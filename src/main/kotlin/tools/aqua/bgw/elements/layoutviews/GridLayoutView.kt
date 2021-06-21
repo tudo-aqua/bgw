@@ -31,14 +31,14 @@ open class GridLayoutView<T : ElementView>(
 	/**
 	 * Current row count.
 	 */
-	var rows = rows
-		private set
+	val rows: Int
+		get() = grid.rows
 	
 	/**
 	 * Current column count.
 	 */
-	var columns = columns
-		private set
+	val columns: Int
+		get() = grid.columns
 	
 	/**
 	 * Current spacing.
@@ -291,8 +291,6 @@ open class GridLayoutView<T : ElementView>(
 	 */
 	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0) {
 		grid.grow(left = left, right = right, top = top, bottom = bottom)
-		columns = grid.columns
-		rows = grid.rows
 	}
 	
 	/**
@@ -314,15 +312,13 @@ open class GridLayoutView<T : ElementView>(
 	 */
 	fun trim() {
 		grid.trim()
-		columns = grid.columns
-		rows = grid.rows
 	}
 	
 	/**
-	 * Adds the desired amount of columns between column <b>columnIndex</b> and <b>columnIndex + 1</b>.
+	 * Adds the desired amount of columns between column <b>columnIndex - 1</b> and <b>columnIndex</b>.
 	 * New columns get NULL-initialized.
 	 *
-	 * @param columnIndex index after which the new column should be added
+	 * @param columnIndex index on which the new column should be added
 	 * @param count Column count to be added. Default: 1
 	 *
 	 * @see addRows

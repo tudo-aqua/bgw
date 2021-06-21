@@ -239,7 +239,7 @@ internal class ElementViewGrid<T : ElementView>(
 			}
 		}
 		
-		for (x in columnIndex until columns + count) {
+		for (x in columnIndex until columns) {
 			for (y in 0 until rows) {
 				newGrid[x + count][y] = grid[x][y]
 				newCenteringModes[x + count][y] = centeringModes[x][y]
@@ -262,7 +262,7 @@ internal class ElementViewGrid<T : ElementView>(
 		columns += count
 		grid = newGrid
 		centeringModes = newCenteringModes
-	}//Todo: definitely needs a test
+	}
 	
 	fun removeColumn(columnIndex: Int) {
 		require(columnIndex in 0 until columns) {
@@ -342,7 +342,7 @@ internal class ElementViewGrid<T : ElementView>(
 		}
 		
 		for (x in 0 until columns) {
-			for (y in rowIndex until rows + count) {
+			for (y in rowIndex until rows) {
 				newGrid[x][y + count] = grid[x][y]
 				newCenteringModes[x][y + count] = centeringModes[x][y]
 			}
