@@ -1,0 +1,296 @@
+package tools.aqua.bgw.builder
+
+import javafx.animation.*
+import javafx.application.Application
+import javafx.application.Platform
+import javafx.beans.property.SimpleDoubleProperty
+import javafx.event.EventHandler
+import javafx.scene.Scene
+import javafx.scene.effect.GaussianBlur
+import javafx.scene.layout.Pane
+import javafx.stage.Stage
+import javafx.stage.StageStyle
+import javafx.util.Duration
+import tools.aqua.bgw.builder.SceneBuilder.Companion.buildGame
+import tools.aqua.bgw.builder.SceneBuilder.Companion.buildMenu
+import tools.aqua.bgw.core.*
+import tools.aqua.bgw.dialog.FileDialog
+import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
+import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.visual.ColorVisual
+import java.awt.Color
+import java.awt.Toolkit
+import java.io.File
+import java.util.*
+import kotlin.math.min
+
+/**
+ * Frontend JavaFX wrapper.
+ */
+class Frontend : Application() {
+	
+	override fun start(primaryStage: Stage) {
+		startApplication(primaryStage)
+	}
+	
+	internal fun show() {
+		launch()
+	}
+	
+	companion object {
+		internal const val DEFAULT_FADE_TIME = 0.25
+		private const val BLUR_RADIUS = 63.0
+		private const val MINIMIZED_FACTOR = 0.8
+		private const val BACKGROUND_SIZE = 10_000.0
+		
+		internal var boardGameScene: BoardGameScene? = null
+		internal var menuScene: MenuScene? = null
+		internal var scenePane: Pane = Pane()
+		private var gamePane: Pane? = null
+		private var menuPane: Pane? = null
+		private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
+		private var primaryStage: Stage? = null
+		private var verticalSceneAlignment = VerticalAlignment.CENTER
+		private var horizontalSceneAlignment = HorizontalAlignment.CENTER
+		private var scaleMode = ScaleMode.FULL
+		private var fullscreen = false
+		
+		internal var draggedElement: ElementView? = null
+		internal var sceneScale: Double = 1.0
+		internal var sceneX: Double = 0.0
+		internal var sceneY: Double = 0.0
+		
+		private val backgroundProperty: ObjectProperty<ColorVisual> = ObjectProperty(ColorVisual(Color.BLACK))
+		private var background: ColorVisual
+			get() = backgroundProperty.value
+			set(value) {
+				backgroundProperty.value = value
+			}
+		
+		internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
+			menuScene = scene
+			
+			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) {
+				if (primaryStage != null) {
+					menuPane = buildMenu(scene)
+					boardGameScene?.lock()
+					
+					updateScene()
+					fadeMenu(true, fadeTime)
+				}
+			}
+		}
+		
+		internal fun hideMenuScene(fadeTime: Double) {
+			fadeMenu(false, fadeTime)
+		}
+		
+		internal fun showGameScene(scene: BoardGameScene) {
+			boardGameScene = scene
+			
+			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) {
+				if (primaryStage != null) {
+					gamePane = buildGame(scene)
+					
+					updateScene()
+				}
+			}
+		}
+		
+		internal fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
+			horizontalSceneAlignment = newHorizontalAlignment
+			sizeChanged()
+		}
+		
+		internal fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
+			verticalSceneAlignment = newVerticalAlignment
+			sizeChanged()
+		}
+		
+		internal fun setScaleMode(newScaleMode: ScaleMode) {
+			scaleMode = newScaleMode
+			sizeChanged()
+		}
+		
+		internal fun setFullScreen(fullscreen: Boolean) {
+			this.fullscreen = fullscreen
+			this.primaryStage?.isFullScreen = fullscreen
+		}
+		
+		internal fun updateScene() {
+			val activePanes: MutableList<Pane> = ArrayList(2)
+			
+			gamePane?.apply {
+				widthProperty().addListener { _, _, _ -> sizeChanged() }
+				heightProperty().addListener { _, _, _ -> sizeChanged() }
+				
+				activePanes.add(this)
+			}
+			
+			menuPane?.apply {
+				widthProperty().addListener { _, _, _ -> sizeChanged() }
+				heightProperty().addListener { _, _, _ -> sizeChanged() }
+				
+				activePanes.add(this)
+			}
+			
+			if (activePanes.size == 2) {
+				gamePane?.effect = GaussianBlur(BLUR_RADIUS)
+				boardGameScene?.lock()
+			}
+			
+			scenePane = Pane().apply {
+				children.clear()
+				children.add(backgroundPane)
+				children.addAll(activePanes)
+			}
+			
+			primaryStage?.scene = Scene(scenePane)
+			sizeChanged()
+		}
+		
+		private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
+			menuPane?.apply {
+				FadeTransition(Duration.seconds(fadeTime / 2), menuPane).apply {
+					fromValue = if (fadeIn) 0.0 else 1.0
+					toValue = if (fadeIn) 1.0 else 0.0
+					interpolator = Interpolator.EASE_OUT
+					onFinished = EventHandler {
+						if (!fadeIn) {
+							menuPane = null
+							if (boardGameScene != null) boardGameScene!!.unlock()
+							updateScene()
+						}
+					}
+				}.play()
+			}
+			
+			gamePane?.apply {
+				val blur = GaussianBlur(0.0).also { effect = it }
+				
+				val value = SimpleDoubleProperty(0.0).apply {
+					addListener { _, _, newValue -> blur.radius = newValue.toDouble() }
+				}
+				
+				Timeline(
+					KeyFrame(Duration.ZERO, KeyValue(value, if (fadeIn) 0 else BLUR_RADIUS)),
+					KeyFrame(Duration.seconds(fadeTime), KeyValue(value, if (fadeIn) BLUR_RADIUS else 0))
+				).play()
+			}
+		}
+		
+		private fun sizeChanged() {
+			val activePanes: List<Pane> = listOfNotNull(gamePane, menuPane).ifEmpty { return }
+			
+			//Wait for renderer to finish resize nodes
+			Platform.runLater {
+				val sceneHeight = scenePane.height
+				val sceneWidth = scenePane.width
+				
+				if (sceneHeight == 0.0 || sceneWidth == 0.0)
+					return@runLater
+				
+				activePanes.forEach {
+					it.apply {
+						val contentHeight = height
+						val contentWidth = width
+						
+						if (contentHeight == 0.0 || contentWidth == 0.0)
+							return@apply
+						
+						//Set new content layout
+						layoutX = (sceneWidth - contentWidth) * horizontalSceneAlignment.positionMultiplier
+						layoutY = (sceneHeight - contentHeight) * verticalSceneAlignment.positionMultiplier
+						sceneX = layoutX
+						sceneY = layoutY
+						
+						//Set new content scale
+						if (scaleMode != ScaleMode.NO_SCALE) {
+							sceneScale = min(sceneWidth / contentWidth, sceneHeight / contentHeight)
+							
+							if (scaleMode == ScaleMode.ONLY_SHRINK)
+								sceneScale = min(sceneScale, 1.0)
+							
+							scaleX = sceneScale
+							scaleY = sceneScale
+							
+							translateX = contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
+							translateY = contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
+							
+							//TODO: Check with left and right alignment
+							sceneX = (sceneWidth - contentWidth * sceneScale) / 2 *
+									(1 + horizontalSceneAlignment.pivotMultiplier)
+							sceneY = (sceneHeight - contentHeight * sceneScale) / 2 *
+									(1 + verticalSceneAlignment.pivotMultiplier)
+						}
+						
+						//Zoom detail
+						val scene = this.toScene()!!
+						val scale = min(
+							(scene.width - scene.zoomDetail.width) / scene.width,
+							(scene.height - scene.zoomDetail.height) / scene.height
+						)
+						scaleX += scale //FIXME
+						scaleY += scale
+						translateX -= scene.zoomDetail.topLeft.xCoord
+						translateY -= scene.zoomDetail.topLeft.yCoord
+						
+					}
+				}
+			}
+		}
+		
+		private fun Pane.toScene() =
+			if (this == gamePane) boardGameScene else menuScene
+		
+		internal fun startApplication(stage: Stage) {
+			primaryStage = stage.apply {
+				//Initialize default DECORATED stage style allowing minimizing
+				initStyle(StageStyle.DECORATED)
+				
+				//Set minimized window size as 80% of screen resolution and set default window mode to maximized
+				val screenSize = Toolkit.getDefaultToolkit().screenSize
+				height = screenSize.getHeight() * MINIMIZED_FACTOR
+				width = screenSize.getWidth() * MINIMIZED_FACTOR
+				isMaximized = true
+				isFullScreen = fullscreen //TODO: Fullscreen not working
+				
+				heightProperty().addListener { _, _, _ -> sizeChanged() }
+				widthProperty().addListener { _, _, _ -> sizeChanged() }
+				show()
+			}
+			
+			menuScene?.let { menuPane = buildMenu(it) }
+			boardGameScene?.let { gamePane = buildGame(it) }
+			
+			backgroundProperty.guiListener = {
+				backgroundPane.style = "-fx-background-color: #${
+					Integer.toHexString(
+						background.color.rgb
+					).substring(2)
+				};"
+			}
+			backgroundPane.apply {
+				minHeight = BACKGROUND_SIZE
+				minWidth = BACKGROUND_SIZE
+			}
+			
+			updateScene()
+		}
+		
+		internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> =
+			Optional.ofNullable(
+				when (dialog.mode) {
+					OPEN_FILE ->
+						listOf(FileChooserBuilder.buildFileChooser(dialog).showOpenDialog(primaryStage))
+					OPEN_MULTIPLE_FILES ->
+						FileChooserBuilder.buildFileChooser(dialog).showOpenMultipleDialog(primaryStage)
+					SAVE_FILE ->
+						listOf(FileChooserBuilder.buildFileChooser(dialog).showSaveDialog(primaryStage))
+					CHOOSE_DIRECTORY ->
+						listOf(FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage))
+				}
+			)
+	}
+}

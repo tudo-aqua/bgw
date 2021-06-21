@@ -1,0 +1,78 @@
+package tools.aqua.bgw.builder
+
+import javafx.scene.Node
+import javafx.scene.layout.Pane
+import javafx.scene.layout.Region
+import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.elements.layoutviews.ElementPane
+import tools.aqua.bgw.elements.layoutviews.GridLayoutView
+import tools.aqua.bgw.util.ElementViewGrid
+
+/**
+ * LayoutNodeBuilder.
+ * Factory for all BGW layout elements.
+ */
+internal class LayoutNodeBuilder {
+	companion object {
+		internal fun buildGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>): Region {
+			val grid: ElementViewGrid<out ElementView> = gridView.grid.apply { trim() }
+			
+			//Build Nodes
+			val nodes = ArrayList<Triple<Pair<Int, Int>, ElementView, Node>>()
+			grid.getColumns().forEachIndexed { colIndex, col ->
+				for (rowIndex in col.indices) {
+					val gameElementView = col[rowIndex] ?: continue
+					
+					nodes.add(
+						Triple(
+							Pair(colIndex, rowIndex), gameElementView,
+							NodeBuilder.build(scene = scene, elementView = gameElementView)
+						)
+					)
+				}
+			}
+			
+			gridView.renderedRowHeights = DoubleArray(grid.rows) {
+				grid.getRow(it).maxOf { entry -> entry?.let { t -> t.height + t.posY } ?: 0.0 }
+			}
+			gridView.renderedColWidths = DoubleArray(grid.columns) {
+				grid.getColumn(it).maxOf { entry -> entry?.let { t -> t.width + t.posY } ?: 0.0 }
+			}
+			
+			//TODO: Disable auto resizing if desired
+			gridView.width = gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
+			gridView.height =
+				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
+			
+			//val topLeftX = gridView.posX - if (gridView.layoutFromCenter) gridView.width / 2 else 0.0
+			//val topLeftY = gridView.posY - if (gridView.layoutFromCenter) gridView.height / 2 else 0.0
+			
+			val gridPane = Pane()
+			
+			nodes.forEach { triple ->
+				val colIndex = triple.first.first
+				val rowIndex = triple.first.second
+				val element = triple.second
+				val node = triple.third
+				val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
+				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
+				
+				gridPane.children.add(node.apply {
+					layoutX = posX + element.posX
+					layoutY = posY + element.posY
+				})
+			}
+			
+			return gridPane
+		}
+		
+		@Suppress("UNUSED_PARAMETER")
+		internal fun buildElementPane(
+			scene: Scene<out ElementView>,
+			layoutElementView: ElementPane<out ElementView>
+		): Region {
+			TODO("Not yet implemented")
+		}
+	}
+}
