@@ -1,4 +1,4 @@
 Index
 
-[VerfügbareKomponenten](Verfügbare%20Komponenten.md)
+[VerfügbareKomponenten](Verfügbare-Komponenten.md)
 [TokenView](TokenView.md)
