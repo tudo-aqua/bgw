@@ -6,7 +6,7 @@ import kotlin.test.fail
 
 class IteratorTest {
 	@Test
-	@DisplayName("Add multiple rows in middle")
+	@DisplayName("Fail")
 	fun failTest() {
 		fail()
 	}

@@ -58,7 +58,7 @@ class RemoveEmptyRowsTest : GridLayoutViewTestBase() {
 		
 		checkSize(3, 2)
 		
-		//Columns 0-1 unchanged
+		//Rows 0-1 unchanged
 		testUnchanged(rows = 0..1)
 	}
 	
@@ -72,11 +72,11 @@ class RemoveEmptyRowsTest : GridLayoutViewTestBase() {
 		
 		checkSize(3, 2)
 		
-		//Column 0 unchanged
+		//Row 0 unchanged
 		testUnchanged(rows = 0..0)
 		
-		//Column 1 contains former column 2
-		testUnchanged(rows = 1..1, columnBias = 1)
+		//Row 1 contains former row 2
+		testUnchanged(rows = 1..1, rowBias = 1)
 	}
 	
 	@Test

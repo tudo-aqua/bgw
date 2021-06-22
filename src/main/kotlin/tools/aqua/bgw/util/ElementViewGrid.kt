@@ -80,6 +80,14 @@ internal class ElementViewGrid<T : ElementView>(
 	
 	fun getColumns(): List<List<T?>> = (0 until columns).map { getColumn(it) }
 	
+	fun getColumnWidth(columnIndex: Int): Double {
+		require(columnIndex in columnWidths.indices) {
+			"ColumnIndex out of grid range."
+		}
+		
+		return columnWidths[columnIndex]
+	}
+	
 	fun setColumnWidth(columnIndex: Int, columnWidth: Double) {
 		require(columnIndex in columnWidths.indices) {
 			"ColumnIndex out of grid range."
@@ -102,6 +110,14 @@ internal class ElementViewGrid<T : ElementView>(
 		this.columnWidths = columnWidths
 	}
 	
+	fun getRowHeight(rowIndex: Int): Double {
+		require(rowIndex in rowHeights.indices) {
+			"ColumnIndex out of grid range."
+		}
+		
+		return rowHeights[rowIndex]
+	}
+	
 	fun setRowHeight(rowIndex: Int, rowHeight: Double) {
 		require(rowIndex in rowHeights.indices) {
 			"ColumnIndex out of grid range."
@@ -110,7 +126,7 @@ internal class ElementViewGrid<T : ElementView>(
 			"Parameter must be positive or ROW_HEIGHT_AUTO."
 		}
 		
-		columnWidths[rowIndex] = rowHeight
+		rowHeights[rowIndex] = rowHeight
 	}
 	
 	fun setRowHeights(rowHeights: DoubleArray) {
@@ -145,7 +161,7 @@ internal class ElementViewGrid<T : ElementView>(
 		columns += left + right
 		rowHeights = DoubleArray(left) { ROW_HEIGHT_AUTO } + rowHeights + DoubleArray(right) { ROW_HEIGHT_AUTO }
 		columnWidths = DoubleArray(left) { COLUMN_WIDTH_AUTO } + columnWidths + DoubleArray(right) { COLUMN_WIDTH_AUTO }
-	}    //Todo: definitely needs a test
+	}
 	
 	fun trim() {
 		trimColumns()
@@ -411,7 +427,7 @@ internal class ElementViewGrid<T : ElementView>(
 	}
 	
 	fun removeEmptyRows() {
-		val rowIndices = (0 until rows).filter { x -> (0 until columns).any { y -> grid[x][y] != null } }.toIntArray()
+		val rowIndices = (0 until rows).filter { j -> (0 until columns).any { i -> grid[i][j] != null } }.toIntArray()
 		
 		if (rowIndices.isEmpty()) {
 			initEmpty()
