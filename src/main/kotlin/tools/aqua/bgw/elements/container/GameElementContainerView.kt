@@ -66,15 +66,18 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param element Element to add.
 	 */
 	@Synchronized
-	open fun addElement(element: T) {
+	open fun addElement(element: T, index: Int = observableElements.size()) {
 		check(!observableElements.contains(element)) {
 			"Element $element is already contained in this $this."
 		}
 		check(element.parent == null) {
 			"Element $element is already contained in another container."
 		}
+		check(index in 0..observableElements.size()) {
+			"Index $index is out of list range."
+		}
 		
-		observableElements.add(element.apply { parent = this@GameElementContainerView })
+		observableElements.add(index, element.apply { parent = this@GameElementContainerView })
 	}
 	
 	/**

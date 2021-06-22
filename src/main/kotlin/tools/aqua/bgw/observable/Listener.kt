@@ -19,9 +19,10 @@ fun interface IValueObservable<T> {
 	/**
 	 * Indicates property update.
 	 *
+	 * @param oldValue Old value of property
 	 * @param newValue New value of property
 	 */
-	fun update(newValue: T)
+	fun update(oldValue: T, newValue: T)
 }
 
 /**
@@ -134,7 +135,7 @@ open class ValueObservable<T> {
 	 * Used by renderer to listen on important properties for visualization.
 	 */
 	private var guiListenerHandler: IValueObservable<T>? = null
-	internal var guiListener: ((T) -> Unit)? = null
+	internal var guiListener: ((T, T) -> Unit)? = null
 		set(value) {
 			guiListenerHandler = if (value == null) null else IValueObservable(value)
 		}
@@ -144,7 +145,7 @@ open class ValueObservable<T> {
 	 * Should only be set by direct parent.
 	 */
 	private var internalListenerHandler: IValueObservable<T>? = null
-	internal var internalListener: ((T) -> Unit)? = null
+	internal var internalListener: ((T, T) -> Unit)? = null
 		set(value) {
 			internalListenerHandler = if (value == null) null else IValueObservable(value)
 		}
@@ -154,9 +155,9 @@ open class ValueObservable<T> {
 	 *
 	 * @param initialValue Initial value to notify
 	 */
-	internal fun setGUIListenerAndInvoke(initialValue: T, listener: ((T)) -> Unit) {
+	internal fun setGUIListenerAndInvoke(initialValue: T, listener: ((T, T) -> Unit)) {
 		guiListener = listener
-		guiListenerHandler?.update(initialValue)
+		guiListenerHandler?.update(initialValue, initialValue)
 	}
 	
 	/**
@@ -164,9 +165,9 @@ open class ValueObservable<T> {
 	 *
 	 * @param initialValue Initial value to notify
 	 */
-	internal fun setInternalListenerAndInvoke(initialValue: T, listener: ((T)) -> Unit) {
+	internal fun setInternalListenerAndInvoke(initialValue: T, listener: ((T, T) -> Unit)) {
 		internalListener = listener
-		internalListenerHandler?.update(initialValue)
+		internalListenerHandler?.update(initialValue, initialValue)
 	}
 	
 	/**
@@ -177,7 +178,7 @@ open class ValueObservable<T> {
 	 */
 	fun addListenerAndInvoke(initialValue: T, listener: IValueObservable<T>) {
 		listeners.add(listener)
-		listener.update(initialValue)
+		listener.update(initialValue, initialValue)
 	}
 	
 	/**
@@ -208,29 +209,32 @@ open class ValueObservable<T> {
 	/**
 	 * Notifies all listeners by calling update().
 	 *
+	 * @param oldValue Old value to notify.
 	 * @param newValue New value to notify.
 	 */
-	fun notifyChange(newValue: T) {
-		listeners.forEach { it.update(newValue) }
-		internalListenerHandler?.update(newValue)
-		guiListenerHandler?.update(newValue)
+	fun notifyChange(oldValue: T, newValue: T) {
+		listeners.forEach { it.update(oldValue, newValue) }
+		internalListenerHandler?.update(oldValue, newValue)
+		guiListenerHandler?.update(oldValue, newValue)
 	}
 	
 	/**
 	 * Notifies internal listener by calling update().
 	 *
+	 * @param oldValue Old value to notify.
 	 * @param newValue New value to notify.
 	 */
-	internal fun notifyInternalListener(newValue: T) {
-		internalListenerHandler?.update(newValue)
+	internal fun notifyInternalListener(oldValue: T, newValue: T) {
+		internalListenerHandler?.update(oldValue, newValue)
 	}
 	
 	/**
 	 * Notifies GUI listener by calling update().
 	 *
+	 * @param oldValue Old value to notify.
 	 * @param newValue New value to notify.
 	 */
-	internal fun notifyGUIListener(newValue: T) {
-		guiListenerHandler?.update(newValue)
+	internal fun notifyGUIListener(oldValue: T, newValue: T) {
+		guiListenerHandler?.update(oldValue, newValue)
 	}
 }

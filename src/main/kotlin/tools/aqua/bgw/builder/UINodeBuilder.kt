@@ -42,8 +42,8 @@ internal class UINodeBuilder {
 			
 			node.textProperty().bindTextProperty(textArea)
 			node.promptText = textArea.prompt
-			textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) {
-				node.font = it.toFXFont()
+			textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
+				node.font = nV.toFXFont()
 				//TODO text color
 			}
 			return node
@@ -59,8 +59,8 @@ internal class UINodeBuilder {
 				comboBox.selectedItem = newValue
 			}
 			//font size
-			comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) {
-				node.editor.font = it.toFXFont()
+			comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, nV ->
+				node.editor.font = nV.toFXFont()
 				//TODO text color
 			}
 			return node
@@ -87,7 +87,7 @@ internal class UINodeBuilder {
 					node.items.clear()
 					listView.items.forEach { node.items.add(it) }
 				}
-				fontProperty.setGUIListenerAndInvoke(this.font) { font ->
+				fontProperty.setGUIListenerAndInvoke(this.font) { _, font ->
 					node.cellFactory = javafx.util.Callback {
 						object : ListCell<T>() {
 							override fun updateItem(item: T, empty: Boolean) {
@@ -100,8 +100,8 @@ internal class UINodeBuilder {
 						}
 					}
 				}
-				orientationProperty.setGUIListenerAndInvoke(this.orientation) {
-					node.orientationProperty().value = it.toJavaFXOrientation()
+				orientationProperty.setGUIListenerAndInvoke(this.orientation) { _, nV ->
+					node.orientationProperty().value = nV.toJavaFXOrientation()
 				}
 			}
 			return node
@@ -119,12 +119,12 @@ internal class UINodeBuilder {
 		}
 		
 		fun buildProgressBar(progressBar: ProgressBar): Region = javafx.scene.control.ProgressBar().apply {
-			progressBar.progressProperty.setGUIListenerAndInvoke(progressBar.progress) {
-				this.progress = if (it < 0.0) 0.0 else it
+			progressBar.progressProperty.setGUIListenerAndInvoke(progressBar.progress) { _, nV ->
+				this.progress = if (nV < 0.0) 0.0 else nV
 			}
-			progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) {
+			progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) { _, nV ->
 				//TODO remove css usage
-				style = "-fx-accent: rgba(${it.red},${it.green},${it.blue},${it.alpha});"
+				style = "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
 			}
 		}
 		
@@ -159,14 +159,14 @@ internal class UINodeBuilder {
 		
 		private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: LabeledUIElementView) {
 			//Framework -> JavaFX
-			labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { value = it }
+			labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
 			//JavaFX -> Framework
 			addListener { _, _, new -> labeled.label = new }
 		}
 		
 		private fun javafx.beans.property.BooleanProperty.bindBooleanProperty(booleanProperty: BooleanProperty) {
 			//Framework -> JavaFX
-			booleanProperty.guiListener = { value = it }
+			booleanProperty.guiListener = { _, nV -> value = nV }
 			
 			//JavaFX -> Framework
 			value = booleanProperty.value
@@ -188,9 +188,9 @@ internal class UINodeBuilder {
 		)
 		
 		private fun Labeled.bindFont(labeled: LabeledUIElementView) {
-			labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) {
-				font = it.toFXFont()
-				textFill = it.color.toFXColor()
+			labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
+				font = nV.toFXFont()
+				textFill = nV.color.toFXColor()
 			}
 		}
 		

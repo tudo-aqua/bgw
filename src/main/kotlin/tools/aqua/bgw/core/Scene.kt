@@ -2,6 +2,8 @@ package tools.aqua.bgw.core
 
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.builder.DragElementObject
+import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.RootElement
 import tools.aqua.bgw.observable.DoubleProperty
@@ -21,6 +23,14 @@ import java.awt.Color
  * @param height Scene height in virtual coordinates
  */
 sealed class Scene<T : ElementView>(width: Number, height: Number) {
+	
+	//TODO: Docs
+	internal val draggedElementObjectProperty: ObjectProperty<DragElementObject?> = ObjectProperty(null)
+	
+	//TODO: Docs
+	val draggedElement: DynamicView?
+		get() = draggedElementObjectProperty.value?.draggedElement
+	
 	
 	/**
 	 * The root node of this Scene.

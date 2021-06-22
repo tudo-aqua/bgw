@@ -13,15 +13,15 @@ import tools.aqua.bgw.elements.gameelements.TokenView
 internal class ElementNodeBuilder {
 	companion object {
 		internal fun buildCardView(cardView: CardView): Region {
-			cardView.currentSideProperty.setGUIListenerAndInvoke(cardView.currentSide) {
-				cardView.currentVisual = it.visual
+			cardView.currentSideProperty.setGUIListenerAndInvoke(cardView.currentSide) { _, nV ->
+				cardView.currentVisual = nV.visual
 			}
 			return Pane()
 		}
 		
 		internal fun buildDiceView(diceView: DiceView): Region {
-			diceView.currentSideProperty.setGUIListenerAndInvoke(diceView.currentSide) {
-				diceView.currentVisual = it - 1
+			diceView.currentSideProperty.setGUIListenerAndInvoke(diceView.currentSide) { _, nV ->
+				diceView.currentVisual = nV - 1
 			}
 			return Pane()
 		}
