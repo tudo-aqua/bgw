@@ -4,6 +4,7 @@ import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
+import tools.aqua.bgw.builder.NodeBuilder.Companion.registerEvents
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -23,6 +24,7 @@ import tools.aqua.bgw.event.EventConverter.Companion.toKeyEvent
 import tools.aqua.bgw.event.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.util.Coordinate
+import kotlin.math.min
 
 /**
  * NodeBuilder.
@@ -161,34 +163,31 @@ internal class NodeBuilder {
 					)
 					
 					var rollback: (() -> Unit) = {}
-					/*when (val parent = pathToChild[1]) {
+					when (val parent = pathToChild[1]) {
 						is GameElementContainerView<*> -> {
-							val index = parent.elements.indexOf(this)
+							val index = parent.observableElements.indexOf(this)
 							rollback = {
 								@Suppress("UNCHECKED_CAST")
 								(parent as GameElementContainerView<GameElementView>)
 									.addElement(this as GameElementView, min(parent.observableElements.size(), index))
 							}
 						}
-						is GridLayoutView<*> -> {{
-						
-						}}
-						scene.rootNode -> {{
-							Frontend.updateScene()
-						}}
-						else -> {{}}
+						is GridLayoutView<*> -> {
+							parent.grid.find { triple ->
+								triple.third == this
+							}?.apply {
+								rollback = {
+									@Suppress("UNCHECKED_CAST")
+									(parent as GridLayoutView<ElementView>)[first, second] =
+										this@registerEvents as ElementView
+								}
+							}
+						}
+						scene.rootNode -> {
+							rollback = { Frontend.updateScene() }
+						}
+						else -> {}
 					}
-					
-					
-					var index = parent.elements.indexOf(child)
-					
-					parent.removeElement(child)
-					child.parent = scene.rootNode
-					Frontend.gamePane!!.children.add(stackPane)
-					stackPane.toFront()
-					
-					//get dragged Object toFront globally
-					//pathToChild.forEach { t -> scene.elementsMap[t]?.toFront() } //TODO dont bring to front*/
 					
 					val relativeParentRotation = if (pathToChild.size > 1)
 						pathToChild.drop(1).sumOf { t -> t.rotation }

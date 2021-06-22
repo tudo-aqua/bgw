@@ -81,8 +81,14 @@ open class GridLayoutView<T : ElementView>(
 	 * @param element ElementView to be added to the specified cell.
 	 */
 	operator fun set(columnIndex: Int, rowIndex: Int, element: T?) {
-		grid[columnIndex, rowIndex]?.internalListener = null
-		grid[columnIndex, rowIndex] = element.also { it?.internalListener = {} } //FIXME why is this here?
+		grid[columnIndex, rowIndex]?.apply {
+			this.internalListener = null
+			this.parent = null }
+		grid[columnIndex, rowIndex] = element?.apply {
+			this.internalListener = {}
+			this.parent = this@GridLayoutView
+		} //FIXME why is this here?
+
 		notifyChange()
 	}
 	
