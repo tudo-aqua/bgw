@@ -43,9 +43,9 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	
 	/**
 	 * Adds a relation A -> B if domain does not contain A and coDomain does not contain B.
-	 * Returns false if the relation could not be added.
+	 * Returns `false` if the relation could not be added.
 	 *
-	 * @return True if the element was added to the map, false otherwise.
+	 * @return `true` if the element was added to the map, `false` otherwise.
 	 *
 	 * @see add
 	 */
@@ -103,7 +103,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 * @param entity Relation key A.
 	 * @param value Relation value B.
 	 *
-	 * @return True if the element was removed, false if the element was not found.
+	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
 	 * @see removeForward
 	 * @see removeBackward
@@ -115,7 +115,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param pair (Relation key A, Relation value B)
 	 *
-	 * @return True if the element was removed, false if the element was not found.
+	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
 	 * @see removeForward
 	 * @see removeBackward
@@ -128,7 +128,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param entity Relation key A.
 	 *
-	 * @return True if the element was removed, false if the element was not found.
+	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
 	 * @see remove
 	 * @see removeBackward
@@ -141,7 +141,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param value Relation value B.
 	 *
-	 * @return True if the element was removed, false if the element was not found.
+	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
 	 * @see remove
 	 * @see removeForward
@@ -154,7 +154,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 * @param entity Relation key A.
 	 * @param value Relation value B.
 	 *
-	 * @return True if the relation exists in this map, false otherwise.
+	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
 	 * @see containsForward
 	 * @see containsBackward
@@ -166,7 +166,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param entity Relation key A.
 	 *
-	 * @return True if the relation exists in this map, false otherwise.
+	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
 	 * @see contains
 	 * @see containsBackward
@@ -178,7 +178,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param value Relation value B.
 	 *
-	 * @return True if the relation exists in this map, false otherwise.
+	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
 	 * @see contains
 	 * @see containsForward

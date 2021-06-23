@@ -632,50 +632,66 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 	override fun toString(): String = string
 	
 	/**
-	 * Returns true if key was a modifier like Shift or Ctrl etc, false otherwise.
+	 * Returns `true` if key was a modifier like Shift or Ctrl etc, `false` otherwise.
+	 *
+	 * @return `true` if key was a modifier like Shift or Ctrl etc, `false` otherwise.
 	 */
 	fun isModifier(): Boolean = keyTypeMask and KeyType.MODIFIER != 0
 	
 	/**
-	 * Returns true if key was a letter key A-Z, false otherwise.
+	 * Returns `true` if key was a letter key A-Z, `false` otherwise.
+	 *
+	 * @return `true` if key was a letter key A-Z, `false` otherwise.
 	 *
 	 * @see isDigit
 	 */
 	fun isLetter(): Boolean = keyTypeMask and KeyType.LETTER != 0
 	
 	/**
-	 * Returns true if key was digit key 1-9 from key- or numpad, false otherwise.
+	 * Returns `true` if key was digit key 1-9 from key- or numpad, `false` otherwise.
+	 *
+	 * @return `true` if key was digit key 1-9 from key- or numpad, `false` otherwise.
 	 *
 	 * @see isLetter
 	 */
 	fun isDigit(): Boolean = keyTypeMask and KeyType.DIGIT != 0
 	
 	/**
-	 * Returns true if key was on numpad like numpad numbers or +,-,/,* etc, false otherwise.
+	 * Returns `true` if key was on numpad like numpad numbers or +,-,/,* etc, `false` otherwise.
+	 *
+	 * @return `true` if key was on numpad like numpad numbers or +,-,/,* etc, `false` otherwise.
 	 */
 	fun isOnNumpad(): Boolean = keyTypeMask and KeyType.NUMPAD != 0
 	
 	/**
-	 * Returns true if key was an arrow key, false otherwise.
+	 * Returns `true` if key was an arrow key, `false` otherwise.
+	 *
+	 * @return `true` if key was an arrow key, `false` otherwise.
 	 *
 	 * @see isNavigation
 	 */
 	fun isArrow(): Boolean = keyTypeMask and KeyType.ARROW != 0
 	
 	/**
-	 * Returns true if key was a navigation key like arrows and page up / down, false otherwise.
+	 * Returns `true` if key was a navigation key like arrows and page up / down, `false` otherwise.
+	 *
+	 * @return `true` if key was a navigation key like arrows and page up / down, `false` otherwise.
 	 *
 	 * @see isArrow
 	 */
 	fun isNavigation(): Boolean = keyTypeMask and KeyType.NAVIGATION != 0
 	
 	/**
-	 * Returns true if key was a whitespace key like space, tab etc, false otherwise.
+	 * Returns `true` if key was a whitespace key like space, tab etc, `false` otherwise.
+	 *
+	 * @return `true` if key was a whitespace key like space, tab etc, `false` otherwise.
 	 */
 	fun isWhitespace(): Boolean = keyTypeMask and KeyType.WHITESPACE != 0
 	
 	/**
-	 * Returns true if key was a function key F1, F2, etc, false otherwise.
+	 * Returns `true` if key was a function key F1, F2, etc, `false` otherwise.
+	 *
+	 * @return `true` if key was a function key F1, F2, etc, `false` otherwise.
 	 */
 	fun isFunction(): Boolean = keyTypeMask and KeyType.FUNCTION != 0
 	//endregion

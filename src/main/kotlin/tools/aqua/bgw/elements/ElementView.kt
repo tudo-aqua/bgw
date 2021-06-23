@@ -187,13 +187,13 @@ abstract class ElementView(
 	
 	/**
 	 * Property that controls if GUI events are passed to the eventHandlers of this ElementView.
-	 * true means no events are passed, where false means events are passed.
+	 * `true` means no events are passed, where `false` means events are passed.
 	 */
 	val isDisabledProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
 	 * Field that controls if GUI events are passed to the eventHandlers of this ElementView.
-	 * true means no events are passed, where false means events are passed.
+	 * `true` means no events are passed, where `false` means events are passed.
 	 */
 	var isDisabled: Boolean
 		get() = isDisabledProperty.value
@@ -288,7 +288,7 @@ abstract class ElementView(
 	internal var postDragGestureEnded: ((DragEvent, Boolean) -> Unit)? = null
 	
 	/**
-	 * Should return true if this ElementView is a valid drop target for the dragged element in the given DropEvent.
+	 * Should return `true` if this ElementView is a valid drop target for the dragged element in the given DropEvent.
 	 * Note: Do not alter the given dragged element by now. Use the onDragElementDropped handler.
 	 *
 	 * @see DropEvent
