@@ -6,10 +6,11 @@ import javax.imageio.ImageIO
 
 /**
  * Visual showing an image.
+ * The image gets stretched to the size of the element that this visual is embedded in.
  *
- * @constructor Loads an ImageVisual from an image.
+ * @constructor Loads an ImageVisual from a BufferedImage.
  *
- * @param image Image to show
+ * @param image Image to show.
  */
 class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 	
@@ -38,7 +39,7 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 		/**
 		 * Creates an ImageVisual from a file.
 		 *
-		 * @param file Image file to load
+		 * @param file Image file to load.
 		 */
 		fun loadImage(file: String) = ImageVisual(load(file))
 		

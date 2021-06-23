@@ -3,19 +3,22 @@ package tools.aqua.bgw.visual
 import tools.aqua.bgw.observable.ObservableArrayList
 
 /**
- * A compound visual containing stacked single layer visuals.
- * Each single layer visual should have opacity in order to work properly.
+ * A compound visual containing stacked SingleLayerVisuals.
+ * Hint: Each SingleLayerVisual besides the bottom should have opacity in order to work properly.
  *
- * @param children Children
+ * @param children Children SingleLayerVisuals in the order they should be displayed, where the first SingleLayerVisual
+ * gets displayed at the bottom of the stack.
  */
 class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
 	/**
 	 * The property for the children of this stack.
+	 * The first SingleLayerVisual gets displayed at the bottom of the stack.
 	 */
 	val childrenProperty = ObservableArrayList(children.toList())
 	
 	/**
 	 * The children of this stack.
+	 * The first SingleLayerVisual gets displayed at the bottom of the stack.
 	 */
 	var children: List<SingleLayerVisual>
 		get() = childrenProperty.toList()
