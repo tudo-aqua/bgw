@@ -22,7 +22,7 @@ open class GridLayoutView<T : ElementView>(
 	posX: Number = 0,
 	posY: Number = 0,
 	layoutFromCenter: Boolean = true
-) : LayoutElement<T>(posX = posX, posY = posY), IObservable {
+) : LayoutElement<T>(posX = posX, posY = posY), Iterable<Triple<Int, Int, T?>>, IObservable {
 	
 	internal val grid: ElementViewGrid<T> = ElementViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
@@ -83,12 +83,13 @@ open class GridLayoutView<T : ElementView>(
 	operator fun set(columnIndex: Int, rowIndex: Int, element: T?) {
 		grid[columnIndex, rowIndex]?.apply {
 			this.internalListener = null
-			this.parent = null }
+			this.parent = null
+		}
 		grid[columnIndex, rowIndex] = element?.apply {
 			this.internalListener = {}
 			this.parent = this@GridLayoutView
 		} //FIXME why is this here?
-
+		
 		notifyChange()
 	}
 	
@@ -455,6 +456,11 @@ open class GridLayoutView<T : ElementView>(
 			
 			Coordinate(offsetX + child.posX, offsetY + child.posY)
 		}.firstOrNull()
+	
+	/**
+	 * {@inheritDoc}.
+	 */
+	override fun iterator() = grid.iterator()
 	
 	companion object {
 		/**
