@@ -8,17 +8,21 @@ package tools.aqua.bgw.observable
  * @param initialValue Initial value of this property.
  */
 sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
-	protected var realValue: T = initialValue
+	
+	/**
+	 * Value of this property.
+	 */
+	protected var boxedValue: T = initialValue
 	
 	/**
 	 * Value of this property.
 	 */
 	open var value: T
-		get() = realValue
+		get() = boxedValue
 		set(value) {
-			val savedValue = realValue
-			if (realValue != value) {
-				realValue = value
+			val savedValue = boxedValue
+			if (boxedValue != value) {
+				boxedValue = value
 				notifyChange(savedValue, value)
 			}
 		}
@@ -28,46 +32,46 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	 * Only notifies GUI listener.
 	 */
 	internal open fun setSilent(value: T) {
-		val savedValue = realValue
-		this.realValue = value
+		val savedValue = boxedValue
+		this.boxedValue = value
 		notifyGUIListener(savedValue, value)
 	}
 	
 	/**
 	 * Notifies all listeners with current value.
 	 */
-	fun notifyUnchanged() = notifyChange(realValue, realValue)
+	fun notifyUnchanged() = notifyChange(boxedValue, boxedValue)
 }
 
 /**
- * A Boolean Property.
+ * A BooleanProperty.
  *
- * @param initialValue initial Value. Default: false
+ * @param initialValue Initial Value. Default: false
  */
 class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
 
 /**
- * An Integer Property.
+ * An IntegerProperty.
  *
- * @param initialValue initial Value. Default: 0
+ * @param initialValue Initial Value. Default: 0
  */
 class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
 
 /**
- * A Double Property.
+ * A DoubleProperty.
  *
- * @param initialValue initial Value. Default: 0.0
+ * @param initialValue Initial Value. Default: 0.0
  */
 class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
 
 /**
- * A limited Double Property to a value range.
+ * A limited DoubleProperty to a value range.
  *
  * @throws IllegalArgumentException If a value out of range is set.
  *
  * @param lowerBoundInclusive lower bound inclusive. Default: -inf
  * @param upperBoundInclusive lower bound inclusive. Default: +inf
- * @param initialValue initial Value. Default: 0.0
+ * @param initialValue Initial Value. Default: 0.0
  */
 class LimitedDoubleProperty(
 	private val lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
@@ -78,13 +82,13 @@ class LimitedDoubleProperty(
 	 * Value of this property.
 	 */
 	override var value: Double
-		get() = realValue
+		get() = boxedValue
 		set(value) {
 			checkBounds(value)
 			
-			val savedValue = realValue
-			if (realValue != value) {
-				realValue = value
+			val savedValue = boxedValue
+			if (boxedValue != value) {
+				boxedValue = value
 				notifyChange(savedValue, value)
 			}
 		}
@@ -96,11 +100,16 @@ class LimitedDoubleProperty(
 	override fun setSilent(value: Double) {
 		checkBounds(value)
 		
-		val savedValue = realValue
-		this.realValue = value
+		val savedValue = boxedValue
+		this.boxedValue = value
 		notifyGUIListener(savedValue, value)
 	}
 	
+	/**
+	 * Checks whether the given value is in the valid range.
+	 *
+	 * @return `true` if the given value is in the valid range, `false` otherwise.
+	 */
 	private fun checkBounds(value: Double) {
 		require(value >= lowerBoundInclusive.toDouble()) {
 			"Argument is lower than lower bound for this property."
@@ -112,15 +121,15 @@ class LimitedDoubleProperty(
 }
 
 /**
- * A String Property.
+ * A StringProperty.
  *
- * @param initialValue initial Value. Default: Empty string
+ * @param initialValue Initial Value. Default: Empty string
  */
 class StringProperty(initialValue: String = "") : Property<String>(initialValue)
 
 /**
- * A Object Property with generic type.
+ * An ObjectProperty with generic type.
  *
- * @param initialValue initial Value.
+ * @param initialValue Initial Value.
  */
 class ObjectProperty<T>(initialValue: T) : Property<T>(initialValue)
