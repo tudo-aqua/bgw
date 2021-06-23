@@ -53,7 +53,7 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	private fun cos(degrees: Double) = kotlin.math.cos(Math.toRadians(degrees))
 	
 	/**
-	 * toString method.
+	 * Prints xCoord and yCoord as String.
 	 */
 	override fun toString() = "X = $xCoord, Y = $yCoord"
 }
