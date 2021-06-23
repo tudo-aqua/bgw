@@ -16,7 +16,6 @@ import tools.aqua.bgw.builder.SceneBuilder.Companion.buildMenu
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
-import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
@@ -47,7 +46,7 @@ class Frontend : Application() {
 		internal var boardGameScene: BoardGameScene? = null
 		internal var menuScene: MenuScene? = null
 		internal var scenePane: Pane = Pane()
-		private var gamePane: Pane? = null
+		internal var gamePane: Pane? = null
 		private var menuPane: Pane? = null
 		private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
 		private var primaryStage: Stage? = null
@@ -56,7 +55,6 @@ class Frontend : Application() {
 		private var scaleMode = ScaleMode.FULL
 		private var fullscreen = false
 		
-		internal var draggedElement: ElementView? = null
 		internal var sceneScale: Double = 1.0
 		internal var sceneX: Double = 0.0
 		internal var sceneY: Double = 0.0
@@ -71,7 +69,7 @@ class Frontend : Application() {
 		internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
 			menuScene = scene
 			
-			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) {
+			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
 				if (primaryStage != null) {
 					menuPane = buildMenu(scene)
 					boardGameScene?.lock()
@@ -89,7 +87,7 @@ class Frontend : Application() {
 		internal fun showGameScene(scene: BoardGameScene) {
 			boardGameScene = scene
 			
-			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) {
+			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
 				if (primaryStage != null) {
 					gamePane = buildGame(scene)
 					
@@ -149,6 +147,13 @@ class Frontend : Application() {
 			primaryStage?.scene = Scene(scenePane)
 			sizeChanged()
 		}
+		
+		internal fun mapScene(scene: tools.aqua.bgw.core.Scene<*>): Pane? =
+			when (scene) {
+				boardGameScene -> gamePane
+				menuScene -> menuPane
+				else -> null
+			}
 		
 		private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
 			menuPane?.apply {
@@ -264,7 +269,7 @@ class Frontend : Application() {
 			menuScene?.let { menuPane = buildMenu(it) }
 			boardGameScene?.let { gamePane = buildGame(it) }
 			
-			backgroundProperty.guiListener = {
+			backgroundProperty.guiListener = { _, _ ->
 				backgroundPane.style = "-fx-background-color: #${
 					Integer.toHexString(
 						background.color.rgb

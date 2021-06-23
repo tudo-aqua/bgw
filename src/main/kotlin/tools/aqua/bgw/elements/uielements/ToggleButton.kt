@@ -55,7 +55,7 @@ open class ToggleButton(
 	
 	init {
 		this.toggleGroup = toggleGroup
-		selectedProperty.internalListener = { fire() }
+		selectedProperty.internalListener = { _, _ -> fire() }
 	}
 	
 	private fun fire() {

@@ -30,8 +30,8 @@ open class GameElementPoolView<T : GameElementView>(
 	
 	private val initialStates: HashMap<ElementView, InitialState> = HashMap()
 	
-	override fun addElement(element: T) {
-		super.addElement(element)
+	override fun addElement(element: T, index: Int) {
+		super.addElement(element, index)
 		initialStates[element] = InitialState(
 			isDraggable = element.isDraggable,
 			isVisible = element.isVisible,
@@ -77,23 +77,23 @@ open class GameElementPoolView<T : GameElementView>(
 	}
 	
 	private fun ElementView.addInternalListeners() {
-		isDraggableProperty.internalListener = {
-			initialStates[this]!!.isDraggable = it
+		isDraggableProperty.internalListener = { _, nV ->
+			initialStates[this]!!.isDraggable = nV
 			isDraggableProperty.setSilent(true)
 		}
 		
-		isVisibleProperty.internalListener = {
-			initialStates[this]!!.isVisible = it
+		isVisibleProperty.internalListener = { _, nV ->
+			initialStates[this]!!.isVisible = nV
 			isVisibleProperty.setSilent(false)
 		}
 		
-		widthProperty.internalListener = {
-			initialStates[this]!!.width = it
+		widthProperty.internalListener = { _, nV ->
+			initialStates[this]!!.width = nV
 			widthProperty.setSilent(this@GameElementPoolView.width)
 		}
 		
-		heightProperty.internalListener = {
-			initialStates[this]!!.height = it
+		heightProperty.internalListener = { _, nV ->
+			initialStates[this]!!.height = nV
 			heightProperty.setSilent(this@GameElementPoolView.height)
 		}
 	}

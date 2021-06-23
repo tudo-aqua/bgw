@@ -70,10 +70,10 @@ open class CardStackView<T : CardView>(
 		}
 	
 	init {
-		horizontalAlignmentProperty.internalListener = {
+		horizontalAlignmentProperty.internalListener = { _, _ ->
 			observableElements.forEach { it.layoutX() }
 		}
-		verticalAlignmentProperty.internalListener = {
+		verticalAlignmentProperty.internalListener = { _, _ ->
 			observableElements.forEach { it.layoutY() }
 		}
 	}
@@ -114,8 +114,8 @@ open class CardStackView<T : CardView>(
 		cardView.addPosListeners()
 	}
 	
-	override fun addElement(element: T) {
-		super.addElement(element)
+	override fun addElement(element: T, index: Int) {
+		super.addElement(element, index)
 		element.addPosListeners()
 	}
 	
@@ -140,8 +140,8 @@ open class CardStackView<T : CardView>(
 	}
 	
 	private fun T.addPosListeners() {
-		posXProperty.setInternalListenerAndInvoke(0.0) { layoutX() }
-		posYProperty.setInternalListenerAndInvoke(0.0) { layoutY() }
+		posXProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutX() }
+		posYProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutY() }
 	}
 	
 	private fun T.removePosListeners() {

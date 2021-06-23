@@ -22,11 +22,11 @@ internal class VisualBuilder {
 		internal fun build(elementView: ElementView): Pane {
 			val root = Pane()
 			
-			elementView.currentVisualProperty.setGUIListenerAndInvoke(elementView.currentVisual) {
+			elementView.currentVisualProperty.setGUIListenerAndInvoke(elementView.currentVisual) { _, nV ->
 				root.children.clear()
 				
-				if (it in elementView.visuals.indices) {
-					root.children.add(buildVisual(elementView.visuals[it]).apply {
+				if (nV in elementView.visuals.indices) {
+					root.children.add(buildVisual(elementView.visuals[nV]).apply {
 						prefWidthProperty().bind(root.prefWidthProperty())
 						prefHeightProperty().bind(root.prefHeightProperty())
 					})
@@ -40,9 +40,9 @@ internal class VisualBuilder {
 			when (visual) {
 				is ColorVisual ->
 					Pane().apply {
-						visual.colorProperty.setGUIListenerAndInvoke(visual.color) {
-							style = "-fx-background-color: #${Integer.toHexString(it.rgb).substring(2)};"
-							opacity = (it.alpha / MAX_HEX) * visual.transparency
+						visual.colorProperty.setGUIListenerAndInvoke(visual.color) { _, nV ->
+							style = "-fx-background-color: #${Integer.toHexString(nV.rgb).substring(2)};"
+							opacity = (nV.alpha / MAX_HEX) * visual.transparency
 						}
 					}
 				
@@ -50,8 +50,8 @@ internal class VisualBuilder {
 					Pane().apply {
 						val imageView = ImageView()
 						
-						visual.imageProperty.setGUIListenerAndInvoke(visual.image) {
-							imageView.image = it.readImage()
+						visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
+							imageView.image = nV.readImage()
 							opacity = visual.transparency
 						}
 						
@@ -62,8 +62,8 @@ internal class VisualBuilder {
 				
 				is TextVisual ->
 					Label().apply {
-						visual.textProperty.setGUIListenerAndInvoke(visual.text) {
-							this.text = it
+						visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, nV ->
+							this.text = nV
 							opacity = visual.transparency
 						}
 						//TODO: Add Font size here and in TextVisual

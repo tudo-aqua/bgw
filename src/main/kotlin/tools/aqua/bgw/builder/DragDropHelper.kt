@@ -1,9 +1,8 @@
 package tools.aqua.bgw.builder
 
-import javafx.scene.layout.Pane
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.container.GameElementContainerView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
@@ -16,18 +15,32 @@ import tools.aqua.bgw.util.Coordinate
  */
 class DragDropHelper {
 	companion object {
-		internal fun DynamicView.tryFindDropTarget(
-			draggedElement: StackPane,
-			scene: Scene<out ElementView>,
+		internal fun transformCoordinatesToScene(
+			mouseEvent: MouseEvent,
+			draggedElementObject: DragElementObject
+		): Coordinate {
+			val rotated = Coordinate(
+				xCoord = mouseEvent.sceneX / Frontend.sceneScale - draggedElementObject.mouseStartCoord.xCoord,
+				yCoord = mouseEvent.sceneY / Frontend.sceneScale - draggedElementObject.mouseStartCoord.yCoord
+			).rotated(-draggedElementObject.relativeParentRotation)
+			
+			return Coordinate(
+				xCoord = draggedElementObject.posStartCoord.xCoord + rotated.xCoord,
+				yCoord = draggedElementObject.posStartCoord.yCoord + rotated.yCoord
+			)
+		}
+		
+		internal fun Scene<out ElementView>.tryFindDropTarget(
 			mouseX: Double,
 			mouseY: Double
 		): Boolean {
+			val draggedElement = draggedElement!!
 			val validTargets = mutableListOf<ElementView>()
-			val nodes = (Frontend.scenePane.children.last() as Pane).children
+			val acceptingDropTargets = Frontend.mapScene(this)!!.children
 				.filterIsInstance<StackPane>()  //top level Elements
 				.mapNotNull {
 					//to DragTargetObject
-					val element = scene.elementsMap.entries.firstOrNull { t -> t.value == it }?.key
+					val element = elementsMap.entries.firstOrNull { t -> t.value == it }?.key
 					val newMouseX = (mouseX - Frontend.sceneX) / Frontend.sceneScale
 					val newMouseY = (mouseY - Frontend.sceneY) / Frontend.sceneScale
 					
@@ -37,21 +50,21 @@ class DragDropHelper {
 					val rotatedTarget = it.rotated()
 					//try Drop allowed?
 					if (rotatedTarget.mouseX in it.rangeX() && rotatedTarget.mouseY in it.rangeY()) {
-						val tryDropData = tryDrop(scene, draggedElement, rotatedTarget)
-						validTargets += tryDropData.second
-						return@filter tryDropData.first
+						val tryDropData = findAcceptingDropTargets(rotatedTarget)
+						validTargets += tryDropData
+						return@filter tryDropData.isNotEmpty()
 					}
 					false
 				}
 			
-			val isNodesNotEmpty = nodes.isNotEmpty()
-			val dragEvent = DragEvent(this, validTargets)
-			val dropEvent = DropEvent(this)
+			val isNodesNotEmpty = acceptingDropTargets.isNotEmpty()
+			val dragEvent = DragEvent(draggedElement, validTargets)
+			val dropEvent = DropEvent(draggedElement)
 			
 			//Invoke drag drop handler in dragged element
-			preDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
-			onDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
-			postDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
+			draggedElement.preDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
+			draggedElement.onDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
+			draggedElement.postDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
 			
 			//Invoke drag drop handler on all accepting drag targets
 			validTargets.forEach { it.onDragElementDropped?.invoke(dropEvent) }
@@ -60,14 +73,11 @@ class DragDropHelper {
 			return isNodesNotEmpty
 		}
 		
-		private fun ElementView.tryDrop(
-			scene: Scene<out ElementView>,
-			draggedElement: StackPane,
+		private fun Scene<out ElementView>.findAcceptingDropTargets(
 			dragTargetObject: DragTargetObject
-		): Pair<Boolean, List<ElementView>> {
+		): List<ElementView> {
 			
 			val availableSubTargets = searchAvailableDropTargetsRecursively(
-				scene,
 				DragTargetObject(
 					dragTargetObject.dragTarget,
 					dragTargetObject.dragTargetView,
@@ -81,26 +91,13 @@ class DragDropHelper {
 				mutableListOf()
 			)
 			
-			val snapBackX = posX
-			val snapBackY = posY
-			val validTargets = availableSubTargets.map { it.dragTarget }.filter {
+			return availableSubTargets.map { it.dragTarget }.filter {
 				this != it
-						&& it.dropAcceptor?.invoke(DropEvent(this)) ?: false
-			}
-			
-			return if (validTargets.isNotEmpty()) {
-				posX = draggedElement.layoutX
-				posY = draggedElement.layoutY
-				Pair(true, validTargets)
-			} else {
-				posX = snapBackX
-				posY = snapBackY
-				Pair(false, listOf())
+						&& it.dropAcceptor?.invoke(DropEvent(draggedElement!!)) ?: false
 			}
 		}
 		
-		private fun ElementView.searchAvailableDropTargetsRecursively(
-			scene: Scene<out ElementView>,
+		private fun Scene<out ElementView>.searchAvailableDropTargetsRecursively(
 			parent: DragTargetObject,
 			availableTargets: MutableList<DragTargetObject>
 		): MutableList<DragTargetObject> {
@@ -116,10 +113,9 @@ class DragDropHelper {
 				
 			}.forEach {
 				searchAvailableDropTargetsRecursively(
-					scene,
 					DragTargetObject(
 						it.first,
-						scene.elementsMap[it.first]!!,
+						elementsMap[it.first]!!,
 						parent.mouseX,
 						parent.mouseY,
 						parent.offsetX + it.second.xCoord,

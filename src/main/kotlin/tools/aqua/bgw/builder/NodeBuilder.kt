@@ -3,7 +3,8 @@ package tools.aqua.bgw.builder
 import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
+import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
+import tools.aqua.bgw.builder.NodeBuilder.Companion.registerEvents
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -23,6 +24,7 @@ import tools.aqua.bgw.event.EventConverter.Companion.toKeyEvent
 import tools.aqua.bgw.event.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.util.Coordinate
+import kotlin.math.min
 
 /**
  * NodeBuilder.
@@ -141,71 +143,83 @@ internal class NodeBuilder {
 					UINodeBuilder.buildProgressBar(uiElementView)
 			}
 		
-		private fun ElementView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<*>) {
-			var mouseStartCoord = Coordinate()
-			var posStartCoord = Coordinate()
-			var relativeParentRotation = 0.0
-			
+		private fun ElementView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ElementView>) {
 			stackPane.onDragDetected = EventHandler {
 				if (this is DynamicView && isDraggable) {
-					Frontend.draggedElement = this
-					
-					mouseStartCoord = Coordinate(
+					val mouseStartCoord = Coordinate(
 						xCoord = it.sceneX / Frontend.sceneScale,
 						yCoord = it.sceneY / Frontend.sceneScale
 					)
-					posStartCoord = Coordinate(
+					/*val posStartCoord = Coordinate(
 						xCoord = stackPane.layoutX,
 						yCoord = stackPane.layoutY
-					)
+					)*/
 					
 					val pathToChild = scene.findPathToChild(this)
 					
-					//get dragged Object toFront globally
-					pathToChild.forEach { t -> scene.elementsMap[t]?.toFront() } //TODO dont bring to front
+					val posStartCoord = Coordinate(
+						xCoord = pathToChild.sumOf { t -> t.posX },
+						yCoord = pathToChild.sumOf { t -> t.posY }
+					)
 					
+					var rollback: (() -> Unit) = {}
+					when (val parent = pathToChild[1]) {
+						is GameElementContainerView<*> -> {
+							val index = parent.observableElements.indexOf(this)
+							rollback = {
+								@Suppress("UNCHECKED_CAST")
+								(parent as GameElementContainerView<GameElementView>)
+									.addElement(this as GameElementView, min(parent.observableElements.size(), index))
+							}
+						}
+						is GridLayoutView<*> -> {
+							parent.grid.find { triple ->
+								triple.third == this
+							}?.apply {
+								rollback = {
+									@Suppress("UNCHECKED_CAST")
+									(parent as GridLayoutView<ElementView>)[first, second] =
+										this@registerEvents as ElementView
+								}
+							}
+						}
+						scene.rootNode -> {
+							rollback = { Frontend.updateScene() }
+						}
+						else -> {}
+					}
 					
-					if (pathToChild.size > 1)
-						relativeParentRotation = pathToChild.drop(1).sumOf { t -> t.rotation }
+					val relativeParentRotation = if (pathToChild.size > 1)
+						pathToChild.drop(1).sumOf { t -> t.rotation }
+					else
+						0.0
 					
-					stackPane.toFront()
+					val dragElementObject = DragElementObject(
+						this,
+						scene.elementsMap[this]!!,
+						mouseStartCoord,
+						posStartCoord,
+						relativeParentRotation,
+						rollback
+					)
+					val newCoords = transformCoordinatesToScene(it, dragElementObject)
+					
+					removeFromParent()
+					posX = newCoords.xCoord
+					posY = newCoords.yCoord
+					scene.draggedElementObjectProperty.value = dragElementObject
+					
 					isDragged = true
 					preDragGestureStarted?.invoke(DragEvent(this))
 					onDragGestureStarted?.invoke(DragEvent(this))
 					postDragGestureStarted?.invoke(DragEvent(this))
 				}
 			}
-			stackPane.onMouseDragged = EventHandler {
-				if (this is DynamicView && isDragged) {
-					val rotated = Coordinate(
-						xCoord = it.sceneX / Frontend.sceneScale - mouseStartCoord.xCoord,
-						yCoord = it.sceneY / Frontend.sceneScale - mouseStartCoord.yCoord
-					).rotated(-relativeParentRotation)
-					
-					stackPane.layoutX = posStartCoord.xCoord + rotated.xCoord
-					stackPane.layoutY = posStartCoord.yCoord + rotated.yCoord
-					
-					onDragGestureMoved?.invoke(DragEvent(this))
-				}
-			}
-			
+
 			node.setOnMouseClicked { onMouseClicked?.invoke(it.toMouseEvent()) }
 			node.setOnMousePressed { onMousePressed?.invoke(it.toMouseEvent()) }
 			node.setOnMouseEntered { onMouseEntered?.invoke(Event()) }
 			node.setOnMouseExited { onMouseExited?.invoke(Event()) }
-			node.setOnMouseReleased {
-				onMouseReleased?.invoke(it.toMouseEvent())
-				if (this is DynamicView && isDragged) {
-					Frontend.draggedElement = null
-					isDragged = false
-					
-					if (!tryFindDropTarget(stackPane, scene, it.sceneX, it.sceneY)) {
-						//TODO: Remove refresh all and only update drag source
-						Frontend.boardGameScene?.rootElements?.notifyChange()
-						Frontend.menuScene?.rootElements?.notifyChange()
-					}
-				}
-			}
 			
 			node.setOnKeyPressed { onKeyPressed?.invoke(it.toKeyEvent()) }
 			node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
@@ -214,42 +228,42 @@ internal class NodeBuilder {
 		
 		@Suppress("DuplicatedCode")
 		private fun ElementView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
-			posXProperty.setGUIListenerAndInvoke(posX) {
-				stackPane.layoutX = it - if (layoutFromCenter) width / 2 else 0.0
+			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
+				stackPane.layoutX = nV - if (layoutFromCenter) width / 2 else 0.0
 			}
-			posYProperty.setGUIListenerAndInvoke(posY) {
-				stackPane.layoutY = it - if (layoutFromCenter) height / 2 else 0.0
-			}
-			
-			rotationProperty.setGUIListenerAndInvoke(rotation) { stackPane.rotate = it }
-			opacityProperty.setGUIListenerAndInvoke(opacity) { stackPane.opacity = it }
-			
-			heightProperty.setGUIListenerAndInvoke(height) {
-				node.prefHeight = it
-				background.prefHeight = it
-			}
-			widthProperty.setGUIListenerAndInvoke(width) {
-				node.prefWidth = it
-				background.prefWidth = it
+			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
+				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
 			}
 			
-			isVisibleProperty.setGUIListenerAndInvoke(isVisible) {
-				node.isVisible = it
-				background.isVisible = it
+			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }
+			opacityProperty.setGUIListenerAndInvoke(opacity) { _, nV -> stackPane.opacity = nV }
+			
+			heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
+				node.prefHeight = nV
+				background.prefHeight = nV
 			}
-			isDisabledProperty.setGUIListenerAndInvoke(isDisabled) {
-				node.isDisable = it
-				background.isDisable = it
+			widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
+				node.prefWidth = nV
+				background.prefWidth = nV
+			}
+			
+			isVisibleProperty.setGUIListenerAndInvoke(isVisible) { _, nV ->
+				node.isVisible = nV
+				background.isVisible = nV
+			}
+			isDisabledProperty.setGUIListenerAndInvoke(isDisabled) { _, nV ->
+				node.isDisable = nV
+				background.isDisable = nV
 			}
 			
 			if (this is UIElementView) {
-				backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) {
-					if (it.isNotEmpty())
-						background.style = it
+				backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
+					if (nV.isNotEmpty())
+						background.style = nV
 				}
-				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) {
-					if (it.isNotEmpty())
-						node.style = it
+				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, nV ->
+					if (nV.isNotEmpty())
+						node.style = nV
 				}
 			}
 		}

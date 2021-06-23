@@ -115,14 +115,14 @@ open class LinearLayoutContainer<T : GameElementView>(
 		observableElements.setInternalListenerAndInvoke {
 			layout()
 		}
-		spacingProperty.internalListener = { layout() }
-		orientationProperty.internalListener = { layout() }
-		verticalAlignmentProperty.internalListener = { layout() }
-		horizontalAlignmentProperty.internalListener = { layout() }
+		spacingProperty.internalListener = { _, _ -> layout() }
+		orientationProperty.internalListener = { _, _ -> layout() }
+		verticalAlignmentProperty.internalListener = { _, _ -> layout() }
+		horizontalAlignmentProperty.internalListener = { _, _ -> layout() }
 	}
 	
-	override fun addElement(element: T) {
-		super.addElement(element)
+	override fun addElement(element: T, index: Int) {
+		super.addElement(element, index)
 		element.apply { addPosListeners() }
 	}
 	
@@ -147,8 +147,8 @@ open class LinearLayoutContainer<T : GameElementView>(
 	
 	private fun T.addPosListeners() {
 		//TODO: maybe increase performance
-		posXProperty.internalListener = { observableElements.internalListener?.invoke() }
-		posYProperty.internalListener = { observableElements.internalListener?.invoke() }
+		posXProperty.internalListener = { _, _ -> observableElements.internalListener?.invoke() }
+		posYProperty.internalListener = { _, _ -> observableElements.internalListener?.invoke() }
 	}
 	
 	private fun T.removePosListeners() {

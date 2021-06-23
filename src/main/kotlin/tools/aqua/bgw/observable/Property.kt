@@ -16,9 +16,10 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	open var value: T
 		get() = realValue
 		set(value) {
+			val savedValue = realValue
 			if (realValue != value) {
 				realValue = value
-				notifyChange(realValue)
+				notifyChange(savedValue, value)
 			}
 		}
 	
@@ -27,14 +28,15 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	 * Only notifies GUI listener.
 	 */
 	internal open fun setSilent(value: T) {
+		val savedValue = realValue
 		this.realValue = value
-		notifyGUIListener(value)
+		notifyGUIListener(savedValue, value)
 	}
 	
 	/**
 	 * Notifies all listeners with current value.
 	 */
-	fun notifyUnchanged() = notifyChange(realValue)
+	fun notifyUnchanged() = notifyChange(realValue, realValue)
 }
 
 /**
@@ -80,9 +82,10 @@ class LimitedDoubleProperty(
 		set(value) {
 			checkBounds(value)
 			
+			val savedValue = realValue
 			if (realValue != value) {
 				realValue = value
-				notifyChange(realValue)
+				notifyChange(savedValue, value)
 			}
 		}
 	
@@ -92,8 +95,10 @@ class LimitedDoubleProperty(
 	 */
 	override fun setSilent(value: Double) {
 		checkBounds(value)
+		
+		val savedValue = realValue
 		this.realValue = value
-		notifyGUIListener(value)
+		notifyGUIListener(savedValue, value)
 	}
 	
 	private fun checkBounds(value: Double) {

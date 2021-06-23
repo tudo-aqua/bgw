@@ -33,6 +33,10 @@ class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableLi
  * An observable list implementation.
  */
 abstract class ObservableList<T> : Observable(), Iterable<T> {
+	
+	val indices: IntRange
+		get() = 0 until size()
+	
 	/**
 	 * List field.
 	 */

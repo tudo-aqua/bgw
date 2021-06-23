@@ -81,8 +81,14 @@ open class GridLayoutView<T : ElementView>(
 	 * @param element ElementView to be added to the specified cell.
 	 */
 	operator fun set(columnIndex: Int, rowIndex: Int, element: T?) {
-		grid[columnIndex, rowIndex]?.internalListener = null
-		grid[columnIndex, rowIndex] = element.also { it?.internalListener = {} } //FIXME why is this here?
+		grid[columnIndex, rowIndex]?.apply {
+			this.internalListener = null
+			this.parent = null }
+		grid[columnIndex, rowIndex] = element?.apply {
+			this.internalListener = {}
+			this.parent = this@GridLayoutView
+		} //FIXME why is this here?
+
 		notifyChange()
 	}
 	
@@ -115,7 +121,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param columnIndex Column index in grid.
 	 * @param value New Centering mode to be set for the whole column.
 	 */
-	fun setCellCenterMode(columnIndex: Int, value: Alignment) {
+	fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
 		grid.setColumnCenterMode(columnIndex = columnIndex, value = value)
 		notifyChange()
 	}
@@ -144,6 +150,18 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
+	 * Returns the set column width for the given column.
+	 *
+	 * @param columnIndex Target column.
+	 *
+	 * @see setColumnWidth
+	 * @see setColumnWidths
+	 * @see setAutoColumnWidth
+	 * @see setAutoColumnWidths
+	 */
+	fun getColumnWidth(columnIndex: Int) = grid.getColumnWidth(columnIndex)
+	
+	/**
 	 * Manually set column width of one column.
 	 * Overrides automatic resizing based on content from this column.
 	 *
@@ -156,8 +174,8 @@ open class GridLayoutView<T : ElementView>(
 	 * @see setAutoColumnWidth
 	 * @see setAutoColumnWidths
 	 */
-	fun setColumnWidth(columnIndex: Int, columnWidth: Double) {
-		grid.setColumnWidth(columnIndex = columnIndex, columnWidth = columnWidth)
+	fun setColumnWidth(columnIndex: Int, columnWidth: Number) {
+		grid.setColumnWidth(columnIndex = columnIndex, columnWidth = columnWidth.toDouble())
 		notifyChange()
 	}
 	
@@ -206,6 +224,18 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
+	 * Returns the set row height for the given row.
+	 *
+	 * @param rowIndex Target row.
+	 *
+	 * @see setRowHeight
+	 * @see setRowHeights
+	 * @see setAutoRowHeight
+	 * @see setAutoRowHeights
+	 */
+	fun getRowHeight(rowIndex: Int) = grid.getRowHeight(rowIndex)
+	
+	/**
 	 * Manually set row height of one row.
 	 * Overrides automatic resizing based on content from this row.
 	 *
@@ -218,8 +248,8 @@ open class GridLayoutView<T : ElementView>(
 	 * @see setAutoColumnWidth
 	 * @see setAutoColumnWidths
 	 */
-	fun setRowHeight(rowIndex: Int, rowHeight: Double) {
-		grid.setRowHeight(rowIndex = rowIndex, rowHeight = rowHeight)
+	fun setRowHeight(rowIndex: Int, rowHeight: Number) {
+		grid.setRowHeight(rowIndex = rowIndex, rowHeight = rowHeight.toDouble())
 		notifyChange()
 	}
 	
@@ -263,7 +293,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @see setAutoRowHeight
 	 */
 	fun setAutoRowHeights() {
-		grid.setColumnWidths(columnWidths = DoubleArray(columns) { COLUMN_WIDTH_AUTO })
+		grid.setRowHeights(rowHeights = DoubleArray(rows) { ROW_HEIGHT_AUTO })
 		notifyChange()
 	}
 	
