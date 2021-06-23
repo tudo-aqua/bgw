@@ -3,6 +3,7 @@ package tools.aqua.bgw.elements.container
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.event.DragEvent
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A GameElementPoolView may bu used to visualize a pool containing GameElementViews.
@@ -24,11 +25,13 @@ open class GameElementPoolView<T : GameElementView>(
 	height: Number = 200,
 	width: Number = 130,
 	posX: Number = 0,
-	posY: Number = 0
+	posY: Number = 0,
+	visual: Visual,
 ) :
-	GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY) {
+	GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visuals = mutableListOf(visual)) {
 	
 	private val initialStates: HashMap<ElementView, InitialState> = HashMap()
+
 	
 	override fun addElement(element: T, index: Int) {
 		super.addElement(element, index)
@@ -40,6 +43,7 @@ open class GameElementPoolView<T : GameElementView>(
 		)
 		element.initializePoolElement()
 		element.addInternalListeners()
+		element.addPosListeners()
 	}
 	
 	override fun addAllElements(collection: Collection<T>) {
@@ -54,10 +58,11 @@ open class GameElementPoolView<T : GameElementView>(
 		super.removeElement(element)
 		element.removeInternalListeners()
 		element.restoreInitialBehaviour()
+		element.removePosListeners()
 		initialStates.remove(element)
 	}
 	
-	private fun ElementView.initializePoolElement() {
+	private fun GameElementView.initializePoolElement() {
 		isVisibleProperty.setSilent(false)
 		widthProperty.setSilent(this@GameElementPoolView.width)
 		heightProperty.setSilent(this@GameElementPoolView.height)
@@ -66,7 +71,7 @@ open class GameElementPoolView<T : GameElementView>(
 		preDragGestureEnded = preDragGestureEnded()
 	}
 	
-	private fun ElementView.restoreInitialBehaviour() {
+	private fun GameElementView.restoreInitialBehaviour() {
 		val initialState = initialStates[this]!!
 		widthProperty.setSilent(initialState.width)
 		heightProperty.setSilent(initialState.height)
@@ -76,7 +81,7 @@ open class GameElementPoolView<T : GameElementView>(
 		preDragGestureEnded = null
 	}
 	
-	private fun ElementView.addInternalListeners() {
+	private fun GameElementView.addInternalListeners() {
 		isDraggableProperty.internalListener = { _, nV ->
 			initialStates[this]!!.isDraggable = nV
 			isDraggableProperty.setSilent(true)
@@ -98,21 +103,35 @@ open class GameElementPoolView<T : GameElementView>(
 		}
 	}
 	
-	private fun ElementView.removeInternalListeners() {
+	private fun GameElementView.removeInternalListeners() {
 		isDraggableProperty.internalListener = null
 		isVisibleProperty.internalListener = null
 		widthProperty.internalListener = null
 		heightProperty.internalListener = null
 	}
-	
-	private fun ElementView.preDragGestureStarted(): ((DragEvent) -> Unit) = {
+
+	private fun GameElementView.addPosListeners() {
+		this.posXProperty.addListenerAndInvoke(0.0) { _, _ ->
+			posXProperty.setSilent(0.0)
+		}
+		this.posYProperty.addListenerAndInvoke(0.0) { _, _ ->
+			posYProperty.setSilent(0.0)
+		}
+	}
+
+	private fun GameElementView.removePosListeners() {
+		this.posXProperty.internalListener = null
+		this.posYProperty.internalListener = null
+	}
+
+	private fun GameElementView.preDragGestureStarted(): ((DragEvent) -> Unit) = {
 		val initialState = initialStates[this]!!
 		widthProperty.setSilent(initialState.width)
 		heightProperty.setSilent(initialState.height)
 		isVisibleProperty.setSilent(initialState.isVisible)
 	}
 	
-	private fun ElementView.preDragGestureEnded(): ((DragEvent, Boolean) -> Unit) = { _, success ->
+	private fun GameElementView.preDragGestureEnded(): ((DragEvent, Boolean) -> Unit) = { _, success ->
 		if (!success) {
 			isVisibleProperty.setSilent(false)
 			widthProperty.setSilent(this@GameElementPoolView.width)
