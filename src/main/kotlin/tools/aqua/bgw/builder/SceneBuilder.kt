@@ -73,7 +73,6 @@ internal class SceneBuilder {
 			pane.setOnMouseDragged {
 				val draggedElementObject = scene.draggedElementObjectProperty.value
 				if (draggedElementObject != null) {
-					println("B")
 					val draggedElement = draggedElementObject.draggedElement
 					val newCoords = transformCoordinatesToScene(it, draggedElementObject)
 					
@@ -84,18 +83,16 @@ internal class SceneBuilder {
 				}
 			}
 			pane.setOnMouseReleased {
-				val element = scene.draggedElement
+				val draggedElementObject = scene.draggedElementObjectProperty.value
+				val draggedElement = draggedElementObject?.draggedElement
 				
-				if (element != null) {
-					element.onMouseReleased?.invoke(it.toMouseEvent())
+				if (draggedElement != null) {
+					draggedElement.onMouseReleased?.invoke(it.toMouseEvent())
 					
 					if (!scene.tryFindDropTarget(it.sceneX, it.sceneY)) {
-						//rollback.invoke()
-						//TODO: Remove refresh all and only update drag source
-						//Frontend.boardGameScene?.rootElements?.notifyChange()
-						println("SUCCESS")
+						draggedElementObject.rollback()
 					}
-					element.isDragged = false
+					draggedElement.isDragged = false
 					scene.draggedElementObjectProperty.value = null
 				}
 			}
