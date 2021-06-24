@@ -83,7 +83,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * More formally, returns the lowest index `i` such that
 	 * `Objects.equals(o, get(i))`, or -1 if there is no such index.
 	 *
-	 * @return First index of the element, or -1 if the list does not contain the element.
+	 * @return first index of the element, or -1 if the list does not contain the element.
 	 */
 	fun indexOf(o: Any?): Int = list.indexOf(o)
 	
@@ -94,7 +94,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * `Objects.equals(o, get(i))`,
 	 * or -1 if there is no such index.
 	 *
-	 * @return Last index of the element, or -1 if the list does not contain the element.
+	 * @return last index of the element, or -1 if the list does not contain the element.
 	 */
 	fun lastIndexOf(o: Any?): Int = list.lastIndexOf(o)
 	
@@ -103,7 +103,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 *
 	 * @param index index of the element to return.
 	 *
-	 * @return The element at the specified position in this list.
+	 * @return the element at the specified position in this list.
 	 *
 	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
 	 */
@@ -116,9 +116,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @param index index of the element to replace.
 	 * @param element element to be stored at the specified position.
 	 *
-	 * @return The element previously at the specified position.
+	 * @return the element previously at the specified position.
 	 *
-	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
+	 * @throws IndexOutOfBoundsException if the index exceeds the list's bounds.
 	 */
 	operator fun set(index: Int, element: T): T {
 		val oldValue: T = list[index]
@@ -130,7 +130,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Appends the specified element to the end of this list.
 	 *
-	 * @param element Element to be appended to this list.
+	 * @param element element to be appended to this list.
 	 */
 	fun add(element: T): Boolean {
 		val result = list.add(element)
@@ -146,7 +146,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @param index index at which the specified element is to be inserted.
 	 * @param element element to be inserted.
 	 *
-	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
+	 * @throws IndexOutOfBoundsException if the index exceeds the list's bounds.
 	 */
 	fun add(index: Int, element: T) {
 		list.add(index, element)
@@ -177,9 +177,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Removes an element at the specified [index] from the list.
 	 *
-	 * @return The element that has been removed.
+	 * @return the element that has been removed.
 	 *
-	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
+	 * @throws IndexOutOfBoundsException if the index exceeds the list's bounds.
 	 */
 	fun removeAt(index: Int): T {
 		val result = list.removeAt(index)
@@ -203,7 +203,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Removes the first element from this list and returns that removed element.
 	 *
-	 * @throws EmptyListException If the list was empty.
+	 * @throws EmptyListException if the list was empty.
 	 */
 	fun removeFirst(): T = removeFirstOrNull() ?: throw EmptyListException()
 	
@@ -223,7 +223,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Removes the last element from this list and returns that removed element.
 	 *
-	 * @throws EmptyListException If the list was empty.
+	 * @throws EmptyListException if the list was empty.
 	 */
 	fun removeLast(): T = removeLastOrNull() ?: throw EmptyListException()
 	
@@ -245,11 +245,11 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * while the operation is in progress. (This implies that the behavior of this call is undefined
 	 * if the specified collection is this list, and this list is nonempty.)
 	 *
-	 * @param elements Collection containing elements to be added to this list.
+	 * @param elements collection containing elements to be added to this list.
 	 *
 	 * @return `true` if this list changed as a result of the call.
 	 *
-	 * @throws NullPointerException If the specified collection is null.
+	 * @throws NullPointerException if the specified collection is null.
 	 */
 	fun addAll(elements: Collection<T>): Boolean {
 		val result = list.addAll(elements)
@@ -263,13 +263,13 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * and any subsequent elements to the right (increases their indices). The new elements will appear
 	 * in the list in the order that they are returned by the specified collection's iterator.
 	 *
-	 * @param index Index at which to insert the first element from the specified collection.
-	 * @param elements Collection containing elements to be added to this list.
+	 * @param index index at which to insert the first element from the specified collection.
+	 * @param elements collection containing elements to be added to this list.
 	 *
-	 * @return `true` if this list changed as a result of the call
+	 * @return `true` if this list changed as a result of the call.
 	 *
-	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
-	 * @throws NullPointerException If the specified collection is null
+	 * @throws IndexOutOfBoundsException if the index exceeds the list's bounds.
+	 * @throws NullPointerException if the specified collection is null.
 	 */
 	fun addAll(index: Int, elements: Collection<T>): Boolean {
 		val result = list.addAll(index, elements)
@@ -280,12 +280,12 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Removes from this list all of its elements that are contained in the specified collection.
 	 *
-	 * @param elements Collection containing elements to be removed from this list.
+	 * @param elements collection containing elements to be removed from this list.
 	 *
 	 * @return `true` if this list changed as a result of the call.
 	 *
-	 * @throws ClassCastException If the class of an element of this list is incompatible with the specified collection.
-	 * @throws NullPointerException If this list contains a null element and the specified collection
+	 * @throws ClassCastException if the class of an element of this list is incompatible with the specified collection.
+	 * @throws NullPointerException if this list contains a null element and the specified collection
 	 * does not permit null elements or if the specified collection is null.
 	 *
 	 * @see Collection.contains
@@ -303,13 +303,13 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * Retains only the elements in this list that are contained in the specified collection.
 	 * In other words, removes from this list all of its elements that are not contained in the specified collection.
 	 *
-	 * @param elements Collection containing elements to be retained in this list.
+	 * @param elements collection containing elements to be retained in this list.
 	 *
-	 * @return `true` if this list changed as a result of the call
+	 * @return `true` if this list changed as a result of the call.
 	 *
-	 * @throws ClassCastException If the class of an element of this list is incompatible with the specified collection
-	 * @throws NullPointerException If this list contains a null element and the specified collection
-	 * does not permit null elements or if the specified collection is null
+	 * @throws ClassCastException if the class of an element of this list is incompatible with the specified collection.
+	 * @throws NullPointerException if this list contains a null element and the specified collection
+	 * does not permit null elements or if the specified collection is null.
 	 *
 	 * @see Collection.contains
 	 */
@@ -339,10 +339,10 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * The semantics of the list returned by this method become undefined if the backing list (i.e., this list)
 	 * is *structurally modified* in any way other than via the returned list.
 	 * (Structural modifications are those that change the size of this list, or otherwise perturb it in such
-	 * a fashion that iterations in progress may yield incorrect results.)
+	 * a fashion that iterations in progress may yield incorrect results.).
 	 *
-	 * @throws IndexOutOfBoundsException If any index exceeds the list's bounds.
-	 * @throws IllegalArgumentException If the endpoint indices are out of order (fromIndex > toIndex)
+	 * @throws IndexOutOfBoundsException if any index exceeds the list's bounds.
+	 * @throws IllegalArgumentException if the endpoint indices are out of order (fromIndex > toIndex).
 	 */
 	fun subList(fromIndex: Int, toIndex: Int): List<T> = list.subList(fromIndex, toIndex)
 	
@@ -362,10 +362,10 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * Removes all of the elements of this collection that satisfy the given predicate.
 	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
 	 *
-	 * @param filter A predicate which returns `true` for elements to be removed.
+	 * @param filter a predicate which returns `true` for elements to be removed.
 	 *
 	 * @return `true` if elements were removed.
-	 * @throws NullPointerException If the specified filter is null
+	 * @throws NullPointerException if the specified filter is null
 	 */
 	fun removeIf(filter: Predicate<in T>): Boolean {
 		val result = list.removeIf(filter)
@@ -379,7 +379,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Replaces each element of this list with the result of applying the operator to that element.
 	 *
-	 * @param operator The operator to apply to each element.
+	 * @param operator the operator to apply to each element.
 	 */
 	fun replaceAll(operator: UnaryOperator<T>) {
 		list.replaceAll(operator)
@@ -389,7 +389,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Sorts this list by given comparator.
 	 *
-	 * @param comparator Comparator to be applied.
+	 * @param comparator comparator to be applied.
 	 * If the elements contained in this list implement the comparable interface, pass null.
 	 */
 	fun sort(comparator: Comparator<in T>?) {
@@ -401,7 +401,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Returns an iterator over the elements in this list.
 	 *
-	 * @return Iterator over the elements in this list.
+	 * @return iterator over the elements in this list.
 	 */
 	override fun iterator(): Iterator<T> = list.iterator()
 }

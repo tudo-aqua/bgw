@@ -10,7 +10,7 @@ import javax.imageio.ImageIO
  *
  * @constructor Loads an ImageVisual from a BufferedImage.
  *
- * @param image Image to show.
+ * @param image image to show.
  */
 class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 	
@@ -31,7 +31,7 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 	/**
 	 * Loads an ImageVisual from a file.
 	 *
-	 * @param path Path to image file to show
+	 * @param path path to image file to show
 	 */
 	constructor(path: String) : this(load(path))
 	
@@ -39,7 +39,7 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 		/**
 		 * Creates an ImageVisual from a file.
 		 *
-		 * @param file Image file to load.
+		 * @param file image file to load.
 		 */
 		fun loadImage(file: String) = ImageVisual(load(file))
 		
@@ -47,11 +47,11 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 		 * Creates an ImageVisual from a file.
 		 * Uses a sub-image to display.
 		 *
-		 * @param file Image file to load
-		 * @param offsetX Left bound of sub-image
-		 * @param offsetY Top bound of sub-image
-		 * @param width Width of sub-image
-		 * @param height Height of sub-image
+		 * @param file image file to load
+		 * @param offsetX left bound of sub-image
+		 * @param offsetY top bound of sub-image
+		 * @param width width of sub-image
+		 * @param height height of sub-image
 		 */
 		fun loadSubImage(file: String, offsetX: Int = 0, offsetY: Int = 0, width: Int = 0, height: Int) =
 			ImageVisual(load(file).getSubimage(offsetX, offsetY, width, height))

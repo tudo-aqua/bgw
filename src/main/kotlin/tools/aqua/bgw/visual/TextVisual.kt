@@ -5,7 +5,7 @@ import tools.aqua.bgw.observable.StringProperty
 /**
  * A visual displaying text.
  *
- * @param text text to display
+ * @param text text to display.
  */
 class TextVisual(text: String) : SingleLayerVisual() { //TODO: Add Font size here and in VisualBuilder
 	/**

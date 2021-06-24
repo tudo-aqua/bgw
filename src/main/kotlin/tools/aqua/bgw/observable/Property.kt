@@ -5,7 +5,7 @@ package tools.aqua.bgw.observable
 /**
  * Property superclass providing observable fields.
  *
- * @param initialValue Initial value of this property.
+ * @param initialValue initial value of this property.
  */
 sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	
@@ -46,32 +46,32 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 /**
  * A BooleanProperty.
  *
- * @param initialValue Initial Value. Default: false
+ * @param initialValue initial Value. Default: false.
  */
 class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
 
 /**
  * An IntegerProperty.
  *
- * @param initialValue Initial Value. Default: 0
+ * @param initialValue initial Value. Default: 0.
  */
 class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
 
 /**
  * A DoubleProperty.
  *
- * @param initialValue Initial Value. Default: 0.0
+ * @param initialValue initial Value. Default: 0.0.
  */
 class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
 
 /**
  * A limited DoubleProperty to a value range.
  *
- * @throws IllegalArgumentException If a value out of range is set.
+ * @throws IllegalArgumentException if a value out of range is set.
  *
- * @param lowerBoundInclusive lower bound inclusive. Default: -inf
- * @param upperBoundInclusive lower bound inclusive. Default: +inf
- * @param initialValue Initial Value. Default: 0.0
+ * @param lowerBoundInclusive lower bound inclusive. Default: -inf.
+ * @param upperBoundInclusive lower bound inclusive. Default: +inf.
+ * @param initialValue initial Value. Default: 0.0.
  */
 class LimitedDoubleProperty(
 	private val lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
@@ -123,13 +123,13 @@ class LimitedDoubleProperty(
 /**
  * A StringProperty.
  *
- * @param initialValue Initial Value. Default: Empty string
+ * @param initialValue initial Value. Default: Empty string.
  */
 class StringProperty(initialValue: String = "") : Property<String>(initialValue)
 
 /**
  * An ObjectProperty with generic type.
  *
- * @param initialValue Initial Value.
+ * @param initialValue initial value.
  */
 class ObjectProperty<T>(initialValue: T) : Property<T>(initialValue)

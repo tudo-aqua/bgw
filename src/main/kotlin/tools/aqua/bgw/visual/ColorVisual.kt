@@ -7,7 +7,7 @@ import java.awt.Color
  * A solid color visual.
  * Displays a rectangle filled with the given color.
  *
- * @param color Color to use as filling.
+ * @param color color to use as filling.
  */
 class ColorVisual(color: Color) : SingleLayerVisual() {
 	
@@ -33,10 +33,10 @@ class ColorVisual(color: Color) : SingleLayerVisual() {
 	 * A solid color visual.
 	 * Displays a rectangle filled with the given color.
 	 *
-	 * @param r Red channel.
-	 * @param g Green channel.
-	 * @param b Blue channel.
-	 * @param a Alpha channel. Default: 255.
+	 * @param r red channel.
+	 * @param g green channel.
+	 * @param b blue channel.
+	 * @param a alpha channel. Default: 255.
 	 */
 	constructor(r: Int, g: Int, b: Int, a: Int = 255) : this(Color(r, g, b, a))
 }
