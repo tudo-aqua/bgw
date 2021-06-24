@@ -4,7 +4,6 @@ package tools.aqua.bgw.elements.layoutviews
 
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.observable.IObservable
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.ElementViewGrid
 
@@ -22,7 +21,7 @@ open class GridLayoutView<T : ElementView>(
 	posX: Number = 0,
 	posY: Number = 0,
 	layoutFromCenter: Boolean = true
-) : LayoutElement<T>(posX = posX, posY = posY), Iterable<Triple<Int, Int, T?>>, IObservable {
+) : LayoutElement<T>(posX = posX, posY = posY), Iterable<Triple<Int, Int, T?>> {
 	
 	internal val grid: ElementViewGrid<T> = ElementViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
@@ -53,13 +52,6 @@ open class GridLayoutView<T : ElementView>(
 	
 	init {
 		this.layoutFromCenter = layoutFromCenter
-	}
-	
-	/**
-	 * Notifies UI to update view component.
-	 */
-	override fun update() {
-		notifyChange()
 	}
 	
 	/**
@@ -309,6 +301,8 @@ open class GridLayoutView<T : ElementView>(
 	 * @param top row count to be added on the top.
 	 * @param bottom row count to be added on the bottom.
 	 *
+	 * @return `true` if the grid has changed by this operation, `false` otherwise.
+	 *
 	 * @throws IllegalArgumentException If any value passed was negative.
 	 *
 	 * @see trim
@@ -320,8 +314,13 @@ open class GridLayoutView<T : ElementView>(
 	 * @see addRows
 	 * @see removeRow
 	 */
-	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0) {
-		grid.grow(left = left, right = right, top = top, bottom = bottom)
+	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0): Boolean {
+		val result = grid.grow(left = left, right = right, top = top, bottom = bottom)
+		
+		if (result)
+			notifyChange()
+		
+		return result
 	}
 	
 	/**
@@ -332,6 +331,8 @@ open class GridLayoutView<T : ElementView>(
 	 * Attributes "rows" and "columns" get updated according to new dimensions.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
+	 * @return `true` if the grid has changed by this operation, `false` otherwise.
+	 *
 	 * @see grow
 	 * @see removeEmptyColumns
 	 * @see removeEmptyRows
@@ -341,8 +342,13 @@ open class GridLayoutView<T : ElementView>(
 	 * @see addRows
 	 * @see removeRow
 	 */
-	fun trim() {
-		grid.trim()
+	fun trim(): Boolean {
+		val result = grid.trim()
+		
+		if (result)
+			notifyChange()
+		
+		return result
 	}
 	
 	/**
@@ -441,6 +447,7 @@ open class GridLayoutView<T : ElementView>(
 			this[elementTriple.first, elementTriple.second] = null
 			child.parent = null
 		}
+		notifyChange()
 	}
 	
 	/**

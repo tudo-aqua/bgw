@@ -15,8 +15,16 @@ import tools.aqua.bgw.util.ElementViewGrid
  */
 internal class LayoutNodeBuilder {
 	companion object {
-		internal fun buildGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>): Region {
-			val grid: ElementViewGrid<out ElementView> = gridView.grid.apply { trim() }
+		//region grid
+		internal fun buildGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>): Region =
+			Pane().apply {
+				gridView.setGUIListenerAndInvoke { refreshGrid(scene, gridView) }
+			}
+		
+		private fun Pane.refreshGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>) {
+			val grid: ElementViewGrid<out ElementView> = gridView.grid
+			
+			children.clear()
 			
 			//Build Nodes
 			val nodes = ArrayList<Triple<Pair<Int, Int>, ElementView, Node>>()
@@ -26,7 +34,8 @@ internal class LayoutNodeBuilder {
 					
 					nodes.add(
 						Triple(
-							Pair(colIndex, rowIndex), gameElementView,
+							Pair(colIndex, rowIndex),
+							gameElementView,
 							NodeBuilder.build(scene = scene, elementView = gameElementView)
 						)
 					)
@@ -45,11 +54,6 @@ internal class LayoutNodeBuilder {
 			gridView.height =
 				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
 			
-			//val topLeftX = gridView.posX - if (gridView.layoutFromCenter) gridView.width / 2 else 0.0
-			//val topLeftY = gridView.posY - if (gridView.layoutFromCenter) gridView.height / 2 else 0.0
-			
-			val gridPane = Pane()
-			
 			nodes.forEach { triple ->
 				val colIndex = triple.first.first
 				val rowIndex = triple.first.second
@@ -58,15 +62,15 @@ internal class LayoutNodeBuilder {
 				val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
 				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
 				
-				gridPane.children.add(node.apply {
+				children.add(node.apply {
 					layoutX = posX + element.posX
 					layoutY = posY + element.posY
 				})
 			}
-			
-			return gridPane
 		}
+		//endregion
 		
+		//region elementPane
 		@Suppress("UNUSED_PARAMETER")
 		internal fun buildElementPane(
 			scene: Scene<out ElementView>,
@@ -74,5 +78,6 @@ internal class LayoutNodeBuilder {
 		): Region {
 			TODO("Not yet implemented")
 		}
+		//endregion
 	}
 }

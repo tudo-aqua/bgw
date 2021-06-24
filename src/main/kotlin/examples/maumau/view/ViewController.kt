@@ -5,8 +5,11 @@ import examples.maumau.model.CardSuit
 import examples.maumau.model.MauMauCard
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.elements.gameelements.CardView
+import tools.aqua.bgw.elements.gameelements.TokenView
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.util.BidirectionalMap
+import tools.aqua.bgw.visual.ColorVisual
+import java.awt.Color
 import kotlin.system.exitProcess
 
 class ViewController : BoardGameApplication() {
@@ -59,7 +62,9 @@ class ViewController : BoardGameApplication() {
     
     private fun registerMenuEvents() {
         gameScene.mainMenuButton.onMouseClicked = {
-            showMenuScene(mauMauMenuScene)
+            //showMenuScene(mauMauMenuScene)
+            gameScene.grid[0, 2] = TokenView(100, 100, 0, 0, ColorVisual(Color.BLACK))
+            println(gameScene.grid.grid)
         }
         
         mauMauMenuScene.continueGameButton.onMouseClicked = {
