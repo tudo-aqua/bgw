@@ -123,6 +123,8 @@ class GameScene : BoardGameScene() {
         buttonSpades.isVisible = false
         buttonClubs.isVisible = false
 
+        drawStackView.isDisabled
+
         //Add views
         addElements(
             drawStackView,

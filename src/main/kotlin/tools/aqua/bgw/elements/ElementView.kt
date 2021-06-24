@@ -2,7 +2,10 @@
 
 package tools.aqua.bgw.elements
 
+import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.elements.container.GameElementContainerView
 import tools.aqua.bgw.event.*
+import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.IntegerProperty
@@ -11,16 +14,18 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * ElementView is the abstract super class of all framework elements.
- * It defines important fields and methods that are needed to visualize inheriting elements.
+ * ElementView is the abstract superclass of all framework elements.
+ * It defines important fields and functions that are needed to visualize inheriting elements.
  *
- * Do not inherit from this class.
+ * @param height height for this ElementView. Default: 0.0.
+ * @param width width for this ElementView. Default: 0.0.
+ * @param posX the X coordinate for this ElementView relative to its container. Default: 0.0.
+ * @param posY the Y coordinate for this ElementView relative to its container. Default: 0.0.
+ * @param visuals a mutable list of possible Visuals for this ElementView. Default: an empty ArrayList.
  *
- * @param height Height for this ElementView. Default: 0.0.
- * @param width Width for this ElementView. Default: 0.0.
- * @param posX The X coordinate for this ElementView relative to its container. Default: 0.0.
- * @param posY The Y coordinate for this ElementView relative to its container. Default: 0.0.
- * @param visuals A mutable list of possible Visuals for this ElementView. Default: an empty ArrayList.
+ * Inheriting from this Class is not advised, because it cannot be rendered and trying to do so will result in an
+ * IllegalInheritanceException.
+ * @see IllegalInheritanceException
  */
 abstract class ElementView(
 	height: Number = 0,
@@ -31,16 +36,18 @@ abstract class ElementView(
 ) : Observable() {
 	
 	/**
-	 * The parent view of this ElementView.
-	 * If and only if it has not been added to a scene or has been removed this field is null.
+	 * The parent of this ElementView.
+	 * Null if this ElementView is not contained in a container or a scene.
 	 * If the element has been added directly to a scene, parent is equal to the scene's rootNode.
-	 * If the element is contained within a container, this field contains this container.
+	 * If the element is contained within a container, parent is equal to that container.
+	 * @see Scene
+	 * @see GameElementContainerView
 	 */
 	var parent: ElementView? = null
 		internal set
 	
 	/**
-	 * Field that indicated whether posX/Y is anchored in the center of the view component or top left.
+	 * Field that indicates whether posX and posY denote the center or top left of this ElementView.
 	 */
 	internal var layoutFromCenter: Boolean = false
 	
@@ -50,12 +57,12 @@ abstract class ElementView(
 	var name = javaClass.name + "@" + Integer.toHexString(this.hashCode())
 	
 	/**
-	 * Property for the height of this ElementView. Changes are rendered directly by the framework.
+	 * Property for the height of this ElementView.
 	 */
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
-	 * Sets the Height for this ElementView. Changes are rendered directly by the framework.
+	 * The Height for this ElementView.
 	 */
 	var height: Double
 		get() = heightProperty.value
@@ -64,12 +71,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the width of this ElementView. Changes are rendered directly by the framework.
+	 * Property for the width of this ElementView.
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
-	 * Sets the Width for this ElementView. Changes are rendered directly by the framework.
+	 * The Width for this ElementView.
 	 */
 	var width: Double
 		get() = widthProperty.value
@@ -78,12 +85,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the horizontal position of the object.
+	 * Property for the horizontal position of this ElementView.
 	 */
 	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
 	
 	/**
-	 * Horizontal position of the object.
+	 * Horizontal position of this ElementView.
 	 */
 	var posX: Double
 		get() = posXProperty.value
@@ -92,12 +99,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the vertical position of the object.
+	 * Property for the vertical position of this ElementView.
 	 */
 	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
 	
 	/**
-	 * Vertical position of the object.
+	 * Vertical position of this ElementView.
 	 */
 	var posY: Double
 		get() = posYProperty.value
@@ -106,14 +113,26 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the rotation of the object in degrees e.g. 0 to 360 from the center.
-	 * Negative rotations and degrees above 360 get mapped onto domain [0,360).
+	 * Property for the rotation of this ElementView in degrees.
+	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
+	 *
+	 * example conversions:
+	 * -10  -> 350
+	 * -370 -> 350
+	 * 370  -> 10
+	 * 730  -> 10
 	 */
 	val rotationProperty: DoubleProperty = DoubleProperty(0.0)
-	
+
 	/**
-	 * Rotation of the object in degrees e.g. 0 to 360 from the center.
-	 * Negative rotations and degrees above 360 get mapped onto domain [0,360).
+	 * Rotation of this ElementView in degrees.
+	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
+	 *
+	 * example conversions:
+	 * -10  -> 350
+	 * -370 -> 350
+	 * 370  -> 10
+	 * 730  -> 10
 	 */
 	var rotation: Double
 		get() = rotationProperty.value
@@ -122,14 +141,14 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the index of the Current Visual in the visuals list.
-	 * Changes of this property are rendered directly by the framework.
+	 * Property for the index of the current Visual in the visuals list.
+	 * @see Visual
 	 */
 	val currentVisualProperty: IntegerProperty = IntegerProperty()
 	
 	/**
-	 * Index of the Current Visual in the visuals list.
-	 * Changes of this property are rendered directly by the framework.
+	 * Index of the current Visual in the visuals list.
+	 * @see Visual
 	 */
 	var currentVisual: Int
 		get() = currentVisualProperty.value
@@ -138,20 +157,18 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the opacity of a rendered Element.
-	 * Should be in range 0.0 to 1.0
+	 * Property for the opacity of this ElementView.
+	 * Should be in range 0.0 to 1.0.
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
-	 * Changes of this property are rendered directly by the framework.
-	 * Note that invisible objects (e.g. opacity = 0) still remain interactive.
+	 * Note that invisible objects (opacity == 0.0) still remain interactive.
 	 */
 	val opacityProperty: DoubleProperty = DoubleProperty(1.0)
 	
 	/**
-	 * Opacity of a rendered Element.
-	 * Must be in range 0.0 to 1.0
+	 * Opacity of this ElementView.
+	 * Must be in range 0.0 to 1.0.
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
-	 * Changes of this property are rendered directly by the framework.
-	 * Note that invisible objects (e.g. opacity = 0) still remain interactive.
+	 * Note that invisible objects (opacity == 0.0) still remain interactive.
 	 */
 	var opacity: Double
 		get() = opacityProperty.value
@@ -162,22 +179,20 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the visibility of a rendered Element.
-	 * Changes of this property are rendered directly by the framework.
-	 * Note that invisible are non-interactive.
+	 * Property for the visibility of this ElementView.
+	 * Invisible ElementViews are disabled.
 	 * An object marked as visible may still be opaque due to opacity
-	 *
+	 * @see isDisabledProperty
 	 * @see opacityProperty
 	 */
 	val isVisibleProperty: BooleanProperty = BooleanProperty(true)
 	
 	/**
-	 * Visibility of a rendered Element.
-	 * Changes of this property are rendered directly by the framework.
-	 * Note that invisible are non-interactive.
+	 * Visibility of this ElementView.
+	 * Invisible ElementViews are disabled.
 	 * An object marked as visible may still be opaque due to opacity
-	 *
-	 * @see opacity
+	 * @see isDisabledProperty
+	 * @see opacityProperty
 	 */
 	var isVisible: Boolean
 		get() = isVisibleProperty.value
@@ -186,14 +201,40 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property that controls if GUI events are passed to the eventHandlers of this ElementView.
-	 * `true` means no events are passed, where `false` means events are passed.
+	 * Property that controls if user input events cause input functions of this ElementView to get invoked.
+	 * `true` means no invocation, where `false` means invocation.
+	 *
+	 * For a list of affected functions refer to the `See Also` section.
+	 *
+	 * @see onMouseEntered
+	 * @see onMouseExited
+	 * @see dropAcceptor
+	 * @see onDragElementDropped
+	 * @see onKeyPressed
+	 * @see onKeyReleased
+	 * @see onKeyTyped
+	 * @see onMousePressed
+	 * @see onMouseReleased
+	 * @see onMouseClicked
 	 */
 	val isDisabledProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Field that controls if GUI events are passed to the eventHandlers of this ElementView.
-	 * `true` means no events are passed, where `false` means events are passed.
+	 * Controls if user input events cause input functions of this ElementView to get invoked.
+	 * `true` means no invocation, where `false` means invocation.
+	 *
+	 * For a list of affected functions refer to the `See Also` section.
+	 *
+	 * @see onMouseEntered
+	 * @see onMouseExited
+	 * @see dropAcceptor
+	 * @see onDragElementDropped
+	 * @see onKeyPressed
+	 * @see onKeyReleased
+	 * @see onKeyTyped
+	 * @see onMousePressed
+	 * @see onMouseReleased
+	 * @see onMouseClicked
 	 */
 	var isDisabled: Boolean
 		get() = isDisabledProperty.value
@@ -202,12 +243,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property that controls if element is focusable or not.
+	 * Property that controls whether this ElementView is focusable or not.
 	 */
 	val isFocusableProperty: BooleanProperty = BooleanProperty(true)
 	
 	/**
-	 * Field that controls if element is focusable or not.
+	 * Controls whether this ElementView is focusable or not.
 	 */
 	var isFocusable: Boolean
 		get() = isFocusableProperty.value
@@ -216,89 +257,93 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Gets invoked with an event whenever the Mouse enters this rendered ElementView.
+	 * Gets invoked with an event whenever the Mouse enters this ElementView.
 	 * @see Event
+	 * @see isDisabledProperty
 	 */
 	var onMouseEntered: ((Event) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with an event whenever the Mouse leaves this rendered ElementView.
+	 * Gets invoked with an event whenever the Mouse leaves this ElementView.
 	 * @see Event
+	 * @see isDisabledProperty
 	 */
 	var onMouseExited: ((Event) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is pressed inside this rendered ElementView.
+	 * Gets invoked with a mouseEvent whenever the Mouse is pressed inside this ElementView.
 	 * @see MouseEvent
+	 * @see isDisabledProperty
 	 */
 	var onMousePressed: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is released inside this rendered ElementView.
+	 * Gets invoked with a mouseEvent whenever the Mouse is released inside this ElementView.
 	 * @see MouseEvent
+	 * @see isDisabledProperty
 	 */
 	var onMouseReleased: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is clicked inside this rendered ElementView.
-	 * Gets invoked after onMousePressed and onMouseReleased
+	 * Gets invoked with a mouseEvent whenever the Mouse is clicked inside this ElementView.
+	 * Gets invoked after onMousePressed and onMouseReleased.
 	 * @see MouseEvent
 	 * @see onMousePressed
 	 * @see onMouseReleased
+	 * @see isDisabledProperty
 	 */
 	var onMouseClicked: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a keyEvent whenever a key is pressed while rendered ElementView has focus.
+	 * Gets invoked with a keyEvent whenever a key is pressed while this ElementView has focus.
 	 * @see KeyEvent
+	 * @see isDisabledProperty
+	 * @see isFocusableProperty
 	 */
 	var onKeyPressed: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a keyEvent whenever a key is released while rendered ElementView has focus.
+	 * Gets invoked with a keyEvent whenever a key is released while this ElementView has focus.
 	 * @see KeyEvent
+	 * @see isDisabledProperty
+	 * @see isFocusableProperty
 	 */
 	var onKeyReleased: ((KeyEvent) -> Unit)? = null
 	
 	//TODO: key typed is composition of keys
 	/**
-	 * Gets invoked with a keyEvent whenever a key is typed while rendered ElementView has focus.
+	 * Gets invoked with a keyEvent whenever a key is typed while this ElementView has focus.
 	 * Gets invoked after onKeyPressed
 	 * @see KeyEvent
 	 * @see onKeyPressed
+	 * @see isDisabledProperty
+	 * @see isFocusableProperty
 	 */
 	var onKeyTyped: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a DragEvent whenever a drag gesture has ended on this rendered ElementView.
-	 * @see DragEvent
-	 */
-	var onDragGestureEnded: ((DragEvent, Boolean) -> Unit)? = null
-	
-	/**
-	 * Gets invoked with a DragEvent before onDragGestureEnded.
-	 * @see DragEvent
-	 */
-	internal var preDragGestureEnded: ((DragEvent, Boolean) -> Unit)? = null
-	
-	/**
-	 * Gets invoked with a DragEvent after onDragGestureEnded.
-	 * @see DragEvent
-	 */
-	internal var postDragGestureEnded: ((DragEvent, Boolean) -> Unit)? = null
-	
-	/**
-	 * Should return `true` if this ElementView is a valid drop target for the dragged element in the given DropEvent.
-	 * Note: Do not alter the given dragged element by now. Use the onDragElementDropped handler.
+	 * Should return `true` whether this ElementView is a valid drop target
+	 * for the dragged element in the given DropEvent or not.
 	 *
+	 * It is advised to not modify the Scene or its children in this function.
+	 * A better suited function to modify the Scene or its children
+	 * after a drag and drop gesture is onDragElementDropped.
+	 *
+	 * Note: onDragElementDropped for only gets invoked if the dropAcceptor returns `true` for the given DropEvent.
+	 *
+	 * @see onDragElementDropped
 	 * @see DropEvent
+	 * @see isDisabledProperty
 	 */
 	var dropAcceptor: ((DropEvent) -> Boolean)? = null
 	
 	/**
-	 * Gets invoked with a DropEvent whenever a drag gesture has ended above this rendered ElementView.
+	 * Gets invoked with a DropEvent whenever a drag and drop gesture finishes over this ElementView
+	 * and the dropAcceptor returns `true` for the given DropEvent.
 	 *
+	 * @see dropAcceptor
 	 * @see DropEvent
+	 * @see isDisabledProperty
 	 */
 	var onDragElementDropped: ((DropEvent) -> Unit)? = null
 	
@@ -346,9 +391,10 @@ abstract class ElementView(
 	}
 	
 	/**
-	 * Removes this element out of it's container.
+	 * Removes this element from it's parent.
 	 *
 	 * @throws IllegalStateException If this element is not contained in any container. Use parent field to check.
+	 * @see parent
 	 */
 	fun removeFromParent(): ElementView {
 		val par = parent

@@ -55,6 +55,12 @@ abstract class DynamicView(
 	 */
 	var onDragGestureMoved: ((DragEvent) -> Unit)? = null
 
+	/**
+	 * Gets invoked with a DragEvent whenever a drag gesture has ended on this rendered ElementView.
+	 * @see DragEvent
+	 */
+	var onDragGestureEnded: ((DragEvent, Boolean) -> Unit)? = null
+
 //	/**
 //	 * Gets passed a DragEvent whenever the Mouse enters this rendered ElementView while performing a drag gesture.
 //	 * @see DragEvent
