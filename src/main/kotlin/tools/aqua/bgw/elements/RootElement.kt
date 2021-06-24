@@ -8,9 +8,7 @@ import tools.aqua.bgw.core.Scene
  * @param scene scene of this root element.
  */
 internal class RootElement<T : ElementView>(val scene: Scene<T>) : ElementView() {
-	/**
-	 * {@inheritDoc}.
-	 */
+
 	@Suppress("UNCHECKED_CAST")
 	override fun removeChild(child: ElementView) {
 		try {

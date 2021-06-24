@@ -63,6 +63,7 @@ abstract class ElementView(
 	
 	/**
 	 * The Height for this ElementView.
+	 * @see heightProperty
 	 */
 	var height: Double
 		get() = heightProperty.value
@@ -77,6 +78,7 @@ abstract class ElementView(
 	
 	/**
 	 * The Width for this ElementView.
+	 * @see widthProperty
 	 */
 	var width: Double
 		get() = widthProperty.value
@@ -91,6 +93,7 @@ abstract class ElementView(
 	
 	/**
 	 * Horizontal position of this ElementView.
+	 * @see posXProperty
 	 */
 	var posX: Double
 		get() = posXProperty.value
@@ -105,6 +108,7 @@ abstract class ElementView(
 	
 	/**
 	 * Vertical position of this ElementView.
+	 * @see posYProperty
 	 */
 	var posY: Double
 		get() = posYProperty.value
@@ -133,6 +137,7 @@ abstract class ElementView(
 	 * -370 -> 350
 	 * 370  -> 10
 	 * 730  -> 10
+	 * @see rotationProperty
 	 */
 	var rotation: Double
 		get() = rotationProperty.value
@@ -149,6 +154,7 @@ abstract class ElementView(
 	/**
 	 * Index of the current Visual in the visuals list.
 	 * @see Visual
+	 * @see currentVisualProperty
 	 */
 	var currentVisual: Int
 		get() = currentVisualProperty.value
@@ -169,6 +175,7 @@ abstract class ElementView(
 	 * Must be in range 0.0 to 1.0.
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 	 * Note that invisible objects (opacity == 0.0) still remain interactive.
+	 * @see opacityProperty
 	 */
 	var opacity: Double
 		get() = opacityProperty.value
@@ -193,6 +200,7 @@ abstract class ElementView(
 	 * An object marked as visible may still be opaque due to opacity
 	 * @see isDisabledProperty
 	 * @see opacityProperty
+	 * @see isVisibleProperty
 	 */
 	var isVisible: Boolean
 		get() = isVisibleProperty.value
@@ -235,6 +243,8 @@ abstract class ElementView(
 	 * @see onMousePressed
 	 * @see onMouseReleased
 	 * @see onMouseClicked
+	 *
+	 * @see isDisabledProperty
 	 */
 	var isDisabled: Boolean
 		get() = isDisabledProperty.value
@@ -249,6 +259,7 @@ abstract class ElementView(
 	
 	/**
 	 * Controls whether this ElementView is focusable or not.
+	 * @see isFocusableProperty
 	 */
 	var isFocusable: Boolean
 		get() = isFocusableProperty.value

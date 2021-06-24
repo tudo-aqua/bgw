@@ -21,7 +21,8 @@ abstract class DynamicView(
 	val isDraggableProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Field that controls whether element is draggable or not.
+	 * Controls whether element is draggable or not.
+	 * @see isDraggableProperty
 	 */
 	var isDraggable: Boolean
 		get() = isDraggableProperty.value
@@ -35,7 +36,8 @@ abstract class DynamicView(
 	val isDraggedProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Field that reflects whether element is dragged or not.
+	 * Reflects whether element is dragged or not.
+	 * @see isDisabledProperty
 	 */
 	var isDragged: Boolean
 		get() = isDraggedProperty.value
