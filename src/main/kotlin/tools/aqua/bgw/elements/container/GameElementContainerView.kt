@@ -10,30 +10,31 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * GameElementContainerView is the abstract super class for containers that can contain ElementViews or its subclasses.
- * It provides the ObservableList to store ElementViews and some useful methods to work on said list.
+ * GameElementContainerView is the abstract superclass for containers that can contain ElementViews or its subclasses.
+ * It provides the list to store ElementViews and some useful methods to work on said list.
  *
- * @param height Height for this gameElementContainerView. Default: 0.
- * @param width Width for this gameElementContainerView. Default: 0.
- * @param posX Horizontal coordinate for this GameElementView. Default: 0.
- * @param posY Vertical coordinate for this GameElementView. Default: 0.
+ * @param height height for this gameElementContainerView. Default: 0.
+ * @param width width for this gameElementContainerView. Default: 0.
+ * @param posX horizontal coordinate for this GameElementContainerView. Default: 0.
+ * @param posY vertical coordinate for this GameElementContainerView. Default: 0.
+ * @param visuals the list of possible visuals for this GameElementContainerView. Default: empty list.
  */
 sealed class GameElementContainerView<T : GameElementView>(
 	height: Number = 0,
 	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
-	visuals: MutableList<Visual> = ArrayList()
+	visuals: MutableList<Visual> = mutableListOf()
 ) : DynamicView(height = height, width = width, visuals = visuals, posX = posX, posY = posY) {
 	/**
 	 * An ObservableList to store the ElementViews that are contained in this GameElementContainerView.
-	 * If changes are made to this list, the BGW framework will re-render this GameElementContainerView.
+	 * If changes are made to this list, this GameElementContainerView gets re-rendered.
 	 */
 	internal val observableElements: ObservableList<T> = ObservableLinkedList()
 	
 	/**
 	 * ElementViews that are contained in this GameElementContainerView.
-	 * If changes are made to this list, the BGW framework will re-render this GameElementContainerView.
+	 * If changes are made to this list, this GameElementContainerView gets re-rendered.
 	 */
 	var elements: List<T> = observableElements.toList()
 		get() = observableElements.toList()
@@ -121,33 +122,25 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Returns a copy of the elements list.
-	 */
-	fun getAllElements(): List<T> = observableElements.toList()
-	
-	/**
-	 * Returns the size of this elements list.
+	 * Returns the size of the elements list.
+	 * @see elements
 	 */
 	fun numberOfElements() = observableElements.size()
 	
 	/**
-	 * Returns whether the elements list is empty (true) or not (false) .
+	 * Returns whether the elements list is empty `true` or not `false`.
+	 * @see elements
 	 */
 	fun isEmpty() = observableElements.isEmpty()
 	
 	/**
-	 * Returns whether the elements list is not empty (true) or not (false).
+	 * Returns whether the elements list is not empty `true` or not `false`.
+	 * @see elements
 	 */
 	fun isNotEmpty() = !isEmpty()
-	
-	/**
-	 * {@inheritDoc}.
-	 */
+
 	override fun getChildPosition(child: ElementView): Coordinate? = Coordinate(child.posX, child.posY)
-	
-	/**
-	 * {@inheritDoc}.
-	 */
+
 	@Suppress("UNCHECKED_CAST")
 	override fun removeChild(child: ElementView) {
 		try {

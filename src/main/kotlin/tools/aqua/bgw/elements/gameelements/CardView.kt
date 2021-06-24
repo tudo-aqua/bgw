@@ -11,14 +11,14 @@ import tools.aqua.bgw.visual.Visual
  * Visualization:
  * The Visual at the currentSide value is used to visualize the card.
  *
- * @param height Height for this cardView. Default: the suggested card height for the SoPra.
- * @param width Width for this cardView. Default: the suggested card width for the SoPra.
- * @param front Visual to represent the front side of the card.
- * @param back Visual to represent the back side of the card. Default: same Visual as front.
+ * @param height height for this cardView. Default: the suggested card height.
+ * @param width width for this cardView. Default: the suggested card width.
+ * @param front visual to represent the front side of the card.
+ * @param back visual to represent the back side of the card. Default: same Visual as front.
  */
 open class CardView(
-	height: Number = SOPRA_CARD_HEIGHT,
-	width: Number = SOPRA_CARD_WIDTH,
+	height: Number = DEFAULT_CARD_HEIGHT,
+	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	front: Visual,
@@ -32,7 +32,7 @@ open class CardView(
 ) {
 	
 	/**
-	 * The property for the current Side that is displayed.
+	 * The property for the current side that is displayed.
 	 *
 	 * @see showFront
 	 * @see showBack
@@ -40,7 +40,7 @@ open class CardView(
 	val currentSideProperty: ObjectProperty<CardSide> = ObjectProperty(CardSide.BACK)
 	
 	/**
-	 * The current Side that is displayed.
+	 * The current side that is displayed.
 	 *
 	 * @see showFront
 	 * @see showBack
@@ -52,14 +52,16 @@ open class CardView(
 		}
 	
 	/**
-	 * Returns the front visual for this cardView.
+	 * Front visual for this CardView.
 	 */
-	fun getFront() = visuals[0]
+	val front : Visual
+		get() = visuals[0]
 	
 	/**
-	 * Returns the back visual for this cardView.
+	 * Back visual for this CardView.
 	 */
-	fun getBack() = visuals[1]
+	val back : Visual
+		get() = visuals[0]
 	
 	/**
 	 * Sets the currentSide to be displayed to front.
@@ -89,12 +91,12 @@ open class CardView(
 		/**
 		 * Suggested card height for the SoPra.
 		 */
-		const val SOPRA_CARD_HEIGHT = 200
+		const val DEFAULT_CARD_HEIGHT = 200
 		
 		/**
 		 * Suggested card width for the SoPra.
 		 */
-		const val SOPRA_CARD_WIDTH = 130
+		const val DEFAULT_CARD_WIDTH = 130
 	}
 	
 	/**

@@ -3,54 +3,55 @@ package tools.aqua.bgw.elements.container
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
 import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.elements.gameelements.CardView.Companion.SOPRA_CARD_HEIGHT
-import tools.aqua.bgw.elements.gameelements.CardView.Companion.SOPRA_CARD_WIDTH
+import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.exception.EmptyStackException
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A CardStackView may be used to visualize a card stack.
- * You can inherit from this class if you want to add additional functionality or fields.
- * Inheriting does NOT change how a CardStackView is visualized by the BGW framework.
  *
  * Visualization:
- * The Visual at visuals[0] is used to visualize a background.
- * The current Visual of the cardView at elements[0] is used to visualize the topmost card of the card stack.
+ * The current Visual is used to visualize a background.
+ * The current Visual of the CardView at elements[0] is used to visualize the topmost card of the card stack.
+ * The positioning of contained CardViews gets ignored and the specified alignment gets used to position them instead.
  *
- * @param height Height for this cardStackView. Default: the suggested card height for the SoPra.
- * @param width Width for this cardStackView. Default: the suggested card width for the SoPra.
- * @param posX Horizontal coordinate for this cardStackView. Default: 0.
- * @param posY Vertical coordinate for this cardStackView. Default: 0.
- *
+ * @param height height for this CardStackView. Default: the suggested card height.
+ * @param width width for this CardStackView. Default: the suggested card width.
+ * @param posX horizontal coordinate for this CardStackView. Default: 0.
+ * @param posY vertical coordinate for this CardStackView. Default: 0.
+ * @param verticalAlignment specifies how the contained CardViews should be aligned vertically. Default: CENTER.
+ * @param horizontalAlignment specifies how the contained CardViews should be aligned horizontally. Default: CENTER.
+ * @param visual visual for this CardStackView. Default: empty Visual.
  * @see CardView
  */
 open class CardStackView<T : CardView>(
-	height: Number = SOPRA_CARD_HEIGHT,
-	width: Number = SOPRA_CARD_WIDTH,
+	height: Number = DEFAULT_CARD_HEIGHT,
+	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	verticalAlignment: VerticalAlignment = VerticalAlignment.CENTER,
-	horizontalAlignment: HorizontalAlignment = HorizontalAlignment.CENTER
-) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY) {
+	horizontalAlignment: HorizontalAlignment = HorizontalAlignment.CENTER,
+	visual: Visual = Visual.EMPTY
+) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visuals = mutableListOf(visual)) {
 	
 	/**
-	 * Property for the verticalAlignment of GameElementViews in this CardStackView.
-	 * Changes are rendered directly by the framework.
+	 * Property for the verticalAlignment of CardViews in this CardStackView.
 	 * @see VerticalAlignment
 	 */
 	val verticalAlignmentProperty: ObjectProperty<VerticalAlignment> = ObjectProperty(verticalAlignment)
 	
 	/**
-	 * Property for the horizontalAlignment of GameElementViews in this CardStackView.
-	 * Changes are rendered directly by the framework.
+	 * Property for the horizontalAlignment of CardViews in this CardStackView.
 	 * @see HorizontalAlignment
 	 */
 	val horizontalAlignmentProperty: ObjectProperty<HorizontalAlignment> = ObjectProperty(horizontalAlignment)
 	
 	/**
-	 * Sets the verticalAlignment for this CardStackView.
-	 * Changes are rendered directly by the framework.
+	 * VerticalAlignment of CardViews in this CardStackView.
 	 * @see VerticalAlignment
+	 * @see verticalAlignmentProperty
 	 */
 	var verticalAlignment: VerticalAlignment
 		get() = verticalAlignmentProperty.value
@@ -59,9 +60,9 @@ open class CardStackView<T : CardView>(
 		}
 	
 	/**
-	 * Sets the verticalAlignment for this CardStackView.
-	 * Changes are rendered directly by the framework.
+	 * HorizontalAlignment of CardViews in this CardStackView.
 	 * @see HorizontalAlignment
+	 * @see verticalAlignmentProperty
 	 */
 	var horizontalAlignment: HorizontalAlignment
 		get() = horizontalAlignmentProperty.value
@@ -93,8 +94,8 @@ open class CardStackView<T : CardView>(
 	fun pop(): T = popOrNull() ?: throw EmptyStackException()
 	
 	/**
-	 * Returns the topmost CardView. Does not modify the CardStackView,
-	 * or null, if the stack is empty.
+	 * Returns the topmost CardView, or null, if the stack is empty.
+	 * Does not modify the CardStackView.
 	 */
 	fun peekOrNull(): T? = observableElements.lastOrNull()
 	
@@ -113,7 +114,8 @@ open class CardStackView<T : CardView>(
 		cardView.parent = this
 		cardView.addPosListeners()
 	}
-	
+
+
 	override fun addElement(element: T, index: Int) {
 		super.addElement(element, index)
 		element.addPosListeners()

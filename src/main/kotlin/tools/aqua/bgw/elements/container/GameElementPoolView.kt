@@ -7,26 +7,42 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * A GameElementPoolView may bu used to visualize a pool containing GameElementViews.
- * You can inherit from this class if you want to add additional functionality or fields.
- * Inheriting does NOT change how an GameElementPoolView is visualized by the BGW framework.
+ * A typical use case for a GameElementPoolView may be to visualize a satchel of hidden items,
+ * where the user should not know what item he might draw next.
  *
  * Visualization:
- * The Visual at visuals[0] is used to visualize a background.
- * The placement of the contained Elements is used to place them relative
- * to the top left corner of this GameElementPoolView.
- * Elements that are out of bounds for this GameElementPoolView will still get rendered.
+ * The current Visual is used to visualize the area from where the user can start a drag and drop gesture.
  *
- * @param height Height for this GameElementPoolView. Default: 0.
- * @param height Width for this GameElementPoolView. Default: 0.
- * @param posX Horizontal coordinate for this GameElementPoolView. Default: 0.
- * @param posY Vertical coordinate for this GameElementPoolView. Default: 0.
+ * How to Use:
+ * Upon adding a GameElementView to a GameElementPoolView
+ * a snapshot of the initial state of the GameElementView gets created and stored.
+ * Then the GameElementView is made draggable, invisible and its size gets fit to the GameElementPoolView size.
+ *
+ * the initial state consist of the following properties:
+ * 	-isDraggable
+ * 	-isVisible
+ * 	-width
+ * 	-height
+ *
+ * Any changes made to those properties while a GameElementView is contained in the GameElementPoolView get ignored,
+ * but they override the initial state.
+ *
+ * As soon as an Element gets removed (e.g. by initiating a drag and drop gesture) the initial state gets restored.
+ * The GameElementView at the highest index in the elements list
+ * registers the next drag and drop gesture above this GameElementPoolView.
+ *
+ * @param height height for this GameElementPoolView. Default: 0.
+ * @param height width for this GameElementPoolView. Default: 0.
+ * @param posX horizontal coordinate for this GameElementPoolView. Default: 0.
+ * @param posY vertical coordinate for this GameElementPoolView. Default: 0.
+ * @param visual visual for this GameElementPoolView. Default: empty Visual.
  */
 open class GameElementPoolView<T : GameElementView>(
 	height: Number = 200,
 	width: Number = 130,
 	posX: Number = 0,
 	posY: Number = 0,
-	visual: Visual,
+	visual: Visual = Visual.EMPTY,
 ) :
 	GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visuals = mutableListOf(visual)) {
 	
