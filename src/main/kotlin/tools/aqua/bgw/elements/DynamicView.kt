@@ -5,7 +5,7 @@ import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Superclass for all dynamic views that can be used only in BoardGameScenes.
+ * Superclass for all ElementViews that can be draggable.
  */
 abstract class DynamicView(
 	height: Number = 0,
@@ -16,12 +16,12 @@ abstract class DynamicView(
 ) : ElementView(height = height, width = width, posX = posX, posY = posY, visuals = visuals) {
 	
 	/**
-	 * Property that controls if element is draggable or not.
+	 * Property that controls whether element is draggable or not.
 	 */
 	val isDraggableProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Field that controls if element is draggable or not.
+	 * Field that controls whether element is draggable or not.
 	 */
 	var isDraggable: Boolean
 		get() = isDraggableProperty.value
@@ -30,12 +30,12 @@ abstract class DynamicView(
 		}
 	
 	/**
-	 * Property that reflects when element is dragged.
+	 * Property that reflects whether element is dragged or not.
 	 */
 	val isDraggedProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Field that reflects when element is dragged.
+	 * Field that reflects whether element is dragged or not.
 	 */
 	var isDragged: Boolean
 		get() = isDraggedProperty.value
@@ -44,13 +44,13 @@ abstract class DynamicView(
 		}
 	
 	/**
-	 * Gets invoked with a DragEvent whenever a drag gesture is started on this rendered ElementView.
+	 * Gets invoked with a DragEvent whenever a drag gesture is started on this ElementView.
 	 * @see DragEvent
 	 */
 	var onDragGestureStarted: ((DragEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a DragEvent whenever a drag gesture is moved on this rendered ElementView.
+	 * Gets invoked with a DragEvent whenever a mouse movement occurs during a drag gesture on this ElementView.
 	 * @see DragEvent
 	 */
 	var onDragGestureMoved: ((DragEvent) -> Unit)? = null
