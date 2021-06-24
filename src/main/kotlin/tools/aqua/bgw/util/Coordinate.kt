@@ -16,6 +16,31 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	val yCoord = yCoord.toDouble()
 	
 	/**
+	 * Returns a new coordinate object containing added xCoord and yCoord.
+	 *
+	 * @return New coordinate object containing added xCoord and yCoord.
+	 *
+	 * @see minus
+	 */
+	operator fun plus(other: Coordinate) = Coordinate(
+		xCoord + other.xCoord,
+		yCoord + other.yCoord
+	)
+	
+	/**
+	 * Returns a new coordinate object containing subtracted xCoord and yCoord.
+	 *
+	 * @return New coordinate object containing subtracted xCoord and yCoord.
+	 *
+	 * @see minus
+	 */
+	operator fun minus(other: Coordinate) = Coordinate(
+		xCoord - other.xCoord,
+		yCoord - other.yCoord
+	)
+	
+	
+	/**
 	 * Rotates coordinate by angle degrees around center point.
 	 * With
 	 * - Angle t,
