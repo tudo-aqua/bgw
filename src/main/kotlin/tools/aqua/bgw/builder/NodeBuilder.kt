@@ -210,9 +210,7 @@ internal class NodeBuilder {
 					scene.draggedElementObjectProperty.value = dragElementObject
 					
 					isDragged = true
-					preDragGestureStarted?.invoke(DragEvent(this))
 					onDragGestureStarted?.invoke(DragEvent(this))
-					postDragGestureStarted?.invoke(DragEvent(this))
 				}
 			}
 

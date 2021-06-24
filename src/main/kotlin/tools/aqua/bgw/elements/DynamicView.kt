@@ -50,18 +50,6 @@ abstract class DynamicView(
 	var onDragGestureStarted: ((DragEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a DragEvent before onDragGestureStarted.
-	 * @see DragEvent
-	 */
-	internal var preDragGestureStarted: ((DragEvent) -> Unit)? = null
-	
-	/**
-	 * Gets invoked with a DragEvent after onDragGestureStarted.
-	 * @see DragEvent
-	 */
-	internal var postDragGestureStarted: ((DragEvent) -> Unit)? = null
-	
-	/**
 	 * Gets invoked with a DragEvent whenever a drag gesture is moved on this rendered ElementView.
 	 * @see DragEvent
 	 */
