@@ -5,7 +5,7 @@ import tools.aqua.bgw.core.Scene
 /**
  * The root element in the view hierarchy of a scene.
  *
- * @param scene The scene of this root element,.
+ * @param scene scene of this root element.
  */
 internal class RootElement<T : ElementView>(val scene: Scene<T>) : ElementView() {
 	/**
