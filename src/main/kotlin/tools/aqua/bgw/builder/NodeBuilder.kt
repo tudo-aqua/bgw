@@ -4,7 +4,6 @@ import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
-import tools.aqua.bgw.builder.NodeBuilder.Companion.registerEvents
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -157,7 +156,7 @@ internal class NodeBuilder {
 					
 					val pathToChild = scene.findPathToChild(this)
 					
-					val posStartCoord = Coordinate(
+					var posStartCoord = Coordinate(
 						xCoord = pathToChild.sumOf { t -> t.posX },
 						yCoord = pathToChild.sumOf { t -> t.posY }
 					)
@@ -166,7 +165,11 @@ internal class NodeBuilder {
 					when (val parent = pathToChild[1]) {
 						is GameElementContainerView<*> -> {
 							val index = parent.observableElements.indexOf(this)
+							val initialX = posX
+							val initialY = posY
 							rollback = {
+								posX = initialX
+								posY = initialY
 								@Suppress("UNCHECKED_CAST")
 								(parent as GameElementContainerView<GameElementView>)
 									.addElement(this as GameElementView, min(parent.observableElements.size(), index))
@@ -176,12 +179,26 @@ internal class NodeBuilder {
 							parent.grid.find { triple ->
 								triple.third == this
 							}?.apply {
+								val initialX = posX
+								val initialY = posY
+								
+								//calculate position in grid
+								posStartCoord += parent.getChildPosition(third!!)!!
+								
+								//add layout from center bias
+								if (parent.layoutFromCenter) {
+									posStartCoord -= Coordinate(parent.width / 2, parent.height / 2)
+								}
+								
 								rollback = {
+									posX = initialX
+									posY = initialY
 									@Suppress("UNCHECKED_CAST")
 									(parent as GridLayoutView<ElementView>)[first, second] =
 										this@registerEvents as ElementView
 								}
 							}
+							
 						}
 						scene.rootNode -> {
 							rollback = { Frontend.updateScene() }

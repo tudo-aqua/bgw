@@ -140,7 +140,10 @@ internal class ElementViewGrid<T : ElementView>(
 		this.rowHeights = rowHeights
 	}
 	
-	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0) {
+	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0): Boolean {
+		if (left == 0 && right == 0 && top == 0 && bottom == 0)
+			return false
+		
 		require(left >= 0 && right >= 0 && top >= 0 && bottom >= 0) {
 			"All parameters must be positive."
 		}
@@ -161,14 +164,14 @@ internal class ElementViewGrid<T : ElementView>(
 		columns += left + right
 		rowHeights = DoubleArray(left) { ROW_HEIGHT_AUTO } + rowHeights + DoubleArray(right) { ROW_HEIGHT_AUTO }
 		columnWidths = DoubleArray(left) { COLUMN_WIDTH_AUTO } + columnWidths + DoubleArray(right) { COLUMN_WIDTH_AUTO }
+		
+		return true
 	}
 	
-	fun trim() {
-		trimColumns()
-		trimRows()
-	}
+	fun trim(): Boolean = trimColumns() || trimRows()
 	
-	fun trimColumns() {
+	fun trimColumns(): Boolean {
+		val oldColumns = columns
 		var firstColumn = -1
 		var lastColumn = -1
 		
@@ -185,24 +188,26 @@ internal class ElementViewGrid<T : ElementView>(
 			rows = 0
 			grid = Array(columns) { Array(rows) { null } }
 			centeringModes = Array(columns) { Array(rows) { Alignment.CENTER } }
-			return
-		}
-		
-		for (index in columns - 1 downTo firstColumn) {
-			if (getColumn(index).any { it != null }) {
-				lastColumn = index
-				break
+		} else {
+			for (index in columns - 1 downTo firstColumn) {
+				if (getColumn(index).any { it != null }) {
+					lastColumn = index
+					break
+				}
 			}
+			
+			columns = lastColumn - firstColumn + 1
+			
+			grid = Array(columns) { grid[it + firstColumn] }
+			centeringModes = Array(columns) { centeringModes[it + firstColumn] }
+			columnWidths = DoubleArray(columns) { columnWidths[it + firstColumn] }
 		}
 		
-		columns = lastColumn - firstColumn + 1
-		
-		grid = Array(columns) { grid[it + firstColumn] }
-		centeringModes = Array(columns) { centeringModes[it + firstColumn] }
-		columnWidths = DoubleArray(columns) { columnWidths[it + firstColumn] }
+		return columns != oldColumns
 	}
 	
-	fun trimRows() {
+	fun trimRows(): Boolean {
+		val oldRows = rows
 		var firstRow = -1
 		var lastRow = -1
 		
@@ -219,22 +224,24 @@ internal class ElementViewGrid<T : ElementView>(
 			rows = 0
 			grid = Array(columns) { Array(rows) { null } }
 			centeringModes = Array(columns) { Array(rows) { Alignment.CENTER } }
-			return
-		}
-		
-		for (index in rows - 1 downTo firstRow) {
-			if (getRow(index).any { it != null }) {
-				lastRow = index
-				break
+		} else {
+			
+			for (index in rows - 1 downTo firstRow) {
+				if (getRow(index).any { it != null }) {
+					lastRow = index
+					break
+				}
 			}
+			
+			assert(lastRow > firstRow)
+			
+			rows = lastRow - firstRow + 1
+			grid = Array(columns) { x -> Array(rows) { y -> grid[x][y + firstRow] } }
+			centeringModes = Array(columns) { x -> Array(rows) { y -> centeringModes[x][y + firstRow] } }
+			rowHeights = DoubleArray(rows) { rowHeights[it + firstRow] }
 		}
 		
-		assert(lastRow > firstRow)
-		
-		rows = lastRow - firstRow + 1
-		grid = Array(columns) { x -> Array(rows) { y -> grid[x][y + firstRow] } }
-		centeringModes = Array(columns) { x -> Array(rows) { y -> centeringModes[x][y + firstRow] } }
-		rowHeights = DoubleArray(rows) { rowHeights[it + firstRow] }
+		return rows != oldRows
 	}
 	
 	fun addColumns(columnIndex: Int, count: Int) {

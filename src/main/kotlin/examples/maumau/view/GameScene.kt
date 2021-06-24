@@ -9,12 +9,12 @@ import examples.maumau.model.CardValue
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
-import tools.aqua.bgw.elements.container.AreaContainerView
 import tools.aqua.bgw.elements.container.CardStackView
-import tools.aqua.bgw.elements.container.GameElementPoolView
 import tools.aqua.bgw.elements.container.LinearLayoutContainer
 import tools.aqua.bgw.elements.gameelements.CardView
+import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.elements.gameelements.TokenView
+import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
@@ -37,13 +37,20 @@ class GameScene : BoardGameScene() {
     val gameStackView = CardStackView<CardView>(height = 200, width = 130, posX = 1040, posY = 440)
     val drawStackInfo = Label(height = 40, width = 130, posX = 750, posY = 400)
     val gameStackInfo = Label(height = 40, width = 130, posX = 1040, posY = 400)
-
+    
     //Jack selection
     val buttonClubs = Button(height = 200, width = 130, posX = 820, posY = 330)
     val buttonSpades = Button(height = 200, width = 130, posX = 970, posY = 330)
     val buttonHearts = Button(height = 200, width = 130, posX = 820, posY = 550)
     val buttonDiamonds = Button(height = 200, width = 130, posX = 970, posY = 550)
-
+    
+    val grid = GridLayoutView<GameElementView>(3, 3, posX = 200, posY = 200, spacing = 20).apply {
+        this[0, 0] = TokenView(50, 50, 0, 0, ColorVisual(Color.RED)).apply { isDraggable = true }
+        this[1, 1] = TokenView(50, 50, 0, 0, ColorVisual(Color.GREEN)).apply { isDraggable = true }
+        this[2, 2] = TokenView(50, 50, 0, 0, ColorVisual(Color.BLUE)).apply { isDraggable = true }
+        setVisuals(ColorVisual(Color.WHITE))
+    }
+    
     //Menu button
     val mainMenuButton = Button(
         height = 100,
@@ -138,6 +145,7 @@ class GameScene : BoardGameScene() {
             buttonSpades,
             buttonClubs,
             mainMenuButton,
+            grid
         )
     }
 }
