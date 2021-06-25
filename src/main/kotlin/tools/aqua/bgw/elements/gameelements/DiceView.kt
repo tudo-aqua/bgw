@@ -5,19 +5,20 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A DiceView may be used to visualize a dice of any sides.
- * You can inherit from this class if you want to add additional functionality or fields.
- * Inheriting does NOT change how a DiceView is visualized by the BGW framework.
+ * A DiceView may be used to visualize a dice.
  *
  * Visualization:
  * The Visual at the currentSide value is used to visualize the dice.
  *
- * @param height Height for this DiceView. Default: the suggested dice height for the SoPra.
- * @param width Width for this DiceView. Default: the suggested dice width for the SoPra.
+ * @param height height for this DiceView. Default: the suggested dice height.
+ * @param width width for this DiceView. Default: the suggested dice width.
+ * @param posX horizontal coordinate for this DiceView. Default: 0.
+ * @param posY vertical coordinate for this DiceView. Default: 0.
+ * @param visuals list of visuals to represent the sides of the die.
  */
 open class DiceView(
-	height: Number = SOPRA_DICE_HEIGHT,
-	width: Number = SOPRA_DICE_WIDTH,
+	height: Number = DICE_HEIGHT,
+	width: Number = DICE_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	visuals: MutableList<Visual>
@@ -29,7 +30,7 @@ open class DiceView(
 	val currentSideProperty: IntegerProperty = IntegerProperty(1)
 	
 	/**
-	 * The current side that is displayed.
+	 * Current side that is displayed.
 	 */
 	var currentSide
 		get() = currentSideProperty.value
@@ -38,7 +39,7 @@ open class DiceView(
 		}
 	
 	/**
-	 * Returns the current imageVisual for this cardView.
+	 * Returns the current imageVisual for this DiceView.
 	 *
 	 * @see ImageVisual
 	 */
@@ -49,22 +50,21 @@ open class DiceView(
 	 */
 	fun showSide(value: Int) {
 		check(value <= visuals.size) { "Value is larger than side count" }
-		
 		currentSide = value
 	}
 	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a card.
+	 * Defines some static constants that can be used as suggested properties of a DiceView.
 	 */
 	companion object {
 		/**
-		 * Suggested card height for the SoPra.
+		 * Suggested DiceView height.
 		 */
-		const val SOPRA_DICE_HEIGHT = 80
+		const val DICE_HEIGHT = 80
 		
 		/**
-		 * Suggested card width for the SoPra.
+		 * Suggested DiceView width.
 		 */
-		const val SOPRA_DICE_WIDTH = 80
+		const val DICE_WIDTH = 80
 	}
 }

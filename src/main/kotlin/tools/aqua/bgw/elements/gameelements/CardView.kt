@@ -13,6 +13,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param height height for this cardView. Default: the suggested card height.
  * @param width width for this cardView. Default: the suggested card width.
+ * @param posX horizontal coordinate for this CardView. Default: 0.
+ * @param posY vertical coordinate for this CardView. Default: 0.
  * @param front visual to represent the front side of the card.
  * @param back visual to represent the back side of the card. Default: same Visual as front.
  */
@@ -89,12 +91,12 @@ open class CardView(
 	 */
 	companion object {
 		/**
-		 * Suggested card height for the SoPra.
+		 * Suggested card height.
 		 */
 		const val DEFAULT_CARD_HEIGHT = 200
 		
 		/**
-		 * Suggested card width for the SoPra.
+		 * Suggested card width.
 		 */
 		const val DEFAULT_CARD_WIDTH = 130
 	}

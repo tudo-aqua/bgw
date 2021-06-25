@@ -3,12 +3,16 @@ package tools.aqua.bgw.elements.gameelements
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A TokenView may be used to visualize an kind of token.
- * You can inherit from this class if you want to add additional functionality or fields.
- * Inheriting does NOT change how a TokenView is visualized by the BGW framework.
+ * A TokenView may be used to visualize any kind of token.
  *
- * @param height Height for this TokenView.
- * @param width Width for this TokenView.
+ * Visualization:
+ * The current Visual is used to visualize the token.
+ *
+ * @param height height for this TokenView.
+ * @param width width for this TokenView.
+ * @param posX horizontal coordinate for this TokenView. Default: 0.
+ * @param posY vertical coordinate for this TokenView. Default: 0.
+ * @param visual visual for this TokenView.
  */
 open class TokenView(
 	height: Number,
