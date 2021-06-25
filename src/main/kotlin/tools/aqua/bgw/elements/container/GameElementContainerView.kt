@@ -150,4 +150,25 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 
 	override fun iterator() : Iterator<T> = observableElements.iterator()
+
+	/**
+	 * Adds the supplied GameElement to this GameElementViewContainer.
+	 */
+	operator fun T.unaryPlus() {
+		addElement(this)
+	}
+
+	/**
+	 * Adds the supplied GameElements to this GameElementViewContainer.
+	 */
+	operator fun Collection<T>.unaryPlus() {
+		addAllElements(this)
+	}
+
+	/**
+	 * Removes the supplied GameElement from this GameElementContainerView.
+	 */
+	operator fun T.unaryMinus() {
+		removeElement(this)
+	}
 }
