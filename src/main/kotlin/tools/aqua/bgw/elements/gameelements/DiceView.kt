@@ -31,6 +31,7 @@ open class DiceView(
 	
 	/**
 	 * Current side that is displayed.
+	 * @see currentSideProperty
 	 */
 	var currentSide
 		get() = currentSideProperty.value

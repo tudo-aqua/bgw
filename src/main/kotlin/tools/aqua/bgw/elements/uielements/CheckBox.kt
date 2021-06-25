@@ -4,7 +4,17 @@ import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
 
 /**
- * A standard CheckBox with text.
+ * A simple checkbox with a label.
+ *
+ * @param height height for this CheckBox. Default: 0.
+ * @param width width for this CheckBox. Default: 0.
+ * @param posX horizontal coordinate for this CheckBox. Default: 0.
+ * @param posY vertical coordinate for this CheckBox. Default: 0.
+ * @param label label for this CheckBox. Default: empty String.
+ * @param font font to be used for the label. Default: default Font constructor.
+ * @param isChecked the initial checked state. Default: `false`.
+ * @param allowIndeterminate the initial allowIndeterminate state. Default: `false`.
+ * @param isIndeterminate the initial indeterminate state. Default: `false`.
  */
 open class CheckBox(
 	height: Number = 0,
@@ -24,7 +34,8 @@ open class CheckBox(
 	val checkedProperty: BooleanProperty = BooleanProperty(isChecked)
 	
 	/**
-	 * Boolean value for the checked state.
+	 * The checked state.
+	 * @see checkedProperty
 	 */
 	var checked: Boolean
 		get() = checkedProperty.value
@@ -39,6 +50,7 @@ open class CheckBox(
 	
 	/**
 	 * Boolean whether this element allows an indeterminate state.
+	 * @see allowIndeterminateProperty
 	 */
 	var allowIndeterminate: Boolean
 		get() = allowIndeterminateProperty.value
@@ -53,6 +65,7 @@ open class CheckBox(
 	
 	/**
 	 * Boolean whether this element in in the indeterminate state.
+	 * @see indeterminateProperty
 	 */
 	var isIndeterminate: Boolean
 		get() = indeterminateProperty.value

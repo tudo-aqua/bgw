@@ -46,6 +46,7 @@ open class CardView(
 	 *
 	 * @see showFront
 	 * @see showBack
+	 * @see currentSideProperty
 	 */
 	var currentSide
 		get() = currentSideProperty.value

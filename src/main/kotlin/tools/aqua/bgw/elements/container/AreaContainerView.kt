@@ -12,7 +12,7 @@ import tools.aqua.bgw.visual.Visual
  * to the top left corner of this AreaContainerView.
  * Elements that are out of bounds for this AreaContainerView will still get rendered.
  *
- * @param height geight for this AreaContainerView. Default: 0.
+ * @param height height for this AreaContainerView. Default: 0.
  * @param width width for this AreaContainerView. Default: 0.
  * @param posX horizontal coordinate for this AreaContainerView. Default: 0.
  * @param posY vertical coordinate for this AreaContainerView. Default: 0.

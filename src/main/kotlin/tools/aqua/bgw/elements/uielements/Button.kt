@@ -3,29 +3,20 @@ package tools.aqua.bgw.elements.uielements
 import tools.aqua.bgw.util.Font
 
 /**
- * A standard Button with text.
+ * A simple button with a label.
+ *
+ * @param height height for this Button. Default: 0.
+ * @param width width for this Button. Default: 0.
+ * @param posX horizontal coordinate for this Button. Default: 0.
+ * @param posY vertical coordinate for this Button. Default: 0.
+ * @param label label for this Button. Default: empty String.
+ * @param font font to be used for the label. Default: default Font constructor.
  */
 open class Button(
-	height: Number = SOPRA_BUTTON_HEIGHT,
-	width: Number = SOPRA_BUTTON_WIDTH,
+	height: Number = 0,
+	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
 	label: String = "",
 	font: Font = Font(),
-) : LabeledUIElementView(height = height, width = width, posX = posX, posY = posY, font = font, label = label) {
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a button.
-	 */
-	companion object {
-		/**
-		 * Suggested button height for the SoPra.
-		 */
-		const val SOPRA_BUTTON_HEIGHT = 50
-		
-		/**
-		 * Suggested button width for the SoPra.
-		 */
-		const val SOPRA_BUTTON_WIDTH = 100
-	}
-}
+) : LabeledUIElementView(height = height, width = width, posX = posX, posY = posY, font = font, label = label)
