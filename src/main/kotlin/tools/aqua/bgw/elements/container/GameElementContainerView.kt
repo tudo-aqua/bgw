@@ -25,7 +25,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	posX: Number = 0,
 	posY: Number = 0,
 	visuals: MutableList<Visual> = mutableListOf()
-) : DynamicView(height = height, width = width, visuals = visuals, posX = posX, posY = posY) {
+) : DynamicView(height = height, width = width, visuals = visuals, posX = posX, posY = posY), Iterable<T> {
 	/**
 	 * An ObservableList to store the ElementViews that are contained in this GameElementContainerView.
 	 * If changes are made to this list, this GameElementContainerView gets re-rendered.
@@ -148,4 +148,6 @@ sealed class GameElementContainerView<T : GameElementView>(
 		} catch (_: ClassCastException) {
 		}
 	}
+
+	override fun iterator() : Iterator<T> = observableElements.iterator()
 }
