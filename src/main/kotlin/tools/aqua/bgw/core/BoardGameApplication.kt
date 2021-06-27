@@ -42,8 +42,8 @@ open class BoardGameApplication {
 		Alert(
 			alertType.toAlertType(),
 			msg,
-			*buttons.map { t -> t.toButtonType() }.toTypedArray()
-		).showAndWait().map { t -> ButtonType.fromButtonType(t) }
+			*buttons.map { it.toButtonType() }.toTypedArray()
+		).showAndWait().map { ButtonType.fromButtonType(it) }
 	
 	/**
 	 * Shows given menu scene. If BoardGameScene is currently displayed, it gets deactivated and blurred.
