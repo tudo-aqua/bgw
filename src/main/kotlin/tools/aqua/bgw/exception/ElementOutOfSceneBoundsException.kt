@@ -5,6 +5,10 @@ package tools.aqua.bgw.exception
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
 
+/**
+ * Gets raised when an [ElementView] is placed in a [Scene] outside of its bounds.
+ */
+@Deprecated("Not used any more.")
 internal class ElementOutOfSceneBoundsException(element: ElementView, scene: Scene<*>) :
 	RuntimeException(
 		"Element $element is placed out of scene bounds: " +
