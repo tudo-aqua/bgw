@@ -3,8 +3,8 @@ package tools.aqua.bgw.event
 /**
  * Enum for available key codes.
  *
- * @param string Key name
- * @param keyTypeMask Mask for the key's type
+ * @param string key name.
+ * @param keyTypeMask mask for the key's type.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 enum class KeyCode(val string: String, private val keyTypeMask: Int) {
@@ -625,7 +625,7 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 	 */
 	UNDEFINED("Undefined", KeyType.OTHER);
 	
-	//region methods
+	//region Methods
 	/**
 	 * Returns a string representation of the key.
 	 */
@@ -699,7 +699,7 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 	/**
 	 * Integer mask for KeyCode type.
 	 */
-	internal class KeyType {
+	class KeyType {
 		companion object {
 			/**
 			 * Modifier keys like Shift or Ctrl.

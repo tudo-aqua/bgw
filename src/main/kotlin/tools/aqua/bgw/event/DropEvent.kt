@@ -3,8 +3,11 @@ package tools.aqua.bgw.event
 import tools.aqua.bgw.elements.ElementView
 
 /**
- * Event that gets raised for drag gestures.
+ * Event that gets raised for drop events after drag gestures.
+ * Receiver is the drop target.
  *
- * @param draggedElement Currently dragged ElementView
+ * @param draggedElement currently dragged ElementView.
+ *
+ * @see DragEvent
  */
-class DropEvent(val draggedElement: ElementView) : Event()
+class DropEvent(draggedElement: ElementView) : DragDropEvent(draggedElement)

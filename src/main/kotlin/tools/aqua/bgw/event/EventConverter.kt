@@ -8,7 +8,7 @@ internal class EventConverter {
 		/**
 		 * Converts the JavaFX MouseEvent to tools.aqua.bgw MouseEvent.
 		 */
-		fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
+		internal fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
 			MouseEvent(
 				when (button) {
 					javafx.scene.input.MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
@@ -21,7 +21,7 @@ internal class EventConverter {
 		/**
 		 * Converts the JavaFX KeyEvent to tools.aqua.bgw KeyEvent.
 		 */
-		fun javafx.scene.input.KeyEvent.toKeyEvent(): KeyEvent =
+		internal fun javafx.scene.input.KeyEvent.toKeyEvent(): KeyEvent =
 			KeyEvent(
 				keyCode = code.toKeyCode(),
 				character = character,
@@ -33,7 +33,7 @@ internal class EventConverter {
 		/**
 		 * Converts the JavaFX KeyCode to tools.aqua.bgw KeyCode.
 		 */
-		fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
+		internal fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
 			javafx.scene.input.KeyCode.SHIFT -> KeyCode.SHIFT
 			javafx.scene.input.KeyCode.CONTROL -> KeyCode.CONTROL
 			javafx.scene.input.KeyCode.ALT -> KeyCode.ALT
