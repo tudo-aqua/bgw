@@ -9,8 +9,8 @@ import tools.aqua.bgw.observable.BooleanProperty
  * Superclass for BGW game scenes.
  * Extends from this class in order to create your own game scene.
  *
- * @param width Scene width in virtual coordinates
- * @param height Scene height in virtual coordinates
+ * @param width scene width in virtual coordinates.
+ * @param height scene height in virtual coordinates.
  */
 open class BoardGameScene(width: Number = 1920, height: Number = 1080) :
 	Scene<ElementView>(width = width, height = height) {

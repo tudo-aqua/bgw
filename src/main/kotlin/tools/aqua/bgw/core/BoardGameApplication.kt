@@ -12,70 +12,76 @@ import java.util.*
 
 /**
  * Superclass for all BGW Applications.
+ * Extends from this class in order to create your own game application.
  *
- * You may extend from this class in order to create your own application.
- * Scenes get shown by calling showMenuScene and showGameScene.
- * Application starts by calling show.
+ * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
+ * Application starts by calling [show].
+ *
+ * @see BoardGameScene
+ * @see MenuScene
  */
 open class BoardGameApplication {
 	
+	/**
+	 * Frontend instance.
+	 */
 	private val frontend: Frontend = Frontend()
 	
 	/**
-	 * Shows the given FileDialog.
+	 * Shows the given [FileDialog].
 	 *
-	 * @param dialog The FileDialog to be shown
+	 * @param dialog the [FileDialog] to be shown.
 	 *
-	 * @return Chosen file(s) or Optional.empty if canceled
+	 * @return chosen file(s) or [Optional.empty] if canceled.
 	 */
 	fun showFileDialog(dialog: FileDialog): Optional<List<File>> = Frontend.showFileDialog(dialog)
 	
 	/**
-	 * Shows a dialog containing the given message and buttons.
+	 * Shows a dialog containing the given [message] and [buttons].
 	 *
-	 * @param alertType The type of the alert. Affects the displayed icon
-	 * @param msg Message to be shown
-	 * @param buttons Buttons to be shown
+	 * @param alertType the [AlertType] of the alert. Affects the displayed icon.
+	 * @param message message to be shown.
+	 * @param buttons buttons to be shown.
 	 *
-	 * @return Chosen button or Optional.empty if canceled
+	 * @return chosen button or [Optional.empty] if canceled.
 	 */
-	fun showAlertDialog(alertType: AlertType, msg: String, vararg buttons: ButtonType): Optional<ButtonType> =
+	fun showAlertDialog(alertType: AlertType, message: String, vararg buttons: ButtonType): Optional<ButtonType> =
 		Alert(
 			alertType.toAlertType(),
-			msg,
+			message,
 			*buttons.map { it.toButtonType() }.toTypedArray()
 		).showAndWait().map { ButtonType.fromButtonType(it) }
 	
 	/**
-	 * Shows given menu scene. If BoardGameScene is currently displayed, it gets deactivated and blurred.
+	 * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.
 	 *
-	 * @param scene MenuScene to show
-	 * @param fadeTime Time to fade in. Default: Frontend.DEFAULT_FADE_TIME
+	 * @param scene menu scene to show.
+	 * @param fadeTime time to fade in. Default: [Frontend.DEFAULT_FADE_TIME].
 	 */
 	fun showMenuScene(scene: MenuScene, fadeTime: Number = Frontend.DEFAULT_FADE_TIME) {
 		Frontend.showMenuScene(scene, fadeTime.toDouble())
-	}//TODO: Check what happens if menuScene is already shown (same or other)
+	}
 	
 	/**
-	 * Hides currently shown menuScene. Activates BoardGameScene if present.
+	 * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
 	 *
-	 * @param fadeTime Time to fade in. Default: Frontend.DEFAULT_FADE_TIME
+	 * @param fadeTime time to fade in. Default: [Frontend.DEFAULT_FADE_TIME].
 	 */
 	fun hideMenuScene(fadeTime: Number = Frontend.DEFAULT_FADE_TIME) {
 		Frontend.hideMenuScene(fadeTime.toDouble())
 	}
 	
 	/**
-	 * Shows given BoardGameScene.
+	 * Shows given [BoardGameScene].
 	 *
-	 * @param scene BoardGameScene to show
+	 * @param scene game scene to show.
 	 */
 	fun showGameScene(scene: BoardGameScene) {
 		Frontend.showGameScene(scene)
 	}//TODO: Check what happens if menuScene is shown (new boardGameScene inactive?)
 	
 	/**
-	 * Sets alignment of all scenes in this BoardGameApplication.
+	 * Sets alignment of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setSceneAlignment(newAlignment: Alignment) {
 		setHorizontalSceneAlignment(newAlignment.horizontalAlignment)
@@ -83,42 +89,42 @@ open class BoardGameApplication {
 	}
 	
 	/**
-	 * Sets horizontal alignment of all scenes in this BoardGameApplication.
+	 * Sets horizontal alignment of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
 		Frontend.setHorizontalSceneAlignment(newHorizontalAlignment)
 	}
 	
 	/**
-	 * Sets vertical alignment of all scenes in this BoardGameApplication.
+	 * Sets vertical alignment of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
 		Frontend.setVerticalSceneAlignment(newVerticalAlignment)
 	}
 	
 	/**
-	 * Sets scale mode of all scenes in this BoardGameApplication.
+	 * Sets scale mode of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setScaleMode(newScaleMode: ScaleMode) {
 		Frontend.setScaleMode(newScaleMode)
 	}
 	
 	/**
-	 * Sets this BoardGameApplication to fullscreen mode.
+	 * Sets this [BoardGameApplication] to fullscreen mode.
 	 */
 	fun setFullScreen(fullscreen: Boolean) {
 		Frontend.setFullScreen(fullscreen)
 	}
 	
 	/**
-	 * Manually refreshes currently displayed scenes.
+	 * Manually refreshes currently displayed [Scene]s.
 	 */
 	fun repaint() {
 		Frontend.updateScene()
 	}
 	
 	/**
-	 * Shows the BoardGameApplication.
+	 * Shows the [BoardGameApplication].
 	 */
 	fun show() {
 		frontend.show()

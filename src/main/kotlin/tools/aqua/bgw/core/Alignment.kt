@@ -3,11 +3,11 @@
 package tools.aqua.bgw.core
 
 /**
- * Used to define the centering behaviour of the corresponding main BoardGameScene in current BoardGameApplication.
- * Encapsulates vertical and horizontal alignment.
+ * Used to define a centering behaviour.
+ * Encapsulates [VerticalAlignment] and [HorizontalAlignment].
  *
- * @param verticalAlignment Vertical alignment component
- * @param horizontalAlignment Horizontal alignment component
+ * @param verticalAlignment vertical alignment component.
+ * @param horizontalAlignment horizontal alignment component.
  *
  * @see tools.aqua.bgw.core.BoardGameScene
  * @see tools.aqua.bgw.core.BoardGameApplication

@@ -3,7 +3,7 @@
 package tools.aqua.bgw.core
 
 /**
- * Used to define the scaling behaviour of the corresponding main BoardGameScene in current BoardGameApplication.
+ * Used to define the scaling behaviour of a [Scene].
  *
  * @see tools.aqua.bgw.core.BoardGameScene
  * @see tools.aqua.bgw.core.BoardGameApplication

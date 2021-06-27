@@ -3,16 +3,15 @@
 package tools.aqua.bgw.core
 
 /**
- * Used to define the horizontal centering behaviour
- * of the corresponding main BoardGameScene in current BoardGameApplication.
+ * Used to define horizontal centering behaviour.
  *
- * @param positionMultiplier Position multiplier
- * @param pivotMultiplier Pivot multiplier
+ * @param positionMultiplier internal position multiplier.
+ * @param pivotMultiplier internal pivot multiplier.
  *
  * @see tools.aqua.bgw.core.BoardGameScene
  * @see tools.aqua.bgw.core.BoardGameApplication
  */
-enum class HorizontalAlignment(val positionMultiplier: Double, val pivotMultiplier: Double) {
+enum class HorizontalAlignment(internal val positionMultiplier: Double, internal val pivotMultiplier: Double) {
 	/**
 	 * Alignment on the left.
 	 */

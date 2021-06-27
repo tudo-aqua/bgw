@@ -21,48 +21,55 @@ import java.awt.Color
 /**
  * Superclass for BGW scenes.
  *
- * @param width Scene width in virtual coordinates
- * @param height Scene height in virtual coordinates
+ * @param width scene width in virtual coordinates.
+ * @param height scene height in virtual coordinates.
+ *
+ * @see BoardGameScene
+ * @see MenuScene
  */
 sealed class Scene<T : ElementView>(width: Number, height: Number) {
-	
-	//TODO: Docs
+	/**
+	 * Property for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
+	 * currently dragged.
+	 */
 	internal val draggedElementObjectProperty: ObjectProperty<DragElementObject?> = ObjectProperty(null)
 	
-	//TODO: Docs
+	/**
+	 * Currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is currently dragged.
+	 */
 	val draggedElement: DynamicView?
 		get() = draggedElementObjectProperty.value?.draggedElement
 	
 	
 	/**
-	 * The root node of this Scene.
-	 * Use it to compare the parent property of any ElementView to find out whether it wa directly added to the scene.
+	 * The root node of this [Scene].
+	 * Use it to compare the parent property of any [ElementView] to find out whether it wa directly added to the scene.
 	 */
 	val rootNode: ElementView = RootElement(this)
 	
 	/**
-	 * The width of this scene in virtual coordinates.
+	 * The width of this [Scene] in virtual coordinates.
 	 */
 	val width: Double = width.toDouble()
 	
 	/**
-	 * The height of this scene in virtual coordinates.
+	 * The height of this [Scene] in virtual coordinates.
 	 */
 	val height: Double = height.toDouble()
 	
 	/**
-	 * All elements on the root node.
+	 * All [ElementView]s on the root node.
 	 */
 	internal val rootElements: ObservableList<T> = ObservableArrayList()
 	
 	/**
-	 * Property for the background visual of this scene.
+	 * Property for the background [Visual] of this [Scene].
 	 */
 	internal val backgroundProperty: ObjectProperty<Visual> =
 		ObjectProperty(ColorVisual(Color(255, 255, 255))) //TODO: Can be private = BUG?
 	
 	/**
-	 * The background visual of this scene.
+	 * The background [Visual] of this [Scene].
 	 */
 	var background: Visual
 		get() = backgroundProperty.value
@@ -71,12 +78,12 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * Property for the opacity of the background of this scene.
+	 * Property for the opacity of the background of this [Scene].
 	 */
 	internal val opacityProperty = DoubleProperty(1.0)
 	
 	/**
-	 * Opacity of the background of this scene.
+	 * Opacity of the background of this [Scene].
 	 */
 	var opacity: Double
 		get() = opacityProperty.value
@@ -87,12 +94,12 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * Property for the currently displayed zoom detail of this scene.
+	 * Property for the currently displayed zoom detail of this [Scene].
 	 */
 	internal val zoomDetailProperty = ObjectProperty(CoordinatePlain(0, 0, width, height))
 	
 	/**
-	 * The currently displayed zoom detail of this scene.
+	 * The currently displayed zoom detail of this [Scene].
 	 */
 	internal var zoomDetail
 		get() = zoomDetailProperty.value
@@ -101,19 +108,19 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * Map for all elements to their stackPanes.
+	 * Map for all [ElementView]s to their stackPanes.
 	 */
 	internal val elementsMap: MutableMap<ElementView, StackPane> = HashMap()
 	
 	/**
-	 * All animations currently playing.
+	 * All [Animation]s currently playing.
 	 */
 	internal val animations: ObservableList<Animation> = ObservableArrayList()
 	
 	/**
-	 * Adds all given elements to the root node and rootElements list.
+	 * Adds all given [ElementView]s to the root node and [rootElements] list.
 	 *
-	 * @param elements Elements to add
+	 * @param elements elements to add.
 	 */
 	fun addElements(vararg elements: T) {
 		rootElements.addAll(elements.toList().onEach {
@@ -123,9 +130,9 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	/**
-	 * Removes all given elements from the root node and rootElements list.
+	 * Removes all given [ElementView]s from the root node and [rootElements] list.
 	 *
-	 * @param elements Elements to remove
+	 * @param elements elements to remove.
 	 */
 	fun removeElements(vararg elements: T) {
 		rootElements.removeAll(elements.toList().onEach {
@@ -142,38 +149,38 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	/**
-	 * Plays given animation.
+	 * Plays given [Animation].
 	 *
-	 * @param animation Animation to play
+	 * @param animation animation to play.
 	 */
 	fun playAnimation(animation: Animation) {
 		animations.add(animation)
 	}
 	
 	/**
-	 * Zooms scene to given bounds.
+	 * Zooms [Scene] to given bounds.
 	 *
-	 * @param fromX Left bound
-	 * @param fromY Top bound
-	 * @param toX Right bound
-	 * @param toY Bottom bound
+	 * @param fromX left bound.
+	 * @param fromY top bound.
+	 * @param toX right bound.
+	 * @param toY bottom bound.
 	 */
 	fun zoomTo(fromX: Number, fromY: Number, toX: Number, toY: Number): Unit =
 		zoomTo(fromX.toDouble(), fromY.toDouble(), toX.toDouble(), toY.toDouble())
 	
 	/**
-	 * Zooms scene to given bounds.
+	 * Zooms [Scene] to given bounds.
 	 *
-	 * @param from Top left coordinate
-	 * @param to Bottom right coordinate
+	 * @param from top left coordinate.
+	 * @param to bottom right coordinate.
 	 */
 	fun zoomTo(from: Coordinate, to: Coordinate): Unit =
 		zoomTo(from.xCoord, from.yCoord, to.xCoord, to.yCoord)
 	
 	/**
-	 * Zooms scene to given bounds.
+	 * Zooms [Scene] to given bounds.
 	 *
-	 * @param to Layout bounds
+	 * @param to layout bounds.
 	 */
 	fun zoomTo(to: CoordinatePlain): Unit =
 		zoomTo(to.topLeft, to.bottomRight)
@@ -186,7 +193,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	/**
-	 * Sets zoom detail property to given bounds.
+	 * Sets [zoomDetailProperty] to given bounds.
 	 * Checks for targets out of layout bounds.
 	 */
 	private fun zoomTo(fromX: Double, fromY: Double, toX: Double, toY: Double) {
@@ -207,63 +214,36 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	/**
-	 * Searches node recursively through the visual tree and logs path
-	 * where the node appears as first element and the root node as last.
+	 * Searches [node] recursively through the visual tree and logs path where the [node] appears as first element and
+	 * the [rootNode] as last.
 	 *
-	 * @param elementView Child to find.
+	 * @param node child to find.
 	 *
-	 * @return Path to child,.
+	 * @return path to child.
 	 *
-	 * @throws IllegalStateException If child was not in contained in this scene.
+	 * @throws IllegalStateException if child was not in contained in this [Scene].
 	 */
-	//TODO: How to prevent circles i.e. StackOverflow in recursion
-	fun findPathToChild(elementView: ElementView): List<ElementView> {
-		if (elementView is RootElement<*>) {
-			check(elementView == rootNode) { "Child is contained in another scene" }
+	fun findPathToChild(node: ElementView): List<ElementView> {
+		if (node is RootElement<*>) {
+			check(node == rootNode) { "Child is contained in another scene" }
 			return listOf(rootNode)
 		}
 		
-		checkNotNull(elementView.parent) { "Encountered element $elementView that is not contained in a scene." }
+		checkNotNull(node.parent) { "Encountered element $node that is not contained in a scene." }
 		
-		return mutableListOf(elementView) + findPathToChild(elementView.parent!!)
+		return mutableListOf(node) + findPathToChild(node.parent!!)
 	}
 	
-	@Suppress("UNCHECKED_CAST")
+	/**
+	 * Removes [child] from the root.
+	 */
 	internal fun removeChild(child: ElementView) {
 		try {
+			@Suppress("UNCHECKED_CAST")
 			this.removeElements(child as T)
 		} catch (_: ClassCastException) {
 		}
 	}
-	
-	/*
-	rootElements.flatMap { it.findPathToChildRecursively(elementView) }
-		.ifEmpty { throw NoSuchElementException("Child not found in visual tree.") }
-
-/**
- * Searches node recursively through the visual tree and logs path.
- *
- * @param elementView Child to find
- *
- * @return Path to child
- */
-private fun ElementView.findPathToChildRecursively(elementView: ElementView): List<ElementView> {
-	if (this == elementView)
-		return mutableListOf(elementView)
-	
-	val path = when (this) {
-		is GameElementContainerView<*> ->
-			observableElements.flatMap { it.findPathToChildRecursively(elementView) }.toMutableList()
-		
-		is GridLayoutView<*> ->
-			grid.mapNotNull { it.third }.flatMap { it.findPathToChildRecursively(elementView) }.toMutableList()
-		
-		else ->
-			mutableListOf()
-	}.ifEmpty { return listOf() }
-	
-	return path.apply { add(this@findPathToChildRecursively) }
-}*/
 }
 
 
