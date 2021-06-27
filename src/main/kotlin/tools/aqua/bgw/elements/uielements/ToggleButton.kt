@@ -28,7 +28,7 @@ open class ToggleButton(
 	width = width,
 	posX = posX,
 	posY = posY,
-) { //TODO: maybe labeled?
+) {
 	
 	/**
 	 * The ToggleGroup of this ToggleButton.

@@ -24,7 +24,7 @@ internal class AnimationBuilder {
 			
 			//set on finished
 			animation.setOnFinished {
-				node.layoutX = anim.toX //TODO: Check layoutX or PosX
+				node.layoutX = anim.toX
 				node.layoutY = anim.toY
 				node.translateX = 0.0
 				node.translateY = 0.0

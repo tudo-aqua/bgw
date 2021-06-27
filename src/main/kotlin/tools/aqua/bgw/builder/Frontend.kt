@@ -227,7 +227,6 @@ class Frontend : Application() {
 							translateX = contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
 							translateY = contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
 							
-							//TODO: Check with left and right alignment
 							sceneX = (sceneWidth - contentWidth * sceneScale) / 2 *
 									(1 + horizontalSceneAlignment.pivotMultiplier)
 							sceneY = (sceneHeight - contentHeight * sceneScale) / 2 *
@@ -240,7 +239,7 @@ class Frontend : Application() {
 							(scene.width - scene.zoomDetail.width) / scene.width,
 							(scene.height - scene.zoomDetail.height) / scene.height
 						)
-						scaleX += scale //FIXME
+						scaleX += scale
 						scaleY += scale
 						translateX -= scene.zoomDetail.topLeft.xCoord
 						translateY -= scene.zoomDetail.topLeft.yCoord

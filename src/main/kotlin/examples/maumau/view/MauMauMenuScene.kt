@@ -20,8 +20,6 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500) {
         background = ColorVisual(Color.WHITE)
         opacity = 0.7
         
-        //TODO: TextColor
-        
         val visual = ImageVisual("assets/buttonBG.png")
         continueGameButton.setVisuals(visual)
         newGameButton.setVisuals(visual)

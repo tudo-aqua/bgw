@@ -1,4 +1,4 @@
-@file:Suppress("MemberVisibilityCanBePrivate", "unused", "Unchecked_Cast", "DuplicatedCode") //TODO: Check suppresses
+@file:Suppress("MemberVisibilityCanBePrivate", "unused", "Unchecked_Cast", "DuplicatedCode")
 
 package tools.aqua.bgw.util
 
@@ -386,7 +386,7 @@ internal class ElementViewGrid<T : ElementView>(
 		rows += count
 		grid = newGrid
 		centeringModes = newCenteringModes
-	}//Todo: definitely needs a test
+	}
 	
 	fun removeRow(rowIndex: Int) {
 		require(rowIndex in 0 until rows) {
@@ -471,7 +471,7 @@ internal class ElementViewGrid<T : ElementView>(
 		private var currRow = 0
 		private var currCol = 0
 		
-		override fun hasNext(): Boolean = currCol < grid.size && currRow < grid[currCol].size //TODO: TEST!!!!!
+		override fun hasNext(): Boolean = currCol < grid.size && currRow < grid[currCol].size
 		
 		override fun next(): Triple<Int, Int, T?> {
 			if (currCol >= grid.size)

@@ -324,7 +324,6 @@ abstract class ElementView(
 	 */
 	var onKeyReleased: ((KeyEvent) -> Unit)? = null
 	
-	//TODO: key typed is composition of keys
 	/**
 	 * Gets invoked with a keyEvent whenever a key is typed while this ElementView has focus.
 	 * Gets invoked after onKeyPressed

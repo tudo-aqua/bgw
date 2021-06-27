@@ -69,7 +69,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				viewController.gameScene.currentPlayerHand.removeElement(cardView)
 				viewController.gameScene.gameStackView.addElement(cardView)
 				
-				cardView.posX = 0.0 //TODO: Check
+				cardView.posX = 0.0
 				cardView.posY = 0.0
 				
 				//update label
@@ -83,7 +83,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			viewController.gameScene.currentPlayerHand.removeElement(cardView)
 			viewController.gameScene.gameStackView.push(cardView)
 			
-			cardView.posX = 0.0 //TODO: Check
+			cardView.posX = 0.0
 			cardView.posY = 0.0
 			
 			//update label

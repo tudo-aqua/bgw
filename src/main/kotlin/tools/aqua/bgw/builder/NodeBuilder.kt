@@ -44,10 +44,10 @@ internal class NodeBuilder {
 				|| elementView.posY + elementView.height > scene.height + TOLERANCE
 			) {
 				throw ElementOutOfSceneBoundsException(element = elementView, scene = scene)
-			}*///Fixme
+			}*/
 			
 			//if(scene.elementsMap.containsKey(elementView))
-			//	throw RuntimeException("Duplicate element") //TODO
+			//	throw RuntimeException("Duplicate element")
 			
 			val node = when (elementView) {
 				is GameElementContainerView<out GameElementView> ->

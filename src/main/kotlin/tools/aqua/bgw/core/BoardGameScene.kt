@@ -15,7 +15,12 @@ import tools.aqua.bgw.observable.BooleanProperty
 open class BoardGameScene(width: Number = 1920, height: Number = 1080) :
 	Scene<ElementView>(width = width, height = height) {
 	
-	//TODO: Missing Docs
+	/**
+	 * Property that indicates if this [BoardGameScene] is locked from user input.
+	 *
+	 * @see lock
+	 * @see unlock
+	 */
 	internal val lockedProperty = BooleanProperty(false)
 	
 	/**

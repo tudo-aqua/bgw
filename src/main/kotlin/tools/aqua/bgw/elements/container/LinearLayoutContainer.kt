@@ -143,7 +143,6 @@ open class LinearLayoutContainer<T : GameElementView>(
     }
     
     private fun T.addPosListeners() {
-        //TODO: maybe increase performance
         posXProperty.internalListener = { _, _ -> observableElements.internalListener?.invoke() }
         posYProperty.internalListener = { _, _ -> observableElements.internalListener?.invoke() }
     }

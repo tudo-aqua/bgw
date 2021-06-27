@@ -66,7 +66,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	 * Property for the background [Visual] of this [Scene].
 	 */
 	internal val backgroundProperty: ObjectProperty<Visual> =
-		ObjectProperty(ColorVisual(Color(255, 255, 255))) //TODO: Can be private = BUG?
+		ObjectProperty(ColorVisual(Color(255, 255, 255)))
 	
 	/**
 	 * The background [Visual] of this [Scene].

@@ -104,13 +104,15 @@ internal class SceneBuilder {
 			children.clear()
 			scene.elementsMap.clear()
 			
-			children.add(VisualBuilder.buildVisual(scene.background).apply { //TODO: Make observable
-				prefWidthProperty().unbind() //TODO: Check
-				prefWidthProperty().unbind()
-				prefHeight = scene.height
-				prefWidth = scene.width
-				scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
-			})
+			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oV, nV ->
+				children.add(0, VisualBuilder.buildVisual(nV).apply {
+					prefWidthProperty().unbind()
+					prefWidthProperty().unbind()
+					prefHeight = scene.height
+					prefWidth = scene.width
+					scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
+				})
+			}
 			
 			for (element in scene.rootElements) {
 				val node = NodeBuilder.build(scene, element)

@@ -78,7 +78,7 @@ open class BoardGameApplication {
 	 */
 	fun showGameScene(scene: BoardGameScene) {
 		Frontend.showGameScene(scene)
-	}//TODO: Check what happens if menuScene is shown (new boardGameScene inactive?)
+	}
 	
 	/**
 	 * Sets alignment of all [Scene]s in this [BoardGameApplication].
