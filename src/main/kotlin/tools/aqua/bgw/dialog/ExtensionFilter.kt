@@ -3,9 +3,10 @@ package tools.aqua.bgw.dialog
 /**
  * Extension filters for FileChoosers.
  * Maps a file type description to it's extensions.
+ * To generate e.g. "Image Files (*.png, *.jpg)" set [description] = "Image files" and [extensions] = ("png", "jpg").
  *
- * @param description File type description
- * @param extensions File extensions
+ * @param description file type description.
+ * @param extensions file extensions.
  */
 class ExtensionFilter(val description: String, vararg extensions: String) {
 	

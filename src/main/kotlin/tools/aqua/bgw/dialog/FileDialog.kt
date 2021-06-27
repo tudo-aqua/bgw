@@ -5,11 +5,11 @@ import java.io.File
 /**
  * A FileDialog such as a file chooser or save dialog, depending on FileDialogMode.
  *
- * @param mode The dialog's mode
- * @param title The dialog's title text
- * @param initialFileName The initial file name in the file name text box
- * @param initialDirectory The initial directory where to open the file chooser
- * @param extensionFilters Extensions filters for this file chooser
+ * @param mode the dialog's mode.
+ * @param title the dialog's title text.
+ * @param initialFileName the initial file name in the file name text box.
+ * @param initialDirectory the initial directory where to open the file chooser.
+ * @param extensionFilters extensions filters for this file chooser.
  *
  * @see tools.aqua.bgw.dialog.FileDialog.FileDialogMode
  * @see tools.aqua.bgw.dialog.ExtensionFilter
