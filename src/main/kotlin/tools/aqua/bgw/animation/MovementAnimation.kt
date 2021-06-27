@@ -7,14 +7,14 @@ import tools.aqua.bgw.elements.ElementView
 
 /**
  * A movement animation.
- * Moves given ElementView relative to parents anchor point.
+ * Moves given [ElementView] relative to parents anchor point.
  *
- * @param elementView GameElementView to animate
- * @param fromX Initial X position. Default: current PosX
- * @param toX Resulting X position. Default: current PosX
- * @param fromY Initial X position. Default: current PosY
- * @param toY Resulting X position. Default: current PosY
- * @param duration Animation duration in milliseconds. Default: 1 second
+ * @param elementView [ElementView] to animate
+ * @param fromX initial X position. Default: Current PosX.
+ * @param toX resulting X position. Default: Current PosX.
+ * @param fromY initial X position. Default: Current PosY.
+ * @param toY resulting X position. Default: Current PosY.
+ * @param duration duration in milliseconds. Default: 1 second.
  */
 class MovementAnimation<T : ElementView>(
 	elementView: T,

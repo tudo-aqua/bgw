@@ -6,12 +6,12 @@ import tools.aqua.bgw.elements.ElementView
 
 /**
  * A rotation animation.
- * Rotates given ElementView to given angle.
+ * Rotates [ElementView] to given angle.
  *
- * @param elementView GameElementView to animate
- * @param fromAngle Initial angle. Default: current angle
- * @param toAngle Resulting angle. Default: current angle
- * @param duration Animation duration in milliseconds. Default: 1 second
+ * @param elementView [ElementView] to animate.
+ * @param fromAngle initial angle. Default: Current angle.
+ * @param toAngle resulting angle. Default: Current angle.
+ * @param duration duration in milliseconds. Default: 1 second.
  */
 class RotationAnimation<T : ElementView>(
 	elementView: T,

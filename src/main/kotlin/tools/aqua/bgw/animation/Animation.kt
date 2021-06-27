@@ -8,7 +8,7 @@ import tools.aqua.bgw.event.EventHandler
 /**
  * Animation superclass.
  *
- * @param duration Animation duration in milliseconds. Default: 1 second
+ * @param duration duration in milliseconds. Default: 1 second.
  */
 sealed class Animation(var duration: Int = 1000) {
     
@@ -18,7 +18,7 @@ sealed class Animation(var duration: Int = 1000) {
     var running: Boolean = false
     
     /**
-     * Event handler that gets invoked when animation has finished.
+     * [EventHandler] that gets invoked when animation has finished.
      */
     var onFinished: EventHandler<AnimationFinishedEvent>? = null
 }
