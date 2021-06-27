@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.ObservableArrayList
@@ -14,7 +16,7 @@ class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
 	 * The property for the children of this stack.
 	 * The first SingleLayerVisual gets displayed at the bottom of the stack.
 	 */
-	val childrenProperty = ObservableArrayList(children.toList())
+	val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children.toList())
 	
 	/**
 	 * The children of this stack.

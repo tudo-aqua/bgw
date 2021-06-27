@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.exception
 
 import tools.aqua.bgw.core.Scene

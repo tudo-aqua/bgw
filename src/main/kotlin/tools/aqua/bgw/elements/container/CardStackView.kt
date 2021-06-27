@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.elements.container
 
 import tools.aqua.bgw.core.HorizontalAlignment
@@ -114,8 +116,8 @@ open class CardStackView<T : CardView>(
 		cardView.parent = this
 		cardView.addPosListeners()
 	}
-
-
+	
+	
 	override fun addElement(element: T, index: Int) {
 		super.addElement(element, index)
 		element.addPosListeners()

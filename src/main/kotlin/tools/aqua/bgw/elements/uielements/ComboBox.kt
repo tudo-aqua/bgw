@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.observable.ObjectProperty

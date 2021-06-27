@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package tools.aqua.bgw.observable
 
@@ -64,7 +64,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 *
 	 * @return `true` if this list contains elements.
 	 */
-	fun isNotEmpty() = !isEmpty()
+	fun isNotEmpty(): Boolean = !isEmpty()
 	
 	/**
 	 * Returns `true` if this list contains the specified element.
@@ -349,7 +349,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * ForEach action.
 	 */
-	fun forEach(action: Consumer<in T>) = list.forEach(action)
+	fun forEach(action: Consumer<in T>): Unit = list.forEach(action)
 	
 	/**
 	 * Creates *[late-binding](Spliterator.html#binding)* and *fail-fast* [Spliterator] over the elements in this list.

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.uielements
 
 import java.awt.Color
@@ -25,11 +27,11 @@ open class ColorPicker(
 		/**
 		 * Suggested color picker height.
 		 */
-		const val COLOR_PICKER_HEIGHT = 40
+		const val COLOR_PICKER_HEIGHT: Int = 40
 		
 		/**
 		 * Suggested color picker width.
 		 */
-		const val COLOR_PICKER_WIDTH = 100
+		const val COLOR_PICKER_WIDTH: Int = 100
 	}
 }

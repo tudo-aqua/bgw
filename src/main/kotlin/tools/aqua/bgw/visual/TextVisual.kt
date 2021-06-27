@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.StringProperty
@@ -11,12 +13,12 @@ class TextVisual(text: String) : SingleLayerVisual() { //TODO: Add Font size her
 	/**
 	 * The property for the displayed text.
 	 */
-	val textProperty = StringProperty(text)
+	val textProperty: StringProperty = StringProperty(text)
 	
 	/**
 	 * The displayed text.
 	 */
-	var text
+	var text: String
 		get() = textProperty.value
 		set(value) {
 			textProperty.value = value

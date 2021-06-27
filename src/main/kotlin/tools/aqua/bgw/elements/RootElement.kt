@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.Scene
@@ -8,7 +10,7 @@ import tools.aqua.bgw.core.Scene
  * @param scene scene of this root element.
  */
 internal class RootElement<T : ElementView>(val scene: Scene<T>) : ElementView() {
-
+	
 	@Suppress("UNCHECKED_CAST")
 	override fun removeChild(child: ElementView) {
 		try {

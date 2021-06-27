@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.gameelements
 
 import tools.aqua.bgw.observable.IntegerProperty
@@ -33,7 +35,7 @@ open class DiceView(
 	 * Current side that is displayed.
 	 * @see currentSideProperty
 	 */
-	var currentSide
+	var currentSide: Int
 		get() = currentSideProperty.value
 		set(value) {
 			currentSideProperty.value = value
@@ -44,7 +46,7 @@ open class DiceView(
 	 *
 	 * @see ImageVisual
 	 */
-	fun getCurrentImageVisual() = visuals[currentVisual] as ImageVisual
+	fun getCurrentImageVisual(): ImageVisual = visuals[currentVisual] as ImageVisual
 	
 	/**
 	 * Sets the currentSide to be displayed.
@@ -61,11 +63,11 @@ open class DiceView(
 		/**
 		 * Suggested DiceView height.
 		 */
-		const val DICE_HEIGHT = 80
+		const val DICE_HEIGHT: Int = 80
 		
 		/**
 		 * Suggested DiceView width.
 		 */
-		const val DICE_WIDTH = 80
+		const val DICE_WIDTH: Int = 80
 	}
 }

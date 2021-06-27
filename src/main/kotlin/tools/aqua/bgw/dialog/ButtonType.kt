@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.dialog
 
 /**
@@ -5,7 +7,7 @@ package tools.aqua.bgw.dialog
  *
  * @param text Displayed button text
  */
-enum class ButtonType(val text: String) {
+enum class ButtonType(private val text: String) {
 	/**
 	 * A [ButtonType] that displays "Apply".
 	 */

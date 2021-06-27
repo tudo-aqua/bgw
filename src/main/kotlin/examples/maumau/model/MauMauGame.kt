@@ -4,14 +4,14 @@ class MauMauGame {
 	
 	val mauMauCards: MutableCollection<MauMauCard> = ArrayList()
 	
-	val drawStack = DrawStack()
+	val drawStack: DrawStack = DrawStack()
 	
-	val gameStack = GameStack()
+	val gameStack: GameStack = GameStack()
 	
-	var currentPlayer = MauMauPlayer()
-	var otherPlayer = MauMauPlayer()
+	var currentPlayer: MauMauPlayer = MauMauPlayer()
+	var otherPlayer: MauMauPlayer = MauMauPlayer()
 	
-	var nextSuit = CardSuit.HEARTS
+	var nextSuit: CardSuit = CardSuit.HEARTS
 	
 	fun shuffleGameStackBack() {
 		drawStack.shuffleBack(gameStack.shuffleBack())

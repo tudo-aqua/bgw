@@ -13,7 +13,7 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Current game instance
 	 */
-	var game = MauMauGame()
+	var game: MauMauGame = MauMauGame()
 	
 	/**
 	 * Sets up a new game
@@ -167,7 +167,7 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Checks play rules
 	 */
-	fun checkRules(card: MauMauCard) =
+	fun checkRules(card: MauMauCard): Boolean =
 		card.cardValue == CardValue.JACK
 				|| card.cardSuit == game.nextSuit
 				|| card.cardValue == game.gameStack.peek().cardValue

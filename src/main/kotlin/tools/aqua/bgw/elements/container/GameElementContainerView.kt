@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.elements.container
 
 import tools.aqua.bgw.elements.DynamicView
@@ -125,22 +127,22 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * Returns the size of the elements list.
 	 * @see elements
 	 */
-	fun numberOfElements() = observableElements.size()
+	fun numberOfElements(): Int = observableElements.size()
 	
 	/**
 	 * Returns whether the elements list is empty `true` or not `false`.
 	 * @see elements
 	 */
-	fun isEmpty() = observableElements.isEmpty()
+	fun isEmpty(): Boolean = observableElements.isEmpty()
 	
 	/**
 	 * Returns whether the elements list is not empty `true` or not `false`.
 	 * @see elements
 	 */
-	fun isNotEmpty() = !isEmpty()
-
+	fun isNotEmpty(): Boolean = !isEmpty()
+	
 	override fun getChildPosition(child: ElementView): Coordinate? = Coordinate(child.posX, child.posY)
-
+	
 	@Suppress("UNCHECKED_CAST")
 	override fun removeChild(child: ElementView) {
 		try {
@@ -148,23 +150,23 @@ sealed class GameElementContainerView<T : GameElementView>(
 		} catch (_: ClassCastException) {
 		}
 	}
-
+	
 	override fun iterator() : Iterator<T> = observableElements.iterator()
-
+	
 	/**
 	 * Adds the supplied GameElement to this GameElementViewContainer.
 	 */
 	operator fun T.unaryPlus() {
 		addElement(this)
 	}
-
+	
 	/**
 	 * Adds the supplied GameElements to this GameElementViewContainer.
 	 */
 	operator fun Collection<T>.unaryPlus() {
 		addAllElements(this)
 	}
-
+	
 	/**
 	 * Removes the supplied GameElement from this GameElementContainerView.
 	 */

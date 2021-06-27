@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.gameelements
 
 import tools.aqua.bgw.observable.ObjectProperty
@@ -48,7 +50,7 @@ open class CardView(
 	 * @see showBack
 	 * @see currentSideProperty
 	 */
-	var currentSide
+	var currentSide: CardSide
 		get() = currentSideProperty.value
 		set(value) {
 			currentSideProperty.value = value
@@ -94,12 +96,12 @@ open class CardView(
 		/**
 		 * Suggested card height.
 		 */
-		const val DEFAULT_CARD_HEIGHT = 200
+		const val DEFAULT_CARD_HEIGHT: Int = 200
 		
 		/**
 		 * Suggested card width.
 		 */
-		const val DEFAULT_CARD_WIDTH = 130
+		const val DEFAULT_CARD_WIDTH: Int = 130
 	}
 	
 	/**

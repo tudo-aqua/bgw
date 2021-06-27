@@ -40,7 +40,7 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	/**
 	 * Notifies all listeners with current value.
 	 */
-	fun notifyUnchanged() = notifyChange(boxedValue, boxedValue)
+	fun notifyUnchanged(): Unit = notifyChange(boxedValue, boxedValue)
 }
 
 /**

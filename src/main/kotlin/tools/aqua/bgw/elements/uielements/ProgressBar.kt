@@ -1,9 +1,12 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.ObjectProperty
 import java.awt.Color
 
+//TODO: Missing Docs
 class ProgressBar(
 	height: Number = 0,
 	width: Number = 0,
@@ -19,7 +22,7 @@ class ProgressBar(
 	 * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100% progress.
 	 * Any value less than 0 gets represented as 0% progress, while any value greater than 1 gets represented as 100% progress.
 	 */
-	val progressProperty = DoubleProperty(progress)
+	val progressProperty: DoubleProperty = DoubleProperty(progress)
 	
 	/**
 	 * Progress state of this ProgressBar. Changes are rendered directly by the framework.
@@ -27,7 +30,7 @@ class ProgressBar(
 	 * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100% progress.
 	 * Any value less than 0 gets represented as 0% progress, while any value greater than 1 gets represented as 100% progress.
 	 */
-	var progress
+	var progress: Double
 		get() = progressProperty.value
 		set(value) {
 			progressProperty.value = value
@@ -36,12 +39,12 @@ class ProgressBar(
 	/**
 	 * Property for the bar color of this ProgressBar. Changes are rendered directly by the framework.
 	 */
-	val barColorProperty = ObjectProperty(barColor)
+	val barColorProperty: ObjectProperty<Color> = ObjectProperty(barColor)
 	
 	/**
 	 * Bar color of this ProgressBar. Changes are rendered directly by the framework.
 	 */
-	var barColor
+	var barColor: Color
 		get() = barColorProperty.value
 		set(value) {
 			barColorProperty.value = value

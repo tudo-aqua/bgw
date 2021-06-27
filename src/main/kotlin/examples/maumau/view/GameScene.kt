@@ -25,51 +25,53 @@ import java.awt.Color
 import javax.imageio.ImageIO
 
 class GameScene : BoardGameScene() {
-
-    //Player hands
-    var otherPlayerHand =
-        LinearLayoutContainer<CardView>(height = 220, width = 800, posX = 560, posY = 50, spacing = -50)
-    var currentPlayerHand =
-        LinearLayoutContainer<CardView>(height = 220, width = 800, posX = 560, posY = 830, spacing = -50)
-
-    //Stacks
-    val drawStackView = CardStackView<CardView>(height = 200, width = 130, posX = 750, posY = 440)
-    val gameStackView = CardStackView<CardView>(height = 200, width = 130, posX = 1040, posY = 440)
-    val drawStackInfo = Label(height = 40, width = 130, posX = 750, posY = 400)
-    val gameStackInfo = Label(height = 40, width = 130, posX = 1040, posY = 400)
-    
-    //Jack selection
-    val buttonClubs = Button(height = 200, width = 130, posX = 820, posY = 330)
-    val buttonSpades = Button(height = 200, width = 130, posX = 970, posY = 330)
-    val buttonHearts = Button(height = 200, width = 130, posX = 820, posY = 550)
-    val buttonDiamonds = Button(height = 200, width = 130, posX = 970, posY = 550)
-    
-    val grid = GridLayoutView<GameElementView>(3, 3, posX = 200, posY = 200, spacing = 20).apply {
-        this[0, 0] = TokenView(50, 50, 0, 0, ColorVisual(Color.RED)).apply { isDraggable = true }
-        this[1, 1] = TokenView(50, 50, 0, 0, ColorVisual(Color.GREEN)).apply { isDraggable = true }
-        this[2, 2] = TokenView(50, 50, 0, 0, ColorVisual(Color.BLUE)).apply { isDraggable = true }
-        setVisuals(ColorVisual(Color.WHITE))
-    }
-    
-    //Menu button
-    val mainMenuButton = Button(
-        height = 100,
-        width = 200,
-        posX = 20,
-        posY = 20,
-        label = "Hauptmenü",
-        font = Font(20.0, fontStyle = FontStyle.Italic, color = Color.PINK)
-    )
-
-    init {
-        //Set background of scene
-        background = ImageVisual(ImageIO.read(this::class.java.classLoader.getResource(BG_FILE)))
-
-        //Color MenuButton
-        mainMenuButton.setVisuals(ColorVisual(180, 0, 0))
-
-        //Set up player hands
-        currentPlayerHand.apply {
+	//Player hands
+	var otherPlayerHand: LinearLayoutContainer<CardView> =
+		LinearLayoutContainer(height = 220, width = 800, posX = 560, posY = 50, spacing = -50)
+	var currentPlayerHand: LinearLayoutContainer<CardView> =
+		LinearLayoutContainer(height = 220, width = 800, posX = 560, posY = 830, spacing = -50)
+	
+	//Stacks
+	val drawStackView: CardStackView<CardView> =
+		CardStackView(height = 200, width = 130, posX = 750, posY = 440)
+	val gameStackView: CardStackView<CardView> =
+		CardStackView(height = 200, width = 130, posX = 1040, posY = 440)
+	val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 400)
+	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 400)
+	
+	//Jack selection
+	val buttonClubs: Button = Button(height = 200, width = 130, posX = 820, posY = 330)
+	val buttonSpades: Button = Button(height = 200, width = 130, posX = 970, posY = 330)
+	val buttonHearts: Button = Button(height = 200, width = 130, posX = 820, posY = 550)
+	val buttonDiamonds: Button = Button(height = 200, width = 130, posX = 970, posY = 550)
+	
+	val grid: GridLayoutView<GameElementView> =
+		GridLayoutView<GameElementView>(3, 3, posX = 200, posY = 200, spacing = 20).apply {
+			this[0, 0] = TokenView(50, 50, 0, 0, ColorVisual(Color.RED)).apply { isDraggable = true }
+			this[1, 1] = TokenView(50, 50, 0, 0, ColorVisual(Color.GREEN)).apply { isDraggable = true }
+			this[2, 2] = TokenView(50, 50, 0, 0, ColorVisual(Color.BLUE)).apply { isDraggable = true }
+			setVisuals(ColorVisual(Color.WHITE))
+		}
+	
+	//Menu button
+	val mainMenuButton: Button = Button(
+		height = 100,
+		width = 200,
+		posX = 20,
+		posY = 20,
+		label = "Hauptmenü",
+		font = Font(20.0, fontStyle = FontStyle.Italic, color = Color.PINK)
+	)
+	
+	init {
+		//Set background of scene
+		background = ImageVisual(ImageIO.read(this::class.java.classLoader.getResource(BG_FILE)))
+		
+		//Color MenuButton
+		mainMenuButton.setVisuals(ColorVisual(180, 0, 0))
+		
+		//Set up player hands
+		currentPlayerHand.apply {
             setVisuals(ColorVisual(Color(255, 255, 255, 50)))
             horizontalAlignment = HorizontalAlignment.CENTER
             verticalAlignment = VerticalAlignment.CENTER

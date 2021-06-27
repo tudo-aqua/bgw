@@ -1,9 +1,12 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
+//TODO: Missing Docs
 sealed class LabeledUIElementView(
 	height: Number = 0,
 	width: Number = 0,

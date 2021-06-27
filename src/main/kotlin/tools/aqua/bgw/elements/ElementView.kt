@@ -1,10 +1,13 @@
-@file:Suppress("MemberVisibilityCanBePrivate", "Unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.event.*
+import tools.aqua.bgw.event.DropEvent
+import tools.aqua.bgw.event.Event
+import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.DoubleProperty
@@ -54,7 +57,7 @@ abstract class ElementView(
 	/**
 	 * Name field only for debugging purposes. Has no effect on rendering
 	 */
-	var name = javaClass.name + "@" + Integer.toHexString(this.hashCode())
+	var name: String = javaClass.name + "@" + Integer.toHexString(this.hashCode())
 	
 	/**
 	 * Property for the height of this ElementView.
@@ -272,14 +275,14 @@ abstract class ElementView(
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
-	var onMouseEntered: ((Event) -> Unit)? = null
+	var onMouseEntered: ((MouseEvent) -> Unit)? = null
 	
 	/**
 	 * Gets invoked with an event whenever the Mouse leaves this ElementView.
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
-	var onMouseExited: ((Event) -> Unit)? = null
+	var onMouseExited: ((MouseEvent) -> Unit)? = null
 	
 	/**
 	 * Gets invoked with a mouseEvent whenever the Mouse is pressed inside this ElementView.

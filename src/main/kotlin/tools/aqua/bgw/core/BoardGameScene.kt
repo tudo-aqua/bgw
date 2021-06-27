@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.elements.ElementView
@@ -12,6 +14,8 @@ import tools.aqua.bgw.observable.BooleanProperty
  */
 open class BoardGameScene(width: Number = 1920, height: Number = 1080) :
 	Scene<ElementView>(width = width, height = height) {
+	
+	//TODO: Missing Docs
 	internal val lockedProperty = BooleanProperty(false)
 	
 	/**

@@ -4,7 +4,7 @@ import javafx.animation.*
 import javafx.util.Duration
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.event.Event
+import tools.aqua.bgw.event.AnimationFinishedEvent
 import kotlin.random.Random
 
 internal class AnimationBuilder {
@@ -29,7 +29,7 @@ internal class AnimationBuilder {
 				node.translateX = 0.0
 				node.translateY = 0.0
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(Event())
+				anim.onFinished?.handle(AnimationFinishedEvent())
 			}
 			
 			animation.play()
@@ -52,7 +52,7 @@ internal class AnimationBuilder {
 				node.translateX = 0.0
 				node.translateY = 0.0
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(Event())
+				anim.onFinished?.handle(AnimationFinishedEvent())
 			}
 			
 			animation.play()
@@ -81,7 +81,7 @@ internal class AnimationBuilder {
 			
 			//set on finished
 			animation2.setOnFinished {
-				anim.onFinished?.handle(Event())
+				anim.onFinished?.handle(AnimationFinishedEvent())
 			}
 			
 			animation1.play()
@@ -93,7 +93,7 @@ internal class AnimationBuilder {
 			//set on finished
 			animation.setOnFinished {
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(Event())
+				anim.onFinished?.handle(AnimationFinishedEvent())
 			}
 			
 			animation.play()
@@ -113,7 +113,7 @@ internal class AnimationBuilder {
 			seq.setOnFinished {
 				anim.element.currentSide = anim.toSide
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(Event())
+				anim.onFinished?.handle(AnimationFinishedEvent())
 			}
 			
 			seq.play()

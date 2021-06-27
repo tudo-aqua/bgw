@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.event
 
 /**
@@ -22,5 +24,10 @@ enum class MouseButtonType {
 	/**
 	 * All other buttons.
 	 */
-	OTHER
+	OTHER,
+	
+	/**
+	 * Unspecified.
+	 */
+	UNSPECIFIED
 }

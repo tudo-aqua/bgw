@@ -1,8 +1,9 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.container
 
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.gameelements.GameElementView
-import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -47,7 +48,7 @@ open class GameElementPoolView<T : GameElementView>(
 	GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visuals = mutableListOf(visual)) {
 	
 	private val initialStates: HashMap<ElementView, InitialState> = HashMap()
-
+	
 	
 	override fun addElement(element: T, index: Int) {
 		super.addElement(element, index)
@@ -121,7 +122,7 @@ open class GameElementPoolView<T : GameElementView>(
 		widthProperty.internalListener = null
 		heightProperty.internalListener = null
 	}
-
+	
 	private fun GameElementView.addPosListeners() {
 		this.posXProperty.addListenerAndInvoke(0.0) { _, _ ->
 			posXProperty.setSilent(0.0)
@@ -130,7 +131,7 @@ open class GameElementPoolView<T : GameElementView>(
 			posYProperty.setSilent(0.0)
 		}
 	}
-
+	
 	private fun GameElementView.removePosListeners() {
 		this.posXProperty.internalListener = null
 		this.posYProperty.internalListener = null

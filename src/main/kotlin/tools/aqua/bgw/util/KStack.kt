@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.util
 
 /**
@@ -82,25 +84,25 @@ class KStack<T> {
 	 * Returns the index of the first occurrence of the specified element in the KStack,
 	 * or -1 if the specified element is not contained in the KStack.
 	 */
-	fun indexOf(element: T) = data.indexOf(element)
+	fun indexOf(element: T): Int = data.indexOf(element)
 	
 	/**
 	 * Returns whether this KStack is empty or not.
 	 */
-	fun isEmpty() = data.isEmpty()
+	fun isEmpty(): Boolean = data.isEmpty()
 	
 	/**
 	 * Returns the size of this KStack.
 	 */
-	fun size() = data.size
+	fun size(): Int = data.size
 	
 	/**
 	 * Clears this KStack.
 	 */
-	fun clear() = data.clear()
+	fun clear(): Unit = data.clear()
 	
 	/**
 	 * Shuffles this KStack.
 	 */
-	fun shuffle() = data.shuffle()
+	fun shuffle(): Unit = data.shuffle()
 }

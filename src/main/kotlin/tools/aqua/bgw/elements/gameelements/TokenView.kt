@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.gameelements
 
 import tools.aqua.bgw.visual.Visual

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.elements.StaticView

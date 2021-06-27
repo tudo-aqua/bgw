@@ -1,4 +1,4 @@
-@file:Suppress("MemberVisibilityCanBePrivate")
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
 
 package tools.aqua.bgw.core
 
@@ -7,6 +7,7 @@ import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.FileDialog
+import java.io.File
 import java.util.*
 
 /**
@@ -27,7 +28,7 @@ open class BoardGameApplication {
 	 *
 	 * @return Chosen file(s) or Optional.empty if canceled
 	 */
-	fun showFileDialog(dialog: FileDialog) = Frontend.showFileDialog(dialog)
+	fun showFileDialog(dialog: FileDialog): Optional<List<File>> = Frontend.showFileDialog(dialog)
 	
 	/**
 	 * Shows a dialog containing the given message and buttons.

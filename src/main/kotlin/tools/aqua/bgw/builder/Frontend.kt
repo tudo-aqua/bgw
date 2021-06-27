@@ -29,6 +29,9 @@ import kotlin.math.min
  */
 class Frontend : Application() {
 	
+	/**
+	 * Starts the application.
+	 */
 	override fun start(primaryStage: Stage) {
 		startApplication(primaryStage)
 	}
@@ -44,9 +47,10 @@ class Frontend : Application() {
 		private const val BACKGROUND_SIZE = 10_000.0
 		
 		internal var boardGameScene: BoardGameScene? = null
-		internal var menuScene: MenuScene? = null
-		internal var scenePane: Pane = Pane()
-		internal var gamePane: Pane? = null
+		
+		private var menuScene: MenuScene? = null
+		private var scenePane: Pane = Pane()
+		private var gamePane: Pane? = null
 		private var menuPane: Pane? = null
 		private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
 		private var primaryStage: Stage? = null

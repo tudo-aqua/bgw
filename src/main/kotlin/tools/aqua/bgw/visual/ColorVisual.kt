@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.ObjectProperty
@@ -16,14 +18,14 @@ class ColorVisual(color: Color) : SingleLayerVisual() {
 	 * The alpha channel gets multiplied with the transparency property i.e. alpha = 128 (50%)
 	 * and transparency = 0.5 (50%) leads to 25% visibility / 75% transparency.
 	 */
-	val colorProperty = ObjectProperty(color)
+	val colorProperty: ObjectProperty<Color> = ObjectProperty(color)
 	
 	/**
 	 * The displayed color of this visual.
 	 * The alpha channel gets multiplied with the transparency property i.e. alpha = 128 (50%)
 	 * and transparency = 0.5 (50%) leads to 25% visibility / 75% transparency.
 	 */
-	var color
+	var color: Color
 		get() = colorProperty.value
 		set(value) {
 			colorProperty.value = value

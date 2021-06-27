@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.MenuScene

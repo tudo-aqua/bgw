@@ -13,32 +13,32 @@ import java.awt.Color
 import kotlin.system.exitProcess
 
 class ViewController : BoardGameApplication() {
-    
-    val gameScene: GameScene = GameScene()
-    val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
-    
-    val refreshViewController = RefreshViewController(this)
-    val logicController = LogicController(refreshViewController)
-    
-    val cardMap = BidirectionalMap<MauMauCard, CardView>()
-    
-    init {
-        registerGameEvents()
-        registerMenuEvents()
-        
-        showGameScene(gameScene)
-        showMenuScene(mauMauMenuScene)
-        show()
-    }
-    
-    private fun registerGameEvents() {
-        gameScene.gameStackView.dropAcceptor = this::tryElementDropped
-        gameScene.gameStackView.onDragElementDropped = this::elementDropped
-        
-        gameScene.drawStackView.onMouseClicked = {
-            if (!logicController.game.drawStack.isEmpty())
-                logicController.drawCard()
-        }
+	
+	val gameScene: GameScene = GameScene()
+	val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
+	
+	val refreshViewController: RefreshViewController = RefreshViewController(this)
+	val logicController: LogicController = LogicController(refreshViewController)
+	
+	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap<MauMauCard, CardView>()
+	
+	init {
+		registerGameEvents()
+		registerMenuEvents()
+		
+		showGameScene(gameScene)
+		showMenuScene(mauMauMenuScene)
+		show()
+	}
+	
+	private fun registerGameEvents() {
+		gameScene.gameStackView.dropAcceptor = this::tryElementDropped
+		gameScene.gameStackView.onDragElementDropped = this::elementDropped
+		
+		gameScene.drawStackView.onMouseClicked = {
+			if (!logicController.game.drawStack.isEmpty())
+				logicController.drawCard()
+		}
         
         gameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS) }
         gameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS) }

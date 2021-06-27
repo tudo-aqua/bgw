@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.core
 
 import javafx.scene.layout.StackPane
@@ -56,7 +58,8 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	/**
 	 * Property for the background visual of this scene.
 	 */
-	internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(ColorVisual(Color(255, 255, 255)))
+	internal val backgroundProperty: ObjectProperty<Visual> =
+		ObjectProperty(ColorVisual(Color(255, 255, 255))) //TODO: Can be private = BUG?
 	
 	/**
 	 * The background visual of this scene.
@@ -155,7 +158,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	 * @param toX Right bound
 	 * @param toY Bottom bound
 	 */
-	fun zoomTo(fromX: Number, fromY: Number, toX: Number, toY: Number) =
+	fun zoomTo(fromX: Number, fromY: Number, toX: Number, toY: Number): Unit =
 		zoomTo(fromX.toDouble(), fromY.toDouble(), toX.toDouble(), toY.toDouble())
 	
 	/**
@@ -164,7 +167,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	 * @param from Top left coordinate
 	 * @param to Bottom right coordinate
 	 */
-	fun zoomTo(from: Coordinate, to: Coordinate) =
+	fun zoomTo(from: Coordinate, to: Coordinate): Unit =
 		zoomTo(from.xCoord, from.yCoord, to.xCoord, to.yCoord)
 	
 	/**
@@ -172,7 +175,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	 *
 	 * @param to Layout bounds
 	 */
-	fun zoomTo(to: CoordinatePlain) =
+	fun zoomTo(to: CoordinatePlain): Unit =
 		zoomTo(to.topLeft, to.bottomRight)
 	
 	/**

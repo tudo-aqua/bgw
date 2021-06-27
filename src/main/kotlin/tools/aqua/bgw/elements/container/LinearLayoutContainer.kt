@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.elements.container
 
 import tools.aqua.bgw.core.HorizontalAlignment
@@ -39,31 +41,31 @@ open class LinearLayoutContainer<T : GameElementView>(
     verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
     horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
 ) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY) {
-
+    
     /**
      * Property for the spacing of GameElementViews in this LinearLayoutContainer.
      */
     val spacingProperty: DoubleProperty = DoubleProperty(spacing.toDouble())
-
+    
     /**
      * Property for the orientation of GameElementViews in this LinearLayoutContainer.
      * @see Orientation
      */
     val orientationProperty: ObjectProperty<Orientation> = ObjectProperty(orientation)
-
+    
     /**
      * Property for the verticalAlignment of GameElementViews in this LinearLayoutContainer.
      * @see VerticalAlignment
      */
     val verticalAlignmentProperty: ObjectProperty<VerticalAlignment> = ObjectProperty(verticalAlignment)
-
+    
     /**
      * Property for the horizontalAlignment of GameElementViews in this LinearLayoutContainer.
      * @see HorizontalAlignment
      */
     val horizontalAlignmentProperty: ObjectProperty<HorizontalAlignment> = ObjectProperty(horizontalAlignment)
-
-
+    
+    
     /**
      * Spacing for this LinearLayoutContainer.
      */
@@ -72,7 +74,7 @@ open class LinearLayoutContainer<T : GameElementView>(
         set(value) {
             spacingProperty.value = value
         }
-
+    
     /**
      * Orientation for this LinearLayoutContainer.
      * @see Orientation
@@ -83,7 +85,7 @@ open class LinearLayoutContainer<T : GameElementView>(
         set(value) {
             orientationProperty.value = value
         }
-
+    
     /**
      * VerticalAlignment for this LinearLayoutContainer.
      * @see VerticalAlignment
@@ -94,7 +96,7 @@ open class LinearLayoutContainer<T : GameElementView>(
         set(value) {
             verticalAlignmentProperty.value = value
         }
-
+    
     /**
      * VerticalAlignment for this LinearLayoutContainer.
      * @see HorizontalAlignment
@@ -105,7 +107,7 @@ open class LinearLayoutContainer<T : GameElementView>(
         set(value) {
             horizontalAlignmentProperty.value = value
         }
-
+    
     init {
         observableElements.setInternalListenerAndInvoke {
             layout()
@@ -115,42 +117,42 @@ open class LinearLayoutContainer<T : GameElementView>(
         verticalAlignmentProperty.internalListener = { _, _ -> layout() }
         horizontalAlignmentProperty.internalListener = { _, _ -> layout() }
     }
-
+    
     override fun addElement(element: T, index: Int) {
         super.addElement(element, index)
         element.apply { addPosListeners() }
     }
-
+    
     override fun addAllElements(collection: Collection<T>) {
         super.addAllElements(collection)
         collection.forEach { it.addPosListeners() }
     }
-
+    
     override fun addAllElements(vararg elements: T) {
         addAllElements(elements.toList())
     }
-
+    
     override fun removeElement(element: T) {
         super.removeElement(element.apply { removePosListeners() })
     }
-
+    
     override fun removeAll(): List<T> {
         return super.removeAll().onEach {
             it.removePosListeners()
         }
     }
-
+    
     private fun T.addPosListeners() {
         //TODO: maybe increase performance
         posXProperty.internalListener = { _, _ -> observableElements.internalListener?.invoke() }
         posYProperty.internalListener = { _, _ -> observableElements.internalListener?.invoke() }
     }
-
+    
     private fun T.removePosListeners() {
         posXProperty.internalListener = null
         posYProperty.internalListener = null
     }
-
+    
     private fun layoutHorizontal() {
         val totalContentWidth: Double = observableElements.sumOf { it.width }
         val totalContentWidthWithSpacing = totalContentWidth + (observableElements.size() - 1) * spacing
@@ -165,7 +167,7 @@ open class LinearLayoutContainer<T : GameElementView>(
             HorizontalAlignment.CENTER -> (width - newTotalContentWidth) / 2
             HorizontalAlignment.RIGHT -> width - newTotalContentWidth
         }
-
+        
         observableElements.fold(initial) { acc: Double, element: T ->
             element.posYProperty.setSilent(
                 when (verticalAlignment) {
@@ -178,7 +180,7 @@ open class LinearLayoutContainer<T : GameElementView>(
             acc + element.width + newSpacing
         }
     }
-
+    
     private fun layoutVertical() {
         val totalContentHeight: Double = observableElements.sumOf { it.height }
         val totalContentHeightWithSpacing = totalContentHeight + (observableElements.size() - 1) * spacing
@@ -205,12 +207,12 @@ open class LinearLayoutContainer<T : GameElementView>(
             acc + element.height + newSpacing
         }
     }
-
+    
     private fun layout() {
         when (orientation) {
             Orientation.HORIZONTAL -> layoutHorizontal()
             Orientation.VERTICAL -> layoutVertical()
         }
     }
-
+    
 }

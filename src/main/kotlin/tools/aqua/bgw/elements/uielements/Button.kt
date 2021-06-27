@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.util.Font

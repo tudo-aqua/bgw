@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.observable.ObjectProperty
@@ -22,7 +24,7 @@ open class ListView<T>(
 	posX: Number = 0,
 	posY: Number = 0,
 	items: List<T> = listOf(),
-	font: Font = Font(),
+	font: Font = Font(), //TODO: Unused?
 	orientation: Orientation = Orientation.VERTICAL,
 	formatFunction: ((T) -> String)? = null
 ) : UIElementView(height = height, width = width, posX = posX, posY = posY) {

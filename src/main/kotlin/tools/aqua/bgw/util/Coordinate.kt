@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.util
 
 /**
@@ -8,12 +10,12 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	/**
 	 * X coordinate.
 	 */
-	val xCoord = xCoord.toDouble()
+	val xCoord: Double = xCoord.toDouble()
 	
 	/**
 	 * Y coordinate.
 	 */
-	val yCoord = yCoord.toDouble()
+	val yCoord: Double = yCoord.toDouble()
 	
 	/**
 	 * Returns a new coordinate object containing added xCoord and yCoord.
@@ -22,7 +24,7 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 *
 	 * @see minus
 	 */
-	operator fun plus(other: Coordinate) = Coordinate(
+	operator fun plus(other: Coordinate): Coordinate = Coordinate(
 		xCoord + other.xCoord,
 		yCoord + other.yCoord
 	)
@@ -34,7 +36,7 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 *
 	 * @see minus
 	 */
-	operator fun minus(other: Coordinate) = Coordinate(
+	operator fun minus(other: Coordinate): Coordinate = Coordinate(
 		xCoord - other.xCoord,
 		yCoord - other.yCoord
 	)
@@ -50,7 +52,7 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * [ cos(phi)  -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
-	fun rotated(angle: Double, center: Coordinate) = Coordinate(
+	fun rotated(angle: Double, center: Coordinate): Coordinate = Coordinate(
 		xCoord = cos(angle) * (xCoord - center.xCoord) - sin(angle) * (yCoord - center.yCoord) + center.xCoord,
 		yCoord = sin(angle) * (xCoord - center.xCoord) + cos(angle) * (yCoord - center.yCoord) + center.yCoord
 	)
@@ -65,7 +67,7 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * [ cos(phi)  -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
-	fun rotated(angle: Double) = rotated(angle, Coordinate(0, 0))
+	fun rotated(angle: Double): Coordinate = rotated(angle, Coordinate(0, 0))
 	
 	/**
 	 * Sin function for angles in degrees.
@@ -80,5 +82,5 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	/**
 	 * Prints xCoord and yCoord as String.
 	 */
-	override fun toString() = "X = $xCoord, Y = $yCoord"
+	override fun toString(): String = "X = $xCoord, Y = $yCoord"
 }

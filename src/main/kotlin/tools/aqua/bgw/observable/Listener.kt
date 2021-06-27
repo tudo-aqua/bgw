@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.observable
 
 /**
@@ -108,7 +110,7 @@ open class Observable {
 	 *
 	 * @return `true` if the listener has been successfully remove, `false` if it was not found.
 	 */
-	fun removeListener(listener: IObservable) = listeners.remove(listener)
+	fun removeListener(listener: IObservable): Boolean = listeners.remove(listener)
 	
 	/**
 	 * Removes all listeners.
@@ -227,7 +229,7 @@ open class ValueObservable<T> {
 	 *
 	 * @return `true` if the listener has been successfully remove, `false` if it was not found.
 	 */
-	fun removeListener(listener: IValueObservable<T>) = listeners.remove(listener)
+	fun removeListener(listener: IValueObservable<T>): Boolean = listeners.remove(listener)
 	
 	/**
 	 * Removes all listeners.

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.exception
 
 internal class IllegalInheritanceException(inheritance: Any, supertype: Class<*>) :

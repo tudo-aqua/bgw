@@ -1,3 +1,5 @@
+@file:Suppress("unused", "memberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.event.DragEvent
@@ -56,7 +58,7 @@ abstract class DynamicView(
 	 * @see DragEvent
 	 */
 	var onDragGestureMoved: ((DragEvent) -> Unit)? = null
-
+	
 	/**
 	 * Gets invoked with a DragEvent whenever a drag gesture has ended on this rendered ElementView.
 	 * @see DragEvent

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.ObjectProperty
@@ -17,12 +19,12 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 	/**
 	 * The property for the displayed image.
 	 */
-	val imageProperty = ObjectProperty(image)
+	val imageProperty: ObjectProperty<BufferedImage> = ObjectProperty(image)
 	
 	/**
 	 * The displayed image.
 	 */
-	var image
+	var image: BufferedImage
 		get() = imageProperty.value
 		set(value) {
 			imageProperty.value = value
@@ -41,7 +43,7 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 		 *
 		 * @param file image file to load.
 		 */
-		fun loadImage(file: String) = ImageVisual(load(file))
+		fun loadImage(file: String): ImageVisual = ImageVisual(load(file))
 		
 		/**
 		 * Creates an ImageVisual from a file.
@@ -53,7 +55,7 @@ class ImageVisual(image: BufferedImage) : SingleLayerVisual() {
 		 * @param width width of sub-image
 		 * @param height height of sub-image
 		 */
-		fun loadSubImage(file: String, offsetX: Int = 0, offsetY: Int = 0, width: Int = 0, height: Int) =
+		fun loadSubImage(file: String, offsetX: Int = 0, offsetY: Int = 0, width: Int = 0, height: Int): ImageVisual =
 			ImageVisual(load(file).getSubimage(offsetX, offsetY, width, height))
 		
 		/**

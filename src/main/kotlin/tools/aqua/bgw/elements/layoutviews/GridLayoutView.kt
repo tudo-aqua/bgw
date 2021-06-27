@@ -60,7 +60,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param columnIndex Column index in grid.
 	 * @param rowIndex Row index in grid.
 	 */
-	operator fun get(columnIndex: Int, rowIndex: Int) =
+	operator fun get(columnIndex: Int, rowIndex: Int): T? =
 		grid[columnIndex, rowIndex]
 	
 	/**
@@ -152,7 +152,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @see setAutoColumnWidth
 	 * @see setAutoColumnWidths
 	 */
-	fun getColumnWidth(columnIndex: Int) = grid.getColumnWidth(columnIndex)
+	fun getColumnWidth(columnIndex: Int): Double = grid.getColumnWidth(columnIndex)
 	
 	/**
 	 * Manually set column width of one column.
@@ -226,7 +226,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @see setAutoRowHeight
 	 * @see setAutoRowHeights
 	 */
-	fun getRowHeight(rowIndex: Int) = grid.getRowHeight(rowIndex)
+	fun getRowHeight(rowIndex: Int): Double = grid.getRowHeight(rowIndex)
 	
 	/**
 	 * Manually set row height of one row.
@@ -467,17 +467,17 @@ open class GridLayoutView<T : ElementView>(
 	/**
 	 * {@inheritDoc}.
 	 */
-	override fun iterator() = grid.iterator()
+	override fun iterator(): Iterator<Triple<Int, Int, T?>> = grid.iterator()
 	
 	companion object {
 		/**
 		 * Constant for auto column width.
 		 */
-		const val COLUMN_WIDTH_AUTO = -1.0
+		const val COLUMN_WIDTH_AUTO: Double = -1.0
 		
 		/**
 		 * Constant for auto row height.
 		 */
-		const val ROW_HEIGHT_AUTO = -1.0
+		const val ROW_HEIGHT_AUTO: Double = -1.0
 	}
 }

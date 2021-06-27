@@ -3,7 +3,7 @@ package examples.maumau.model
 import java.util.*
 
 open class MauMauStack {
-	val cards = Stack<MauMauCard>()
+	val cards: Stack<MauMauCard> = Stack<MauMauCard>()
 	
 	fun size(): Int = cards.size
 	
