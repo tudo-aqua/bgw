@@ -2,7 +2,6 @@
 
 package tools.aqua.bgw.observable
 
-import tools.aqua.bgw.exception.EmptyListException
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Predicate
@@ -203,9 +202,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Removes the first element from this list and returns that removed element.
 	 *
-	 * @throws EmptyListException if the list was empty.
+	 * @throws NoSuchElementException if the list was empty.
 	 */
-	fun removeFirst(): T = removeFirstOrNull() ?: throw EmptyListException()
+	fun removeFirst(): T = removeFirstOrNull() ?: throw NoSuchElementException("List is empty")
 	
 	/**
 	 * Removes the last element from this list and returns that removed element,
@@ -223,9 +222,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	/**
 	 * Removes the last element from this list and returns that removed element.
 	 *
-	 * @throws EmptyListException if the list was empty.
+	 * @throws NoSuchElementException if the list was empty.
 	 */
-	fun removeLast(): T = removeLastOrNull() ?: throw EmptyListException()
+	fun removeLast(): T = removeLastOrNull() ?: throw NoSuchElementException("List is empty")
 	
 	
 	/**
