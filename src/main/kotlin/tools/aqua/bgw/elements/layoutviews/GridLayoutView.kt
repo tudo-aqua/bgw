@@ -466,7 +466,16 @@ open class GridLayoutView<T : ElementView>(
 		}.firstOrNull()
 	
 	/**
-	 * {@inheritDoc}.
+	 * Returns an iterator over the grid elements.
+	 * Iteration is columns-first which means that the iterator starts at cell [0,0] and then proceeds iterating through
+	 * the first row from left to right. When reaching the end of a row it proceeds to the next one resetting the column
+	 * pointer to 0.
+	 *
+	 * [Iterator.hasNext] returns true if at least one cell is left to iterate.
+	 * [Iterator.next] returns a data object [GridIteratorElement] that contains the current row and column as well as
+	 * the element itself. Refer to the [GridIteratorElement] documentation for further information.
+	 *
+	 * @return iterator over the grid elements.
 	 */
 	override fun iterator(): Iterator<GridIteratorElement<T>> = grid.iterator()
 	
