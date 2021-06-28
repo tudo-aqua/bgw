@@ -12,7 +12,7 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	/**
 	 * Value of this property.
 	 */
-	protected var boxedValue: T = initialValue
+	private var boxedValue: T = initialValue
 	
 	/**
 	 * Value of this property.
@@ -33,8 +33,10 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 	 */
 	internal open fun setSilent(value: T) {
 		val savedValue = boxedValue
-		this.boxedValue = value
-		notifyGUIListener(savedValue, value)
+		if (boxedValue != value) {
+			boxedValue = value
+			notifyGUIListener(savedValue, value)
+		}
 	}
 	
 	/**
@@ -74,23 +76,32 @@ class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue
  * @param initialValue initial Value. Default: 0.0.
  */
 class LimitedDoubleProperty(
-	private val lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
-	private val upperBoundInclusive: Number = Double.POSITIVE_INFINITY,
-	initialValue: Number = 0
+	initialValue: Number = 0,
+	lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
+	upperBoundInclusive: Number = Double.POSITIVE_INFINITY
 ) : Property<Double>(initialValue.toDouble()) {
+	
+	private val lowerBoundInclusive: Double
+	private val upperBoundInclusive: Double
+	
+	init {
+		require(lowerBoundInclusive.toDouble() <= upperBoundInclusive.toDouble()) {
+			"Argument is lower than lower bound for this property."
+		}
+		this.lowerBoundInclusive = lowerBoundInclusive.toDouble()
+		this.upperBoundInclusive = upperBoundInclusive.toDouble()
+		
+		checkBounds(initialValue.toDouble())
+	}
+	
 	/**
 	 * Value of this property.
 	 */
 	override var value: Double
-		get() = boxedValue
+		get() = super.value
 		set(value) {
 			checkBounds(value)
-			
-			val savedValue = boxedValue
-			if (boxedValue != value) {
-				boxedValue = value
-				notifyChange(savedValue, value)
-			}
+			super.value = value
 		}
 	
 	/**
@@ -100,9 +111,7 @@ class LimitedDoubleProperty(
 	override fun setSilent(value: Double) {
 		checkBounds(value)
 		
-		val savedValue = boxedValue
-		this.boxedValue = value
-		notifyGUIListener(savedValue, value)
+		super.setSilent(value)
 	}
 	
 	/**
@@ -111,10 +120,10 @@ class LimitedDoubleProperty(
 	 * @return `true` if the given value is in the valid range, `false` otherwise.
 	 */
 	private fun checkBounds(value: Double) {
-		require(value >= lowerBoundInclusive.toDouble()) {
+		require(value >= lowerBoundInclusive) {
 			"Argument is lower than lower bound for this property."
 		}
-		require(value <= upperBoundInclusive.toDouble()) {
+		require(value <= upperBoundInclusive) {
 			"Argument is higher than upper bound for this property."
 		}
 	}

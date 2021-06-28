@@ -208,9 +208,9 @@ open class ValueObservable<T> {
 	 * @param initialValue initial value to notify.
 	 * @param listener listener to add and notify.
 	 */
-	fun addListenerAndInvoke(initialValue: T, listener: IValueObservable<T>) {
+	fun addListenerAndInvoke(initialValue: T, listener: ((T, T) -> Unit)) {
 		listeners.add(listener)
-		listener.update(initialValue, initialValue)
+		listener.invoke(initialValue, initialValue)
 	}
 	
 	/**
@@ -218,7 +218,7 @@ open class ValueObservable<T> {
 	 *
 	 * @param listener listener to add.
 	 */
-	fun addListener(listener: IValueObservable<T>) {
+	fun addListener(listener: ((T, T) -> Unit)) {
 		listeners.add(listener)
 	}
 	
@@ -229,7 +229,7 @@ open class ValueObservable<T> {
 	 *
 	 * @return `true` if the listener has been successfully remove, `false` if it was not found.
 	 */
-	fun removeListener(listener: IValueObservable<T>): Boolean = listeners.remove(listener)
+	fun removeListener(listener: ((T, T) -> Unit)): Boolean = listeners.remove(listener)
 	
 	/**
 	 * Removes all listeners.
