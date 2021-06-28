@@ -83,4 +83,25 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * Prints xCoord and yCoord as String.
 	 */
 	override fun toString(): String = "X = $xCoord, Y = $yCoord"
+	
+	/**
+	 * Compares coordinate to another Object.
+	 *
+	 * @return `true` if other object is Coordinate and [xCoord] == other.xCoord && [yCoord] == other.yCoord.
+	 */
+	override fun equals(other: Any?): Boolean {
+		if (other !is Coordinate)
+			return false
+		
+		return this.xCoord == other.xCoord && this.yCoord == other.yCoord
+	}
+	
+	/**
+	 * Hashcode for this object.
+	 *
+	 * @return hashCode containing [xCoord] and [yCoord].
+	 */
+	override fun hashCode(): Int {
+		return xCoord.hashCode() - yCoord.hashCode()
+	}
 }
