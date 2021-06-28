@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class SetAndInvokeTest : PropertyTestBase() {
 	@Test
-	@DisplayName("Test add listener siliently")
+	@DisplayName("Test add listener silently")
 	fun testAddListenerSilently() {
 		val testListener = TestListener()
 		property.addListener(testListener)
