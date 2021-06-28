@@ -6,6 +6,7 @@ import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.ElementViewGrid
+import tools.aqua.bgw.util.GridIteratorElement
 
 /**
  * Defines an GameElementContainerView that orders elements in a grid structure.
@@ -21,7 +22,7 @@ open class GridLayoutView<T : ElementView>(
 	posX: Number = 0,
 	posY: Number = 0,
 	layoutFromCenter: Boolean = true
-) : LayoutElement<T>(posX = posX, posY = posY), Iterable<Triple<Int, Int, T?>> {
+) : LayoutElement<T>(posX = posX, posY = posY), Iterable<GridIteratorElement<T>> {
 	
 	internal val grid: ElementViewGrid<T> = ElementViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
@@ -441,10 +442,10 @@ open class GridLayoutView<T : ElementView>(
 	 * {@inheritDoc}.
 	 */
 	override fun removeChild(child: ElementView) {
-		val elementTriple = grid.find { it.third == child }
+		val elementTriple = grid.find { it.element == child }
 		
 		if (elementTriple != null) {
-			this[elementTriple.first, elementTriple.second] = null
+			this[elementTriple.columnIndex, elementTriple.rowIndex] = null
 			child.parent = null
 		}
 		notifyChange()
@@ -454,11 +455,11 @@ open class GridLayoutView<T : ElementView>(
 	 * {@inheritDoc}.
 	 */
 	override fun getChildPosition(child: ElementView): Coordinate? =
-		grid.filter { it.third == child }.map {
-			val cols = renderedColWidths.toMutableList().subList(0, it.first)
+		grid.filter { it.element == child }.map {
+			val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
 			val offsetX = cols.sum() + cols.size * spacing
 			
-			val rows = renderedRowHeights.toMutableList().subList(0, it.second)
+			val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
 			val offsetY = rows.sum() + rows.size * spacing
 			
 			Coordinate(offsetX + child.posX, offsetY + child.posY)
@@ -467,7 +468,7 @@ open class GridLayoutView<T : ElementView>(
 	/**
 	 * {@inheritDoc}.
 	 */
-	override fun iterator(): Iterator<Triple<Int, Int, T?>> = grid.iterator()
+	override fun iterator(): Iterator<GridIteratorElement<T>> = grid.iterator()
 	
 	companion object {
 		/**

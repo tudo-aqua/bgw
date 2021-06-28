@@ -101,7 +101,7 @@ class DragDropHelper {
 		): MutableList<DragTargetObject> {
 			when (parent.dragTarget) {
 				is GameElementContainerView<*> -> parent.dragTarget.observableElements
-				is GridLayoutView<*> -> parent.dragTarget.grid.mapNotNull { it.third }
+				is GridLayoutView<*> -> parent.dragTarget.grid.mapNotNull { it.element }
 				else -> listOf()
 			}.map {
 				Pair(it, parent.dragTarget.getChildPosition(it) ?: Coordinate(0.0, 0.0))

@@ -14,7 +14,7 @@ import tools.aqua.bgw.elements.layoutviews.GridLayoutView.Companion.ROW_HEIGHT_A
 internal class ElementViewGrid<T : ElementView>(
 	rows: Int,
 	columns: Int
-) : Iterable<Triple<Int, Int, T?>> {
+) : Iterable<GridIteratorElement<T>> {
 	
 	var rows = rows
 		private set
@@ -456,7 +456,15 @@ internal class ElementViewGrid<T : ElementView>(
 		rows = 0
 	}
 	
-	override fun iterator(): Iterator<Triple<Int, Int, T?>> = GridIterator()
+	inline fun forEachNotNull(action: (GridIteratorElement<T>) -> Unit) {
+		for (element in this.filter { it.element != null }) action(element)
+	}
+	
+	inline fun forEachItemNotNull(action: (T) -> Unit) {
+		for (element in this.mapNotNull { it.element }) action(element)
+	}
+	
+	override fun iterator(): Iterator<GridIteratorElement<T>> = GridIterator()
 	
 	override fun toString(): String = "#Rows: " + rows + "\n" +
 			"#Columns: " + columns + "\n" +
@@ -466,18 +474,18 @@ internal class ElementViewGrid<T : ElementView>(
 				{ if (it == null) "0" else "X" }
 			}
 	
-	internal inner class GridIterator : Iterator<Triple<Int, Int, T?>> {
+	internal inner class GridIterator : Iterator<GridIteratorElement<T>> {
 		
 		private var currRow = 0
 		private var currCol = 0
 		
 		override fun hasNext(): Boolean = currCol < grid.size && currRow < grid[currCol].size
 		
-		override fun next(): Triple<Int, Int, T?> {
+		override fun next(): GridIteratorElement<T> {
 			if (currCol >= grid.size)
 				throw NoSuchElementException()
 			
-			val res: Triple<Int, Int, T?> = Triple(currCol, currRow, grid[currCol][currRow] as? T)
+			val res = GridIteratorElement(currCol, currRow, grid[currCol][currRow] as? T)
 			
 			currRow = ++currRow % grid[currCol].size
 			
@@ -486,13 +494,5 @@ internal class ElementViewGrid<T : ElementView>(
 			
 			return res
 		}
-	}
-	
-	inline fun forEachNotNull(action: (Triple<Int, Int, T>) -> Unit) {
-		for (element in this.filter { it.third != null }) action(element as Triple<Int, Int, T>)
-	}
-	
-	inline fun forEachItemNotNull(action: (T) -> Unit) {
-		for (element in this.mapNotNull { it.third }) action(element)
 	}
 }

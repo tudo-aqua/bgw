@@ -177,14 +177,14 @@ internal class NodeBuilder {
 							}
 						}
 						is GridLayoutView<*> -> {
-							parent.grid.find { triple ->
-								triple.third == this
+							parent.grid.find { iteratorElement ->
+								iteratorElement.element == this
 							}?.apply {
 								val initialX = posX
 								val initialY = posY
 								
 								//calculate position in grid
-								posStartCoord += parent.getChildPosition(third!!)!!
+								posStartCoord += parent.getChildPosition(element!!)!!
 								
 								//add layout from center bias
 								if (parent.layoutFromCenter) {
@@ -195,7 +195,7 @@ internal class NodeBuilder {
 									posX = initialX
 									posY = initialY
 									@Suppress("UNCHECKED_CAST")
-									(parent as GridLayoutView<ElementView>)[first, second] =
+									(parent as GridLayoutView<ElementView>)[columnIndex, rowIndex] =
 										this@registerEvents as ElementView
 								}
 							}

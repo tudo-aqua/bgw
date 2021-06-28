@@ -28,9 +28,9 @@ class IteratorTest : GridLayoutViewTestBase() {
 			
 			val nextItem = iterator.next()
 			
-			assertEquals(it / 3, nextItem.first)
-			assertEquals(it % 3, nextItem.second)
-			assertEquals(order.pop(), nextItem.third)
+			assertEquals(it / 3, nextItem.columnIndex)
+			assertEquals(it % 3, nextItem.rowIndex)
+			assertEquals(order.pop(), nextItem.element)
 		}
 		
 		assertFalse { iterator.hasNext() }
