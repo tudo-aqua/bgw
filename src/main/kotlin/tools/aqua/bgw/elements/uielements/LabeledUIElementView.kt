@@ -16,7 +16,7 @@ import tools.aqua.bgw.util.Font
  * @param label label for this LabeledUIElementView. Default: empty String.
  * @param font font to be used for the label. Default: default Font constructor.
  */
-abstract class LabeledUIElementView(
+sealed class LabeledUIElementView(
 	height: Number = 0,
 	width: Number = 0,
 	posX: Number = 0,
