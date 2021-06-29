@@ -42,19 +42,51 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	}
 	
 	/**
+	 * The size of this map.
+	 * Returns the amount of pairs.
+	 */
+	val size: Int
+		get() = map.size
+	
+	/**
 	 * Adds a relation A -> B if domain does not contain A and coDomain does not contain B.
 	 * Returns `false` if the relation could not be added.
 	 *
 	 * @return `true` if the element was added to the map, `false` otherwise.
 	 *
+	 * @see addAll
+	 */
+	fun add(entity: T, value: R): Boolean = add(Pair(entity, value))
+	
+	/**
+	 * Adds a relation A -> B if domain does not contain A and coDomain does not contain B.
+	 * Returns `false` if the relation could not be added.
+	 *
+	 * @return `true` if the element was added to the map, `false` otherwise.
+	 *
+	 * @see addAll
+	 */
+	fun add(element: Pair<T, R>): Boolean =
+		if (containsForward(element.first) || containsBackward(element.second))
+			false
+		else
+			map.add(element)
+	
+	/**
+	 * Adds all relations A -> B.
+	 *
+	 * @return `true` if the map was changed by this call, `false` otherwise.
+	 *
 	 * @see add
 	 */
-	fun add(entity: T, elementView: R): Boolean {
-		if (contains(entity, elementView))
-			return false
+	fun addAll(vararg items: Pair<T, R>): Boolean {
+		var result = false
 		
-		map.add(Pair(entity, elementView))
-		return true
+		for (element in items) {
+			result = add(element) || result
+		}
+		
+		return result
 	}
 	
 	/**
@@ -205,4 +237,18 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	fun clear() {
 		map.clear()
 	}
+	
+	/**
+	 * Returns whether this map contains no elements.
+	 *
+	 * @return `true` if this map contains no elements, false otherwise.
+	 */
+	fun isEmpty(): Boolean = map.isEmpty()
+	
+	/**
+	 * Returns whether this map contains elements.
+	 *
+	 * @return `true` if this map contains elements, false otherwise.
+	 */
+	fun isNotEmpty(): Boolean = map.isNotEmpty()
 }
