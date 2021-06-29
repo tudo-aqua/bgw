@@ -1,9 +1,7 @@
-@file:Suppress("unused")
-
 package tools.aqua.bgw.elements.uielements
 
 /**
- * Enum for element orientations HORIZONTAL and VERTICAL.
+ * Enum for orientations HORIZONTAL and VERTICAL.
  */
 enum class Orientation {
 	/**
