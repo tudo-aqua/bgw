@@ -22,6 +22,8 @@ dependencies {
 	implementation("com.jfoenix", "jfoenix", "9.0.1")
 	
 	testImplementation(kotlin("test"))
+	
+	dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.32")
 }
 
 tasks.test {
@@ -67,6 +69,13 @@ detekt {
 	
 	config = files("detekt-rules.yml")
 	
+}
+
+val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+	dependsOn(dokkaHtml)
+	archiveClassifier.set("javadoc")
+	from(dokkaHtml.outputDirectory)
 }
 
 java {
