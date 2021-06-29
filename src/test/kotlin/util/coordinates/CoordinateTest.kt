@@ -1,10 +1,10 @@
 package util.coordinates
 
+import DOUBLE_TOLERANCE
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.Coordinate
-import kotlin.math.round
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
@@ -46,16 +46,16 @@ class CoordinateTest {
 	@DisplayName("Test rotation")
 	fun testRotation() {
 		val coordinateC = coordinateA.rotated(90.0)
-		assertEquals(-100.0, round(coordinateC.xCoord))
-		assertEquals(50.0, round(coordinateC.yCoord))
+		assertEquals(-100.0, coordinateC.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(50.0, coordinateC.yCoord, DOUBLE_TOLERANCE)
 	}
 	
 	@Test
 	@DisplayName("Test rotation around pivot")
 	fun testRotationPivot() {
 		val coordinateC = coordinateA.rotated(90.0, Coordinate(50, 50))
-		assertEquals(0.0, round(coordinateC.xCoord))
-		assertEquals(50.0, round(coordinateC.yCoord))
+		assertEquals(0.0, coordinateC.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(50.0, coordinateC.yCoord, DOUBLE_TOLERANCE)
 	}
 	
 	@Test
