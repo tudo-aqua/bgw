@@ -8,6 +8,11 @@ package tools.aqua.bgw.util
  */
 class KStack<T> {
 	private val data = mutableListOf<T>()
+
+	/**
+	 * Size of this KStack.
+	 */
+	val size: Int = data.size
 	
 	/**
 	 * Pops the topmost element in this KStack.
@@ -90,12 +95,13 @@ class KStack<T> {
 	 * Returns whether this KStack is empty or not.
 	 */
 	fun isEmpty(): Boolean = data.isEmpty()
-	
+
 	/**
-	 * Returns the size of this KStack.
+	 * Returns whether this KStack is not empty.
 	 */
-	fun size(): Int = data.size
-	
+	fun isNotEmpty(): Boolean = data.isNotEmpty()
+
+
 	/**
 	 * Clears this KStack.
 	 */
