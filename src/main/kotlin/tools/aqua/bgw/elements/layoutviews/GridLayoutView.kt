@@ -11,9 +11,9 @@ import tools.aqua.bgw.util.GridIteratorElement
 /**
  * Defines an GameElementContainerView that orders elements in a grid structure.
  *
- * @param rows Initial row count.
- * @param columns Initial column count.
- * @param spacing Spacing between rows and columns. Default: 0.0
+ * @param rows initial row count.
+ * @param columns initial column count.
+ * @param spacing spacing between rows and columns. Default: 0.0
  */
 open class GridLayoutView<T : ElementView>(
 	rows: Int,
@@ -56,10 +56,10 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * Returns ElementView in specified cell. Returns NULL if there was no element.
+	 * Returns [ElementView] in specified cell. Returns `null` if there was no element.
 	 *
-	 * @param columnIndex Column index in grid.
-	 * @param rowIndex Row index in grid.
+	 * @param columnIndex column index in grid.
+	 * @param rowIndex row index in grid.
 	 */
 	operator fun get(columnIndex: Int, rowIndex: Int): T? =
 		grid[columnIndex, rowIndex]
@@ -67,21 +67,28 @@ open class GridLayoutView<T : ElementView>(
 	/**
 	 * Sets content of desired grid cell.
 	 * Overrides existing element in this cell.
-	 * Pass null to remove an element.
+	 * Pass `null` to remove an element.
 	 *
-	 * @param columnIndex Column index in grid.
-	 * @param rowIndex Row index in grid.
-	 * @param element ElementView to be added to the specified cell.
+	 * @param columnIndex column index in grid.
+	 * @param rowIndex row index in grid.
+	 * @param element [ElementView] to be added to the specified cell.
 	 */
 	operator fun set(columnIndex: Int, rowIndex: Int, element: T?) {
 		grid[columnIndex, rowIndex]?.apply {
-			this.internalListener = null
+			this.widthProperty.internalListener = null
+			this.heightProperty.internalListener = null
+			this.posXProperty.internalListener = null
+			this.posYProperty.internalListener = null
 			this.parent = null
 		}
+		
 		grid[columnIndex, rowIndex] = element?.apply {
-			this.internalListener = {}
+			this.widthProperty.internalListener = { _, _ -> notifyChange() }
+			this.heightProperty.internalListener = { _, _ -> notifyChange() }
+			this.posXProperty.internalListener = { _, _ -> notifyChange() }
+			this.posYProperty.internalListener = { _, _ -> notifyChange() }
 			this.parent = this@GridLayoutView
-		} //FIXME why is this here?
+		}
 		
 		notifyChange()
 	}
@@ -89,8 +96,8 @@ open class GridLayoutView<T : ElementView>(
 	/**
 	 * Returns centering mode of the specified cell.
 	 *
-	 * @param columnIndex Column index in grid.
-	 * @param rowIndex Row index in grid.
+	 * @param columnIndex column index in grid.
+	 * @param rowIndex row index in grid.
 	 */
 	fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment =
 		grid.getCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex)
@@ -99,9 +106,9 @@ open class GridLayoutView<T : ElementView>(
 	 * Sets centering mode of desired grid cell.
 	 * Overrides existing mode in this cell.
 	 *
-	 * @param columnIndex Column index in grid.
-	 * @param rowIndex Row index in grid.
-	 * @param value New Centering mode to be set for the specified cell.
+	 * @param columnIndex column index in grid.
+	 * @param rowIndex row index in grid.
+	 * @param value new Centering mode to be set for the specified cell.
 	 */
 	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
 		grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, value = value)
@@ -112,8 +119,8 @@ open class GridLayoutView<T : ElementView>(
 	 * Sets centering mode of desired column in grid.
 	 * Overrides existing mode in the whole column.
 	 *
-	 * @param columnIndex Column index in grid.
-	 * @param value New Centering mode to be set for the whole column.
+	 * @param columnIndex column index in grid.
+	 * @param value new centering mode to be set for the whole column.
 	 */
 	fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
 		grid.setColumnCenterMode(columnIndex = columnIndex, value = value)
