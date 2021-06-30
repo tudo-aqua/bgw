@@ -66,7 +66,7 @@ internal class VisualBuilder {
 							this.text = nV
 							opacity = visual.transparency
 						}
-						//TODO: Add Font size here and in TextVisual
+						//TODO: Add Font size here
 					}
 				
 				is CompoundVisual ->
