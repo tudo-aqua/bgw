@@ -4,10 +4,7 @@ package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.event.DropEvent
-import tools.aqua.bgw.event.Event
-import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.DoubleProperty
@@ -131,7 +128,7 @@ abstract class ElementView(
 	 * 730  -> 10
 	 */
 	val rotationProperty: DoubleProperty = DoubleProperty(0.0)
-
+	
 	/**
 	 * Rotation of this ElementView in degrees.
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
@@ -336,8 +333,8 @@ abstract class ElementView(
 	var onKeyTyped: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Rreturns whether this ElementView is a valid drop target
-	 * for the dragged element in the given DropEvent or not.
+	 * Returns whether this [ElementView] is a valid drop target
+	 * for the dragged element in the given [DragEvent] or not.
 	 *
 	 * Implement this function in such a way that it returns `true` if this [ElementView] accepts the drop of the given
 	 * [DropEvent.draggedElement] or `false` if a drop is not valid. The [DropEvent.draggedElement] will snap back
@@ -353,17 +350,30 @@ abstract class ElementView(
 	 * @see DropEvent
 	 * @see isDisabledProperty
 	 */
-	var dropAcceptor: ((DropEvent) -> Boolean)? = null
+	var dropAcceptor: ((DragEvent) -> Boolean)? = null
+	/*
+	/**
+	 * Gets invoked with a [DragEvent] whenever the mouse enters this [ElementView] while performing a drag gesture.
+	 *
+	 * @see DragEvent
+	 */
+	var onDragGestureEntered: ((DragEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a DropEvent whenever a drag and drop gesture finishes over this ElementView
-	 * and the dropAcceptor returns `true` for the given DropEvent.
+	 * Gets invoked with a [DragEvent] whenever the mouse leaves this [ElementView] while performing a drag gesture.
+	 * @see DragEvent
+	 */
+	var onDragGestureExited: ((DragEvent) -> Unit)? = null
+	*/
+	/**
+	 * Gets invoked with a [DragEvent] whenever a drag and drop gesture finishes over this [ElementView]
+	 * and the [dropAcceptor] returns `true` for the given [DragEvent].
 	 *
 	 * @see dropAcceptor
 	 * @see DropEvent
 	 * @see isDisabledProperty
 	 */
-	var onDragElementDropped: ((DropEvent) -> Unit)? = null
+	var onDragElementDropped: ((DragEvent) -> Unit)? = null
 	
 	/**
 	 * Returns the Visual that is currently used to render this ElementView.

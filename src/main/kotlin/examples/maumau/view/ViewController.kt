@@ -6,7 +6,7 @@ import examples.maumau.model.MauMauCard
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.elements.gameelements.TokenView
-import tools.aqua.bgw.event.DropEvent
+import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
@@ -45,20 +45,20 @@ class ViewController : BoardGameApplication() {
         gameScene.buttonSpades.onMousePressed = { logicController.selectSuit(CardSuit.SPADES) }
         gameScene.buttonClubs.onMousePressed = { logicController.selectSuit(CardSuit.CLUBS) }
     }
-    
-    private fun tryElementDropped(event: DropEvent): Boolean {
-        println("Element Dropped! ${event.draggedElement.posX}|${event.draggedElement.posY}")
-        if (event.draggedElement !is CardView)
-            return false
-        
-        return logicController.checkRules(cardMap.backward(event.draggedElement))
-    }
-    
-    private fun elementDropped(event: DropEvent) {
-        logicController.playCard(cardMap.backward(event.draggedElement as CardView), false)
-        
-        println("${event.draggedElement.posX}|${event.draggedElement.posY}")
-    }
+	
+	private fun tryElementDropped(event: DragEvent): Boolean {
+		println("Element Dropped! ${event.draggedElement.posX}|${event.draggedElement.posY}")
+		if (event.draggedElement !is CardView)
+			return false
+		
+		return logicController.checkRules(cardMap.backward(event.draggedElement))
+	}
+	
+	private fun elementDropped(event: DragEvent) {
+		logicController.playCard(cardMap.backward(event.draggedElement as CardView), false)
+		
+		println("${event.draggedElement.posX}|${event.draggedElement.posY}")
+	}
     
     private fun registerMenuEvents() {
         gameScene.mainMenuButton.onMouseClicked = {

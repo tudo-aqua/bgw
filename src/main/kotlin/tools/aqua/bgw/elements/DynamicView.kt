@@ -3,6 +3,7 @@
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.event.DragEvent
+import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.visual.Visual
 
@@ -61,19 +62,9 @@ abstract class DynamicView(
 	
 	/**
 	 * Gets invoked with a DragEvent whenever a drag gesture has ended on this rendered ElementView.
+	 * Second parameter is `true` if at least one drop target accepted drop, `false` otherwise.
+	 *
 	 * @see DragEvent
 	 */
-	var onDragGestureEnded: ((DragEvent, Boolean) -> Unit)? = null
-
-//	/**
-//	 * Gets passed a DragEvent whenever the Mouse enters this rendered ElementView while performing a drag gesture.
-//	 * @see DragEvent
-//	 */
-//	var onDragGestureEntered: EventHandler<DragEvent>? = null
-//
-//	/**
-//	 * Gets passed a DragEvent whenever the Mouse leaves this rendered ElementView while performing a drag gesture.
-//	 * @see DragEvent
-//	 */
-//	var onDragGestureExited: EventHandler<DragEvent>? = null
+	var onDragGestureEnded: ((DropEvent, Boolean) -> Unit)? = null
 }

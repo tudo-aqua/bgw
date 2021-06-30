@@ -58,14 +58,14 @@ class DragDropHelper {
 				}
 			
 			val isNodesNotEmpty = acceptingDropTargets.isNotEmpty()
-			val dragEvent = DragEvent(draggedElement, validTargets)
-			val dropEvent = DropEvent(draggedElement)
+			val dropEvent = DropEvent(draggedElement, validTargets)
+			val dragEvent = DragEvent(draggedElement)
 			
 			//Invoke drag drop handler in dragged element
-			draggedElement.onDragGestureEnded?.invoke(dragEvent, isNodesNotEmpty)
+			draggedElement.onDragGestureEnded?.invoke(dropEvent, isNodesNotEmpty)
 			
 			//Invoke drag drop handler on all accepting drag targets
-			validTargets.forEach { it.onDragElementDropped?.invoke(dropEvent) }
+			validTargets.forEach { it.onDragElementDropped?.invoke(dragEvent) }
 			
 			println(isNodesNotEmpty)
 			return isNodesNotEmpty

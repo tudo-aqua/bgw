@@ -104,7 +104,7 @@ internal class SceneBuilder {
 			children.clear()
 			scene.elementsMap.clear()
 			
-			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oV, nV ->
+			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, nV ->
 				children.add(0, VisualBuilder.buildVisual(nV).apply {
 					prefWidthProperty().unbind()
 					prefWidthProperty().unbind()
