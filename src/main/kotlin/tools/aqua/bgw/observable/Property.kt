@@ -67,18 +67,21 @@ class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
 class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
 
 /**
- * A limited DoubleProperty to a value range.
+ * A limited DoubleProperty to a value range. Value will be checked to be in range
+ * [[lowerBoundInclusive], [upperBoundInclusive]].
+ * Therefore [upperBoundInclusive] must be greater or equal to [lowerBoundInclusive].
+ * The Range cannot be altered after object creation.
  *
- * @throws IllegalArgumentException if a value out of range is set.
+ * @throws IllegalArgumentException if a value out of range is set as initialValue.
  *
  * @param lowerBoundInclusive lower bound inclusive. Default: -inf.
- * @param upperBoundInclusive lower bound inclusive. Default: +inf.
- * @param initialValue initial Value. Default: 0.0.
+ * @param upperBoundInclusive upper bound inclusive. Default: +inf.
+ * @param initialValue initial Value. Default: [lowerBoundInclusive].
  */
 class LimitedDoubleProperty(
-	initialValue: Number = 0,
 	lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
-	upperBoundInclusive: Number = Double.POSITIVE_INFINITY
+	upperBoundInclusive: Number = Double.POSITIVE_INFINITY,
+	initialValue: Number = lowerBoundInclusive
 ) : Property<Double>(initialValue.toDouble()) {
 	
 	private val lowerBoundInclusive: Double

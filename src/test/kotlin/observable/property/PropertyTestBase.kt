@@ -17,7 +17,7 @@ open class PropertyTestBase {
 	
 	@BeforeEach
 	fun setUp() {
-		property = LimitedDoubleProperty(initialValue, lowerBound, upperBound)
+		property = LimitedDoubleProperty(lowerBound, upperBound, initialValue)
 		property.addListener(listener1)
 		property.addListener(listener2)
 		property.internalListener = internalListener

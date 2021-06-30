@@ -394,7 +394,8 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	fun sort(comparator: Comparator<in T>?) {
 		val sorted = list.stream().sorted(comparator).toList()
 		list.clear()
-		list.addAll(sorted) //notifies already,
+		list.addAll(sorted)
+		//notifyChange() not necessary since addAll() already notified.
 	}
 	
 	/**
