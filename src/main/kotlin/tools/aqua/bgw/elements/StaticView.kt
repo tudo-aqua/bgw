@@ -6,12 +6,12 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Superclass for all ElementVies that are considered static.
+ * Superclass for all [ElementView]s that are considered static.
  *
- * This class is used to distinguish between ElementViews that can be used in MenuScenes
- * and ElementViews that can not be used in MenuScenes.
+ * This class is used to distinguish between [ElementView]s that can be used in [MenuScene]s
+ * and those that can't.
  *
- * Only StaticViews are allowed in MenuScenes.
+ * Only StaticViews are allowed in [MenuScene]s.
  *
  * @see MenuScene
  */
