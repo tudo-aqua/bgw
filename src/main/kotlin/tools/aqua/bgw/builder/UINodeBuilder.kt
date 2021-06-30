@@ -14,7 +14,6 @@ import javafx.scene.text.Font
 import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
 import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXColor
-import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXFont
 import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
 import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
 import tools.aqua.bgw.elements.uielements.*
