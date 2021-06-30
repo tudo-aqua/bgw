@@ -9,8 +9,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Superclass for all layout elements.
  *
- * @param height height for this LayoutElement. Default: the suggested card height.
- * @param width width for this LayoutElement. Default: the suggested card width.
+ * @param height height for this LayoutElement.Default: 0.
+ * @param width width for this LayoutElement. Default: 0.
  * @param posX horizontal coordinate for this LayoutElement. Default: 0.
  * @param posY vertical coordinate for this LayoutElement. Default: 0.
  * @param visuals initial list of visuals for this LayoutElement. Default: empty list.
