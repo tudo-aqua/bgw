@@ -4,6 +4,7 @@ package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.StaticView
+import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
@@ -79,7 +80,10 @@ sealed class UIElementView(
 		set(value) {
 			componentStyleProperty.value = value
 		}
-
+	
+	/**
+	 * @throws RuntimeException [GameElementView] does not support children.
+	 */
 	override fun removeChild(child: ElementView) {
 		throw RuntimeException("This $this Element has no children.")
 	}

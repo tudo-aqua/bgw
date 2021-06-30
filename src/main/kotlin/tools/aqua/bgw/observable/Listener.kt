@@ -3,7 +3,7 @@
 package tools.aqua.bgw.observable
 
 /**
- * Observable interface for observable properties.
+ * Observable interface for observable Properties.
  */
 @FunctionalInterface
 fun interface IObservable {
@@ -65,7 +65,7 @@ open class Observable {
 		}
 	
 	/**
-	 * Sets GUI listener and calls update().
+	 * Sets [guiListener] and calls [IObservable.update].
 	 *
 	 * @param listener listener to add and notify.
 	 */
@@ -75,7 +75,7 @@ open class Observable {
 	}
 	
 	/**
-	 * Sets internal listener and calls update().
+	 * Sets [internalListener] and calls [IObservable.update].
 	 *
 	 * @param listener listener to add and notify.
 	 */
@@ -85,7 +85,7 @@ open class Observable {
 	}
 	
 	/**
-	 * Adds a listener and calls update() on this new listener.
+	 * Adds a listener and calls [IObservable.update] on this new listener.
 	 *
 	 * @param listener listener to add and notify.
 	 */
@@ -108,7 +108,7 @@ open class Observable {
 	 *
 	 * @param listener listener to remove.
 	 *
-	 * @return `true` if the listener has been successfully remove, `false` if it was not found.
+	 * @return `true` if the listener has been successfully removed, `false` if it was not found.
 	 */
 	fun removeListener(listener: IObservable): Boolean = listeners.remove(listener)
 	
@@ -120,21 +120,21 @@ open class Observable {
 	}
 	
 	/**
-	 * Notifies GUI listener by calling update().
+	 * Notifies [guiListener] by calling [IObservable.update].
 	 */
 	internal fun notifyGUIListener() {
 		guiListenerHandler?.update()
 	}
 	
 	/**
-	 * Notifies internal listener by calling update().
+	 * Notifies [internalListener] by calling [IObservable.update].
 	 */
 	internal fun notifyInternalListener() {
 		internalListenerHandler?.update()
 	}
 	
 	/**
-	 * Notifies all listeners by calling update().
+	 * Notifies all [listeners] by calling [IObservable.update].
 	 */
 	fun notifyChange() {
 		listeners.forEach { it.update() }
@@ -181,7 +181,7 @@ open class ValueObservable<T> {
 		}
 	
 	/**
-	 * Sets GUI listener and calls update().
+	 * Sets [guiListener] and calls [IValueObservable.update].
 	 *
 	 * @param initialValue initial value to notify.
 	 * @param listener listener to add and notify.
@@ -192,7 +192,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Sets internal listener and calls update().
+	 * Sets [internalListener] and calls [IValueObservable.update].
 	 *
 	 * @param initialValue initial value to notify.
 	 * @param listener listener to add and notify.
@@ -203,7 +203,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Adds a listener and calls update() on this new listener with given initial value.
+	 * Adds a listener and calls [IValueObservable.update] on this new listener with given initial value.
 	 *
 	 * @param initialValue initial value to notify.
 	 * @param listener listener to add and notify.
@@ -239,7 +239,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Notifies GUI listener by calling update().
+	 * Notifies [guiListener] by calling [IValueObservable.update].
 	 *
 	 * @param oldValue old value to notify.
 	 * @param newValue new value to notify.
@@ -249,7 +249,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Notifies internal listener by calling update().
+	 * Notifies [internalListener] by calling [IValueObservable.update].
 	 *
 	 * @param oldValue old value to notify.
 	 * @param newValue new value to notify.
@@ -259,7 +259,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Notifies all listeners by calling update().
+	 * Notifies all [listeners] by calling [IValueObservable.update].
 	 *
 	 * @param oldValue old value to notify.
 	 * @param newValue new value to notify.

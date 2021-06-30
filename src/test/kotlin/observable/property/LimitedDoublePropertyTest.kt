@@ -11,7 +11,7 @@ class LimitedDoublePropertyTest : PropertyTestBase() {
 	@DisplayName("Test upperBound < lowerBound")
 	fun testBoundsWrongOrderEqual() {
 		assertFailsWith<IllegalArgumentException> {
-			LimitedDoubleProperty(0, 10, 5)
+			LimitedDoubleProperty(10, 5, 0)
 		}
 	}
 	
@@ -26,7 +26,7 @@ class LimitedDoublePropertyTest : PropertyTestBase() {
 	@DisplayName("Test initial value out of bounds")
 	fun testInitialValueOutOfBounds() {
 		assertFailsWith<IllegalArgumentException> {
-			LimitedDoubleProperty(15, 0, 10)
+			LimitedDoubleProperty(0, 10, 15)
 		}
 	}
 	

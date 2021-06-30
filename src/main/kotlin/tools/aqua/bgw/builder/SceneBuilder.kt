@@ -5,12 +5,12 @@ import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
+import tools.aqua.bgw.builder.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.event.DragEvent
-import tools.aqua.bgw.event.EventConverter.Companion.toMouseEvent
 
 /**
  * SceneBuilder.
@@ -104,7 +104,7 @@ internal class SceneBuilder {
 			children.clear()
 			scene.elementsMap.clear()
 			
-			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oV, nV ->
+			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, nV ->
 				children.add(0, VisualBuilder.buildVisual(nV).apply {
 					prefWidthProperty().unbind()
 					prefWidthProperty().unbind()
@@ -123,7 +123,6 @@ internal class SceneBuilder {
 		}
 		
 		private fun Scene<*>.refreshDraggedElement(oV: StackPane?, nV: StackPane?) {
-			println("refresh")
 			when {
 				nV == null && oV != null -> {
 					//Remove dragged element from pane

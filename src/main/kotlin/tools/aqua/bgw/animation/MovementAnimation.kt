@@ -12,8 +12,8 @@ import tools.aqua.bgw.elements.ElementView
  * @param elementView [ElementView] to animate
  * @param fromX initial X position. Default: Current PosX.
  * @param toX resulting X position. Default: Current PosX.
- * @param fromY initial X position. Default: Current PosY.
- * @param toY resulting X position. Default: Current PosY.
+ * @param fromY initial Y position. Default: Current PosY.
+ * @param toY resulting Y position. Default: Current PosY.
  * @param duration duration in milliseconds. Default: 1 second.
  */
 class MovementAnimation<T : ElementView>(

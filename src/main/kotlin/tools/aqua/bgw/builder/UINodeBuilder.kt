@@ -15,10 +15,10 @@ import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
 import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXColor
 import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXFont
+import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
 import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.util.FontStyle
 
 /**
  * UINodeBuilder.
@@ -92,7 +92,7 @@ internal class UINodeBuilder {
 				}
 			}
 		}
-		
+
 		internal fun buildCheckBox(checkBox: CheckBox): Region {
 			val node = com.jfoenix.controls.JFXCheckBox(checkBox.label)
 			node.textProperty().bindTextProperty(checkBox)
@@ -219,26 +219,6 @@ internal class UINodeBuilder {
 				font = nV.toFXFont()
 				textFill = nV.color.toFXColor()
 			}
-		}
-		
-		private fun tools.aqua.bgw.util.Font.toFXFont(): Font {
-			val fontWeight: FontWeight
-			val fontPosture: FontPosture
-			when (fontStyle) {
-				FontStyle.BOLD -> {
-					fontWeight = FontWeight.BOLD; fontPosture = FontPosture.REGULAR
-				}
-				FontStyle.REGULAR -> {
-					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.REGULAR
-				}
-				FontStyle.SEMI_BOLD -> {
-					fontWeight = FontWeight.SEMI_BOLD; fontPosture = FontPosture.REGULAR
-				}
-				FontStyle.Italic -> {
-					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.ITALIC
-				}
-			}
-			return Font.font(family, fontWeight, fontPosture, size.toDouble())
 		}
 	}
 }

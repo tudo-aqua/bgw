@@ -4,10 +4,7 @@ package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.event.DropEvent
-import tools.aqua.bgw.event.Event
-import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.DoubleProperty
@@ -18,7 +15,7 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * ElementView is the abstract superclass of all framework elements.
- * It defines important fields and functions that are needed to visualize inheriting elements.
+ * It defines important fields and functions that are necessary to visualize inheriting elements.
  *
  * @param height height for this ElementView. Default: 0.0.
  * @param width width for this ElementView. Default: 0.0.
@@ -26,8 +23,9 @@ import tools.aqua.bgw.visual.Visual
  * @param posY the Y coordinate for this ElementView relative to its container. Default: 0.0.
  * @param visuals a mutable list of possible Visuals for this ElementView. Default: an empty ArrayList.
  *
- * Inheriting from this Class is not advised, because it cannot be rendered and trying to do so will result in an
- * IllegalInheritanceException.
+ * @throws IllegalInheritanceException inheriting from this Class is not advised,
+ * because it cannot be rendered and trying to do so will result in an IllegalInheritanceException.
+ *
  * @see IllegalInheritanceException
  */
 abstract class ElementView(
@@ -65,7 +63,7 @@ abstract class ElementView(
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
-	 * The Height for this ElementView.
+	 * The height for this ElementView.
 	 * @see heightProperty
 	 */
 	var height: Double
@@ -80,7 +78,7 @@ abstract class ElementView(
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
-	 * The Width for this ElementView.
+	 * The width for this ElementView.
 	 * @see widthProperty
 	 */
 	var width: Double
@@ -130,7 +128,7 @@ abstract class ElementView(
 	 * 730  -> 10
 	 */
 	val rotationProperty: DoubleProperty = DoubleProperty(0.0)
-
+	
 	/**
 	 * Rotation of this ElementView in degrees.
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
@@ -271,35 +269,35 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Gets invoked with an event whenever the Mouse enters this ElementView.
+	 * Gets invoked with an event whenever the mouse enters this ElementView.
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
 	var onMouseEntered: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with an event whenever the Mouse leaves this ElementView.
+	 * Gets invoked with an event whenever the mouse leaves this ElementView.
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
 	var onMouseExited: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is pressed inside this ElementView.
+	 * Gets invoked with a mouseEvent whenever the mouse is pressed inside this ElementView.
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
 	var onMousePressed: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is released inside this ElementView.
+	 * Gets invoked with a mouseEvent whenever the mouse is released inside this ElementView.
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
 	var onMouseReleased: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is clicked inside this ElementView.
+	 * Gets invoked with a mouseEvent whenever the mouse is clicked inside this ElementView.
 	 * Gets invoked after onMousePressed and onMouseReleased.
 	 * @see MouseEvent
 	 * @see onMousePressed
@@ -335,30 +333,47 @@ abstract class ElementView(
 	var onKeyTyped: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Should return `true` whether this ElementView is a valid drop target
-	 * for the dragged element in the given DropEvent or not.
+	 * Returns whether this [ElementView] is a valid drop target
+	 * for the dragged element in the given [DragEvent] or not.
 	 *
-	 * It is advised to not modify the Scene or its children in this function.
-	 * A better suited function to modify the Scene or its children
-	 * after a drag and drop gesture is onDragElementDropped.
+	 * Implement this function in such a way that it returns `true` if this [ElementView] accepts the drop of the given
+	 * [DropEvent.draggedElement] or `false` if a drop is not valid. The [DropEvent.draggedElement] will snap back
+	 * if all available drop targets return `false`.
 	 *
-	 * Note: onDragElementDropped for only gets invoked if the dropAcceptor returns `true` for the given DropEvent.
+	 * It is advised not to modify the [Scene] or its children in this function.
+	 * A better suited function to modify the [Scene] or its children
+	 * after a drag and drop gesture is [onDragElementDropped].
+	 *
+	 * Note: [onDragElementDropped] only gets invoked if the dropAcceptor returns `true` for the given [DropEvent].
 	 *
 	 * @see onDragElementDropped
 	 * @see DropEvent
 	 * @see isDisabledProperty
 	 */
-	var dropAcceptor: ((DropEvent) -> Boolean)? = null
+	var dropAcceptor: ((DragEvent) -> Boolean)? = null
+	/*
+	/**
+	 * Gets invoked with a [DragEvent] whenever the mouse enters this [ElementView] while performing a drag gesture.
+	 *
+	 * @see DragEvent
+	 */
+	var onDragGestureEntered: ((DragEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a DropEvent whenever a drag and drop gesture finishes over this ElementView
-	 * and the dropAcceptor returns `true` for the given DropEvent.
+	 * Gets invoked with a [DragEvent] whenever the mouse leaves this [ElementView] while performing a drag gesture.
+	 * @see DragEvent
+	 */
+	var onDragGestureExited: ((DragEvent) -> Unit)? = null
+	*/
+	/**
+	 * Gets invoked with a [DragEvent] whenever a drag and drop gesture finishes over this [ElementView]
+	 * and the [dropAcceptor] returns `true` for the given [DragEvent].
 	 *
 	 * @see dropAcceptor
 	 * @see DropEvent
 	 * @see isDisabledProperty
 	 */
-	var onDragElementDropped: ((DropEvent) -> Unit)? = null
+	var onDragElementDropped: ((DragEvent) -> Unit)? = null
 	
 	/**
 	 * Returns the Visual that is currently used to render this ElementView.
@@ -417,6 +432,13 @@ abstract class ElementView(
 		return par.also { it.removeChild(this) }
 	}
 	
+	/**
+	 * Removes element from container's children if supported.
+	 *
+	 * @param child child to be removed.
+	 *
+	 * @throws RuntimeException if the elementView does not support children.
+	 */
 	internal abstract fun removeChild(child: ElementView)
 	
 	/**
@@ -424,9 +446,9 @@ abstract class ElementView(
 	 * This method has to be overridden.
 	 * Returns null on all elementViews not supporting this feature.
 	 *
-	 * @param child Child to find
+	 * @param child child to find.
 	 *
-	 * @return Coordinate of given child in this ElementView or null if not supported
+	 * @return coordinate of given child in this ElementView or null if not supported,.
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ElementView): Coordinate? = null

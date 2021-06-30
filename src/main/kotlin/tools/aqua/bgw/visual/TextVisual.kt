@@ -2,14 +2,17 @@
 
 package tools.aqua.bgw.visual
 
+import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.StringProperty
+import tools.aqua.bgw.util.Font
 
 /**
  * A visual displaying text.
  *
  * @param text text to display.
+ * @param font font to be used for the [text]
  */
-class TextVisual(text: String) : SingleLayerVisual() { //TODO: Add Font size here and in VisualBuilder
+class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
 	 * The property for the displayed text.
 	 */
@@ -22,5 +25,19 @@ class TextVisual(text: String) : SingleLayerVisual() { //TODO: Add Font size her
 		get() = textProperty.value
 		set(value) {
 			textProperty.value = value
+		}
+	
+	/**
+	 * The property for the displayed text font.
+	 */
+	val fontProperty: ObjectProperty<Font> = ObjectProperty(font)
+	
+	/**
+	 * The displayed text font.
+	 */
+	var font: Font
+		get() = fontProperty.value
+		set(value) {
+			fontProperty.value = value
 		}
 }

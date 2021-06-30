@@ -60,7 +60,7 @@ class GameScene : BoardGameScene() {
 		posX = 20,
 		posY = 20,
 		label = "Hauptmenü",
-		font = Font(20.0, fontStyle = FontStyle.Italic, color = Color.PINK)
+		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.PINK)
 	)
 	
 	init {

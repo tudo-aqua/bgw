@@ -7,6 +7,7 @@ import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.FileDialog
+import tools.aqua.bgw.visual.Visual
 import java.io.File
 import java.util.*
 
@@ -26,6 +27,16 @@ open class BoardGameApplication {
 	 * Frontend instance.
 	 */
 	private val frontend: Frontend = Frontend()
+	
+	/**
+	 * Background for the [BoardGameApplication]. Visual appears as bars window does not match [Scene] ratio.
+	 * Do not mix up this property with the [Scene] background visual [Scene.background].
+	 */
+	var background: Visual
+		get() = Frontend.backgroundProperty.value
+		set(value) {
+			Frontend.backgroundProperty.value = value
+		}
 	
 	/**
 	 * Shows the given [FileDialog].

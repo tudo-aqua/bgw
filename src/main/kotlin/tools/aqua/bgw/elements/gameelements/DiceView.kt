@@ -52,7 +52,7 @@ open class DiceView(
 	 * Sets the currentSide to be displayed.
 	 */
 	fun showSide(value: Int) {
-		check(value <= visuals.size) { "Value is larger than side count" }
+		check(value <= visuals.size) { "Value is greater than side count" }
 		currentSide = value
 	}
 	

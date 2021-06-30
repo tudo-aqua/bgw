@@ -14,7 +14,7 @@ sealed class Visual {
 	 * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
 	 * Default: 1.
 	 */
-	val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(1, 0, 1)
+	val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
 	
 	/**
 	 * Transparency / alpha channel for this visual.

@@ -1,6 +1,44 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+package tools.aqua.bgw.builder
 
-package tools.aqua.bgw.event
+import javafx.scene.input.MouseButton
+import javafx.scene.text.FontPosture
+import javafx.scene.text.FontWeight
+import tools.aqua.bgw.event.KeyCode
+import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.event.MouseButtonType
+import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.util.FontStyle
+
+/**
+ * FontConverter between JavaFX and BGW.
+ */
+internal class FontConverter {
+	companion object {
+		/**
+		 * Converts the BGW [Font] MouseEvent to tools.aqua.bgw MouseEvent.
+		 */
+		internal fun Font.toFXFont(): javafx.scene.text.Font {
+			val fontWeight: FontWeight
+			val fontPosture: FontPosture
+			when (fontStyle) {
+				FontStyle.BOLD -> {
+					fontWeight = FontWeight.BOLD; fontPosture = FontPosture.REGULAR
+				}
+				FontStyle.REGULAR -> {
+					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.REGULAR
+				}
+				FontStyle.SEMI_BOLD -> {
+					fontWeight = FontWeight.SEMI_BOLD; fontPosture = FontPosture.REGULAR
+				}
+				FontStyle.ITALIC -> {
+					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.ITALIC
+				}
+			}
+			return javafx.scene.text.Font.font(family, fontWeight, fontPosture, size.toDouble())
+		}
+	}
+}
 
 /**
  * EventConverters between JavaFX and BGW.
@@ -13,9 +51,9 @@ internal class EventConverter {
 		internal fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
 			MouseEvent(
 				when (button) {
-					javafx.scene.input.MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
-					javafx.scene.input.MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
-					javafx.scene.input.MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
+					MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
+					MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
+					MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
 					else -> MouseButtonType.OTHER
 				}
 			)

@@ -2,17 +2,19 @@
 
 package tools.aqua.bgw.core
 
+import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_HEIGHT
+import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_WIDTH
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.BooleanProperty
 
 /**
  * Superclass for BGW game scenes.
- * Extends from this class in order to create your own game scene.
+ * Extend this class in order to create your own game scene.
  *
- * @param width scene width in virtual coordinates.
- * @param height scene height in virtual coordinates.
+ * @param width scene width in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
+ * @param height scene height in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
  */
-open class BoardGameScene(width: Number = 1920, height: Number = 1080) :
+open class BoardGameScene(width: Number = DEFAULT_SCENE_WIDTH, height: Number = DEFAULT_SCENE_HEIGHT) :
 	Scene<ElementView>(width = width, height = height) {
 	
 	/**

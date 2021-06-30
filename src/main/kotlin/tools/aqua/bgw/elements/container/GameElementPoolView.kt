@@ -4,14 +4,12 @@ package tools.aqua.bgw.elements.container
 
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.gameelements.GameElementView
-import tools.aqua.bgw.elements.offset
-import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A GameElementPoolView may bu used to visualize a pool containing GameElementViews.
- * A typical use case for a GameElementPoolView may be to visualize a satchel of hidden items,
- * where the user should not know what item he might draw next.
+ * A GameElementPoolView may be used to visualize a pool containing GameElementViews.
+ * A typical use case for a GameElementPoolView may be to visualize a pile of hidden items,
+ * where the user should not know what item might be draw next.
  *
  * Visualization:
  * The current Visual is used to visualize the area from where the user can start a drag and drop gesture.
@@ -21,7 +19,7 @@ import tools.aqua.bgw.visual.Visual
  * a snapshot of the initial state of the GameElementView gets created and stored.
  * Then the GameElementView is made draggable, invisible and its size gets fit to the GameElementPoolView size.
  *
- * the initial state consist of the following properties:
+ * The initial state consist of the following properties:
  * 	-isDraggable
  * 	-isVisible
  * 	-width
@@ -30,7 +28,7 @@ import tools.aqua.bgw.visual.Visual
  * Any changes made to those properties while a GameElementView is contained in the GameElementPoolView get ignored,
  * but they override the initial state.
  *
- * As soon as an Element gets removed (e.g. by initiating a drag and drop gesture) the initial state gets restored.
+ * As soon as an element gets removed (e.g. by initiating a drag and drop gesture) the initial state gets restored.
  * The GameElementView at the highest index in the elements list
  * registers the next drag and drop gesture above this GameElementPoolView.
  *

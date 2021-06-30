@@ -4,6 +4,8 @@ import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
+import tools.aqua.bgw.builder.EventConverter.Companion.toKeyEvent
+import tools.aqua.bgw.builder.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -18,8 +20,6 @@ import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.event.DragEvent
-import tools.aqua.bgw.event.EventConverter.Companion.toKeyEvent
-import tools.aqua.bgw.event.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException

@@ -45,5 +45,5 @@ enum class FontStyle {
 	/**
 	 * Italic font style.
 	 */
-	Italic,
+	ITALIC,
 }

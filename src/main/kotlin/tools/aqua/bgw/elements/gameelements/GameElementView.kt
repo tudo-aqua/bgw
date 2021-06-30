@@ -7,7 +7,7 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Abstract super class for game elements like cards or tokens.
+ * Abstract superclass for game elements like cards or tokens.
  * This class is used to restrict the type argument of containers.
  *
  * @param height height for this GameElementView.
@@ -31,7 +31,10 @@ sealed class GameElementView(
 	posY = posY,
 	visuals = visuals
 ) {
+	/**
+	 * @throws RuntimeException [GameElementView] does not support children.
+	 */
 	override fun removeChild(child: ElementView) {
-		throw RuntimeException("This $this Element has no children.")
+		throw RuntimeException("This $this element has no children.")
 	}
 }

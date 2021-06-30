@@ -30,15 +30,13 @@ package tools.aqua.bgw.util
  *
  * @constructor Creates a map with the given set of elements mapping pair.first -> pair.second.
  *
- * @param elements Elements to be initialized in the map.
+ * @param elements elements to be initialized in the map.
  */
 class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	private val map: MutableList<Pair<T, R>> = mutableListOf()
 	
 	init {
-		for (element in elements) {
-			add(element.first, element.second)
-		}
+		require(elements.all { add(it) })
 	}
 	
 	/**
@@ -56,54 +54,70 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @see addAll
 	 */
-	fun add(entity: T, value: R): Boolean = add(Pair(entity, value))
+	fun add(entity: T, value: R): Boolean {
+		if (contains(entity, value))
+			return true
+		
+		if (containsForward(entity) || containsBackward(value))
+			return false
+		
+		return map.add(Pair(entity, value))
+	}
 	
 	/**
 	 * Adds a relation A -> B if domain does not contain A and coDomain does not contain B.
 	 * Returns `false` if the relation could not be added.
 	 *
-	 * @return `true` if the element was added to the map, `false` otherwise.
+	 * @return `true` if the element was added to the map or already existed, `false` otherwise.
 	 *
 	 * @see addAll
 	 */
-	fun add(element: Pair<T, R>): Boolean =
-		if (containsForward(element.first) || containsBackward(element.second))
-			false
-		else
-			map.add(element)
+	fun add(element: Pair<T, R>): Boolean = add(element.first, element.second)
 	
 	/**
 	 * Adds all relations A -> B.
+	 * If any of the given items already exist, it gets ignored.
+	 * If any item contains a key or value that already exists, the map remains unchanged.
 	 *
-	 * @return `true` if the map was changed by this call, `false` otherwise.
+	 * Example:
+	 * Map: [(A->B), (C->D)]
+	 *
+	 * addAll[(E->F),(G->H)] results in [(A->B), (C->D), (E->F),(G->H)] : true
+	 *
+	 * addAll[(A->B),(E->F)] results in [(A->B), (C->D), (E->F),] : true
+	 *
+	 * addAll[(A->C),(E->F)] results in [(A->B), (C->D)] : false
+	 *
+	 * @return `true` if all elements were added to the map, `false` otherwise.
 	 *
 	 * @see add
 	 */
 	fun addAll(vararg items: Pair<T, R>): Boolean {
-		var result = false
+		val nonDuplicates = items.filter { !contains(it) }.toList()
 		
-		for (element in items) {
-			result = add(element) || result
-		}
+		if (nonDuplicates.any { containsForward(it.first) || containsBackward(it.second) })
+			return false
 		
-		return result
+		nonDuplicates.forEach { map.add(it) }
+		
+		return true
 	}
 	
 	/**
 	 * Forward lookup for entry.
 	 *
-	 * @param entity Relation key.
+	 * @param entity relation key.
 	 *
 	 * @return B for query A if relation A -> B exists.
 	 *
-	 * @throws NoSuchElementException If no such element is found.
+	 * @throws NoSuchElementException if no such element is found.
 	 */
 	fun forward(entity: T): R = map.first { t -> t.first == entity }.second
 	
 	/**
 	 * Forward lookup for entry.
 	 *
-	 * @param entity Relation key.
+	 * @param entity relation key.
 	 *
 	 * @return B for query A if relation A -> B exists. Null otherwise.
 	 */
@@ -112,18 +126,18 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Backward lookup for entry.
 	 *
-	 * @param value Relation key.
+	 * @param value relation key.
 	 *
 	 * @return A for query B if relation A -> B exists.
 	 *
-	 * @throws NoSuchElementException If no such element is found.
+	 * @throws NoSuchElementException if no such element is found.
 	 */
 	fun backward(value: R): T = map.first { t -> t.second == value }.first
 	
 	/**
 	 * Backward lookup for entry.
 	 *
-	 * @param value Relation key.
+	 * @param value relation key.
 	 *
 	 * @return A for query B if relation A -> B exists. Null otherwise.
 	 */
@@ -132,8 +146,8 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Removes relation A -> B if it exists.
 	 *
-	 * @param entity Relation key A.
-	 * @param value Relation value B.
+	 * @param entity relation key A.
+	 * @param value relation value B.
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -145,20 +159,20 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Removes relation A -> B if it exists.
 	 *
-	 * @param pair (Relation key A, Relation value B)
+	 * @param element (Relation key A, Relation value B)
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
 	 * @see removeForward
 	 * @see removeBackward
 	 */
-	fun remove(pair: Pair<T, R>): Boolean = remove(pair.first, pair.second)
+	fun remove(element: Pair<T, R>): Boolean = remove(element.first, element.second)
 	
 	/**
 	 * Removes by forward lookup.
 	 * Removes relation A -> * if it exists.
 	 *
-	 * @param entity Relation key A.
+	 * @param entity relation key A.
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -171,7 +185,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 * Removes by backward lookup.
 	 * Removes relation * -> B.
 	 *
-	 * @param value Relation value B.
+	 * @param value relation value B.
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -183,8 +197,8 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Returns whether relation A -> B exists in this map.
 	 *
-	 * @param entity Relation key A.
-	 * @param value Relation value B.
+	 * @param entity relation key A.
+	 * @param value relation value B.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
@@ -194,9 +208,21 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	fun contains(entity: T, value: R): Boolean = containsForward(entity) && containsBackward(value)
 	
 	/**
+	 * Returns whether relation A -> B exists in this map.
+	 *
+	 * @param pair relation pair A -> B.
+	 *
+	 * @return `true` if the relation exists in this map, `false` otherwise.
+	 *
+	 * @see containsForward
+	 * @see containsBackward
+	 */
+	fun contains(pair: Pair<T, R>): Boolean = contains(pair.first, pair.second)
+	
+	/**
 	 * Returns whether a relation A -> * exists.
 	 *
-	 * @param entity Relation key A.
+	 * @param entity relation key A.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
@@ -208,7 +234,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Returns whether a relation * -> B exists.
 	 *
-	 * @param value Relation value B.
+	 * @param value relation value B.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
