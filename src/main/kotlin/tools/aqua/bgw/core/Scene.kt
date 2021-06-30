@@ -43,7 +43,8 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	
 	/**
 	 * The root node of this [Scene].
-	 * Use it to compare the parent property of any [ElementView] to find out whether it wa directly added to the scene.
+	 * Use it to compare the parent property of any [ElementView]
+	 * to find out whether it was directly added to the [Scene].
 	 */
 	val rootNode: ElementView = RootElement(this)
 	
@@ -243,6 +244,11 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 			this.removeElements(child as T)
 		} catch (_: ClassCastException) {
 		}
+	}
+	
+	companion object {
+		const val DEFAULT_SCENE_WIDTH: Double = 1920.0
+		const val DEFAULT_SCENE_HEIGHT: Double = 1040.0
 	}
 }
 
