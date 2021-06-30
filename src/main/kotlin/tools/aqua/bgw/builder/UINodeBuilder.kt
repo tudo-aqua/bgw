@@ -1,16 +1,20 @@
 package tools.aqua.bgw.builder
 
+import com.jfoenix.controls.JFXComboBox
 import javafx.beans.property.ReadOnlyStringWrapper
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
+import javafx.scene.control.SingleSelectionModel
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
+import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXColor
+import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXFont
 import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty
@@ -50,20 +54,43 @@ internal class UINodeBuilder {
 		}
 		
 		internal fun <T> buildComboBox(comboBox: ComboBox<T>): Region {
-			val node = com.jfoenix.controls.JFXComboBox<T>(FXCollections.observableArrayList(comboBox.items))
-			comboBox.setGUIListenerAndInvoke {
+			val node = JFXComboBox<T>()
+			comboBox.observableItemsList.setGUIListenerAndInvoke {
 				node.items.clear()
 				comboBox.items.forEach { node.items.add(it) }
+				node.setCellFactory(comboBox)
 			}
 			node.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
 				comboBox.selectedItem = newValue
 			}
-			//font size
-			comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, nV ->
-				node.editor.font = nV.toFXFont()
-				//TODO text color
+			comboBox.selectedItemProperty.setInternalListenerAndInvoke(comboBox.selectedItem) { _, newValue ->
+				if (newValue != null) {
+					node.selectionModel.select(newValue)
+				}
+			}
+			node.promptText = comboBox.prompt
+			//font
+			comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, _ ->
+				node.buttonCell.font = comboBox.font.toFXFont()
+				node.buttonCell.textFill = comboBox.font.color.toFXColor()
+				node.setCellFactory(comboBox)
 			}
 			return node
+		}
+
+		private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
+			cellFactory = javafx.util.Callback {
+				object : ListCell<T>() {
+					override fun updateItem(item: T, empty: Boolean) {
+						super.updateItem(item, empty)
+						this.font = comboBox.font.toFXFont()
+						this.textFill = comboBox.font.color.toFXColor()
+						if (!empty) {
+							this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
+						}
+					}
+				}
+			}
 		}
 		
 		internal fun buildCheckBox(checkBox: CheckBox): Region {

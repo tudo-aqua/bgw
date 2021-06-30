@@ -23,7 +23,6 @@ import tools.aqua.bgw.util.Font
  *        Default: empty string.
  * @param font font to be used for the label. Default: default Font constructor.
  * @param items the initial selection of items. Default: empty list.
- * @param selectedItem the initial selected item. Null denotes no initial selection. Default: null.
  * @param formatFunction the formatFunction that is used to represent the items. Default: null.
  */
 open class ComboBox<T>(
@@ -31,18 +30,17 @@ open class ComboBox<T>(
 	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
-	@Suppress("UNUSED_PARAMETER") val prompt: String = "",
+	val prompt: String = "",
 	font: Font = Font(),
 	items: List<T> = listOf(),
-	selectedItem: T? = null,
-	formatFunction: ((T) -> String)? = null, //TODO: implement
+	formatFunction: ((T) -> String)? = null,
 ) : UIElementView(
 	height = height,
 	width = width,
 	posX = posX,
 	posY = posY,
 	font = font
-) { //TODO: Selected Item not working
+) {
 	
 	/**
 	 * Property for the items list for this ComboBox.
