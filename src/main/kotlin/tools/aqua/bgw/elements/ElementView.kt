@@ -18,7 +18,7 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * ElementView is the abstract superclass of all framework elements.
- * It defines important fields and functions that are needed to visualize inheriting elements.
+ * It defines important fields and functions that are necessary to visualize inheriting elements.
  *
  * @param height height for this ElementView. Default: 0.0.
  * @param width width for this ElementView. Default: 0.0.
@@ -26,8 +26,9 @@ import tools.aqua.bgw.visual.Visual
  * @param posY the Y coordinate for this ElementView relative to its container. Default: 0.0.
  * @param visuals a mutable list of possible Visuals for this ElementView. Default: an empty ArrayList.
  *
- * Inheriting from this Class is not advised, because it cannot be rendered and trying to do so will result in an
- * IllegalInheritanceException.
+ * @throws IllegalInheritanceException inheriting from this Class is not advised,
+ * because it cannot be rendered and trying to do so will result in an IllegalInheritanceException.
+ *
  * @see IllegalInheritanceException
  */
 abstract class ElementView(
@@ -65,7 +66,7 @@ abstract class ElementView(
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
-	 * The Height for this ElementView.
+	 * The height for this ElementView.
 	 * @see heightProperty
 	 */
 	var height: Double
@@ -80,7 +81,7 @@ abstract class ElementView(
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
-	 * The Width for this ElementView.
+	 * The width for this ElementView.
 	 * @see widthProperty
 	 */
 	var width: Double
@@ -271,35 +272,35 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Gets invoked with an event whenever the Mouse enters this ElementView.
+	 * Gets invoked with an event whenever the mouse enters this ElementView.
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
 	var onMouseEntered: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with an event whenever the Mouse leaves this ElementView.
+	 * Gets invoked with an event whenever the mouse leaves this ElementView.
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
 	var onMouseExited: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is pressed inside this ElementView.
+	 * Gets invoked with a mouseEvent whenever the mouse is pressed inside this ElementView.
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
 	var onMousePressed: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is released inside this ElementView.
+	 * Gets invoked with a mouseEvent whenever the mouse is released inside this ElementView.
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
 	var onMouseReleased: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the Mouse is clicked inside this ElementView.
+	 * Gets invoked with a mouseEvent whenever the mouse is clicked inside this ElementView.
 	 * Gets invoked after onMousePressed and onMouseReleased.
 	 * @see MouseEvent
 	 * @see onMousePressed
@@ -335,14 +336,18 @@ abstract class ElementView(
 	var onKeyTyped: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Should return `true` whether this ElementView is a valid drop target
+	 * Rreturns whether this ElementView is a valid drop target
 	 * for the dragged element in the given DropEvent or not.
 	 *
-	 * It is advised to not modify the Scene or its children in this function.
-	 * A better suited function to modify the Scene or its children
-	 * after a drag and drop gesture is onDragElementDropped.
+	 * Implement this function in such a way that it returns `true` if this [ElementView] accepts the drop of the given
+	 * [DropEvent.draggedElement] or `false` if a drop is not valid. The [DropEvent.draggedElement] will snap back
+	 * if all available drop targets return `false`.
 	 *
-	 * Note: onDragElementDropped for only gets invoked if the dropAcceptor returns `true` for the given DropEvent.
+	 * It is advised not to modify the [Scene] or its children in this function.
+	 * A better suited function to modify the [Scene] or its children
+	 * after a drag and drop gesture is [onDragElementDropped].
+	 *
+	 * Note: [onDragElementDropped] only gets invoked if the dropAcceptor returns `true` for the given [DropEvent].
 	 *
 	 * @see onDragElementDropped
 	 * @see DropEvent
