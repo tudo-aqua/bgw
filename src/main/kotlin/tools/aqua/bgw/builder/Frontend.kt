@@ -18,6 +18,7 @@ import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.Visual
 import java.awt.Color
 import java.awt.Toolkit
 import java.io.File
@@ -44,7 +45,7 @@ class Frontend : Application() {
 		internal const val DEFAULT_FADE_TIME = 0.25
 		private const val BLUR_RADIUS = 63.0
 		private const val MINIMIZED_FACTOR = 0.8
-		private const val BACKGROUND_SIZE = 10_000.0
+		private const val TITLE_BAR_HEIGHT = 39
 		
 		internal var boardGameScene: BoardGameScene? = null
 		
@@ -63,12 +64,7 @@ class Frontend : Application() {
 		internal var sceneX: Double = 0.0
 		internal var sceneY: Double = 0.0
 		
-		private val backgroundProperty: ObjectProperty<ColorVisual> = ObjectProperty(ColorVisual(Color.BLACK))
-		private var background: ColorVisual
-			get() = backgroundProperty.value
-			set(value) {
-				backgroundProperty.value = value
-			}
+		internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(ColorVisual(Color.BLACK))
 		
 		internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
 			menuScene = scene
@@ -272,16 +268,18 @@ class Frontend : Application() {
 			menuScene?.let { menuPane = buildMenu(it) }
 			boardGameScene?.let { gamePane = buildGame(it) }
 			
-			backgroundProperty.guiListener = { _, _ ->
-				backgroundPane.style = "-fx-background-color: #${
-					Integer.toHexString(
-						background.color.rgb
-					).substring(2)
-				};"
-			}
-			backgroundPane.apply {
-				minHeight = BACKGROUND_SIZE
-				minWidth = BACKGROUND_SIZE
+			backgroundProperty.setGUIListenerAndInvoke(backgroundProperty.value) { _, nV ->
+				backgroundPane.children.clear()
+				backgroundPane.children.add(VisualBuilder.buildVisual(nV).apply {
+					prefWidthProperty().bind(primaryStage!!.widthProperty())
+					prefHeightProperty().bind(
+						primaryStage!!.heightProperty().subtract(
+							if (fullscreen)
+								0
+							else TITLE_BAR_HEIGHT
+						)
+					)
+				})
 			}
 			
 			updateScene()

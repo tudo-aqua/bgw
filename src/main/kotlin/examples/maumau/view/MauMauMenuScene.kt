@@ -1,5 +1,6 @@
 package examples.maumau.view
 
+import examples.main.BUTTON_BG_FILE
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
@@ -19,8 +20,8 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500) {
     init {
         background = ColorVisual(Color.WHITE)
         opacity = 0.7
-        
-        val visual = ImageVisual("assets/buttonBG.png")
+    
+        val visual = ImageVisual(BUTTON_BG_FILE)
         continueGameButton.setVisuals(visual)
         newGameButton.setVisuals(visual)
         exitButton.setVisuals(visual)

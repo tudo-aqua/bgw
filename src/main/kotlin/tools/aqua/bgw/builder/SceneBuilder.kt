@@ -123,7 +123,6 @@ internal class SceneBuilder {
 		}
 		
 		private fun Scene<*>.refreshDraggedElement(oV: StackPane?, nV: StackPane?) {
-			println("refresh")
 			when {
 				nV == null && oV != null -> {
 					//Remove dragged element from pane

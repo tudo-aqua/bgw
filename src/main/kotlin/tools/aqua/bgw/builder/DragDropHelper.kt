@@ -67,7 +67,6 @@ class DragDropHelper {
 			//Invoke drag drop handler on all accepting drag targets
 			validTargets.forEach { it.onDragElementDropped?.invoke(dragEvent) }
 			
-			println(isNodesNotEmpty)
 			return isNodesNotEmpty
 		}
 		
@@ -82,9 +81,15 @@ class DragDropHelper {
 					dragTargetObject.mouseX,
 					dragTargetObject.mouseY,
 					dragTargetObject.dragTarget.posX -
-							if (dragTargetObject.dragTarget.layoutFromCenter) dragTargetObject.dragTarget.width / 2 else 0.0,
+							if (dragTargetObject.dragTarget.layoutFromCenter)
+								dragTargetObject.dragTarget.width / 2
+							else
+								0.0,
 					dragTargetObject.dragTarget.posY -
-							if (dragTargetObject.dragTarget.layoutFromCenter) dragTargetObject.dragTarget.height / 2 else 0.0
+							if (dragTargetObject.dragTarget.layoutFromCenter)
+								dragTargetObject.dragTarget.height / 2
+							else
+								0.0
 				),
 				mutableListOf()
 			)
