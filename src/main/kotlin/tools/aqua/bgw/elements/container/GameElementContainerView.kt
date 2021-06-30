@@ -66,7 +66,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Adds an ElementView to this GameElementViewContainer.
 	 *
-	 * @param element Element to add.
+	 * @param element element to add.
 	 */
 	@Synchronized
 	open fun addElement(element: T, index: Int = observableElements.size()) {
@@ -86,7 +86,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Adds all ElementViews passed as varargs to this GameElementContainerView.
 	 *
-	 * @param elements Vararg ElementViews to add.
+	 * @param elements vararg ElementViews to add.
 	 */
 	open fun addAllElements(vararg elements: T) {
 		addAllElements(elements.toList())
@@ -95,7 +95,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Adds all ElementViews contained in the passed collection to this GameElementContainerView.
 	 *
-	 * @param collection Collection containing the ElementViews to add.
+	 * @param collection collection containing the ElementViews to add.
 	 */
 	@Synchronized
 	open fun addAllElements(collection: Collection<T>) {
@@ -105,7 +105,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Removes the element specified by the parameter from this GameElementContainerView.
 	 *
-	 * @param element The element to remove.
+	 * @param element the element to remove.
 	 */
 	@Synchronized
 	open fun removeElement(element: T) {
@@ -130,28 +130,51 @@ sealed class GameElementContainerView<T : GameElementView>(
 	fun numberOfElements(): Int = observableElements.size()
 	
 	/**
-	 * Returns whether the elements list is empty `true` or not `false`.
+	 * Returns whether the elements list is empty.
+	 *
+	 * @return `true` if this list contains no elements, `false` otherwise.
+	 *
+	 * @see isNotEmpty
 	 * @see elements
 	 */
 	fun isEmpty(): Boolean = observableElements.isEmpty()
 	
 	/**
-	 * Returns whether the elements list is not empty `true` or not `false`.
+	 * Returns whether the elements list is not empty.
+	 *
+	 * @return `true` if this list contains elements, `false` otherwise.
+	 *
+	 * @see isEmpty
 	 * @see elements
 	 */
 	fun isNotEmpty(): Boolean = !isEmpty()
 	
+	/**
+	 * Method returning a contained child's coordinates within this container.
+	 *
+	 * @param child child to find.
+	 *
+	 * @return coordinate of given child in this container relative to containers anchor point.
+	 */
 	override fun getChildPosition(child: ElementView): Coordinate? = Coordinate(child.posX, child.posY)
 	
-	@Suppress("UNCHECKED_CAST")
+	/**
+	 * Removes element from container's children.
+	 *
+	 * @param child child to be removed.
+	 *
+	 * @throws RuntimeException if the child's type is incompatible with container's type.
+	 */
 	override fun removeChild(child: ElementView) {
 		try {
+			@Suppress("UNCHECKED_CAST")
 			this.removeElement(child as T)
 		} catch (_: ClassCastException) {
+			throw RuntimeException("$child type is incompatible with container's type.")
 		}
 	}
 	
-	override fun iterator() : Iterator<T> = observableElements.iterator()
+	override fun iterator(): Iterator<T> = observableElements.iterator()
 	
 	/**
 	 * Adds the supplied GameElement to this GameElementViewContainer.

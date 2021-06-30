@@ -439,7 +439,9 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * {@inheritDoc}.
+	 * Removes element from grid.
+	 *
+	 * @param child child to be removed.
 	 */
 	override fun removeChild(child: ElementView) {
 		val elementTriple = grid.find { it.element == child }

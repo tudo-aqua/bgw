@@ -31,7 +31,10 @@ sealed class GameElementView(
 	posY = posY,
 	visuals = visuals
 ) {
+	/**
+	 * @throws RuntimeException [GameElementView] does not support children.
+	 */
 	override fun removeChild(child: ElementView) {
-		throw RuntimeException("This $this Element has no children.")
+		throw RuntimeException("This $this element has no children.")
 	}
 }

@@ -417,6 +417,13 @@ abstract class ElementView(
 		return par.also { it.removeChild(this) }
 	}
 	
+	/**
+	 * Removes element from container's children if supported.
+	 *
+	 * @param child child to be removed.
+	 *
+	 * @throws RuntimeException if the elementView does not support children.
+	 */
 	internal abstract fun removeChild(child: ElementView)
 	
 	/**
@@ -424,9 +431,9 @@ abstract class ElementView(
 	 * This method has to be overridden.
 	 * Returns null on all elementViews not supporting this feature.
 	 *
-	 * @param child Child to find
+	 * @param child child to find.
 	 *
-	 * @return Coordinate of given child in this ElementView or null if not supported
+	 * @return coordinate of given child in this ElementView or null if not supported,.
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ElementView): Coordinate? = null

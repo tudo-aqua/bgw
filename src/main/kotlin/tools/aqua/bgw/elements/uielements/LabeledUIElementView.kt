@@ -2,7 +2,6 @@
 
 package tools.aqua.bgw.elements.uielements
 
-import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
@@ -38,8 +37,4 @@ sealed class LabeledUIElementView(
 		set(value) {
 			labelProperty.value = value
 		}
-
-	override fun removeChild(child: ElementView) {
-		throw RuntimeException("This $this Element has no children.")
-	}
 }
