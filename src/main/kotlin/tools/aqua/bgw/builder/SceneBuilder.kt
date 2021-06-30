@@ -5,12 +5,12 @@ import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
+import tools.aqua.bgw.builder.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.event.DragEvent
-import tools.aqua.bgw.event.EventConverter.Companion.toMouseEvent
 
 /**
  * SceneBuilder.

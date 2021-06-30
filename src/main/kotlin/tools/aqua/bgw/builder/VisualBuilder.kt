@@ -7,6 +7,7 @@ import javafx.scene.image.WritableImage
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
+import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.visual.*
 import java.awt.image.BufferedImage
@@ -66,7 +67,9 @@ internal class VisualBuilder {
 							this.text = nV
 							opacity = visual.transparency
 						}
-						//TODO: Add Font size here
+						visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, nV ->
+							this.font = nV.toFXFont()
+						}
 					}
 				
 				is CompoundVisual ->
