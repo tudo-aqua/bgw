@@ -7,7 +7,7 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Abstract super class for game elements like cards or tokens.
+ * Abstract superclass for game elements like cards or tokens.
  * This class is used to restrict the type argument of containers.
  *
  * @param height height for this GameElementView.
