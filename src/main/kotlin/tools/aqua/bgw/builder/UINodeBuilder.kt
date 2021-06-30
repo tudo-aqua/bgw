@@ -201,7 +201,7 @@ internal class UINodeBuilder {
 				FontStyle.BOLD -> {
 					fontWeight = FontWeight.BOLD; fontPosture = FontPosture.REGULAR
 				}
-				FontStyle.NORMAL -> {
+				FontStyle.REGULAR -> {
 					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.REGULAR
 				}
 				FontStyle.SEMI_BOLD -> {

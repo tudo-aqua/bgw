@@ -17,6 +17,7 @@ import tools.aqua.bgw.util.Font
  * @param width Width for this TableView. Default: 0.
  * @param posX Horizontal coordinate for this TableView. Default: 0.
  * @param posY Vertical coordinate for this TableView. Default: 0.
+ * @param font the Font for this TableView. Default: default Font constructor.
  *
  * Simplified example on how the columns list is used to represent the data:
  *

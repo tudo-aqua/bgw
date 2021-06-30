@@ -11,10 +11,11 @@ import tools.aqua.bgw.util.Font
 /**
  * Superclass for all UI elements.
  *
- * @param height Height for this View. Default: 0.
- * @param width Width for this View. Default: 0.
- * @param posX Horizontal coordinate for this View. Default: 0.
- * @param posY Vertical coordinate for this View. Default: 0.
+ * @param height height for this UIElementView. Default: 0.
+ * @param width width for this UIElementView. Default: 0.
+ * @param posX horizontal coordinate for this UIElementView. Default: 0.
+ * @param posY vertical coordinate for this UIElementView. Default: 0.
+ * @param font font for this UIElementView. Usage depends on subclass. Default: default Font constructor.
  */
 sealed class UIElementView(
 	height: Number = 0,
@@ -33,6 +34,7 @@ sealed class UIElementView(
 	/**
 	 * Font of this LabeledUIElementView.
 	 * @see Font
+	 * @see fontProperty
 	 */
 	var font: Font
 		get() = fontProperty.value
@@ -41,40 +43,43 @@ sealed class UIElementView(
 		}
 	
 	/**
-	 * Property for the css style of this UIElementView's background.
-	 * Changes are rendered directly by the framework overriding other styles.
+	 * Property for the css style that gets applied to this UIElementView's background.
+	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
+	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 */
 	val backgroundStyleProperty: StringProperty = StringProperty("")
 	
 	/**
-	 * Css style to be applied to this UIElementView's background.
-	 * Be aware that changes may override the framework's behaviour leading to critical failures or undefined behaviour.
+	 * Css style that gets applied to this UIElementView's background.
+	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
+	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 * @see backgroundStyleProperty
 	 */
 	var backgroundStyle: String
 		get() = backgroundStyleProperty.value
 		set(value) {
 			backgroundStyleProperty.value = value
 		}
-	
+
 	/**
-	 * Property for the css style of this UIElementView.
-	 * Changes are rendered directly by the framework overriding other styles.
+	 * Property for the css style that gets applied to this UIElementView.
+	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
+	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 */
 	val componentStyleProperty: StringProperty = StringProperty("")
-	
+
 	/**
-	 * Css style to be applied to this UIElementView.
-	 * Be aware that changes may override the framework's behaviour leading to critical failures or undefined behaviour.
+	 * Css style that gets applied to this UIElementView.
+	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
+	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 * @see componentStyleProperty
 	 */
 	var componentStyle: String
 		get() = componentStyleProperty.value
 		set(value) {
 			componentStyleProperty.value = value
 		}
-	
-	/**
-	 * {@inheritDoc}.
-	 */
+
 	override fun removeChild(child: ElementView) {
 		throw RuntimeException("This $this Element has no children.")
 	}

@@ -6,11 +6,10 @@ import tools.aqua.bgw.elements.ElementView
 
 /**
  * A pane containing elements.
+ * TODO implement and doc
  */
 open class ElementPane<T : ElementView> : LayoutElement<T>() {
-	/**
-	 * {@inheritDoc}.
-	 */
+
 	override fun removeChild(child: ElementView) {
 		TODO("Not yet implemented")
 	}
