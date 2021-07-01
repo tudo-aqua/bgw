@@ -5,7 +5,7 @@ package tools.aqua.bgw.animation
 import tools.aqua.bgw.elements.ElementView
 
 /**
- * ElementAnimation baseclass.
+ * [ElementAnimation] baseclass.
  *
  * @param element [ElementView] to animate.
  * @param duration duration in milliseconds. Default: 1 second.

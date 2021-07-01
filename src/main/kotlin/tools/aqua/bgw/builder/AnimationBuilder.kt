@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.builder
 
 import javafx.animation.*
@@ -97,6 +99,26 @@ internal class AnimationBuilder {
 			}
 			
 			animation.play()
+		}
+		
+		internal fun addRandomizeAnimation(scene: BoardGameScene, anim: RandomizeAnimation<*>) {
+			val seq = SequentialTransition()
+			
+			repeat(anim.speed) {
+				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
+					setOnFinished {
+						anim.element.visual = anim.visuals[Random.nextInt(anim.visuals.size)]
+					}
+				}
+			}
+			
+			seq.setOnFinished {
+				anim.element.visual = anim.toVisual
+				scene.animations.remove(anim)
+				anim.onFinished?.handle(AnimationFinishedEvent())
+			}
+			
+			seq.play()
 		}
 		
 		internal fun addDiceAnimation(scene: BoardGameScene, anim: DiceAnimation<*>) {

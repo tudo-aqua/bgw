@@ -20,5 +20,4 @@ class FlipAnimation<T : ElementView>(
 	var fromVisual: Visual,
 	var toVisual: Visual,
 	duration: Int = 500
-) :
-	ElementAnimation<T>(element = elementView, duration = duration)
+) : ElementAnimation<T>(element = elementView, duration = duration)

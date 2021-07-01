@@ -10,10 +10,10 @@ import tools.aqua.bgw.elements.ElementView
  * Moves given [ElementView] relative to parents anchor point.
  *
  * @param elementView [ElementView] to animate
- * @param fromX initial X position. Default: Current PosX.
- * @param toX resulting X position. Default: Current PosX.
- * @param fromY initial Y position. Default: Current PosY.
- * @param toY resulting Y position. Default: Current PosY.
+ * @param fromX initial X position. Default: Current [ElementView.posX].
+ * @param toX resulting X position. Default: Current [ElementView.posX].
+ * @param fromY initial Y position. Default: Current [ElementView.posY].
+ * @param toY resulting Y position. Default: Current [ElementView.posY].
  * @param duration duration in milliseconds. Default: 1 second.
  */
 class MovementAnimation<T : ElementView>(
@@ -47,12 +47,12 @@ class MovementAnimation<T : ElementView>(
 	
 	/**
 	 * A movement animation.
-	 * Moves given ElementView relative to parents anchor point.
+	 * Moves given [ElementView] relative to parents anchor point.
 	 *
-	 * @param elementView GameElementView to animate
+	 * @param elementView [ElementView] to animate
 	 * @param byX Relative X movement.
 	 * @param byY Relative Y movement.
-	 * @param duration Animation duration in milliseconds. Default: 1 second
+	 * @param duration [Animation] duration in milliseconds. Default: 1 second
 	 */
 	constructor(elementView: T, byX: Number = 0.0, byY: Number = 0.0, duration: Int = 1000) : this(
 		elementView = elementView,
@@ -63,13 +63,13 @@ class MovementAnimation<T : ElementView>(
 	
 	companion object {
 		/**
-		 * Creates a movement animation to another element's position.
-		 * Moves given ElementView relative to parents anchor point.
+		 * Creates a [MovementAnimation] to another element's position.
+		 * Moves given [ElementView] relative to parents anchor point.
 		 *
-		 * @param elementView GameElementView to animate
-		 * @param toElementViewPosition Defines the destination element to move the given element to.
-		 * @param scene The scene.
-		 * @param duration Animation duration in milliseconds. Default: 1 second
+		 * @param elementView [ElementView] to animate
+		 * @param toElementViewPosition Defines the destination [ElementView] to move the given element to.
+		 * @param scene The [Scene].
+		 * @param duration [Animation] duration in milliseconds. Default: 1 second
 		 */
 		fun <T : ElementView> toElementView(
 			elementView: T,
