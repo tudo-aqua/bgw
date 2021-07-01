@@ -68,7 +68,7 @@ open class BoardGameApplication {
 	 * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.
 	 *
 	 * @param scene menu scene to show.
-	 * @param fadeTime time to fade in. Default: [Frontend.DEFAULT_FADE_TIME].
+	 * @param fadeTime time to fade in, specified in seconds. Default: [Frontend.DEFAULT_FADE_TIME].
 	 */
 	fun showMenuScene(scene: MenuScene, fadeTime: Number = Frontend.DEFAULT_FADE_TIME) {
 		Frontend.showMenuScene(scene, fadeTime.toDouble())
@@ -77,7 +77,7 @@ open class BoardGameApplication {
 	/**
 	 * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
 	 *
-	 * @param fadeTime time to fade in. Default: [Frontend.DEFAULT_FADE_TIME].
+	 * @param fadeTime time to fade out, specified in seconds. Default: [Frontend.DEFAULT_FADE_TIME].
 	 */
 	fun hideMenuScene(fadeTime: Number = Frontend.DEFAULT_FADE_TIME) {
 		Frontend.hideMenuScene(fadeTime.toDouble())
