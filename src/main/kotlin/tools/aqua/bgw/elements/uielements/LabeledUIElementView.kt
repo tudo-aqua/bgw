@@ -6,7 +6,7 @@ import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
 /**
- * Superclass for all UIElementViews that have a label.
+ * Baseclass for all UIElementViews that have a label.
  *
  * @param height height for this LabeledUIElementView. Default: 0.
  * @param width width for this LabeledUIElementView. Default: 0.

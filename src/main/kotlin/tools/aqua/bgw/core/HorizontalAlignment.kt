@@ -13,17 +13,17 @@ package tools.aqua.bgw.core
  */
 enum class HorizontalAlignment(internal val positionMultiplier: Double, internal val pivotMultiplier: Double) {
 	/**
-	 * Alignment on the left.
+	 * [Alignment] on the left.
 	 */
 	LEFT(0.0, -1.0),
 	
 	/**
-	 * Alignment centered horizontally.
+	 * [Alignment] centered horizontally.
 	 */
 	CENTER(0.5, 0.0),
 	
 	/**
-	 * Alignment on the right.
+	 * [Alignment] on the right.
 	 */
 	RIGHT(1.0, 1.0)
 }

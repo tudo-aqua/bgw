@@ -11,7 +11,7 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Superclass for all UI elements.
+ * Baseclass for all UI elements.
  *
  * @param height height for this UIElementView. Default: 0.
  * @param width width for this UIElementView. Default: 0.

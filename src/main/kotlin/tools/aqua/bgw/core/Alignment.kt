@@ -21,47 +21,47 @@ import tools.aqua.bgw.core.VerticalAlignment.TOP
  */
 enum class Alignment(val verticalAlignment: VerticalAlignment, val horizontalAlignment: HorizontalAlignment) {
 	/**
-	 * Alignment in the top left corner.
+	 * [Alignment] in the top left corner.
 	 */
 	TOP_LEFT(TOP, LEFT),
 	
 	/**
-	 * Alignment in the top right corner.
+	 * [Alignment] in the top right corner.
 	 */
 	TOP_RIGHT(TOP, RIGHT),
 	
 	/**
-	 * Alignment on the top centered horizontally.
+	 * [Alignment] on the top centered horizontally.
 	 */
 	TOP_CENTER(TOP, HorizontalAlignment.CENTER),
 	
 	/**
-	 * Alignment in the bottom left corner.
+	 * [Alignment] in the bottom left corner.
 	 */
 	BOTTOM_LEFT(BOTTOM, LEFT),
 	
 	/**
-	 * Alignment in the bottom right corner.
+	 * [Alignment] in the bottom right corner.
 	 */
 	BOTTOM_RIGHT(BOTTOM, RIGHT),
 	
 	/**
-	 * Alignment on the bottom centered horizontally.
+	 * [Alignment] on the bottom centered horizontally.
 	 */
 	BOTTOM_CENTER(BOTTOM, HorizontalAlignment.CENTER),
 	
 	/**
-	 * Alignment on the left centered vertically.
+	 * [Alignment] on the left centered vertically.
 	 */
 	CENTER_LEFT(VerticalAlignment.CENTER, LEFT),
 	
 	/**
-	 * Alignment on the right centered vertically.
+	 * [Alignment] on the right centered vertically.
 	 */
 	CENTER_RIGHT(VerticalAlignment.CENTER, RIGHT),
 	
 	/**
-	 * Alignment centered horizontally and vertically.
+	 * [Alignment] centered horizontally and vertically.
 	 */
 	CENTER(VerticalAlignment.CENTER, HorizontalAlignment.CENTER);
 	
