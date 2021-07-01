@@ -15,7 +15,6 @@ import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.elements.gameelements.DiceView
 import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.elements.gameelements.TokenView
-import tools.aqua.bgw.elements.layoutviews.ElementPane
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.elements.uielements.*
@@ -110,8 +109,6 @@ internal class NodeBuilder {
 			layoutElementView: LayoutElement<out ElementView>
 		): Region =
 			when (layoutElementView) {
-				is ElementPane ->
-					LayoutNodeBuilder.buildElementPane(scene, layoutElementView)
 				is GridLayoutView<*> ->
 					LayoutNodeBuilder.buildGrid(scene, layoutElementView)
 			}

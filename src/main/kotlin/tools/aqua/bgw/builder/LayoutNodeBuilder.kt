@@ -5,7 +5,6 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.layoutviews.ElementPane
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.util.ElementViewGrid
 
@@ -67,16 +66,6 @@ internal class LayoutNodeBuilder {
 					layoutY = posY + element.posY
 				})
 			}
-		}
-		//endregion
-		
-		//region elementPane
-		@Suppress("UNUSED_PARAMETER")
-		internal fun buildElementPane(
-			scene: Scene<out ElementView>,
-			layoutElementView: ElementPane<out ElementView>
-		): Region {
-			TODO("Not yet implemented")
 		}
 		//endregion
 	}
