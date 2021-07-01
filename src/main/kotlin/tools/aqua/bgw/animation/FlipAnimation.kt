@@ -3,6 +3,7 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A flip animation.
@@ -10,9 +11,14 @@ import tools.aqua.bgw.elements.ElementView
  * and extends again in half the given duration.
  *
  * @param elementView [ElementView] to animate.
- * @param fromVisual initial visual.
- * @param toVisual resulting visual.
+ * @param fromVisual initial [Visual].
+ * @param toVisual resulting [Visual].
  * @param duration duration in milliseconds. Default: 1 second.
  */
-class FlipAnimation<T : ElementView>(elementView: T, var fromVisual: Int, var toVisual: Int, duration: Int = 500) :
+class FlipAnimation<T : ElementView>(
+	elementView: T,
+	var fromVisual: Visual,
+	var toVisual: Visual,
+	duration: Int = 500
+) :
 	ElementAnimation<T>(element = elementView, duration = duration)

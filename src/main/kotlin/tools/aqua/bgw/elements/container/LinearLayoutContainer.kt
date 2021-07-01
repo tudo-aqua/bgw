@@ -2,34 +2,38 @@
 
 package tools.aqua.bgw.elements.container
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
 import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.elements.uielements.Orientation
 import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.visual.Visual
 
 /**
- * A LinearLayoutContainer may be used to visualize a zone containing GameElementViews.
- * GameElementViews inside the container get placed according to the specified orientation and alignment.
- * A spacing between Elements may be specified which may also be negative
+ * A [LinearLayoutContainer] may be used to visualize a zone containing [GameElementView]s.
+ * [GameElementView]s inside the container get placed according to the specified [Orientation] and [Alignment].
+ * A [spacing] between Elements may be specified which may also be negative
  * e.g. Elements like playing cards should overlap.
  *
  * Visualization:
- * The current Visual is used to visualize a background.
+ * The [Visual] is used to visualize a background.
  * If all Elements are still within bounds with the user defined spacing,
  * the user defined spacing gets used to space the Elements.
  * Otherwise the biggest possible spacing is used
- * so that all Elements are still withing bounds of the LinearLayoutContainer.
+ * so that all Elements are still withing bounds of the [LinearLayoutContainer].
  *
- * @param height height for this LinearLayoutContainer. Default: 0.
- * @param width width for this LinearLayoutContainer. Default: 0.
- * @param posX horizontal coordinate for this LinearLayoutContainer. Default: 0.
- * @param posY vertical coordinate for this LinearLayoutContainer. Default: 0.
- * @param spacing spacing between contained GameElementViews. Default: 0.
- * @param orientation orientation for this LinearLayoutContainer. Default: HORIZONTAL.
- * @param verticalAlignment specifies how the contained Elements should be aligned vertically. Default: TOP.
- * @param horizontalAlignment specifies how the contained Elements should be aligned horizontally. Default: LEFT.
+ * @param height height for this [LinearLayoutContainer]. Default: 0.
+ * @param width width for this [LinearLayoutContainer]. Default: 0.
+ * @param posX horizontal coordinate for this [LinearLayoutContainer]. Default: 0.
+ * @param posY vertical coordinate for this [LinearLayoutContainer]. Default: 0.
+ * @param spacing spacing between contained [GameElementView]s. Default: 0.
+ * @param orientation orientation for this [LinearLayoutContainer]. Default: [Orientation.HORIZONTAL].
+ * @param verticalAlignment specifies how the contained Elements should be aligned vertically.
+ * Default: [VerticalAlignment.TOP].
+ * @param horizontalAlignment specifies how the contained Elements should be aligned horizontally.
+ * Default: [HorizontalAlignment.LEFT].
  */
 open class LinearLayoutContainer<T : GameElementView>(
     height: Number = 0,
@@ -37,10 +41,11 @@ open class LinearLayoutContainer<T : GameElementView>(
     posX: Number = 0,
     posY: Number = 0,
     spacing: Number = 0,
+    visual: Visual = Visual.EMPTY,
     orientation: Orientation = Orientation.HORIZONTAL,
     verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
     horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
-) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY) {
+) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
     
     /**
      * Property for the spacing of GameElementViews in this LinearLayoutContainer.

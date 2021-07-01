@@ -50,7 +50,7 @@ class GameScene : BoardGameScene() {
 			this[0, 0] = TokenView(50, 50, 0, 0, ColorVisual(Color.RED)).apply { isDraggable = true }
 			this[1, 1] = TokenView(50, 50, 0, 0, ColorVisual(Color.GREEN)).apply { isDraggable = true }
 			this[2, 2] = TokenView(50, 50, 0, 0, ColorVisual(Color.BLUE)).apply { isDraggable = true }
-			setVisuals(ColorVisual(Color.WHITE))
+			visual = ColorVisual.WHITE
 		}
 	
 	//Menu button
@@ -68,88 +68,83 @@ class GameScene : BoardGameScene() {
 		background = ImageVisual(ImageIO.read(this::class.java.classLoader.getResource(BG_FILE)))
 		
 		//Color MenuButton
-		mainMenuButton.setVisuals(ColorVisual(180, 0, 0))
+		mainMenuButton.visual = ColorVisual(180, 0, 0)
 		
 		//Set up player hands
 		currentPlayerHand.apply {
-            setVisuals(ColorVisual(Color(255, 255, 255, 50)))
-            horizontalAlignment = HorizontalAlignment.CENTER
-            verticalAlignment = VerticalAlignment.CENTER
-        }
-        otherPlayerHand.apply {
-            setVisuals(ColorVisual(Color(255, 255, 255, 50)))
-            horizontalAlignment = HorizontalAlignment.CENTER
-            verticalAlignment = VerticalAlignment.CENTER
-            rotation = 180.0
-        }
-
-        //Background color for stack
-        drawStackView.setVisuals(ColorVisual(Color(255, 255, 255, 50)))
-        gameStackView.setVisuals(ColorVisual(Color(255, 255, 255, 50)))
-
-        //Jack selection visuals
-        buttonDiamonds.setVisuals(
-            ImageVisual.loadSubImage(
-                CARDS_FILE,
-                CardValue.ACE.ordinal * IMG_WIDTH,
-                CardSuit.DIAMONDS.ordinal * IMG_HEIGHT,
-                IMG_WIDTH,
-                IMG_HEIGHT
-            )
-        )
-        buttonHearts.setVisuals(
-            ImageVisual.loadSubImage(
-                CARDS_FILE,
-                CardValue.ACE.ordinal * IMG_WIDTH,
-                CardSuit.HEARTS.ordinal * IMG_HEIGHT,
-                IMG_WIDTH,
-                IMG_HEIGHT
-            )
-        )
-        buttonSpades.setVisuals(
-            ImageVisual.loadSubImage(
-                CARDS_FILE,
-                CardValue.ACE.ordinal * IMG_WIDTH,
-                CardSuit.SPADES.ordinal * IMG_HEIGHT,
-                IMG_WIDTH,
-                IMG_HEIGHT
-            )
-
-        )
-        buttonClubs.setVisuals(
-            ImageVisual.loadSubImage(
-                CARDS_FILE,
-                CardValue.ACE.ordinal * IMG_WIDTH,
-                CardSuit.CLUBS.ordinal * IMG_HEIGHT,
-                IMG_WIDTH,
-                IMG_HEIGHT
-            )
-        )
-
-        //Hide jack selection
-        buttonDiamonds.isVisible = false
-        buttonHearts.isVisible = false
-        buttonSpades.isVisible = false
-        buttonClubs.isVisible = false
-
-        drawStackView.isDisabled
-
-        //Add views
-        addElements(
-            drawStackView,
-            gameStackView,
-            currentPlayerHand,
-            otherPlayerHand,
-            drawStackInfo,
-            gameStackInfo,
-            buttonDiamonds,
-            buttonHearts,
-            buttonSpades,
-            buttonClubs,
-            mainMenuButton,
-            grid
-        )
-    }
+			visual = ColorVisual(Color(255, 255, 255, 50))
+			horizontalAlignment = HorizontalAlignment.CENTER
+			verticalAlignment = VerticalAlignment.CENTER
+		}
+		otherPlayerHand.apply {
+			visual = ColorVisual(Color(255, 255, 255, 50))
+			horizontalAlignment = HorizontalAlignment.CENTER
+			verticalAlignment = VerticalAlignment.CENTER
+			rotation = 180.0
+		}
+		
+		//Background color for stack
+		drawStackView.visual = ColorVisual(Color(255, 255, 255, 50))
+		gameStackView.visual = ColorVisual(Color(255, 255, 255, 50))
+		
+		//Jack selection visuals
+		buttonDiamonds.visual = ImageVisual.loadSubImage(
+			CARDS_FILE,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.DIAMONDS.ordinal * IMG_HEIGHT,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		
+		)
+		
+		buttonHearts.visual = ImageVisual.loadSubImage(
+			CARDS_FILE,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.HEARTS.ordinal * IMG_HEIGHT,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		)
+		
+		buttonSpades.visual = ImageVisual.loadSubImage(
+			CARDS_FILE,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.SPADES.ordinal * IMG_HEIGHT,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		)
+		
+		buttonClubs.visual = ImageVisual.loadSubImage(
+			CARDS_FILE,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.CLUBS.ordinal * IMG_HEIGHT,
+			IMG_WIDTH,
+			IMG_HEIGHT
+		)
+		
+		//Hide jack selection
+		buttonDiamonds.isVisible = false
+		buttonHearts.isVisible = false
+		buttonSpades.isVisible = false
+		buttonClubs.isVisible = false
+		
+		drawStackView.isDisabled
+		
+		//Add views
+		addElements(
+			drawStackView,
+			gameStackView,
+			currentPlayerHand,
+			otherPlayerHand,
+			drawStackInfo,
+			gameStackInfo,
+			buttonDiamonds,
+			buttonHearts,
+			buttonSpades,
+			buttonClubs,
+			mainMenuButton,
+			grid
+		)
+	}
 }
 
 

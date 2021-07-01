@@ -8,7 +8,7 @@ import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.IntegerProperty
+import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Observable
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
@@ -17,11 +17,11 @@ import tools.aqua.bgw.visual.Visual
  * ElementView is the abstract superclass of all framework elements.
  * It defines important fields and functions that are necessary to visualize inheriting elements.
  *
- * @param height height for this ElementView. Default: 0.0.
- * @param width width for this ElementView. Default: 0.0.
- * @param posX the X coordinate for this ElementView relative to its container. Default: 0.0.
- * @param posY the Y coordinate for this ElementView relative to its container. Default: 0.0.
- * @param visuals a mutable list of possible Visuals for this ElementView. Default: an empty ArrayList.
+ * @param height height for this [ElementView].
+ * @param width width for this [ElementView].
+ * @param posX the X coordinate for this [ElementView] relative to its container.
+ * @param posY the Y coordinate for this [ElementView] relative to its container.
+ * @param visual visual for this ElementView.
  *
  * @throws IllegalInheritanceException inheriting from this Class is not advised,
  * because it cannot be rendered and trying to do so will result in an IllegalInheritanceException.
@@ -29,11 +29,11 @@ import tools.aqua.bgw.visual.Visual
  * @see IllegalInheritanceException
  */
 abstract class ElementView(
-	height: Number = 0,
-	width: Number = 0,
-	posX: Number = 0,
-	posY: Number = 0,
-	var visuals: MutableList<Visual> = ArrayList()
+	height: Number,
+	width: Number,
+	posX: Number,
+	posY: Number,
+	visual: Visual
 ) : Observable() {
 	
 	/**
@@ -147,20 +147,21 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the index of the current Visual in the visuals list.
-	 * @see Visual
+	 * Property for the current [Visual] of this [ElementView].
+	 *
+	 * @see visual
 	 */
-	val currentVisualProperty: IntegerProperty = IntegerProperty()
+	val visualProperty: ObjectProperty<Visual> = ObjectProperty(visual)
 	
 	/**
 	 * Index of the current Visual in the visuals list.
-	 * @see Visual
-	 * @see currentVisualProperty
+	 *
+	 * @see visualProperty
 	 */
-	var currentVisual: Int
-		get() = currentVisualProperty.value
+	var visual: Visual
+		get() = visualProperty.value
 		set(value) {
-			currentVisualProperty.value = value
+			visualProperty.value = value
 		}
 	
 	/**
@@ -374,49 +375,6 @@ abstract class ElementView(
 	 * @see isDisabledProperty
 	 */
 	var onDragElementDropped: ((DragEvent) -> Unit)? = null
-	
-	/**
-	 * Returns the Visual that is currently used to render this ElementView.
-	 */
-	fun getCurrentVisual(): Visual = if (currentVisual < visuals.size) visuals[currentVisual] else Visual.EMPTY
-	
-	/**
-	 * Changes the current Visual that gets used for rendering this ElementView
-	 * to the Visual at the specified index in the visuals list.
-	 *
-	 * @param id the index for the Visual that should be rendered.
-	 */
-	fun showVisual(id: Int) {
-		if (id <= visuals.size)
-			currentVisual = id
-		else
-			throw IndexOutOfBoundsException("Index out of bounds for visuals.")
-	}
-	
-	/**
-	 * Clears the visuals list and adds all visuals passed as a parameter.
-	 * Sets first Visual as the one to show.
-	 *
-	 * @param newVisuals the new Visuals for this ElementView.
-	 */
-	fun setVisuals(vararg newVisuals: Visual) {
-		setVisuals(0, *newVisuals)
-	}
-	
-	/**
-	 * Clears the visuals list and adds all visuals passed as a parameter and shows selected one.
-	 *
-	 * @param newVisuals the new Visuals for this ElementView.
-	 * @param visualToShow Index of the visual to show
-	 */
-	fun setVisuals(visualToShow: Int, vararg newVisuals: Visual) {
-		if (visualToShow !in newVisuals.indices)
-			throw ArrayIndexOutOfBoundsException("VisualToShow index out of bounds")
-		
-		visuals.clear()
-		visuals.addAll(newVisuals)
-		currentVisual = visualToShow
-	}
 	
 	/**
 	 * Removes this element from it's parent.

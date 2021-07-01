@@ -8,6 +8,7 @@ import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * Superclass for all UI elements.
@@ -15,8 +16,8 @@ import tools.aqua.bgw.util.Font
  * @param height height for this UIElementView. Default: 0.
  * @param width width for this UIElementView. Default: 0.
  * @param posX horizontal coordinate for this UIElementView. Default: 0.
- * @param posY vertical coordinate for this UIElementView. Default: 0.
- * @param font font for this UIElementView. Usage depends on subclass. Default: default Font constructor.
+ * @param posY vertical coordinate for this [UIElementView]. Default: 0.
+ * @param font font for this UIElementView. Usage depends on subclass. Default: default [Font] constructor.
  */
 sealed class UIElementView(
 	height: Number = 0,
@@ -24,7 +25,7 @@ sealed class UIElementView(
 	posX: Number = 0,
 	posY: Number = 0,
 	font: Font = Font(),
-) : StaticView<UIElementView>(height = height, width = width, posX = posX, posY = posY) {
+) : StaticView<UIElementView>(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**
 	 * Property for the Font of this LabeledUIElementView.

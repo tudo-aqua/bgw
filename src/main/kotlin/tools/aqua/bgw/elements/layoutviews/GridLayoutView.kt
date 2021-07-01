@@ -7,6 +7,7 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.ElementViewGrid
 import tools.aqua.bgw.util.GridIteratorElement
+import tools.aqua.bgw.visual.Visual
 
 /**
  * Defines an GameElementContainerView that orders elements in a grid structure.
@@ -14,6 +15,11 @@ import tools.aqua.bgw.util.GridIteratorElement
  * @param rows initial row count.
  * @param columns initial column count.
  * @param spacing spacing between rows and columns. Default: 0.0
+ * @param posX horizontal coordinate for this [GridLayoutView]. Default: 0.
+ * @param posY vertical coordinate for this [GridLayoutView]. Default: 0.
+ * @param layoutFromCenter whether the [GridLayoutView] should anchor in the center (`true`) or top-Left (`false`).
+ * Default: `true`.
+ * @param visual initial visual for this [GridLayoutView]. Default: [Visual.EMPTY].
  */
 open class GridLayoutView<T : ElementView>(
 	rows: Int,
@@ -21,8 +27,10 @@ open class GridLayoutView<T : ElementView>(
 	spacing: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
-	layoutFromCenter: Boolean = true
-) : LayoutElement<T>(posX = posX, posY = posY), Iterable<GridIteratorElement<T>> {
+	layoutFromCenter: Boolean = true,
+	visual: Visual = Visual.EMPTY
+) : LayoutElement<T>(height = 0, width = 0, posX = posX, posY = posY, visual = visual),
+	Iterable<GridIteratorElement<T>> {
 	
 	internal val grid: ElementViewGrid<T> = ElementViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
