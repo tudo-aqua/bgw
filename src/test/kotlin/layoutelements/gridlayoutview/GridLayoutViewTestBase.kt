@@ -23,10 +23,10 @@ abstract class GridLayoutViewTestBase {
 	fun setUp() {
 		grid = GridLayoutView(3, 3)
 		centerings = Array(3) { Array(3) { Alignment.CENTER } }
-		centerings[0][0] = Alignment.LEFT_CENTER
+		centerings[0][0] = Alignment.CENTER_LEFT
 		centerings[0][1] = Alignment.BOTTOM_RIGHT
 		centerings[1][1] = Alignment.TOP_RIGHT
-		centerings[1][2] = Alignment.RIGHT_CENTER
+		centerings[1][2] = Alignment.CENTER_RIGHT
 		
 		for (i in 0..2) {
 			for (j in 0..2) {
