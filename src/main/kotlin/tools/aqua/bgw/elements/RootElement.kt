@@ -3,13 +3,14 @@
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.visual.Visual
 
 /**
  * The root element in the view hierarchy of a scene.
  *
  * @param scene scene of this root element.
  */
-internal class RootElement<T : ElementView>(val scene: Scene<T>) : ElementView() {
+internal class RootElement<T : ElementView>(val scene: Scene<T>) : ElementView(0, 0, 0, 0, Visual.EMPTY) {
 	
 	/**
 	 * Removes element from the [scene].

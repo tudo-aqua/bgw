@@ -15,17 +15,20 @@ import tools.aqua.bgw.visual.Visual
  * A CardStackView may be used to visualize a card stack.
  *
  * Visualization:
- * The current Visual is used to visualize a background.
- * The current Visual of the CardView at elements[0] is used to visualize the topmost card of the card stack.
- * The positioning of contained CardViews gets ignored and the specified alignment gets used to position them instead.
+ * The [Visual] is used to visualize a background.
+ * The [Visual] of the [CardView] at elements[0] is used to visualize the topmost card of the card stack.
+ * The positioning of contained [CardView]s gets ignored and the specified alignment gets used to position them instead.
  *
- * @param height height for this CardStackView. Default: the suggested card height.
- * @param width width for this CardStackView. Default: the suggested card width.
- * @param posX horizontal coordinate for this CardStackView. Default: 0.
- * @param posY vertical coordinate for this CardStackView. Default: 0.
- * @param verticalAlignment specifies how the contained CardViews should be aligned vertically. Default: CENTER.
- * @param horizontalAlignment specifies how the contained CardViews should be aligned horizontally. Default: CENTER.
- * @param visual visual for this CardStackView. Default: empty Visual.
+ * @param height height for this [CardStackView]. Default: the suggested card height.
+ * @param width width for this [CardStackView]. Default: the suggested card width.
+ * @param posX horizontal coordinate for this [CardStackView]. Default: 0.
+ * @param posY vertical coordinate for this [CardStackView]. Default: 0.
+ * @param verticalAlignment specifies how the contained [CardView]s should be aligned vertically.
+ * Default: [VerticalAlignment.CENTER].
+ * @param horizontalAlignment specifies how the contained CardViews should be aligned horizontally.
+ * Default: [HorizontalAlignment.CENTER].
+ * @param visual visual for this [CardStackView]. Default: [Visual.EMPTY].
+ *
  * @see CardView
  */
 open class CardStackView<T : CardView>(
@@ -36,7 +39,7 @@ open class CardStackView<T : CardView>(
 	verticalAlignment: VerticalAlignment = VerticalAlignment.CENTER,
 	horizontalAlignment: HorizontalAlignment = HorizontalAlignment.CENTER,
 	visual: Visual = Visual.EMPTY
-) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visuals = mutableListOf(visual)) {
+) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	
 	/**
 	 * Property for the verticalAlignment of CardViews in this CardStackView.

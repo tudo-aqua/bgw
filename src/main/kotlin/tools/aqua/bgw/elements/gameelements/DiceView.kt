@@ -2,8 +2,7 @@
 
 package tools.aqua.bgw.elements.gameelements
 
-import tools.aqua.bgw.observable.IntegerProperty
-import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -24,36 +23,42 @@ open class DiceView(
 	posX: Number = 0,
 	posY: Number = 0,
 	visuals: MutableList<Visual>
-) : GameElementView(height = height, width = width, posX = posX, posY = posY, visuals = visuals) {
+) : GameElementView(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**
-	 * The property for the current Side that is displayed.
+	 * Visuals for this DiceView.
 	 */
-	val currentSideProperty: IntegerProperty = IntegerProperty(1)
+	val visuals: ObservableArrayList<Visual> = ObservableArrayList(visuals)
 	
 	/**
-	 * Current side that is displayed.
-	 * @see currentSideProperty
+	 * Current side that is displayed 0-based.
+	 * If index is greater than the amount of visuals stored in [visuals] or negative,
+	 * [Visual.EMPTY] will be displayed.
 	 */
-	var currentSide: Int
-		get() = currentSideProperty.value
+	var currentSide: Int = 0
 		set(value) {
-			currentSideProperty.value = value
+			if (field != value) {
+				field = value
+				
+				visual = if (value in visuals.indices)
+					visuals[value]
+				else
+					Visual.EMPTY
+			}
 		}
 	
-	/**
-	 * Returns the current imageVisual for this DiceView.
-	 *
-	 * @see ImageVisual
-	 */
-	fun getCurrentImageVisual(): ImageVisual = visuals[currentVisual] as ImageVisual
-	
-	/**
-	 * Sets the currentSide to be displayed.
-	 */
-	fun showSide(value: Int) {
-		check(value <= visuals.size) { "Value is greater than side count" }
-		currentSide = value
+	init {
+		visual = if (visuals.isNotEmpty())
+			visuals.first()
+		else
+			Visual.EMPTY
+		
+		this.visuals.internalListener = {
+			visual = if (currentSide in visuals.indices)
+				visuals[currentSide]
+			else
+				Visual.EMPTY
+		}
 	}
 	
 	/**

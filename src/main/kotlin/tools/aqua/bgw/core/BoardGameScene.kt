@@ -8,7 +8,7 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.BooleanProperty
 
 /**
- * Superclass for BGW game scenes.
+ * Baseclass for BGW game scenes.
  * Extend this class in order to create your own game scene.
  *
  * @param width scene width in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
@@ -26,7 +26,7 @@ open class BoardGameScene(width: Number = DEFAULT_SCENE_WIDTH, height: Number = 
 	internal val lockedProperty = BooleanProperty(false)
 	
 	/**
-	 * Locks scene from any user input.
+	 * Locks [Scene] from any user input.
 	 *
 	 * @see unlock
 	 */
@@ -35,7 +35,7 @@ open class BoardGameScene(width: Number = DEFAULT_SCENE_WIDTH, height: Number = 
 	}
 	
 	/**
-	 * Unlocks scene for user input.
+	 * Unlocks [Scene] for user input.
 	 *
 	 * @see lock
 	 */

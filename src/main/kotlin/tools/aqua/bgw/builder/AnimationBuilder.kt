@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tools.aqua.bgw.builder
 
 import javafx.animation.*
@@ -60,8 +62,8 @@ internal class AnimationBuilder {
 		
 		internal fun addFlipAnimation(scene: BoardGameScene, anim: FlipAnimation<*>) {
 			val node = scene.elementsMap[anim.element]!!
-			val fromVisual = VisualBuilder.buildVisual(anim.element.visuals[anim.fromVisual])
-			val toVisual = VisualBuilder.buildVisual(anim.element.visuals[anim.toVisual]).apply { scaleX = 0.0 }
+			val fromVisual = VisualBuilder.buildVisual(anim.fromVisual)
+			val toVisual = VisualBuilder.buildVisual(anim.toVisual).apply { scaleX = 0.0 }
 			
 			val animation1 = ScaleTransition(Duration.millis(anim.duration / 2.0), fromVisual).apply {
 				fromX = 1.0
@@ -99,13 +101,33 @@ internal class AnimationBuilder {
 			animation.play()
 		}
 		
+		internal fun addRandomizeAnimation(scene: BoardGameScene, anim: RandomizeAnimation<*>) {
+			val seq = SequentialTransition()
+			
+			repeat(anim.speed) {
+				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
+					setOnFinished {
+						anim.element.visual = anim.visuals[Random.nextInt(anim.visuals.size)]
+					}
+				}
+			}
+			
+			seq.setOnFinished {
+				anim.element.visual = anim.toVisual
+				scene.animations.remove(anim)
+				anim.onFinished?.handle(AnimationFinishedEvent())
+			}
+			
+			seq.play()
+		}
+		
 		internal fun addDiceAnimation(scene: BoardGameScene, anim: DiceAnimation<*>) {
 			val seq = SequentialTransition()
 			
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					setOnFinished {
-						anim.element.currentSide = Random.nextInt(anim.element.visuals.size) + 1
+						anim.element.currentSide = Random.nextInt(anim.element.visuals.size())
 					}
 				}
 			}

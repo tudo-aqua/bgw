@@ -6,14 +6,9 @@ import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
-import javafx.scene.control.SingleSelectionModel
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
-import javafx.scene.text.Font
-import javafx.scene.text.FontPosture
-import javafx.scene.text.FontWeight
-import tools.aqua.bgw.builder.UINodeBuilder.Companion.toFXColor
 import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
 import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
 import tools.aqua.bgw.elements.uielements.*

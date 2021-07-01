@@ -7,12 +7,13 @@ import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.FileDialog
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 import java.io.File
 import java.util.*
 
 /**
- * Superclass for all BGW Applications.
+ * Baseclass for all BGW Applications.
  * Extends from this class in order to create your own game application.
  *
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
@@ -24,13 +25,13 @@ import java.util.*
 open class BoardGameApplication {
 	
 	/**
-	 * Frontend instance.
+	 * [Frontend] instance.
 	 */
 	private val frontend: Frontend = Frontend()
 	
 	/**
-	 * Background for the [BoardGameApplication]. Visual appears as bars window does not match [Scene] ratio.
-	 * Do not mix up this property with the [Scene] background visual [Scene.background].
+	 * Background [Visual] for the [BoardGameApplication]. [Visual] appears as bars window does not match [Scene] ratio.
+	 * Do not mix up this [Property] with the [Scene] background [Visual] [Scene.background].
 	 */
 	var background: Visual
 		get() = Frontend.backgroundProperty.value
@@ -85,14 +86,14 @@ open class BoardGameApplication {
 	/**
 	 * Shows given [BoardGameScene].
 	 *
-	 * @param scene game scene to show.
+	 * @param scene [BoardGameScene] to show.
 	 */
 	fun showGameScene(scene: BoardGameScene) {
 		Frontend.showGameScene(scene)
 	}
 	
 	/**
-	 * Sets alignment of all [Scene]s in this [BoardGameApplication].
+	 * Sets [Alignment] of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setSceneAlignment(newAlignment: Alignment) {
 		setHorizontalSceneAlignment(newAlignment.horizontalAlignment)
@@ -100,32 +101,32 @@ open class BoardGameApplication {
 	}
 	
 	/**
-	 * Sets horizontal alignment of all [Scene]s in this [BoardGameApplication].
+	 * Sets [HorizontalAlignment] of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
 		Frontend.setHorizontalSceneAlignment(newHorizontalAlignment)
 	}
 	
 	/**
-	 * Sets vertical alignment of all [Scene]s in this [BoardGameApplication].
+	 * Sets [VerticalAlignment] of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
 		Frontend.setVerticalSceneAlignment(newVerticalAlignment)
 	}
 	
 	/**
-	 * Sets scale mode of all [Scene]s in this [BoardGameApplication].
+	 * Sets [ScaleMode] of all [Scene]s in this [BoardGameApplication].
 	 */
 	fun setScaleMode(newScaleMode: ScaleMode) {
 		Frontend.setScaleMode(newScaleMode)
 	}
-	
-	/**
-	 * Sets this [BoardGameApplication] to fullscreen mode.
-	 */
-	fun setFullScreen(fullscreen: Boolean) {
-		Frontend.setFullScreen(fullscreen)
-	}
+
+//	/**
+//	 * Sets this [BoardGameApplication] to fullscreen mode.
+//	 */
+//	fun setFullScreen(fullscreen: Boolean) {
+//		Frontend.setFullScreen(fullscreen)
+//	}
 	
 	/**
 	 * Manually refreshes currently displayed [Scene]s.

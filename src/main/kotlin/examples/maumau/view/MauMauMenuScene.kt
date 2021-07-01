@@ -22,10 +22,10 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500) {
         opacity = 0.7
     
         val visual = ImageVisual(BUTTON_BG_FILE)
-        continueGameButton.setVisuals(visual)
-        newGameButton.setVisuals(visual)
-        exitButton.setVisuals(visual)
-        
+        continueGameButton.visual = visual
+        newGameButton.visual = visual
+        exitButton.visual = visual
+    
         addElements(
             menuLabel,
             continueGameButton,

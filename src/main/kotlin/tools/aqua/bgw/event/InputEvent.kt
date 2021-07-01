@@ -3,6 +3,6 @@
 package tools.aqua.bgw.event
 
 /**
- * Superclass for input events.
+ * Baseclass for input events.
  */
 abstract class InputEvent : Event()

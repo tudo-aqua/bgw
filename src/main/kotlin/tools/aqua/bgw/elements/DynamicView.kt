@@ -8,15 +8,21 @@ import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Superclass for all ElementViews that can be draggable.
+ * Baseclass for all ElementViews that can be draggable.
+ *
+ * @param height height for this [DynamicView].
+ * @param width width for this [DynamicView].
+ * @param posX the X coordinate for this [DynamicView] relative to its container.
+ * @param posY the Y coordinate for this [DynamicView] relative to its container.
+ * @param visual visual for this [DynamicView].
  */
 abstract class DynamicView(
-	height: Number = 0,
-	width: Number = 0,
-	posX: Number = 0,
-	posY: Number = 0,
-	visuals: MutableList<Visual> = ArrayList()
-) : ElementView(height = height, width = width, posX = posX, posY = posY, visuals = visuals) {
+	height: Number,
+	width: Number,
+	posX: Number,
+	posY: Number,
+	visual: Visual
+) : ElementView(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	
 	/**
 	 * Property that controls whether element is draggable or not.

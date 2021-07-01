@@ -1,24 +1,25 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package tools.aqua.bgw.elements.gameelements
 
-import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A CardView may be used to visualize a card.
+ * A [CardView] may be used to visualize a card.
  * You can inherit from this class if you want to add additional functionality or fields.
  * Inheriting does NOT change how a cardView is visualized by the BGW framework.
  *
  * Visualization:
- * The Visual at the currentSide value is used to visualize the card.
+ * The [Visual] at the [currentSide] value is used to visualize the card. By default the back side is shown.
  *
- * @param height height for this cardView. Default: the suggested card height.
- * @param width width for this cardView. Default: the suggested card width.
- * @param posX horizontal coordinate for this CardView. Default: 0.
- * @param posY vertical coordinate for this CardView. Default: 0.
+ * @param height height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
+ * @param width width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].
+ * @param posX horizontal coordinate for this [CardView]. Default: 0.
+ * @param posY vertical coordinate for this [CardView]. Default: 0.
  * @param front visual to represent the front side of the card.
- * @param back visual to represent the back side of the card. Default: same Visual as front.
+ * @param back visual to represent the back side of the card. Default: same [Visual] as front.
  */
 open class CardView(
 	height: Number = DEFAULT_CARD_HEIGHT,
@@ -32,41 +33,47 @@ open class CardView(
 	width = width,
 	posX = posX,
 	posY = posY,
-	visuals = mutableListOf(front, back)
+	visual = back
 ) {
-	
 	/**
-	 * The property for the current side that is displayed.
+	 * The current [CardSide] that is displayed.
 	 *
 	 * @see showFront
 	 * @see showBack
 	 */
-	val currentSideProperty: ObjectProperty<CardSide> = ObjectProperty(CardSide.BACK)
-	
-	/**
-	 * The current side that is displayed.
-	 *
-	 * @see showFront
-	 * @see showBack
-	 * @see currentSideProperty
-	 */
-	var currentSide: CardSide
-		get() = currentSideProperty.value
+	var currentSide: CardSide = CardSide.BACK
 		set(value) {
-			currentSideProperty.value = value
+			if (field != value) {
+				field = value
+				
+				visual = if (value == CardSide.FRONT)
+					frontVisual
+				else
+					backVisual
+			}
 		}
 	
 	/**
-	 * Front visual for this CardView.
+	 * Front [Visual] for this [CardView].
 	 */
-	val front : Visual
-		get() = visuals[0]
+	var frontVisual: Visual = front
+		set(value) {
+			field = value
+			
+			if (currentSide == CardSide.FRONT)
+				visual = value
+		}
 	
 	/**
-	 * Back visual for this CardView.
+	 * Back [Visual] for this [CardView].
 	 */
-	val back : Visual
-		get() = visuals[0]
+	var backVisual: Visual = back
+		set(value) {
+			field = value
+			
+			if (currentSide == CardSide.BACK)
+				visual = value
+		}
 	
 	/**
 	 * Sets the currentSide to be displayed to front.
@@ -106,18 +113,16 @@ open class CardView(
 	
 	/**
 	 * Enum for the card sides FRONT and BACK with their visual indices.
-	 *
-	 * @param visual Corresponding visual index of this card side
 	 */
-	enum class CardSide(val visual: Int) {
+	enum class CardSide {
 		/**
 		 * The FRONT side.
 		 */
-		FRONT(0),
+		FRONT,
 		
 		/**
 		 * The BACK side.
 		 */
-		BACK(1)
+		BACK
 	}
 }

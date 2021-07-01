@@ -20,6 +20,7 @@ import javax.imageio.ImageIO
 class RefreshViewController(private val viewController: ViewController) : Refreshable {
 	
 	private val image: BufferedImage = ImageIO.read(this::class.java.classLoader.getResource(CARDS_FILE))
+	private val overlay = ColorVisual.GREEN.apply { transparency = 0.0 }
 	
 	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
 		val playerHandView = if (player == viewController.logicController.game.currentPlayer)
@@ -132,12 +133,11 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				)
 			)
 			
-			val cardView = CardView(height = 200, width = 130, front = cardFront, back = cardBack)
-			cardView.visuals.addAll(
-				listOf(
-					CompoundVisual(cardFront, ColorVisual(Color.GREEN).apply { transparency = 0.5 }),
-					CompoundVisual(cardFront, ColorVisual(Color.RED).apply { transparency = 0.5 })
-				)
+			val cardView = CardView(
+				height = 200,
+				width = 130,
+				front = CompoundVisual(cardFront, overlay),
+				back = cardBack
 			)
 			
 			viewController.cardMap.add(card, cardView)
@@ -177,8 +177,8 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		viewController.gameScene.currentPlayerHand.elements.forEach { it.addInteraction() }
 		viewController.gameScene.otherPlayerHand.elements.forEach { t ->
 			t.removeInteraction()
-			t.onMouseEntered = { viewController.gameScene.playAnimation(FlipAnimation(t, 1, 0)) }
-			t.onMouseExited = { viewController.gameScene.playAnimation(FlipAnimation(t, 0, 1)) }
+			t.onMouseEntered = { viewController.gameScene.playAnimation(FlipAnimation(t, t.backVisual, t.frontVisual)) }
+			t.onMouseExited = { viewController.gameScene.playAnimation(FlipAnimation(t, t.frontVisual, t.backVisual)) }
 		}
 		
 		//hide suit selection
@@ -212,10 +212,10 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				t.removeInteraction()
 				t.showBack()
 				t.onMouseEntered = {
-					viewController.gameScene.playAnimation(FlipAnimation(t, 1, 0))
+					viewController.gameScene.playAnimation(FlipAnimation(t, t.backVisual, t.frontVisual))
 				}
 				t.onMouseExited = {
-					viewController.gameScene.playAnimation(FlipAnimation(t, 0, 1))
+					viewController.gameScene.playAnimation(FlipAnimation(t, t.frontVisual, t.backVisual))
 				}
 			}
 			
@@ -260,10 +260,16 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		var topCard: CardView? = null
 		onDragGestureStarted = {
 			topCard = viewController.gameScene.gameStackView.elements.last()
-			topCard!!.showVisual(if (viewController.logicController.checkRules(viewController.cardMap.backward(this))) 2 else 3)
+			
+			overlay.color = if (viewController.logicController.checkRules(viewController.cardMap.backward(this)))
+				Color.GREEN
+			else
+				Color.RED
+			overlay.transparency = 0.5
 		}
 		onDragGestureEnded = { _, _ ->
 			topCard?.showFront()
+			overlay.transparency = 0.0
 		}
 		onMouseClicked = { viewController.logicController.playCard(viewController.cardMap.backward(this), true) }
 	}

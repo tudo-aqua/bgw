@@ -3,7 +3,7 @@
 package tools.aqua.bgw.observable
 
 /**
- * Property superclass providing observable fields.
+ * Property baseclass providing observable fields.
  *
  * @param initialValue initial value of this property.
  */

@@ -15,7 +15,7 @@ enum class ScaleMode {
 	FULL,
 	
 	/**
-	 * Scaling only shrinks scene when window gets to small.
+	 * Scaling only shrinks [Scene] when window gets to small.
 	 */
 	ONLY_SHRINK,
 	

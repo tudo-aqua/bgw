@@ -12,22 +12,22 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * GameElementContainerView is the abstract superclass for containers that can contain ElementViews or its subclasses.
- * It provides the list to store ElementViews and some useful methods to work on said list.
+ * GameElementContainerView is the abstract baseclass for containers that can contain [ElementView]s or its subclasses.
+ * It provides the list to store [ElementView]s and some useful methods to work on said list.
  *
- * @param height height for this gameElementContainerView. Default: 0.
- * @param width width for this gameElementContainerView. Default: 0.
- * @param posX horizontal coordinate for this GameElementContainerView. Default: 0.
- * @param posY vertical coordinate for this GameElementContainerView. Default: 0.
- * @param visuals the list of possible visuals for this GameElementContainerView. Default: empty list.
+ * @param height height for this [GameElementContainerView].
+ * @param width width for this [GameElementContainerView].
+ * @param posX horizontal coordinate for this [GameElementContainerView].
+ * @param posY vertical coordinate for this [GameElementContainerView].
+ * @param visual visual for this [GameElementContainerView].
  */
 sealed class GameElementContainerView<T : GameElementView>(
-	height: Number = 0,
-	width: Number = 0,
-	posX: Number = 0,
-	posY: Number = 0,
-	visuals: MutableList<Visual> = mutableListOf()
-) : DynamicView(height = height, width = width, visuals = visuals, posX = posX, posY = posY), Iterable<T> {
+	height: Number,
+	width: Number,
+	posX: Number,
+	posY: Number,
+	visual: Visual
+) : DynamicView(height = height, width = width, visual = visual, posX = posX, posY = posY), Iterable<T> {
 	/**
 	 * An ObservableList to store the ElementViews that are contained in this GameElementContainerView.
 	 * If changes are made to this list, this GameElementContainerView gets re-rendered.

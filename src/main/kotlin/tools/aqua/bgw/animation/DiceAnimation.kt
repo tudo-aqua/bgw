@@ -5,7 +5,7 @@ package tools.aqua.bgw.animation
 import tools.aqua.bgw.elements.gameelements.DiceView
 
 /**
- * A dice roll animation.
+ * A dice roll [Animation].
  *
  * @param dice [DiceView] to animate.
  * @param toSide resulting side after roll.

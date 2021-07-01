@@ -5,7 +5,7 @@ package tools.aqua.bgw.visual
 import tools.aqua.bgw.observable.LimitedDoubleProperty
 
 /**
- * Visual superclass.
+ * Visual baseclass.
  */
 sealed class Visual {
 	

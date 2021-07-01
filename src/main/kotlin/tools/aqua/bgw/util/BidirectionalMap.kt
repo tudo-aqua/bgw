@@ -88,7 +88,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * addAll[(A->C),(E->F)] results in [(A->B), (C->D)] : false
 	 *
-	 * @return `true` if all elements were added to the map, `false` otherwise.
+	 * @return `true` if all elements were added to the map or were already contained, `false` otherwise.
 	 *
 	 * @see add
 	 */

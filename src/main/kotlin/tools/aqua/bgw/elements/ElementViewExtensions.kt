@@ -2,8 +2,6 @@
 
 package tools.aqua.bgw.elements
 
-import tools.aqua.bgw.visual.Visual
-
 /**
  * Repositions this ElementView to the specified coordinates.
  * @param posX the new X coordinate.
@@ -78,11 +76,4 @@ fun ElementView.scaleHeight(scaleFactor: Number) {
  */
 fun ElementView.rotate(degrees: Number) {
 	this.rotation += degrees.toDouble()
-}
-
-/**
- * Sets the visuals of this ElementView to the result of the given function.
- */
-fun ElementView.visual(func: () -> Visual) {
-	this.setVisuals(func())
 }

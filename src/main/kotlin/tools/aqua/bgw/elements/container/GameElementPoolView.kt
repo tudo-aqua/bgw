@@ -7,17 +7,17 @@ import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A GameElementPoolView may be used to visualize a pool containing GameElementViews.
- * A typical use case for a GameElementPoolView may be to visualize a pile of hidden items,
+ * A [GameElementPoolView] may be used to visualize a pool containing [GameElementView]s.
+ * A typical use case for a [GameElementPoolView] may be to visualize a pile of hidden items,
  * where the user should not know what item might be draw next.
  *
  * Visualization:
- * The current Visual is used to visualize the area from where the user can start a drag and drop gesture.
+ * The current [Visual] is used to visualize the area from where the user can start a drag and drop gesture.
  *
  * How to Use:
- * Upon adding a GameElementView to a GameElementPoolView
- * a snapshot of the initial state of the GameElementView gets created and stored.
- * Then the GameElementView is made draggable, invisible and its size gets fit to the GameElementPoolView size.
+ * Upon adding a [GameElementView] to a [GameElementPoolView]
+ * a snapshot of the initial state of the [GameElementView] gets created and stored.
+ * Then the [GameElementView] is made draggable, invisible and its size gets fit to the [GameElementPoolView] size.
  *
  * The initial state consist of the following properties:
  * 	-isDraggable
@@ -25,18 +25,18 @@ import tools.aqua.bgw.visual.Visual
  * 	-width
  * 	-height
  *
- * Any changes made to those properties while a GameElementView is contained in the GameElementPoolView get ignored,
+ * Any changes made to those properties while a [GameElementView] is contained in the [GameElementPoolView] get ignored,
  * but they override the initial state.
  *
  * As soon as an element gets removed (e.g. by initiating a drag and drop gesture) the initial state gets restored.
- * The GameElementView at the highest index in the elements list
- * registers the next drag and drop gesture above this GameElementPoolView.
+ * The [GameElementView] at the highest index in the elements list
+ * registers the next drag and drop gesture above this [GameElementPoolView].
  *
- * @param height height for this GameElementPoolView. Default: 0.
- * @param height width for this GameElementPoolView. Default: 0.
- * @param posX horizontal coordinate for this GameElementPoolView. Default: 0.
- * @param posY vertical coordinate for this GameElementPoolView. Default: 0.
- * @param visual visual for this GameElementPoolView. Default: empty Visual.
+ * @param height height for this [GameElementPoolView]. Default: 0.
+ * @param height width for this [GameElementPoolView]. Default: 0.
+ * @param posX horizontal coordinate for this [GameElementPoolView]. Default: 0.
+ * @param posY vertical coordinate for this [GameElementPoolView]. Default: 0.
+ * @param visual visual for this [GameElementPoolView]. Default: [Visual.EMPTY].
  */
 open class GameElementPoolView<T : GameElementView>(
 	height: Number = 200,
@@ -45,10 +45,9 @@ open class GameElementPoolView<T : GameElementView>(
 	posY: Number = 0,
 	visual: Visual = Visual.EMPTY,
 ) :
-	GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visuals = mutableListOf(visual)) {
+	GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	
 	private val initialStates: HashMap<ElementView, InitialState> = HashMap()
-
 	
 	override fun addElement(element: T, index: Int) {
 		super.addElement(element, index)

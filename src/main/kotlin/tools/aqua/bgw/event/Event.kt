@@ -3,6 +3,6 @@
 package tools.aqua.bgw.event
 
 /**
- * Event superclass.
+ * Event baseclass.
  */
 abstract class Event

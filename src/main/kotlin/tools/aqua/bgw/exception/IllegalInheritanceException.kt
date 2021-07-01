@@ -9,7 +9,7 @@ internal class IllegalInheritanceException(inheritance: Any, supertype: Class<*>
 	RuntimeException(
 		"Illegal direct inheritance of "
 				+ inheritance::class.java.name
-				+ " from supertype "
+				+ " from basetype "
 				+ supertype.name
 				+ " has no legal rendering."
 	)

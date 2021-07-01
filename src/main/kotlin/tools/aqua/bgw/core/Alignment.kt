@@ -2,6 +2,11 @@
 
 package tools.aqua.bgw.core
 
+import tools.aqua.bgw.core.HorizontalAlignment.LEFT
+import tools.aqua.bgw.core.HorizontalAlignment.RIGHT
+import tools.aqua.bgw.core.VerticalAlignment.BOTTOM
+import tools.aqua.bgw.core.VerticalAlignment.TOP
+
 /**
  * Used to define a centering behaviour.
  * Encapsulates [VerticalAlignment] and [HorizontalAlignment].
@@ -16,47 +21,65 @@ package tools.aqua.bgw.core
  */
 enum class Alignment(val verticalAlignment: VerticalAlignment, val horizontalAlignment: HorizontalAlignment) {
 	/**
-	 * Alignment in the top left corner.
+	 * [Alignment] in the top left corner.
 	 */
-	TOP_LEFT(VerticalAlignment.TOP, HorizontalAlignment.LEFT),
+	TOP_LEFT(TOP, LEFT),
 	
 	/**
-	 * Alignment in the top right corner.
+	 * [Alignment] in the top right corner.
 	 */
-	TOP_RIGHT(VerticalAlignment.TOP, HorizontalAlignment.RIGHT),
+	TOP_RIGHT(TOP, RIGHT),
 	
 	/**
-	 * Alignment in the bottom left corner.
+	 * [Alignment] on the top centered horizontally.
 	 */
-	BOTTOM_LEFT(VerticalAlignment.BOTTOM, HorizontalAlignment.LEFT),
+	TOP_CENTER(TOP, HorizontalAlignment.CENTER),
 	
 	/**
-	 * Alignment in the bottom right corner.
+	 * [Alignment] in the bottom left corner.
 	 */
-	BOTTOM_RIGHT(VerticalAlignment.BOTTOM, HorizontalAlignment.RIGHT),
+	BOTTOM_LEFT(BOTTOM, LEFT),
 	
 	/**
-	 * Alignment on the top centered horizontally.
+	 * [Alignment] in the bottom right corner.
 	 */
-	TOP_CENTER(VerticalAlignment.TOP, HorizontalAlignment.CENTER),
+	BOTTOM_RIGHT(BOTTOM, RIGHT),
 	
 	/**
-	 * Alignment on the bottom centered horizontally.
+	 * [Alignment] on the bottom centered horizontally.
 	 */
-	BOTTOM_CENTER(VerticalAlignment.BOTTOM, HorizontalAlignment.CENTER),
+	BOTTOM_CENTER(BOTTOM, HorizontalAlignment.CENTER),
 	
 	/**
-	 * Alignment on the left centered vertically.
+	 * [Alignment] on the left centered vertically.
 	 */
-	LEFT_CENTER(VerticalAlignment.CENTER, HorizontalAlignment.LEFT),
+	CENTER_LEFT(VerticalAlignment.CENTER, LEFT),
 	
 	/**
-	 * Alignment on the right centered vertically.
+	 * [Alignment] on the right centered vertically.
 	 */
-	RIGHT_CENTER(VerticalAlignment.CENTER, HorizontalAlignment.RIGHT),
+	CENTER_RIGHT(VerticalAlignment.CENTER, RIGHT),
 	
 	/**
-	 * Alignment centered horizontally and vertically.
+	 * [Alignment] centered horizontally and vertically.
 	 */
 	CENTER(VerticalAlignment.CENTER, HorizontalAlignment.CENTER);
+	
+	companion object {
+		fun of(v: VerticalAlignment, h: HorizontalAlignment): Alignment = when {
+			v == TOP && h == LEFT -> TOP_LEFT
+			v == TOP && h == RIGHT -> TOP_RIGHT
+			v == TOP && h == HorizontalAlignment.CENTER -> TOP_CENTER
+			
+			v == BOTTOM && h == LEFT -> BOTTOM_LEFT
+			v == BOTTOM && h == RIGHT -> BOTTOM_RIGHT
+			v == BOTTOM && h == HorizontalAlignment.CENTER -> BOTTOM_CENTER
+			
+			v == VerticalAlignment.CENTER && h == LEFT -> CENTER_LEFT
+			v == VerticalAlignment.CENTER && h == RIGHT -> CENTER_RIGHT
+			v == VerticalAlignment.CENTER && h == HorizontalAlignment.CENTER -> CENTER
+			
+			else -> throw UnsupportedOperationException()
+		}
+	}
 }

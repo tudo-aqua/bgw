@@ -8,28 +8,24 @@ import tools.aqua.bgw.builder.DragElementObject
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.RootElement
-import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.ObjectProperty
-import tools.aqua.bgw.observable.ObservableArrayList
-import tools.aqua.bgw.observable.ObservableList
-import tools.aqua.bgw.util.Coordinate
+import tools.aqua.bgw.observable.*
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
 
 /**
- * Superclass for BGW scenes.
+ * Baseclass for BGW scenes.
  *
- * @param width scene width in virtual coordinates.
- * @param height scene height in virtual coordinates.
+ * @param width [Scene] width in virtual coordinates.
+ * @param height [Scene] height in virtual coordinates.
  *
  * @see BoardGameScene
  * @see MenuScene
  */
 sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	/**
-	 * Property for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
+	 * [Property] for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
 	 * currently dragged.
 	 */
 	internal val draggedElementObjectProperty: ObjectProperty<DragElementObject?> = ObjectProperty(null)
@@ -43,7 +39,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	
 	/**
 	 * The root node of this [Scene].
-	 * Use it to compare the parent property of any [ElementView]
+	 * Use it to compare the parent [Property] of any [ElementView]
 	 * to find out whether it was directly added to the [Scene].
 	 */
 	val rootNode: ElementView = RootElement(this)
@@ -64,7 +60,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	internal val rootElements: ObservableList<T> = ObservableArrayList()
 	
 	/**
-	 * Property for the background [Visual] of this [Scene].
+	 * [Property] for the [background] [Visual] of this [Scene].
 	 */
 	internal val backgroundProperty: ObjectProperty<Visual> =
 		ObjectProperty(ColorVisual(Color(255, 255, 255)))
@@ -79,12 +75,12 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * Property for the opacity of the background of this [Scene].
+	 * [Property] for the [opacity] of the [background] of this [Scene].
 	 */
 	internal val opacityProperty = DoubleProperty(1.0)
 	
 	/**
-	 * Opacity of the background of this [Scene].
+	 * Opacity of the [background] of this [Scene].
 	 */
 	var opacity: Double
 		get() = opacityProperty.value
@@ -95,7 +91,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * Property for the currently displayed zoom detail of this [Scene].
+	 * [Property] for the currently displayed zoom detail of this [Scene].
 	 */
 	internal val zoomDetailProperty = ObjectProperty(CoordinatePlain(0, 0, width, height))
 	
@@ -109,7 +105,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * Map for all [ElementView]s to their stackPanes.
+	 * [Map] for all [ElementView]s to their stackPanes.
 	 */
 	internal val elementsMap: MutableMap<ElementView, StackPane> = HashMap()
 	
@@ -142,7 +138,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	/**
-	 * Removes all elements from the root node and rootElements list.
+	 * Removes all [ElementView]s from the root node and [rootElements] list.
 	 */
 	fun clearElements() {
 		rootElements.forEach { it.parent = null }
@@ -157,62 +153,62 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	fun playAnimation(animation: Animation) {
 		animations.add(animation)
 	}
-	
-	/**
-	 * Zooms [Scene] to given bounds.
-	 *
-	 * @param fromX left bound.
-	 * @param fromY top bound.
-	 * @param toX right bound.
-	 * @param toY bottom bound.
-	 */
-	fun zoomTo(fromX: Number, fromY: Number, toX: Number, toY: Number): Unit =
-		zoomTo(fromX.toDouble(), fromY.toDouble(), toX.toDouble(), toY.toDouble())
-	
-	/**
-	 * Zooms [Scene] to given bounds.
-	 *
-	 * @param from top left coordinate.
-	 * @param to bottom right coordinate.
-	 */
-	fun zoomTo(from: Coordinate, to: Coordinate): Unit =
-		zoomTo(from.xCoord, from.yCoord, to.xCoord, to.yCoord)
-	
-	/**
-	 * Zooms [Scene] to given bounds.
-	 *
-	 * @param to layout bounds.
-	 */
-	fun zoomTo(to: CoordinatePlain): Unit =
-		zoomTo(to.topLeft, to.bottomRight)
-	
-	/**
-	 * Zooms scene out to max bounds.
-	 */
-	fun zoomOut() {
-		zoomDetail = CoordinatePlain(0, 0, width, height)
-	}
-	
-	/**
-	 * Sets [zoomDetailProperty] to given bounds.
-	 * Checks for targets out of layout bounds.
-	 */
-	private fun zoomTo(fromX: Double, fromY: Double, toX: Double, toY: Double) {
-		when {
-			fromX < 0 || fromY < 0 || toX < 0 || toY < 0 ->
-				throw IllegalArgumentException("All bounds must be positive.")
-			fromX >= toX ->
-				throw IllegalArgumentException("Right X bound is not greater than left X bound.")
-			fromY >= toY ->
-				throw IllegalArgumentException("Bottom Y bound is not greater than top Y bound.")
-			toX > width ->
-				throw IllegalArgumentException("Right X bound is greater than scene width.")
-			toY > height ->
-				throw IllegalArgumentException("Bottom Y bound is greater than scene height.")
-		}
-		
-		zoomDetail = CoordinatePlain(fromX, fromY, toX, toY)
-	}
+
+//	/**
+//	 * Zooms [Scene] to given bounds.
+//	 *
+//	 * @param fromX left bound.
+//	 * @param fromY top bound.
+//	 * @param toX right bound.
+//	 * @param toY bottom bound.
+//	 */
+//	fun zoomTo(fromX: Number, fromY: Number, toX: Number, toY: Number): Unit =
+//		zoomTo(fromX.toDouble(), fromY.toDouble(), toX.toDouble(), toY.toDouble())
+
+//	/**
+//	 * Zooms [Scene] to given bounds.
+//	 *
+//	 * @param from top left [Coordinate].
+//	 * @param to bottom right [Coordinate].
+//	 */
+//	fun zoomTo(from: Coordinate, to: Coordinate): Unit =
+//		zoomTo(from.xCoord, from.yCoord, to.xCoord, to.yCoord)
+
+//	/**
+//	 * Zooms [Scene] to given bounds.
+//	 *
+//	 * @param to layout bounds.
+//	 */
+//	fun zoomTo(to: CoordinatePlain): Unit =
+//		zoomTo(to.topLeft, to.bottomRight)
+
+//	/**
+//	 * Zooms scene out to max bounds.
+//	 */
+//	fun zoomOut() {
+//		zoomDetail = CoordinatePlain(0, 0, width, height)
+//	}
+
+//	/**
+//	 * Sets [zoomDetailProperty] to given bounds.
+//	 * Checks for targets out of layout bounds.
+//	 */
+//	private fun zoomTo(fromX: Double, fromY: Double, toX: Double, toY: Double) {
+//		when {
+//			fromX < 0 || fromY < 0 || toX < 0 || toY < 0 ->
+//				throw IllegalArgumentException("All bounds must be positive.")
+//			fromX >= toX ->
+//				throw IllegalArgumentException("Right X bound is not greater than left X bound.")
+//			fromY >= toY ->
+//				throw IllegalArgumentException("Bottom Y bound is not greater than top Y bound.")
+//			toX > width ->
+//				throw IllegalArgumentException("Right X bound is greater than scene width.")
+//			toY > height ->
+//				throw IllegalArgumentException("Bottom Y bound is greater than scene height.")
+//		}
+//
+//		zoomDetail = CoordinatePlain(fromX, fromY, toX, toY)
+//	}
 	
 	/**
 	 * Searches [node] recursively through the visual tree and logs path where the [node] appears as first element and
@@ -248,7 +244,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	
 	companion object {
 		const val DEFAULT_SCENE_WIDTH: Double = 1920.0
-		const val DEFAULT_SCENE_HEIGHT: Double = 1040.0
+		const val DEFAULT_SCENE_HEIGHT: Double = 1016.0
 	}
 }
 

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.BidirectionalMap
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class ConstructorTest : BidirectionalMapTestBase() {
@@ -34,11 +34,9 @@ class ConstructorTest : BidirectionalMapTestBase() {
 		val item1 = Pair(0, 1)
 		val item2 = Pair(0, 2)
 		
-		val lMap = BidirectionalMap(item1, item2)
-		
-		assertEquals(1, lMap.size)
-		assertTrue(lMap.contains(item1.first, item1.second))
-		assertFalse(lMap.contains(item2.first, item2.second))
+		assertFailsWith<IllegalArgumentException> {
+			BidirectionalMap(item1, item2)
+		}
 	}
 	
 	@Test
@@ -47,10 +45,20 @@ class ConstructorTest : BidirectionalMapTestBase() {
 		val item1 = Pair(0, 1)
 		val item2 = Pair(1, 1)
 		
+		assertFailsWith<IllegalArgumentException> {
+			BidirectionalMap(item1, item2)
+		}
+	}
+	
+	@Test
+	@DisplayName("Test constructor with duplicate pairs")
+	fun testConstructorWithDuplicatePairs() {
+		val item1 = Pair(0, 1)
+		val item2 = Pair(0, 1)
+		
 		val lMap = BidirectionalMap(item1, item2)
 		
 		assertEquals(1, lMap.size)
-		assertTrue(lMap.contains(item1.first, item1.second))
-		assertFalse(lMap.contains(item2.first, item2.second))
+		assertTrue(lMap.contains(item1))
 	}
 }

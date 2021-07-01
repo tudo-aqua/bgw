@@ -23,15 +23,12 @@ internal class VisualBuilder {
 		internal fun build(elementView: ElementView): Pane {
 			val root = Pane()
 			
-			elementView.currentVisualProperty.setGUIListenerAndInvoke(elementView.currentVisual) { _, nV ->
+			elementView.visualProperty.setGUIListenerAndInvoke(elementView.visual) { _, nV ->
 				root.children.clear()
-				
-				if (nV in elementView.visuals.indices) {
-					root.children.add(buildVisual(elementView.visuals[nV]).apply {
-						prefWidthProperty().bind(root.prefWidthProperty())
-						prefHeightProperty().bind(root.prefHeightProperty())
-					})
-				}
+				root.children.add(buildVisual(nV).apply {
+					prefWidthProperty().bind(root.prefWidthProperty())
+					prefHeightProperty().bind(root.prefHeightProperty())
+				})
 			}
 			
 			return root
@@ -81,7 +78,7 @@ internal class VisualBuilder {
 					}
 			}
 		
-		internal fun BufferedImage.readImage(): Image {
+		private fun BufferedImage.readImage(): Image {
 			val imageWriter = WritableImage(width, height)
 			val pixelWriter = imageWriter.pixelWriter
 			for (x in 0 until width) {

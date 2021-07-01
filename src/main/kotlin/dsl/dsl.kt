@@ -4,9 +4,6 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.uielements.*
-import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.Visual
-import java.awt.Color
 
 //region Util
 /**.*/
@@ -24,14 +21,14 @@ fun UIElementView.backgroundStyle(func: () -> String) {
 }
 
 /**.*/
-fun UIElementView.visual(func: () -> Visual) {
-    setVisuals(func())
-}
-
-/**.*/
-fun UIElementView.colorVisual(func: () -> Color) {
-    setVisuals(ColorVisual(func()))
-}
+//fun UIElementView.visual(func: () -> Visual) {
+//    setVisuals(func())
+//}
+//
+///**.*/
+//fun UIElementView.colorVisual(func: () -> Color) {
+//    setVisuals(ColorVisual(func()))
+//}
 
 /**.*/
 fun UIElementView.dimensions(height: Number, width: Number) {

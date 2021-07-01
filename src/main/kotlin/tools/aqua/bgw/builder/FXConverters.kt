@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.builder
 
 import javafx.scene.input.MouseButton

@@ -12,19 +12,11 @@ import tools.aqua.bgw.elements.gameelements.TokenView
  */
 internal class ElementNodeBuilder {
 	companion object {
-		internal fun buildCardView(cardView: CardView): Region {
-			cardView.currentSideProperty.setGUIListenerAndInvoke(cardView.currentSide) { _, nV ->
-				cardView.currentVisual = nV.visual
-			}
-			return Pane()
-		}
+		@Suppress("UNUSED_PARAMETER")
+		internal fun buildCardView(cardView: CardView): Region = Pane()
 		
-		internal fun buildDiceView(diceView: DiceView): Region {
-			diceView.currentSideProperty.setGUIListenerAndInvoke(diceView.currentSide) { _, nV ->
-				diceView.currentVisual = nV - 1
-			}
-			return Pane()
-		}
+		@Suppress("UNUSED_PARAMETER")
+		internal fun buildDiceView(diceView: DiceView): Region = Pane()
 		
 		@Suppress("UNUSED_PARAMETER")
 		internal fun buildToken(tokenView: TokenView): Region = Pane()
