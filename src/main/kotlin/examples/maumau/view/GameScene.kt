@@ -29,21 +29,21 @@ class GameScene : BoardGameScene() {
 	var otherPlayerHand: LinearLayoutContainer<CardView> =
 		LinearLayoutContainer(height = 220, width = 800, posX = 560, posY = 50, spacing = -50)
 	var currentPlayerHand: LinearLayoutContainer<CardView> =
-		LinearLayoutContainer(height = 220, width = 800, posX = 560, posY = 830, spacing = -50)
+		LinearLayoutContainer(height = 220, width = 800, posX = 560, posY = 750, spacing = -50)
 	
 	//Stacks
 	val drawStackView: CardStackView<CardView> =
-		CardStackView(height = 200, width = 130, posX = 750, posY = 440)
+		CardStackView(height = 200, width = 130, posX = 750, posY = 360)
 	val gameStackView: CardStackView<CardView> =
-		CardStackView(height = 200, width = 130, posX = 1040, posY = 440)
-	val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 400)
-	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 400)
+		CardStackView(height = 200, width = 130, posX = 1040, posY = 360)
+	val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 320)
+	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 320)
 	
 	//Jack selection
-	val buttonClubs: Button = Button(height = 200, width = 130, posX = 820, posY = 330)
-	val buttonSpades: Button = Button(height = 200, width = 130, posX = 970, posY = 330)
-	val buttonHearts: Button = Button(height = 200, width = 130, posX = 820, posY = 550)
-	val buttonDiamonds: Button = Button(height = 200, width = 130, posX = 970, posY = 550)
+	val buttonClubs: Button = Button(height = 200, width = 130, posX = 820, posY = 250)
+	val buttonSpades: Button = Button(height = 200, width = 130, posX = 970, posY = 250)
+	val buttonHearts: Button = Button(height = 200, width = 130, posX = 820, posY = 470)
+	val buttonDiamonds: Button = Button(height = 200, width = 130, posX = 970, posY = 470)
 	
 	val grid: GridLayoutView<GameElementView> =
 		GridLayoutView<GameElementView>(3, 3, posX = 200, posY = 200, spacing = 20).apply {
