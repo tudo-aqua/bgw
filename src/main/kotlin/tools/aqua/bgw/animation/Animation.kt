@@ -6,7 +6,7 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
 import tools.aqua.bgw.event.EventHandler
 
 /**
- * Animation superclass.
+ * Animation baseclass.
  *
  * @param duration duration in milliseconds. Default: 1 second.
  */

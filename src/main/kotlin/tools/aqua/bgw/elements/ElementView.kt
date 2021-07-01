@@ -14,7 +14,7 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * ElementView is the abstract superclass of all framework elements.
+ * ElementView is the abstract baseclass of all framework elements.
  * It defines important fields and functions that are necessary to visualize inheriting elements.
  *
  * @param height height for this [ElementView].
