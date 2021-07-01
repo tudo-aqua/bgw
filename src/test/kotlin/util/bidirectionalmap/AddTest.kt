@@ -69,7 +69,7 @@ class AddTest : BidirectionalMapTestBase() {
 	
 	@Test
 	@DisplayName("Test adding new and old values by addAll")
-	fun testAddAllMixed() {
+	fun testAddAllMixedNewAndOld() {
 		assertTrue(
 			map.addAll(
 				Pair(5, 6),
@@ -82,9 +82,25 @@ class AddTest : BidirectionalMapTestBase() {
 	}
 	
 	@Test
+	@DisplayName("Test adding new, old and invalid values by addAll")
+	fun testAddAllMixedWithInvalid() {
+		assertFalse(
+			map.addAll(
+				Pair(5, 6),
+				Pair(0, 5),
+				Pair(0, 1)
+			)
+		)
+		
+		assertEquals(2, map.size)
+		assertFalse(map.contains(5, 6))
+		assertFalse(map.contains(0, 5))
+	}
+	
+	@Test
 	@DisplayName("Test adding old values by addAll")
 	fun testAddAllOld() {
-		assertFalse(
+		assertTrue(
 			map.addAll(
 				Pair(0, 1),
 				Pair(2, 3)
