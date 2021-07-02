@@ -10,7 +10,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * Visualization:
  * The [Visual] is used to visualize a background.
- * The Placement of the contained [GameElementView]s is used to place them relative
+ * The position of the contained [GameElementView]s is used to place them relative
  * to the top left corner of this [AreaContainerView].
  * Elements that are out of bounds for this [AreaContainerView] will still get rendered.
  *
