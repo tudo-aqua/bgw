@@ -1,8 +1,9 @@
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 
 /**
@@ -10,13 +11,13 @@ import tools.aqua.bgw.util.Font
  *
  * @param height height for this CheckBox. Default: 0.
  * @param width width for this CheckBox. Default: 0.
- * @param posX horizontal coordinate for this CheckBox. Default: 0.
- * @param posY vertical coordinate for this CheckBox. Default: 0.
- * @param label label for this CheckBox. Default: empty String.
- * @param font font to be used for the label. Default: default Font constructor.
+ * @param posX horizontal coordinate for this [CheckBox]. Default: 0.
+ * @param posY vertical coordinate for this [CheckBox]. Default: 0.
+ * @param label label for this [CheckBox]. Default: empty String.
+ * @param font font to be used for the [label]. Default: default [Font] constructor.
  * @param isChecked the initial checked state. Default: `false`.
- * @param allowIndeterminate the initial allowIndeterminate state. Default: `false`.
- * @param isIndeterminate the initial indeterminate state. Default: `false`.
+ * @param allowIndeterminate the initial [allowIndeterminate] state. Default: `false`.
+ * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.
  */
 open class CheckBox(
 	height: Number = 0,
@@ -31,7 +32,7 @@ open class CheckBox(
 ) : LabeledUIElementView(height = height, width = width, posX = posX, posY = posY, font = font, label = label) {
 	
 	/**
-	 * Property for the checked state.
+	 * [Property] for the checked state.
 	 */
 	val checkedProperty: BooleanProperty = BooleanProperty(isChecked)
 	
@@ -46,12 +47,12 @@ open class CheckBox(
 		}
 	
 	/**
-	 * Property for whether this element allows an indeterminate state.
+	 * [Property] for whether this element allows an indeterminate state.
 	 */
 	val allowIndeterminateProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
 	
 	/**
-	 * Boolean whether this element allows an indeterminate state.
+	 * [Boolean] whether this element allows an indeterminate state.
 	 * @see allowIndeterminateProperty
 	 */
 	var allowIndeterminate: Boolean
@@ -61,12 +62,12 @@ open class CheckBox(
 		}
 	
 	/**
-	 * Property for the indeterminate state.
+	 * [Property] for the indeterminate state.
 	 */
 	val indeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 	
 	/**
-	 * Boolean whether this element in in the indeterminate state.
+	 * [Boolean] whether this element in in the indeterminate state.
 	 * @see indeterminateProperty
 	 */
 	var isIndeterminate: Boolean

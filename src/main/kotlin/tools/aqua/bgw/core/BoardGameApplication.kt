@@ -4,6 +4,9 @@ package tools.aqua.bgw.core
 
 import javafx.scene.control.Alert
 import tools.aqua.bgw.builder.Frontend
+import tools.aqua.bgw.builder.toAlertType
+import tools.aqua.bgw.builder.toButtonType
+import tools.aqua.bgw.builder.toFXButtonType
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.FileDialog
@@ -19,15 +22,26 @@ import java.util.*
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
  * Application starts by calling [show].
  *
+ * @param windowTitle Window title displayed in the title bar.
+ *
  * @see BoardGameScene
  * @see MenuScene
  */
-open class BoardGameApplication {
+open class BoardGameApplication(windowTitle: String = "BoardGameWork Application") {
 	
 	/**
 	 * [Frontend] instance.
 	 */
 	private val frontend: Frontend = Frontend()
+	
+	/**
+	 * Window title displayed in the title bar.
+	 */
+	var title: String
+		get() = Frontend.titleProperty.value
+		set(value) {
+			Frontend.titleProperty.value = value
+		}
 	
 	/**
 	 * Background [Visual] for the [BoardGameApplication]. [Visual] appears as bars window does not match [Scene] ratio.
@@ -38,6 +52,10 @@ open class BoardGameApplication {
 		set(value) {
 			Frontend.backgroundProperty.value = value
 		}
+	
+	init {
+		title = windowTitle
+	}
 	
 	/**
 	 * Shows the given [FileDialog].
@@ -61,8 +79,8 @@ open class BoardGameApplication {
 		Alert(
 			alertType.toAlertType(),
 			message,
-			*buttons.map { it.toButtonType() }.toTypedArray()
-		).showAndWait().map { ButtonType.fromButtonType(it) }
+			*buttons.map { it.toFXButtonType() }.toTypedArray()
+		).showAndWait().map { it.toButtonType() }
 	
 	/**
 	 * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.

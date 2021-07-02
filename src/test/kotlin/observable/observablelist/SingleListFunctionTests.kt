@@ -32,7 +32,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 		list[0] = -1
 		assertEquals(-1, list[0])
 		
-		for (i in 1 until list.size())
+		for (i in 1 until list.size)
 			assertEquals(unordered[i], list[i])
 		
 		checkNotified()
@@ -49,11 +49,11 @@ class SingleListFunctionTests : ObservableListTestBase() {
 	@Test
 	@DisplayName("Test size")
 	fun testSize() {
-		assertEquals(5, list.size())
+		assertEquals(5, list.size)
 		list.add(-1)
-		assertEquals(6, list.size())
+		assertEquals(6, list.size)
 		list.clear()
-		assertEquals(0, list.size())
+		assertEquals(0, list.size)
 		
 		checkNotNotified()
 	}

@@ -30,12 +30,12 @@ open class TokenView(
 	 */
 	companion object {
 		/**
-		 * Suggested token height.
+		 * Suggested token [height].
 		 */
 		const val DEFAULT_TOKEN_HEIGHT: Int = 50
 		
 		/**
-		 * Suggested token width.
+		 * Suggested token [width].
 		 */
 		const val DEFAULT_TOKEN_WIDTH: Int = 50
 	}

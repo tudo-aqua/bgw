@@ -4,8 +4,6 @@ import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
-import tools.aqua.bgw.builder.EventConverter.Companion.toKeyEvent
-import tools.aqua.bgw.builder.EventConverter.Companion.toMouseEvent
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -170,7 +168,7 @@ internal class NodeBuilder {
 								posY = initialY
 								@Suppress("UNCHECKED_CAST")
 								(parent as GameElementContainerView<GameElementView>)
-									.add(this as GameElementView, min(parent.observableElements.size(), index))
+									.add(this as GameElementView, min(parent.observableElements.size, index))
 							}
 						}
 						is GridLayoutView<*> -> {

@@ -11,7 +11,7 @@ class AddTest : ObservableListTestBase() {
 	fun testAdd() {
 		list.add(42)
 		
-		for (i in 0 until list.size() - 1)
+		for (i in 0 until list.size - 1)
 			assertEquals(unordered[i], list[i])
 		assertEquals(42, list[5])
 		
@@ -23,7 +23,7 @@ class AddTest : ObservableListTestBase() {
 	fun testAddIndexAtStart() {
 		list.add(0, 42)
 		
-		for (i in 0 until list.size() - 1)
+		for (i in 0 until list.size - 1)
 			assertEquals(unordered[i], list[i + 1])
 		assertEquals(42, list[0])
 		
@@ -35,7 +35,7 @@ class AddTest : ObservableListTestBase() {
 	fun testAddIndexAtEnd() {
 		list.add(5, 42)
 		
-		for (i in 0 until list.size() - 1)
+		for (i in 0 until list.size - 1)
 			assertEquals(unordered[i], list[i])
 		assertEquals(42, list[5])
 		

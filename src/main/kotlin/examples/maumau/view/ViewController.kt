@@ -1,6 +1,5 @@
 package examples.maumau.view
 
-import examples.main.BUTTON_BG_FILE
 import examples.maumau.controller.LogicController
 import examples.maumau.model.CardSuit
 import examples.maumau.model.MauMauCard
@@ -8,10 +7,9 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.util.BidirectionalMap
-import tools.aqua.bgw.visual.ImageVisual
 import kotlin.system.exitProcess
 
-class ViewController : BoardGameApplication() {
+class ViewController : BoardGameApplication("MauMau") {
 	
 	val gameScene: GameScene = GameScene()
 	val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
@@ -62,8 +60,7 @@ class ViewController : BoardGameApplication() {
 	var i = 0
 	private fun registerMenuEvents() {
 		gameScene.mainMenuButton.onMouseClicked = {
-			//showMenuScene(mauMauMenuScene)
-			background = ImageVisual(BUTTON_BG_FILE)
+			showMenuScene(mauMauMenuScene)
 		}
 		
 		mauMauMenuScene.continueGameButton.onMouseClicked = {

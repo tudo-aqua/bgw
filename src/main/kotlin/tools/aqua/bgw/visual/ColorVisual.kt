@@ -34,6 +34,7 @@ class ColorVisual(color: Color) : SingleLayerVisual() {
 	/**
 	 * A solid color visual.
 	 * Displays a rectangle filled with the given color.
+	 * All values must be in range 0 until 255 which corresponds to 00 until FF in hexadecimal.
 	 *
 	 * @param r red channel.
 	 * @param g green channel.

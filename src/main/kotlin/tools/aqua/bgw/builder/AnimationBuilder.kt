@@ -127,7 +127,7 @@ internal class AnimationBuilder {
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					setOnFinished {
-						anim.element.currentSide = Random.nextInt(anim.element.visuals.size())
+						anim.element.currentSide = Random.nextInt(anim.element.visuals.size)
 					}
 				}
 			}

@@ -2,6 +2,8 @@
 
 package tools.aqua.bgw.elements.gameelements
 
+import tools.aqua.bgw.elements.gameelements.CardView.CardSide.BACK
+import tools.aqua.bgw.elements.gameelements.CardView.CardSide.FRONT
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIGHT
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.visual.Visual
@@ -41,12 +43,12 @@ open class CardView(
 	 * @see showFront
 	 * @see showBack
 	 */
-	var currentSide: CardSide = CardSide.BACK
+	var currentSide: CardSide = BACK
 		set(value) {
 			if (field != value) {
 				field = value
 				
-				visual = if (value == CardSide.FRONT)
+				visual = if (value == FRONT)
 					frontVisual
 				else
 					backVisual
@@ -60,7 +62,7 @@ open class CardView(
 		set(value) {
 			field = value
 			
-			if (currentSide == CardSide.FRONT)
+			if (currentSide == FRONT)
 				visual = value
 		}
 	
@@ -71,26 +73,26 @@ open class CardView(
 		set(value) {
 			field = value
 			
-			if (currentSide == CardSide.BACK)
+			if (currentSide == BACK)
 				visual = value
 		}
 	
 	/**
-	 * Sets the currentSide to be displayed to front.
+	 * Sets the [currentSide] to be displayed to [CardSide.FRONT].
 	 */
 	fun showFront() {
-		currentSide = CardSide.FRONT
+		currentSide = FRONT
 	}
 	
 	/**
-	 * Sets the currentSide to be displayed to back.
+	 * Sets the [currentSide] to be displayed to [CardSide.BACK].
 	 */
 	fun showBack() {
-		currentSide = CardSide.BACK
+		currentSide = BACK
 	}
 	
 	/**
-	 * Sets the currentSide to the parameter value.
+	 * Sets the [currentSide] to the parameter value.
 	 */
 	fun showCardSide(side: CardSide) {
 		currentSide = side
@@ -101,27 +103,27 @@ open class CardView(
 	 */
 	companion object {
 		/**
-		 * Suggested card height.
+		 * Suggested card [height].
 		 */
 		const val DEFAULT_CARD_HEIGHT: Int = 200
 		
 		/**
-		 * Suggested card width.
+		 * Suggested card [width].
 		 */
 		const val DEFAULT_CARD_WIDTH: Int = 130
 	}
 	
 	/**
-	 * Enum for the card sides FRONT and BACK with their visual indices.
+	 * Enum for the card sides [FRONT] and [BACK] with their visual indices.
 	 */
 	enum class CardSide {
 		/**
-		 * The FRONT side.
+		 * The [FRONT] side.
 		 */
 		FRONT,
 		
 		/**
-		 * The BACK side.
+		 * The [BACK] side.
 		 */
 		BACK
 	}
