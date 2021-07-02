@@ -76,7 +76,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 		require(element.parent == null) {
 			"Element $element is already contained in another container."
 		}
-		require(index in observableElements.indices) {
+		require(index in 0..observableElements.size) {
 			"Index $index is out of list range."
 		}
 		
