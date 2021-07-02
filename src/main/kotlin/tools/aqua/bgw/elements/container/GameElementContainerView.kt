@@ -71,7 +71,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @throws IllegalArgumentException when [index] is out of bounds for [elements].
 	 */
 	@Synchronized
-	open fun add(element: T, index: Int = observableElements.size()) {
+	open fun add(element: T, index: Int = observableElements.size) {
 		require(!observableElements.contains(element)) {
 			"Element $element is already contained in this $this."
 		}
