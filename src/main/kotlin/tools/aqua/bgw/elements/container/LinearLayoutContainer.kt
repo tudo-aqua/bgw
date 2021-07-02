@@ -164,22 +164,22 @@ open class LinearLayoutContainer<T : GameElementView>(
 		alignmentProperty.internalListener = { _, _ -> layout() }
 	}
 	
-	override fun addElement(element: T, index: Int) {
-		super.addElement(element, index)
+	override fun add(element: T, index: Int) {
+		super.add(element, index)
 		element.apply { addPosListeners() }
 	}
 	
-	override fun addAllElements(collection: Collection<T>) {
-		super.addAllElements(collection)
+	override fun addAll(collection: Collection<T>) {
+		super.addAll(collection)
 		collection.forEach { it.addPosListeners() }
 	}
 	
-	override fun addAllElements(vararg elements: T) {
-		addAllElements(elements.toList())
+	override fun addAll(vararg elements: T) {
+		addAll(elements.toList())
 	}
 	
-	override fun removeElement(element: T) {
-		super.removeElement(element.apply { removePosListeners() })
+	override fun remove(element: T) {
+		super.remove(element.apply { removePosListeners() })
 	}
 	
 	override fun removeAll(): List<T> {

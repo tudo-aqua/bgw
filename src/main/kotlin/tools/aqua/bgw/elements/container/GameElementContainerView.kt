@@ -67,9 +67,11 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * Adds an ElementView to this GameElementViewContainer.
 	 *
 	 * @param element element to add.
+	 * @throws IllegalArgumentException when [element] is already contained.
+	 * @throws IllegalArgumentException when [index] is out of bounds for [elements].
 	 */
 	@Synchronized
-	open fun addElement(element: T, index: Int = observableElements.size()) {
+	open fun add(element: T, index: Int = observableElements.size()) {
 		require(!observableElements.contains(element)) {
 			"Element $element is already contained in this $this."
 		}
@@ -85,21 +87,35 @@ sealed class GameElementContainerView<T : GameElementView>(
 	
 	/**
 	 * Adds all ElementViews passed as varargs to this GameElementContainerView.
+	 * Whenever an ElementView is encountered, that is already contained, an
+	 * [IllegalArgumentException] is thrown and no further ElementView is added.
 	 *
 	 * @param elements vararg ElementViews to add.
+	 * @throws IllegalArgumentException when an ElementView is already contained.
 	 */
-	open fun addAllElements(vararg elements: T) {
-		addAllElements(elements.toList())
+	open fun addAll(vararg elements: T) {
+		try {
+			addAll(elements.toList())
+		} catch (e: IllegalArgumentException) {
+			throw IllegalArgumentException(e.message)
+		}
 	}
 	
 	/**
 	 * Adds all ElementViews contained in the passed collection to this GameElementContainerView.
+	 * Whenever an ElementView is encountered, that is already contained, an
+	 * [IllegalArgumentException] is thrown and no further ElementView is added.
 	 *
 	 * @param collection collection containing the ElementViews to add.
+	 * @throws IllegalArgumentException when an ElementView is already contained.
 	 */
 	@Synchronized
-	open fun addAllElements(collection: Collection<T>) {
-		collection.forEach { addElement(it) }
+	open fun addAll(collection: Collection<T>) {
+		try {
+			collection.forEach { add(it) }
+		} catch (e: IllegalArgumentException) {
+			throw IllegalArgumentException(e.message)
+		}
 	}
 	
 	/**
@@ -108,12 +124,13 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param element the element to remove.
 	 */
 	@Synchronized
-	open fun removeElement(element: T) {
+	open fun remove(element: T) {
 		observableElements.remove(element.apply { parent = null })
 	}
 	
 	/**
-	 * Removes all ElementViews from this GameElementContainerView.
+	 * Removes all ElementViews from this GameElementContainerView and returns them.
+	 * @return list of all removed Elements
 	 */
 	@Synchronized
 	open fun removeAll(): List<T> {
@@ -168,7 +185,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	override fun removeChild(child: ElementView) {
 		try {
 			@Suppress("UNCHECKED_CAST")
-			this.removeElement(child as T)
+			this.remove(child as T)
 		} catch (_: ClassCastException) {
 			throw RuntimeException("$child type is incompatible with container's type.")
 		}
@@ -180,20 +197,20 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * Adds the supplied GameElement to this GameElementViewContainer.
 	 */
 	operator fun T.unaryPlus() {
-		addElement(this)
+		add(this)
 	}
 	
 	/**
 	 * Adds the supplied GameElements to this GameElementViewContainer.
 	 */
 	operator fun Collection<T>.unaryPlus() {
-		addAllElements(this)
+		addAll(this)
 	}
 	
 	/**
 	 * Removes the supplied GameElement from this GameElementContainerView.
 	 */
 	operator fun T.unaryMinus() {
-		removeElement(this)
+		remove(this)
 	}
 }

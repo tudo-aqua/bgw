@@ -170,7 +170,7 @@ internal class NodeBuilder {
 								posY = initialY
 								@Suppress("UNCHECKED_CAST")
 								(parent as GameElementContainerView<GameElementView>)
-									.addElement(this as GameElementView, min(parent.observableElements.size(), index))
+									.add(this as GameElementView, min(parent.observableElements.size(), index))
 							}
 						}
 						is GridLayoutView<*> -> {

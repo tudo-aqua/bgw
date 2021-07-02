@@ -49,8 +49,8 @@ open class GameElementPoolView<T : GameElementView>(
 	
 	private val initialStates: HashMap<ElementView, InitialState> = HashMap()
 	
-	override fun addElement(element: T, index: Int) {
-		super.addElement(element, index)
+	override fun add(element: T, index: Int) {
+		super.add(element, index)
 		initialStates[element] = InitialState(
 			isDraggable = element.isDraggable,
 			isVisible = element.isVisible,
@@ -62,16 +62,16 @@ open class GameElementPoolView<T : GameElementView>(
 		element.addPosListeners()
 	}
 	
-	override fun addAllElements(collection: Collection<T>) {
-		collection.forEach { addElement(it) }
+	override fun addAll(collection: Collection<T>) {
+		collection.forEach { add(it) }
 	}
 	
-	override fun addAllElements(vararg elements: T) {
-		addAllElements(elements.toList())
+	override fun addAll(vararg elements: T) {
+		addAll(elements.toList())
 	}
 	
-	override fun removeElement(element: T) {
-		super.removeElement(element)
+	override fun remove(element: T) {
+		super.remove(element)
 		element.removeInternalListeners()
 		element.restoreInitialBehaviour()
 		element.removePosListeners()

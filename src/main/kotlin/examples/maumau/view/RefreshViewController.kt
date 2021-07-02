@@ -30,8 +30,8 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		
 		//transfer card
 		val cardView = viewController.cardMap.forward(card)
-		viewController.gameScene.drawStackView.removeElement(cardView)
-		playerHandView.addElement(cardView)
+		viewController.gameScene.drawStackView.remove(cardView)
+		playerHandView.add(cardView)
 		
 		if (player == viewController.logicController.game.currentPlayer)
 			cardView.showFront()
@@ -67,8 +67,8 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			)
 			
 			anim.onFinished = EventHandler {
-				viewController.gameScene.currentPlayerHand.removeElement(cardView)
-				viewController.gameScene.gameStackView.addElement(cardView)
+				viewController.gameScene.currentPlayerHand.remove(cardView)
+				viewController.gameScene.gameStackView.add(cardView)
 				
 				cardView.posX = 0.0
 				cardView.posY = 0.0
@@ -81,7 +81,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			viewController.gameScene.lock()
 			viewController.gameScene.playAnimation(anim)
 		} else {
-			viewController.gameScene.currentPlayerHand.removeElement(cardView)
+			viewController.gameScene.currentPlayerHand.remove(cardView)
 			viewController.gameScene.gameStackView.push(cardView)
 			
 			cardView.posX = 0.0
@@ -101,7 +101,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		}
 		
 		
-		viewController.gameScene.drawStackView.addAllElements(
+		viewController.gameScene.drawStackView.addAll(
 			viewController.logicController.game.drawStack.cards.map { viewController.cardMap.forward(it) }.onEach {
 				it.removeInteraction()
 				it.showBack()
@@ -144,12 +144,12 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		}
 		
 		//Add elements to stacks
-		viewController.gameScene.drawStackView.addAllElements(
+		viewController.gameScene.drawStackView.addAll(
 			game.drawStack.cards.asReversed().map { card ->
 				viewController.cardMap.forward(card).apply { showBack() }
 			})
 		
-		viewController.gameScene.gameStackView.addAllElements(
+		viewController.gameScene.gameStackView.addAll(
 			game.gameStack.cards.asReversed().map { card ->
 				viewController.cardMap.forward(card).apply { showFront() }
 			})
@@ -163,12 +163,12 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		
 		//Add elements to hands
 		for (i in 0 until game.currentPlayer.hand.cards.size) {
-			viewController.gameScene.currentPlayerHand.addElement(
+			viewController.gameScene.currentPlayerHand.add(
 				viewController.cardMap.forward(game.currentPlayer.hand.cards[i]).apply { showFront() }
 			)
 		}
 		for (i in 0 until game.otherPlayer.hand.cards.size) {
-			viewController.gameScene.otherPlayerHand.addElement(
+			viewController.gameScene.otherPlayerHand.add(
 				viewController.cardMap.forward(game.otherPlayer.hand.cards[i]).apply { showBack() }
 			)
 		}
