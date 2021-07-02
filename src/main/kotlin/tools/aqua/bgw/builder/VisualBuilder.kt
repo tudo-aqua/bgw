@@ -41,6 +41,10 @@ internal class VisualBuilder {
 							style = "-fx-background-color: #${Integer.toHexString(nV.rgb).substring(2)};"
 							opacity = (nV.alpha / MAX_HEX) * visual.transparency
 						}
+
+						visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+							opacity = (visual.color.alpha / MAX_HEX) * nV
+						}
 					}
 				
 				is ImageVisual ->
@@ -49,7 +53,10 @@ internal class VisualBuilder {
 						
 						visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
 							imageView.image = nV.readImage()
-							opacity = visual.transparency
+						}
+
+						visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+							opacity = nV
 						}
 						
 						imageView.fitWidthProperty().bind(prefWidthProperty())
@@ -60,21 +67,22 @@ internal class VisualBuilder {
 				is TextVisual ->
 					Label().apply {
 						visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, nV ->
-							this.text = nV
-							opacity = visual.transparency
+							text = nV
+						}
+						visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+							opacity = nV
 						}
 						visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, nV ->
-							this.font = nV.toFXFont()
+							font = nV.toFXFont()
+							textFill = nV.color.toFXColor()
 						}
 					}
 				
-				is CompoundVisual ->
+				is CompoundVisual -> {
 					StackPane().apply {
-						children.addAll(visual.children.map { buildVisual(it) }.onEach {
-							it.prefWidthProperty().bind(prefWidthProperty())
-							it.prefHeightProperty().bind(prefHeightProperty())
-						})
+						visual.setGUIListenerAndInvoke { this.rebuildCompoundVisual(visual) }
 					}
+				}
 			}
 		
 		private fun BufferedImage.readImage(): Image {
@@ -86,6 +94,17 @@ internal class VisualBuilder {
 				}
 			}
 			return imageWriter
+		}
+
+		private fun StackPane.rebuildCompoundVisual(compoundVisual: CompoundVisual) {
+			children.clear()
+			children.addAll(compoundVisual.children.map { buildVisual(it) }.onEach {
+				it.prefWidthProperty().bind(prefWidthProperty())
+				it.prefHeightProperty().bind(prefHeightProperty())
+			})
+			compoundVisual.transparencyProperty.setGUIListenerAndInvoke(compoundVisual.transparency) { _, nV ->
+				opacity = nV
+			}
 		}
 	}
 }

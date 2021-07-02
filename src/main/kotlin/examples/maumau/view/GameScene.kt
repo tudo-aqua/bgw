@@ -19,10 +19,10 @@ import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.FontStyle
-import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.*
 import java.awt.Color
 import javax.imageio.ImageIO
+import kotlin.random.Random
 
 class GameScene : BoardGameScene() {
 	//Player hands
@@ -128,7 +128,7 @@ class GameScene : BoardGameScene() {
 		buttonClubs.isVisible = false
 		
 		drawStackView.isDisabled
-		
+
 		//Add views
 		addElements(
 			drawStackView,
@@ -142,7 +142,7 @@ class GameScene : BoardGameScene() {
 			buttonSpades,
 			buttonClubs,
 			mainMenuButton,
-			grid
+			grid,
 		)
 	}
 }

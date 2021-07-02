@@ -4,6 +4,7 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.control.Alert
 import javafx.scene.input.MouseButton
+import javafx.scene.paint.Color
 import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
 import tools.aqua.bgw.dialog.AlertType
@@ -16,7 +17,17 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.FontStyle
 
 /**
- * Converts the BGW [Font] MouseEvent to tools.aqua.bgw MouseEvent.
+ * Converts the [java.awt.Color] to [Color].
+ */
+internal fun java.awt.Color.toFXColor(): Color = Color(
+	red / VisualBuilder.MAX_HEX,
+	green / VisualBuilder.MAX_HEX,
+	blue / VisualBuilder.MAX_HEX,
+	alpha / VisualBuilder.MAX_HEX,
+)
+
+/**
+ * Converts the BGW [Font] to [javafx.scene.text.Font].
  */
 internal fun Font.toFXFont(): javafx.scene.text.Font {
 	val fontWeight: FontWeight
@@ -39,7 +50,7 @@ internal fun Font.toFXFont(): javafx.scene.text.Font {
 }
 
 /**
- * Converts the JavaFX MouseEvent to tools.aqua.bgw MouseEvent.
+ * Converts the [javafx.scene.input.MouseEvent] to [MouseEvent].
  */
 internal fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
 	MouseEvent(
@@ -52,7 +63,7 @@ internal fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
 	)
 
 /**
- * Converts the JavaFX KeyEvent to tools.aqua.bgw KeyEvent.
+ * Converts the [javafx.scene.input.KeyEvent] to [KeyEvent].
  */
 internal fun javafx.scene.input.KeyEvent.toKeyEvent(): KeyEvent =
 	KeyEvent(
@@ -64,7 +75,7 @@ internal fun javafx.scene.input.KeyEvent.toKeyEvent(): KeyEvent =
 	)
 
 /**
- * Converts the JavaFX KeyCode to tools.aqua.bgw KeyCode.
+ * Converts the [javafx.scene.input.KeyCode] to [KeyCode].
  */
 internal fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
 	javafx.scene.input.KeyCode.SHIFT -> KeyCode.SHIFT
@@ -177,7 +188,7 @@ internal fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
 //endregion
 
 /**
- * Converts [ButtonType] enum value to JavaFX ButtonType constant.
+ * Converts the [AlertType] to [Alert.AlertType].
  */
 internal fun AlertType.toAlertType(): Alert.AlertType = when (this) {
 	AlertType.NONE -> Alert.AlertType.NONE
@@ -188,7 +199,7 @@ internal fun AlertType.toAlertType(): Alert.AlertType = when (this) {
 }
 
 /**
- * Converts ButtonType enum value to JavaFX ButtonType constant.
+ * Converts the [ButtonType] to [javafx.scene.control.ButtonType].
  */
 internal fun ButtonType.toFXButtonType(): javafx.scene.control.ButtonType = when (this) {
 	ButtonType.APPLY -> javafx.scene.control.ButtonType.APPLY
@@ -203,9 +214,9 @@ internal fun ButtonType.toFXButtonType(): javafx.scene.control.ButtonType = when
 }
 
 /**
- * Converts JavaFX ButtonType constant to ButtonType enum value.
+ * Converts the [javafx.scene.control.ButtonType] constant to [ButtonType].
  */
-fun javafx.scene.control.ButtonType.toButtonType(): ButtonType = when (this) {
+internal fun javafx.scene.control.ButtonType.toButtonType(): ButtonType = when (this) {
 	javafx.scene.control.ButtonType.APPLY -> ButtonType.APPLY
 	javafx.scene.control.ButtonType.OK -> ButtonType.OK
 	javafx.scene.control.ButtonType.CANCEL -> ButtonType.CANCEL

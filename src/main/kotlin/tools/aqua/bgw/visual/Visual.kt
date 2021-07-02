@@ -3,11 +3,12 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.LimitedDoubleProperty
+import tools.aqua.bgw.observable.Observable
 
 /**
  * Visual baseclass.
  */
-sealed class Visual {
+sealed class Visual : Observable() {
 	
 	/**
 	 * Property for the transparency / alpha channel for this visual.

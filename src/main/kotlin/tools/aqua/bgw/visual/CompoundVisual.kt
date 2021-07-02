@@ -6,12 +6,13 @@ import tools.aqua.bgw.observable.ObservableArrayList
 
 /**
  * A compound visual containing stacked SingleLayerVisuals.
- * Hint: Each SingleLayerVisual besides the bottom should have opacity in order to work properly.
+ * Hint: Each [SingleLayerVisual] besides the bottom should have opacity in order to work properly.
  *
- * @param children children SingleLayerVisuals in the order they should be displayed, where the first SingleLayerVisual
+ * @param children children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
  * gets displayed at the bottom of the stack.
  */
 class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
+
 	/**
 	 * The property for the children of this stack.
 	 * The first SingleLayerVisual gets displayed at the bottom of the stack.
@@ -28,4 +29,8 @@ class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
 			childrenProperty.clear()
 			childrenProperty.addAll(value)
 		}
+
+	init {
+	    childrenProperty.internalListener = { notifyGUIListener() }
+	}
 }

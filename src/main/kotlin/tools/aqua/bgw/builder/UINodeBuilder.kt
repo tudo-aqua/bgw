@@ -8,8 +8,6 @@ import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
-import javafx.scene.paint.Color
-import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty
 
@@ -199,13 +197,6 @@ internal class UINodeBuilder {
 				Orientation.VERTICAL -> javafx.geometry.Orientation.VERTICAL
 			}
 		}
-		
-		private fun java.awt.Color.toFXColor(): Color = Color(
-			red / MAX_HEX,
-			green / MAX_HEX,
-			blue / MAX_HEX,
-			alpha / MAX_HEX,
-		)
 		
 		private fun Labeled.bindFont(labeled: LabeledUIElementView) {
 			labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
