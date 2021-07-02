@@ -34,22 +34,21 @@ class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableLi
 abstract class ObservableList<T> : Observable(), Iterable<T> {
 	
 	/**
+	 * Returns the number of elements in this list.
+	 */
+	val size: Int
+		get() = list.size
+	
+	/**
 	 * All available indices of this list as IntRange i.e. 0..size()-1.
 	 */
 	val indices: IntRange
-		get() = 0 until size()
+		get() = 0 until size
 	
 	/**
 	 * List field.
 	 */
 	abstract val list: MutableList<T>
-	
-	/**
-	 * Returns the number of elements in this list.
-	 *
-	 * @return The number of elements in this list.
-	 */
-	fun size(): Int = list.size
 	
 	/**
 	 * Returns `true` if this list contains no elements.

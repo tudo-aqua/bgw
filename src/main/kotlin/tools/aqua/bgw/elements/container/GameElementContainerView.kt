@@ -69,14 +69,14 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param element element to add.
 	 */
 	@Synchronized
-	open fun addElement(element: T, index: Int = observableElements.size()) {
+	open fun addElement(element: T, index: Int = observableElements.size) {
 		require(!observableElements.contains(element)) {
 			"Element $element is already contained in this $this."
 		}
 		require(element.parent == null) {
 			"Element $element is already contained in another container."
 		}
-		require(index in 0..observableElements.size()) {
+		require(index in observableElements.indices) {
 			"Index $index is out of list range."
 		}
 		
@@ -127,7 +127,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * Returns the size of the elements list.
 	 * @see elements
 	 */
-	fun numberOfElements(): Int = observableElements.size()
+	fun numberOfElements(): Int = observableElements.size
 	
 	/**
 	 * Returns whether the elements list is empty.

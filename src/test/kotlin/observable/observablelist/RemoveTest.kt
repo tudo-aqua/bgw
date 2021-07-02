@@ -15,9 +15,9 @@ class RemoveTest : ObservableListTestBase() {
 		assertTrue(list.remove(13))
 		
 		//25,17,13,-4
-		assertEquals(4, list.size())
+		assertEquals(4, list.size)
 		
-		for (i in 1 until list.size())
+		for (i in 1 until list.size)
 			assertEquals(unordered[i], list[i - 1])
 		
 		checkNotified()
@@ -32,9 +32,9 @@ class RemoveTest : ObservableListTestBase() {
 		assertEquals(13, list.removeAt(0))
 		
 		//25,17,13,-4
-		assertEquals(4, list.size())
+		assertEquals(4, list.size)
 		
-		for (i in 1 until list.size())
+		for (i in 1 until list.size)
 			assertEquals(unordered[i], list[i - 1])
 		
 		checkNotified()
@@ -117,7 +117,7 @@ class RemoveTest : ObservableListTestBase() {
 	@DisplayName("Test clear")
 	fun testClear() {
 		list.clear()
-		assertEquals(0, list.size())
+		assertEquals(0, list.size)
 		
 		checkNotified(1)
 		
@@ -135,7 +135,7 @@ class RemoveTest : ObservableListTestBase() {
 		
 		assertTrue(list.removeAll(subList))
 		
-		assertEquals(2, list.size())
+		assertEquals(2, list.size)
 		for (i in list.indices)
 			assertEquals(resultList[i], list[i])
 		
@@ -156,7 +156,7 @@ class RemoveTest : ObservableListTestBase() {
 		
 		assertTrue(list.retainAll(subList))
 		
-		assertEquals(3, list.size())
+		assertEquals(3, list.size)
 		for (i in list.indices)
 			assertEquals(resultList[i], list[i])
 		
@@ -176,7 +176,7 @@ class RemoveTest : ObservableListTestBase() {
 		
 		assertTrue(list.removeIf { it > 15 })
 		
-		assertEquals(3, list.size())
+		assertEquals(3, list.size)
 		for (i in list.indices)
 			assertEquals(resultList[i], list[i])
 		
@@ -194,7 +194,7 @@ class RemoveTest : ObservableListTestBase() {
 		
 		list.replaceAll { it + 1 }
 		
-		assertEquals(5, list.size())
+		assertEquals(5, list.size)
 		for (i in list.indices)
 			assertEquals(unordered[i] + 1, list[i])
 		

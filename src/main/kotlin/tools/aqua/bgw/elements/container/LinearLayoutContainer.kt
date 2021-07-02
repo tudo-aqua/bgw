@@ -200,13 +200,13 @@ open class LinearLayoutContainer<T : GameElementView>(
 	
 	private fun layoutHorizontal() {
 		val totalContentWidth: Double = observableElements.sumOf { it.width }
-		val totalContentWidthWithSpacing = totalContentWidth + (observableElements.size() - 1) * spacing
+		val totalContentWidthWithSpacing = totalContentWidth + (observableElements.size - 1) * spacing
 		val newSpacing: Double = if (totalContentWidthWithSpacing > width) {
-			-((totalContentWidth - width) / (observableElements.size() - 1)) //ignore user defined spacing
+			-((totalContentWidth - width) / (observableElements.size - 1)) //ignore user defined spacing
 		} else {
 			spacing //use user defined spacing
 		}
-		val newTotalContentWidth = totalContentWidth + (observableElements.size() - 1) * newSpacing
+		val newTotalContentWidth = totalContentWidth + (observableElements.size - 1) * newSpacing
 		val initial = when (horizontalAlignment) {
 			HorizontalAlignment.LEFT -> 0.0
 			HorizontalAlignment.CENTER -> (width - newTotalContentWidth) / 2
@@ -228,13 +228,13 @@ open class LinearLayoutContainer<T : GameElementView>(
 	
 	private fun layoutVertical() {
 		val totalContentHeight: Double = observableElements.sumOf { it.height }
-		val totalContentHeightWithSpacing = totalContentHeight + (observableElements.size() - 1) * spacing
+		val totalContentHeightWithSpacing = totalContentHeight + (observableElements.size - 1) * spacing
 		val newSpacing: Double = if (totalContentHeightWithSpacing > height) {
-			-((totalContentHeight - height) / (observableElements.size() - 1)) //ignore user defined spacing
+			-((totalContentHeight - height) / (observableElements.size - 1)) //ignore user defined spacing
 		} else {
 			spacing //use user defined spacing
 		}
-		val newTotalContentHeight = totalContentHeight + (observableElements.size() - 1) * newSpacing
+		val newTotalContentHeight = totalContentHeight + (observableElements.size - 1) * newSpacing
 		val initial = when (verticalAlignment) {
 			VerticalAlignment.TOP -> 0.0
 			VerticalAlignment.CENTER -> (width - newTotalContentHeight) / 2
