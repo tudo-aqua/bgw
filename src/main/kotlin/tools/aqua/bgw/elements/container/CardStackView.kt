@@ -16,7 +16,6 @@ import tools.aqua.bgw.visual.Visual
  *
  * Visualization:
  * The [Visual] is used to visualize a background.
- * The [Visual] of the [CardView] at elements[0] is used to visualize the topmost card of the card stack.
  * The positioning of contained [CardView]s gets ignored and the specified alignment gets used to position them instead.
  *
  * @param height height for this [CardStackView]. Default: the suggested card height.

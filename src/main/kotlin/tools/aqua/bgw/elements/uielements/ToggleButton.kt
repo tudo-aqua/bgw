@@ -9,10 +9,10 @@ import tools.aqua.bgw.observable.BooleanProperty
  * An important feature of ToggleButtons is the ToggleGroup.
  * @see ToggleGroup
  *
- * @param height Height for this ToggleButton. Default: 0.
- * @param width Width for this ToggleButton. Default: 0.
- * @param posX Horizontal coordinate for this ToggleButton. Default: 0.
- * @param posY Vertical coordinate for this ToggleButton. Default: 0.
+ * @param height height for this ToggleButton. Default: 0.
+ * @param width width for this ToggleButton. Default: 0.
+ * @param posX horizontal coordinate for this ToggleButton. Default: 0.
+ * @param posY vertical coordinate for this ToggleButton. Default: 0.
  * @param isSelected the initial state for this ToggleButton. Default: false.
  * @param toggleGroup the ToggleGroup of this ToggleButton. Default: null.
  */
