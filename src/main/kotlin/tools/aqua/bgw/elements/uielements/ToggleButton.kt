@@ -5,16 +5,16 @@ package tools.aqua.bgw.elements.uielements
 import tools.aqua.bgw.observable.BooleanProperty
 
 /**
- * A ToggleButton may be used as a Button that is either selected or not selected.
- * An important feature of ToggleButtons is the ToggleGroup.
+ * A [ToggleButton] may be used as a [Button] that is either selected or not selected.
+ * An important feature of [ToggleButton]s is the [ToggleGroup].
  * @see ToggleGroup
  *
- * @param height height for this ToggleButton. Default: 0.
- * @param width width for this ToggleButton. Default: 0.
- * @param posX horizontal coordinate for this ToggleButton. Default: 0.
- * @param posY vertical coordinate for this ToggleButton. Default: 0.
- * @param isSelected the initial state for this ToggleButton. Default: false.
- * @param toggleGroup the ToggleGroup of this ToggleButton. Default: null.
+ * @param height height for this [ToggleButton]. Default: 0.
+ * @param width width for this [ToggleButton]. Default: 0.
+ * @param posX horizontal coordinate for this [ToggleButton]. Default: 0.
+ * @param posY vertical coordinate for this [ToggleButton]. Default: 0.
+ * @param isSelected the initial state for this [ToggleButton]. Default: false.
+ * @param toggleGroup the ToggleGroup of this [ToggleButton]. Default: null.
  */
 open class ToggleButton(
 	height: Number = 0,

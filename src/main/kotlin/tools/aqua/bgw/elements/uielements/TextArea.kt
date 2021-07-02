@@ -5,16 +5,16 @@ package tools.aqua.bgw.elements.uielements
 import tools.aqua.bgw.util.Font
 
 /**
- * Represents a TextArea that can be written to.
- * Whenever user input occurs the textProperty field gets updated.
+ * Represents a [TextArea] that can be written to.
+ * Whenever user input occurs the [label] field gets updated.
  *
- * @param height height for this textArea. Default: 0.
- * @param width width for this textArea. Default: 0.
- * @param posX horizontal coordinate for this TextArea. Default: 0.
- * @param posY vertical coordinate for this TextArea. Default: 0.
- * @param label initial label for this textArea. Default: empty string.
- * @param prompt Prompt for this textArea.
- *        This gets displayed as a prompt to the user whenever the textProperty's value is an empty string.
+ * @param height height for this [TextArea]. Default: 0.
+ * @param width width for this [TextArea]. Default: 0.
+ * @param posX horizontal coordinate for this [TextArea]. Default: 0.
+ * @param posY vertical coordinate for this [TextArea]. Default: 0.
+ * @param label initial label for this [TextArea]. Default: empty string.
+ * @param prompt Prompt for this [TextArea].
+ *        This gets displayed as a prompt to the user whenever the label is an empty string.
  *        Default: empty string.
  */
 open class TextArea(

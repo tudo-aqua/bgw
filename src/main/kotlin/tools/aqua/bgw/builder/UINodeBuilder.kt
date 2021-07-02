@@ -9,7 +9,6 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
-import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
 import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty

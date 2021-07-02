@@ -6,6 +6,7 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
@@ -13,11 +14,11 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all UI elements.
  *
- * @param height height for this UIElementView. Default: 0.
- * @param width width for this UIElementView. Default: 0.
- * @param posX horizontal coordinate for this UIElementView. Default: 0.
+ * @param height height for this [UIElementView]. Default: 0.
+ * @param width width for this [UIElementView]. Default: 0.
+ * @param posX horizontal coordinate for this [UIElementView]. Default: 0.
  * @param posY vertical coordinate for this [UIElementView]. Default: 0.
- * @param font font for this UIElementView. Usage depends on subclass. Default: default [Font] constructor.
+ * @param font font for this [UIElementView]. Usage depends on subclass. Default: default [Font] constructor.
  */
 sealed class UIElementView(
 	height: Number = 0,
@@ -28,13 +29,13 @@ sealed class UIElementView(
 ) : StaticView<UIElementView>(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**
-	 * Property for the Font of this LabeledUIElementView.
+	 * [Property] for the [Font] of this [LabeledUIElementView].
 	 * @see Font
 	 */
 	val fontProperty: ObjectProperty<Font> = ObjectProperty(font)
 	
 	/**
-	 * Font of this LabeledUIElementView.
+	 * [Font] of this [LabeledUIElementView].
 	 * @see Font
 	 * @see fontProperty
 	 */
@@ -45,16 +46,16 @@ sealed class UIElementView(
 		}
 	
 	/**
-	 * Property for the css style that gets applied to this UIElementView's background.
-	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
-	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 * [Property] for the css style that gets applied to this [UIElementView]'s background.
+	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * [UIElementView]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 */
 	val backgroundStyleProperty: StringProperty = StringProperty("")
 	
 	/**
-	 * Css style that gets applied to this UIElementView's background.
-	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
-	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 * Css style that gets applied to this [UIElementView]'s background.
+	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * [UIElementView]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 * @see backgroundStyleProperty
 	 */
 	var backgroundStyle: String
@@ -62,18 +63,18 @@ sealed class UIElementView(
 		set(value) {
 			backgroundStyleProperty.value = value
 		}
-
+	
 	/**
-	 * Property for the css style that gets applied to this UIElementView.
-	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
-	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 * [Property] for the css style that gets applied to this [UIElementView].
+	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * [UIElementView]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 */
 	val componentStyleProperty: StringProperty = StringProperty("")
-
+	
 	/**
-	 * Css style that gets applied to this UIElementView.
-	 * This gets applied last so it may override any changes made via other fields and functions of this UIElementView.
-	 * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 * Css style that gets applied to this [UIElementView].
+	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * [UIElementView]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 * @see componentStyleProperty
 	 */
 	var componentStyle: String

@@ -4,17 +4,15 @@ package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.container.GameElementContainerView
+import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.ObjectProperty
-import tools.aqua.bgw.observable.Observable
+import tools.aqua.bgw.observable.*
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * ElementView is the abstract baseclass of all framework elements.
+ * [ElementView] is the abstract baseclass of all framework elements.
  * It defines important fields and functions that are necessary to visualize inheriting elements.
  *
  * @param height height for this [ElementView].
@@ -24,7 +22,7 @@ import tools.aqua.bgw.visual.Visual
  * @param visual visual for this ElementView.
  *
  * @throws IllegalInheritanceException inheriting from this Class is not advised,
- * because it cannot be rendered and trying to do so will result in an IllegalInheritanceException.
+ * because it cannot be rendered and trying to do so will result in an [IllegalInheritanceException].
  *
  * @see IllegalInheritanceException
  */
@@ -37,9 +35,9 @@ abstract class ElementView(
 ) : Observable() {
 	
 	/**
-	 * The parent of this ElementView.
-	 * Null if this ElementView is not contained in a container or a scene.
-	 * If the element has been added directly to a scene, parent is equal to the scene's rootNode.
+	 * The parent of this [ElementView].
+	 * `null` if this [ElementView] is not contained in a [GameElementContainerView], [LayoutElement], or a [Scene].
+	 * If the element has been added directly to a [Scene], [parent] is equal to the scene's [RootElement].
 	 * If the element is contained within a container, parent is equal to that container.
 	 * @see Scene
 	 * @see GameElementContainerView
@@ -48,22 +46,22 @@ abstract class ElementView(
 		internal set
 	
 	/**
-	 * Field that indicates whether posX and posY denote the center or top left of this ElementView.
+	 * Field that indicates whether posX and posY denote the center or top left of this [ElementView].
 	 */
 	internal var layoutFromCenter: Boolean = false
 	
 	/**
-	 * Name field only for debugging purposes. Has no effect on rendering
+	 * Name field only for debugging purposes. Has no effect on rendering.
 	 */
 	var name: String = javaClass.name + "@" + Integer.toHexString(this.hashCode())
 	
 	/**
-	 * Property for the height of this ElementView.
+	 * [Property] for the [height] of this [ElementView].
 	 */
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
-	 * The height for this ElementView.
+	 * The [height] for this [ElementView].
 	 * @see heightProperty
 	 */
 	var height: Double
@@ -73,12 +71,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the width of this ElementView.
+	 * [Property] for the [width] of this [ElementView].
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
-	 * The width for this ElementView.
+	 * The [width] for this [ElementView].
 	 * @see widthProperty
 	 */
 	var width: Double
@@ -88,12 +86,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the horizontal position of this ElementView.
+	 * [Property] for the horizontal position of this [ElementView].
 	 */
 	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
 	
 	/**
-	 * Horizontal position of this ElementView.
+	 * Horizontal position of this [ElementView].
 	 * @see posXProperty
 	 */
 	var posX: Double
@@ -103,12 +101,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the vertical position of this ElementView.
+	 * [Property] for the vertical position of this [ElementView].
 	 */
 	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
 	
 	/**
-	 * Vertical position of this ElementView.
+	 * Vertical position of this [ElementView].
 	 * @see posYProperty
 	 */
 	var posY: Double
@@ -118,7 +116,7 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the rotation of this ElementView in degrees.
+	 * [Property] for the rotation of this [ElementView] in degrees.
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
 	 *
 	 * example conversions:
@@ -130,7 +128,7 @@ abstract class ElementView(
 	val rotationProperty: DoubleProperty = DoubleProperty(0.0)
 	
 	/**
-	 * Rotation of this ElementView in degrees.
+	 * Rotation of this [ElementView] in degrees.
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
 	 *
 	 * example conversions:
@@ -147,14 +145,14 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the current [Visual] of this [ElementView].
+	 * [Property] for the current [Visual] of this [ElementView].
 	 *
 	 * @see visual
 	 */
 	val visualProperty: ObjectProperty<Visual> = ObjectProperty(visual)
 	
 	/**
-	 * Index of the current Visual in the visuals list.
+	 * Index of the current [Visual] in the visuals list.
 	 *
 	 * @see visualProperty
 	 */
@@ -165,7 +163,7 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the opacity of this ElementView.
+	 * [Property] for the [opacity] of this [ElementView].
 	 * Should be in range 0.0 to 1.0.
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 	 * Note that invisible objects (opacity == 0.0) still remain interactive.
@@ -173,7 +171,7 @@ abstract class ElementView(
 	val opacityProperty: DoubleProperty = DoubleProperty(1.0)
 	
 	/**
-	 * Opacity of this ElementView.
+	 * Opacity of this [ElementView].
 	 * Must be in range 0.0 to 1.0.
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 	 * Note that invisible objects (opacity == 0.0) still remain interactive.
@@ -188,8 +186,8 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property for the visibility of this ElementView.
-	 * Invisible ElementViews are disabled.
+	 * [Property] for the visibility of this [ElementView].
+	 * Invisible [ElementView]s are disabled.
 	 * An object marked as visible may still be opaque due to opacity
 	 * @see isDisabledProperty
 	 * @see opacityProperty
@@ -197,8 +195,8 @@ abstract class ElementView(
 	val isVisibleProperty: BooleanProperty = BooleanProperty(true)
 	
 	/**
-	 * Visibility of this ElementView.
-	 * Invisible ElementViews are disabled.
+	 * Visibility of this [ElementView].
+	 * Invisible [ElementView]s are disabled.
 	 * An object marked as visible may still be opaque due to opacity
 	 * @see isDisabledProperty
 	 * @see opacityProperty
@@ -211,7 +209,7 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property that controls if user input events cause input functions of this ElementView to get invoked.
+	 * [Property] that controls if user input events cause input functions of this [ElementView] to get invoked.
 	 * `true` means no invocation, where `false` means invocation.
 	 *
 	 * For a list of affected functions refer to the `See Also` section.
@@ -230,7 +228,7 @@ abstract class ElementView(
 	val isDisabledProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Controls if user input events cause input functions of this ElementView to get invoked.
+	 * Controls if user input events cause input functions of this [ElementView] to get invoked.
 	 * `true` means no invocation, where `false` means invocation.
 	 *
 	 * For a list of affected functions refer to the `See Also` section.
@@ -255,12 +253,12 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Property that controls whether this ElementView is focusable or not.
+	 * [Property] that controls whether this [ElementView] is focusable or not.
 	 */
 	val isFocusableProperty: BooleanProperty = BooleanProperty(true)
 	
 	/**
-	 * Controls whether this ElementView is focusable or not.
+	 * Controls whether this [ElementView] is focusable or not.
 	 * @see isFocusableProperty
 	 */
 	var isFocusable: Boolean
@@ -270,36 +268,36 @@ abstract class ElementView(
 		}
 	
 	/**
-	 * Gets invoked with an event whenever the mouse enters this ElementView.
+	 * Gets invoked with an event whenever the mouse enters this [ElementView].
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
 	var onMouseEntered: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with an event whenever the mouse leaves this ElementView.
+	 * Gets invoked with an event whenever the mouse leaves this [ElementView].
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
 	var onMouseExited: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the mouse is pressed inside this ElementView.
+	 * Gets invoked with a [MouseEvent] whenever the mouse is pressed inside this [ElementView].
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
 	var onMousePressed: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the mouse is released inside this ElementView.
+	 * Gets invoked with a [MouseEvent] whenever the mouse is released inside this [ElementView].
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
 	var onMouseReleased: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a mouseEvent whenever the mouse is clicked inside this ElementView.
-	 * Gets invoked after onMousePressed and onMouseReleased.
+	 * Gets invoked with a [MouseEvent] whenever the mouse is clicked inside this [ElementView].
+	 * Gets invoked after [onMousePressed] and [onMouseReleased].
 	 * @see MouseEvent
 	 * @see onMousePressed
 	 * @see onMouseReleased
@@ -308,7 +306,7 @@ abstract class ElementView(
 	var onMouseClicked: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a keyEvent whenever a key is pressed while this ElementView has focus.
+	 * Gets invoked with a [KeyEvent] whenever a key is pressed while this [ElementView] has focus.
 	 * @see KeyEvent
 	 * @see isDisabledProperty
 	 * @see isFocusableProperty
@@ -316,7 +314,7 @@ abstract class ElementView(
 	var onKeyPressed: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a keyEvent whenever a key is released while this ElementView has focus.
+	 * Gets invoked with a [KeyEvent] whenever a key is released while this [ElementView] has focus.
 	 * @see KeyEvent
 	 * @see isDisabledProperty
 	 * @see isFocusableProperty
@@ -324,8 +322,8 @@ abstract class ElementView(
 	var onKeyReleased: ((KeyEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with a keyEvent whenever a key is typed while this ElementView has focus.
-	 * Gets invoked after onKeyPressed
+	 * Gets invoked with a [KeyEvent] whenever a key is typed while this [ElementView] has focus.
+	 * Gets invoked after [onKeyPressed]
 	 * @see KeyEvent
 	 * @see onKeyPressed
 	 * @see isDisabledProperty
@@ -400,13 +398,13 @@ abstract class ElementView(
 	internal abstract fun removeChild(child: ElementView)
 	
 	/**
-	 * Method returning a contained child's coordinates within this ElementView if supported.
+	 * Function returning a contained child's coordinates within this [ElementView] if supported.
 	 * This method has to be overridden.
-	 * Returns null on all elementViews not supporting this feature.
+	 * Returns `null` on all [ElementView]s not supporting this feature.
 	 *
 	 * @param child child to find.
 	 *
-	 * @return coordinate of given child in this ElementView or null if not supported,.
+	 * @return coordinate of given child in this [ElementView] or `null` if not supported,.
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ElementView): Coordinate? = null

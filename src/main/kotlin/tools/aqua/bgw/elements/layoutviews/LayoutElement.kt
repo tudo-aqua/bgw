@@ -7,7 +7,7 @@ import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * baseclass for all layout elements.
+ * Baseclass for all layout elements.
  *
  * @param height height for this [LayoutElement].
  * @param width width for this [LayoutElement].

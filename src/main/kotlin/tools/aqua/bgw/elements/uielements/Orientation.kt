@@ -1,16 +1,16 @@
 package tools.aqua.bgw.elements.uielements
 
 /**
- * Enum for orientations HORIZONTAL and VERTICAL.
+ * Enum for orientations [HORIZONTAL] and [VERTICAL].
  */
 enum class Orientation {
 	/**
-	 * HORIZONTAL orientation.
+	 * [HORIZONTAL] orientation.
 	 */
 	HORIZONTAL,
 	
 	/**
-	 * VERTICAL orientation.
+	 * [VERTICAL] orientation.
 	 */
 	VERTICAL
 }

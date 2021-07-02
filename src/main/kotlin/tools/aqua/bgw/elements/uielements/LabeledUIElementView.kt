@@ -6,14 +6,14 @@ import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
 /**
- * Baseclass for all UIElementViews that have a label.
+ * Baseclass for all [UIElementView]s that have a label.
  *
- * @param height height for this LabeledUIElementView. Default: 0.
- * @param width width for this LabeledUIElementView. Default: 0.
- * @param posX horizontal coordinate for this LabeledUIElementView. Default: 0.
- * @param posY vertical coordinate for this LabeledUIElementView. Default: 0.
- * @param label label for this LabeledUIElementView. Default: empty String.
- * @param font font to be used for the label. Default: default Font constructor.
+ * @param height height for this [LabeledUIElementView]. Default: 0.
+ * @param width width for this [LabeledUIElementView]. Default: 0.
+ * @param posX horizontal coordinate for this [LabeledUIElementView]. Default: 0.
+ * @param posY vertical coordinate for this [LabeledUIElementView]. Default: 0.
+ * @param label label for this [LabeledUIElementView]. Default: empty String.
+ * @param font font to be used for the label. Default: default [Font] constructor.
  */
 sealed class LabeledUIElementView(
 	height: Number = 0,

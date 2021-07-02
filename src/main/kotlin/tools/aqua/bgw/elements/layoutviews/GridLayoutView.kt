@@ -10,7 +10,7 @@ import tools.aqua.bgw.util.GridIteratorElement
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Defines an GameElementContainerView that orders elements in a grid structure.
+ * Defines an [LayoutElement] that orders elements in a grid structure.
  *
  * @param rows initial row count.
  * @param columns initial column count.
@@ -308,7 +308,7 @@ open class GridLayoutView<T : ElementView>(
 	
 	/**
 	 * Grows grid by specified dimensions, filling new cells with NULL values.
-	 * New rows and columns get automatic resizing behaviour, specified as COLUMN_WIDTH_AUTO and ROW_HEIGHT_AUTO.
+	 * New rows and columns get automatic resizing behaviour, specified as [COLUMN_WIDTH_AUTO] and [ROW_HEIGHT_AUTO].
 	 * Therefore new empty rows and columns get rendered with height and width 0.0
 	 * e.g. invisible if not specified otherwise.
 	 *
@@ -344,7 +344,7 @@ open class GridLayoutView<T : ElementView>(
 	 * e.g. all rows and columns counted from left, right, top and bottom that have no views in their cells.
 	 * That means after calling the first and last row
 	 * as well as the first and last column have at least one element in their cells.
-	 * Attributes "rows" and "columns" get updated according to new dimensions.
+	 * Attributes [rows] and [columns] get updated according to new dimensions.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @return `true` if the grid has changed by this operation, `false` otherwise.
@@ -398,8 +398,8 @@ open class GridLayoutView<T : ElementView>(
 	
 	/**
 	 * Removes all empty columns e.g. all rows that have no views in their cells.
-	 * That means after calling every row has at least one element in its cell.
-	 * Attribute "rows" get updated according to new dimension.
+	 * That means after calling every column has at least one element in its cells.
+	 * Attribute [columns] get updated according to new dimension.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @see addRows
@@ -441,8 +441,8 @@ open class GridLayoutView<T : ElementView>(
 	
 	/**
 	 * Removes all empty rows e.g. all rows that have no views in their cells.
-	 * That means after calling every row has at least one element in its cell.
-	 * Attribute "rows" get updated according to new dimension.
+	 * That means after calling every row has at least one element in its cells.
+	 * Attribute [rows] gets updated according to new dimension.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @see addRows
@@ -469,7 +469,11 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * {@inheritDoc}.
+	 * Function returning a contained child's coordinates within this [GridLayoutView] relative to the top left corner.
+	 *
+	 * @param child child to find.
+	 *
+	 * @return coordinate of given child in this [GridLayoutView].
 	 */
 	override fun getChildPosition(child: ElementView): Coordinate? =
 		grid.filter { it.element == child }.map {
@@ -483,7 +487,7 @@ open class GridLayoutView<T : ElementView>(
 		}.firstOrNull()
 	
 	/**
-	 * Returns an iterator over the grid elements.
+	 * Returns an [Iterator] over the grid elements.
 	 * Iteration is columns-first which means that the iterator starts at cell [0,0] and then proceeds iterating through
 	 * the first row from left to right. When reaching the end of a row it proceeds to the next one resetting the column
 	 * pointer to 0.

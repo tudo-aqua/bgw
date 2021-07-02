@@ -259,5 +259,4 @@ open class LinearLayoutContainer<T : GameElementView>(
 			Orientation.VERTICAL -> layoutVertical()
 		}
 	}
-	
 }

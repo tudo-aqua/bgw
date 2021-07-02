@@ -4,6 +4,9 @@ package tools.aqua.bgw.core
 
 import javafx.scene.control.Alert
 import tools.aqua.bgw.builder.Frontend
+import tools.aqua.bgw.builder.toAlertType
+import tools.aqua.bgw.builder.toButtonType
+import tools.aqua.bgw.builder.toFXButtonType
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.FileDialog
@@ -76,8 +79,8 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 		Alert(
 			alertType.toAlertType(),
 			message,
-			*buttons.map { it.toButtonType() }.toTypedArray()
-		).showAndWait().map { ButtonType.fromButtonType(it) }
+			*buttons.map { it.toFXButtonType() }.toTypedArray()
+		).showAndWait().map { it.toButtonType() }
 	
 	/**
 	 * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.

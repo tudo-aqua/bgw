@@ -112,11 +112,11 @@ class Frontend : Application() {
 			scaleMode = newScaleMode
 			sizeChanged()
 		}
-		
-		internal fun setFullScreen(fullscreen: Boolean) {
-			this.fullscreen = fullscreen
-			this.primaryStage?.isFullScreen = fullscreen
-		}
+
+//		internal fun setFullScreen(fullscreen: Boolean) {
+//			this.fullscreen = fullscreen
+//			this.primaryStage?.isFullScreen = fullscreen
+//		}
 		
 		internal fun updateScene() {
 			val activePanes: MutableList<Pane> = ArrayList(2)

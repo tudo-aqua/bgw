@@ -9,6 +9,7 @@ import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIG
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.exception.EmptyStackException
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -41,19 +42,13 @@ open class CardStackView<T : CardView>(
 ) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	
 	/**
-	 * Property for the verticalAlignment of CardViews in this CardStackView.
+	 * [Property] for the [verticalAlignment] of [CardView]s in this [CardStackView].
 	 * @see VerticalAlignment
 	 */
 	val verticalAlignmentProperty: ObjectProperty<VerticalAlignment> = ObjectProperty(verticalAlignment)
 	
 	/**
-	 * Property for the horizontalAlignment of CardViews in this CardStackView.
-	 * @see HorizontalAlignment
-	 */
-	val horizontalAlignmentProperty: ObjectProperty<HorizontalAlignment> = ObjectProperty(horizontalAlignment)
-	
-	/**
-	 * VerticalAlignment of CardViews in this CardStackView.
+	 * [VerticalAlignment] of [CardView]s in this [CardStackView].
 	 * @see VerticalAlignment
 	 * @see verticalAlignmentProperty
 	 */
@@ -64,7 +59,13 @@ open class CardStackView<T : CardView>(
 		}
 	
 	/**
-	 * HorizontalAlignment of CardViews in this CardStackView.
+	 * [Property] for the [horizontalAlignment] of [CardView]s in this [CardStackView].
+	 * @see HorizontalAlignment
+	 */
+	val horizontalAlignmentProperty: ObjectProperty<HorizontalAlignment> = ObjectProperty(horizontalAlignment)
+	
+	/**
+	 * [HorizontalAlignment] of [CardView]s in this [CardStackView].
 	 * @see HorizontalAlignment
 	 * @see verticalAlignmentProperty
 	 */
@@ -83,42 +84,42 @@ open class CardStackView<T : CardView>(
 		}
 	}
 	
-	
 	/**
-	 * Pops the topmost CardView from this CardStackView and returns it,
+	 * Pops the topmost [CardView] from this [CardStackView] and returns it,
 	 * or null, if the stack is empty.
+	 * Removes it from the [CardStackView].
 	 */
 	fun popOrNull(): T? = observableElements.removeLastOrNull()?.apply { removePosListeners(); parent = null }
 	
 	/**
-	 * Pops the topmost CardView from this CardStackView and returns it.
+	 * Pops the topmost [CardView] from this [CardStackView] and returns it.
+	 * Removes it from the [CardStackView].
 	 *
 	 * @throws EmptyStackException If stack was empty.
 	 */
 	fun pop(): T = popOrNull() ?: throw EmptyStackException()
 	
 	/**
-	 * Returns the topmost CardView, or null, if the stack is empty.
-	 * Does not modify the CardStackView.
+	 * Returns the topmost [CardView], or null, if the stack is empty.
+	 * Does not modify the [CardStackView].
 	 */
 	fun peekOrNull(): T? = observableElements.lastOrNull()
 	
 	/**
-	 * Returns the topmost CardView. Does not modify the CardStackView.
+	 * Returns the topmost [CardView]. Does not modify the [CardStackView].
 	 *
 	 * @throws EmptyStackException If stack was empty.
 	 */
 	fun peek(): T = peekOrNull() ?: throw EmptyStackException()
 	
 	/**
-	 * Adds a CardView on top of this CardStackView.
+	 * Adds a [CardView] on top of this [CardStackView].
 	 */
 	fun push(cardView: T) {
 		observableElements.add(cardView)
 		cardView.parent = this
 		cardView.addPosListeners()
 	}
-	
 	
 	override fun addElement(element: T, index: Int) {
 		super.addElement(element, index)

@@ -7,7 +7,6 @@ import javafx.scene.image.WritableImage
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.visual.*
 import java.awt.image.BufferedImage
