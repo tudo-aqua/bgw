@@ -19,15 +19,26 @@ import java.util.*
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
  * Application starts by calling [show].
  *
+ * @param windowTitle Window title displayed in the title bar.
+ *
  * @see BoardGameScene
  * @see MenuScene
  */
-open class BoardGameApplication {
+open class BoardGameApplication(windowTitle: String = "BoardGameWork Application") {
 	
 	/**
 	 * [Frontend] instance.
 	 */
 	private val frontend: Frontend = Frontend()
+	
+	/**
+	 * Window title displayed in the title bar.
+	 */
+	var title: String
+		get() = Frontend.titleProperty.value
+		set(value) {
+			Frontend.titleProperty.value = value
+		}
 	
 	/**
 	 * Background [Visual] for the [BoardGameApplication]. [Visual] appears as bars window does not match [Scene] ratio.
@@ -38,6 +49,10 @@ open class BoardGameApplication {
 		set(value) {
 			Frontend.backgroundProperty.value = value
 		}
+	
+	init {
+		title = windowTitle
+	}
 	
 	/**
 	 * Shows the given [FileDialog].

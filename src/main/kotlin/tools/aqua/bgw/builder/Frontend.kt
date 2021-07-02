@@ -17,6 +17,7 @@ import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
@@ -64,6 +65,7 @@ class Frontend : Application() {
 		internal var sceneX: Double = 0.0
 		internal var sceneY: Double = 0.0
 		
+		internal val titleProperty: StringProperty = StringProperty()
 		internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(ColorVisual(Color.BLACK))
 		
 		internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
@@ -267,6 +269,10 @@ class Frontend : Application() {
 			
 			menuScene?.let { menuPane = buildMenu(it) }
 			boardGameScene?.let { gamePane = buildGame(it) }
+			
+			titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV ->
+				primaryStage?.title = nV
+			}
 			
 			backgroundProperty.setGUIListenerAndInvoke(backgroundProperty.value) { _, nV ->
 				backgroundPane.children.clear()
