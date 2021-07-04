@@ -84,7 +84,7 @@ sealed class UIElementView(
 		}
 	
 	/**
-	 * @throws RuntimeException [GameElementView] does not support children.
+	 * @throws RuntimeException if [GameElementView] does not support children.
 	 */
 	override fun removeChild(child: ElementView) {
 		throw RuntimeException("This $this Element has no children.")

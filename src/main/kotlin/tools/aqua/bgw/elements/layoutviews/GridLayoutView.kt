@@ -177,7 +177,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param columnIndex target column.
 	 * @param columnWidth new column width. Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if value was negative.
+	 * @throws IllegalArgumentException if value was negative.
 	 *
 	 * @see setColumnWidths
 	 * @see setAutoColumnWidth
@@ -195,7 +195,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param columnWidths New column widths. Array index 0 get applied for the first column etc.
 	 * Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if Array size does not match column count or values were negative.
+	 * @throws IllegalArgumentException if Array size does not match column count or values were negative.
 	 *
 	 * @see setColumnWidth
 	 * @see setAutoColumnWidth
@@ -251,7 +251,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param rowIndex Target row.
 	 * @param rowHeight New row height. Use ROW_HEIGHT_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if value was negative.
+	 * @throws IllegalArgumentException if value was negative.
 	 *
 	 * @see setRowHeights
 	 * @see setAutoColumnWidth
@@ -269,7 +269,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param rowHeights New row heights. Array index 0 get applied for the first row etc.
 	 * Use ROW_HEIGHT_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if Array size does not match row count or values were negative.
+	 * @throws IllegalArgumentException if Array size does not match row count or values were negative.
 	 *
 	 * @see setRowHeight
 	 * @see setAutoRowHeight
@@ -319,7 +319,7 @@ open class GridLayoutView<T : ElementView>(
 	 *
 	 * @return `true` if the grid has changed by this operation, `false` otherwise.
 	 *
-	 * @throws IllegalArgumentException If any value passed was negative.
+	 * @throws IllegalArgumentException if any value passed was negative.
 	 *
 	 * @see trim
 	 * @see removeEmptyColumns

@@ -103,7 +103,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 *
 	 * @return the element at the specified position in this list.
 	 *
-	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
+	 * @throws IndexOutOfBoundsException if the index exceeds the list's bounds.
 	 */
 	operator fun get(index: Int): T = list[index]
 	

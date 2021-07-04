@@ -34,7 +34,7 @@ fun ElementView.resize(height: Number, width: Number) {
 
 /**
  * Scales this ElementViews height and width by the given scale factor.
- * @throws IllegalArgumentException when the given scaleFactor is negative.
+ * @throws IllegalArgumentException if the given scaleFactor is negative.
  */
 fun ElementView.scale(scaleFactor: Number) {
 	val scaleFactorDoubleValue = scaleFactor.toDouble()
@@ -48,7 +48,7 @@ fun ElementView.scale(scaleFactor: Number) {
 /**
  *
  * Scales this ElementViews width by the given scale factor.
- * @throws IllegalArgumentException when the given scaleFactor is negative.
+ * @throws IllegalArgumentException if the given scaleFactor is negative.
  */
 fun ElementView.scaleWidth(scaleFactor: Number) {
 	val scaleFactorDoubleValue = scaleFactor.toDouble()
@@ -61,7 +61,7 @@ fun ElementView.scaleWidth(scaleFactor: Number) {
 /**
  *
  * Scales this ElementViews height by the given scale factor.
- * @throws IllegalArgumentException when the given scaleFactor is negative.
+ * @throws IllegalArgumentException if the given scaleFactor is negative.
  */
 fun ElementView.scaleHeight(scaleFactor: Number) {
 	val scaleFactorDoubleValue = scaleFactor.toDouble()

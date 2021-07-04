@@ -94,7 +94,7 @@ open class CardStackView<T : CardView>(
 	 * Pops the topmost [CardView] from this [CardStackView] and returns it.
 	 * Removes it from the [CardStackView].
 	 *
-	 * @throws NoSuchElementException If stack was empty.
+	 * @throws NoSuchElementException if stack was empty.
 	 */
 	fun pop(): T = popOrNull() ?: throw NoSuchElementException()
 	
@@ -107,7 +107,7 @@ open class CardStackView<T : CardView>(
 	/**
 	 * Returns the topmost [CardView]. Does not modify the [CardStackView].
 	 *
-	 * @throws NoSuchElementException If stack was empty.
+	 * @throws NoSuchElementException if stack was empty.
 	 */
 	fun peek(): T = peekOrNull() ?: throw NoSuchElementException()
 	

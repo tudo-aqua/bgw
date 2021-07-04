@@ -13,7 +13,7 @@ package tools.aqua.bgw.util
  * @param bottomRightX xCoord of bottom right corner
  * @param bottomRightY yCoord of bottom right corner
  *
- * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
+ * @throws IllegalArgumentException if TOP_LEFT corner coordinates are larger in x or y direction
  * than BOTTOM_RIGHT corner coordinate.
  */
 class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Number, bottomRightY: Number) {
@@ -72,7 +72,7 @@ class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Number, 
 	 * @param topLeft [Coordinate] of top left corner
 	 * @param bottomRight [Coordinate] of bottom right corner
 	 *
-	 * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
+	 * @throws IllegalArgumentException if TOP_LEFT corner coordinates are larger in x or y direction
 	 * than BOTTOM_RIGHT corner coordinate.
 	 */
 	constructor(topLeft: Coordinate, bottomRight: Coordinate) : this(

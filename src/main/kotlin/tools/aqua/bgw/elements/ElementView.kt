@@ -377,7 +377,7 @@ abstract class ElementView(
 	/**
 	 * Removes this element from it's parent.
 	 *
-	 * @throws IllegalStateException If this element is not contained in any container. Use parent field to check.
+	 * @throws IllegalStateException if this element is not contained in any container. Use parent field to check.
 	 * @see parent
 	 */
 	fun removeFromParent(): ElementView {

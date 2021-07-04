@@ -104,10 +104,10 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Adds all [ElementView]s contained in the passed collection to this [GameElementContainerView].
 	 * Whenever an ElementView is encountered, that is already contained, an
-	 * [IllegalArgumentException] is thrown and no further ElementView is added.
+	 * [IllegalArgumentException] is thrown and no further [ElementView] is added.
 	 *
-	 * @param collection collection containing the ElementViews to add.
-	 * @throws IllegalArgumentException if an ElementView is already contained.
+	 * @param collection collection containing the [ElementView]s to add.
+	 * @throws IllegalArgumentException if an [ElementView] is already contained.
 	 */
 	@Synchronized
 	open fun addAll(collection: Collection<T>) {
