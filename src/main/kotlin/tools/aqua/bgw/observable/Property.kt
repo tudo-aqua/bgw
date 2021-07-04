@@ -7,7 +7,7 @@ package tools.aqua.bgw.observable
  *
  * @param initialValue initial value of this property.
  */
-sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
+abstract class Property<T>(initialValue: T) : ValueObservable<T>() {
 	
 	/**
 	 * Value of this property.
@@ -50,21 +50,21 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
  *
  * @param initialValue initial Value. Default: `false`.
  */
-class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
+open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
 
 /**
  * An IntegerProperty.
  *
  * @param initialValue initial Value. Default: 0.
  */
-class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
+open class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
 
 /**
  * A DoubleProperty.
  *
  * @param initialValue initial Value. Default: 0.0.
  */
-class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
+open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
 
 /**
  * A limited DoubleProperty to a value range. Value will be checked to be in range
@@ -78,7 +78,7 @@ class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue
  * @param upperBoundInclusive upper bound inclusive. Default: +inf.
  * @param initialValue initial Value. Default: [lowerBoundInclusive].
  */
-class LimitedDoubleProperty(
+open class LimitedDoubleProperty(
 	lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
 	upperBoundInclusive: Number = Double.POSITIVE_INFINITY,
 	initialValue: Number = lowerBoundInclusive
@@ -137,11 +137,11 @@ class LimitedDoubleProperty(
  *
  * @param initialValue initial Value. Default: Empty string.
  */
-class StringProperty(initialValue: String = "") : Property<String>(initialValue)
+open class StringProperty(initialValue: String = "") : Property<String>(initialValue)
 
 /**
  * An ObjectProperty with generic type.
  *
  * @param initialValue initial value.
  */
-class ObjectProperty<T>(initialValue: T) : Property<T>(initialValue)
+open class ObjectProperty<T>(initialValue: T) : Property<T>(initialValue)

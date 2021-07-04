@@ -96,7 +96,7 @@ class DragDropHelper {
 			
 			return availableSubTargets.map { it.dragTarget }.filter {
 				this != it
-						&& it.dropAcceptor?.invoke(DropEvent(draggedElement!!)) ?: false
+						&& it.dropAcceptor?.invoke(DragEvent(draggedElement!!)) ?: false
 			}
 		}
 		

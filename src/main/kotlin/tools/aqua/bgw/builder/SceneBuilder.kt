@@ -2,7 +2,6 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
 import tools.aqua.bgw.core.BoardGameScene
@@ -25,20 +24,8 @@ internal class SceneBuilder {
 			//register animations
 			scene.animations.guiListener = {
 				scene.animations.list.stream().filter { t -> !t.running }.forEach { anim ->
-					run {
-						when (anim) {
-							is MovementAnimation<*> -> AnimationBuilder.addTranslateAnimation(scene, anim)
-							is RotationAnimation<*> -> AnimationBuilder.addRotateAnimation(scene, anim)
-							is FlipAnimation<*> -> AnimationBuilder.addFlipAnimation(scene, anim)
-							is DelayAnimation -> AnimationBuilder.addDelayAnimation(scene, anim)
-							is DiceAnimation<*> -> AnimationBuilder.addDiceAnimation(scene, anim)
-						}
-						
-						anim.running = true
-						
-						//TODO: remove anim from list when finished
-						//TODO: Add animation stop and endless mode
-					}
+					AnimationBuilder.build(scene, anim).play()
+					anim.running = true
 				}
 			}
 			

@@ -32,7 +32,7 @@ package tools.aqua.bgw.util
  *
  * @param elements elements to be initialized in the map.
  */
-class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
+open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	private val map: MutableList<Pair<T, R>> = mutableListOf()
 	
 	init {

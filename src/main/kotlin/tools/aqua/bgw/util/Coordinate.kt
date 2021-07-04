@@ -5,7 +5,7 @@ package tools.aqua.bgw.util
 /**
  * A Coordinate containing [xCoord] and [yCoord].
  */
-class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
+open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	
 	/**
 	 * X coordinate.

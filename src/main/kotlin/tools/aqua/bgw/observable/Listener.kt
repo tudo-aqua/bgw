@@ -30,7 +30,7 @@ fun interface IValueObservable<T> {
 /**
  * Basic observable.
  */
-open class Observable {
+abstract class Observable {
 	/**
 	 * Holds all listeners on this property.
 	 */
@@ -146,7 +146,7 @@ open class Observable {
 /**
  * Basic observable with value.
  */
-open class ValueObservable<T> {
+abstract class ValueObservable<T> {
 	/**
 	 * Holds all listeners on this property.
 	 */

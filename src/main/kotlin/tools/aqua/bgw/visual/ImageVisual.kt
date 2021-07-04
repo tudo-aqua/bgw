@@ -23,7 +23,7 @@ import javax.imageio.ImageIO
  * @param offsetX left bound of sub-image. Default: 0.
  * @param offsetY top bound of sub-image. Default: 0.
  */
-class ImageVisual(
+open class ImageVisual(
 	image: BufferedImage,
 	width: Int = -1,
 	height: Int = -1,

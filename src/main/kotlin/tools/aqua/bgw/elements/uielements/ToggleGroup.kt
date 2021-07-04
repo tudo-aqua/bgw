@@ -14,7 +14,7 @@ package tools.aqua.bgw.elements.uielements
  *
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
  */
-class ToggleGroup {
+open class ToggleGroup {
 	private val buttons: MutableList<ToggleButton> = mutableListOf()
 	
 	internal fun addButton(toggleButton: ToggleButton) {

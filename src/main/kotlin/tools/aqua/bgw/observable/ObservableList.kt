@@ -11,7 +11,7 @@ import kotlin.streams.toList
 /**
  * An observable [ArrayList].
  */
-class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
+open class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
 	 * List field.
 	 */
@@ -21,7 +21,7 @@ class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableLis
 /**
  * An observable [LinkedList].
  */
-class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
+open class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
 	 * List field.
 	 */

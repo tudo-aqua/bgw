@@ -9,7 +9,7 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
  *
  * @param duration duration in milliseconds. Default: 1 second.
  */
-sealed class Animation(var duration: Int = 1000) {
+sealed class Animation(val duration: Int = 1000) {
     
     /**
      * [Boolean] indicating whether the [Animation] is currently playing.

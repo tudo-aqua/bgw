@@ -12,7 +12,7 @@ import tools.aqua.bgw.observable.ObservableList
  * @param children children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
  * gets displayed at the bottom of the stack.
  */
-class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
+open class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
 	
 	/**
 	 * [ObservableList] for the [children] of this stack.

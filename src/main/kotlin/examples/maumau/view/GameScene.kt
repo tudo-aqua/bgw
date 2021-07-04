@@ -18,7 +18,7 @@ import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.util.FontStyle
+import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color

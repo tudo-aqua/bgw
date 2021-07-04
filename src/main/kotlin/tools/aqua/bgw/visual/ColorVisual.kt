@@ -12,7 +12,7 @@ import java.awt.Color
  *
  * @param color color to use as filling.
  */
-class ColorVisual(color: Color) : SingleLayerVisual() {
+open class ColorVisual(color: Color) : SingleLayerVisual() {
 	
 	/**
 	 * [Property] for the displayed [Color] of this [Visual].

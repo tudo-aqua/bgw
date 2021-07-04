@@ -29,7 +29,7 @@ import kotlin.math.min
 /**
  * Frontend JavaFX wrapper.
  */
-class Frontend : Application() {
+internal class Frontend : Application() {
 	
 	/**
 	 * Starts the application.
@@ -44,12 +44,12 @@ class Frontend : Application() {
 	
 	companion object {
 		internal const val DEFAULT_FADE_TIME = 0.25
+		
 		private const val BLUR_RADIUS = 63.0
 		private const val MINIMIZED_FACTOR = 0.8
 		private const val TITLE_BAR_HEIGHT = 39
 		
-		internal var boardGameScene: BoardGameScene? = null
-		
+		private var boardGameScene: BoardGameScene? = null
 		private var menuScene: MenuScene? = null
 		private var scenePane: Pane = Pane()
 		private var gamePane: Pane? = null

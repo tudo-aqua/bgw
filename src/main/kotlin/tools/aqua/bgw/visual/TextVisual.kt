@@ -13,7 +13,7 @@ import tools.aqua.bgw.util.Font
  * @param text text to display.
  * @param font font to be used for the [text]
  */
-class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
+open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
 	 * [Property] for the displayed [text].
 	 */

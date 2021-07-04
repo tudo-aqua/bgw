@@ -15,8 +15,8 @@ import tools.aqua.bgw.elements.ElementView
  */
 class RotationAnimation<T : ElementView>(
 	elementView: T,
-	var fromAngle: Double = elementView.rotation,
-	var toAngle: Double = elementView.rotation,
+	val fromAngle: Double = elementView.rotation,
+	val toAngle: Double = elementView.rotation,
 	duration: Int = 1000
 ) : ElementAnimation<T>(element = elementView, duration = duration) {
 	

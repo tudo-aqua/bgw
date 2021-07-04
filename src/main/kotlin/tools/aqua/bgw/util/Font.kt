@@ -2,6 +2,7 @@
 
 package tools.aqua.bgw.util
 
+import tools.aqua.bgw.util.Font.FontStyle
 import java.awt.Color
 
 /**
@@ -20,30 +21,30 @@ class Font(
 	val color: Color = Color.BLACK,
 	val family: String = "Arial",
 	val fontStyle: FontStyle = FontStyle.REGULAR
-)
-
-/**
- * Enum class for representing all available font styles for the Font class.
- * @see Font
- */
-enum class FontStyle {
+) {
 	/**
-	 * Regular font style.
+	 * Enum class for representing all available font styles for the Font class.
+	 * @see Font
 	 */
-	REGULAR,
-
-	/**
-	 * Font style that is bolder than REGULAR but not as bold as BOLD.
-	 */
-	SEMI_BOLD,
-
-	/**
-	 * Bold font style.
-	 */
-	BOLD,
-
-	/**
-	 * Italic font style.
-	 */
-	ITALIC,
+	enum class FontStyle {
+		/**
+		 * Regular font style.
+		 */
+		REGULAR,
+		
+		/**
+		 * Font style that is bolder than REGULAR but not as bold as BOLD.
+		 */
+		SEMI_BOLD,
+		
+		/**
+		 * Bold font style.
+		 */
+		BOLD,
+		
+		/**
+		 * Italic font style.
+		 */
+		ITALIC,
+	}
 }

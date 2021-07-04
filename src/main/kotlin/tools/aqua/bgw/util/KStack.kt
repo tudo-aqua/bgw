@@ -6,9 +6,9 @@ package tools.aqua.bgw.util
  * KStack represents a Last In First Out (LIFO) data structure.
  * It provides useful functions to manipulate the KStack.
  */
-class KStack<T> {
+open class KStack<T> {
 	private val data = mutableListOf<T>()
-
+	
 	/**
 	 * Size of this KStack.
 	 */

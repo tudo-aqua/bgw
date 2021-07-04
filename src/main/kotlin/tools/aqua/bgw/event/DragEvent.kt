@@ -11,4 +11,4 @@ import tools.aqua.bgw.elements.ElementView
  *
  * @see DropEvent
  */
-open class DragEvent(val draggedElement: ElementView) : Event()
+class DragEvent(val draggedElement: ElementView) : Event()

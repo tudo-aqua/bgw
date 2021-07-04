@@ -17,7 +17,7 @@ import java.awt.Color
  * @param progress the initial progress of this [ProgressBar]. Default 0.
  * @param barColor the initial bar color of this [ProgressBar]. Default [Color.CYAN].
  */
-class ProgressBar(
+open class ProgressBar(
 	height: Number = 0,
 	width: Number = 0,
 	posX: Number = 0,

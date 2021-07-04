@@ -33,58 +33,90 @@ internal class VisualBuilder {
 			return root
 		}
 		
+		/**
+		 * Switches between visuals.
+		 */
 		internal fun buildVisual(visual: Visual): Region =
 			when (visual) {
 				is ColorVisual ->
-					Pane().apply {
-						visual.colorProperty.setGUIListenerAndInvoke(visual.color) { _, nV ->
-							style = "-fx-background-color: #${Integer.toHexString(nV.rgb).substring(2)};"
-							opacity = (nV.alpha / MAX_HEX) * visual.transparency
-						}
-
-						visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
-							opacity = (visual.color.alpha / MAX_HEX) * nV
-						}
-					}
-				
+					buildColorVisual(visual)
 				is ImageVisual ->
-					Pane().apply {
-						val imageView = ImageView()
-						
-						visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
-							imageView.image = nV.readImage()
-						}
-
-						visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
-							opacity = nV
-						}
-						
-						imageView.fitWidthProperty().bind(prefWidthProperty())
-						imageView.fitHeightProperty().bind(prefHeightProperty())
-						children.add(imageView)
-					}
-				
+					buildImageVisual(visual)
 				is TextVisual ->
-					Label().apply {
-						visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, nV ->
-							text = nV
-						}
-						visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
-							opacity = nV
-						}
-						visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, nV ->
-							font = nV.toFXFont()
-							textFill = nV.color.toFXColor()
-						}
-					}
-				
+					buildTextVisual(visual)
 				is CompoundVisual -> {
-					StackPane().apply {
-						visual.setGUIListenerAndInvoke { this.rebuildCompoundVisual(visual) }
-					}
+					buildCompoundVisual(visual)
 				}
 			}
 		
+		/**
+		 * Builds [ColorVisual].
+		 */
+		private fun buildColorVisual(visual: ColorVisual) = Pane().apply {
+			visual.colorProperty.setGUIListenerAndInvoke(visual.color) { _, nV ->
+				style = "-fx-background-color: #${Integer.toHexString(nV.rgb).substring(2)};"
+				opacity = (nV.alpha / MAX_HEX) * visual.transparency
+			}
+			
+			visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+				opacity = (visual.color.alpha / MAX_HEX) * nV
+			}
+		}
+		
+		/**
+		 * Builds [ImageVisual].
+		 */
+		private fun buildImageVisual(visual: ImageVisual) = Pane().apply {
+			val imageView = ImageView()
+			
+			visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
+				imageView.image = nV.readImage()
+			}
+			
+			visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+				opacity = nV
+			}
+			
+			imageView.fitWidthProperty().bind(prefWidthProperty())
+			imageView.fitHeightProperty().bind(prefHeightProperty())
+			children.add(imageView)
+		}
+		
+		/**
+		 * Builds [TextVisual].
+		 */
+		private fun buildTextVisual(visual: TextVisual) = Label().apply {
+			visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, nV ->
+				text = nV
+			}
+			visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+				opacity = nV
+			}
+			visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, nV ->
+				font = nV.toFXFont()
+				textFill = nV.color.toFXColor()
+			}
+		}
+		
+		/**
+		 * Builds [CompoundVisual].
+		 */
+		private fun buildCompoundVisual(visual: CompoundVisual) = StackPane().apply {
+			visual.setGUIListenerAndInvoke {
+				children.clear()
+				children.addAll(visual.children.map { buildVisual(it) }.onEach {
+					it.prefWidthProperty().bind(prefWidthProperty())
+					it.prefHeightProperty().bind(prefHeightProperty())
+				})
+				visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+					opacity = nV
+				}
+			}
+		}
+		
+		/**
+		 * Reads [BufferedImage] to [Image].
+		 */
 		private fun BufferedImage.readImage(): Image {
 			val imageWriter = WritableImage(width, height)
 			val pixelWriter = imageWriter.pixelWriter
@@ -94,17 +126,6 @@ internal class VisualBuilder {
 				}
 			}
 			return imageWriter
-		}
-
-		private fun StackPane.rebuildCompoundVisual(compoundVisual: CompoundVisual) {
-			children.clear()
-			children.addAll(compoundVisual.children.map { buildVisual(it) }.onEach {
-				it.prefWidthProperty().bind(prefWidthProperty())
-				it.prefHeightProperty().bind(prefHeightProperty())
-			})
-			compoundVisual.transparencyProperty.setGUIListenerAndInvoke(compoundVisual.transparency) { _, nV ->
-				opacity = nV
-			}
 		}
 	}
 }

@@ -16,7 +16,7 @@ package tools.aqua.bgw.util
  * @throws IllegalArgumentException if TOP_LEFT corner coordinates are larger in x or y direction
  * than BOTTOM_RIGHT corner coordinate.
  */
-class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Number, bottomRightY: Number) {
+open class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Number, bottomRightY: Number) {
 	
 	/**
 	 * Top left corner coordinate.

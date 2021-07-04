@@ -9,13 +9,10 @@ import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.elements.gameelements.DiceView
 import tools.aqua.bgw.elements.gameelements.GameElementView
-import tools.aqua.bgw.elements.gameelements.TokenView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
-import tools.aqua.bgw.elements.uielements.*
+import tools.aqua.bgw.elements.uielements.UIElementView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
@@ -29,22 +26,19 @@ import kotlin.math.min
  */
 internal class NodeBuilder {
 	companion object {
-		//private const val TOLERANCE = 0.099
-		
 		/**
 		 * Switches between top level element types.
 		 */
 		internal fun build(scene: Scene<out ElementView>, elementView: ElementView): Region {
-			
 			val node = when (elementView) {
 				is GameElementContainerView<out GameElementView> ->
-					buildContainer(scene, elementView)
+					ContainerNodeBuilder.buildContainer(scene, elementView)
 				is GameElementView ->
-					buildGameElement(elementView)
+					ElementNodeBuilder.buildGameElement(elementView)
 				is LayoutElement<out ElementView> ->
-					buildLayoutElement(scene, elementView)
+					LayoutNodeBuilder.buildLayoutElement(scene, elementView)
 				is UIElementView ->
-					buildUIElement(elementView)
+					UINodeBuilder.buildUIElement(elementView)
 				is StaticView<*> ->
 					throw IllegalInheritanceException(elementView, StaticView::class.java)
 				is DynamicView ->
@@ -67,67 +61,9 @@ internal class NodeBuilder {
 			return stackPane
 		}
 		
-		
 		/**
-		 * Switches between Containers.
+		 * Registers events.
 		 */
-		private fun buildContainer(
-			scene: Scene<out ElementView>,
-			containerView: GameElementContainerView<out GameElementView>
-		): Region = ContainerNodeBuilder.buildGameElementContainer(scene, containerView)
-		
-		/**
-		 * Switches between GameElements.
-		 */
-		private fun buildGameElement(gameElementView: GameElementView): Region =
-			when (gameElementView) {
-				is CardView ->
-					ElementNodeBuilder.buildCardView(gameElementView)
-				is DiceView ->
-					ElementNodeBuilder.buildDiceView(gameElementView)
-				is TokenView ->
-					ElementNodeBuilder.buildToken(gameElementView)
-			}
-		
-		/**
-		 * Switches between LayoutElements.
-		 */
-		private fun buildLayoutElement(
-			scene: Scene<out ElementView>,
-			layoutElementView: LayoutElement<out ElementView>
-		): Region =
-			when (layoutElementView) {
-				is GridLayoutView<*> ->
-					LayoutNodeBuilder.buildGrid(scene, layoutElementView)
-			}
-		
-		/**
-		 * Switches between UIElements.
-		 */
-		private fun buildUIElement(uiElementView: UIElementView): Region =
-			when (uiElementView) {
-				is Button ->
-					UINodeBuilder.buildButton(uiElementView)
-				is CheckBox ->
-					UINodeBuilder.buildCheckBox(uiElementView)
-				is ComboBox<*> ->
-					UINodeBuilder.buildComboBox(uiElementView)
-				is Label ->
-					UINodeBuilder.buildLabel(uiElementView)
-				is ListView<*> ->
-					UINodeBuilder.buildListView(uiElementView)
-				is TableView<*> ->
-					UINodeBuilder.buildTableView(uiElementView)
-				is TextArea ->
-					UINodeBuilder.buildTextArea(uiElementView)
-				is ToggleButton ->
-					UINodeBuilder.buildToggleButton(uiElementView)
-				is ColorPicker ->
-					UINodeBuilder.buildColorPicker(uiElementView)
-				is ProgressBar ->
-					UINodeBuilder.buildProgressBar(uiElementView)
-			}
-		
 		private fun ElementView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ElementView>) {
 			stackPane.onDragDetected = EventHandler {
 				if (this is DynamicView && isDraggable) {
@@ -227,6 +163,9 @@ internal class NodeBuilder {
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
 		
+		/**
+		 * Registers observers.
+		 */
 		@Suppress("DuplicatedCode")
 		private fun ElementView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
 			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->

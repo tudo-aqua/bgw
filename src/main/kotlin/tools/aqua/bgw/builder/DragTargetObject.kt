@@ -14,19 +14,19 @@ internal class DragTargetObject(
 	val offsetY: Double = 0.0,
 	//val rotationOffset: Double = 0.0
 ) {
-	fun rangeX() =
+	internal fun rangeX() =
 		if (dragTarget is GridLayoutView<*>)
 			dragTarget.posX - dragTarget.width / 2..dragTarget.posX + dragTarget.width / 2
 		else
 			dragTarget.posX.rangeTo(dragTarget.posX + dragTarget.width)
 	
-	fun rangeY() =
+	internal fun rangeY() =
 		if (dragTarget is GridLayoutView<*>)
 			dragTarget.posY - dragTarget.height / 2..dragTarget.posY + dragTarget.height / 2
 		else
 			dragTarget.posY.rangeTo(dragTarget.posY + dragTarget.height)
 	
-	fun rotated(): DragTargetObject {
+	internal fun rotated(): DragTargetObject {
 		//get parent center
 		val parentCenter = Coordinate(
 			offsetX + dragTarget.posX + dragTarget.width / 2,

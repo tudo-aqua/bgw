@@ -9,12 +9,13 @@ import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
+import tools.aqua.bgw.elements.uielements.Orientation
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.util.FontStyle
+import tools.aqua.bgw.util.Font.FontStyle
 
 /**
  * Converts the [java.awt.Color] to [Color].
@@ -227,4 +228,14 @@ internal fun javafx.scene.control.ButtonType.toButtonType(): ButtonType = when (
 	javafx.scene.control.ButtonType.NEXT -> ButtonType.NEXT
 	javafx.scene.control.ButtonType.PREVIOUS -> ButtonType.PREVIOUS
 	else -> throw IllegalArgumentException()
+}
+
+/**
+ * Converts the [Orientation] constant to [javafx.geometry.Orientation].
+ */
+internal fun Orientation.toJavaFXOrientation(): javafx.geometry.Orientation {
+	return when (this) {
+		Orientation.HORIZONTAL -> javafx.geometry.Orientation.HORIZONTAL
+		Orientation.VERTICAL -> javafx.geometry.Orientation.VERTICAL
+	}
 }
