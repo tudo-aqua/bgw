@@ -20,6 +20,6 @@ sealed class Animation(var duration: Int = 1000) {
     /**
      * [EventHandler] that gets invoked when [Animation] has finished.
      */
-    var onFinished: EventHandler<AnimationFinishedEvent>? = null
+    var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
 }
 
