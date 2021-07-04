@@ -87,7 +87,7 @@ class ImageVisual(
 		require(height > 0 || height == -1) { "Height must be positive or -1." }
 		
 		val subWidth = if (width != -1) width else image.width - offsetX
-		val subHeight = if (height != -1) width else image.height - offsetY
+		val subHeight = if (height != -1) height else image.height - offsetY
 		
 		require(subWidth > 0) { "Width exceeds image width." }
 		require(subHeight > 0) { "Height exceeds image height." }

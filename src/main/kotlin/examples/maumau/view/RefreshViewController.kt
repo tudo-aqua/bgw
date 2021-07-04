@@ -118,18 +118,23 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 	
 	override fun refreshAll() {
 		val game = viewController.logicController.game
-		val cardBack = ImageVisual(image.getSubimage(2 * IMG_WIDTH, 4 * IMG_HEIGHT, IMG_WIDTH, IMG_HEIGHT))
+		val cardBack = ImageVisual(
+			image,
+			IMG_WIDTH,
+			IMG_HEIGHT,
+			2 * IMG_WIDTH,
+			4 * IMG_HEIGHT
+		)
 		
 		//Generate cards
 		viewController.cardMap.clear()
 		for (card in game.mauMauCards) {
 			val cardFront = ImageVisual(
-				image.getSubimage(
-					card.cardValue.ordinal * IMG_WIDTH,
-					card.cardSuit.ordinal * IMG_HEIGHT,
-					IMG_WIDTH,
-					IMG_HEIGHT
-				)
+				image,
+				IMG_WIDTH,
+				IMG_HEIGHT,
+				card.cardValue.ordinal * IMG_WIDTH,
+				card.cardSuit.ordinal * IMG_HEIGHT,
 			)
 			
 			val cardView = CardView(
