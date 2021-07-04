@@ -46,6 +46,11 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
 	
 	companion object {
 		/**
+		 * [ColorVisual] filled [WHITE] but completely opaque.
+		 */
+		val TRANSPARENT: ColorVisual = ColorVisual(Color.WHITE).apply { transparency = 0.0 }
+		
+		/**
 		 * [ColorVisual] filled [WHITE].
 		 */
 		val WHITE: ColorVisual = ColorVisual(Color.WHITE)

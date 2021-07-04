@@ -19,7 +19,6 @@ import javax.imageio.ImageIO
 class RefreshViewController(private val viewController: ViewController) : Refreshable {
 	
 	private val image: BufferedImage = ImageIO.read(this::class.java.classLoader.getResource(CARDS_FILE))
-	private val overlay = ColorVisual.GREEN.apply { transparency = 0.0 }
 	
 	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
 		val playerHandView = if (player == viewController.logicController.game.currentPlayer)
@@ -140,7 +139,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			val cardView = CardView(
 				height = 200,
 				width = 130,
-				front = CompoundVisual(cardFront, overlay),
+				front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
 				back = cardBack
 			)
 			
@@ -261,19 +260,23 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		}*/
 		isDraggable = true
 		
-		var topCard: CardView? = null
+		var overlay: ColorVisual? = null
 		onDragGestureStarted = {
-			topCard = viewController.gameScene.gameStackView.elements.last()
-			
-			overlay.color = if (viewController.logicController.checkRules(viewController.cardMap.backward(this)))
-				Color.GREEN
-			else
-				Color.RED
-			overlay.transparency = 0.5
+			overlay = ((viewController.gameScene.gameStackView.elements.last().frontVisual as CompoundVisual)
+				.children.last() as ColorVisual)
+				.apply {
+					color = if (viewController.logicController.checkRules(
+							viewController.cardMap.backward(this@addInteraction)
+						)
+					)
+						Color.GREEN
+					else
+						Color.RED
+					transparency = 0.5
+				}
 		}
 		onDragGestureEnded = { _, _ ->
-			topCard?.showFront()
-			overlay.transparency = 0.0
+			overlay?.transparency = 0.0
 		}
 		onMouseClicked = { viewController.logicController.playCard(viewController.cardMap.backward(this), true) }
 	}
