@@ -35,7 +35,9 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
 	/**
 	 * A solid color visual.
 	 * Displays a rectangle filled with the given [color].
-	 * All values must be in range 0 until 255 which corresponds to 00 until FF in hexadecimal.
+	 * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%)
+	 * and [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
+	 * All values must be in range 0 until 255 which corresponds to 00..FF in hexadecimal.
 	 *
 	 * @param r red channel.
 	 * @param g green channel.
