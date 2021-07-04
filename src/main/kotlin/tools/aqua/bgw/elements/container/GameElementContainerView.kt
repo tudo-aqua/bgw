@@ -67,8 +67,8 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * Adds an [ElementView] to this [GameElementContainerView].
 	 *
 	 * @param element element to add.
-	 * @throws IllegalArgumentException when [element] is already contained.
-	 * @throws IllegalArgumentException when [index] is out of bounds for [elements].
+	 * @throws IllegalArgumentException if [element] is already contained.
+	 * @throws IllegalArgumentException if [index] is out of bounds for [elements].
 	 */
 	@Synchronized
 	open fun add(element: T, index: Int = observableElements.size) {
@@ -90,8 +90,8 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * Whenever an ElementView is encountered, that is already contained, an
 	 * [IllegalArgumentException] is thrown and no further ElementView is added.
 	 *
-	 * @param elements vararg ElementViews to add.
-	 * @throws IllegalArgumentException when an ElementView is already contained.
+	 * @param elements vararg [ElementView]s to add.
+	 * @throws IllegalArgumentException if an [ElementView] is already contained.
 	 */
 	open fun addAll(vararg elements: T) {
 		try {
@@ -107,7 +107,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * [IllegalArgumentException] is thrown and no further ElementView is added.
 	 *
 	 * @param collection collection containing the ElementViews to add.
-	 * @throws IllegalArgumentException when an ElementView is already contained.
+	 * @throws IllegalArgumentException if an ElementView is already contained.
 	 */
 	@Synchronized
 	open fun addAll(collection: Collection<T>) {

@@ -139,8 +139,8 @@ open class GridLayoutView<T : ElementView>(
 	 * Sets centering mode of desired row in grid.
 	 * Overrides existing mode in the whole row.
 	 *
-	 * @param rowIndex Row index in grid.
-	 * @param value New Centering mode to be set for the whole row.
+	 * @param rowIndex row index in grid.
+	 * @param value new Centering mode to be set for the whole row.
 	 */
 	fun setRowCenterMode(rowIndex: Int, value: Alignment) {
 		grid.setRowCenterMode(rowIndex = rowIndex, value = value)
@@ -151,7 +151,7 @@ open class GridLayoutView<T : ElementView>(
 	 * Sets centering mode of all cells in the grid.
 	 * Overrides existing modes of all cells.
 	 *
-	 * @param value New Centering mode to be set for all cells.
+	 * @param value new Centering mode to be set for all cells.
 	 */
 	fun setCenterMode(value: Alignment) {
 		grid.setCenterMode(value = value)
@@ -161,7 +161,7 @@ open class GridLayoutView<T : ElementView>(
 	/**
 	 * Returns the set column width for the given column.
 	 *
-	 * @param columnIndex Target column.
+	 * @param columnIndex target column.
 	 *
 	 * @see setColumnWidth
 	 * @see setColumnWidths
@@ -174,8 +174,8 @@ open class GridLayoutView<T : ElementView>(
 	 * Manually set column width of one column.
 	 * Overrides automatic resizing based on content from this column.
 	 *
-	 * @param columnIndex Target column.
-	 * @param columnWidth New column width. Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
+	 * @param columnIndex target column.
+	 * @param columnWidth new column width. Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
 	 *
 	 * @throws IllegalArgumentException Thrown if value was negative.
 	 *

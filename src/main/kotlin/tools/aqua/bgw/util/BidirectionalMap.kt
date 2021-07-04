@@ -159,7 +159,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Removes relation A -> B if it exists.
 	 *
-	 * @param element (Relation key A, Relation value B)
+	 * @param element pair (Relation key A, Relation value B)
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *

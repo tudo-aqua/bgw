@@ -69,8 +69,8 @@ class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Number, 
 	 * Creates a coordinate plain out of the two corners TOP_LEFT and BOTTOM_RIGHT as Coordinates.
 	 * TOP_LEFT corner coordinates must be smaller or equal in x and y direction than BOTTOM_RIGHT corner coordinate,.
 	 *
-	 * @param topLeft Coordinate of top left corner
-	 * @param bottomRight Coordinate of bottom right corner
+	 * @param topLeft [Coordinate] of top left corner
+	 * @param bottomRight [Coordinate] of bottom right corner
 	 *
 	 * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
 	 * than BOTTOM_RIGHT corner coordinate.
