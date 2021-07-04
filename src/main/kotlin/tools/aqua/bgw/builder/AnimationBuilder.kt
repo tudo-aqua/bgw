@@ -31,7 +31,7 @@ internal class AnimationBuilder {
 				node.translateX = 0.0
 				node.translateY = 0.0
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(AnimationFinishedEvent())
+				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 			
 			animation.play()
@@ -54,7 +54,7 @@ internal class AnimationBuilder {
 				node.translateX = 0.0
 				node.translateY = 0.0
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(AnimationFinishedEvent())
+				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 			
 			animation.play()
@@ -83,7 +83,7 @@ internal class AnimationBuilder {
 			
 			//set on finished
 			animation2.setOnFinished {
-				anim.onFinished?.handle(AnimationFinishedEvent())
+				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 			
 			animation1.play()
@@ -95,7 +95,7 @@ internal class AnimationBuilder {
 			//set on finished
 			animation.setOnFinished {
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(AnimationFinishedEvent())
+				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 			
 			animation.play()
@@ -115,7 +115,7 @@ internal class AnimationBuilder {
 			seq.setOnFinished {
 				anim.element.visual = anim.toVisual
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(AnimationFinishedEvent())
+				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 			
 			seq.play()
@@ -135,7 +135,7 @@ internal class AnimationBuilder {
 			seq.setOnFinished {
 				anim.element.currentSide = anim.toSide
 				scene.animations.remove(anim)
-				anim.onFinished?.handle(AnimationFinishedEvent())
+				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 			
 			seq.play()

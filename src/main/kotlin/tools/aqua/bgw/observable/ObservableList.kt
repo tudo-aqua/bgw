@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator
 import kotlin.streams.toList
 
 /**
- * An observable ArrayList.
+ * An observable [ArrayList].
  */
 class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
@@ -19,7 +19,7 @@ class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableLis
 }
 
 /**
- * An observable LinkedList.
+ * An observable [LinkedList].
  */
 class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
@@ -29,7 +29,7 @@ class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableLi
 }
 
 /**
- * An observable list implementation.
+ * An observable [List] implementation.
  */
 abstract class ObservableList<T> : Observable(), Iterable<T> {
 	

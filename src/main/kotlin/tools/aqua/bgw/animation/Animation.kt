@@ -3,7 +3,6 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.event.AnimationFinishedEvent
-import tools.aqua.bgw.event.EventHandler
 
 /**
  * [Animation] baseclass.
@@ -18,7 +17,7 @@ sealed class Animation(var duration: Int = 1000) {
     var running: Boolean = false
     
     /**
-     * [EventHandler] that gets invoked when [Animation] has finished.
+     * Gets invoked when [Animation] has finished.
      */
     var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
 }

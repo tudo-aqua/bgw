@@ -85,7 +85,7 @@ open class Observable {
 	}
 	
 	/**
-	 * Adds a listener and calls [IObservable.update] on this new listener.
+	 * Adds a [listener] and calls [IObservable.update] on this new listener.
 	 *
 	 * @param listener listener to add and notify.
 	 */
@@ -95,7 +95,7 @@ open class Observable {
 	}
 	
 	/**
-	 * Adds a listener silently.
+	 * Adds a [listener] silently.
 	 *
 	 * @param listener listener to add
 	 */
@@ -104,7 +104,7 @@ open class Observable {
 	}
 	
 	/**
-	 * Removes a listener.
+	 * Removes a [listener].
 	 *
 	 * @param listener listener to remove.
 	 *
@@ -203,7 +203,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Adds a listener and calls [IValueObservable.update] on this new listener with given initial value.
+	 * Adds a [listener] and calls [IValueObservable.update] on this new listener with given initial value.
 	 *
 	 * @param initialValue initial value to notify.
 	 * @param listener listener to add and notify.
@@ -214,7 +214,7 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Adds a listener silently.
+	 * Adds a [listener] silently.
 	 *
 	 * @param listener listener to add.
 	 */
@@ -223,11 +223,11 @@ open class ValueObservable<T> {
 	}
 	
 	/**
-	 * Removes a listener.
+	 * Removes a [listener].
 	 *
 	 * @param listener listener to remove.
 	 *
-	 * @return `true` if the listener has been successfully remove, `false` if it was not found.
+	 * @return `true` if the listener has been successfully removed, `false` if it was not found.
 	 */
 	fun removeListener(listener: ((T, T) -> Unit)): Boolean = listeners.remove(listener)
 	

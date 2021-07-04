@@ -9,7 +9,6 @@ import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.event.EventHandler
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
@@ -66,7 +65,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				duration = 500
 			)
 			
-			anim.onFinished = EventHandler {
+			anim.onFinished = {
 				viewController.gameScene.currentPlayerHand.remove(cardView)
 				viewController.gameScene.gameStackView.add(cardView)
 				
@@ -188,7 +187,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 	override fun refreshAdvancePlayer() {
 		val delay = DelayAnimation(1000)
 		
-		delay.onFinished = EventHandler {
+		delay.onFinished = {
 			//swap playerHands
 			val tmp = viewController.gameScene.currentPlayerHand
 			viewController.gameScene.currentPlayerHand = viewController.gameScene.otherPlayerHand

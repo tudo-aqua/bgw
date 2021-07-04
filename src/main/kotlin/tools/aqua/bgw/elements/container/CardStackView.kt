@@ -7,7 +7,6 @@ import tools.aqua.bgw.core.VerticalAlignment
 import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIGHT
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
-import tools.aqua.bgw.exception.EmptyStackException
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
@@ -95,9 +94,9 @@ open class CardStackView<T : CardView>(
 	 * Pops the topmost [CardView] from this [CardStackView] and returns it.
 	 * Removes it from the [CardStackView].
 	 *
-	 * @throws EmptyStackException If stack was empty.
+	 * @throws NoSuchElementException If stack was empty.
 	 */
-	fun pop(): T = popOrNull() ?: throw EmptyStackException()
+	fun pop(): T = popOrNull() ?: throw NoSuchElementException()
 	
 	/**
 	 * Returns the topmost [CardView], or null, if the stack is empty.
@@ -108,9 +107,9 @@ open class CardStackView<T : CardView>(
 	/**
 	 * Returns the topmost [CardView]. Does not modify the [CardStackView].
 	 *
-	 * @throws EmptyStackException If stack was empty.
+	 * @throws NoSuchElementException If stack was empty.
 	 */
-	fun peek(): T = peekOrNull() ?: throw EmptyStackException()
+	fun peek(): T = peekOrNull() ?: throw NoSuchElementException()
 	
 	/**
 	 * Adds a [CardView] on top of this [CardStackView].

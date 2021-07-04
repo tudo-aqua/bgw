@@ -3,6 +3,7 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
@@ -14,12 +15,12 @@ import tools.aqua.bgw.util.Font
  */
 class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
-	 * The property for the displayed text.
+	 * [Property] for the displayed [text].
 	 */
 	val textProperty: StringProperty = StringProperty(text)
 	
 	/**
-	 * The displayed text.
+	 * The displayed [text].
 	 */
 	var text: String
 		get() = textProperty.value
@@ -28,12 +29,12 @@ class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 		}
 	
 	/**
-	 * The property for the displayed text font.
+	 * [Property] for the displayed [text] [Font].
 	 */
 	val fontProperty: ObjectProperty<Font> = ObjectProperty(font)
 	
 	/**
-	 * The displayed text font.
+	 * The displayed [text] [Font].
 	 */
 	var font: Font
 		get() = fontProperty.value

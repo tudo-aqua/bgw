@@ -11,14 +11,14 @@ import tools.aqua.bgw.observable.Observable
 sealed class Visual : Observable() {
 	
 	/**
-	 * Property for the transparency / alpha channel for this visual.
+	 * Property for the [transparency] / alpha channel for this [Visual].
 	 * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
 	 * Default: 1.
 	 */
 	val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
 	
 	/**
-	 * Transparency / alpha channel for this visual.
+	 * The [transparency] / alpha channel for this [Visual].
 	 * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
 	 * Default: 1.
 	 */
@@ -30,7 +30,7 @@ sealed class Visual : Observable() {
 	
 	companion object {
 		/**
-		 * An empty Visual.
+		 * An empty [Visual].
 		 */
 		val EMPTY: Visual = CompoundVisual()
 	}

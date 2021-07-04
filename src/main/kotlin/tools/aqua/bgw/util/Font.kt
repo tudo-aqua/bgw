@@ -5,13 +5,13 @@ package tools.aqua.bgw.util
 import java.awt.Color
 
 /**
- * This class is used to represent a font as simple as possible.
+ * This class is used to represent a font.
  * For more customization of fonts, the CSS feature can be used.
  *
- * @param size size of this Font in PT. May be a floating-point value. Default: 14.
- * @param color color of this font. Default: java.awt.Color.BLACK.
+ * @param size size of this Font in `pt`. May be a floating-point value. Default: 14.
+ * @param color color of this font. Default: [java.awt.Color.BLACK].
  * @param family font family as a String for this Font. Default: "Arial".
- * @param fontStyle font style for this Font. Default: NORMAL.
+ * @param fontStyle font style for this Font. Default: [FontStyle.REGULAR].
  *
  * @see FontStyle
  */

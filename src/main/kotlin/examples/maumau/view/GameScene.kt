@@ -19,10 +19,10 @@ import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.FontStyle
-import tools.aqua.bgw.visual.*
+import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 import javax.imageio.ImageIO
-import kotlin.random.Random
 
 class GameScene : BoardGameScene() {
 	//Player hands
@@ -88,37 +88,36 @@ class GameScene : BoardGameScene() {
 		gameStackView.visual = ColorVisual(Color(255, 255, 255, 50))
 		
 		//Jack selection visuals
-		buttonDiamonds.visual = ImageVisual.loadSubImage(
+		buttonDiamonds.visual = ImageVisual(
 			CARDS_FILE,
-			CardValue.ACE.ordinal * IMG_WIDTH,
-			CardSuit.DIAMONDS.ordinal * IMG_HEIGHT,
 			IMG_WIDTH,
-			IMG_HEIGHT
-		
+			IMG_HEIGHT,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.DIAMONDS.ordinal * IMG_HEIGHT
 		)
 		
-		buttonHearts.visual = ImageVisual.loadSubImage(
+		buttonHearts.visual = ImageVisual(
 			CARDS_FILE,
-			CardValue.ACE.ordinal * IMG_WIDTH,
-			CardSuit.HEARTS.ordinal * IMG_HEIGHT,
 			IMG_WIDTH,
-			IMG_HEIGHT
+			IMG_HEIGHT,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.HEARTS.ordinal * IMG_HEIGHT
 		)
 		
-		buttonSpades.visual = ImageVisual.loadSubImage(
+		buttonSpades.visual = ImageVisual(
 			CARDS_FILE,
-			CardValue.ACE.ordinal * IMG_WIDTH,
-			CardSuit.SPADES.ordinal * IMG_HEIGHT,
 			IMG_WIDTH,
-			IMG_HEIGHT
+			IMG_HEIGHT,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.SPADES.ordinal * IMG_HEIGHT
 		)
 		
-		buttonClubs.visual = ImageVisual.loadSubImage(
+		buttonClubs.visual = ImageVisual(
 			CARDS_FILE,
-			CardValue.ACE.ordinal * IMG_WIDTH,
-			CardSuit.CLUBS.ordinal * IMG_HEIGHT,
 			IMG_WIDTH,
-			IMG_HEIGHT
+			IMG_HEIGHT,
+			CardValue.ACE.ordinal * IMG_WIDTH,
+			CardSuit.CLUBS.ordinal * IMG_HEIGHT
 		)
 		
 		//Hide jack selection

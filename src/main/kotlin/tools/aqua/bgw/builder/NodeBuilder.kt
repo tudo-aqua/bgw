@@ -35,16 +35,6 @@ internal class NodeBuilder {
 		 * Switches between top level element types.
 		 */
 		internal fun build(scene: Scene<out ElementView>, elementView: ElementView): Region {
-			/*if (elementView.posX < -TOLERANCE
-				|| elementView.posY < -TOLERANCE
-				|| elementView.posX + elementView.width > scene.width + TOLERANCE
-				|| elementView.posY + elementView.height > scene.height + TOLERANCE
-			) {
-				throw ElementOutOfSceneBoundsException(element = elementView, scene = scene)
-			}*/
-			
-			//if(scene.elementsMap.containsKey(elementView))
-			//	throw RuntimeException("Duplicate element")
 			
 			val node = when (elementView) {
 				is GameElementContainerView<out GameElementView> ->

@@ -3,7 +3,7 @@
 package tools.aqua.bgw.util
 
 /**
- * A CoordinatePlain with its four corners as Coordinates.
+ * A CoordinatePlain with its four corners as [Coordinate]s.
  *
  * @constructor Creates a coordinate plain out of the two corners TOP_LEFT and BOTTOM_RIGHT.
  * TOP_LEFT corner coordinates must be smaller or equal in x and y direction than BOTTOM_RIGHT corner coordinate.

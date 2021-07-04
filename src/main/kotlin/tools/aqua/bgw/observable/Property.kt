@@ -28,7 +28,7 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 		}
 	
 	/**
-	 * Overrides value of this property without notifying student listeners.
+	 * Overrides [value] of this property without notifying public listeners.
 	 * Only notifies GUI listener.
 	 */
 	internal open fun setSilent(value: T) {
@@ -48,7 +48,7 @@ sealed class Property<T>(initialValue: T) : ValueObservable<T>() {
 /**
  * A BooleanProperty.
  *
- * @param initialValue initial Value. Default: false.
+ * @param initialValue initial Value. Default: `false`.
  */
 class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
 
@@ -68,9 +68,9 @@ class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue
 
 /**
  * A limited DoubleProperty to a value range. Value will be checked to be in range
- * [[lowerBoundInclusive], [upperBoundInclusive]].
+ * [lowerBoundInclusive] to [upperBoundInclusive].
  * Therefore [upperBoundInclusive] must be greater or equal to [lowerBoundInclusive].
- * The Range cannot be altered after object creation.
+ * The Range is constant and cannot be altered after object creation.
  *
  * @throws IllegalArgumentException if a value out of range is set as initialValue.
  *
@@ -108,8 +108,8 @@ class LimitedDoubleProperty(
 		}
 	
 	/**
-	 * Overrides value of this property without notifying student listeners.
-	 * Only notifies GUI listener.
+	 * Overrides value of this property without notifying public listeners.
+	 * Only notifies [guiListener].
 	 */
 	override fun setSilent(value: Double) {
 		checkBounds(value)

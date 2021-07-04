@@ -3,7 +3,7 @@
 package tools.aqua.bgw.util
 
 /**
- * A Coordinate containing xCoord and yCoord.
+ * A Coordinate containing [xCoord] and [yCoord].
  */
 class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	
@@ -18,9 +18,9 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	val yCoord: Double = yCoord.toDouble()
 	
 	/**
-	 * Returns a new coordinate object containing added xCoord and yCoord.
+	 * Returns a new coordinate object containing added [xCoord] and [yCoord].
 	 *
-	 * @return New coordinate object containing added xCoord and yCoord.
+	 * @return New coordinate object containing added [xCoord] and [yCoord].
 	 *
 	 * @see minus
 	 */
@@ -30,9 +30,9 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	)
 	
 	/**
-	 * Returns a new coordinate object containing subtracted xCoord and yCoord.
+	 * Returns a new coordinate object containing subtracted [xCoord] and [yCoord].
 	 *
-	 * @return New coordinate object containing subtracted xCoord and yCoord.
+	 * @return New coordinate object containing subtracted [xCoord] and [yCoord].
 	 *
 	 * @see minus
 	 */
@@ -80,7 +80,7 @@ class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	private fun cos(degrees: Double) = kotlin.math.cos(Math.toRadians(degrees))
 	
 	/**
-	 * Prints xCoord and yCoord as String.
+	 * Prints [xCoord] and [yCoord] as String.
 	 */
 	override fun toString(): String = "X = $xCoord, Y = $yCoord"
 	

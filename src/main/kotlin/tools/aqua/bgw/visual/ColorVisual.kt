@@ -3,27 +3,28 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import java.awt.Color
 
 /**
  * A solid color visual.
- * Displays a rectangle filled with the given color.
+ * Displays a rectangle filled with the given [color].
  *
  * @param color color to use as filling.
  */
 class ColorVisual(color: Color) : SingleLayerVisual() {
 	
 	/**
-	 * Property for the displayed color of this visual.
-	 * The alpha channel gets multiplied with the transparency property i.e. alpha = 128 (50%)
-	 * and transparency = 0.5 (50%) leads to 25% visibility / 75% transparency.
+	 * [Property] for the displayed [Color] of this [Visual].
+	 * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%)
+	 * and [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
 	 */
 	val colorProperty: ObjectProperty<Color> = ObjectProperty(color)
 	
 	/**
-	 * The displayed color of this visual.
-	 * The alpha channel gets multiplied with the transparency property i.e. alpha = 128 (50%)
-	 * and transparency = 0.5 (50%) leads to 25% visibility / 75% transparency.
+	 * The displayed [Color] of this [Visual].
+	 * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%)
+	 * and [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
 	 */
 	var color: Color
 		get() = colorProperty.value
@@ -33,7 +34,7 @@ class ColorVisual(color: Color) : SingleLayerVisual() {
 	
 	/**
 	 * A solid color visual.
-	 * Displays a rectangle filled with the given color.
+	 * Displays a rectangle filled with the given [color].
 	 * All values must be in range 0 until 255 which corresponds to 00 until FF in hexadecimal.
 	 *
 	 * @param r red channel.
@@ -45,67 +46,67 @@ class ColorVisual(color: Color) : SingleLayerVisual() {
 	
 	companion object {
 		/**
-		 * ColorVisual filled WHITE.
+		 * [ColorVisual] filled [WHITE].
 		 */
 		val WHITE: ColorVisual = ColorVisual(Color.WHITE)
 		
 		/**
-		 * ColorVisual filled LIGHT_GRAY.
+		 * [ColorVisual] filled [LIGHT_GRAY].
 		 */
 		val LIGHT_GRAY: ColorVisual = ColorVisual(Color.LIGHT_GRAY)
 		
 		/**
-		 * ColorVisual filled GRAY.
+		 * [ColorVisual] filled [GRAY].
 		 */
 		val GRAY: ColorVisual = ColorVisual(Color.GRAY)
 		
 		/**
-		 * ColorVisual filled DARK_GRAY.
+		 * [ColorVisual] filled [DARK_GRAY].
 		 */
 		val DARK_GRAY: ColorVisual = ColorVisual(Color.DARK_GRAY)
 		
 		/**
-		 * ColorVisual filled BLACK.
+		 * [ColorVisual] filled [BLACK].
 		 */
 		val BLACK: ColorVisual = ColorVisual(Color.BLACK)
 		
 		/**
-		 * ColorVisual filled RED.
+		 * [ColorVisual] filled [RED].
 		 */
 		val RED: ColorVisual = ColorVisual(Color.RED)
 		
 		/**
-		 * ColorVisual filled PINK.
+		 * [ColorVisual] filled [PINK].
 		 */
 		val PINK: ColorVisual = ColorVisual(Color.PINK)
 		
 		/**
-		 * ColorVisual filled ORANGE.
+		 * [ColorVisual] filled [ORANGE].
 		 */
 		val ORANGE: ColorVisual = ColorVisual(Color.ORANGE)
 		
 		/**
-		 * ColorVisual filled YELLOW.
+		 * [ColorVisual] filled [YELLOW].
 		 */
 		val YELLOW: ColorVisual = ColorVisual(Color.YELLOW)
 		
 		/**
-		 * ColorVisual filled GREEN.
+		 * [ColorVisual] filled [GREEN].
 		 */
 		val GREEN: ColorVisual = ColorVisual(Color.GREEN)
 		
 		/**
-		 * ColorVisual filled MAGENTA.
+		 * [ColorVisual] filled [MAGENTA].
 		 */
 		val MAGENTA: ColorVisual = ColorVisual(Color.MAGENTA)
 		
 		/**
-		 * ColorVisual filled CYAN.
+		 * [ColorVisual] filled [CYAN].
 		 */
 		val CYAN: ColorVisual = ColorVisual(Color.CYAN)
 		
 		/**
-		 * ColorVisual filled BLUE.
+		 * [ColorVisual] filled [BLUE].
 		 */
 		val BLUE: ColorVisual = ColorVisual(Color.BLUE)
 	}
