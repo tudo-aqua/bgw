@@ -198,6 +198,7 @@ open class LinearLayoutContainer<T : GameElementView>(
 		posYProperty.internalListener = null
 	}
 	
+	@Suppress("DuplicatedCode")
 	private fun layoutHorizontal() {
 		val totalContentWidth: Double = observableElements.sumOf { it.width }
 		val totalContentWidthWithSpacing = totalContentWidth + (observableElements.size - 1) * spacing
@@ -212,7 +213,6 @@ open class LinearLayoutContainer<T : GameElementView>(
 			HorizontalAlignment.CENTER -> (width - newTotalContentWidth) / 2
 			HorizontalAlignment.RIGHT -> width - newTotalContentWidth
 		}
-		
 		observableElements.fold(initial) { acc: Double, element: T ->
 			element.posYProperty.setSilent(
 				when (verticalAlignment) {
@@ -226,6 +226,7 @@ open class LinearLayoutContainer<T : GameElementView>(
 		}
 	}
 	
+	@Suppress("DuplicatedCode")
 	private fun layoutVertical() {
 		val totalContentHeight: Double = observableElements.sumOf { it.height }
 		val totalContentHeightWithSpacing = totalContentHeight + (observableElements.size - 1) * spacing
