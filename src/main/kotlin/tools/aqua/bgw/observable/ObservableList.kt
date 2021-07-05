@@ -403,4 +403,12 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @return iterator over the elements in this list.
 	 */
 	override fun iterator(): Iterator<T> = list.iterator()
+	
+	/**
+	 * Sets [list] silently.
+	 */
+	internal fun setSilent(elements: List<T>) {
+		list.clear()
+		list.addAll(elements)
+	}
 }

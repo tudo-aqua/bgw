@@ -46,6 +46,13 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
 	 */
 	constructor(r: Int, g: Int, b: Int, a: Int = 255) : this(Color(r, g, b, a))
 	
+	/**
+	 * Copies this [ColorVisual] to a new object.
+	 */
+	override fun copy(): ColorVisual = ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {
+		transparency = this@ColorVisual.transparency
+	}
+	
 	companion object {
 		/**
 		 * [ColorVisual] filled [WHITE] but completely opaque.

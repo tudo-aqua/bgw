@@ -35,7 +35,7 @@ open class CardView(
 	width = width,
 	posX = posX,
 	posY = posY,
-	visual = back
+	visual = Visual.EMPTY
 ) {
 	/**
 	 * The current [CardSide] that is displayed.
@@ -43,12 +43,12 @@ open class CardView(
 	 * @see showFront
 	 * @see showBack
 	 */
-	var currentSide: CardSide = BACK
+	var currentSide: CardSide = FRONT
 		set(value) {
 			if (field != value) {
 				field = value
 				
-				visual = if (value == FRONT)
+				visualProperty.value = if (value == FRONT)
 					frontVisual
 				else
 					backVisual
@@ -58,23 +58,29 @@ open class CardView(
 	/**
 	 * Front [Visual] for this [CardView].
 	 */
-	var frontVisual: Visual = front
+	var frontVisual: Visual = Visual.EMPTY
+		/**
+		 * Sets front [Visual] for this [CardView] as a copy of given [value].
+		 */
 		set(value) {
-			field = value
+			field = value.copy()
 			
 			if (currentSide == FRONT)
-				visual = value
+				visual = field
 		}
 	
 	/**
 	 * Back [Visual] for this [CardView].
 	 */
-	var backVisual: Visual = back
+	var backVisual: Visual = Visual.EMPTY
+		/**
+		 * Sets back [Visual] for this [CardView] as a copy of given [value].
+		 */
 		set(value) {
-			field = value
+			field = value.copy()
 			
 			if (currentSide == BACK)
-				visual = value
+				visual = field
 		}
 	
 	/**
@@ -96,6 +102,12 @@ open class CardView(
 	 */
 	fun showCardSide(side: CardSide) {
 		currentSide = side
+	}
+	
+	init {
+		this.frontVisual = front
+		this.backVisual = back
+		this.currentSide = BACK
 	}
 	
 	/**
@@ -126,5 +138,9 @@ open class CardView(
 		 * The [BACK] side.
 		 */
 		BACK
+	}
+	
+	override fun toString(): String {
+		return name
 	}
 }
