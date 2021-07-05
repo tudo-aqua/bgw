@@ -45,7 +45,9 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
         }
 
     /**
-     * Background [Visual] for the [BoardGameApplication]. [Visual] appears as bars window does not match [Scene] ratio.
+     * Background [Visual] for the [BoardGameApplication].
+     * It is visible in the space that appears if the application window ratio does not fit the [Scene] ratio.
+     *
      * Do not mix up this [Property] with the [Scene] background [Visual] [Scene.background].
      */
     var background: Visual
