@@ -37,6 +37,8 @@ internal class UINodeBuilder {
 					buildTableView(uiElementView)
 				is TextArea ->
 					buildTextArea(uiElementView)
+				is TextField ->
+					buildTextField(uiElementView)
 				is ToggleButton ->
 					buildToggleButton(uiElementView)
 				is ColorPicker ->
@@ -44,11 +46,11 @@ internal class UINodeBuilder {
 				is ProgressBar ->
 					buildProgressBar(uiElementView)
 			}
-		
+
 		private fun buildLabel(label: Label): Region {
 			val node = javafx.scene.control.Label()
 			node.alignment = Pos.CENTER
-			node.textProperty().bindTextProperty(label)
+			node.textProperty().bindLabelProperty(label)
 			node.bindFont(label)
 			return node
 		}
@@ -58,7 +60,7 @@ internal class UINodeBuilder {
 		 */
 		private fun buildButton(button: Button): Region {
 			val node = com.jfoenix.controls.JFXButton()
-			node.textProperty().bindTextProperty(button)
+			node.textProperty().bindLabelProperty(button)
 			node.bindFont(button)
 			return node
 		}
@@ -69,9 +71,24 @@ internal class UINodeBuilder {
 		private fun buildTextArea(textArea: TextArea): Region {
 			val node = javafx.scene.control.TextArea(textArea.labelProperty.value)
 			
-			node.textProperty().bindTextProperty(textArea)
+			node.textProperty().bindLabelProperty(textArea)
 			node.promptText = textArea.prompt
 			textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
+				node.font = nV.toFXFont()
+				//TODO text color
+			}
+			return node
+		}
+
+		/**
+		 * Builds [TextField]
+		 */
+		private fun buildTextField(textField: TextField): Region {
+			val node = javafx.scene.control.TextField(textField.labelProperty.value)
+
+			node.textProperty().bindLabelProperty(textField)
+			node.promptText = textField.prompt
+			textField.fontProperty.setGUIListenerAndInvoke(textField.font) { _, nV ->
 				node.font = nV.toFXFont()
 				//TODO text color
 			}
@@ -129,7 +146,7 @@ internal class UINodeBuilder {
 		 */
 		private fun buildCheckBox(checkBox: CheckBox): Region {
 			val node = com.jfoenix.controls.JFXCheckBox(checkBox.label)
-			node.textProperty().bindTextProperty(checkBox)
+			node.textProperty().bindLabelProperty(checkBox)
 			node.allowIndeterminateProperty().bindBooleanProperty(checkBox.allowIndeterminateProperty)
 			node.indeterminateProperty().bindBooleanProperty(checkBox.indeterminateProperty)
 			node.selectedProperty().bindBooleanProperty(checkBox.checkedProperty)
@@ -239,7 +256,7 @@ internal class UINodeBuilder {
 		/**
 		 * Binds [LabeledUIElementView.labelProperty].
 		 */
-		private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: LabeledUIElementView) {
+		private fun javafx.beans.property.StringProperty.bindLabelProperty(labeled: LabeledUIElementView) {
 			//Framework -> JavaFX
 			labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
 			//JavaFX -> Framework

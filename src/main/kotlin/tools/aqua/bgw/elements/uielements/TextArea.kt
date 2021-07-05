@@ -5,7 +5,7 @@ package tools.aqua.bgw.elements.uielements
 import tools.aqua.bgw.util.Font
 
 /**
- * Represents a [TextArea] that can be written to.
+ * A [TextArea] is a multi line input field.
  * Whenever user input occurs the [label] field gets updated.
  *
  * @param height height for this [TextArea]. Default: 0.

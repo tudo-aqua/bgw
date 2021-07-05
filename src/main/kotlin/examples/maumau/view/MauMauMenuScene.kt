@@ -4,6 +4,7 @@ import examples.main.BUTTON_BG_FILE
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
+import tools.aqua.bgw.elements.uielements.TextField
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
@@ -30,7 +31,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500) {
             menuLabel,
             continueGameButton,
             newGameButton,
-            exitButton
+            exitButton,
         )
     }
     
