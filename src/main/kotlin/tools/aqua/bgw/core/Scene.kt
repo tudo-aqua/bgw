@@ -105,7 +105,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * [Map] for all [ElementView]s to their stackPanes.
+	 * [Map] for all [ElementView]s to their [StackPane]s.
 	 */
 	internal val elementsMap: MutableMap<ElementView, StackPane> = HashMap()
 	
