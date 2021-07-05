@@ -46,7 +46,5 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 	/**
 	 * Copies this [CompoundVisual] to a new object recursively including children.
 	 */
-	override fun copy(): CompoundVisual = CompoundVisual(children.map { it.copy() as SingleLayerVisual }.toList()).apply {
-		transparency = this@CompoundVisual.transparency
-	}
+	override fun copy(): CompoundVisual = CompoundVisual(children.map { it.copy() as SingleLayerVisual }.toList())
 }

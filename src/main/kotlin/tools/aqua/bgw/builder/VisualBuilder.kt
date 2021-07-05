@@ -108,9 +108,6 @@ internal class VisualBuilder {
 					it.prefWidthProperty().bind(prefWidthProperty())
 					it.prefHeightProperty().bind(prefHeightProperty())
 				})
-				visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
-					opacity = nV
-				}
 			}
 		}
 		
