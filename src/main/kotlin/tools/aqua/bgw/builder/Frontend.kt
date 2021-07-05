@@ -47,7 +47,6 @@ internal class Frontend : Application() {
 		
 		private const val BLUR_RADIUS = 63.0
 		private const val MINIMIZED_FACTOR = 0.8
-		private const val TITLE_BAR_HEIGHT = 39
 		
 		private var boardGameScene: BoardGameScene? = null
 		private var menuScene: MenuScene? = null
@@ -278,13 +277,7 @@ internal class Frontend : Application() {
 				backgroundPane.children.clear()
 				backgroundPane.children.add(VisualBuilder.buildVisual(nV).apply {
 					prefWidthProperty().bind(primaryStage!!.widthProperty())
-					prefHeightProperty().bind(
-						primaryStage!!.heightProperty().subtract(
-							if (fullscreen)
-								0
-							else TITLE_BAR_HEIGHT
-						)
-					)
+					prefHeightProperty().bind(primaryStage!!.heightProperty())
 				})
 			}
 			
