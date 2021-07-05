@@ -17,7 +17,7 @@ import java.util.*
 
 /**
  * Baseclass for all BGW Applications.
- * Extends from this class in order to create your own game application.
+ * Extend from this class in order to create your own game application.
  *
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
  * Application starts by calling [show].
