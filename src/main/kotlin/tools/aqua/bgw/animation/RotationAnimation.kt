@@ -25,7 +25,7 @@ class RotationAnimation<T : ElementView>(
 	 * Rotates given [ElementView] to given angle.
 	 *
 	 * @param elementView [ElementView] to animate
-	 * @param byAngle Relative angle. Default: 0
+	 * @param byAngle relative angle. Default: 0
 	 * @param duration [Animation] duration in milliseconds. Default: 1 second
 	 */
 	constructor(elementView: T, byAngle: Double = 0.0, duration: Int = 1000) : this(
