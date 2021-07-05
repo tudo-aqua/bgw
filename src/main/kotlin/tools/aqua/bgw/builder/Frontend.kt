@@ -41,6 +41,10 @@ internal class Frontend : Application() {
 	internal fun show() {
 		launch()
 	}
+
+	internal fun exit() {
+		Platform.exit()
+	}
 	
 	companion object {
 		internal const val DEFAULT_FADE_TIME = 0.25

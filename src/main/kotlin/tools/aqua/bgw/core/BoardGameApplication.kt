@@ -159,4 +159,11 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 	fun show() {
 		frontend.show()
 	}
+
+	/**
+	 * Returns the [show] function, thus closing the application window.
+	 */
+	fun exit() {
+		frontend.exit()
+	}
 }
