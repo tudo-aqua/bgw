@@ -49,7 +49,9 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
 	/**
 	 * Copies this [ColorVisual] to a new object.
 	 */
-	override fun copy(): ColorVisual = ColorVisual(color)
+	override fun copy(): ColorVisual = ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {
+		transparency = this@ColorVisual.transparency
+	}
 	
 	companion object {
 		/**

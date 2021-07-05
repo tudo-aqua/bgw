@@ -45,5 +45,5 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
 	 * Copies this [TextVisual] to a new object.
 	 */
-	override fun copy(): TextVisual = TextVisual(text, font)
+	override fun copy(): TextVisual = TextVisual(text, font).apply { transparency = this@TextVisual.transparency }
 }

@@ -100,7 +100,7 @@ open class ImageVisual(
 	/**
 	 * Copies this [ImageVisual] to a new object.
 	 */
-	override fun copy(): ImageVisual = ImageVisual(image)
+	override fun copy(): ImageVisual = ImageVisual(image).apply { transparency = this@ImageVisual.transparency }
 	
 	companion object {
 		/**
