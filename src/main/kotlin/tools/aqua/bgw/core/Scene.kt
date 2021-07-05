@@ -243,7 +243,14 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	companion object {
+		/**
+		 * Default scene width.
+		 */
 		const val DEFAULT_SCENE_WIDTH: Double = 1920.0
+		
+		/**
+		 * Default scene height.
+		 */
 		const val DEFAULT_SCENE_HEIGHT: Double = 1016.0
 	}
 }
