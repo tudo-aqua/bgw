@@ -218,7 +218,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	 *
 	 * @return path to child.
 	 *
-	 * @throws IllegalStateException if child was not in contained in this [Scene].
+	 * @throws IllegalStateException if child was not contained in this [Scene].
 	 */
 	fun findPathToChild(node: ElementView): List<ElementView> {
 		if (node is RootElement<*>) {
