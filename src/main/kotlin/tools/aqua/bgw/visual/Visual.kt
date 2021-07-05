@@ -28,6 +28,11 @@ sealed class Visual : Observable() {
 			transparencyProperty.value = value
 		}
 	
+	/**
+	 * Copies this [Visual] to a new object.
+	 */
+	abstract fun copy(): Visual
+	
 	companion object {
 		/**
 		 * An empty [Visual].

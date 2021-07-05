@@ -28,7 +28,7 @@ open class DiceView(
 	/**
 	 * [Visual]s for this [DiceView].
 	 */
-	val visuals: ObservableArrayList<Visual> = ObservableArrayList(visuals)
+	internal val visuals: ObservableArrayList<Visual> = ObservableArrayList(visuals.onEach { it.copy() })
 	
 	/**
 	 * Current side that is displayed, 0-based.
@@ -40,7 +40,7 @@ open class DiceView(
 			if (field != value) {
 				field = value
 				
-				visual = if (value in visuals.indices)
+				visualProperty.value = if (value in visuals.indices)
 					visuals[value]
 				else
 					Visual.EMPTY
@@ -48,17 +48,25 @@ open class DiceView(
 		}
 	
 	init {
-		visual = if (visuals.isNotEmpty())
+		visualProperty.value = if (visuals.isNotEmpty())
 			visuals.first()
 		else
 			Visual.EMPTY
+	}
+	
+	/**
+	 * Sets all visuals for this DiceView. Clears old visuals.
+	 * All [visuals] get copied before being added.
+	 * If [currentSide] is out of range, a [Visual.EMPTY] will be shown.
+	 */
+	fun setVisuals(visuals: List<Visual>) {
+		this.visuals.setSilent(visuals.onEach { it.copy() })
+		this.visuals.notifyChange()
 		
-		this.visuals.internalListener = {
-			visual = if (currentSide in visuals.indices)
-				visuals[currentSide]
-			else
-				Visual.EMPTY
-		}
+		visualProperty.value = if (currentSide in visuals.indices)
+			visuals[currentSide]
+		else
+			Visual.EMPTY
 	}
 	
 	/**

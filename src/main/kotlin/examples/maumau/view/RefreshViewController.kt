@@ -141,7 +141,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				width = 130,
 				front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
 				back = cardBack
-			)
+			).apply { name = card.toString() }
 			
 			viewController.cardMap.add(card, cardView)
 		}
@@ -259,25 +259,36 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			)
 		}*/
 		isDraggable = true
-		
-		var overlay: ColorVisual? = null
+
+//		var overlay: ColorVisual? = null
 		onDragGestureStarted = {
-			overlay = ((viewController.gameScene.gameStackView.elements.last().frontVisual as CompoundVisual)
-				.children.last() as ColorVisual)
-				.apply {
-					color = if (viewController.logicController.checkRules(
-							viewController.cardMap.backward(this@addInteraction)
-						)
-					)
-						Color.GREEN
-					else
-						Color.RED
-					transparency = 0.5
-				}
+			viewController.gameScene.currentPlayerHand.forEach {
+				println(it.visual)
+			}
+			println("----")
+			viewController.gameScene.currentPlayerHand.forEach {
+				println((it.visual as CompoundVisual).children.last())
+			}
+			
+			val card = viewController.gameScene.gameStackView.elements.last()
+			println(card)
+			
+			val visual = (card.visual as CompoundVisual).children.last() as ColorVisual
+			println(visual)
+			
+			visual.color = if (viewController.logicController.checkRules(
+					viewController.cardMap.backward(this@addInteraction)
+				)
+			)
+				Color.GREEN
+			else
+				Color.RED
+			
+			visual.transparency = 0.5
 		}
-		onDragGestureEnded = { _, _ ->
-			overlay?.transparency = 0.0
-		}
+//		onDragGestureEnded = { _, _ ->
+//			overlay?.transparency = 0.0
+//		}
 		onMouseClicked = { viewController.logicController.playCard(viewController.cardMap.backward(this), true) }
 	}
 	

@@ -12,13 +12,13 @@ import tools.aqua.bgw.observable.ObservableList
  * @param children children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
  * gets displayed at the bottom of the stack.
  */
-open class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
+open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 	
 	/**
 	 * [ObservableList] for the [children] of this stack.
 	 * The first [SingleLayerVisual] gets displayed at the bottom of the stack.
 	 */
-	val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children.toList())
+	val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children)
 	
 	/**
 	 * The [children] of this stack.
@@ -30,8 +30,21 @@ open class CompoundVisual(vararg children: SingleLayerVisual) : Visual() {
 			childrenProperty.clear()
 			childrenProperty.addAll(value)
 		}
-
+	
+	/**
+	 * [CompoundVisual] constructor with vararg parameter.
+	 *
+	 * @param children children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
+	 * gets displayed at the bottom of the stack.
+	 */
+	constructor(vararg children: SingleLayerVisual) : this(children.toList())
+	
 	init {
-	    childrenProperty.internalListener = { notifyGUIListener() }
+		childrenProperty.internalListener = { notifyGUIListener() }
 	}
+	
+	/**
+	 * Copies this [CompoundVisual] to a new object recursively including children.
+	 */
+	override fun copy(): CompoundVisual = CompoundVisual(children.map { it.copy() as SingleLayerVisual }.toList())
 }

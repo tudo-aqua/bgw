@@ -149,7 +149,7 @@ abstract class ElementView(
 	 *
 	 * @see visual
 	 */
-	val visualProperty: ObjectProperty<Visual> = ObjectProperty(visual)
+	internal val visualProperty: ObjectProperty<Visual> = ObjectProperty(visual.copy())
 	
 	/**
 	 * Index of the current [Visual] in the visuals list.
@@ -158,8 +158,11 @@ abstract class ElementView(
 	 */
 	var visual: Visual
 		get() = visualProperty.value
+		/**
+		 * Sets a copy of the given [Visual] [value] to this field and refreshes GUI.
+		 */
 		set(value) {
-			visualProperty.value = value
+			visualProperty.value = value.copy()
 		}
 	
 	/**
