@@ -5,7 +5,7 @@ package tools.aqua.bgw.dialog
 /**
  * Enum for all available button types.
  *
- * @param text Displayed button text
+ * @param text displayed button text.
  */
 enum class ButtonType(private val text: String) {
 	/**
