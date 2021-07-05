@@ -16,6 +16,6 @@ import tools.aqua.bgw.elements.StaticView
 open class MenuScene(width: Number = DEFAULT_SCENE_WIDTH, height: Number = DEFAULT_SCENE_HEIGHT) :
 	Scene<StaticView<out StaticView<*>>>(width = width, height = height) {
 	init {
-		opacity = 0.0
+		opacity = 0.75
 	}
 }
