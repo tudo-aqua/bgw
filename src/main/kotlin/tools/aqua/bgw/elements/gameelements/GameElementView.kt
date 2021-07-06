@@ -32,7 +32,7 @@ sealed class GameElementView(
 	visual = visual
 ) {
 	/**
-	 * @throws RuntimeException if [GameElementView] does not support children.
+	 * @throws RuntimeException [GameElementView] does not support children.
 	 */
 	override fun removeChild(child: ElementView) {
 		throw RuntimeException("This $this element has no children.")
