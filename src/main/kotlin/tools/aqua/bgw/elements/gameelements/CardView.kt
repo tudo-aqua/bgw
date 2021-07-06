@@ -115,12 +115,12 @@ open class CardView(
 	 */
 	companion object {
 		/**
-		 * Suggested card [height].
+		 * Suggested [CardView] [height].
 		 */
 		const val DEFAULT_CARD_HEIGHT: Int = 200
 		
 		/**
-		 * Suggested card [width].
+		 * Suggested [CardView] [width].
 		 */
 		const val DEFAULT_CARD_WIDTH: Int = 130
 	}

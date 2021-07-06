@@ -11,15 +11,15 @@ import tools.aqua.bgw.visual.Visual
  * Visualization:
  * The Visual at the [currentSide] value is used to visualize the dice.
  *
- * @param height height for this DiceView. Default: the suggested dice height.
- * @param width width for this DiceView. Default: the suggested dice width.
+ * @param height height for this DiceView. Default: [DiceView.DEFAULT_DICE_HEIGHT].
+ * @param width width for this DiceView. Default: [DiceView.DEFAULT_DICE_WIDTH].
  * @param posX horizontal coordinate for this DiceView. Default: 0.
  * @param posY vertical coordinate for this DiceView. Default: 0.
  * @param visuals list of visuals to represent the sides of the die.
  */
 open class DiceView(
-	height: Number = DICE_HEIGHT,
-	width: Number = DICE_WIDTH,
+	height: Number = DEFAULT_DICE_HEIGHT,
+	width: Number = DEFAULT_DICE_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	visuals: MutableList<Visual>
@@ -76,11 +76,11 @@ open class DiceView(
 		/**
 		 * Suggested [DiceView] [height].
 		 */
-		const val DICE_HEIGHT: Int = 80
+		const val DEFAULT_DICE_HEIGHT: Int = 80
 		
 		/**
 		 * Suggested [DiceView] [width].
 		 */
-		const val DICE_WIDTH: Int = 80
+		const val DEFAULT_DICE_WIDTH: Int = 80
 	}
 }

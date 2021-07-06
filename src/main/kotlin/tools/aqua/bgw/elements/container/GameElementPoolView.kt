@@ -39,8 +39,8 @@ import tools.aqua.bgw.visual.Visual
  * @param visual visual for this [GameElementPoolView]. Default: [Visual.EMPTY].
  */
 open class GameElementPoolView<T : GameElementView>(
-	height: Number = 200,
-	width: Number = 130,
+	height: Number = 0,
+	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
 	visual: Visual = Visual.EMPTY,
