@@ -18,7 +18,9 @@ import javax.imageio.ImageIO
 
 class RefreshViewController(private val viewController: ViewController) : Refreshable {
 	
+	
 	private val image: BufferedImage = ImageIO.read(this::class.java.classLoader.getResource(CARDS_FILE))
+	private var hintOverlay: ColorVisual? = null
 	
 	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
 		val playerHandView = if (player == viewController.logicController.game.currentPlayer)
@@ -43,6 +45,9 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		
 		//hide suit selection
 		showJackEffectSelection(false)
+		
+		//Clear overlay
+		hintOverlay?.transparency = 0.0
 	}
 	
 	override fun refreshCardPlayed(card: MauMauCard, animated: Boolean) {
@@ -89,6 +94,9 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			viewController.gameScene.gameStackInfo.labelProperty.value =
 				viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 		}
+		
+		//Clear overlay
+		hintOverlay?.transparency = 0.0
 	}
 	
 	override fun refreshGameStackShuffledBack() {
@@ -113,6 +121,24 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 	
 	override fun showJackEffectSelection() {
 		showJackEffectSelection(true)
+	}
+	
+	override fun refreshHintTakeCard() {
+		hintOverlay = ((viewController.gameScene.drawStackView.elements.last().visual as CompoundVisual)
+			.children.last() as ColorVisual)
+			.apply {
+				color = Color.YELLOW
+				transparency = 0.5
+			}
+	}
+	
+	override fun refreshHintPlayCard(card: MauMauCard) {
+		hintOverlay = ((viewController.cardMap.forward(card).visual as CompoundVisual)
+			.children.last() as ColorVisual)
+			.apply {
+				color = Color.YELLOW
+				transparency = 0.5
+			}
 	}
 	
 	override fun refreshAll() {
@@ -140,7 +166,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				height = 200,
 				width = 130,
 				front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
-				back = cardBack
+				back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT)
 			).apply { name = card.toString() }
 			
 			viewController.cardMap.add(card, cardView)

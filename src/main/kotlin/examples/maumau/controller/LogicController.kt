@@ -172,4 +172,39 @@ class LogicController(val view: Refreshable) {
 				|| card.cardSuit == game.nextSuit
 				|| card.cardValue == game.gameStack.peek().cardValue
 	
+	fun showHint() {
+		val card = calculateHint()
+		
+		if (card == null)
+			view.refreshHintTakeCard()
+		else
+			view.refreshHintPlayCard(card)
+	}
+	
+	private fun calculateHint(): MauMauCard? {
+		val cards = game.currentPlayer.hand.cards
+		
+		//Hint 1: Play 8
+		var hint: List<MauMauCard> = cards.filter { it.cardValue == CardValue.EIGHT && checkRules(it) }
+		if (hint.isNotEmpty())
+			return hint.first()
+		
+		//Hint 2: Play 7
+		hint = cards.filter { it.cardValue == CardValue.SEVEN && checkRules(it) }
+		if (hint.isNotEmpty())
+			return hint.first()
+		
+		//Hint 3: Play regular card
+		hint = cards.filter { it.cardValue != CardValue.JACK && checkRules(it) }
+		if (hint.isNotEmpty())
+			return hint.first()
+		
+		//Hint 4: Play Jack
+		hint = cards.filter { it.cardValue == CardValue.JACK && checkRules(it) }
+		if (hint.isNotEmpty())
+			return hint.first()
+		
+		//Hint 5: Take card
+		return null
+	}
 }

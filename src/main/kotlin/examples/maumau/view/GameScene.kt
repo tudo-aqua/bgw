@@ -109,6 +109,16 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	}
 	//endregion
 	
+	val hintButton: Button = Button(
+		height = 80,
+		width = 80,
+		posX = 1430,
+		posY = 820,
+		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
+	).apply {
+		visual = ImageVisual(LIGHT_BULB_FILE)
+	}
+	
 	val mainMenuButton: Button = Button(
 		height = 100,
 		width = 200,
@@ -132,6 +142,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			buttonHearts,
 			buttonSpades,
 			buttonClubs,
+			hintButton,
 			mainMenuButton
 		)
 	}

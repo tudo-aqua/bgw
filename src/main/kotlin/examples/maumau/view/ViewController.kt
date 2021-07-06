@@ -17,7 +17,7 @@ class ViewController : BoardGameApplication("MauMau") {
 	val refreshViewController: RefreshViewController = RefreshViewController(this)
 	val logicController: LogicController = LogicController(refreshViewController)
 	
-	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap<MauMauCard, CardView>()
+	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap()
 	
 	init {
 		registerGameEvents()
@@ -29,6 +29,8 @@ class ViewController : BoardGameApplication("MauMau") {
 	}
 	
 	private fun registerGameEvents() {
+		gameScene.hintButton.onMouseClicked = { logicController.showHint() }
+		
 		gameScene.gameStackView.dropAcceptor = this::tryElementDropped
 		gameScene.gameStackView.onDragElementDropped = this::elementDropped
 		
@@ -36,9 +38,9 @@ class ViewController : BoardGameApplication("MauMau") {
 			if (!logicController.game.drawStack.isEmpty())
 				logicController.drawCard()
 		}
-        
-        gameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS) }
-        gameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS) }
+		
+		gameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS) }
+		gameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS) }
         gameScene.buttonSpades.onMousePressed = { logicController.selectSuit(CardSuit.SPADES) }
         gameScene.buttonClubs.onMousePressed = { logicController.selectSuit(CardSuit.CLUBS) }
     }

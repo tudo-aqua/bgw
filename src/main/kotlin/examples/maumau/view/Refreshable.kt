@@ -26,4 +26,8 @@ interface Refreshable {
 	fun refreshSuitSelected()
 	
 	fun showJackEffectSelection()
+	
+	fun refreshHintTakeCard()
+	
+	fun refreshHintPlayCard(card: MauMauCard)
 }
