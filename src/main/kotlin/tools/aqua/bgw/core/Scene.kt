@@ -10,20 +10,19 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.RootElement
 import tools.aqua.bgw.observable.*
 import tools.aqua.bgw.util.CoordinatePlain
-import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
-import java.awt.Color
 
 /**
  * Baseclass for BGW scenes.
  *
  * @param width [Scene] width in virtual coordinates.
  * @param height [Scene] height in virtual coordinates.
+ * @param background [Scene] [background] [Visual].
  *
  * @see BoardGameScene
  * @see MenuScene
  */
-sealed class Scene<T : ElementView>(width: Number, height: Number) {
+sealed class Scene<T : ElementView>(width: Number, height: Number, background: Visual) {
 	/**
 	 * [Property] for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
 	 * currently dragged.
@@ -62,8 +61,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	/**
 	 * [Property] for the [background] [Visual] of this [Scene].
 	 */
-	internal val backgroundProperty: ObjectProperty<Visual> =
-		ObjectProperty(ColorVisual(Color(255, 255, 255)))
+	internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(background)
 	
 	/**
 	 * The background [Visual] of this [Scene].
