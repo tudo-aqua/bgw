@@ -7,6 +7,10 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * A randomization [Animation] that shuffles between different visuals.
+ * Shuffles through visuals in the given [visuals] [List] for given [duration] and shows [toVisual] in the end.
+ * Use the [speed] parameter to define how many steps the animation should have.
+ * For example:
+ * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the [duration] of one second.
  *
  * @param element [GameElementView] to animate.
  * @param visuals [List] of [Visual]s to shuffle through.

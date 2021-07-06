@@ -102,7 +102,7 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * Returns centering mode of the specified cell.
+	 * Returns centering mode as an [Alignment] of the specified cell.
 	 *
 	 * @param columnIndex column index in grid.
 	 * @param rowIndex row index in grid.
@@ -111,7 +111,7 @@ open class GridLayoutView<T : ElementView>(
 		grid.getCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex)
 	
 	/**
-	 * Sets centering mode of desired grid cell.
+	 * Sets centering mode of desired grid cell with given [Alignment].
 	 * Overrides existing mode in this cell.
 	 *
 	 * @param columnIndex column index in grid.
@@ -124,7 +124,7 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * Sets centering mode of desired column in grid.
+	 * Sets centering mode of desired column in grid with given [Alignment].
 	 * Overrides existing mode in the whole column.
 	 *
 	 * @param columnIndex column index in grid.
@@ -136,7 +136,7 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * Sets centering mode of desired row in grid.
+	 * Sets centering mode of desired row in grid with given [Alignment].
 	 * Overrides existing mode in the whole row.
 	 *
 	 * @param rowIndex row index in grid.
@@ -148,7 +148,7 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * Sets centering mode of all cells in the grid.
+	 * Sets centering mode of all cells in the grid with given [Alignment].
 	 * Overrides existing modes of all cells.
 	 *
 	 * @param value new Centering mode to be set for all cells.

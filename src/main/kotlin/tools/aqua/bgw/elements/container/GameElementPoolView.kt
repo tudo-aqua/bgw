@@ -9,7 +9,7 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [GameElementPoolView] may be used to visualize a pool containing [GameElementView]s.
  * A typical use case for a [GameElementPoolView] may be to visualize a pile of hidden items,
- * where the user should not know what item might be draw next.
+ * where the user should not know what item might be drawn next.
  *
  * Visualization:
  * The current [Visual] is used to visualize the area from where the user can start a drag and drop gesture.
