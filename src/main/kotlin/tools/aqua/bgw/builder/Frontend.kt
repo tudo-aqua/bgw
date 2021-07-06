@@ -47,7 +47,7 @@ internal class Frontend : Application() {
 	}
 	
 	companion object {
-		internal const val DEFAULT_FADE_TIME = 0.25
+		internal const val DEFAULT_FADE_TIME = 250
 		
 		private const val BLUR_RADIUS = 63.0
 		private const val MINIMIZED_FACTOR = 0.8
@@ -162,7 +162,7 @@ internal class Frontend : Application() {
 		
 		private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
 			menuPane?.apply {
-				FadeTransition(Duration.seconds(fadeTime / 2), menuPane).apply {
+				FadeTransition(Duration.millis(fadeTime / 2), menuPane).apply {
 					fromValue = if (fadeIn) 0.0 else 1.0
 					toValue = if (fadeIn) 1.0 else 0.0
 					interpolator = Interpolator.EASE_OUT
@@ -185,7 +185,7 @@ internal class Frontend : Application() {
 				
 				Timeline(
 					KeyFrame(Duration.ZERO, KeyValue(value, if (fadeIn) 0 else BLUR_RADIUS)),
-					KeyFrame(Duration.seconds(fadeTime), KeyValue(value, if (fadeIn) BLUR_RADIUS else 0))
+					KeyFrame(Duration.millis(fadeTime), KeyValue(value, if (fadeIn) BLUR_RADIUS else 0))
 				).play()
 			}
 		}
