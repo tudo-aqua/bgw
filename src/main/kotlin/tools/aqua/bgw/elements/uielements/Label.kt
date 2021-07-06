@@ -11,7 +11,7 @@ import tools.aqua.bgw.util.Font
  * @param width width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].
  * @param posX horizontal coordinate for this [Label]. Default: 0.
  * @param posY vertical coordinate for this [Label]. Default: 0.
- * @param label label for this [Label]. Default: "Label".
+ * @param label label for this [Label]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
  */
 open class Label(
@@ -19,7 +19,7 @@ open class Label(
 	width: Number = DEFAULT_LABEL_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	label: String = "Label",
+	label: String = "",
 	font: Font = Font()
 ) : LabeledUIElementView(height = height, width = width, posX = posX, posY = posY, font = font, label = label) {
 	/**

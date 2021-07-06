@@ -13,7 +13,7 @@ import tools.aqua.bgw.util.Font
  * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
  * @param posX horizontal coordinate for this [CheckBox]. Default: 0.
  * @param posY vertical coordinate for this [CheckBox]. Default: 0.
- * @param label label for this [CheckBox]. Default: "CheckBox".
+ * @param label label for this [CheckBox]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
  * @param isChecked the initial checked state. Default: `false`.
  * @param allowIndeterminate the initial [allowIndeterminate] state. Default: `false`.
@@ -24,7 +24,7 @@ open class CheckBox(
 	width: Number = DEFAULT_CHECKBOX_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	label: String = "CheckBox",
+	label: String = "",
 	font: Font = Font(),
 	isChecked: Boolean = false,
 	allowIndeterminate: Boolean = false,

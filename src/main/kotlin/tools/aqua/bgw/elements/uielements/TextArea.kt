@@ -12,7 +12,7 @@ import tools.aqua.bgw.util.Font
  * @param width width for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_WIDTH].
  * @param posX horizontal coordinate for this [TextArea]. Default: 0.
  * @param posY vertical coordinate for this [TextArea]. Default: 0.
- * @param label initial label for this [TextArea]. Default: "TextArea".
+ * @param label initial label for this [TextArea]. Default: empty String.
  * @param prompt Prompt for this [TextArea].
  *        This gets displayed as a prompt to the user whenever the label is an empty string.
  *        Default: empty string.
@@ -22,7 +22,7 @@ open class TextArea(
 	width: Number = DEFAULT_TEXTAREA_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	label: String = "TextArea",
+	label: String = "",
 	font: Font = Font(),
 	val prompt: String = "",
 ) : LabeledUIElementView(height = height, width = width, posX = posX, posY = posY, label = label, font = font) {
