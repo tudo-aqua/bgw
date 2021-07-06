@@ -9,8 +9,8 @@ import tools.aqua.bgw.util.Font
 /**
  * A simple checkbox with a label.
  *
- * @param height height for this CheckBox. Default: 0.
- * @param width width for this CheckBox. Default: 0.
+ * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
+ * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
  * @param posX horizontal coordinate for this [CheckBox]. Default: 0.
  * @param posY vertical coordinate for this [CheckBox]. Default: 0.
  * @param label label for this [CheckBox]. Default: empty String.
@@ -20,8 +20,8 @@ import tools.aqua.bgw.util.Font
  * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.
  */
 open class CheckBox(
-	height: Number = 0,
-	width: Number = 0,
+	height: Number = DEFAULT_CHECKBOX_HEIGHT,
+	width: Number = DEFAULT_CHECKBOX_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	label: String = "",
@@ -75,4 +75,20 @@ open class CheckBox(
 		set(value) {
 			indeterminateProperty.value = value
 		}
+	
+	/**
+	 * Defines some static constants that can be used as suggested properties of a [CheckBox].
+	 */
+	companion object {
+		/**
+		 * Suggested [CheckBox] [height].
+		 */
+		const val DEFAULT_CHECKBOX_HEIGHT: Int = 30
+		
+		/**
+		 * Suggested [CheckBox] [width].
+		 */
+		const val DEFAULT_CHECKBOX_WIDTH: Int = 100
+	}
+	
 }

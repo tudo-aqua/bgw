@@ -14,18 +14,18 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all UI elements.
  *
- * @param height height for this [UIElementView]. Default: 0.
- * @param width width for this [UIElementView]. Default: 0.
- * @param posX horizontal coordinate for this [UIElementView]. Default: 0.
- * @param posY vertical coordinate for this [UIElementView]. Default: 0.
- * @param font font for this [UIElementView]. Usage depends on subclass. Default: default [Font] constructor.
+ * @param height height for this [UIElementView].
+ * @param width width for this [UIElementView].
+ * @param posX horizontal coordinate for this [UIElementView].
+ * @param posY vertical coordinate for this [UIElementView].
+ * @param font font for this [UIElementView]. Usage depends on subclass.
  */
 sealed class UIElementView(
-	height: Number = 0,
-	width: Number = 0,
-	posX: Number = 0,
-	posY: Number = 0,
-	font: Font = Font(),
+	height: Number,
+	width: Number,
+	posX: Number,
+	posY: Number,
+	font: Font,
 ) : StaticView<UIElementView>(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**

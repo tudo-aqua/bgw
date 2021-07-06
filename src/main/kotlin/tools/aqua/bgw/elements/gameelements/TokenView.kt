@@ -26,7 +26,7 @@ open class TokenView(
 	visual: Visual
 ) : GameElementView(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	/**
-	 * Defines some static constants that can be used as suggested properties of a token.
+	 * Defines some static constants that can be used as suggested properties of a [TokenView].
 	 */
 	companion object {
 		/**

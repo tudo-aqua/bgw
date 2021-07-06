@@ -111,7 +111,7 @@ open class CardView(
 	}
 	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a card.
+	 * Defines some static constants that can be used as suggested properties of a [CardView].
 	 */
 	companion object {
 		/**

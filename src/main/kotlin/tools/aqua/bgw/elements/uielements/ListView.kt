@@ -13,8 +13,8 @@ import tools.aqua.bgw.util.Font
  * The [formatFunction] is used to gain a [String] representation of each item.
  * If no [formatFunction] is specified the [toString] function gets used instead.
  *
- * @param height height for this [ListView]. Default: 0.
- * @param width width for this [ListView]. Default: 0.
+ * @param height height for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_HEIGHT].
+ * @param width width for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_WIDTH].
  * @param posX horizontal coordinate for this [ListView]. Default: 0.
  * @param posY vertical coordinate for this [ListView]. Default: 0.
  * @param items initial list of items for this [ListView]. Default: empty list.
@@ -23,15 +23,15 @@ import tools.aqua.bgw.util.Font
  * @param formatFunction the [formatFunction] that is used to represent the items. Default: `null`.
  */
 open class ListView<T>(
-	height: Number = 0,
-	width: Number = 0,
+	height: Number = DEFAULT_LISTVIEW_HEIGHT,
+	width: Number = DEFAULT_LISTVIEW_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	items: List<T> = listOf(),
 	font: Font = Font(), //TODO: Unused?
 	orientation: Orientation = Orientation.VERTICAL,
 	formatFunction: ((T) -> String)? = null
-) : UIElementView(height = height, width = width, posX = posX, posY = posY) {
+) : UIElementView(height = height, width = width, posX = posX, posY = posY, font) {
 	
 	/**
 	 * [Property] for the items list for this [ListView].
@@ -83,5 +83,20 @@ open class ListView<T>(
 	
 	init {
 		observableItemsList.addAll(items)
+	}
+	
+	/**
+	 * Defines some static constants that can be used as suggested properties of a [ListView].
+	 */
+	companion object {
+		/**
+		 * Suggested [ListView] [height].
+		 */
+		const val DEFAULT_LISTVIEW_HEIGHT: Int = 200
+		
+		/**
+		 * Suggested [ListView] [width].
+		 */
+		const val DEFAULT_LISTVIEW_WIDTH: Int = 100
 	}
 }

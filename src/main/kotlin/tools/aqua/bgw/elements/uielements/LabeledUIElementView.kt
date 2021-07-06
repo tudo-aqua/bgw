@@ -8,20 +8,20 @@ import tools.aqua.bgw.util.Font
 /**
  * Baseclass for all [UIElementView]s that have a label.
  *
- * @param height height for this [LabeledUIElementView]. Default: 0.
- * @param width width for this [LabeledUIElementView]. Default: 0.
- * @param posX horizontal coordinate for this [LabeledUIElementView]. Default: 0.
- * @param posY vertical coordinate for this [LabeledUIElementView]. Default: 0.
- * @param label label for this [LabeledUIElementView]. Default: empty String.
- * @param font font to be used for the label. Default: default [Font] constructor.
+ * @param height height for this [LabeledUIElementView].
+ * @param width width for this [LabeledUIElementView].
+ * @param posX horizontal coordinate for this [LabeledUIElementView].
+ * @param posY vertical coordinate for this [LabeledUIElementView].
+ * @param label label for this [LabeledUIElementView].
+ * @param font font to be used for the label.
  */
 sealed class LabeledUIElementView(
-	height: Number = 0,
-	width: Number = 0,
-	posX: Number = 0,
-	posY: Number = 0,
+	height: Number,
+	width: Number,
+	posX: Number,
+	posY: Number,
 	font: Font,
-	label: String = ""
+	label: String
 ) : UIElementView(height = height, width = width, posX = posX, posY = posY, font = font) {
 	/**
 	 * Property for the label of this LabeledUIElementView.

@@ -15,10 +15,10 @@ import tools.aqua.bgw.util.Font
  *
  * Whenever the user selects an item, the [selectedItemProperty] gets updated.
  *
- * @param height height for this Button. Default: 0.
- * @param width width for this Button. Default: 0.
- * @param posX horizontal coordinate for this Button. Default: 0.
- * @param posY vertical coordinate for this Button. Default: 0.
+ * @param height height for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_HEIGHT].
+ * @param width width for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_WIDTH].
+ * @param posX horizontal coordinate for this [ComboBox]. Default: 0.
+ * @param posY vertical coordinate for this [ComboBox]. Default: 0.
  * @param prompt Prompt for this [ComboBox].
  *        This gets displayed as a prompt to the user whenever the [selectedItemsProperty] value is `null`.
  *        Default: empty string.
@@ -27,8 +27,8 @@ import tools.aqua.bgw.util.Font
  * @param formatFunction the formatFunction that is used to represent the items. Default: `null`.
  */
 open class ComboBox<T>(
-	height: Number = 0,
-	width: Number = 0,
+	height: Number = DEFAULT_COMBOBOX_HEIGHT,
+	width: Number = DEFAULT_COMBOBOX_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	val prompt: String = "",
@@ -50,6 +50,7 @@ open class ComboBox<T>(
 	
 	/**
 	 * Items list for this [ComboBox].
+	 *
 	 * @see observableItemsList
 	 */
 	var items: MutableList<T>
@@ -68,6 +69,7 @@ open class ComboBox<T>(
 	/**
 	 * The selected item.
 	 * May be `null` if no item is selected.
+	 *
 	 * @see selectedItemProperty
 	 */
 	var selectedItem: T?
@@ -87,6 +89,7 @@ open class ComboBox<T>(
 	/**
 	 * The [formatFunction] that gets used to obtain a [String] representation for each item.
 	 * If the value is `null`, the [toString] function of the item is used instead.
+	 *
 	 * @see formatFunctionProperty
 	 */
 	var formatFunction: ((T) -> String)?
@@ -94,7 +97,7 @@ open class ComboBox<T>(
 		set(value) {
 			formatFunctionProperty.value = value
 		}
-
+	
 	init {
 		observableItemsList.addAll(items)
 		
@@ -103,5 +106,20 @@ open class ComboBox<T>(
 			
 			selectedItemProperty.value = selectedItem
 		}
+	}
+	
+	/**
+	 * Defines some static constants that can be used as suggested properties of a [ComboBox].
+	 */
+	companion object {
+		/**
+		 * Suggested [ComboBox] [height].
+		 */
+		const val DEFAULT_COMBOBOX_HEIGHT: Int = 30
+		
+		/**
+		 * Suggested [ComboBox] [width].
+		 */
+		const val DEFAULT_COMBOBOX_WIDTH: Int = 100
 	}
 }
