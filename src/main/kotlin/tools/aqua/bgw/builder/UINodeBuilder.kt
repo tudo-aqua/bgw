@@ -45,6 +45,9 @@ internal class UINodeBuilder {
 					buildColorPicker(uiElementView)
 				is ProgressBar ->
 					buildProgressBar(uiElementView)
+			}.apply {
+				minHeight = 0.0
+				minWidth = 0.0
 			}
 
 		private fun buildLabel(label: Label): Region {
