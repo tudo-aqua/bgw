@@ -1,9 +1,6 @@
 package examples.maumau.view
 
-import examples.main.BG_FILE
-import examples.main.CARDS_FILE
-import examples.main.IMG_HEIGHT
-import examples.main.IMG_WIDTH
+import examples.main.*
 import examples.maumau.model.CardSuit
 import examples.maumau.model.CardValue
 import tools.aqua.bgw.core.BoardGameScene
@@ -118,9 +115,9 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		posX = 20,
 		posY = 20,
 		label = "Hauptmenü",
-		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.PINK),
+		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
 	).apply {
-		visual = ColorVisual(180, 0, 0)
+		visual = ImageVisual(BUTTON_BG_FILE)
 	}
 	
 	init {
@@ -135,7 +132,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			buttonHearts,
 			buttonSpades,
 			buttonClubs,
-			mainMenuButton,
+			mainMenuButton
 		)
 	}
 }

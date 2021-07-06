@@ -120,6 +120,6 @@ open class ComboBox<T>(
 		/**
 		 * Suggested [ComboBox] [width].
 		 */
-		const val DEFAULT_COMBOBOX_WIDTH: Int = 100
+		const val DEFAULT_COMBOBOX_WIDTH: Int = 120
 	}
 }

@@ -70,12 +70,12 @@ open class ToggleButton(
 		/**
 		 * Suggested [ToggleButton] [height].
 		 */
-		const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Int = 25
+		const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Int = 45
 		
 		/**
 		 * Suggested [ToggleButton] [width].
 		 */
-		const val DEFAULT_TOGGLE_BUTTON_WIDTH: Int = 100
+		const val DEFAULT_TOGGLE_BUTTON_WIDTH: Int = 120
 	}
 }
 

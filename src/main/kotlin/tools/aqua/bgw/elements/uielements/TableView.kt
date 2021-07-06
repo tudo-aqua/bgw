@@ -62,12 +62,12 @@ open class TableView<T>(
 		/**
 		 * Suggested [TableView] [height].
 		 */
-		const val DEFAULT_TABLEVIEW_HEIGHT: Int = 200
+		const val DEFAULT_TABLEVIEW_HEIGHT: Int = 500
 		
 		/**
 		 * Suggested [TableView] [width].
 		 */
-		const val DEFAULT_TABLEVIEW_WIDTH: Int = 100
+		const val DEFAULT_TABLEVIEW_WIDTH: Int = 400
 	}
 }
 

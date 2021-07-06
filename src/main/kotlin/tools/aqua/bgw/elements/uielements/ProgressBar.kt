@@ -75,6 +75,6 @@ open class ProgressBar(
 		/**
 		 * Suggested [ProgressBar] [width].
 		 */
-		const val DEFAULT_PROGRESSBAR_WIDTH: Int = 100
+		const val DEFAULT_PROGRESSBAR_WIDTH: Int = 250
 	}
 }

@@ -92,11 +92,11 @@ open class ListView<T>(
 		/**
 		 * Suggested [ListView] [height].
 		 */
-		const val DEFAULT_LISTVIEW_HEIGHT: Int = 200
+		const val DEFAULT_LISTVIEW_HEIGHT: Int = 400
 		
 		/**
 		 * Suggested [ListView] [width].
 		 */
-		const val DEFAULT_LISTVIEW_WIDTH: Int = 100
+		const val DEFAULT_LISTVIEW_WIDTH: Int = 200
 	}
 }

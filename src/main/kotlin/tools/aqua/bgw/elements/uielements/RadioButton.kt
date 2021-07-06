@@ -38,11 +38,11 @@ open class RadioButton(
 		/**
 		 * Suggested [RadioButton] [height].
 		 */
-		const val DEFAULT_RADIOBUTTON_HEIGHT: Int = 20
+		const val DEFAULT_RADIOBUTTON_HEIGHT: Int = 45
 		
 		/**
 		 * Suggested [RadioButton] [width].
 		 */
-		const val DEFAULT_RADIOBUTTON_WIDTH: Int = 100
+		const val DEFAULT_RADIOBUTTON_WIDTH: Int = 45
 	}
 }

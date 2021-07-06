@@ -29,11 +29,11 @@ open class ColorPicker(
 		/**
 		 * Suggested [ColorPicker] [height].
 		 */
-		const val DEFAULT_COLOR_PICKER_HEIGHT: Int = 40
+		const val DEFAULT_COLOR_PICKER_HEIGHT: Int = 30
 		
 		/**
 		 * Suggested [ColorPicker] [width].
 		 */
-		const val DEFAULT_COLOR_PICKER_WIDTH: Int = 100
+		const val DEFAULT_COLOR_PICKER_WIDTH: Int = 120
 	}
 }
