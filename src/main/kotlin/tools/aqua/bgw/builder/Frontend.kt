@@ -39,7 +39,7 @@ internal class Frontend : Application() {
 	override fun start(primaryStage: Stage) {
 		Thread.setDefaultUncaughtExceptionHandler { _, e ->
 			e.printStackTrace()
-			showDialog(Dialog("Exception occurred!", "An exception occurred!", "", e))
+			showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message?:"", e))
 		}
 		startApplication(primaryStage)
 	}
