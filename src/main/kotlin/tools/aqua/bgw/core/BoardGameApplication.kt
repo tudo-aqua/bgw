@@ -2,13 +2,9 @@
 
 package tools.aqua.bgw.core
 
-import javafx.scene.control.Alert
 import tools.aqua.bgw.builder.Frontend
-import tools.aqua.bgw.builder.toAlertType
-import tools.aqua.bgw.builder.toButtonType
-import tools.aqua.bgw.builder.toFXButtonType
-import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
+import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
@@ -55,11 +51,21 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
         set(value) {
             Frontend.backgroundProperty.value = value
         }
-
+    
     init {
         title = windowTitle
     }
-
+    
+    /**
+     * Shows a dialog and blocks further thread execution.
+     *
+     * @param dialog the [Dialog] to show
+     *
+     * @return chosen button or [Optional.empty] if canceled.
+     */
+    fun showDialog(dialog: Dialog): Optional<ButtonType> =
+        Frontend.showDialog(dialog)
+    
     /**
      * Shows the given [FileDialog].
      *
@@ -68,22 +74,6 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
      * @return chosen file(s) or [Optional.empty] if canceled.
      */
     fun showFileDialog(dialog: FileDialog): Optional<List<File>> = Frontend.showFileDialog(dialog)
-
-    /**
-     * Shows a dialog containing the given [message] and [buttons].
-     *
-     * @param alertType the [AlertType] of the alert. Affects the displayed icon.
-     * @param message message to be shown.
-     * @param buttons buttons to be shown.
-     *
-     * @return chosen button or [Optional.empty] if canceled.
-     */
-    fun showAlertDialog(alertType: AlertType, message: String, vararg buttons: ButtonType): Optional<ButtonType> =
-        Alert(
-            alertType.toAlertType(),
-            message,
-            *buttons.map { it.toFXButtonType() }.toTypedArray()
-        ).showAndWait().map { it.toButtonType() }
 
     /**
      * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.

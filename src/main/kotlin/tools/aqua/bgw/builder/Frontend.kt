@@ -14,6 +14,8 @@ import javafx.util.Duration
 import tools.aqua.bgw.builder.SceneBuilder.Companion.buildGame
 import tools.aqua.bgw.builder.SceneBuilder.Companion.buildMenu
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.dialog.ButtonType
+import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
 import tools.aqua.bgw.observable.ObjectProperty
@@ -35,6 +37,10 @@ internal class Frontend : Application() {
 	 * Starts the application.
 	 */
 	override fun start(primaryStage: Stage) {
+		Thread.setDefaultUncaughtExceptionHandler { _, e ->
+			e.printStackTrace()
+			showDialog(Dialog("Exception occurred!", "An exception occurred!", "", e))
+		}
 		startApplication(primaryStage)
 	}
 	
@@ -287,6 +293,9 @@ internal class Frontend : Application() {
 			
 			updateScene()
 		}
+		
+		internal fun showDialog(dialog: Dialog): Optional<ButtonType> =
+			DialogBuilder.build(dialog).showAndWait().map { it.toButtonType() }
 		
 		internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> =
 			Optional.ofNullable(

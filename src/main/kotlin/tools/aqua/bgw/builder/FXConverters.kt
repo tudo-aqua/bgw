@@ -191,12 +191,24 @@ internal fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
 /**
  * Converts the [AlertType] to [Alert.AlertType].
  */
-internal fun AlertType.toAlertType(): Alert.AlertType = when (this) {
+internal fun AlertType.toFXAlertType(): Alert.AlertType = when (this) {
 	AlertType.NONE -> Alert.AlertType.NONE
 	AlertType.INFORMATION -> Alert.AlertType.INFORMATION
 	AlertType.WARNING -> Alert.AlertType.WARNING
 	AlertType.CONFIRMATION -> Alert.AlertType.CONFIRMATION
 	AlertType.ERROR -> Alert.AlertType.ERROR
+	AlertType.EXCEPTION -> Alert.AlertType.ERROR
+}
+
+/**
+ * Converts the [Alert.AlertType] to [AlertType] .
+ */
+internal fun Alert.AlertType.toAlertType(): AlertType = when (this) {
+	Alert.AlertType.NONE -> AlertType.NONE
+	Alert.AlertType.INFORMATION -> AlertType.INFORMATION
+	Alert.AlertType.WARNING -> AlertType.WARNING
+	Alert.AlertType.CONFIRMATION -> AlertType.CONFIRMATION
+	Alert.AlertType.ERROR -> AlertType.ERROR
 }
 
 /**
