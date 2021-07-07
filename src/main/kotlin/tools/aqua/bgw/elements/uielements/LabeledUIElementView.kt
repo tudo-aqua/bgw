@@ -13,7 +13,7 @@ import tools.aqua.bgw.util.Font
  * @param posX horizontal coordinate for this [LabeledUIElementView].
  * @param posY vertical coordinate for this [LabeledUIElementView].
  * @param label label for this [LabeledUIElementView].
- * @param font font to be used for the label.
+ * @param font font to be used for the [label].
  */
 sealed class LabeledUIElementView(
 	height: Number,

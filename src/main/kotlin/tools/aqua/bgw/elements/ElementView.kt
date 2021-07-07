@@ -19,9 +19,9 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [ElementView].
  * @param posX the X coordinate for this [ElementView] relative to its container.
  * @param posY the Y coordinate for this [ElementView] relative to its container.
- * @param visual visual for this ElementView.
+ * @param visual visual for this [ElementView].
  *
- * @throws IllegalInheritanceException inheriting from this Class is not advised,
+ * @throws IllegalInheritanceException inheriting from this [Class] is not advised,
  * because it cannot be rendered and trying to do so will result in an [IllegalInheritanceException].
  *
  * @see IllegalInheritanceException

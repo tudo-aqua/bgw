@@ -5,7 +5,7 @@ package tools.aqua.bgw.elements.uielements
 import tools.aqua.bgw.util.Font
 
 /**
- * A basic label displaying text.
+ * A basic [Label] displaying text.
  *
  * @param height height for this [Label]. Default: [Label.DEFAULT_LABEL_HEIGHT].
  * @param width width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].

@@ -9,7 +9,7 @@ import tools.aqua.bgw.util.Font
 import java.awt.Color
 
 /**
- * A ProgressBar.
+ * A [ProgressBar].
  *
  * @param height height for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_HEIGHT].
  * @param width width for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_WIDTH].

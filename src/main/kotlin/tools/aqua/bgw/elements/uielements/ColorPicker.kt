@@ -6,12 +6,12 @@ import tools.aqua.bgw.util.Font
 import java.awt.Color
 
 /**
- * A color picker that allows to chose a color.
+ * A [ColorPicker] that allows to chose a [Color].
  *
- * @param height height for this ColorPicker. Default: [ColorPicker.DEFAULT_COLOR_PICKER_HEIGHT].
- * @param width width for this ColorPicker. Default: [ColorPicker.DEFAULT_COLOR_PICKER_WIDTH].
- * @param posX horizontal coordinate for this ColorPicker. Default: 0.
- * @param posY vertical coordinate for this ColorPicker. Default: 0.
+ * @param height height for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_HEIGHT].
+ * @param width width for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_WIDTH].
+ * @param posX horizontal coordinate for this [ColorPicker]. Default: 0.
+ * @param posY vertical coordinate for this [ColorPicker]. Default: 0.
  * @param initialColor the color that is initially selected. Default: [Color.WHITE].
  */
 open class ColorPicker(

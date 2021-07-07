@@ -3,7 +3,7 @@
 package tools.aqua.bgw.elements.uielements
 
 /**
- * A ToggleGroup may be set as an attribute in [ToggleButton] or [RadioButton].
+ * A [ToggleGroup] may be set as an attribute in [ToggleButton] or [RadioButton].
  * @see ToggleButton
  * @see RadioButton
  *

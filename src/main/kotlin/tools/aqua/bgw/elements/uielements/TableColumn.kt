@@ -3,7 +3,7 @@
 package tools.aqua.bgw.elements.uielements
 
 /**
- * A TableColumn may be used to represent a column in a [TableView].
+ * A [TableColumn] may be used to represent a column in a [TableView].
  * @see TableView
  */
 open class TableColumn<T>(

@@ -7,7 +7,7 @@ import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 
 /**
- * A simple checkbox with a label.
+ * A simple [CheckBox] with a [label].
  *
  * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
  * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
