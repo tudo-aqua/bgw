@@ -19,7 +19,7 @@ import tools.aqua.bgw.util.Font
  * @param width width for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_WIDTH].
  * @param posX horizontal coordinate for this [ComboBox]. Default: 0.
  * @param posY vertical coordinate for this [ComboBox]. Default: 0.
- * @param prompt Prompt for this [ComboBox].
+ * @param prompt prompt for this [ComboBox].
  *        This gets displayed as a prompt to the user whenever the [selectedItemsProperty] value is `null`.
  *        Default: empty string.
  * @param font font to be used for the label. Default: default [Font] constructor.
