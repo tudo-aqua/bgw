@@ -40,7 +40,7 @@ internal class Frontend(private val application: BoardGameApplication) : Applica
 	override fun start(primaryStage: Stage) {
 		Thread.setDefaultUncaughtExceptionHandler { _, e ->
 			e.printStackTrace()
-			showDialog(Dialog("Exception occurred!", "An exception occurred!", "", e))
+			showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message?:"", e))
 		}
 		
 		startApplication(primaryStage)
