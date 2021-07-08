@@ -18,6 +18,7 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
+import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
@@ -31,7 +32,7 @@ import kotlin.math.min
 /**
  * Frontend JavaFX wrapper.
  */
-internal class Frontend : Application() {
+internal class Frontend(private val application: BoardGameApplication) : Application() {
 	
 	/**
 	 * Starts the application.
@@ -41,20 +42,34 @@ internal class Frontend : Application() {
 			e.printStackTrace()
 			showDialog(Dialog("Exception occurred!", "An exception occurred!", "", e))
 		}
+		
 		startApplication(primaryStage)
+		
+		application.onWindowShown?.invoke()
 	}
 	
+	/**
+	 * Called when the application closes.
+	 */
+	override fun stop() {
+		application.onWindowClosed?.invoke()
+	}
+	
+	/**
+	 * Starts the application.
+	 */
 	internal fun show() {
 		launch()
 	}
-
+	
+	/**
+	 * Stops the application.
+	 */
 	internal fun exit() {
 		Platform.exit()
 	}
 	
 	companion object {
-		internal const val DEFAULT_FADE_TIME = 250
-		
 		private const val BLUR_RADIUS = 63.0
 		private const val MINIMIZED_FACTOR = 0.8
 		
@@ -156,6 +171,7 @@ internal class Frontend : Application() {
 			}
 			
 			primaryStage?.scene = Scene(scenePane)
+			
 			sizeChanged()
 		}
 		
@@ -264,16 +280,43 @@ internal class Frontend : Application() {
 				//Initialize default DECORATED stage style allowing minimizing
 				initStyle(StageStyle.DECORATED)
 				
-				//Set minimized window size as 80% of screen resolution and set default window mode to maximized
+				scene = Scene(Pane())
+				
+				//Get screen size and set ratio in relation to screen resolution
 				val screenSize = Toolkit.getDefaultToolkit().screenSize
-				height = screenSize.getHeight() * MINIMIZED_FACTOR
-				width = screenSize.getWidth() * MINIMIZED_FACTOR
-				isMaximized = true
+				val bgwScene: tools.aqua.bgw.core.Scene<out ElementView>? = boardGameScene ?: menuScene
+				
+				//Set minimized window size as 80% of screen resolution and set default window mode to maximized
+				if (bgwScene == null) {
+					width = screenSize.getWidth() * MINIMIZED_FACTOR
+					height = screenSize.getHeight() * MINIMIZED_FACTOR
+				} else {
+					//Get BoardGameScene ratio
+					val sceneWidth: Double = bgwScene.width
+					val sceneHeight: Double = bgwScene.height
+					
+					val relativeSceneWidth: Double = sceneWidth / screenSize.getWidth()
+					val relativeSceneHeight: Double = sceneHeight / screenSize.getHeight()
+					
+					if (relativeSceneWidth > relativeSceneHeight) {
+						width = screenSize.getWidth() * MINIMIZED_FACTOR
+						height = width / sceneWidth * sceneHeight
+					} else {
+						height = screenSize.getHeight() * MINIMIZED_FACTOR
+						width = height / sceneHeight * sceneWidth
+					}
+				}
+				
+				isMaximized = false
 				isFullScreen = fullscreen //TODO: Fullscreen not working
 				
 				heightProperty().addListener { _, _, _ -> sizeChanged() }
 				widthProperty().addListener { _, _, _ -> sizeChanged() }
+				
 				show()
+				
+				//Adjust for title bar height
+				height += (stage.height - scene.height)
 			}
 			
 			menuScene?.let { menuPane = buildMenu(it) }
