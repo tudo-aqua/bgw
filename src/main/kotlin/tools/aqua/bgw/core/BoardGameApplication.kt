@@ -14,6 +14,7 @@ import java.util.*
 /**
  * Baseclass for all BGW Applications.
  * Extend from this class in order to create your own game application.
+ * You may only instantiate one application.
  *
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
  * Application starts by calling [show].
@@ -25,7 +26,12 @@ import java.util.*
  * @see MenuScene
  */
 open class BoardGameApplication(windowTitle: String = "BoardGameWork Application") {
-
+    
+    init {
+        check(!instantiated) { "Unable to create second application." }
+        instantiated = true
+    }
+    
     /**
      * Window title displayed in the title bar.
      */
@@ -34,7 +40,7 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
         set(value) {
             Frontend.titleProperty.value = value
         }
-
+    
     /**
      * Background [Visual] for the [BoardGameApplication].
      * It is visible in the space that appears if the application window ratio does not fit the [Scene] ratio.
@@ -170,6 +176,11 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
     }
     
     companion object {
+        /**
+         * Static holder for instantiation of BoardGameApplication.
+         */
+        private var instantiated: Boolean = false
+    
         /**
          * The default fade time for [MenuScene]s in [showMenuScene] or [hideMenuScene].
          */
