@@ -116,7 +116,7 @@ open class GridLayoutView<T : ElementView>(
 	 *
 	 * @param columnIndex column index in grid.
 	 * @param rowIndex row index in grid.
-	 * @param value new Centering mode to be set for the specified cell.
+	 * @param value new centering mode to be set for the specified cell.
 	 */
 	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
 		grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, value = value)
@@ -140,7 +140,7 @@ open class GridLayoutView<T : ElementView>(
 	 * Overrides existing mode in the whole row.
 	 *
 	 * @param rowIndex row index in grid.
-	 * @param value new Centering mode to be set for the whole row.
+	 * @param value new centering mode to be set for the whole row.
 	 */
 	fun setRowCenterMode(rowIndex: Int, value: Alignment) {
 		grid.setRowCenterMode(rowIndex = rowIndex, value = value)
@@ -151,7 +151,7 @@ open class GridLayoutView<T : ElementView>(
 	 * Sets centering mode of all cells in the grid with given [Alignment].
 	 * Overrides existing modes of all cells.
 	 *
-	 * @param value new Centering mode to be set for all cells.
+	 * @param value new centering mode to be set for all cells.
 	 */
 	fun setCenterMode(value: Alignment) {
 		grid.setCenterMode(value = value)

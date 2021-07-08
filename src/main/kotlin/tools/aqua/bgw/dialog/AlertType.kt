@@ -38,5 +38,12 @@ enum class AlertType {
 	 * This includes an 'error' image, an appropriate title and header, and just an OK button for the user to click on
 	 * to dismiss the dialog.
 	 */
-	ERROR;
+	ERROR,
+	
+	/**
+	 * The [EXCEPTION] alert type configures the Alert dialog to show an exception stack trace.
+	 * This includes an 'exception' image, an appropriate title and header, and just an OK button for the user to click
+	 * on to dismiss the dialog.
+	 */
+	EXCEPTION;
 }

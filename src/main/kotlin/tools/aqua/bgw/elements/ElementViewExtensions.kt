@@ -3,7 +3,7 @@
 package tools.aqua.bgw.elements
 
 /**
- * Repositions this ElementView to the specified coordinates.
+ * Repositions this [ElementView] to the specified coordinates.
  * @param posX the new X coordinate.
  * @param posY the new Y coordinate.
  */
@@ -13,7 +13,7 @@ fun ElementView.reposition(posX: Number, posY: Number) {
 }
 
 /**
- * Adds an offset to this ElementViews Position.
+ * Adds an offset to this [ElementView]'s Position.
  * @param offsetX the offset for the X coordinate.
  * @param offsetY the offset for the Y coordinate.
  */
@@ -23,7 +23,7 @@ fun ElementView.offset(offsetX : Number, offsetY : Number) {
 }
 
 /**
- * Resizes this ElementView to the specified coordinates.
+ * Resizes this [ElementView] to the specified coordinates.
  * @param height the new height.
  * @param width the new width.
  */
@@ -33,8 +33,8 @@ fun ElementView.resize(height: Number, width: Number) {
 }
 
 /**
- * Scales this ElementViews height and width by the given scale factor.
- * @throws IllegalArgumentException if the given scaleFactor is negative.
+ * Scales this [ElementView]'s [ElementView.height] and [ElementView.width] by the given [scaleFactor].
+ * @throws IllegalArgumentException if the given [scaleFactor] is negative.
  */
 fun ElementView.scale(scaleFactor: Number) {
 	val scaleFactorDoubleValue = scaleFactor.toDouble()
@@ -47,8 +47,8 @@ fun ElementView.scale(scaleFactor: Number) {
 
 /**
  *
- * Scales this ElementViews width by the given scale factor.
- * @throws IllegalArgumentException if the given scaleFactor is negative.
+ * Scales this [ElementView]'s [ElementView.width] by the given [scaleFactor].
+ * @throws IllegalArgumentException if the given [scaleFactor] is negative.
  */
 fun ElementView.scaleWidth(scaleFactor: Number) {
 	val scaleFactorDoubleValue = scaleFactor.toDouble()
@@ -60,8 +60,8 @@ fun ElementView.scaleWidth(scaleFactor: Number) {
 
 /**
  *
- * Scales this ElementViews height by the given scale factor.
- * @throws IllegalArgumentException if the given scaleFactor is negative.
+ * Scales this [ElementView]'s [ElementView.height] by the given [scaleFactor].
+ * @throws IllegalArgumentException if the given [scaleFactor] is negative.
  */
 fun ElementView.scaleHeight(scaleFactor: Number) {
 	val scaleFactorDoubleValue = scaleFactor.toDouble()
@@ -72,7 +72,7 @@ fun ElementView.scaleHeight(scaleFactor: Number) {
 }
 
 /**
- * Rotates this ElementView by the given number of degrees.
+ * Rotates this [ElementView] by the given number of [degrees].
  */
 fun ElementView.rotate(degrees: Number) {
 	this.rotation += degrees.toDouble()

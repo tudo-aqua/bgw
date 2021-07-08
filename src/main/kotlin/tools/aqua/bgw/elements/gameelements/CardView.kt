@@ -111,16 +111,16 @@ open class CardView(
 	}
 	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a card.
+	 * Defines some static constants that can be used as suggested properties of a [CardView].
 	 */
 	companion object {
 		/**
-		 * Suggested card [height].
+		 * Suggested [CardView] [height].
 		 */
 		const val DEFAULT_CARD_HEIGHT: Int = 200
 		
 		/**
-		 * Suggested card [width].
+		 * Suggested [CardView] [width].
 		 */
 		const val DEFAULT_CARD_WIDTH: Int = 130
 	}

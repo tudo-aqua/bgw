@@ -13,8 +13,8 @@ import tools.aqua.bgw.util.Font
  * The columns list defines how the data is represented.
  * @see TableColumn
  *
- * @param height height for this [TableView]. Default: 0.
- * @param width width for this [TableView]. Default: 0.
+ * @param height height for this [TableView]. Default: [TableView.DEFAULT_TABLEVIEW_HEIGHT].
+ * @param width width for this [TableView]. Default: [TableView.DEFAULT_TABLEVIEW_WIDTH].
  * @param posX horizontal coordinate for this [TableView]. Default: 0.
  * @param posY vertical coordinate for this [TableView]. Default: 0.
  * @param font the Font for this [TableView]. Default: default [Font] constructor.
@@ -36,8 +36,8 @@ import tools.aqua.bgw.util.Font
  *
  */
 open class TableView<T>(
-	height: Number = 0,
-	width: Number = 0,
+	height: Number = DEFAULT_TABLEVIEW_HEIGHT,
+	width: Number = DEFAULT_TABLEVIEW_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	font: Font = Font()
@@ -54,5 +54,20 @@ open class TableView<T>(
 	 * @see TableColumn
 	 */
 	val columns: ObservableList<TableColumn<T>> = ObservableArrayList()
+	
+	/**
+	 * Defines some static constants that can be used as suggested properties of a [TableView].
+	 */
+	companion object {
+		/**
+		 * Suggested [TableView] [height].
+		 */
+		const val DEFAULT_TABLEVIEW_HEIGHT: Int = 500
+		
+		/**
+		 * Suggested [TableView] [width].
+		 */
+		const val DEFAULT_TABLEVIEW_WIDTH: Int = 400
+	}
 }
 

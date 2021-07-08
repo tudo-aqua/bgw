@@ -3,6 +3,7 @@
 package tools.aqua.bgw.elements.uielements
 
 import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.util.Font
 
 /**
  * A [ToggleButton] may be used as a [Button] that is either selected or not selected.
@@ -19,32 +20,35 @@ import tools.aqua.bgw.observable.BooleanProperty
  *
  * @see ToggleGroup
  *
- * @param height height for this [ToggleButton]. Default: 0.
- * @param width width for this [ToggleButton]. Default: 0.
+ * @param height height for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_HEIGHT].
+ * @param width width for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_WIDTH].
  * @param posX horizontal coordinate for this [ToggleButton]. Default: 0.
  * @param posY vertical coordinate for this [ToggleButton]. Default: 0.
+ * @param font font to be used for this [ToggleButton]. Default: default [Font] constructor.
  * @param isSelected the initial state for this [ToggleButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [ToggleButton]. Default: null.
  */
 open class ToggleButton(
-	height: Number = 0,
-	width: Number = 0,
+	height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
+	width: Number = DEFAULT_TOGGLE_BUTTON_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	font: Font = Font(),
 	isSelected: Boolean = false,
-	toggleGroup: ToggleGroup? = null,
+	toggleGroup: ToggleGroup? = null
 ) : UIElementView(
 	height = height,
 	width = width,
 	posX = posX,
 	posY = posY,
+	font = font
 ) {
 	
 	/**
 	 * The ToggleGroup of this ToggleButton.
 	 * @see ToggleGroup
 	 */
-	var toggleGroup: ToggleGroup? = null
+	var toggleGroup: ToggleGroup? = toggleGroup
 		set(value) {
 			toggleGroup?.removeButton(this)
 			value?.addButton(this)
@@ -67,12 +71,22 @@ open class ToggleButton(
 		}
 	
 	init {
-		this.toggleGroup = toggleGroup
-		selectedProperty.internalListener = { _, _ -> fire() }
+		selectedProperty.internalListener = { _, _ -> toggleGroup?.buttonSelectedStateChanged(this) }
 	}
 	
-	private fun fire() {
-		toggleGroup?.buttonSelectedStateChanged(this)
+	/**
+	 * Defines some static constants that can be used as suggested properties of a [ToggleButton].
+	 */
+	companion object {
+		/**
+		 * Suggested [ToggleButton] [height].
+		 */
+		const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Int = 45
+		
+		/**
+		 * Suggested [ToggleButton] [width].
+		 */
+		const val DEFAULT_TOGGLE_BUTTON_WIDTH: Int = 120
 	}
 }
 
