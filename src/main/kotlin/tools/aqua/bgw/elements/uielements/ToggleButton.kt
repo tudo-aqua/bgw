@@ -7,6 +7,16 @@ import tools.aqua.bgw.observable.BooleanProperty
 /**
  * A [ToggleButton] may be used as a [Button] that is either selected or not selected.
  * An important feature of [ToggleButton]s is the [ToggleGroup].
+ *
+ * [ToggleGroup]s can be used to to group [ToggleButton]s.
+ *
+ * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
+ * Only one [ToggleButton] may be selected in a [ToggleGroup].
+ * This means whenever a [ToggleButton] changes its selected state to true,
+ * all other [ToggleButton]s in the same [ToggleGroup] get deselected.
+ *
+ * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
+ *
  * @see ToggleGroup
  *
  * @param height height for this [ToggleButton]. Default: 0.
@@ -42,12 +52,13 @@ open class ToggleButton(
 		}
 	
 	/**
-	 * Property for the selected state of this ToggleButton. Changes are rendered directly by the framework.
+	 * Property for the selected state of this ToggleButton.
 	 */
 	val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
 	
 	/**
-	 * Sets the selected state for this ToggleButton. Changes are rendered directly by the framework.
+	 * Selected state for this ToggleButton.
+	 * @see selectedProperty
 	 */
 	var isSelected: Boolean
 		get() = selectedProperty.value

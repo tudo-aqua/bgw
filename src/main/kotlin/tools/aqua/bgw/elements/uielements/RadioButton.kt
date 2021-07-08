@@ -3,9 +3,19 @@
 package tools.aqua.bgw.elements.uielements
 
 /**
- * A RadioButton may be used as a [Button] that is either selected or not selected.
+ * [RadioButton] is a subclass of [ToggleButton] with a different visual representation.
+ * A [RadioButton] may be used as a [Button] that is either selected or not selected.
  * An important feature of [ToggleButton]s is the [ToggleGroup].
- * A [RadioButton] has the same functionality as a [ToggleButton] but a different visual representation.
+ *
+ * [ToggleGroup]s can be used to to group [ToggleButton]s.
+ *
+ * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
+ * Only one [ToggleButton] may be selected in a [ToggleGroup].
+ * This means whenever a [ToggleButton] changes its selected state to true,
+ * all other [ToggleButton]s in the same [ToggleGroup] get deselected.
+ *
+ * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
+ *
  * @see ToggleButton
  * @see ToggleGroup
  *
