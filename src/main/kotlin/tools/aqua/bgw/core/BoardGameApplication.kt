@@ -29,7 +29,7 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
     /**
      * [Frontend] instance.
      */
-    private val frontend: Frontend = Frontend()
+    private val frontend: Frontend = Frontend(this)
 
     /**
      * Window title displayed in the title bar.
@@ -51,6 +51,20 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
         set(value) {
             Frontend.backgroundProperty.value = value
         }
+    
+    /**
+     * Gets invoked when the application was started and the window was shown.
+     *
+     * @see onWindowClosed
+     */
+    var onWindowShown: (() -> Unit)? = null
+    
+    /**
+     * Gets invoked after the application window was closed.
+     *
+     * @see onWindowShown
+     */
+    var onWindowClosed: (() -> Unit)? = null
     
     init {
         title = windowTitle
@@ -74,23 +88,23 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
      * @return chosen file(s) or [Optional.empty] if canceled.
      */
     fun showFileDialog(dialog: FileDialog): Optional<List<File>> = Frontend.showFileDialog(dialog)
-
+    
     /**
      * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.
      *
      * @param scene menu scene to show.
-     * @param fadeTime time to fade in, specified in milliseconds. Default: [Frontend.DEFAULT_FADE_TIME].
+     * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
-    fun showMenuScene(scene: MenuScene, fadeTime: Number = Frontend.DEFAULT_FADE_TIME) {
+    fun showMenuScene(scene: MenuScene, fadeTime: Number = DEFAULT_FADE_TIME) {
         Frontend.showMenuScene(scene, fadeTime.toDouble())
     }
-
+    
     /**
      * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
      *
-     * @param fadeTime time to fade out, specified in milliseconds. Default: [Frontend.DEFAULT_FADE_TIME].
+     * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
-    fun hideMenuScene(fadeTime: Number = Frontend.DEFAULT_FADE_TIME) {
+    fun hideMenuScene(fadeTime: Number = DEFAULT_FADE_TIME) {
         Frontend.hideMenuScene(fadeTime.toDouble())
     }
 
@@ -152,11 +166,18 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
     fun show() {
         frontend.show()
     }
-
+    
     /**
      * Returns the [show] function, thus closing the application window.
      */
     fun exit() {
         frontend.exit()
+    }
+    
+    companion object {
+        /**
+         * The default fade time for [MenuScene]s in [showMenuScene] or [hideMenuScene].
+         */
+        internal const val DEFAULT_FADE_TIME = 250
     }
 }
