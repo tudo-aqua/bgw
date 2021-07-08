@@ -7,7 +7,6 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.util.BidirectionalMap
-import kotlin.system.exitProcess
 
 class ViewController : BoardGameApplication("MauMau") {
 	
@@ -75,7 +74,7 @@ class ViewController : BoardGameApplication("MauMau") {
         }
         
         mauMauMenuScene.exitButton.onMouseClicked = {
-            exitProcess(0)
+            exit()
         }
     }
 }
