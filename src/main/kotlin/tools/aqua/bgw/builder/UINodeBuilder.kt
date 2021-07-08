@@ -45,11 +45,11 @@ internal class UINodeBuilder {
 					buildColorPicker(uiElementView)
 				is ProgressBar ->
 					buildProgressBar(uiElementView)
-			}.apply {
-				minHeight = 0.0
-				minWidth = 0.0
 			}
 
+		/**
+		 * Builds [Labeled]
+		 */
 		private fun buildLabel(label: Label): Region {
 			val node = javafx.scene.control.Label()
 			node.alignment = Pos.CENTER
@@ -148,7 +148,7 @@ internal class UINodeBuilder {
 		 * Builds [CheckBox].
 		 */
 		private fun buildCheckBox(checkBox: CheckBox): Region {
-			val node = com.jfoenix.controls.JFXCheckBox(checkBox.label)
+			val node = com.jfoenix.controls.JFXCheckBox()
 			node.textProperty().bindLabelProperty(checkBox)
 			node.allowIndeterminateProperty().bindBooleanProperty(checkBox.allowIndeterminateProperty)
 			node.indeterminateProperty().bindBooleanProperty(checkBox.indeterminateProperty)
