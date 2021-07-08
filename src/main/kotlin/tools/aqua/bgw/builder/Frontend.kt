@@ -32,7 +32,7 @@ import kotlin.math.min
 /**
  * Frontend JavaFX wrapper.
  */
-internal class Frontend(private val application: BoardGameApplication) : Application() {
+internal class Frontend : Application() {
 	
 	/**
 	 * Starts the application.
@@ -40,33 +40,26 @@ internal class Frontend(private val application: BoardGameApplication) : Applica
 	override fun start(primaryStage: Stage) {
 		Thread.setDefaultUncaughtExceptionHandler { _, e ->
 			e.printStackTrace()
-			showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message?:"", e))
+			showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message ?: "", e))
 		}
 		
 		startApplication(primaryStage)
 		
-		application.onWindowShown?.invoke()
+		application?.onWindowShown?.invoke()
 	}
 	
 	/**
 	 * Called when the application closes.
 	 */
 	override fun stop() {
-		application.onWindowClosed?.invoke()
+		application?.onWindowClosed?.invoke()
 	}
 	
 	/**
 	 * Starts the application.
 	 */
-	internal fun show() {
+	internal fun start() {
 		launch()
-	}
-	
-	/**
-	 * Stops the application.
-	 */
-	internal fun exit() {
-		Platform.exit()
 	}
 	
 	companion object {
@@ -89,6 +82,7 @@ internal class Frontend(private val application: BoardGameApplication) : Applica
 		internal var sceneX: Double = 0.0
 		internal var sceneY: Double = 0.0
 		
+		internal val application: BoardGameApplication? = null
 		internal val titleProperty: StringProperty = StringProperty()
 		internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(ColorVisual(Color.BLACK))
 		
@@ -353,5 +347,19 @@ internal class Frontend(private val application: BoardGameApplication) : Applica
 						listOf(FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage))
 				}
 			)
+		
+		/**
+		 * Starts the application.
+		 */
+		internal fun show() {
+			Frontend().start()
+		}
+		
+		/**
+		 * Stops the application.
+		 */
+		internal fun exit() {
+			Platform.exit()
+		}
 	}
 }

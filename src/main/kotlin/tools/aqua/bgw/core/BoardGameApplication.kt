@@ -27,11 +27,6 @@ import java.util.*
 open class BoardGameApplication(windowTitle: String = "BoardGameWork Application") {
 
     /**
-     * [Frontend] instance.
-     */
-    private val frontend: Frontend = Frontend(this)
-
-    /**
      * Window title displayed in the title bar.
      */
     var title: String
@@ -164,14 +159,14 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
      * Shows the [BoardGameApplication].
      */
     fun show() {
-        frontend.show()
+        Frontend.show()
     }
     
     /**
      * Returns the [show] function, thus closing the application window.
      */
     fun exit() {
-        frontend.exit()
+        Frontend.exit()
     }
     
     companion object {
