@@ -11,7 +11,7 @@ plugins {
 	signing
 }
 
-group = "io.github.tudo-aqua"
+group = "tools.aqua"
 version = "0.1-SNAPSHOT"
 
 repositories {
@@ -87,13 +87,13 @@ java {
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
-			groupId = "io.github.tudo-aqua"
+			groupId = "tools.aqua"
 			artifactId = "bgw-core"
 			version = "0.1-SNAPSHOT"
 			from(components["java"])
 			
 			pom {
-				name.set("bgw-core")
+				name.set("BoardGameWork Core Library")
 				
 				description.set(
 					"A framework for board game applications."
