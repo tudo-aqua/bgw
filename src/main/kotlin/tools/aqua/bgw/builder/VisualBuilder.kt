@@ -111,8 +111,10 @@ internal class VisualBuilder {
             children.add(label)
         }
 
+        /**
+         * Sets a new padding for this [StackPane] based on the supplied offsets.
+         */
         private fun StackPane.newPadding(offsetX : Double, offsetY : Double) {
-            println("i did it")
             val topInset = if (offsetY >= 0) offsetY else 0.0
             val rightInset = if (offsetX < 0) abs(offsetX) else 0.0
             val bottomInset = if (offsetY < 0) abs(offsetY) else 0.0
