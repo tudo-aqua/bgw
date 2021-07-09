@@ -2,11 +2,13 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.input.MouseButton
 import javafx.scene.paint.Color
 import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.elements.uielements.Orientation
@@ -249,5 +251,22 @@ internal fun Orientation.toJavaFXOrientation(): javafx.geometry.Orientation {
 	return when (this) {
 		Orientation.HORIZONTAL -> javafx.geometry.Orientation.HORIZONTAL
 		Orientation.VERTICAL -> javafx.geometry.Orientation.VERTICAL
+	}
+}
+
+/**
+ * Converts the [Alignment] constant to [Pos]
+ */
+internal fun Alignment.toFXPos(): Pos {
+	return when (this) {
+		Alignment.TOP_LEFT -> Pos.TOP_LEFT
+		Alignment.TOP_RIGHT -> Pos.TOP_RIGHT
+		Alignment.TOP_CENTER -> Pos.TOP_CENTER
+		Alignment.BOTTOM_LEFT -> Pos.BOTTOM_LEFT
+		Alignment.BOTTOM_RIGHT -> Pos.BOTTOM_RIGHT
+		Alignment.BOTTOM_CENTER -> Pos.BOTTOM_CENTER
+		Alignment.CENTER_LEFT -> Pos.CENTER_LEFT
+		Alignment.CENTER_RIGHT -> Pos.CENTER_RIGHT
+		Alignment.CENTER -> Pos.CENTER
 	}
 }

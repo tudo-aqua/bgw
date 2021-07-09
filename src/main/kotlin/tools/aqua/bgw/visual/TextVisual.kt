@@ -2,6 +2,8 @@
 
 package tools.aqua.bgw.visual
 
+import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
@@ -21,6 +23,7 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	
 	/**
 	 * The displayed [text].
+	 * @see textProperty
 	 */
 	var text: String
 		get() = textProperty.value
@@ -35,15 +38,66 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	
 	/**
 	 * The displayed [text] [Font].
+	 * @see fontProperty
 	 */
 	var font: Font
 		get() = fontProperty.value
 		set(value) {
 			fontProperty.value = value
 		}
-	
+
+	/**
+	 * [Property] for the [text] [Alignment].
+	 */
+	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(Alignment.CENTER)
+
+	/**
+	 * The [text] [Alignment].
+	 * @see alignmentProperty
+	 */
+	var alignment: Alignment
+		get() = alignmentProperty.value
+		set(value) {
+			alignmentProperty.value = value
+		}
+
+	/**
+	 * [Property] for the x-axis [text] offset.
+	 */
+	val offsetXProperty: DoubleProperty = DoubleProperty(0)
+
+	/**
+	 * The x-axis [text] offset.
+	 * @see alignmentProperty
+	 */
+	var offsetX: Double
+		get() = offsetXProperty.value
+		set(value) {
+			offsetXProperty.value = value
+		}
+
+	/**
+	 * [Property] for the y-axis [text] offset.
+	 */
+	val offsetYProperty: DoubleProperty = DoubleProperty(0)
+
+	/**
+	 * The y-axis [text] offset.
+	 * @see alignmentProperty
+	 */
+	var offsetY: Double
+		get() = offsetYProperty.value
+		set(value) {
+			offsetYProperty.value = value
+		}
+
 	/**
 	 * Copies this [TextVisual] to a new object.
 	 */
-	override fun copy(): TextVisual = TextVisual(text, font).apply { transparency = this@TextVisual.transparency }
+	override fun copy(): TextVisual = TextVisual(text, font).apply {
+		transparency = this@TextVisual.transparency
+		alignment = this@TextVisual.alignment
+		offsetX = this@TextVisual.offsetX
+		offsetY = this@TextVisual.offsetY
+	}
 }
