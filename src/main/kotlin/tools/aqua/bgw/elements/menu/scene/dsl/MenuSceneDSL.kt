@@ -1,9 +1,9 @@
 package tools.aqua.bgw.elements
 
 import tools.aqua.bgw.core.MenuScene
-import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.uielements.*
+import java.awt.Color
 
 //region Util
 /**
@@ -236,11 +236,67 @@ fun <T> TableView<T>.appendData(data: List<T>) {
 /**
  * Creates a new [TextArea], applies the [func] and adds it to the receiver [MenuScene].
  *
+ * @param prompt the prompt for the new [TextArea].
  * @return the new [TextArea].
  */
 fun MenuScene.textArea(prompt: String, func: TextArea.() -> Unit): TextArea {
     val textArea = TextArea(prompt = prompt).apply(func)
     addElements(textArea)
     return textArea
+}
+//endregion
+
+//region TextField
+/**
+ * Creates a new [TextField], applies the [func] and adds it to the receiver [MenuScene].
+ *
+ * @param prompt the prompt for the new [TextField].
+ * @return the new [TextField].
+ */
+fun MenuScene.textField(prompt: String, func: TextField.() -> Unit): TextField {
+    val textField = TextField(prompt = prompt).apply(func)
+    addElements(textField)
+    return textField
+}
+//endregion
+
+//region ProgressBar
+/**
+ * Creates a new [ProgressBar], applies the [func] and adds it to the receiver [MenuScene].
+ *
+ * @return the new [ProgressBar].
+ */
+fun MenuScene.progressBar(func: ProgressBar.() -> Unit): ProgressBar {
+    val progressBar = ProgressBar().apply(func)
+    addElements(progressBar)
+    return progressBar
+}
+//endregion
+
+//region ComboBox
+/**
+ * Creates a new [ComboBox], applies the [func] and adds it to the receiver [MenuScene].
+ *
+ * @param prompt the prompt for the new [ComboBox].
+ * @return the new [ComboBox].
+ */
+fun <T> MenuScene.comboBox(prompt: String, func: ComboBox<T>.() -> Unit): ComboBox<T> {
+    val comboBox = ComboBox<T>(prompt = prompt).apply(func)
+    addElements(comboBox)
+    return comboBox
+}
+//endregion
+
+//region ColorPicker
+/**
+ * Creates a new [ColorPicker], applies the [func] and adds it to the receiver [MenuScene].
+ *
+ * @param initialColor the initial [Color] for the new [ColorPicker].
+ * @return the new [ColorPicker].
+ */
+fun MenuScene.colorPicker(initialColor : Color, func: ColorPicker.() -> Unit): ColorPicker {
+    val colorPicker = ColorPicker(initialColor = initialColor).apply(func)
+    addElements(colorPicker)
+    return colorPicker
 }
 //endregion
