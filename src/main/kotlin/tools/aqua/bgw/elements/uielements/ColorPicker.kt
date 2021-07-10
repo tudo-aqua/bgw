@@ -2,6 +2,7 @@
 
 package tools.aqua.bgw.elements.uielements
 
+import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.util.Font
 import java.awt.Color
 
@@ -19,9 +20,23 @@ open class ColorPicker(
 	width: Number = DEFAULT_COLOR_PICKER_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	val initialColor: Color = Color.WHITE
+	initialColor: Color = Color.WHITE
 ) : UIElementView(height = height, width = width, posX = posX, posY = posY, font = Font()) {
-	
+
+	/**
+	 * [tools.aqua.bgw.observable.Property] for the currently selected [Color].
+	 */
+	val selectedColorProperty : ObjectProperty<Color> = ObjectProperty(initialColor)
+
+	/**
+	 * The currently selected [Color].
+	 */
+	var selectedColor: Color
+		get() = selectedColorProperty.value
+		set(value) {
+			selectedColorProperty.value = value
+		}
+
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [ColorPicker].
 	 */
