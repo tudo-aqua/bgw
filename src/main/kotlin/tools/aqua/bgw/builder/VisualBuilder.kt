@@ -98,6 +98,7 @@ internal class VisualBuilder {
                     font = newValue.toFXFont()
                     textFill = newValue.color.toFXColor()
                 }
+                wrapTextProperty().set(true)
             }
             visual.alignmentProperty.setGUIListenerAndInvoke(visual.alignment) { _, newValue ->
                 this.alignment = newValue.toFXPos()
