@@ -116,6 +116,57 @@ abstract class ElementView(
 		}
 	
 	/**
+	 * [Property] for the horizontal scale of this [ElementView].
+	 */
+	val scaleXProperty: DoubleProperty = DoubleProperty(1.0)
+	
+	/**
+	 * Horizontal scale of this [ElementView].
+	 * @see scaleYProperty
+	 */
+	var scaleX: Double
+		get() = scaleXProperty.value
+		set(value) {
+			scaleXProperty.value = value
+		}
+	
+	/**
+	 * [Property] for the vertical scale of this [ElementView].
+	 */
+	val scaleYProperty: DoubleProperty = DoubleProperty(1.0)
+	
+	/**
+	 * Vertical scale of this [ElementView].
+	 * @see scaleYProperty
+	 */
+	var scaleY: Double
+		get() = scaleYProperty.value
+		set(value) {
+			scaleYProperty.value = value
+		}
+	
+	/**
+	 * Scale of this [ElementView].
+	 *
+	 * @throws IllegalStateException When invoking getter if scaleX and scaleY differ.
+	 * Use scaleX and scaleY getters instead. Safe to use if scale is equal in both directions.
+	 *
+	 * @see scaleX
+	 * @see scaleY
+	 */
+	var scale: Double
+		get() {
+			require(scaleX == scaleY) {
+				"Cannot return single scale because scaleX ($scaleX) and scaleY ($scaleY) are different."
+			}
+			return scaleX
+		}
+		set(value) {
+			scaleX = value
+			scaleY = value
+		}
+	
+	/**
 	 * [Property] for the rotation of this [ElementView] in degrees.
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
 	 *

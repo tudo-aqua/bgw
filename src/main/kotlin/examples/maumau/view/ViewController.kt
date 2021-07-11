@@ -28,7 +28,9 @@ class ViewController : BoardGameApplication("MauMau") {
 	}
 	
 	private fun registerGameEvents() {
-		gameScene.hintButton.onMouseClicked = { logicController.showHint() }
+		gameScene.hintButton.onMouseClicked = {
+			logicController.showHint()
+		}
 		
 		gameScene.gameStackView.dropAcceptor = this::tryElementDropped
 		gameScene.gameStackView.onDragElementDropped = this::elementDropped

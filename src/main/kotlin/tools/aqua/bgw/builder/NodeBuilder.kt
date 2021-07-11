@@ -176,6 +176,12 @@ internal class NodeBuilder {
 			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
 				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
 			}
+			scaleXProperty.setGUIListenerAndInvoke(scaleX) { _, nV ->
+				stackPane.scaleX = nV
+			}
+			scaleYProperty.setGUIListenerAndInvoke(scaleY) { _, nV ->
+				stackPane.scaleY = nV
+			}
 			
 			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }
 			opacityProperty.setGUIListenerAndInvoke(opacity) { _, nV -> stackPane.opacity = nV }
