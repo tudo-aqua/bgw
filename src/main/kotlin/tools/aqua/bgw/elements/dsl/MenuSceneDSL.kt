@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package tools.aqua.bgw.dsl
+package tools.aqua.bgw.elements.dsl
 
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.elements.StaticView
@@ -12,7 +12,7 @@ import java.awt.Color
 /**
  * MenuSceneBuilder is a static class, that can be used to build [MenuScene]s.
  * It is meant to be used in conjunction with the internal
- * domain specific language in [tools.aqua.bgw.elements.menu.scene.dsl].
+ * domain specific language in [tools.aqua.bgw.elements.dsl].
  *
  * To initiate a new description of a menu scene, simply call the `dsl` function,
  * which then returns the resulting [MenuScene].
