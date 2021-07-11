@@ -47,7 +47,7 @@ internal class NodeBuilder {
 					throw IllegalInheritanceException(elementView, ElementView::class.java)
 			}
 			val background = VisualBuilder.build(elementView)
-			val stackPane = StackPane(background, node)
+			val stackPane = StackPane(background, node).apply { isPickOnBounds = false }
 			
 			//JavaFX -> Framework
 			elementView.registerEvents(stackPane, node, scene)
