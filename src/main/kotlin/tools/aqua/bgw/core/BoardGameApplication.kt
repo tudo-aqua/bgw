@@ -30,6 +30,7 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
     init {
         check(!instantiated) { "Unable to create second application." }
         instantiated = true
+        Frontend.application = this
     }
     
     /**
@@ -120,6 +121,8 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 
     /**
      * Sets [Alignment] of all [Scene]s in this [BoardGameApplication].
+     *
+     * @param newAlignment new alignment to set.
      */
     fun setSceneAlignment(newAlignment: Alignment) {
         setHorizontalSceneAlignment(newAlignment.horizontalAlignment)
@@ -128,6 +131,8 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 
     /**
      * Sets [HorizontalAlignment] of all [Scene]s in this [BoardGameApplication].
+     *
+     * @param newHorizontalAlignment new alignment to set.
      */
     fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
         Frontend.setHorizontalSceneAlignment(newHorizontalAlignment)
@@ -135,6 +140,8 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 
     /**
      * Sets [VerticalAlignment] of all [Scene]s in this [BoardGameApplication].
+     *
+     * @param newVerticalAlignment new alignment to set.
      */
     fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
         Frontend.setVerticalSceneAlignment(newVerticalAlignment)
@@ -142,6 +149,8 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 
     /**
      * Sets [ScaleMode] of all [Scene]s in this [BoardGameApplication].
+     *
+     * @param newScaleMode new scale mode to set.
      */
     fun setScaleMode(newScaleMode: ScaleMode) {
         Frontend.setScaleMode(newScaleMode)

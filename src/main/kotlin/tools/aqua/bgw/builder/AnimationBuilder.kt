@@ -188,6 +188,5 @@ internal class AnimationBuilder {
 			
 			return seq
 		}
-		
 	}
 }

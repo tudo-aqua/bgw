@@ -8,6 +8,9 @@ import javafx.scene.image.WritableImage
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXFont
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.visual.*
 import java.awt.image.BufferedImage
@@ -19,18 +22,24 @@ import kotlin.math.abs
  */
 internal class VisualBuilder {
     companion object {
-        internal const val MAX_HEX = 255.0
-
-        internal fun build(elementView: ElementView): Pane {
-            val root = Pane()
-
-            elementView.visualProperty.setGUIListenerAndInvoke(elementView.visual) { _, nV ->
-                root.children.clear()
-                root.children.add(buildVisual(nV).apply {
-                    prefWidthProperty().bind(root.prefWidthProperty())
-                    prefHeightProperty().bind(root.prefHeightProperty())
-                })
-            }
+	    /**
+	     * Max value of HEX ind decimal.
+	     */
+	    internal const val MAX_HEX = 255.0
+	
+	    /**
+	     * Builds [Visual].
+	     */
+	    internal fun build(elementView: ElementView): Pane {
+		    val root = Pane()
+		
+		    elementView.visualProperty.setGUIListenerAndInvoke(elementView.visual) { _, nV ->
+			    root.children.clear()
+			    root.children.add(buildVisual(nV).apply {
+				    prefWidthProperty().bind(root.prefWidthProperty())
+				    prefHeightProperty().bind(root.prefHeightProperty())
+			    })
+		    }
 
             return root
         }

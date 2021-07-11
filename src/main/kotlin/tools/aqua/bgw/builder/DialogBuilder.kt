@@ -2,40 +2,40 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.control.Alert
 import javafx.scene.control.TextArea
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXAlertType
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXButtonType
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.Dialog
 
-
+/**
+ * DialogBuilder.
+ * Factory for all BGW dialogs.
+ */
 class DialogBuilder {
-	/*
-	 * Alert(
-	alertType.toAlertType(),
-	message,
-	 *buttons.map { it.toFXButtonType() }.toTypedArray()
-	).showAndWait().map { it.toButtonType() }
-	 */
 	companion object {
-		internal fun build(dialog: Dialog): Alert {
-			val alert = Alert(dialog.alertType.toFXAlertType())
-			alert.title = dialog.title
-			alert.headerText = dialog.header
-			alert.contentText = dialog.message
+		/**
+		 * Builds dialogs.
+		 */
+		internal fun build(dialog: Dialog): Alert = Alert(dialog.alertType.toFXAlertType()).apply {
+			title = dialog.title
+			headerText = dialog.header
+			contentText = dialog.message
 			
+			//If user specified buttons, clear defaults and set custom
 			if (dialog.buttons.isNotEmpty()) {
-				alert.buttonTypes.clear()
-				alert.buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
+				buttonTypes.clear()
+				buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
 			}
 			
+			//Add expandable content for exception stack trace in case of AlertType.EXCEPTION
 			if (dialog.alertType == AlertType.EXCEPTION) {
-				alert.dialogPane.expandableContent = TextArea(dialog.exception!!.stackTraceToString()).apply {
+				dialogPane.expandableContent = TextArea(dialog.exception!!.stackTraceToString()).apply {
 					isEditable = false
 					isWrapText = true
 					maxWidth = Double.MAX_VALUE
 					maxHeight = Double.MAX_VALUE
 				}
 			}
-			
-			return alert
 		}
 	}
 }
