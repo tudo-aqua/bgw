@@ -1,6 +1,9 @@
-package tools.aqua.bgw.elements
+@file:Suppress("unused")
+
+package tools.aqua.bgw.dsl
 
 import tools.aqua.bgw.core.MenuScene
+import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.uielements.*
 import java.awt.Color

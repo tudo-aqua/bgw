@@ -2,7 +2,6 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.LimitedDoubleProperty
 import tools.aqua.bgw.observable.Observable
 
 /**
