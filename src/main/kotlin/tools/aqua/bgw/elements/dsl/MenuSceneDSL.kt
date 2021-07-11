@@ -45,7 +45,7 @@ fun UIElementView.backgroundStyle(func: () -> String) {
 //endregion
 
 
-//region grid
+//region Grid
 /**
  * Creates a new [GridLayoutView], applies the [func] and adds it to the receiver [MenuScene].
  *

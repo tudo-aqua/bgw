@@ -15,7 +15,7 @@ internal class ElementViewGrid<T : ElementView>(
 	columns: Int
 ) : Iterable<GridIteratorElement<T>> {
 	
-	//region attributes
+	//region Attributes
 	/**
 	 * Current number of rows.
 	 */
@@ -49,7 +49,7 @@ internal class ElementViewGrid<T : ElementView>(
 	private var columnWidths = DoubleArray(columns) { -1.0 }
 	//endregion
 	
-	//region get/set operators
+	//region Get/Set operators
 	/**
 	 * Returns grid cell content.
 	 *
@@ -76,7 +76,7 @@ internal class ElementViewGrid<T : ElementView>(
 	}
 	//endregion
 	
-	//region get/set center modes
+	//region Get/Set center modes
 	/**
 	 * Returns grid cell centering mode.
 	 *
@@ -147,7 +147,7 @@ internal class ElementViewGrid<T : ElementView>(
 	}
 	//endregion
 	
-	//region get/set values
+	//region Get/Set values
 	/**
 	 * Returns whole row as [List].
 	 *
@@ -173,7 +173,7 @@ internal class ElementViewGrid<T : ElementView>(
 	fun getColumns(): List<List<T?>> = (0 until columns).map { getColumn(it) }
 	//endregion
 	
-	//region get/set column width/row height
+	//region Get/Set column width/row height
 	/**
 	 * Returns preferred column width ([COLUMN_WIDTH_AUTO] for auto).
 	 *
@@ -281,7 +281,7 @@ internal class ElementViewGrid<T : ElementView>(
 	}
 	//endregion
 	
-	//region grow/trim
+	//region Grow/Trim
 	/**
 	 * Extends grid to given directions.
 	 *
@@ -412,7 +412,7 @@ internal class ElementViewGrid<T : ElementView>(
 	}
 	//endregion
 	
-	//region add/remove columns and rows
+	//region Add/Remove columns and rows
 	/**
 	 * Inserts the given amount of columns at the given position.
 	 *
@@ -653,7 +653,7 @@ internal class ElementViewGrid<T : ElementView>(
 	}
 	//endregion
 	
-	//region helper
+	//region Helper
 	/**
 	 * Creates an empty grid of size 0x0.
 	 */
