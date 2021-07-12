@@ -115,7 +115,7 @@ publishing {
 				developers {
 					developer {
 						name.set("Stefan Naujokat")
-						email.set("stefan.naujokat@cs.tu-dortmund.de")
+						email.set("stefan.naujokat@tu-dortmund.de")
 					}
 					developer {
 						name.set("Till Schallau")
@@ -123,7 +123,7 @@ publishing {
 					}
 					developer {
 						name.set("Dominik Mäckel")
-						email.set("dominik.maeckel@cs.tu-dortmund.de")
+						email.set("dominik.maeckel@tu-dortmund.de")
 					}
 					developer {
 						name.set("Fabian Klümpers")
