@@ -2,13 +2,14 @@
 
 package tools.aqua.bgw.elements.container
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
 import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIGHT
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
-import tools.aqua.bgw.exception.EmptyStackException
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -22,10 +23,7 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [CardStackView]. Default: the suggested card width.
  * @param posX horizontal coordinate for this [CardStackView]. Default: 0.
  * @param posY vertical coordinate for this [CardStackView]. Default: 0.
- * @param verticalAlignment specifies how the contained [CardView]s should be aligned vertically.
- * Default: [VerticalAlignment.CENTER].
- * @param horizontalAlignment specifies how the contained CardViews should be aligned horizontally.
- * Default: [HorizontalAlignment.CENTER].
+ * @param alignment specifies how the contained [CardView]s should be aligned. Default: [Alignment.CENTER]
  * @param visual visual for this [CardStackView]. Default: [Visual.EMPTY].
  *
  * @see CardView
@@ -35,83 +33,61 @@ open class CardStackView<T : CardView>(
 	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	verticalAlignment: VerticalAlignment = VerticalAlignment.CENTER,
-	horizontalAlignment: HorizontalAlignment = HorizontalAlignment.CENTER,
+	alignment: Alignment = Alignment.CENTER,
 	visual: Visual = Visual.EMPTY
 ) : GameElementContainerView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	
 	/**
-	 * Property for the verticalAlignment of CardViews in this CardStackView.
-	 * @see VerticalAlignment
+	 * [Property] for the [Alignment] of [CardView]s in this [CardStackView].
 	 */
-	val verticalAlignmentProperty: ObjectProperty<VerticalAlignment> = ObjectProperty(verticalAlignment)
+	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(alignment)
 	
 	/**
-	 * Property for the horizontalAlignment of CardViews in this CardStackView.
-	 * @see HorizontalAlignment
+	 * [Alignment] of [CardView]s in this [CardStackView].
+	 * @see alignmentProperty
 	 */
-	val horizontalAlignmentProperty: ObjectProperty<HorizontalAlignment> = ObjectProperty(horizontalAlignment)
-	
-	/**
-	 * VerticalAlignment of CardViews in this CardStackView.
-	 * @see VerticalAlignment
-	 * @see verticalAlignmentProperty
-	 */
-	var verticalAlignment: VerticalAlignment
-		get() = verticalAlignmentProperty.value
+	var alignment: Alignment
+		get() = alignmentProperty.value
 		set(value) {
-			verticalAlignmentProperty.value = value
-		}
-	
-	/**
-	 * HorizontalAlignment of CardViews in this CardStackView.
-	 * @see HorizontalAlignment
-	 * @see verticalAlignmentProperty
-	 */
-	var horizontalAlignment: HorizontalAlignment
-		get() = horizontalAlignmentProperty.value
-		set(value) {
-			horizontalAlignmentProperty.value = value
+			alignmentProperty.value = value
 		}
 	
 	init {
-		horizontalAlignmentProperty.internalListener = { _, _ ->
-			observableElements.forEach { it.layoutX() }
-		}
-		verticalAlignmentProperty.internalListener = { _, _ ->
-			observableElements.forEach { it.layoutY() }
+		alignmentProperty.internalListener = { _, _ ->
+			observableElements.forEach { it.layoutX(); it.layoutY() }
 		}
 	}
-	
-	
+
 	/**
-	 * Pops the topmost CardView from this CardStackView and returns it,
+	 * Pops the topmost [CardView] from this [CardStackView] and returns it,
 	 * or null, if the stack is empty.
+	 * Removes it from the [CardStackView].
 	 */
 	fun popOrNull(): T? = observableElements.removeLastOrNull()?.apply { removePosListeners(); parent = null }
 	
 	/**
-	 * Pops the topmost CardView from this CardStackView and returns it.
+	 * Pops the topmost [CardView] from this [CardStackView] and returns it.
+	 * Removes it from the [CardStackView].
 	 *
-	 * @throws EmptyStackException If stack was empty.
+	 * @throws NoSuchElementException if stack was empty.
 	 */
-	fun pop(): T = popOrNull() ?: throw EmptyStackException()
+	fun pop(): T = popOrNull() ?: throw NoSuchElementException()
 	
 	/**
-	 * Returns the topmost CardView, or null, if the stack is empty.
-	 * Does not modify the CardStackView.
+	 * Returns the topmost [CardView], or null, if the stack is empty.
+	 * Does not modify the [CardStackView].
 	 */
 	fun peekOrNull(): T? = observableElements.lastOrNull()
 	
 	/**
-	 * Returns the topmost CardView. Does not modify the CardStackView.
+	 * Returns the topmost [CardView]. Does not modify the [CardStackView].
 	 *
-	 * @throws EmptyStackException If stack was empty.
+	 * @throws NoSuchElementException if stack was empty.
 	 */
-	fun peek(): T = peekOrNull() ?: throw EmptyStackException()
+	fun peek(): T = peekOrNull() ?: throw NoSuchElementException()
 	
 	/**
-	 * Adds a CardView on top of this CardStackView.
+	 * Adds a [CardView] on top of this [CardStackView].
 	 */
 	fun push(cardView: T) {
 		observableElements.add(cardView)
@@ -120,22 +96,22 @@ open class CardStackView<T : CardView>(
 	}
 	
 	
-	override fun addElement(element: T, index: Int) {
-		super.addElement(element, index)
+	override fun add(element: T, index: Int) {
+		super.add(element, index)
 		element.addPosListeners()
 	}
 	
-	override fun addAllElements(collection: Collection<T>) {
-		super.addAllElements(collection)
+	override fun addAll(collection: Collection<T>) {
+		super.addAll(collection)
 		collection.forEach { it.addPosListeners() }
 	}
 	
-	override fun addAllElements(vararg elements: T) {
-		addAllElements(elements.toList())
+	override fun addAll(vararg elements: T) {
+		addAll(elements.toList())
 	}
 	
-	override fun removeElement(element: T) {
-		super.removeElement(element)
+	override fun remove(element: T) {
+		super.remove(element)
 		element.removePosListeners()
 	}
 	
@@ -156,8 +132,9 @@ open class CardStackView<T : CardView>(
 	}
 	
 	private fun T.layoutX() {
+
 		posXProperty.setSilent(
-			when (horizontalAlignment) {
+			when (alignment.horizontalAlignment) {
 				HorizontalAlignment.LEFT -> 0.0
 				HorizontalAlignment.CENTER -> (this@CardStackView.width - this.width) / 2
 				HorizontalAlignment.RIGHT -> this@CardStackView.width - this.width
@@ -167,7 +144,7 @@ open class CardStackView<T : CardView>(
 	
 	private fun T.layoutY() {
 		posYProperty.setSilent(
-			when (verticalAlignment) {
+			when (alignment.verticalAlignment) {
 				VerticalAlignment.TOP -> 0.0
 				VerticalAlignment.CENTER -> (this@CardStackView.height - this.height) / 2
 				VerticalAlignment.BOTTOM -> this@CardStackView.height - this.height

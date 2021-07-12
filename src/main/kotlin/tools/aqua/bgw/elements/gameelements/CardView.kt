@@ -2,6 +2,8 @@
 
 package tools.aqua.bgw.elements.gameelements
 
+import tools.aqua.bgw.elements.gameelements.CardView.CardSide.BACK
+import tools.aqua.bgw.elements.gameelements.CardView.CardSide.FRONT
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_HEIGHT
 import tools.aqua.bgw.elements.gameelements.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.visual.Visual
@@ -33,7 +35,7 @@ open class CardView(
 	width = width,
 	posX = posX,
 	posY = posY,
-	visual = back
+	visual = Visual.EMPTY
 ) {
 	/**
 	 * The current [CardSide] that is displayed.
@@ -41,12 +43,12 @@ open class CardView(
 	 * @see showFront
 	 * @see showBack
 	 */
-	var currentSide: CardSide = CardSide.BACK
+	var currentSide: CardSide = FRONT
 		set(value) {
 			if (field != value) {
 				field = value
 				
-				visual = if (value == CardSide.FRONT)
+				visualProperty.value = if (value == FRONT)
 					frontVisual
 				else
 					backVisual
@@ -56,73 +58,89 @@ open class CardView(
 	/**
 	 * Front [Visual] for this [CardView].
 	 */
-	var frontVisual: Visual = front
+	var frontVisual: Visual = Visual.EMPTY
+		/**
+		 * Sets front [Visual] for this [CardView] as a copy of given [value].
+		 */
 		set(value) {
-			field = value
+			field = value.copy()
 			
-			if (currentSide == CardSide.FRONT)
-				visual = value
+			if (currentSide == FRONT)
+				visual = field
 		}
 	
 	/**
 	 * Back [Visual] for this [CardView].
 	 */
-	var backVisual: Visual = back
+	var backVisual: Visual = Visual.EMPTY
+		/**
+		 * Sets back [Visual] for this [CardView] as a copy of given [value].
+		 */
 		set(value) {
-			field = value
+			field = value.copy()
 			
-			if (currentSide == CardSide.BACK)
-				visual = value
+			if (currentSide == BACK)
+				visual = field
 		}
 	
 	/**
-	 * Sets the currentSide to be displayed to front.
+	 * Sets the [currentSide] to be displayed to [CardSide.FRONT].
 	 */
 	fun showFront() {
-		currentSide = CardSide.FRONT
+		currentSide = FRONT
 	}
 	
 	/**
-	 * Sets the currentSide to be displayed to back.
+	 * Sets the [currentSide] to be displayed to [CardSide.BACK].
 	 */
 	fun showBack() {
-		currentSide = CardSide.BACK
+		currentSide = BACK
 	}
 	
 	/**
-	 * Sets the currentSide to the parameter value.
+	 * Sets the [currentSide] to the parameter value.
 	 */
 	fun showCardSide(side: CardSide) {
 		currentSide = side
 	}
 	
+	init {
+		this.frontVisual = front
+		this.backVisual = back
+		this.currentSide = BACK
+	}
+	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a card.
+	 * Defines some static constants that can be used as suggested properties of a [CardView].
 	 */
 	companion object {
 		/**
-		 * Suggested card height.
+		 * Suggested [CardView] [height].
 		 */
 		const val DEFAULT_CARD_HEIGHT: Int = 200
 		
 		/**
-		 * Suggested card width.
+		 * Suggested [CardView] [width].
 		 */
 		const val DEFAULT_CARD_WIDTH: Int = 130
 	}
 	
 	/**
-	 * Enum for the card sides FRONT and BACK with their visual indices.
+	 * Enum for the card sides [FRONT] and [BACK] with their visual indices.
 	 */
 	enum class CardSide {
 		/**
-		 * The FRONT side.
+		 * The [FRONT] side.
 		 */
 		FRONT,
 		
 		/**
-		 * The BACK side.
+		 * The [BACK] side.
 		 */
 		BACK
+	}
+	
+	override fun toString(): String {
+		return name
 	}
 }

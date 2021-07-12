@@ -8,213 +8,304 @@ import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
-import javafx.scene.paint.Color
-import tools.aqua.bgw.builder.FontConverter.Companion.toFXFont
-import tools.aqua.bgw.builder.VisualBuilder.Companion.MAX_HEX
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXFont
+import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.util.Font
+import java.awt.Color
 
 /**
  * UINodeBuilder.
  * Factory for all BGW UI elements.
  */
 internal class UINodeBuilder {
-	companion object {
-		internal fun buildLabel(label: Label): Region {
-			val node = javafx.scene.control.Label()
-			node.alignment = Pos.CENTER
-			node.textProperty().bindTextProperty(label)
-			node.bindFont(label)
-			return node
-		}
-		
-		internal fun buildButton(button: Button): Region {
-			val node = com.jfoenix.controls.JFXButton()
-			node.textProperty().bindTextProperty(button)
-			node.bindFont(button)
-			return node
-		}
-		
-		internal fun buildTextArea(textArea: TextArea): Region {
-			val node = javafx.scene.control.TextArea(textArea.labelProperty.value)
-			
-			node.textProperty().bindTextProperty(textArea)
-			node.promptText = textArea.prompt
-			textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
-				node.font = nV.toFXFont()
-				//TODO text color
-			}
-			return node
-		}
-		
-		internal fun <T> buildComboBox(comboBox: ComboBox<T>): Region {
-			val node = JFXComboBox<T>()
-			comboBox.observableItemsList.setGUIListenerAndInvoke {
-				node.items.clear()
-				comboBox.items.forEach { node.items.add(it) }
-				node.setCellFactory(comboBox)
-			}
-			node.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
-				comboBox.selectedItem = newValue
-			}
-			comboBox.selectedItemProperty.setInternalListenerAndInvoke(comboBox.selectedItem) { _, newValue ->
-				if (newValue != null) {
-					node.selectionModel.select(newValue)
-				}
-			}
-			node.promptText = comboBox.prompt
-			//font
-			comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, _ ->
-				node.buttonCell.font = comboBox.font.toFXFont()
-				node.buttonCell.textFill = comboBox.font.color.toFXColor()
-				node.setCellFactory(comboBox)
-			}
-			return node
-		}
+    companion object {
+        /**
+         * Switches between [UIElementView]s.
+         */
+        internal fun buildUIElement(uiElementView: UIElementView): Region =
+            when (uiElementView) {
+                is Button ->
+                    buildButton(uiElementView)
+                is CheckBox ->
+                    buildCheckBox(uiElementView)
+                is ComboBox<*> ->
+                    buildComboBox(uiElementView)
+                is Label ->
+                    buildLabel(uiElementView)
+                is ListView<*> ->
+                    buildListView(uiElementView)
+                is TableView<*> ->
+                    buildTableView(uiElementView)
+                is TextArea ->
+                    buildTextArea(uiElementView)
+                is TextField ->
+                    buildTextField(uiElementView)
+                is ToggleButton ->
+                    buildToggleButton(uiElementView)
+                is ColorPicker ->
+                    buildColorPicker(uiElementView)
+                is ProgressBar ->
+                    buildProgressBar(uiElementView)
+            }
 
-		private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
-			cellFactory = javafx.util.Callback {
-				object : ListCell<T>() {
-					override fun updateItem(item: T, empty: Boolean) {
-						super.updateItem(item, empty)
-						this.font = comboBox.font.toFXFont()
-						this.textFill = comboBox.font.color.toFXColor()
-						if (!empty) {
-							this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
-						}
-					}
-				}
-			}
-		}
+        /**
+         * Builds [Labeled]
+         */
+        private fun buildLabel(label: Label): Region {
+            val node = javafx.scene.control.Label()
+            node.alignment = Pos.CENTER
+            node.textProperty().bindLabelProperty(label)
+            node.bindFont(label)
+            return node
+        }
 
-		internal fun buildCheckBox(checkBox: CheckBox): Region {
-			val node = com.jfoenix.controls.JFXCheckBox(checkBox.label)
-			node.textProperty().bindTextProperty(checkBox)
-			node.allowIndeterminateProperty().bindBooleanProperty(checkBox.allowIndeterminateProperty)
-			node.indeterminateProperty().bindBooleanProperty(checkBox.indeterminateProperty)
-			node.selectedProperty().bindBooleanProperty(checkBox.checkedProperty)
-			//font size
-			node.bindFont(checkBox)
-			return node
-		}
-		
-		internal fun buildColorPicker(colorPicker: ColorPicker): Region =
-			javafx.scene.control.ColorPicker(colorPicker.initialColor.toFXColor())
-		
-		internal fun <T> buildListView(listView: ListView<T>): Region {
-			val node = javafx.scene.control.ListView<T>(FXCollections.observableArrayList())
-			listView.apply {
-				observableItemsList.setGUIListenerAndInvoke {
-					node.items.clear()
-					listView.items.forEach { node.items.add(it) }
-				}
-				fontProperty.setGUIListenerAndInvoke(this.font) { _, font ->
-					node.cellFactory = javafx.util.Callback {
-						object : ListCell<T>() {
-							override fun updateItem(item: T, empty: Boolean) {
-								this.font = font.toFXFont()
-								this.textFill = font.color.toFXColor()
-								if (!empty) {
-									this.text = listView.formatFunction?.invoke(item) ?: item.toString()
-								}
-							}
-						}
-					}
-				}
-				orientationProperty.setGUIListenerAndInvoke(this.orientation) { _, nV ->
-					node.orientationProperty().value = nV.toJavaFXOrientation()
-				}
-			}
-			return node
-		}
-		
-		internal fun buildToggleButton(toggleButton: ToggleButton): Region {
-			val node = if (toggleButton is RadioButton)
-				com.jfoenix.controls.JFXRadioButton()
-			else
-				com.jfoenix.controls.JFXToggleButton()
-			
-			node.selectedProperty().bindBooleanProperty(toggleButton.selectedProperty)
-			
-			return node
-		}
-		
-		fun buildProgressBar(progressBar: ProgressBar): Region = javafx.scene.control.ProgressBar().apply {
-			progressBar.progressProperty.setGUIListenerAndInvoke(progressBar.progress) { _, nV ->
-				this.progress = if (nV < 0.0) 0.0 else nV
-			}
-			progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) { _, nV ->
-				//TODO remove css usage
-				style = "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
-			}
-		}
-		
-		internal fun <T> buildTableView(uiElementView: TableView<T>): Region {
-			val node = javafx.scene.control.TableView<T>().apply {
-				populateTableView(uiElementView)
-			}
-			uiElementView.items.guiListener = {
-				node.populateTableView(uiElementView)
-			}
-			uiElementView.columns.guiListener = {
-				node.populateTableView(uiElementView)
-			}
-			node.isEditable = false
-			return node
-		}
-		
-		private fun <T> javafx.scene.control.TableView<T>.populateTableView(tableView: TableView<T>) {
-			items.clear()
-			items.addAll(tableView.items)
-			columns.clear()
-			tableView.columns.forEach {
-				columns.add(TableColumn<T, String>(it.title).apply {
-					this.minWidth = it.width.toDouble()
-					this.isResizable = false
-					setCellValueFactory { data ->
-						ReadOnlyStringWrapper(it.formatFunction(data.value))
-					}
-				})
-			}
-		}
-		
-		private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: LabeledUIElementView) {
-			//Framework -> JavaFX
-			labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
-			//JavaFX -> Framework
-			addListener { _, _, new -> labeled.label = new }
-		}
-		
-		private fun javafx.beans.property.BooleanProperty.bindBooleanProperty(booleanProperty: BooleanProperty) {
-			//Framework -> JavaFX
-			booleanProperty.guiListener = { _, nV -> value = nV }
-			
-			//JavaFX -> Framework
-			value = booleanProperty.value
-			addListener { _, _, new -> booleanProperty.value = new }
-		}
-		
-		private fun Orientation.toJavaFXOrientation(): javafx.geometry.Orientation {
-			return when (this) {
-				Orientation.HORIZONTAL -> javafx.geometry.Orientation.HORIZONTAL
-				Orientation.VERTICAL -> javafx.geometry.Orientation.VERTICAL
-			}
-		}
-		
-		private fun java.awt.Color.toFXColor(): Color = Color(
-			red / MAX_HEX,
-			green / MAX_HEX,
-			blue / MAX_HEX,
-			alpha / MAX_HEX,
-		)
-		
-		private fun Labeled.bindFont(labeled: LabeledUIElementView) {
-			labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
-				font = nV.toFXFont()
-				textFill = nV.color.toFXColor()
-			}
-		}
-	}
+        /**
+         * Builds [Button].
+         */
+        private fun buildButton(button: Button): Region {
+            val node = com.jfoenix.controls.JFXButton()
+            node.textProperty().bindLabelProperty(button)
+            node.bindFont(button)
+            return node
+        }
+
+        /**
+         * Builds [TextArea].
+         */
+        private fun buildTextArea(textArea: TextArea): Region {
+            val node = javafx.scene.control.TextArea(textArea.labelProperty.value)
+
+            node.textProperty().bindLabelProperty(textArea)
+            node.promptText = textArea.prompt
+            textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
+                node.font = nV.toFXFont()
+                //TODO text color
+            }
+            return node
+        }
+
+        /**
+         * Builds [TextField]
+         */
+        private fun buildTextField(textField: TextField): Region {
+            val node = javafx.scene.control.TextField(textField.labelProperty.value)
+
+            node.textProperty().bindLabelProperty(textField)
+            node.promptText = textField.prompt
+            textField.fontProperty.setGUIListenerAndInvoke(textField.font) { _, nV ->
+                node.font = nV.toFXFont()
+                //TODO text color
+            }
+            return node
+        }
+
+        /**
+         * Builds [ComboBox].
+         */
+        private fun <T> buildComboBox(comboBox: ComboBox<T>): Region {
+            val node = JFXComboBox<T>()
+            comboBox.observableItemsList.setGUIListenerAndInvoke {
+                node.items.clear()
+                comboBox.items.forEach { node.items.add(it) }
+                node.setCellFactory(comboBox)
+            }
+            node.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
+                comboBox.selectedItem = newValue
+            }
+            comboBox.selectedItemProperty.setInternalListenerAndInvoke(comboBox.selectedItem) { _, newValue ->
+                if (newValue != null) {
+                    node.selectionModel.select(newValue)
+                }
+            }
+            node.promptText = comboBox.prompt
+            //font
+            comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, _ ->
+                node.buttonCell.font = comboBox.font.toFXFont()
+                node.buttonCell.textFill = comboBox.font.color.toFXColor()
+                node.setCellFactory(comboBox)
+            }
+            return node
+        }
+
+        /**
+         * Sets [ComboBox] cell factory .
+         */
+        private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
+            cellFactory = javafx.util.Callback {
+                object : ListCell<T>() {
+                    override fun updateItem(item: T, empty: Boolean) {
+                        super.updateItem(item, empty)
+                        this.font = comboBox.font.toFXFont()
+                        this.textFill = comboBox.font.color.toFXColor()
+                        if (!empty) {
+                            this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Builds [CheckBox].
+         */
+        private fun buildCheckBox(checkBox: CheckBox): Region {
+            val node = com.jfoenix.controls.JFXCheckBox()
+            node.textProperty().bindLabelProperty(checkBox)
+            node.allowIndeterminateProperty().bindBooleanProperty(checkBox.allowIndeterminateProperty)
+            node.indeterminateProperty().bindBooleanProperty(checkBox.indeterminateProperty)
+            node.selectedProperty().bindBooleanProperty(checkBox.checkedProperty)
+            //font size
+            node.bindFont(checkBox)
+            return node
+        }
+
+        /**
+         * Builds [ColorPicker].
+         */
+        private fun buildColorPicker(colorPicker: ColorPicker): Region =
+            javafx.scene.control.ColorPicker().apply {
+                colorPicker.selectedColorProperty.setGUIListenerAndInvoke(colorPicker.selectedColor) { _, newValue ->
+                    this.value = newValue.toFXColor()
+                }
+                this.valueProperty().addListener { _, _, newValue ->
+                    colorPicker.selectedColor = Color(
+                        newValue.red.toFloat(),
+                        newValue.green.toFloat(),
+                        newValue.blue.toFloat(),
+                        newValue.opacity.toFloat()
+                    )
+                }
+            }
+
+        /**
+         * Builds [ListView].
+         */
+        private fun <T> buildListView(listView: ListView<T>): Region {
+            val node = javafx.scene.control.ListView<T>(FXCollections.observableArrayList())
+	
+	        listView.apply {
+                observableItemsList.setGUIListenerAndInvoke {
+                    node.items.clear()
+                    listView.items.forEach { node.items.add(it) }
+                }
+                fontProperty.setGUIListenerAndInvoke(this.font) { _, font ->
+                    node.cellFactory = javafx.util.Callback {
+                        object : ListCell<T>() {
+                            override fun updateItem(item: T, empty: Boolean) {
+                                this.font = font.toFXFont()
+                                this.textFill = font.color.toFXColor()
+                                if (!empty) {
+                                    this.text = listView.formatFunction?.invoke(item) ?: item.toString()
+                                }
+                            }
+                        }
+                    }
+                }
+                orientationProperty.setGUIListenerAndInvoke(this.orientation) { _, nV ->
+                    node.orientationProperty().value = nV.toJavaFXOrientation()
+                }
+            }
+	
+	        return node
+        }
+
+        /**
+         * Builds [ToggleButton] or [RadioButton].
+         */
+        private fun buildToggleButton(toggleButton: ToggleButton): Region {
+            val node = if (toggleButton is RadioButton)
+                com.jfoenix.controls.JFXRadioButton()
+            else
+                com.jfoenix.controls.JFXToggleButton()
+
+            node.selectedProperty().bindBooleanProperty(toggleButton.selectedProperty)
+
+            return node
+        }
+
+        /**
+         * Builds [ProgressBar].
+         */
+        private fun buildProgressBar(progressBar: ProgressBar): Region = javafx.scene.control.ProgressBar().apply {
+            progressBar.progressProperty.setGUIListenerAndInvoke(progressBar.progress) { _, nV ->
+                this.progress = if (nV < 0.0) 0.0 else nV
+            }
+            progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) { _, nV ->
+                //TODO remove css usage
+                style = "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
+            }
+        }
+
+        /**
+         * Builds [TableView].
+         */
+        private fun <T> buildTableView(uiElementView: TableView<T>): Region {
+            val node = javafx.scene.control.TableView<T>().apply {
+                populateTableView(uiElementView)
+            }
+            uiElementView.items.guiListener = {
+                node.populateTableView(uiElementView)
+            }
+            uiElementView.columns.guiListener = {
+                node.populateTableView(uiElementView)
+            }
+            node.isEditable = false
+            return node
+        }
+
+        /**
+         * Sets [TableView] children.
+         */
+        private fun <T> javafx.scene.control.TableView<T>.populateTableView(tableView: TableView<T>) {
+            items.clear()
+            items.addAll(tableView.items)
+            columns.clear()
+            tableView.columns.forEach {
+                columns.add(TableColumn<T, String>(it.title).apply {
+                    this.minWidth = it.width.toDouble()
+                    this.isResizable = false
+                    setCellValueFactory { data ->
+                        ReadOnlyStringWrapper(it.formatFunction(data.value))
+                    }
+                })
+            }
+        }
+
+        /**
+         * Binds [LabeledUIElementView.labelProperty].
+         */
+        private fun javafx.beans.property.StringProperty.bindLabelProperty(labeled: LabeledUIElementView) {
+            //Framework -> JavaFX
+            labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
+            //JavaFX -> Framework
+            addListener { _, _, new -> labeled.label = new }
+        }
+
+        /**
+         * Binds [BooleanProperty].
+         */
+        private fun javafx.beans.property.BooleanProperty.bindBooleanProperty(booleanProperty: BooleanProperty) {
+            //Framework -> JavaFX
+            booleanProperty.guiListener = { _, nV -> value = nV }
+
+            //JavaFX -> Framework
+            value = booleanProperty.value
+            addListener { _, _, new -> booleanProperty.value = new }
+        }
+
+        /**
+         * Binds [Font].
+         */
+        private fun Labeled.bindFont(labeled: LabeledUIElementView) {
+            labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
+                font = nV.toFXFont()
+                textFill = nV.color.toFXColor()
+            }
+        }
+    }
 }
 
 

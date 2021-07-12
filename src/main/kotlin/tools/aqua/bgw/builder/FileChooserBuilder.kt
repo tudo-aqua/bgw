@@ -24,13 +24,14 @@ internal class FileChooserBuilder {
 				if (chooser.initialDirectory != null)
 					initialDirectory = chooser.initialDirectory
 				
-				if (chooser.extensionFilters.isNotEmpty())
+				if (chooser.extensionFilters.isNotEmpty()) {
 					extensionFilters.addAll(chooser.extensionFilters.map {
 						FileChooser.ExtensionFilter(
 							it.description,
 							it.extensions
 						)
 					})
+				}
 			}
 		
 		/**

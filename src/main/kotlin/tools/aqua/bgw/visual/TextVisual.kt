@@ -2,7 +2,10 @@
 
 package tools.aqua.bgw.visual
 
+import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
@@ -12,14 +15,15 @@ import tools.aqua.bgw.util.Font
  * @param text text to display.
  * @param font font to be used for the [text]
  */
-class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
+open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
-	 * The property for the displayed text.
+	 * [Property] for the displayed [text].
 	 */
 	val textProperty: StringProperty = StringProperty(text)
 	
 	/**
-	 * The displayed text.
+	 * The displayed [text].
+	 * @see textProperty
 	 */
 	var text: String
 		get() = textProperty.value
@@ -28,16 +32,72 @@ class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 		}
 	
 	/**
-	 * The property for the displayed text font.
+	 * [Property] for the displayed [text] [Font].
 	 */
 	val fontProperty: ObjectProperty<Font> = ObjectProperty(font)
 	
 	/**
-	 * The displayed text font.
+	 * The displayed [text] [Font].
+	 * @see fontProperty
 	 */
 	var font: Font
 		get() = fontProperty.value
 		set(value) {
 			fontProperty.value = value
 		}
+
+	/**
+	 * [Property] for the [text] [Alignment].
+	 */
+	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(Alignment.CENTER)
+
+	/**
+	 * The [text] [Alignment].
+	 * @see alignmentProperty
+	 */
+	var alignment: Alignment
+		get() = alignmentProperty.value
+		set(value) {
+			alignmentProperty.value = value
+		}
+
+	/**
+	 * [Property] for the x-axis [text] offset.
+	 */
+	val offsetXProperty: DoubleProperty = DoubleProperty(0)
+
+	/**
+	 * The x-axis [text] offset.
+	 * @see alignmentProperty
+	 */
+	var offsetX: Double
+		get() = offsetXProperty.value
+		set(value) {
+			offsetXProperty.value = value
+		}
+
+	/**
+	 * [Property] for the y-axis [text] offset.
+	 */
+	val offsetYProperty: DoubleProperty = DoubleProperty(0)
+
+	/**
+	 * The y-axis [text] offset.
+	 * @see alignmentProperty
+	 */
+	var offsetY: Double
+		get() = offsetYProperty.value
+		set(value) {
+			offsetYProperty.value = value
+		}
+
+	/**
+	 * Copies this [TextVisual] to a new object.
+	 */
+	override fun copy(): TextVisual = TextVisual(text, font).apply {
+		transparency = this@TextVisual.transparency
+		alignment = this@TextVisual.alignment
+		offsetX = this@TextVisual.offsetX
+		offsetY = this@TextVisual.offsetY
+	}
 }

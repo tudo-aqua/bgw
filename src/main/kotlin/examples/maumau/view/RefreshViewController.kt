@@ -9,7 +9,6 @@ import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.event.EventHandler
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
@@ -19,8 +18,9 @@ import javax.imageio.ImageIO
 
 class RefreshViewController(private val viewController: ViewController) : Refreshable {
 	
+	
 	private val image: BufferedImage = ImageIO.read(this::class.java.classLoader.getResource(CARDS_FILE))
-	private val overlay = ColorVisual.GREEN.apply { transparency = 0.0 }
+	private var hintOverlay: ColorVisual? = null
 	
 	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
 		val playerHandView = if (player == viewController.logicController.game.currentPlayer)
@@ -30,8 +30,8 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		
 		//transfer card
 		val cardView = viewController.cardMap.forward(card)
-		viewController.gameScene.drawStackView.removeElement(cardView)
-		playerHandView.addElement(cardView)
+		viewController.gameScene.drawStackView.remove(cardView)
+		playerHandView.add(cardView)
 		
 		if (player == viewController.logicController.game.currentPlayer)
 			cardView.showFront()
@@ -45,6 +45,9 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		
 		//hide suit selection
 		showJackEffectSelection(false)
+		
+		//Clear overlay
+		hintOverlay?.transparency = 0.0
 	}
 	
 	override fun refreshCardPlayed(card: MauMauCard, animated: Boolean) {
@@ -66,9 +69,9 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				duration = 500
 			)
 			
-			anim.onFinished = EventHandler {
-				viewController.gameScene.currentPlayerHand.removeElement(cardView)
-				viewController.gameScene.gameStackView.addElement(cardView)
+			anim.onFinished = {
+				viewController.gameScene.currentPlayerHand.remove(cardView)
+				viewController.gameScene.gameStackView.add(cardView)
 				
 				cardView.posX = 0.0
 				cardView.posY = 0.0
@@ -81,7 +84,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			viewController.gameScene.lock()
 			viewController.gameScene.playAnimation(anim)
 		} else {
-			viewController.gameScene.currentPlayerHand.removeElement(cardView)
+			viewController.gameScene.currentPlayerHand.remove(cardView)
 			viewController.gameScene.gameStackView.push(cardView)
 			
 			cardView.posX = 0.0
@@ -91,6 +94,9 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 			viewController.gameScene.gameStackInfo.labelProperty.value =
 				viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 		}
+		
+		//Clear overlay
+		hintOverlay?.transparency = 0.0
 	}
 	
 	override fun refreshGameStackShuffledBack() {
@@ -101,7 +107,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		}
 		
 		
-		viewController.gameScene.drawStackView.addAllElements(
+		viewController.gameScene.drawStackView.addAll(
 			viewController.logicController.game.drawStack.cards.map { viewController.cardMap.forward(it) }.onEach {
 				it.removeInteraction()
 				it.showBack()
@@ -117,39 +123,62 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		showJackEffectSelection(true)
 	}
 	
+	override fun refreshHintTakeCard() {
+		hintOverlay = ((viewController.gameScene.drawStackView.elements.last().visual as CompoundVisual)
+			.children.last() as ColorVisual)
+			.apply {
+				color = Color.YELLOW
+				transparency = 0.5
+			}
+	}
+	
+	override fun refreshHintPlayCard(card: MauMauCard) {
+		hintOverlay = ((viewController.cardMap.forward(card).visual as CompoundVisual)
+			.children.last() as ColorVisual)
+			.apply {
+				color = Color.YELLOW
+				transparency = 0.5
+			}
+	}
+	
 	override fun refreshAll() {
 		val game = viewController.logicController.game
-		val cardBack = ImageVisual(image.getSubimage(2 * IMG_WIDTH, 4 * IMG_HEIGHT, IMG_WIDTH, IMG_HEIGHT))
+		val cardBack = ImageVisual(
+			image,
+			IMG_WIDTH,
+			IMG_HEIGHT,
+			2 * IMG_WIDTH,
+			4 * IMG_HEIGHT
+		)
 		
 		//Generate cards
 		viewController.cardMap.clear()
 		for (card in game.mauMauCards) {
 			val cardFront = ImageVisual(
-				image.getSubimage(
-					card.cardValue.ordinal * IMG_WIDTH,
-					card.cardSuit.ordinal * IMG_HEIGHT,
-					IMG_WIDTH,
-					IMG_HEIGHT
-				)
+				image,
+				IMG_WIDTH,
+				IMG_HEIGHT,
+				card.cardValue.ordinal * IMG_WIDTH,
+				card.cardSuit.ordinal * IMG_HEIGHT,
 			)
 			
 			val cardView = CardView(
 				height = 200,
 				width = 130,
-				front = CompoundVisual(cardFront, overlay),
-				back = cardBack
-			)
+				front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
+				back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT)
+			).apply { name = card.toString() }
 			
 			viewController.cardMap.add(card, cardView)
 		}
 		
 		//Add elements to stacks
-		viewController.gameScene.drawStackView.addAllElements(
+		viewController.gameScene.drawStackView.addAll(
 			game.drawStack.cards.asReversed().map { card ->
 				viewController.cardMap.forward(card).apply { showBack() }
 			})
 		
-		viewController.gameScene.gameStackView.addAllElements(
+		viewController.gameScene.gameStackView.addAll(
 			game.gameStack.cards.asReversed().map { card ->
 				viewController.cardMap.forward(card).apply { showFront() }
 			})
@@ -163,12 +192,12 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		
 		//Add elements to hands
 		for (i in 0 until game.currentPlayer.hand.cards.size) {
-			viewController.gameScene.currentPlayerHand.addElement(
+			viewController.gameScene.currentPlayerHand.add(
 				viewController.cardMap.forward(game.currentPlayer.hand.cards[i]).apply { showFront() }
 			)
 		}
 		for (i in 0 until game.otherPlayer.hand.cards.size) {
-			viewController.gameScene.otherPlayerHand.addElement(
+			viewController.gameScene.otherPlayerHand.add(
 				viewController.cardMap.forward(game.otherPlayer.hand.cards[i]).apply { showBack() }
 			)
 		}
@@ -188,7 +217,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 	override fun refreshAdvancePlayer() {
 		val delay = DelayAnimation(1000)
 		
-		delay.onFinished = EventHandler {
+		delay.onFinished = {
 			//swap playerHands
 			val tmp = viewController.gameScene.currentPlayerHand
 			viewController.gameScene.currentPlayerHand = viewController.gameScene.otherPlayerHand
@@ -257,19 +286,23 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		}*/
 		isDraggable = true
 		
-		var topCard: CardView? = null
+		var overlay: ColorVisual? = null
 		onDragGestureStarted = {
-			topCard = viewController.gameScene.gameStackView.elements.last()
-			
-			overlay.color = if (viewController.logicController.checkRules(viewController.cardMap.backward(this)))
-				Color.GREEN
-			else
-				Color.RED
-			overlay.transparency = 0.5
+			overlay =
+				((viewController.gameScene.gameStackView.elements.last().visual as CompoundVisual).children.last() as ColorVisual).apply {
+					color = if (viewController.logicController.checkRules(
+							viewController.cardMap.backward(this@addInteraction)
+						)
+					)
+						Color.GREEN
+					else
+						Color.RED
+					
+					transparency = 0.5
+				}
 		}
 		onDragGestureEnded = { _, _ ->
-			topCard?.showFront()
-			overlay.transparency = 0.0
+			overlay?.transparency = 0.0
 		}
 		onMouseClicked = { viewController.logicController.playCard(viewController.cardMap.backward(this), true) }
 	}

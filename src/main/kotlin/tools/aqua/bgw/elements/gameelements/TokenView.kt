@@ -26,16 +26,16 @@ open class TokenView(
 	visual: Visual
 ) : GameElementView(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	/**
-	 * Defines some static constants that can be used as suggested properties of a token.
+	 * Defines some static constants that can be used as suggested properties of a [TokenView].
 	 */
 	companion object {
 		/**
-		 * Suggested token height.
+		 * Suggested [TokenView] [height].
 		 */
 		const val DEFAULT_TOKEN_HEIGHT: Int = 50
 		
 		/**
-		 * Suggested token width.
+		 * Suggested [TokenView] [width].
 		 */
 		const val DEFAULT_TOKEN_WIDTH: Int = 50
 	}

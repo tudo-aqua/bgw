@@ -6,7 +6,7 @@ import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.visual.Visual
 
 /**
- * The root element in the view hierarchy of a scene.
+ * The root element in the view hierarchy of a [Scene].
  *
  * @param scene scene of this root element.
  */

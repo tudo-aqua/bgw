@@ -12,7 +12,7 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * GameElementContainerView is the abstract baseclass for containers that can contain [ElementView]s or its subclasses.
+ * Baseclass for containers that can contain [ElementView]s or its subclasses.
  * It provides the list to store [ElementView]s and some useful methods to work on said list.
  *
  * @param height height for this [GameElementContainerView].
@@ -29,54 +29,56 @@ sealed class GameElementContainerView<T : GameElementView>(
 	visual: Visual
 ) : DynamicView(height = height, width = width, visual = visual, posX = posX, posY = posY), Iterable<T> {
 	/**
-	 * An ObservableList to store the ElementViews that are contained in this GameElementContainerView.
-	 * If changes are made to this list, this GameElementContainerView gets re-rendered.
+	 * An [ObservableList] to store the [ElementView]s that are contained in this [GameElementContainerView].
+	 * If changes are made to this list, this [GameElementContainerView] gets re-rendered.
 	 */
 	internal val observableElements: ObservableList<T> = ObservableLinkedList()
 	
 	/**
-	 * ElementViews that are contained in this GameElementContainerView.
-	 * If changes are made to this list, this GameElementContainerView gets re-rendered.
+	 * [ElementView]s that are contained in this [GameElementContainerView].
+	 * If changes are made to this list, this [GameElementContainerView] gets re-rendered.
 	 */
 	var elements: List<T> = observableElements.toList()
 		get() = observableElements.toList()
 		private set
 	
 	/**
-	 * Adds a listener on the observableElements list.
+	 * Adds a [listener] on the [observableElements] list.
 	 */
 	fun addElementsListener(listener: IObservable) {
 		observableElements.addListener(listener)
 	}
 	
 	/**
-	 * Removes a listener from the observableElements list.
+	 * Removes a [listener] from the [observableElements] list.
 	 */
 	fun removeElementsListener(listener: IObservable) {
 		observableElements.removeListener(listener)
 	}
 	
 	/**
-	 * Removes all listeners from the observableElements list.
+	 * Removes all [listeners] from the [observableElements] list.
 	 */
 	fun clearElementsListener() {
 		observableElements.clearListeners()
 	}
 	
 	/**
-	 * Adds an ElementView to this GameElementViewContainer.
+	 * Adds an [ElementView] to this [GameElementContainerView].
 	 *
 	 * @param element element to add.
+	 * @throws IllegalArgumentException if [element] is already contained.
+	 * @throws IllegalArgumentException if [index] is out of bounds for [elements].
 	 */
 	@Synchronized
-	open fun addElement(element: T, index: Int = observableElements.size) {
+	open fun add(element: T, index: Int = observableElements.size) {
 		require(!observableElements.contains(element)) {
 			"Element $element is already contained in this $this."
 		}
 		require(element.parent == null) {
 			"Element $element is already contained in another container."
 		}
-		require(index in observableElements.indices) {
+		require(index in 0..observableElements.size) {
 			"Index $index is out of list range."
 		}
 		
@@ -84,36 +86,51 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Adds all ElementViews passed as varargs to this GameElementContainerView.
+	 * Adds all [ElementView]s passed as varargs to this [GameElementContainerView].
+	 * Whenever an ElementView is encountered, that is already contained, an
+	 * [IllegalArgumentException] is thrown and no further ElementView is added.
 	 *
-	 * @param elements vararg ElementViews to add.
+	 * @param elements vararg [ElementView]s to add.
+	 * @throws IllegalArgumentException if an [ElementView] is already contained.
 	 */
-	open fun addAllElements(vararg elements: T) {
-		addAllElements(elements.toList())
+	open fun addAll(vararg elements: T) {
+		try {
+			addAll(elements.toList())
+		} catch (e: IllegalArgumentException) {
+			throw IllegalArgumentException(e.message)
+		}
 	}
 	
 	/**
-	 * Adds all ElementViews contained in the passed collection to this GameElementContainerView.
+	 * Adds all [ElementView]s contained in the passed collection to this [GameElementContainerView].
+	 * Whenever an ElementView is encountered, that is already contained, an
+	 * [IllegalArgumentException] is thrown and no further [ElementView] is added.
 	 *
-	 * @param collection collection containing the ElementViews to add.
+	 * @param collection collection containing the [ElementView]s to add.
+	 * @throws IllegalArgumentException if an [ElementView] is already contained.
 	 */
 	@Synchronized
-	open fun addAllElements(collection: Collection<T>) {
-		collection.forEach { addElement(it) }
+	open fun addAll(collection: Collection<T>) {
+		try {
+			collection.forEach { add(it) }
+		} catch (e: IllegalArgumentException) {
+			throw IllegalArgumentException(e.message)
+		}
 	}
 	
 	/**
-	 * Removes the element specified by the parameter from this GameElementContainerView.
+	 * Removes the [element] specified by the parameter from this [GameElementContainerView].
 	 *
 	 * @param element the element to remove.
 	 */
 	@Synchronized
-	open fun removeElement(element: T) {
+	open fun remove(element: T) {
 		observableElements.remove(element.apply { parent = null })
 	}
 	
 	/**
-	 * Removes all ElementViews from this GameElementContainerView.
+	 * Removes all [ElementView]s from this [GameElementContainerView].
+	 * @return list of all removed Elements
 	 */
 	@Synchronized
 	open fun removeAll(): List<T> {
@@ -150,7 +167,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	fun isNotEmpty(): Boolean = !isEmpty()
 	
 	/**
-	 * Method returning a contained child's coordinates within this container.
+	 * Returning a contained child's coordinates within this container.
 	 *
 	 * @param child child to find.
 	 *
@@ -159,7 +176,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	override fun getChildPosition(child: ElementView): Coordinate? = Coordinate(child.posX, child.posY)
 	
 	/**
-	 * Removes element from container's children.
+	 * Removes [child] from container's children.
 	 *
 	 * @param child child to be removed.
 	 *
@@ -168,7 +185,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	override fun removeChild(child: ElementView) {
 		try {
 			@Suppress("UNCHECKED_CAST")
-			this.removeElement(child as T)
+			this.remove(child as T)
 		} catch (_: ClassCastException) {
 			throw RuntimeException("$child type is incompatible with container's type.")
 		}
@@ -177,23 +194,23 @@ sealed class GameElementContainerView<T : GameElementView>(
 	override fun iterator(): Iterator<T> = observableElements.iterator()
 	
 	/**
-	 * Adds the supplied GameElement to this GameElementViewContainer.
+	 * Adds the supplied [GameElementView] to this [GameElementContainerView].
 	 */
 	operator fun T.unaryPlus() {
-		addElement(this)
+		add(this)
 	}
 	
 	/**
-	 * Adds the supplied GameElements to this GameElementViewContainer.
+	 * Adds the supplied [GameElementView]s to this [GameElementContainerView].
 	 */
 	operator fun Collection<T>.unaryPlus() {
-		addAllElements(this)
+		addAll(this)
 	}
 	
 	/**
-	 * Removes the supplied GameElement from this GameElementContainerView.
+	 * Removes the supplied [GameElementView] from this [GameElementContainerView].
 	 */
 	operator fun T.unaryMinus() {
-		removeElement(this)
+		remove(this)
 	}
 }

@@ -9,7 +9,7 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [GameElementPoolView] may be used to visualize a pool containing [GameElementView]s.
  * A typical use case for a [GameElementPoolView] may be to visualize a pile of hidden items,
- * where the user should not know what item might be draw next.
+ * where the user should not know what item might be drawn next.
  *
  * Visualization:
  * The current [Visual] is used to visualize the area from where the user can start a drag and drop gesture.
@@ -39,8 +39,8 @@ import tools.aqua.bgw.visual.Visual
  * @param visual visual for this [GameElementPoolView]. Default: [Visual.EMPTY].
  */
 open class GameElementPoolView<T : GameElementView>(
-	height: Number = 200,
-	width: Number = 130,
+	height: Number = 0,
+	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
 	visual: Visual = Visual.EMPTY,
@@ -49,8 +49,8 @@ open class GameElementPoolView<T : GameElementView>(
 	
 	private val initialStates: HashMap<ElementView, InitialState> = HashMap()
 	
-	override fun addElement(element: T, index: Int) {
-		super.addElement(element, index)
+	override fun add(element: T, index: Int) {
+		super.add(element, index)
 		initialStates[element] = InitialState(
 			isDraggable = element.isDraggable,
 			isVisible = element.isVisible,
@@ -62,16 +62,16 @@ open class GameElementPoolView<T : GameElementView>(
 		element.addPosListeners()
 	}
 	
-	override fun addAllElements(collection: Collection<T>) {
-		collection.forEach { addElement(it) }
+	override fun addAll(collection: Collection<T>) {
+		collection.forEach { add(it) }
 	}
 	
-	override fun addAllElements(vararg elements: T) {
-		addAllElements(elements.toList())
+	override fun addAll(vararg elements: T) {
+		addAll(elements.toList())
 	}
 	
-	override fun removeElement(element: T) {
-		super.removeElement(element)
+	override fun remove(element: T) {
+		super.remove(element)
 		element.removeInternalListeners()
 		element.restoreInitialBehaviour()
 		element.removePosListeners()

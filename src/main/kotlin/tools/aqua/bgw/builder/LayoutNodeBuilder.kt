@@ -6,6 +6,7 @@ import javafx.scene.layout.Region
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
+import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.util.ElementViewGrid
 
 /**
@@ -14,12 +15,29 @@ import tools.aqua.bgw.util.ElementViewGrid
  */
 internal class LayoutNodeBuilder {
 	companion object {
-		//region grid
-		internal fun buildGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>): Region =
+		/**
+		 * Switches between LayoutElements.
+		 */
+		internal fun buildLayoutElement(
+			scene: Scene<out ElementView>,
+			layoutElementView: LayoutElement<out ElementView>
+		): Region =
+			when (layoutElementView) {
+				is GridLayoutView<*> ->
+					buildGrid(scene, layoutElementView)
+			}
+		
+		/**
+		 * Builds [GridLayoutView].
+		 */
+		private fun buildGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>): Region =
 			Pane().apply {
 				gridView.setGUIListenerAndInvoke { refreshGrid(scene, gridView) }
 			}
 		
+		/**
+		 * Refreshes [GridLayoutView].
+		 */
 		private fun Pane.refreshGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>) {
 			val grid: ElementViewGrid<out ElementView> = gridView.grid
 			
@@ -67,6 +85,5 @@ internal class LayoutNodeBuilder {
 				})
 			}
 		}
-		//endregion
 	}
 }

@@ -5,35 +5,36 @@ package tools.aqua.bgw.elements.uielements
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 
 /**
- * A list view displaying its items next to each other in the given orientation.
- * The formatFunction is used to gain a String representation of each item.
- * If no formatFunction is specified the toString function gets used instead.
+ * A [ListView] displaying its items next to each other in the given orientation.
+ * The [formatFunction] is used to gain a [String] representation of each item.
+ * If no [formatFunction] is specified the [toString] function gets used instead.
  *
- * @param height height for this ListView. Default: 0.
- * @param width width for this ListView. Default: 0.
- * @param posX horizontal coordinate for this ListView. Default: 0.
- * @param posY vertical coordinate for this ListView. Default: 0.
- * @param items initial list of items for this ListView. Default: empty list.
- * @param font font to be used for this ListView. Default: default Font constructor.
- * @param orientation orientation for this ListView. Default: VERTICAL.
- * @param formatFunction the formatFunction that is used to represent the items. Default: null.
+ * @param height height for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_HEIGHT].
+ * @param width width for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_WIDTH].
+ * @param posX horizontal coordinate for this [ListView]. Default: 0.
+ * @param posY vertical coordinate for this [ListView]. Default: 0.
+ * @param items initial list of items for this [ListView]. Default: empty list.
+ * @param font font to be used for this [ListView]. Default: default [Font] constructor.
+ * @param orientation orientation for this [ListView]. Default: [Orientation.VERTICAL].
+ * @param formatFunction the [formatFunction] that is used to represent the items. Default: `null`.
  */
 open class ListView<T>(
-	height: Number = 0,
-	width: Number = 0,
+	height: Number = DEFAULT_LISTVIEW_HEIGHT,
+	width: Number = DEFAULT_LISTVIEW_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
 	items: List<T> = listOf(),
 	font: Font = Font(), //TODO: Unused?
 	orientation: Orientation = Orientation.VERTICAL,
 	formatFunction: ((T) -> String)? = null
-) : UIElementView(height = height, width = width, posX = posX, posY = posY) {
-
+) : UIElementView(height = height, width = width, posX = posX, posY = posY, font) {
+	
 	/**
-	 * Property for the items list for this ListView.
+	 * [Property] for the items list for this [ListView].
 	 */
 	val observableItemsList: ObservableList<T> = ObservableArrayList()
 	
@@ -49,12 +50,12 @@ open class ListView<T>(
 		}
 	
 	/**
-	 * Property for the orientation of this ListView.
+	 * [Property] for the [Orientation] of this [ListView].
 	 */
 	val orientationProperty: ObjectProperty<Orientation> = ObjectProperty(orientation)
 	
 	/**
-	 * Orientation of this ListView displayed.
+	 * [Orientation] of this [ListView] displayed.
 	 * @see orientationProperty
 	 */
 	var orientation: Orientation
@@ -62,16 +63,16 @@ open class ListView<T>(
 		set(value) {
 			orientationProperty.value = value
 		}
-
+	
 	/**
-	 * Property for the formatFunction that gets used to obtain a String representation for each item.
-	 * If the value is null, the toString function of the item is used instead.
+	 * [Property] for the [formatFunction] that gets used to obtain a [String] representation for each item.
+	 * If the value is `null`, the [toString] function of the item is used instead.
 	 */
 	var formatFunctionProperty: ObjectProperty<((T) -> String)?> = ObjectProperty(formatFunction)
-
+	
 	/**
-	 * The formatFunction that gets used to obtain a String representation for each item.
-	 * If the value is null, the toString function of the item is used instead.
+	 * The [formatFunction] that gets used to obtain a [String] representation for each item.
+	 * If the value is `null`, the [toString] function of the item is used instead.
 	 * @see formatFunctionProperty
 	 */
 	var formatFunction: ((T) -> String)?
@@ -82,5 +83,20 @@ open class ListView<T>(
 	
 	init {
 		observableItemsList.addAll(items)
+	}
+	
+	/**
+	 * Defines some static constants that can be used as suggested properties of a [ListView].
+	 */
+	companion object {
+		/**
+		 * Suggested [ListView] [height].
+		 */
+		const val DEFAULT_LISTVIEW_HEIGHT: Int = 400
+		
+		/**
+		 * Suggested [ListView] [width].
+		 */
+		const val DEFAULT_LISTVIEW_WIDTH: Int = 200
 	}
 }

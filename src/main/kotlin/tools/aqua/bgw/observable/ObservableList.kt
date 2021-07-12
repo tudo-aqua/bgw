@@ -9,9 +9,9 @@ import java.util.function.UnaryOperator
 import kotlin.streams.toList
 
 /**
- * An observable ArrayList.
+ * An observable [ArrayList].
  */
-class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
+open class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
 	 * List field.
 	 */
@@ -19,9 +19,9 @@ class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableLis
 }
 
 /**
- * An observable LinkedList.
+ * An observable [LinkedList].
  */
-class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
+open class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
 	 * List field.
 	 */
@@ -29,7 +29,7 @@ class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableLi
 }
 
 /**
- * An observable list implementation.
+ * An observable [List] implementation.
  */
 abstract class ObservableList<T> : Observable(), Iterable<T> {
 	
@@ -103,7 +103,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 *
 	 * @return the element at the specified position in this list.
 	 *
-	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
+	 * @throws IndexOutOfBoundsException if the index exceeds the list's bounds.
 	 */
 	operator fun get(index: Int): T = list[index]
 	
@@ -403,4 +403,12 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @return iterator over the elements in this list.
 	 */
 	override fun iterator(): Iterator<T> = list.iterator()
+	
+	/**
+	 * Sets [list] silently.
+	 */
+	internal fun setSilent(elements: List<T>) {
+		list.clear()
+		list.addAll(elements)
+	}
 }

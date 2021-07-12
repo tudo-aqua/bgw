@@ -10,20 +10,19 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.RootElement
 import tools.aqua.bgw.observable.*
 import tools.aqua.bgw.util.CoordinatePlain
-import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
-import java.awt.Color
 
 /**
  * Baseclass for BGW scenes.
  *
  * @param width [Scene] width in virtual coordinates.
  * @param height [Scene] height in virtual coordinates.
+ * @param background [Scene] [background] [Visual].
  *
  * @see BoardGameScene
  * @see MenuScene
  */
-sealed class Scene<T : ElementView>(width: Number, height: Number) {
+sealed class Scene<T : ElementView>(width: Number, height: Number, background: Visual) {
 	/**
 	 * [Property] for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
 	 * currently dragged.
@@ -62,8 +61,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	/**
 	 * [Property] for the [background] [Visual] of this [Scene].
 	 */
-	internal val backgroundProperty: ObjectProperty<Visual> =
-		ObjectProperty(ColorVisual(Color(255, 255, 255)))
+	internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(background)
 	
 	/**
 	 * The background [Visual] of this [Scene].
@@ -105,7 +103,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 		}
 	
 	/**
-	 * [Map] for all [ElementView]s to their stackPanes.
+	 * [Map] for all [ElementView]s to their [StackPane]s.
 	 */
 	internal val elementsMap: MutableMap<ElementView, StackPane> = HashMap()
 	
@@ -218,7 +216,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	 *
 	 * @return path to child.
 	 *
-	 * @throws IllegalStateException if child was not in contained in this [Scene].
+	 * @throws IllegalStateException if child was not contained in this [Scene].
 	 */
 	fun findPathToChild(node: ElementView): List<ElementView> {
 		if (node is RootElement<*>) {
@@ -243,8 +241,15 @@ sealed class Scene<T : ElementView>(width: Number, height: Number) {
 	}
 	
 	companion object {
+		/**
+		 * Default scene width.
+		 */
 		const val DEFAULT_SCENE_WIDTH: Double = 1920.0
-		const val DEFAULT_SCENE_HEIGHT: Double = 1016.0
+		
+		/**
+		 * Default scene height.
+		 */
+		const val DEFAULT_SCENE_HEIGHT: Double = 1080.0
 	}
 }
 

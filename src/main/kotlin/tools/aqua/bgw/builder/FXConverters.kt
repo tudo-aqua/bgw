@@ -2,53 +2,62 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.geometry.Pos
+import javafx.scene.control.Alert
 import javafx.scene.input.MouseButton
+import javafx.scene.paint.Color
 import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
+import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.dialog.AlertType
+import tools.aqua.bgw.dialog.ButtonType
+import tools.aqua.bgw.elements.uielements.Orientation
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.util.FontStyle
 
 /**
- * FontConverter between JavaFX and BGW.
+ * Helper class for conversion functions between BGW and JavaFX and backwards.
  */
-internal class FontConverter {
+abstract class FXConverters {
 	companion object {
 		/**
-		 * Converts the BGW [Font] MouseEvent to tools.aqua.bgw MouseEvent.
+		 * Converts the [java.awt.Color] to [Color].
+		 */
+		internal fun java.awt.Color.toFXColor(): Color = Color(
+			red / VisualBuilder.MAX_HEX,
+			green / VisualBuilder.MAX_HEX,
+			blue / VisualBuilder.MAX_HEX,
+			alpha / VisualBuilder.MAX_HEX,
+		)
+		
+		/**
+		 * Converts the BGW [Font] to [javafx.scene.text.Font].
 		 */
 		internal fun Font.toFXFont(): javafx.scene.text.Font {
 			val fontWeight: FontWeight
 			val fontPosture: FontPosture
 			when (fontStyle) {
-				FontStyle.BOLD -> {
+				Font.FontStyle.BOLD -> {
 					fontWeight = FontWeight.BOLD; fontPosture = FontPosture.REGULAR
 				}
-				FontStyle.REGULAR -> {
+				Font.FontStyle.REGULAR -> {
 					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.REGULAR
 				}
-				FontStyle.SEMI_BOLD -> {
+				Font.FontStyle.SEMI_BOLD -> {
 					fontWeight = FontWeight.SEMI_BOLD; fontPosture = FontPosture.REGULAR
 				}
-				FontStyle.ITALIC -> {
+				Font.FontStyle.ITALIC -> {
 					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.ITALIC
 				}
 			}
 			return javafx.scene.text.Font.font(family, fontWeight, fontPosture, size.toDouble())
 		}
-	}
-}
-
-/**
- * EventConverters between JavaFX and BGW.
- */
-internal class EventConverter {
-	companion object {
+		
 		/**
-		 * Converts the JavaFX MouseEvent to tools.aqua.bgw MouseEvent.
+		 * Converts the [javafx.scene.input.MouseEvent] to [MouseEvent].
 		 */
 		internal fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
 			MouseEvent(
@@ -61,7 +70,7 @@ internal class EventConverter {
 			)
 		
 		/**
-		 * Converts the JavaFX KeyEvent to tools.aqua.bgw KeyEvent.
+		 * Converts the [javafx.scene.input.KeyEvent] to [KeyEvent].
 		 */
 		internal fun javafx.scene.input.KeyEvent.toKeyEvent(): KeyEvent =
 			KeyEvent(
@@ -73,7 +82,7 @@ internal class EventConverter {
 			)
 		
 		/**
-		 * Converts the JavaFX KeyCode to tools.aqua.bgw KeyCode.
+		 * Converts the [javafx.scene.input.KeyCode] to [KeyCode].
 		 */
 		internal fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
 			javafx.scene.input.KeyCode.SHIFT -> KeyCode.SHIFT
@@ -182,6 +191,88 @@ internal class EventConverter {
 			javafx.scene.input.KeyCode.F11 -> KeyCode.F11
 			javafx.scene.input.KeyCode.F12 -> KeyCode.F12
 			else -> KeyCode.UNDEFINED
+		}
+//endregion
+		
+		/**
+		 * Converts the [AlertType] to [Alert.AlertType].
+		 */
+		internal fun AlertType.toFXAlertType(): Alert.AlertType = when (this) {
+			AlertType.NONE -> Alert.AlertType.NONE
+			AlertType.INFORMATION -> Alert.AlertType.INFORMATION
+			AlertType.WARNING -> Alert.AlertType.WARNING
+			AlertType.CONFIRMATION -> Alert.AlertType.CONFIRMATION
+			AlertType.ERROR -> Alert.AlertType.ERROR
+			AlertType.EXCEPTION -> Alert.AlertType.ERROR
+		}
+		
+		/**
+		 * Converts the [Alert.AlertType] to [AlertType] .
+		 */
+		internal fun Alert.AlertType.toAlertType(): AlertType = when (this) {
+			Alert.AlertType.NONE -> AlertType.NONE
+			Alert.AlertType.INFORMATION -> AlertType.INFORMATION
+			Alert.AlertType.WARNING -> AlertType.WARNING
+			Alert.AlertType.CONFIRMATION -> AlertType.CONFIRMATION
+			Alert.AlertType.ERROR -> AlertType.ERROR
+		}
+		
+		/**
+		 * Converts the [ButtonType] to [javafx.scene.control.ButtonType].
+		 */
+		internal fun ButtonType.toFXButtonType(): javafx.scene.control.ButtonType = when (this) {
+			ButtonType.APPLY -> javafx.scene.control.ButtonType.APPLY
+			ButtonType.OK -> javafx.scene.control.ButtonType.OK
+			ButtonType.CANCEL -> javafx.scene.control.ButtonType.CANCEL
+			ButtonType.CLOSE -> javafx.scene.control.ButtonType.CLOSE
+			ButtonType.YES -> javafx.scene.control.ButtonType.YES
+			ButtonType.NO -> javafx.scene.control.ButtonType.NO
+			ButtonType.FINISH -> javafx.scene.control.ButtonType.FINISH
+			ButtonType.NEXT -> javafx.scene.control.ButtonType.NEXT
+			ButtonType.PREVIOUS -> javafx.scene.control.ButtonType.PREVIOUS
+		}
+		
+		/**
+		 * Converts the [javafx.scene.control.ButtonType] constant to [ButtonType].
+		 */
+		internal fun javafx.scene.control.ButtonType.toButtonType(): ButtonType = when (this) {
+			javafx.scene.control.ButtonType.APPLY -> ButtonType.APPLY
+			javafx.scene.control.ButtonType.OK -> ButtonType.OK
+			javafx.scene.control.ButtonType.CANCEL -> ButtonType.CANCEL
+			javafx.scene.control.ButtonType.CLOSE -> ButtonType.CLOSE
+			javafx.scene.control.ButtonType.YES -> ButtonType.YES
+			javafx.scene.control.ButtonType.NO -> ButtonType.NO
+			javafx.scene.control.ButtonType.FINISH -> ButtonType.FINISH
+			javafx.scene.control.ButtonType.NEXT -> ButtonType.NEXT
+			javafx.scene.control.ButtonType.PREVIOUS -> ButtonType.PREVIOUS
+			else -> throw IllegalArgumentException()
+		}
+		
+		/**
+		 * Converts the [Orientation] constant to [javafx.geometry.Orientation].
+		 */
+		internal fun Orientation.toJavaFXOrientation(): javafx.geometry.Orientation {
+			return when (this) {
+				Orientation.HORIZONTAL -> javafx.geometry.Orientation.HORIZONTAL
+				Orientation.VERTICAL -> javafx.geometry.Orientation.VERTICAL
+			}
+		}
+		
+		/**
+		 * Converts the [Alignment] constant to [Pos]
+		 */
+		internal fun Alignment.toFXPos(): Pos {
+			return when (this) {
+				Alignment.TOP_LEFT -> Pos.TOP_LEFT
+				Alignment.TOP_RIGHT -> Pos.TOP_RIGHT
+				Alignment.TOP_CENTER -> Pos.TOP_CENTER
+				Alignment.BOTTOM_LEFT -> Pos.BOTTOM_LEFT
+				Alignment.BOTTOM_RIGHT -> Pos.BOTTOM_RIGHT
+				Alignment.BOTTOM_CENTER -> Pos.BOTTOM_CENTER
+				Alignment.CENTER_LEFT -> Pos.CENTER_LEFT
+				Alignment.CENTER_RIGHT -> Pos.CENTER_RIGHT
+				Alignment.CENTER -> Pos.CENTER
+			}
 		}
 	}
 }

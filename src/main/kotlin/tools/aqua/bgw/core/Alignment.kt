@@ -2,10 +2,10 @@
 
 package tools.aqua.bgw.core
 
+import tools.aqua.bgw.core.HorizontalAlignment.CENTER
 import tools.aqua.bgw.core.HorizontalAlignment.LEFT
 import tools.aqua.bgw.core.HorizontalAlignment.RIGHT
-import tools.aqua.bgw.core.VerticalAlignment.BOTTOM
-import tools.aqua.bgw.core.VerticalAlignment.TOP
+import tools.aqua.bgw.core.VerticalAlignment.*
 
 /**
  * Used to define a centering behaviour.

@@ -3,7 +3,7 @@
 package tools.aqua.bgw.event
 
 /**
- * Event that gets raised for key inputs.
+ * [Event] that gets raised for key inputs.
  *
  * @param keyCode corresponding key code enum value.
  * @param character corresponding character string.

@@ -10,7 +10,7 @@ import tools.aqua.bgw.util.GridIteratorElement
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Defines an GameElementContainerView that orders elements in a grid structure.
+ * Defines an [LayoutElement] that orders elements in a grid structure.
  *
  * @param rows initial row count.
  * @param columns initial column count.
@@ -102,7 +102,7 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * Returns centering mode of the specified cell.
+	 * Returns centering mode as an [Alignment] of the specified cell.
 	 *
 	 * @param columnIndex column index in grid.
 	 * @param rowIndex row index in grid.
@@ -111,57 +111,57 @@ open class GridLayoutView<T : ElementView>(
 		grid.getCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex)
 	
 	/**
-	 * Sets centering mode of desired grid cell.
+	 * Sets centering mode of desired grid cell with given [Alignment].
 	 * Overrides existing mode in this cell.
 	 *
 	 * @param columnIndex column index in grid.
 	 * @param rowIndex row index in grid.
-	 * @param value new Centering mode to be set for the specified cell.
+	 * @param value new centering mode to be set for the specified cell.
 	 */
 	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
-		grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, value = value)
+		grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, alignment = value)
 		notifyChange()
 	}
 	
 	/**
-	 * Sets centering mode of desired column in grid.
+	 * Sets centering mode of desired column in grid with given [Alignment].
 	 * Overrides existing mode in the whole column.
 	 *
 	 * @param columnIndex column index in grid.
 	 * @param value new centering mode to be set for the whole column.
 	 */
 	fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
-		grid.setColumnCenterMode(columnIndex = columnIndex, value = value)
+		grid.setColumnCenterMode(columnIndex = columnIndex, alignment = value)
 		notifyChange()
 	}
 	
 	/**
-	 * Sets centering mode of desired row in grid.
+	 * Sets centering mode of desired row in grid with given [Alignment].
 	 * Overrides existing mode in the whole row.
 	 *
-	 * @param rowIndex Row index in grid.
-	 * @param value New Centering mode to be set for the whole row.
+	 * @param rowIndex row index in grid.
+	 * @param value new centering mode to be set for the whole row.
 	 */
 	fun setRowCenterMode(rowIndex: Int, value: Alignment) {
-		grid.setRowCenterMode(rowIndex = rowIndex, value = value)
+		grid.setRowCenterMode(rowIndex = rowIndex, alignment = value)
 		notifyChange()
 	}
 	
 	/**
-	 * Sets centering mode of all cells in the grid.
+	 * Sets centering mode of all cells in the grid with given [Alignment].
 	 * Overrides existing modes of all cells.
 	 *
-	 * @param value New Centering mode to be set for all cells.
+	 * @param value new centering mode to be set for all cells.
 	 */
 	fun setCenterMode(value: Alignment) {
-		grid.setCenterMode(value = value)
+		grid.setCenterMode(alignment = value)
 		notifyChange()
 	}
 	
 	/**
 	 * Returns the set column width for the given column.
 	 *
-	 * @param columnIndex Target column.
+	 * @param columnIndex target column.
 	 *
 	 * @see setColumnWidth
 	 * @see setColumnWidths
@@ -174,10 +174,10 @@ open class GridLayoutView<T : ElementView>(
 	 * Manually set column width of one column.
 	 * Overrides automatic resizing based on content from this column.
 	 *
-	 * @param columnIndex Target column.
-	 * @param columnWidth New column width. Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
+	 * @param columnIndex target column.
+	 * @param columnWidth new column width. Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if value was negative.
+	 * @throws IllegalArgumentException if value was negative.
 	 *
 	 * @see setColumnWidths
 	 * @see setAutoColumnWidth
@@ -195,7 +195,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param columnWidths New column widths. Array index 0 get applied for the first column etc.
 	 * Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if Array size does not match column count or values were negative.
+	 * @throws IllegalArgumentException if Array size does not match column count or values were negative.
 	 *
 	 * @see setColumnWidth
 	 * @see setAutoColumnWidth
@@ -251,7 +251,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param rowIndex Target row.
 	 * @param rowHeight New row height. Use ROW_HEIGHT_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if value was negative.
+	 * @throws IllegalArgumentException if value was negative.
 	 *
 	 * @see setRowHeights
 	 * @see setAutoColumnWidth
@@ -269,7 +269,7 @@ open class GridLayoutView<T : ElementView>(
 	 * @param rowHeights New row heights. Array index 0 get applied for the first row etc.
 	 * Use ROW_HEIGHT_AUTO to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException Thrown if Array size does not match row count or values were negative.
+	 * @throws IllegalArgumentException if Array size does not match row count or values were negative.
 	 *
 	 * @see setRowHeight
 	 * @see setAutoRowHeight
@@ -308,7 +308,7 @@ open class GridLayoutView<T : ElementView>(
 	
 	/**
 	 * Grows grid by specified dimensions, filling new cells with NULL values.
-	 * New rows and columns get automatic resizing behaviour, specified as COLUMN_WIDTH_AUTO and ROW_HEIGHT_AUTO.
+	 * New rows and columns get automatic resizing behaviour, specified as [COLUMN_WIDTH_AUTO] and [ROW_HEIGHT_AUTO].
 	 * Therefore new empty rows and columns get rendered with height and width 0.0
 	 * e.g. invisible if not specified otherwise.
 	 *
@@ -319,7 +319,7 @@ open class GridLayoutView<T : ElementView>(
 	 *
 	 * @return `true` if the grid has changed by this operation, `false` otherwise.
 	 *
-	 * @throws IllegalArgumentException If any value passed was negative.
+	 * @throws IllegalArgumentException if any value passed was negative.
 	 *
 	 * @see trim
 	 * @see removeEmptyColumns
@@ -344,7 +344,7 @@ open class GridLayoutView<T : ElementView>(
 	 * e.g. all rows and columns counted from left, right, top and bottom that have no views in their cells.
 	 * That means after calling the first and last row
 	 * as well as the first and last column have at least one element in their cells.
-	 * Attributes "rows" and "columns" get updated according to new dimensions.
+	 * Attributes [rows] and [columns] get updated according to new dimensions.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @return `true` if the grid has changed by this operation, `false` otherwise.
@@ -398,8 +398,8 @@ open class GridLayoutView<T : ElementView>(
 	
 	/**
 	 * Removes all empty columns e.g. all rows that have no views in their cells.
-	 * That means after calling every row has at least one element in its cell.
-	 * Attribute "rows" get updated according to new dimension.
+	 * That means after calling every column has at least one element in its cells.
+	 * Attribute [columns] get updated according to new dimension.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @see addRows
@@ -441,8 +441,8 @@ open class GridLayoutView<T : ElementView>(
 	
 	/**
 	 * Removes all empty rows e.g. all rows that have no views in their cells.
-	 * That means after calling every row has at least one element in its cell.
-	 * Attribute "rows" get updated according to new dimension.
+	 * That means after calling every row has at least one element in its cells.
+	 * Attribute [rows] gets updated according to new dimension.
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @see addRows
@@ -469,7 +469,11 @@ open class GridLayoutView<T : ElementView>(
 	}
 	
 	/**
-	 * {@inheritDoc}.
+	 * Function returning a contained child's coordinates within this [GridLayoutView] relative to the top left corner.
+	 *
+	 * @param child child to find.
+	 *
+	 * @return coordinate of given child in this [GridLayoutView].
 	 */
 	override fun getChildPosition(child: ElementView): Coordinate? =
 		grid.filter { it.element == child }.map {
@@ -483,7 +487,7 @@ open class GridLayoutView<T : ElementView>(
 		}.firstOrNull()
 	
 	/**
-	 * Returns an iterator over the grid elements.
+	 * Returns an [Iterator] over the grid elements.
 	 * Iteration is columns-first which means that the iterator starts at cell [0,0] and then proceeds iterating through
 	 * the first row from left to right. When reaching the end of a row it proceeds to the next one resetting the column
 	 * pointer to 0.

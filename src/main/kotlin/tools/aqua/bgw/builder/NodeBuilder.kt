@@ -4,20 +4,17 @@ import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
-import tools.aqua.bgw.builder.EventConverter.Companion.toKeyEvent
-import tools.aqua.bgw.builder.EventConverter.Companion.toMouseEvent
+import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
+import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.elements.gameelements.DiceView
 import tools.aqua.bgw.elements.gameelements.GameElementView
-import tools.aqua.bgw.elements.gameelements.TokenView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
-import tools.aqua.bgw.elements.uielements.*
+import tools.aqua.bgw.elements.uielements.UIElementView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
@@ -31,32 +28,19 @@ import kotlin.math.min
  */
 internal class NodeBuilder {
 	companion object {
-		//private const val TOLERANCE = 0.099
-		
 		/**
 		 * Switches between top level element types.
 		 */
 		internal fun build(scene: Scene<out ElementView>, elementView: ElementView): Region {
-			/*if (elementView.posX < -TOLERANCE
-				|| elementView.posY < -TOLERANCE
-				|| elementView.posX + elementView.width > scene.width + TOLERANCE
-				|| elementView.posY + elementView.height > scene.height + TOLERANCE
-			) {
-				throw ElementOutOfSceneBoundsException(element = elementView, scene = scene)
-			}*/
-			
-			//if(scene.elementsMap.containsKey(elementView))
-			//	throw RuntimeException("Duplicate element")
-			
 			val node = when (elementView) {
 				is GameElementContainerView<out GameElementView> ->
-					buildContainer(scene, elementView)
+					ContainerNodeBuilder.buildContainer(scene, elementView)
 				is GameElementView ->
-					buildGameElement(elementView)
+					ElementNodeBuilder.buildGameElement(elementView)
 				is LayoutElement<out ElementView> ->
-					buildLayoutElement(scene, elementView)
+					LayoutNodeBuilder.buildLayoutElement(scene, elementView)
 				is UIElementView ->
-					buildUIElement(elementView)
+					UINodeBuilder.buildUIElement(elementView)
 				is StaticView<*> ->
 					throw IllegalInheritanceException(elementView, StaticView::class.java)
 				is DynamicView ->
@@ -65,7 +49,7 @@ internal class NodeBuilder {
 					throw IllegalInheritanceException(elementView, ElementView::class.java)
 			}
 			val background = VisualBuilder.build(elementView)
-			val stackPane = StackPane(background, node)
+			val stackPane = StackPane(background, node).apply { isPickOnBounds = false }
 			
 			//JavaFX -> Framework
 			elementView.registerEvents(stackPane, node, scene)
@@ -79,67 +63,9 @@ internal class NodeBuilder {
 			return stackPane
 		}
 		
-		
 		/**
-		 * Switches between Containers.
+		 * Registers events.
 		 */
-		private fun buildContainer(
-			scene: Scene<out ElementView>,
-			containerView: GameElementContainerView<out GameElementView>
-		): Region = ContainerNodeBuilder.buildGameElementContainer(scene, containerView)
-		
-		/**
-		 * Switches between GameElements.
-		 */
-		private fun buildGameElement(gameElementView: GameElementView): Region =
-			when (gameElementView) {
-				is CardView ->
-					ElementNodeBuilder.buildCardView(gameElementView)
-				is DiceView ->
-					ElementNodeBuilder.buildDiceView(gameElementView)
-				is TokenView ->
-					ElementNodeBuilder.buildToken(gameElementView)
-			}
-		
-		/**
-		 * Switches between LayoutElements.
-		 */
-		private fun buildLayoutElement(
-			scene: Scene<out ElementView>,
-			layoutElementView: LayoutElement<out ElementView>
-		): Region =
-			when (layoutElementView) {
-				is GridLayoutView<*> ->
-					LayoutNodeBuilder.buildGrid(scene, layoutElementView)
-			}
-		
-		/**
-		 * Switches between UIElements.
-		 */
-		private fun buildUIElement(uiElementView: UIElementView): Region =
-			when (uiElementView) {
-				is Button ->
-					UINodeBuilder.buildButton(uiElementView)
-				is CheckBox ->
-					UINodeBuilder.buildCheckBox(uiElementView)
-				is ComboBox<*> ->
-					UINodeBuilder.buildComboBox(uiElementView)
-				is Label ->
-					UINodeBuilder.buildLabel(uiElementView)
-				is ListView<*> ->
-					UINodeBuilder.buildListView(uiElementView)
-				is TableView<*> ->
-					UINodeBuilder.buildTableView(uiElementView)
-				is TextArea ->
-					UINodeBuilder.buildTextArea(uiElementView)
-				is ToggleButton ->
-					UINodeBuilder.buildToggleButton(uiElementView)
-				is ColorPicker ->
-					UINodeBuilder.buildColorPicker(uiElementView)
-				is ProgressBar ->
-					UINodeBuilder.buildProgressBar(uiElementView)
-			}
-		
 		private fun ElementView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ElementView>) {
 			stackPane.onDragDetected = EventHandler {
 				if (this is DynamicView && isDraggable) {
@@ -170,7 +96,7 @@ internal class NodeBuilder {
 								posY = initialY
 								@Suppress("UNCHECKED_CAST")
 								(parent as GameElementContainerView<GameElementView>)
-									.addElement(this as GameElementView, min(parent.observableElements.size, index))
+									.add(this as GameElementView, min(parent.observableElements.size, index))
 							}
 						}
 						is GridLayoutView<*> -> {
@@ -239,6 +165,9 @@ internal class NodeBuilder {
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
 		
+		/**
+		 * Registers observers.
+		 */
 		@Suppress("DuplicatedCode")
 		private fun ElementView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
 			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
@@ -246,6 +175,12 @@ internal class NodeBuilder {
 			}
 			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
 				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
+			}
+			scaleXProperty.setGUIListenerAndInvoke(scaleX) { _, nV ->
+				stackPane.scaleX = nV
+			}
+			scaleYProperty.setGUIListenerAndInvoke(scaleY) { _, nV ->
+				stackPane.scaleY = nV
 			}
 			
 			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }

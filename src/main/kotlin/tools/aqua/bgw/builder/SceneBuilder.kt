@@ -2,10 +2,9 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
-import tools.aqua.bgw.builder.EventConverter.Companion.toMouseEvent
+import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
@@ -18,28 +17,22 @@ import tools.aqua.bgw.event.DragEvent
  */
 internal class SceneBuilder {
 	companion object {
+		/**
+		 * Builds [MenuScene].
+		 */
 		internal fun buildMenu(scene: MenuScene): Pane = buildPane(scene)
 		
+		/**
+		 * Builds [BoardGameScene].
+		 */
 		internal fun buildGame(scene: BoardGameScene): Pane {
 			val pane = buildPane(scene)
 			
 			//register animations
 			scene.animations.guiListener = {
 				scene.animations.list.stream().filter { t -> !t.running }.forEach { anim ->
-					run {
-						when (anim) {
-							is MovementAnimation<*> -> AnimationBuilder.addTranslateAnimation(scene, anim)
-							is RotationAnimation<*> -> AnimationBuilder.addRotateAnimation(scene, anim)
-							is FlipAnimation<*> -> AnimationBuilder.addFlipAnimation(scene, anim)
-							is DelayAnimation -> AnimationBuilder.addDelayAnimation(scene, anim)
-							is DiceAnimation<*> -> AnimationBuilder.addDiceAnimation(scene, anim)
-						}
-						
-						anim.running = true
-						
-						//TODO: remove anim from list when finished
-						//TODO: Add animation stop and endless mode
-					}
+					AnimationBuilder.build(scene, anim).play()
+					anim.running = true
 				}
 			}
 			
@@ -57,6 +50,9 @@ internal class SceneBuilder {
 			return pane
 		}
 		
+		/**
+		 * Builds a [Scene] pane.
+		 */
 		private fun buildPane(scene: Scene<out ElementView>): Pane {
 			val pane = Pane().apply {
 				prefHeight = scene.height
@@ -100,6 +96,9 @@ internal class SceneBuilder {
 			return pane
 		}
 		
+		/**
+		 * Rebuilds pane on elements changed.
+		 */
 		private fun Pane.rebuild(scene: Scene<out ElementView>) {
 			children.clear()
 			scene.elementsMap.clear()
@@ -122,6 +121,9 @@ internal class SceneBuilder {
 			}
 		}
 		
+		/**
+		 * Refreshes [Scene] after drag and drop.
+		 */
 		private fun Scene<*>.refreshDraggedElement(oV: StackPane?, nV: StackPane?) {
 			when {
 				nV == null && oV != null -> {
@@ -145,10 +147,16 @@ internal class SceneBuilder {
 			}
 		}
 		
+		/**
+		 * Removes dragged element from [Scene].
+		 */
 		private fun Scene<*>.removeDraggedElement(node: StackPane) {
 			Frontend.mapScene(this)!!.children.remove(node)
 		}
 		
+		/**
+		 * Adds dragged element to [Scene].
+		 */
 		private fun Scene<*>.addDraggedElement(node: StackPane) {
 			Frontend.mapScene(this)!!.children.add(node)
 		}

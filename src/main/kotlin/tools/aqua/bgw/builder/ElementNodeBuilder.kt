@@ -4,6 +4,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import tools.aqua.bgw.elements.gameelements.CardView
 import tools.aqua.bgw.elements.gameelements.DiceView
+import tools.aqua.bgw.elements.gameelements.GameElementView
 import tools.aqua.bgw.elements.gameelements.TokenView
 
 /**
@@ -12,13 +13,35 @@ import tools.aqua.bgw.elements.gameelements.TokenView
  */
 internal class ElementNodeBuilder {
 	companion object {
-		@Suppress("UNUSED_PARAMETER")
-		internal fun buildCardView(cardView: CardView): Region = Pane()
+		/**
+		 * Switches between GameElements.
+		 */
+		internal fun buildGameElement(gameElementView: GameElementView): Region =
+			when (gameElementView) {
+				is CardView ->
+					buildCardView(gameElementView)
+				is DiceView ->
+					buildDiceView(gameElementView)
+				is TokenView ->
+					buildToken(gameElementView)
+			}
 		
+		/**
+		 * Builds [CardView].
+		 */
 		@Suppress("UNUSED_PARAMETER")
-		internal fun buildDiceView(diceView: DiceView): Region = Pane()
+		private fun buildCardView(cardView: CardView): Region = Pane()
 		
+		/**
+		 * Builds [DiceView].
+		 */
 		@Suppress("UNUSED_PARAMETER")
-		internal fun buildToken(tokenView: TokenView): Region = Pane()
+		private fun buildDiceView(diceView: DiceView): Region = Pane()
+		
+		/**
+		 * Builds [TokenView].
+		 */
+		@Suppress("UNUSED_PARAMETER")
+		private fun buildToken(tokenView: TokenView): Region = Pane()
 	}
 }

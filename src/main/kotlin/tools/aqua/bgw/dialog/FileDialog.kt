@@ -2,10 +2,11 @@
 
 package tools.aqua.bgw.dialog
 
+import tools.aqua.bgw.dialog.FileDialog.FileDialogMode
 import java.io.File
 
 /**
- * A FileDialog such as a file chooser or save dialog, depending on FileDialogMode.
+ * A [FileDialog] such as a file chooser or save dialog, depending on [FileDialogMode].
  *
  * @param mode the dialog's mode.
  * @param title the dialog's title text.
@@ -24,7 +25,7 @@ data class FileDialog(
 	val extensionFilters: List<ExtensionFilter> = listOf()
 ) {
 	/**
-	 * Enum for possible FileDialog modes.
+	 * Enum for possible [FileDialog] modes.
 	 */
 	enum class FileDialogMode {
 		/**

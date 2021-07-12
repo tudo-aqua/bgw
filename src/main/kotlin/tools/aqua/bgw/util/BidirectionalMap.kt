@@ -32,7 +32,7 @@ package tools.aqua.bgw.util
  *
  * @param elements elements to be initialized in the map.
  */
-class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
+open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	private val map: MutableList<Pair<T, R>> = mutableListOf()
 	
 	init {
@@ -159,7 +159,7 @@ class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Removes relation A -> B if it exists.
 	 *
-	 * @param element (Relation key A, Relation value B)
+	 * @param element pair (Relation key A, Relation value B)
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *

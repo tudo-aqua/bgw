@@ -2,34 +2,20 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.LimitedDoubleProperty
+import tools.aqua.bgw.observable.Observable
 
 /**
  * Visual baseclass.
  */
-sealed class Visual {
-	
+sealed class Visual : Observable() {
 	/**
-	 * Property for the transparency / alpha channel for this visual.
-	 * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
-	 * Default: 1.
+	 * Copies this [Visual] to a new object.
 	 */
-	val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
-	
-	/**
-	 * Transparency / alpha channel for this visual.
-	 * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
-	 * Default: 1.
-	 */
-	var transparency: Double
-		get() = transparencyProperty.value
-		set(value) {
-			transparencyProperty.value = value
-		}
+	abstract fun copy(): Visual
 	
 	companion object {
 		/**
-		 * An empty Visual.
+		 * An empty [Visual].
 		 */
 		val EMPTY: Visual = CompoundVisual()
 	}

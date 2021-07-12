@@ -17,7 +17,7 @@ import tools.aqua.bgw.visual.Visual
  */
 class FlipAnimation<T : ElementView>(
 	elementView: T,
-	var fromVisual: Visual,
-	var toVisual: Visual,
+	val fromVisual: Visual,
+	val toVisual: Visual,
 	duration: Int = 500
 ) : ElementAnimation<T>(element = elementView, duration = duration)

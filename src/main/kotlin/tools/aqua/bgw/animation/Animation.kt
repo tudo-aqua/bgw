@@ -3,14 +3,13 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.event.AnimationFinishedEvent
-import tools.aqua.bgw.event.EventHandler
 
 /**
  * [Animation] baseclass.
  *
- * @param duration duration in milliseconds. Default: 1 second.
+ * @param duration duration in milliseconds.
  */
-sealed class Animation(var duration: Int = 1000) {
+sealed class Animation(val duration: Int) {
     
     /**
      * [Boolean] indicating whether the [Animation] is currently playing.
@@ -18,8 +17,8 @@ sealed class Animation(var duration: Int = 1000) {
     var running: Boolean = false
     
     /**
-     * [EventHandler] that gets invoked when [Animation] has finished.
+     * Gets invoked when [Animation] has finished.
      */
-    var onFinished: EventHandler<AnimationFinishedEvent>? = null
+    var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
 }
 
