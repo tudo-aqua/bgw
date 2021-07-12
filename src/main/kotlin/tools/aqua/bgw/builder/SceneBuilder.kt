@@ -5,6 +5,7 @@ import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
+import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
@@ -151,14 +152,14 @@ internal class SceneBuilder {
 		 * Removes dragged element from [Scene].
 		 */
 		private fun Scene<*>.removeDraggedElement(node: StackPane) {
-			Frontend.mapScene(this)!!.children.remove(node)
+			mapToPane()!!.children.remove(node)
 		}
 		
 		/**
 		 * Adds dragged element to [Scene].
 		 */
 		private fun Scene<*>.addDraggedElement(node: StackPane) {
-			Frontend.mapScene(this)!!.children.add(node)
+			mapToPane()!!.children.add(node)
 		}
 	}
 }

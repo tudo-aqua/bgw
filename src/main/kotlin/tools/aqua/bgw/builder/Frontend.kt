@@ -310,14 +310,24 @@ internal class Frontend : Application() {
 		/**
 		 * Returns pane associated to scene.
 		 *
-		 * @param scene scene to map.
-		 *
 		 * @return [gamePane] for [boardGameScene], [menuPane] for [menuScene] and `null` for other parameters.
 		 */
-		internal fun mapScene(scene: tools.aqua.bgw.core.Scene<*>): Pane? =
-			when (scene) {
+		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane? =
+			when (this) {
 				boardGameScene -> gamePane
 				menuScene -> menuPane
+				else -> null
+			}
+		
+		/**
+		 * Returns scene associated to pane.
+		 *
+		 * @return  [boardGameScene] for [gamePane], [menuScene] for [menuPane] and `null` for other parameters.
+		 */
+		internal fun Pane.mapToScene(): tools.aqua.bgw.core.Scene<*>? =
+			when (this) {
+				gamePane -> boardGameScene
+				menuPane -> menuScene
 				else -> null
 			}
 		
@@ -514,16 +524,17 @@ internal class Frontend : Application() {
 								}
 								
 								//Zoom detail
-								val scene =
-									(if (this == gamePane) boardGameScene else menuScene)!! //TODO: Do this more elegantly
-								val scale = min(
-									(scene.width - scene.zoomDetail.width) / scene.width,
-									(scene.height - scene.zoomDetail.height) / scene.height
-								)
-								scaleX += scale
-								scaleY += scale
-								translateX -= scene.zoomDetail.topLeft.xCoord
-								translateY -= scene.zoomDetail.topLeft.yCoord
+								mapToScene()!!.apply {
+									val scale = min(
+										(width - zoomDetail.width) / width,
+										(height - zoomDetail.height) / height
+									)
+									
+									scaleX += scale
+									scaleY += scale
+									translateX -= zoomDetail.topLeft.xCoord
+									translateY -= zoomDetail.topLeft.yCoord
+								}
 							}
 						}
 					}

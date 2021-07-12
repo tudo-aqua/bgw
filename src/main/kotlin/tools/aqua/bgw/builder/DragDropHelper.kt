@@ -2,6 +2,7 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.StackPane
+import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.container.GameElementContainerView
@@ -50,7 +51,7 @@ class DragDropHelper {
 		): Boolean {
 			val draggedElement = draggedElement!!
 			val validTargets = mutableListOf<ElementView>()
-			val acceptingDropTargets = Frontend.mapScene(this)!!.children
+			val acceptingDropTargets = mapToPane()!!.children
 				.filterIsInstance<StackPane>()  //top level Elements
 				.mapNotNull {
 					//to DragTargetObject
