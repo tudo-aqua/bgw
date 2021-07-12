@@ -28,7 +28,9 @@ class ViewController : BoardGameApplication("MauMau") {
 	}
 	
 	private fun registerGameEvents() {
-		gameScene.hintButton.onMouseClicked = { logicController.showHint() }
+		gameScene.hintButton.onMouseClicked = {
+			logicController.showHint()
+		}
 		
 		gameScene.gameStackView.dropAcceptor = this::tryElementDropped
 		gameScene.gameStackView.onDragElementDropped = this::elementDropped
@@ -45,7 +47,6 @@ class ViewController : BoardGameApplication("MauMau") {
     }
 	
 	private fun tryElementDropped(event: DragEvent): Boolean {
-		println("Element Dropped! ${event.draggedElement.posX}|${event.draggedElement.posY}")
 		if (event.draggedElement !is CardView)
 			return false
 		
@@ -54,11 +55,8 @@ class ViewController : BoardGameApplication("MauMau") {
 	
 	private fun elementDropped(event: DragEvent) {
 		logicController.playCard(cardMap.backward(event.draggedElement as CardView), false)
-		
-		println("${event.draggedElement.posX}|${event.draggedElement.posY}")
 	}
 	
-	var i = 0
 	private fun registerMenuEvents() {
 		gameScene.mainMenuButton.onMouseClicked = {
 			showMenuScene(mauMauMenuScene)

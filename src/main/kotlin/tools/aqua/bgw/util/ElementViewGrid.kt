@@ -7,29 +7,66 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView.Companion.COLUMN_WIDTH_AUTO
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView.Companion.ROW_HEIGHT_AUTO
 
-//TODO: Avoid duplicate code on require statements
 /**
- * ElementViewGrid.
+ * Internal class ElementViewGrid boxing grid structure.
  */
 internal class ElementViewGrid<T : ElementView>(
 	rows: Int,
 	columns: Int
 ) : Iterable<GridIteratorElement<T>> {
 	
+	//region Attributes
+	/**
+	 * Current number of rows.
+	 */
 	var rows = rows
 		private set
 	
+	/**
+	 * Current number of columns.
+	 */
 	var columns = columns
 		private set
 	
+	/**
+	 * Grid array containing contents.
+	 */
 	private var grid = Array(columns) { Array<ElementView?>(rows) { null } }
+	
+	/**
+	 * Grid array containing centering behaviors for individual cells.
+	 */
 	private var centeringModes = Array(columns) { Array(rows) { Alignment.CENTER } }
 	
+	/**
+	 * Row heights.
+	 */
 	private var rowHeights = DoubleArray(rows) { -1.0 }
-	private var columnWidths = DoubleArray(columns) { -1.0 }
 	
+	/**
+	 * Column widths.
+	 */
+	private var columnWidths = DoubleArray(columns) { -1.0 }
+	//endregion
+	
+	//region Get/Set operators
+	/**
+	 * Returns grid cell content.
+	 *
+	 * @param columnIndex column index of cell.
+	 * @param rowIndex row index of cell.
+	 */
 	operator fun get(columnIndex: Int, rowIndex: Int): T? = grid[columnIndex][rowIndex] as? T
 	
+	
+	/**
+	 * Sets grid cell content.
+	 *
+	 * @param columnIndex column index of cell.
+	 * @param rowIndex row index of cell.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
+	 */
 	operator fun set(columnIndex: Int, rowIndex: Int, value: T?) {
 		require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
 			"Indices exceed grid bounds."
@@ -37,49 +74,113 @@ internal class ElementViewGrid<T : ElementView>(
 		
 		grid[columnIndex][rowIndex] = value
 	}
+	//endregion
 	
+	//region Get/Set center modes
+	/**
+	 * Returns grid cell centering mode.
+	 *
+	 * @param columnIndex column index of cell.
+	 * @param rowIndex row index of cell.
+	 */
 	fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment = centeringModes[columnIndex][rowIndex]
 	
-	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
+	/**
+	 * Sets grid cell centering mode.
+	 *
+	 * @param columnIndex column index of cell.
+	 * @param rowIndex row index of cell.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] or [rowIndex] is out of grid range.
+	 */
+	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, alignment: Alignment) {
 		require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
 			"Indices exceed grid bounds."
 		}
 		
-		centeringModes[columnIndex][rowIndex] = value
+		centeringModes[columnIndex][rowIndex] = alignment
 	}
 	
-	fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
+	/**
+	 * Sets grid centering mode for whole column.
+	 *
+	 * @param columnIndex column index.
+	 * @param alignment new alignment.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
+	 */
+	fun setColumnCenterMode(columnIndex: Int, alignment: Alignment) {
 		require(columnIndex in 0 until columns) {
 			"Column index exceed grid bounds."
 		}
 		
 		for (i in 0 until rows)
-			centeringModes[columnIndex][i] = value
+			centeringModes[columnIndex][i] = alignment
 	}
 	
-	fun setRowCenterMode(rowIndex: Int, value: Alignment) {
+	/**
+	 * Sets grid centering mode for whole row.
+	 *
+	 * @param rowIndex row index.
+	 * @param alignment new alignment.
+	 *
+	 * @throws IllegalArgumentException if [rowIndex] is out of grid range.
+	 */
+	fun setRowCenterMode(rowIndex: Int, alignment: Alignment) {
 		require(rowIndex in 0 until rows) {
 			"Row index exceed grid bounds."
 		}
 		
 		for (i in 0 until columns)
-			centeringModes[i][rowIndex] = value
+			centeringModes[i][rowIndex] = alignment
 	}
 	
-	fun setCenterMode(value: Alignment) {
+	/**
+	 * Sets grid centering mode for all cells.
+	 *
+	 * @param alignment new alignment.
+	 */
+	fun setCenterMode(alignment: Alignment) {
 		for (x in 0 until columns)
 			for (y in 0 until rows)
-				centeringModes[x][y] = value
+				centeringModes[x][y] = alignment
 	}
+	//endregion
 	
+	//region Get/Set values
+	/**
+	 * Returns whole row as [List].
+	 *
+	 * @param rowIndex row index.
+	 */
 	fun getRow(rowIndex: Int): List<T?> = List(columns) { grid[it][rowIndex] as? T }
 	
+	/**
+	 * Returns [List] all all rows as another [List].
+	 */
 	fun getRows(): List<List<T?>> = (0 until rows).map { getRow(it) }
 	
+	/**
+	 * Returns whole column as [List].
+	 *
+	 * @param columnIndex column index.
+	 */
 	fun getColumn(columnIndex: Int): List<T?> = grid[columnIndex].toList() as List<T?>
 	
+	/**
+	 * Returns [List] all all columns as another [List].
+	 */
 	fun getColumns(): List<List<T?>> = (0 until columns).map { getColumn(it) }
+	//endregion
 	
+	//region Get/Set column width/row height
+	/**
+	 * Returns preferred column width ([COLUMN_WIDTH_AUTO] for auto).
+	 *
+	 * @param columnIndex column index.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range,.
+	 */
 	fun getColumnWidth(columnIndex: Int): Double {
 		require(columnIndex in columnWidths.indices) {
 			"ColumnIndex out of grid range."
@@ -88,6 +189,14 @@ internal class ElementViewGrid<T : ElementView>(
 		return columnWidths[columnIndex]
 	}
 	
+	/**
+	 * Sets preferred column width ([COLUMN_WIDTH_AUTO] for auto).
+	 *
+	 * @param columnIndex column index.
+	 * @param columnWidth new column width.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range or [columnWidth] is negative.
+	 */
 	fun setColumnWidth(columnIndex: Int, columnWidth: Double) {
 		require(columnIndex in columnWidths.indices) {
 			"ColumnIndex out of grid range."
@@ -99,6 +208,14 @@ internal class ElementViewGrid<T : ElementView>(
 		columnWidths[columnIndex] = columnWidth
 	}
 	
+	/**
+	 * Sets preferred column width ([COLUMN_WIDTH_AUTO] for auto) for all columns.
+	 *
+	 * @param columnWidths new column widths.
+	 *
+	 * @throws IllegalArgumentException if size of [columnWidths] does not match grid size
+	 * or any columnWidth is negative.
+	 */
 	fun setColumnWidths(columnWidths: DoubleArray) {
 		require(columnWidths.size == this.columnWidths.size) {
 			"Array size does not match grid range."
@@ -110,6 +227,13 @@ internal class ElementViewGrid<T : ElementView>(
 		this.columnWidths = columnWidths
 	}
 	
+	/**
+	 * Returns preferred row height ([ROW_HEIGHT_AUTO] for auto).
+	 *
+	 * @param rowIndex row index.
+	 *
+	 * @throws IllegalArgumentException if [rowIndex] is out of grid range.
+	 */
 	fun getRowHeight(rowIndex: Int): Double {
 		require(rowIndex in rowHeights.indices) {
 			"ColumnIndex out of grid range."
@@ -118,6 +242,14 @@ internal class ElementViewGrid<T : ElementView>(
 		return rowHeights[rowIndex]
 	}
 	
+	/**
+	 * Sets preferred row height ([ROW_HEIGHT_AUTO] for auto).
+	 *
+	 * @param rowIndex row index.
+	 * @param rowHeight new row height.
+	 *
+	 * @throws IllegalArgumentException if [rowIndex] is out of grid range or [rowHeight] is negative.
+	 */
 	fun setRowHeight(rowIndex: Int, rowHeight: Double) {
 		require(rowIndex in rowHeights.indices) {
 			"ColumnIndex out of grid range."
@@ -129,6 +261,14 @@ internal class ElementViewGrid<T : ElementView>(
 		rowHeights[rowIndex] = rowHeight
 	}
 	
+	/**
+	 * Sets preferred row height ([ROW_HEIGHT_AUTO] for auto) for all rows.
+	 *
+	 * @param rowHeights new row heights.
+	 *
+	 * @throws IllegalArgumentException if size of [rowHeights] does not match grid size
+	 * or any rowHeight is negative.
+	 */
 	fun setRowHeights(rowHeights: DoubleArray) {
 		require(rowHeights.size == this.rowHeights.size) {
 			"Array size does not match grid range."
@@ -139,7 +279,19 @@ internal class ElementViewGrid<T : ElementView>(
 		
 		this.rowHeights = rowHeights
 	}
+	//endregion
 	
+	//region Grow/Trim
+	/**
+	 * Extends grid to given directions.
+	 *
+	 * @param left amount of columns to add to the left.
+	 * @param right amount of columns to add to the right.
+	 * @param top amount of rows to add on the top.
+	 * @param bottom amount of rows to add on the bottom.
+	 *
+	 * @throws IllegalArgumentException if any parameter is negative.
+	 */
 	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0): Boolean {
 		if (left == 0 && right == 0 && top == 0 && bottom == 0)
 			return false
@@ -168,8 +320,18 @@ internal class ElementViewGrid<T : ElementView>(
 		return true
 	}
 	
+	/**
+	 * Removes all empty outer rows and columns.
+	 *
+	 * @return `true` if the grid has been changes by this operation, `false` otherwise.
+	 */
 	fun trim(): Boolean = trimColumns() || trimRows()
 	
+	/**
+	 * Removes all empty outer columns.
+	 *
+	 * @return `true` if the grid has been changes by this operation, `false` otherwise.
+	 */
 	fun trimColumns(): Boolean {
 		val oldColumns = columns
 		var firstColumn = -1
@@ -206,6 +368,11 @@ internal class ElementViewGrid<T : ElementView>(
 		return columns != oldColumns
 	}
 	
+	/**
+	 * Removes all empty outer rows.
+	 *
+	 * @return `true` if the grid has been changes by this operation, `false` otherwise.
+	 */
 	fun trimRows(): Boolean {
 		val oldRows = rows
 		var firstRow = -1
@@ -243,13 +410,23 @@ internal class ElementViewGrid<T : ElementView>(
 		
 		return rows != oldRows
 	}
+	//endregion
 	
+	//region Add/Remove columns and rows
+	/**
+	 * Inserts the given amount of columns at the given position.
+	 *
+	 * @param columnIndex index after which the columns should be inserted.
+	 * @param count amount of columns to insert.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range or [count] is negative.
+	 */
 	fun addColumns(columnIndex: Int, count: Int) {
-		require(count >= 0) {
-			"Parameter count must be positive."
-		}
 		require(columnIndex in 0..columns) {
 			"Column index out of grid range."
+		}
+		require(count >= 0) {
+			"Parameter count must be positive."
 		}
 		
 		val newGrid = Array(columns + count) { Array<ElementView?>(rows) { null } }
@@ -287,6 +464,13 @@ internal class ElementViewGrid<T : ElementView>(
 		centeringModes = newCenteringModes
 	}
 	
+	/**
+	 * Removes column at given index.
+	 *
+	 * @param columnIndex index of column to be deleted.
+	 *
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
+	 */
 	fun removeColumn(columnIndex: Int) {
 		require(columnIndex in 0 until columns) {
 			"Column index out of grid range."
@@ -332,6 +516,9 @@ internal class ElementViewGrid<T : ElementView>(
 		centeringModes = newCenteringModes
 	}
 	
+	/**
+	 * Removes all empty columns.
+	 */
 	fun removeEmptyColumns() {
 		val columnIndices = grid.indices.filter { grid[it].any { e -> e != null } }.toIntArray()
 		
@@ -346,12 +533,20 @@ internal class ElementViewGrid<T : ElementView>(
 		columns = columnIndices.size
 	}
 	
+	/**
+	 * Inserts the given amount of rows at the given position.
+	 *
+	 * @param rowIndex index after which the rows should be inserted.
+	 * @param count amount of columns to insert.
+	 *
+	 * @throws IllegalArgumentException if [rowIndex] is out of grid range or [count] is negative.
+	 */
 	fun addRows(rowIndex: Int, count: Int) {
-		require(count >= 0) {
-			"Parameter count must be positive."
-		}
 		require(rowIndex in 0..rows) {
 			"Row index out of grid range."
+		}
+		require(count >= 0) {
+			"Parameter count must be positive."
 		}
 		
 		val newGrid = Array(columns) { Array<ElementView?>(rows + count) { null } }
@@ -388,6 +583,13 @@ internal class ElementViewGrid<T : ElementView>(
 		centeringModes = newCenteringModes
 	}
 	
+	/**
+	 * Removes row at given index.
+	 *
+	 * @param rowIndex index of row to be deleted.
+	 *
+	 * @throws IllegalArgumentException if [rowIndex] is out of grid range.
+	 */
 	fun removeRow(rowIndex: Int) {
 		require(rowIndex in 0 until rows) {
 			"Row index out of grid range."
@@ -433,6 +635,9 @@ internal class ElementViewGrid<T : ElementView>(
 		centeringModes = newCenteringModes
 	}
 	
+	/**
+	 * Removes all empty rows.
+	 */
 	fun removeEmptyRows() {
 		val rowIndices = (0 until rows).filter { j -> (0 until columns).any { i -> grid[i][j] != null } }.toIntArray()
 		
@@ -446,26 +651,48 @@ internal class ElementViewGrid<T : ElementView>(
 		rowHeights = DoubleArray(rowIndices.size) { rowHeights[rowIndices[it]] }
 		rows = rowIndices.size
 	}
+	//endregion
 	
+	//region Helper
+	/**
+	 * Creates an empty grid of size 0x0.
+	 */
 	private fun initEmpty() {
 		grid = Array(0) { Array(0) { null } }
 		centeringModes = Array(0) { Array(0) { Alignment.CENTER } }
-		columnWidths = DoubleArray(0) { -1.0 }
-		rowHeights = DoubleArray(0) { -1.0 }
+		columnWidths = DoubleArray(0) { COLUMN_WIDTH_AUTO }
+		rowHeights = DoubleArray(0) { ROW_HEIGHT_AUTO }
 		columns = 0
 		rows = 0
 	}
 	
+	/**
+	 * Inline forEach method only returning cells with non-null content.
+	 *
+	 * @see GridIterator
+	 * @see GridIteratorElement
+	 */
 	inline fun forEachNotNull(action: (GridIteratorElement<T>) -> Unit) {
 		for (element in this.filter { it.element != null }) action(element)
 	}
 	
+	/**
+	 * Inline forEach method only returning non-null cell values.
+	 *
+	 * @see GridIterator
+	 */
 	inline fun forEachItemNotNull(action: (T) -> Unit) {
 		for (element in this.mapNotNull { it.element }) action(element)
 	}
 	
+	/**
+	 * Returns a [GridIterator] for this grid.
+	 */
 	override fun iterator(): Iterator<GridIteratorElement<T>> = GridIterator()
 	
+	/**
+	 * Prints grid as "x" and "o", where "x" is a cell containing a value and "o" an empty cell.
+	 */
 	override fun toString(): String = "#Rows: " + rows + "\n" +
 			"#Columns: " + columns + "\n" +
 			grid.joinToString(separator = "\n")
@@ -473,14 +700,30 @@ internal class ElementViewGrid<T : ElementView>(
 				cols.joinToString(prefix = "[", postfix = "]")
 				{ if (it == null) "0" else "X" }
 			}
+	//endregion
 	
+	/**
+	 * An iterator over a ElementViewGrid. Allows to sequentially access the elements.
+	 */
 	internal inner class GridIterator : Iterator<GridIteratorElement<T>> {
-		
+		/**
+		 * Current row position.
+		 */
 		private var currRow = 0
+		
+		/**
+		 * Current column position.
+		 */
 		private var currCol = 0
 		
+		/**
+		 * Returns ``rue` if the iteration has more elements.
+		 */
 		override fun hasNext(): Boolean = currCol < grid.size && currRow < grid[currCol].size
 		
+		/**
+		 * Returns the next element in the iteration.
+		 */
 		override fun next(): GridIteratorElement<T> {
 			if (currCol >= grid.size)
 				throw NoSuchElementException()

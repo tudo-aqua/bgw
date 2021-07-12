@@ -11,7 +11,6 @@ import tools.aqua.bgw.elements.gameelements.GameElementView
  * ContainerNodeBuilder.
  * Factory for all BGW containers.
  */
-@Suppress("UNUSED_PARAMETER")
 internal class ContainerNodeBuilder {
 	companion object {
 		/**
@@ -38,21 +37,25 @@ internal class ContainerNodeBuilder {
 		/**
 		 * Builds [AreaContainerView].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildAreaContainer(containerView: GameElementContainerView<*>): Pane = Pane()
 		
 		/**
 		 * Builds [CardStackView].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildCardStack(containerView: GameElementContainerView<*>): Pane = Pane()
 		
 		/**
 		 * Builds [GameElementPoolView].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildGameElementPool(containerView: GameElementContainerView<*>): Pane = Pane()
 		
 		/**
 		 * Builds [LinearLayoutContainer].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildLinearLayout(containerView: GameElementContainerView<*>): Pane = Pane()
 		
 		/**

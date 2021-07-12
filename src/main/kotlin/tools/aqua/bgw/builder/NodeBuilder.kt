@@ -4,6 +4,8 @@ import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
+import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
+import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -47,7 +49,7 @@ internal class NodeBuilder {
 					throw IllegalInheritanceException(elementView, ElementView::class.java)
 			}
 			val background = VisualBuilder.build(elementView)
-			val stackPane = StackPane(background, node)
+			val stackPane = StackPane(background, node).apply { isPickOnBounds = false }
 			
 			//JavaFX -> Framework
 			elementView.registerEvents(stackPane, node, scene)
@@ -173,6 +175,12 @@ internal class NodeBuilder {
 			}
 			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
 				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
+			}
+			scaleXProperty.setGUIListenerAndInvoke(scaleX) { _, nV ->
+				stackPane.scaleX = nV
+			}
+			scaleYProperty.setGUIListenerAndInvoke(scaleY) { _, nV ->
+				stackPane.scaleY = nV
 			}
 			
 			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }

@@ -8,6 +8,9 @@ import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXFont
+import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
@@ -182,7 +185,8 @@ internal class UINodeBuilder {
          */
         private fun <T> buildListView(listView: ListView<T>): Region {
             val node = javafx.scene.control.ListView<T>(FXCollections.observableArrayList())
-            listView.apply {
+	
+	        listView.apply {
                 observableItemsList.setGUIListenerAndInvoke {
                     node.items.clear()
                     listView.items.forEach { node.items.add(it) }
@@ -204,7 +208,8 @@ internal class UINodeBuilder {
                     node.orientationProperty().value = nV.toJavaFXOrientation()
                 }
             }
-            return node
+	
+	        return node
         }
 
         /**

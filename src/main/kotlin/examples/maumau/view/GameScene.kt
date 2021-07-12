@@ -18,7 +18,7 @@ import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 
 class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
-	//region player hands
+	//region Player hands
 	var currentPlayerHand: LinearLayoutContainer<CardView> = LinearLayoutContainer<CardView>(
 		height = 220,
 		width = 800,
@@ -47,7 +47,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		}
 	//endregion
 	
-	//region stacks
+	//region Stacks
 	val drawStackView: CardStackView<CardView> = CardStackView(
 		height = 200,
 		width = 130,
@@ -66,7 +66,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 320)
 	//endregion stacks
 	
-	//region jack selection
+	//region Jack selection
 	val buttonClubs: Button = Button(height = 200, width = 130, posX = 820, posY = 250).apply {
 		visual = ImageVisual(
 			CARDS_FILE,

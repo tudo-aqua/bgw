@@ -11,7 +11,6 @@ import tools.aqua.bgw.elements.gameelements.TokenView
  * ElementNodeBuilder.
  * Factory for all BGW elements.
  */
-@Suppress("UNUSED_PARAMETER")
 internal class ElementNodeBuilder {
 	companion object {
 		/**
@@ -30,16 +29,19 @@ internal class ElementNodeBuilder {
 		/**
 		 * Builds [CardView].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildCardView(cardView: CardView): Region = Pane()
 		
 		/**
 		 * Builds [DiceView].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildDiceView(diceView: DiceView): Region = Pane()
 		
 		/**
 		 * Builds [TokenView].
 		 */
+		@Suppress("UNUSED_PARAMETER")
 		private fun buildToken(tokenView: TokenView): Region = Pane()
 	}
 }

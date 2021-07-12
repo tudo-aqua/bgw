@@ -15,6 +15,12 @@ import tools.aqua.bgw.util.Coordinate
  */
 class DragDropHelper {
 	companion object {
+		/**
+		 * Rotates coordinates to 0 degrees relative to scene.
+		 *
+		 * @param mouseEvent mouse event.
+		 * @param draggedElementObject rotated element.
+		 */
 		internal fun transformCoordinatesToScene(
 			mouseEvent: MouseEvent,
 			draggedElementObject: DragElementObject
@@ -30,6 +36,14 @@ class DragDropHelper {
 			)
 		}
 		
+		/**
+		 * Searches all elements below mouse position.
+		 *
+		 * @param mouseX mouse x coordinate.
+		 * @param mouseY mouse y coordinate.
+		 *
+		 * @return `true` if a valid drop target was found and the drop was successful, `false` otherwise.
+		 */
 		internal fun Scene<out ElementView>.tryFindDropTarget(
 			mouseX: Double,
 			mouseY: Double
@@ -70,14 +84,20 @@ class DragDropHelper {
 			return isNodesNotEmpty
 		}
 		
+		/**
+		 * Finds all drop targets that accept drop by invoking dropAcceptor.
+		 *
+		 * @param dragTargetObject drag target object.
+		 *
+		 * @return [List] of all accepting drop targets.
+		 */
 		private fun Scene<out ElementView>.findAcceptingDropTargets(
 			dragTargetObject: DragTargetObject
 		): List<ElementView> {
-			
 			val availableSubTargets = searchAvailableDropTargetsRecursively(
 				DragTargetObject(
 					dragTargetObject.dragTarget,
-					dragTargetObject.dragTargetView,
+					dragTargetObject.dragTargetStackPane,
 					dragTargetObject.mouseX,
 					dragTargetObject.mouseY,
 					dragTargetObject.dragTarget.posX -
@@ -100,6 +120,12 @@ class DragDropHelper {
 			}
 		}
 		
+		/**
+		 * Searches for drop targets recursively.
+		 *
+		 * @param parent current parent node.
+		 * @param availableTargets [List] of all collected drop targets.
+		 */
 		private fun Scene<out ElementView>.searchAvailableDropTargetsRecursively(
 			parent: DragTargetObject,
 			availableTargets: MutableList<DragTargetObject>
