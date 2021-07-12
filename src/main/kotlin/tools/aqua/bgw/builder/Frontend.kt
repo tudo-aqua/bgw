@@ -20,13 +20,13 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
-import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.observable.LimitedDoubleProperty
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
-import java.awt.Toolkit
 import java.io.File
 import java.util.*
 import kotlin.math.min
@@ -67,14 +67,19 @@ internal class Frontend : Application() {
 	companion object {
 		//region Constants
 		/**
+		 * Default window width in non-maximized mode.
+		 */
+		private const val DEFAULT_WINDOW_WIDTH = 1280.0
+		
+		/**
+		 * Default window height in non-maximized mode.
+		 */
+		private const val DEFAULT_WINDOW_HEIGHT = 751.0
+		
+		/**
 		 * Blur radius for menuScene overlay
 		 */
 		private const val BLUR_RADIUS = 63.0
-		
-		/**
-		 * Factor for default window size in minimized state.
-		 */
-		private const val MINIMIZED_FACTOR = 0.8
 		//endregion
 		
 		//region Private attributes
@@ -127,11 +132,6 @@ internal class Frontend : Application() {
 		 * Current [ScaleMode].
 		 */
 		private var scaleMode = ScaleMode.FULL
-		
-		/**
-		 * Whether application is currently in fullscreen mode.
-		 */
-		private var fullscreen = false
 		//endregion
 		
 		//region Internal attributes
@@ -159,6 +159,34 @@ internal class Frontend : Application() {
 		 * Property for the window title.
 		 */
 		internal val titleProperty: StringProperty = StringProperty()
+		
+		/**
+		 * Property whether application is currently maximized.
+		 */
+		internal val maximizedProperty = BooleanProperty(false)
+		
+		/**
+		 * Property whether application is currently fullscreen
+		 */
+		internal val fullscreenProperty = BooleanProperty(false)
+		
+		/**
+		 * Property for the current application width.
+		 */
+		internal val widthProperty = LimitedDoubleProperty(
+			lowerBoundInclusive = 0,
+			upperBoundInclusive = Double.POSITIVE_INFINITY,
+			initialValue = DEFAULT_WINDOW_WIDTH
+		)
+		
+		/**
+		 * Property for the current application height.
+		 */
+		internal val heightProperty = LimitedDoubleProperty(
+			lowerBoundInclusive = 0,
+			upperBoundInclusive = Double.POSITIVE_INFINITY,
+			initialValue = DEFAULT_WINDOW_HEIGHT
+		)
 		
 		/**
 		 * Property for the background [Visual].
@@ -242,11 +270,6 @@ internal class Frontend : Application() {
 			scaleMode = newScaleMode
 			sizeChanged()
 		}
-
-//		internal fun setFullScreen(fullscreen: Boolean) {
-//			this.fullscreen = fullscreen
-//			this.primaryStage?.isFullScreen = fullscreen
-//		}
 		
 		/**
 		 * Manually refreshes currently displayed [Scene]s.
@@ -308,43 +331,34 @@ internal class Frontend : Application() {
 				//Initialize default DECORATED stage style allowing minimizing
 				initStyle(StageStyle.DECORATED)
 				
-				scene = Scene(Pane())
-				
-				//Get screen size and set ratio in relation to screen resolution
-				val screenSize = Toolkit.getDefaultToolkit().screenSize
-				val bgwScene: tools.aqua.bgw.core.Scene<out ElementView>? = boardGameScene ?: menuScene
-				
-				//Set minimized window size as 80% of screen resolution and set default window mode to maximized
-				if (bgwScene == null) {
-					width = screenSize.getWidth() * MINIMIZED_FACTOR
-					height = screenSize.getHeight() * MINIMIZED_FACTOR
-				} else {
-					//Get BoardGameScene ratio
-					val sceneWidth: Double = bgwScene.width
-					val sceneHeight: Double = bgwScene.height
-					
-					val relativeSceneWidth: Double = sceneWidth / screenSize.getWidth()
-					val relativeSceneHeight: Double = sceneHeight / screenSize.getHeight()
-					
-					if (relativeSceneWidth > relativeSceneHeight) {
-						width = screenSize.getWidth() * MINIMIZED_FACTOR
-						height = width / sceneWidth * sceneHeight
-					} else {
-						height = screenSize.getHeight() * MINIMIZED_FACTOR
-						width = height / sceneHeight * sceneWidth
-					}
+				//Set internal listeners as GUI listeners would get invoked in setSilent in FX -> BGW direction
+				maximizedProperty.setInternalListenerAndInvoke(maximizedProperty.value) { _, nV -> isMaximized = nV }
+				fullscreenProperty.setInternalListenerAndInvoke(fullscreenProperty.value) { _, nV ->
+					Platform.runLater { isFullScreen = nV }
 				}
 				
-				isMaximized = false
-				isFullScreen = fullscreen //TODO: Fullscreen not working
+				widthProperty.setInternalListenerAndInvoke(widthProperty.value) { _, nV ->
+					if (!isFullScreen && !isMaximized)
+						width = nV
+				}
+				heightProperty.setInternalListenerAndInvoke(heightProperty.value) { _, nV ->
+					if (!isFullScreen && !isMaximized)
+						height = nV
+				}
 				
-				heightProperty().addListener { _, _, _ -> sizeChanged() }
-				widthProperty().addListener { _, _, _ -> sizeChanged() }
+				maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }
+				fullScreenProperty().addListener { _, _, nV -> fullscreenProperty.setSilent(nV) }
+				
+				heightProperty().addListener { _, _, nV ->
+					heightProperty.setSilent(nV.toDouble())
+					sizeChanged()
+				}
+				widthProperty().addListener { _, _, nV ->
+					widthProperty.setSilent(nV.toDouble())
+					sizeChanged()
+				}
 				
 				show()
-				
-				//Adjust for title bar height
-				height += (stage.height - scene.height)
 			}
 			
 			menuScene?.let { menuPane = buildMenu(it) }
@@ -455,61 +469,66 @@ internal class Frontend : Application() {
 			val activePanes: List<Pane> = listOfNotNull(gamePane, menuPane).ifEmpty { return }
 			
 			//Wait for renderer to finish resize nodes
-			Platform.runLater {
-				val sceneHeight = scenePane.height
-				val sceneWidth = scenePane.width
-				
-				if (sceneHeight == 0.0 || sceneWidth == 0.0)
-					return@runLater
-				
-				activePanes.forEach {
-					it.apply {
-						val contentHeight = height
-						val contentWidth = width
+			PauseTransition(Duration.millis(1.0)).also {
+				it.onFinished = EventHandler {
+					Platform.runLater {
+						val sceneHeight = scenePane.height
+						val sceneWidth = scenePane.width
 						
-						if (contentHeight == 0.0 || contentWidth == 0.0)
-							return@apply
+						if (sceneHeight == 0.0 || sceneWidth == 0.0)
+							return@runLater
 						
-						//Set new content layout
-						layoutX = (sceneWidth - contentWidth) * horizontalSceneAlignment.positionMultiplier
-						layoutY = (sceneHeight - contentHeight) * verticalSceneAlignment.positionMultiplier
-						sceneX = layoutX
-						sceneY = layoutY
-						
-						//Set new content scale
-						if (scaleMode != ScaleMode.NO_SCALE) {
-							sceneScale = min(sceneWidth / contentWidth, sceneHeight / contentHeight)
-							
-							if (scaleMode == ScaleMode.ONLY_SHRINK)
-								sceneScale = min(sceneScale, 1.0)
-							
-							scaleX = sceneScale
-							scaleY = sceneScale
-							
-							translateX = contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
-							translateY = contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
-							
-							sceneX = (sceneWidth - contentWidth * sceneScale) / 2 *
-									(1 + horizontalSceneAlignment.pivotMultiplier)
-							sceneY = (sceneHeight - contentHeight * sceneScale) / 2 *
-									(1 + verticalSceneAlignment.pivotMultiplier)
+						activePanes.forEach { pane ->
+							pane.apply {
+								val contentHeight = height
+								val contentWidth = width
+								
+								if (contentHeight == 0.0 || contentWidth == 0.0)
+									return@apply
+								
+								//Set new content layout
+								layoutX = (sceneWidth - contentWidth) * horizontalSceneAlignment.positionMultiplier
+								layoutY = (sceneHeight - contentHeight) * verticalSceneAlignment.positionMultiplier
+								sceneX = layoutX
+								sceneY = layoutY
+								
+								//Set new content scale
+								if (scaleMode != ScaleMode.NO_SCALE) {
+									sceneScale = min(sceneWidth / contentWidth, sceneHeight / contentHeight)
+									
+									if (scaleMode == ScaleMode.ONLY_SHRINK)
+										sceneScale = min(sceneScale, 1.0)
+									
+									scaleX = sceneScale
+									scaleY = sceneScale
+									
+									translateX =
+										contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
+									translateY =
+										contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
+									
+									sceneX = (sceneWidth - contentWidth * sceneScale) / 2 *
+											(1 + horizontalSceneAlignment.pivotMultiplier)
+									sceneY = (sceneHeight - contentHeight * sceneScale) / 2 *
+											(1 + verticalSceneAlignment.pivotMultiplier)
+								}
+								
+								//Zoom detail
+								val scene =
+									(if (this == gamePane) boardGameScene else menuScene)!! //TODO: Do this more elegantly
+								val scale = min(
+									(scene.width - scene.zoomDetail.width) / scene.width,
+									(scene.height - scene.zoomDetail.height) / scene.height
+								)
+								scaleX += scale
+								scaleY += scale
+								translateX -= scene.zoomDetail.topLeft.xCoord
+								translateY -= scene.zoomDetail.topLeft.yCoord
+							}
 						}
-						
-						//Zoom detail
-						val scene =
-							(if (this == gamePane) boardGameScene else menuScene)!! //TODO: Do this more elegantly
-						val scale = min(
-							(scene.width - scene.zoomDetail.width) / scene.width,
-							(scene.height - scene.zoomDetail.height) / scene.height
-						)
-						scaleX += scale
-						scaleY += scale
-						translateX -= scene.zoomDetail.topLeft.xCoord
-						translateY -= scene.zoomDetail.topLeft.yCoord
-						
 					}
 				}
-			}
+			}.play()
 		}
 		//endregion
 	}

@@ -249,7 +249,7 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 		/**
 		 * Default scene height.
 		 */
-		const val DEFAULT_SCENE_HEIGHT: Double = 1016.0
+		const val DEFAULT_SCENE_HEIGHT: Double = 1080.0
 	}
 }
 
