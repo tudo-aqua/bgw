@@ -3,18 +3,22 @@ package examples.maumau.view
 import examples.main.*
 import examples.maumau.model.CardSuit
 import examples.maumau.model.CardValue
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
 import tools.aqua.bgw.elements.container.CardStackView
 import tools.aqua.bgw.elements.container.LinearLayoutContainer
 import tools.aqua.bgw.elements.gameelements.CardView
+import tools.aqua.bgw.elements.gameelements.TokenView
 import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
 class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
@@ -28,8 +32,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	)
 		.apply {
 			visual = ColorVisual(Color(255, 255, 255, 50))
-			horizontalAlignment = HorizontalAlignment.CENTER
-			verticalAlignment = VerticalAlignment.CENTER
+			alignment = Alignment.CENTER
 		}
 	
 	var otherPlayerHand: LinearLayoutContainer<CardView> = LinearLayoutContainer<CardView>(
@@ -41,8 +44,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	)
 		.apply {
 			visual = ColorVisual(Color(255, 255, 255, 50))
-			horizontalAlignment = HorizontalAlignment.CENTER
-			verticalAlignment = VerticalAlignment.CENTER
+			alignment = Alignment.CENTER
 			rotation = 180.0
 		}
 	//endregion
@@ -129,7 +131,6 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	).apply {
 		visual = ImageVisual(BUTTON_BG_FILE)
 	}
-	
 	init {
 		addElements(
 			drawStackView,
@@ -143,7 +144,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			buttonSpades,
 			buttonClubs,
 			hintButton,
-			mainMenuButton
+			mainMenuButton,
 		)
 	}
 }
