@@ -82,28 +82,4 @@ enum class Alignment(val verticalAlignment: VerticalAlignment, val horizontalAli
 			else -> throw UnsupportedOperationException()
 		}
 	}
-
-	fun toVerticalAlignment(): VerticalAlignment = when (this) {
-		TOP_LEFT -> TOP
-		TOP_RIGHT -> TOP
-		TOP_CENTER -> TOP
-		BOTTOM_LEFT -> BOTTOM
-		BOTTOM_RIGHT -> BOTTOM
-		BOTTOM_CENTER -> BOTTOM
-		CENTER_LEFT -> VerticalAlignment.CENTER
-		CENTER_RIGHT -> VerticalAlignment.CENTER
-		CENTER -> VerticalAlignment.CENTER
-	}
-
-	fun toHorizontalAlignment(): HorizontalAlignment = when (this) {
-		TOP_LEFT -> LEFT
-		TOP_RIGHT -> RIGHT
-		TOP_CENTER -> HorizontalAlignment.CENTER
-		BOTTOM_LEFT -> LEFT
-		BOTTOM_RIGHT -> RIGHT
-		BOTTOM_CENTER -> HorizontalAlignment.CENTER
-		CENTER_LEFT -> LEFT
-		CENTER_RIGHT -> RIGHT
-		CENTER -> HorizontalAlignment.CENTER
-	}
 }
