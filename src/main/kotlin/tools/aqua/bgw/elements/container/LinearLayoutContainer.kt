@@ -31,8 +31,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [LinearLayoutContainer]. Default: 0.
  * @param spacing spacing between contained [GameElementView]s. Default: 0.
  * @param orientation orientation for this [LinearLayoutContainer]. Default: [Orientation.HORIZONTAL].
- * @param alignment specifies how the contained Elements should be aligned.
- * Default: [Alignment.TOP_LEFT].
+ * @param alignment specifies how the contained [GameElementView]s should be aligned. Default: [Alignment.TOP_LEFT].
  */
 open class LinearLayoutContainer<T : GameElementView>(
 	height: Number = 0,
@@ -106,53 +105,20 @@ open class LinearLayoutContainer<T : GameElementView>(
 	
 	/**
 	 * [Property] for the [Alignment] of [GameElementView]s in this [LinearLayoutContainer].
-	 * @see VerticalAlignment
+	 * @see Alignment
 	 */
 	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(alignment)
 	
 	/**
 	 * [Alignment] for this [LinearLayoutContainer].
 	 *
+	 * @see alignmentProperty
 	 * @see Alignment
-	 * @see VerticalAlignment
-	 * @see verticalAlignment
-	 * @see HorizontalAlignment
-	 * @see horizontalAlignment
 	 */
 	var alignment: Alignment
 		get() = alignmentProperty.value
 		set(value) {
 			alignmentProperty.value = value
-		}
-	
-	/**
-	 * [VerticalAlignment] for this [LinearLayoutContainer].
-	 *
-	 * @see Alignment
-	 * @see alignment
-	 * @see VerticalAlignment
-	 * @see HorizontalAlignment
-	 * @see horizontalAlignment
-	 */
-	var verticalAlignment: VerticalAlignment
-		get() = alignmentProperty.value.verticalAlignment
-		set(value) {
-			alignmentProperty.value = Alignment.of(value, alignmentProperty.value.horizontalAlignment)
-		}
-	
-	/**
-	 * [HorizontalAlignment] for this [LinearLayoutContainer].
-	 *
-	 * @see Alignment
-	 * @see alignment
-	 * @see VerticalAlignment
-	 * @see verticalAlignment
-	 * @see HorizontalAlignment
-	 */
-	var horizontalAlignment: HorizontalAlignment
-		get() = alignmentProperty.value.horizontalAlignment
-		set(value) {
-			alignmentProperty.value = Alignment.of(alignmentProperty.value.verticalAlignment, value)
 		}
 	
 	init {
@@ -208,14 +174,14 @@ open class LinearLayoutContainer<T : GameElementView>(
 			spacing //use user defined spacing
 		}
 		val newTotalContentWidth = totalContentWidth + (observableElements.size - 1) * newSpacing
-		val initial = when (horizontalAlignment) {
+		val initial = when (alignment.horizontalAlignment) {
 			HorizontalAlignment.LEFT -> 0.0
 			HorizontalAlignment.CENTER -> (width - newTotalContentWidth) / 2
 			HorizontalAlignment.RIGHT -> width - newTotalContentWidth
 		}
 		observableElements.fold(initial) { acc: Double, element: T ->
 			element.posYProperty.setSilent(
-				when (verticalAlignment) {
+				when (alignment.verticalAlignment) {
 					VerticalAlignment.TOP -> 0.0
 					VerticalAlignment.CENTER -> (height - element.height) / 2
 					VerticalAlignment.BOTTOM -> height - element.height
@@ -236,7 +202,7 @@ open class LinearLayoutContainer<T : GameElementView>(
 			spacing //use user defined spacing
 		}
 		val newTotalContentHeight = totalContentHeight + (observableElements.size - 1) * newSpacing
-		val initial = when (verticalAlignment) {
+		val initial = when (alignment.verticalAlignment) {
 			VerticalAlignment.TOP -> 0.0
 			VerticalAlignment.CENTER -> (width - newTotalContentHeight) / 2
 			VerticalAlignment.BOTTOM -> width - newTotalContentHeight
@@ -244,7 +210,7 @@ open class LinearLayoutContainer<T : GameElementView>(
 		observableElements.fold(initial) { acc: Double, element: T ->
 			element.posYProperty.setSilent(acc)
 			element.posXProperty.setSilent(
-				when (horizontalAlignment) {
+				when (alignment.horizontalAlignment) {
 					HorizontalAlignment.LEFT -> 0.0
 					HorizontalAlignment.CENTER -> (width - element.width) / 2
 					HorizontalAlignment.RIGHT -> width - element.width
