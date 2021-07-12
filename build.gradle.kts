@@ -127,7 +127,7 @@ publishing {
 					}
 					developer {
 						name.set("Fabian Klümpers")
-						email.set("fabian.kluempers@cs.tu-dortmund.de")
+						email.set("fabian.kluempers@tu-dortmund.de")
 					}
 				}
 				
