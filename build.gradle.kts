@@ -11,8 +11,11 @@ plugins {
 	signing
 }
 
+val versionNumber = "0.1"
+//val version = "0.1-SNAPSHOT"
+
 group = "tools.aqua"
-version = "0.1-SNAPSHOT"
+version = versionNumber
 
 repositories {
 	mavenCentral()
@@ -89,7 +92,7 @@ publishing {
 		create<MavenPublication>("maven") {
 			groupId = "tools.aqua"
 			artifactId = "bgw-core"
-			version = "0.1-SNAPSHOT"
+			version = versionNumber
 			from(components["java"])
 			
 			pom {
