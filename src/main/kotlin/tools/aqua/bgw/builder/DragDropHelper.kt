@@ -6,6 +6,7 @@ import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.container.GameElementContainerView
+import tools.aqua.bgw.elements.layoutviews.ElementPane
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
@@ -134,6 +135,7 @@ class DragDropHelper {
 			when (parent.dragTarget) {
 				is GameElementContainerView<*> -> parent.dragTarget.observableElements
 				is GridLayoutView<*> -> parent.dragTarget.grid.mapNotNull { it.element }
+				is ElementPane<*> -> parent.dragTarget.observableElements
 				else -> listOf()
 			}.map {
 				Pair(it, parent.dragTarget.getChildPosition(it) ?: Coordinate(0.0, 0.0))

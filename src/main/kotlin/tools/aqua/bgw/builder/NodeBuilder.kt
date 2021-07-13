@@ -12,6 +12,7 @@ import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.elements.container.GameElementContainerView
 import tools.aqua.bgw.elements.gameelements.GameElementView
+import tools.aqua.bgw.elements.layoutviews.ElementPane
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.elements.uielements.UIElementView
@@ -123,6 +124,18 @@ internal class NodeBuilder {
 								}
 							}
 							
+						}
+						is ElementPane<*> -> {
+							val index = parent.observableElements.indexOf(this)
+							val initialX = posX
+							val initialY = posY
+							rollback = {
+								posX = initialX
+								posY = initialY
+								@Suppress("UNCHECKED_CAST")
+								(parent as ElementPane<ElementView>)
+									.add(this as ElementView, min(parent.observableElements.size, index))
+							}
 						}
 						scene.rootNode -> {
 							rollback = { Frontend.updateScene() }

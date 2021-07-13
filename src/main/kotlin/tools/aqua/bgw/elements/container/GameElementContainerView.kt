@@ -36,7 +36,6 @@ sealed class GameElementContainerView<T : GameElementView>(
 	
 	/**
 	 * [ElementView]s that are contained in this [GameElementContainerView].
-	 * If changes are made to this list, this [GameElementContainerView] gets re-rendered.
 	 */
 	var elements: List<T> = observableElements.toList()
 		get() = observableElements.toList()
@@ -70,6 +69,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @throws IllegalArgumentException if [element] is already contained.
 	 * @throws IllegalArgumentException if [index] is out of bounds for [elements].
 	 */
+	@Suppress("DuplicatedCode")
 	@Synchronized
 	open fun add(element: T, index: Int = observableElements.size) {
 		require(!observableElements.contains(element)) {

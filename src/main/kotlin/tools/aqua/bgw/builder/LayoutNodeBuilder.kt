@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.elements.layoutviews.ElementPane
 import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.util.ElementViewGrid
@@ -25,8 +26,22 @@ internal class LayoutNodeBuilder {
 			when (layoutElementView) {
 				is GridLayoutView<*> ->
 					buildGrid(scene, layoutElementView)
+				is ElementPane<*> ->
+					buildElementPane(scene, layoutElementView)
 			}
-		
+
+		private fun buildElementPane(scene: Scene<out ElementView>, elementPane: ElementPane<out ElementView>): Region =
+			Pane().apply {
+				elementPane.observableElements.setGUIListenerAndInvoke {
+					refreshElementPane(scene, elementPane)
+				}
+			}
+
+		private fun Pane.refreshElementPane(scene: Scene<out ElementView>, elementPane: ElementPane<out ElementView>) {
+			children.clear()
+			children.addAll(elementPane.observableElements.map { NodeBuilder.build(scene, it) })
+		}
+
 		/**
 		 * Builds [GridLayoutView].
 		 */
