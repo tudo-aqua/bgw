@@ -50,7 +50,7 @@ class ViewController : BoardGameApplication("MauMau") {
 		if (event.draggedElement !is CardView)
 			return false
 		
-		return logicController.checkRules(cardMap.backward(event.draggedElement))
+		return logicController.checkRules(cardMap.backward(event.draggedElement as CardView))
 	}
 	
 	private fun elementDropped(event: DragEvent) {
