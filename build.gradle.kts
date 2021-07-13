@@ -11,8 +11,8 @@ plugins {
 	signing
 }
 
-val versionNumber = "0.1"
-//val version = "0.1-SNAPSHOT"
+//val versionNumber = "0.2"
+val versionNumber = "0.2-SNAPSHOT"
 
 group = "tools.aqua"
 version = versionNumber
