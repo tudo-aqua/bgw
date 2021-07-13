@@ -48,7 +48,7 @@ jobs:
           arguments: dokkaHtml
 
       - name: Move Dokka to /docs
-        run: cp -r ./build/dokka/html ./docs
+        run: cp -r ./framework/build/dokka/html ./docs
 
       - name: Rename docs/html folder
         run: mv ./docs/html ./docs/kotlin-docs
