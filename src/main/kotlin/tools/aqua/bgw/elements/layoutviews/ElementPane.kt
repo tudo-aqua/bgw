@@ -104,9 +104,9 @@ class ElementPane<T : ElementView>(
     }
 
     /**
-     * Removes the [element] specified by the parameter from this [ElementPane].
+     * Removes the [ElementView] specified by the parameter from this [ElementPane].
      *
-     * @param element the element to remove.
+     * @param element the [ElementView] to remove.
      */
     @Synchronized
     fun remove(element: T) {

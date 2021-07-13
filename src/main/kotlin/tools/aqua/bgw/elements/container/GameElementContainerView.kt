@@ -12,8 +12,8 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Baseclass for containers that can contain [ElementView]s or its subclasses.
- * It provides the list to store [ElementView]s and some useful methods to work on said list.
+ * Baseclass for containers that can contain [GameElementView]s or its subclasses.
+ * It provides the list to store [GameElementView]s and some useful methods to work on said list.
  *
  * @param height height for this [GameElementContainerView].
  * @param width width for this [GameElementContainerView].
@@ -29,13 +29,13 @@ sealed class GameElementContainerView<T : GameElementView>(
 	visual: Visual
 ) : DynamicView(height = height, width = width, visual = visual, posX = posX, posY = posY), Iterable<T> {
 	/**
-	 * An [ObservableList] to store the [ElementView]s that are contained in this [GameElementContainerView].
+	 * An [ObservableList] to store the [GameElementView]s that are contained in this [GameElementContainerView].
 	 * If changes are made to this list, this [GameElementContainerView] gets re-rendered.
 	 */
 	internal val observableElements: ObservableList<T> = ObservableLinkedList()
 	
 	/**
-	 * [ElementView]s that are contained in this [GameElementContainerView].
+	 * [GameElementView]s that are contained in this [GameElementContainerView].
 	 */
 	var elements: List<T> = observableElements.toList()
 		get() = observableElements.toList()
@@ -63,7 +63,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Adds an [ElementView] to this [GameElementContainerView].
+	 * Adds a [GameElementView] to this [GameElementContainerView].
 	 *
 	 * @param element element to add.
 	 * @throws IllegalArgumentException if [element] is already contained.
@@ -86,12 +86,12 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Adds all [ElementView]s passed as varargs to this [GameElementContainerView].
+	 * Adds all [GameElementView]s passed as varargs to this [GameElementContainerView].
 	 * Whenever an ElementView is encountered, that is already contained, an
 	 * [IllegalArgumentException] is thrown and no further ElementView is added.
 	 *
-	 * @param elements vararg [ElementView]s to add.
-	 * @throws IllegalArgumentException if an [ElementView] is already contained.
+	 * @param elements vararg [GameElementView]s to add.
+	 * @throws IllegalArgumentException if a [GameElementView] is already contained.
 	 */
 	open fun addAll(vararg elements: T) {
 		try {
@@ -102,12 +102,12 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Adds all [ElementView]s contained in the passed collection to this [GameElementContainerView].
+	 * Adds all [GameElementView]s contained in the passed collection to this [GameElementContainerView].
 	 * Whenever an ElementView is encountered, that is already contained, an
-	 * [IllegalArgumentException] is thrown and no further [ElementView] is added.
+	 * [IllegalArgumentException] is thrown and no further [GameElementView] is added.
 	 *
-	 * @param collection collection containing the [ElementView]s to add.
-	 * @throws IllegalArgumentException if an [ElementView] is already contained.
+	 * @param collection collection containing the [GameElementView]s to add.
+	 * @throws IllegalArgumentException if a [GameElementView] is already contained.
 	 */
 	@Synchronized
 	open fun addAll(collection: Collection<T>) {
@@ -119,9 +119,9 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Removes the [element] specified by the parameter from this [GameElementContainerView].
+	 * Removes the [GameElementView] specified by the parameter from this [GameElementContainerView].
 	 *
-	 * @param element the element to remove.
+	 * @param element the [GameElementView] to remove.
 	 */
 	@Synchronized
 	open fun remove(element: T) {
@@ -129,7 +129,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	}
 	
 	/**
-	 * Removes all [ElementView]s from this [GameElementContainerView].
+	 * Removes all [GameElementView]s from this [GameElementContainerView].
 	 * @return list of all removed Elements
 	 */
 	@Synchronized
