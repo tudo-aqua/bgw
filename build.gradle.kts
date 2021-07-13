@@ -8,10 +8,14 @@ plugins {
 	id("io.gitlab.arturbosch.detekt") version "1.17.0"
 	id("maven-publish")
 	kotlin("jvm") version "1.5.0"
+	signing
 }
 
+val versionNumber = "0.1"
+//val version = "0.1-SNAPSHOT"
+
 group = "tools.aqua"
-version = "1.0"
+version = versionNumber
 
 repositories {
 	mavenCentral()
@@ -88,8 +92,73 @@ publishing {
 		create<MavenPublication>("maven") {
 			groupId = "tools.aqua"
 			artifactId = "bgw-core"
-			version = "0.1-SNAPSHOT"
+			version = versionNumber
 			from(components["java"])
+			
+			pom {
+				name.set("BoardGameWork Core Library")
+				
+				description.set(
+					"A framework for board game applications."
+				)
+				
+				url.set("https://github.com/tudo-aqua/bgw-core")
+				
+				licenses {
+					license {
+						name.set("The MIT License")
+						url.set("https://opensource.org/licenses/MIT")
+					}
+					license {
+						name.set("ISC License")
+						url.set("https://opensource.org/licenses/ISC")
+					}
+				}
+				
+				developers {
+					developer {
+						name.set("Stefan Naujokat")
+						email.set("stefan.naujokat@tu-dortmund.de")
+					}
+					developer {
+						name.set("Till Schallau")
+						email.set("till.schallau@tu-dortmund.de")
+					}
+					developer {
+						name.set("Dominik Mäckel")
+						email.set("dominik.maeckel@tu-dortmund.de")
+					}
+					developer {
+						name.set("Fabian Klümpers")
+						email.set("fabian.kluempers@tu-dortmund.de")
+					}
+				}
+				
+				scm {
+					connection.set("scm:git:git://github.com:tudo-aqua/bgw-core.git")
+					developerConnection.set("scm:git:ssh://git@github.com:tudo-aqua/bgw-core.git")
+					url.set("https://github.com/tudo-aqua/bgw-core/tree/main")
+				}
+			}
 		}
 	}
+	repositories {
+		maven {
+			name = "nexusOSS"
+			val releasesUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+			val snapshotsUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+			url = if (version.toString().endsWith("SNAPSHOT")) snapshotsUrl else releasesUrl
+			credentials {
+				username = properties["nexusUsername"] as? String
+				password = properties["nexusPassword"] as? String
+			}
+		}
+	}
+}
+
+
+signing {
+	isRequired = !hasProperty("skip-signing")
+	useGpgCmd()
+	sign(publishing.publications["maven"])
 }
