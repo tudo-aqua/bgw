@@ -75,11 +75,9 @@ detekt {
 	
 }
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-	dependsOn(dokkaHtml)
 	archiveClassifier.set("javadoc")
-	from(dokkaHtml.outputDirectory)
+	from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
 }
 
 java {
@@ -94,16 +92,16 @@ publishing {
 			artifactId = "bgw-core"
 			version = versionNumber
 			from(components["java"])
-			
+
 			pom {
 				name.set("BoardGameWork Core Library")
-				
+
 				description.set(
 					"A framework for board game applications."
 				)
-				
+
 				url.set("https://github.com/tudo-aqua/bgw-core")
-				
+
 				licenses {
 					license {
 						name.set("The MIT License")
@@ -114,7 +112,7 @@ publishing {
 						url.set("https://opensource.org/licenses/ISC")
 					}
 				}
-				
+
 				developers {
 					developer {
 						name.set("Stefan Naujokat")
@@ -133,7 +131,7 @@ publishing {
 						email.set("fabian.kluempers@tu-dortmund.de")
 					}
 				}
-				
+
 				scm {
 					connection.set("scm:git:git://github.com:tudo-aqua/bgw-core.git")
 					developerConnection.set("scm:git:ssh://git@github.com:tudo-aqua/bgw-core.git")
@@ -156,9 +154,11 @@ publishing {
 	}
 }
 
-
+/*
 signing {
 	isRequired = !hasProperty("skip-signing")
 	useGpgCmd()
 	sign(publishing.publications["maven"])
 }
+
+ */
