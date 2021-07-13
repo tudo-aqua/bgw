@@ -6,6 +6,7 @@ plugins {
 	id("org.openjfx.javafxplugin") version "0.0.8"
 	id("org.jetbrains.dokka") version "1.4.32"
 	id("io.gitlab.arturbosch.detekt") version "1.17.0"
+	id("org.cadixdev.licenser") version "0.6.1"
 	`maven-publish`
 	kotlin("jvm")
 	signing
@@ -131,3 +132,8 @@ signing {
 	useGpgCmd()
 	sign(publishing.publications["maven"])
 }
+
+license {
+	header(rootProject.file("LICENSE-HEADER.txt"))
+}
+
