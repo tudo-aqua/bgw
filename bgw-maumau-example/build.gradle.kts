@@ -21,7 +21,7 @@ dependencies {
 	implementation(kotlin("stdlib-jdk8"))
 	implementation("com.jfoenix", "jfoenix", "9.0.1")
 	testImplementation(kotlin("test"))
-	implementation(project(":framework"))
+	implementation(project(":bgw-core"))
 }
 
 tasks.test {

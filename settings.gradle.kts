@@ -1,2 +1,2 @@
-rootProject.name = "BoardGameWork"
-include("framework", "examples")
+rootProject.name = "bgw"
+include("bgw-core", "bgw-maumau-example")
