@@ -127,10 +127,8 @@ publishing {
 	}
 }
 
-signing {
-	isRequired = !hasProperty("skip-signing")
-	useGpgCmd()
-	sign(publishing.publications["maven"])
+tasks.named("publishMavenPublicationToNexusOSSRepository") {
+	dependsOn (tasks.checkLicenses)
 }
 
 license {
