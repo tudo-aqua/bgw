@@ -6,16 +6,13 @@ plugins {
 	id("org.openjfx.javafxplugin") version "0.0.8"
 	id("org.jetbrains.dokka") version "1.4.32"
 	id("io.gitlab.arturbosch.detekt") version "1.17.0"
-	id("maven-publish")
+	`maven-publish`
 	kotlin("jvm")
 	signing
 }
 
-val versionNumber = "0.1"
-//val versionNumber = "0.1-SNAPSHOT"
-
 group = "tools.aqua"
-version = versionNumber
+version = rootProject.version
 
 repositories {
 	mavenCentral()
@@ -69,9 +66,7 @@ java {
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
-			groupId = "tools.aqua"
-			artifactId = "bgw-core"
-			version = versionNumber
+
 			from(components["java"])
 
 			pom {

@@ -7,11 +7,8 @@ plugins {
 	kotlin("jvm")
 }
 
-//val versionNumber = "0.1"
-val versionNumber = "0.1-SNAPSHOT"
-
 group = "tools.aqua"
-version = versionNumber
+version = rootProject.version
 
 repositories {
 	mavenCentral()
@@ -19,22 +16,9 @@ repositories {
 
 dependencies {
 	implementation(kotlin("stdlib-jdk8"))
-	implementation("com.jfoenix", "jfoenix", "9.0.1")
-	testImplementation(kotlin("test"))
 	implementation(project(":bgw-core"))
-}
-
-tasks.test {
-	useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions.jvmTarget = "11"
 }
-
-javafx {
-	modules("javafx.controls", "javafx.fxml")
-}
-
-
-
