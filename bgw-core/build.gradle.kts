@@ -7,6 +7,7 @@ plugins {
 	id("org.jetbrains.dokka") version "1.4.32"
 	id("io.gitlab.arturbosch.detekt") version "1.17.0"
 	id("org.cadixdev.licenser") version "0.6.1"
+	id("com.dorongold.task-tree") version "2.1.0" // example usage: ./gradlew publish taskTree
 	`maven-publish`
 	kotlin("jvm")
 	signing
