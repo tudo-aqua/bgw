@@ -13,7 +13,7 @@ The complete source code for this example can be found at the bottom of the page
 ## Component Declaration
 
 We declare the components that we are going to need in a subclass of 
-[BoardGameApplication](kotlin-docs/bgw-core/tools.aqua.bgw.core/-BoardGameApplication)
+[BoardGameApplication](kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application)
 
 ````kotlin
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
@@ -72,7 +72,7 @@ redArea.onDragElementDropped = { dragEvent ->
 }
 ````
 We apply the ``reposition`` function to the ``draggedElement``, 
-because [AreaContainerView](kotlin-docs/bgw-core/tools.aqua.bgw.elements.container/-AreaContainerView) 
+because [AreaContainerView](kotlin-docs/bgw-core/tools.aqua.bgw.elements.container/-area-container-view) 
 does not have automatic layout.
 
 The greenArea gets initialized similarly with the following code:
@@ -96,7 +96,7 @@ The tokens need to be draggable in order to register drag gestures. We do that a
 redToken.isDraggable = true
 ````
 We also want the tokens to be non-draggable, whenever the drag and drop gesture was successful.
-In Order to achive that we set the ``onDragGestureEnded``, where we set ``isDraggable`` to ``false`` when the boolean indicates success.
+In order to achive that we set the ``onDragGestureEnded``, where we set ``isDraggable`` to ``false`` when the boolean indicates success.
 ````kotlin
 redToken.onDragGestureEnded = { _, success ->
     if (success) {
