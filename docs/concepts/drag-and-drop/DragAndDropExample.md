@@ -1,3 +1,8 @@
+---
+parent: Concepts
+title: Drag and Drop
+---
+
 # Drag and Drop
 
 In this section we are going to create a fully functional step-by-step example on the drag and drop 
