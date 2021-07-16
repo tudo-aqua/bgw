@@ -12,6 +12,14 @@ layout: default
 
 ## Table of contents
 {: .no_toc .text-delta }
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
 
 In this section we are going to create a fully functional step-by-step example on the drag and drop 
 feature from BGW.
