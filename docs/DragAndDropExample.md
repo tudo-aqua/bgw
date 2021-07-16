@@ -23,10 +23,22 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
     val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
 
     val redArea: AreaContainerView<TokenView> =
-        AreaContainerView(height = 50, width = 50, posX = 200, posY = 20, visual = ColorVisual(255, 0, 0, 100))
+        AreaContainerView(
+            height = 50, 
+            width = 50, 
+            posX = 200, 
+            posY = 20, 
+            visual = ColorVisual(255, 0, 0, 100)
+        )
 
     val greenArea: AreaContainerView<TokenView> =
-        AreaContainerView(height = 50, width = 50, posX = 200, posY = 200, visual = ColorVisual(0, 255, 0, 100))
+        AreaContainerView(
+            height = 50,
+            width = 50,
+            posX = 200,
+            posY = 200,
+            visual = ColorVisual(0, 255, 0, 100)
+        )
 
     init {
         //the code referenced further down goes here
@@ -55,7 +67,7 @@ redArea.dropAcceptor = { dragEvent ->
 Now we also want to add the redToken to the redArea if it gets dropped on the redArea.
 To do that we set the ``onDragElementDropped`` in the redArea as follows:
 ````kotlin
-redArea.onDragElementDropped = {dragEvent ->
+redArea.onDragElementDropped = { dragEvent ->
     redArea.add((dragEvent.draggedElement as TokenView).apply { reposition(0,0) })
 }
 ````
@@ -67,7 +79,7 @@ The greenArea gets initialized similarly with the following code:
 ````kotlin
 greenArea.dropAcceptor = {
     when (it.draggedElement) {
-        is TokenView -> {it.draggedElement == greenToken}
+        is TokenView -> it.draggedElement == greenToken
         else -> false
     }
 }
@@ -120,26 +132,38 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
     val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
 
     val redArea: AreaContainerView<TokenView> =
-        AreaContainerView(height = 50, width = 50, posX = 200, posY = 20, visual = ColorVisual(255, 0, 0, 100))
+        AreaContainerView(
+            height = 50, 
+            width = 50, 
+            posX = 200, 
+            posY = 20,
+            visual = ColorVisual(255, 0, 0, 100)
+        )
 
     val greenArea: AreaContainerView<TokenView> =
-        AreaContainerView(height = 50, width = 50, posX = 200, posY = 200, visual = ColorVisual(0, 255, 0, 100))
+        AreaContainerView(
+            height = 50, 
+            width = 50, 
+            posX = 200, 
+            posY = 200, 
+            visual = ColorVisual(0, 255, 0, 100)
+        )
 
     init {
         //initialize areas for drag and drop
         redArea.dropAcceptor = { dragEvent ->
             when (dragEvent.draggedElement) {
-                is TokenView -> {dragEvent.draggedElement == redToken}
+                is TokenView -> dragEvent.draggedElement == redToken
                 else -> false
             }
         }
-        redArea.onDragElementDropped = {dragEvent ->
+        redArea.onDragElementDropped = { dragEvent ->
             redArea.add((dragEvent.draggedElement as TokenView).apply { reposition(0,0) })
         }
 
         greenArea.dropAcceptor = {
             when (it.draggedElement) {
-                is TokenView -> {it.draggedElement == greenToken}
+                is TokenView -> it.draggedElement == greenToken
                 else -> false
             }
         }
