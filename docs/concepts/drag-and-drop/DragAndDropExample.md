@@ -1,9 +1,17 @@
 ---
 parent: Concepts
+grand_parent: Index
 title: Drag and Drop
+has_toc: true
+nav_order: 1
+layout: default
 ---
 
 # Drag and Drop
+{: .no_toc }
+
+## Table of contents
+{: .no_toc .text-delta }
 
 In this section we are going to create a fully functional step-by-step example on the drag and drop 
 feature from BGW.
