@@ -1,16 +1,17 @@
-#Drag and Drop
+# Drag and Drop
 
-In this section we are going to create a fully functional example on the drag and drop 
+In this section we are going to create a fully functional step-by-step example on the drag and drop 
 feature from BGW.
 
 We want to have a scene with a red token, a green token, a red area and a green area.
 It should be possible to drag the red token into the red area but not into the green area.
-Vice versa for the green token and green area. Once the tokens have been dragged into a correct area, 
+Vice versa for the green token and area. Once the tokens have been dragged into a correct area, 
 they should become non-draggable.
 
 The complete source code for this example can be found at the bottom of the page.
 
-#Component Declaration
+## Component Declaration
+
 We declare the components that we are going to need in a subclass of 
 [BoardGameApplication](kotlin-docs/bgw-core/tools.aqua.bgw.core/-BoardGameApplication)
 
@@ -37,7 +38,8 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
 }
 ````
 
-#Initialization for drag and drop on areas
+## Initialization for drag and drop on areas
+
 First we want to set the ``dropAcceptor``. It should return whether this element is a valid drop target for the dragged 
 element supplied in the DragEvent passed as an argument. 
 In this instance we want the redArea to only be a valid target for the redToken, 
@@ -75,7 +77,8 @@ greenArea.onDragElementDropped = {
 }
 ````
 
-#Initialization for drag and drop on tokens
+## Initialization for drag and drop on tokens
+
 The tokens need to be draggable in order to register drag gestures. We do that as follows:
 ````kotlin
 redToken.isDraggable = true
@@ -99,10 +102,12 @@ greenToken.onDragGestureEnded = { _, success ->
 }
 ````
 
-#Useful Hints when dealing with drag and drop
+## Useful Hints when dealing with drag and drop
+
 //Todo
 
-#Complete source code for the example
+## Complete source code for the example
+
 ````kotlin
 fun main() {
     DragAndDropExample()
