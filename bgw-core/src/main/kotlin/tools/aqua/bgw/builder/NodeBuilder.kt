@@ -23,6 +23,8 @@ import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
+import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
@@ -38,6 +40,7 @@ import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.util.Coordinate
+import java.lang.RuntimeException
 import kotlin.math.min
 
 /**
@@ -155,7 +158,20 @@ internal class NodeBuilder {
 							}
 						}
 						scene.rootNode -> {
-							rollback = { Frontend.updateScene() }
+							val initialX = posX
+							val initialY = posY
+							rollback = { when (scene) {
+								is BoardGameScene -> {
+									this.posX = initialX
+									this.posY = initialY
+									scene.addElements(this)
+								}
+								is MenuScene -> {
+									throw RuntimeException("DynamicView $this should not be contained in a MenuScene.")
+								}
+							} }
+
+
 						}
 						else -> {}
 					}
@@ -194,7 +210,7 @@ internal class NodeBuilder {
 			node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
-		
+
 		/**
 		 * Registers observers.
 		 */
