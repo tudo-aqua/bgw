@@ -3,7 +3,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.openjfx.javafxplugin") version "0.0.8"
 	id("org.jetbrains.dokka") version "1.4.32"
 	id("io.gitlab.arturbosch.detekt") version "1.17.0"
 	id("org.cadixdev.licenser") version "0.6.1"
@@ -15,6 +14,7 @@ plugins {
 
 group = "tools.aqua"
 version = rootProject.version
+var javaFxVersion = "12.0.1"
 
 repositories {
 	mavenCentral()
@@ -27,6 +27,19 @@ dependencies {
 	testImplementation(kotlin("test"))
 	
 	dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.32")
+
+	implementation(group="org.openjfx", name="javafx-base", version=javaFxVersion, classifier="win")
+	implementation(group="org.openjfx", name="javafx-base", version=javaFxVersion, classifier="mac")
+	implementation(group="org.openjfx", name="javafx-base", version=javaFxVersion, classifier="linux")
+	implementation(group="org.openjfx", name="javafx-controls", version=javaFxVersion, classifier="win")
+	implementation(group="org.openjfx", name="javafx-controls", version=javaFxVersion, classifier="mac")
+	implementation(group="org.openjfx", name="javafx-controls", version=javaFxVersion, classifier="linux")
+	implementation(group="org.openjfx", name="javafx-fxml", version=javaFxVersion, classifier="win")
+	implementation(group="org.openjfx", name="javafx-fxml", version=javaFxVersion, classifier="mac")
+	implementation(group="org.openjfx", name="javafx-fxml", version=javaFxVersion, classifier="linux")
+	implementation(group="org.openjfx", name="javafx-graphics", version=javaFxVersion, classifier="win")
+	implementation(group="org.openjfx", name="javafx-graphics", version=javaFxVersion, classifier="mac")
+	implementation(group="org.openjfx", name="javafx-graphics", version=javaFxVersion, classifier="linux")
 }
 
 tasks.test {
@@ -35,10 +48,6 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions.jvmTarget = "11"
-}
-
-javafx {
-	modules("javafx.controls", "javafx.fxml")
 }
 
 
@@ -126,6 +135,12 @@ publishing {
 			}
 		}
 	}
+}
+
+signing {
+	isRequired = !hasProperty("skip-signing")
+	useGpgCmd()
+	sign(publishing.publications["maven"])
 }
 
 tasks.named("publishMavenPublicationToNexusOSSRepository") {
