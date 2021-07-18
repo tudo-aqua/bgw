@@ -4,11 +4,12 @@ name: GitHub-Pages
 
 # Controls when the action will run. 
 on:
-  workflow_run:
-    workflows: [ "Build" ]
-    branches: [ main ]
-    types:
-      - completed
+  push:
+    branches:
+      - 'documentation'
+  pull_request:
+    branches:
+      - 'documentation'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
