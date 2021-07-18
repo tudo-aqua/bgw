@@ -7,5 +7,5 @@ has_children: false
 
 Index
 
-[VerfügbareKomponenten](Verfügbare-Komponenten.md)
-[Drag and drop example](concepts/drag-and-drop/DragAndDropExample.md)
+- [VerfügbareKomponenten](Verfügbare-Komponenten.md)
+- [Drag and drop example](concepts/drag-and-drop/DragAndDropExample.md)
