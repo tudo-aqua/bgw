@@ -1,6 +1,5 @@
 ---
 parent: Concepts
-grand_parent: Index
 title: Drag and Drop
 has_toc: true
 nav_order: 1
