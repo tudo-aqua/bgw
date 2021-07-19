@@ -1,6 +1,6 @@
 ---
 parent: Game Elements
-grand-parent: Components
+grand_parent: Components
 title: Token
 has_toc: true
 nav_order: 1

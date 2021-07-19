@@ -2,7 +2,7 @@
 layout: default
 title: Token
 parent: Container
-grand-parent: Components
+grand_parent: Components
 nav_order: 1
 ---
 
