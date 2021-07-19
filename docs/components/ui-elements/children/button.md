@@ -1,12 +1,13 @@
 ---
-parent: Container
+parent: UI Elements
 grand_parent: Components
-title: Linear Layout
+title: Button
 has_toc: true
 nav_order: 1
 layout: default
 ---
 
-# Token
+# Button
 
-test
+How to use a button.
+
