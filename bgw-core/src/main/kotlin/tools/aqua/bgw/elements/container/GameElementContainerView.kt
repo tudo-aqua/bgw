@@ -176,7 +176,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 		collection.map { remove(it) }.fold(false) { x,y -> x || y }
 
 	/**
-	 * Removes all [GameElementView]s mathcing the [predicate] from this [GameElementContainerView].
+	 * Removes all [GameElementView]s matching the [predicate] from this [GameElementContainerView].
 	 *
 	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
 	 *
