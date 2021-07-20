@@ -138,11 +138,18 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Removes the [GameElementView] specified by the parameter from this [GameElementContainerView].
 	 *
+	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
+	 *
 	 * @param element the [GameElementView] to remove.
 	 */
 	@Synchronized
-	open fun remove(element: T) {
-		observableElements.remove(element.apply { parent = null })
+	open fun remove(element: T) : Boolean {
+		if (observableElements.remove(element)) {
+			element.parent = null
+
+			return true
+		}
+		return false
 	}
 	
 	/**
@@ -150,13 +157,34 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @return list of all removed Elements
 	 */
 	@Synchronized
-	open fun removeAll(): List<T> {
+	open fun clear(): List<T> {
 		val tmp = observableElements.toList()
 		observableElements.forEach { it.parent = null }
 		observableElements.clear()
 		return tmp
 	}
-	
+
+	/**
+	 * Removes all [GameElementView]s contained in [collection] from this [GameElementContainerView].
+	 *
+	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
+	 *
+	 * @param collection the [GameElementView]s to remove.
+	 */
+	@Synchronized
+	open fun removeAll(collection: Collection<T>) : Boolean = collection.map { remove(it) }.reduce { x,y -> x || y }
+
+	/**
+	 * Removes all [GameElementView]s mathcing the [predicate] from this [GameElementContainerView].
+	 *
+	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
+	 *
+	 * @param predicate the predicate to evaluate.
+	 */
+	@Synchronized
+	open fun removeAll(predicate: (T) -> Boolean) : Boolean =
+		observableElements.map { if (predicate(it)) remove(it) else false }.reduce { x,y -> x || y }
+
 	/**
 	 * Returns the size of the elements list.
 	 * @see elements

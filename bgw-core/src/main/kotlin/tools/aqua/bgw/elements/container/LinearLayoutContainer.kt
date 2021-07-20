@@ -160,13 +160,14 @@ open class LinearLayoutContainer<T : GameElementView>(
 	override fun addAll(vararg elements: T) {
 		addAll(elements.toList())
 	}
-	
-	override fun remove(element: T) {
-		super.remove(element.apply { removePosListeners() })
+
+	override fun remove(element: T) : Boolean = when (super.remove(element)) {
+		true -> { element.removePosListeners(); true }
+		false -> false
 	}
 	
-	override fun removeAll(): List<T> {
-		return super.removeAll().onEach {
+	override fun clear(): List<T> {
+		return super.clear().onEach {
 			it.removePosListeners()
 		}
 	}

@@ -42,7 +42,7 @@ class RemoveElementTest: AreaContainerViewTestBase() {
     fun removeAllElements() {
         tokenAreaContainer.add(redToken)
         tokenAreaContainer.add(blueToken)
-        val result = tokenAreaContainer.removeAll()
+        val result = tokenAreaContainer.clear()
         assertEquals(listOf(redToken, blueToken), result)
         assertNull(redToken.parent)
         assertNull(blueToken.parent)
