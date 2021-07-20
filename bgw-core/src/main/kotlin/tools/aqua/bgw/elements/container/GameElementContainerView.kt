@@ -172,7 +172,8 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param collection the [GameElementView]s to remove.
 	 */
 	@Synchronized
-	open fun removeAll(collection: Collection<T>) : Boolean = collection.map { remove(it) }.reduce { x,y -> x || y }
+	open fun removeAll(collection: Collection<T>) : Boolean =
+		collection.map { remove(it) }.fold(false) { x,y -> x || y }
 
 	/**
 	 * Removes all [GameElementView]s mathcing the [predicate] from this [GameElementContainerView].
@@ -183,7 +184,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 */
 	@Synchronized
 	open fun removeAll(predicate: (T) -> Boolean) : Boolean =
-		observableElements.map { if (predicate(it)) remove(it) else false }.reduce { x,y -> x || y }
+		elements.map { if (predicate(it)) remove(it) else false }.fold(false) { x,y -> x || y }
 
 	/**
 	 * Returns the size of the elements list.
