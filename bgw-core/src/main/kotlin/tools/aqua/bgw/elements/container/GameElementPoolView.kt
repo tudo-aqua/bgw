@@ -78,14 +78,6 @@ open class GameElementPoolView<T : GameElementView>(
 		element.addInternalListeners()
 		element.addPosListeners()
 	}
-	
-	override fun addAll(collection: Collection<T>) {
-		collection.forEach { add(it) }
-	}
-	
-	override fun addAll(vararg elements: T) {
-		addAll(elements.toList())
-	}
 
 	override fun remove(element: T) : Boolean = when (super.remove(element)) {
 		true -> {

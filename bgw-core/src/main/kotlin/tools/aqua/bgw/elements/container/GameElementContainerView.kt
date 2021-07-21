@@ -110,7 +110,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param elements vararg [GameElementView]s to add.
 	 * @throws IllegalArgumentException if a [GameElementView] is already contained.
 	 */
-	open fun addAll(vararg elements: T) {
+	fun addAll(vararg elements: T) {
 		try {
 			addAll(elements.toList())
 		} catch (e: IllegalArgumentException) {
@@ -127,7 +127,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @throws IllegalArgumentException if a [GameElementView] is already contained.
 	 */
 	@Synchronized
-	open fun addAll(collection: Collection<T>) {
+	fun addAll(collection: Collection<T>) {
 		try {
 			collection.forEach { add(it) }
 		} catch (e: IllegalArgumentException) {
@@ -157,10 +157,9 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @return list of all removed Elements
 	 */
 	@Synchronized
-	open fun clear(): List<T> {
+	fun clear(): List<T> {
 		val tmp = observableElements.toList()
-		observableElements.forEach { it.parent = null }
-		observableElements.clear()
+		tmp.map { remove(it) }
 		return tmp
 	}
 
@@ -172,7 +171,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param collection the [GameElementView]s to remove.
 	 */
 	@Synchronized
-	open fun removeAll(collection: Collection<T>) : Boolean =
+	fun removeAll(collection: Collection<T>) : Boolean =
 		collection.map { remove(it) }.fold(false) { x,y -> x || y }
 
 	/**
@@ -183,7 +182,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param predicate the predicate to evaluate.
 	 */
 	@Synchronized
-	open fun removeAll(predicate: (T) -> Boolean) : Boolean =
+	fun removeAll(predicate: (T) -> Boolean) : Boolean =
 		elements.map { if (predicate(it)) remove(it) else false }.fold(false) { x,y -> x || y }
 
 	/**
