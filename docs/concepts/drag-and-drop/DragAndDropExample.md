@@ -77,14 +77,14 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
 }
 ````
 
-## Initialization for drag and drop on tokens
+## Make an element draggable
 
 The first thing we are always going to need, when dealing with drag and drop is a draggable element. 
-In this case we want the tokens to be draggable. We can achieve that as follows:
+In this case we want the ``redToken`` to be draggable. We can achieve that as follows:
 ````kotlin
 redToken.isDraggable = true
 ````
-After the desired drag and drop gesture was performed on the token we want it to be non-draggable.
+After the desired drag and drop gesture was performed on the ``redToken`` we want it to be non-draggable.
 In order to achieve that we set the ``onDragGestureEnded``, where we set ``isDraggable`` to ``false`` when the boolean indicates success.
 ````kotlin
 redToken.onDragGestureEnded = { _, success ->
@@ -103,7 +103,7 @@ greenToken.onDragGestureEnded = { _, success ->
 }
 ````
 
-## Initialization for drag and drop on areas
+## Make an element act as a target for a drag and drop gesture
 
 To make it possible that a drag and drop gesture is valid, we need another element that indicates, 
 that the drag and gesture was a success.
