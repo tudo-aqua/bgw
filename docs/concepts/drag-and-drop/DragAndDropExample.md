@@ -39,7 +39,7 @@ For this tutorial we assume, that you have knowledge of the following components
 ## Component declaration
 
 We declare the components that we are going to need in a subclass of 
-[BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/)
+[BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
 
 
 ````kotlin
@@ -93,7 +93,7 @@ redToken.onDragGestureEnded = { _, success ->
     }
 }
 ````
-The greenToken gets initialized similarly with the following code:
+The ``greenToken`` gets initialized similarly with the following code:
 ````kotlin
 greenToken.isDraggable = true
 greenToken.onDragGestureEnded = { _, success ->
@@ -105,12 +105,17 @@ greenToken.onDragGestureEnded = { _, success ->
 
 ## Initialization for drag and drop on areas
 
-To make it possible that a drag and drop gesture is valid, we need another element that indicates, that the drag and gesture was a success.
+To make it possible that a drag and drop gesture is valid, we need another element that indicates, 
+that the drag and gesture was a success.
 If we want to allow an element to indicate success for a drag and drop gesture, we need to set the ``dropAcceptor``. 
 It should return whether this element is a valid drop target for the dragged
-element supplied in the DragEvent passed as an argument.
-In this instance we want the redArea to only be a valid target for the redToken,
-hence we only return true if the draggedElement is a TokenView and is equal to the redToken.
+element supplied in the 
+[DragEvent](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/) 
+passed as an argument.
+In this instance we want the ``redArea`` to only be a valid target for the ``redToken``,
+hence we only return true if the ``draggedElement`` is a 
+[TokenView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.elements.gameelements/-token-view/) 
+and is equal to the ``redToken``.
 ````kotlin
 redArea.dropAcceptor = { dragEvent ->
     when (dragEvent.draggedElement) {
@@ -119,18 +124,18 @@ redArea.dropAcceptor = { dragEvent ->
     }
 }
 ````
-Now we also want to add the redToken to the redArea if it gets dropped on the redArea.
-To do that we set the ``onDragElementDropped`` in the redArea as follows:
+Now we also want to add the ``redToken`` to the ``redArea`` if it gets dropped on the ``redArea``.
+To do that we set the ``onDragElementDropped`` in the ``redArea`` as follows:
 ````kotlin
 redArea.onDragElementDropped = { dragEvent ->
     redArea.add((dragEvent.draggedElement as TokenView).apply { reposition(0,0) })
 }
 ````
-We apply the ``reposition`` function to the ``draggedElement``,
-because [AreaContainerView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.elements.container/-area-container-view/)
+We apply the ``reposition`` function to the ``draggedElement``, because 
+[AreaContainerView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.elements.container/-area-container-view/)
 does not have automatic layout.
 
-The greenArea gets initialized similarly with the following code:
+The ``greenArea`` gets initialized similarly with the following code:
 ````kotlin
 greenArea.dropAcceptor = { dragEvent ->
     when (dragEvent.draggedElement) {
@@ -144,7 +149,20 @@ greenArea.onDragElementDropped = { dragEvent ->
 }
 ````
 
-## Useful Hints when dealing with drag and drop
+## Useful hints when dealing with drag and drop
+
+- ``dropAccpetor`` should not modify any state and only evaluate if the drag and drop gesture is valid.
+- The order of invocation is as follows:
+    - ``onDragGestureStarted`` on the dragged element.
+    - ``onDragGestureMoved`` on the dragged element, while the drag and drop gesture is in motion.
+    - ``dropAcceptor`` on all possible drop targets (elements that are under the mouse position).
+    - ``onDragElementDropped`` on all valid drop targets (``dropAcceptor`` returned ``true``).
+    - ``onDragGestureEnded`` on the dragged element.
+  
+- After a failed drag and drop gesture (no ``dropAcceptor`` returned true), the dragged element snaps back to the initial scene, container or layout.
+- If the dragged element does not get added to the scene, a container or layout after a valid drag and drop gesture, it is no longer contained anywhere in the scene.
+- Be careful when dealing with situations, where multiple ``dropAcceptors`` might return ``true``, because ``onDragElementDropped`` gets invoked on multiple elements and no 
+    guarantee is given for the order of invocations.
 
 
 
