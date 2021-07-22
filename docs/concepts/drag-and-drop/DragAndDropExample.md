@@ -29,6 +29,7 @@ The complete source code for this example can be found at the bottom of the page
 
 ## Prior knowledge
 For this tutorial we assume, that you have knowledge of the following components and concepts.
+
 - [BoardGameApplication]()
 - [DynamicView]()
 - [AreaContainerView]()
