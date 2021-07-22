@@ -24,7 +24,7 @@ The goal of this example is to create a scene with a red and a green token, and 
 It should only be possible to drag tokens into areas of the same color.
 Once the tokens have been dragged into a correct area, they should become non-draggable.
 
-The complete source code for this example can be found [here](/docs/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example).
+The complete source code for this example can be found [here](/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example).
 
 ## Prior knowledge
 Knowledge about the following components and concepts is necessary for this tutorial.
@@ -38,7 +38,7 @@ Knowledge about the following components and concepts is necessary for this tuto
 ## Component declaration
 
 To create a running example, the described elements are wrapped in a 
-[BoardGameApplication](/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
+[BoardGameApplication](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
 
 
 ````kotlin
