@@ -18,35 +18,24 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
     val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
 
     val redArea: AreaContainerView<TokenView> =
-        AreaContainerView(height = 50, width = 50, posX = 200, posY = 20, visual = ColorVisual(255, 0, 0, 100))
+        AreaContainerView(
+            height = 50,
+            width = 50,
+            posX = 200,
+            posY = 20,
+            visual = ColorVisual(255, 0, 0, 100)
+        )
 
     val greenArea: AreaContainerView<TokenView> =
-        AreaContainerView(height = 50, width = 50, posX = 200, posY = 200, visual = ColorVisual(0, 255, 0, 100))
+        AreaContainerView(
+            height = 50,
+            width = 50,
+            posX = 200,
+            posY = 200,
+            visual = ColorVisual(0, 255, 0, 100)
+        )
 
     init {
-        //initialize areas for drag and drop
-        redArea.dropAcceptor = { dragEvent ->
-            when (dragEvent.draggedElement) {
-                is TokenView -> {dragEvent.draggedElement == redToken}
-                else -> false
-            }
-        }
-        redArea.onDragElementDropped = {dragEvent ->
-            redArea.add((dragEvent.draggedElement as TokenView).apply { reposition(0,0) })
-        }
-
-        greenArea.dropAcceptor = {
-            when (it.draggedElement) {
-                is TokenView -> {it.draggedElement == greenToken}
-                else -> false
-            }
-        }
-        greenArea.onDragElementDropped = {
-            greenArea.add((it.draggedElement as TokenView).apply { reposition(0,0) })
-        }
-
-
-        //initialize Tokens for drag and drop
         redToken.isDraggable = true
         redToken.onDragGestureEnded = { _, success ->
             if (success) {
@@ -61,7 +50,26 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
             }
         }
 
-        //add elements to scene and show scene
+        redArea.dropAcceptor = { dragEvent ->
+            when (dragEvent.draggedElement) {
+                is TokenView -> dragEvent.draggedElement == redToken
+                else -> false
+            }
+        }
+        redArea.onDragElementDropped = { dragEvent ->
+            redArea.add((dragEvent.draggedElement as TokenView).apply { reposition(0,0) })
+        }
+
+        greenArea.dropAcceptor = { dragEvent ->
+            when (dragEvent.draggedElement) {
+                is TokenView -> dragEvent.draggedElement == greenToken
+                else -> false
+            }
+        }
+        greenArea.onDragElementDropped = { dragEvent ->
+            greenArea.add((dragEvent.draggedElement as TokenView).apply { reposition(0,0) })
+        }
+
         gameScene.addElements(redToken, greenToken, redArea, greenArea)
         showGameScene(gameScene)
         show()
