@@ -108,8 +108,7 @@ greenToken.onDragGestureEnded = { _, success ->
 To make it possible that a drag and drop gesture is valid, we need another element that indicates, 
 that the drag and gesture was a success.
 If we want to allow an element to indicate success for a drag and drop gesture, we need to set the ``dropAcceptor``. 
-It should return whether this element is a valid drop target for the dragged
-element supplied in the 
+It should return whether this element is a valid drop target for the ``draggedElement`` supplied in the 
 [DragEvent](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/) 
 passed as an argument.
 In this instance we want the ``redArea`` to only be a valid target for the ``redToken``,
@@ -161,7 +160,7 @@ greenArea.onDragElementDropped = { dragEvent ->
   
 - After a failed drag and drop gesture (no ``dropAcceptor`` returned true), the dragged element snaps back to the initial scene, container or layout.
 - If the dragged element does not get added to the scene, a container or layout after a valid drag and drop gesture, it is no longer contained anywhere in the scene.
-- Be careful when dealing with situations, where multiple ``dropAcceptors`` might return ``true``, because ``onDragElementDropped`` gets invoked on multiple elements and no 
+- Be careful when dealing with situations, where multiple ``dropAcceptor`` invocations might return ``true``, because ``onDragElementDropped`` gets invoked on multiple elements and no 
     guarantee is given for the order of invocations.
 
 
