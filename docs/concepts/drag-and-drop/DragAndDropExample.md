@@ -21,7 +21,7 @@ The complete source code for this example can be found at the bottom of the page
 ## Component Declaration
 
 We declare the components that we are going to need in a subclass of 
-[BoardGameApplication](kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application)
+[BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/)
 
 [AreaContainerView]()
 
