@@ -7,6 +7,7 @@ layout: default
 ---
 
 # Drag and Drop
+{: .no_toc}
 
 In this section we are going to create a fully functional step-by-step example on the drag and drop 
 feature from BGW.
@@ -18,12 +19,21 @@ they should become non-draggable.
 
 The complete source code for this example can be found at the bottom of the page.
 
+{:toc}
+
+## Prior knowledge
+For this tutorial we assume, that you have knowledge of the following components and concepts.
+-[BoardGameApplication]()
+-[DynamicView]()
+-[AreaContainerView]()
+-[TokenView]()
+
+
 ## Component Declaration
 
 We declare the components that we are going to need in a subclass of 
 [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/)
 
-[AreaContainerView]()
 
 ````kotlin
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
