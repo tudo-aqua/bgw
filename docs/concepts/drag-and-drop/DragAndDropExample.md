@@ -8,6 +8,14 @@ layout: default
 
 # Drag and Drop
 {: .no_toc}
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
 
 In this section we are going to create a fully functional step-by-step example on the drag and drop 
 feature from BGW.
@@ -19,17 +27,15 @@ they should become non-draggable.
 
 The complete source code for this example can be found at the bottom of the page.
 
-{:toc}
-
 ## Prior knowledge
 For this tutorial we assume, that you have knowledge of the following components and concepts.
--[BoardGameApplication]()
--[DynamicView]()
--[AreaContainerView]()
--[TokenView]()
+- [BoardGameApplication]()
+- [DynamicView]()
+- [AreaContainerView]()
+- [TokenView]()
 
 
-## Component Declaration
+## Component declaration
 
 We declare the components that we are going to need in a subclass of 
 [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/)
@@ -120,7 +126,7 @@ redArea.onDragElementDropped = { dragEvent ->
 }
 ````
 We apply the ``reposition`` function to the ``draggedElement``,
-because [AreaContainerView](kotlin-docs/bgw-core/tools.aqua.bgw.elements.container/-area-container-view)
+because [AreaContainerView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.elements.container/-area-container-view/)
 does not have automatic layout.
 
 The greenArea gets initialized similarly with the following code:
