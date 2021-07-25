@@ -63,13 +63,11 @@ class DragDropHelper {
 		 *
 		 * @return `true` if a valid drop target was found and the drop was successful, `false` otherwise.
 		 */
-		internal fun Scene<out ElementView>.tryFindDropTarget(
+		internal fun Scene<out ElementView>.findElementsBelowMouse(
 			mouseX: Double,
 			mouseY: Double
-		): Boolean {
-			val draggedElement = draggedElement!!
-			val validTargets = mutableListOf<ElementView>()
-			val acceptingDropTargets = mapToPane()!!.children
+		): List<DragTargetObject> =
+			mapToPane()!!.children
 				.filterIsInstance<StackPane>()  //top level Elements
 				.mapNotNull {
 					//to DragTargetObject
@@ -81,26 +79,38 @@ class DragDropHelper {
 				}
 				.filter {
 					val rotatedTarget = it.rotated()
-					//try Drop allowed?
-					if (rotatedTarget.mouseX in it.rangeX() && rotatedTarget.mouseY in it.rangeY()) {
-						val tryDropData = findAcceptingDropTargets(rotatedTarget)
-						validTargets += tryDropData
-						return@filter tryDropData.isNotEmpty()
-					}
-					false
-				}
+					rotatedTarget.mouseX in it.rangeX() && rotatedTarget.mouseY in it.rangeY()
+				}.toList()
+		
+		
+		/**
+		 * Searches all elements below mouse position.
+		 *
+		 * @param mouseX mouse x coordinate.
+		 * @param mouseY mouse y coordinate.
+		 *
+		 * @return `true` if a valid drop target was found and the drop was successful, `false` otherwise.
+		 */
+		internal fun Scene<out ElementView>.tryFindDropTarget(mouseX: Double, mouseY: Double): Boolean {
+			val draggedElement = draggedElement!!
 			
-			val isNodesNotEmpty = acceptingDropTargets.isNotEmpty()
+			val validTargets = mutableListOf<ElementView>()
+			findElementsBelowMouse(mouseX, mouseY).forEach {
+				val tryDropData = findAcceptingDropTargets(it)
+				validTargets += tryDropData
+				tryDropData.isNotEmpty()
+			}
+			
 			val dropEvent = DropEvent(draggedElement, validTargets)
 			val dragEvent = DragEvent(draggedElement)
 			
 			//Invoke drag drop handler in dragged element
-			draggedElement.onDragGestureEnded?.invoke(dropEvent, isNodesNotEmpty)
+			draggedElement.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
 			
 			//Invoke drag drop handler on all accepting drag targets
 			validTargets.forEach { it.onDragElementDropped?.invoke(dragEvent) }
 			
-			return isNodesNotEmpty
+			return validTargets.isNotEmpty()
 		}
 		
 		/**

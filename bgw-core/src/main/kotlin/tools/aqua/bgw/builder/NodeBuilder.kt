@@ -20,6 +20,7 @@ package tools.aqua.bgw.builder
 import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
+import tools.aqua.bgw.builder.DragDropHelper.Companion.findElementsBelowMouse
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
@@ -38,7 +39,6 @@ import tools.aqua.bgw.elements.uielements.UIElementView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.util.Coordinate
-import java.lang.RuntimeException
 import kotlin.math.min
 
 /**
@@ -189,6 +189,13 @@ internal class NodeBuilder {
 					posX = newCoords.xCoord
 					posY = newCoords.yCoord
 					scene.draggedElementObjectProperty.value = dragElementObject
+					
+					scene.dragTargetsBelowMouse.clear()
+					scene.dragTargetsBelowMouse.addAll(scene.findElementsBelowMouse(it.sceneX, it.sceneY))
+					
+					println("--- STARTING LIST ---")
+					scene.dragTargetsBelowMouse.forEach { targetObject -> println(targetObject) }
+					println("---------------------")
 					
 					isDragged = true
 					onDragGestureStarted?.invoke(DragEvent(this))

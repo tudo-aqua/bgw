@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
+import tools.aqua.bgw.builder.DragDropHelper.Companion.findElementsBelowMouse
 import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
@@ -94,6 +95,35 @@ internal class SceneBuilder {
 					draggedElement.posY = newCoords.yCoord
 					
 					draggedElement.onDragGestureMoved?.invoke(DragEvent(draggedElement))
+					
+					//Calculate all elements below mouse
+					val newElements = scene.findElementsBelowMouse(it.sceneX, it.sceneY)
+					val oldElements = scene.dragTargetsBelowMouse
+					
+					val enteredElements = (newElements subtract oldElements)
+					val exitedElements = (oldElements subtract newElements)
+					
+					enteredElements.forEach { target ->
+						target.dragTarget.onDragGestureEntered?.invoke(
+							DragEvent(draggedElementObject.draggedElement)
+						)
+					}
+					
+					enteredElements.forEach { target ->
+						target.dragTarget.onDragGestureEntered?.invoke(
+							DragEvent(draggedElementObject.draggedElement)
+						)
+					}
+					
+					scene.dragTargetsBelowMouse.removeAll(exitedElements)
+					scene.dragTargetsBelowMouse.addAll(enteredElements)
+					
+					if (enteredElements.isNotEmpty() || exitedElements.isNotEmpty()) {
+						println("Exited:")
+						exitedElements.forEach { t -> println(t.dragTarget) }
+						println("Entered:")
+						enteredElements.forEach { t -> println(t.dragTarget) }
+					}
 				}
 			}
 			pane.setOnMouseReleased {
