@@ -18,10 +18,10 @@
 package tools.aqua.bgw.builder
 
 import javafx.event.EventHandler
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.findElementsBelowMouse
-import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
+import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveElementsBelowMouse
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.core.BoardGameScene
@@ -88,117 +88,7 @@ internal class NodeBuilder {
 		private fun ElementView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ElementView>) {
 			stackPane.onDragDetected = EventHandler {
 				if (this is DynamicView && isDraggable) {
-					val mouseStartCoord = Coordinate(
-						xCoord = it.sceneX / Frontend.sceneScale,
-						yCoord = it.sceneY / Frontend.sceneScale
-					)
-					
-					val pathToChild = scene.findPathToChild(this)
-					
-					var posStartCoord = Coordinate(
-						xCoord = pathToChild.sumOf { t -> t.posX },
-						yCoord = pathToChild.sumOf { t -> t.posY }
-					)
-					
-					var rollback: (() -> Unit) = {}
-					when (val parent = pathToChild[1]) {
-						is GameElementContainerView<*> -> {
-							val index = parent.observableElements.indexOf(this)
-							val initialX = posX
-							val initialY = posY
-							rollback = {
-								posX = initialX
-								posY = initialY
-								@Suppress("UNCHECKED_CAST")
-								(parent as GameElementContainerView<GameElementView>)
-									.add(this as GameElementView, min(parent.observableElements.size, index))
-							}
-						}
-						is GridLayoutView<*> -> {
-							parent.grid.find { iteratorElement ->
-								iteratorElement.element == this
-							}?.apply {
-								val initialX = posX
-								val initialY = posY
-								
-								//calculate position in grid
-								posStartCoord += parent.getChildPosition(element!!)!!
-								
-								//add layout from center bias
-								if (parent.layoutFromCenter) {
-									posStartCoord -= Coordinate(parent.width / 2, parent.height / 2)
-								}
-								
-								rollback = {
-									posX = initialX
-									posY = initialY
-									@Suppress("UNCHECKED_CAST")
-									(parent as GridLayoutView<ElementView>)[columnIndex, rowIndex] =
-										this@registerEvents as ElementView
-								}
-							}
-							
-						}
-						is ElementPane<*> -> {
-							val index = parent.observableElements.indexOf(this)
-							val initialX = posX
-							val initialY = posY
-							rollback = {
-								posX = initialX
-								posY = initialY
-								@Suppress("UNCHECKED_CAST")
-								(parent as ElementPane<ElementView>)
-									.add(this as ElementView, min(parent.observableElements.size, index))
-							}
-						}
-						scene.rootNode -> {
-							val initialX = posX
-							val initialY = posY
-							rollback = { when (scene) {
-								is BoardGameScene -> {
-									this.posX = initialX
-									this.posY = initialY
-									scene.addElements(this)
-								}
-								is MenuScene -> {
-									throw RuntimeException("DynamicView $this should not be contained in a MenuScene.")
-								}
-							} }
-
-
-						}
-						else -> {}
-					}
-					
-					val relativeParentRotation = if (pathToChild.size > 1)
-						pathToChild.drop(1).sumOf { t -> t.rotation }
-					else
-						0.0
-					
-					val dragElementObject = DragElementObject(
-						this,
-						scene.elementsMap[this]!!,
-						mouseStartCoord,
-						posStartCoord,
-						relativeParentRotation,
-						rollback
-					)
-					val newCoords = transformCoordinatesToScene(it, dragElementObject)
-					
-					removeFromParent()
-					posX = newCoords.xCoord
-					posY = newCoords.yCoord
-					scene.draggedElementObjectProperty.value = dragElementObject
-					
-					scene.dragTargetsBelowMouse.clear()
-					scene.dragTargetsBelowMouse.addAll(scene.findElementsBelowMouse(it.sceneX, it.sceneY))
-					
-					println("--- STARTING LIST ---")
-					scene.dragTargetsBelowMouse.forEach { targetObject -> println(targetObject) }
-					println("---------------------")
-					
-					isDragged = true
-					onDragGestureStarted?.invoke(DragEvent(this))
+					onDragDetected(scene, it)
 				}
 			}
 			
@@ -211,7 +101,146 @@ internal class NodeBuilder {
 			node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
-
+		
+		private fun DynamicView.onDragDetected(scene: Scene<out ElementView>, e: MouseEvent) {
+			val mouseStartCoord = Coordinate(
+				xCoord = e.sceneX / Frontend.sceneScale,
+				yCoord = e.sceneY / Frontend.sceneScale
+			)
+			
+			val pathToChild = scene.findPathToChild(this)
+			
+			var posStartCoord = Coordinate(
+				xCoord = pathToChild.sumOf { t -> t.posX },
+				yCoord = pathToChild.sumOf { t -> t.posY }
+			)
+			
+			val rollback: (() -> Unit) = when (val parent = pathToChild[1]) {
+				is GameElementContainerView<*> -> {
+					parent.findRollback(this as GameElementView)
+				}
+				is GridLayoutView<*> -> {
+					//calculate position in grid
+					posStartCoord += parent.getChildPosition(this)!!
+					
+					//add layout from center bias
+					if (parent.layoutFromCenter) {
+						posStartCoord -= Coordinate(parent.width / 2, parent.height / 2)
+					}
+					
+					parent.findRollback(this)
+				}
+				is ElementPane<*> -> {
+					parent.findRollback(this)
+				}
+				scene.rootNode -> {
+					findRollbackOnRoot(scene)
+				}
+				else -> {
+					{}
+				}
+			}
+			
+			val relativeParentRotation = if (pathToChild.size > 1)
+				pathToChild.drop(1).sumOf { t -> t.rotation }
+			else
+				0.0
+			
+			val dragElementObject = DragElementObject(
+				this,
+				scene.elementsMap[this]!!,
+				mouseStartCoord,
+				posStartCoord,
+				relativeParentRotation,
+				rollback
+			)
+			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragElementObject)
+			
+			removeFromParent()
+			posX = newCoords.xCoord
+			posY = newCoords.yCoord
+			scene.draggedElementObjectProperty.value = dragElementObject
+			
+			scene.dragTargetsBelowMouse.clear()
+			scene.dragTargetsBelowMouse.addAll(scene.findActiveElementsBelowMouse(e.sceneX, e.sceneY))
+			
+			isDragged = true
+			onDragGestureStarted?.invoke(DragEvent(this))
+			
+		}
+		
+		/**
+		 * Calculates rollback for [GameElementContainerView]s.
+		 */
+		private fun GameElementContainerView<*>.findRollback(element: GameElementView): (() -> Unit) {
+			val index = observableElements.indexOf(element)
+			val initialX = posX
+			val initialY = posY
+			
+			return {
+				posX = initialX
+				posY = initialY
+				@Suppress("UNCHECKED_CAST")
+				(this as GameElementContainerView<GameElementView>).add(element, min(observableElements.size, index))
+			}
+		}
+		
+		/**
+		 * Calculates rollback for [GridLayoutView]s.
+		 */
+		private fun GridLayoutView<*>.findRollback(element: ElementView): (() -> Unit) {
+			val e = grid.find { iteratorElement ->
+				iteratorElement.element == element
+			} ?: return {}
+			
+			val initialX = e.element!!.posX
+			val initialY = e.element.posY
+			val initialColumnIndex = e.columnIndex
+			val initialRowIndex = e.rowIndex
+			
+			return {
+				posX = initialX
+				posY = initialY
+				@Suppress("UNCHECKED_CAST")
+				(parent as GridLayoutView<ElementView>)[initialColumnIndex, initialRowIndex] =
+					this@findRollback as ElementView
+			}
+		}
+		
+		/**
+		 * Calculates rollback for [ElementPane]s.
+		 */
+		private fun ElementPane<*>.findRollback(element: ElementView): (() -> Unit) {
+			val index = observableElements.indexOf(element)
+			val initialX = posX
+			val initialY = posY
+			
+			return {
+				posX = initialX
+				posY = initialY
+				@Suppress("UNCHECKED_CAST")
+				(parent as ElementPane<ElementView>)
+					.add(this as ElementView, min(observableElements.size, index))
+			}
+		}
+		
+		private fun DynamicView.findRollbackOnRoot(scene: Scene<out ElementView>): (() -> Unit) {
+			val initialX = posX
+			val initialY = posY
+			return {
+				when (scene) {
+					is BoardGameScene -> {
+						posX = initialX
+						posY = initialY
+						scene.addElements(this)
+					}
+					is MenuScene -> {
+						throw RuntimeException("DynamicView $this should not be contained in a MenuScene.")
+					}
+				}
+			}
+		}
+		
 		/**
 		 * Registers observers.
 		 */

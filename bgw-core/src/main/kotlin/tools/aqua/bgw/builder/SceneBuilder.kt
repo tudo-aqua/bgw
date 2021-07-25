@@ -17,10 +17,10 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.findElementsBelowMouse
-import tools.aqua.bgw.builder.DragDropHelper.Companion.transformCoordinatesToScene
+import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveElementsBelowMouse
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
@@ -85,63 +85,59 @@ internal class SceneBuilder {
 				scene.refreshDraggedElement(oV?.draggedStackPane, nV?.draggedStackPane)
 			}
 			
-			pane.setOnMouseDragged {
-				val draggedElementObject = scene.draggedElementObjectProperty.value
-				if (draggedElementObject != null) {
-					val draggedElement = draggedElementObject.draggedElement
-					val newCoords = transformCoordinatesToScene(it, draggedElementObject)
-					
-					draggedElement.posX = newCoords.xCoord
-					draggedElement.posY = newCoords.yCoord
-					
-					draggedElement.onDragGestureMoved?.invoke(DragEvent(draggedElement))
-					
-					//Calculate all elements below mouse
-					val newElements = scene.findElementsBelowMouse(it.sceneX, it.sceneY)
-					val oldElements = scene.dragTargetsBelowMouse
-					
-					val enteredElements = (newElements subtract oldElements)
-					val exitedElements = (oldElements subtract newElements)
-					
-					enteredElements.forEach { target ->
-						target.dragTarget.onDragGestureEntered?.invoke(
-							DragEvent(draggedElementObject.draggedElement)
-						)
-					}
-					
-					enteredElements.forEach { target ->
-						target.dragTarget.onDragGestureEntered?.invoke(
-							DragEvent(draggedElementObject.draggedElement)
-						)
-					}
-					
-					scene.dragTargetsBelowMouse.removeAll(exitedElements)
-					scene.dragTargetsBelowMouse.addAll(enteredElements)
-					
-					if (enteredElements.isNotEmpty() || exitedElements.isNotEmpty()) {
-						println("Exited:")
-						exitedElements.forEach { t -> println(t.dragTarget) }
-						println("Entered:")
-						enteredElements.forEach { t -> println(t.dragTarget) }
-					}
-				}
-			}
-			pane.setOnMouseReleased {
-				val draggedElementObject = scene.draggedElementObjectProperty.value
-				val draggedElement = draggedElementObject?.draggedElement
-				
-				if (draggedElement != null) {
-					draggedElement.onMouseReleased?.invoke(it.toMouseEvent())
-					
-					if (!scene.tryFindDropTarget(it.sceneX, it.sceneY)) {
-						draggedElementObject.rollback()
-					}
-					draggedElement.isDragged = false
-					scene.draggedElementObjectProperty.value = null
-				}
-			}
+			pane.setOnMouseDragged { scene.onMouseDragged(it) }
+			pane.setOnMouseReleased { scene.onMouseReleased(it) }
 			
 			return pane
+		}
+		
+		/**
+		 * Event handler for onMouseDragged.
+		 */
+		private fun Scene<*>.onMouseDragged(e: MouseEvent) {
+			val draggedElementObject = draggedElementObjectProperty.value ?: return
+			val draggedElement = draggedElementObject.draggedElement
+			
+			//Move dragged element to mouse position
+			val newCoords = DragDropHelper.transformCoordinatesToScene(e, draggedElementObject)
+			draggedElement.posX = newCoords.xCoord
+			draggedElement.posY = newCoords.yCoord
+			
+			//Invoke onDragMoved on dragged element
+			draggedElement.onDragGestureMoved?.invoke(DragEvent(draggedElement))
+			
+			//Inspect elements below mouse
+			val newElementsBelow = findActiveElementsBelowMouse(e.sceneX, e.sceneY)
+			val oldElementsBelow = dragTargetsBelowMouse
+			
+			//Find delta for entered and exited elements
+			val entered = newElementsBelow.filter { oldElementsBelow.none { t -> t.dragTarget == it.dragTarget } }
+			val exited = oldElementsBelow.filter { newElementsBelow.none { t -> t.dragTarget == it.dragTarget } }
+			
+			//Invoke onDragGestureEntered and onDragGestureExited
+			entered.forEach { t -> t.dragTarget.onDragGestureEntered?.invoke(DragEvent(draggedElement)) }
+			exited.forEach { t -> t.dragTarget.onDragGestureExited?.invoke(DragEvent(draggedElement)) }
+			
+			//Keep house holding of elements currently below mouse
+			dragTargetsBelowMouse.clear()
+			dragTargetsBelowMouse.addAll(newElementsBelow)
+		}
+		
+		/**
+		 * Event handler for onMouseReleased.
+		 */
+		private fun Scene<*>.onMouseReleased(e: MouseEvent) {
+			val draggedElementObject = draggedElementObjectProperty.value
+			val draggedElement = draggedElementObject?.draggedElement ?: return
+			
+			draggedElement.onMouseReleased?.invoke(e.toMouseEvent())
+			
+			if (!tryFindDropTarget(e.sceneX, e.sceneY)) {
+				draggedElementObject.rollback()
+			}
+			
+			draggedElement.isDragged = false
+			draggedElementObjectProperty.value = null
 		}
 		
 		/**

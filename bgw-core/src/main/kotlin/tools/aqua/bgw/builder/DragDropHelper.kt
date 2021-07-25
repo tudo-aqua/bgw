@@ -58,10 +58,12 @@ class DragDropHelper {
 		/**
 		 * Searches all elements below mouse position.
 		 *
+		 * Note: Invisible or disabled elements also get returned. Use findActiveElementsBelowMouse(...).
+		 *
 		 * @param mouseX mouse x coordinate.
 		 * @param mouseY mouse y coordinate.
 		 *
-		 * @return `true` if a valid drop target was found and the drop was successful, `false` otherwise.
+		 * @return [List] of elements.
 		 */
 		internal fun Scene<out ElementView>.findElementsBelowMouse(
 			mouseX: Double,
@@ -82,6 +84,22 @@ class DragDropHelper {
 					rotatedTarget.mouseX in it.rangeX() && rotatedTarget.mouseY in it.rangeY()
 				}.toList()
 		
+		/**
+		 * Searches all visible and enabled elements below mouse position.
+		 *
+		 * Note: Invisible and disabled elements get returned by using findElementsBelowMouse(...).
+		 *
+		 * @param mouseX mouse x coordinate.
+		 * @param mouseY mouse y coordinate.
+		 *
+		 * @return [List] of elements.
+		 */
+		internal fun Scene<out ElementView>.findActiveElementsBelowMouse(
+			mouseX: Double,
+			mouseY: Double
+		): List<DragTargetObject> = findElementsBelowMouse(mouseX, mouseY).filter {
+			it.dragTarget.isVisible && !it.dragTarget.isDisabled
+		}
 		
 		/**
 		 * Searches all elements below mouse position.
