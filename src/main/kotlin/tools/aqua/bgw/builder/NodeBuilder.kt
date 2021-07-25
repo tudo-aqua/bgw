@@ -16,8 +16,6 @@ import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.elements.layoutviews.LayoutElement
 import tools.aqua.bgw.elements.uielements.UIElementView
 import tools.aqua.bgw.event.DragEvent
-import tools.aqua.bgw.event.MouseButtonType
-import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.util.Coordinate
 import kotlin.math.min
@@ -73,10 +71,6 @@ internal class NodeBuilder {
 						xCoord = it.sceneX / Frontend.sceneScale,
 						yCoord = it.sceneY / Frontend.sceneScale
 					)
-					/*val posStartCoord = Coordinate(
-						xCoord = stackPane.layoutX,
-						yCoord = stackPane.layoutY
-					)*/
 					
 					val pathToChild = scene.findPathToChild(this)
 					
@@ -157,8 +151,8 @@ internal class NodeBuilder {
 			
 			node.setOnMouseClicked { onMouseClicked?.invoke(it.toMouseEvent()) }
 			node.setOnMousePressed { onMousePressed?.invoke(it.toMouseEvent()) }
-			node.setOnMouseEntered { onMouseEntered?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED)) }
-			node.setOnMouseExited { onMouseExited?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED)) }
+			node.setOnMouseEntered { onMouseEntered?.invoke(it.toMouseEvent()) }
+			node.setOnMouseExited { onMouseExited?.invoke(it.toMouseEvent()) }
 			
 			node.setOnKeyPressed { onKeyPressed?.invoke(it.toKeyEvent()) }
 			node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }

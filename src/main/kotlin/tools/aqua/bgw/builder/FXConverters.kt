@@ -65,7 +65,7 @@ abstract class FXConverters {
 					MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
 					MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
 					MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
-					else -> MouseButtonType.OTHER
+					else -> MouseButtonType.UNSPECIFIED
 				}
 			)
 		
