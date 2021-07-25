@@ -1,1 +1,0 @@
-const val DOUBLE_TOLERANCE: Double = 0.00000000000002

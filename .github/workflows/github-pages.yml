@@ -4,11 +4,12 @@ name: GitHub-Pages
 
 # Controls when the action will run. 
 on:
-  workflow_run:
-    workflows: [ "Build" ]
-    branches: [ main ]
-    types:
-      - completed
+  push:
+    branches:
+      - 'documentation'
+  pull_request:
+    branches:
+      - 'documentation'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -48,7 +49,7 @@ jobs:
           arguments: dokkaHtml
 
       - name: Move Dokka to /docs
-        run: cp -r ./build/dokka/html ./docs
+        run: cp -r ./bgw-core/build/dokka/html ./docs
 
       - name: Rename docs/html folder
         run: mv ./docs/html ./docs/kotlin-docs
