@@ -26,7 +26,7 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
-import tools.aqua.bgw.builder.FXConverters.Companion.toFXFont
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.elements.uielements.*
 import tools.aqua.bgw.observable.BooleanProperty
@@ -98,8 +98,7 @@ internal class UINodeBuilder {
             node.textProperty().bindLabelProperty(textArea)
             node.promptText = textArea.prompt
             textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
-                node.font = nV.toFXFont()
-                //TODO text color
+                node.style = nV.toFXFontCSS()
             }
             return node
         }
@@ -113,8 +112,7 @@ internal class UINodeBuilder {
             node.textProperty().bindLabelProperty(textField)
             node.promptText = textField.prompt
             textField.fontProperty.setGUIListenerAndInvoke(textField.font) { _, nV ->
-                node.font = nV.toFXFont()
-                //TODO text color
+                node.style = nV.toFXFontCSS()
             }
             return node
         }
@@ -140,7 +138,7 @@ internal class UINodeBuilder {
             node.promptText = comboBox.prompt
             //font
             comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, _ ->
-                node.buttonCell.font = comboBox.font.toFXFont()
+                node.buttonCell.style = comboBox.font.toFXFontCSS()
                 node.buttonCell.textFill = comboBox.font.color.toFXColor()
                 node.setCellFactory(comboBox)
             }
@@ -155,7 +153,7 @@ internal class UINodeBuilder {
                 object : ListCell<T>() {
                     override fun updateItem(item: T, empty: Boolean) {
                         super.updateItem(item, empty)
-                        this.font = comboBox.font.toFXFont()
+                        this.style = comboBox.font.toFXFontCSS()
                         this.textFill = comboBox.font.color.toFXColor()
                         if (!empty) {
                             this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
@@ -212,7 +210,7 @@ internal class UINodeBuilder {
                     node.cellFactory = javafx.util.Callback {
                         object : ListCell<T>() {
                             override fun updateItem(item: T, empty: Boolean) {
-                                this.font = font.toFXFont()
+                                this.style = font.toFXFontCSS()
                                 this.textFill = font.color.toFXColor()
                                 if (!empty) {
                                     this.text = listView.formatFunction?.invoke(item) ?: item.toString()
@@ -318,7 +316,7 @@ internal class UINodeBuilder {
          */
         private fun Labeled.bindFont(labeled: LabeledUIElementView) {
             labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
-                font = nV.toFXFont()
+                style = nV.toFXFontCSS()
                 textFill = nV.color.toFXColor()
             }
         }

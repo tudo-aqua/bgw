@@ -26,7 +26,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
-import tools.aqua.bgw.builder.FXConverters.Companion.toFXFont
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.visual.*
@@ -122,7 +122,7 @@ internal class VisualBuilder {
                     opacity = newValue
                 }
                 visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, newValue ->
-                    font = newValue.toFXFont()
+                    style = newValue.toFXFontCSS()
                     textFill = newValue.color.toFXColor()
                 }
                 wrapTextProperty().set(true)
