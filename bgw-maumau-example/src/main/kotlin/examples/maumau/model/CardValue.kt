@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package examples.maumau.model
 
 import java.util.*

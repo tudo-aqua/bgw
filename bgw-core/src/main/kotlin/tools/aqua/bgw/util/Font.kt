@@ -20,16 +20,18 @@
 package tools.aqua.bgw.util
 
 import tools.aqua.bgw.util.Font.FontStyle
+import tools.aqua.bgw.util.Font.FontWeight
 import java.awt.Color
 
 /**
  * This class is used to represent a font.
  * For more customization of fonts, the CSS feature can be used.
  *
- * @param size size of this Font in `pt`. May be a floating-point value. Default: 14.
+ * @param size size of this Font in `px`. May be a floating-point value. Default: 14.
  * @param color color of this font. Default: [java.awt.Color.BLACK].
  * @param family font family as a String for this Font. Default: "Arial".
- * @param fontStyle font style for this Font. Default: [FontStyle.REGULAR].
+ * @param fontWeight font weight for this Font. Default: [FontWeight.NORMAL].
+ * @param fontStyle font style for this Font. Default: [FontStyle.NORMAL].
  *
  * @see FontStyle
  */
@@ -37,31 +39,53 @@ class Font(
 	val size: Number = 14,
 	val color: Color = Color.BLACK,
 	val family: String = "Arial",
-	val fontStyle: FontStyle = FontStyle.REGULAR
+	val fontWeight: FontWeight = FontWeight.NORMAL,
+	val fontStyle: FontStyle = FontStyle.NORMAL
 ) {
+	/**
+	 * Enum class for representing all available font weights for the Font class.
+	 * @see Font
+	 */
+	enum class FontWeight {
+		/**
+		 * Light font weight.
+		 */
+		LIGHT,
+		
+		/**
+		 * Normal font weight.
+		 */
+		NORMAL,
+		
+		/**
+		 * Font style weight is bolder than [NORMAL] but not as bold as [BOLD].
+		 */
+		SEMI_BOLD,
+		
+		/**
+		 * Bold font weight.
+		 */
+		BOLD,
+	}
+	
 	/**
 	 * Enum class for representing all available font styles for the Font class.
 	 * @see Font
 	 */
 	enum class FontStyle {
 		/**
-		 * Regular font style.
+		 * Normal font style.
 		 */
-		REGULAR,
-		
-		/**
-		 * Font style that is bolder than REGULAR but not as bold as BOLD.
-		 */
-		SEMI_BOLD,
-		
-		/**
-		 * Bold font style.
-		 */
-		BOLD,
+		NORMAL,
 		
 		/**
 		 * Italic font style.
 		 */
 		ITALIC,
+		
+		/**
+		 * Oblique font style.
+		 */
+		OBLIQUE,
 	}
 }

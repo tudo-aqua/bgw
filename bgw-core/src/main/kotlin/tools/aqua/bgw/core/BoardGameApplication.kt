@@ -42,6 +42,7 @@ import java.util.*
  * @see BoardGameScene
  * @see MenuScene
  */
+@Suppress("LeakingThis")
 open class BoardGameApplication(windowTitle: String = "BoardGameWork Application") {
 	
 	init {

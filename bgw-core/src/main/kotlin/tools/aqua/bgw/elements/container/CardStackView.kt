@@ -117,26 +117,11 @@ open class CardStackView<T : CardView>(
 		super.add(element, index)
 		element.addPosListeners()
 	}
-	
-	override fun addAll(collection: Collection<T>) {
-		super.addAll(collection)
-		collection.forEach { it.addPosListeners() }
-	}
-	
-	override fun addAll(vararg elements: T) {
-		addAll(elements.toList())
-	}
-	
-	override fun remove(element: T) {
-		super.remove(element)
-		element.removePosListeners()
-	}
-	
-	override fun removeAll(): List<T> {
-		return super.removeAll().onEach {
-			it.removePosListeners()
+
+	override fun remove(element: T) : Boolean = when (super.remove(element)) {
+			true -> { element.removePosListeners(); true }
+			false -> false
 		}
-	}
 	
 	private fun T.addPosListeners() {
 		posXProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutX() }

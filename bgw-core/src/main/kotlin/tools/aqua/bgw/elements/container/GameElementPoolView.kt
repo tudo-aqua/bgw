@@ -78,21 +78,15 @@ open class GameElementPoolView<T : GameElementView>(
 		element.addInternalListeners()
 		element.addPosListeners()
 	}
-	
-	override fun addAll(collection: Collection<T>) {
-		collection.forEach { add(it) }
-	}
-	
-	override fun addAll(vararg elements: T) {
-		addAll(elements.toList())
-	}
-	
-	override fun remove(element: T) {
-		super.remove(element)
-		element.removeInternalListeners()
-		element.restoreInitialBehaviour()
-		element.removePosListeners()
-		initialStates.remove(element)
+
+	override fun remove(element: T) : Boolean = when (super.remove(element)) {
+		true -> {
+			element.removeInternalListeners()
+			element.restoreInitialBehaviour()
+			element.removePosListeners()
+			initialStates.remove(element)
+			true }
+		false -> false
 	}
 	
 	private fun GameElementView.initializePoolElement() {

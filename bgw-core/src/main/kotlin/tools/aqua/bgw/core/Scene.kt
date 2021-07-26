@@ -22,6 +22,7 @@ package tools.aqua.bgw.core
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.builder.DragElementObject
+import tools.aqua.bgw.builder.DragTargetObject
 import tools.aqua.bgw.elements.DynamicView
 import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.elements.RootElement
@@ -40,6 +41,12 @@ import tools.aqua.bgw.visual.Visual
  * @see MenuScene
  */
 sealed class Scene<T : ElementView>(width: Number, height: Number, background: Visual) {
+	
+	/**
+	 * [MutableList] containing all [ElementView]s currently below mouse position while performing a drag gesture.
+	 */
+	internal val dragTargetsBelowMouse: MutableList<DragTargetObject> = mutableListOf()
+	
 	/**
 	 * [Property] for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
 	 * currently dragged.
@@ -58,7 +65,8 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 	 * Use it to compare the parent [Property] of any [ElementView]
 	 * to find out whether it was directly added to the [Scene].
 	 */
-	val rootNode: ElementView = RootElement(this)
+	@Suppress("LeakingThis")
+	val rootNode: RootElement<T> = RootElement(this)
 	
 	/**
 	 * The width of this [Scene] in virtual coordinates.

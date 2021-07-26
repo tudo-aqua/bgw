@@ -110,7 +110,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @param elements vararg [GameElementView]s to add.
 	 * @throws IllegalArgumentException if a [GameElementView] is already contained.
 	 */
-	open fun addAll(vararg elements: T) {
+	fun addAll(vararg elements: T) {
 		try {
 			addAll(elements.toList())
 		} catch (e: IllegalArgumentException) {
@@ -127,7 +127,7 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @throws IllegalArgumentException if a [GameElementView] is already contained.
 	 */
 	@Synchronized
-	open fun addAll(collection: Collection<T>) {
+	fun addAll(collection: Collection<T>) {
 		try {
 			collection.forEach { add(it) }
 		} catch (e: IllegalArgumentException) {
@@ -138,11 +138,18 @@ sealed class GameElementContainerView<T : GameElementView>(
 	/**
 	 * Removes the [GameElementView] specified by the parameter from this [GameElementContainerView].
 	 *
+	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
+	 *
 	 * @param element the [GameElementView] to remove.
 	 */
 	@Synchronized
-	open fun remove(element: T) {
-		observableElements.remove(element.apply { parent = null })
+	open fun remove(element: T) : Boolean {
+		if (observableElements.remove(element)) {
+			element.parent = null
+
+			return true
+		}
+		return false
 	}
 	
 	/**
@@ -150,13 +157,34 @@ sealed class GameElementContainerView<T : GameElementView>(
 	 * @return list of all removed Elements
 	 */
 	@Synchronized
-	open fun removeAll(): List<T> {
+	fun clear(): List<T> {
 		val tmp = observableElements.toList()
-		observableElements.forEach { it.parent = null }
-		observableElements.clear()
+		tmp.map { remove(it) }
 		return tmp
 	}
-	
+
+	/**
+	 * Removes all [GameElementView]s contained in [collection] from this [GameElementContainerView].
+	 *
+	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
+	 *
+	 * @param collection the [GameElementView]s to remove.
+	 */
+	@Synchronized
+	fun removeAll(collection: Collection<T>) : Boolean =
+		collection.map { remove(it) }.fold(false) { x,y -> x || y }
+
+	/**
+	 * Removes all [GameElementView]s matching the [predicate] from this [GameElementContainerView].
+	 *
+	 * @return `true` if the [GameElementContainerView] was altered by the call, `false` otherwise.
+	 *
+	 * @param predicate the predicate to evaluate.
+	 */
+	@Synchronized
+	fun removeAll(predicate: (T) -> Boolean) : Boolean =
+		elements.map { if (predicate(it)) remove(it) else false }.fold(false) { x,y -> x || y }
+
 	/**
 	 * Returns the size of the elements list.
 	 * @see elements

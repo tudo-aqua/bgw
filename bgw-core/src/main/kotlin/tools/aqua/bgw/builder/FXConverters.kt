@@ -23,8 +23,6 @@ import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.input.MouseButton
 import javafx.scene.paint.Color
-import javafx.scene.text.FontPosture
-import javafx.scene.text.FontWeight
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
@@ -53,24 +51,22 @@ abstract class FXConverters {
 		/**
 		 * Converts the BGW [Font] to [javafx.scene.text.Font].
 		 */
-		internal fun Font.toFXFont(): javafx.scene.text.Font {
-			val fontWeight: FontWeight
-			val fontPosture: FontPosture
-			when (fontStyle) {
-				Font.FontStyle.BOLD -> {
-					fontWeight = FontWeight.BOLD; fontPosture = FontPosture.REGULAR
-				}
-				Font.FontStyle.REGULAR -> {
-					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.REGULAR
-				}
-				Font.FontStyle.SEMI_BOLD -> {
-					fontWeight = FontWeight.SEMI_BOLD; fontPosture = FontPosture.REGULAR
-				}
-				Font.FontStyle.ITALIC -> {
-					fontWeight = FontWeight.NORMAL; fontPosture = FontPosture.ITALIC
-				}
+		internal fun Font.toFXFontCSS(): String {
+			val weight = when (fontWeight) {
+				Font.FontWeight.LIGHT -> "lighter"
+				Font.FontWeight.NORMAL -> "normal"
+				Font.FontWeight.SEMI_BOLD -> "bolder"
+				Font.FontWeight.BOLD -> "bold"
 			}
-			return javafx.scene.text.Font.font(family, fontWeight, fontPosture, size.toDouble())
+			val style = when (fontStyle) {
+				Font.FontStyle.NORMAL -> "normal"
+				Font.FontStyle.ITALIC -> "italic"
+				Font.FontStyle.OBLIQUE -> "oblique"
+			}
+			return "-fx-font-size: ${size}px; " +
+					"-fx-font-family: $family; " +
+					"-fx-font-weight: $weight; " +
+					"-fx-font-style: $style;"
 		}
 		
 		/**
@@ -82,7 +78,7 @@ abstract class FXConverters {
 					MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
 					MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
 					MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
-					else -> MouseButtonType.OTHER
+					else -> MouseButtonType.UNSPECIFIED
 				}
 			)
 		

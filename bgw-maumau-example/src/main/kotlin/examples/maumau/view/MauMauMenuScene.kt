@@ -4,7 +4,6 @@ package examples.maumau.view
 import examples.main.BUTTON_BG_FILE
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.elements.uielements.Button
-import tools.aqua.bgw.elements.uielements.ColorPicker
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -51,7 +50,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         posX = 50,
         posY = 0,
         label = "Hauptmenü",
-        font = Font(fontStyle = Font.FontStyle.BOLD)
+        font = Font(fontWeight = Font.FontWeight.BOLD)
     )
     
     init {

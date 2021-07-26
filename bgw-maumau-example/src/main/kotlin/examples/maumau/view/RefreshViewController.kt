@@ -102,7 +102,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 	override fun refreshGameStackShuffledBack() {
 		viewController.gameScene.gameStackView.apply {
 			val saved = pop()
-			removeAll()
+			clear()
 			push(saved)
 		}
 		

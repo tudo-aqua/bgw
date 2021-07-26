@@ -421,7 +421,7 @@ abstract class ElementView(
 	 * @see isDisabledProperty
 	 */
 	var dropAcceptor: ((DragEvent) -> Boolean)? = null
-	/*
+	
 	/**
 	 * Gets invoked with a [DragEvent] whenever the mouse enters this [ElementView] while performing a drag gesture.
 	 *
@@ -434,7 +434,7 @@ abstract class ElementView(
 	 * @see DragEvent
 	 */
 	var onDragGestureExited: ((DragEvent) -> Unit)? = null
-	*/
+	
 	/**
 	 * Gets invoked with a [DragEvent] whenever a drag and drop gesture finishes over this [ElementView]
 	 * and the [dropAcceptor] returns `true` for the given [DragEvent].
