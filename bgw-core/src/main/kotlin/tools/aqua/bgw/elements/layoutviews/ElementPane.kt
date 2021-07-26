@@ -15,14 +15,14 @@
  *    limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.bgw.elements.layoutviews
 
 import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.container.GameElementContainerView
 import tools.aqua.bgw.observable.IObservable
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
-import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.Visual
 
 class ElementPane<T : ElementView>(
@@ -167,7 +167,7 @@ class ElementPane<T : ElementView>(
      * @see elements
      */
     fun isNotEmpty(): Boolean = !isEmpty()
-
+    
     /**
      * Returning a contained child's coordinates within this container.
      *
@@ -175,7 +175,7 @@ class ElementPane<T : ElementView>(
      *
      * @return coordinate of given child in this container relative to containers anchor point.
      */
-    override fun getChildPosition(child: ElementView): Coordinate? = Coordinate(child.posX, child.posY)
+    override fun getChildPosition(child: ElementView): Coordinate = Coordinate(child.posX, child.posY)
 
     /**
      * Removes [child] from container's children.

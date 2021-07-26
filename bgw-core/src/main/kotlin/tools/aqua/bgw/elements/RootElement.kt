@@ -27,7 +27,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param scene scene of this root element.
  */
-internal class RootElement<T : ElementView>(val scene: Scene<T>) : ElementView(0, 0, 0, 0, Visual.EMPTY) {
+class RootElement<T : ElementView> internal constructor(val scene: Scene<T>) :
+	ElementView(0, 0, 0, 0, Visual.EMPTY) {
 	
 	/**
 	 * Removes element from the [scene].

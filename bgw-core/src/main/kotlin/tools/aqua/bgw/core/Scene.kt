@@ -65,7 +65,8 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 	 * Use it to compare the parent [Property] of any [ElementView]
 	 * to find out whether it was directly added to the [Scene].
 	 */
-	val rootNode: ElementView = RootElement(this)
+	@Suppress("LeakingThis")
+	val rootNode: RootElement<T> = RootElement(this)
 	
 	/**
 	 * The width of this [Scene] in virtual coordinates.

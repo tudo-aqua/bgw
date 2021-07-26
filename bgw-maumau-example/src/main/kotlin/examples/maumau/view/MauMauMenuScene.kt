@@ -4,7 +4,6 @@ package examples.maumau.view
 import examples.main.BUTTON_BG_FILE
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.elements.uielements.Button
-import tools.aqua.bgw.elements.uielements.ColorPicker
 import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual

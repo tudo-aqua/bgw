@@ -115,8 +115,8 @@ The tokens need to be draggable in order to register drag gestures. We do that a
 ````kotlin
 redToken.isDraggable = true
 ````
-We also want the tokens to be non-draggable, whenever the drag and drop gesture was successful.
-In order to achive that we set the ``onDragGestureEnded``, where we set ``isDraggable`` to ``false`` when the boolean indicates success.
+We also want the tokens to be non-draggable, whenever the drag and drop gesture was successful. In order to achieve that
+we set the ``onDragGestureEnded``, where we set ``isDraggable`` to ``false`` when the boolean indicates success.
 ````kotlin
 redToken.onDragGestureEnded = { _, success ->
     if (success) {
