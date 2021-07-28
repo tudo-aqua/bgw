@@ -1,15 +1,15 @@
 package examples.maumau.view
 
 import examples.main.*
-import examples.maumau.model.CardSuit
-import examples.maumau.model.CardValue
+import examples.maumau.entity.CardSuit
+import examples.maumau.entity.CardValue
+import tools.aqua.bgw.components.container.CardStack
+import tools.aqua.bgw.components.container.LinearLayout
+import tools.aqua.bgw.components.gamecomponents.Card
+import tools.aqua.bgw.components.uicomponents.Button
+import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.elements.container.CardStackView
-import tools.aqua.bgw.elements.container.LinearLayoutContainer
-import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.elements.uielements.Button
-import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
@@ -18,46 +18,44 @@ import java.awt.Color
 
 class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//region Player hands
-	var currentPlayerHand: LinearLayoutContainer<CardView> = LinearLayoutContainer<CardView>(
+	var currentPlayerHand: LinearLayout<Card> = LinearLayout<Card>(
 		height = 220,
 		width = 800,
 		posX = 560,
 		posY = 750,
 		spacing = -50
-	)
-		.apply {
-			visual = ColorVisual(Color(255, 255, 255, 50))
-			alignment = Alignment.CENTER
-		}
+	).apply {
+		visual = ColorVisual(255, 255, 255, 50)
+		alignment = Alignment.CENTER
+	}
 	
-	var otherPlayerHand: LinearLayoutContainer<CardView> = LinearLayoutContainer<CardView>(
+	var otherPlayerHand: LinearLayout<Card> = LinearLayout<Card>(
 		height = 220,
 		width = 800,
 		posX = 560,
 		posY = 50,
 		spacing = -50
-	)
-		.apply {
-			visual = ColorVisual(Color(255, 255, 255, 50))
-			alignment = Alignment.CENTER
-			rotation = 180.0
-		}
+	).apply {
+		visual = ColorVisual(255, 255, 255, 50)
+		alignment = Alignment.CENTER
+		rotation = 180.0
+	}
 	//endregion
 	
 	//region Stacks
-	val drawStackView: CardStackView<CardView> = CardStackView(
+	val drawStack: CardStack<Card> = CardStack(
 		height = 200,
 		width = 130,
 		posX = 750,
 		posY = 360,
-		visual = ColorVisual(Color(255, 255, 255, 50))
+		visual = ColorVisual(255, 255, 255, 50)
 	)
-	val gameStackView: CardStackView<CardView> = CardStackView(
+	val gameStack: CardStack<Card> = CardStack(
 		height = 200,
 		width = 130,
 		posX = 1040,
 		posY = 360,
-		visual = ColorVisual(Color(255, 255, 255, 50))
+		visual = ColorVisual(255, 255, 255, 50)
 	)
 	val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 320)
 	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 320)
@@ -126,10 +124,11 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	).apply {
 		visual = ImageVisual(BUTTON_BG_FILE)
 	}
+	
 	init {
-		addElements(
-			drawStackView,
-			gameStackView,
+		addComponents(
+			drawStack,
+			gameStack,
 			currentPlayerHand,
 			otherPlayerHand,
 			drawStackInfo,

@@ -19,9 +19,9 @@
 
 package tools.aqua.bgw.core
 
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_HEIGHT
 import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_WIDTH
-import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
@@ -38,7 +38,7 @@ open class BoardGameScene(
 	width: Number = DEFAULT_SCENE_WIDTH,
 	height: Number = DEFAULT_SCENE_HEIGHT,
 	background: Visual = ColorVisual.WHITE
-) : Scene<ElementView>(width = width, height = height, background = background) {
+) : Scene<ComponentView>(width = width, height = height, background = background) {
 	
 	/**
 	 * Property that indicates if this [BoardGameScene] is locked from user input.

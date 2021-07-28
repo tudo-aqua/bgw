@@ -18,74 +18,74 @@
 package tools.aqua.bgw.builder
 
 import javafx.scene.Node
-import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.LayoutView
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.layoutviews.ElementPane
-import tools.aqua.bgw.elements.layoutviews.GridLayoutView
-import tools.aqua.bgw.elements.layoutviews.LayoutElement
-import tools.aqua.bgw.util.ElementViewGrid
+import tools.aqua.bgw.util.ComponentViewGrid
+import javafx.scene.layout.Pane as FXPane
 
 /**
  * LayoutNodeBuilder.
- * Factory for all BGW layout elements.
+ * Factory for all BGW layout components.
  */
 internal class LayoutNodeBuilder {
 	companion object {
 		/**
-		 * Switches between LayoutElements.
+		 * Switches between LayoutComponents.
 		 */
-		internal fun buildLayoutElement(
-			scene: Scene<out ElementView>,
-			layoutElementView: LayoutElement<out ElementView>
+		internal fun buildLayoutView(
+			scene: Scene<out ComponentView>,
+			layoutViewView: LayoutView<out ComponentView>
 		): Region =
-			when (layoutElementView) {
-				is GridLayoutView<*> ->
-					buildGrid(scene, layoutElementView)
-				is ElementPane<*> ->
-					buildElementPane(scene, layoutElementView)
+			when (layoutViewView) {
+				is GridPane<*> ->
+					buildGrid(scene, layoutViewView)
+				is Pane<*> ->
+					buildPane(scene, layoutViewView)
 			}
-
-		private fun buildElementPane(scene: Scene<out ElementView>, elementPane: ElementPane<out ElementView>): Region =
-			Pane().apply {
-				elementPane.observableElements.setGUIListenerAndInvoke {
-					refreshElementPane(scene, elementPane)
+		
+		private fun buildPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>): Region =
+			FXPane().apply {
+				pane.observableComponents.setGUIListenerAndInvoke {
+					refreshPane(scene, pane)
 				}
 			}
-
-		private fun Pane.refreshElementPane(scene: Scene<out ElementView>, elementPane: ElementPane<out ElementView>) {
+		
+		private fun FXPane.refreshPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>) {
 			children.clear()
-			children.addAll(elementPane.observableElements.map { NodeBuilder.build(scene, it) })
+			children.addAll(pane.observableComponents.map { NodeBuilder.build(scene, it) })
 		}
-
+		
 		/**
-		 * Builds [GridLayoutView].
+		 * Builds [GridPane].
 		 */
-		private fun buildGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>): Region =
-			Pane().apply {
+		private fun buildGrid(scene: Scene<out ComponentView>, gridView: GridPane<out ComponentView>): Region =
+			FXPane().apply {
 				gridView.setGUIListenerAndInvoke { refreshGrid(scene, gridView) }
 			}
 		
 		/**
-		 * Refreshes [GridLayoutView].
+		 * Refreshes [GridPane].
 		 */
-		private fun Pane.refreshGrid(scene: Scene<out ElementView>, gridView: GridLayoutView<out ElementView>) {
-			val grid: ElementViewGrid<out ElementView> = gridView.grid
+		private fun FXPane.refreshGrid(scene: Scene<out ComponentView>, gridView: GridPane<out ComponentView>) {
+			val grid: ComponentViewGrid<out ComponentView> = gridView.grid
 			
 			children.clear()
 			
 			//Build Nodes
-			val nodes = ArrayList<Triple<Pair<Int, Int>, ElementView, Node>>()
+			val nodes = ArrayList<Triple<Pair<Int, Int>, ComponentView, Node>>()
 			grid.getColumns().forEachIndexed { colIndex, col ->
 				for (rowIndex in col.indices) {
-					val gameElementView = col[rowIndex] ?: continue
+					val gameComponent = col[rowIndex] ?: continue
 					
 					nodes.add(
 						Triple(
 							Pair(colIndex, rowIndex),
-							gameElementView,
-							NodeBuilder.build(scene = scene, elementView = gameElementView)
+							gameComponent,
+							NodeBuilder.build(scene = scene, componentView = gameComponent)
 						)
 					)
 				}
@@ -106,14 +106,14 @@ internal class LayoutNodeBuilder {
 			nodes.forEach { triple ->
 				val colIndex = triple.first.first
 				val rowIndex = triple.first.second
-				val element = triple.second
+				val component = triple.second
 				val node = triple.third
 				val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
 				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
 				
 				children.add(node.apply {
-					layoutX = posX + element.posX
-					layoutY = posY + element.posY
+					layoutX = posX + component.posX
+					layoutY = posY + component.posY
 				})
 			}
 		}

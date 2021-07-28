@@ -20,14 +20,14 @@ package tools.aqua.bgw.builder
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveElementsBelowMouse
+import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveComponentsBelowMouse
 import tools.aqua.bgw.builder.DragDropHelper.Companion.tryFindDropTarget
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.event.DragEvent
 
 /**
@@ -72,17 +72,17 @@ internal class SceneBuilder {
 		/**
 		 * Builds a [Scene] pane.
 		 */
-		private fun buildPane(scene: Scene<out ElementView>): Pane {
+		private fun buildPane(scene: Scene<out ComponentView>): Pane {
 			val pane = Pane().apply {
 				prefHeight = scene.height
 				prefWidth = scene.width
 			}
 			
-			scene.rootElements.setGUIListenerAndInvoke { pane.rebuild(scene) }
-			scene.draggedElementObjectProperty.setGUIListenerAndInvoke(
-				scene.draggedElementObjectProperty.value
+			scene.rootComponents.setGUIListenerAndInvoke { pane.rebuild(scene) }
+			scene.draggedDataObjectProperty.setGUIListenerAndInvoke(
+				scene.draggedDataObjectProperty.value
 			) { oV, nV ->
-				scene.refreshDraggedElement(oV?.draggedStackPane, nV?.draggedStackPane)
+				scene.refreshDraggedComponent(oV?.draggedStackPane, nV?.draggedStackPane)
 			}
 			
 			pane.setOnMouseDragged { scene.onMouseDragged(it) }
@@ -95,57 +95,57 @@ internal class SceneBuilder {
 		 * Event handler for onMouseDragged.
 		 */
 		private fun Scene<*>.onMouseDragged(e: MouseEvent) {
-			val draggedElementObject = draggedElementObjectProperty.value ?: return
-			val draggedElement = draggedElementObject.draggedElement
+			val draggedDataObject = draggedDataObjectProperty.value ?: return
+			val draggedComponent = draggedDataObject.draggedComponent
 			
-			//Move dragged element to mouse position
-			val newCoords = DragDropHelper.transformCoordinatesToScene(e, draggedElementObject)
-			draggedElement.posX = newCoords.xCoord
-			draggedElement.posY = newCoords.yCoord
+			//Move dragged component to mouse position
+			val newCoords = DragDropHelper.transformCoordinatesToScene(e, draggedDataObject)
+			draggedComponent.posX = newCoords.xCoord
+			draggedComponent.posY = newCoords.yCoord
 			
-			//Invoke onDragMoved on dragged element
-			draggedElement.onDragGestureMoved?.invoke(DragEvent(draggedElement))
+			//Invoke onDragMoved on dragged component
+			draggedComponent.onDragGestureMoved?.invoke(DragEvent(draggedComponent))
 			
-			//Inspect elements below mouse
-			val newElementsBelow = findActiveElementsBelowMouse(e.sceneX, e.sceneY)
-			val oldElementsBelow = dragTargetsBelowMouse
+			//Inspect components below mouse
+			val newComponentsBelow = findActiveComponentsBelowMouse(e.sceneX, e.sceneY)
+			val oldComponentsBelow = dragTargetsBelowMouse
 			
-			//Find delta for entered and exited elements
-			val entered = newElementsBelow.filter { oldElementsBelow.none { t -> t.dragTarget == it.dragTarget } }
-			val exited = oldElementsBelow.filter { newElementsBelow.none { t -> t.dragTarget == it.dragTarget } }
+			//Find delta for entered and exited components
+			val entered = newComponentsBelow.filter { oldComponentsBelow.none { t -> t.dragTarget == it.dragTarget } }
+			val exited = oldComponentsBelow.filter { newComponentsBelow.none { t -> t.dragTarget == it.dragTarget } }
 			
 			//Invoke onDragGestureEntered and onDragGestureExited
-			entered.forEach { t -> t.dragTarget.onDragGestureEntered?.invoke(DragEvent(draggedElement)) }
-			exited.forEach { t -> t.dragTarget.onDragGestureExited?.invoke(DragEvent(draggedElement)) }
+			entered.forEach { t -> t.dragTarget.onDragGestureEntered?.invoke(DragEvent(draggedComponent)) }
+			exited.forEach { t -> t.dragTarget.onDragGestureExited?.invoke(DragEvent(draggedComponent)) }
 			
-			//Keep house holding of elements currently below mouse
+			//Keep house holding of components currently below mouse
 			dragTargetsBelowMouse.clear()
-			dragTargetsBelowMouse.addAll(newElementsBelow)
+			dragTargetsBelowMouse.addAll(newComponentsBelow)
 		}
 		
 		/**
 		 * Event handler for onMouseReleased.
 		 */
 		private fun Scene<*>.onMouseReleased(e: MouseEvent) {
-			val draggedElementObject = draggedElementObjectProperty.value
-			val draggedElement = draggedElementObject?.draggedElement ?: return
+			val dragDataObject = draggedDataObjectProperty.value
+			val draggedComponent = dragDataObject?.draggedComponent ?: return
 			
-			draggedElement.onMouseReleased?.invoke(e.toMouseEvent())
+			draggedComponent.onMouseReleased?.invoke(e.toMouseEvent())
 			
 			if (!tryFindDropTarget(e.sceneX, e.sceneY)) {
-				draggedElementObject.rollback()
+				dragDataObject.rollback()
 			}
 			
-			draggedElement.isDragged = false
-			draggedElementObjectProperty.value = null
+			draggedComponent.isDragged = false
+			draggedDataObjectProperty.value = null
 		}
 		
 		/**
-		 * Rebuilds pane on elements changed.
+		 * Rebuilds pane on components changed.
 		 */
-		private fun Pane.rebuild(scene: Scene<out ElementView>) {
+		private fun Pane.rebuild(scene: Scene<out ComponentView>) {
 			children.clear()
-			scene.elementsMap.clear()
+			scene.componentsMap.clear()
 			
 			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, nV ->
 				children.add(0, VisualBuilder.buildVisual(nV).apply {
@@ -157,51 +157,46 @@ internal class SceneBuilder {
 				})
 			}
 			
-			for (element in scene.rootElements) {
-				val node = NodeBuilder.build(scene, element)
-				
-				children.add(node)
-				//scene.elementsMap[element] = node
-			}
+			scene.rootComponents.forEach { children.add(NodeBuilder.build(scene, it)) }
 		}
 		
 		/**
 		 * Refreshes [Scene] after drag and drop.
 		 */
-		private fun Scene<*>.refreshDraggedElement(oV: StackPane?, nV: StackPane?) {
+		private fun Scene<*>.refreshDraggedComponent(oV: StackPane?, nV: StackPane?) {
 			when {
 				nV == null && oV != null -> {
-					//Remove dragged element from pane
-					removeDraggedElement(oV)
+					//Remove dragged component from pane
+					removeDraggedComponent(oV)
 					return
 				}
 				
 				nV != null && oV == null -> {
-					//Add dragged element to pane
-					addDraggedElement(nV)
+					//Add dragged component to pane
+					addDraggedComponent(nV)
 					return
 				}
 				
 				nV != null && oV != null && nV != oV -> {
-					//Remove old and add new dragged element to pane
-					removeDraggedElement(oV)
-					addDraggedElement(nV)
+					//Remove old and add new dragged component to pane
+					removeDraggedComponent(oV)
+					addDraggedComponent(nV)
 					return
 				}
 			}
 		}
 		
 		/**
-		 * Removes dragged element from [Scene].
+		 * Removes dragged component from [Scene].
 		 */
-		private fun Scene<*>.removeDraggedElement(node: StackPane) {
+		private fun Scene<*>.removeDraggedComponent(node: StackPane) {
 			mapToPane()!!.children.remove(node)
 		}
 		
 		/**
-		 * Adds dragged element to [Scene].
+		 * Adds dragged component to [Scene].
 		 */
-		private fun Scene<*>.addDraggedElement(node: StackPane) {
+		private fun Scene<*>.addDraggedComponent(node: StackPane) {
 			mapToPane()!!.children.add(node)
 		}
 	}

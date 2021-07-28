@@ -19,28 +19,28 @@
 
 package tools.aqua.bgw.animation
 
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.ElementView
 
 /**
  * A movement animation.
- * Moves given [ElementView] relative to parents anchor point.
+ * Moves given [ComponentView] relative to parents anchor point.
  *
- * @param elementView [ElementView] to animate
- * @param fromX initial X position. Default: Current [ElementView.posX].
- * @param toX resulting X position. Default: Current [ElementView.posX].
- * @param fromY initial Y position. Default: Current [ElementView.posY].
- * @param toY resulting Y position. Default: Current [ElementView.posY].
+ * @param componentView [ComponentView] to animate
+ * @param fromX initial X position. Default: Current [ComponentView.posX].
+ * @param toX resulting X position. Default: Current [ComponentView.posX].
+ * @param fromY initial Y position. Default: Current [ComponentView.posY].
+ * @param toY resulting Y position. Default: Current [ComponentView.posY].
  * @param duration duration in milliseconds. Default: 1 second.
  */
-class MovementAnimation<T : ElementView>(
-	elementView: T,
-	fromX: Number = elementView.posX,
-	toX: Number = elementView.posX,
-	fromY: Number = elementView.posY,
-	toY: Number = elementView.posY,
+class MovementAnimation<T : ComponentView>(
+	componentView: T,
+	fromX: Number = componentView.posX,
+	toX: Number = componentView.posX,
+	fromY: Number = componentView.posY,
+	toY: Number = componentView.posY,
 	duration: Int = 1000
-) : ElementAnimation<T>(element = elementView, duration = duration) {
+) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 	
 	/**
 	 * Initial X position.
@@ -64,50 +64,50 @@ class MovementAnimation<T : ElementView>(
 	
 	/**
 	 * A movement animation.
-	 * Moves given [ElementView] relative to parents anchor point.
+	 * Moves given [ComponentView] relative to parents anchor point.
 	 *
-	 * @param elementView [ElementView] to animate
+	 * @param componentView [ComponentView] to animate
 	 * @param byX Relative X movement.
 	 * @param byY Relative Y movement.
 	 * @param duration [Animation] duration in milliseconds. Default: 1 second
 	 */
-	constructor(elementView: T, byX: Number = 0.0, byY: Number = 0.0, duration: Int = 1000) : this(
-		elementView = elementView,
-		toX = elementView.posX + byX.toDouble(),
-		toY = elementView.posY + byY.toDouble(),
+	constructor(componentView: T, byX: Number = 0.0, byY: Number = 0.0, duration: Int = 1000) : this(
+		componentView = componentView,
+		toX = componentView.posX + byX.toDouble(),
+		toY = componentView.posY + byY.toDouble(),
 		duration = duration
 	)
 	
 	companion object {
 		/**
-		 * Creates a [MovementAnimation] to another element's position.
-		 * Moves given [ElementView] relative to parents anchor point.
+		 * Creates a [MovementAnimation] to another component's position.
+		 * Moves given [ComponentView] relative to parents anchor point.
 		 *
-		 * @param elementView [ElementView] to animate
-		 * @param toElementViewPosition Defines the destination [ElementView] to move the given element to.
+		 * @param componentView [ComponentView] to animate
+		 * @param toComponentViewPosition Defines the destination [ComponentView] to move the given component to.
 		 * @param scene The [Scene].
 		 * @param duration [Animation] duration in milliseconds. Default: 1 second
 		 */
-		fun <T : ElementView> toElementView(
-			elementView: T,
-			toElementViewPosition: T,
+		fun <T : ComponentView> toComponentView(
+			componentView: T,
+			toComponentViewPosition: T,
 			scene: Scene<*>,
 			duration: Int = 1000
 		): MovementAnimation<T> {
-			//Find visual tree for elements and drop root node
-			val pathToElement = scene.findPathToChild(elementView).dropLast(1)
-			val pathToDestination = scene.findPathToChild(toElementViewPosition).dropLast(1)
+			//Find visual tree for components and drop root node
+			val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
+			val pathToDestination = scene.findPathToChild(toComponentViewPosition).dropLast(1)
 			
 			//Sum relative positions
-			val elementAbsoluteX = pathToElement.sumOf { it.posX }
-			val elementAbsoluteY = pathToElement.sumOf { it.posY }
+			val componentAbsoluteX = pathToComponent.sumOf { it.posX }
+			val componentAbsoluteY = pathToComponent.sumOf { it.posY }
 			val destinationAbsoluteX = pathToDestination.sumOf { it.posX }
 			val destinationAbsoluteY = pathToDestination.sumOf { it.posY }
 			
 			return MovementAnimation(
-				elementView = elementView,
-				byX = destinationAbsoluteX - elementAbsoluteX,
-				byY = destinationAbsoluteY - elementAbsoluteY,
+				componentView = componentView,
+				byX = destinationAbsoluteX - componentAbsoluteX,
+				byY = destinationAbsoluteY - componentAbsoluteY,
 				duration = duration
 			)
 		}
