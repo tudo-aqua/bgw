@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -27,14 +27,14 @@ import tools.aqua.bgw.visual.Visual
  * Sets background to given [fromVisual] than contracts background in half the given duration, switches to [toVisual]
  * and extends again in half the given duration.
  *
- * @param elementView [ElementView] to animate.
+ * @param componentView [ComponentView] to animate.
  * @param fromVisual initial [Visual].
  * @param toVisual resulting [Visual].
  * @param duration duration in milliseconds. Default: 1 second.
  */
-class FlipAnimation<T : ElementView>(
-	elementView: T,
+class FlipAnimation<T : ComponentView>(
+	componentView: T,
 	val fromVisual: Visual,
 	val toVisual: Visual,
 	duration: Int = 500
-) : ElementAnimation<T>(element = elementView, duration = duration)
+) : ComponentAnimation<T>(componentView = componentView, duration = duration)

@@ -28,7 +28,7 @@ import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
-import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.visual.*
 import java.awt.image.BufferedImage
 import kotlin.math.abs
@@ -43,21 +43,21 @@ internal class VisualBuilder {
 	     * Max value of HEX ind decimal.
 	     */
 	    internal const val MAX_HEX = 255.0
-	
-	    /**
-	     * Builds [Visual].
-	     */
-	    internal fun build(elementView: ElementView): Pane {
-		    val root = Pane()
-		
-		    elementView.visualProperty.setGUIListenerAndInvoke(elementView.visual) { _, nV ->
-			    root.children.clear()
-			    root.children.add(buildVisual(nV).apply {
-				    prefWidthProperty().bind(root.prefWidthProperty())
-				    prefHeightProperty().bind(root.prefHeightProperty())
-			    })
-		    }
-
+    
+        /**
+         * Builds [Visual].
+         */
+        internal fun build(componentView: ComponentView): Pane {
+            val root = Pane()
+        
+            componentView.visualProperty.setGUIListenerAndInvoke(componentView.visual) { _, nV ->
+                root.children.clear()
+                root.children.add(buildVisual(nV).apply {
+                    prefWidthProperty().bind(root.prefWidthProperty())
+                    prefHeightProperty().bind(root.prefHeightProperty())
+                })
+            }
+        
             return root
         }
 

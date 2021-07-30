@@ -23,8 +23,8 @@ import javafx.animation.*
 import javafx.util.Duration
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.ElementView
 import tools.aqua.bgw.event.AnimationFinishedEvent
 import kotlin.random.Random
 
@@ -33,7 +33,7 @@ internal class AnimationBuilder {
 		/**
 		 * Switches between Animations.
 		 */
-		internal fun build(scene: Scene<out ElementView>, anim: Animation): javafx.animation.Animation =
+		internal fun build(scene: Scene<out ComponentView>, anim: Animation): javafx.animation.Animation =
 			when (anim) {
 				is MovementAnimation<*> -> buildMovementAnimation(scene, anim)
 				is RotationAnimation<*> -> addRotateAnimation(scene, anim)
@@ -47,10 +47,10 @@ internal class AnimationBuilder {
 		 * Builds [MovementAnimation].
 		 */
 		private fun buildMovementAnimation(
-			scene: Scene<out ElementView>,
+			scene: Scene<out ComponentView>,
 			anim: MovementAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.elementsMap[anim.element]!!
+			val node = scene.componentsMap[anim.componentView]!!
 			
 			//Move node to initial position
 			node.layoutX = anim.fromX
@@ -79,10 +79,10 @@ internal class AnimationBuilder {
 		 * Builds [RotationAnimation].
 		 */
 		private fun addRotateAnimation(
-			scene: Scene<out ElementView>,
+			scene: Scene<out ComponentView>,
 			anim: RotationAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.elementsMap[anim.element]!!
+			val node = scene.componentsMap[anim.componentView]!!
 			
 			//Move node to initial position
 			node.rotate = anim.fromAngle
@@ -108,10 +108,10 @@ internal class AnimationBuilder {
 		 * Builds [FlipAnimation].
 		 */
 		private fun addFlipAnimation(
-			scene: Scene<out ElementView>,
+			scene: Scene<out ComponentView>,
 			anim: FlipAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.elementsMap[anim.element]!!
+			val node = scene.componentsMap[anim.componentView]!!
 			val fromVisual = VisualBuilder.buildVisual(anim.fromVisual)
 			val toVisual = VisualBuilder.buildVisual(anim.toVisual).apply { scaleX = 0.0 }
 			
@@ -142,7 +142,10 @@ internal class AnimationBuilder {
 		/**
 		 * Builds [DelayAnimation].
 		 */
-		private fun addDelayAnimation(scene: Scene<out ElementView>, anim: DelayAnimation): javafx.animation.Animation {
+		private fun addDelayAnimation(
+			scene: Scene<out ComponentView>,
+			anim: DelayAnimation
+		): javafx.animation.Animation {
 			val animation = PauseTransition(Duration.millis(anim.duration.toDouble()))
 			
 			//set on finished
@@ -158,7 +161,7 @@ internal class AnimationBuilder {
 		 * Builds [DiceAnimation].
 		 */
 		private fun addDiceAnimation(
-			scene: Scene<out ElementView>,
+			scene: Scene<out ComponentView>,
 			anim: DiceAnimation<*>
 		): javafx.animation.Animation {
 			val seq = SequentialTransition()
@@ -166,13 +169,13 @@ internal class AnimationBuilder {
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					setOnFinished {
-						anim.element.currentSide = Random.nextInt(anim.element.visuals.size)
+						anim.componentView.currentSide = Random.nextInt(anim.componentView.visuals.size)
 					}
 				}
 			}
 			
 			seq.setOnFinished {
-				anim.element.currentSide = anim.toSide
+				anim.componentView.currentSide = anim.toSide
 				scene.animations.remove(anim)
 				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
@@ -184,7 +187,7 @@ internal class AnimationBuilder {
 		 * Builds [RandomizeAnimation].
 		 */
 		private fun addRandomizeAnimation(
-			scene: Scene<out ElementView>,
+			scene: Scene<out ComponentView>,
 			anim: RandomizeAnimation<*>
 		): javafx.animation.Animation {
 			val seq = SequentialTransition()
@@ -192,13 +195,13 @@ internal class AnimationBuilder {
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					setOnFinished {
-						anim.element.visual = anim.visuals[Random.nextInt(anim.visuals.size)]
+						anim.componentView.visual = anim.visuals[Random.nextInt(anim.visuals.size)]
 					}
 				}
 			}
 			
 			seq.setOnFinished {
-				anim.element.visual = anim.toVisual
+				anim.componentView.visual = anim.toVisual
 				scene.animations.remove(anim)
 				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}

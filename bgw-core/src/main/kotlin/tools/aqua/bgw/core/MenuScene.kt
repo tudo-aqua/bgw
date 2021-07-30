@@ -19,9 +19,9 @@
 
 package tools.aqua.bgw.core
 
+import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_HEIGHT
 import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_WIDTH
-import tools.aqua.bgw.elements.StaticView
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
@@ -37,7 +37,7 @@ open class MenuScene(
 	width: Number = DEFAULT_SCENE_WIDTH,
 	height: Number = DEFAULT_SCENE_HEIGHT,
 	background: Visual = ColorVisual.WHITE
-) : Scene<StaticView<out StaticView<*>>>(width = width, height = height, background = background) {
+) : Scene<StaticComponentView<out StaticComponentView<*>>>(width = width, height = height, background = background) {
 	
 	init {
 		opacity = DEFAULT_MENU_SCENE_OPACITY

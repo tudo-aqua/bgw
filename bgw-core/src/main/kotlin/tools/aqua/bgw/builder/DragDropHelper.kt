@@ -20,11 +20,11 @@ package tools.aqua.bgw.builder
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.GameComponentContainer
+import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.elements.layoutviews.ElementPane
-import tools.aqua.bgw.elements.layoutviews.GridLayoutView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.util.Coordinate
@@ -38,46 +38,46 @@ class DragDropHelper {
 		 * Rotates coordinates to 0 degrees relative to scene.
 		 *
 		 * @param mouseEvent mouse event.
-		 * @param draggedElementObject rotated element.
+		 * @param draggedDataObject rotated component.
 		 */
 		internal fun transformCoordinatesToScene(
 			mouseEvent: MouseEvent,
-			draggedElementObject: DragElementObject
+			draggedDataObject: DragDataObject
 		): Coordinate {
 			val rotated = Coordinate(
-				xCoord = mouseEvent.sceneX / Frontend.sceneScale - draggedElementObject.mouseStartCoord.xCoord,
-				yCoord = mouseEvent.sceneY / Frontend.sceneScale - draggedElementObject.mouseStartCoord.yCoord
-			).rotated(-draggedElementObject.relativeParentRotation)
+				xCoord = mouseEvent.sceneX / Frontend.sceneScale - draggedDataObject.mouseStartCoord.xCoord,
+				yCoord = mouseEvent.sceneY / Frontend.sceneScale - draggedDataObject.mouseStartCoord.yCoord
+			).rotated(-draggedDataObject.relativeParentRotation)
 			
 			return Coordinate(
-				xCoord = draggedElementObject.posStartCoord.xCoord + rotated.xCoord,
-				yCoord = draggedElementObject.posStartCoord.yCoord + rotated.yCoord
+				xCoord = draggedDataObject.posStartCoord.xCoord + rotated.xCoord,
+				yCoord = draggedDataObject.posStartCoord.yCoord + rotated.yCoord
 			)
 		}
 		
 		/**
-		 * Searches all elements below mouse position.
+		 * Searches all components below mouse position.
 		 *
-		 * Note: Invisible or disabled elements also get returned. Use findActiveElementsBelowMouse(...).
+		 * Note: Invisible or disabled components also get returned. Use findActiveComponentsBelowMouse(...).
 		 *
 		 * @param mouseX mouse x coordinate.
 		 * @param mouseY mouse y coordinate.
 		 *
-		 * @return [List] of elements.
+		 * @return [List] of components.
 		 */
-		internal fun Scene<out ElementView>.findElementsBelowMouse(
+		internal fun Scene<out ComponentView>.findComponentsBelowMouse(
 			mouseX: Double,
 			mouseY: Double
 		): List<DragTargetObject> =
 			mapToPane()!!.children
-				.filterIsInstance<StackPane>()  //top level Elements
+				.filterIsInstance<StackPane>()  //top level components
 				.mapNotNull {
 					//to DragTargetObject
-					val element = elementsMap.entries.firstOrNull { t -> t.value == it }?.key
+					val component = componentsMap.entries.firstOrNull { t -> t.value == it }?.key
 					val newMouseX = (mouseX - Frontend.sceneX) / Frontend.sceneScale
 					val newMouseY = (mouseY - Frontend.sceneY) / Frontend.sceneScale
 					
-					if (element != null) DragTargetObject(element, it, newMouseX, newMouseY) else null
+					if (component != null) DragTargetObject(component, it, newMouseX, newMouseY) else null
 				}
 				.filter {
 					val rotatedTarget = it.rotated()
@@ -85,48 +85,48 @@ class DragDropHelper {
 				}.toList()
 		
 		/**
-		 * Searches all visible and enabled elements below mouse position.
+		 * Searches all visible and enabled components below mouse position.
 		 *
-		 * Note: Invisible and disabled elements get returned by using findElementsBelowMouse(...).
+		 * Note: Invisible and disabled components get returned by using findComponentsBelowMouse(...).
 		 *
 		 * @param mouseX mouse x coordinate.
 		 * @param mouseY mouse y coordinate.
 		 *
-		 * @return [List] of elements.
+		 * @return [List] of components.
 		 */
-		internal fun Scene<out ElementView>.findActiveElementsBelowMouse(
+		internal fun Scene<out ComponentView>.findActiveComponentsBelowMouse(
 			mouseX: Double,
 			mouseY: Double
-		): List<DragTargetObject> = findElementsBelowMouse(mouseX, mouseY).filter {
+		): List<DragTargetObject> = findComponentsBelowMouse(mouseX, mouseY).filter {
 			it.dragTarget.isVisible && !it.dragTarget.isDisabled
 		}
 		
 		/**
-		 * Searches all elements below mouse position.
+		 * Searches all components below mouse position.
 		 *
 		 * @param mouseX mouse x coordinate.
 		 * @param mouseY mouse y coordinate.
 		 *
 		 * @return `true` if a valid drop target was found and the drop was successful, `false` otherwise.
 		 */
-		internal fun Scene<out ElementView>.tryFindDropTarget(mouseX: Double, mouseY: Double): Boolean {
-			val draggedElement = draggedElement!!
+		internal fun Scene<out ComponentView>.tryFindDropTarget(mouseX: Double, mouseY: Double): Boolean {
+			val draggedComponent = draggedComponent!!
 			
-			val validTargets = mutableListOf<ElementView>()
-			findElementsBelowMouse(mouseX, mouseY).forEach {
+			val validTargets = mutableListOf<ComponentView>()
+			findComponentsBelowMouse(mouseX, mouseY).forEach {
 				val tryDropData = findAcceptingDropTargets(it)
 				validTargets += tryDropData
 				tryDropData.isNotEmpty()
 			}
 			
-			val dropEvent = DropEvent(draggedElement, validTargets)
-			val dragEvent = DragEvent(draggedElement)
+			val dropEvent = DropEvent(draggedComponent, validTargets)
+			val dragEvent = DragEvent(draggedComponent)
 			
-			//Invoke drag drop handler in dragged element
-			draggedElement.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
+			//Invoke drag drop handler in dragged component
+			draggedComponent.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
 			
 			//Invoke drag drop handler on all accepting drag targets
-			validTargets.forEach { it.onDragElementDropped?.invoke(dragEvent) }
+			validTargets.forEach { it.onDragDropped?.invoke(dragEvent) }
 			
 			return validTargets.isNotEmpty()
 		}
@@ -138,9 +138,9 @@ class DragDropHelper {
 		 *
 		 * @return [List] of all accepting drop targets.
 		 */
-		private fun Scene<out ElementView>.findAcceptingDropTargets(
+		private fun Scene<out ComponentView>.findAcceptingDropTargets(
 			dragTargetObject: DragTargetObject
-		): List<ElementView> {
+		): List<ComponentView> {
 			val availableSubTargets = searchAvailableDropTargetsRecursively(
 				DragTargetObject(
 					dragTargetObject.dragTarget,
@@ -163,7 +163,7 @@ class DragDropHelper {
 			
 			return availableSubTargets.map { it.dragTarget }.filter {
 				this != it
-						&& it.dropAcceptor?.invoke(DragEvent(draggedElement!!)) ?: false
+						&& it.dropAcceptor?.invoke(DragEvent(draggedComponent!!)) ?: false
 			}
 		}
 		
@@ -173,14 +173,14 @@ class DragDropHelper {
 		 * @param parent current parent node.
 		 * @param availableTargets [List] of all collected drop targets.
 		 */
-		private fun Scene<out ElementView>.searchAvailableDropTargetsRecursively(
+		private fun Scene<out ComponentView>.searchAvailableDropTargetsRecursively(
 			parent: DragTargetObject,
 			availableTargets: MutableList<DragTargetObject>
 		): MutableList<DragTargetObject> {
 			when (parent.dragTarget) {
-				is GameElementContainerView<*> -> parent.dragTarget.observableElements
-				is GridLayoutView<*> -> parent.dragTarget.grid.mapNotNull { it.element }
-				is ElementPane<*> -> parent.dragTarget.observableElements
+				is GameComponentContainer<*> -> parent.dragTarget.observableComponents
+				is GridPane<*> -> parent.dragTarget.grid.mapNotNull { it.component }
+				is Pane<*> -> parent.dragTarget.observableComponents
 				else -> listOf()
 			}.map {
 				Pair(it, parent.dragTarget.getChildPosition(it) ?: Coordinate(0.0, 0.0))
@@ -192,7 +192,7 @@ class DragDropHelper {
 				searchAvailableDropTargetsRecursively(
 					DragTargetObject(
 						it.first,
-						elementsMap[it.first]!!,
+						componentsMap[it.first]!!,
 						parent.mouseX,
 						parent.mouseY,
 						parent.offsetX + it.second.xCoord,

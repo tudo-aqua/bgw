@@ -21,21 +21,21 @@ import javafx.event.EventHandler
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveElementsBelowMouse
+import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveComponentsBelowMouse
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.StaticComponentView
+import tools.aqua.bgw.components.container.GameComponentContainer
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.LayoutView
+import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.DynamicView
-import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.StaticView
-import tools.aqua.bgw.elements.container.GameElementContainerView
-import tools.aqua.bgw.elements.gameelements.GameElementView
-import tools.aqua.bgw.elements.layoutviews.ElementPane
-import tools.aqua.bgw.elements.layoutviews.GridLayoutView
-import tools.aqua.bgw.elements.layoutviews.LayoutElement
-import tools.aqua.bgw.elements.uielements.UIElementView
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.util.Coordinate
@@ -48,36 +48,36 @@ import kotlin.math.min
 internal class NodeBuilder {
 	companion object {
 		/**
-		 * Switches between top level element types.
+		 * Switches between top level component types.
 		 */
-		internal fun build(scene: Scene<out ElementView>, elementView: ElementView): Region {
-			val node = when (elementView) {
-				is GameElementContainerView<out GameElementView> ->
-					ContainerNodeBuilder.buildContainer(scene, elementView)
-				is GameElementView ->
-					ElementNodeBuilder.buildGameElement(elementView)
-				is LayoutElement<out ElementView> ->
-					LayoutNodeBuilder.buildLayoutElement(scene, elementView)
-				is UIElementView ->
-					UINodeBuilder.buildUIElement(elementView)
-				is StaticView<*> ->
-					throw IllegalInheritanceException(elementView, StaticView::class.java)
-				is DynamicView ->
-					throw IllegalInheritanceException(elementView, DynamicView::class.java)
+		internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
+			val node = when (componentView) {
+				is GameComponentContainer<out GameComponentView> ->
+					ContainerNodeBuilder.buildContainer(scene, componentView)
+				is GameComponentView ->
+					ComponentNodeBuilder.buildGameComponent(componentView)
+				is LayoutView<out ComponentView> ->
+					LayoutNodeBuilder.buildLayoutView(scene, componentView)
+				is UIComponent ->
+					UINodeBuilder.buildUIComponent(componentView)
+				is StaticComponentView<*> ->
+					throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
+				is DynamicComponentView ->
+					throw IllegalInheritanceException(componentView, DynamicComponentView::class.java)
 				else ->
-					throw IllegalInheritanceException(elementView, ElementView::class.java)
+					throw IllegalInheritanceException(componentView, ComponentView::class.java)
 			}
-			val background = VisualBuilder.build(elementView)
+			val background = VisualBuilder.build(componentView)
 			val stackPane = StackPane(background, node).apply { isPickOnBounds = false }
 			
 			//JavaFX -> Framework
-			elementView.registerEvents(stackPane, node, scene)
+			componentView.registerEvents(stackPane, node, scene)
 			
 			//Framework -> JavaFX
-			elementView.registerObservers(stackPane, node, background)
+			componentView.registerObservers(stackPane, node, background)
 			
-			//Register in elementsMap
-			scene.elementsMap[elementView] = stackPane
+			//Register in componentsMap
+			scene.componentsMap[componentView] = stackPane
 			
 			return stackPane
 		}
@@ -85,9 +85,9 @@ internal class NodeBuilder {
 		/**
 		 * Registers events.
 		 */
-		private fun ElementView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ElementView>) {
+		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
 			stackPane.onDragDetected = EventHandler {
-				if (this is DynamicView && isDraggable) {
+				if (this is DynamicComponentView && isDraggable) {
 					onDragDetected(scene, it)
 				}
 			}
@@ -102,7 +102,7 @@ internal class NodeBuilder {
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
 		
-		private fun DynamicView.onDragDetected(scene: Scene<out ElementView>, e: MouseEvent) {
+		private fun DynamicComponentView.onDragDetected(scene: Scene<out ComponentView>, e: MouseEvent) {
 			val mouseStartCoord = Coordinate(
 				xCoord = e.sceneX / Frontend.sceneScale,
 				yCoord = e.sceneY / Frontend.sceneScale
@@ -116,10 +116,10 @@ internal class NodeBuilder {
 			)
 			
 			val rollback: (() -> Unit) = when (val parent = pathToChild[1]) {
-				is GameElementContainerView<*> -> {
-					parent.findRollback(this as GameElementView)
+				is GameComponentContainer<*> -> {
+					parent.findRollback(this as GameComponentView)
 				}
-				is GridLayoutView<*> -> {
+				is GridPane<*> -> {
 					//calculate position in grid
 					posStartCoord += parent.getChildPosition(this)!!
 					
@@ -130,7 +130,7 @@ internal class NodeBuilder {
 					
 					parent.findRollback(this)
 				}
-				is ElementPane<*> -> {
+				is Pane<*> -> {
 					parent.findRollback(this)
 				}
 				scene.rootNode -> {
@@ -146,23 +146,23 @@ internal class NodeBuilder {
 			else
 				0.0
 			
-			val dragElementObject = DragElementObject(
+			val dragDataObject = DragDataObject(
 				this,
-				scene.elementsMap[this]!!,
+				scene.componentsMap[this]!!,
 				mouseStartCoord,
 				posStartCoord,
 				relativeParentRotation,
 				rollback
 			)
-			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragElementObject)
+			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragDataObject)
 			
 			removeFromParent()
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
-			scene.draggedElementObjectProperty.value = dragElementObject
+			scene.draggedDataObjectProperty.value = dragDataObject
 			
 			scene.dragTargetsBelowMouse.clear()
-			scene.dragTargetsBelowMouse.addAll(scene.findActiveElementsBelowMouse(e.sceneX, e.sceneY))
+			scene.dragTargetsBelowMouse.addAll(scene.findActiveComponentsBelowMouse(e.sceneX, e.sceneY))
 			
 			isDragged = true
 			onDragGestureStarted?.invoke(DragEvent(this))
@@ -170,10 +170,10 @@ internal class NodeBuilder {
 		}
 		
 		/**
-		 * Calculates rollback for [GameElementContainerView]s.
+		 * Calculates rollback for [GameComponentContainer]s.
 		 */
-		private fun GameElementContainerView<*>.findRollback(element: GameElementView): (() -> Unit) {
-			val index = observableElements.indexOf(element)
+		private fun GameComponentContainer<*>.findRollback(component: GameComponentView): (() -> Unit) {
+			val index = observableComponents.indexOf(component)
 			val initialX = posX
 			val initialY = posY
 			
@@ -181,20 +181,23 @@ internal class NodeBuilder {
 				posX = initialX
 				posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(this as GameElementContainerView<GameElementView>).add(element, min(observableElements.size, index))
+				(this as GameComponentContainer<GameComponentView>).add(
+					component,
+					min(observableComponents.size, index)
+				)
 			}
 		}
 		
 		/**
-		 * Calculates rollback for [GridLayoutView]s.
+		 * Calculates rollback for [GridPane]s.
 		 */
-		private fun GridLayoutView<*>.findRollback(element: ElementView): (() -> Unit) {
+		private fun GridPane<*>.findRollback(component: ComponentView): (() -> Unit) {
 			val e = grid.find { iteratorElement ->
-				iteratorElement.element == element
+				iteratorElement.component == component
 			} ?: return {}
 			
-			val initialX = e.element!!.posX
-			val initialY = e.element.posY
+			val initialX = e.component!!.posX
+			val initialY = e.component.posY
 			val initialColumnIndex = e.columnIndex
 			val initialRowIndex = e.rowIndex
 			
@@ -202,16 +205,16 @@ internal class NodeBuilder {
 				posX = initialX
 				posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(parent as GridLayoutView<ElementView>)[initialColumnIndex, initialRowIndex] =
-					this@findRollback as ElementView
+				(parent as GridPane<ComponentView>)[initialColumnIndex, initialRowIndex] =
+					this@findRollback as ComponentView
 			}
 		}
 		
 		/**
-		 * Calculates rollback for [ElementPane]s.
+		 * Calculates rollback for [Pane]s.
 		 */
-		private fun ElementPane<*>.findRollback(element: ElementView): (() -> Unit) {
-			val index = observableElements.indexOf(element)
+		private fun Pane<*>.findRollback(component: ComponentView): (() -> Unit) {
+			val index = observableComponents.indexOf(component)
 			val initialX = posX
 			val initialY = posY
 			
@@ -219,12 +222,12 @@ internal class NodeBuilder {
 				posX = initialX
 				posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(parent as ElementPane<ElementView>)
-					.add(this as ElementView, min(observableElements.size, index))
+				(parent as Pane<ComponentView>)
+					.add(this as ComponentView, min(observableComponents.size, index))
 			}
 		}
 		
-		private fun DynamicView.findRollbackOnRoot(scene: Scene<out ElementView>): (() -> Unit) {
+		private fun DynamicComponentView.findRollbackOnRoot(scene: Scene<out ComponentView>): (() -> Unit) {
 			val initialX = posX
 			val initialY = posY
 			return {
@@ -232,7 +235,7 @@ internal class NodeBuilder {
 					is BoardGameScene -> {
 						posX = initialX
 						posY = initialY
-						scene.addElements(this)
+						scene.addComponents(this)
 					}
 					is MenuScene -> {
 						throw RuntimeException("DynamicView $this should not be contained in a MenuScene.")
@@ -245,7 +248,7 @@ internal class NodeBuilder {
 		 * Registers observers.
 		 */
 		@Suppress("DuplicatedCode")
-		private fun ElementView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
+		private fun ComponentView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
 			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
 				stackPane.layoutX = nV - if (layoutFromCenter) width / 2 else 0.0
 			}
@@ -280,7 +283,7 @@ internal class NodeBuilder {
 				background.isDisable = nV
 			}
 			
-			if (this is UIElementView) {
+			if (this is UIComponent) {
 				backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
 					if (nV.isNotEmpty())
 						background.style = nV

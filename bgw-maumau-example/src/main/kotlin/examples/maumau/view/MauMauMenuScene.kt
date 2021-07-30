@@ -2,9 +2,9 @@ package examples.maumau.view
 
 
 import examples.main.BUTTON_BG_FILE
+import tools.aqua.bgw.components.uicomponents.Button
+import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.MenuScene
-import tools.aqua.bgw.elements.uielements.Button
-import tools.aqua.bgw.elements.uielements.Label
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
@@ -23,6 +23,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
     ).apply {
         visual = ImageVisual(BUTTON_BG_FILE)
     }
+    
     val newGameButton: Button = Button(
         height = 80,
         width = 200,
@@ -54,7 +55,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
     )
     
     init {
-        addElements(
+        addComponents(
             menuLabel,
             continueGameButton,
             newGameButton,

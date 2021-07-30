@@ -21,11 +21,11 @@ package tools.aqua.bgw.core
 
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.Animation
-import tools.aqua.bgw.builder.DragElementObject
+import tools.aqua.bgw.builder.DragDataObject
 import tools.aqua.bgw.builder.DragTargetObject
-import tools.aqua.bgw.elements.DynamicView
-import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.RootElement
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.observable.*
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
@@ -40,33 +40,34 @@ import tools.aqua.bgw.visual.Visual
  * @see BoardGameScene
  * @see MenuScene
  */
-sealed class Scene<T : ElementView>(width: Number, height: Number, background: Visual) {
+sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
 	
 	/**
-	 * [MutableList] containing all [ElementView]s currently below mouse position while performing a drag gesture.
+	 * [MutableList] containing all [ComponentView]s currently below mouse position while performing a drag gesture.
 	 */
 	internal val dragTargetsBelowMouse: MutableList<DragTargetObject> = mutableListOf()
 	
 	/**
-	 * [Property] for the currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is
-	 * currently dragged.
+	 * [Property] for the currently dragged [ComponentView] encapsulated in a [DragDataObject]
+	 * or null if no [DynamicComponentView] is currently dragged.
 	 */
-	internal val draggedElementObjectProperty: ObjectProperty<DragElementObject?> = ObjectProperty(null)
+	internal val draggedDataObjectProperty: ObjectProperty<DragDataObject?> = ObjectProperty(null)
 	
 	/**
-	 * Currently dragged [ElementView] encapsulated in a [DragElementObject] or null if no element is currently dragged.
+	 * Currently dragged [ComponentView] encapsulated in a [DragDataObject]
+	 * or null if no [DynamicComponentView] is currently dragged.
 	 */
-	val draggedElement: DynamicView?
-		get() = draggedElementObjectProperty.value?.draggedElement
+	val draggedComponent: DynamicComponentView?
+		get() = draggedDataObjectProperty.value?.draggedComponent
 	
 	
 	/**
 	 * The root node of this [Scene].
-	 * Use it to compare the parent [Property] of any [ElementView]
+	 * Use it to compare the parent [Property] of any [ComponentView]
 	 * to find out whether it was directly added to the [Scene].
 	 */
 	@Suppress("LeakingThis")
-	val rootNode: RootElement<T> = RootElement(this)
+	val rootNode: RootComponent<T> = RootComponent(this)
 	
 	/**
 	 * The width of this [Scene] in virtual coordinates.
@@ -79,9 +80,9 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 	val height: Double = height.toDouble()
 	
 	/**
-	 * All [ElementView]s on the root node.
+	 * All [ComponentView]s on the root node.
 	 */
-	internal val rootElements: ObservableList<T> = ObservableArrayList()
+	internal val rootComponents: ObservableList<T> = ObservableArrayList()
 	
 	/**
 	 * [Property] for the [background] [Visual] of this [Scene].
@@ -128,9 +129,9 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 		}
 	
 	/**
-	 * [Map] for all [ElementView]s to their [StackPane]s.
+	 * [Map] for all [ComponentView]s to their [StackPane]s.
 	 */
-	internal val elementsMap: MutableMap<ElementView, StackPane> = HashMap()
+	internal val componentsMap: MutableMap<ComponentView, StackPane> = HashMap()
 	
 	/**
 	 * All [Animation]s currently playing.
@@ -138,34 +139,34 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 	internal val animations: ObservableList<Animation> = ObservableArrayList()
 	
 	/**
-	 * Adds all given [ElementView]s to the root node and [rootElements] list.
+	 * Adds all given [ComponentView]s to the root node and [rootComponents] list.
 	 *
-	 * @param elements elements to add.
+	 * @param components components to add.
 	 */
-	fun addElements(vararg elements: T) {
-		rootElements.addAll(elements.toList().onEach {
-			check(it.parent == null) { "Element $it is already contained in another container." }
+	fun addComponents(vararg components: T) {
+		rootComponents.addAll(components.toList().onEach {
+			check(it.parent == null) { "Component $it is already contained in another container." }
 			it.parent = rootNode
 		})
 	}
 	
 	/**
-	 * Removes all given [ElementView]s from the root node and [rootElements] list.
+	 * Removes all given [ComponentView]s from the root node and [rootComponents] list.
 	 *
-	 * @param elements elements to remove.
+	 * @param components components to remove.
 	 */
-	fun removeElements(vararg elements: T) {
-		rootElements.removeAll(elements.toList().onEach {
+	fun removeComponents(vararg components: T) {
+		rootComponents.removeAll(components.toList().onEach {
 			it.parent = null
 		})
 	}
 	
 	/**
-	 * Removes all [ElementView]s from the root node and [rootElements] list.
+	 * Removes all [ComponentView]s from the root node and [rootComponents] list.
 	 */
-	fun clearElements() {
-		rootElements.forEach { it.parent = null }
-		rootElements.clear()
+	fun clearComponents() {
+		rootComponents.forEach { it.parent = null }
+		rootComponents.clear()
 	}
 	
 	/**
@@ -234,8 +235,8 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 //	}
 	
 	/**
-	 * Searches [node] recursively through the visual tree and logs path where the [node] appears as first element and
-	 * the [rootNode] as last.
+	 * Searches [node] recursively through the visual tree and logs path where the [node] appears
+	 * as first component and the [rootNode] as last.
 	 *
 	 * @param node child to find.
 	 *
@@ -243,13 +244,13 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 	 *
 	 * @throws IllegalStateException if child was not contained in this [Scene].
 	 */
-	fun findPathToChild(node: ElementView): List<ElementView> {
-		if (node is RootElement<*>) {
+	fun findPathToChild(node: ComponentView): List<ComponentView> {
+		if (node is RootComponent<*>) {
 			check(node == rootNode) { "Child is contained in another scene" }
 			return listOf(rootNode)
 		}
 		
-		checkNotNull(node.parent) { "Encountered element $node that is not contained in a scene." }
+		checkNotNull(node.parent) { "Encountered component $node that is not contained in a scene." }
 		
 		return mutableListOf(node) + findPathToChild(node.parent!!)
 	}
@@ -257,10 +258,10 @@ sealed class Scene<T : ElementView>(width: Number, height: Number, background: V
 	/**
 	 * Removes [child] from the root.
 	 */
-	internal fun removeChild(child: ElementView) {
+	internal fun removeChild(child: ComponentView) {
 		try {
 			@Suppress("UNCHECKED_CAST")
-			this.removeElements(child as T)
+			this.removeComponents(child as T)
 		} catch (_: ClassCastException) {
 		}
 	}

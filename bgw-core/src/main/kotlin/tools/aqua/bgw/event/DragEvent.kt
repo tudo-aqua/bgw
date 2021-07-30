@@ -19,13 +19,13 @@
 
 package tools.aqua.bgw.event
 
-import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.components.ComponentView
 
 /**
  * Event that gets raised for drag gestures.
  *
- * @param draggedElement currently dragged [ElementView].
+ * @param draggedComponent currently dragged [ComponentView].
  *
  * @see DropEvent
  */
-class DragEvent(val draggedElement: ElementView) : Event()
+class DragEvent(val draggedComponent: ComponentView) : Event()
