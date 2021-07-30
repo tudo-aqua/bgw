@@ -22,7 +22,7 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
 		width = 130,
 		visual = CompoundVisual(
 			ColorVisual.YELLOW,
-			TextVisual("Hint")
+			TextVisual(text = "Hint")
 		)
 	)
 	private val token2: TokenView = TokenView(
@@ -31,8 +31,14 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
 		height = 200,
 		width = 130,
 		visual = CompoundVisual(
-			ImageVisual("card_deck.png", 130, 200, 260, 200),
-			TextVisual("3 of Diamonds")
+			ImageVisual(
+				path = "card_deck.png",
+				width = 130,
+				height = 200,
+				offsetX = 260,
+				offsetY = 200
+			),
+			TextVisual(text = "3 of Diamonds")
 		)
 	)
 	private val token3: TokenView = TokenView(
@@ -41,7 +47,13 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
 		height = 200,
 		width = 130,
 		visual = CompoundVisual(
-			ImageVisual("card_deck.png", 130, 200, 260, 200),
+			ImageVisual(
+				path = "card_deck.png",
+				width = 130,
+				height = 200,
+				offsetX = 260,
+				offsetY = 200
+			),
 			ColorVisual.GREEN.apply { transparency = 0.2 }
 		)
 	)
