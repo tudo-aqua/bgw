@@ -1,9 +1,9 @@
 package examples.concepts.visuals
 
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.elements.gameelements.TokenView
-import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.*
 import java.awt.Color
@@ -61,7 +61,7 @@ class VisualsExample : BoardGameApplication("Visuals example") {
 			)
 		}
 		
-		gameScene.addElements(token, buttonColor, buttonImage, buttonText, buttonCompound)
+		gameScene.addComponents(token, buttonColor, buttonImage, buttonText, buttonCompound)
 		showGameScene(gameScene)
 		show()
 	}

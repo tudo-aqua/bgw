@@ -1,11 +1,11 @@
 package examples.concepts.animation
 
 import tools.aqua.bgw.animation.*
+import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.elements.gameelements.CardView
-import tools.aqua.bgw.elements.gameelements.DiceView
-import tools.aqua.bgw.elements.uielements.Button
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -86,7 +86,7 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 		buttonMovement.onMouseClicked = {
 			gameScene.playAnimation(
 				MovementAnimation(
-					elementView = cardMovement,
+					componentView = cardMovement,
 					byX = 0,
 					byY = -50,
 					duration = 1000
@@ -96,7 +96,7 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 		buttonRotation.onMouseClicked = {
 			gameScene.playAnimation(
 				RotationAnimation(
-					elementView = cardRotation,
+					componentView = cardRotation,
 					byAngle = 180.0,
 					duration = 1000
 				)
@@ -105,7 +105,7 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 		buttonFlip.onMouseClicked = {
 			gameScene.playAnimation(
 				FlipAnimation(
-					elementView = cardFlip,
+					componentView = cardFlip,
 					fromVisual = cardFlip.backVisual,
 					toVisual = cardFlip.frontVisual,
 					duration = 1000
@@ -115,7 +115,7 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 		buttonRandomize.onMouseClicked = {
 			gameScene.playAnimation(
 				RandomizeAnimation(
-					element = cardRandomize,
+					componentView = cardRandomize,
 					visuals = randomCardFaces,
 					toVisual = cardFlip.frontVisual,
 					duration = 1000,
@@ -134,8 +134,8 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 			)
 		}
 		
-		gameScene.addElements(buttonDelay, buttonMovement, buttonRotation, buttonFlip, buttonRandomize, buttonDie)
-		gameScene.addElements(cardMovement, cardRotation, cardFlip, cardRandomize, die)
+		gameScene.addComponents(buttonDelay, buttonMovement, buttonRotation, buttonFlip, buttonRandomize, buttonDie)
+		gameScene.addComponents(cardMovement, cardRotation, cardFlip, cardRandomize, die)
 		showGameScene(gameScene)
 		show()
 	}

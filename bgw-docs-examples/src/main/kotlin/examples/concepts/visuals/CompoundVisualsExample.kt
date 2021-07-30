@@ -1,8 +1,8 @@
 package examples.concepts.visuals
 
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.elements.gameelements.TokenView
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
@@ -59,7 +59,7 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
 	)
 	
 	init {
-		gameScene.addElements(token1, token2, token3)
+		gameScene.addComponents(token1, token2, token3)
 		showGameScene(gameScene)
 		show()
 	}
