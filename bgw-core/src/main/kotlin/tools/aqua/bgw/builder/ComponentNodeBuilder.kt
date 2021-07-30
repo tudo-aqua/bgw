@@ -19,8 +19,8 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
-import tools.aqua.bgw.components.gamecomponents.Card
 import tools.aqua.bgw.components.gamecomponents.Die
+import tools.aqua.bgw.components.gamecomponents.GameCard
 import tools.aqua.bgw.components.gamecomponents.GameComponent
 import tools.aqua.bgw.components.gamecomponents.GameToken
 
@@ -35,7 +35,7 @@ internal class ComponentNodeBuilder {
 		 */
 		internal fun buildGameComponent(gameComponent: GameComponent): Region =
 			when (gameComponent) {
-				is Card ->
+				is GameCard ->
 					buildCardView(gameComponent)
 				is Die ->
 					buildDiceView(gameComponent)
@@ -44,10 +44,10 @@ internal class ComponentNodeBuilder {
 			}
 		
 		/**
-		 * Builds [Card].
+		 * Builds [GameCard].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildCardView(card: Card): Region = Pane()
+		private fun buildCardView(gameCard: GameCard): Region = Pane()
 		
 		/**
 		 * Builds [Die].

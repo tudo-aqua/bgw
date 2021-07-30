@@ -19,9 +19,9 @@
 
 package tools.aqua.bgw.components.container
 
-import tools.aqua.bgw.components.gamecomponents.Card
-import tools.aqua.bgw.components.gamecomponents.Card.Companion.DEFAULT_CARD_HEIGHT
-import tools.aqua.bgw.components.gamecomponents.Card.Companion.DEFAULT_CARD_WIDTH
+import tools.aqua.bgw.components.gamecomponents.GameCard
+import tools.aqua.bgw.components.gamecomponents.GameCard.Companion.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.components.gamecomponents.GameCard.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
@@ -34,18 +34,18 @@ import tools.aqua.bgw.visual.Visual
  *
  * Visualization:
  * The [Visual] is used to visualize a background.
- * The positioning of contained [Card]s gets ignored and the specified alignment gets used to position them instead.
+ * The positioning of contained [GameCard]s gets ignored and the specified alignment gets used to position them instead.
  *
  * @param height height for this [CardStack]. Default: the suggested card height.
  * @param width width for this [CardStack]. Default: the suggested card width.
  * @param posX horizontal coordinate for this [CardStack]. Default: 0.
  * @param posY vertical coordinate for this [CardStack]. Default: 0.
- * @param alignment specifies how the contained [Card]s should be aligned. Default: [Alignment.CENTER]
+ * @param alignment specifies how the contained [GameCard]s should be aligned. Default: [Alignment.CENTER]
  * @param visual visual for this [CardStack]. Default: [Visual.EMPTY].
  *
- * @see Card
+ * @see GameCard
  */
-open class CardStack<T : Card>(
+open class CardStack<T : GameCard>(
 	height: Number = DEFAULT_CARD_HEIGHT,
 	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
@@ -55,12 +55,12 @@ open class CardStack<T : Card>(
 ) : GameComponentContainer<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	
 	/**
-	 * [Property] for the [Alignment] of [Card]s in this [CardStack].
+	 * [Property] for the [Alignment] of [GameCard]s in this [CardStack].
 	 */
 	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(alignment)
 	
 	/**
-	 * [Alignment] of [Card]s in this [CardStack].
+	 * [Alignment] of [GameCard]s in this [CardStack].
 	 * @see alignmentProperty
 	 */
 	var alignment: Alignment
@@ -76,14 +76,14 @@ open class CardStack<T : Card>(
 	}
 	
 	/**
-	 * Pops the topmost [Card] from this [CardStack] and returns it,
+	 * Pops the topmost [GameCard] from this [CardStack] and returns it,
 	 * or null, if the stack is empty.
 	 * Removes it from the [CardStack].
 	 */
 	fun popOrNull(): T? = observableComponents.removeLastOrNull()?.apply { removePosListeners(); parent = null }
 	
 	/**
-	 * Pops the topmost [Card] from this [CardStack] and returns it.
+	 * Pops the topmost [GameCard] from this [CardStack] and returns it.
 	 * Removes it from the [CardStack].
 	 *
 	 * @throws NoSuchElementException if stack was empty.
@@ -91,20 +91,20 @@ open class CardStack<T : Card>(
 	fun pop(): T = popOrNull() ?: throw NoSuchElementException()
 	
 	/**
-	 * Returns the topmost [Card], or null, if the stack is empty.
+	 * Returns the topmost [GameCard], or null, if the stack is empty.
 	 * Does not modify the [CardStack].
 	 */
 	fun peekOrNull(): T? = observableComponents.lastOrNull()
 	
 	/**
-	 * Returns the topmost [Card]. Does not modify the [CardStack].
+	 * Returns the topmost [GameCard]. Does not modify the [CardStack].
 	 *
 	 * @throws NoSuchElementException if stack was empty.
 	 */
 	fun peek(): T = peekOrNull() ?: throw NoSuchElementException()
 	
 	/**
-	 * Adds a [Card] on top of this [CardStack].
+	 * Adds a [GameCard] on top of this [CardStack].
 	 */
 	fun push(cardView: T) {
 		observableComponents.add(cardView)

@@ -8,7 +8,7 @@ import examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
-import tools.aqua.bgw.components.gamecomponents.Card
+import tools.aqua.bgw.components.gamecomponents.GameCard
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
@@ -160,14 +160,14 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 				card.cardSuit.ordinal * IMG_HEIGHT,
 			)
 			
-			val cardView = Card(
+			val gameCard = GameCard(
 				height = 200,
 				width = 130,
 				front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
 				back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT)
 			).apply { name = card.toString() }
 			
-			viewController.cardMap.add(card, cardView)
+			viewController.cardMap.add(card, gameCard)
 		}
 		
 		//Add components to stacks
@@ -261,7 +261,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		showJackEffectSelection(false)
 	}
 	
-	private fun Card.addInteraction() {
+	private fun GameCard.addInteraction() {
 		/*onMouseEntered = {
 			viewController.gameScene.playAnimation(
 				MovementAnimation(
@@ -305,7 +305,7 @@ class RefreshViewController(private val viewController: ViewController) : Refres
 		onMouseClicked = { viewController.logicController.playCard(viewController.cardMap.backward(this), true) }
 	}
 	
-	private fun Card.removeInteraction() {
+	private fun GameCard.removeInteraction() {
 		isDraggable = false
 		onMouseClicked = null
 		onMouseEntered = null

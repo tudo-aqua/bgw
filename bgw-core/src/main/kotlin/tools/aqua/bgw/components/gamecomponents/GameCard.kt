@@ -19,28 +19,28 @@
 
 package tools.aqua.bgw.components.gamecomponents
 
-import tools.aqua.bgw.components.gamecomponents.Card.CardSide.BACK
-import tools.aqua.bgw.components.gamecomponents.Card.CardSide.FRONT
-import tools.aqua.bgw.components.gamecomponents.Card.Companion.DEFAULT_CARD_HEIGHT
-import tools.aqua.bgw.components.gamecomponents.Card.Companion.DEFAULT_CARD_WIDTH
+import tools.aqua.bgw.components.gamecomponents.GameCard.CardSide.BACK
+import tools.aqua.bgw.components.gamecomponents.GameCard.CardSide.FRONT
+import tools.aqua.bgw.components.gamecomponents.GameCard.Companion.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.components.gamecomponents.GameCard.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [Card] may be used to visualize a card.
+ * A [GameCard] may be used to visualize a card.
  * You can inherit from this class if you want to add additional functionality or fields.
  * Inheriting does NOT change how a cardView is visualized by the BGW framework.
  *
  * Visualization:
  * The [Visual] at the [currentSide] value is used to visualize the card. By default the back side is shown.
  *
- * @param height height for this [Card]. Default: [DEFAULT_CARD_HEIGHT].
- * @param width width for this [Card]. Default: [DEFAULT_CARD_WIDTH].
- * @param posX horizontal coordinate for this [Card]. Default: 0.
- * @param posY vertical coordinate for this [Card]. Default: 0.
+ * @param height height for this [GameCard]. Default: [DEFAULT_CARD_HEIGHT].
+ * @param width width for this [GameCard]. Default: [DEFAULT_CARD_WIDTH].
+ * @param posX horizontal coordinate for this [GameCard]. Default: 0.
+ * @param posY vertical coordinate for this [GameCard]. Default: 0.
  * @param front visual to represent the front side of the card.
  * @param back visual to represent the back side of the card. Default: same [Visual] as front.
  */
-open class Card(
+open class GameCard(
 	height: Number = DEFAULT_CARD_HEIGHT,
 	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
@@ -73,11 +73,11 @@ open class Card(
 		}
 	
 	/**
-	 * Front [Visual] for this [Card].
+	 * Front [Visual] for this [GameCard].
 	 */
 	var frontVisual: Visual = Visual.EMPTY
 		/**
-		 * Sets front [Visual] for this [Card] as a copy of given [value].
+		 * Sets front [Visual] for this [GameCard] as a copy of given [value].
 		 */
 		set(value) {
 			field = value.copy()
@@ -87,11 +87,11 @@ open class Card(
 		}
 	
 	/**
-	 * Back [Visual] for this [Card].
+	 * Back [Visual] for this [GameCard].
 	 */
 	var backVisual: Visual = Visual.EMPTY
 		/**
-		 * Sets back [Visual] for this [Card] as a copy of given [value].
+		 * Sets back [Visual] for this [GameCard] as a copy of given [value].
 		 */
 		set(value) {
 			field = value.copy()
@@ -128,16 +128,16 @@ open class Card(
 	}
 	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a [Card].
+	 * Defines some static constants that can be used as suggested properties of a [GameCard].
 	 */
 	companion object {
 		/**
-		 * Suggested [Card] [height].
+		 * Suggested [GameCard] [height].
 		 */
 		const val DEFAULT_CARD_HEIGHT: Int = 200
 		
 		/**
-		 * Suggested [Card] [width].
+		 * Suggested [GameCard] [width].
 		 */
 		const val DEFAULT_CARD_WIDTH: Int = 130
 	}
