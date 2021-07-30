@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -29,13 +29,13 @@ import tools.aqua.bgw.visual.Visual
  * For example:
  * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the [duration] of one second.
  *
- * @param componentView [GameComponent] to animate.
+ * @param componentView [GameComponentView] to animate.
  * @param visuals [List] of [Visual]s to shuffle through.
  * @param toVisual resulting [Visual] after shuffle.
  * @param duration duration in milliseconds. Default: 1 second.
  * @param speed count of steps. Default: 50 steps.
  */
-class RandomizeAnimation<T : GameComponent>(
+class RandomizeAnimation<T : GameComponentView>(
 	componentView: T,
 	val visuals: List<Visual>,
 	val toVisual: Visual,

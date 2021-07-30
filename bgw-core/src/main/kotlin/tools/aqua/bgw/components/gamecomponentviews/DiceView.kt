@@ -17,7 +17,7 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.bgw.components.gamecomponents
+package tools.aqua.bgw.components.gamecomponentviews
 
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
@@ -40,7 +40,7 @@ open class DiceView(
 	posX: Number = 0,
 	posY: Number = 0,
 	visuals: MutableList<Visual>
-) : GameComponent(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
+) : GameComponentView(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**
 	 * [Visual]s for this [DiceView].

@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.components.container
 
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
@@ -30,8 +30,8 @@ import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [LinearLayout] may be used to visualize a zone containing [GameComponent]s.
- * [GameComponent]s inside the container get placed according to the specified [Orientation] and [Alignment].
+ * A [LinearLayout] may be used to visualize a zone containing [GameComponentView]s.
+ * [GameComponentView]s inside the container get placed according to the specified [Orientation] and [Alignment].
  * A [spacing] between components may be specified which may also be negative
  * e.g. components like playing cards should overlap.
  *
@@ -46,11 +46,11 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [LinearLayout]. Default: 0.
  * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
  * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
- * @param spacing spacing between contained [GameComponent]s. Default: 0.
+ * @param spacing spacing between contained [GameComponentView]s. Default: 0.
  * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
- * @param alignment specifies how the contained [GameComponent]s should be aligned. Default: [Alignment.TOP_LEFT].
+ * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default: [Alignment.TOP_LEFT].
  */
-open class LinearLayout<T : GameComponent>(
+open class LinearLayout<T : GameComponentView>(
 	height: Number = 0,
 	width: Number = 0,
 	posX: Number = 0,
@@ -68,7 +68,7 @@ open class LinearLayout<T : GameComponent>(
 	 * @param width width for this [LinearLayout]. Default: 0.
 	 * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
 	 * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
-	 * @param spacing spacing between contained [GameComponent]s. Default: 0.
+	 * @param spacing spacing between contained [GameComponentView]s. Default: 0.
 	 * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
 	 * @param verticalAlignment specifies how the contained components should be aligned vertically.
 	 * Default: [VerticalAlignment.TOP].
@@ -90,7 +90,7 @@ open class LinearLayout<T : GameComponent>(
 	)
 	
 	/**
-	 * [Property] for the spacing of [GameComponent]s in this [LinearLayout].
+	 * [Property] for the spacing of [GameComponentView]s in this [LinearLayout].
 	 */
 	val spacingProperty: DoubleProperty = DoubleProperty(spacing.toDouble())
 	
@@ -104,7 +104,7 @@ open class LinearLayout<T : GameComponent>(
 		}
 	
 	/**
-	 * [Property] for the orientation of [GameComponent]s in this [LinearLayout].
+	 * [Property] for the orientation of [GameComponentView]s in this [LinearLayout].
 	 * @see Orientation
 	 */
 	val orientationProperty: ObjectProperty<Orientation> = ObjectProperty(orientation)
@@ -121,7 +121,7 @@ open class LinearLayout<T : GameComponent>(
 		}
 	
 	/**
-	 * [Property] for the [Alignment] of [GameComponent]s in this [LinearLayout].
+	 * [Property] for the [Alignment] of [GameComponentView]s in this [LinearLayout].
 	 * @see Alignment
 	 */
 	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(alignment)

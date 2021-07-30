@@ -21,7 +21,7 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.StaticComponentView
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
@@ -101,7 +101,7 @@ sealed class UIComponent(
 		}
 	
 	/**
-	 * @throws RuntimeException if [GameComponent] does not support children.
+	 * @throws RuntimeException if [GameComponentView] does not support children.
 	 */
 	override fun removeChild(component: ComponentView) {
 		throw RuntimeException("This $this ComponentView has no children.")

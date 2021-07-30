@@ -20,11 +20,11 @@
 package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [Satchel] may be used to visualize a pool containing [GameComponent]s.
+ * A [Satchel] may be used to visualize a pool containing [GameComponentView]s.
  * A typical use case for a [Satchel] may be to visualize a pile of hidden items,
  * where the user should not know what item might be drawn next.
  *
@@ -32,9 +32,9 @@ import tools.aqua.bgw.visual.Visual
  * The current [Visual] is used to visualize the area from where the user can start a drag and drop gesture.
  *
  * How to Use:
- * Upon adding a [GameComponent] to a [Satchel]
- * a snapshot of the initial state of the [GameComponent] gets created and stored.
- * Then the [GameComponent] is made draggable, invisible and its size gets fit to the [Satchel] size.
+ * Upon adding a [GameComponentView] to a [Satchel]
+ * a snapshot of the initial state of the [GameComponentView] gets created and stored.
+ * Then the [GameComponentView] is made draggable, invisible and its size gets fit to the [Satchel] size.
  *
  * The initial state consist of the following properties:
  * 	-isDraggable
@@ -42,11 +42,11 @@ import tools.aqua.bgw.visual.Visual
  * 	-width
  * 	-height
  *
- * Any changes made to those properties while a [GameComponent] is contained in the [Satchel] get ignored,
+ * Any changes made to those properties while a [GameComponentView] is contained in the [Satchel] get ignored,
  * but they override the initial state.
  *
  * As soon as a component gets removed (e.g. by initiating a drag and drop gesture) the initial state gets restored.
- * The [GameComponent] at the highest index in the components list
+ * The [GameComponentView] at the highest index in the components list
  * registers the next drag and drop gesture above this [Satchel].
  *
  * @param height height for this [Satchel]. Default: 0.
@@ -55,7 +55,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
  * @param visual visual for this [Satchel]. Default: [Visual.EMPTY].
  */
-open class Satchel<T : GameComponent>(
+open class Satchel<T : GameComponentView>(
 	height: Number = 0,
 	width: Number = 0,
 	posX: Number = 0,
@@ -90,14 +90,14 @@ open class Satchel<T : GameComponent>(
 		false -> false
 	}
 	
-	private fun GameComponent.initializeSatchelComponent() {
+	private fun GameComponentView.initializeSatchelComponent() {
 		isVisibleProperty.setSilent(false)
 		widthProperty.setSilent(this@Satchel.width)
 		heightProperty.setSilent(this@Satchel.height)
 		isDraggableProperty.setSilent(true)
 	}
 	
-	private fun GameComponent.restoreInitialBehaviour() {
+	private fun GameComponentView.restoreInitialBehaviour() {
 		val initialState = initialStates[this]!!
 		widthProperty.setSilent(initialState.width)
 		heightProperty.setSilent(initialState.height)
@@ -105,7 +105,7 @@ open class Satchel<T : GameComponent>(
 		isVisibleProperty.setSilent(initialState.isVisible)
 	}
 	
-	private fun GameComponent.addInternalListeners() {
+	private fun GameComponentView.addInternalListeners() {
 		isDraggableProperty.internalListener = { _, nV ->
 			initialStates[this]!!.isDraggable = nV
 			isDraggableProperty.setSilent(true)
@@ -127,14 +127,14 @@ open class Satchel<T : GameComponent>(
 		}
 	}
 	
-	private fun GameComponent.removeInternalListeners() {
+	private fun GameComponentView.removeInternalListeners() {
 		isDraggableProperty.internalListener = null
 		isVisibleProperty.internalListener = null
 		widthProperty.internalListener = null
 		heightProperty.internalListener = null
 	}
 	
-	private fun GameComponent.addPosListeners() {
+	private fun GameComponentView.addPosListeners() {
 		this.posXProperty.addListenerAndInvoke(0.0) { _, _ ->
 			posXProperty.setSilent(0.0)
 		}
@@ -143,7 +143,7 @@ open class Satchel<T : GameComponent>(
 		}
 	}
 	
-	private fun GameComponent.removePosListeners() {
+	private fun GameComponentView.removePosListeners() {
 		this.posXProperty.internalListener = null
 		this.posYProperty.internalListener = null
 	}

@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.components.gamecomponents.DiceView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
 
 /**
  * A die roll [Animation].

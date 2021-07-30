@@ -17,7 +17,7 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.bgw.components.gamecomponents
+package tools.aqua.bgw.components.gamecomponentviews
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
@@ -27,15 +27,15 @@ import tools.aqua.bgw.visual.Visual
  * Abstract baseclass for game components like [CardView]s or [TokenView]s.
  * This class is used to restrict the type argument of containers.
  *
- * @param height height for this [GameComponent].
- * @param width width for this [GameComponent].
- * @param posX horizontal coordinate for this [GameComponent].
- * @param posY vertical coordinate for this [GameComponent].
- * @param visual visual for this [GameComponent].
+ * @param height height for this [GameComponentView].
+ * @param width width for this [GameComponentView].
+ * @param posX horizontal coordinate for this [GameComponentView].
+ * @param posY vertical coordinate for this [GameComponentView].
+ * @param visual visual for this [GameComponentView].
  *
  * @see tools.aqua.bgw.components.container
  */
-sealed class GameComponent(
+sealed class GameComponentView(
 	height: Number,
 	width: Number,
 	posX: Number,
@@ -49,7 +49,7 @@ sealed class GameComponent(
 	visual = visual
 ) {
 	/**
-	 * @throws RuntimeException [GameComponent] does not support children.
+	 * @throws RuntimeException [GameComponentView] does not support children.
 	 */
 	override fun removeChild(component: ComponentView) {
 		throw RuntimeException("This $this component has no children.")

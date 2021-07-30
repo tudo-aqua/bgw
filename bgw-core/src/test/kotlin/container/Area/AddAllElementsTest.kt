@@ -21,7 +21,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.gamecomponents.TokenView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
 import kotlin.test.assertContains

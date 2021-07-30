@@ -1,7 +1,7 @@
 package examples.concepts.draganddrop
 
 import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.gamecomponents.TokenView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.reposition
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene

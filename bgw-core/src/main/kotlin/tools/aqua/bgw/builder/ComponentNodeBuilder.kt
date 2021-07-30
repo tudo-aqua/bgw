@@ -19,10 +19,10 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
-import tools.aqua.bgw.components.gamecomponents.CardView
-import tools.aqua.bgw.components.gamecomponents.DiceView
-import tools.aqua.bgw.components.gamecomponents.GameComponent
-import tools.aqua.bgw.components.gamecomponents.TokenView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 
 /**
  * [ComponentNodeBuilder].
@@ -33,14 +33,14 @@ internal class ComponentNodeBuilder {
 		/**
 		 * Switches between GameComponents.
 		 */
-		internal fun buildGameComponent(gameComponent: GameComponent): Region =
-			when (gameComponent) {
+		internal fun buildGameComponent(gameComponentView: GameComponentView): Region =
+			when (gameComponentView) {
 				is CardView ->
-					buildCardView(gameComponent)
+					buildCardView(gameComponentView)
 				is DiceView ->
-					buildDiceView(gameComponent)
+					buildDiceView(gameComponentView)
 				is TokenView ->
-					buildToken(gameComponent)
+					buildToken(gameComponentView)
 			}
 		
 		/**

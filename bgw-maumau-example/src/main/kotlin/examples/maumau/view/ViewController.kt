@@ -3,7 +3,7 @@ package examples.maumau.view
 import examples.maumau.entity.CardSuit
 import examples.maumau.entity.MauMauCard
 import examples.maumau.service.LogicController
-import tools.aqua.bgw.components.gamecomponents.CardView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.util.BidirectionalMap

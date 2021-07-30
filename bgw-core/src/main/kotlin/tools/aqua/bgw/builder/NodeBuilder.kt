@@ -28,7 +28,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
@@ -52,9 +52,9 @@ internal class NodeBuilder {
 		 */
 		internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
 			val node = when (componentView) {
-				is GameComponentContainer<out GameComponent> ->
+				is GameComponentContainer<out GameComponentView> ->
 					ContainerNodeBuilder.buildContainer(scene, componentView)
-				is GameComponent ->
+				is GameComponentView ->
 					ComponentNodeBuilder.buildGameComponent(componentView)
 				is LayoutView<out ComponentView> ->
 					LayoutNodeBuilder.buildLayoutView(scene, componentView)
@@ -117,7 +117,7 @@ internal class NodeBuilder {
 			
 			val rollback: (() -> Unit) = when (val parent = pathToChild[1]) {
 				is GameComponentContainer<*> -> {
-					parent.findRollback(this as GameComponent)
+					parent.findRollback(this as GameComponentView)
 				}
 				is GridPane<*> -> {
 					//calculate position in grid
@@ -172,7 +172,7 @@ internal class NodeBuilder {
 		/**
 		 * Calculates rollback for [GameComponentContainer]s.
 		 */
-		private fun GameComponentContainer<*>.findRollback(component: GameComponent): (() -> Unit) {
+		private fun GameComponentContainer<*>.findRollback(component: GameComponentView): (() -> Unit) {
 			val index = observableComponents.indexOf(component)
 			val initialX = posX
 			val initialY = posY
@@ -181,7 +181,10 @@ internal class NodeBuilder {
 				posX = initialX
 				posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(this as GameComponentContainer<GameComponent>).add(component, min(observableComponents.size, index))
+				(this as GameComponentContainer<GameComponentView>).add(
+					component,
+					min(observableComponents.size, index)
+				)
 			}
 		}
 		

@@ -17,12 +17,12 @@
 
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
-package tools.aqua.bgw.components.gamecomponents
+package tools.aqua.bgw.components.gamecomponentviews
 
-import tools.aqua.bgw.components.gamecomponents.CardView.CardSide.BACK
-import tools.aqua.bgw.components.gamecomponents.CardView.CardSide.FRONT
-import tools.aqua.bgw.components.gamecomponents.CardView.Companion.DEFAULT_CARD_HEIGHT
-import tools.aqua.bgw.components.gamecomponents.CardView.Companion.DEFAULT_CARD_WIDTH
+import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide.BACK
+import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide.FRONT
+import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -47,7 +47,7 @@ open class CardView(
 	posY: Number = 0,
 	front: Visual,
 	back: Visual = front
-) : GameComponent(
+) : GameComponentView(
 	height = height,
 	width = width,
 	posX = posX,

@@ -18,11 +18,11 @@
 package container
 
 import org.junit.jupiter.api.BeforeEach
-import tools.aqua.bgw.components.gamecomponents.TokenView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
 
-abstract class GameComponentContainerTestBase {
+abstract class GameComponentViewContainerTestBase {
     protected lateinit var redTokenView: TokenView
     protected lateinit var blueTokenView: TokenView
     protected lateinit var greenTokenView: TokenView

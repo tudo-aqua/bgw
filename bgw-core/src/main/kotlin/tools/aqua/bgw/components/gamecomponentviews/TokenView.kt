@@ -17,10 +17,10 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.bgw.components.gamecomponents
+package tools.aqua.bgw.components.gamecomponentviews
 
-import tools.aqua.bgw.components.gamecomponents.TokenView.Companion.DEFAULT_TOKEN_HEIGHT
-import tools.aqua.bgw.components.gamecomponents.TokenView.Companion.DEFAULT_TOKEN_WIDTH
+import tools.aqua.bgw.components.gamecomponentviews.TokenView.Companion.DEFAULT_TOKEN_HEIGHT
+import tools.aqua.bgw.components.gamecomponentviews.TokenView.Companion.DEFAULT_TOKEN_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -41,7 +41,7 @@ open class TokenView(
 	posX: Number = 0,
 	posY: Number = 0,
 	visual: Visual
-) : GameComponent(height = height, width = width, posX = posX, posY = posY, visual = visual) {
+) : GameComponentView(height = height, width = width, posX = posX, posY = posY, visual = visual) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [TokenView].
 	 */

@@ -19,9 +19,9 @@
 
 package tools.aqua.bgw.components.container
 
-import tools.aqua.bgw.components.gamecomponents.CardView
-import tools.aqua.bgw.components.gamecomponents.CardView.Companion.DEFAULT_CARD_HEIGHT
-import tools.aqua.bgw.components.gamecomponents.CardView.Companion.DEFAULT_CARD_WIDTH
+import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment

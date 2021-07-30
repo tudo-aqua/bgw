@@ -21,7 +21,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.Scene
 
 /**
@@ -35,7 +35,7 @@ internal class ContainerNodeBuilder {
 		 */
 		internal fun buildContainer(
 			scene: Scene<out ComponentView>,
-			container: GameComponentContainer<out GameComponent>
+			container: GameComponentContainer<out GameComponentView>
 		): Region =
 			when (container) {
 				is Area -> buildArea(container)

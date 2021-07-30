@@ -8,7 +8,7 @@ import examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
-import tools.aqua.bgw.components.gamecomponents.CardView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual

@@ -5,7 +5,7 @@ import examples.maumau.entity.CardSuit
 import examples.maumau.entity.CardValue
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
-import tools.aqua.bgw.components.gamecomponents.CardView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment

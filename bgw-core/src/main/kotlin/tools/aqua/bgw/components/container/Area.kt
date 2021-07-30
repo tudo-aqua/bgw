@@ -19,15 +19,15 @@
 
 package tools.aqua.bgw.components.container
 
-import tools.aqua.bgw.components.gamecomponents.GameComponent
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * An [Area] may be used to visualize a zone containing [GameComponent]s.
+ * An [Area] may be used to visualize a zone containing [GameComponentView]s.
  *
  * Visualization:
  * The [Visual] is used to visualize a background.
- * The positioning of the contained [GameComponent]s is used to place them relative
+ * The positioning of the contained [GameComponentView]s is used to place them relative
  * to the top left corner of this [Area].
  * Components that are out of bounds for this [Area] will still get rendered.
  *
@@ -37,7 +37,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [Area]. Default: 0.
  * @param visual visual for this [Area]. Default: [Visual.EMPTY].
  */
-open class Area<T : GameComponent>(
+open class Area<T : GameComponentView>(
 	height: Number = 0,
 	width: Number = 0,
 	posX: Number = 0,
