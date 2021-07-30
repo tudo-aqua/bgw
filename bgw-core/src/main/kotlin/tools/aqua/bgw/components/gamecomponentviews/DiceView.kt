@@ -39,7 +39,7 @@ open class DiceView(
 	width: Number = DEFAULT_DICE_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	visuals: MutableList<Visual>
+	visuals: List<Visual>
 ) : GameComponentView(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**
