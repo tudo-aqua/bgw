@@ -63,7 +63,25 @@ val visual: ImageVisual = ImageVisual(
   offsetY = 200
 )
 ````
-
+The full example can be found [here](/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/VisualsExample.kt).
 
 ## [CompoundVisual](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-compound-visual/)
-CompundVisuals can be used to stack multiple visuals.
+CompundVisuals can be used to stack multiple visuals. Therefore if stacking [ColorVisuals](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-color-visual/) and [ImageVisuals](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-image-visual/) they have to be partially transparent in order to see the Visual beyond. The Visuals get added in the order they get passed from bottom to top. CompundVisuals can for example be used to create a Text with background Color (left), label a GameToken (center), or display valid drop targets (right):
+![image](compund.png)
+
+The right Visual for example has been created by the following code:
+````kotlin
+visual = CompoundVisual(
+  ImageVisual(
+    path = "card_deck.png", 
+    width = 130, 
+    height = 200, 
+    offsetX = 260, 
+    offsetY = 200
+  ),
+  ColorVisual.GREEN.apply { 
+    transparency = 0.2 
+  }
+)
+````
+The full example can be found [here](/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/CompoundVisualsExample.kt).
