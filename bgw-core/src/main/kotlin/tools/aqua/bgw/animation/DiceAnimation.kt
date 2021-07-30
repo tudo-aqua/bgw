@@ -29,14 +29,14 @@ import tools.aqua.bgw.components.gamecomponents.DiceView
  * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the [duration] of one
  * second.
  *
- * @param die [DiceView] to animate.
+ * @param dice [DiceView] to animate.
  * @param toSide resulting side after roll.
  * @param duration duration in milliseconds. Default: 1 second.
  * @param speed count of steps. Default: 50 steps.
  */
-class DieAnimation<T : DiceView>(
-	die: T,
+class DiceAnimation<T : DiceView>(
+	dice: T,
 	val toSide: Int,
 	duration: Int = 1000,
 	val speed: Int = 50
-) : ComponentAnimation<T>(componentView = die, duration = duration)
+) : ComponentAnimation<T>(componentView = dice, duration = duration)

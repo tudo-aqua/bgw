@@ -39,7 +39,7 @@ internal class AnimationBuilder {
 				is RotationAnimation<*> -> addRotateAnimation(scene, anim)
 				is FlipAnimation<*> -> addFlipAnimation(scene, anim)
 				is DelayAnimation -> addDelayAnimation(scene, anim)
-				is DieAnimation<*> -> addDiceAnimation(scene, anim)
+				is DiceAnimation<*> -> addDiceAnimation(scene, anim)
 				is RandomizeAnimation<*> -> addRandomizeAnimation(scene, anim)
 			}
 		
@@ -158,11 +158,11 @@ internal class AnimationBuilder {
 		}
 		
 		/**
-		 * Builds [DieAnimation].
+		 * Builds [DiceAnimation].
 		 */
 		private fun addDiceAnimation(
 			scene: Scene<out ComponentView>,
-			anim: DieAnimation<*>
+			anim: DiceAnimation<*>
 		): javafx.animation.Animation {
 			val seq = SequentialTransition()
 			
