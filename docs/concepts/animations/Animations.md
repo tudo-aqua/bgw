@@ -20,6 +20,8 @@ In this section we are going to showcase the differend types of animations in th
 Visuals are mostly used to move game elements or change their [Visual](https://tudo-aqua.github.io/bgw/concepts/visual/visual.html).
 Additionally the DelayAnimation can be used to delay code execution to enable the player to see what is happening on the table.
 
+![](animations.gif)
+
 ## [DelayAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/)
 
 ## [MovementAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/)
