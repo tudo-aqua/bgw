@@ -28,44 +28,44 @@ import javafx.scene.layout.Region
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
-import tools.aqua.bgw.elements.uielements.*
+import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
 import java.awt.Color
 
 /**
  * UINodeBuilder.
- * Factory for all BGW UI elements.
+ * Factory for all BGW UI components.
  */
 internal class UINodeBuilder {
     companion object {
         /**
-         * Switches between [UIElementView]s.
+         * Switches between [UIComponent]s.
          */
-        internal fun buildUIElement(uiElementView: UIElementView): Region =
-            when (uiElementView) {
+        internal fun buildUIComponent(uiComponent: UIComponent): Region =
+            when (uiComponent) {
                 is Button ->
-                    buildButton(uiElementView)
+                    buildButton(uiComponent)
                 is CheckBox ->
-                    buildCheckBox(uiElementView)
+                    buildCheckBox(uiComponent)
                 is ComboBox<*> ->
-                    buildComboBox(uiElementView)
+                    buildComboBox(uiComponent)
                 is Label ->
-                    buildLabel(uiElementView)
+                    buildLabel(uiComponent)
                 is ListView<*> ->
-                    buildListView(uiElementView)
-                is TableView<*> ->
-                    buildTableView(uiElementView)
+                    buildListView(uiComponent)
+                is Table<*> ->
+                    buildTableView(uiComponent)
                 is TextArea ->
-                    buildTextArea(uiElementView)
+                    buildTextArea(uiComponent)
                 is TextField ->
-                    buildTextField(uiElementView)
+                    buildTextField(uiComponent)
                 is ToggleButton ->
-                    buildToggleButton(uiElementView)
+                    buildToggleButton(uiComponent)
                 is ColorPicker ->
-                    buildColorPicker(uiElementView)
+                    buildColorPicker(uiComponent)
                 is ProgressBar ->
-                    buildProgressBar(uiElementView)
+                    buildProgressBar(uiComponent)
             }
 
         /**
@@ -253,32 +253,32 @@ internal class UINodeBuilder {
                 style = "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
             }
         }
-
+    
         /**
-         * Builds [TableView].
+         * Builds [Table].
          */
-        private fun <T> buildTableView(uiElementView: TableView<T>): Region {
+        private fun <T> buildTableView(table: Table<T>): Region {
             val node = javafx.scene.control.TableView<T>().apply {
-                populateTableView(uiElementView)
+                populateTableView(table)
             }
-            uiElementView.items.guiListener = {
-                node.populateTableView(uiElementView)
+            table.items.guiListener = {
+                node.populateTableView(table)
             }
-            uiElementView.columns.guiListener = {
-                node.populateTableView(uiElementView)
+            table.columns.guiListener = {
+                node.populateTableView(table)
             }
             node.isEditable = false
             return node
         }
-
+    
         /**
-         * Sets [TableView] children.
+         * Sets [Table] children.
          */
-        private fun <T> javafx.scene.control.TableView<T>.populateTableView(tableView: TableView<T>) {
+        private fun <T> javafx.scene.control.TableView<T>.populateTableView(table: Table<T>) {
             items.clear()
-            items.addAll(tableView.items)
+            items.addAll(table.items)
             columns.clear()
-            tableView.columns.forEach {
+            table.columns.forEach {
                 columns.add(TableColumn<T, String>(it.title).apply {
                     this.minWidth = it.width.toDouble()
                     this.isResizable = false
@@ -288,11 +288,11 @@ internal class UINodeBuilder {
                 })
             }
         }
-
+    
         /**
-         * Binds [LabeledUIElementView.labelProperty].
+         * Binds [LabeledUIComponent.labelProperty].
          */
-        private fun javafx.beans.property.StringProperty.bindLabelProperty(labeled: LabeledUIElementView) {
+        private fun javafx.beans.property.StringProperty.bindLabelProperty(labeled: LabeledUIComponent) {
             //Framework -> JavaFX
             labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
             //JavaFX -> Framework
@@ -310,11 +310,11 @@ internal class UINodeBuilder {
             value = booleanProperty.value
             addListener { _, _, new -> booleanProperty.value = new }
         }
-
+    
         /**
          * Binds [Font].
          */
-        private fun Labeled.bindFont(labeled: LabeledUIElementView) {
+        private fun Labeled.bindFont(labeled: LabeledUIComponent) {
             labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
                 style = nV.toFXFontCSS()
                 textFill = nV.color.toFXColor()

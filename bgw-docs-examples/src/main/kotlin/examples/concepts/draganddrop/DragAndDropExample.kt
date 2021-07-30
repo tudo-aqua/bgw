@@ -1,10 +1,10 @@
 package examples.concepts.draganddrop
 
+import tools.aqua.bgw.components.container.Area
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.reposition
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.elements.container.AreaContainerView
-import tools.aqua.bgw.elements.gameelements.TokenView
-import tools.aqua.bgw.elements.reposition
 import tools.aqua.bgw.visual.ColorVisual
 
 fun main() {

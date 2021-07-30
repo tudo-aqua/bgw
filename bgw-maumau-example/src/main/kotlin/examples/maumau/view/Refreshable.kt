@@ -1,7 +1,7 @@
 package examples.maumau.view
 
-import examples.maumau.model.MauMauCard
-import examples.maumau.model.MauMauPlayer
+import examples.maumau.entity.MauMauCard
+import examples.maumau.entity.MauMauPlayer
 
 interface Refreshable {
 	

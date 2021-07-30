@@ -19,10 +19,10 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.*
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.elements.ElementView
-import tools.aqua.bgw.elements.container.*
-import tools.aqua.bgw.elements.gameelements.GameElementView
 
 /**
  * ContainerNodeBuilder.
@@ -34,53 +34,53 @@ internal class ContainerNodeBuilder {
 		 * Switches between Containers.
 		 */
 		internal fun buildContainer(
-			scene: Scene<out ElementView>,
-			containerView: GameElementContainerView<out GameElementView>
+			scene: Scene<out ComponentView>,
+			container: GameComponentContainer<out GameComponentView>
 		): Region =
-			when (containerView) {
-				is AreaContainerView -> buildAreaContainer(containerView)
-				is CardStackView -> buildCardStack(containerView)
-				is GameElementPoolView -> buildGameElementPool(containerView)
-				is LinearLayoutContainer -> buildLinearLayout(containerView)
+			when (container) {
+				is Area -> buildArea(container)
+				is CardStack -> buildCardStack(container)
+				is Satchel -> buildSatchel(container)
+				is LinearLayout -> buildLinearLayout(container)
 			}.apply {
-				containerView.observableElements.setGUIListenerAndInvoke {
+				container.observableComponents.setGUIListenerAndInvoke {
 					refresh(
 						scene,
-						containerView
+						container
 					)
 				}
 			}
 		
 		/**
-		 * Builds [AreaContainerView].
+		 * Builds [Area].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildAreaContainer(containerView: GameElementContainerView<*>): Pane = Pane()
+		private fun buildArea(container: GameComponentContainer<*>): Pane = Pane()
 		
 		/**
-		 * Builds [CardStackView].
+		 * Builds [CardStack].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildCardStack(containerView: GameElementContainerView<*>): Pane = Pane()
+		private fun buildCardStack(container: GameComponentContainer<*>): Pane = Pane()
 		
 		/**
-		 * Builds [GameElementPoolView].
+		 * Builds [Satchel].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildGameElementPool(containerView: GameElementContainerView<*>): Pane = Pane()
+		private fun buildSatchel(container: GameComponentContainer<*>): Pane = Pane()
 		
 		/**
-		 * Builds [LinearLayoutContainer].
+		 * Builds [LinearLayout].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildLinearLayout(containerView: GameElementContainerView<*>): Pane = Pane()
+		private fun buildLinearLayout(container: GameComponentContainer<*>): Pane = Pane()
 		
 		/**
 		 * Refreshes children in this container.
 		 */
-		private fun Pane.refresh(scene: Scene<out ElementView>, gameElementContainerView: GameElementContainerView<*>) {
+		private fun Pane.refresh(scene: Scene<out ComponentView>, gameComponentContainer: GameComponentContainer<*>) {
 			children.clear()
-			gameElementContainerView.observableElements.forEach {
+			gameComponentContainer.observableComponents.forEach {
 				children.add(NodeBuilder.build(scene, it))
 			}
 		}

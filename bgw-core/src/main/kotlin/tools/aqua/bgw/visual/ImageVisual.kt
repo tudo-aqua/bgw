@@ -27,7 +27,7 @@ import javax.imageio.ImageIO
 
 /**
  * Visual showing an image.
- * The image gets stretched to the size of the element that this visual is embedded in.
+ * The image gets stretched to the size of the component that this visual is embedded in.
  *
  * A sub-image can be loaded by passing offsetX/offsetY for the TOP_LEFT corner and width/height for the sub-image size.
  * If width or height is passed as -1, the remaining image from offsetX/offsetY will be loaded.

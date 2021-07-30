@@ -19,35 +19,45 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.elements.ElementView
+import tools.aqua.bgw.components.ComponentView
 
 /**
  * A rotation animation.
- * Rotates [ElementView] to given angle.
+ * Rotates [ComponentView] to given angle.
  *
- * @param elementView [ElementView] to animate.
- * @param fromAngle initial angle. Default: Current [ElementView.rotation].
- * @param toAngle resulting angle. Default: Current [ElementView.rotation].
+ * @param componentView [ComponentView] to animate.
+ * @param fromAngle initial angle. Default: Current [ComponentView.rotation].
+ * @param toAngle resulting angle. Default: Current [ComponentView.rotation].
  * @param duration duration in milliseconds. Default: 1 second.
  */
-class RotationAnimation<T : ElementView>(
-	elementView: T,
-	val fromAngle: Double = elementView.rotation,
-	val toAngle: Double = elementView.rotation,
+class RotationAnimation<T : ComponentView>(
+	componentView: T,
+	fromAngle: Number = componentView.rotation,
+	toAngle: Number = componentView.rotation,
 	duration: Int = 1000
-) : ElementAnimation<T>(element = elementView, duration = duration) {
+) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
+	
+	/**
+	 * Initial angle.
+	 */
+	val fromAngle: Double = fromAngle.toDouble()
+	
+	/**
+	 * Resulting angle.
+	 */
+	val toAngle: Double = toAngle.toDouble()
 	
 	/**
 	 * A rotation animation.
-	 * Rotates given [ElementView] to given angle.
+	 * Rotates given [ComponentView] to given angle.
 	 *
-	 * @param elementView [ElementView] to animate
+	 * @param componentView [ComponentView] to animate
 	 * @param byAngle relative angle. Default: 0
 	 * @param duration [Animation] duration in milliseconds. Default: 1 second
 	 */
-	constructor(elementView: T, byAngle: Double = 0.0, duration: Int = 1000) : this(
-		elementView = elementView,
-		toAngle = elementView.rotation + byAngle,
+	constructor(componentView: T, byAngle: Double = 0.0, duration: Int = 1000) : this(
+		componentView = componentView,
+		toAngle = componentView.rotation + byAngle,
 		duration = duration
 	)
 }

@@ -23,15 +23,19 @@ import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.input.MouseButton
 import javafx.scene.paint.Color
+import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
-import tools.aqua.bgw.elements.uielements.Orientation
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Font
+import javafx.scene.control.ButtonType as FXButtonType
+import javafx.scene.input.KeyCode as FXKeyCode
+import javafx.scene.input.KeyEvent as FXKeyEvent
+import javafx.scene.input.MouseEvent as FXMouseEvent
 
 /**
  * Helper class for conversion functions between BGW and JavaFX and backwards.
@@ -47,6 +51,7 @@ abstract class FXConverters {
 			blue / VisualBuilder.MAX_HEX,
 			alpha / VisualBuilder.MAX_HEX,
 		)
+		
 		
 		/**
 		 * Converts the BGW [Font] to [javafx.scene.text.Font].
@@ -70,9 +75,9 @@ abstract class FXConverters {
 		}
 		
 		/**
-		 * Converts the [javafx.scene.input.MouseEvent] to [MouseEvent].
+		 * Converts the [FXMouseEvent] to [MouseEvent].
 		 */
-		internal fun javafx.scene.input.MouseEvent.toMouseEvent(): MouseEvent =
+		internal fun FXMouseEvent.toMouseEvent(): MouseEvent =
 			MouseEvent(
 				when (button) {
 					MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
@@ -85,7 +90,7 @@ abstract class FXConverters {
 		/**
 		 * Converts the [javafx.scene.input.KeyEvent] to [KeyEvent].
 		 */
-		internal fun javafx.scene.input.KeyEvent.toKeyEvent(): KeyEvent =
+		internal fun FXKeyEvent.toKeyEvent(): KeyEvent =
 			KeyEvent(
 				keyCode = code.toKeyCode(),
 				character = character,
@@ -97,112 +102,112 @@ abstract class FXConverters {
 		/**
 		 * Converts the [javafx.scene.input.KeyCode] to [KeyCode].
 		 */
-		internal fun javafx.scene.input.KeyCode.toKeyCode(): KeyCode = when (this) {
-			javafx.scene.input.KeyCode.SHIFT -> KeyCode.SHIFT
-			javafx.scene.input.KeyCode.CONTROL -> KeyCode.CONTROL
-			javafx.scene.input.KeyCode.ALT -> KeyCode.ALT
-			javafx.scene.input.KeyCode.ALT_GRAPH -> KeyCode.ALT_GRAPH
-			javafx.scene.input.KeyCode.WINDOWS -> KeyCode.WINDOWS
-			javafx.scene.input.KeyCode.CONTEXT_MENU -> KeyCode.CONTEXT_MENU
-			javafx.scene.input.KeyCode.TAB -> KeyCode.TAB
-			javafx.scene.input.KeyCode.CAPS -> KeyCode.CAPS
-			javafx.scene.input.KeyCode.ENTER -> KeyCode.ENTER
-			javafx.scene.input.KeyCode.SPACE -> KeyCode.SPACE
-			javafx.scene.input.KeyCode.BACK_SPACE -> KeyCode.BACK_SPACE
-			javafx.scene.input.KeyCode.PAUSE -> KeyCode.PAUSE
-			javafx.scene.input.KeyCode.SCROLL_LOCK -> KeyCode.SCROLL_LOCK
-			javafx.scene.input.KeyCode.ESCAPE -> KeyCode.ESCAPE
+		internal fun FXKeyCode.toKeyCode(): KeyCode = when (this) {
+			FXKeyCode.SHIFT -> KeyCode.SHIFT
+			FXKeyCode.CONTROL -> KeyCode.CONTROL
+			FXKeyCode.ALT -> KeyCode.ALT
+			FXKeyCode.ALT_GRAPH -> KeyCode.ALT_GRAPH
+			FXKeyCode.WINDOWS -> KeyCode.WINDOWS
+			FXKeyCode.CONTEXT_MENU -> KeyCode.CONTEXT_MENU
+			FXKeyCode.TAB -> KeyCode.TAB
+			FXKeyCode.CAPS -> KeyCode.CAPS
+			FXKeyCode.ENTER -> KeyCode.ENTER
+			FXKeyCode.SPACE -> KeyCode.SPACE
+			FXKeyCode.BACK_SPACE -> KeyCode.BACK_SPACE
+			FXKeyCode.PAUSE -> KeyCode.PAUSE
+			FXKeyCode.SCROLL_LOCK -> KeyCode.SCROLL_LOCK
+			FXKeyCode.ESCAPE -> KeyCode.ESCAPE
 			
-			javafx.scene.input.KeyCode.DELETE -> KeyCode.DELETE
-			javafx.scene.input.KeyCode.HOME -> KeyCode.HOME_POS1
-			javafx.scene.input.KeyCode.END -> KeyCode.END
-			javafx.scene.input.KeyCode.PAGE_UP -> KeyCode.PAGE_UP
-			javafx.scene.input.KeyCode.PAGE_DOWN -> KeyCode.PAGE_DOWN
+			FXKeyCode.DELETE -> KeyCode.DELETE
+			FXKeyCode.HOME -> KeyCode.HOME_POS1
+			FXKeyCode.END -> KeyCode.END
+			FXKeyCode.PAGE_UP -> KeyCode.PAGE_UP
+			FXKeyCode.PAGE_DOWN -> KeyCode.PAGE_DOWN
 			
-			javafx.scene.input.KeyCode.LEFT -> KeyCode.LEFT
-			javafx.scene.input.KeyCode.UP -> KeyCode.UP
-			javafx.scene.input.KeyCode.RIGHT -> KeyCode.RIGHT
-			javafx.scene.input.KeyCode.DOWN -> KeyCode.DOWN
+			FXKeyCode.LEFT -> KeyCode.LEFT
+			FXKeyCode.UP -> KeyCode.UP
+			FXKeyCode.RIGHT -> KeyCode.RIGHT
+			FXKeyCode.DOWN -> KeyCode.DOWN
 			
-			javafx.scene.input.KeyCode.PRINTSCREEN -> KeyCode.PRINT_SCREEN
-			javafx.scene.input.KeyCode.INSERT -> KeyCode.INSERT
+			FXKeyCode.PRINTSCREEN -> KeyCode.PRINT_SCREEN
+			FXKeyCode.INSERT -> KeyCode.INSERT
 			
-			javafx.scene.input.KeyCode.DIGIT0 -> KeyCode.DIGIT0
-			javafx.scene.input.KeyCode.DIGIT1 -> KeyCode.DIGIT1
-			javafx.scene.input.KeyCode.DIGIT2 -> KeyCode.DIGIT2
-			javafx.scene.input.KeyCode.DIGIT3 -> KeyCode.DIGIT3
-			javafx.scene.input.KeyCode.DIGIT4 -> KeyCode.DIGIT4
-			javafx.scene.input.KeyCode.DIGIT5 -> KeyCode.DIGIT5
-			javafx.scene.input.KeyCode.DIGIT6 -> KeyCode.DIGIT6
-			javafx.scene.input.KeyCode.DIGIT7 -> KeyCode.DIGIT7
-			javafx.scene.input.KeyCode.DIGIT8 -> KeyCode.DIGIT8
-			javafx.scene.input.KeyCode.DIGIT9 -> KeyCode.DIGIT9
-			javafx.scene.input.KeyCode.DEAD_CIRCUMFLEX -> KeyCode.CIRCUMFLEX
-			javafx.scene.input.KeyCode.DEAD_ACUTE -> KeyCode.ACUTE
+			FXKeyCode.DIGIT0 -> KeyCode.DIGIT0
+			FXKeyCode.DIGIT1 -> KeyCode.DIGIT1
+			FXKeyCode.DIGIT2 -> KeyCode.DIGIT2
+			FXKeyCode.DIGIT3 -> KeyCode.DIGIT3
+			FXKeyCode.DIGIT4 -> KeyCode.DIGIT4
+			FXKeyCode.DIGIT5 -> KeyCode.DIGIT5
+			FXKeyCode.DIGIT6 -> KeyCode.DIGIT6
+			FXKeyCode.DIGIT7 -> KeyCode.DIGIT7
+			FXKeyCode.DIGIT8 -> KeyCode.DIGIT8
+			FXKeyCode.DIGIT9 -> KeyCode.DIGIT9
+			FXKeyCode.DEAD_CIRCUMFLEX -> KeyCode.CIRCUMFLEX
+			FXKeyCode.DEAD_ACUTE -> KeyCode.ACUTE
 			
-			javafx.scene.input.KeyCode.A -> KeyCode.A
-			javafx.scene.input.KeyCode.B -> KeyCode.B
-			javafx.scene.input.KeyCode.C -> KeyCode.C
-			javafx.scene.input.KeyCode.D -> KeyCode.D
-			javafx.scene.input.KeyCode.E -> KeyCode.E
-			javafx.scene.input.KeyCode.F -> KeyCode.F
-			javafx.scene.input.KeyCode.G -> KeyCode.G
-			javafx.scene.input.KeyCode.H -> KeyCode.H
-			javafx.scene.input.KeyCode.I -> KeyCode.I
-			javafx.scene.input.KeyCode.J -> KeyCode.J
-			javafx.scene.input.KeyCode.K -> KeyCode.K
-			javafx.scene.input.KeyCode.L -> KeyCode.L
-			javafx.scene.input.KeyCode.M -> KeyCode.M
-			javafx.scene.input.KeyCode.N -> KeyCode.N
-			javafx.scene.input.KeyCode.O -> KeyCode.O
-			javafx.scene.input.KeyCode.P -> KeyCode.P
-			javafx.scene.input.KeyCode.Q -> KeyCode.Q
-			javafx.scene.input.KeyCode.R -> KeyCode.R
-			javafx.scene.input.KeyCode.S -> KeyCode.S
-			javafx.scene.input.KeyCode.T -> KeyCode.T
-			javafx.scene.input.KeyCode.U -> KeyCode.U
-			javafx.scene.input.KeyCode.V -> KeyCode.V
-			javafx.scene.input.KeyCode.W -> KeyCode.W
-			javafx.scene.input.KeyCode.X -> KeyCode.X
-			javafx.scene.input.KeyCode.Y -> KeyCode.Y
-			javafx.scene.input.KeyCode.Z -> KeyCode.Z
+			FXKeyCode.A -> KeyCode.A
+			FXKeyCode.B -> KeyCode.B
+			FXKeyCode.C -> KeyCode.C
+			FXKeyCode.D -> KeyCode.D
+			FXKeyCode.E -> KeyCode.E
+			FXKeyCode.F -> KeyCode.F
+			FXKeyCode.G -> KeyCode.G
+			FXKeyCode.H -> KeyCode.H
+			FXKeyCode.I -> KeyCode.I
+			FXKeyCode.J -> KeyCode.J
+			FXKeyCode.K -> KeyCode.K
+			FXKeyCode.L -> KeyCode.L
+			FXKeyCode.M -> KeyCode.M
+			FXKeyCode.N -> KeyCode.N
+			FXKeyCode.O -> KeyCode.O
+			FXKeyCode.P -> KeyCode.P
+			FXKeyCode.Q -> KeyCode.Q
+			FXKeyCode.R -> KeyCode.R
+			FXKeyCode.S -> KeyCode.S
+			FXKeyCode.T -> KeyCode.T
+			FXKeyCode.U -> KeyCode.U
+			FXKeyCode.V -> KeyCode.V
+			FXKeyCode.W -> KeyCode.W
+			FXKeyCode.X -> KeyCode.X
+			FXKeyCode.Y -> KeyCode.Y
+			FXKeyCode.Z -> KeyCode.Z
 			
-			javafx.scene.input.KeyCode.COMMA -> KeyCode.COMMA
-			javafx.scene.input.KeyCode.PERIOD -> KeyCode.PERIOD
-			javafx.scene.input.KeyCode.MINUS -> KeyCode.MINUS
-			javafx.scene.input.KeyCode.LESS -> KeyCode.LESS
-			javafx.scene.input.KeyCode.NUMBER_SIGN -> KeyCode.NUMBER_SIGN
-			javafx.scene.input.KeyCode.PLUS -> KeyCode.PLUS
+			FXKeyCode.COMMA -> KeyCode.COMMA
+			FXKeyCode.PERIOD -> KeyCode.PERIOD
+			FXKeyCode.MINUS -> KeyCode.MINUS
+			FXKeyCode.LESS -> KeyCode.LESS
+			FXKeyCode.NUMBER_SIGN -> KeyCode.NUMBER_SIGN
+			FXKeyCode.PLUS -> KeyCode.PLUS
 			
-			javafx.scene.input.KeyCode.NUM_LOCK -> KeyCode.NUM_LOCK
-			javafx.scene.input.KeyCode.NUMPAD0 -> KeyCode.NUMPAD0
-			javafx.scene.input.KeyCode.NUMPAD1 -> KeyCode.NUMPAD1
-			javafx.scene.input.KeyCode.NUMPAD2 -> KeyCode.NUMPAD2
-			javafx.scene.input.KeyCode.NUMPAD3 -> KeyCode.NUMPAD3
-			javafx.scene.input.KeyCode.NUMPAD4 -> KeyCode.NUMPAD4
-			javafx.scene.input.KeyCode.NUMPAD5 -> KeyCode.NUMPAD5
-			javafx.scene.input.KeyCode.NUMPAD6 -> KeyCode.NUMPAD6
-			javafx.scene.input.KeyCode.NUMPAD7 -> KeyCode.NUMPAD7
-			javafx.scene.input.KeyCode.NUMPAD8 -> KeyCode.NUMPAD8
-			javafx.scene.input.KeyCode.NUMPAD9 -> KeyCode.NUMPAD9
-			javafx.scene.input.KeyCode.DIVIDE -> KeyCode.DIVIDE
-			javafx.scene.input.KeyCode.MULTIPLY -> KeyCode.MULTIPLY
-			javafx.scene.input.KeyCode.SUBTRACT -> KeyCode.SUBTRACT
-			javafx.scene.input.KeyCode.ADD -> KeyCode.ADD
-			javafx.scene.input.KeyCode.DECIMAL -> KeyCode.DECIMAL
+			FXKeyCode.NUM_LOCK -> KeyCode.NUM_LOCK
+			FXKeyCode.NUMPAD0 -> KeyCode.NUMPAD0
+			FXKeyCode.NUMPAD1 -> KeyCode.NUMPAD1
+			FXKeyCode.NUMPAD2 -> KeyCode.NUMPAD2
+			FXKeyCode.NUMPAD3 -> KeyCode.NUMPAD3
+			FXKeyCode.NUMPAD4 -> KeyCode.NUMPAD4
+			FXKeyCode.NUMPAD5 -> KeyCode.NUMPAD5
+			FXKeyCode.NUMPAD6 -> KeyCode.NUMPAD6
+			FXKeyCode.NUMPAD7 -> KeyCode.NUMPAD7
+			FXKeyCode.NUMPAD8 -> KeyCode.NUMPAD8
+			FXKeyCode.NUMPAD9 -> KeyCode.NUMPAD9
+			FXKeyCode.DIVIDE -> KeyCode.DIVIDE
+			FXKeyCode.MULTIPLY -> KeyCode.MULTIPLY
+			FXKeyCode.SUBTRACT -> KeyCode.SUBTRACT
+			FXKeyCode.ADD -> KeyCode.ADD
+			FXKeyCode.DECIMAL -> KeyCode.DECIMAL
 			
-			javafx.scene.input.KeyCode.F1 -> KeyCode.F1
-			javafx.scene.input.KeyCode.F2 -> KeyCode.F2
-			javafx.scene.input.KeyCode.F3 -> KeyCode.F3
-			javafx.scene.input.KeyCode.F4 -> KeyCode.F4
-			javafx.scene.input.KeyCode.F5 -> KeyCode.F5
-			javafx.scene.input.KeyCode.F6 -> KeyCode.F6
-			javafx.scene.input.KeyCode.F7 -> KeyCode.F7
-			javafx.scene.input.KeyCode.F8 -> KeyCode.F8
-			javafx.scene.input.KeyCode.F9 -> KeyCode.F9
-			javafx.scene.input.KeyCode.F10 -> KeyCode.F10
-			javafx.scene.input.KeyCode.F11 -> KeyCode.F11
-			javafx.scene.input.KeyCode.F12 -> KeyCode.F12
+			FXKeyCode.F1 -> KeyCode.F1
+			FXKeyCode.F2 -> KeyCode.F2
+			FXKeyCode.F3 -> KeyCode.F3
+			FXKeyCode.F4 -> KeyCode.F4
+			FXKeyCode.F5 -> KeyCode.F5
+			FXKeyCode.F6 -> KeyCode.F6
+			FXKeyCode.F7 -> KeyCode.F7
+			FXKeyCode.F8 -> KeyCode.F8
+			FXKeyCode.F9 -> KeyCode.F9
+			FXKeyCode.F10 -> KeyCode.F10
+			FXKeyCode.F11 -> KeyCode.F11
+			FXKeyCode.F12 -> KeyCode.F12
 			else -> KeyCode.UNDEFINED
 		}
 //endregion
@@ -233,31 +238,31 @@ abstract class FXConverters {
 		/**
 		 * Converts the [ButtonType] to [javafx.scene.control.ButtonType].
 		 */
-		internal fun ButtonType.toFXButtonType(): javafx.scene.control.ButtonType = when (this) {
-			ButtonType.APPLY -> javafx.scene.control.ButtonType.APPLY
-			ButtonType.OK -> javafx.scene.control.ButtonType.OK
-			ButtonType.CANCEL -> javafx.scene.control.ButtonType.CANCEL
-			ButtonType.CLOSE -> javafx.scene.control.ButtonType.CLOSE
-			ButtonType.YES -> javafx.scene.control.ButtonType.YES
-			ButtonType.NO -> javafx.scene.control.ButtonType.NO
-			ButtonType.FINISH -> javafx.scene.control.ButtonType.FINISH
-			ButtonType.NEXT -> javafx.scene.control.ButtonType.NEXT
-			ButtonType.PREVIOUS -> javafx.scene.control.ButtonType.PREVIOUS
+		internal fun ButtonType.toFXButtonType(): FXButtonType = when (this) {
+			ButtonType.APPLY -> FXButtonType.APPLY
+			ButtonType.OK -> FXButtonType.OK
+			ButtonType.CANCEL -> FXButtonType.CANCEL
+			ButtonType.CLOSE -> FXButtonType.CLOSE
+			ButtonType.YES -> FXButtonType.YES
+			ButtonType.NO -> FXButtonType.NO
+			ButtonType.FINISH -> FXButtonType.FINISH
+			ButtonType.NEXT -> FXButtonType.NEXT
+			ButtonType.PREVIOUS -> FXButtonType.PREVIOUS
 		}
 		
 		/**
 		 * Converts the [javafx.scene.control.ButtonType] constant to [ButtonType].
 		 */
-		internal fun javafx.scene.control.ButtonType.toButtonType(): ButtonType = when (this) {
-			javafx.scene.control.ButtonType.APPLY -> ButtonType.APPLY
-			javafx.scene.control.ButtonType.OK -> ButtonType.OK
-			javafx.scene.control.ButtonType.CANCEL -> ButtonType.CANCEL
-			javafx.scene.control.ButtonType.CLOSE -> ButtonType.CLOSE
-			javafx.scene.control.ButtonType.YES -> ButtonType.YES
-			javafx.scene.control.ButtonType.NO -> ButtonType.NO
-			javafx.scene.control.ButtonType.FINISH -> ButtonType.FINISH
-			javafx.scene.control.ButtonType.NEXT -> ButtonType.NEXT
-			javafx.scene.control.ButtonType.PREVIOUS -> ButtonType.PREVIOUS
+		internal fun FXButtonType.toButtonType(): ButtonType = when (this) {
+			FXButtonType.APPLY -> ButtonType.APPLY
+			FXButtonType.OK -> ButtonType.OK
+			FXButtonType.CANCEL -> ButtonType.CANCEL
+			FXButtonType.CLOSE -> ButtonType.CLOSE
+			FXButtonType.YES -> ButtonType.YES
+			FXButtonType.NO -> ButtonType.NO
+			FXButtonType.FINISH -> ButtonType.FINISH
+			FXButtonType.NEXT -> ButtonType.NEXT
+			FXButtonType.PREVIOUS -> ButtonType.PREVIOUS
 			else -> throw IllegalArgumentException()
 		}
 		
