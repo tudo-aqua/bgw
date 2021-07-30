@@ -5,7 +5,7 @@ import examples.maumau.entity.CardSuit
 import examples.maumau.entity.CardValue
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
-import tools.aqua.bgw.components.gamecomponents.GameCard
+import tools.aqua.bgw.components.gamecomponents.CardView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
@@ -18,7 +18,7 @@ import java.awt.Color
 
 class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//region Player hands
-	var currentPlayerHand: LinearLayout<GameCard> = LinearLayout<GameCard>(
+	var currentPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
 		height = 220,
 		width = 800,
 		posX = 560,
@@ -29,7 +29,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		alignment = Alignment.CENTER
 	}
 	
-	var otherPlayerHand: LinearLayout<GameCard> = LinearLayout<GameCard>(
+	var otherPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
 		height = 220,
 		width = 800,
 		posX = 560,
@@ -43,14 +43,14 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//endregion
 	
 	//region Stacks
-	val drawStack: CardStack<GameCard> = CardStack(
+	val drawStack: CardStack<CardView> = CardStack(
 		height = 200,
 		width = 130,
 		posX = 750,
 		posY = 360,
 		visual = ColorVisual(255, 255, 255, 50)
 	)
-	val gameStack: CardStack<GameCard> = CardStack(
+	val gameStack: CardStack<CardView> = CardStack(
 		height = 200,
 		width = 130,
 		posX = 1040,

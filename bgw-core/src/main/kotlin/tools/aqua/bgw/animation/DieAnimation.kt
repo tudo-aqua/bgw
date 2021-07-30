@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.components.gamecomponents.Die
+import tools.aqua.bgw.components.gamecomponents.DiceView
 
 /**
  * A die roll [Animation].
@@ -29,12 +29,12 @@ import tools.aqua.bgw.components.gamecomponents.Die
  * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the [duration] of one
  * second.
  *
- * @param die [Die] to animate.
+ * @param die [DiceView] to animate.
  * @param toSide resulting side after roll.
  * @param duration duration in milliseconds. Default: 1 second.
  * @param speed count of steps. Default: 50 steps.
  */
-class DieAnimation<T : Die>(
+class DieAnimation<T : DiceView>(
 	die: T,
 	val toSide: Int,
 	duration: Int = 1000,

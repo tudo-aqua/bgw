@@ -20,13 +20,13 @@ package container.Area
 import container.GameComponentContainerTestBase
 import org.junit.jupiter.api.BeforeEach
 import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.gamecomponents.GameToken
+import tools.aqua.bgw.components.gamecomponents.TokenView
 
 abstract class AreaTestBase : GameComponentContainerTestBase() {
-    protected lateinit var gameTokenAreaContainer: Area<GameToken>
+    protected lateinit var tokenViewArea: Area<TokenView>
     
     @BeforeEach
     fun areaContainerViewSetup() {
-        gameTokenAreaContainer = Area()
+        tokenViewArea = Area()
     }
 }

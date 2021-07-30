@@ -19,10 +19,10 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
-import tools.aqua.bgw.components.gamecomponents.Die
-import tools.aqua.bgw.components.gamecomponents.GameCard
+import tools.aqua.bgw.components.gamecomponents.CardView
+import tools.aqua.bgw.components.gamecomponents.DiceView
 import tools.aqua.bgw.components.gamecomponents.GameComponent
-import tools.aqua.bgw.components.gamecomponents.GameToken
+import tools.aqua.bgw.components.gamecomponents.TokenView
 
 /**
  * [ComponentNodeBuilder].
@@ -35,30 +35,30 @@ internal class ComponentNodeBuilder {
 		 */
 		internal fun buildGameComponent(gameComponent: GameComponent): Region =
 			when (gameComponent) {
-				is GameCard ->
+				is CardView ->
 					buildCardView(gameComponent)
-				is Die ->
+				is DiceView ->
 					buildDiceView(gameComponent)
-				is GameToken ->
+				is TokenView ->
 					buildToken(gameComponent)
 			}
 		
 		/**
-		 * Builds [GameCard].
+		 * Builds [CardView].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildCardView(gameCard: GameCard): Region = Pane()
+		private fun buildCardView(cardView: CardView): Region = Pane()
 		
 		/**
-		 * Builds [Die].
+		 * Builds [DiceView].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildDiceView(die: Die): Region = Pane()
+		private fun buildDiceView(diceView: DiceView): Region = Pane()
 		
 		/**
-		 * Builds [GameToken].
+		 * Builds [TokenView].
 		 */
 		@Suppress("UNUSED_PARAMETER")
-		private fun buildToken(gameToken: GameToken): Region = Pane()
+		private fun buildToken(tokenView: TokenView): Region = Pane()
 	}
 }

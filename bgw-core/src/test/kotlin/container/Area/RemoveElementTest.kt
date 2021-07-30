@@ -27,24 +27,24 @@ class RemoveElementTest : AreaTestBase() {
     @Test
     @DisplayName("Removes an element")
     fun removeElement() {
-        gameTokenAreaContainer.add(redGameToken)
-        gameTokenAreaContainer.add(blueGameToken)
-        gameTokenAreaContainer.add(greenGameToken)
-        gameTokenAreaContainer.remove(redGameToken)
-        assertEquals(listOf(blueGameToken, greenGameToken), gameTokenAreaContainer.components)
-        assertNull(redGameToken.parent)
-        gameTokenAreaContainer.remove(redGameToken)
-        assertEquals(listOf(blueGameToken, greenGameToken), gameTokenAreaContainer.components)
+        tokenViewArea.add(redTokenView)
+        tokenViewArea.add(blueTokenView)
+        tokenViewArea.add(greenTokenView)
+        tokenViewArea.remove(redTokenView)
+        assertEquals(listOf(blueTokenView, greenTokenView), tokenViewArea.components)
+        assertNull(redTokenView.parent)
+        tokenViewArea.remove(redTokenView)
+        assertEquals(listOf(blueTokenView, greenTokenView), tokenViewArea.components)
     }
 
     @Test
     @DisplayName("Remove all Elements")
     fun removeAllElements() {
-        gameTokenAreaContainer.add(redGameToken)
-        gameTokenAreaContainer.add(blueGameToken)
-        val result = gameTokenAreaContainer.clear()
-        assertEquals(listOf(redGameToken, blueGameToken), result)
-        assertNull(redGameToken.parent)
-        assertNull(blueGameToken.parent)
+        tokenViewArea.add(redTokenView)
+        tokenViewArea.add(blueTokenView)
+        val result = tokenViewArea.clear()
+        assertEquals(listOf(redTokenView, blueTokenView), result)
+        assertNull(redTokenView.parent)
+        assertNull(blueTokenView.parent)
     }
 }

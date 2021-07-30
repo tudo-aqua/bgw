@@ -1,7 +1,7 @@
 package examples.concepts.draganddrop
 
 import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.gamecomponents.GameToken
+import tools.aqua.bgw.components.gamecomponents.TokenView
 import tools.aqua.bgw.components.reposition
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
@@ -14,10 +14,10 @@ fun main() {
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
     val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
     
-    val redGameToken: GameToken = GameToken(posX = 20, posY = 20, visual = ColorVisual.RED)
-    val greenGameToken: GameToken = GameToken(posX = 20, posY = 200, visual = ColorVisual.GREEN)
+    val redTokenView: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
+    val greenTokenView: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
     
-    val redArea: Area<GameToken> =
+    val redArea: Area<TokenView> =
         Area(
             height = 50,
             width = 50,
@@ -26,7 +26,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
             visual = ColorVisual(255, 0, 0, 100)
         )
     
-    val greenArea: Area<GameToken> =
+    val greenArea: Area<TokenView> =
         Area(
             height = 50,
             width = 50,
@@ -36,41 +36,41 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
         )
     
     init {
-        redGameToken.isDraggable = true
-        redGameToken.onDragGestureEnded = { _, success ->
+        redTokenView.isDraggable = true
+        redTokenView.onDragGestureEnded = { _, success ->
             if (success) {
-                redGameToken.isDraggable = false
+                redTokenView.isDraggable = false
             }
         }
-        
-        greenGameToken.isDraggable = true
-        greenGameToken.onDragGestureEnded = { _, success ->
+    
+        greenTokenView.isDraggable = true
+        greenTokenView.onDragGestureEnded = { _, success ->
             if (success) {
-                greenGameToken.isDraggable = false
+                greenTokenView.isDraggable = false
             }
         }
-        
+    
         redArea.dropAcceptor = { dragEvent ->
             when (dragEvent.draggedComponent) {
-                is GameToken -> dragEvent.draggedComponent == redGameToken
+                is TokenView -> dragEvent.draggedComponent == redTokenView
                 else -> false
             }
         }
         redArea.onDragDropped = { dragEvent ->
-            redArea.add((dragEvent.draggedComponent as GameToken).apply { reposition(0, 0) })
+            redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
         }
         
         greenArea.dropAcceptor = { dragEvent ->
             when (dragEvent.draggedComponent) {
-                is GameToken -> dragEvent.draggedComponent == greenGameToken
+                is TokenView -> dragEvent.draggedComponent == greenTokenView
                 else -> false
             }
         }
         greenArea.onDragDropped = { dragEvent ->
-            greenArea.add((dragEvent.draggedComponent as GameToken).apply { reposition(0, 0) })
+            greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
         }
-        
-        gameScene.addComponents(redGameToken, greenGameToken, redArea, greenArea)
+    
+        gameScene.addComponents(redTokenView, greenTokenView, redArea, greenArea)
         showGameScene(gameScene)
         show()
     }

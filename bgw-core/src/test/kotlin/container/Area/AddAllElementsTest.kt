@@ -21,7 +21,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.gamecomponents.GameToken
+import tools.aqua.bgw.components.gamecomponents.TokenView
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
 import kotlin.test.assertContains
@@ -34,64 +34,64 @@ class AddAllElementsTest : AreaTestBase() {
 	@DisplayName("Add an empty list")
 	fun addAllElementsEmptyList() {
 		//add empty list
-		gameTokenAreaContainer.addAll(listOf())
-		assertTrue { gameTokenAreaContainer.components.isEmpty() }
+		tokenViewArea.addAll(listOf())
+		assertTrue { tokenViewArea.components.isEmpty() }
 	}
 	
 	@Test
 	@DisplayName("Add a list containing two componentViews")
 	fun addAllElementsNonEmptyList() {
 		//add list with elements
-		gameTokenAreaContainer.addAll(listOf(redGameToken, greenGameToken))
-		assertContains(gameTokenAreaContainer.components, redGameToken)
-		assertContains(gameTokenAreaContainer.components, greenGameToken)
+		tokenViewArea.addAll(listOf(redTokenView, greenTokenView))
+		assertContains(tokenViewArea.components, redTokenView)
+		assertContains(tokenViewArea.components, greenTokenView)
 	}
 	
 	@Test
 	@DisplayName("Add a list containing two componentViews, where one is already contained")
 	fun addAllElementsAlreadyContained() {
 		//add list with one element already contained in tokenAreaContainer
-		gameTokenAreaContainer.addAll(listOf(redGameToken, greenGameToken))
-		assertThrows<IllegalArgumentException> { gameTokenAreaContainer.addAll(listOf(blueGameToken, redGameToken)) }
-		assertContains(gameTokenAreaContainer.components, blueGameToken)
+		tokenViewArea.addAll(listOf(redTokenView, greenTokenView))
+		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(listOf(blueTokenView, redTokenView)) }
+		assertContains(tokenViewArea.components, blueTokenView)
 		//add list with one element already contained in another Container
-		val cyanToken = GameToken(visual = ColorVisual(Color.CYAN))
-		val otherAreaContainer = Area<GameToken>()
+		val cyanToken = TokenView(visual = ColorVisual(Color.CYAN))
+		val otherAreaContainer = Area<TokenView>()
 		otherAreaContainer.add(cyanToken)
-		assertThrows<IllegalArgumentException> { gameTokenAreaContainer.addAll(listOf(cyanToken)) }
-		assertFalse { gameTokenAreaContainer.components.contains(cyanToken) }
+		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(listOf(cyanToken)) }
+		assertFalse { tokenViewArea.components.contains(cyanToken) }
 		assertContains(otherAreaContainer.components, cyanToken)
 	}
 	
 	@Test
 	@DisplayName("Add an empty list")
 	fun addAllElementsVarArgsEmptyList() {
-		gameTokenAreaContainer.addAll()
-		assertTrue { gameTokenAreaContainer.components.isEmpty() }
+		tokenViewArea.addAll()
+		assertTrue { tokenViewArea.components.isEmpty() }
 	}
 	
 	@Test
 	@DisplayName("Add a list containing two componentViews")
 	fun addAllElementsVarArgsNonEmptyList() {
 		//add list with elements
-		gameTokenAreaContainer.addAll(listOf(redGameToken, greenGameToken))
-		assertContains(gameTokenAreaContainer.components, redGameToken)
-		assertContains(gameTokenAreaContainer.components, greenGameToken)
+		tokenViewArea.addAll(listOf(redTokenView, greenTokenView))
+		assertContains(tokenViewArea.components, redTokenView)
+		assertContains(tokenViewArea.components, greenTokenView)
 	}
 	
 	@Test
 	@DisplayName("Add a list containing two componentViews, where one is already contained")
 	fun addAllElementsVarArgsAlreadyContained() {
 		//add list with one element already contained in tokenAreaContainer
-		gameTokenAreaContainer.addAll(redGameToken, greenGameToken)
-		assertThrows<IllegalArgumentException> { gameTokenAreaContainer.addAll(blueGameToken, redGameToken) }
-		assertContains(gameTokenAreaContainer.components, blueGameToken)
+		tokenViewArea.addAll(redTokenView, greenTokenView)
+		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(blueTokenView, redTokenView) }
+		assertContains(tokenViewArea.components, blueTokenView)
 		//add list with one element already contained in another Container
-		val cyanToken = GameToken(visual = ColorVisual(Color.CYAN))
-		val otherAreaContainer = Area<GameToken>()
+		val cyanToken = TokenView(visual = ColorVisual(Color.CYAN))
+		val otherAreaContainer = Area<TokenView>()
 		otherAreaContainer.add(cyanToken)
-		assertThrows<IllegalArgumentException> { gameTokenAreaContainer.addAll(cyanToken) }
-		assertFalse { gameTokenAreaContainer.components.contains(cyanToken) }
+		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(cyanToken) }
+		assertFalse { tokenViewArea.components.contains(cyanToken) }
 		assertContains(otherAreaContainer.components, cyanToken)
 	}
 }

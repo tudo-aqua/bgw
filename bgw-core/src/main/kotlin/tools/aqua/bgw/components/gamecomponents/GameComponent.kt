@@ -24,7 +24,7 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Abstract baseclass for game components like [GameCard]s or [GameToken]s.
+ * Abstract baseclass for game components like [CardView]s or [TokenView]s.
  * This class is used to restrict the type argument of containers.
  *
  * @param height height for this [GameComponent].

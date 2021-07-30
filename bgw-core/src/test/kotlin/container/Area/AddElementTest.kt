@@ -21,7 +21,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.gamecomponents.GameToken
+import tools.aqua.bgw.components.gamecomponents.TokenView
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -33,42 +33,42 @@ class AddElementTest : AreaTestBase() {
     @DisplayName("Add an element")
     fun addElement() {
         //simple add
-        assertTrue(gameTokenAreaContainer.components.isEmpty())
-        gameTokenAreaContainer.add(redGameToken)
-        assertContains(gameTokenAreaContainer.components, redGameToken)
-        assertEquals(gameTokenAreaContainer, redGameToken.parent)
+        assertTrue(tokenViewArea.components.isEmpty())
+        tokenViewArea.add(redTokenView)
+        assertContains(tokenViewArea.components, redTokenView)
+        assertEquals(tokenViewArea, redTokenView.parent)
     }
 
     @Test
     @DisplayName("Add an element that is already contained in this")
     fun addElementAlreadyContainedInThis() {
         //add already contained in this
-        gameTokenAreaContainer.add(redGameToken)
-        assertThrows<IllegalArgumentException> { gameTokenAreaContainer.add(redGameToken) }
+        tokenViewArea.add(redTokenView)
+        assertThrows<IllegalArgumentException> { tokenViewArea.add(redTokenView) }
     }
 
     @Test
     @DisplayName("Add an element that is already contained in another container")
     fun addElementAlreadyContainedInOther() {
         //add already contained in other container
-        Area<GameToken>().add(blueGameToken)
-        assertThrows<IllegalArgumentException> { gameTokenAreaContainer.add(blueGameToken) }
+        Area<TokenView>().add(blueTokenView)
+        assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView) }
     }
 
     @Test
     @DisplayName("Add element with custom index")
     fun addElementWithIndex() {
         //add with index
-        gameTokenAreaContainer.add(redGameToken, 0)
+        tokenViewArea.add(redTokenView, 0)
         //index out of bounds
-        assertThrows<IllegalArgumentException> { gameTokenAreaContainer.add(blueGameToken, 2) }
-        assertFalse { gameTokenAreaContainer.components.contains(blueGameToken) }
-        assertThrows<IllegalArgumentException> { gameTokenAreaContainer.add(blueGameToken, -1) }
-        assertFalse { gameTokenAreaContainer.components.contains(blueGameToken) }
+        assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView, 2) }
+        assertFalse { tokenViewArea.components.contains(blueTokenView) }
+        assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView, -1) }
+        assertFalse { tokenViewArea.components.contains(blueTokenView) }
         //add in between two elements
-        gameTokenAreaContainer.add(blueGameToken, 1)
-        assertEquals(listOf(redGameToken, blueGameToken), gameTokenAreaContainer.components)
-        gameTokenAreaContainer.add(greenGameToken, 1)
-        assertEquals(listOf(redGameToken, greenGameToken, blueGameToken), gameTokenAreaContainer.components)
+        tokenViewArea.add(blueTokenView, 1)
+        assertEquals(listOf(redTokenView, blueTokenView), tokenViewArea.components)
+        tokenViewArea.add(greenTokenView, 1)
+        assertEquals(listOf(redTokenView, greenTokenView, blueTokenView), tokenViewArea.components)
     }
 }

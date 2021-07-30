@@ -23,18 +23,18 @@ import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [Die] may be used to visualize a die.
+ * A [DiceView] may be used to visualize a die.
  *
  * Visualization:
  * The Visual at the [currentSide] value is used to visualize the die.
  *
- * @param height height for this [Die]. Default: [Die.DEFAULT_DICE_HEIGHT].
- * @param width width for this [Die]. Default: [Die.DEFAULT_DICE_WIDTH].
- * @param posX horizontal coordinate for this [Die]. Default: 0.
- * @param posY vertical coordinate for this [Die]. Default: 0.
+ * @param height height for this [DiceView]. Default: [DiceView.DEFAULT_DICE_HEIGHT].
+ * @param width width for this [DiceView]. Default: [DiceView.DEFAULT_DICE_WIDTH].
+ * @param posX horizontal coordinate for this [DiceView]. Default: 0.
+ * @param posY vertical coordinate for this [DiceView]. Default: 0.
  * @param visuals list of visuals to represent the sides of the die.
  */
-open class Die(
+open class DiceView(
 	height: Number = DEFAULT_DICE_HEIGHT,
 	width: Number = DEFAULT_DICE_WIDTH,
 	posX: Number = 0,
@@ -43,7 +43,7 @@ open class Die(
 ) : GameComponent(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
 	
 	/**
-	 * [Visual]s for this [Die].
+	 * [Visual]s for this [DiceView].
 	 */
 	internal val visuals: ObservableArrayList<Visual> = ObservableArrayList(visuals.onEach { it.copy() })
 	
@@ -87,16 +87,16 @@ open class Die(
 	}
 	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a [Die].
+	 * Defines some static constants that can be used as suggested properties of a [DiceView].
 	 */
 	companion object {
 		/**
-		 * Suggested [Die] [height].
+		 * Suggested [DiceView] [height].
 		 */
 		const val DEFAULT_DICE_HEIGHT: Int = 80
 		
 		/**
-		 * Suggested [Die] [width].
+		 * Suggested [DiceView] [width].
 		 */
 		const val DEFAULT_DICE_WIDTH: Int = 80
 	}

@@ -3,7 +3,7 @@ package examples.maumau.view
 import examples.maumau.entity.CardSuit
 import examples.maumau.entity.MauMauCard
 import examples.maumau.service.LogicController
-import tools.aqua.bgw.components.gamecomponents.GameCard
+import tools.aqua.bgw.components.gamecomponents.CardView
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.util.BidirectionalMap
@@ -16,7 +16,7 @@ class ViewController : BoardGameApplication("MauMau") {
 	val refreshViewController: RefreshViewController = RefreshViewController(this)
 	val logicController: LogicController = LogicController(refreshViewController)
 	
-	val cardMap: BidirectionalMap<MauMauCard, GameCard> = BidirectionalMap()
+	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap()
 	
 	init {
 		registerGameEvents()
@@ -47,14 +47,14 @@ class ViewController : BoardGameApplication("MauMau") {
 	}
 	
 	private fun tryElementDropped(event: DragEvent): Boolean {
-		if (event.draggedComponent !is GameCard)
+		if (event.draggedComponent !is CardView)
 			return false
 		
-		return logicController.checkRules(cardMap.backward(event.draggedComponent as GameCard))
+		return logicController.checkRules(cardMap.backward(event.draggedComponent as CardView))
 	}
 	
 	private fun elementDropped(event: DragEvent) {
-		logicController.playCard(cardMap.backward(event.draggedComponent as GameCard), false)
+		logicController.playCard(cardMap.backward(event.draggedComponent as CardView), false)
 	}
 	
 	private fun registerMenuEvents() {
