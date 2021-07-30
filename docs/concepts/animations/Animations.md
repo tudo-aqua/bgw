@@ -22,11 +22,11 @@ Additionally the DelayAnimation can be used to delay code execution to enable th
 
 ![](animations.gif)
 
-The full example can be found [here](/bgw-docs-examples/src/main/kotlin/examples/concepts/animations/AnimationsExample.kt).
+The full example can be found [here](/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt).
 
-Each [Animation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-animation/) has a duration, a running attrtibute and an *onFinished* EventHandler that gets invoked after the animation has finished.
+Each [Animation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-animation/) has a duration, a running attrtibute and an *onFinished* EventHandler that gets invoked after the animation has finished.
 
-## [DelayAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/)
+## [DelayAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/)
 A DelayAnimation does nothing in the application window besides calling *onFinished* after the given amount of time (duration parameter). This timer runs asynchronously so it can run while the player is playing. To add a delay between moves in which the user should not be able to interact with the scene use [BoardgameScene#lock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html) before plaing the animation and [BoardgameScene#unlock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html) in *onAnimationFinished*.
 ````kotlin
 gameScene.lock()
@@ -38,16 +38,52 @@ gameScene.playAnimation(DelayAnimation(duration = 2000).apply {
 })
 ````
 
-## [MovementAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/)
-A movement animation moves a [GameComponent]().
+## [MovementAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/)
+A movement animation moves a [GameComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/). 
+The Movement can be passed as fromX/toX, fromY,toY or relative to the current position with byX/byY.
 
-## [RotationAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/)
+**NOTE**: The Anmiation only moves the component in your Scene and ***does not update it's position***. The Component will snap back upon next refresh if the new position is not set in *onAnimationFinished*, which is the suggested way of usage.
 
-## [FlipAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-flip-animation/)
+````kotlin
+gameScene.playAnimation(
+  MovementAnimation(
+    componentView = component,
+		byX = 0,
+    byY = -50,
+    duration = 1000
+  ).apply { 
+    onFinished = {
+      component.posY -= 50
+    }
+  }
+)
+````
 
-## [RandomizeAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-randomize-animation/)
+Additionally you can move a componentt to another component's location. This is for example useful to animate cards onto a card stack:
 
-## [DieAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-die-animation/)
+````kotlin
+gameScene.playAnimation(
+  MovementAnimation.toComponentView(
+    componentView = card,
+    toComponentViewPosition = cardStack,
+    scene = gameScene,
+    duration = 1000
+  ).apply { 
+    onFinished = {
+      card.removeFromParent()
+      cardStack.add(card)
+    }
+  }
+)
+````
+
+## [RotationAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/)
+
+## [FlipAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-flip-animation/)
+
+## [RandomizeAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-randomize-animation/)
+
+## [DiceAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/)
 ````kotlin
 
 ````
