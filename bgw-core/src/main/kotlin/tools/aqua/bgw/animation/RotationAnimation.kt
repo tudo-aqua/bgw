@@ -32,10 +32,20 @@ import tools.aqua.bgw.components.ComponentView
  */
 class RotationAnimation<T : ComponentView>(
 	componentView: T,
-	val fromAngle: Double = componentView.rotation,
-	val toAngle: Double = componentView.rotation,
+	fromAngle: Number = componentView.rotation,
+	toAngle: Number = componentView.rotation,
 	duration: Int = 1000
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
+	
+	/**
+	 * Initial angle.
+	 */
+	val fromAngle: Double = fromAngle.toDouble()
+	
+	/**
+	 * Resulting angle.
+	 */
+	val toAngle: Double = toAngle.toDouble()
 	
 	/**
 	 * A rotation animation.
