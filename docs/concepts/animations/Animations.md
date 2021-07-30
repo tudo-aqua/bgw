@@ -22,9 +22,24 @@ Additionally the DelayAnimation can be used to delay code execution to enable th
 
 ![](animations.gif)
 
+The full example can be found [here](/bgw-docs-examples/src/main/kotlin/examples/concepts/animations/AnimationsExample.kt).
+
+Each [Animation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-animation/) has a duration, a running attrtibute and an *onFinished* EventHandler that gets invoked after the animation has finished.
+
 ## [DelayAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/)
+A DelayAnimation does nothing in the application window besides calling *onFinished* after the given amount of time (duration parameter). This timer runs asynchronously so it can run while the player is playing. To add a delay between moves in which the user should not be able to interact with the scene use [BoardgameScene#lock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html) before plaing the animation and [BoardgameScene#unlock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html) in *onAnimationFinished*.
+````kotlin
+gameScene.lock()
+gameScene.playAnimation(DelayAnimation(duration = 2000).apply {
+  onFinished = {
+    //Do stuff here
+    gameScene.unlock()
+  }
+})
+````
 
 ## [MovementAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/)
+A movement animation moves a [GameComponent]().
 
 ## [RotationAnimation](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/)
 
