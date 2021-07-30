@@ -1,4 +1,4 @@
-package examples.concepts.draganddrop
+package examples.concepts.visuals
 
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
