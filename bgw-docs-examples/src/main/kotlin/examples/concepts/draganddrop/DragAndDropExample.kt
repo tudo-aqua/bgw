@@ -13,10 +13,10 @@ fun main() {
 
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
     val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-    
+
     val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
     val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
-    
+
     val redArea: Area<TokenView> =
         Area(
             height = 50,
@@ -25,7 +25,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
             posY = 20,
             visual = ColorVisual(255, 0, 0, 100)
         )
-    
+
     val greenArea: Area<TokenView> =
         Area(
             height = 50,
@@ -34,7 +34,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
             posY = 200,
             visual = ColorVisual(0, 255, 0, 100)
         )
-    
+
     init {
         redToken.isDraggable = true
         redToken.onDragGestureEnded = { _, success ->
@@ -42,14 +42,14 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
                 redToken.isDraggable = false
             }
         }
-    
+
         greenToken.isDraggable = true
         greenToken.onDragGestureEnded = { _, success ->
             if (success) {
                 greenToken.isDraggable = false
             }
         }
-    
+
         redArea.dropAcceptor = { dragEvent ->
             when (dragEvent.draggedComponent) {
                 is TokenView -> dragEvent.draggedComponent == redToken
@@ -59,7 +59,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
         redArea.onDragDropped = { dragEvent ->
             redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
         }
-        
+
         greenArea.dropAcceptor = { dragEvent ->
             when (dragEvent.draggedComponent) {
                 is TokenView -> dragEvent.draggedComponent == greenToken
@@ -69,7 +69,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
         greenArea.onDragDropped = { dragEvent ->
             greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
         }
-    
+
         gameScene.addComponents(redToken, greenToken, redArea, greenArea)
         showGameScene(gameScene)
         show()
