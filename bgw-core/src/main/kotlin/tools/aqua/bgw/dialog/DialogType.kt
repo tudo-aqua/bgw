@@ -22,7 +22,7 @@ package tools.aqua.bgw.dialog
 /**
  * Enum for all available alert types.
  */
-enum class AlertType {
+enum class DialogType {
 	/**
 	 * The [NONE] alert type has the effect of not setting any default properties in the Alert
 	 * besides an [ButtonType.OK] button for the user to click on to dismiss the dialog.

@@ -22,8 +22,8 @@ import javafx.scene.control.ButtonType
 import javafx.scene.control.TextArea
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXAlertType
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXButtonType
-import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 
 /**
  * DialogBuilder.
@@ -34,7 +34,7 @@ class DialogBuilder {
 		/**
 		 * Builds dialogs.
 		 */
-		internal fun build(dialog: Dialog): Alert = Alert(dialog.alertType.toFXAlertType()).apply {
+		internal fun build(dialog: Dialog): Alert = Alert(dialog.dialogType.toFXAlertType()).apply {
 			title = dialog.title
 			headerText = dialog.header
 			contentText = dialog.message
@@ -44,15 +44,15 @@ class DialogBuilder {
 				buttonTypes.clear()
 				buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
 				buttonTypes.clear()
-			} else if (dialog.alertType == AlertType.CONFIRMATION) {
+			} else if (dialog.dialogType == DialogType.CONFIRMATION) {
 				buttonTypes.clear()
 				buttonTypes.addAll(ButtonType.YES, ButtonType.NO)
-			} else if (dialog.alertType == AlertType.NONE) {
+			} else if (dialog.dialogType == DialogType.NONE) {
 				buttonTypes.add(ButtonType.OK)
 			}
 			
 			//Add expandable content for exception stack trace in case of AlertType.EXCEPTION
-			if (dialog.alertType == AlertType.EXCEPTION) {
+			if (dialog.dialogType == DialogType.EXCEPTION) {
 				dialogPane.expandableContent = TextArea(dialog.exception!!.stackTraceToString()).apply {
 					isEditable = false
 					isWrapText = true

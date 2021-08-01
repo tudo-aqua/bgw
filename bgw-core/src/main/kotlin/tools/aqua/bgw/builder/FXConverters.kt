@@ -25,8 +25,8 @@ import javafx.scene.input.MouseButton
 import javafx.scene.paint.Color
 import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.ButtonType
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
@@ -213,26 +213,26 @@ abstract class FXConverters {
 //endregion
 		
 		/**
-		 * Converts the [AlertType] to [Alert.AlertType].
+		 * Converts the [DialogType] to [Alert.AlertType].
 		 */
-		internal fun AlertType.toFXAlertType(): Alert.AlertType = when (this) {
-			AlertType.NONE -> Alert.AlertType.NONE
-			AlertType.INFORMATION -> Alert.AlertType.INFORMATION
-			AlertType.WARNING -> Alert.AlertType.WARNING
-			AlertType.CONFIRMATION -> Alert.AlertType.CONFIRMATION
-			AlertType.ERROR -> Alert.AlertType.ERROR
-			AlertType.EXCEPTION -> Alert.AlertType.ERROR
+		internal fun DialogType.toFXAlertType(): Alert.AlertType = when (this) {
+			DialogType.NONE -> Alert.AlertType.NONE
+			DialogType.INFORMATION -> Alert.AlertType.INFORMATION
+			DialogType.WARNING -> Alert.AlertType.WARNING
+			DialogType.CONFIRMATION -> Alert.AlertType.CONFIRMATION
+			DialogType.ERROR -> Alert.AlertType.ERROR
+			DialogType.EXCEPTION -> Alert.AlertType.ERROR
 		}
 		
 		/**
-		 * Converts the [Alert.AlertType] to [AlertType] .
+		 * Converts the [Alert.AlertType] to [DialogType] .
 		 */
-		internal fun Alert.AlertType.toAlertType(): AlertType = when (this) {
-			Alert.AlertType.NONE -> AlertType.NONE
-			Alert.AlertType.INFORMATION -> AlertType.INFORMATION
-			Alert.AlertType.WARNING -> AlertType.WARNING
-			Alert.AlertType.CONFIRMATION -> AlertType.CONFIRMATION
-			Alert.AlertType.ERROR -> AlertType.ERROR
+		internal fun Alert.AlertType.toAlertType(): DialogType = when (this) {
+			Alert.AlertType.NONE -> DialogType.NONE
+			Alert.AlertType.INFORMATION -> DialogType.INFORMATION
+			Alert.AlertType.WARNING -> DialogType.WARNING
+			Alert.AlertType.CONFIRMATION -> DialogType.CONFIRMATION
+			Alert.AlertType.ERROR -> DialogType.ERROR
 		}
 		
 		/**

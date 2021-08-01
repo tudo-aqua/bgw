@@ -3,8 +3,8 @@ package examples.dialog
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.dialog.AlertType
 import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.visual.ColorVisual
 
 fun main() {
@@ -19,7 +19,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 		onMouseClicked = {
 			showDialog(
 				Dialog(
-					alertType = AlertType.INFORMATION,
+					dialogType = DialogType.INFORMATION,
 					title = "Information Dialog",
 					header = "Information",
 					message = "An information Dialog."
@@ -32,7 +32,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 		onMouseClicked = {
 			showDialog(
 				Dialog(
-					alertType = AlertType.WARNING,
+					dialogType = DialogType.WARNING,
 					title = "Warning",
 					header = "Empty player name",
 					message = "Player name must not be empty!"
@@ -45,7 +45,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 		onMouseClicked = {
 			showDialog(
 				Dialog(
-					alertType = AlertType.ERROR,
+					dialogType = DialogType.ERROR,
 					title = "Error Dialog",
 					header = "Error",
 					message = "An error Dialog."
@@ -58,7 +58,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 		onMouseClicked = {
 			showDialog(
 				Dialog(
-					alertType = AlertType.CONFIRMATION,
+					dialogType = DialogType.CONFIRMATION,
 					title = "Confirmation Dialog",
 					header = "Confirmation",
 					message = "A confirmation Dialog."
@@ -71,7 +71,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 		onMouseClicked = {
 			showDialog(
 				Dialog(
-					alertType = AlertType.NONE,
+					dialogType = DialogType.NONE,
 					title = "Dialog",
 					header = "Dialog",
 					message = "A dialog."

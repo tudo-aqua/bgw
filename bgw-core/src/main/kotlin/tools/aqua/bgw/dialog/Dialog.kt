@@ -24,16 +24,16 @@ package tools.aqua.bgw.dialog
  *
  * @constructor Internal constructor. Refer to secondary constructors.
  *
- * @param alertType the [AlertType] of the alert. Affects the displayed icon.
+ * @param dialogType the [DialogType] of the alert. Affects the displayed icon.
  * @param title title to be shown.
  * @param header headline to be shown in the dialogs content.
  * @param message message to be shown.
  * @param exception throwable to be shown in expandable content.
- * @param buttons buttons to be shown. Standard set of buttons according to [alertType] will be used if you don't pass
+ * @param buttons buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
  * any [ButtonType]s.
  */
 class Dialog private constructor(
-	val alertType: AlertType,
+	val dialogType: DialogType,
 	val title: String,
 	val header: String,
 	val message: String,
@@ -44,16 +44,16 @@ class Dialog private constructor(
 	 * Creates a [Dialog].
 	 * For exception dialogs refer to exception constructor.
 	 *
-	 * @param alertType the [AlertType] of the alert. Affects the displayed icon.
+	 * @param dialogType the [DialogType] of the alert. Affects the displayed icon.
 	 * @param title title to be shown.
 	 * @param header headline to be shown in the dialogs content.
 	 * @param message message to be shown in the dialogs content.
-	 * @param buttons buttons to be shown. Standard set of buttons according to [alertType] will be used if you don't pass
+	 * @param buttons buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
 	 * any [ButtonType]s.
 	 */
-	constructor(alertType: AlertType, title: String, header: String, message: String, vararg buttons: ButtonType) :
-			this(alertType, title, header, message, null, *buttons) {
-		require(alertType != AlertType.EXCEPTION) {
+	constructor(dialogType: DialogType, title: String, header: String, message: String, vararg buttons: ButtonType) :
+			this(dialogType, title, header, message, null, *buttons) {
+		require(dialogType != DialogType.EXCEPTION) {
 			"To create an Exception dialog use exception dialog constructor."
 		}
 	}
@@ -68,5 +68,5 @@ class Dialog private constructor(
 	 * @param exception throwable to be shown in expandable content.
 	 */
 	constructor(title: String, header: String, message: String, exception: Throwable) :
-			this(AlertType.EXCEPTION, title, header, message, exception, ButtonType.OK)
+			this(DialogType.EXCEPTION, title, header, message, exception, ButtonType.OK)
 }

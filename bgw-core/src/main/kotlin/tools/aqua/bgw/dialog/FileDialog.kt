@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.dialog
 
-import tools.aqua.bgw.dialog.FileDialog.FileDialogMode
 import java.io.File
 
 /**
@@ -31,7 +30,7 @@ import java.io.File
  * @param initialDirectory the initial directory where to open the file chooser.
  * @param extensionFilters extensions filters for this file chooser.
  *
- * @see tools.aqua.bgw.dialog.FileDialog.FileDialogMode
+ * @see tools.aqua.bgw.dialog.FileDialogMode
  * @see tools.aqua.bgw.dialog.ExtensionFilter
  */
 data class FileDialog(
@@ -40,29 +39,4 @@ data class FileDialog(
 	val initialFileName: String = "",
 	val initialDirectory: File? = null,
 	val extensionFilters: List<ExtensionFilter> = listOf()
-) {
-	/**
-	 * Enum for possible [FileDialog] modes.
-	 */
-	enum class FileDialogMode {
-		/**
-		 * Mode to open one file.
-		 */
-		OPEN_FILE,
-		
-		/**
-		 * Mode to open multiple files.
-		 */
-		OPEN_MULTIPLE_FILES,
-		
-		/**
-		 * Mode to save a file.
-		 */
-		SAVE_FILE,
-		
-		/**
-		 * Mode so select a directory.
-		 */
-		CHOOSE_DIRECTORY
-	}
-}
+)
