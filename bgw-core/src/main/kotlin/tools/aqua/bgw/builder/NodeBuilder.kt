@@ -159,7 +159,7 @@ internal class NodeBuilder {
 			removeFromParent()
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
-			scene.draggedDataObjectProperty.value = dragDataObject
+			scene.draggedDataProperty.value = dragDataObject
 			
 			scene.dragTargetsBelowMouse.clear()
 			scene.dragTargetsBelowMouse.addAll(scene.findActiveComponentsBelowMouse(e.sceneX, e.sceneY))

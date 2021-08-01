@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 import java.awt.Color
 
@@ -43,7 +43,7 @@ open class ColorPicker(
 	/**
 	 * [tools.aqua.bgw.observable.Property] for the currently selected [Color].
 	 */
-	val selectedColorProperty: ObjectProperty<Color> = ObjectProperty(initialColor)
+	val selectedColorProperty: Property<Color> = Property(initialColor)
 	
 	/**
 	 * The currently selected [Color].

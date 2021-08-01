@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import java.awt.Color
 
@@ -36,7 +35,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
 	 * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%)
 	 * and [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
 	 */
-	val colorProperty: ObjectProperty<Color> = ObjectProperty(color)
+	val colorProperty: Property<Color> = Property(color)
 	
 	/**
 	 * The displayed [Color] of this [Visual].
