@@ -43,6 +43,10 @@ class DialogBuilder {
 			if (dialog.buttons.isNotEmpty()) {
 				buttonTypes.clear()
 				buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
+				buttonTypes.clear()
+			} else if (dialog.alertType == AlertType.CONFIRMATION) {
+				buttonTypes.clear()
+				buttonTypes.addAll(ButtonType.YES, ButtonType.NO)
 			} else if (dialog.alertType == AlertType.NONE) {
 				buttonTypes.add(ButtonType.OK)
 			}
@@ -55,6 +59,7 @@ class DialogBuilder {
 					maxWidth = Double.MAX_VALUE
 					maxHeight = Double.MAX_VALUE
 				}
+				buttonTypes.add(ButtonType.OK)
 			}
 		}
 	}

@@ -94,8 +94,6 @@ class DialogExample : BoardGameApplication("Dialog example") {
 	}
 	
 	init {
-		
-		
 		gameScene.addComponents(
 			buttonInformation, buttonWarning, buttonError,
 			buttonConfirmation, buttonNone, buttonException
