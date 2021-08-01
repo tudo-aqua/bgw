@@ -50,7 +50,19 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 * If changes are made to this list, this [GameComponentContainer] gets re-rendered.
 	 */
 	internal val observableComponents: ObservableList<T> = ObservableLinkedList()
-	
+
+	/**
+	 * [onAdd] gets invoked anytime after a [GameComponentView] is added to this
+	 * [GameComponentContainer] with the added [GameComponentView] as it receiver.
+	 */
+	var onAdd : (T.() -> Unit)? = null
+
+	/**
+	 * [onRemove] gets invoked anytime after a [GameComponentView] is removed from this
+	 * [GameComponentContainer] with the removed [GameComponentView] as it receiver.
+	 */
+	var onRemove : (T.() -> Unit)? = null
+
 	/**
 	 * [GameComponentView]s that are contained in this [GameComponentContainer].
 	 */
@@ -99,7 +111,10 @@ sealed class GameComponentContainer<T : GameComponentView>(
 			"Index $index is out of list range."
 		}
 		
-		observableComponents.add(index, component.apply { parent = this@GameComponentContainer })
+		observableComponents.add(index, component.apply {
+			parent = this@GameComponentContainer
+			onAdd?.invoke(this)
+		})
 	}
 	
 	/**
@@ -146,7 +161,7 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	open fun remove(component: T): Boolean {
 		if (observableComponents.remove(component)) {
 			component.parent = null
-			
+			onRemove?.invoke(component)
 			return true
 		}
 		return false
