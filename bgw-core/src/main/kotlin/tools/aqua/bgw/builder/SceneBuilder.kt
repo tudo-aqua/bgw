@@ -79,8 +79,8 @@ internal class SceneBuilder {
 			}
 			
 			scene.rootComponents.setGUIListenerAndInvoke { pane.rebuild(scene) }
-			scene.draggedDataObjectProperty.setGUIListenerAndInvoke(
-				scene.draggedDataObjectProperty.value
+			scene.draggedDataProperty.setGUIListenerAndInvoke(
+				scene.draggedDataProperty.value
 			) { oV, nV ->
 				scene.refreshDraggedComponent(oV?.draggedStackPane, nV?.draggedStackPane)
 			}
@@ -95,7 +95,7 @@ internal class SceneBuilder {
 		 * Event handler for onMouseDragged.
 		 */
 		private fun Scene<*>.onMouseDragged(e: MouseEvent) {
-			val draggedDataObject = draggedDataObjectProperty.value ?: return
+			val draggedDataObject = draggedDataProperty.value ?: return
 			val draggedComponent = draggedDataObject.draggedComponent
 			
 			//Move dragged component to mouse position
@@ -127,7 +127,7 @@ internal class SceneBuilder {
 		 * Event handler for onMouseReleased.
 		 */
 		private fun Scene<*>.onMouseReleased(e: MouseEvent) {
-			val dragDataObject = draggedDataObjectProperty.value
+			val dragDataObject = draggedDataProperty.value
 			val draggedComponent = dragDataObject?.draggedComponent ?: return
 			
 			draggedComponent.onMouseReleased?.invoke(e.toMouseEvent())
@@ -137,7 +137,7 @@ internal class SceneBuilder {
 			}
 			
 			draggedComponent.isDragged = false
-			draggedDataObjectProperty.value = null
+			draggedDataProperty.value = null
 		}
 		
 		/**

@@ -25,7 +25,6 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_C
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 
@@ -57,7 +56,7 @@ open class CardStack<T : CardView>(
 	/**
 	 * [Property] for the [Alignment] of [CardView]s in this [CardStack].
 	 */
-	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(alignment)
+	val alignmentProperty: Property<Alignment> = Property(alignment)
 	
 	/**
 	 * [Alignment] of [CardView]s in this [CardStack].

@@ -20,7 +20,6 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 import java.awt.Color
@@ -68,7 +67,7 @@ open class ProgressBar(
 	/**
 	 * [Property] for the bar color of this [ProgressBar].
 	 */
-	val barColorProperty: ObjectProperty<Color> = ObjectProperty(barColor)
+	val barColorProperty: Property<Color> = Property(barColor)
 	
 	/**
 	 * Bar color of this [ProgressBar].

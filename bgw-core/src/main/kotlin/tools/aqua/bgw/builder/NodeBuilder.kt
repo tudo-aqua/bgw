@@ -159,7 +159,7 @@ internal class NodeBuilder {
 			removeFromParent()
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
-			scene.draggedDataObjectProperty.value = dragDataObject
+			scene.draggedDataProperty.value = dragDataObject
 			
 			scene.dragTargetsBelowMouse.clear()
 			scene.dragTargetsBelowMouse.addAll(scene.findActiveComponentsBelowMouse(e.sceneX, e.sceneY))
@@ -288,9 +288,10 @@ internal class NodeBuilder {
 					if (nV.isNotEmpty())
 						background.style = nV
 				}
+				node.style = internalCSS
 				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, nV ->
 					if (nV.isNotEmpty())
-						node.style = nV
+						node.style = this.internalCSS + nV
 				}
 			}
 		}

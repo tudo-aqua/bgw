@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.Property
@@ -69,7 +68,7 @@ open class ListView<T>(
 	/**
 	 * [Property] for the [Orientation] of this [ListView].
 	 */
-	val orientationProperty: ObjectProperty<Orientation> = ObjectProperty(orientation)
+	val orientationProperty: Property<Orientation> = Property(orientation)
 	
 	/**
 	 * [Orientation] of this [ListView] displayed.
@@ -85,7 +84,7 @@ open class ListView<T>(
 	 * [Property] for the [formatFunction] that gets used to obtain a [String] representation for each item.
 	 * If the value is `null`, the [toString] function of the item is used instead.
 	 */
-	var formatFunctionProperty: ObjectProperty<((T) -> String)?> = ObjectProperty(formatFunction)
+	var formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
 	
 	/**
 	 * The [formatFunction] that gets used to obtain a [String] representation for each item.

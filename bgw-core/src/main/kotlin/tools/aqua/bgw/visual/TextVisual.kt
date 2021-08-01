@@ -21,7 +21,6 @@ package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
@@ -51,7 +50,7 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
 	 * [Property] for the displayed [text] [Font].
 	 */
-	val fontProperty: ObjectProperty<Font> = ObjectProperty(font)
+	val fontProperty: Property<Font> = Property(font)
 	
 	/**
 	 * The displayed [text] [Font].
@@ -62,11 +61,11 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 		set(value) {
 			fontProperty.value = value
 		}
-
+	
 	/**
 	 * [Property] for the [text] [Alignment].
 	 */
-	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(Alignment.CENTER)
+	val alignmentProperty: Property<Alignment> = Property(Alignment.CENTER)
 
 	/**
 	 * The [text] [Alignment].

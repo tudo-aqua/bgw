@@ -26,7 +26,10 @@ import tools.aqua.bgw.builder.DragTargetObject
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.RootComponent
-import tools.aqua.bgw.observable.*
+import tools.aqua.bgw.observable.DoubleProperty
+import tools.aqua.bgw.observable.ObservableArrayList
+import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 
@@ -51,14 +54,14 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	 * [Property] for the currently dragged [ComponentView] encapsulated in a [DragDataObject]
 	 * or null if no [DynamicComponentView] is currently dragged.
 	 */
-	internal val draggedDataObjectProperty: ObjectProperty<DragDataObject?> = ObjectProperty(null)
+	internal val draggedDataProperty: Property<DragDataObject?> = Property(null)
 	
 	/**
 	 * Currently dragged [ComponentView] encapsulated in a [DragDataObject]
 	 * or null if no [DynamicComponentView] is currently dragged.
 	 */
 	val draggedComponent: DynamicComponentView?
-		get() = draggedDataObjectProperty.value?.draggedComponent
+		get() = draggedDataProperty.value?.draggedComponent
 	
 	
 	/**
@@ -87,7 +90,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	/**
 	 * [Property] for the [background] [Visual] of this [Scene].
 	 */
-	internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(background)
+	internal val backgroundProperty: Property<Visual> = Property(background)
 	
 	/**
 	 * The background [Visual] of this [Scene].
@@ -117,7 +120,9 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	/**
 	 * [Property] for the currently displayed zoom detail of this [Scene].
 	 */
-	internal val zoomDetailProperty = ObjectProperty(CoordinatePlain(0, 0, width, height))
+	internal val zoomDetailProperty: Property<CoordinatePlain> = Property(
+		CoordinatePlain(0, 0, width, height)
+	)
 	
 	/**
 	 * The currently displayed zoom detail of this [Scene].
