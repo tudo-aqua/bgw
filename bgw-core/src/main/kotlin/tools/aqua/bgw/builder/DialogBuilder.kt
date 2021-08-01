@@ -18,6 +18,7 @@
 package tools.aqua.bgw.builder
 
 import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.control.TextArea
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXAlertType
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXButtonType
@@ -42,6 +43,8 @@ class DialogBuilder {
 			if (dialog.buttons.isNotEmpty()) {
 				buttonTypes.clear()
 				buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
+			} else if (dialog.alertType == AlertType.NONE) {
+				buttonTypes.add(ButtonType.OK)
 			}
 			
 			//Add expandable content for exception stack trace in case of AlertType.EXCEPTION

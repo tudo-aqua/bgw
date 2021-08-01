@@ -22,7 +22,7 @@ package tools.aqua.bgw.dialog
 /**
  * Shows a dialog containing the given [message] and [buttons].
  *
- * @constructor Internal constructor, should not be used. Refer to secondary constructors.
+ * @constructor Internal constructor. Refer to secondary constructors.
  *
  * @param alertType the [AlertType] of the alert. Affects the displayed icon.
  * @param title title to be shown.
@@ -32,7 +32,7 @@ package tools.aqua.bgw.dialog
  * @param buttons buttons to be shown. Standard set of buttons according to [alertType] will be used if you don't pass
  * any [ButtonType]s.
  */
-class Dialog(
+class Dialog private constructor(
 	val alertType: AlertType,
 	val title: String,
 	val header: String,
@@ -40,20 +40,9 @@ class Dialog(
 	val exception: Throwable? = null,
 	vararg val buttons: ButtonType
 ) {
-	
-	/**
-	 * Creates an [exception] [Dialog].
-	 *
-	 * @param title title to be shown.
-	 * @param header headline to be shown in the dialogs content.
-	 * @param message message to be shown.
-	 * @param exception throwable to be shown in expandable content.
-	 */
-	constructor(title: String, header: String, message: String, exception: Throwable) :
-			this(AlertType.EXCEPTION, title, header, message, exception, ButtonType.OK)
-	
 	/**
 	 * Creates a [Dialog].
+	 * For exception dialogs refer to exception constructor.
 	 *
 	 * @param alertType the [AlertType] of the alert. Affects the displayed icon.
 	 * @param title title to be shown.
@@ -68,4 +57,16 @@ class Dialog(
 			"To create an Exception dialog use exception dialog constructor."
 		}
 	}
+	
+	/**
+	 * Creates an [exception] [Dialog].
+	 * For information dialogs refer to information constructor.
+	 *
+	 * @param title title to be shown.
+	 * @param header headline to be shown in the dialogs content.
+	 * @param message message to be shown.
+	 * @param exception throwable to be shown in expandable content.
+	 */
+	constructor(title: String, header: String, message: String, exception: Throwable) :
+			this(AlertType.EXCEPTION, title, header, message, exception, ButtonType.OK)
 }

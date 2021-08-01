@@ -130,7 +130,11 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 					toSide = 3,
 					duration = 1000,
 					speed = 50
-				)
+				).apply {
+					onFinished = {
+						die.currentSide = 3
+					}
+				}
 			)
 		}
 		
