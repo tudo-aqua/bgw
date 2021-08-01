@@ -157,7 +157,8 @@ where the user should not know what might get drawn next, or what is in the cont
 
 ## Complete source code for the example
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/components/container/AreaExample.kt) {: .btn }
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/components/container/AreaExample.kt){:
+.btn }
 ````kotlin
 class AreaExample : BoardGameApplication("Area example") {
     val gameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
