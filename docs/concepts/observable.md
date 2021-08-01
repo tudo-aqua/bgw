@@ -33,3 +33,7 @@ For common data types there are dedicated classes
 For generic types use baseclass [Property<T>](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-property/index.html).
 
 ## Observable Lists
+Observable list work exaktly like Properties. It provides all standard list operations and notifies listeners every time the list changes.
+In the BGW framework there exist two implementations of the abstract [ObservableList](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable-list/index.html):
+* [ObservableArrayList](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable-array-list/index.html) and
+* [ObservableLinkedList](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable-linked-list/index.html)
