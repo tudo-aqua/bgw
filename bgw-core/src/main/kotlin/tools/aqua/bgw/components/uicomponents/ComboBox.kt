@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.Property
@@ -80,7 +79,7 @@ open class ComboBox<T>(
 	 * [Property] for the selected item.
 	 * Value may be `null` if no item is selected.
 	 */
-	val selectedItemProperty: ObjectProperty<T?> = ObjectProperty(null)
+	val selectedItemProperty: Property<T?> = Property(null)
 	
 	/**
 	 * The selected item.
@@ -100,7 +99,7 @@ open class ComboBox<T>(
 	 * [Property] for the [formatFunction] that gets used to obtain a [String] representation for each item.
 	 * If the value is `null`, the [toString] function of the item is used instead.
 	 */
-	var formatFunctionProperty: ObjectProperty<((T) -> String)?> = ObjectProperty(formatFunction)
+	var formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
 	
 	/**
 	 * The [formatFunction] that gets used to obtain a [String] representation for each item.

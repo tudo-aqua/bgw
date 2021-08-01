@@ -24,7 +24,7 @@ package tools.aqua.bgw.observable
  *
  * @param initialValue initial value of this property.
  */
-abstract class Property<T>(initialValue: T) : ValueObservable<T>() {
+open class Property<T>(initialValue: T) : ValueObservable<T>() {
 	
 	/**
 	 * Value of this property.
@@ -155,10 +155,3 @@ open class LimitedDoubleProperty(
  * @param initialValue initial Value. Default: Empty string.
  */
 open class StringProperty(initialValue: String = "") : Property<String>(initialValue)
-
-/**
- * An ObjectProperty with generic type.
- *
- * @param initialValue initial value.
- */
-open class ObjectProperty<T>(initialValue: T) : Property<T>(initialValue)
