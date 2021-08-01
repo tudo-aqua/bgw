@@ -5,7 +5,8 @@ nav_order: 1
 layout: default
 ---
 
-## Visual
+# Visual
+
 {: .no_toc}
 <details open markdown="block">
   <summary>
