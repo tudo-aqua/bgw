@@ -44,7 +44,12 @@ sealed class UIComponent(
 	posY: Number,
 	font: Font,
 ) : StaticComponentView<UIComponent>(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
-	
+
+	/**
+	 * Field that is used for internal styling purposes.
+	 */
+	internal var internalCSS : String = ""
+
 	/**
 	 * [Property] for the [Font] of this [LabeledUIComponent].
 	 * @see Font
