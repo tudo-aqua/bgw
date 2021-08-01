@@ -6,6 +6,8 @@ import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -80,6 +82,7 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 				onFinished = {
 					println("Delay finished!")
 					gameScene.unlock()
+					showDialog(Dialog(DialogType.NONE, "", "", ""))
 				}
 			})
 		}

@@ -20,6 +20,7 @@
 package tools.aqua.bgw.builder
 
 import javafx.animation.*
+import javafx.application.Platform
 import javafx.util.Duration
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.animation.Animation
@@ -68,8 +69,7 @@ internal class AnimationBuilder {
 				node.layoutY = anim.toY
 				node.translateX = 0.0
 				node.translateY = 0.0
-				scene.animations.remove(anim)
-				anim.onFinished?.invoke(AnimationFinishedEvent())
+				onFinished(scene, anim)
 			}
 			
 			return animation
@@ -97,8 +97,7 @@ internal class AnimationBuilder {
 				node.rotate = anim.toAngle
 				node.translateX = 0.0
 				node.translateY = 0.0
-				scene.animations.remove(anim)
-				anim.onFinished?.invoke(AnimationFinishedEvent())
+				onFinished(scene, anim)
 			}
 			
 			return animation
@@ -133,7 +132,7 @@ internal class AnimationBuilder {
 			
 			//set on finished
 			animation2.setOnFinished {
-				anim.onFinished?.invoke(AnimationFinishedEvent())
+				onFinished(scene, anim)
 			}
 			
 			return animation1
@@ -150,8 +149,7 @@ internal class AnimationBuilder {
 			
 			//set on finished
 			animation.setOnFinished {
-				scene.animations.remove(anim)
-				anim.onFinished?.invoke(AnimationFinishedEvent())
+				onFinished(scene, anim)
 			}
 			
 			return animation
@@ -176,8 +174,7 @@ internal class AnimationBuilder {
 			
 			seq.setOnFinished {
 				anim.componentView.currentSide = anim.toSide
-				scene.animations.remove(anim)
-				anim.onFinished?.invoke(AnimationFinishedEvent())
+				onFinished(scene, anim)
 			}
 			
 			return seq
@@ -202,11 +199,20 @@ internal class AnimationBuilder {
 			
 			seq.setOnFinished {
 				anim.componentView.visual = anim.toVisual
-				scene.animations.remove(anim)
-				anim.onFinished?.invoke(AnimationFinishedEvent())
+				onFinished(scene, anim)
 			}
 			
 			return seq
+		}
+		
+		/**
+		 * Removes [anim] from animations list and invokes [Animation.onFinished].
+		 */
+		private fun onFinished(scene: Scene<out ComponentView>, anim: Animation) {
+			scene.animations.remove(anim)
+			Platform.runLater {
+				anim.onFinished?.invoke(AnimationFinishedEvent())
+			}
 		}
 	}
 }
