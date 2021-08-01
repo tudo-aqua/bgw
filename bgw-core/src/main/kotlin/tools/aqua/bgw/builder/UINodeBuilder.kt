@@ -249,8 +249,7 @@ internal class UINodeBuilder {
                 this.progress = if (nV < 0.0) 0.0 else nV
             }
             progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) { _, nV ->
-                //TODO remove css usage
-                style = "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
+                progressBar.internalCSS = "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
             }
         }
     

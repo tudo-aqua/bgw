@@ -288,9 +288,10 @@ internal class NodeBuilder {
 					if (nV.isNotEmpty())
 						background.style = nV
 				}
+				node.style = internalCSS
 				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, nV ->
 					if (nV.isNotEmpty())
-						node.style = nV
+						node.style = this.internalCSS + nV
 				}
 			}
 		}
