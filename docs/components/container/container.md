@@ -1,6 +1,7 @@
 ---
 parent: Components 
 title: Container 
+has_toc: true
 nav_order: 2 
 layout: default 
 has_children: true
@@ -16,6 +17,16 @@ has_children: true
 
 # Container
 
+{: .no_toc}
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
+
 Containers can be used to group
 [GameComponentView][GameComponentView]s.
 
@@ -25,16 +36,25 @@ contained components.
 
 ## Container features
 
-The Container features will be demonstrated using an [Area][AreaDoc], since [GameComponentContainer][DontainerDoc]
+The Container features will be demonstrated using an [Area][AreaDoc], since [GameComponentContainer][ContainerDoc]
 is abstract and [Area][AreaDoc] is just the discrete implementation.
 
 The complete source code for this example can be
-found [here](/bgw/components/Container.html#complete-source-code-for-the-example).
+found [here](/bgw/components/container.html#complete-source-code-for-the-example).
 
-The following component declaration is used throughout this tutorial:
+To create a running example, the described elements are wrapped in a
+[BoardGameApplication](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
 
 ````kotlin
-TODO!!
+class AreaExample : BoardGameApplication("Area example") {
+    val gameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+
+    val numberOfComponentsLabel = Label(width = 400, posX = 50, posY = 50)
+    val area = Area<TokenView>(100, 400, 50, 100, ColorVisual.DARK_GRAY)
+
+    val greenToken = TokenView(visual = ColorVisual.GREEN)
+    val redToken = TokenView(visual = ColorVisual.RED)
+}
 ````
 
 ### Add and remove
@@ -98,28 +118,76 @@ Listeners can be removed via the ``clearComponentsListners`` or ``removeComponen
 ## Useful hints for dealing with containers
 
 - Containers provide an iterator over their components list via the [Iterable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) interface.
-- The position of components contained in any containers with automatic layouting (CardStack, LinearLayout, Satchel) 
+- The position of components contained in any containers with automatic layouting
   should never be modified, since the containers handle positioning.
+
+- When using non-automatic layouting containers, do not forget to position the contained components.
+  Especially if they get added after a drag and drop gesture.
   
 - Any Component can only ever be contained in one container at a time. 
   Trying to add an already contained component to another container will result in a runtime exception.
   
 - Containers can also be draggable and can act as a drag target.
 
-- When using non-automatic layouting containers (Area), do not forget to position the contained components. 
-  Especially if they get added after a drag and drop gesture.
-  
 - ComponentListeners can be a great way of exposing dynamic information about a container 
   via sufficient [UIComponents](https://tudo-aqua.github.io/bgw/components/ui-elements/ui-elements.html).
 
 ## Types of Containers
 
-### [Area](/bgw/components/container/children/Area.html)
+### [Area](/bgw/components/container/children/area.html)
 
 Area is the simplest form of a container. Its contained components are positioned relative to the top-left corner of the
 Area. No further layouting is provided by the Area.
 
+### [CardStack](/bgw/components/container/children/cardstack.html)
+
+CardStack is a special form of container. It can only contain 
+[CardView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html).
+It should be used to visualize card stacks. It provides automatic layouting and alignment features.
+
+### [LinearLayout](https://tudo-aqua.github.io/bgw/components/container/children/linearlayout.html)
+
+LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined spacing. 
+Additionally, an orientation and alignment may be specified. 
+
+### [Satchel](https://tudo-aqua.github.io/bgw/components/container/children/satchel.html)
+
+A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an entity, 
+where the user should not know what might get drawn next, or what is in the container.
+
 ## Complete source code for the example
 
-[View it on GitHub](){:
-.btn }
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/components/container/AreaExample.kt) {: .btn }
+````kotlin
+class AreaExample : BoardGameApplication("Area example") {
+    val gameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+
+    val numberOfComponentsLabel = Label(width = 400, posX = 50, posY = 50)
+    val area = Area<TokenView>(100, 400, 50, 100, ColorVisual.DARK_GRAY)
+
+    val greenToken = TokenView(visual = ColorVisual.GREEN)
+    val redToken = TokenView(visual = ColorVisual.RED)
+
+    init {
+        area.onAdd = {
+            this.resize(100,100)
+        }
+        area.onRemove = {
+            this.rotation += 45
+        }
+
+        area.addComponentsListener {
+            numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+        }
+
+        area.add(greenToken)
+        area.add(redToken, 0)
+
+        area.remove(redToken)
+
+        gameScene.addComponents(area, numberOfComponentsLabel)
+        showGameScene(gameScene)
+        show()
+    }
+}
+````
