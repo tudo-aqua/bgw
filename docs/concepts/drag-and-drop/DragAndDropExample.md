@@ -39,7 +39,7 @@ Knowledge about the following components and concepts is necessary for this tuto
 
 ## Component declaration
 
-To create a running example, the described elements are wrapped in a
+To create a running example, the described components are wrapped in a
 [BoardGameApplication](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
 
 ````kotlin

@@ -42,7 +42,7 @@ is abstract and [Area][AreaDoc] is just the discrete implementation.
 The complete source code for this example can be
 found [here](/bgw/components/container.html#complete-source-code-for-the-example).
 
-To create a running example, the described elements are wrapped in a
+To create a running example, the required components are wrapped in a
 [BoardGameApplication](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
 
 ````kotlin
