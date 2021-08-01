@@ -25,7 +25,6 @@ import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
 import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 
@@ -107,7 +106,7 @@ open class LinearLayout<T : GameComponentView>(
 	 * [Property] for the orientation of [GameComponentView]s in this [LinearLayout].
 	 * @see Orientation
 	 */
-	val orientationProperty: ObjectProperty<Orientation> = ObjectProperty(orientation)
+	val orientationProperty: Property<Orientation> = Property(orientation)
 	
 	/**
 	 * [Orientation] for this [LinearLayout].
@@ -124,7 +123,7 @@ open class LinearLayout<T : GameComponentView>(
 	 * [Property] for the [Alignment] of [GameComponentView]s in this [LinearLayout].
 	 * @see Alignment
 	 */
-	val alignmentProperty: ObjectProperty<Alignment> = ObjectProperty(alignment)
+	val alignmentProperty: Property<Alignment> = Property(alignment)
 	
 	/**
 	 * [Alignment] for this [LinearLayout].

@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.ObjectProperty
 import tools.aqua.bgw.observable.Property
 import java.awt.image.BufferedImage
 import java.io.File
@@ -51,7 +50,7 @@ open class ImageVisual(
 	/**
 	 * [Property] for the displayed [image].
 	 */
-	val imageProperty: ObjectProperty<BufferedImage>
+	val imageProperty: Property<BufferedImage>
 	
 	/**
 	 * The displayed [image].
@@ -111,7 +110,7 @@ open class ImageVisual(
 		
 		val img = image.getSubimage(offsetX, offsetY, subWidth, subHeight)
 		
-		imageProperty = ObjectProperty(img)
+		imageProperty = Property(img)
 	}
 	
 	/**

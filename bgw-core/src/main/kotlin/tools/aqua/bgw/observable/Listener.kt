@@ -281,7 +281,7 @@ abstract class ValueObservable<T> {
 	 * @param oldValue old value to notify.
 	 * @param newValue new value to notify.
 	 */
-	fun notifyChange(oldValue: T, newValue: T) {
+	internal fun notifyChange(oldValue: T, newValue: T) {
 		listeners.forEach { it.update(oldValue, newValue) }
 		internalListenerHandler?.update(oldValue, newValue)
 		guiListenerHandler?.update(oldValue, newValue)

@@ -39,7 +39,7 @@ import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode.*
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.LimitedDoubleProperty
-import tools.aqua.bgw.observable.ObjectProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
@@ -208,7 +208,7 @@ internal class Frontend : Application() {
 		/**
 		 * Property for the background [Visual].
 		 */
-		internal val backgroundProperty: ObjectProperty<Visual> = ObjectProperty(ColorVisual(Color.BLACK))
+		internal val backgroundProperty: Property<Visual> = Property(ColorVisual(Color.BLACK))
 		//endregion
 		
 		//region Internal functions
