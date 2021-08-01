@@ -20,7 +20,13 @@ FileDialog can be used to display a popup to choose a file or directory either t
 
 ## Dialog creation
 
-The FileDialog class provides different [FileDialogMode](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog/-file-dialog-mode/index.html)s
+The FileDialog class provides different [FileDialogMode](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog/-file-dialog-mode/index.html)s:
+* OPEN_FILE
+* OPEN_MULTIPLE_FILES
+* SAVE_FILE
+* CHOOSE_DIRECTORY
+
+Depending on the selection the dialog will request the appropriate type (file vs. directory) and enable multiselction.
 
 ## Showing a FileDialog
 To show a dialog use [#showFileDialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-file-dialog.html) in [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html).
