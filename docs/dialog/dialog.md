@@ -1,5 +1,4 @@
 ---
-parent: Concepts
 title: Dialog
 nav_order: 1
 layout: default
