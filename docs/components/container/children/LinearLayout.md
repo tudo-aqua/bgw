@@ -3,7 +3,7 @@ parent: Container
 grand_parent: Components
 title: Linear Layout
 has_toc: true
-nav_order: 1
+nav_order: 3
 layout: default
 ---
 
