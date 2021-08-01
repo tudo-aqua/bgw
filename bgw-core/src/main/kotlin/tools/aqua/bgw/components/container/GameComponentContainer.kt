@@ -111,10 +111,11 @@ sealed class GameComponentContainer<T : GameComponentView>(
 			"Index $index is out of list range."
 		}
 		
-		observableComponents.add(index, component.apply {
+		observableComponents.add(index, component)
+		component.apply {
 			parent = this@GameComponentContainer
 			onAdd?.invoke(this)
-		})
+		}
 	}
 	
 	/**
