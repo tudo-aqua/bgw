@@ -22,27 +22,45 @@ package tools.aqua.bgw.dialog
 /**
  * Shows a dialog containing the given [message] and [buttons].
  *
- * @constructor Internal constructor, should not be used. Refer to secondary constructors.
+ * @constructor Internal constructor. Refer to secondary constructors.
  *
- * @param alertType the [AlertType] of the alert. Affects the displayed icon.
+ * @param dialogType the [DialogType] of the alert. Affects the displayed icon.
  * @param title title to be shown.
  * @param header headline to be shown in the dialogs content.
  * @param message message to be shown.
  * @param exception throwable to be shown in expandable content.
- * @param buttons buttons to be shown. Standard set of buttons according to [alertType] will be used if you don't pass
+ * @param buttons buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
  * any [ButtonType]s.
  */
-class Dialog(
-	val alertType: AlertType,
+class Dialog private constructor(
+	val dialogType: DialogType,
 	val title: String,
 	val header: String,
 	val message: String,
 	val exception: Throwable? = null,
 	vararg val buttons: ButtonType
 ) {
+	/**
+	 * Creates a [Dialog].
+	 * For exception dialogs refer to exception constructor.
+	 *
+	 * @param dialogType the [DialogType] of the alert. Affects the displayed icon.
+	 * @param title title to be shown.
+	 * @param header headline to be shown in the dialogs content.
+	 * @param message message to be shown in the dialogs content.
+	 * @param buttons buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
+	 * any [ButtonType]s.
+	 */
+	constructor(dialogType: DialogType, title: String, header: String, message: String, vararg buttons: ButtonType) :
+			this(dialogType, title, header, message, null, *buttons) {
+		require(dialogType != DialogType.EXCEPTION) {
+			"To create an Exception dialog use exception dialog constructor."
+		}
+	}
 	
 	/**
 	 * Creates an [exception] [Dialog].
+	 * For information dialogs refer to information constructor.
 	 *
 	 * @param title title to be shown.
 	 * @param header headline to be shown in the dialogs content.
@@ -50,22 +68,5 @@ class Dialog(
 	 * @param exception throwable to be shown in expandable content.
 	 */
 	constructor(title: String, header: String, message: String, exception: Throwable) :
-			this(AlertType.EXCEPTION, title, header, message, exception, ButtonType.OK)
-	
-	/**
-	 * Creates a [Dialog].
-	 *
-	 * @param alertType the [AlertType] of the alert. Affects the displayed icon.
-	 * @param title title to be shown.
-	 * @param header headline to be shown in the dialogs content.
-	 * @param message message to be shown in the dialogs content.
-	 * @param buttons buttons to be shown. Standard set of buttons according to [alertType] will be used if you don't pass
-	 * any [ButtonType]s.
-	 */
-	constructor(alertType: AlertType, title: String, header: String, message: String, vararg buttons: ButtonType) :
-			this(alertType, title, header, message, null, *buttons) {
-		require(alertType != AlertType.EXCEPTION) {
-			"To create an Exception dialog use exception dialog constructor."
-		}
-	}
+			this(DialogType.EXCEPTION, title, header, message, exception, ButtonType.OK)
 }

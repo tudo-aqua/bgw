@@ -1,11 +1,12 @@
 ---
 layout: default
-title: Index
+title: Board Game Work
 nav_order: 1
 has_children: false
 ---
 
-Index
+# Board Game Work
 
-[VerfügbareKomponenten](Verfügbare-Komponenten.md)
-[Drag and drop example](concepts/drag-and-drop/DragAndDropExample.md)
+Introduction to board game work.
+
+

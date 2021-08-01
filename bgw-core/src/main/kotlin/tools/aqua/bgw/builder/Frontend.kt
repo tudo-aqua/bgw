@@ -36,7 +36,7 @@ import tools.aqua.bgw.core.BoardGameApplication.Companion.DEFAULT_FADE_TIME
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.dialog.FileDialog.FileDialogMode.*
+import tools.aqua.bgw.dialog.FileDialogMode.*
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.LimitedDoubleProperty
 import tools.aqua.bgw.observable.ObjectProperty
