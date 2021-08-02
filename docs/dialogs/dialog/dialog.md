@@ -1,6 +1,7 @@
 ---
-title: Dialog
-nav_order: 1
+parent : Dialogs
+title: Dialog 
+nav_order: 1 
 layout: default
 ---
 
