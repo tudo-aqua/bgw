@@ -82,9 +82,9 @@ open class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Num
 	}
 	
 	/**
-	 * A CoordinatePlain with it's four corners as Coordinates.
+	 * A CoordinatePlain with its four corners as Coordinates.
 	 * Creates a coordinate plain out of the two corners TOP_LEFT and BOTTOM_RIGHT as Coordinates.
-	 * TOP_LEFT corner coordinates must be smaller or equal in x and y direction than BOTTOM_RIGHT corner coordinate,.
+	 * TOP_LEFT corner coordinates must be smaller or equal in x and y direction than BOTTOM_RIGHT corner coordinate.
 	 *
 	 * @param topLeft [Coordinate] of top left corner
 	 * @param bottomRight [Coordinate] of bottom right corner

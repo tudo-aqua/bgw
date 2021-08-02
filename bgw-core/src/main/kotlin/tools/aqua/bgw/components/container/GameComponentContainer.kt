@@ -53,13 +53,13 @@ sealed class GameComponentContainer<T : GameComponentView>(
 
 	/**
 	 * [onAdd] gets invoked anytime after a [GameComponentView] is added to this
-	 * [GameComponentContainer] with the added [GameComponentView] as it receiver.
+	 * [GameComponentContainer] with the added [GameComponentView] as its receiver.
 	 */
 	var onAdd : (T.() -> Unit)? = null
 
 	/**
 	 * [onRemove] gets invoked anytime after a [GameComponentView] is removed from this
-	 * [GameComponentContainer] with the removed [GameComponentView] as it receiver.
+	 * [GameComponentContainer] with the removed [GameComponentView] as its receiver.
 	 */
 	var onRemove : (T.() -> Unit)? = null
 
@@ -135,7 +135,7 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	}
 	
 	/**
-	 * Adds all [GameComponentView]s contained in the passed collection to this [GameComponentContainer].
+	 * Adds all [GameComponentView]s contained in [collection] to this [GameComponentContainer].
 	 * Whenever an [GameComponentView]] is encountered, that is already contained, an
 	 * [IllegalArgumentException] is thrown and no further [GameComponentView] is added.
 	 *

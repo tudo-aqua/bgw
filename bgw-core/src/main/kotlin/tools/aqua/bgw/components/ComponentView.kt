@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "GrazieInspection")
 
 package tools.aqua.bgw.components
 
@@ -449,7 +449,7 @@ abstract class ComponentView(
 	var onDragDropped: ((DragEvent) -> Unit)? = null
 	
 	/**
-	 * Removes this component from it's parent.
+	 * Removes this component from its parent.
 	 *
 	 * @throws IllegalStateException if this component is not contained in any container. Use parent field to check.
 	 * @see parent
@@ -478,7 +478,7 @@ abstract class ComponentView(
 	 *
 	 * @param child child to find.
 	 *
-	 * @return coordinate of given child in this [ComponentView] or `null` if not supported,.
+	 * @return coordinate of given child in this [ComponentView] or `null` if not supported.
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ComponentView): Coordinate? = null

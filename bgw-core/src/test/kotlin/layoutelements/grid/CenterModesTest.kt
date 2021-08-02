@@ -45,7 +45,7 @@ class CenterModesTest : GridPaneTestBase() {
 	}
 	
 	@Test
-	@DisplayName("Set columns's center mode")
+	@DisplayName("Set columns' center mode")
 	fun testSetColumnCenterMode() {
 		grid.setColumnCenterMode(1, Alignment.TOP_LEFT)
 		

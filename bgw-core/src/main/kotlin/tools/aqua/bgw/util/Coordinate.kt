@@ -89,11 +89,13 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	/**
 	 * Sin function for angles in degrees.
 	 */
+	@Suppress("GrazieInspection")
 	private fun sin(degrees: Double) = kotlin.math.sin(Math.toRadians(degrees))
 	
 	/**
 	 * Cos function for angles in degrees.
 	 */
+	@Suppress("GrazieInspection")
 	private fun cos(degrees: Double) = kotlin.math.cos(Math.toRadians(degrees))
 	
 	/**
