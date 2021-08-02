@@ -1,7 +1,5 @@
 ---
-title: FileDialog
-nav_order: 1
-layout: default
+parent : Dialogs title: FileDialog nav_order: 2 layout: default
 ---
 
 # FileDialog

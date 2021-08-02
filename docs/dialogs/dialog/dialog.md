@@ -1,7 +1,5 @@
 ---
-title: Dialog
-nav_order: 1
-layout: default
+parent : Dialogs title: Dialog nav_order: 1 layout: default
 ---
 
 # Dialog
