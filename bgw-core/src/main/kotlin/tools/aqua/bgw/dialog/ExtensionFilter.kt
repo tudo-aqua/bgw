@@ -21,7 +21,7 @@ package tools.aqua.bgw.dialog
 
 /**
  * Extension filters for [FileDialog]s.
- * Maps a file type description to it's extensions.
+ * Maps a file type description to its extensions.
  * To generate e.g. "Image Files (*.png, *.jpg)" set [description] = "Image files" and [extensions] = ("png", "jpg").
  *
  * @param description file type description.

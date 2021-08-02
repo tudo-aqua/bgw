@@ -84,7 +84,7 @@ open class CheckBox(
 	val indeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 	
 	/**
-	 * [Boolean] whether this component in in the indeterminate state.
+	 * [Boolean] whether this component in the indeterminate state.
 	 * @see indeterminateProperty
 	 */
 	var isIndeterminate: Boolean

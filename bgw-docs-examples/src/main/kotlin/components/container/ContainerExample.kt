@@ -20,23 +20,25 @@ fun main() {
     ContainerExample()
 }
 
-class ContainerExample() : BoardGameApplication("Container Example") {
-    val gameScene: BoardGameScene = BoardGameScene(background = ImageVisual("bg.jpg"))
-
-    val cardStack = CardStack<CardView>(
+class ContainerExample : BoardGameApplication("Container Example") {
+    private val gameScene: BoardGameScene = BoardGameScene(background = ImageVisual("bg.jpg"))
+    
+    private val cardStack: CardStack<CardView> = CardStack<CardView>(
         height = CardView.DEFAULT_CARD_HEIGHT * 1.2,
         width = CardView.DEFAULT_CARD_WIDTH * 1.2,
         posX = 50,
         posY = 50,
         visual = ColorVisual(0, 0, 255, 80)
     ).apply {
-        addAll(generateCards(0, 5).map { it.apply {
-            showBack()
-            isDraggable = true
-            onDragGestureStarted = {
-                showFront()
+        addAll(generateCards(0, 5).map {
+            it.apply {
+                showBack()
+                isDraggable = true
+                onDragGestureStarted = {
+                    showFront()
+                }
             }
-        } })
+        })
         dropAcceptor = {
             it.draggedComponent is CardView
         }
@@ -44,16 +46,16 @@ class ContainerExample() : BoardGameApplication("Container Example") {
             add((it.draggedComponent as CardView).apply { showBack() })
         }
     }
-
-    val area = Area<TokenView>(
+    
+    private val area: Area<TokenView> = Area(
         height = TokenView.DEFAULT_TOKEN_HEIGHT * 2,
         width = TokenView.DEFAULT_TOKEN_WIDTH * 5,
         posX = 1010,
         posY = 50,
         visual = ColorVisual(255, 0, 0, 80)
     )
-
-    val linearLayout = LinearLayout<CardView>(
+    
+    private val linearLayout: LinearLayout<CardView> = LinearLayout<CardView>(
         height = CardView.DEFAULT_CARD_HEIGHT * 1.2,
         width = CardView.DEFAULT_CARD_WIDTH * 4,
         posX = 50,
@@ -62,13 +64,15 @@ class ContainerExample() : BoardGameApplication("Container Example") {
         spacing = -CardView.DEFAULT_CARD_WIDTH * 0.3,
         alignment = Alignment.CENTER
     ).apply {
-        addAll(generateCards(1, 4).map { it.apply {
-            showFront()
-            isDraggable = true
-            onDragGestureStarted = {
+        addAll(generateCards(1, 4).map {
+            it.apply {
                 showFront()
+                isDraggable = true
+                onDragGestureStarted = {
+                    showFront()
+                }
             }
-        } })
+        })
         dropAcceptor = {
             it.draggedComponent is CardView
         }
@@ -76,16 +80,16 @@ class ContainerExample() : BoardGameApplication("Container Example") {
             add((it.draggedComponent as CardView).apply { showFront() })
         }
     }
-
-    val satchel = Satchel<TokenView>(
+    
+    private val satchel: Satchel<TokenView> = Satchel(
         height = 200,
         width = 200,
         posX = 1010,
         posY = 590,
         visual = ColorVisual(0, 255, 0, 80)
     )
-
-    val alignmentControls : Pane<UIComponent> = Pane<UIComponent>(posX = 50, posY = 335).apply {
+    
+    private val alignmentControls: Pane<UIComponent> = Pane<UIComponent>(posX = 50, posY = 335).apply {
         add(Label(posY = 8, width = 220, label = "Vertical Alignment:", font = Font(20)))
         add(Label(posY = 68, width = 220, label = "Horizontal Alignment:", font = Font(20)))
         add(Label(posY = 128, width = 220, label = "LinearLayout Orientation:", font = Font(20)))

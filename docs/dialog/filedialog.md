@@ -15,8 +15,8 @@ layout: default
 {:toc}
 </details>
 
-In this section we are going to showcase the differend types of file dialogs in the BGW framework.
-FileDialog can be used to display a popup to choose a file or directory either to load or save resources.
+In this section we are going to showcase the different types of file dialogs in the BGW framework. FileDialog can be
+used to display a popup to choose a file or directory either to load or save resources.
 
 ## Dialog creation
 
@@ -26,7 +26,7 @@ The FileDialog class provides different [FileDialogMode](https://tudo-aqua.githu
 * SAVE_FILE
 * CHOOSE_DIRECTORY
 
-Depending on the selection the dialog will request the appropriate type (file vs. directory) and enable multiselction.
+Depending on the selection the dialog will request the appropriate type (file vs. directory) and enable multi-selection.
 
 ## Showing a FileDialog
 To show a dialog use [#showFileDialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-file-dialog.html) in [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html).

@@ -2,7 +2,7 @@ package examples.maumau.entity
 
 class MauMauHand {
 	
-	val cards: ArrayList<MauMauCard> = ArrayList<MauMauCard>()
+	val cards: ArrayList<MauMauCard> = ArrayList()
 	
 	fun addCard(card: MauMauCard) {
 		cards.add(card)

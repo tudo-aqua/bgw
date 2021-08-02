@@ -114,6 +114,7 @@ class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		visual = ImageVisual(LIGHT_BULB_FILE)
 	}
 	
+	@Suppress("SpellCheckingInspection")
 	val mainMenuButton: Button = Button(
 		height = 100,
 		width = 200,

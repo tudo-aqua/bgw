@@ -28,27 +28,27 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 abstract class GridPaneTestBase {
-	protected lateinit var grid: GridPane<UIComponent>
-	protected lateinit var centerings: Array<Array<Alignment>>
+	private lateinit var alignments: Array<Array<Alignment>>
+	private val labels: Array<Label> = Array(3) { Label() }
+	private val buttons: Array<Button> = Array(3) { Button() }
+	private val colorPickers: Array<ColorPicker> = Array(3) { ColorPicker() }
 	
-	protected val labels = Array(3) { Label() }
-	protected val buttons = Array(3) { Button() }
-	protected val colorPickers = Array(3) { ColorPicker() }
-	protected val contents = arrayOf(labels, buttons, colorPickers)
+	protected lateinit var grid: GridPane<UIComponent>
+	protected val contents: Array<Array<out UIComponent>> = arrayOf(labels, buttons, colorPickers)
 	
 	@BeforeEach
 	fun setUp() {
 		grid = GridPane(3, 3)
-		centerings = Array(3) { Array(3) { Alignment.CENTER } }
-		centerings[0][0] = Alignment.CENTER_LEFT
-		centerings[0][1] = Alignment.BOTTOM_RIGHT
-		centerings[1][1] = Alignment.TOP_RIGHT
-		centerings[1][2] = Alignment.CENTER_RIGHT
+		alignments = Array(3) { Array(3) { Alignment.CENTER } }
+		alignments[0][0] = Alignment.CENTER_LEFT
+		alignments[0][1] = Alignment.BOTTOM_RIGHT
+		alignments[1][1] = Alignment.TOP_RIGHT
+		alignments[1][2] = Alignment.CENTER_RIGHT
 		
 		for (i in 0..2) {
 			for (j in 0..2) {
 				grid[i, j] = contents[i][j]
-				grid.setCellCenterMode(i, j, centerings[i][j])
+				grid.setCellCenterMode(i, j, alignments[i][j])
 			}
 		}
 	}
@@ -62,7 +62,7 @@ abstract class GridPaneTestBase {
 		for (i in columns) {
 			for (j in rows) {
 				assertEquals(contents[i + columnBias][j + rowBias], grid[i, j])
-				assertEquals(centerings[i + columnBias][j + rowBias], grid.getCellCenterMode(i, j))
+				assertEquals(alignments[i + columnBias][j + rowBias], grid.getCellCenterMode(i, j))
 			}
 		}
 	}
