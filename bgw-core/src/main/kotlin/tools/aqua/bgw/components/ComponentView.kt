@@ -52,7 +52,7 @@ abstract class ComponentView(
 	posX: Number,
 	posY: Number,
 	visual: Visual
-) : Observable() {
+) {
 	
 	/**
 	 * The parent of this [ComponentView].

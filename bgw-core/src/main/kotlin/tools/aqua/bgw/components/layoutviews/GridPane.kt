@@ -21,6 +21,9 @@ package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.observable.IObservable
+import tools.aqua.bgw.observable.Observable
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.ComponentViewGrid
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.GridIteratorElement
@@ -49,6 +52,8 @@ open class GridPane<T : ComponentView>(
 ) : LayoutView<T>(height = 0, width = 0, posX = posX, posY = posY, visual = visual),
 	Iterable<GridIteratorElement<T>> {
 	
+	internal var updateGui : (() -> Unit)? = null
+	
 	internal val grid: ComponentViewGrid<T> = ComponentViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
 	internal var renderedColWidths = DoubleArray(columns) { 0.0 }
@@ -73,7 +78,7 @@ open class GridPane<T : ComponentView>(
 			require(value >= 0) { "Spacing has to be positive or zero" }
 			
 			field = value
-			notifyChange()
+			updateGui?.invoke()
 		}
 	
 	init {
@@ -108,14 +113,14 @@ open class GridPane<T : ComponentView>(
 		}
 		
 		grid[columnIndex, rowIndex] = component?.apply {
-			this.widthProperty.internalListener = { _, _ -> notifyChange() }
-			this.heightProperty.internalListener = { _, _ -> notifyChange() }
-			this.posXProperty.internalListener = { _, _ -> notifyChange() }
-			this.posYProperty.internalListener = { _, _ -> notifyChange() }
+			this.widthProperty.internalListener = { _, _ -> updateGui?.invoke() }
+			this.heightProperty.internalListener = { _, _ -> updateGui?.invoke() }
+			this.posXProperty.internalListener = { _, _ -> updateGui?.invoke() }
+			this.posYProperty.internalListener = { _, _ -> updateGui?.invoke() }
 			this.parent = this@GridPane
 		}
-		
-		notifyChange()
+
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -137,7 +142,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
 		grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, alignment = value)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -149,7 +154,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
 		grid.setColumnCenterMode(columnIndex = columnIndex, alignment = value)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -161,7 +166,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setRowCenterMode(rowIndex: Int, value: Alignment) {
 		grid.setRowCenterMode(rowIndex = rowIndex, alignment = value)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -172,7 +177,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setCenterMode(value: Alignment) {
 		grid.setCenterMode(alignment = value)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -202,7 +207,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setColumnWidth(columnIndex: Int, columnWidth: Number) {
 		grid.setColumnWidth(columnIndex = columnIndex, columnWidth = columnWidth.toDouble())
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -220,7 +225,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setColumnWidths(columnWidths: DoubleArray) {
 		grid.setColumnWidths(columnWidths = columnWidths)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -234,7 +239,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setAutoColumnWidth(columnIndex: Int) {
 		grid.setColumnWidth(columnIndex = columnIndex, columnWidth = COLUMN_WIDTH_AUTO)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -246,7 +251,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setAutoColumnWidths() {
 		grid.setColumnWidths(columnWidths = DoubleArray(columns) { COLUMN_WIDTH_AUTO })
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -276,7 +281,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setRowHeight(rowIndex: Int, rowHeight: Number) {
 		grid.setRowHeight(rowIndex = rowIndex, rowHeight = rowHeight.toDouble())
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -294,7 +299,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setRowHeights(rowHeights: DoubleArray) {
 		grid.setRowHeights(rowHeights = rowHeights)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -308,7 +313,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setAutoRowHeight(rowIndex: Int) {
 		grid.setRowHeight(rowIndex = rowIndex, rowHeight = ROW_HEIGHT_AUTO)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -320,7 +325,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun setAutoRowHeights() {
 		grid.setRowHeights(rowHeights = DoubleArray(rows) { ROW_HEIGHT_AUTO })
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -351,7 +356,7 @@ open class GridPane<T : ComponentView>(
 		val result = grid.grow(left = left, right = right, top = top, bottom = bottom)
 		
 		if (result)
-			notifyChange()
+			updateGui?.invoke()
 		
 		return result
 	}
@@ -379,7 +384,7 @@ open class GridPane<T : ComponentView>(
 		val result = grid.trim()
 		
 		if (result)
-			notifyChange()
+			updateGui?.invoke()
 		
 		return result
 	}
@@ -396,7 +401,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun addColumns(columnIndex: Int, count: Int = 1) {
 		grid.addColumns(columnIndex = columnIndex, count = count)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -410,7 +415,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun removeColumn(columnIndex: Int) {
 		grid.removeColumn(columnIndex = columnIndex)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -424,7 +429,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun removeEmptyColumns() {
 		grid.removeEmptyColumns()
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -439,7 +444,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun addRows(rowIndex: Int, count: Int = 1) {
 		grid.addRows(rowIndex = rowIndex, count = count)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -453,7 +458,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun removeRow(rowIndex: Int) {
 		grid.removeRow(rowIndex = rowIndex)
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -467,7 +472,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	fun removeEmptyRows() {
 		grid.removeEmptyRows()
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**
@@ -482,7 +487,7 @@ open class GridPane<T : ComponentView>(
 			this[componentTriple.columnIndex, componentTriple.rowIndex] = null
 			component.parent = null
 		}
-		notifyChange()
+		updateGui?.invoke()
 	}
 	
 	/**

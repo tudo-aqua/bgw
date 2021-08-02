@@ -64,7 +64,7 @@ internal class LayoutNodeBuilder {
 		 */
 		private fun buildGrid(scene: Scene<out ComponentView>, gridView: GridPane<out ComponentView>): Region =
 			FXPane().apply {
-				gridView.setGUIListenerAndInvoke { refreshGrid(scene, gridView) }
+				gridView.updateGui = { refreshGrid(scene, gridView) }
 			}
 		
 		/**
