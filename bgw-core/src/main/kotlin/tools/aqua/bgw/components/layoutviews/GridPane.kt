@@ -92,7 +92,7 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Sets content of desired grid cell.
 	 * Overrides existing component in this cell.
-	 * Pass `null` to remove an component.
+	 * Pass `null` to remove a component.
 	 *
 	 * @param columnIndex column index in grid.
 	 * @param rowIndex row index in grid.
@@ -326,7 +326,7 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Grows grid by specified dimensions, filling new cells with NULL values.
 	 * New rows and columns get automatic resizing behaviour, specified as [COLUMN_WIDTH_AUTO] and [ROW_HEIGHT_AUTO].
-	 * Therefore new empty rows and columns get rendered with height and width 0.0
+	 * Therefore, new empty rows and columns get rendered with height and width 0.0
 	 * e.g. invisible if not specified otherwise.
 	 *
 	 * @param left column count to be added to the left.
@@ -431,8 +431,8 @@ open class GridPane<T : ComponentView>(
 	 * Adds the desired amount of rows between row <b>rowIndex</b> and <b>rowIndex + 1</b>.
 	 * New rows get NULL-initialized.
 	 *
-	 * @param rowIndex index after which the new row should be added
-	 * @param count Row count to be added. Default: 1
+	 * @param rowIndex Index after which the new row should be added
+	 * @param count Count of rows to be added. Default: 1
 	 *
 	 * @see addColumns
 	 * @see removeRow

@@ -105,7 +105,7 @@ class Pane<T : ComponentView>(
     }
     
     /**
-     * Adds all [ComponentView]s contained in the passed collection to this [Pane].
+     * Adds all [ComponentView]s contained in [collection] to this [Pane].
      * Whenever an [ComponentView] is encountered, that is already contained, an
      * [IllegalArgumentException] is thrown and no further [ComponentView] is added.
      *

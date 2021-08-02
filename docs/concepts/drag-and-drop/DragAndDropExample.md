@@ -44,36 +44,36 @@ To create a running example, the described elements are wrapped in a
 
 ````kotlin
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
-    val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+  private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
-    val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
-    val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
+  private val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
+  private val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
 
-    val redArea: Area<TokenView> =
-        Area(
-            height = 50,
-            width = 50,
-            posX = 200,
-            posY = 20,
-            visual = ColorVisual(255, 0, 0, 100)
-        )
+  private val redArea: Area<TokenView> =
+    Area(
+      height = 50,
+      width = 50,
+      posX = 200,
+      posY = 20,
+      visual = ColorVisual(255, 0, 0, 100)
+    )
 
-    val greenArea: Area<TokenView> =
-        Area(
-            height = 50,
-            width = 50,
-            posX = 200,
-            posY = 200,
-            visual = ColorVisual(0, 255, 0, 100)
-        )
+  private val greenArea: Area<TokenView> =
+    Area(
+      height = 50,
+      width = 50,
+      posX = 200,
+      posY = 200,
+      visual = ColorVisual(0, 255, 0, 100)
+    )
 
-    init {
-        //Drag and Drop code goes here
+  init {
+    //Drag and Drop code goes here
 
-        gameScene.addComponents(redToken, greenToken, redArea, greenArea)
-        showGameScene(gameScene)
-        show()
-    }
+    gameScene.addComponents(redToken, greenToken, redArea, greenArea)
+    showGameScene(gameScene)
+    show()
+  }
 }
 ````
 
@@ -170,7 +170,7 @@ greenArea.onDragDropped = { dragEvent ->
 - After a failed drag and drop gesture (no ``dropAcceptor`` returned ``true``), the dragged element snaps back to the
   previous container.
 - If the dragged element does not get added to the scene, container or layout after a valid drag and drop gesture, it is
-  not longer contained anywhere in the scene.
+  no longer contained anywhere in the scene.
 - Keep in mind that when dealing with situations, where multiple ``dropAcceptor`` invocations might return ``true``,
   that the event ``onDragElementDropped`` gets invoked on multiple elements and no guarantee is given for the order of
   invocations.
@@ -182,71 +182,71 @@ greenArea.onDragDropped = { dragEvent ->
 
 ````kotlin
 fun main() {
-    DragAndDropExample()
+  DragAndDropExample()
 }
 
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
-    val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+  private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
-    val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
-    val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
+  private val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
+  private val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
 
-    val redArea: Area<TokenView> =
-        Area(
-            height = 50,
-            width = 50,
-            posX = 200,
-            posY = 20,
-            visual = ColorVisual(255, 0, 0, 100)
-        )
+  private val redArea: Area<TokenView> =
+    Area(
+      height = 50,
+      width = 50,
+      posX = 200,
+      posY = 20,
+      visual = ColorVisual(255, 0, 0, 100)
+    )
 
-    val greenArea: Area<TokenView> =
-        Area(
-            height = 50,
-            width = 50,
-            posX = 200,
-            posY = 200,
-            visual = ColorVisual(0, 255, 0, 100)
-        )
+  private val greenArea: Area<TokenView> =
+    Area(
+      height = 50,
+      width = 50,
+      posX = 200,
+      posY = 200,
+      visual = ColorVisual(0, 255, 0, 100)
+    )
 
-    init {
-        redToken.isDraggable = true
-        redToken.onDragGestureEnded = { _, success ->
-            if (success) {
-                redToken.isDraggable = false
-            }
-        }
-
-        greenToken.isDraggable = true
-        greenToken.onDragGestureEnded = { _, success ->
-            if (success) {
-                greenToken.isDraggable = false
-            }
-        }
-
-        redArea.dropAcceptor = { dragEvent ->
-            when (dragEvent.draggedComponent) {
-                is TokenView -> dragEvent.draggedComponent == redToken
-                else -> false
-            }
-        }
-        redArea.onDragDropped = { dragEvent ->
-            redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-        }
-
-        greenArea.dropAcceptor = { dragEvent ->
-            when (dragEvent.draggedComponent) {
-                is TokenView -> dragEvent.draggedComponent == greenToken
-                else -> false
-            }
-        }
-        greenArea.onDragDropped = { dragEvent ->
-            greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-        }
-
-        gameScene.addComponents(redToken, greenToken, redArea, greenArea)
-        showGameScene(gameScene)
-        show()
+  init {
+    redToken.isDraggable = true
+    redToken.onDragGestureEnded = { _, success ->
+      if (success) {
+        redToken.isDraggable = false
+      }
     }
+
+    greenToken.isDraggable = true
+    greenToken.onDragGestureEnded = { _, success ->
+      if (success) {
+        greenToken.isDraggable = false
+      }
+    }
+
+    redArea.dropAcceptor = { dragEvent ->
+      when (dragEvent.draggedComponent) {
+        is TokenView -> dragEvent.draggedComponent == redToken
+        else -> false
+      }
+    }
+    redArea.onDragDropped = { dragEvent ->
+      redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
+    }
+
+    greenArea.dropAcceptor = { dragEvent ->
+      when (dragEvent.draggedComponent) {
+        is TokenView -> dragEvent.draggedComponent == greenToken
+        else -> false
+      }
+    }
+    greenArea.onDragDropped = { dragEvent ->
+      greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
+    }
+
+    gameScene.addComponents(redToken, greenToken, redArea, greenArea)
+    showGameScene(gameScene)
+    show()
+  }
 }
 ````

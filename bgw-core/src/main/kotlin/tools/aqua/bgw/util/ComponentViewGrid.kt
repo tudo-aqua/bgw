@@ -173,7 +173,7 @@ internal class ComponentViewGrid<T : ComponentView>(
 	fun getRow(rowIndex: Int): List<T?> = List(columns) { grid[it][rowIndex] as? T }
 	
 	/**
-	 * Returns [List] all all rows as another [List].
+	 * Returns [List] all rows as another [List].
 	 */
 	fun getRows(): List<List<T?>> = (0 until rows).map { getRow(it) }
 	
@@ -185,7 +185,7 @@ internal class ComponentViewGrid<T : ComponentView>(
 	fun getColumn(columnIndex: Int): List<T?> = grid[columnIndex].toList() as List<T?>
 	
 	/**
-	 * Returns [List] all all columns as another [List].
+	 * Returns [List] all columns as another [List].
 	 */
 	fun getColumns(): List<List<T?>> = (0 until columns).map { getColumn(it) }
 	//endregion
@@ -196,7 +196,7 @@ internal class ComponentViewGrid<T : ComponentView>(
 	 *
 	 * @param columnIndex column index.
 	 *
-	 * @throws IllegalArgumentException if [columnIndex] is out of grid range,.
+	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
 	 */
 	fun getColumnWidth(columnIndex: Int): Double {
 		require(columnIndex in columnWidths.indices) {

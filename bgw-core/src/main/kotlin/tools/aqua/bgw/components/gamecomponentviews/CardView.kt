@@ -31,7 +31,7 @@ import tools.aqua.bgw.visual.Visual
  * Inheriting does NOT change how a cardView is visualized by the BGW framework.
  *
  * Visualization:
- * The [Visual] at the [currentSide] value is used to visualize the card. By default the back side is shown.
+ * The [Visual] at the [currentSide] value is used to visualize the card. By default, the back side is shown.
  *
  * @param height height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
  * @param width width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].

@@ -68,14 +68,14 @@ sealed class UIComponent(
 	
 	/**
 	 * [Property] for the css style that gets applied to this [UIComponent]'s background.
-	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 */
 	val backgroundStyleProperty: StringProperty = StringProperty("")
 	
 	/**
 	 * Css style that gets applied to this [UIComponent]'s background.
-	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 * @see backgroundStyleProperty
 	 */
@@ -87,14 +87,14 @@ sealed class UIComponent(
 	
 	/**
 	 * [Property] for the css style that gets applied to this [UIComponent].
-	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 */
 	val componentStyleProperty: StringProperty = StringProperty("")
 	
 	/**
 	 * Css style that gets applied to this [UIComponent].
-	 * This gets applied last so it may override any changes made via other fields and functions of this
+	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
 	 * @see componentStyleProperty
 	 */

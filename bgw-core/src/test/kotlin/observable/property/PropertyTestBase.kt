@@ -23,8 +23,8 @@ import tools.aqua.bgw.observable.LimitedDoubleProperty
 open class PropertyTestBase {
 	protected val initialValue: Double = 13.0
 	protected val newValue: Double = 42.0
-	protected val lowerBound: Double = -5.0
-	protected val upperBound: Double = 50.0
+	private val lowerBound: Double = -5.0
+	private val upperBound: Double = 50.0
 	
 	protected lateinit var property: LimitedDoubleProperty
 	protected val listener1: TestListener = TestListener()

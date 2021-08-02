@@ -10,10 +10,10 @@ import tools.aqua.bgw.util.BidirectionalMap
 
 class ViewController : BoardGameApplication("MauMau") {
 	
-	val gameScene: GameScene = GameScene()
-	val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
+	private val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
+	private val refreshViewController: RefreshViewController = RefreshViewController(this)
 	
-	val refreshViewController: RefreshViewController = RefreshViewController(this)
+	val gameScene: GameScene = GameScene()
 	val logicController: LogicController = LogicController(refreshViewController)
 	
 	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap()

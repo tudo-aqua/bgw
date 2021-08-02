@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "GrazieInspection")
 
 package tools.aqua.bgw.event
 
@@ -651,9 +651,9 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 	override fun toString(): String = string
 	
 	/**
-	 * Returns `true` if key was a modifier like Shift or Ctrl etc, `false` otherwise.
+	 * Returns `true` if key was a modifier like Shift or Ctrl etc., `false` otherwise.
 	 *
-	 * @return `true` if key was a modifier like Shift or Ctrl etc, `false` otherwise.
+	 * @return `true` if key was a modifier like Shift or Ctrl etc., `false` otherwise.
 	 */
 	fun isModifier(): Boolean = keyTypeMask and KeyType.MODIFIER != 0
 	
@@ -676,9 +676,9 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 	fun isDigit(): Boolean = keyTypeMask and KeyType.DIGIT != 0
 	
 	/**
-	 * Returns `true` if key was on numpad like numpad numbers or +,-,/,* etc, `false` otherwise.
+	 * Returns `true` if key was on numpad like numpad numbers or +,-,/,* etc., `false` otherwise.
 	 *
-	 * @return `true` if key was on numpad like numpad numbers or +,-,/,* etc, `false` otherwise.
+	 * @return `true` if key was on numpad like numpad numbers or +,-,/,* etc., `false` otherwise.
 	 */
 	fun isOnNumpad(): Boolean = keyTypeMask and KeyType.NUMPAD != 0
 	
@@ -701,16 +701,16 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 	fun isNavigation(): Boolean = keyTypeMask and KeyType.NAVIGATION != 0
 	
 	/**
-	 * Returns `true` if key was a whitespace key like space, tab etc, `false` otherwise.
+	 * Returns `true` if key was a whitespace key like space, tab etc., `false` otherwise.
 	 *
-	 * @return `true` if key was a whitespace key like space, tab etc, `false` otherwise.
+	 * @return `true` if key was a whitespace key like space, tab etc., `false` otherwise.
 	 */
 	fun isWhitespace(): Boolean = keyTypeMask and KeyType.WHITESPACE != 0
 	
 	/**
-	 * Returns `true` if key was a function key F1, F2, etc, `false` otherwise.
+	 * Returns `true` if key was a function key F1, F2, etc., `false` otherwise.
 	 *
-	 * @return `true` if key was a function key F1, F2, etc, `false` otherwise.
+	 * @return `true` if key was a function key F1, F2, etc., `false` otherwise.
 	 */
 	fun isFunction(): Boolean = keyTypeMask and KeyType.FUNCTION != 0
 	//endregion

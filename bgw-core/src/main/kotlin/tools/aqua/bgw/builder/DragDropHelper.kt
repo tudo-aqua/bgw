@@ -65,7 +65,7 @@ class DragDropHelper {
 		 *
 		 * @return [List] of components.
 		 */
-		internal fun Scene<out ComponentView>.findComponentsBelowMouse(
+		private fun Scene<out ComponentView>.findComponentsBelowMouse(
 			mouseX: Double,
 			mouseY: Double
 		): List<DragTargetObject> =

@@ -1,10 +1,5 @@
 ---
-parent: Components 
-title: Container 
-has_toc: true
-nav_order: 2 
-layout: default 
-has_children: true
+parent: Components title: Container has_toc: true nav_order: 2 layout: default has_children: true
 ---
 
 [AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html
@@ -47,13 +42,13 @@ To create a running example, the described elements are wrapped in a
 
 ````kotlin
 class AreaExample : BoardGameApplication("Area example") {
-    val gameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-
-    val numberOfComponentsLabel = Label(width = 400, posX = 50, posY = 50)
-    val area = Area<TokenView>(100, 400, 50, 100, ColorVisual.DARK_GRAY)
-
-    val greenToken = TokenView(visual = ColorVisual.GREEN)
-    val redToken = TokenView(visual = ColorVisual.RED)
+	val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+	
+	val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50)
+	val area: Area<TokenView> = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY)
+	
+	val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN)
+	val redToken: TokenView = TokenView(visual = ColorVisual.RED)
 }
 ````
 
@@ -95,10 +90,10 @@ removed from ``area``. To achieve this behaviour, the ``onAdd`` and ``onRemove``
 
 ````kotlin
 area.onAdd = {
-    this.resize(100, 100)
+	this.resize(100, 100)
 }
 area.onRemove = {
-    this.rotation += 45
+	this.rotation += 45
 }
 ````
 
@@ -109,7 +104,7 @@ state. In this example a Label gets updated with the Number of components curren
 
 ````kotlin
 area.addComponentsListener {
-    numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+	numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
 }
 ````
 
@@ -117,20 +112,21 @@ Listeners can be removed via the ``clearComponentsListners`` or ``removeComponen
 
 ## Useful hints for dealing with containers
 
-- Containers provide an iterator over their components list via the [Iterable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) interface.
-- The position of components contained in any containers with automatic layouting
-  should never be modified, since the containers handle positioning.
+- Containers provide an iterator over their components list via
+  the [Iterable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) interface.
+- The position of components contained in any containers with automatic layouting should never be modified, since the
+  containers handle positioning.
 
-- When using non-automatic layouting containers, do not forget to position the contained components.
-  Especially if they get added after a drag and drop gesture.
-  
-- Any Component can only ever be contained in one container at a time. 
-  Trying to add an already contained component to another container will result in a runtime exception.
-  
+- When using non-automatic layouting containers, do not forget to position the contained components. Especially if they
+  get added after a drag and drop gesture.
+
+- Any Component can only ever be contained in one container at a time. Trying to add an already contained component to
+  another container will result in a runtime exception.
+
 - Containers can also be draggable and can act as a drag target.
 
-- ComponentListeners can be a great way of exposing dynamic information about a container 
-  via sufficient [UIComponents](https://tudo-aqua.github.io/bgw/components/ui-elements/ui-elements.html).
+- ComponentListeners can be a great way of exposing dynamic information about a container via
+  sufficient [UIComponents](https://tudo-aqua.github.io/bgw/components/ui-elements/ui-elements.html).
 
 ## Types of Containers
 
@@ -141,53 +137,55 @@ Area. No further layouting is provided by the Area.
 
 ### [CardStack](/bgw/components/container/children/cardstack.html)
 
-CardStack is a special form of container. It can only contain 
-[CardView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html).
-It should be used to visualize card stacks. It provides automatic layouting and alignment features.
+CardStack is a special form of container. It can only contain
+[CardView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html)
+. It should be used to visualize card stacks. It provides automatic layouting and alignment features.
 
 ### [LinearLayout](https://tudo-aqua.github.io/bgw/components/container/children/linearlayout.html)
 
-LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined spacing. 
-Additionally, an orientation and alignment may be specified. 
+LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined
+spacing. Additionally, an orientation and alignment may be specified.
 
 ### [Satchel](https://tudo-aqua.github.io/bgw/components/container/children/satchel.html)
 
-A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an entity, 
-where the user should not know what might get drawn next, or what is in the container.
+A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an
+entity, where the user should not know what might get drawn next, or what is in the container.
 
 ## Complete source code for the example
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/components/container/AreaExample.kt) {: .btn }
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/components/container/AreaExample.kt)
+{: .btn }
+
 ````kotlin
 class AreaExample : BoardGameApplication("Area example") {
-    val gameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-
-    val numberOfComponentsLabel = Label(width = 400, posX = 50, posY = 50)
-    val area = Area<TokenView>(100, 400, 50, 100, ColorVisual.DARK_GRAY)
-
-    val greenToken = TokenView(visual = ColorVisual.GREEN)
-    val redToken = TokenView(visual = ColorVisual.RED)
-
-    init {
-        area.onAdd = {
-            this.resize(100,100)
-        }
-        area.onRemove = {
-            this.rotation += 45
-        }
-
-        area.addComponentsListener {
-            numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
-        }
-
-        area.add(greenToken)
-        area.add(redToken, 0)
-
-        area.remove(redToken)
-
-        gameScene.addComponents(area, numberOfComponentsLabel)
-        showGameScene(gameScene)
-        show()
-    }
+	private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+	
+	private val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50)
+	private val area: Area<TokenView> = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY)
+	
+	private val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN)
+	private val redToken: TokenView = TokenView(visual = ColorVisual.RED)
+	
+	init {
+		area.onAdd = {
+			this.resize(100, 100)
+		}
+		area.onRemove = {
+			this.rotation += 45
+		}
+		
+		area.addComponentsListener {
+			numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+		}
+		
+		area.add(greenToken)
+		area.add(redToken, 0)
+		
+		area.remove(redToken)
+		
+		gameScene.addComponents(area, numberOfComponentsLabel)
+		showGameScene(gameScene)
+		show()
+	}
 }
 ````

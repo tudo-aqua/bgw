@@ -24,7 +24,7 @@ import tools.aqua.bgw.util.Font
 import java.awt.Color
 
 /**
- * A [ColorPicker] that allows to chose a [Color].
+ * A [ColorPicker] that allows to choose a [Color].
  *
  * @param height height for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_HEIGHT].
  * @param width width for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_WIDTH].

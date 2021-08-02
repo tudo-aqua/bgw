@@ -24,7 +24,7 @@ package tools.aqua.bgw.components.uicomponents
  * A [RadioButton] may be used as a [Button] that is either selected or not selected.
  * An important feature of [ToggleButton]s is the [ToggleGroup].
  *
- * [ToggleGroup]s can be used to to group [ToggleButton]s.
+ * [ToggleGroup]s can be used to group [ToggleButton]s.
  *
  * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
  * Only one [ToggleButton] may be selected in a [ToggleGroup].

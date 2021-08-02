@@ -45,7 +45,7 @@ package tools.aqua.bgw.util
  *
  * is valid because A is only contained once in the domain and in the coDomain.
  *
- * @constructor Creates a map with the given set of elements mapping pair.first -> pair.second.
+ * @constructor Creates a map with the given set of elements mapping pair first -> pair.second.
  *
  * @param elements elements to be initialized in the map.
  */

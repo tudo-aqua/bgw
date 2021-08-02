@@ -14,7 +14,7 @@ plugins {
 
 group = "tools.aqua"
 version = rootProject.version
-var javaFxVersion = "12.0.1"
+var javaFxVersion: String = "12.0.1"
 
 repositories {
 	mavenCentral()

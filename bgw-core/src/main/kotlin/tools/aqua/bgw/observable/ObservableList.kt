@@ -244,7 +244,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	
 	
 	/**
-	 * Removes all of the elements from this list. The list will be empty after this call returns.
+	 * Removes all elements from this list. The list will be empty after this call returns.
 	 */
 	fun clear() {
 		if (list.isNotEmpty()) {
@@ -254,7 +254,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	}
 	
 	/**
-	 * Appends all of the elements in the specified collection to the end of this list,
+	 * Appends all elements in the specified collection to the end of this list,
 	 * in the order that they are returned by the specified collection's Iterator.
 	 * The behavior of this operation is undefined if the specified collection is modified
 	 * while the operation is in progress. (This implies that the behavior of this call is undefined
@@ -273,7 +273,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	}
 	
 	/**
-	 * Inserts all of the elements in the specified collection into this list,
+	 * Inserts all elements in the specified collection into this list,
 	 * starting at the specified position. Shifts the element currently at that position (if any)
 	 * and any subsequent elements to the right (increases their indices). The new elements will appear
 	 * in the list in the order that they are returned by the specified collection's iterator.
@@ -339,7 +339,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * (If `fromIndex` and `toIndex` are equal, the returned list is empty.)
 	 * The returned list is backed by this list, so non-structural changes in the returned list
 	 * are reflected in this list, and vice-versa.
-	 * The returned list supports all of the optional list operations.
+	 * The returned list supports all optional list operations.
 	 *
 	 * This method eliminates the need for explicit range operations (of the sort that commonly exist for arrays).
 	 * Any operation that expects a list can be used as a range operation
@@ -348,7 +348,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * <pre>
 	 * list.subList(from, to).clear();
 	 * </pre>
-	 * Similar idioms may be constructed for [.indexOf] and [.lastIndexOf], and all of the algorithms in the
+	 * Similar idioms may be constructed for [.indexOf] and [.lastIndexOf], and all algorithms in the
 	 * [Collections] class can be applied to a subList.
 	 *
 	 * The semantics of the list returned by this method become undefined if the backing list (i.e., this list)
@@ -374,7 +374,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	fun spliterator(): Spliterator<T> = list.spliterator()
 	
 	/**
-	 * Removes all of the elements of this collection that satisfy the given predicate.
+	 * Removes all elements of this collection that satisfy the given predicate.
 	 * Errors or runtime exceptions thrown during iteration or by the predicate are relayed to the caller.
 	 *
 	 * @param filter a predicate which returns `true` for elements to be removed.

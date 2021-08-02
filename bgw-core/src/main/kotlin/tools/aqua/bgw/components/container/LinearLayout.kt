@@ -38,7 +38,7 @@ import tools.aqua.bgw.visual.Visual
  * The [Visual] is used to visualize a background.
  * If all components are still within bounds with the user defined spacing,
  * the user defined spacing gets used to space the components.
- * Otherwise the biggest possible spacing is used
+ * Otherwise, the biggest possible spacing is used
  * so that all components are still withing bounds of the [LinearLayout].
  *
  * @param height height for this [LinearLayout]. Default: 0.
