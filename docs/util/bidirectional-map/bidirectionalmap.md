@@ -1,5 +1,5 @@
 ---
-parent: util
+parent: Util
 layout: default
 title: BiDirectionalMap
 nav_order: 2

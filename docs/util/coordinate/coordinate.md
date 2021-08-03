@@ -1,5 +1,5 @@
 ---
-parent: util
+parent: Util
 layout: default
 title: Coordinate
 nav_order: 1
