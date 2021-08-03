@@ -23,7 +23,7 @@ import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
 /**
- * Baseclass for all [UIComponent]s that have a text.
+ * Baseclass for all [UIComponent]s that have a text input field.
  *
  * @param height height for this [TextInputUIComponent].
  * @param width width for this [TextInputUIComponent].
