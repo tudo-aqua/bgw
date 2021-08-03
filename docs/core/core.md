@@ -7,5 +7,5 @@ has_children: true
 
 # Core
 
-Introduction to core. (Scene, alignment)
+Introduction to core.
 
