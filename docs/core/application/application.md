@@ -5,7 +5,7 @@ title: BoardGameApplication
 nav_order: 1
 ---
 
-# Core
+# BoardGameApplication
 
 Introduction to BoardGameApplication.
 

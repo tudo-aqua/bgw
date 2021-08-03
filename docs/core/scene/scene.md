@@ -5,7 +5,7 @@ title: Scene
 nav_order: 2
 ---
 
-# Core
+# Scene
 
 Introduction to scene.
 
