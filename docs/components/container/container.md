@@ -1,7 +1,6 @@
 ---
 parent: Components 
-title: Container 
-has_toc: true
+title: Container
 nav_order: 2 
 layout: default 
 ---
@@ -134,62 +133,69 @@ Listeners can be removed via the ``clearComponentsListners`` or ``removeComponen
 
 ## Types of Containers
 
-### [Area](/bgw/components/container/children/area.html)
+### [Area](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html)
 
 Area is the simplest form of a container. Its contained components are positioned relative to the top-left corner of the
 Area. No further layouting is provided by the Area.
 
-### [CardStack](/bgw/components/container/children/cardstack.html)
+### [CardStack](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html)
 
 CardStack is a special form of container. It can only contain
 [CardView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html)
 . It should be used to visualize card stacks. It provides automatic layouting and alignment features.
 
-### [LinearLayout](https://tudo-aqua.github.io/bgw/components/container/children/linearlayout.html)
+### [LinearLayout](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html)
 
 LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined
-spacing. Additionally, an orientation and alignment may be specified.
+spacing. Additionally, an orientation and alignment may be specified. In this image a linearLayout is used to 
+visualize a hand of cards:
 
-### [Satchel](https://tudo-aqua.github.io/bgw/components/container/children/satchel.html)
+![image](LinearLayout.png)
+
+### [Satchel](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html)
 
 A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an
 entity, where the user should not know what might get drawn next, or what is in the container.
 
 ## Complete source code for the example
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/components/container/AreaExample.kt)
-{: .btn }
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/components/container/AreaExample.kt){:
+.btn }
 
 ````kotlin
+fun main() {
+  AreaExample()
+}
+
 class AreaExample : BoardGameApplication("Area example") {
-	private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-	
-	private val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50)
-	private val area: Area<TokenView> = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY)
-	
-	private val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN)
-	private val redToken: TokenView = TokenView(visual = ColorVisual.RED)
-	
-	init {
-		area.onAdd = {
-			this.resize(100, 100)
-		}
-		area.onRemove = {
-			this.rotation += 45
-		}
-		
-		area.addComponentsListener {
-			numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
-		}
-		
-		area.add(greenToken)
-		area.add(redToken, 0)
-		
-		area.remove(redToken)
-		
-		gameScene.addComponents(area, numberOfComponentsLabel)
-		showGameScene(gameScene)
-		show()
-	}
+  private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+
+  private val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50)
+  private val area: Area<TokenView> = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY)
+
+  private val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN)
+  private val redToken: TokenView = TokenView(visual = ColorVisual.RED)
+
+  init {
+    area.onAdd = {
+      this.resize(100, 100)
+    }
+    area.onRemove = {
+      this.rotation += 45
+    }
+
+    area.addComponentsListener {
+      numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+    }
+
+    area.add(greenToken)
+    area.add(redToken, 0)
+
+    area.remove(redToken)
+
+    gameScene.addComponents(area, numberOfComponentsLabel)
+    showGameScene(gameScene)
+    show()
+  }
 }
 ````
