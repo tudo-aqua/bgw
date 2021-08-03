@@ -2,7 +2,7 @@
 parent: util
 layout: default
 title: BiDirectionalMap
-nav_order: 3
+nav_order: 2
 ---
 
 # Util

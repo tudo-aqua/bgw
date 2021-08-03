@@ -26,7 +26,7 @@ be possible to drag tokens into areas of the same color. Once the tokens have be
 should become non-draggable.
 
 The complete source code for this example can be
-found [here](/bgw/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example).
+found [here](https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example).
 
 ## Prior knowledge
 
@@ -40,7 +40,7 @@ Knowledge about the following components and concepts is necessary for this tuto
 ## Component declaration
 
 To create a running example, the described components are wrapped in a
-[BoardGameApplication](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
+[BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
 
 ````kotlin
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
