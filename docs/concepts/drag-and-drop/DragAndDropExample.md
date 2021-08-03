@@ -138,7 +138,7 @@ redArea.onDragDropped = { dragEvent ->
 ````
 
 The ``reposition`` function is applied to the ``draggedComponent``, because
-[Area](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/)
+[Area](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/)
 does not have an automatic layout algorithm.
 
 The ``greenArea`` gets initialized accordingly:
