@@ -4,7 +4,6 @@ title: Container
 has_toc: true
 nav_order: 2 
 layout: default 
-has_children: true
 ---
 
 [AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html

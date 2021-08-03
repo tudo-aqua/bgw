@@ -6,3 +6,5 @@ has_children: true
 ---
 
 # Dialogs
+
+Introduction to dialogs.

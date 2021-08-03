@@ -1,5 +1,5 @@
 ---
-parent: core
+parent: Core
 layout: default
 title: Scene
 nav_order: 2

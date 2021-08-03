@@ -7,4 +7,4 @@ has_children: true
 
 # Components
 
-Introduction to components
+Introduction to components.
