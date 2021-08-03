@@ -20,13 +20,13 @@ package tools.aqua.bgw.builder
 import com.jfoenix.controls.JFXComboBox
 import javafx.beans.property.ReadOnlyStringWrapper
 import javafx.collections.FXCollections
-import javafx.geometry.Pos
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
 import javafx.scene.layout.Region
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXColor
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
 import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.observable.BooleanProperty
@@ -73,9 +73,9 @@ internal class UINodeBuilder {
          */
         private fun buildLabel(label: Label): Region {
             val node = javafx.scene.control.Label()
-            node.alignment = Pos.CENTER
             node.textProperty().bindLabelProperty(label)
             node.bindFont(label)
+            node.alignmentProperty().bindAlignmentProperty(label)
             return node
         }
 
@@ -86,6 +86,7 @@ internal class UINodeBuilder {
             val node = com.jfoenix.controls.JFXButton()
             node.textProperty().bindLabelProperty(button)
             node.bindFont(button)
+            node.alignmentProperty().bindAlignmentProperty(button)
             return node
         }
 
@@ -93,9 +94,9 @@ internal class UINodeBuilder {
          * Builds [TextArea].
          */
         private fun buildTextArea(textArea: TextArea): Region {
-            val node = javafx.scene.control.TextArea(textArea.labelProperty.value)
+            val node = javafx.scene.control.TextArea(textArea.textProperty.value)
 
-            node.textProperty().bindLabelProperty(textArea)
+            node.textProperty().bindTextProperty(textArea)
             node.promptText = textArea.prompt
             textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
                 node.style = nV.toFXFontCSS()
@@ -107,9 +108,9 @@ internal class UINodeBuilder {
          * Builds [TextField]
          */
         private fun buildTextField(textField: TextField): Region {
-            val node = javafx.scene.control.TextField(textField.labelProperty.value)
+            val node = javafx.scene.control.TextField(textField.textProperty.value)
 
-            node.textProperty().bindLabelProperty(textField)
+            node.textProperty().bindTextProperty(textField)
             node.promptText = textField.prompt
             textField.fontProperty.setGUIListenerAndInvoke(textField.font) { _, nV ->
                 node.style = nV.toFXFontCSS()
@@ -174,6 +175,7 @@ internal class UINodeBuilder {
             node.selectedProperty().bindBooleanProperty(checkBox.checkedProperty)
             //font size
             node.bindFont(checkBox)
+            node.alignmentProperty().bindAlignmentProperty(checkBox)
             return node
         }
 
@@ -289,6 +291,16 @@ internal class UINodeBuilder {
         }
     
         /**
+         * Binds [TextInputUIComponent.textProperty].
+         */
+        private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: TextInputUIComponent) {
+            //Framework -> JavaFX
+            labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
+            //JavaFX -> Framework
+            addListener { _, _, new -> labeled.text = new }
+        }
+
+        /**
          * Binds [LabeledUIComponent.labelProperty].
          */
         private fun javafx.beans.property.StringProperty.bindLabelProperty(labeled: LabeledUIComponent) {
@@ -296,6 +308,14 @@ internal class UINodeBuilder {
             labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
             //JavaFX -> Framework
             addListener { _, _, new -> labeled.label = new }
+        }
+
+        /**
+         * Binds [LabeledUIComponent.alignmentProperty]. Framework -> JavaFX only.
+         */
+        private fun javafx.beans.property.ObjectProperty<javafx.geometry.Pos>.bindAlignmentProperty(labeled: LabeledUIComponent) {
+            //Framework -> JavaFX
+            labeled.alignmentProperty.setGUIListenerAndInvoke(labeled.alignment) { _, nV -> value = nV.toFXPos() }
         }
 
         /**
@@ -313,7 +333,7 @@ internal class UINodeBuilder {
         /**
          * Binds [Font].
          */
-        private fun Labeled.bindFont(labeled: LabeledUIComponent) {
+        private fun Labeled.bindFont(labeled: UIComponent) {
             labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
                 style = nV.toFXFontCSS()
                 textFill = nV.color.toFXColor()

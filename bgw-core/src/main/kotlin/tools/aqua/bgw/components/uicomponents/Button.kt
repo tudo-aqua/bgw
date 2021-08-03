@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.util.Font
 
 /**
@@ -30,6 +31,7 @@ import tools.aqua.bgw.util.Font
  * @param posY vertical coordinate for this [Button]. Default: 0.
  * @param label label for this [Button]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
+ * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
  */
 open class Button(
 	height: Number = DEFAULT_BUTTON_HEIGHT,
@@ -38,7 +40,8 @@ open class Button(
 	posY: Number = 0,
 	label: String = "",
 	font: Font = Font(),
-) : LabeledUIComponent(height = height, width = width, posX = posX, posY = posY, font = font, label = label) {
+	alignment: Alignment = Alignment.CENTER,
+) : LabeledUIComponent(height = height, width = width, posX = posX, posY = posY, label = label, font = font, alignment = alignment) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [Button].
 	 */
