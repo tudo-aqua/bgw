@@ -1,13 +1,13 @@
 ---
 parent: Components
-title: UI Elements
+title: UIComponents
 nav_order: 3
 layout: default
 ---
 
-# UI Elements
+# UIComponents
 
-Introduction to ui elements.
+Introduction to UIComponents.
 
 ## Button
 
