@@ -98,4 +98,20 @@ open class CoordinatePlain(topLeftX: Number, topLeftY: Number, bottomRightX: Num
 		bottomRight.xCoord,
 		bottomRight.yCoord
 	)
+	
+	/**
+	 * Returns `true` if the given [coordinate] is inside this plain.
+	 *
+	 * @return `true` if the given [coordinate] is inside this plain, `false` otherwise
+	 */
+	fun isIn(coordinate: Coordinate): Boolean = isIn(coordinate.xCoord, coordinate.yCoord)
+	
+	/**
+	 * Returns `true` if the given coordinate ([xCoord],[yCoord]) is inside this plain.
+	 *
+	 * @return `true` if the given coordinate ([xCoord],[yCoord]) is inside this plain, `false` otherwise
+	 */
+	fun isIn(xCoord: Number, yCoord: Number): Boolean =
+		xCoord.toDouble() in topLeft.xCoord .. bottomRight.xCoord &&
+				yCoord.toDouble() in topLeft.yCoord .. bottomRight.yCoord
 }
