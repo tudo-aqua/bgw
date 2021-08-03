@@ -1,5 +1,5 @@
 ---
-parents: Concepts
+parent: Concepts
 title: Observable
 nav_order: 4
 layout: default
