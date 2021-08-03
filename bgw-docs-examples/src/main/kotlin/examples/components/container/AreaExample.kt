@@ -1,4 +1,4 @@
-package components.container
+package examples.components.container
 
 import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
