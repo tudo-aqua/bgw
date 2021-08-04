@@ -8,6 +8,7 @@ import tools.aqua.bgw.components.scale
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.visual.ColorVisual
 
 fun main() {
@@ -24,10 +25,14 @@ class UserInputExample: BoardGameApplication("User input example") {
 
 	val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
+	private fun handleMouseClicked(mouseEvent: MouseEvent) {
+		button.label = "someone clicked on me!"
+	}
+
 	init {
-		button.onMouseClicked = {
-			button.label = "someone clicked on me!"
-		}
+		//handling user input on ComponentView
+		button.onMouseClicked = this::handleMouseClicked
+
 		button.onMousePressed = { mouseEvent ->
 			button.label = "pressed ${mouseEvent.button}"
 		}
@@ -62,7 +67,7 @@ class UserInputExample: BoardGameApplication("User input example") {
 			button.visual = ColorVisual.GREEN
 		}
 
-
+		//Additional function references available only to DynamicComponentViews
 		token.isDraggable = true
 
 		token.onDragGestureMoved = { token.rotate(5) }
