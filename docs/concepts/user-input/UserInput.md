@@ -12,7 +12,7 @@ layout: default
 
 The BGW framework uses events to communicate user input to Components. To execute code when a specific event is fired, a
 function reference, or a function literal can be set in
-[ComponentView][CompDoc]s. If components can be enabled for drag and drop some additional handlers can be set.
+[ComponentView][CompDoc]s. If components can be enabled for drag and drop, some additional handlers can be set.
 Components can be enabled for drag and drop whenever they extend
 [DynamicComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html)
 .
@@ -20,12 +20,12 @@ Components can be enabled for drag and drop whenever they extend
 For a more detailed introduction for Drag and Drop
 head [here](https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html).
 
-The full source code for this example can be found [here](/bgw/concepts/concepts/user-input/UserInput.html#full-example-on-all-available-methods-of-dealing-with-user-input).
+The full source code for this example can be found [here](/bgw/concepts/user-input/UserInput.html#full-example-on-all-available-methods-of-dealing-with-user-input).
 
 ## Component declaration
 
-To showcase the user input handling, a ComponentView, in this case a button and a DynamicView, in this case a TokenView,
-get wrapped inside a BoardGameApplication, to create a running example.
+To showcase the user input handling, the following components are declared and wrapped inside a BoardGameApplication, 
+to create a running example.
 
 ````kotlin
 class UserInputExample : BoardGameApplication("User input example") {
@@ -108,6 +108,7 @@ class UserInputExample: BoardGameApplication("User input example") {
 
 	init {
         //handling user input on ComponentView
+        
 		button.onMouseClicked = this::handleMouseClicked
 
 		button.onMousePressed = { mouseEvent ->
@@ -145,6 +146,7 @@ class UserInputExample: BoardGameApplication("User input example") {
 		}
 
         //Additional function references available only to DynamicComponentViews
+        
 		token.isDraggable = true
 
 		token.onDragGestureMoved = { token.rotate(5) }

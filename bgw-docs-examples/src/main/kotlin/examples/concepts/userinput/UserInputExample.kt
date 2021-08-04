@@ -31,6 +31,7 @@ class UserInputExample: BoardGameApplication("User input example") {
 
 	init {
 		//handling user input on ComponentView
+
 		button.onMouseClicked = this::handleMouseClicked
 
 		button.onMousePressed = { mouseEvent ->
@@ -68,6 +69,7 @@ class UserInputExample: BoardGameApplication("User input example") {
 		}
 
 		//Additional function references available only to DynamicComponentViews
+
 		token.isDraggable = true
 
 		token.onDragGestureMoved = { token.rotate(5) }
