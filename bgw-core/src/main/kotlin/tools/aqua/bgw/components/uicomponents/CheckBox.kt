@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
@@ -32,6 +33,7 @@ import tools.aqua.bgw.util.Font
  * @param posY vertical coordinate for this [CheckBox]. Default: 0.
  * @param label label for this [CheckBox]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
+ * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
  * @param isChecked the initial checked state. Default: `false`.
  * @param allowIndeterminate the initial [allowIndeterminate] state. Default: `false`.
  * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.
@@ -43,10 +45,11 @@ open class CheckBox(
 	posY: Number = 0,
 	label: String = "",
 	font: Font = Font(),
+	alignment: Alignment = Alignment.CENTER,
 	isChecked: Boolean = false,
 	allowIndeterminate: Boolean = false,
-	isIndeterminate: Boolean = false
-) : LabeledUIComponent(height = height, width = width, posX = posX, posY = posY, font = font, label = label) {
+	isIndeterminate: Boolean = false,
+) : LabeledUIComponent(height = height, width = width, posX = posX, posY = posY, label = label, font = font, alignment = alignment) {
 	
 	/**
 	 * [Property] for the checked state.

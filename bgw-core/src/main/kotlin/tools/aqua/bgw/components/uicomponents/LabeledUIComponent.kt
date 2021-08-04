@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 
@@ -31,27 +33,45 @@ import tools.aqua.bgw.util.Font
  * @param posY vertical coordinate for this [LabeledUIComponent].
  * @param label label for this [LabeledUIComponent].
  * @param font font to be used for the [label].
+ * @param alignment alignment to be used for the [label].
  */
 sealed class LabeledUIComponent(
-	height: Number,
-	width: Number,
-	posX: Number,
-	posY: Number,
-	font: Font,
-	label: String
+    height: Number,
+    width: Number,
+    posX: Number,
+    posY: Number,
+    label: String,
+    font: Font,
+    alignment: Alignment,
 ) : UIComponent(height = height, width = width, posX = posX, posY = posY, font = font) {
-	/**
-	 * Property for the label of this [LabeledUIComponent].
-	 */
-	val labelProperty: StringProperty = StringProperty(label)
-	
-	/**
-	 * Label of this [LabeledUIComponent].
-	 * @see labelProperty
-	 */
-	var label: String
-		get() = labelProperty.value
-		set(value) {
-			labelProperty.value = value
-		}
+    /**
+     * Property for the label of this [LabeledUIComponent].
+     */
+    val labelProperty: StringProperty = StringProperty(label)
+
+    /**
+     * Label of this [LabeledUIComponent].
+     * @see labelProperty
+     */
+    var label: String
+        get() = labelProperty.value
+        set(value) {
+            labelProperty.value = value
+        }
+
+
+    /**
+     * Property for the alignment of this [LabeledUIComponent].
+     */
+    val alignmentProperty: Property<Alignment> = Property(alignment)
+
+    /**
+     * Alignment of this [LabeledUIComponent].
+     * @see alignmentProperty
+     */
+    var alignment: Alignment
+        get() = alignmentProperty.value
+        set(value) {
+            alignmentProperty.value = value
+        }
 }

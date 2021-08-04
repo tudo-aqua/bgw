@@ -50,13 +50,13 @@ sealed class UIComponent(
 	internal var internalCSS : String = ""
 
 	/**
-	 * [Property] for the [Font] of this [LabeledUIComponent].
+	 * [Property] for the [Font] of this [UIComponent]. Usage depends on subclass.
 	 * @see Font
 	 */
 	val fontProperty: Property<Font> = Property(font)
 	
 	/**
-	 * [Font] of this [LabeledUIComponent].
+	 * [Font] of this [UIComponent]. Usage depends on subclass.
 	 * @see Font
 	 * @see fontProperty
 	 */
