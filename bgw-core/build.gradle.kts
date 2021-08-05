@@ -15,6 +15,7 @@ plugins {
 group = "tools.aqua"
 version = rootProject.version
 var javaFxVersion: String = "12.0.1"
+extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 repositories {
 	mavenCentral()
@@ -138,9 +139,12 @@ publishing {
 }
 
 signing {
-	isRequired = !hasProperty("skip-signing")
 	useGpgCmd()
 	sign(publishing.publications["maven"])
+}
+
+tasks.withType<Sign>().configureEach {
+	onlyIf { project.extra["isReleaseVersion"] as Boolean }
 }
 
 tasks.named("publishMavenPublicationToNexusOSSRepository") {
