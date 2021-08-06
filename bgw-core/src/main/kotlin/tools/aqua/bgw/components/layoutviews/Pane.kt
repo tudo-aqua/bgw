@@ -26,7 +26,7 @@ import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 //TODO: Docs
-class Pane<T : ComponentView>(
+open class Pane<T : ComponentView>(
     height: Number = 0,
     width: Number = 0,
     posX: Number = 0,
@@ -59,7 +59,7 @@ class Pane<T : ComponentView>(
     }
     
     /**
-     * Removes all [listeners] from the [observableComponents] list.
+     * Removes all listeners from the [observableComponents] list.
      */
     fun clearComponentsListener() {
         observableComponents.clearListeners()
