@@ -30,7 +30,6 @@ import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
 import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.util.Font
 import java.awt.Color
 
 /**
@@ -74,7 +73,6 @@ internal class UINodeBuilder {
         private fun buildLabel(label: Label): Region {
             val node = javafx.scene.control.Label()
             node.textProperty().bindLabelProperty(label)
-            node.bindFont(label)
             node.alignmentProperty().bindAlignmentProperty(label)
             return node
         }
@@ -85,7 +83,6 @@ internal class UINodeBuilder {
         private fun buildButton(button: Button): Region {
             val node = com.jfoenix.controls.JFXButton()
             node.textProperty().bindLabelProperty(button)
-            node.bindFont(button)
             node.alignmentProperty().bindAlignmentProperty(button)
             return node
         }
@@ -98,9 +95,6 @@ internal class UINodeBuilder {
 
             node.textProperty().bindTextProperty(textArea)
             node.promptText = textArea.prompt
-            textArea.fontProperty.setGUIListenerAndInvoke(textArea.font) { _, nV ->
-                node.style = nV.toFXFontCSS()
-            }
             return node
         }
 
@@ -112,9 +106,6 @@ internal class UINodeBuilder {
 
             node.textProperty().bindTextProperty(textField)
             node.promptText = textField.prompt
-            textField.fontProperty.setGUIListenerAndInvoke(textField.font) { _, nV ->
-                node.style = nV.toFXFontCSS()
-            }
             return node
         }
 
@@ -173,8 +164,6 @@ internal class UINodeBuilder {
             node.allowIndeterminateProperty().bindBooleanProperty(checkBox.allowIndeterminateProperty)
             node.indeterminateProperty().bindBooleanProperty(checkBox.indeterminateProperty)
             node.selectedProperty().bindBooleanProperty(checkBox.checkedProperty)
-            //font size
-            node.bindFont(checkBox)
             node.alignmentProperty().bindAlignmentProperty(checkBox)
             return node
         }
@@ -328,16 +317,6 @@ internal class UINodeBuilder {
             //JavaFX -> Framework
             value = booleanProperty.value
             addListener { _, _, new -> booleanProperty.value = new }
-        }
-    
-        /**
-         * Binds [Font].
-         */
-        private fun Labeled.bindFont(labeled: UIComponent) {
-            labeled.fontProperty.setGUIListenerAndInvoke(labeled.font) { _, nV ->
-                style = nV.toFXFontCSS()
-                textFill = nV.color.toFXColor()
-            }
         }
     }
 }
