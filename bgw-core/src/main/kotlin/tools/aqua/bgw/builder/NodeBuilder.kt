@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveComponentsBelowMouse
+import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.components.ComponentView
@@ -288,12 +289,17 @@ internal class NodeBuilder {
 					if (nV.isNotEmpty())
 						background.style = nV
 				}
-				node.style = internalCSS
-				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, nV ->
-					if (nV.isNotEmpty())
-						node.style = this.internalCSS + nV
-				}
+				
+				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _,_ -> updateStyle(node) }
+				fontProperty.setGUIListenerAndInvoke(font) { _,_ -> updateStyle(node) }
 			}
+		}
+		
+		/**
+		 * Updates nodes style property
+		 */
+		private fun UIComponent.updateStyle(node: Region) {
+			node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle
 		}
 	}
 }

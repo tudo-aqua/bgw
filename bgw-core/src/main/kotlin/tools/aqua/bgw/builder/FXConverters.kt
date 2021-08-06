@@ -52,7 +52,6 @@ abstract class FXConverters {
 			alpha / VisualBuilder.MAX_HEX,
 		)
 		
-		
 		/**
 		 * Converts the BGW [Font] to [javafx.scene.text.Font].
 		 */
@@ -68,10 +67,12 @@ abstract class FXConverters {
 				Font.FontStyle.ITALIC -> "italic"
 				Font.FontStyle.OBLIQUE -> "oblique"
 			}
-			return "-fx-font-size: ${size}px; " +
-					"-fx-font-family: $family; " +
-					"-fx-font-weight: $weight; " +
-					"-fx-font-style: $style;"
+			return "-fx-font-size: ${size}px;" +
+					"-fx-font-family: $family;" +
+					"-fx-font-weight: $weight;" +
+					"-fx-font-style: $style;" +
+					"-fx-text-fill: " +
+					String.format("#%02x%02x%02x%02x;", color.red, color.green, color.blue, color.alpha)
 		}
 		
 		/**
