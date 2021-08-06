@@ -30,8 +30,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * Only StaticViews are allowed in [MenuScene]s.
  *
- * @param height height for this [StaticComponentView].
  * @param width width for this [StaticComponentView].
+ * @param height height for this [StaticComponentView].
  * @param posX the X coordinate for this [StaticComponentView] relative to its container.
  * @param posY the Y coordinate for this [StaticComponentView] relative to its container.
  * @param visual visual for this [StaticComponentView].
@@ -39,9 +39,9 @@ import tools.aqua.bgw.visual.Visual
  * @see MenuScene
  */
 abstract class StaticComponentView<T : ComponentView>(
-	height: Number,
 	width: Number,
+	height: Number,
 	posX: Number,
 	posY: Number,
 	visual: Visual
-) : ComponentView(height = height, width = width, posX = posX, posY = posY, visual = visual)
+) : ComponentView(width = width, height = height, posX = posX, posY = posY, visual = visual)

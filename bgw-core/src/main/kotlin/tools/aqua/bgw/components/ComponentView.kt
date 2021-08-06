@@ -35,8 +35,8 @@ import tools.aqua.bgw.visual.Visual
  * [ComponentView] is the abstract baseclass of all framework components.
  * It defines important fields and functions that are necessary to visualize inheriting components.
  *
- * @param height height for this [ComponentView].
  * @param width width for this [ComponentView].
+ * @param height height for this [ComponentView].
  * @param posX the X coordinate for this [ComponentView] relative to its container.
  * @param posY the Y coordinate for this [ComponentView] relative to its container.
  * @param visual visual for this [ComponentView].
@@ -47,8 +47,8 @@ import tools.aqua.bgw.visual.Visual
  * @see IllegalInheritanceException
  */
 abstract class ComponentView(
-	height: Number,
 	width: Number,
+	height: Number,
 	posX: Number,
 	posY: Number,
 	visual: Visual
@@ -76,21 +76,6 @@ abstract class ComponentView(
 	var name: String = javaClass.name + "@" + Integer.toHexString(this.hashCode())
 	
 	/**
-	 * [Property] for the [height] of this [ComponentView].
-	 */
-	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
-	
-	/**
-	 * The [height] for this [ComponentView].
-	 * @see heightProperty
-	 */
-	var height: Double
-		get() = heightProperty.value
-		set(value) {
-			heightProperty.value = value
-		}
-	
-	/**
 	 * [Property] for the [width] of this [ComponentView].
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
@@ -104,7 +89,22 @@ abstract class ComponentView(
 		set(value) {
 			widthProperty.value = value
 		}
-	
+
+	/**
+	 * [Property] for the [height] of this [ComponentView].
+	 */
+	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
+
+	/**
+	 * The [height] for this [ComponentView].
+	 * @see heightProperty
+	 */
+	var height: Double
+		get() = heightProperty.value
+		set(value) {
+			heightProperty.value = value
+		}
+
 	/**
 	 * [Property] for the horizontal position of this [ComponentView].
 	 */

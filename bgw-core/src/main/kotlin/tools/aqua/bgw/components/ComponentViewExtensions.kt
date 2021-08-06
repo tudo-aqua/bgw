@@ -41,12 +41,12 @@ fun ComponentView.offset(offsetX: Number, offsetY: Number) {
 
 /**
  * Resizes this [ComponentView] to the specified coordinates.
- * @param height the new height.
  * @param width the new width.
+ * @param height the new height.
  */
-fun ComponentView.resize(height: Number, width: Number) {
-	this.height = height.toDouble()
+fun ComponentView.resize(width: Number, height: Number) {
 	this.width = width.toDouble()
+	this.height = height.toDouble()
 }
 
 /**
@@ -58,8 +58,8 @@ fun ComponentView.scale(scaleFactor: Number) {
 	require(scaleFactorDoubleValue >= 0) {
 		"Only non-negative scale factors are allowed. Provided scale factor was $scaleFactorDoubleValue."
 	}
-	this.height = height * scaleFactorDoubleValue
 	this.width = width * scaleFactorDoubleValue
+	this.height = height * scaleFactorDoubleValue
 }
 
 /**

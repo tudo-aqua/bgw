@@ -32,19 +32,19 @@ import tools.aqua.bgw.visual.Visual
  * Baseclass for containers that can contain [GameComponentView]s or its subclasses.
  * It provides the list to store [GameComponentView]s and some useful methods to work on said list.
  *
- * @param height height for this [GameComponentContainer].
  * @param width width for this [GameComponentContainer].
+ * @param height height for this [GameComponentContainer].
  * @param posX horizontal coordinate for this [GameComponentContainer].
  * @param posY vertical coordinate for this [GameComponentContainer].
  * @param visual visual for this [GameComponentContainer].
  */
 sealed class GameComponentContainer<T : GameComponentView>(
-	height: Number,
 	width: Number,
+	height: Number,
 	posX: Number,
 	posY: Number,
 	visual: Visual
-) : DynamicComponentView(height = height, width = width, visual = visual, posX = posX, posY = posY), Iterable<T> {
+) : DynamicComponentView(width = width, height = height, visual = visual, posX = posX, posY = posY), Iterable<T> {
 	/**
 	 * An [ObservableList] to store the [GameComponentView]s that are contained in this [GameComponentContainer].
 	 * If changes are made to this list, this [GameComponentContainer] gets re-rendered.

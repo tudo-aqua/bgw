@@ -27,13 +27,13 @@ import tools.aqua.bgw.visual.Visual
 
 //TODO: Docs
 open class Pane<T : ComponentView>(
-    height: Number = 0,
     width: Number = 0,
+    height: Number = 0,
     posX: Number = 0,
     posY: Number = 0,
     visual: Visual = Visual.EMPTY
 ) :
-    LayoutView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual), Iterable<T> {
+    LayoutView<T>(width = width, height = height, posX = posX, posY = posY, visual = visual), Iterable<T> {
     
     internal val observableComponents: ObservableArrayList<T> = ObservableArrayList()
     

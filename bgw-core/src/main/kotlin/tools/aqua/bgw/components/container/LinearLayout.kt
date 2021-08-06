@@ -50,8 +50,8 @@ import tools.aqua.bgw.visual.Visual
  * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default: [Alignment.TOP_LEFT].
  */
 open class LinearLayout<T : GameComponentView>(
-	height: Number = 0,
 	width: Number = 0,
+	height: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
 	spacing: Number = 0,
@@ -63,8 +63,8 @@ open class LinearLayout<T : GameComponentView>(
 	/**
 	 * Secondary constructor taking separate alignment components.
 	 *
-	 * @param height height for this [LinearLayout]. Default: 0.
 	 * @param width width for this [LinearLayout]. Default: 0.
+	 * @param height height for this [LinearLayout]. Default: 0.
 	 * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
 	 * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
 	 * @param spacing spacing between contained [GameComponentView]s. Default: 0.
@@ -75,8 +75,8 @@ open class LinearLayout<T : GameComponentView>(
 	 * Default: [HorizontalAlignment.LEFT].
 	 */
 	constructor(
-		height: Number = 0,
 		width: Number = 0,
+		height: Number = 0,
 		posX: Number = 0,
 		posY: Number = 0,
 		spacing: Number = 0,

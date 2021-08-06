@@ -28,19 +28,19 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all [ComponentView]s that can be draggable.
  *
- * @param height height for this [DynamicComponentView].
  * @param width width for this [DynamicComponentView].
+ * @param height height for this [DynamicComponentView].
  * @param posX the X coordinate for this [DynamicComponentView] relative to its container.
  * @param posY the Y coordinate for this [DynamicComponentView] relative to its container.
  * @param visual visual for this [DynamicComponentView].
  */
 abstract class DynamicComponentView(
-	height: Number,
 	width: Number,
+	height: Number,
 	posX: Number,
 	posY: Number,
 	visual: Visual
-) : ComponentView(height = height, width = width, posX = posX, posY = posY, visual = visual) {
+) : ComponentView(width = width, height = height, posX = posX, posY = posY, visual = visual) {
 	
 	/**
 	 * [Property] that controls whether component is draggable or not.
