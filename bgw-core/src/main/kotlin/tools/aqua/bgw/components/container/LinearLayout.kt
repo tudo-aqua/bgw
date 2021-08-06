@@ -208,8 +208,8 @@ open class LinearLayout<T : GameComponentView>(
 		val newTotalContentHeight = totalContentHeight + (observableComponents.size - 1) * newSpacing
 		val initial = when (alignment.verticalAlignment) {
 			VerticalAlignment.TOP -> 0.0
-			VerticalAlignment.CENTER -> (width - newTotalContentHeight) / 2
-			VerticalAlignment.BOTTOM -> width - newTotalContentHeight
+			VerticalAlignment.CENTER -> (height - newTotalContentHeight) / 2
+			VerticalAlignment.BOTTOM -> height - newTotalContentHeight
 		}
 		observableComponents.fold(initial) { acc: Double, component: T ->
 			component.posYProperty.setSilent(acc)
