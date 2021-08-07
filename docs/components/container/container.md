@@ -5,13 +5,21 @@ nav_order: 2
 layout: default 
 ---
 
+[BGADocs]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/
 [AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/index.html
-
 [ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-game-component-container/index.html
-
 [GameComponentView]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
-
 [TokenDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
+[CardViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
+[AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html
+[CardStackDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
+[LinearLayoutDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
+[SatchelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html
+
+[UIComponentsDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
+[ContainerExample]: https://tudo-aqua.github.io/bgw/components/container.html#complete-source-code-for-the-example
+
+[IterableDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/
 
 # Container
 
@@ -38,10 +46,10 @@ The Container features will be demonstrated using an [Area][AreaDoc], since [Gam
 is abstract and [Area][AreaDoc] is just the discrete implementation.
 
 The complete source code for this example can be
-found [here](/bgw/components/container.html#complete-source-code-for-the-example).
+found [here][ContainerExample].
 
 To create a running example, the required components are wrapped in a
-[BoardGameApplication](/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
+[BoardGameApplication][BGADocs].
 
 ````kotlin
 class AreaExample : BoardGameApplication("Area example") {
@@ -116,7 +124,7 @@ Listeners can be removed via the ``clearComponentsListners`` or ``removeComponen
 ## Useful hints for dealing with containers
 
 - Containers provide an iterator over their components list via
-  the [Iterable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) interface.
+  the [Iterable][IterableDoc] interface.
 - The position of components contained in any containers with automatic layouting should never be modified, since the
   containers handle positioning.
 
@@ -129,22 +137,22 @@ Listeners can be removed via the ``clearComponentsListners`` or ``removeComponen
 - Containers can also be draggable and can act as a drag target.
 
 - ComponentListeners can be a great way of exposing dynamic information about a container via
-  sufficient [UIComponents](https://tudo-aqua.github.io/bgw/components/ui-elements/ui-elements.html).
+  sufficient [UIComponents][UIComponentsDoc].
 
 ## Types of Containers
 
-### [Area](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html)
+### [Area][AreaDoc]
 
 Area is the simplest form of a container. Its contained components are positioned relative to the top-left corner of the
 Area. No further layouting is provided by the Area.
 
-### [CardStack](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html)
+### [CardStack][CardStackDoc]
 
 CardStack is a special form of container. It can only contain
-[CardView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html)
+[CardView][CardViewDoc]
 . It should be used to visualize card stacks. It provides automatic layouting and alignment features.
 
-### [LinearLayout](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html)
+### [LinearLayout][LinearLayoutDoc]
 
 LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined
 spacing. Additionally, an orientation and alignment may be specified. In this image a linearLayout is used to 
@@ -152,7 +160,7 @@ visualize a hand of cards:
 
 ![image](LinearLayout.png)
 
-### [Satchel](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html)
+### [Satchel][SatchelDoc]
 
 A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an
 entity, where the user should not know what might get drawn next, or what is in the container.
