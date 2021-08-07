@@ -15,6 +15,10 @@ has_children: false
 [StaticComponentViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-static-component-view/index.html
 [LabelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
 [ButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-button/index.html
+[GameComponentDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
+[ContainerDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
+[CardStackDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
+[LinearLayoutDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
 
 [visualsTutorial]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
 
@@ -34,7 +38,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau")
 ````
 
 This creates a window in which the game can take place.
-For the game itself we declare a [BoardGameScene][GBSDoc] and a [MenuScene][MSDoc].
+For the game itself we declare a [BoardGameScene][BGSDoc] and a [MenuScene][MSDoc].
 
 ````kotlin
 class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
@@ -107,7 +111,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         posY = 110,
         label = "Continue",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
-        visual = ImageVisual(BUTTON_BG_FILE)
+        visual = ImageVisual("button_bg.jpg")
     )
     
     val newGameButton: Button = Button(
@@ -117,7 +121,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         posY = 220,
         label = "New Game",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
-        visual = ImageVisual(BUTTON_BG_FILE)
+        visual = ImageVisual("button_bg.jpg")
     )
     
     val exitButton: Button = Button(
@@ -127,7 +131,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         posY = 330,
         label = "Exit",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
-        visual = ImageVisual(BUTTON_BG_FILE)
+        visual = ImageVisual("button_bg.jpg")
     )
     
     init {
@@ -140,3 +144,104 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
     }
 }
 ````
+
+## Declaring a BoardGameScene
+
+[BoardGameScenes][BGSDoc] are the main component of your game.
+BoardGameScenes behave just like menu scenes but can additionally contain [GameComponentViews][GameComponentDoc] and [GameContainerViews][ContainerDoc].
+
+For our MauMau example we need two [CardStacks][CardStackDoc] and two player hands as [LinearLayouts][LinearlayoutDoc].
+
+````kotlin
+class MauMauGameScene : BoardGameScene(background = ImageVisual("bg.jpg")) {
+	
+    val drawStack: CardStack<CardView> = CardStack(
+        height = 200,
+        width = 130,
+        posX = 750,
+        posY = 360,
+        visual = ColorVisual(255, 255, 255, 50)
+    )
+    val gameStack: CardStack<CardView> = CardStack(
+        height = 200,
+        width = 130,
+        posX = 1040,
+        posY = 360,
+        visual = ColorVisual(255, 255, 255, 50)
+    )
+    
+    var currentPlayerHand: LinearLayout<CardView> = LinearLayout(
+        height = 220,
+        width = 800,
+        posX = 560,
+        posY = 750,
+        spacing = -50,
+        alignment = Alignment.CENTER,
+        visual = ColorVisual(255, 255, 255, 50)
+    )
+    
+    var otherPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
+        height = 220, 
+        width = 800, 
+        posX = 560, 
+        posY = 50, 
+        spacing = -50, 
+        alignment = Alignment.CENTER, 
+        visual = ColorVisual(255, 255, 255, 50)
+    ).apply { 
+        rotation = 180.0 
+    }
+        
+    init {
+        addComponents(
+            drawStack,
+            gameStack,
+            currentPlayerHand,
+            otherPlayerHand
+        )
+    }
+}
+````
+
+## Event handler
+
+When we start the application both menu scene and game scene are shown.
+
+![](assets/menu.png)
+
+We now want to add event handlers to the menu buttons to start a new game and close the menu scene.
+As these button's actions change the scene, the handlers get set in the view controller.
+
+````kotlin
+class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {	
+    val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
+    val mauMauGameScene: MauMauGameScene = MauMauGameScene()
+    
+    init {
+	    registerMenuEvents()
+        
+        showGameScene(mauMauGameScene)
+        showMenuScene(mauMauMenuScene)
+        show()
+    }
+	
+    private fun registerMenuEvents() {
+        mauMauMenuScene.continueGameButton.onMouseClicked = {
+            hideMenuScene()
+        }
+        
+        mauMauMenuScene.newGameButton.onMouseClicked = {
+            //Start new game here
+            hideMenuScene()
+        }
+        
+        mauMauMenuScene.exitButton.onMouseClicked = {
+            exit()
+        }
+    }
+}
+````
+
+Now after pressing the *"New Game"* button the menu scene is hidden.
+
+![](assets/game.png)
