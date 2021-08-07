@@ -8,12 +8,12 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.util.BidirectionalMap
 
-class ViewController : BoardGameApplication("MauMau") {
+class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	
 	private val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
 	private val refreshViewController: RefreshViewController = RefreshViewController(this)
 	
-	val gameScene: GameScene = GameScene()
+	val mauMauGameScene: MauMauGameScene = MauMauGameScene()
 	val logicController: LogicController = LogicController(refreshViewController)
 	
 	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap()
@@ -22,28 +22,28 @@ class ViewController : BoardGameApplication("MauMau") {
 		registerGameEvents()
 		registerMenuEvents()
 		
-		showGameScene(gameScene)
+		showGameScene(mauMauGameScene)
 		showMenuScene(mauMauMenuScene)
 		show()
 	}
 	
 	private fun registerGameEvents() {
-		gameScene.hintButton.onMouseClicked = {
+		mauMauGameScene.hintButton.onMouseClicked = {
 			logicController.showHint()
 		}
 		
-		gameScene.gameStack.dropAcceptor = this::tryElementDropped
-		gameScene.gameStack.onDragDropped = this::elementDropped
+		mauMauGameScene.gameStack.dropAcceptor = this::tryElementDropped
+		mauMauGameScene.gameStack.onDragDropped = this::elementDropped
 		
-		gameScene.drawStack.onMouseClicked = {
+		mauMauGameScene.drawStack.onMouseClicked = {
 			if (!logicController.game.drawStack.isEmpty())
 				logicController.drawCard()
 		}
 		
-		gameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS) }
-		gameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS) }
-		gameScene.buttonSpades.onMousePressed = { logicController.selectSuit(CardSuit.SPADES) }
-		gameScene.buttonClubs.onMousePressed = { logicController.selectSuit(CardSuit.CLUBS) }
+		mauMauGameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS) }
+		mauMauGameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS) }
+		mauMauGameScene.buttonSpades.onMousePressed = { logicController.selectSuit(CardSuit.SPADES) }
+		mauMauGameScene.buttonClubs.onMousePressed = { logicController.selectSuit(CardSuit.CLUBS) }
 	}
 	
 	private fun tryElementDropped(event: DragEvent): Boolean {
@@ -58,7 +58,7 @@ class ViewController : BoardGameApplication("MauMau") {
 	}
 	
 	private fun registerMenuEvents() {
-		gameScene.mainMenuButton.onMouseClicked = {
+		mauMauGameScene.mainMenuButton.onMouseClicked = {
 			showMenuScene(mauMauMenuScene)
 		}
 		

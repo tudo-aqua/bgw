@@ -16,7 +16,7 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 
-class GameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
+class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//region Player hands
 	var currentPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
 		height = 220,

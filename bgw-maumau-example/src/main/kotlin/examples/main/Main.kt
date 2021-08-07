@@ -1,7 +1,7 @@
 package examples.main
 
-import examples.maumau.view.ViewController
+import examples.maumau.view.MauMauViewController
 
 fun main() {
-	ViewController()
+	MauMauViewController()
 }
