@@ -18,26 +18,25 @@ import java.awt.Color
 
 class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//region Player hands
-	var currentPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
+	var currentPlayerHand: LinearLayout<CardView> = LinearLayout(
 		height = 220,
 		width = 800,
 		posX = 560,
 		posY = 750,
-		spacing = -50
-	).apply {
+		spacing = -50,
+		alignment = Alignment.CENTER,
 		visual = ColorVisual(255, 255, 255, 50)
-		alignment = Alignment.CENTER
-	}
+	)
 	
 	var otherPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
 		height = 220,
 		width = 800,
 		posX = 560,
 		posY = 50,
-		spacing = -50
-	).apply {
+		spacing = -50,
+		alignment = Alignment.CENTER,
 		visual = ColorVisual(255, 255, 255, 50)
-		alignment = Alignment.CENTER
+	).apply {
 		rotation = 180.0
 	}
 	//endregion
@@ -114,13 +113,12 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		visual = ImageVisual(LIGHT_BULB_FILE)
 	}
 	
-	@Suppress("SpellCheckingInspection")
 	val mainMenuButton: Button = Button(
 		height = 100,
 		width = 200,
 		posX = 20,
 		posY = 20,
-		label = "Hauptmenü",
+		label = "Main menu",
 		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
 	).apply {
 		visual = ImageVisual(BUTTON_BG_FILE)
@@ -132,14 +130,14 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			gameStack,
 			currentPlayerHand,
 			otherPlayerHand,
-			drawStackInfo,
+			/*drawStackInfo,
 			gameStackInfo,
 			buttonDiamonds,
 			buttonHearts,
 			buttonSpades,
 			buttonClubs,
 			hintButton,
-			mainMenuButton,
+			mainMenuButton,*/
 		)
 	}
 }
