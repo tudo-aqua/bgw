@@ -51,7 +51,7 @@ open class CardStack<T : CardView>(
 	height: Number = DEFAULT_CARD_HEIGHT,
 	alignment: Alignment = Alignment.CENTER,
 	visual: Visual = Visual.EMPTY
-) : GameComponentContainer<T>(posX, posY, width, height, visual) {
+) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	
 	/**
 	 * [Property] for the [Alignment] of [CardView]s in this [CardStack].

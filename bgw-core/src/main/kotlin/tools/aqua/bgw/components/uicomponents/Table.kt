@@ -22,6 +22,7 @@ package tools.aqua.bgw.components.uicomponents
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A [Table] may be used to visualize a data table.
@@ -58,7 +59,13 @@ open class Table<T>(
 	width: Number = DEFAULT_TABLEVIEW_WIDTH,
 	height: Number = DEFAULT_TABLEVIEW_HEIGHT,
 	font: Font = Font()
-) : UIComponent(posX, posY, width, height, font) {
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = font,
+	visual = Visual.EMPTY) {
 	/**
 	 * An [ObservableList] that contains the data objects for this [Table].
 	 * The first object in this [ObservableList] will be the topmost row in the rendered [Table].

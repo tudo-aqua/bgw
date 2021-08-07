@@ -47,7 +47,7 @@ open class CardView(
 	height: Number = DEFAULT_CARD_HEIGHT,
 	front: Visual,
 	back: Visual = front
-) : GameComponentView(posX, posY, width, height, Visual.EMPTY) {
+) : GameComponentView(posX = posX, posY = posY, width = width, height = height, visual = Visual.EMPTY) {
 	/**
 	 * The current [CardSide] that is displayed.
 	 *

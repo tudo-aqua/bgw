@@ -39,7 +39,7 @@ open class TextField(
 	text: String = "",
 	font: Font = Font(),
 	val prompt: String = "",
-) : TextInputUIComponent(posX, posY, width, height, text, font) {
+) : TextInputUIComponent(posX = posX, posY = posY, width = width, height = height, text = text, font = font) {
     /**
      * Defines some static constants that can be used as suggested properties of a [TextField].
      */

@@ -41,7 +41,7 @@ open class TokenView(
 	width: Number = DEFAULT_TOKEN_WIDTH,
 	height: Number = DEFAULT_TOKEN_HEIGHT,
 	visual: Visual
-) : GameComponentView(posX, posY, width, height, visual) {
+) : GameComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [TokenView].
 	 */

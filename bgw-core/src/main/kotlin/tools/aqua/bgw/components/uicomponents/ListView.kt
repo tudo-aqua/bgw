@@ -23,6 +23,7 @@ import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A [ListView] displaying its items next to each other in the given orientation.
@@ -47,8 +48,13 @@ open class ListView<T>(
 	font: Font = Font(), //TODO: Unused?
 	orientation: Orientation = Orientation.VERTICAL,
 	formatFunction: ((T) -> String)? = null
-) : UIComponent(posX, posY, width, height, font) {
-	
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = font,
+	visual = Visual.EMPTY) {
 	/**
 	 * [Property] for the items list for this [ListView].
 	 */

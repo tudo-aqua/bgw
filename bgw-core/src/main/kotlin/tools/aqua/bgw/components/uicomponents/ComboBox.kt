@@ -23,6 +23,7 @@ import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A standard [ComboBox] that may be populated with items of specified type parameter.
@@ -50,8 +51,13 @@ open class ComboBox<T>(
 	val prompt: String = "",
 	items: List<T> = listOf(),
 	formatFunction: ((T) -> String)? = null,
-) : UIComponent(posX, posY, width, height, font) {
-	
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = Font(),
+	visual = Visual.EMPTY) {
 	/**
 	 * [Property] for the items list for this [ComboBox].
 	 */

@@ -44,7 +44,7 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	width: Number,
 	height: Number,
 	visual: Visual
-) : DynamicComponentView(posX, posY, width, height, visual), Iterable<T> {
+) : DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual), Iterable<T> {
 	/**
 	 * An [ObservableList] to store the [GameComponentView]s that are contained in this [GameComponentContainer].
 	 * If changes are made to this list, this [GameComponentContainer] gets re-rendered.

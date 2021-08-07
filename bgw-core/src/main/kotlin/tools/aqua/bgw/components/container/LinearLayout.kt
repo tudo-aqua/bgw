@@ -58,7 +58,7 @@ open class LinearLayout<T : GameComponentView>(
 	visual: Visual = Visual.EMPTY,
 	orientation: Orientation = Orientation.HORIZONTAL,
 	alignment: Alignment = Alignment.TOP_LEFT,
-) : GameComponentContainer<T>(posX, posY, width, height, visual) {
+) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	
 	/**
 	 * Secondary constructor taking separate alignment components.

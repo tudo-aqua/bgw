@@ -44,4 +44,4 @@ abstract class StaticComponentView<T : ComponentView>(
 	width: Number,
 	height: Number,
 	visual: Visual
-) : ComponentView(posX, posY, width, height, visual)
+) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual)

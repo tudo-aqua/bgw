@@ -23,6 +23,7 @@ import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * Baseclass for all [UIComponent]s that have a label.
@@ -34,6 +35,7 @@ import tools.aqua.bgw.util.Font
  * @param label label for this [LabeledUIComponent].
  * @param font font to be used for the [label].
  * @param alignment alignment to be used for the [label].
+ * @param visual background [Visual].
  */
 sealed class LabeledUIComponent(
     posX: Number,
@@ -43,7 +45,14 @@ sealed class LabeledUIComponent(
     label: String,
     font: Font,
     alignment: Alignment,
-) : UIComponent(posX, posY, width, height, font) {
+    visual: Visual
+) : UIComponent(
+    posX = posX,
+    posY = posY,
+    width = width,
+    height = height,
+    font = font,
+    visual = visual) {
     /**
      * Property for the label of this [LabeledUIComponent].
      */

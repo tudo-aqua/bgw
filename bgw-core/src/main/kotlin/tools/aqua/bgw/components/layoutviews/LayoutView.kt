@@ -38,4 +38,4 @@ sealed class LayoutView<T : ComponentView>(
 	width: Number,
 	height: Number,
 	visual: Visual
-) : StaticComponentView<T>(posX, posY, width, height, visual)
+) : StaticComponentView<T>(posX = posX, posY = posY, width = width, height = height, visual = visual)

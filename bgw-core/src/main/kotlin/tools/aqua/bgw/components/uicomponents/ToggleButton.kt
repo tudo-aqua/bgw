@@ -21,6 +21,7 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A [ToggleButton] may be used as a [Button] that is either selected or not selected.
@@ -44,6 +45,7 @@ import tools.aqua.bgw.util.Font
  * @param font font to be used for this [ToggleButton]. Default: default [Font] constructor.
  * @param isSelected the initial state for this [ToggleButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [ToggleButton]. Default: null.
+ * @param visual background [Visual]. Default: [Visual.EMPTY]
  */
 open class ToggleButton(
 	posX: Number = 0,
@@ -52,9 +54,15 @@ open class ToggleButton(
 	height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
 	font: Font = Font(),
 	isSelected: Boolean = false,
-	toggleGroup: ToggleGroup? = null
-) : UIComponent(posX, posY, width, height, font) {
-	
+	toggleGroup: ToggleGroup? = null,
+	visual: Visual = Visual.EMPTY
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = font,
+	visual = visual) {
 	/**
 	 * The ToggleGroup of this ToggleButton.
 	 * @see ToggleGroup

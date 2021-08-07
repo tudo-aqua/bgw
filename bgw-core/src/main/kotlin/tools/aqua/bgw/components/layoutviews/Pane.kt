@@ -32,8 +32,7 @@ open class Pane<T : ComponentView>(
     width: Number = 0,
     height: Number = 0,
     visual: Visual = Visual.EMPTY
-) :
-    LayoutView<T>(posX, posY, width, height, visual), Iterable<T> {
+) : LayoutView<T>(posX = posX, posY = posY, width = width, height = height, visual = visual), Iterable<T> {
     
     internal val observableComponents: ObservableArrayList<T> = ObservableArrayList()
     

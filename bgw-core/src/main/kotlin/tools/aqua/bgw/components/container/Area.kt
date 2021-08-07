@@ -43,4 +43,4 @@ open class Area<T : GameComponentView>(
 	width: Number = 0,
 	height: Number = 0,
 	visual: Visual = Visual.EMPTY
-) : GameComponentContainer<T>(posX, posY, width, height, visual)
+) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual)

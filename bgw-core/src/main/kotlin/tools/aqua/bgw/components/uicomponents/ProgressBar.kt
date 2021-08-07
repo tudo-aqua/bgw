@@ -22,6 +22,7 @@ package tools.aqua.bgw.components.uicomponents
 import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 import java.awt.Color
 
 /**
@@ -41,8 +42,13 @@ open class ProgressBar(
 	height: Number = DEFAULT_PROGRESSBAR_HEIGHT,
 	progress: Double = 0.0,
 	barColor: Color = Color.CYAN
-) : UIComponent(posX, posY, width, height, Font()) {
-	
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = Font(),
+	visual = Visual.EMPTY) {
 	/**
 	 * [Property] for the progress state of this [ProgressBar].
 	 * Should be in range of 0 to 1.

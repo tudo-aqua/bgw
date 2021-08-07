@@ -28,7 +28,7 @@ import tools.aqua.bgw.visual.Visual
  * @param scene scene of this root component.
  */
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
-	ComponentView(0, 0, 0, 0, Visual.EMPTY) {
+	ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY){
 	
 	/**
 	 * Removes [component] from the [scene].

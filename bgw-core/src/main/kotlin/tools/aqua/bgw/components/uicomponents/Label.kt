@@ -20,8 +20,8 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A basic [Label] displaying text.
@@ -33,6 +33,7 @@ import tools.aqua.bgw.util.Font
  * @param label label for this [Label]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
+ * @param visual background [Visual]. Default: [Visual.EMPTY]
  */
 open class Label(
 	posX: Number = 0,
@@ -42,7 +43,16 @@ open class Label(
 	label: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
-) : LabeledUIComponent(posX, posY, width, height, label, font, alignment) {
+	visual: Visual = Visual.EMPTY
+) : LabeledUIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	label = label,
+	font = font,
+	alignment = alignment,
+	visual = visual) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [Label].
 	 */

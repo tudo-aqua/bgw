@@ -20,6 +20,7 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * [RadioButton] is a subclass of [ToggleButton] with a different visual representation.
@@ -44,6 +45,7 @@ import tools.aqua.bgw.util.Font
  * @param height height for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_HEIGHT].
  * @param isSelected the initial state for this [RadioButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [RadioButton]. Default: null.
+ * @param visual background [Visual]. Default: [Visual.EMPTY]
  */
 open class RadioButton(
 	posX: Number = 0,
@@ -53,7 +55,16 @@ open class RadioButton(
 	font: Font = Font(),
 	isSelected: Boolean = false,
 	toggleGroup: ToggleGroup? = null,
-) : ToggleButton(posX, posY, width, height, font, isSelected, toggleGroup) {
+	visual: Visual = Visual.EMPTY
+) : ToggleButton(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = font,
+	isSelected = isSelected,
+	toggleGroup = toggleGroup,
+	visual = visual) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [RadioButton].
 	 */

@@ -21,6 +21,7 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 
 /**
  * Baseclass for all [UIComponent]s that have a text input field.
@@ -39,7 +40,13 @@ sealed class TextInputUIComponent(
 	height: Number,
 	text: String,
 	font: Font,
-) : UIComponent(posX, posY, width, height, font) {
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = font,
+	visual = Visual.EMPTY) {
 	/**
 	 * Property for the text of this [TextInputUIComponent].
 	 */

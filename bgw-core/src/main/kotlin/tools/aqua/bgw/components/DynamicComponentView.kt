@@ -40,7 +40,7 @@ abstract class DynamicComponentView(
 	width: Number,
 	height: Number,
 	visual: Visual
-) : ComponentView(posX, posY, width, height, visual) {
+) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	
 	/**
 	 * [Property] that controls whether component is draggable or not.

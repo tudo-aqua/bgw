@@ -21,6 +21,8 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A simple [Button] with a [label].
@@ -32,6 +34,7 @@ import tools.aqua.bgw.util.Font
  * @param label label for this [Button]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
+ * @param visual visual for this button. Default: [ColorVisual.WHITE]
  */
 open class Button(
 	posX: Number = 0,
@@ -41,7 +44,16 @@ open class Button(
 	label: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
-) : LabeledUIComponent(posX, posY, width, height, label, font, alignment) {
+	visual: Visual = ColorVisual.WHITE
+) : LabeledUIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	label = label,
+	font = font,
+	alignment = alignment,
+	visual = visual) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [Button].
 	 */

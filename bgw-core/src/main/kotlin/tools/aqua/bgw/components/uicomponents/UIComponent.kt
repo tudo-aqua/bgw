@@ -35,6 +35,7 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [UIComponent].
  * @param height height for this [UIComponent].
  * @param font font for this [UIComponent]. Usage depends on subclass.
+ * @param visual background [Visual].
  */
 sealed class UIComponent(
 	posX: Number,
@@ -42,8 +43,13 @@ sealed class UIComponent(
 	width: Number,
 	height: Number,
 	font: Font,
-) : StaticComponentView<UIComponent>(posX, posY, width, height, Visual.EMPTY) {
-
+	visual: Visual
+) : StaticComponentView<UIComponent>(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	visual = visual) {
 	/**
 	 * Field that is used for internal styling purposes.
 	 */

@@ -21,6 +21,7 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.Visual
 import java.awt.Color
 
 /**
@@ -38,8 +39,13 @@ open class ColorPicker(
 	width: Number = DEFAULT_COLOR_PICKER_WIDTH,
 	height: Number = DEFAULT_COLOR_PICKER_HEIGHT,
 	initialColor: Color = Color.WHITE
-) : UIComponent(posX, posY, width, height, Font()) {
-	
+) : UIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	font = Font(),
+	visual = Visual.EMPTY) {
 	/**
 	 * [tools.aqua.bgw.observable.Property] for the currently selected [Color].
 	 */

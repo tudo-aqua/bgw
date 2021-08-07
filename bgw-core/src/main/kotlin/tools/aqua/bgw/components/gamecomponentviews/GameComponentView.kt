@@ -41,7 +41,7 @@ sealed class GameComponentView(
 	width: Number,
 	height: Number,
 	visual: Visual
-) : DynamicComponentView(posX, posY, width, height, visual) {
+) : DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	/**
 	 * @throws RuntimeException [GameComponentView] does not support children.
 	 */
