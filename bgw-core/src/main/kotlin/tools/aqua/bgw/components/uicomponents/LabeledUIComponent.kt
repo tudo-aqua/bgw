@@ -27,23 +27,23 @@ import tools.aqua.bgw.util.Font
 /**
  * Baseclass for all [UIComponent]s that have a label.
  *
- * @param height height for this [LabeledUIComponent].
- * @param width width for this [LabeledUIComponent].
  * @param posX horizontal coordinate for this [LabeledUIComponent].
  * @param posY vertical coordinate for this [LabeledUIComponent].
+ * @param width width for this [LabeledUIComponent].
+ * @param height height for this [LabeledUIComponent].
  * @param label label for this [LabeledUIComponent].
  * @param font font to be used for the [label].
  * @param alignment alignment to be used for the [label].
  */
 sealed class LabeledUIComponent(
-    height: Number,
-    width: Number,
     posX: Number,
     posY: Number,
+    width: Number,
+    height: Number,
     label: String,
     font: Font,
     alignment: Alignment,
-) : UIComponent(height = height, width = width, posX = posX, posY = posY, font = font) {
+) : UIComponent(posX, posY, width, height, font) {
     /**
      * Property for the label of this [LabeledUIComponent].
      */

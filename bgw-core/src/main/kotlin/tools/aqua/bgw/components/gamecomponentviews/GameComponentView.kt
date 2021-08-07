@@ -27,27 +27,21 @@ import tools.aqua.bgw.visual.Visual
  * Abstract baseclass for game components like [CardView]s or [TokenView]s.
  * This class is used to restrict the type argument of containers.
  *
- * @param height height for this [GameComponentView].
- * @param width width for this [GameComponentView].
  * @param posX horizontal coordinate for this [GameComponentView].
  * @param posY vertical coordinate for this [GameComponentView].
+ * @param width width for this [GameComponentView].
+ * @param height height for this [GameComponentView].
  * @param visual visual for this [GameComponentView].
  *
  * @see tools.aqua.bgw.components.container
  */
 sealed class GameComponentView(
-	height: Number,
-	width: Number,
 	posX: Number,
 	posY: Number,
+	width: Number,
+	height: Number,
 	visual: Visual
-) : DynamicComponentView(
-	height = height,
-	width = width,
-	posX = posX,
-	posY = posY,
-	visual = visual
-) {
+) : DynamicComponentView(posX, posY, width, height, visual) {
 	/**
 	 * @throws RuntimeException [GameComponentView] does not support children.
 	 */

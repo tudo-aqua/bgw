@@ -26,19 +26,19 @@ import java.awt.Color
 /**
  * A [ColorPicker] that allows to choose a [Color].
  *
- * @param height height for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_HEIGHT].
- * @param width width for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_WIDTH].
  * @param posX horizontal coordinate for this [ColorPicker]. Default: 0.
  * @param posY vertical coordinate for this [ColorPicker]. Default: 0.
+ * @param width width for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_WIDTH].
+ * @param height height for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_HEIGHT].
  * @param initialColor the color that is initially selected. Default: [Color.WHITE].
  */
 open class ColorPicker(
-	height: Number = DEFAULT_COLOR_PICKER_HEIGHT,
-	width: Number = DEFAULT_COLOR_PICKER_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_COLOR_PICKER_WIDTH,
+	height: Number = DEFAULT_COLOR_PICKER_HEIGHT,
 	initialColor: Color = Color.WHITE
-) : UIComponent(height = height, width = width, posX = posX, posY = posY, font = Font()) {
+) : UIComponent(posX, posY, width, height, Font()) {
 	
 	/**
 	 * [tools.aqua.bgw.observable.Property] for the currently selected [Color].

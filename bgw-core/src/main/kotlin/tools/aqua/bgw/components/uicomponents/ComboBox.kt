@@ -31,10 +31,10 @@ import tools.aqua.bgw.util.Font
  *
  * Whenever the user selects an item, the [selectedItemProperty] gets updated.
  *
- * @param height height for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_HEIGHT].
- * @param width width for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_WIDTH].
  * @param posX horizontal coordinate for this [ComboBox]. Default: 0.
  * @param posY vertical coordinate for this [ComboBox]. Default: 0.
+ * @param width width for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_WIDTH].
+ * @param height height for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_HEIGHT].
  * @param prompt prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever the
  * [selectedItemProperty] value is `null`.Default: empty string.
  * @param font font to be used for the [prompt]. Default: default [Font] constructor.
@@ -42,21 +42,15 @@ import tools.aqua.bgw.util.Font
  * @param formatFunction the formatFunction that is used to represent the items. Default: `null`.
  */
 open class ComboBox<T>(
-	height: Number = DEFAULT_COMBOBOX_HEIGHT,
-	width: Number = DEFAULT_COMBOBOX_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
-	val prompt: String = "",
+	width: Number = DEFAULT_COMBOBOX_WIDTH,
+	height: Number = DEFAULT_COMBOBOX_HEIGHT,
 	font: Font = Font(),
+	val prompt: String = "",
 	items: List<T> = listOf(),
 	formatFunction: ((T) -> String)? = null,
-) : UIComponent(
-	height = height,
-	width = width,
-	posX = posX,
-	posY = posY,
-	font = font
-) {
+) : UIComponent(posX, posY, width, height, font) {
 	
 	/**
 	 * [Property] for the items list for this [ComboBox].

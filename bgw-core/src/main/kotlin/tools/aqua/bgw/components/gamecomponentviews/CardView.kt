@@ -33,27 +33,21 @@ import tools.aqua.bgw.visual.Visual
  * Visualization:
  * The [Visual] at the [currentSide] value is used to visualize the card. By default, the back side is shown.
  *
- * @param height height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
- * @param width width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].
  * @param posX horizontal coordinate for this [CardView]. Default: 0.
  * @param posY vertical coordinate for this [CardView]. Default: 0.
+ * @param width width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].
+ * @param height height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
  * @param front visual to represent the front side of the card.
  * @param back visual to represent the back side of the card. Default: same [Visual] as front.
  */
 open class CardView(
-	height: Number = DEFAULT_CARD_HEIGHT,
-	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_CARD_WIDTH,
+	height: Number = DEFAULT_CARD_HEIGHT,
 	front: Visual,
 	back: Visual = front
-) : GameComponentView(
-	height = height,
-	width = width,
-	posX = posX,
-	posY = posY,
-	visual = Visual.EMPTY
-) {
+) : GameComponentView(posX, posY, width, height, Visual.EMPTY) {
 	/**
 	 * The current [CardSide] that is displayed.
 	 *
@@ -64,14 +58,14 @@ open class CardView(
 		set(value) {
 			if (field != value) {
 				field = value
-				
+
 				visualProperty.value = if (value == FRONT)
 					frontVisual
 				else
 					backVisual
 			}
 		}
-	
+
 	/**
 	 * Front [Visual] for this [CardView].
 	 */
@@ -81,11 +75,11 @@ open class CardView(
 		 */
 		set(value) {
 			field = value.copy()
-			
+
 			if (currentSide == FRONT)
 				visual = field
 		}
-	
+
 	/**
 	 * Back [Visual] for this [CardView].
 	 */
@@ -95,38 +89,38 @@ open class CardView(
 		 */
 		set(value) {
 			field = value.copy()
-			
+
 			if (currentSide == BACK)
 				visual = field
 		}
-	
+
 	/**
 	 * Sets the [currentSide] to be displayed to [CardSide.FRONT].
 	 */
 	fun showFront() {
 		currentSide = FRONT
 	}
-	
+
 	/**
 	 * Sets the [currentSide] to be displayed to [CardSide.BACK].
 	 */
 	fun showBack() {
 		currentSide = BACK
 	}
-	
+
 	/**
 	 * Sets the [currentSide] to the parameter value.
 	 */
 	fun showCardSide(side: CardSide) {
 		currentSide = side
 	}
-	
+
 	init {
 		this.frontVisual = front
 		this.backVisual = back
 		this.currentSide = BACK
 	}
-	
+
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [CardView].
 	 */
@@ -135,13 +129,13 @@ open class CardView(
 		 * Suggested [CardView] [height].
 		 */
 		const val DEFAULT_CARD_HEIGHT: Int = 200
-		
+
 		/**
 		 * Suggested [CardView] [width].
 		 */
 		const val DEFAULT_CARD_WIDTH: Int = 130
 	}
-	
+
 	/**
 	 * Enum for the card sides [FRONT] and [BACK] with their visual indices.
 	 */
@@ -150,13 +144,13 @@ open class CardView(
 		 * The [FRONT] side.
 		 */
 		FRONT,
-		
+
 		/**
 		 * The [BACK] side.
 		 */
 		BACK
 	}
-	
+
 	override fun toString(): String {
 		return name
 	}

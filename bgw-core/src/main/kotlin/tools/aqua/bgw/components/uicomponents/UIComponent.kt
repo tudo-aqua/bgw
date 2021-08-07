@@ -30,19 +30,19 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all UI components.
  *
- * @param height height for this [UIComponent].
- * @param width width for this [UIComponent].
  * @param posX horizontal coordinate for this [UIComponent].
  * @param posY vertical coordinate for this [UIComponent].
+ * @param width width for this [UIComponent].
+ * @param height height for this [UIComponent].
  * @param font font for this [UIComponent]. Usage depends on subclass.
  */
 sealed class UIComponent(
-	height: Number,
-	width: Number,
 	posX: Number,
 	posY: Number,
+	width: Number,
+	height: Number,
 	font: Font,
-) : StaticComponentView<UIComponent>(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
+) : StaticComponentView<UIComponent>(posX, posY, width, height, Visual.EMPTY) {
 
 	/**
 	 * Field that is used for internal styling purposes.

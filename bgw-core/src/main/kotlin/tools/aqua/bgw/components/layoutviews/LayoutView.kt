@@ -26,16 +26,16 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all layout component.
  *
- * @param height height for this [LayoutView].
- * @param width width for this [LayoutView].
  * @param posX horizontal coordinate for this [LayoutView].
  * @param posY vertical coordinate for this [LayoutView].
+ * @param width width for this [LayoutView].
+ * @param height height for this [LayoutView].
  * @param visual initial visual for this [LayoutView].
  */
 sealed class LayoutView<T : ComponentView>(
-	height: Number,
-	width: Number,
 	posX: Number,
 	posY: Number,
+	width: Number,
+	height: Number,
 	visual: Visual
-) : StaticComponentView<T>(height = height, width = width, posX = posX, posY = posY, visual = visual)
+) : StaticComponentView<T>(posX, posY, width, height, visual)

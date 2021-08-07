@@ -28,19 +28,19 @@ import tools.aqua.bgw.visual.Visual
  * Visualization:
  * The Visual at the [currentSide] value is used to visualize the die.
  *
- * @param height height for this [DiceView]. Default: [DiceView.DEFAULT_DICE_HEIGHT].
- * @param width width for this [DiceView]. Default: [DiceView.DEFAULT_DICE_WIDTH].
  * @param posX horizontal coordinate for this [DiceView]. Default: 0.
  * @param posY vertical coordinate for this [DiceView]. Default: 0.
+ * @param width width for this [DiceView]. Default: [DiceView.DEFAULT_DICE_WIDTH].
+ * @param height height for this [DiceView]. Default: [DiceView.DEFAULT_DICE_HEIGHT].
  * @param visuals list of visuals to represent the sides of the die.
  */
 open class DiceView(
-	height: Number = DEFAULT_DICE_HEIGHT,
-	width: Number = DEFAULT_DICE_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_DICE_WIDTH,
+	height: Number = DEFAULT_DICE_HEIGHT,
 	visuals: List<Visual>
-) : GameComponentView(height = height, width = width, posX = posX, posY = posY, visual = Visual.EMPTY) {
+) : GameComponentView(posX, posY, width, height, Visual.EMPTY) {
 	
 	/**
 	 * [Visual]s for this [DiceView].

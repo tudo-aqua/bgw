@@ -41,32 +41,32 @@ import tools.aqua.bgw.visual.Visual
  * Otherwise, the biggest possible spacing is used
  * so that all components are still withing bounds of the [LinearLayout].
  *
- * @param height height for this [LinearLayout]. Default: 0.
- * @param width width for this [LinearLayout]. Default: 0.
  * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
  * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
+ * @param width width for this [LinearLayout]. Default: 0.
+ * @param height height for this [LinearLayout]. Default: 0.
  * @param spacing spacing between contained [GameComponentView]s. Default: 0.
  * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
  * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default: [Alignment.TOP_LEFT].
  */
 open class LinearLayout<T : GameComponentView>(
-	height: Number = 0,
-	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = 0,
+	height: Number = 0,
 	spacing: Number = 0,
 	visual: Visual = Visual.EMPTY,
 	orientation: Orientation = Orientation.HORIZONTAL,
 	alignment: Alignment = Alignment.TOP_LEFT,
-) : GameComponentContainer<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
+) : GameComponentContainer<T>(posX, posY, width, height, visual) {
 	
 	/**
 	 * Secondary constructor taking separate alignment components.
 	 *
-	 * @param height height for this [LinearLayout]. Default: 0.
-	 * @param width width for this [LinearLayout]. Default: 0.
 	 * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
 	 * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
+	 * @param width width for this [LinearLayout]. Default: 0.
+	 * @param height height for this [LinearLayout]. Default: 0.
 	 * @param spacing spacing between contained [GameComponentView]s. Default: 0.
 	 * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
 	 * @param verticalAlignment specifies how the contained components should be aligned vertically.
@@ -75,10 +75,10 @@ open class LinearLayout<T : GameComponentView>(
 	 * Default: [HorizontalAlignment.LEFT].
 	 */
 	constructor(
-		height: Number = 0,
-		width: Number = 0,
 		posX: Number = 0,
 		posY: Number = 0,
+		width: Number = 0,
+		height: Number = 0,
 		spacing: Number = 0,
 		visual: Visual = Visual.EMPTY,
 		orientation: Orientation = Orientation.HORIZONTAL,

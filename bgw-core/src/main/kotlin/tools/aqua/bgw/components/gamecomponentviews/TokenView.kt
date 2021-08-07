@@ -29,19 +29,19 @@ import tools.aqua.bgw.visual.Visual
  * Visualization:
  * The current [Visual] is used to visualize the token.
  *
- * @param height height for this TokenView. Default: [DEFAULT_TOKEN_HEIGHT].
- * @param width width for this TokenView. Default: [DEFAULT_TOKEN_WIDTH].
  * @param posX horizontal coordinate for this TokenView. Default: 0.
  * @param posY vertical coordinate for this TokenView. Default: 0.
+ * @param width width for this TokenView. Default: [DEFAULT_TOKEN_WIDTH].
+ * @param height height for this TokenView. Default: [DEFAULT_TOKEN_HEIGHT].
  * @param visual visual for this TokenView.
  */
 open class TokenView(
-	height: Number = DEFAULT_TOKEN_HEIGHT,
-	width: Number = DEFAULT_TOKEN_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_TOKEN_WIDTH,
+	height: Number = DEFAULT_TOKEN_HEIGHT,
 	visual: Visual
-) : GameComponentView(height = height, width = width, posX = posX, posY = posY, visual = visual) {
+) : GameComponentView(posX, posY, width, height, visual) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [TokenView].
 	 */

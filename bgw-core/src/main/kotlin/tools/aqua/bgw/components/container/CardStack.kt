@@ -35,23 +35,23 @@ import tools.aqua.bgw.visual.Visual
  * The [Visual] is used to visualize a background.
  * The positioning of contained [CardView]s gets ignored and the specified alignment gets used to position them instead.
  *
- * @param height height for this [CardStack]. Default: the suggested card height.
- * @param width width for this [CardStack]. Default: the suggested card width.
  * @param posX horizontal coordinate for this [CardStack]. Default: 0.
  * @param posY vertical coordinate for this [CardStack]. Default: 0.
+ * @param width width for this [CardStack]. Default: the suggested card width.
+ * @param height height for this [CardStack]. Default: the suggested card height.
  * @param alignment specifies how the contained [CardView]s should be aligned. Default: [Alignment.CENTER]
  * @param visual visual for this [CardStack]. Default: [Visual.EMPTY].
  *
  * @see CardView
  */
 open class CardStack<T : CardView>(
-	height: Number = DEFAULT_CARD_HEIGHT,
-	width: Number = DEFAULT_CARD_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_CARD_WIDTH,
+	height: Number = DEFAULT_CARD_HEIGHT,
 	alignment: Alignment = Alignment.CENTER,
 	visual: Visual = Visual.EMPTY
-) : GameComponentContainer<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
+) : GameComponentContainer<T>(posX, posY, width, height, visual) {
 	
 	/**
 	 * [Property] for the [Alignment] of [CardView]s in this [CardStack].

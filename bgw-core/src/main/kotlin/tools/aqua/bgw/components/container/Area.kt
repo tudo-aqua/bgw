@@ -31,16 +31,16 @@ import tools.aqua.bgw.visual.Visual
  * to the top left corner of this [Area].
  * Components that are out of bounds for this [Area] will still get rendered.
  *
- * @param height height for this [Area]. Default: 0.
- * @param width width for this [Area]. Default: 0.
  * @param posX horizontal coordinate for this [Area]. Default: 0.
  * @param posY vertical coordinate for this [Area]. Default: 0.
+ * @param width width for this [Area]. Default: 0.
+ * @param height height for this [Area]. Default: 0.
  * @param visual visual for this [Area]. Default: [Visual.EMPTY].
  */
 open class Area<T : GameComponentView>(
-	height: Number = 0,
-	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = 0,
+	height: Number = 0,
 	visual: Visual = Visual.EMPTY
-) : GameComponentContainer<T>(height = height, width = width, posX = posX, posY = posY, visual = visual)
+) : GameComponentContainer<T>(posX, posY, width, height, visual)

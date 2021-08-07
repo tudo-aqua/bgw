@@ -27,10 +27,10 @@ import tools.aqua.bgw.util.Font
 /**
  * A simple [CheckBox] with a [label].
  *
- * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
- * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
  * @param posX horizontal coordinate for this [CheckBox]. Default: 0.
  * @param posY vertical coordinate for this [CheckBox]. Default: 0.
+ * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
+ * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
  * @param label label for this [CheckBox]. Default: empty String.
  * @param font font to be used for the [label]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
@@ -39,17 +39,17 @@ import tools.aqua.bgw.util.Font
  * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.
  */
 open class CheckBox(
-	height: Number = DEFAULT_CHECKBOX_HEIGHT,
-	width: Number = DEFAULT_CHECKBOX_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_CHECKBOX_WIDTH,
+	height: Number = DEFAULT_CHECKBOX_HEIGHT,
 	label: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
 	isChecked: Boolean = false,
 	allowIndeterminate: Boolean = false,
 	isIndeterminate: Boolean = false,
-) : LabeledUIComponent(height = height, width = width, posX = posX, posY = posY, label = label, font = font, alignment = alignment) {
+) : LabeledUIComponent(posX, posY, width, height, label, font, alignment) {
 	
 	/**
 	 * [Property] for the checked state.

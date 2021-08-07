@@ -29,25 +29,25 @@ import tools.aqua.bgw.util.Font
  * The [formatFunction] is used to gain a [String] representation of each item.
  * If no [formatFunction] is specified the [toString] function gets used instead.
  *
- * @param height height for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_HEIGHT].
- * @param width width for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_WIDTH].
  * @param posX horizontal coordinate for this [ListView]. Default: 0.
  * @param posY vertical coordinate for this [ListView]. Default: 0.
+ * @param width width for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_WIDTH].
+ * @param height height for this [ListView]. Default: [ListView.DEFAULT_LISTVIEW_HEIGHT].
  * @param items initial list of items for this [ListView]. Default: empty list.
  * @param font font to be used for this [ListView]. Default: default [Font] constructor.
  * @param orientation orientation for this [ListView]. Default: [Orientation.VERTICAL].
  * @param formatFunction the [formatFunction] that is used to represent the items. Default: `null`.
  */
 open class ListView<T>(
-	height: Number = DEFAULT_LISTVIEW_HEIGHT,
-	width: Number = DEFAULT_LISTVIEW_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_LISTVIEW_WIDTH,
+	height: Number = DEFAULT_LISTVIEW_HEIGHT,
 	items: List<T> = listOf(),
 	font: Font = Font(), //TODO: Unused?
 	orientation: Orientation = Orientation.VERTICAL,
 	formatFunction: ((T) -> String)? = null
-) : UIComponent(height = height, width = width, posX = posX, posY = posY, font) {
+) : UIComponent(posX, posY, width, height, font) {
 	
 	/**
 	 * [Property] for the items list for this [ListView].

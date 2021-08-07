@@ -32,8 +32,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Defines a [LayoutView] that orders components in a grid structure.
  *
- * @param rows initial row count.
  * @param columns initial column count.
+ * @param rows initial row count.
  * @param spacing spacing between rows and columns. Default: 0.0
  * @param posX horizontal coordinate for this [GridPane]. Default: 0.
  * @param posY vertical coordinate for this [GridPane]. Default: 0.
@@ -42,8 +42,8 @@ import tools.aqua.bgw.visual.Visual
  * @param visual initial visual for this [GridPane]. Default: [Visual.EMPTY].
  */
 open class GridPane<T : ComponentView>(
-	rows: Int,
 	columns: Int,
+	rows: Int,
 	spacing: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
@@ -57,19 +57,21 @@ open class GridPane<T : ComponentView>(
 	internal val grid: ComponentViewGrid<T> = ComponentViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
 	internal var renderedColWidths = DoubleArray(columns) { 0.0 }
-	
-	/**
-	 * Current row count.
-	 */
-	val rows: Int
-		get() = grid.rows
-	
+
+
 	/**
 	 * Current column count.
 	 */
 	val columns: Int
 		get() = grid.columns
-	
+
+
+	/**
+	 * Current row count.
+	 */
+	val rows: Int
+		get() = grid.rows
+
 	/**
 	 * Current spacing.
 	 */

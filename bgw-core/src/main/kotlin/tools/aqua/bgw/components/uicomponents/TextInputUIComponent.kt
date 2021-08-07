@@ -25,21 +25,21 @@ import tools.aqua.bgw.util.Font
 /**
  * Baseclass for all [UIComponent]s that have a text input field.
  *
- * @param height height for this [TextInputUIComponent].
- * @param width width for this [TextInputUIComponent].
  * @param posX horizontal coordinate for this [TextInputUIComponent].
  * @param posY vertical coordinate for this [TextInputUIComponent].
+ * @param width width for this [TextInputUIComponent].
+ * @param height height for this [TextInputUIComponent].
  * @param text text for this [TextInputUIComponent].
  * @param font font to be used for the [text].
  */
 sealed class TextInputUIComponent(
-	height: Number,
-	width: Number,
 	posX: Number,
 	posY: Number,
+	width: Number,
+	height: Number,
 	text: String,
 	font: Font,
-) : UIComponent(height = height, width = width, posX = posX, posY = posY, font = font) {
+) : UIComponent(posX, posY, width, height, font) {
 	/**
 	 * Property for the text of this [TextInputUIComponent].
 	 */

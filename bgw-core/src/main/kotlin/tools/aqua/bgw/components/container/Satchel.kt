@@ -49,20 +49,20 @@ import tools.aqua.bgw.visual.Visual
  * The [GameComponentView] at the highest index in the components list
  * registers the next drag and drop gesture above this [Satchel].
  *
- * @param height height for this [Satchel]. Default: 0.
- * @param height width for this [Satchel]. Default: 0.
  * @param posX horizontal coordinate for this [Satchel]. Default: 0.
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
+ * @param width width for this [Satchel]. Default: 0.
+ * @param height height for this [Satchel]. Default: 0.
  * @param visual visual for this [Satchel]. Default: [Visual.EMPTY].
  */
 open class Satchel<T : GameComponentView>(
-	height: Number = 0,
-	width: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = 0,
+	height: Number = 0,
 	visual: Visual = Visual.EMPTY,
 ) :
-	GameComponentContainer<T>(height = height, width = width, posX = posX, posY = posY, visual = visual) {
+	GameComponentContainer<T>(posX, posY, width, height, visual) {
 	
 	private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
 	

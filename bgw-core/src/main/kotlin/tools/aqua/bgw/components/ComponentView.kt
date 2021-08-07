@@ -35,10 +35,10 @@ import tools.aqua.bgw.visual.Visual
  * [ComponentView] is the abstract baseclass of all framework components.
  * It defines important fields and functions that are necessary to visualize inheriting components.
  *
- * @param height height for this [ComponentView].
- * @param width width for this [ComponentView].
  * @param posX the X coordinate for this [ComponentView] relative to its container.
  * @param posY the Y coordinate for this [ComponentView] relative to its container.
+ * @param width width for this [ComponentView].
+ * @param height height for this [ComponentView].
  * @param visual visual for this [ComponentView].
  *
  * @throws IllegalInheritanceException inheriting from this [Class] is not advised,
@@ -47,10 +47,10 @@ import tools.aqua.bgw.visual.Visual
  * @see IllegalInheritanceException
  */
 abstract class ComponentView(
-	height: Number,
-	width: Number,
 	posX: Number,
 	posY: Number,
+	width: Number,
+	height: Number,
 	visual: Visual
 ) {
 	
@@ -74,7 +74,53 @@ abstract class ComponentView(
 	 * Name field only for debugging purposes. Has no effect on rendering.
 	 */
 	var name: String = javaClass.name + "@" + Integer.toHexString(this.hashCode())
-	
+
+	/**
+	 * [Property] for the horizontal position of this [ComponentView].
+	 */
+	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
+
+	/**
+	 * Horizontal position of this [ComponentView].
+	 * @see posXProperty
+	 */
+	var posX: Double
+		get() = posXProperty.value
+		set(value) {
+			posXProperty.value = value
+		}
+
+	/**
+	 * [Property] for the vertical position of this [ComponentView].
+	 */
+	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
+
+	/**
+	 * Vertical position of this [ComponentView].
+	 * @see posYProperty
+	 */
+	var posY: Double
+		get() = posYProperty.value
+		set(value) {
+			posYProperty.value = value
+		}
+
+	/**
+	 * [Property] for the [width] of this [ComponentView].
+	 */
+	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
+
+	/**
+	 * The [width] for this [ComponentView].
+	 * @see widthProperty
+	 */
+	var width: Double
+		get() = widthProperty.value
+		set(value) {
+			widthProperty.value = value
+		}
+
+
 	/**
 	 * [Property] for the [height] of this [ComponentView].
 	 */
@@ -89,52 +135,7 @@ abstract class ComponentView(
 		set(value) {
 			heightProperty.value = value
 		}
-	
-	/**
-	 * [Property] for the [width] of this [ComponentView].
-	 */
-	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
-	
-	/**
-	 * The [width] for this [ComponentView].
-	 * @see widthProperty
-	 */
-	var width: Double
-		get() = widthProperty.value
-		set(value) {
-			widthProperty.value = value
-		}
-	
-	/**
-	 * [Property] for the horizontal position of this [ComponentView].
-	 */
-	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
-	
-	/**
-	 * Horizontal position of this [ComponentView].
-	 * @see posXProperty
-	 */
-	var posX: Double
-		get() = posXProperty.value
-		set(value) {
-			posXProperty.value = value
-		}
-	
-	/**
-	 * [Property] for the vertical position of this [ComponentView].
-	 */
-	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
-	
-	/**
-	 * Vertical position of this [ComponentView].
-	 * @see posYProperty
-	 */
-	var posY: Double
-		get() = posYProperty.value
-		set(value) {
-			posYProperty.value = value
-		}
-	
+
 	/**
 	 * [Property] for the horizontal scale of this [ComponentView].
 	 */

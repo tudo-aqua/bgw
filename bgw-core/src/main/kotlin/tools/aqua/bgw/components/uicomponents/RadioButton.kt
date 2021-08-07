@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.util.Font
+
 /**
  * [RadioButton] is a subclass of [ToggleButton] with a different visual representation.
  * A [RadioButton] may be used as a [Button] that is either selected or not selected.
@@ -36,28 +38,22 @@ package tools.aqua.bgw.components.uicomponents
  * @see ToggleButton
  * @see ToggleGroup
  *
- * @param height height for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_HEIGHT].
- * @param width width for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_WIDTH].
  * @param posX horizontal coordinate for this [RadioButton]. Default: 0.
  * @param posY vertical coordinate for this [RadioButton]. Default: 0.
+ * @param width width for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_WIDTH].
+ * @param height height for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_HEIGHT].
  * @param isSelected the initial state for this [RadioButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [RadioButton]. Default: null.
  */
 open class RadioButton(
-	height: Number = DEFAULT_RADIOBUTTON_HEIGHT,
-	width: Number = DEFAULT_RADIOBUTTON_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_RADIOBUTTON_WIDTH,
+	height: Number = DEFAULT_RADIOBUTTON_HEIGHT,
+	font: Font = Font(),
 	isSelected: Boolean = false,
 	toggleGroup: ToggleGroup? = null,
-) : ToggleButton(
-	height = height,
-	width = width,
-	posX = posX,
-	posY = posY,
-	isSelected = isSelected,
-	toggleGroup = toggleGroup
-) {
+) : ToggleButton(posX, posY, width, height, font, isSelected, toggleGroup) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [RadioButton].
 	 */

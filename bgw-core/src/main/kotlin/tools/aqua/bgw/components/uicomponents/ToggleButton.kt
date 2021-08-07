@@ -37,29 +37,23 @@ import tools.aqua.bgw.util.Font
  *
  * @see ToggleGroup
  *
- * @param height height for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_HEIGHT].
- * @param width width for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_WIDTH].
  * @param posX horizontal coordinate for this [ToggleButton]. Default: 0.
  * @param posY vertical coordinate for this [ToggleButton]. Default: 0.
+ * @param width width for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_WIDTH].
+ * @param height height for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_HEIGHT].
  * @param font font to be used for this [ToggleButton]. Default: default [Font] constructor.
  * @param isSelected the initial state for this [ToggleButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [ToggleButton]. Default: null.
  */
 open class ToggleButton(
-	height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
-	width: Number = DEFAULT_TOGGLE_BUTTON_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_TOGGLE_BUTTON_WIDTH,
+	height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
 	font: Font = Font(),
 	isSelected: Boolean = false,
 	toggleGroup: ToggleGroup? = null
-) : UIComponent(
-	height = height,
-	width = width,
-	posX = posX,
-	posY = posY,
-	font = font
-) {
+) : UIComponent(posX, posY, width, height, font) {
 	
 	/**
 	 * The ToggleGroup of this ToggleButton.

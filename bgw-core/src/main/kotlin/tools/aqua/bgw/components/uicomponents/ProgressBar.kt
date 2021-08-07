@@ -27,21 +27,21 @@ import java.awt.Color
 /**
  * A [ProgressBar].
  *
- * @param height height for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_HEIGHT].
- * @param width width for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_WIDTH].
  * @param posX horizontal coordinate for this [ProgressBar]. Default: 0.
  * @param posY vertical coordinate for this [ProgressBar]. Default: 0.
+ * @param width width for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_WIDTH].
+ * @param height height for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_HEIGHT].
  * @param progress the initial progress of this [ProgressBar]. Default 0.
  * @param barColor the initial bar color of this [ProgressBar]. Default [Color.CYAN].
  */
 open class ProgressBar(
-	height: Number = DEFAULT_PROGRESSBAR_HEIGHT,
-	width: Number = DEFAULT_PROGRESSBAR_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_PROGRESSBAR_WIDTH,
+	height: Number = DEFAULT_PROGRESSBAR_HEIGHT,
 	progress: Double = 0.0,
 	barColor: Color = Color.CYAN
-) : UIComponent(height = height, width = width, posX = posX, posY = posY, font = Font()) {
+) : UIComponent(posX, posY, width, height, Font()) {
 	
 	/**
 	 * [Property] for the progress state of this [ProgressBar].

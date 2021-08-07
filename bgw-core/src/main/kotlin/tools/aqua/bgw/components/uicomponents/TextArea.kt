@@ -25,24 +25,24 @@ import tools.aqua.bgw.util.Font
  * A [TextArea] is a multi line input field.
  * Whenever user input occurs the [text] field gets updated.
  *
- * @param height height for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_HEIGHT].
- * @param width width for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_WIDTH].
  * @param posX horizontal coordinate for this [TextArea]. Default: 0.
  * @param posY vertical coordinate for this [TextArea]. Default: 0.
+ * @param width width for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_WIDTH].
+ * @param height height for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_HEIGHT].
  * @param text initial label for this [TextArea]. Default: empty String.
  * @param prompt Prompt for this [TextArea].
  *        This gets displayed as a prompt to the user whenever the label is an empty string.
  *        Default: empty string.
  */
 open class TextArea(
-	height: Number = DEFAULT_TEXTAREA_HEIGHT,
-	width: Number = DEFAULT_TEXTAREA_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_TEXTAREA_WIDTH,
+	height: Number = DEFAULT_TEXTAREA_HEIGHT,
 	text: String = "",
 	font: Font = Font(),
 	val prompt: String = "",
-) : TextInputUIComponent(height = height, width = width, posX = posX, posY = posY, text = text, font = font) {
+) : TextInputUIComponent(posX, posY, width, height, text, font) {
 	/**
 	 * Defines some static constants that can be used as suggested properties of a [TextArea].
 	 */

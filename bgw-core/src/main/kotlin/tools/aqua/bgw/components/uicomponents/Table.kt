@@ -30,10 +30,10 @@ import tools.aqua.bgw.util.Font
  * The columns list defines how the data is represented.
  * @see TableColumn
  *
- * @param height height for this [Table]. Default: [Table.DEFAULT_TABLEVIEW_HEIGHT].
- * @param width width for this [Table]. Default: [Table.DEFAULT_TABLEVIEW_WIDTH].
  * @param posX horizontal coordinate for this [Table]. Default: 0.
  * @param posY vertical coordinate for this [Table]. Default: 0.
+ * @param width width for this [Table]. Default: [Table.DEFAULT_TABLEVIEW_WIDTH].
+ * @param height height for this [Table]. Default: [Table.DEFAULT_TABLEVIEW_HEIGHT].
  * @param font the Font for this [Table]. Default: default [Font] constructor.
  *
  * Simplified example on how the columns list is used to represent the data:
@@ -53,12 +53,12 @@ import tools.aqua.bgw.util.Font
  *
  */
 open class Table<T>(
-	height: Number = DEFAULT_TABLEVIEW_HEIGHT,
-	width: Number = DEFAULT_TABLEVIEW_WIDTH,
 	posX: Number = 0,
 	posY: Number = 0,
+	width: Number = DEFAULT_TABLEVIEW_WIDTH,
+	height: Number = DEFAULT_TABLEVIEW_HEIGHT,
 	font: Font = Font()
-) : UIComponent(height = height, width = width, posX = posX, posY = posY, font = font) {
+) : UIComponent(posX, posY, width, height, font) {
 	/**
 	 * An [ObservableList] that contains the data objects for this [Table].
 	 * The first object in this [ObservableList] will be the topmost row in the rendered [Table].

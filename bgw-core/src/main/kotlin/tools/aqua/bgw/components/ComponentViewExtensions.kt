@@ -44,9 +44,9 @@ fun ComponentView.offset(offsetX: Number, offsetY: Number) {
  * @param height the new height.
  * @param width the new width.
  */
-fun ComponentView.resize(height: Number, width: Number) {
-	this.height = height.toDouble()
+fun ComponentView.resize(width: Number, height: Number) {
 	this.width = width.toDouble()
+	this.height = height.toDouble()
 }
 
 /**
