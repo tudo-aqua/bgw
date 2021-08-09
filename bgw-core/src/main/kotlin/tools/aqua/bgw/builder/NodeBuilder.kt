@@ -283,7 +283,8 @@ internal class NodeBuilder {
 				node.isDisable = nV
 				background.isDisable = nV
 			}
-			
+
+			//TODO: component style needs to update when internal css changes
 			if (this is UIComponent) {
 				backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
 					if (nV.isNotEmpty())

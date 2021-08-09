@@ -20,6 +20,7 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
@@ -53,6 +54,22 @@ sealed class LabeledUIComponent(
     height = height,
     font = font,
     visual = visual) {
+
+    /**
+     * Property for the [isWrapText] state of this [Label].
+     */
+    val isWrapTextProperty = BooleanProperty(false)
+
+    /**
+     * Defines if text should be wrapped, if it exceeds the labels width.
+     * @see isWrapTextProperty
+     */
+    var isWrapText
+        get() = isWrapTextProperty.value
+        set(value) {
+            isWrapTextProperty.value = value
+        }
+
     /**
      * Property for the label of this [LabeledUIComponent].
      */
