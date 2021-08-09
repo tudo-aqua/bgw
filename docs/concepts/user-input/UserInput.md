@@ -50,7 +50,7 @@ be assigned on different components, or if the reference gets removed and re-add
 
 ````kotlin
 private fun handleMouseClicked(mouseEvent: MouseEvent) {
-	button.label = "someone clicked on me!"
+	button.text = "someone clicked on me!"
 }
 
 init {
@@ -64,7 +64,7 @@ component.
 
 ````kotlin
 button.onMousePressed = { mouseEvent ->
-	button.label = "pressed ${mouseEvent.button}"
+	button.text = "pressed ${mouseEvent.button}"
 }
 ````
 
@@ -103,19 +103,19 @@ class UserInputExample: BoardGameApplication("User input example") {
 	val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
 	private fun handleMouseClicked(mouseEvent: MouseEvent) {
-		button.label = "someone clicked on me!"
+		button.text = "someone clicked on me!"
 	}
 
 	init {
-        //handling user input on ComponentView
-        
+		//handling user input on ComponentView
+
 		button.onMouseClicked = this::handleMouseClicked
 
 		button.onMousePressed = { mouseEvent ->
-			button.label = "pressed ${mouseEvent.button}"
+			button.text = "pressed ${mouseEvent.button}"
 		}
 		button.onMouseReleased = { mouseEvent ->
-			button.label = "released ${mouseEvent.button}"
+			button.text = "released ${mouseEvent.button}"
 		}
 		button.onMouseEntered = {
 			button.visual = ColorVisual.MAGENTA
@@ -124,13 +124,13 @@ class UserInputExample: BoardGameApplication("User input example") {
 			button.visual = ColorVisual.GREEN
 		}
 		button.onKeyPressed = { keyEvent ->
-			button.label = "pressed key: ${keyEvent.keyCode}"
+			button.text = "pressed key: ${keyEvent.keyCode}"
 		}
 		button.onKeyReleased = { keyEvent ->
-			button.label = "released key: ${keyEvent.keyCode}"
+			button.text = "released key: ${keyEvent.keyCode}"
 		}
 		button.onKeyTyped = { keyEvent ->
-			button.label = "typed key: ${keyEvent.character}"
+			button.text = "typed key: ${keyEvent.character}"
 		}
 		button.dropAcceptor = { true }
 		button.onDragDropped = {
@@ -145,8 +145,8 @@ class UserInputExample: BoardGameApplication("User input example") {
 			button.visual = ColorVisual.GREEN
 		}
 
-        //Additional function references available only to DynamicComponentViews
-        
+		//Additional function references available only to DynamicComponentViews
+
 		token.isDraggable = true
 
 		token.onDragGestureMoved = { token.rotate(5) }
