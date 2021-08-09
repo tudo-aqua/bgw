@@ -31,7 +31,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [Button]. Default: 0.
  * @param width width for this [Button]. Default: [Button.DEFAULT_BUTTON_WIDTH].
  * @param height height for this [Button]. Default: [Button.DEFAULT_BUTTON_HEIGHT].
- * @param label label for this [Button]. Default: empty String.
+ * @param label text for this [Button]. Default: empty String.
  * @param font font to be used for the [text]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param visual visual for this button. Default: [ColorVisual.WHITE]
@@ -50,7 +50,7 @@ open class Button(
 	posY = posY,
 	width = width,
 	height = height,
-	label = label,
+	text = label,
 	font = font,
 	alignment = alignment,
 	visual = visual) {

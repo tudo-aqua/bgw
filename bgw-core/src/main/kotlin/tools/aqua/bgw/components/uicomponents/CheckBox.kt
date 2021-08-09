@@ -32,7 +32,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [CheckBox]. Default: 0.
  * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
  * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
- * @param label label for this [CheckBox]. Default: empty String.
+ * @param text text for this [CheckBox]. Default: empty String.
  * @param font font to be used for the [text]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param isChecked the initial checked state. Default: `false`.
@@ -45,7 +45,7 @@ open class CheckBox(
 	posY: Number = 0,
 	width: Number = DEFAULT_CHECKBOX_WIDTH,
 	height: Number = DEFAULT_CHECKBOX_HEIGHT,
-	label: String = "",
+	text: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
 	visual: Visual = Visual.EMPTY,
@@ -57,7 +57,7 @@ open class CheckBox(
 	posY = posY,
 	width = width,
 	height = height,
-	label = label,
+	text = text,
 	font = font,
 	alignment = alignment,
 	visual = visual) {

@@ -90,9 +90,9 @@ class ContainerExample : BoardGameApplication("Container Example") {
     )
     
     private val alignmentControls: Pane<UIComponent> = Pane<UIComponent>(posX = 50, posY = 335).apply {
-        add(Label(posY = 8, width = 220, label = "Vertical Alignment:", font = Font(20)))
-        add(Label(posY = 68, width = 220, label = "Horizontal Alignment:", font = Font(20)))
-        add(Label(posY = 128, width = 220, label = "LinearLayout Orientation:", font = Font(20)))
+        add(Label(posY = 8, width = 220, text = "Vertical Alignment:", font = Font(20)))
+        add(Label(posY = 68, width = 220, text = "Horizontal Alignment:", font = Font(20)))
+        add(Label(posY = 128, width = 220, text = "LinearLayout Orientation:", font = Font(20)))
         add(Button(width = 80, posX = 220, label = "TOP").apply {
             visual = ColorVisual.LIGHT_GRAY
             onMouseClicked = {

@@ -20,7 +20,6 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
@@ -31,7 +30,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [Label]. Default: 0.
  * @param width width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].
  * @param height height for this [Label]. Default: [Label.DEFAULT_LABEL_HEIGHT].
- * @param label label for this [Label]. Default: empty String.
+ * @param text text for this [Label]. Default: empty String.
  * @param font font to be used for the [text]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param visual background [Visual]. Default: [Visual.EMPTY]
@@ -41,7 +40,7 @@ open class Label(
 	posY: Number = 0,
 	width: Number = DEFAULT_LABEL_WIDTH,
 	height: Number = DEFAULT_LABEL_HEIGHT,
-	label: String = "",
+	text: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
 	visual: Visual = Visual.EMPTY
@@ -50,7 +49,7 @@ open class Label(
 	posY = posY,
 	width = width,
 	height = height,
-	label = label,
+	text = text,
 	font = font,
 	alignment = alignment,
 	visual = visual

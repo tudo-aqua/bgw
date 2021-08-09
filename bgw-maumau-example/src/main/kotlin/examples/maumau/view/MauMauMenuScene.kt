@@ -50,7 +50,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         width = 200,
         posX = 50,
         posY = 0,
-        label = "Main menu",
+        text = "Main menu",
         font = Font(fontWeight = Font.FontWeight.BOLD)
     )
     

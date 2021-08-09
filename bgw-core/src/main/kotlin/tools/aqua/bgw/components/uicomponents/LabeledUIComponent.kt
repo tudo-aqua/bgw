@@ -33,7 +33,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY vertical coordinate for this [LabeledUIComponent].
  * @param width width for this [LabeledUIComponent].
  * @param height height for this [LabeledUIComponent].
- * @param label label for this [LabeledUIComponent].
+ * @param text label for this [LabeledUIComponent].
  * @param font font to be used for the [text].
  * @param alignment alignment to be used for the [text].
  * @param visual background [Visual].
@@ -43,7 +43,7 @@ sealed class LabeledUIComponent(
     posY: Number,
     width: Number,
     height: Number,
-    label: String,
+    text: String,
     font: Font,
     alignment: Alignment,
     visual: Visual
@@ -73,7 +73,7 @@ sealed class LabeledUIComponent(
     /**
      * Property for the label of this [LabeledUIComponent].
      */
-    val textProperty: StringProperty = StringProperty(label)
+    val textProperty: StringProperty = StringProperty(text)
 
     /**
      * Label of this [LabeledUIComponent].

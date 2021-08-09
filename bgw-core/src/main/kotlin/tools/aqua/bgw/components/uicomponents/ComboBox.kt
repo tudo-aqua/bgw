@@ -38,7 +38,7 @@ import tools.aqua.bgw.visual.Visual
  * @param height height for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_HEIGHT].
  * @param prompt prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever the
  * [selectedItemProperty] value is `null`.Default: empty string.
- * @param font font to be used for the [prompt]. Default: default [Font] constructor.
+ * @param font font to be used for the options. Default: default [Font] constructor.
  * @param items the initial selection of items. Default: empty list.
  * @param formatFunction the formatFunction that is used to represent the items. Default: `null`.
  */
