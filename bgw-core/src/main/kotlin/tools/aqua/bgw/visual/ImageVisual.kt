@@ -107,6 +107,9 @@ open class ImageVisual(
 		
 		require(subWidth > 0) { "Width exceeds image width." }
 		require(subHeight > 0) { "Height exceeds image height." }
+
+		require(offsetX + subWidth <= image.width) { "Width of SubImage exceeds image bounds." }
+		require(offsetY + subHeight <= image.height) { "Height of SubImage exceeds image bounds." }
 		
 		val img = image.getSubimage(offsetX, offsetY, subWidth, subHeight)
 		
