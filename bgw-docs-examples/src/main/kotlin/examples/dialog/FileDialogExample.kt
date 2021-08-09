@@ -14,7 +14,7 @@ fun main() {
 class FileDialogExample : BoardGameApplication("FileDialog example") {
 	private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.GRAY)
 	
-	private val buttonOpenFile: Button = Button(posX = 700, posY = 500, label = "OpenFile").apply {
+	private val buttonOpenFile: Button = Button(posX = 700, posY = 500, text = "OpenFile").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showFileDialog(
@@ -25,7 +25,7 @@ class FileDialogExample : BoardGameApplication("FileDialog example") {
 			)
 		}
 	}
-	private val buttonOpenFiles: Button = Button(posX = 900, posY = 500, label = "OpenFiles").apply {
+	private val buttonOpenFiles: Button = Button(posX = 900, posY = 500, text = "OpenFiles").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showFileDialog(
@@ -36,7 +36,7 @@ class FileDialogExample : BoardGameApplication("FileDialog example") {
 			)
 		}
 	}
-	private val buttonSaveFile: Button = Button(posX = 1100, posY = 500, label = "SaveFile").apply {
+	private val buttonSaveFile: Button = Button(posX = 1100, posY = 500, text = "SaveFile").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showFileDialog(
@@ -47,7 +47,7 @@ class FileDialogExample : BoardGameApplication("FileDialog example") {
 			)
 		}
 	}
-	private val buttonChooseDirectory: Button = Button(posX = 900, posY = 600, label = "ChooseDir").apply {
+	private val buttonChooseDirectory: Button = Button(posX = 900, posY = 600, text = "ChooseDir").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showFileDialog(

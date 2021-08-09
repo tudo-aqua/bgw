@@ -29,7 +29,7 @@ import tools.aqua.bgw.util.Font
  * @param posY vertical coordinate for this [TextArea]. Default: 0.
  * @param width width for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_WIDTH].
  * @param height height for this [TextArea]. Default: [TextArea.DEFAULT_TEXTAREA_HEIGHT].
- * @param text initial label for this [TextArea]. Default: empty String.
+ * @param text initial text for this [TextArea]. Default: empty String.
  * @param prompt Prompt for this [TextArea].
  *        This gets displayed as a prompt to the user whenever the label is an empty string.
  *        Default: empty string.

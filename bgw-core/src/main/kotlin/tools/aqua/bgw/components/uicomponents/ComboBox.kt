@@ -56,7 +56,7 @@ open class ComboBox<T>(
 	posY = posY,
 	width = width,
 	height = height,
-	font = Font(),
+	font = font,
 	visual = Visual.EMPTY) {
 	/**
 	 * [Property] for the items list for this [ComboBox].

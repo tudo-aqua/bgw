@@ -118,7 +118,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		width = 200,
 		posX = 20,
 		posY = 20,
-		label = "Main menu",
+		text = "Main menu",
 		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
 	).apply {
 		visual = ImageVisual(BUTTON_BG_FILE)

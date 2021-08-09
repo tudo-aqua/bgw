@@ -50,22 +50,22 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 		ImageVisual(path = "card_deck.png", width = 130, height = 200, offsetX = 650, offsetY = 0),
 	)
 	
-	private val buttonDelay: Button = Button(posX = 900, posY = 800, label = "Delay").apply {
+	private val buttonDelay: Button = Button(posX = 900, posY = 800, text = "Delay").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonMovement: Button = Button(posX = 500, posY = 700, label = "Move").apply {
+	private val buttonMovement: Button = Button(posX = 500, posY = 700, text = "Move").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonRotation: Button = Button(posX = 700, posY = 700, label = "Rotate").apply {
+	private val buttonRotation: Button = Button(posX = 700, posY = 700, text = "Rotate").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonFlip: Button = Button(posX = 900, posY = 700, label = "Flip").apply {
+	private val buttonFlip: Button = Button(posX = 900, posY = 700, text = "Flip").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonRandomize: Button = Button(posX = 1100, posY = 700, label = "Randomize").apply {
+	private val buttonRandomize: Button = Button(posX = 1100, posY = 700, text = "Randomize").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonDie: Button = Button(posX = 1300, posY = 700, label = "Roll").apply {
+	private val buttonDie: Button = Button(posX = 1300, posY = 700, text = "Roll").apply {
 		visual = ColorVisual.WHITE
 	}
 	

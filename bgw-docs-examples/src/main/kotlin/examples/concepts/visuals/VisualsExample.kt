@@ -16,16 +16,16 @@ class VisualsExample : BoardGameApplication("Visuals example") {
 	private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.GRAY)
 	
 	private val token: TokenView = TokenView(posX = 860, posY = 400, height = 200, width = 200, visual = Visual.EMPTY)
-	private val buttonColor: Button = Button(posX = 600, posY = 700, label = "ColorVisual").apply {
+	private val buttonColor: Button = Button(posX = 600, posY = 700, text = "ColorVisual").apply {
 		visual = ColorVisual.LIGHT_GRAY
 	}
-	private val buttonImage: Button = Button(posX = 800, posY = 700, label = "ImageVisual").apply {
+	private val buttonImage: Button = Button(posX = 800, posY = 700, text = "ImageVisual").apply {
 		visual = ColorVisual.LIGHT_GRAY
 	}
-	private val buttonText: Button = Button(posX = 1000, posY = 700, label = "TextVisual").apply {
+	private val buttonText: Button = Button(posX = 1000, posY = 700, text = "TextVisual").apply {
 		visual = ColorVisual.LIGHT_GRAY
 	}
-	private val buttonCompound: Button = Button(posX = 1200, posY = 700, label = "Compound").apply {
+	private val buttonCompound: Button = Button(posX = 1200, posY = 700, text = "Compound").apply {
 		visual = ColorVisual.LIGHT_GRAY
 	}
 	

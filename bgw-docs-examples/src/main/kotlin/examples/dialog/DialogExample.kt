@@ -14,7 +14,7 @@ fun main() {
 class DialogExample : BoardGameApplication("Dialog example") {
 	private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.GRAY)
 	
-	private val buttonInformation: Button = Button(posX = 500, posY = 500, label = "INFORMATION").apply {
+	private val buttonInformation: Button = Button(posX = 500, posY = 500, text = "INFORMATION").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showDialog(
@@ -27,7 +27,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 			)
 		}
 	}
-	private val buttonWarning: Button = Button(posX = 700, posY = 500, label = "WARNING").apply {
+	private val buttonWarning: Button = Button(posX = 700, posY = 500, text = "WARNING").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showDialog(
@@ -40,7 +40,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 			)
 		}
 	}
-	private val buttonError: Button = Button(posX = 900, posY = 500, label = "ERROR").apply {
+	private val buttonError: Button = Button(posX = 900, posY = 500, text = "ERROR").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showDialog(
@@ -53,7 +53,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 			)
 		}
 	}
-	private val buttonConfirmation: Button = Button(posX = 1100, posY = 500, label = "CONFIRMATION").apply {
+	private val buttonConfirmation: Button = Button(posX = 1100, posY = 500, text = "CONFIRMATION").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showDialog(
@@ -66,7 +66,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 			)
 		}
 	}
-	private val buttonNone: Button = Button(posX = 1300, posY = 500, label = "NONE").apply {
+	private val buttonNone: Button = Button(posX = 1300, posY = 500, text = "NONE").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showDialog(
@@ -79,7 +79,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
 			)
 		}
 	}
-	private val buttonException: Button = Button(posX = 900, posY = 600, label = "EXCEPTION").apply {
+	private val buttonException: Button = Button(posX = 900, posY = 600, text = "EXCEPTION").apply {
 		visual = ColorVisual.WHITE
 		onMouseClicked = {
 			showDialog(

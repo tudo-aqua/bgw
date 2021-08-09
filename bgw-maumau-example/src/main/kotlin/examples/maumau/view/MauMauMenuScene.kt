@@ -18,7 +18,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         width = 200,
         posX = 50,
         posY = 110,
-        label = "Continue",
+        text = "Continue",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
     ).apply {
         visual = ImageVisual(BUTTON_BG_FILE)
@@ -29,7 +29,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         width = 200,
         posX = 50,
         posY = 220,
-        label = "New Game",
+        text = "New Game",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC)
     ).apply {
         visual = ImageVisual(BUTTON_BG_FILE)
@@ -39,7 +39,7 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         width = 200,
         posX = 50,
         posY = 330,
-        label = "Exit",
+        text = "Exit",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC)
     ).apply {
         visual = ImageVisual(BUTTON_BG_FILE)
