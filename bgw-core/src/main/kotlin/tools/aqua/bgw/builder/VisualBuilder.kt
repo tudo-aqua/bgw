@@ -115,6 +115,8 @@ internal class VisualBuilder {
          */
         private fun buildTextVisual(visual: TextVisual) = StackPane().apply {
             val label = Label().apply {
+                minWidth = 0.0
+                minHeight = 0.0
                 visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, newValue ->
                     text = newValue
                 }
