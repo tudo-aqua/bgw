@@ -119,7 +119,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		)
 		menuScene.addComponents(listView, listViewLabel)
 
-		val table = Table<Int>(posX = 450, posY = 800, width = 300, height = 200)
+		val table = TableView<Int>(posX = 450, posY = 800, width = 300, height = 200)
 		table.columns.add(TableColumn(title = "Value", width = 100) { "$it" })
 		table.columns.add(TableColumn(title = "Squared", width = 100) { "${it * it}" })
 		table.columns.add(TableColumn(title = "Even?", width = 100) { "${it % 2 == 0}" })

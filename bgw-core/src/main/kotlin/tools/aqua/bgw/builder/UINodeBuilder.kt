@@ -53,7 +53,7 @@ internal class UINodeBuilder {
 					buildLabel(uiComponent)
 				is ListView<*> ->
 					buildListView(uiComponent)
-				is Table<*> ->
+				is TableView<*> ->
 					buildTableView(uiComponent)
 				is TextArea ->
 					buildTextArea(uiComponent)
@@ -254,30 +254,30 @@ internal class UINodeBuilder {
 		}
 
 		/**
-		 * Builds [Table].
+		 * Builds [TableView].
 		 */
-		private fun <T> buildTableView(table: Table<T>): Region {
+		private fun <T> buildTableView(tableView: TableView<T>): Region {
 			val node = javafx.scene.control.TableView<T>().apply {
-				populateTableView(table)
+				populateTableView(tableView)
 			}
-			table.items.guiListener = {
-				node.populateTableView(table)
+			tableView.items.guiListener = {
+				node.populateTableView(tableView)
 			}
-			table.columns.guiListener = {
-				node.populateTableView(table)
+			tableView.columns.guiListener = {
+				node.populateTableView(tableView)
 			}
 			node.isEditable = false
 			return node
 		}
 
 		/**
-		 * Sets [Table] children.
+		 * Sets [TableView] children.
 		 */
-		private fun <T> javafx.scene.control.TableView<T>.populateTableView(table: Table<T>) {
+		private fun <T> javafx.scene.control.TableView<T>.populateTableView(tableView: TableView<T>) {
 			items.clear()
-			items.addAll(table.items)
+			items.addAll(tableView.items)
 			columns.clear()
-			table.columns.forEach {
+			tableView.columns.forEach {
 				columns.add(TableColumn<T, String>(it.title).apply {
 					this.minWidth = it.width.toDouble()
 					this.isResizable = false

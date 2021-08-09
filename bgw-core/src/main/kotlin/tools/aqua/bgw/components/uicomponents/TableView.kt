@@ -25,17 +25,17 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [Table] may be used to visualize a data table.
+ * A [TableView] may be used to visualize a data table.
  *
  * The items list is used as the data model.
  * The columns list defines how the data is represented.
  * @see TableColumn
  *
- * @param posX horizontal coordinate for this [Table]. Default: 0.
- * @param posY vertical coordinate for this [Table]. Default: 0.
- * @param width width for this [Table]. Default: [Table.DEFAULT_TABLEVIEW_WIDTH].
- * @param height height for this [Table]. Default: [Table.DEFAULT_TABLEVIEW_HEIGHT].
- * @param font the Font for this [Table]. Default: default [Font] constructor.
+ * @param posX horizontal coordinate for this [TableView]. Default: 0.
+ * @param posY vertical coordinate for this [TableView]. Default: 0.
+ * @param width width for this [TableView]. Default: [TableView.DEFAULT_TABLEVIEW_WIDTH].
+ * @param height height for this [TableView]. Default: [TableView.DEFAULT_TABLEVIEW_HEIGHT].
+ * @param font the Font for this [TableView]. Default: default [Font] constructor.
  *
  * Simplified example on how the columns list is used to represent the data:
  *
@@ -53,7 +53,7 @@ import tools.aqua.bgw.visual.Visual
  *  |4         |nice string 3 |9!        |
  *
  */
-open class Table<T>(
+open class TableView<T>(
 	posX: Number = 0,
 	posY: Number = 0,
 	width: Number = DEFAULT_TABLEVIEW_WIDTH,
@@ -67,29 +67,29 @@ open class Table<T>(
 	font = font,
 	visual = Visual.EMPTY) {
 	/**
-	 * An [ObservableList] that contains the data objects for this [Table].
-	 * The first object in this [ObservableList] will be the topmost row in the rendered [Table].
+	 * An [ObservableList] that contains the data objects for this [TableView].
+	 * The first object in this [ObservableList] will be the topmost row in the rendered [TableView].
 	 */
 	val items: ObservableList<T> = ObservableArrayList()
 	
 	/**
 	 * An [ObservableList] that contains [TableColumn]s which specify how the data is represented in that column.
-	 * The first [TableColumn] in this [ObservableList] will be the leftmost column in the rendered [Table].
+	 * The first [TableColumn] in this [ObservableList] will be the leftmost column in the rendered [TableView].
 	 * @see TableColumn
 	 */
 	val columns: ObservableList<TableColumn<T>> = ObservableArrayList()
 	
 	/**
-	 * Defines some static constants that can be used as suggested properties of a [Table].
+	 * Defines some static constants that can be used as suggested properties of a [TableView].
 	 */
 	companion object {
 		/**
-		 * Suggested [Table] [height].
+		 * Suggested [TableView] [height].
 		 */
 		const val DEFAULT_TABLEVIEW_HEIGHT: Int = 500
 		
 		/**
-		 * Suggested [Table] [width].
+		 * Suggested [TableView] [width].
 		 */
 		const val DEFAULT_TABLEVIEW_WIDTH: Int = 400
 	}

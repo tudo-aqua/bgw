@@ -20,14 +20,14 @@
 package tools.aqua.bgw.components.uicomponents
 
 /**
- * A [TableColumn] may be used to represent a column in a [Table].
- * @see Table
+ * A [TableColumn] may be used to represent a column in a [TableView].
+ * @see TableView
  */
 open class TableColumn<T>(
 	/**
 	 * The title for this [TableColumn].
-	 * It gets displayed in the header row of the [Table].
-	 * @see Table
+	 * It gets displayed in the header row of the [TableView].
+	 * @see TableView
 	 */
 	val title: String,
 	
@@ -38,8 +38,8 @@ open class TableColumn<T>(
 	
 	/**
 	 * The format function for this [TableColumn].
-	 * It gets applied to each item in the [Table] to get a [String] for its cell.
-	 * @see Table
+	 * It gets applied to each item in the [TableView] to get a [String] for its cell.
+	 * @see TableView
 	 */
 	val formatFunction: (T) -> String,
 )

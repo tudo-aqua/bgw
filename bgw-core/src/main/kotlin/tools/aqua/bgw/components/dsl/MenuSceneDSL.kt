@@ -211,43 +211,43 @@ fun <T> MenuScene.listView(func: ListView<T>.() -> Unit): ListView<T> {
 
 //region TableView
 /**
- * Creates a new [Table], applies the [func] and adds it to the receiver [MenuScene].
+ * Creates a new [TableView], applies the [func] and adds it to the receiver [MenuScene].
  *
- * @return the new [Table].
+ * @return the new [TableView].
  */
-fun <T> MenuScene.tableView(func: Table<T>.() -> Unit): Table<T> {
-    val tableView = Table<T>()
+fun <T> MenuScene.tableView(func: TableView<T>.() -> Unit): TableView<T> {
+    val tableView = TableView<T>()
     addComponents(tableView.apply(func))
     return tableView
 }
 
 /**
- * Creates a new [TableColumn] and adds it to the receiver [Table].
+ * Creates a new [TableColumn] and adds it to the receiver [TableView].
  *
  * @param title the title for the new [TableColumn].
  * @param width the width for the new [TableColumn].
  * @param func the new formatFunction for the new [TableColumn].
  */
-fun <T> Table<T>.column(title: String, width: Number, func: T.() -> String) {
+fun <T> TableView<T>.column(title: String, width: Number, func: T.() -> String) {
     columns.add(TableColumn(title = title, width = width, formatFunction = func))
 }
 
 /**
- * Sets the data model for the receiver [Table].
+ * Sets the data model for the receiver [TableView].
  *
  * @param data the data to set.
  */
-fun <T> Table<T>.data(data: List<T>) {
+fun <T> TableView<T>.data(data: List<T>) {
     items.clear()
     items.addAll(data)
 }
 
 /**
- * Appends the supplied [data] to the data model of the receiver [Table].
+ * Appends the supplied [data] to the data model of the receiver [TableView].
  *
  * @param data the data to append.
  */
-fun <T> Table<T>.appendData(data: List<T>) {
+fun <T> TableView<T>.appendData(data: List<T>) {
     items.addAll(data)
 }
 //endregion
