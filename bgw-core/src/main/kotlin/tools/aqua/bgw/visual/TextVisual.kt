@@ -29,14 +29,23 @@ import tools.aqua.bgw.util.Font
  * A visual displaying text.
  *
  * @param text text to display.
- * @param font font to be used for the [text]
+ * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment [Alignment] for the [text]. Default: [Alignment.CENTER].
+ * @param offsetX the horizontal offset of the [text] from its anchorpoint. Default: 0.
+ * @param offsetY the vertical offset of the [text] from its anchorpoint. Default: 0.
  */
-open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
+open class TextVisual(
+	text: String,
+	font: Font = Font(),
+	alignment: Alignment = Alignment.CENTER,
+	offsetX: Number = 0,
+	offsetY: Number = 0,
+) : SingleLayerVisual() {
 	/**
 	 * [Property] for the displayed [text].
 	 */
 	val textProperty: StringProperty = StringProperty(text)
-	
+
 	/**
 	 * The displayed [text].
 	 * @see textProperty
@@ -46,12 +55,12 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 		set(value) {
 			textProperty.value = value
 		}
-	
+
 	/**
 	 * [Property] for the displayed [text] [Font].
 	 */
 	val fontProperty: Property<Font> = Property(font)
-	
+
 	/**
 	 * The displayed [text] [Font].
 	 * @see fontProperty
@@ -61,11 +70,11 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 		set(value) {
 			fontProperty.value = value
 		}
-	
+
 	/**
 	 * [Property] for the [text] [Alignment].
 	 */
-	val alignmentProperty: Property<Alignment> = Property(Alignment.CENTER)
+	val alignmentProperty: Property<Alignment> = Property(alignment)
 
 	/**
 	 * The [text] [Alignment].
@@ -80,7 +89,7 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
 	 * [Property] for the x-axis [text] offset.
 	 */
-	val offsetXProperty: DoubleProperty = DoubleProperty(0)
+	val offsetXProperty: DoubleProperty = DoubleProperty(offsetX)
 
 	/**
 	 * The x-axis [text] offset.
@@ -95,7 +104,7 @@ open class TextVisual(text: String, font: Font = Font()) : SingleLayerVisual() {
 	/**
 	 * [Property] for the y-axis [text] offset.
 	 */
-	val offsetYProperty: DoubleProperty = DoubleProperty(0)
+	val offsetYProperty: DoubleProperty = DoubleProperty(offsetY)
 
 	/**
 	 * The y-axis [text] offset.
