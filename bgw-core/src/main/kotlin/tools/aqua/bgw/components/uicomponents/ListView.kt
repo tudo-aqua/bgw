@@ -45,7 +45,7 @@ open class ListView<T>(
 	width: Number = DEFAULT_LISTVIEW_WIDTH,
 	height: Number = DEFAULT_LISTVIEW_HEIGHT,
 	items: List<T> = listOf(),
-	font: Font = Font(), //TODO: Unused?
+	font: Font = Font(),
 	orientation: Orientation = Orientation.VERTICAL,
 	formatFunction: ((T) -> String)? = null
 ) : UIComponent(
