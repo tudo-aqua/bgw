@@ -90,6 +90,7 @@ open class ToggleButton(
 		}
 	
 	init {
+		this.toggleGroup = toggleGroup
 		selectedProperty.internalListener = { _, _ -> toggleGroup?.buttonSelectedStateChanged(this) }
 	}
 	
