@@ -33,8 +33,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [LabeledUIComponent].
  * @param height height for this [LabeledUIComponent].
  * @param label label for this [LabeledUIComponent].
- * @param font font to be used for the [label].
- * @param alignment alignment to be used for the [label].
+ * @param font font to be used for the [text].
+ * @param alignment alignment to be used for the [text].
  * @param visual background [Visual].
  */
 sealed class LabeledUIComponent(
@@ -56,16 +56,16 @@ sealed class LabeledUIComponent(
     /**
      * Property for the label of this [LabeledUIComponent].
      */
-    val labelProperty: StringProperty = StringProperty(label)
+    val textProperty: StringProperty = StringProperty(label)
 
     /**
      * Label of this [LabeledUIComponent].
-     * @see labelProperty
+     * @see textProperty
      */
-    var label: String
-        get() = labelProperty.value
+    var text: String
+        get() = textProperty.value
         set(value) {
-            labelProperty.value = value
+            textProperty.value = value
         }
 
 

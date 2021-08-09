@@ -36,7 +36,7 @@ class RefreshViewController(private val mauMauViewController: MauMauViewControll
 			cardView.showFront()
 		
 		//update label
-		mauMauViewController.mauMauGameScene.drawStackInfo.labelProperty.value =
+		mauMauViewController.mauMauGameScene.drawStackInfo.textProperty.value =
 			mauMauViewController.logicController.game.drawStack.size().toString()
 		
 		//add event handlers
@@ -75,7 +75,7 @@ class RefreshViewController(private val mauMauViewController: MauMauViewControll
 				cardView.posY = 0.0
 				
 				//update label
-				mauMauViewController.mauMauGameScene.gameStackInfo.labelProperty.value =
+				mauMauViewController.mauMauGameScene.gameStackInfo.textProperty.value =
 					mauMauViewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 			}
 			
@@ -89,7 +89,7 @@ class RefreshViewController(private val mauMauViewController: MauMauViewControll
 			cardView.posY = 0.0
 			
 			//update label
-			mauMauViewController.mauMauGameScene.gameStackInfo.labelProperty.value =
+			mauMauViewController.mauMauGameScene.gameStackInfo.textProperty.value =
 				mauMauViewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 		}
 		
@@ -182,10 +182,10 @@ class RefreshViewController(private val mauMauViewController: MauMauViewControll
 			})
 		
 		//update labels
-		mauMauViewController.mauMauGameScene.drawStackInfo.labelProperty.value =
+		mauMauViewController.mauMauGameScene.drawStackInfo.textProperty.value =
 			mauMauViewController.logicController.game.drawStack.size().toString()
 		
-		mauMauViewController.mauMauGameScene.gameStackInfo.labelProperty.value =
+		mauMauViewController.mauMauGameScene.gameStackInfo.textProperty.value =
 			mauMauViewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 		
 		//Add elements to hands
@@ -257,7 +257,7 @@ class RefreshViewController(private val mauMauViewController: MauMauViewControll
 	}
 	
 	override fun refreshSuitSelected() {
-		mauMauViewController.mauMauGameScene.gameStackInfo.label = mauMauViewController.logicController.game.nextSuit.toString()
+		mauMauViewController.mauMauGameScene.gameStackInfo.text = mauMauViewController.logicController.game.nextSuit.toString()
 		showJackEffectSelection(false)
 	}
 	

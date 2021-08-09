@@ -31,8 +31,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].
  * @param height height for this [Label]. Default: [Label.DEFAULT_LABEL_HEIGHT].
  * @param label label for this [Label]. Default: empty String.
- * @param font font to be used for the [label]. Default: default [Font] constructor.
- * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
+ * @param font font to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param visual background [Visual]. Default: [Visual.EMPTY]
  */
 open class Label(

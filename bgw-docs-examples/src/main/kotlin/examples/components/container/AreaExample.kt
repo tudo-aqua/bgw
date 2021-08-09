@@ -30,7 +30,7 @@ class AreaExample : BoardGameApplication("Area example") {
         }
         
         area.addComponentsListener {
-            numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+            numberOfComponentsLabel.text = "Number of components in this area: ${area.numberOfComponents()}"
         }
 
         area.add(greenToken)

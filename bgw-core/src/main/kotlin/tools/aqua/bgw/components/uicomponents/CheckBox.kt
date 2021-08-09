@@ -26,15 +26,15 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A simple [CheckBox] with a [label].
+ * A simple [CheckBox] with a [text].
  *
  * @param posX horizontal coordinate for this [CheckBox]. Default: 0.
  * @param posY vertical coordinate for this [CheckBox]. Default: 0.
  * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
  * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
  * @param label label for this [CheckBox]. Default: empty String.
- * @param font font to be used for the [label]. Default: default [Font] constructor.
- * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
+ * @param font font to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param isChecked the initial checked state. Default: `false`.
  * @param allowIndeterminate the initial [allowIndeterminate] state. Default: `false`.
  * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.

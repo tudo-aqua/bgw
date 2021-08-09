@@ -25,15 +25,15 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A simple [Button] with a [label].
+ * A simple [Button] with a [text].
  *
  * @param posX horizontal coordinate for this [Button]. Default: 0.
  * @param posY vertical coordinate for this [Button]. Default: 0.
  * @param width width for this [Button]. Default: [Button.DEFAULT_BUTTON_WIDTH].
  * @param height height for this [Button]. Default: [Button.DEFAULT_BUTTON_HEIGHT].
  * @param label label for this [Button]. Default: empty String.
- * @param font font to be used for the [label]. Default: default [Font] constructor.
- * @param alignment alignment to be used for the [label] Default: [Alignment.CENTER].
+ * @param font font to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param visual visual for this button. Default: [ColorVisual.WHITE]
  */
 open class Button(

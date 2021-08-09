@@ -72,7 +72,7 @@ internal class UINodeBuilder {
          */
         private fun buildLabel(label: Label): Region {
             val node = javafx.scene.control.Label()
-            node.textProperty().bindLabelProperty(label)
+            node.textProperty().bindTextProperty(label)
             node.alignmentProperty().bindAlignmentProperty(label)
             return node
         }
@@ -82,7 +82,7 @@ internal class UINodeBuilder {
          */
         private fun buildButton(button: Button): Region {
             val node = com.jfoenix.controls.JFXButton()
-            node.textProperty().bindLabelProperty(button)
+            node.textProperty().bindTextProperty(button)
             node.alignmentProperty().bindAlignmentProperty(button)
             return node
         }
@@ -160,7 +160,7 @@ internal class UINodeBuilder {
          */
         private fun buildCheckBox(checkBox: CheckBox): Region {
             val node = com.jfoenix.controls.JFXCheckBox()
-            node.textProperty().bindLabelProperty(checkBox)
+            node.textProperty().bindTextProperty(checkBox)
             node.allowIndeterminateProperty().bindBooleanProperty(checkBox.allowIndeterminateProperty)
             node.indeterminateProperty().bindBooleanProperty(checkBox.indeterminateProperty)
             node.selectedProperty().bindBooleanProperty(checkBox.checkedProperty)
@@ -290,13 +290,13 @@ internal class UINodeBuilder {
         }
 
         /**
-         * Binds [LabeledUIComponent.labelProperty].
+         * Binds [LabeledUIComponent.textProperty].
          */
-        private fun javafx.beans.property.StringProperty.bindLabelProperty(labeled: LabeledUIComponent) {
+        private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: LabeledUIComponent) {
             //Framework -> JavaFX
-            labeled.labelProperty.setGUIListenerAndInvoke(labeled.label) { _, nV -> value = nV }
+            labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
             //JavaFX -> Framework
-            addListener { _, _, new -> labeled.label = new }
+            addListener { _, _, new -> labeled.text = new }
         }
 
         /**
