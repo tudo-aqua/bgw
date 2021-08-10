@@ -259,25 +259,4 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	}
 	
 	override fun iterator(): Iterator<T> = observableComponents.iterator()
-	
-	/**
-	 * Adds the supplied [GameComponentView] to this [GameComponentContainer].
-	 */
-	operator fun T.unaryPlus() {
-		add(this)
-	}
-	
-	/**
-	 * Adds the supplied [GameComponentView]s to this [GameComponentContainer].
-	 */
-	operator fun Collection<T>.unaryPlus() {
-		addAll(this)
-	}
-	
-	/**
-	 * Removes the supplied [GameComponentView] from this [GameComponentContainer].
-	 */
-	operator fun T.unaryMinus() {
-		remove(this)
-	}
 }
