@@ -11,9 +11,9 @@ fun main() {
 }
 
 class UIComponentExample : BoardGameApplication("UIComponent Example") {
-	val menuScene = MenuScene(width = 800)
+	private val menuScene = MenuScene(width = 800)
 
-	val outputLabel = Label(posX = 50, posY = 50, width = 300, text = "I am a label.")
+	private val outputLabel = Label(posX = 50, posY = 50, width = 300, text = "I am a label.")
 
 	init {
 		menuScene.addComponents(outputLabel)
