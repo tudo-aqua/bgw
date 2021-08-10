@@ -50,42 +50,41 @@ fun ComponentView.resize(width: Number, height: Number) {
 }
 
 /**
- * Scales this [ComponentView]'s [ComponentView.height] and [ComponentView.width] by the given [scaleFactor].
- * @throws IllegalArgumentException if the given [scaleFactor] is negative.
+ * Scales this [ComponentView] by the given [scalar].
+ * @throws IllegalArgumentException if the given [scalar] is negative.
  */
-fun ComponentView.scale(scaleFactor: Number) {
-	val scaleFactorDoubleValue = scaleFactor.toDouble()
-	require(scaleFactorDoubleValue >= 0) {
-		"Only non-negative scale factors are allowed. Provided scale factor was $scaleFactorDoubleValue."
+fun ComponentView.scale(scalar: Number) {
+	val scalarDoubleValue = scalar.toDouble()
+	require(scalarDoubleValue >= 0) {
+		"Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
 	}
-	this.height = height * scaleFactorDoubleValue
-	this.width = width * scaleFactorDoubleValue
+	this.scale = scalarDoubleValue
 }
 
 /**
  *
- * Scales this [ComponentView]'s [ComponentView.width] by the given [scaleFactor].
- * @throws IllegalArgumentException if the given [scaleFactor] is negative.
+ * Scales this [ComponentView]'s width by the given [scalar].
+ * @throws IllegalArgumentException if the given [scalar] is negative.
  */
-fun ComponentView.scaleWidth(scaleFactor: Number) {
-	val scaleFactorDoubleValue = scaleFactor.toDouble()
-	require(scaleFactorDoubleValue >= 0) {
-		"Only non-negative scale factors are allowed. Provided scale factor was $scaleFactorDoubleValue."
+fun ComponentView.scaleX(scalar: Number) {
+	val scalarDoubleValue = scalar.toDouble()
+	require(scalarDoubleValue >= 0) {
+		"Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
 	}
-	this.width = width * scaleFactorDoubleValue
+	this.scaleX = scalarDoubleValue
 }
 
 /**
  *
- * Scales this [ComponentView]'s [ComponentView.height] by the given [scaleFactor].
- * @throws IllegalArgumentException if the given [scaleFactor] is negative.
+ * Scales this [ComponentView]'s height by the given [scalar].
+ * @throws IllegalArgumentException if the given [scalar] is negative.
  */
-fun ComponentView.scaleHeight(scaleFactor: Number) {
-	val scaleFactorDoubleValue = scaleFactor.toDouble()
-	require(scaleFactorDoubleValue >= 0) {
-		"Only non-negative scale factors are allowed. Provided scale factor was $scaleFactorDoubleValue."
+fun ComponentView.scaleY(scalar: Number) {
+	val scalarDoubleValue = scalar.toDouble()
+	require(scalarDoubleValue >= 0) {
+		"Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
 	}
-	this.height = height * scaleFactorDoubleValue
+	this.scaleY = scalarDoubleValue
 }
 
 /**
