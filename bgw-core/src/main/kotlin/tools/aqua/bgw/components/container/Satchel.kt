@@ -71,7 +71,7 @@ open class Satchel<T : GameComponentView>(
 	override fun T.onAdd() {
 		initialStates[this] = InitialState(
 			isDraggable = this.isDraggable,
-			isVisible = this.isVisible,
+			opacity = this.opacity,
 			width = this.width,
 			height = this.height
 		)
@@ -88,7 +88,7 @@ open class Satchel<T : GameComponentView>(
 	}
 	
 	private fun GameComponentView.initializeSatchelComponent() {
-		isVisibleProperty.setSilent(false)
+		opacityProperty.setSilent(0.0)
 		widthProperty.setSilent(this@Satchel.width)
 		heightProperty.setSilent(this@Satchel.height)
 		isDraggableProperty.setSilent(true)
@@ -99,7 +99,7 @@ open class Satchel<T : GameComponentView>(
 		widthProperty.setSilent(initialState.width)
 		heightProperty.setSilent(initialState.height)
 		isDraggableProperty.setSilent(initialState.isDraggable)
-		isVisibleProperty.setSilent(initialState.isVisible)
+		opacityProperty.setSilent(initialState.opacity)
 	}
 	
 	private fun GameComponentView.addInternalListeners() {
@@ -108,9 +108,9 @@ open class Satchel<T : GameComponentView>(
 			isDraggableProperty.setSilent(true)
 		}
 		
-		isVisibleProperty.internalListener = { _, nV ->
-			initialStates[this]!!.isVisible = nV
-			isVisibleProperty.setSilent(false)
+		opacityProperty.internalListener = { _, nV ->
+			initialStates[this]!!.opacity = nV
+			opacityProperty.setSilent(0.0)
 		}
 		
 		widthProperty.internalListener = { _, nV ->
@@ -126,7 +126,7 @@ open class Satchel<T : GameComponentView>(
 	
 	private fun GameComponentView.removeInternalListeners() {
 		isDraggableProperty.internalListener = null
-		isVisibleProperty.internalListener = null
+		opacityProperty.internalListener = null
 		widthProperty.internalListener = null
 		heightProperty.internalListener = null
 	}
@@ -145,5 +145,5 @@ open class Satchel<T : GameComponentView>(
 		this.posYProperty.internalListener = null
 	}
 	
-	private class InitialState(var isDraggable: Boolean, var isVisible: Boolean, var width: Double, var height: Double)
+	private class InitialState(var isDraggable: Boolean, var opacity: Double, var width: Double, var height: Double)
 }
