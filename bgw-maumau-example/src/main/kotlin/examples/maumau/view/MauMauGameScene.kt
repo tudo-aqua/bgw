@@ -130,16 +130,14 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			gameStack,
 			currentPlayerHand,
 			otherPlayerHand,
-			/*drawStackInfo,
+			drawStackInfo,
 			gameStackInfo,
 			buttonDiamonds,
 			buttonHearts,
 			buttonSpades,
 			buttonClubs,
 			hintButton,
-			mainMenuButton,*/
+			mainMenuButton
 		)
 	}
 }
-
-
