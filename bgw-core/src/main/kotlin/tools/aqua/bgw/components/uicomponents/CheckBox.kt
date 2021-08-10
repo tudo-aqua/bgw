@@ -35,6 +35,7 @@ import tools.aqua.bgw.visual.Visual
  * @param text text for this [CheckBox]. Default: empty String.
  * @param font font to be used for the [text]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
+ * @param isWrapText defines if [text] should be wrapped. Default: `false`.
  * @param isChecked the initial checked state. Default: `false`.
  * @param allowIndeterminate the initial [allowIndeterminate] state. Default: `false`.
  * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.
@@ -48,6 +49,7 @@ open class CheckBox(
 	text: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
+	isWrapText: Boolean = false,
 	visual: Visual = Visual.EMPTY,
 	isChecked: Boolean = false,
 	allowIndeterminate: Boolean = false,
@@ -59,6 +61,7 @@ open class CheckBox(
 	height = height,
 	text = text,
 	font = font,
+	isWrapText = isWrapText,
 	alignment = alignment,
 	visual = visual) {
 	/**

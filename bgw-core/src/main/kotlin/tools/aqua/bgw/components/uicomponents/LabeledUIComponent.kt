@@ -36,6 +36,7 @@ import tools.aqua.bgw.visual.Visual
  * @param text label for this [LabeledUIComponent].
  * @param font font to be used for the [text].
  * @param alignment alignment to be used for the [text].
+ * @param isWrapText defines if [text] should be wrapped, if it exceeds the labels width.
  * @param visual background [Visual].
  */
 sealed class LabeledUIComponent(
@@ -46,6 +47,7 @@ sealed class LabeledUIComponent(
     text: String,
     font: Font,
     alignment: Alignment,
+    isWrapText: Boolean,
     visual: Visual
 ) : UIComponent(
     posX = posX,
@@ -58,7 +60,7 @@ sealed class LabeledUIComponent(
     /**
      * Property for the [isWrapText] state of this [Label].
      */
-    val isWrapTextProperty = BooleanProperty(false)
+    val isWrapTextProperty = BooleanProperty(isWrapText)
 
     /**
      * Defines if text should be wrapped, if it exceeds the labels width.

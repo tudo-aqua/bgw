@@ -33,6 +33,7 @@ import tools.aqua.bgw.visual.Visual
  * @param text text for this [Label]. Default: empty String.
  * @param font font to be used for the [text]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
+ * @param isWrapText defines if [text] should be wrapped. Default: `false`.
  * @param visual background [Visual]. Default: [Visual.EMPTY]
  */
 open class Label(
@@ -43,6 +44,7 @@ open class Label(
 	text: String = "",
 	font: Font = Font(),
 	alignment: Alignment = Alignment.CENTER,
+	isWrapText: Boolean = false,
 	visual: Visual = Visual.EMPTY
 ) : LabeledUIComponent(
 	posX = posX,
@@ -52,6 +54,7 @@ open class Label(
 	text = text,
 	font = font,
 	alignment = alignment,
+	isWrapText = isWrapText,
 	visual = visual
 ) {
 	/**
