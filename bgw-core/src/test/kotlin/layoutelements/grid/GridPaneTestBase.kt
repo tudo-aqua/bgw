@@ -38,7 +38,7 @@ abstract class GridPaneTestBase {
 	
 	@BeforeEach
 	fun setUp() {
-		grid = GridPane(3, 3)
+		grid = GridPane(rows = 3, columns = 3)
 		alignments = Array(3) { Array(3) { Alignment.CENTER } }
 		alignments[0][0] = Alignment.CENTER_LEFT
 		alignments[0][1] = Alignment.BOTTOM_RIGHT

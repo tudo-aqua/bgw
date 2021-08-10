@@ -43,7 +43,7 @@ import java.util.*
  * @see MenuScene
  */
 @Suppress("LeakingThis")
-open class BoardGameApplication(windowTitle: String = "BoardGameWork Application") {
+open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	
 	init {
 		check(!instantiated) { "Unable to create second application." }
@@ -239,10 +239,5 @@ open class BoardGameApplication(windowTitle: String = "BoardGameWork Application
 		 * Static holder for instantiation of BoardGameApplication.
 		 */
 		private var instantiated: Boolean = false
-		
-		/**
-		 * The default fade time for [MenuScene]s in [showMenuScene] or [hideMenuScene].
-		 */
-		internal const val DEFAULT_FADE_TIME = 250
 	}
 }

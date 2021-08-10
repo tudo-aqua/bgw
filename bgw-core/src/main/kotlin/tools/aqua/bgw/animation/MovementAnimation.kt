@@ -20,6 +20,7 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 import tools.aqua.bgw.core.Scene
 
 /**
@@ -31,7 +32,7 @@ import tools.aqua.bgw.core.Scene
  * @param toX resulting X position. Default: Current [ComponentView.posX].
  * @param fromY initial Y position. Default: Current [ComponentView.posY].
  * @param toY resulting Y position. Default: Current [ComponentView.posY].
- * @param duration duration in milliseconds. Default: 1 second.
+ * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class MovementAnimation<T : ComponentView>(
 	componentView: T,
@@ -39,7 +40,7 @@ class MovementAnimation<T : ComponentView>(
 	toX: Number = componentView.posX,
 	fromY: Number = componentView.posY,
 	toY: Number = componentView.posY,
-	duration: Int = 1000
+	duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 	
 	/**

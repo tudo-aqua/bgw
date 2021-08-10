@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_WIDTH
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
@@ -40,8 +42,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [ToggleButton]. Default: 0.
  * @param posY vertical coordinate for this [ToggleButton]. Default: 0.
- * @param width width for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_WIDTH].
- * @param height height for this [ToggleButton]. Default: [ToggleButton.DEFAULT_TOGGLE_BUTTON_HEIGHT].
+ * @param width width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].
+ * @param height height for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_HEIGHT].
  * @param font font to be used for this [ToggleButton]. Default: default [Font] constructor.
  * @param isSelected the initial state for this [ToggleButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [ToggleButton]. Default: null.
@@ -92,21 +94,6 @@ open class ToggleButton(
 	init {
 		this.toggleGroup = toggleGroup
 		selectedProperty.internalListener = { _, _ -> toggleGroup?.buttonSelectedStateChanged(this) }
-	}
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [ToggleButton].
-	 */
-	companion object {
-		/**
-		 * Suggested [ToggleButton] [height].
-		 */
-		const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Int = 45
-		
-		/**
-		 * Suggested [ToggleButton] [width].
-		 */
-		const val DEFAULT_TOGGLE_BUTTON_WIDTH: Int = 120
 	}
 }
 

@@ -20,6 +20,8 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.gamecomponentviews.DiceView
+import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
+import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 
 /**
  * A die roll [Animation].
@@ -31,12 +33,12 @@ import tools.aqua.bgw.components.gamecomponentviews.DiceView
  *
  * @param dice [DiceView] to animate.
  * @param toSide resulting side after roll.
- * @param duration duration in milliseconds. Default: 1 second.
- * @param speed count of steps. Default: 50 steps.
+ * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
+ * @param speed count of steps. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class DiceAnimation<T : DiceView>(
 	dice: T,
 	val toSide: Int,
-	duration: Int = 1000,
-	val speed: Int = 50
-) : ComponentAnimation<T>(componentView = dice, duration = duration)
+	duration: Int = DEFAULT_ANIMATION_DURATION,
+	speed: Int = DEFAULT_ANIMATION_SPEED
+) : SteppedComponentAnimation<T>(componentView = dice, duration = duration, speed = speed)

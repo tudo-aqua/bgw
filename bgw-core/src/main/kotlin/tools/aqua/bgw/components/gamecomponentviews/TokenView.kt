@@ -19,8 +19,8 @@
 
 package tools.aqua.bgw.components.gamecomponentviews
 
-import tools.aqua.bgw.components.gamecomponentviews.TokenView.Companion.DEFAULT_TOKEN_HEIGHT
-import tools.aqua.bgw.components.gamecomponentviews.TokenView.Companion.DEFAULT_TOKEN_WIDTH
+import tools.aqua.bgw.core.DEFAULT_TOKEN_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_TOKEN_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -41,19 +41,4 @@ open class TokenView(
 	width: Number = DEFAULT_TOKEN_WIDTH,
 	height: Number = DEFAULT_TOKEN_HEIGHT,
 	visual: Visual
-) : GameComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [TokenView].
-	 */
-	companion object {
-		/**
-		 * Suggested [TokenView] [height].
-		 */
-		const val DEFAULT_TOKEN_HEIGHT: Int = 50
-		
-		/**
-		 * Suggested [TokenView] [width].
-		 */
-		const val DEFAULT_TOKEN_WIDTH: Int = 50
-	}
-}
+) : GameComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual)

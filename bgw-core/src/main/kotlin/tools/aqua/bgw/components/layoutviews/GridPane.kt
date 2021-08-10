@@ -21,9 +21,7 @@ package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.observable.IObservable
-import tools.aqua.bgw.observable.Observable
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.core.DEFAULT_GRID_SPACING
 import tools.aqua.bgw.util.ComponentViewGrid
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.GridIteratorElement
@@ -32,21 +30,21 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Defines a [LayoutView] that orders components in a grid structure.
  *
- * @param columns initial column count.
- * @param rows initial row count.
- * @param spacing spacing between rows and columns. Default: 0.0
  * @param posX horizontal coordinate for this [GridPane]. Default: 0.
  * @param posY vertical coordinate for this [GridPane]. Default: 0.
+ * @param columns initial column count.
+ * @param rows initial row count.
+ * @param spacing spacing between rows and columns. Default: [DEFAULT_GRID_SPACING].
  * @param layoutFromCenter whether the [GridPane] should anchor in the center (`true`) or top-Left (`false`).
  * Default: `true`.
  * @param visual initial visual for this [GridPane]. Default: [Visual.EMPTY].
  */
 open class GridPane<T : ComponentView>(
-	columns: Int,
-	rows: Int,
-	spacing: Number = 0,
 	posX: Number = 0,
 	posY: Number = 0,
+	columns: Int,
+	rows: Int,
+	spacing: Number = DEFAULT_GRID_SPACING,
 	layoutFromCenter: Boolean = true,
 	visual: Visual = Visual.EMPTY
 ) : LayoutView<T>(height = 0, width = 0, posX = posX, posY = posY, visual = visual),

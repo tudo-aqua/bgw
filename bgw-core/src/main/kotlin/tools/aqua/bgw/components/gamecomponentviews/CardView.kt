@@ -21,8 +21,8 @@ package tools.aqua.bgw.components.gamecomponentviews
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide.BACK
 import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide.FRONT
-import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_HEIGHT
-import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_WIDTH
+import tools.aqua.bgw.core.DEFAULT_CARD_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_CARD_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -119,21 +119,6 @@ open class CardView(
 		this.frontVisual = front
 		this.backVisual = back
 		this.currentSide = BACK
-	}
-
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [CardView].
-	 */
-	companion object {
-		/**
-		 * Suggested [CardView] [height].
-		 */
-		const val DEFAULT_CARD_HEIGHT: Int = 200
-
-		/**
-		 * Suggested [CardView] [width].
-		 */
-		const val DEFAULT_CARD_WIDTH: Int = 130
 	}
 
 	/**

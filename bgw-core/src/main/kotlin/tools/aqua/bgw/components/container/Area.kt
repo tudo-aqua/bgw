@@ -20,6 +20,8 @@
 package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.core.DEFAULT_AREA_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_AREA_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -33,14 +35,14 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [Area]. Default: 0.
  * @param posY vertical coordinate for this [Area]. Default: 0.
- * @param width width for this [Area]. Default: 0.
- * @param height height for this [Area]. Default: 0.
+ * @param width width for this [Area]. Default: [DEFAULT_AREA_WIDTH].
+ * @param height height for this [Area]. Default: [DEFAULT_AREA_HEIGHT].
  * @param visual visual for this [Area]. Default: [Visual.EMPTY].
  */
 open class Area<T : GameComponentView>(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = 0,
-	height: Number = 0,
+	width: Number = DEFAULT_AREA_WIDTH,
+	height: Number = DEFAULT_AREA_HEIGHT,
 	visual: Visual = Visual.EMPTY
 ) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual)

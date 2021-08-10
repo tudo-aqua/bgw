@@ -20,8 +20,6 @@
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.components.StaticComponentView
-import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_HEIGHT
-import tools.aqua.bgw.core.Scene.Companion.DEFAULT_SCENE_WIDTH
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
@@ -41,12 +39,5 @@ open class MenuScene(
 	
 	init {
 		opacity = DEFAULT_MENU_SCENE_OPACITY
-	}
-	
-	companion object {
-		/**
-		 * Default menu scene opacity.
-		 */
-		const val DEFAULT_MENU_SCENE_OPACITY: Double = 0.75
 	}
 }

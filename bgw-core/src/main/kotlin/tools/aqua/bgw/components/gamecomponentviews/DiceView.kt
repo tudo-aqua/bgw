@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.gamecomponentviews
 
+import tools.aqua.bgw.core.DEFAULT_DICE_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_DICE_WIDTH
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
 
@@ -30,8 +32,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [DiceView]. Default: 0.
  * @param posY vertical coordinate for this [DiceView]. Default: 0.
- * @param width width for this [DiceView]. Default: [DiceView.DEFAULT_DICE_WIDTH].
- * @param height height for this [DiceView]. Default: [DiceView.DEFAULT_DICE_HEIGHT].
+ * @param width width for this [DiceView]. Default: [DEFAULT_DICE_WIDTH].
+ * @param height height for this [DiceView]. Default: [DEFAULT_DICE_HEIGHT].
  * @param visuals list of visuals to represent the sides of the die.
  */
 open class DiceView(
@@ -84,20 +86,5 @@ open class DiceView(
 			visuals[currentSide]
 		else
 			Visual.EMPTY
-	}
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [DiceView].
-	 */
-	companion object {
-		/**
-		 * Suggested [DiceView] [height].
-		 */
-		const val DEFAULT_DICE_HEIGHT: Int = 80
-		
-		/**
-		 * Suggested [DiceView] [width].
-		 */
-		const val DEFAULT_DICE_WIDTH: Int = 80
 	}
 }

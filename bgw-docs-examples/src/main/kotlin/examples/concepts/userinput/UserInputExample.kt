@@ -17,14 +17,15 @@ fun main() {
 
 class UserInputExample: BoardGameApplication("User input example") {
 
-	val button : Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply {
+	private val button : Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply {
 		visual = ColorVisual.GREEN
 	}
 
-	val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
+	private val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
 
-	val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+	private val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
+	@Suppress("UNUSED_PARAMETER")
 	private fun handleMouseClicked(mouseEvent: MouseEvent) {
 		button.text = "someone clicked on me!"
 	}
@@ -74,7 +75,7 @@ class UserInputExample: BoardGameApplication("User input example") {
 
 		token.onDragGestureMoved = { token.rotate(5) }
 		token.onDragGestureStarted = { token.scale(1.2) }
-		token.onDragGestureEnded = { dropEvent, success ->
+		token.onDragGestureEnded = { _, success ->
 			if (success) token.resize(50,50)
 		}
 

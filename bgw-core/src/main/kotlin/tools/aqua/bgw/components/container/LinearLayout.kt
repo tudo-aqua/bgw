@@ -21,9 +21,7 @@ package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.uicomponents.Orientation
-import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.core.HorizontalAlignment
-import tools.aqua.bgw.core.VerticalAlignment
+import tools.aqua.bgw.core.*
 import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
@@ -43,18 +41,18 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
  * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
- * @param width width for this [LinearLayout]. Default: 0.
- * @param height height for this [LinearLayout]. Default: 0.
- * @param spacing spacing between contained [GameComponentView]s. Default: 0.
+ * @param width width for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_WIDTH].
+ * @param height height for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_HEIGHT].
+ * @param spacing spacing between contained [GameComponentView]s. Default: [DEFAULT_LINEAR_LAYOUT_SPACING].
  * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
  * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default: [Alignment.TOP_LEFT].
  */
 open class LinearLayout<T : GameComponentView>(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = 0,
-	height: Number = 0,
-	spacing: Number = 0,
+	width: Number = DEFAULT_LINEAR_LAYOUT_WIDTH,
+	height: Number = DEFAULT_LINEAR_LAYOUT_HEIGHT,
+	spacing: Number = DEFAULT_LINEAR_LAYOUT_SPACING,
 	visual: Visual = Visual.EMPTY,
 	orientation: Orientation = Orientation.HORIZONTAL,
 	alignment: Alignment = Alignment.TOP_LEFT,

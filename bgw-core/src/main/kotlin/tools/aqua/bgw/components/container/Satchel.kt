@@ -21,6 +21,8 @@ package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.core.DEFAULT_SATCHEL_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_SATCHEL_WIDTH
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -51,15 +53,15 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [Satchel]. Default: 0.
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
- * @param width width for this [Satchel]. Default: 0.
- * @param height height for this [Satchel]. Default: 0.
+ * @param width width for this [Satchel]. Default: [DEFAULT_SATCHEL_WIDTH].
+ * @param height height for this [Satchel]. Default: [DEFAULT_SATCHEL_HEIGHT].
  * @param visual visual for this [Satchel]. Default: [Visual.EMPTY].
  */
 open class Satchel<T : GameComponentView>(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = 0,
-	height: Number = 0,
+	width: Number = DEFAULT_SATCHEL_WIDTH,
+	height: Number = DEFAULT_SATCHEL_HEIGHT,
 	visual: Visual = Visual.EMPTY,
 ) :
 	GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {
