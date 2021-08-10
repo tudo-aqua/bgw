@@ -23,17 +23,18 @@ The Coordinate class is used as a Tuple wrapper for X and Y coordinates of a Com
 It is created with X and Y coordinates accordingly.
 
 The coordinate class implements plus and minus operator to add or subtract coordinates from each other:
-````kotlin
-val coord1 = Coordinate(xCoord = 5, yCoord = 7)
-val coord2 = Coordinate(xCoord = -1, yCoord = 5)
 
-val addedCoord      = coord1 + coord2 //xCoord = 4, yCoord = 13
-val subtractedCoord = coord1 - coord2 //xCoord = 6, yCoord =  2
+````kotlin
+val coord1: Coordinate = Coordinate(xCoord = 5, yCoord = 7)
+val coord2: Coordinate = Coordinate(xCoord = -1, yCoord = 5)
+
+val addedCoord: Coordinate = coord1 + coord2 //xCoord = 4, yCoord = 13
+val subtractedCoord: Coordinate = coord1 - coord2 //xCoord = 6, yCoord =  2
 ````
 
 The equals function returns true if and only if ````coord1.xCoord == coord2.xCoord && coord1.yCoord == coord2.yCoord````.
 
-Addidtionally the [rotated](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/rotated.html) function can be used to rotate the coordinate by a given angle around a center point.
+Additionally, the [rotated](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/rotated.html) function can be used to rotate the coordinate by a given angle around a center point.
 
 ## [CoordinatePlain](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate-plain/index.html)
 A CoordinatePlain represents a right-angled plain with four its four corners. These can be accessed by

@@ -166,7 +166,7 @@ gameScene.playAnimation(
 
 ## [DiceAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/)
 
-A DiceAnimation behaves like a [RandomizeAnimation](bgw/concepts/observable.html#RandomizeAnimation) specifically for
+A DiceAnimation behaves like a [RandomizeAnimation](https://tudo-aqua.github.io/bgw/concepts/observable.html#RandomizeAnimation) specifically for
 dices. As the visuals got passed as parameter on Dice creation only the resulting side as zero-based index needs to be
 passed. The animation sets the *toSide* as the last step in order to control what is the resulting visual of this
 animation.
