@@ -57,8 +57,8 @@ private val outputLabel = Label(
 ## Button
 
 A [Button][ButtonDoc] is a component that plays a 'click' animation, when a mouse click is performed over the button.
-Additionally, a text may be defined to describe the button. In this example a new button is instantiated, and the '
-onMouseClicked' is set, so that the 'outputLabel' display "Someone pressed the Button!".
+Additionally, a text may be defined to describe the button. In this example a new button is instantiated, and the ``
+onMouseClicked`` is set, so that the 'outputLabel' display "Someone pressed the Button!".
 
 ````kotlin
 val button = Button(posX = 450, posY = 50, text = "I am a Button.")
@@ -74,7 +74,7 @@ button.onMouseClicked = {
 ## CheckBox
 
 A [CheckBox][CheckBoxDoc] is a component that can be checked or unchecked. It can be enabled to allow an indeterminate
-state. This can be used to express no selection. Whenever a CheckBox is clicked it changes its state in the following
+state. This can be used to express uncertainty. Whenever a CheckBox is clicked it changes its state in the following
 order:
 
 if indeterminate is not allowed
