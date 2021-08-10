@@ -20,6 +20,8 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.core.DEFAULT_LABEL_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_LABEL_WIDTH
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
@@ -56,21 +58,4 @@ open class Label(
 	alignment = alignment,
 	isWrapText = isWrapText,
 	visual = visual
-) {
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [Label].
-	 */
-	companion object {
-		/**
-		 * Suggested [Label] [height].
-		 */
-		const val DEFAULT_LABEL_HEIGHT: Int = 30
-
-		/**
-		 * Suggested [Label] [width].
-		 */
-		const val DEFAULT_LABEL_WIDTH: Int = 120
-	}
-
-
-}
+)
