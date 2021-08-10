@@ -20,12 +20,22 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.observable.IObservable
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
-//TODO: Docs
+/**
+ * A [Pane] can be used to group [ComponentView]s for easier
+ * position management and layout.
+ *
+ * @param posX horizontal coordinate for this [Pane]. Default: 0.
+ * @param posY vertical coordinate for this [Pane]. Default: 0.
+ * @param width width for this [Pane].
+ * @param height height for this [Pane].
+ * @param visual visual for this [Pane]. Default: [Visual.EMPTY].
+ */
 open class Pane<T : ComponentView>(
     posX: Number = 0,
     posY: Number = 0,
