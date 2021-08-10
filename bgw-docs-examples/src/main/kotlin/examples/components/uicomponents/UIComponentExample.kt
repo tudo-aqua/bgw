@@ -18,7 +18,14 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		this.opacity = 1.0
 	}
 
-	private val outputLabel = Label(posX = 50, posY = 50, width = 300, text = "I am a Label.")
+	private val outputLabel = Label(
+		posX = 50,
+		posY = 50,
+		width = 300,
+		text = "I am a Label.",
+		alignment = Alignment.CENTER,
+		isWrapText = true
+	)
 
 	init {
 		menuScene.addComponents(outputLabel)
@@ -37,8 +44,6 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 			CheckBox(posX = 50, posY = 150, width = 300, text = "I am a CheckBox.", alignment = Alignment.CENTER_LEFT)
 
 		checkBox.allowIndeterminate = true
-
-		checkBox.checked = true
 
 		checkBox.checkedProperty.addListener { _, newValue ->
 			outputLabel.text = if (newValue) "The check box is checked!" else "The check box is unchecked!"
