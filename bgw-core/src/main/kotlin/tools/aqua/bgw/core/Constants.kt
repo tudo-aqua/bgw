@@ -171,9 +171,14 @@ const val DEFAULT_GRID_SPACING: Double = 0.0
 
 //region UIComponents
 /**
- * Default [Button] height.
+ * Default [Label] width.
  */
-const val DEFAULT_BUTTON_HEIGHT: Double = 45.0
+const val DEFAULT_LABEL_WIDTH: Double = 120.0
+
+/**
+ * Default [Label] height.
+ */
+const val DEFAULT_LABEL_HEIGHT: Double = 30.0
 
 /**
  * Default [Button] width.
@@ -181,9 +186,9 @@ const val DEFAULT_BUTTON_HEIGHT: Double = 45.0
 const val DEFAULT_BUTTON_WIDTH: Double = 120.0
 
 /**
- * Default [ToggleButton] height.
+ * Default [Button] height.
  */
-const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
+const val DEFAULT_BUTTON_HEIGHT: Double = 45.0
 
 /**
  * Default [ToggleButton] width.
@@ -191,9 +196,9 @@ const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
 const val DEFAULT_TOGGLE_BUTTON_WIDTH: Double = DEFAULT_BUTTON_WIDTH
 
 /**
- * Default [RadioButton] height.
+ * Default [ToggleButton] height.
  */
-const val DEFAULT_RADIO_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
+const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
 
 /**
  * Default [RadioButton] width.
@@ -201,9 +206,9 @@ const val DEFAULT_RADIO_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
 const val DEFAULT_RADIO_BUTTON_WIDTH: Double = DEFAULT_BUTTON_HEIGHT //Note: Used height here for square
 
 /**
- * Default [TextField] height.
+ * Default [RadioButton] height.
  */
-const val DEFAULT_TEXT_FIELD_HEIGHT: Double = 30.0
+const val DEFAULT_RADIO_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
 
 /**
  * Default [TextField] width.
@@ -211,9 +216,9 @@ const val DEFAULT_TEXT_FIELD_HEIGHT: Double = 30.0
 const val DEFAULT_TEXT_FIELD_WIDTH: Double = 140.0
 
 /**
- * Default [TextArea] height.
+ * Default [TextField] height.
  */
-const val DEFAULT_TEXT_AREA_HEIGHT: Double = 100.0
+const val DEFAULT_TEXT_FIELD_HEIGHT: Double = 30.0
 
 /**
  * Default [TextArea] width.
@@ -221,12 +226,17 @@ const val DEFAULT_TEXT_AREA_HEIGHT: Double = 100.0
 const val DEFAULT_TEXT_AREA_WIDTH: Double = 200.0
 
 /**
- * Default [TableView] height.
+ * Default [TextArea] height.
  */
-const val DEFAULT_TABLE_VIEW_HEIGHT: Double = 500.0
+const val DEFAULT_TEXT_AREA_HEIGHT: Double = 100.0
 
 /**
  * Default [TableView] width.
  */
 const val DEFAULT_TABLE_VIEW_WIDTH: Double = 400.0
+
+/**
+ * Default [TableView] height.
+ */
+const val DEFAULT_TABLE_VIEW_HEIGHT: Double = 500.0
 //endregion
