@@ -70,7 +70,7 @@ internal class NodeBuilder {
 			}
 			val background = VisualBuilder.build(componentView)
 			val stackPane = StackPane(background, node).apply { isPickOnBounds = false }
-			
+
 			//JavaFX -> Framework
 			componentView.registerEvents(stackPane, node, scene)
 			
@@ -88,7 +88,7 @@ internal class NodeBuilder {
 		 */
 		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
 			stackPane.onDragDetected = EventHandler {
-				if (this is DynamicComponentView && isDraggable) {
+				if (this is DynamicComponentView && isDraggable && scene.draggedDataProperty.value == null) {
 					onDragDetected(scene, it)
 				}
 			}
@@ -108,7 +108,7 @@ internal class NodeBuilder {
 				xCoord = e.sceneX / Frontend.sceneScale,
 				yCoord = e.sceneY / Frontend.sceneScale
 			)
-			
+
 			val pathToChild = scene.findPathToChild(this)
 			
 			var posStartCoord = Coordinate(
