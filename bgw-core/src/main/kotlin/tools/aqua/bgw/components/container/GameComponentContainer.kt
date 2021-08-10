@@ -51,6 +51,10 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 */
 	internal val observableComponents: ObservableList<T> = ObservableLinkedList()
 
+	internal abstract fun T.onRemove()
+
+	internal abstract fun T.onAdd()
+
 	/**
 	 * [onAdd] gets invoked anytime after a [GameComponentView] is added to this
 	 * [GameComponentContainer] with the added [GameComponentView] as its receiver.
@@ -100,7 +104,7 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 */
 	@Suppress("DuplicatedCode")
 	@Synchronized
-	open fun add(component: T, index: Int = observableComponents.size) {
+	fun add(component: T, index: Int = observableComponents.size) {
 		require(!observableComponents.contains(component)) {
 			"Component $component is already contained in this $this."
 		}
@@ -114,6 +118,7 @@ sealed class GameComponentContainer<T : GameComponentView>(
 		observableComponents.add(index, component)
 		component.apply {
 			parent = this@GameComponentContainer
+			this.onAdd()
 			onAdd?.invoke(this)
 		}
 	}
@@ -159,9 +164,10 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 * @param component the [GameComponentView] to remove.
 	 */
 	@Synchronized
-	open fun remove(component: T): Boolean {
+	fun remove(component: T): Boolean {
 		if (observableComponents.remove(component)) {
 			component.parent = null
+			component.onRemove()
 			onRemove?.invoke(component)
 			return true
 		}

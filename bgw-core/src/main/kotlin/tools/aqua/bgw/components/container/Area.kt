@@ -45,4 +45,8 @@ open class Area<T : GameComponentView>(
 	width: Number = DEFAULT_AREA_WIDTH,
 	height: Number = DEFAULT_AREA_HEIGHT,
 	visual: Visual = Visual.EMPTY
-) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual)
+) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {
+	override fun T.onRemove() = Unit
+
+	override fun T.onAdd() = Unit
+}

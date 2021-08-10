@@ -150,17 +150,13 @@ open class LinearLayout<T : GameComponentView>(
 		orientationProperty.internalListener = { _, _ -> layout() }
 		alignmentProperty.internalListener = { _, _ -> layout() }
 	}
-	
-	override fun add(component: T, index: Int) {
-		super.add(component, index)
-		component.apply { addPosListeners() }
+
+	override fun T.onAdd() {
+		addPosListeners()
 	}
-	
-	override fun remove(component: T): Boolean = when (super.remove(component)) {
-		true -> {
-			component.removePosListeners(); true
-		}
-		false -> false
+
+	override fun T.onRemove() {
+		removePosListeners()
 	}
 	
 	private fun T.addPosListeners() {

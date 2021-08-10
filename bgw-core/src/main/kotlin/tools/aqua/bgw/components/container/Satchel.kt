@@ -67,29 +67,24 @@ open class Satchel<T : GameComponentView>(
 	GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	
 	private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
-	
-	override fun add(component: T, index: Int) {
-		super.add(component, index)
-		initialStates[component] = InitialState(
-			isDraggable = component.isDraggable,
-			isVisible = component.isVisible,
-			width = component.width,
-			height = component.height
+
+	override fun T.onAdd() {
+		initialStates[this] = InitialState(
+			isDraggable = this.isDraggable,
+			isVisible = this.isVisible,
+			width = this.width,
+			height = this.height
 		)
-		component.initializeSatchelComponent()
-		component.addInternalListeners()
-		component.addPosListeners()
+		initializeSatchelComponent()
+		addInternalListeners()
+		addPosListeners()
 	}
-	
-	override fun remove(component: T): Boolean = when (super.remove(component)) {
-		true -> {
-			component.removeInternalListeners()
-			component.restoreInitialBehaviour()
-			component.removePosListeners()
-			initialStates.remove(component)
-			true
-		}
-		false -> false
+
+	override fun T.onRemove() {
+		this.removeInternalListeners()
+		this.restoreInitialBehaviour()
+		this.removePosListeners()
+		initialStates.remove(this)
 	}
 	
 	private fun GameComponentView.initializeSatchelComponent() {

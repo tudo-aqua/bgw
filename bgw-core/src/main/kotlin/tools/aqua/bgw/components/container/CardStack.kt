@@ -106,18 +106,13 @@ open class CardStack<T : CardView>(
 		cardView.parent = this
 		cardView.addPosListeners()
 	}
-	
-	
-	override fun add(component: T, index: Int) {
-		super.add(component, index)
-		component.addPosListeners()
+
+	override fun T.onAdd() {
+		addPosListeners()
 	}
-	
-	override fun remove(component: T): Boolean = when (super.remove(component)) {
-		true -> {
-			component.removePosListeners(); true
-		}
-		false -> false
+
+	override fun T.onRemove() {
+		removePosListeners()
 	}
 	
 	private fun T.addPosListeners() {
