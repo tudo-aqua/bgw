@@ -32,7 +32,6 @@ import tools.aqua.bgw.builder.FXConverters.Companion.toButtonType
 import tools.aqua.bgw.builder.SceneBuilder.Companion.buildGame
 import tools.aqua.bgw.builder.SceneBuilder.Companion.buildMenu
 import tools.aqua.bgw.core.*
-import tools.aqua.bgw.core.BoardGameApplication.Companion.DEFAULT_FADE_TIME
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
@@ -82,75 +81,6 @@ internal class Frontend : Application() {
 	}
 
 	companion object {
-		//region Constants
-		/**
-		 * Default window width in non-maximized mode.
-		 */
-		private const val DEFAULT_WINDOW_WIDTH = 1280.0
-
-		/**
-		 * Default window height in non-maximized mode.
-		 */
-		private const val DEFAULT_WINDOW_HEIGHT = 751.0
-
-		/**
-		 * Blur radius for menuScene overlay
-		 */
-		private const val BLUR_RADIUS = 63.0
-		//endregion
-
-		//region Private attributes
-		/**
-		 * Current [BoardGameScene].
-		 */
-		private var boardGameScene: BoardGameScene? = null
-
-		/**
-		 * Current [MenuScene].
-		 */
-		private var menuScene: MenuScene? = null
-
-		/**
-		 * Main pane in current scene.
-		 */
-		private var scenePane: Pane = Pane()
-
-		/**
-		 * The game's root pane.
-		 */
-		private var gamePane: Pane? = null
-
-		/**
-		 * The menu's root pane.
-		 */
-		private var menuPane: Pane? = null
-
-		/**
-		 * Background pane.
-		 */
-		private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
-
-		/**
-		 * Current stage.
-		 */
-		private var primaryStage: Stage? = null
-
-		/**
-		 * Current vertical alignment for scenes.
-		 */
-		private var verticalSceneAlignment = VerticalAlignment.CENTER
-
-		/**
-		 * Current horizontal alignment for scenes.
-		 */
-		private var horizontalSceneAlignment = HorizontalAlignment.CENTER
-
-		/**
-		 * Current [ScaleMode].
-		 */
-		private var scaleMode = ScaleMode.FULL
-		//endregion
-
 		//region Internal attributes
 		/**
 		 * Current scene scale.
@@ -209,6 +139,58 @@ internal class Frontend : Application() {
 		 * Property for the background [Visual].
 		 */
 		internal val backgroundProperty: Property<Visual> = Property(ColorVisual(Color.BLACK))
+		//endregion
+		
+		//region Private attributes
+		/**
+		 * Current [BoardGameScene].
+		 */
+		private var boardGameScene: BoardGameScene? = null
+		
+		/**
+		 * Current [MenuScene].
+		 */
+		private var menuScene: MenuScene? = null
+		
+		/**
+		 * Main pane in current scene.
+		 */
+		private var scenePane: Pane = Pane()
+		
+		/**
+		 * The game's root pane.
+		 */
+		private var gamePane: Pane? = null
+		
+		/**
+		 * The menu's root pane.
+		 */
+		private var menuPane: Pane? = null
+		
+		/**
+		 * Background pane.
+		 */
+		private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
+		
+		/**
+		 * Current stage.
+		 */
+		private var primaryStage: Stage? = null
+		
+		/**
+		 * Current vertical alignment for scenes.
+		 */
+		private var verticalSceneAlignment = VerticalAlignment.CENTER
+		
+		/**
+		 * Current horizontal alignment for scenes.
+		 */
+		private var horizontalSceneAlignment = HorizontalAlignment.CENTER
+		
+		/**
+		 * Current [ScaleMode].
+		 */
+		private var scaleMode = ScaleMode.FULL
 		//endregion
 
 		//region Internal functions
@@ -309,7 +291,7 @@ internal class Frontend : Application() {
 			}
 
 			if (activePanes.size == 2) {
-				gamePane?.effect = GaussianBlur(BLUR_RADIUS)
+				gamePane?.effect = GaussianBlur(DEFAULT_BLUR_RADIUS)
 				boardGameScene?.lock()
 			}
 
@@ -485,8 +467,8 @@ internal class Frontend : Application() {
 				}
 
 				Timeline(
-					KeyFrame(Duration.ZERO, KeyValue(value, if (fadeIn) 0 else BLUR_RADIUS)),
-					KeyFrame(Duration.millis(fadeTime), KeyValue(value, if (fadeIn) BLUR_RADIUS else 0))
+					KeyFrame(Duration.ZERO, KeyValue(value, if (fadeIn) 0 else DEFAULT_BLUR_RADIUS)),
+					KeyFrame(Duration.millis(fadeTime), KeyValue(value, if (fadeIn) DEFAULT_BLUR_RADIUS else 0))
 				).play()
 			}
 		}

@@ -17,6 +17,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_TEXT_FIELD_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_TEXT_FIELD_WIDTH
 import tools.aqua.bgw.util.Font
 
 /**
@@ -25,8 +27,8 @@ import tools.aqua.bgw.util.Font
  *
  * @param posX horizontal coordinate for this [TextField]. Default: 0.
  * @param posY vertical coordinate for this [TextField]. Default: 0.
- * @param width width for this [TextField]. Default: [TextField.DEFAULT_TEXT_FIELD_WIDTH].
- * @param height height for this [TextField]. Default: [TextField.DEFAULT_TEXT_FIELD_HEIGHT].
+ * @param width width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
+ * @param height height for this [TextField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
  * @param text initial text for this [TextField]. Default: empty String.
  * @param prompt Prompt for this [TextField]. This gets displayed as a prompt to the user whenever the label is an
  * empty string. Default: empty string.
@@ -39,19 +41,10 @@ open class TextField(
 	text: String = "",
 	font: Font = Font(),
 	val prompt: String = "",
-) : TextInputUIComponent(posX = posX, posY = posY, width = width, height = height, text = text, font = font) {
-    /**
-     * Defines some static constants that can be used as suggested properties of a [TextField].
-     */
-    companion object {
-	    /**
-	     * Suggested [TextField] [height].
-	     */
-	    const val DEFAULT_TEXT_FIELD_HEIGHT: Int = 30
-	
-	    /**
-	     * Suggested [TextField] [width].
-	     */
-	    const val DEFAULT_TEXT_FIELD_WIDTH: Int = 140
-    }
-}
+) : TextInputUIComponent(
+	posX = posX,
+	posY = posY,
+	width = width,
+	height = height,
+	text = text,
+	font = font)

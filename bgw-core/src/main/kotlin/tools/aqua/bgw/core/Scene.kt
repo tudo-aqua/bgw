@@ -270,18 +270,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 		} catch (_: ClassCastException) {
 		}
 	}
-	
-	companion object {
-		/**
-		 * Default scene width.
-		 */
-		const val DEFAULT_SCENE_WIDTH: Double = 1920.0
-		
-		/**
-		 * Default scene height.
-		 */
-		const val DEFAULT_SCENE_HEIGHT: Double = 1080.0
-	}
 }
 
 

@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_WIDTH
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
@@ -41,8 +43,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [RadioButton]. Default: 0.
  * @param posY vertical coordinate for this [RadioButton]. Default: 0.
- * @param width width for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_WIDTH].
- * @param height height for this [RadioButton]. Default: [RadioButton.DEFAULT_RADIOBUTTON_HEIGHT].
+ * @param width width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
+ * @param height height for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_HEIGHT].
  * @param isSelected the initial state for this [RadioButton]. Default: false.
  * @param toggleGroup the ToggleGroup of this [RadioButton]. Default: null.
  * @param visual background [Visual]. Default: [Visual.EMPTY]
@@ -50,8 +52,8 @@ import tools.aqua.bgw.visual.Visual
 open class RadioButton(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = DEFAULT_RADIOBUTTON_WIDTH,
-	height: Number = DEFAULT_RADIOBUTTON_HEIGHT,
+	width: Number = DEFAULT_RADIO_BUTTON_WIDTH,
+	height: Number = DEFAULT_RADIO_BUTTON_HEIGHT,
 	font: Font = Font(),
 	isSelected: Boolean = false,
 	toggleGroup: ToggleGroup? = null,
@@ -64,19 +66,4 @@ open class RadioButton(
 	font = font,
 	isSelected = isSelected,
 	toggleGroup = toggleGroup,
-	visual = visual) {
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [RadioButton].
-	 */
-	companion object {
-		/**
-		 * Suggested [RadioButton] [height].
-		 */
-		const val DEFAULT_RADIOBUTTON_HEIGHT: Int = 45
-
-		/**
-		 * Suggested [RadioButton] [width].
-		 */
-		const val DEFAULT_RADIOBUTTON_WIDTH: Int = 45
-	}
-}
+	visual = visual)

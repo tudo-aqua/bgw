@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_TABLE_VIEW_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_TABLE_VIEW_WIDTH
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.util.Font
@@ -33,8 +35,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [TableView]. Default: 0.
  * @param posY vertical coordinate for this [TableView]. Default: 0.
- * @param width width for this [TableView]. Default: [TableView.DEFAULT_TABLEVIEW_WIDTH].
- * @param height height for this [TableView]. Default: [TableView.DEFAULT_TABLEVIEW_HEIGHT].
+ * @param width width for this [TableView]. Default: [DEFAULT_TABLE_VIEW_WIDTH].
+ * @param height height for this [TableView]. Default: [DEFAULT_TABLE_VIEW_HEIGHT].
  * @param font the Font for this [TableView]. Default: default [Font] constructor.
  *
  * Simplified example on how the columns list is used to represent the data:
@@ -56,8 +58,8 @@ import tools.aqua.bgw.visual.Visual
 open class TableView<T>(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = DEFAULT_TABLEVIEW_WIDTH,
-	height: Number = DEFAULT_TABLEVIEW_HEIGHT,
+	width: Number = DEFAULT_TABLE_VIEW_WIDTH,
+	height: Number = DEFAULT_TABLE_VIEW_HEIGHT,
 	font: Font = Font()
 ) : UIComponent(
 	posX = posX,
@@ -78,20 +80,5 @@ open class TableView<T>(
 	 * @see TableColumn
 	 */
 	val columns: ObservableList<TableColumn<T>> = ObservableArrayList()
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [TableView].
-	 */
-	companion object {
-		/**
-		 * Suggested [TableView] [height].
-		 */
-		const val DEFAULT_TABLEVIEW_HEIGHT: Int = 500
-		
-		/**
-		 * Suggested [TableView] [width].
-		 */
-		const val DEFAULT_TABLEVIEW_WIDTH: Int = 400
-	}
 }
 

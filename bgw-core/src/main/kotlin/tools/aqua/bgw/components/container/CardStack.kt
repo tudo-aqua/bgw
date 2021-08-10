@@ -20,11 +20,7 @@
 package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_HEIGHT
-import tools.aqua.bgw.components.gamecomponentviews.CardView.Companion.DEFAULT_CARD_WIDTH
-import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.core.HorizontalAlignment
-import tools.aqua.bgw.core.VerticalAlignment
+import tools.aqua.bgw.core.*
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.visual.Visual
 
@@ -37,8 +33,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [CardStack]. Default: 0.
  * @param posY vertical coordinate for this [CardStack]. Default: 0.
- * @param width width for this [CardStack]. Default: the suggested card width.
- * @param height height for this [CardStack]. Default: the suggested card height.
+ * @param width width for this [CardStack]. Default: [DEFAULT_CARD_STACK_WIDTH].
+ * @param height height for this [CardStack]. Default: [DEFAULT_CARD_STACK_HEIGHT].
  * @param alignment specifies how the contained [CardView]s should be aligned. Default: [Alignment.CENTER]
  * @param visual visual for this [CardStack]. Default: [Visual.EMPTY].
  *
@@ -47,8 +43,8 @@ import tools.aqua.bgw.visual.Visual
 open class CardStack<T : CardView>(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = DEFAULT_CARD_WIDTH,
-	height: Number = DEFAULT_CARD_HEIGHT,
+	width: Number = DEFAULT_CARD_STACK_WIDTH,
+	height: Number = DEFAULT_CARD_STACK_HEIGHT,
 	alignment: Alignment = Alignment.CENTER,
 	visual: Visual = Visual.EMPTY
 ) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {

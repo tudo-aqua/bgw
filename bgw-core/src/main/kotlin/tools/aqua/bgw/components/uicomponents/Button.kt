@@ -20,6 +20,8 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.core.DEFAULT_BUTTON_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_BUTTON_WIDTH
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
@@ -29,8 +31,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX horizontal coordinate for this [Button]. Default: 0.
  * @param posY vertical coordinate for this [Button]. Default: 0.
- * @param width width for this [Button]. Default: [Button.DEFAULT_BUTTON_WIDTH].
- * @param height height for this [Button]. Default: [Button.DEFAULT_BUTTON_HEIGHT].
+ * @param width width for this [Button]. Default: [DEFAULT_BUTTON_WIDTH].
+ * @param height height for this [Button]. Default: [DEFAULT_BUTTON_HEIGHT].
  * @param text text for this [Button]. Default: empty String.
  * @param font font to be used for the [text]. Default: default [Font] constructor.
  * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
@@ -56,19 +58,4 @@ open class Button(
 	font = font,
 	alignment = alignment,
 	isWrapText = isWrapText,
-	visual = visual) {
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [Button].
-	 */
-	companion object {
-		/**
-		 * Suggested [Button] [height].
-		 */
-		const val DEFAULT_BUTTON_HEIGHT: Int = 45
-		
-		/**
-		 * Suggested [Button] [width].
-		 */
-		const val DEFAULT_BUTTON_WIDTH: Int = 120
-	}
-}
+	visual = visual)

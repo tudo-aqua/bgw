@@ -32,7 +32,7 @@ In the information dialog's constructor the type of the dialog can be declared b
 * CONFIRMATION
 * NONE
 
-which directly affects the displayed icon and default buttons. The buttons can be altered by passing [ButtonType](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-button-type/)s.  Not that you may not use EXCEPTION as it is created through the second constructor [here](bgw/dialog/dialog.html#exception%20dialog)
+which directly affects the displayed icon and default buttons. The buttons can be altered by passing [ButtonTypes](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-button-type/s).  Not that you may not use EXCEPTION as it is created through the second constructor [here](https://tudo-aqua.github.io/bgw/dialog/dialog.html#exception%20dialog)
 Additional the title of the popup, the header and the content text has to be passed.
 The following code example creates a warning dialog informing the user about an empty player name:
 

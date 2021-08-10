@@ -20,7 +20,7 @@ Components can be enabled for drag and drop whenever they extend
 For a more detailed introduction for Drag and Drop
 head [here](https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html).
 
-The full source code for this example can be found [here](/bgw/concepts/user-input/UserInput.html#full-example-on-all-available-methods-of-dealing-with-user-input).
+The full source code for this example can be found [here](https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html#full-example-on-all-available-methods-of-dealing-with-user-input).
 
 ## Component declaration
 

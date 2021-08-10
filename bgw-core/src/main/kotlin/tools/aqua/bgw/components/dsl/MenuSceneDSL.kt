@@ -73,7 +73,7 @@ fun <T> MenuScene.grid(
     cols: Int,
     func: (GridPane<T>.() -> Unit)
 ): GridPane<T> where T : StaticComponentView<T> {
-    val gridLayoutView = GridPane<T>(rows, cols).apply(func)
+    val gridLayoutView = GridPane<T>(rows = rows, columns = cols).apply(func)
     addComponents(gridLayoutView)
     return gridLayoutView
 }

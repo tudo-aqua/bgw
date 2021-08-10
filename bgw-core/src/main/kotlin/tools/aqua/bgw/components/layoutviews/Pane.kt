@@ -29,8 +29,8 @@ import tools.aqua.bgw.visual.Visual
 open class Pane<T : ComponentView>(
     posX: Number = 0,
     posY: Number = 0,
-    width: Number = 0,
-    height: Number = 0,
+    width: Number,
+    height: Number,
     visual: Visual = Visual.EMPTY
 ) : LayoutView<T>(posX = posX, posY = posY, width = width, height = height, visual = visual), Iterable<T> {
     

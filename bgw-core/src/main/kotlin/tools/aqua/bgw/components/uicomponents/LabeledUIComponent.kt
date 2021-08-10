@@ -60,13 +60,13 @@ sealed class LabeledUIComponent(
     /**
      * Property for the [isWrapText] state of this [Label].
      */
-    val isWrapTextProperty = BooleanProperty(isWrapText)
+    val isWrapTextProperty: BooleanProperty = BooleanProperty(isWrapText)
 
     /**
-     * Defines if text should be wrapped, if it exceeds the labels width.
+     * Defines if text should be wrapped, if it exceeds the label's width.
      * @see isWrapTextProperty
      */
-    var isWrapText
+    var isWrapText: Boolean
         get() = isWrapTextProperty.value
         set(value) {
             isWrapTextProperty.value = value

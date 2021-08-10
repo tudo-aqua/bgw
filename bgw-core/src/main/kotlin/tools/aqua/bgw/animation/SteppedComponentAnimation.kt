@@ -20,22 +20,16 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
-import tools.aqua.bgw.visual.Visual
 
 /**
- * A flip animation.
- * Sets background to given [fromVisual] than contracts background in half the given duration, switches to [toVisual]
- * and extends again in half the given duration.
+ * [SteppedComponentAnimation] baseclass.
  *
  * @param componentView [ComponentView] to animate.
- * @param fromVisual initial [Visual].
- * @param toVisual resulting [Visual].
- * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param duration duration in milliseconds.
+ * @param speed speed in steps.
  */
-class FlipAnimation<T : ComponentView>(
+sealed class SteppedComponentAnimation<T : ComponentView>(
 	componentView: T,
-	val fromVisual: Visual,
-	val toVisual: Visual,
-	duration: Int = DEFAULT_ANIMATION_SPEED
+	duration: Int,
+	val speed: Int
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration)
