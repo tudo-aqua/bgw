@@ -102,16 +102,16 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		//ProgressBar
 		val progressBar = ProgressBar(posX = 450, posY = 350, width = 300, progress = 0.5, barColor = Color.GREEN)
 
+		progressBar.onMouseClicked = {
+			progressBar.progress = if (progressBar.progress > 1.0) 0.0 else progressBar.progress + 0.05
+		}
+
 		progressBar.progressProperty.addListener { _, newValue ->
 			when {
 				newValue > 0.8 -> progressBar.barColor = Color.RED
 				newValue > 0.5 -> progressBar.barColor = Color.GREEN
 				else -> progressBar.barColor = Color.BLUE
 			}
-		}
-
-		progressBar.onMouseClicked = {
-			progressBar.progress = if (progressBar.progress > 1.0) 0.0 else progressBar.progress + 0.05
 		}
 
 		val progressBarLabel = Label(

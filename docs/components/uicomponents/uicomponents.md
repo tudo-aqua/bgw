@@ -75,14 +75,14 @@ order:
 
 if indeterminate is not allowed
 
-| ``checked``  | ``indeterminate`` |
+| ``checked``  | ``isIndeterminate`` |
 | ------------ | ----------------- |
 | ``false``    | ``false``         |
 | ``true``     | ``false``         |
 
 if indeterminate is allowed
 
-| ``checked``  | ``indeterminate`` |
+| ``checked``  | ``isIndeterminate`` |
 | ------------ | ----------------- |
 | ``false``    | ``false``         |
 | ``false``    | ``true``          |
@@ -109,13 +109,13 @@ checkBox.indeterminateProperty.addListener { _, newValue ->
 }
 ````
 
-[ColPicDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
+[ColorPickerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
 
 ## ColorPicker
 
-A [ColorPicker][ColPickDoc] may be used to enable a user to specify a colour in an intuitive way. The selected colour
-can be set and retrieved via the ``selectedColor``. To react to a new ``selectedColor``, a listener may be added to
-the ``selectedColorProperty``. In this example the text colour of another label is changed, whenever a new colour is
+A [ColorPicker][ColorPickerDoc] may be used to enable a user to specify a colour in an intuitive way. The selected
+colour can be set and retrieved via the ``selectedColor``. To react to a new ``selectedColor``, a listener may be added
+to the ``selectedColorProperty``. In this example the text colour of another label is changed, whenever a new colour is
 picked.
 
 ````kotlin
@@ -136,14 +136,14 @@ colorPicker.selectedColorProperty.addListener { _, newValue ->
 }
 ````
 
-[CombDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
+[ComboBoxDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
 
 ## ComboBox
 
-A [ComboBox][CombDoc] is a drop down menu, where a user may choose an option. A ``prompt`` may be specified to inform
-the user what is expected of him. The ComboBox has a type parameter to define a type for the objects that correspond to
-the options. One string per contained object is needed to represent it as an option to the user. There are two methods
-of obtaining said string.
+A [ComboBox][ComboBoxDoc] is a drop down menu, where a user may choose an option. A ``prompt`` may be specified to
+inform the user, what is expected of him. The ComboBox has a type parameter to define a type for the objects that
+correspond to the options. One string per contained object is needed to represent it as an option to the user. There are
+two methods of obtaining said string.
 
 A ``formatFunction``, that projects the contained objects to a string representation may be set. If
 no ``formatFunction`` is set, the ``toString``
@@ -162,7 +162,7 @@ comboBox.formatFunction = {
 }
 ````
 
-To define the options simply set the ``items`` list. In the example three doubles get added.
+To define the options simply set the ``items`` list. In the example three doubles are set.
 
 ````kotlin
 comboBox.items = mutableListOf(0.0, 1.0, 2.0)
@@ -175,5 +175,39 @@ newly selected option whenever it changes.
 ````kotlin
 comboBox.selectedItemProperty.addListener { _, newValue ->
 	outputLabel.text = "Combo box selection is : $newValue"
+}
+````
+
+[ProgressBarDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-progress-bar/index.html
+
+## ProgressBar
+
+A [ProgressBar][ProgressBarDoc] is a coloured bar that can indicate progress to the user. The current progress and
+colour can be retrieved and set via ``progress`` and ``barColor`` respectively.
+
+In this example a new ProgressBar is instantiated and the ``onMouseClicked`` is set, so that the progress of the bar is
+advanced by 5% on a click or reset if the progress is greater than 100%.
+
+**NOTE:** the progress is modelled as a ``Double``, where any value equal or less than 0 means 0% progress and any value
+equal or greater than 1 means 100% progress.
+
+````kotlin
+val progressBar = ProgressBar(posX = 450, posY = 350, width = 300, progress = 0.5, barColor = Color.GREEN)
+
+progressBar.onMouseClicked = {
+	progressBar.progress = if (progressBar.progress > 1.0) 0.0 else progressBar.progress + 0.05
+}
+````
+
+Additionally, to react to change to the progress a listener is added to the ``progressProperty``. In this case updating
+the ``barColor`` based on the current progress level.
+
+````kotlin
+progressBar.progressProperty.addListener { _, newValue ->
+	when {
+		newValue > 0.8 -> progressBar.barColor = Color.RED
+		newValue > 0.5 -> progressBar.barColor = Color.GREEN
+		else -> progressBar.barColor = Color.BLUE
+	}
 }
 ````
