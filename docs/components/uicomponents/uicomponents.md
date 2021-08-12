@@ -33,7 +33,7 @@ of UIComponents.
 
 View the complete source code [here]().
 
-[!image](docs/components/uicomponents/visualguide.png)
+![image](docs/components/uicomponents/visualguide.png)
 
 ## Label
 
