@@ -75,10 +75,10 @@ order:
 
 if indeterminate is not allowed
 
-| ``checked``  |
-| ------------ |
-| ``false``    |
-| ``true``     |
+| ``checked``  | ``indeterminate`` |
+| ------------ | ----------------- |
+| ``false``    | ``false``         |
+| ``true``     | ``false``         |
 
 if indeterminate is allowed
 
@@ -90,6 +90,9 @@ if indeterminate is allowed
 
 In this example listeners are added to the ``checkedProperty`` and ``indeterminateProperty``, so that
 ``outputLabel`` displays the state of the CheckBox, whenever the state changes.
+
+**NOTE:** it is possible to set ``isIndeterminate`` to ``true`` even when indeterminate is not allowed. It is just
+impossible to reach the indeterminate state via clicks on the CheckBox.
 
 ````kotlin
 val checkBox =
@@ -133,4 +136,44 @@ colorPicker.selectedColorProperty.addListener { _, newValue ->
 }
 ````
 
+[CombDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
 
+## ComboBox
+
+A [ComboBox][CombDoc] is a drop down menu, where a user may choose an option. A ``prompt`` may be specified to inform
+the user what is expected of him. The ComboBox has a type parameter to define a type for the objects that correspond to
+the options. One string per contained object is needed to represent it as an option to the user. There are two methods
+of obtaining said string.
+
+A ``formatFunction``, that projects the contained objects to a string representation may be set. If
+no ``formatFunction`` is set, the ``toString``
+function of the contained object is used to obtain a string.
+
+In this example a ComboBox typed to ``Double`` with the ``prompt`` "Select an option! This is the prompt." is
+instantiated. Then the ``formatFunction`` is set, so the contained doubles get represented as their Int value with the
+suffix "Option ".
+
+````kotlin
+val comboBox =
+	ComboBox<Double>(posX = 50, posY = 350, width = 300, prompt = "Select an option! This is the prompt.")
+
+comboBox.formatFunction = {
+	"Option ${it.toInt()}"
+}
+````
+
+To define the options simply set the ``items`` list. In the example three doubles get added.
+
+````kotlin
+comboBox.items = mutableListOf(0.0, 1.0, 2.0)
+````
+
+The ``selectedItem`` can be used to retrieve or set the current selected item. To react to a change of the selected
+item, a listener can be added to the ``selectedItemProperty``. In the example the ``outputLabel`` should display the
+newly selected option whenever it changes.
+
+````kotlin
+comboBox.selectedItemProperty.addListener { _, newValue ->
+	outputLabel.text = "Combo box selection is : $newValue"
+}
+````

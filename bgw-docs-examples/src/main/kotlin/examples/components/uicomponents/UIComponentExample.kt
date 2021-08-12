@@ -78,11 +78,11 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		val comboBox =
 			ComboBox<Double>(posX = 50, posY = 350, width = 300, prompt = "Select an option! This is the prompt.")
 
-		comboBox.items = mutableListOf(0.0, 1.0, 2.0)
-
 		comboBox.formatFunction = {
 			"Option ${it.toInt()}"
 		}
+
+		comboBox.items = mutableListOf(0.0, 1.0, 2.0)
 
 		comboBox.selectedItemProperty.addListener { _, newValue ->
 			outputLabel.text = "Combo box selection is : $newValue"
@@ -236,7 +236,6 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		)
 
 		menuScene.addComponents(table, tableLabel)
-
 
 		showMenuScene(menuScene)
 		show()
