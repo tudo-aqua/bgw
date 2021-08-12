@@ -109,8 +109,8 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		progressBar.progressProperty.addListener { _, newValue ->
 			when {
 				newValue > 0.8 -> progressBar.barColor = Color.RED
-				newValue > 0.5 -> progressBar.barColor = Color.GREEN
-				else -> progressBar.barColor = Color.BLUE
+				newValue > 0.5 -> progressBar.barColor = Color.YELLOW
+				else -> progressBar.barColor = Color.GREEN
 			}
 		}
 

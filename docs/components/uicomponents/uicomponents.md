@@ -1,5 +1,8 @@
 ---
-parent: Components title: UIComponents nav_order: 3 layout: default
+parent: Components 
+title: UIComponents 
+nav_order: 3 
+layout: default
 ---
 
 [UIComp]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
@@ -206,8 +209,52 @@ the ``barColor`` based on the current progress level.
 progressBar.progressProperty.addListener { _, newValue ->
 	when {
 		newValue > 0.8 -> progressBar.barColor = Color.RED
-		newValue > 0.5 -> progressBar.barColor = Color.GREEN
-		else -> progressBar.barColor = Color.BLUE
+		newValue > 0.5 -> progressBar.barColor = Color.YELLOW
+		else -> progressBar.barColor = Color.GREEN
 	}
 }
 ````
+
+[ToggleButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-button/index.html
+
+[RadioButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-radio-button/index.html
+
+[ToggleGroupDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-group/index.html
+
+## ToggleButton and RadioButton
+
+A [ToggleButton][ToggleButtonDoc] can be either selected or not selected. A [RadioButton][RadioButtonDoc] is just a
+ToggleButton with a different visual representation. It has exactly the same functionalities as a ToggleButton.
+
+To retrieve whether the ToggleButton is toggled on or off the ``isSelected`` field can be used.
+
+ToggleButtons have a feature where different ToggleButtons may be linked via a [ToggleGroup][ToggleGroupDoc].
+ToggleGroups enforce a rule, where only one ToggleButton in a ToggleGroup may be selected. So whenever a ToggleButton in
+a ToggleGroup changes its selected state to ``true``, all other ToggleButtons in the ToggleGroup automatically have
+their selected state set to ``false``.
+
+**NOTE:** setting a ToggleGroup on a ToggleButton is an exception. The ToggleGroup rule only gets enforced whenever a
+contained ToggleButton changes its state. So it is technically possible to have multiple selected ToggleButtons in a
+ToggleGroup by setting the ToggleGroup on multiple pre-selected ToggleButtons.
+
+In this example a new ToggleGroup, Toggle- and RadioButton are instantiated. The ``toggleGroup`` is set as
+the ``toggleGroup`` for both buttons.
+
+````kotlin
+val toggleGroup = ToggleGroup()
+
+val radioButton = RadioButton(posX = 50, posY = 450, toggleGroup = toggleGroup)
+
+val toggleButton = ToggleButton(posX = 450, posY = 450, toggleGroup = toggleGroup)
+````
+
+To react to change of the selected state, a listener can be added to the ``selectedProperty``. In the example the text
+of the Label ``radioLabel`` gets updated, whenever the selected state of ``radioButton`` changes.
+
+````kotlin
+radioButton.selectedProperty.addListener { _, newValue ->
+	radioLabel.text = if (newValue) "This is a selected radio button!" else "This is a deselected radio button!"
+}
+````
+
+## TextArea and TextField
