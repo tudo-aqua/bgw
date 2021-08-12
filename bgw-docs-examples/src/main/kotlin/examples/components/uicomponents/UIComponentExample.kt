@@ -31,7 +31,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		menuScene.addComponents(outputLabel)
 
 		//Button
-		val button = Button(posX = 450, posY = 50, text = "I am a Button.")
+		val button = Button(posX = 450, posY = 50, text = "I am a Button.", visual = ColorVisual.LIGHT_GRAY)
 
 		button.onMouseClicked = {
 			outputLabel.text = "Someone pressed the Button!"

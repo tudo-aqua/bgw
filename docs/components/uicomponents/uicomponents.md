@@ -23,7 +23,7 @@ for UIComponents.
   with a text.
 - [TextInputUIComponents][TIUIComp]: extends UIComponent and provides a text where the user may write to.
 
-**NOTE:** UIComponentViews are ComponentViews. This means all methods of handling user input discussed in the
+**NOTE:** UIComponents are ComponentViews. This means all methods of handling user input discussed in the
 [User Input Guide][UserInput] are available to UIComponentViews.
 
 This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in
@@ -60,7 +60,7 @@ Additionally, a text may be defined to describe the button. In this example a ne
 onMouseClicked`` is set, so that the ``outputLabel`` displays "Someone pressed the Button!".
 
 ````kotlin
-val button = Button(posX = 450, posY = 50, text = "I am a Button.")
+val button = Button(posX = 450, posY = 50, text = "I am a Button.", visual = ColorVisual.LIGHT_GRAY)
 
 button.onMouseClicked = {
 	outputLabel.text = "Someone pressed the Button!"
