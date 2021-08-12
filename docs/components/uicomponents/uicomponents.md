@@ -13,8 +13,6 @@ layout: default
 
 [UserInput]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
 
-[LabelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
-
 # UIComponents
 
 A [UIComponent][UIComp] may be used to present information to the user or retrieve input. There are three base classes
@@ -33,7 +31,9 @@ of UIComponents.
 
 View the complete source code [here]().
 
-![image](docs/components/uicomponents/visualguide.png)
+![image](visualguide.png)
+
+[LabelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
 
 ## Label
 
