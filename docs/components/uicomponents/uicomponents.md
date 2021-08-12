@@ -79,23 +79,24 @@ order:
 if indeterminate is not allowed
 
 | ``checked``  | ``isIndeterminate`` |
-| ------------ | ----------------- |
-| ``false``    | ``false``         |
-| ``true``     | ``false``         |
+| ------------ | ------------------- |
+| ``false``    | ``false``           |
+| ``true``     | ``false``           |
 
 if indeterminate is allowed
 
 | ``checked``  | ``isIndeterminate`` |
-| ------------ | ----------------- |
-| ``false``    | ``false``         |
-| ``false``    | ``true``          |
-| ``true``     | ``false``         |
-
-In this example listeners are added to the ``checkedProperty`` and ``indeterminateProperty``, so that
-``outputLabel`` displays the state of the CheckBox, whenever the state changes.
+| ------------ | ------------------- |
+| ``false``    | ``false``           |
+| ``false``    | ``true``            |
+| ``true``     | ``false``           |
 
 **NOTE:** it is possible to set ``isIndeterminate`` to ``true`` even when indeterminate is not allowed. It is just
 impossible to reach the indeterminate state via clicks on the CheckBox.
+
+
+In this example listeners are added to the ``checkedProperty`` and ``indeterminateProperty``, so that
+``outputLabel`` displays the state of the CheckBox, whenever the state changes.
 
 ````kotlin
 val checkBox =
