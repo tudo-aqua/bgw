@@ -1,8 +1,5 @@
 ---
-parent: Components 
-title: UIComponents 
-nav_order: 3 
-layout: default
+parent: Components title: UIComponents nav_order: 3 layout: default
 ---
 
 [UIComp]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
@@ -26,10 +23,9 @@ for UIComponents.
 **NOTE:** UIComponentViews are ComponentViews. This means all methods of handling user input discussed in the
 [User Input Guide][UserInput] are available to UIComponentViews.
 
-In this section example code for the following application will be shown and used to demonstrate all important features
-of UIComponents.
-
-View the complete source code [here]().
+This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in
+this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found [here]()
+.
 
 ![image](visualguide.png)
 
@@ -37,7 +33,7 @@ View the complete source code [here]().
 
 ## Label
 
-A [Label][LabelDoc] is just a simple text. In this example a new label is instantiated with the text 'I am a Label.',
+A [Label][LabelDoc] is just a simple text. In this example a new label is instantiated with the text "I am a Label.",
 aligned to the center and with text wrapping enabled. Enabled text wrapping allows the text to wrap onto a new line if
 the width of the label is too small for the text.
 
@@ -56,9 +52,9 @@ private val outputLabel = Label(
 
 ## Button
 
-A [Button][ButtonDoc] is a component that plays a 'click' animation, when a mouse click is performed over the button.
+A [Button][ButtonDoc] is a component that plays an animation when a mouse click is performed over the button.
 Additionally, a text may be defined to describe the button. In this example a new button is instantiated, and the ``
-onMouseClicked`` is set, so that the 'outputLabel' display "Someone pressed the Button!".
+onMouseClicked`` is set, so that the ``outputLabel`` displays "Someone pressed the Button!".
 
 ````kotlin
 val button = Button(posX = 450, posY = 50, text = "I am a Button.")
@@ -110,5 +106,31 @@ checkBox.indeterminateProperty.addListener { _, newValue ->
 }
 ````
 
+[ColPicDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
+
+## ColorPicker
+
+A [ColorPicker][ColPickDoc] may be used to enable a user to specify a colour in an intuitive way. The selected colour
+can be set and retrieved via the ``selectedColor``. To react to a new ``selectedColor``, a listener may be added to
+the ``selectedColorProperty``. In this example the text colour of another label is changed, whenever a new colour is
+picked.
+
+````kotlin
+val colorPicker = ColorPicker(posX = 450, posY = 200, width = 300, initialColor = Color.BLACK)
+
+val colorPickerLabel = Label(
+	posX = colorPicker.posX,
+	posY = colorPicker.posY - 50,
+	width = colorPicker.width,
+	height = 50,
+	alignment = Alignment.CENTER,
+	font = Font(color = colorPicker.selectedColor),
+	text = "This is a ColorPicker. Use it to change the colour of this text!"
+).apply { isWrapText = true }
+
+colorPicker.selectedColorProperty.addListener { _, newValue ->
+	colorPickerLabel.font = Font(color = newValue)
+}
+````
 
 

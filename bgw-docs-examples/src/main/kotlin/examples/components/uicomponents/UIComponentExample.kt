@@ -56,9 +56,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		menuScene.addComponents(checkBox)
 
 		//ColorPicker
-		val colorPicker = ColorPicker(posX = 450, posY = 200, width = 300)
-
-		colorPicker.selectedColor = Color.BLACK
+		val colorPicker = ColorPicker(posX = 450, posY = 200, width = 300, initialColor = Color.BLACK)
 
 		val colorPickerLabel = Label(
 			posX = colorPicker.posX,
