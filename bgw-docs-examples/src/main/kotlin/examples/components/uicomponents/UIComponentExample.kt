@@ -224,7 +224,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 
 		table.columns.add(TableColumn(title = "Even?", width = 100) { "${it % 2 == 0}" })
 
-		table.items.addAll(listView.items)
+		table.items.addAll(mutableListOf(42, 1337, 1, 2, 3))
 
 		val tableLabel = Label(
 			posX = table.posX,
