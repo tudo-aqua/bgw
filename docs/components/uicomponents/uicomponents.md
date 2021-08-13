@@ -1,8 +1,5 @@
 ---
-parent: Components 
-title: UIComponents 
-nav_order: 3 
-layout: default
+parent: Components title: UIComponents nav_order: 3 layout: default
 ---
 
 [UIComp]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
@@ -93,7 +90,6 @@ if indeterminate is allowed
 
 **NOTE:** it is possible to set ``isIndeterminate`` to ``true`` even when indeterminate is not allowed. It is just
 impossible to reach the indeterminate state via clicks on the CheckBox.
-
 
 In this example listeners are added to the ``checkedProperty`` and ``indeterminateProperty``, so that
 ``outputLabel`` displays the state of the CheckBox, whenever the state changes.
@@ -258,4 +254,33 @@ radioButton.selectedProperty.addListener { _, newValue ->
 }
 ````
 
+[TextAreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-area/index.html
+
+[TextFieldDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-field/index.html
+
 ## TextArea and TextField
+
+[TextArea][TextAreaDoc] and [TextField][TextFieldDoc] can be used to allow users to type texts. The main difference
+between TextArea and R´TextField, is that [TextArea] has multiple lines of input, while [TextField] only has one. The
+text can be set and retrieved via ``text``. A prompt can be specified that informs the user, which textual input is
+requested. To react to user input, a listener on the ``textProperty`` can be added. Additionally, the
+``onKeyPressed``, ``onKeyReleased`` and ``onKeyTyped`` handlers are a great way of executing code when textual input
+occurs.
+
+In this example a TextArea, and a TextField with ``prompt``s are instantiated and listeners on their ``textProperty``s
+are added, that update the ``outputLabel`` with the current ``text``.
+
+````kotlin
+val textArea = TextArea(posX = 50, posY = 600, prompt = "Type something! This is the prompt.")
+textArea.textProperty.addListener { _, newValue ->
+	outputLabel.text = newValue
+}
+
+val textField = TextField(posX = 450, posY = 600, width = 300, prompt = "Type something! This is the prompt.")
+textField.textProperty.addListener { _, newValue ->
+	outputLabel.text = newValue
+}
+````
+
+## ListView
+
