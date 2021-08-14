@@ -16,28 +16,28 @@ layout: default
 {:toc}
 </details>
 
-In this section we are going to showcase the different types of animations in the BGW framework. Visuals are mostly used
+In this section the different types of animations in the BGW framework are shown. Visuals are mostly used
 to move game elements or change their [Visual](https://tudo-aqua.github.io/bgw/concepts/visual/visual.html).
-Additionally, the DelayAnimation can be used to delay code execution to enable the player to see what is happening on
+Additionally, the [DelayAnimation](https://tudo-aqua.github.io/bgw/concepts/animations/Animations.html#delayanimation) 
+can be used to delay code execution to enable the player to see what is happening on
 the table.
 
 ![](animations.gif)
 
-The full example can be found [here](/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt)
-.
+The full example of the gif above can be found [here](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt).
 
 Each [Animation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-animation/) has a
-duration, a running attribute and an *onFinished* EventHandler that gets invoked after the animation has finished.
+duration, a running attribute and an ``onFinished`` EventHandler that gets invoked after the animation has finished.
 
 ## [DelayAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/)
 
-A DelayAnimation does nothing in the application window besides calling *onFinished* after the given amount of time (
-duration parameter). This timer runs asynchronously, so it can run while the player is playing. To add a delay between
-moves in which the user should not be able to interact with the scene
-use [BoardGameScene#lock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html)
-before playing the animation
-and [BoardGameScene#unlock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html)
-in *onAnimationFinished*.
+A DelayAnimation does nothing in the application window besides calling ``onFinished`` after the given amount of time (duration parameter). This timer runs asynchronously, so it can run while the player is playing. To add a delay between
+moves in which the user should not be able to interact with the scene,
+the method [BoardGameScene#lock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html)
+has to be called before playing the animation
+and the method [BoardGameScene#unlock](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html)
+in ``onAnimationFinished``.
+An example for this locking mechanism can be found below:
 
 ````kotlin
 gameScene.lock()
@@ -48,22 +48,23 @@ gameScene.playAnimation(DelayAnimation(duration = 2000).apply {
   }
 })
 ````
+[MovementAnimation]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/
 
-## [MovementAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/)
+## [MovementAnimation][MovementAnimation]
+A [MovementAnimation][MovementAnimation] moves
+a [GameComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/).
+The movement can be passed as ``fromX``/``toX``, ``fromY``/``toY`` or relative to the current position with ``byX``/``byY``.
 
-A movement animation moves
-a [GameComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/)
-. The movement can be passed as fromX/toX, fromY,toY or relative to the current position with byX/byY.
-
-**NOTE**: The Animation only moves the component in your Scene and ***does not update its position***. The Component
-will snap back upon next refresh if the new position is not set in *onAnimationFinished*, which is the suggested way of
+**NOTE**: The Animation only moves the component in the current Scene and ***does not update its position***. The 
+Component
+will snap back upon next refresh if the new position is not set in ``onAnimationFinished``, which is the suggested way of
 usage.
 
 ````kotlin
 gameScene.playAnimation(
   MovementAnimation(
     componentView = component,
-		byX = 0,
+    byX = 0,
     byY = -50,
     duration = 1000
   ).apply { 
@@ -74,8 +75,8 @@ gameScene.playAnimation(
 )
 ````
 
-Additionally, you can move a component to another component's location. This is for example useful to animate cards onto
-a card stack:
+Additionally, a component can be moved to another component's location. This is for example useful to animate moving 
+cards onto a card stack:
 
 ````kotlin
 gameScene.playAnimation(
@@ -92,15 +93,17 @@ gameScene.playAnimation(
   }
 )
 ````
+[RotationAnimation]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/
 
-## [RotationAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/)
+## [RotationAnimation][RotationAnimation]
+A [RotationAnimation][RotationAnimation] rotates
+a [GameComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/).
+The rotation can be passed as ``fromAngle``/``toAngle`` or relative to the current rotation with ``byAngle``.
 
-A rotation animation rotates
-a [GameComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/)
-. The rotation can be passed as fromAngle/toAngle or relative to the current rotation with byAngle.
-
-**NOTE**: The Animation only rotates the component in your Scene and ***does not update its rotation***. The Component
-will snap back upon next refresh if the new rotation is not set in *onAnimationFinished*, which is the suggested way of
+**NOTE**: The Animation only rotates the component in the current Scene and ***does not update its rotation***. The 
+Component
+will snap back upon next refresh if the new rotation is not set in ``onAnimationFinished``, which is the suggested 
+way of
 usage.
 
 ````kotlin
@@ -116,14 +119,15 @@ gameScene.playAnimation(
   }
 )
 ````
+[FlipAnimation]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-flip-animation/
 
-## [FlipAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-flip-animation/)
+## [FlipAnimation][FlipAnimation]
+A [FlipAnimation][FlipAnimation] switches between two visuals in a flipping-like animation. The animation sets the 
+``fromVisual`` and
+then switches to the ``toVisual``.
 
-A rotation animation switches between two visuals in a flipping-like animation. The animation sets the *fromVisual* and
-then switches to the *toVisual*.
-
-**NOTE**: The Animation only switches the visuals visually. The Visual will revert to the *currentVisual* upon next
-refresh if the new visual is not set in *onAnimationFinished*, which is the suggested way of usage.
+**NOTE**: The Animation only switches the visuals visually. The Visual will revert to the ``currentVisual`` upon next
+refresh if the new visual is not set in ``onAnimationFinished``, which is the suggested way of usage.
 
 ````kotlin
 gameScene.playAnimation(
@@ -139,15 +143,15 @@ gameScene.playAnimation(
   }
 )
 ````
+[RandomizeAnimation]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-randomize-animation/
 
-## [RandomizeAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-randomize-animation/)
+## [RandomizeAnimation][RandomizeAnimation]
+A [RandomizeAnimation][RandomizeAnimation] randomly switches between the given visuals. The time each visual is visible can be set by
+passing ``steps``, which is calculated like the following: *steps: time = duration / steps*. The animation sets the 
+``toVisual`` as the last step in order to control what the resulting visual of this animation is.
 
-A RandomizeAnimation randomly switches between the given visuals. The time each visual is visible can be set by
-passing *steps*: time = duration / steps. The animation sets the *toVisual* as the last step in order to control what
-ios the resulting visual of this animation.
-
-**NOTE**: The Animation only switches the visuals visually. The Visual will revert to the *currentVisual* upon next
-refresh if the new visual is not set in *onAnimationFinished*, which is the suggested way of usage.
+**NOTE**: The Animation only switches the visuals visually. The Visual will revert to the ``currentVisual`` upon next
+refresh if the new visual is not set in ``onAnimationFinished``, which is the suggested way of usage.
 
 ````kotlin
 gameScene.playAnimation(
@@ -163,16 +167,16 @@ gameScene.playAnimation(
   }
 )
 ````
+[DiceAnimation]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/
+## [DiceAnimation][DiceAnimation]
 
-## [DiceAnimation](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/)
-
-A DiceAnimation behaves like a [RandomizeAnimation](https://tudo-aqua.github.io/bgw/concepts/observable.html#RandomizeAnimation) specifically for
+A [DiceAnimation][DiceAnimation] behaves like a [RandomizeAnimation](https://tudo-aqua.github.io/bgw/concepts/observable.html#RandomizeAnimation) specifically for
 dices. As the visuals got passed as parameter on Dice creation only the resulting side as zero-based index needs to be
-passed. The animation sets the *toSide* as the last step in order to control what is the resulting visual of this
-animation.
+passed. The animation sets the ``toSide`` as the last step in order to control what the resulting visual of this
+animation is.
 
-**NOTE**: The Animation only switches the visuals visually. The Visual will revert to the *currentVisual* upon next
-refresh if the new visual is not set in *onAnimationFinished*, which is the suggested way of usage.
+**NOTE**: The Animation only switches the visuals visually. The Visual will revert to the ``currentVisual`` upon next
+refresh if the new visual is not set in ``onAnimationFinished``, which is the suggested way of usage.
 
 ````kotlin
 gameScene.playAnimation(
