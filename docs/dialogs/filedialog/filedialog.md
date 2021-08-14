@@ -16,19 +16,24 @@ layout: default
 {:toc}
 </details>
 
-In this section we are going to showcase the different types of file dialogs in the BGW framework. FileDialog can be
+This section showcases the different types of file dialogs in the BGW framework. FileDialog can be
 used to display a popup to choose a file or directory either to load or save resources.
 
 ## Dialog creation
 
-The FileDialog class provides different [FileDialogMode](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog/-file-dialog-mode/index.html)s:
-* OPEN_FILE
-* OPEN_MULTIPLE_FILES
-* SAVE_FILE
-* CHOOSE_DIRECTORY
+The [FileDialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog/index.html) 
+class provides different [FileDialogModes](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog-mode/index.html):
+* ``OPEN_FILE``
+* ``OPEN_MULTIPLE_FILES``
+* ``SAVE_FILE``
+* ``CHOOSE_DIRECTORY``
 
-Depending on the selection the dialog will request the appropriate type (file vs. directory) and enable multi-selection.
+Depending on the selection the [Dialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog/index.html) will request the appropriate type (file vs. directory) and enable 
+multi-selection.
 
 ## Showing a FileDialog
-To show a dialog use [#showFileDialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-file-dialog.html) in [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html).
-The operation blocks user input until the dialog was closed. The function returns an [Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) containing the chosen List of [File](https://docs.oracle.com/javase/8/docs/api/java/io/File.html)s. The optional is empty if the dialog was canceled.
+To show a dialog use [#showFileDialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-file-dialog.html) 
+in [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html).
+The operation blocks user input until the dialog is closed. The function returns an [Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) 
+containing the chosen list of [Files](https://docs.oracle.com/javase/8/docs/api/java/io/File.html). The Optional is 
+empty if the dialog is canceled.
