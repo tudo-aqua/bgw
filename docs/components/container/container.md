@@ -7,7 +7,7 @@ layout: default
 
 [BGADocs]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/
 [AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/index.html
-[ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-game-component-container/index.html
+[ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
 [GameComponentView]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
 [TokenDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
 [CardViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
@@ -17,7 +17,7 @@ layout: default
 [SatchelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html
 
 [UIComponentsDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
-[ContainerExample]: https://tudo-aqua.github.io/bgw/components/container.html#complete-source-code-for-the-example
+[ContainerExample]: https://tudo-aqua.github.io/bgw/components/container/container.html#complete-source-code-for-the-example
 
 [IterableDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/
 
@@ -43,7 +43,7 @@ contained components.
 ## Container features
 
 The Container features will be demonstrated using an [Area][AreaDoc], since [GameComponentContainer][ContainerDoc]
-is abstract and [Area][AreaDoc] is just the discrete implementation.
+is abstract and [Area][AreaDoc] is just one of the discrete implementations.
 
 The complete source code for this example can be
 found [here][ContainerExample].
@@ -65,9 +65,10 @@ class AreaExample : BoardGameApplication("Area example") {
 
 ### Add and remove
 
-The most important feature of a container is to add and remove components.
+The most important feature of a container is to add to and remove components from it.
 
-Adding a Component is as simple as calling the ``add`` function with the component as its argument. Optionally an index
+Adding a Component is as simple as calling the ``add()`` function with the component as its argument. Optionally an 
+index
 may be supplied. An example on how to add with or without index:
 
 ````kotlin
@@ -79,7 +80,7 @@ The ``greenToken`` is added to the ``area``. The index parameter was omitted, so
 components list. In this case at index 0. Then the
 ``redToken`` is added explicitly at index 0, therefore ``greenToken`` is pushed back to index 1.
 
-Removing a Component is as simple as calling the ``remove`` function with the component to remove as its argument.
+Removing a Component is as simple as calling the ``remove()`` function with the component to remove as its argument.
 
 ````kotlin
 area.remove(redToken)
@@ -111,7 +112,7 @@ area.onRemove = {
 ### Listeners
 
 Listeners for the components list may be added to a container. They get invoked any time the components list changes its
-state. In this example a Label gets updated with the Number of components currently contained in ``area``.
+state. In this example a Label gets updated with the number of components currently contained in ``area``.
 
 ````kotlin
 area.addComponentsListener {
@@ -119,12 +120,13 @@ area.addComponentsListener {
 }
 ````
 
-Listeners can be removed via the ``clearComponentsListners`` or ``removeComponentsListner`` functions.
+Listeners can be removed via the ``clearComponentsListners()`` or ``removeComponentsListner()`` functions.
 
 ## Useful hints for dealing with containers
 
 - Containers provide an iterator over their components list via
   the [Iterable][IterableDoc] interface.
+  
 - The position of components contained in any containers with automatic layouting should never be modified, since the
   containers handle positioning.
 
@@ -149,13 +151,13 @@ Area. No further layouting is provided by the Area.
 ### [CardStack][CardStackDoc]
 
 CardStack is a special form of container. It can only contain
-[CardView][CardViewDoc]
-. It should be used to visualize card stacks. It provides automatic layouting and alignment features.
+[CardView][CardViewDoc]. 
+It should be used to visualize card stacks. It provides automatic layouting and alignment features.
 
 ### [LinearLayout][LinearLayoutDoc]
 
 LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined
-spacing. Additionally, an orientation and alignment may be specified. In this image a linearLayout is used to 
+spacing. Additionally, an orientation and alignment may be specified. In this image a LinearLayout is used to 
 visualize a hand of cards:
 
 ![image](LinearLayout.png)

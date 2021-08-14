@@ -28,15 +28,19 @@ layout: default
 {:toc}
 </details>
 
-[GameComponentViews][GameComponentDoc] are used to model interactive game elements like cards, meeples or any other form of game tokens.
-GameComponentViews can be added to [GameComponentContainers][ContainerDoc] and made draggable as explained in [this][DnDDoc] tutorial.
+[GameComponentViews][GameComponentDoc] are used to model interactive game elements like cards, meeples or any other 
+form of game tokens.
+GameComponentViews can be added to [GameComponentContainers][ContainerDoc] and be made draggable as explained in 
+[this][DnDDoc] tutorial.
 Helpful animations can be found [here][AnimationDoc]
 
 ## Generic Token
-For a generic token use [TokenView][TokenDoc]. It takes its position and dimensions as well as one visual as constructor parameters.
+For a generic token use [TokenView][TokenDoc]. It takes its position and dimensions as well as one visual as 
+a constructor parameter.
 
 ## Cards
-For cards use [CardView][CardDoc]. It by default takes a front and back visual and offers additional functions to handle the card.
+For cards use [CardView][CardDoc]. It by default takes a front and back visual and offers additional functions to handle
+the card.
 As cards are a common concept, there exists a [CardStack][CardStackDoc] especially for CardViews.
 For card hands, a [LinearLayout][LinearLayoutDoc] may become handy.
 
@@ -44,7 +48,8 @@ The CardView can also be used for other two-sided tokens.
 
 ## Dice
 The [DiceView][DiceDoc] class takes a list of visuals for its sides. 
-It is not limited to a D6 and has the exact amount of sides as it has visuals where the visual at index i is the i-1th side e.g. the visual at index 0 is side 1.
+It is not limited to a D6 and has the exact amount of sides as it has visuals, where the visual at index i is the i-1th 
+side e.g. the visual at index 0 is side 1.
 If the list of visuals gets altered the amount of sides changes too.
 
 For a dice roll there exists a dedicated [DiceAnimation][DiceAnimationDoc].

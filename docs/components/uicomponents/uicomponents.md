@@ -29,12 +29,12 @@ A [UIComponent][UIComp] may be used to present information to the user or retrie
 for UIComponents.
 
 - [UIComponent][UIComp]: the baseclass for all UIComponents
-- [LabeledUIComponents][LUIComp]: extends UIComponent and provides additional fields to define a text. E.g. a Button
+- [LabeledUIComponents][LUIComp]: extends UIComponent and provides additional fields to define a text e.g., a Button
   with a text.
-- [TextInputUIComponents][TIUIComp]: extends UIComponent and provides a text where the user may write to.
+- [TextInputUIComponents][TIUIComp]: extends UIComponent and provides a text input field for user defined text.
 
 **NOTE:** UIComponents are ComponentViews. This means all methods of handling user input discussed in the
-[User Input Guide][UserInput] are available to UIComponentViews.
+[User Input Guide][UserInput] are also available to UIComponentViews.
 
 This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in
 this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found
@@ -104,7 +104,7 @@ if indeterminate is allowed
 **NOTE:** it is possible to set ``isIndeterminate`` to ``true`` even when indeterminate is not allowed. It is just
 impossible to reach the indeterminate state via clicks on the CheckBox.
 
-In this example listeners are added to the ``checkedProperty`` and ``indeterminateProperty``, so that
+In this example, listeners are added to the ``checkedProperty`` and ``indeterminateProperty``, such that
 ``outputLabel`` displays the state of the CheckBox, whenever the state changes.
 
 ````kotlin
@@ -126,8 +126,9 @@ checkBox.indeterminateProperty.addListener { _, newValue ->
 
 ## ColorPicker
 
-A [ColorPicker][ColorPickerDoc] may be used to enable a user to specify a colour in an intuitive way. The selected
-colour can be set and retrieved via the ``selectedColor``. To react to a new ``selectedColor``, a listener may be added
+A [ColorPicker][ColorPickerDoc] may be used to enable a user to specify a colour intuitively. The selected
+colour can be set and retrieved via the ``selectedColor`` property. To react to a new ``selectedColor``, a listener 
+may be added
 to the ``selectedColorProperty``. In this example the text colour of another label is changed, whenever a new colour is
 picked.
 
@@ -155,8 +156,8 @@ colorPicker.selectedColorProperty.addListener { _, newValue ->
 
 A [ComboBox][ComboBoxDoc] is a drop down menu, where a user may choose an option. A ``prompt`` may be specified to
 inform the user, what is expected of him. The ComboBox has a type parameter to define a type for the objects that
-correspond to the options. One string per contained object is needed to represent it as an option to the user. There are
-two methods of obtaining said string.
+correspond to the options. One string per contained object is necessary to represent it as an option to the user. 
+There are two methods of obtaining said string.
 
 A ``formatFunction``, that projects the contained objects to a string representation may be set. If
 no ``formatFunction`` is set, the ``toString``
@@ -198,7 +199,8 @@ comboBox.selectedItemProperty.addListener { _, newValue ->
 A [ProgressBar][ProgressBarDoc] is a coloured bar that can indicate progress to the user. The current progress and
 colour can be retrieved and set via ``progress`` and ``barColor`` respectively.
 
-In this example a new ProgressBar is instantiated and the ``onMouseClicked`` is set, so that the progress of the bar is
+In this example a new ProgressBar is instantiated and the ``onMouseClicked`` is set, such that the progress of the 
+bar is
 advanced by 5% on a click or reset if the progress is greater than 100%.
 
 **NOTE:** the progress is modelled as a ``Double``, where any value equal or less than 0 means 0% progress and any value
@@ -233,17 +235,18 @@ progressBar.progressProperty.addListener { _, newValue ->
 
 ## ToggleButton and RadioButton
 
-A [ToggleButton][ToggleButtonDoc] can be either selected or not selected. A [RadioButton][RadioButtonDoc] is just a
+A [ToggleButton][ToggleButtonDoc] can either be selected or not selected. A [RadioButton][RadioButtonDoc] is just a
 ToggleButton with a different visual representation. It has exactly the same functionalities as a ToggleButton.
 
 To retrieve whether the ToggleButton is toggled on or off the ``isSelected`` field can be used.
 
 ToggleButtons have a feature where different ToggleButtons may be linked via a [ToggleGroup][ToggleGroupDoc].
-ToggleGroups enforce a rule, where only one ToggleButton in a ToggleGroup may be selected. So whenever a ToggleButton in
+ToggleGroups enforce a rule, where only one ToggleButton in a ToggleGroup may be selected at a time. So whenever a 
+ToggleButton in
 a ToggleGroup changes its selected state to ``true``, all other ToggleButtons in the ToggleGroup automatically have
 their selected state set to ``false``.
 
-**NOTE:** setting a ToggleGroup on a ToggleButton is an exception. The ToggleGroup rule only gets enforced whenever a
+**NOTE:** Setting a ToggleGroup on a ToggleButton is an exception. The ToggleGroup rule only gets enforced whenever a
 contained ToggleButton changes its state. So it is technically possible to have multiple selected ToggleButtons in a
 ToggleGroup by setting the ToggleGroup on multiple pre-selected ToggleButtons.
 
@@ -274,7 +277,7 @@ radioButton.selectedProperty.addListener { _, newValue ->
 ## TextArea and TextField
 
 [TextArea][TextAreaDoc] and [TextField][TextFieldDoc] can be used to allow users to type texts. The main difference
-between TextArea and R´TextField, is that [TextArea] has multiple lines of input, while [TextField] only has one. The
+between TextArea and TextField, is that [TextArea] has multiple lines of input, while [TextField] only has one. The
 text can be set and retrieved via ``text``. A prompt can be specified that informs the user, which textual input is
 requested. To react to user input, a listener on the ``textProperty`` can be added. Additionally, the
 ``onKeyPressed``, ``onKeyReleased`` and ``onKeyTyped`` handlers are a great way of executing code when textual input
@@ -300,9 +303,9 @@ textField.textProperty.addListener { _, newValue ->
 ## ListView
 
 A [ListView][ListViewDoc] can be used to display a list of strings. The ListView has a type parameter, so any type of
-objects can be contained in the ListView. By default, the ``toString`` function is applied to the contained objects to
+objects can be contained in the ListView. By default, the ``toString()`` function is applied to the contained objects to
 obtain a string representation of each object. A ``formatFunction`` can be set that gets used instead of
-the ``toString`` function to obtain the string representations.
+the ``toString()`` function to obtain the string representations.
 
 In this example, a ListView typed to ``Int`` is instantiated.
 
@@ -346,10 +349,10 @@ column.
 
 The three columns are as follows:
 
-- "Value" displays the actual value of the contained int, so the ``fromatFunction`` is just wraps the value in a string.
-- "Squared" display the squared value of the contained int, so the ``formatFunction`` calculates the square of the value
+- ``"Value"`` displays the actual value of the contained int, so the ``fromatFunction`` just wraps the value in a string.
+- ``"Squared"`` display the squared value of the contained int, so the ``formatFunction`` calculates the square of the value
   and wraps it in a string.
-- "Even?" displays whether the value of the contained int is even, so the ``formatFucntion`` checks if the value is
+- ``"Even?"`` displays whether the value of the contained int is even, so the ``formatFucntion`` checks if the value is
   divisible by two and wraps the resulting boolean in a string.
 
 ````kotlin
