@@ -47,8 +47,8 @@ inherit from [BoardGameApplication][BGADoc].
 class MauMauViewController : BoardGameApplication(windowTitle = "MauMau")
 ````
 
-This creates a window in which the game can take place. For the game itself we declare a [BoardGameScene][BGSDoc] and
-a [MenuScene][MSDoc].
+This creates a window in which the game can take place. For the game itself a [BoardGameScene][BGSDoc] and
+a [MenuScene][MSDoc] is declared.
 
 ````kotlin
 class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
@@ -65,15 +65,16 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual("bg.jpg"))
 class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE))
 ````
 
-As you can see the menu scene gets a height of 500px and width of 300px while the game scene gets the default size of
-FullHD. The game scene gets an image as background and the menu scene solid white. Read more about
-visuals [here][visualsTutorial].
+The menu scene gets a height of 500px and width of 300px while the game scene gets the default size of
+FullHD. The game scene gets an image as background and the menu scene solid white. To read more about
+visuals click [here][visualsTutorial].
 
 ## BoardGameScene and MenuScene
 
-In the MauMau example we have declared a game scene and a menu scene. In menu scenes you cannot use draggable
-components, only layouts and ui elements: In other words components that
-extend [StaticComponentView][StaticComponentViewDoc].
+The MauMau example declares a game scene and a menu scene. In menu scenes draggable
+components are not usable, only [LayoutViews](https://tudo-aqua.github.io/bgw/components/layout/layout.html) and 
+[UIComponents](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html): In other words components 
+that extend [StaticComponentView][StaticComponentViewDoc].
 
 A [BoardGameApplication][BGADoc] can display one [BoardGameScene][BGSDoc] and one [MenuScene][MSDoc] at the same time.
 While the menu scene is visible, the game scene gets blurred out.
@@ -97,15 +98,15 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 
 ## Declaring a MenuScene
 
-As we have seen, we can pass the desired size of the scene as an argument to the super constructor. As with all
+As shown above, the desired size of the scene can be passed as an argument to the super constructor. As with all
 coordinates these are declared in a virtual coordinate space that will be transformed while rendering. Primary
 constraint while choosing the scene size is the ratio of height and width as this is not changed by scaling. If the
 ratio does not match the windows size, black bars will appear which can be styled using visuals as well.
 
 All components declared in this scene will relate its position and size to the declared coordinate space.
 
-In this example we want to have a [Label][LabelDoc] displaying *"Main menu"* and three [Buttons][ButtonDoc]
-displaying *"Continue"*, *"New Game"* and *"Exit"*. These components get declared and added to the scene by
+In this example a [Label][LabelDoc] should display *"Main menu"* and three [Buttons][ButtonDoc]
+display *"Continue"*, *"New Game"* and *"Exit"*. These components get declared and added to the scene by
 calling [addComponents()][Scene#addComponents] in the initializer block.
 
 ````kotlin
@@ -166,10 +167,11 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
 
 ## Declaring a BoardGameScene
 
-[BoardGameScenes][BGSDoc] are the main component of your game. BoardGameScenes behave just like menu scenes but can
+[BoardGameScenes][BGSDoc] are the main components of the game. BoardGameScenes behave just like menu scenes but can
 additionally contain [GameComponentViews][GameComponentDoc] and [GameContainerViews][ContainerDoc].
 
-For our MauMau example we need two [CardStacks][CardStackDoc] and two player hands as [LinearLayouts][LinearlayoutDoc].
+For the MauMau example two [CardStacks][CardStackDoc] and two player hands as [LinearLayouts][LinearlayoutDoc] are 
+necessary.
 
 ````kotlin
 class MauMauGameScene : BoardGameScene(background = ImageVisual("bg.jpg")) {
@@ -225,11 +227,10 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual("bg.jpg")) {
 
 ## Event handler
 
-When we start the application both menu scene and game scene are shown. The game scene is blurred in the background.
+When the application is started, both menu scene and game scene are shown. The game scene is blurred in the background.
 
 ![](assets/menu.png)
-
-We now want to add event handlers to the menu buttons to start a new game and close the menu scene. As these button's
+To start a new game and close the menu scene, event handlers have to be added. As these button's
 actions change the scene, the handlers get set in the view controller.
 
 ````kotlin
