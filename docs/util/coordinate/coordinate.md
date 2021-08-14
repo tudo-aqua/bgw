@@ -17,9 +17,11 @@ nav_order: 1
 {:toc}
 </details>
 
-## [Coordinate](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/index.html)
+[CoordinateDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/index.html
 
-The Coordinate class is used as a Tuple wrapper for X and Y coordinates of a ComponentView.
+## [Coordinate][CoordinateDoc]
+
+The [Coordinate][CoordinateDoc] class is used as a Tuple wrapper for X and Y coordinates of a ComponentView.
 It is created with X and Y coordinates accordingly.
 
 The coordinate class implements plus and minus operator to add or subtract coordinates from each other:
@@ -36,8 +38,10 @@ The equals function returns true if and only if ````coord1.xCoord == coord2.xCoo
 
 Additionally, the [rotated](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/rotated.html) function can be used to rotate the coordinate by a given angle around a center point.
 
-## [CoordinatePlain](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate-plain/index.html)
-A CoordinatePlain represents a right-angled plain with four its four corners. These can be accessed by
+[CoordinatePlain]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate-plain/index.html
+
+## [CoordinatePlain][CoordinatePlain]
+A [CoordinatePlain][CoordinatePlain] represents a right-angled plain with four corners. These can be accessed by:
 ````kotlin
 val topLeft: Coordinate
 val topRight: Coordinate
@@ -45,7 +49,7 @@ val bottomLeft: Coordinate
 val bottomRight: Coordinate
 ````
 
-Additionally, the dimensions get calculated
+Additionally, the dimensions get calculated and can be accessed:
 ````kotlin
 val height: Double
 val width: Double
