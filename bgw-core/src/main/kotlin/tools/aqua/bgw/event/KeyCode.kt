@@ -22,8 +22,8 @@ package tools.aqua.bgw.event
 /**
  * Enum for available key codes.
  *
- * @param string key name.
- * @param keyTypeMask mask for the key's type.
+ * @param string Key name.
+ * @param keyTypeMask Mask for the key's type.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 enum class KeyCode(val string: String, private val keyTypeMask: Int) {

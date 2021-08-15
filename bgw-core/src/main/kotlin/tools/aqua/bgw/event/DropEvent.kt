@@ -23,10 +23,11 @@ import tools.aqua.bgw.components.ComponentView
 
 /**
  * Event that gets raised for drop gestures.
+ *
  * Receiver is the dragged component.
  *
- * @param draggedComponent currently dragged [ComponentView].
- * @param dragTargets list of all [ComponentView]s that accepted the drag gesture in case of a dragGestureEnded [Event].
+ * @param draggedComponent Currently dragged [ComponentView].
+ * @param dragTargets [List] of all [ComponentView]s that accepted the drag gesture in case of a dragGestureEnded [Event].
  * Contains all accepting [ComponentView]s in the order they accepted.
  *
  * @see DragEvent

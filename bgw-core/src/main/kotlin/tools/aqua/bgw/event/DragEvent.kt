@@ -24,7 +24,7 @@ import tools.aqua.bgw.components.ComponentView
 /**
  * Event that gets raised for drag gestures.
  *
- * @param draggedComponent currently dragged [ComponentView].
+ * @param draggedComponent Currently dragged [ComponentView].
  *
  * @see DropEvent
  */

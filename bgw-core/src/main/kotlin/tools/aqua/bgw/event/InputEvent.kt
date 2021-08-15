@@ -20,6 +20,6 @@
 package tools.aqua.bgw.event
 
 /**
- * Baseclass for input events.
+ * InputEvent baseclass.
  */
 abstract class InputEvent : Event()
