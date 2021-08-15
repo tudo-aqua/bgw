@@ -21,8 +21,8 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_WIDTH
-import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
@@ -34,7 +34,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
  * Only one [ToggleButton] may be selected in a [ToggleGroup].
- * This means whenever a [ToggleButton] changes its selected state to true,
+ * This means whenever a [ToggleButton] changes its selected state to `true`,
  * all other [ToggleButton]s in the same [ToggleGroup] get deselected.
  *
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.

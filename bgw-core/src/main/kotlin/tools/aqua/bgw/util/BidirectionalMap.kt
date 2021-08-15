@@ -138,7 +138,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param entity Relation key.
 	 *
-	 * @return B for query A if relation A -> B exists. Null otherwise.
+	 * @return B for query A if relation A -> B exists. `null` otherwise.
 	 */
 	fun forwardOrNull(entity: T): R? = map.firstOrNull { t -> t.first == entity }?.second
 	
@@ -158,7 +158,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 *
 	 * @param value Relation value.
 	 *
-	 * @return A for query B if relation A -> B exists. Null otherwise.
+	 * @return A for query B if relation A -> B exists. `null` otherwise.
 	 */
 	fun backwardOrNull(value: R): T? = map.firstOrNull { t -> t.second == value }?.first
 	

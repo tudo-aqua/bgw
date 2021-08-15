@@ -524,7 +524,7 @@ open class GridPane<T : ComponentView>(
 	 * the first row from left to right. When reaching the end of a row it proceeds to the next one resetting the column
 	 * pointer to 0.
 	 *
-	 * [Iterator.hasNext] Returns true if at least one cell is left to iterate.
+	 * [Iterator.hasNext] Returns `true` if at least one cell is left to iterate.
 	 *
 	 * [Iterator.next] Returns a data object [GridIteratorElement] that contains the current row and column as well as
 	 * the component itself. Refer to the [GridIteratorElement] documentation for further information.

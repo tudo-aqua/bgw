@@ -212,7 +212,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	
 	/**
 	 * Removes the first element from this list and returns that removed element,
-	 * or returns null if this list is empty.
+	 * or returns `null` if this list is empty.
 	 */
 	fun removeFirstOrNull(): T? {
 		val result = list.removeFirstOrNull()
@@ -232,7 +232,7 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	
 	/**
 	 * Removes the last element from this list and returns that removed element,
-	 * or returns null if this list is empty.
+	 * or returns `null` if this list is empty.
 	 */
 	fun removeLastOrNull(): T? {
 		val result = list.removeLastOrNull()
