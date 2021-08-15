@@ -27,18 +27,20 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * A [CardView] may be used to visualize a card.
+ *
  * You can inherit from this class if you want to add additional functionality or fields.
  * Inheriting does NOT change how a cardView is visualized by the BGW framework.
  *
  * Visualization:
+ *
  * The [Visual] at the [currentSide] value is used to visualize the card. By default, the back side is shown.
  *
- * @param posX horizontal coordinate for this [CardView]. Default: 0.
- * @param posY vertical coordinate for this [CardView]. Default: 0.
- * @param width width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].
- * @param height height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
- * @param front visual to represent the front side of the card.
- * @param back visual to represent the back side of the card. Default: same [Visual] as front.
+ * @param posX Horizontal coordinate for this [CardView]. Default: 0.
+ * @param posY Vertical coordinate for this [CardView]. Default: 0.
+ * @param width Width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].
+ * @param height Height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
+ * @param front Visual to represent the front side of the card.
+ * @param back Visual to represent the back side of the card. Default: same [Visual] as front.
  */
 open class CardView(
 	posX: Number = 0,
@@ -134,9 +136,5 @@ open class CardView(
 		 * The [BACK] side.
 		 */
 		BACK
-	}
-
-	override fun toString(): String {
-		return name
 	}
 }

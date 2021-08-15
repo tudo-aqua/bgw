@@ -27,13 +27,14 @@ import tools.aqua.bgw.visual.Visual
  * A [TokenView] may be used to visualize any kind of token.
  *
  * Visualization:
+ *
  * The current [Visual] is used to visualize the token.
  *
- * @param posX horizontal coordinate for this TokenView. Default: 0.
- * @param posY vertical coordinate for this TokenView. Default: 0.
- * @param width width for this TokenView. Default: [DEFAULT_TOKEN_WIDTH].
- * @param height height for this TokenView. Default: [DEFAULT_TOKEN_HEIGHT].
- * @param visual visual for this TokenView.
+ * @param posX Horizontal coordinate for this TokenView. Default: 0.
+ * @param posY Vertical coordinate for this TokenView. Default: 0.
+ * @param width Width for this TokenView. Default: [DEFAULT_TOKEN_WIDTH].
+ * @param height Height for this TokenView. Default: [DEFAULT_TOKEN_HEIGHT].
+ * @param visual Visual for this TokenView.
  */
 open class TokenView(
 	posX: Number = 0,

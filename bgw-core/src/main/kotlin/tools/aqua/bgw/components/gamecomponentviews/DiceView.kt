@@ -25,16 +25,17 @@ import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [DiceView] may be used to visualize a die.
+ * A [DiceView] may be used to visualize a dice.
  *
  * Visualization:
- * The Visual at the [currentSide] value is used to visualize the die.
  *
- * @param posX horizontal coordinate for this [DiceView]. Default: 0.
- * @param posY vertical coordinate for this [DiceView]. Default: 0.
- * @param width width for this [DiceView]. Default: [DEFAULT_DICE_WIDTH].
- * @param height height for this [DiceView]. Default: [DEFAULT_DICE_HEIGHT].
- * @param visuals list of visuals to represent the sides of the die.
+ * The Visual at the [currentSide] value is used to visualize the dice.
+ *
+ * @param posX Horizontal coordinate for this [DiceView]. Default: 0.
+ * @param posY Vertical coordinate for this [DiceView]. Default: 0.
+ * @param width Width for this [DiceView]. Default: [DEFAULT_DICE_WIDTH].
+ * @param height Height for this [DiceView]. Default: [DEFAULT_DICE_HEIGHT].
+ * @param visuals List of visuals to represent the sides of the die.
  */
 open class DiceView(
 	posX: Number = 0,
@@ -51,6 +52,7 @@ open class DiceView(
 	
 	/**
 	 * Current side that is displayed, 0-based.
+	 *
 	 * If index is greater than the amount of visuals stored in [visuals] or negative,
 	 * [Visual.EMPTY] will be displayed.
 	 */
@@ -74,7 +76,8 @@ open class DiceView(
 	}
 	
 	/**
-	 * Sets all visuals for this DiceView. Clears old visuals.
+	 * Sets all visuals for this DiceView.
+	 * Clears old visuals.
 	 * All [visuals] get copied before being added.
 	 * If [currentSide] is out of range, a [Visual.EMPTY] will be shown.
 	 */
