@@ -32,7 +32,7 @@ import tools.aqua.bgw.util.Coordinate
 /**
  * Drag and Drop helper methods.
  */
-class DragDropHelper {
+internal class DragDropHelper {
 	companion object {
 		/**
 		 * Rotates coordinates to 0 degrees relative to scene.

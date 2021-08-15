@@ -40,7 +40,7 @@ import javafx.scene.input.MouseEvent as FXMouseEvent
 /**
  * Helper class for conversion functions between BGW and JavaFX and backwards.
  */
-abstract class FXConverters {
+internal abstract class FXConverters {
 	companion object {
 		/**
 		 * Converts the [java.awt.Color] to [Color].

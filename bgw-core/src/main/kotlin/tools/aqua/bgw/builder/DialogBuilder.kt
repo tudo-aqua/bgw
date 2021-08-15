@@ -29,7 +29,7 @@ import tools.aqua.bgw.dialog.DialogType
  * DialogBuilder.
  * Factory for all BGW dialogs.
  */
-class DialogBuilder {
+internal class DialogBuilder {
 	companion object {
 		/**
 		 * Builds dialogs.
