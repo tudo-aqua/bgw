@@ -28,13 +28,13 @@ import tools.aqua.bgw.core.VerticalAlignment.TOP
  * Used to define a centering behaviour.
  * Encapsulates [VerticalAlignment] and [HorizontalAlignment].
  *
- * @param verticalAlignment vertical alignment component.
- * @param horizontalAlignment horizontal alignment component.
+ * @param verticalAlignment Vertical alignment component.
+ * @param horizontalAlignment Horizontal alignment component.
  *
- * @see tools.aqua.bgw.core.BoardGameScene
- * @see tools.aqua.bgw.core.BoardGameApplication
- * @see tools.aqua.bgw.core.VerticalAlignment
- * @see tools.aqua.bgw.core.HorizontalAlignment
+ * @see BoardGameScene
+ * @see BoardGameApplication
+ * @see VerticalAlignment
+ * @see HorizontalAlignment
  */
 enum class Alignment(val verticalAlignment: VerticalAlignment, val horizontalAlignment: HorizontalAlignment) {
 	/**
@@ -83,6 +83,12 @@ enum class Alignment(val verticalAlignment: VerticalAlignment, val horizontalAli
 	CENTER(VerticalAlignment.CENTER, HorizontalAlignment.CENTER);
 	
 	companion object {
+		/**
+		 * Creates [Alignment] instance out of [VerticalAlignment] and [HorizontalAlignment].
+		 *
+		 * @param v Vertical component.
+		 * @param h Horizontal component.
+		 */
 		fun of(v: VerticalAlignment, h: HorizontalAlignment): Alignment = when {
 			v == TOP && h == LEFT -> TOP_LEFT
 			v == TOP && h == RIGHT -> TOP_RIGHT

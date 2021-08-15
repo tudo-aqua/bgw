@@ -22,11 +22,11 @@ package tools.aqua.bgw.core
 /**
  * Used to define vertical centering behaviour.
  *
- * @param positionMultiplier internal position multiplier.
- * @param pivotMultiplier internal pivot multiplier.
+ * @param positionMultiplier Internal position multiplier.
+ * @param pivotMultiplier Internal pivot multiplier.
  *
- * @see tools.aqua.bgw.core.BoardGameScene
- * @see tools.aqua.bgw.core.BoardGameApplication
+ * @see BoardGameScene
+ * @see BoardGameApplication
  */
 enum class VerticalAlignment(internal val positionMultiplier: Double, internal val pivotMultiplier: Double) {
 	/**

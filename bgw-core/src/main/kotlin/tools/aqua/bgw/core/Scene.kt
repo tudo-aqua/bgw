@@ -52,13 +52,13 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	
 	/**
 	 * [Property] for the currently dragged [ComponentView] encapsulated in a [DragDataObject]
-	 * or null if no [DynamicComponentView] is currently dragged.
+	 * or `null` if no [DynamicComponentView] is currently dragged.
 	 */
 	internal val draggedDataProperty: Property<DragDataObject?> = Property(null)
 	
 	/**
 	 * Currently dragged [ComponentView] encapsulated in a [DragDataObject]
-	 * or null if no [DynamicComponentView] is currently dragged.
+	 * or `null` if no [DynamicComponentView] is currently dragged.
 	 */
 	val draggedComponent: DynamicComponentView?
 		get() = draggedDataProperty.value?.draggedComponent
@@ -66,6 +66,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	
 	/**
 	 * The root node of this [Scene].
+	 *
 	 * Use it to compare the parent [Property] of any [ComponentView]
 	 * to find out whether it was directly added to the [Scene].
 	 */
@@ -89,11 +90,15 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	
 	/**
 	 * [Property] for the [background] [Visual] of this [Scene].
+	 *
+	 * @see background
 	 */
 	internal val backgroundProperty: Property<Visual> = Property(background)
 	
 	/**
 	 * The background [Visual] of this [Scene].
+	 *
+	 * @see backgroundProperty
 	 */
 	var background: Visual
 		get() = backgroundProperty.value
@@ -103,11 +108,15 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	
 	/**
 	 * [Property] for the [opacity] of the [background] of this [Scene].
+	 *
+	 * @see opacity
 	 */
 	internal val opacityProperty = DoubleProperty(1.0)
 	
 	/**
 	 * Opacity of the [background] of this [Scene].
+	 *
+	 * @see opacityProperty
 	 */
 	var opacity: Double
 		get() = opacityProperty.value
@@ -119,6 +128,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	
 	/**
 	 * [Property] for the currently displayed zoom detail of this [Scene].
+	 *
+	 * @see zoomDetail
 	 */
 	internal val zoomDetailProperty: Property<CoordinatePlain> = Property(
 		CoordinatePlain(0, 0, width, height)
@@ -126,6 +137,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	
 	/**
 	 * The currently displayed zoom detail of this [Scene].
+	 *
+	 * @see zoomDetailProperty
 	 */
 	internal var zoomDetail
 		get() = zoomDetailProperty.value
@@ -146,7 +159,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	/**
 	 * Adds all given [ComponentView]s to the root node and [rootComponents] list.
 	 *
-	 * @param components components to add.
+	 * @param components Components to add.
 	 */
 	fun addComponents(vararg components: T) {
 		rootComponents.addAll(components.toList().onEach {
@@ -158,7 +171,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	/**
 	 * Removes all given [ComponentView]s from the root node and [rootComponents] list.
 	 *
-	 * @param components components to remove.
+	 * @param components Components to remove.
 	 */
 	fun removeComponents(vararg components: T) {
 		rootComponents.removeAll(components.toList().onEach {
@@ -177,7 +190,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	/**
 	 * Plays given [Animation].
 	 *
-	 * @param animation animation to play.
+	 * @param animation [Animation] to play.
 	 */
 	fun playAnimation(animation: Animation) {
 		animations.add(animation)
@@ -243,11 +256,11 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	 * Searches [node] recursively through the visual tree and logs path where the [node] appears
 	 * as first component and the [rootNode] as last.
 	 *
-	 * @param node child to find.
+	 * @param node Child to find.
 	 *
-	 * @return path to child.
+	 * @return Path to child.
 	 *
-	 * @throws IllegalStateException if child was not contained in this [Scene].
+	 * @throws IllegalStateException If child was not contained in this [Scene].
 	 */
 	fun findPathToChild(node: ComponentView): List<ComponentView> {
 		if (node is RootComponent<*>) {

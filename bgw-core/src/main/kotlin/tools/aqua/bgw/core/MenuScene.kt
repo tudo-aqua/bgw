@@ -27,8 +27,8 @@ import tools.aqua.bgw.visual.Visual
  * Baseclass for BGW menu scenes.
  * Extend this class in order to create your own menu scene.
  *
- * @param width scene width in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
- * @param height scene height in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
+ * @param width [Scene] [width] in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
+ * @param height [Scene] [height] in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
  * @param background [BoardGameScene] [background] [Visual]. Default: [ColorVisual.WHITE].
  */
 open class MenuScene(

@@ -36,8 +36,8 @@ import java.util.*
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
  * Application starts by calling [show].
  *
- * @param windowTitle title for the application window. Gets displayed in the title bar.
- *      Default: "BoardGameWork Application".
+ * @param windowTitle Title for the application window. Gets displayed in the title bar.
+ * Default: "BoardGameWork Application".
  *
  * @see BoardGameScene
  * @see MenuScene
@@ -81,6 +81,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	
 	/**
 	 * Sets this [BoardGameApplication]'s maximized mode.
+	 *
 	 * `true` for maximized mode, `false` for default window size.
 	 */
 	var isMaximized: Boolean
@@ -101,6 +102,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	
 	/**
 	 * Background [Visual] for the [BoardGameApplication].
+	 *
 	 * It is visible in the space that appears if the application window ratio does not fit the [Scene] ratio.
 	 *
 	 * Do not mix up this [Property] with the [Scene] background [Visual] [Scene.background].
@@ -132,9 +134,9 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Shows a dialog and blocks further thread execution.
 	 *
-	 * @param dialog the [Dialog] to show
+	 * @param dialog The [Dialog] to show
 	 *
-	 * @return chosen button or [Optional.empty] if canceled.
+	 * @return Chosen button or [Optional.empty] if canceled.
 	 */
 	fun showDialog(dialog: Dialog): Optional<ButtonType> =
 		Frontend.showDialog(dialog)
@@ -142,17 +144,17 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Shows the given [FileDialog].
 	 *
-	 * @param dialog the [FileDialog] to be shown.
+	 * @param dialog The [FileDialog] to be shown.
 	 *
-	 * @return chosen file(s) or [Optional.empty] if canceled.
+	 * @return Chosen file(s) or [Optional.empty] if canceled.
 	 */
 	fun showFileDialog(dialog: FileDialog): Optional<List<File>> = Frontend.showFileDialog(dialog)
 	
 	/**
 	 * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and blurred.
 	 *
-	 * @param scene menu scene to show.
-	 * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
+	 * @param scene [MenuScene] to show.
+	 * @param fadeTime Time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
 	 */
 	fun showMenuScene(scene: MenuScene, fadeTime: Number = DEFAULT_FADE_TIME) {
 		Frontend.showMenuScene(scene, fadeTime.toDouble())
@@ -161,7 +163,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
 	 *
-	 * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
+	 * @param fadeTime Time to fade out in milliseconds. Default: [DEFAULT_FADE_TIME].
 	 */
 	fun hideMenuScene(fadeTime: Number = DEFAULT_FADE_TIME) {
 		Frontend.hideMenuScene(fadeTime.toDouble())
@@ -179,7 +181,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Sets [Alignment] of all [Scene]s in this [BoardGameApplication].
 	 *
-	 * @param newAlignment new alignment to set.
+	 * @param newAlignment New alignment to set.
 	 */
 	fun setSceneAlignment(newAlignment: Alignment) {
 		setHorizontalSceneAlignment(newAlignment.horizontalAlignment)
@@ -189,7 +191,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Sets [HorizontalAlignment] of all [Scene]s in this [BoardGameApplication].
 	 *
-	 * @param newHorizontalAlignment new alignment to set.
+	 * @param newHorizontalAlignment New alignment to set.
 	 */
 	fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
 		Frontend.setHorizontalSceneAlignment(newHorizontalAlignment)
@@ -198,7 +200,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Sets [VerticalAlignment] of all [Scene]s in this [BoardGameApplication].
 	 *
-	 * @param newVerticalAlignment new alignment to set.
+	 * @param newVerticalAlignment New alignment to set.
 	 */
 	fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
 		Frontend.setVerticalSceneAlignment(newVerticalAlignment)
@@ -207,7 +209,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 	/**
 	 * Sets [ScaleMode] of all [Scene]s in this [BoardGameApplication].
 	 *
-	 * @param newScaleMode new scale mode to set.
+	 * @param newScaleMode New scale mode to set.
 	 */
 	fun setScaleMode(newScaleMode: ScaleMode) {
 		Frontend.setScaleMode(newScaleMode)

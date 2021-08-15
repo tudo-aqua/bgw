@@ -22,8 +22,8 @@ package tools.aqua.bgw.core
 /**
  * Used to define the scaling behaviour of a [Scene].
  *
- * @see tools.aqua.bgw.core.BoardGameScene
- * @see tools.aqua.bgw.core.BoardGameApplication
+ * @see BoardGameScene
+ * @see BoardGameApplication
  */
 enum class ScaleMode {
 	/**
