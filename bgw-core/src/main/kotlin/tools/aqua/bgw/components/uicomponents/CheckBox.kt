@@ -20,6 +20,8 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.core.DEFAULT_CHECKBOX_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_CHECKBOX_WIDTH
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
@@ -28,18 +30,18 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A simple [CheckBox] with a [text].
  *
- * @param posX horizontal coordinate for this [CheckBox]. Default: 0.
- * @param posY vertical coordinate for this [CheckBox]. Default: 0.
- * @param width width for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_WIDTH].
- * @param height height for this [CheckBox]. Default: [CheckBox.DEFAULT_CHECKBOX_HEIGHT].
- * @param text text for this [CheckBox]. Default: empty String.
- * @param font font to be used for the [text]. Default: default [Font] constructor.
- * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
- * @param isWrapText defines if [text] should be wrapped. Default: `false`.
- * @param isChecked the initial checked state. Default: `false`.
- * @param allowIndeterminate the initial [allowIndeterminate] state. Default: `false`.
- * @param isIndeterminate the initial [isIndeterminate] state. Default: `false`.
- * @param visual background [Visual]. Default: [Visual.EMPTY]
+ * @param posX Horizontal coordinate for this [CheckBox]. Default: 0.
+ * @param posY Vertical coordinate for this [CheckBox]. Default: 0.
+ * @param width Width for this [CheckBox]. Default: [DEFAULT_CHECKBOX_WIDTH].
+ * @param height Height for this [CheckBox]. Default: [DEFAULT_CHECKBOX_HEIGHT].
+ * @param text Text for this [CheckBox]. Default: empty String.
+ * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment [Alignment] to be used for the [text] Default: [Alignment.CENTER].
+ * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
+ * @param isChecked The initial checked state. Default: `false`.
+ * @param allowIndeterminate The initial [allowIndeterminate] state. Default: `false`.
+ * @param isIndeterminate The initial [isIndeterminate] state. Default: `false`.
+ * @param visual Background [Visual]. Default: [Visual.EMPTY]
  */
 open class CheckBox(
 	posX: Number = 0,
@@ -66,11 +68,14 @@ open class CheckBox(
 	visual = visual) {
 	/**
 	 * [Property] for the checked state.
+	 *
+	 * @see checked
 	 */
 	val checkedProperty: BooleanProperty = BooleanProperty(isChecked)
 	
 	/**
 	 * The checked state.
+	 *
 	 * @see checkedProperty
 	 */
 	var checked: Boolean
@@ -81,11 +86,14 @@ open class CheckBox(
 	
 	/**
 	 * [Property] for whether this component allows an indeterminate state.
+	 *
+	 * @see allowIndeterminate
 	 */
 	val allowIndeterminateProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
 	
 	/**
 	 * [Boolean] whether this component allows an indeterminate state.
+	 *
 	 * @see allowIndeterminateProperty
 	 */
 	var allowIndeterminate: Boolean
@@ -96,11 +104,14 @@ open class CheckBox(
 	
 	/**
 	 * [Property] for the indeterminate state.
+	 *
+	 * @see isIndeterminate
 	 */
 	val indeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 	
 	/**
 	 * [Boolean] whether this component in the indeterminate state.
+	 *
 	 * @see indeterminateProperty
 	 */
 	var isIndeterminate: Boolean
@@ -108,20 +119,4 @@ open class CheckBox(
 		set(value) {
 			indeterminateProperty.value = value
 		}
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [CheckBox].
-	 */
-	companion object {
-		/**
-		 * Suggested [CheckBox] [height].
-		 */
-		const val DEFAULT_CHECKBOX_HEIGHT: Int = 30
-		
-		/**
-		 * Suggested [CheckBox] [width].
-		 */
-		const val DEFAULT_CHECKBOX_WIDTH: Int = 120
-	}
-	
 }

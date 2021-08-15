@@ -31,29 +31,37 @@ import tools.aqua.bgw.visual.Visual
  *
  * The items list is used as the data model.
  * The columns list defines how the data is represented.
- * @see TableColumn
- *
- * @param posX horizontal coordinate for this [TableView]. Default: 0.
- * @param posY vertical coordinate for this [TableView]. Default: 0.
- * @param width width for this [TableView]. Default: [DEFAULT_TABLE_VIEW_WIDTH].
- * @param height height for this [TableView]. Default: [DEFAULT_TABLE_VIEW_HEIGHT].
- * @param font the Font for this [TableView]. Default: default [Font] constructor.
  *
  * Simplified example on how the columns list is used to represent the data:
  *
  * items:   1, 2, 3
+ *
  * columns: ("first", {x -> x+1}, 10),
+ *
  *          ("second", {x -> "nice string " + x}, 14),
+ *
  *          ("third", {x -> "" + x*x + "!"}, 10)
+ *
  *
  * Representation:
  *
  *  |first     |second        |third     |
+ *
  *  |----------|--------------|----------|
+ *
  *  |2         |nice string 1 |1!        |
+ *
  *  |3         |nice string 2 |4!        |
+ *
  *  |4         |nice string 3 |9!        |
  *
+ * @param posX Horizontal coordinate for this [TableView]. Default: 0.
+ * @param posY Vertical coordinate for this [TableView]. Default: 0.
+ * @param width Width for this [TableView]. Default: [DEFAULT_TABLE_VIEW_WIDTH].
+ * @param height Height for this [TableView]. Default: [DEFAULT_TABLE_VIEW_HEIGHT].
+ * @param font The [Font] for this [TableView]. Default: default [Font] constructor.
+ *
+ * @see TableColumn
  */
 open class TableView<T>(
 	posX: Number = 0,

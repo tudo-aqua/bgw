@@ -231,6 +231,56 @@ const val DEFAULT_TEXT_AREA_WIDTH: Double = 200.0
 const val DEFAULT_TEXT_AREA_HEIGHT: Double = 100.0
 
 /**
+ * Default [ComboBox] height.
+ */
+const val DEFAULT_COMBOBOX_HEIGHT: Int = 30
+
+/**
+ * Default [ComboBox] width.
+ */
+const val DEFAULT_COMBOBOX_WIDTH: Int = 120
+
+/**
+ * Default [CheckBox] height.
+ */
+const val DEFAULT_CHECKBOX_HEIGHT: Int = 30
+
+/**
+ * Default [CheckBox] width.
+ */
+const val DEFAULT_CHECKBOX_WIDTH: Int = 120
+
+/**
+ * Default [ColorPicker] height.
+ */
+const val DEFAULT_COLOR_PICKER_HEIGHT: Int = 30
+
+/**
+ * Default [ColorPicker] width.
+ */
+const val DEFAULT_COLOR_PICKER_WIDTH: Int = 120
+
+/**
+ * Default [ProgressBar] height.
+ */
+const val DEFAULT_PROGRESSBAR_HEIGHT: Int = 20
+
+/**
+ * Default [ProgressBar] width.
+ */
+const val DEFAULT_PROGRESSBAR_WIDTH: Int = 250
+
+/**
+ * Default [ListView] width.
+ */
+const val DEFAULT_LISTVIEW_HEIGHT: Int = 400
+
+/**
+ * Default [ListView] width.
+ */
+const val DEFAULT_LISTVIEW_WIDTH: Int = 200
+
+/**
  * Default [TableView] width.
  */
 const val DEFAULT_TABLE_VIEW_WIDTH: Double = 400.0

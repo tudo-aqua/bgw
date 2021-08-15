@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
@@ -26,12 +27,12 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all [UIComponent]s that have a text input field.
  *
- * @param posX horizontal coordinate for this [TextInputUIComponent].
- * @param posY vertical coordinate for this [TextInputUIComponent].
- * @param width width for this [TextInputUIComponent].
- * @param height height for this [TextInputUIComponent].
- * @param text text for this [TextInputUIComponent].
- * @param font font to be used for the [text].
+ * @param posX Horizontal coordinate for this [TextInputUIComponent].
+ * @param posY Vertical coordinate for this [TextInputUIComponent].
+ * @param width Width for this [TextInputUIComponent].
+ * @param height Height for this [TextInputUIComponent].
+ * @param text Text for this [TextInputUIComponent].
+ * @param font Font to be used for the [text].
  */
 sealed class TextInputUIComponent(
 	posX: Number,
@@ -47,13 +48,17 @@ sealed class TextInputUIComponent(
 	height = height,
 	font = font,
 	visual = Visual.EMPTY) {
+	
 	/**
-	 * Property for the text of this [TextInputUIComponent].
+	 * [Property] for the text of this [TextInputUIComponent].
+	 *
+	 * @see text
 	 */
 	val textProperty: StringProperty = StringProperty(text)
 	
 	/**
 	 * Text of this [TextInputUIComponent].
+	 *
 	 * @see textProperty
 	 */
 	var text: String

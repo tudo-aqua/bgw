@@ -28,15 +28,15 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A basic [Label] displaying text.
  *
- * @param posX horizontal coordinate for this [Label]. Default: 0.
- * @param posY vertical coordinate for this [Label]. Default: 0.
- * @param width width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].
- * @param height height for this [Label]. Default: [Label.DEFAULT_LABEL_HEIGHT].
- * @param text text for this [Label]. Default: empty String.
- * @param font font to be used for the [text]. Default: default [Font] constructor.
- * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
- * @param isWrapText defines if [text] should be wrapped. Default: `false`.
- * @param visual background [Visual]. Default: [Visual.EMPTY]
+ * @param posX Horizontal coordinate for this [Label]. Default: 0.
+ * @param posY Vertical coordinate for this [Label]. Default: 0.
+ * @param width Width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].
+ * @param height Height for this [Label]. Default: [Label.DEFAULT_LABEL_HEIGHT].
+ * @param text Text for this [Label]. Default: empty String.
+ * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].
+ * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
+ * @param visual Background [Visual]. Default: [Visual.EMPTY]
  */
 open class Label(
 	posX: Number = 0,

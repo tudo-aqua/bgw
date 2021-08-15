@@ -29,15 +29,15 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all [UIComponent]s that have a label.
  *
- * @param posX horizontal coordinate for this [LabeledUIComponent].
- * @param posY vertical coordinate for this [LabeledUIComponent].
- * @param width width for this [LabeledUIComponent].
- * @param height height for this [LabeledUIComponent].
- * @param text label for this [LabeledUIComponent].
- * @param font font to be used for the [text].
- * @param alignment alignment to be used for the [text].
- * @param isWrapText defines if [text] should be wrapped, if it exceeds the labels width.
- * @param visual background [Visual].
+ * @param posX Horizontal coordinate for this [LabeledUIComponent].
+ * @param posY Vertical coordinate for this [LabeledUIComponent].
+ * @param width Width for this [LabeledUIComponent].
+ * @param height Height for this [LabeledUIComponent].
+ * @param text Label for this [LabeledUIComponent].
+ * @param font [Font] to be used for the [text].
+ * @param alignment Alignment to be used for the [text].
+ * @param isWrapText Defines if [text] should be wrapped, if it exceeds the labels width.
+ * @param visual Background [Visual].
  */
 sealed class LabeledUIComponent(
     posX: Number,
@@ -58,12 +58,15 @@ sealed class LabeledUIComponent(
     visual = visual) {
 
     /**
-     * Property for the [isWrapText] state of this [Label].
+     * [Property] for the [isWrapText] state of this [Label].
+     *
+     * @see isWrapText
      */
     val isWrapTextProperty: BooleanProperty = BooleanProperty(isWrapText)
 
     /**
-     * Defines if text should be wrapped, if it exceeds the label's width.
+     * Defines if text should be wrapped, if it exceeds the [Label]'s [width].
+     *
      * @see isWrapTextProperty
      */
     var isWrapText: Boolean
@@ -73,12 +76,15 @@ sealed class LabeledUIComponent(
         }
 
     /**
-     * Property for the label of this [LabeledUIComponent].
+     * [Property] for the label of this [LabeledUIComponent].
+     *
+     * @see text
      */
     val textProperty: StringProperty = StringProperty(text)
 
     /**
      * Label of this [LabeledUIComponent].
+     *
      * @see textProperty
      */
     var text: String
@@ -89,12 +95,15 @@ sealed class LabeledUIComponent(
 
 
     /**
-     * Property for the alignment of this [LabeledUIComponent].
+     * [Property] for the [Alignment] of this [LabeledUIComponent].
+     *
+     * @see alignment
      */
     val alignmentProperty: Property<Alignment> = Property(alignment)
 
     /**
-     * Alignment of this [LabeledUIComponent].
+     * [Alignment] of this [LabeledUIComponent].
+     *
      * @see alignmentProperty
      */
     var alignment: Alignment

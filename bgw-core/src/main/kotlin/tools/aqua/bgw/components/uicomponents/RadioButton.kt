@@ -26,6 +26,7 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * [RadioButton] is a subclass of [ToggleButton] with a different visual representation.
+ *
  * A [RadioButton] may be used as a [Button] that is either selected or not selected.
  * An important feature of [ToggleButton]s is the [ToggleGroup].
  *
@@ -38,16 +39,16 @@ import tools.aqua.bgw.visual.Visual
  *
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
  *
+ * @param posX Horizontal coordinate for this [RadioButton]. Default: 0.
+ * @param posY Vertical coordinate for this [RadioButton]. Default: 0.
+ * @param width Width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
+ * @param height Height for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_HEIGHT].
+ * @param isSelected The initial state for this [RadioButton]. Default: false.
+ * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: null.
+ * @param visual Background [Visual]. Default: [Visual.EMPTY]
+ *
  * @see ToggleButton
  * @see ToggleGroup
- *
- * @param posX horizontal coordinate for this [RadioButton]. Default: 0.
- * @param posY vertical coordinate for this [RadioButton]. Default: 0.
- * @param width width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
- * @param height height for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_HEIGHT].
- * @param isSelected the initial state for this [RadioButton]. Default: false.
- * @param toggleGroup the ToggleGroup of this [RadioButton]. Default: null.
- * @param visual background [Visual]. Default: [Visual.EMPTY]
  */
 open class RadioButton(
 	posX: Number = 0,

@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_PROGRESSBAR_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_PROGRESSBAR_WIDTH
 import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
@@ -28,12 +30,12 @@ import java.awt.Color
 /**
  * A [ProgressBar].
  *
- * @param posX horizontal coordinate for this [ProgressBar]. Default: 0.
- * @param posY vertical coordinate for this [ProgressBar]. Default: 0.
- * @param width width for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_WIDTH].
- * @param height height for this [ProgressBar]. Default: [ProgressBar.DEFAULT_PROGRESSBAR_HEIGHT].
- * @param progress the initial progress of this [ProgressBar]. Default 0.
- * @param barColor the initial bar color of this [ProgressBar]. Default [Color.CYAN].
+ * @param posX Horizontal coordinate for this [ProgressBar]. Default: 0.
+ * @param posY Vertical coordinate for this [ProgressBar]. Default: 0.
+ * @param width Width for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_WIDTH].
+ * @param height Height for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_HEIGHT].
+ * @param progress The initial progress of this [ProgressBar]. Default 0.
+ * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN].
  */
 open class ProgressBar(
 	posX: Number = 0,
@@ -51,17 +53,24 @@ open class ProgressBar(
 	visual = Visual.EMPTY) {
 	/**
 	 * [Property] for the progress state of this [ProgressBar].
+	 *
 	 * Should be in range of 0 to 1.
-	 * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100% progress.
-	 * Any value less than 0 gets represented as 0% progress, while any value greater than 1 gets represented as 100% progress.
+	 *
+	 * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100% progress. Any value
+	 * less than 0 gets represented as 0% progress, while any value greater than 1 gets represented as 100% progress.
+	 *
+	 * @see progress
 	 */
 	val progressProperty: DoubleProperty = DoubleProperty(progress)
 	
 	/**
 	 * Progress state of this [ProgressBar].
+	 *
 	 * Should be in range of 0 to 1.
-	 * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100% progress.
-	 * Any value less than 0 gets represented as 0% progress, while any value greater than 1 gets represented as 100% progress.
+	 *
+	 * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100% progress. Any value
+	 * less than 0 gets represented as 0% progress, while any value greater than 1 gets represented as 100% progress.
+	 *
 	 * @see progressProperty
 	 */
 	var progress: Double
@@ -71,12 +80,15 @@ open class ProgressBar(
 		}
 	
 	/**
-	 * [Property] for the bar color of this [ProgressBar].
+	 * [Property] for the bar [Color] of this [ProgressBar].
+	 *
+	 * @see barColor
 	 */
 	val barColorProperty: Property<Color> = Property(barColor)
 	
 	/**
-	 * Bar color of this [ProgressBar].
+	 * Bar [Color] of this [ProgressBar].
+	 *
 	 * @see barColorProperty
 	 */
 	var barColor: Color
@@ -84,19 +96,4 @@ open class ProgressBar(
 		set(value) {
 			barColorProperty.value = value
 		}
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [ProgressBar].
-	 */
-	companion object {
-		/**
-		 * Suggested [ProgressBar] [height].
-		 */
-		const val DEFAULT_PROGRESSBAR_HEIGHT: Int = 20
-		
-		/**
-		 * Suggested [ProgressBar] [width].
-		 */
-		const val DEFAULT_PROGRESSBAR_WIDTH: Int = 250
-	}
 }

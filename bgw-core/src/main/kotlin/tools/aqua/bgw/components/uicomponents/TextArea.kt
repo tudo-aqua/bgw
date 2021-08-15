@@ -25,16 +25,19 @@ import tools.aqua.bgw.util.Font
 
 /**
  * A [TextArea] is a multi line input field.
+ *
  * Whenever user input occurs the [text] field gets updated.
  *
- * @param posX horizontal coordinate for this [TextArea]. Default: 0.
- * @param posY vertical coordinate for this [TextArea]. Default: 0.
- * @param width width for this [TextArea]. Default: [DEFAULT_TEXT_AREA_WIDTH].
- * @param height height for this [TextArea]. Default: [DEFAULT_TEXT_AREA_HEIGHT].
- * @param text initial text for this [TextArea]. Default: empty String.
+ * @param posX Horizontal coordinate for this [TextArea]. Default: 0.
+ * @param posY Vertical coordinate for this [TextArea]. Default: 0.
+ * @param width Width for this [TextArea]. Default: [DEFAULT_TEXT_AREA_WIDTH].
+ * @param height Height for this [TextArea]. Default: [DEFAULT_TEXT_AREA_HEIGHT].
+ * @param text Initial text for this [TextArea]. Default: empty String.
  * @param prompt Prompt for this [TextArea].
  *        This gets displayed as a prompt to the user whenever the label is an empty string.
  *        Default: empty string.
+ *
+ *  @see TextField
  */
 open class TextArea(
 	posX: Number = 0,

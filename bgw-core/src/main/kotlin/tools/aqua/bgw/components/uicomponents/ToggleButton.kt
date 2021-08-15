@@ -21,6 +21,7 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_WIDTH
+import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
@@ -38,16 +39,16 @@ import tools.aqua.bgw.visual.Visual
  *
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
  *
- * @see ToggleGroup
+ * @param posX Horizontal coordinate for this [ToggleButton]. Default: 0.
+ * @param posY Vertical coordinate for this [ToggleButton]. Default: 0.
+ * @param width Width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].
+ * @param height Height for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_HEIGHT].
+ * @param font Font to be used for this [ToggleButton]. Default: default [Font] constructor.
+ * @param isSelected The initial state for this [ToggleButton]. Default: false.
+ * @param toggleGroup The ToggleGroup of this [ToggleButton]. Default: `null`.
+ * @param visual Background [Visual]. Default: [Visual.EMPTY].
  *
- * @param posX horizontal coordinate for this [ToggleButton]. Default: 0.
- * @param posY vertical coordinate for this [ToggleButton]. Default: 0.
- * @param width width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].
- * @param height height for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_HEIGHT].
- * @param font font to be used for this [ToggleButton]. Default: default [Font] constructor.
- * @param isSelected the initial state for this [ToggleButton]. Default: false.
- * @param toggleGroup the ToggleGroup of this [ToggleButton]. Default: null.
- * @param visual background [Visual]. Default: [Visual.EMPTY]
+ * @see ToggleGroup
  */
 open class ToggleButton(
 	posX: Number = 0,
@@ -67,6 +68,7 @@ open class ToggleButton(
 	visual = visual) {
 	/**
 	 * The ToggleGroup of this ToggleButton.
+	 *
 	 * @see ToggleGroup
 	 */
 	var toggleGroup: ToggleGroup? = toggleGroup
@@ -77,12 +79,15 @@ open class ToggleButton(
 		}
 	
 	/**
-	 * Property for the selected state of this ToggleButton.
+	 * [Property] for the selected state of this [ToggleButton].
+	 *
+	 * @see isSelected
 	 */
 	val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
 	
 	/**
-	 * Selected state for this ToggleButton.
+	 * Selected state for this [ToggleButton].
+	 *
 	 * @see selectedProperty
 	 */
 	var isSelected: Boolean

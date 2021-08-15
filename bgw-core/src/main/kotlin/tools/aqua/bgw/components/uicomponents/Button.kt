@@ -29,15 +29,15 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A simple [Button] with a [text].
  *
- * @param posX horizontal coordinate for this [Button]. Default: 0.
- * @param posY vertical coordinate for this [Button]. Default: 0.
- * @param width width for this [Button]. Default: [DEFAULT_BUTTON_WIDTH].
- * @param height height for this [Button]. Default: [DEFAULT_BUTTON_HEIGHT].
- * @param text text for this [Button]. Default: empty String.
- * @param font font to be used for the [text]. Default: default [Font] constructor.
- * @param alignment alignment to be used for the [text] Default: [Alignment.CENTER].
- * @param isWrapText defines if [text] should be wrapped. Default: `false`.
- * @param visual visual for this button. Default: [ColorVisual.WHITE]
+ * @param posX Horizontal coordinate for this [Button]. Default: 0.
+ * @param posY Vertical coordinate for this [Button]. Default: 0.
+ * @param width Width for this [Button]. Default: [DEFAULT_BUTTON_WIDTH].
+ * @param height Height for this [Button]. Default: [DEFAULT_BUTTON_HEIGHT].
+ * @param text Text for this [Button]. Default: empty String.
+ * @param font Font to be used for the [text]. Default: default [Font] constructor.
+ * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].
+ * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
+ * @param visual Visual for this button. Default: [ColorVisual.WHITE]
  */
 open class Button(
 	posX: Number = 0,

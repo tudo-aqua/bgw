@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_COMBOBOX_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_COMBOBOX_WIDTH
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.Property
@@ -27,20 +29,21 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * A standard [ComboBox] that may be populated with items of specified type parameter.
+ *
  * The [formatFunction] is used to gain a String representation of each item.
  * If no [formatFunction] is specified the [toString] function gets used instead.
  *
  * Whenever the user selects an item, the [selectedItemProperty] gets updated.
  *
- * @param posX horizontal coordinate for this [ComboBox]. Default: 0.
- * @param posY vertical coordinate for this [ComboBox]. Default: 0.
- * @param width width for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_WIDTH].
- * @param height height for this [ComboBox]. Default: [ComboBox.DEFAULT_COMBOBOX_HEIGHT].
- * @param prompt prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever the
+ * @param posX Horizontal coordinate for this [ComboBox]. Default: 0.
+ * @param posY Vertical coordinate for this [ComboBox]. Default: 0.
+ * @param width Width for this [ComboBox]. Default: [DEFAULT_COMBOBOX_WIDTH].
+ * @param height Height for this [ComboBox]. Default: [DEFAULT_COMBOBOX_HEIGHT].
+ * @param prompt Prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever the
  * [selectedItemProperty] value is `null`.Default: empty string.
- * @param font font to be used for the options. Default: default [Font] constructor.
- * @param items the initial selection of items. Default: empty list.
- * @param formatFunction the formatFunction that is used to represent the items. Default: `null`.
+ * @param font [Font] to be used for the options. Default: default [Font] constructor.
+ * @param items The initial selection of items. Default: empty list.
+ * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
  */
 open class ComboBox<T>(
 	posX: Number = 0,
@@ -59,12 +62,14 @@ open class ComboBox<T>(
 	font = font,
 	visual = Visual.EMPTY) {
 	/**
-	 * [Property] for the items list for this [ComboBox].
+	 * [Property] for the [items] [List] for this [ComboBox].
+	 *
+	 * @see items
 	 */
 	val observableItemsList: ObservableList<T> = ObservableArrayList()
 	
 	/**
-	 * Items list for this [ComboBox].
+	 * Items [List] for this [ComboBox].
 	 *
 	 * @see observableItemsList
 	 */
@@ -77,12 +82,16 @@ open class ComboBox<T>(
 	
 	/**
 	 * [Property] for the selected item.
+	 *
 	 * Value may be `null` if no item is selected.
+	 *
+	 * @see selectedItem
 	 */
 	val selectedItemProperty: Property<T?> = Property(null)
 	
 	/**
 	 * The selected item.
+	 *
 	 * May be `null` if no item is selected.
 	 *
 	 * @see selectedItemProperty
@@ -97,12 +106,16 @@ open class ComboBox<T>(
 	
 	/**
 	 * [Property] for the [formatFunction] that gets used to obtain a [String] representation for each item.
+	 *
 	 * If the value is `null`, the [toString] function of the item is used instead.
+	 *
+	 * @see formatFunction
 	 */
 	var formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
 	
 	/**
 	 * The [formatFunction] that gets used to obtain a [String] representation for each item.
+	 *
 	 * If the value is `null`, the [toString] function of the item is used instead.
 	 *
 	 * @see formatFunctionProperty
@@ -121,20 +134,5 @@ open class ComboBox<T>(
 			
 			selectedItemProperty.value = selectedItem
 		}
-	}
-	
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [ComboBox].
-	 */
-	companion object {
-		/**
-		 * Suggested [ComboBox] [height].
-		 */
-		const val DEFAULT_COMBOBOX_HEIGHT: Int = 30
-		
-		/**
-		 * Suggested [ComboBox] [width].
-		 */
-		const val DEFAULT_COMBOBOX_WIDTH: Int = 120
 	}
 }

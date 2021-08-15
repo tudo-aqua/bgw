@@ -26,19 +26,23 @@ package tools.aqua.bgw.components.uicomponents
 open class TableColumn<T>(
 	/**
 	 * The title for this [TableColumn].
+	 *
 	 * It gets displayed in the header row of the [TableView].
+	 *
 	 * @see TableView
 	 */
 	val title: String,
 	
 	/**
-	 * The width for this [TableColumn].
+	 * The [width] for this [TableColumn].
 	 */
 	val width: Number,
 	
 	/**
 	 * The format function for this [TableColumn].
+	 *
 	 * It gets applied to each item in the [TableView] to get a [String] for its cell.
+	 *
 	 * @see TableView
 	 */
 	val formatFunction: (T) -> String,

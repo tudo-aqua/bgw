@@ -21,15 +21,17 @@ package tools.aqua.bgw.components.uicomponents
 
 /**
  * A [ToggleGroup] may be set as an attribute in [ToggleButton] or [RadioButton].
- * @see ToggleButton
- * @see RadioButton
  *
  * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
  * Only one [ToggleButton] may be selected in a [ToggleGroup].
  * This means whenever a [ToggleButton] changes its selected state to true,
  * all other [ToggleButton]s in the same [ToggleGroup] get deselected.
  *
- * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
+ * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the
+ * [ToggleGroup].
+ *
+ * @see ToggleButton
+ * @see RadioButton
  */
 open class ToggleGroup {
 	private val buttons: MutableList<ToggleButton> = mutableListOf()

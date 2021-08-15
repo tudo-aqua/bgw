@@ -23,15 +23,18 @@ import tools.aqua.bgw.util.Font
 
 /**
  * A [TextField] is a single line input field.
+ *
  * Whenever user input occurs the [text] field gets updated.
  *
- * @param posX horizontal coordinate for this [TextField]. Default: 0.
- * @param posY vertical coordinate for this [TextField]. Default: 0.
- * @param width width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
- * @param height height for this [TextField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
- * @param text initial text for this [TextField]. Default: empty String.
+ * @param posX Horizontal coordinate for this [TextField]. Default: 0.
+ * @param posY Vertical coordinate for this [TextField]. Default: 0.
+ * @param width Width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
+ * @param height Height for this [TextField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
+ * @param text Initial text for this [TextField]. Default: empty String.
  * @param prompt Prompt for this [TextField]. This gets displayed as a prompt to the user whenever the label is an
  * empty string. Default: empty string.
+ *
+ * @see TextArea
  */
 open class TextField(
 	posX: Number = 0,

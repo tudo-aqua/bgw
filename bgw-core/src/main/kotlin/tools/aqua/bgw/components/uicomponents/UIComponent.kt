@@ -30,12 +30,12 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all UI components.
  *
- * @param posX horizontal coordinate for this [UIComponent].
- * @param posY vertical coordinate for this [UIComponent].
- * @param width width for this [UIComponent].
- * @param height height for this [UIComponent].
- * @param font font for this [UIComponent]. Usage depends on subclass.
- * @param visual background [Visual].
+ * @param posX Horizontal coordinate for this [UIComponent].
+ * @param posY Vertical coordinate for this [UIComponent].
+ * @param width Width for this [UIComponent].
+ * @param height Height for this [UIComponent].
+ * @param font Font for this [UIComponent]. Usage depends on subclass.
+ * @param visual Background [Visual].
  */
 sealed class UIComponent(
 	posX: Number,
@@ -57,12 +57,14 @@ sealed class UIComponent(
 
 	/**
 	 * [Property] for the [Font] of this [UIComponent]. Usage depends on subclass.
+	 *
 	 * @see Font
 	 */
 	val fontProperty: Property<Font> = Property(font)
 	
 	/**
 	 * [Font] of this [UIComponent]. Usage depends on subclass.
+	 *
 	 * @see Font
 	 * @see fontProperty
 	 */
@@ -74,15 +76,20 @@ sealed class UIComponent(
 	
 	/**
 	 * [Property] for the css style that gets applied to this [UIComponent]'s background.
+	 *
 	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 *
+	 * @see backgroundStyle
 	 */
 	val backgroundStyleProperty: StringProperty = StringProperty("")
 	
 	/**
 	 * Css style that gets applied to this [UIComponent]'s background.
+	 *
 	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 *
 	 * @see backgroundStyleProperty
 	 */
 	var backgroundStyle: String
@@ -93,15 +100,20 @@ sealed class UIComponent(
 	
 	/**
 	 * [Property] for the css style that gets applied to this [UIComponent].
+	 *
 	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 *
+	 * @see componentStyle
 	 */
 	val componentStyleProperty: StringProperty = StringProperty("")
 	
 	/**
 	 * Css style that gets applied to this [UIComponent].
+	 *
 	 * This gets applied last, so it may override any changes made via other fields and functions of this
 	 * [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using this feature.
+	 *
 	 * @see componentStyleProperty
 	 */
 	var componentStyle: String
@@ -111,7 +123,7 @@ sealed class UIComponent(
 		}
 	
 	/**
-	 * @throws RuntimeException if [GameComponentView] does not support children.
+	 * @throws RuntimeException If [GameComponentView] does not support children.
 	 */
 	override fun removeChild(component: ComponentView) {
 		throw RuntimeException("This $this ComponentView has no children.")

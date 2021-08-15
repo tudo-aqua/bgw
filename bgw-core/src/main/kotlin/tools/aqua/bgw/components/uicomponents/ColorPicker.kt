@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_COLOR_PICKER_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_COLOR_PICKER_WIDTH
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
@@ -27,11 +29,11 @@ import java.awt.Color
 /**
  * A [ColorPicker] that allows to choose a [Color].
  *
- * @param posX horizontal coordinate for this [ColorPicker]. Default: 0.
- * @param posY vertical coordinate for this [ColorPicker]. Default: 0.
- * @param width width for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_WIDTH].
- * @param height height for this [ColorPicker]. Default: [ColorPicker.DEFAULT_COLOR_PICKER_HEIGHT].
- * @param initialColor the color that is initially selected. Default: [Color.WHITE].
+ * @param posX Horizontal coordinate for this [ColorPicker]. Default: 0.
+ * @param posY Vertical coordinate for this [ColorPicker]. Default: 0.
+ * @param width Width for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_WIDTH].
+ * @param height Height for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_HEIGHT].
+ * @param initialColor The [Color] that is initially selected. Default: [Color.WHITE].
  */
 open class ColorPicker(
 	posX: Number = 0,
@@ -47,31 +49,20 @@ open class ColorPicker(
 	font = Font(),
 	visual = Visual.EMPTY) {
 	/**
-	 * [tools.aqua.bgw.observable.Property] for the currently selected [Color].
+	 * [Property] for the currently selected [Color].
+	 *
+	 * @see selectedColor
 	 */
 	val selectedColorProperty: Property<Color> = Property(initialColor)
 	
 	/**
 	 * The currently selected [Color].
+	 *
+	 * @see selectedColorProperty
 	 */
 	var selectedColor: Color
 		get() = selectedColorProperty.value
 		set(value) {
 			selectedColorProperty.value = value
 		}
-
-	/**
-	 * Defines some static constants that can be used as suggested properties of a [ColorPicker].
-	 */
-	companion object {
-		/**
-		 * Suggested [ColorPicker] [height].
-		 */
-		const val DEFAULT_COLOR_PICKER_HEIGHT: Int = 30
-		
-		/**
-		 * Suggested [ColorPicker] [width].
-		 */
-		const val DEFAULT_COLOR_PICKER_WIDTH: Int = 120
-	}
 }
