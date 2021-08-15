@@ -27,29 +27,38 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * A [Satchel] may be used to visualize a pool containing [GameComponentView]s.
+ *
  * A typical use case for a [Satchel] may be to visualize a pile of hidden items,
  * where the user should not know what item might be drawn next.
  *
  * Visualization:
+ *
  * The current [Visual] is used to visualize the area from where the user can start a drag and drop gesture.
  *
+ *
  * How to Use:
- * Upon adding a [GameComponentView] to a [Satchel]
- * a snapshot of the initial state of the [GameComponentView] gets created and stored.
- * Then the [GameComponentView] is made draggable, invisible and its size gets fit to the [Satchel] size.
+ *
+ * Upon adding a [GameComponentView] to a [Satchel] a snapshot of the initial state of the [GameComponentView] gets
+ * created and stored. Then the [GameComponentView] is made draggable, invisible and its size gets fit to the [Satchel]
+ * size.
  *
  * The initial state consist of the following properties:
- * 	-isDraggable
- * 	-isVisible
- * 	-width
- * 	-height
+ *
+ * 	-[isDraggable]
+ *
+ * 	-[isVisible]
+ *
+ * 	-[width]
+ *
+ * 	-[height]
+ *
  *
  * Any changes made to those properties while a [GameComponentView] is contained in the [Satchel] get ignored,
  * but they override the initial state.
  *
  * As soon as a component gets removed (e.g. by initiating a drag and drop gesture) the initial state gets restored.
- * The [GameComponentView] at the highest index in the components list
- * registers the next drag and drop gesture above this [Satchel].
+ * The [GameComponentView] at the highest index in the components list registers the next drag and drop gesture above
+ * this [Satchel].
  *
  * @param posX horizontal coordinate for this [Satchel]. Default: 0.
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
@@ -69,80 +78,71 @@ open class Satchel<T : GameComponentView>(
 	private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
 
 	override fun T.onAdd() {
-		initialStates[this] = InitialState(
+		val initialState = InitialState(
 			isDraggable = this.isDraggable,
 			opacity = this.opacity,
 			width = this.width,
 			height = this.height
 		)
-		initializeSatchelComponent()
-		addInternalListeners()
-		addPosListeners()
-	}
-
-	override fun T.onRemove() {
-		this.removeInternalListeners()
-		this.restoreInitialBehaviour()
-		this.removePosListeners()
-		initialStates.remove(this)
-	}
-	
-	private fun GameComponentView.initializeSatchelComponent() {
+		
+		//initialize satchel component
 		opacityProperty.setSilent(0.0)
 		widthProperty.setSilent(this@Satchel.width)
 		heightProperty.setSilent(this@Satchel.height)
 		isDraggableProperty.setSilent(true)
-	}
-	
-	private fun GameComponentView.restoreInitialBehaviour() {
-		val initialState = initialStates[this]!!
-		widthProperty.setSilent(initialState.width)
-		heightProperty.setSilent(initialState.height)
-		isDraggableProperty.setSilent(initialState.isDraggable)
-		opacityProperty.setSilent(initialState.opacity)
-	}
-	
-	private fun GameComponentView.addInternalListeners() {
+		
+		//add internal listeners
 		isDraggableProperty.internalListener = { _, nV ->
-			initialStates[this]!!.isDraggable = nV
+			initialState.isDraggable = nV
 			isDraggableProperty.setSilent(true)
 		}
 		
 		opacityProperty.internalListener = { _, nV ->
-			initialStates[this]!!.opacity = nV
+			initialState.opacity = nV
 			opacityProperty.setSilent(0.0)
 		}
 		
 		widthProperty.internalListener = { _, nV ->
-			initialStates[this]!!.width = nV
+			initialState.width = nV
 			widthProperty.setSilent(this@Satchel.width)
 		}
 		
 		heightProperty.internalListener = { _, nV ->
-			initialStates[this]!!.height = nV
+			initialState.height = nV
 			heightProperty.setSilent(this@Satchel.height)
 		}
-	}
-	
-	private fun GameComponentView.removeInternalListeners() {
-		isDraggableProperty.internalListener = null
-		opacityProperty.internalListener = null
-		widthProperty.internalListener = null
-		heightProperty.internalListener = null
-	}
-	
-	private fun GameComponentView.addPosListeners() {
+		
+		//add pos listeners
 		this.posXProperty.addListenerAndInvoke(0.0) { _, _ ->
 			posXProperty.setSilent(0.0)
 		}
 		this.posYProperty.addListenerAndInvoke(0.0) { _, _ ->
 			posYProperty.setSilent(0.0)
 		}
+		
+		initialStates[this] = initialState
 	}
-	
-	private fun GameComponentView.removePosListeners() {
-		this.posXProperty.internalListener = null
-		this.posYProperty.internalListener = null
+
+	override fun T.onRemove() {
+		//remove internal listeners
+		isDraggableProperty.internalListener = null
+		opacityProperty.internalListener = null
+		widthProperty.internalListener = null
+		heightProperty.internalListener = null
+		
+		val initialState = initialStates[this] ?: return
+		
+		//restore initial behaviour
+		widthProperty.setSilent(initialState.width)
+		heightProperty.setSilent(initialState.height)
+		isDraggableProperty.setSilent(initialState.isDraggable)
+		opacityProperty.setSilent(initialState.opacity)
+		
+		//remove pos listeners
+		posXProperty.internalListener = null
+		posYProperty.internalListener = null
+		
+		initialStates.remove(this)
 	}
 	
 	private class InitialState(var isDraggable: Boolean, var opacity: Double, var width: Double, var height: Double)

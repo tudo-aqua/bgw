@@ -28,12 +28,15 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * A [LinearLayout] may be used to visualize a zone containing [GameComponentView]s.
+ *
  * [GameComponentView]s inside the container get placed according to the specified [Orientation] and [Alignment].
  * A [spacing] between components may be specified which may also be negative
  * e.g. components like playing cards should overlap.
  *
  * Visualization:
+ *
  * The [Visual] is used to visualize a background.
+ *
  * If all components are still within bounds with the user defined spacing,
  * the user defined spacing gets used to space the components.
  * Otherwise, the biggest possible spacing is used
@@ -95,11 +98,15 @@ open class LinearLayout<T : GameComponentView>(
 	
 	/**
 	 * [Property] for the spacing of [GameComponentView]s in this [LinearLayout].
+	 *
+	 * @see spacing
 	 */
 	val spacingProperty: DoubleProperty = DoubleProperty(spacing.toDouble())
 	
 	/**
 	 * Spacing for this [LinearLayout].
+	 *
+	 * @see spacingProperty
 	 */
 	var spacing: Double
 		get() = spacingProperty.value
@@ -108,13 +115,16 @@ open class LinearLayout<T : GameComponentView>(
 		}
 	
 	/**
-	 * [Property] for the orientation of [GameComponentView]s in this [LinearLayout].
+	 * [Property] for the [Orientation] of [GameComponentView]s in this [LinearLayout].
+	 *
 	 * @see Orientation
+	 * @see orientation
 	 */
 	val orientationProperty: Property<Orientation> = Property(orientation)
 	
 	/**
-	 * [Orientation] for this [LinearLayout].
+	 * [Orientation] of [GameComponentView]s in this [LinearLayout].
+	 *
 	 * @see Orientation
 	 * @see orientationProperty
 	 */
@@ -126,15 +136,17 @@ open class LinearLayout<T : GameComponentView>(
 	
 	/**
 	 * [Property] for the [Alignment] of [GameComponentView]s in this [LinearLayout].
+	 *
 	 * @see Alignment
+	 * @see alignment
 	 */
 	val alignmentProperty: Property<Alignment> = Property(alignment)
 	
 	/**
 	 * [Alignment] for this [LinearLayout].
 	 *
-	 * @see alignmentProperty
 	 * @see Alignment
+	 * @see alignmentProperty
 	 */
 	var alignment: Alignment
 		get() = alignmentProperty.value
@@ -152,21 +164,22 @@ open class LinearLayout<T : GameComponentView>(
 	}
 
 	override fun T.onAdd() {
-		addPosListeners()
-	}
-
-	override fun T.onRemove() {
-		removePosListeners()
-	}
-	
-	private fun T.addPosListeners() {
+		//add pos listeners
 		posXProperty.internalListener = { _, _ -> observableComponents.internalListener?.invoke() }
 		posYProperty.internalListener = { _, _ -> observableComponents.internalListener?.invoke() }
 	}
-	
-	private fun T.removePosListeners() {
+
+	override fun T.onRemove() {
+		//remove pos listeners
 		posXProperty.internalListener = null
 		posYProperty.internalListener = null
+	}
+	
+	private fun layout() {
+		when (orientation) {
+			Orientation.HORIZONTAL -> layoutHorizontal()
+			Orientation.VERTICAL -> layoutVertical()
+		}
 	}
 	
 	@Suppress("DuplicatedCode")
@@ -222,13 +235,6 @@ open class LinearLayout<T : GameComponentView>(
 				}
 			)
 			acc + component.height + newSpacing
-		}
-	}
-	
-	private fun layout() {
-		when (orientation) {
-			Orientation.HORIZONTAL -> layoutHorizontal()
-			Orientation.VERTICAL -> layoutVertical()
 		}
 	}
 }

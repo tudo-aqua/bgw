@@ -30,6 +30,7 @@ import tools.aqua.bgw.visual.Visual
 
 /**
  * Baseclass for containers that can contain [GameComponentView]s or its subclasses.
+ *
  * It provides the list to store [GameComponentView]s and some useful methods to work on said list.
  *
  * @param posX horizontal coordinate for this [GameComponentContainer].
@@ -47,12 +48,19 @@ sealed class GameComponentContainer<T : GameComponentView>(
 ) : DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual), Iterable<T> {
 	/**
 	 * An [ObservableList] to store the [GameComponentView]s that are contained in this [GameComponentContainer].
+	 *
 	 * If changes are made to this list, this [GameComponentContainer] gets re-rendered.
 	 */
 	internal val observableComponents: ObservableList<T> = ObservableLinkedList()
-
+	
+	/**
+	 * Internal onRemove handler.
+	 */
 	internal abstract fun T.onRemove()
-
+	
+	/**
+	 * Internal onAdd handler.
+	 */
 	internal abstract fun T.onAdd()
 
 	/**
@@ -98,9 +106,10 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	/**
 	 * Adds a [GameComponentView] to this [GameComponentContainer].
 	 *
-	 * @param component component to add.
-	 * @throws IllegalArgumentException if [component] is already contained.
-	 * @throws IllegalArgumentException if [index] is out of bounds for [components].
+	 * @param component Component to add.
+	 *
+	 * @throws IllegalArgumentException If [component] is already contained.
+	 * @throws IllegalArgumentException If [index] is out of bounds for [components].
 	 */
 	@Suppress("DuplicatedCode")
 	@Synchronized
@@ -125,11 +134,12 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	
 	/**
 	 * Adds all [GameComponentView]s passed as varargs to this [GameComponentContainer].
+	 *
 	 * Whenever a [GameComponentView] is encountered, that is already contained, an
 	 * [IllegalArgumentException] is thrown and no further [GameComponentView] is added.
 	 *
-	 * @param components vararg [GameComponentView]s to add.
-	 * @throws IllegalArgumentException if a [GameComponentView] is already contained.
+	 * @param components Vararg [GameComponentView]s to add.
+	 * @throws IllegalArgumentException If a [GameComponentView] is already contained.
 	 */
 	fun addAll(vararg components: T) {
 		try {
@@ -141,11 +151,13 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	
 	/**
 	 * Adds all [GameComponentView]s contained in [collection] to this [GameComponentContainer].
+	 *
 	 * Whenever an [GameComponentView]] is encountered, that is already contained, an
 	 * [IllegalArgumentException] is thrown and no further [GameComponentView] is added.
 	 *
-	 * @param collection collection containing the [GameComponentView]s to add.
-	 * @throws IllegalArgumentException if a [GameComponentView] is already contained.
+	 * @param collection Collection containing the [GameComponentView]s to add.
+	 *
+	 * @throws IllegalArgumentException If a [GameComponentView] is already contained.
 	 */
 	@Synchronized
 	fun addAll(collection: Collection<T>) {
@@ -159,9 +171,9 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	/**
 	 * Removes the [GameComponentView] specified by the parameter from this [GameComponentContainer].
 	 *
-	 * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
+	 * @param component The [GameComponentView] to remove.
 	 *
-	 * @param component the [GameComponentView] to remove.
+	 * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
 	 */
 	@Synchronized
 	fun remove(component: T): Boolean {
@@ -176,7 +188,8 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	
 	/**
 	 * Removes all [GameComponentView]s from this [GameComponentContainer].
-	 * @return list of all removed components.
+	 *
+	 * @return List of all removed components.
 	 */
 	@Synchronized
 	fun clear(): List<T> {
@@ -188,9 +201,9 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	/**
 	 * Removes all [GameComponentView]s contained in [collection] from this [GameComponentContainer].
 	 *
-	 * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
+	 * @param collection The [GameComponentView]s to remove.
 	 *
-	 * @param collection the [GameComponentView]s to remove.
+	 * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
 	 */
 	@Synchronized
 	fun removeAll(collection: Collection<T>) : Boolean =
@@ -199,9 +212,9 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	/**
 	 * Removes all [GameComponentView]s matching the [predicate] from this [GameComponentContainer].
 	 *
-	 * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
+	 * @param predicate The predicate to evaluate.
 	 *
-	 * @param predicate the predicate to evaluate.
+	 * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
 	 */
 	@Synchronized
 	fun removeAll(predicate: (T) -> Boolean): Boolean =
@@ -236,18 +249,18 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	/**
 	 * Returning a contained child's coordinates within this container.
 	 *
-	 * @param child child to find.
+	 * @param child Child to find.
 	 *
-	 * @return coordinate of given child in this container relative to containers anchor point.
+	 * @return Coordinate of given child in this container relative to containers anchor point.
 	 */
 	override fun getChildPosition(child: ComponentView): Coordinate? = Coordinate(child.posX, child.posY)
 	
 	/**
 	 * Removes [component] from container's children.
 	 *
-	 * @param component child to be removed.
+	 * @param component Child to be removed.
 	 *
-	 * @throws RuntimeException if the child's type is incompatible with container's type.
+	 * @throws RuntimeException If the child's type is incompatible with container's type.
 	 */
 	override fun removeChild(component: ComponentView) {
 		try {
@@ -258,5 +271,10 @@ sealed class GameComponentContainer<T : GameComponentView>(
 		}
 	}
 	
+	/**
+	 * Returns an iterator over the elements of this [GameComponentContainer].
+	 *
+	 * @return Iterator over the elements of this [GameComponentContainer].
+	 */
 	override fun iterator(): Iterator<T> = observableComponents.iterator()
 }

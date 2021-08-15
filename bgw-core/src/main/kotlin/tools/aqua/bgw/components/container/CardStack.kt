@@ -28,15 +28,17 @@ import tools.aqua.bgw.visual.Visual
  * A CardStackView may be used to visualize a card stack.
  *
  * Visualization:
+ *
  * The [Visual] is used to visualize a background.
+ *
  * The positioning of contained [CardView]s gets ignored and the specified alignment gets used to position them instead.
  *
- * @param posX horizontal coordinate for this [CardStack]. Default: 0.
- * @param posY vertical coordinate for this [CardStack]. Default: 0.
- * @param width width for this [CardStack]. Default: [DEFAULT_CARD_STACK_WIDTH].
- * @param height height for this [CardStack]. Default: [DEFAULT_CARD_STACK_HEIGHT].
- * @param alignment specifies how the contained [CardView]s should be aligned. Default: [Alignment.CENTER]
- * @param visual visual for this [CardStack]. Default: [Visual.EMPTY].
+ * @param posX Horizontal coordinate for this [CardStack]. Default: 0.
+ * @param posY Vertical coordinate for this [CardStack]. Default: 0.
+ * @param width Width for this [CardStack]. Default: [DEFAULT_CARD_STACK_WIDTH].
+ * @param height Height for this [CardStack]. Default: [DEFAULT_CARD_STACK_HEIGHT].
+ * @param alignment Specifies how the contained [CardView]s should be aligned. Default: [Alignment.CENTER]
+ * @param visual Visual for this [CardStack]. Default: [Visual.EMPTY].
  *
  * @see CardView
  */
@@ -51,11 +53,14 @@ open class CardStack<T : CardView>(
 	
 	/**
 	 * [Property] for the [Alignment] of [CardView]s in this [CardStack].
+	 *
+	 * @see alignment
 	 */
 	val alignmentProperty: Property<Alignment> = Property(alignment)
 	
 	/**
 	 * [Alignment] of [CardView]s in this [CardStack].
+	 *
 	 * @see alignmentProperty
 	 */
 	var alignment: Alignment
