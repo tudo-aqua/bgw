@@ -29,6 +29,7 @@ import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
+import kotlin.math.floor
 
 /**
  * [ComponentView] is the abstract baseclass of all framework components.
@@ -73,12 +74,12 @@ abstract class ComponentView(
 	 * Name field only for debugging purposes. Has no effect on rendering.
 	 */
 	var name: String = javaClass.name + "@" + Integer.toHexString(this.hashCode())
-
+	
 	/**
 	 * [Property] for the horizontal position of this [ComponentView].
 	 */
 	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
-
+	
 	/**
 	 * Horizontal position of this [ComponentView].
 	 * @see posXProperty
@@ -88,12 +89,12 @@ abstract class ComponentView(
 		set(value) {
 			posXProperty.value = value
 		}
-
+	
 	/**
 	 * [Property] for the vertical position of this [ComponentView].
 	 */
 	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
-
+	
 	/**
 	 * Vertical position of this [ComponentView].
 	 * @see posYProperty
@@ -103,12 +104,12 @@ abstract class ComponentView(
 		set(value) {
 			posYProperty.value = value
 		}
-
+	
 	/**
 	 * [Property] for the [width] of this [ComponentView].
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
-
+	
 	/**
 	 * The [width] for this [ComponentView].
 	 * @see widthProperty
@@ -118,8 +119,8 @@ abstract class ComponentView(
 		set(value) {
 			widthProperty.value = value
 		}
-
-
+	
+	
 	/**
 	 * [Property] for the [height] of this [ComponentView].
 	 */
@@ -134,7 +135,7 @@ abstract class ComponentView(
 		set(value) {
 			heightProperty.value = value
 		}
-
+	
 	/**
 	 * [Property] for the horizontal scale of this [ComponentView].
 	 */
@@ -212,7 +213,7 @@ abstract class ComponentView(
 	var rotation: Double
 		get() = rotationProperty.value
 		set(value) {
-			rotationProperty.value = value
+			rotationProperty.value = (value - floor(value/360.0) * 360.0)
 		}
 	
 	/**
@@ -447,6 +448,80 @@ abstract class ComponentView(
 	 * @see isDisabledProperty
 	 */
 	var onDragDropped: ((DragEvent) -> Unit)? = null
+	
+	/**
+	 * Repositions this [ComponentView] to the specified coordinates.
+	 * @param posX the new X coordinate.
+	 * @param posY the new Y coordinate.
+	 */
+	fun reposition(posX: Number, posY: Number) {
+		this.posX = posX.toDouble()
+		this.posY = posY.toDouble()
+	}
+	
+	/**
+	 * Adds an offset to this [ComponentView]'s Position.
+	 * @param offsetX the offset for the X coordinate.
+	 * @param offsetY the offset for the Y coordinate.
+	 */
+	fun offset(offsetX: Number, offsetY: Number) {
+		this.posX += offsetX.toDouble()
+		this.posY += offsetY.toDouble()
+	}
+	
+	/**
+	 * Resizes this [ComponentView] to the specified [width] and [height].
+	 * @param width the new width.
+	 * @param height the new height.
+	 */
+	fun resize(width: Number, height: Number) {
+		this.width = width.toDouble()
+		this.height = height.toDouble()
+	}
+	
+	/**
+	 * Scales this [ComponentView] by the given [scalar].
+	 * @throws IllegalArgumentException if the given [scalar] is negative.
+	 */
+	fun scale(scalar: Number) {
+		val scalarDoubleValue = scalar.toDouble()
+		require(scalarDoubleValue >= 0) {
+			"Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
+		}
+		this.scale = scalarDoubleValue
+	}
+	
+	/**
+	 *
+	 * Scales this [ComponentView]'s width by the given [scalar].
+	 * @throws IllegalArgumentException if the given [scalar] is negative.
+	 */
+	fun scaleX(scalar: Number) {
+		val scalarDoubleValue = scalar.toDouble()
+		require(scalarDoubleValue >= 0) {
+			"Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
+		}
+		this.scaleX = scalarDoubleValue
+	}
+	
+	/**
+	 * Scales this [ComponentView]'s height by the given [scalar].
+	 * @throws IllegalArgumentException if the given [scalar] is negative.
+	 */
+	fun scaleY(scalar: Number) {
+		val scalarDoubleValue = scalar.toDouble()
+		require(scalarDoubleValue >= 0) {
+			"Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
+		}
+		this.scaleY = scalarDoubleValue
+	}
+	
+	/**
+	 * Rotates this [ComponentView] by the given number of [degrees].
+	 */
+	fun rotate(degrees: Number) {
+		this.rotation += degrees.toDouble()
+	}
 	
 	/**
 	 * Removes this component from its parent.
