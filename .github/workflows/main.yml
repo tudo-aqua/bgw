@@ -1,0 +1,37 @@
+name: KDocs
+
+# ----- #
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+      
+# ----- #
+
+jobs:
+  kdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run 'dokkaHtml' Gradle task
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: dokkaHtml
+
+      - name: Move Dokka to /docs
+        run: cp -r ./bgw-core/build/dokka/html ./docs
+
+      - name: Rename docs/html folder
+        run: mv ./docs/html ./docs/kotlin-docs
