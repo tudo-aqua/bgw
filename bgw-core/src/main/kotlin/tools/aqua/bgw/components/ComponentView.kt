@@ -33,6 +33,7 @@ import kotlin.math.floor
 
 /**
  * [ComponentView] is the abstract baseclass of all framework components.
+ *
  * It defines important fields and functions that are necessary to visualize inheriting components.
  *
  * @param posX the X coordinate for this [ComponentView] relative to its container.
@@ -56,8 +57,11 @@ abstract class ComponentView(
 	
 	/**
 	 * The parent of this [ComponentView].
+	 *
 	 * `null` if this [ComponentView] is not contained in a [GameComponentContainer], [LayoutView], or a [Scene].
+	 *
 	 * If the component has been added directly to a [Scene], [parent] is equal to the scene's [RootComponent].
+	 *
 	 * If the component is contained within a container, parent is equal to that container.
 	 * @see Scene
 	 * @see GameComponentContainer
@@ -77,11 +81,14 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the horizontal position of this [ComponentView].
+	 *
+	 * @see posX
 	 */
 	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
 	
 	/**
 	 * Horizontal position of this [ComponentView].
+	 *
 	 * @see posXProperty
 	 */
 	var posX: Double
@@ -92,11 +99,14 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the vertical position of this [ComponentView].
+	 *
+	 * @see posY
 	 */
 	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
 	
 	/**
 	 * Vertical position of this [ComponentView].
+	 *
 	 * @see posYProperty
 	 */
 	var posY: Double
@@ -107,11 +117,14 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the [width] of this [ComponentView].
+	 *
+	 * @see width
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
 	 * The [width] for this [ComponentView].
+	 *
 	 * @see widthProperty
 	 */
 	var width: Double
@@ -123,11 +136,14 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the [height] of this [ComponentView].
+	 *
+	 * @see height
 	 */
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
 	 * The [height] for this [ComponentView].
+	 *
 	 * @see heightProperty
 	 */
 	var height: Double
@@ -138,12 +154,15 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the horizontal scale of this [ComponentView].
+	 *
+	 * @see scaleX
 	 */
 	val scaleXProperty: DoubleProperty = DoubleProperty(1.0)
 	
 	/**
 	 * Horizontal scale of this [ComponentView].
-	 * @see scaleYProperty
+	 *
+	 * @see scaleXProperty
 	 */
 	var scaleX: Double
 		get() = scaleXProperty.value
@@ -153,11 +172,14 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the vertical scale of this [ComponentView].
+	 *
+	 * @see scaleY
 	 */
 	val scaleYProperty: DoubleProperty = DoubleProperty(1.0)
 	
 	/**
 	 * Vertical scale of this [ComponentView].
+	 *
 	 * @see scaleYProperty
 	 */
 	var scaleY: Double
@@ -189,6 +211,7 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the rotation of this [ComponentView] in degrees.
+	 *
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
 	 *
 	 * example conversions:
@@ -196,11 +219,14 @@ abstract class ComponentView(
 	 * -370 -> 350
 	 * 370  -> 10
 	 * 730  -> 10
+	 *
+	 * @see rotation
 	 */
 	val rotationProperty: DoubleProperty = DoubleProperty(0.0)
 	
 	/**
 	 * Rotation of this [ComponentView] in degrees.
+	 *
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
 	 *
 	 * example conversions:
@@ -208,6 +234,7 @@ abstract class ComponentView(
 	 * -370 -> 350
 	 * 370  -> 10
 	 * 730  -> 10
+	 *
 	 * @see rotationProperty
 	 */
 	var rotation: Double
@@ -239,17 +266,26 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the [opacity] of this [ComponentView].
+	 *
 	 * Should be in range 0.0 to 1.0.
+	 *
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
+	 *
 	 * Note that invisible objects (opacity == 0.0) still remain interactive.
+	 *
+	 * @see opacity
 	 */
 	val opacityProperty: DoubleProperty = DoubleProperty(1.0)
 	
 	/**
 	 * Opacity of this [ComponentView].
+	 *
 	 * Must be in range 0.0 to 1.0.
+	 *
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
+	 *
 	 * Note that invisible objects (opacity == 0.0) still remain interactive.
+	 *
 	 * @see opacityProperty
 	 */
 	var opacity: Double
@@ -262,8 +298,10 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] for the visibility of this [ComponentView].
+	 *
 	 * Invisible [ComponentView]s are disabled.
-	 * An object marked as visible may still be opaque due to opacity
+	 * An object marked as visible may still be opaque due to opacity.
+	 *
 	 * @see isDisabledProperty
 	 * @see opacityProperty
 	 */
@@ -271,8 +309,10 @@ abstract class ComponentView(
 	
 	/**
 	 * Visibility of this [ComponentView].
+	 *
 	 * Invisible [ComponentView]s are disabled.
-	 * An object marked as visible may still be opaque due to opacity
+	 * An object marked as visible may still be opaque due to opacity.
+	 *
 	 * @see isDisabledProperty
 	 * @see opacityProperty
 	 * @see isVisibleProperty
@@ -285,6 +325,7 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] that controls if user input events cause input functions of this [ComponentView] to get invoked.
+	 *
 	 * `true` means no invocation, where `false` means invocation.
 	 *
 	 * For a list of affected functions refer to the `See Also` section.
@@ -299,11 +340,14 @@ abstract class ComponentView(
 	 * @see onMousePressed
 	 * @see onMouseReleased
 	 * @see onMouseClicked
+	 *
+	 * @see isDisabled
 	 */
 	val isDisabledProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
 	 * Controls if user input events cause input functions of this [ComponentView] to get invoked.
+	 *
 	 * `true` means no invocation, where `false` means invocation.
 	 *
 	 * For a list of affected functions refer to the `See Also` section.
@@ -329,11 +373,14 @@ abstract class ComponentView(
 	
 	/**
 	 * [Property] that controls whether this [ComponentView] is focusable or not.
+	 *
+	 * @see isFocusable
 	 */
 	val isFocusableProperty: BooleanProperty = BooleanProperty(true)
 	
 	/**
 	 * Controls whether this [ComponentView] is focusable or not.
+	 *
 	 * @see isFocusableProperty
 	 */
 	var isFocusable: Boolean
@@ -344,6 +391,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with an event whenever the mouse enters this [ComponentView].
+	 *
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
@@ -351,6 +399,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with an event whenever the mouse leaves this [ComponentView].
+	 *
 	 * @see Event
 	 * @see isDisabledProperty
 	 */
@@ -358,6 +407,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with a [MouseEvent] whenever the mouse is pressed inside this [ComponentView].
+	 *
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
@@ -365,6 +415,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with a [MouseEvent] whenever the mouse is released inside this [ComponentView].
+	 *
 	 * @see MouseEvent
 	 * @see isDisabledProperty
 	 */
@@ -373,6 +424,7 @@ abstract class ComponentView(
 	/**
 	 * Gets invoked with a [MouseEvent] whenever the mouse is clicked inside this [ComponentView].
 	 * Gets invoked after [onMousePressed] and [onMouseReleased].
+	 *
 	 * @see MouseEvent
 	 * @see onMousePressed
 	 * @see onMouseReleased
@@ -382,6 +434,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with a [KeyEvent] whenever a key is pressed while this [ComponentView] has focus.
+	 *
 	 * @see KeyEvent
 	 * @see isDisabledProperty
 	 * @see isFocusableProperty
@@ -390,6 +443,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with a [KeyEvent] whenever a key is released while this [ComponentView] has focus.
+	 *
 	 * @see KeyEvent
 	 * @see isDisabledProperty
 	 * @see isFocusableProperty
@@ -398,7 +452,8 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with a [KeyEvent] whenever a key is typed while this [ComponentView] has focus.
-	 * Gets invoked after [onKeyPressed]
+	 * Gets invoked after [onKeyPressed].
+	 *
 	 * @see KeyEvent
 	 * @see onKeyPressed
 	 * @see isDisabledProperty
@@ -435,6 +490,7 @@ abstract class ComponentView(
 	
 	/**
 	 * Gets invoked with a [DragEvent] whenever the mouse leaves this [ComponentView] while performing a drag gesture.
+	 *
 	 * @see DragEvent
 	 */
 	var onDragGestureExited: ((DragEvent) -> Unit)? = null
@@ -451,8 +507,9 @@ abstract class ComponentView(
 	
 	/**
 	 * Repositions this [ComponentView] to the specified coordinates.
-	 * @param posX the new X coordinate.
-	 * @param posY the new Y coordinate.
+	 *
+	 * @param posX New X coordinate.
+	 * @param posY New Y coordinate.
 	 */
 	fun reposition(posX: Number, posY: Number) {
 		this.posX = posX.toDouble()
@@ -461,8 +518,9 @@ abstract class ComponentView(
 	
 	/**
 	 * Adds an offset to this [ComponentView]'s Position.
-	 * @param offsetX the offset for the X coordinate.
-	 * @param offsetY the offset for the Y coordinate.
+	 *
+	 * @param offsetX Offset for the X coordinate.
+	 * @param offsetY Offset for the Y coordinate.
 	 */
 	fun offset(offsetX: Number, offsetY: Number) {
 		this.posX += offsetX.toDouble()
@@ -471,8 +529,9 @@ abstract class ComponentView(
 	
 	/**
 	 * Resizes this [ComponentView] to the specified [width] and [height].
-	 * @param width the new width.
-	 * @param height the new height.
+	 *
+	 * @param width New width.
+	 * @param height New height.
 	 */
 	fun resize(width: Number, height: Number) {
 		this.width = width.toDouble()
@@ -481,7 +540,10 @@ abstract class ComponentView(
 	
 	/**
 	 * Scales this [ComponentView] by the given [scalar].
-	 * @throws IllegalArgumentException if the given [scalar] is negative.
+	 *
+	 * @param scalar New scale.
+	 *
+	 * @throws IllegalArgumentException If the given [scalar] is negative.
 	 */
 	fun scale(scalar: Number) {
 		val scalarDoubleValue = scalar.toDouble()
@@ -494,7 +556,10 @@ abstract class ComponentView(
 	/**
 	 *
 	 * Scales this [ComponentView]'s width by the given [scalar].
-	 * @throws IllegalArgumentException if the given [scalar] is negative.
+	 *
+	 * @param scalar New x scale.
+	 *
+	 * @throws IllegalArgumentException If the given [scalar] is negative.
 	 */
 	fun scaleX(scalar: Number) {
 		val scalarDoubleValue = scalar.toDouble()
@@ -506,7 +571,10 @@ abstract class ComponentView(
 	
 	/**
 	 * Scales this [ComponentView]'s height by the given [scalar].
-	 * @throws IllegalArgumentException if the given [scalar] is negative.
+	 *
+	 * @param scalar New y scale.
+	 *
+	 * @throws IllegalArgumentException If the given [scalar] is negative.
 	 */
 	fun scaleY(scalar: Number) {
 		val scalarDoubleValue = scalar.toDouble()
@@ -518,6 +586,8 @@ abstract class ComponentView(
 	
 	/**
 	 * Rotates this [ComponentView] by the given number of [degrees].
+	 *
+	 * @param degrees Degrees to add to current rotation. May be negative.
 	 */
 	fun rotate(degrees: Number) {
 		this.rotation += degrees.toDouble()
@@ -526,7 +596,8 @@ abstract class ComponentView(
 	/**
 	 * Removes this component from its parent.
 	 *
-	 * @throws IllegalStateException if this component is not contained in any container. Use parent field to check.
+	 * @throws IllegalStateException If this component is not contained in any container. Use parent field to check.
+	 *
 	 * @see parent
 	 */
 	fun removeFromParent(): ComponentView {
@@ -540,20 +611,22 @@ abstract class ComponentView(
 	/**
 	 * Removes component from container's children if supported.
 	 *
-	 * @param component child to be removed.
+	 * @param component Child to be removed.
 	 *
-	 * @throws RuntimeException if the componentView does not support children.
+	 * @throws RuntimeException If the componentView does not support children.
 	 */
 	internal abstract fun removeChild(component: ComponentView)
 	
 	/**
 	 * Function returning a contained child's coordinates within this [ComponentView] if supported.
+	 *
 	 * This method has to be overridden.
+	 *
 	 * Returns `null` on all [ComponentView]s not supporting this feature.
 	 *
-	 * @param child child to find.
+	 * @param child Child to find.
 	 *
-	 * @return coordinate of given child in this [ComponentView] or `null` if not supported.
+	 * @return Coordinate of given child in this [ComponentView] or `null` if not supported.
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ComponentView): Coordinate? = null

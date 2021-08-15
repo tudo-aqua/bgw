@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components
 
+import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.observable.BooleanProperty
@@ -28,11 +30,14 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all [ComponentView]s that can be draggable.
  *
- * @param posX the X coordinate for this [DynamicComponentView] relative to its container.
- * @param posY the Y coordinate for this [DynamicComponentView] relative to its container.
- * @param width width for this [DynamicComponentView].
- * @param height height for this [DynamicComponentView].
- * @param visual visual for this [DynamicComponentView].
+ * @param posX The X coordinate for this [DynamicComponentView] relative to its container.
+ * @param posY The Y coordinate for this [DynamicComponentView] relative to its container.
+ * @param width Width for this [DynamicComponentView].
+ * @param height Height for this [DynamicComponentView].
+ * @param visual Visual for this [DynamicComponentView].
+ *
+ * @see BoardGameScene
+ * @see MenuScene
  */
 abstract class DynamicComponentView(
 	posX: Number,
@@ -44,11 +49,14 @@ abstract class DynamicComponentView(
 	
 	/**
 	 * [Property] that controls whether component is draggable or not.
+	 *
+	 * @see isDraggable
 	 */
 	val isDraggableProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
 	 * Controls whether component is draggable or not.
+	 *
 	 * @see isDraggableProperty
 	 */
 	var isDraggable: Boolean
@@ -58,13 +66,16 @@ abstract class DynamicComponentView(
 		}
 	
 	/**
-	 * [Property] that reflects whether component is dragged or not.
+	 * [Property] that reflects whether component is currently dragged or not.
+	 *
+	 * @see isDragged
 	 */
 	val isDraggedProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
-	 * Reflects whether component is dragged or not.
-	 * @see isDisabledProperty
+	 * Reflects whether component is currently dragged or not.
+	 *
+	 * @see isDraggedProperty
 	 */
 	var isDragged: Boolean
 		get() = isDraggedProperty.value
@@ -74,18 +85,21 @@ abstract class DynamicComponentView(
 	
 	/**
 	 * Gets invoked with a [DragEvent] whenever a drag gesture is started on this [ComponentView].
+	 *
 	 * @see DragEvent
 	 */
 	var onDragGestureStarted: ((DragEvent) -> Unit)? = null
 	
 	/**
 	 * Gets invoked with a [DragEvent] whenever a mouse movement occurs during a drag gesture on this [ComponentView].
+	 *
 	 * @see DragEvent
 	 */
 	var onDragGestureMoved: ((DragEvent) -> Unit)? = null
 	
 	/**
 	 * Gets invoked with a [DragEvent] whenever a drag gesture has ended on this rendered [ComponentView].
+	 *
 	 * Second parameter is `true` if at least one drop target accepted drop, `false` otherwise.
 	 *
 	 * @see DragEvent

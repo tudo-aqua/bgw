@@ -25,7 +25,7 @@ import tools.aqua.bgw.visual.Visual
 /**
  * The root component in the view hierarchy of a [Scene].
  *
- * @param scene scene of this root component.
+ * @param scene Scene of this root component.
  */
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
 	ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY){
@@ -33,9 +33,9 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
 	/**
 	 * Removes [component] from the [scene].
 	 *
-	 * @param component child to be removed.
+	 * @param component Child to be removed.
 	 *
-	 * @throws RuntimeException if the child's type is incompatible with scene's type.
+	 * @throws RuntimeException If the child's type is incompatible with scene's type.
 	 */
 	override fun removeChild(component: ComponentView) {
 		try {

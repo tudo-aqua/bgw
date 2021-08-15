@@ -30,11 +30,11 @@ import tools.aqua.bgw.visual.Visual
  *
  * Only StaticViews are allowed in [MenuScene]s.
  *
- * @param posX the X coordinate for this [StaticComponentView] relative to its container.
- * @param posY the Y coordinate for this [StaticComponentView] relative to its container.
- * @param width width for this [StaticComponentView].
- * @param height height for this [StaticComponentView].
- * @param visual visual for this [StaticComponentView].
+ * @param posX The X coordinate for this [StaticComponentView] relative to its container.
+ * @param posY The Y coordinate for this [StaticComponentView] relative to its container.
+ * @param width Width for this [StaticComponentView].
+ * @param height Height for this [StaticComponentView].
+ * @param visual Visual for this [StaticComponentView].
  *
  * @see MenuScene
  */
