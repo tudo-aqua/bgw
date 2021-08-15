@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-package container.Area
+package container.area
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

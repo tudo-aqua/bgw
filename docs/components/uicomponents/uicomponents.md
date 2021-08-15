@@ -154,7 +154,7 @@ colorPicker.selectedColorProperty.addListener { _, newValue ->
 
 ## ComboBox
 
-A [ComboBox][ComboBoxDoc] is a drop down menu, where a user may choose an option. A ``prompt`` may be specified to
+A [ComboBox][ComboBoxDoc] is a drop-down menu, where a user may choose an option. A ``prompt`` may be specified to
 inform the user, what is expected of him. The ComboBox has a type parameter to define a type for the objects that
 correspond to the options. One string per contained object is necessary to represent it as an option to the user. 
 There are two methods of obtaining said string.

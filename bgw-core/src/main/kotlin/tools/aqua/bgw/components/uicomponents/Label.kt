@@ -32,8 +32,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX Horizontal coordinate for this [Label]. Default: 0.
  * @param posY Vertical coordinate for this [Label]. Default: 0.
- * @param width Width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].
- * @param height Height for this [Label]. Default: [Label.DEFAULT_LABEL_HEIGHT].
+ * @param width Width for this [Label]. Default: [DEFAULT_LABEL_WIDTH].
+ * @param height Height for this [Label]. Default: [DEFAULT_LABEL_HEIGHT].
  * @param text Text for this [Label]. Default: empty String.
  * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
  * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].

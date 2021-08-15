@@ -36,7 +36,7 @@ import tools.aqua.bgw.visual.Visual
  * @param text Label for this [LabeledUIComponent].
  * @param font [Font] to be used for the [text].
  * @param alignment Alignment to be used for the [text].
- * @param isWrapText Defines if [text] should be wrapped, if it exceeds the labels width.
+ * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width.
  * @param visual Background [Visual].
  */
 sealed class LabeledUIComponent(
