@@ -27,11 +27,11 @@ import java.awt.Color
  * This class is used to represent a font.
  * For more customization of fonts, the CSS feature can be used.
  *
- * @param size size of this Font in `px`. Maybe a floating-point value. Default: 14.
- * @param color color of this font. Default: [java.awt.Color.BLACK].
- * @param family font family as a String for this Font. Default: "Arial".
- * @param fontWeight font weight for this Font. Default: [FontWeight.NORMAL].
- * @param fontStyle font style for this Font. Default: [FontStyle.NORMAL].
+ * @param size Size of this Font in `px`. Maybe a floating-point value. Default: 14.
+ * @param color Color of this font. Default: [java.awt.Color.BLACK].
+ * @param family Font family as a String for this Font. Default: "Arial".
+ * @param fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
+ * @param fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
  *
  * @see FontStyle
  */
@@ -70,6 +70,7 @@ class Font(
 	
 	/**
 	 * Enum class for representing all available font styles for the Font class.
+	 *
 	 * @see Font
 	 */
 	enum class FontStyle {

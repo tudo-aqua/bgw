@@ -22,9 +22,9 @@ import tools.aqua.bgw.util.ComponentViewGrid.GridIterator
 /**
  * Data class containing meta info about current grid element returned by its [GridIterator].
  *
- * @param columnIndex current column index.
- * @param rowIndex current row index.
- * @param component current component or null if there is no component present in this cell.
+ * @param columnIndex Current column index.
+ * @param rowIndex Current row index.
+ * @param component Current component or null if there is no component present in this cell.
  */
 data class GridIteratorElement<T>(
 	val columnIndex: Int,

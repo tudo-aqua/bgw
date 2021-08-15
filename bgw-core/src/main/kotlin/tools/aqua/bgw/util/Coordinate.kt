@@ -37,6 +37,8 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	/**
 	 * Returns a new coordinate object containing added [xCoord] and [yCoord].
 	 *
+	 * @param other [Coordinate] to add.
+	 *
 	 * @return New coordinate object containing added [xCoord] and [yCoord].
 	 *
 	 * @see minus
@@ -48,6 +50,8 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	
 	/**
 	 * Returns a new coordinate object containing subtracted [xCoord] and [yCoord].
+	 *
+	 * @param other [Coordinate] to subtract.
 	 *
 	 * @return New coordinate object containing subtracted [xCoord] and [yCoord].
 	 *
@@ -61,12 +65,18 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	
 	/**
 	 * Rotates coordinate by angle degrees around center point.
+	 *
 	 * With
+	 *
 	 * - Angle t,
+	 *
 	 * - Center point Z
+	 *
 	 * - Coordinate P
 	 *
+	 *
 	 * [ cos(phi)  -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
+	 *
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
 	fun rotated(angle: Double, center: Coordinate): Coordinate = Coordinate(
@@ -76,12 +86,18 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	
 	/**
 	 * Rotates coordinate by angle degrees around point (0,0).
+	 *
 	 * With
+	 *
 	 * - Angle t,
+	 *
 	 * - Center point Z
+	 *
 	 * - Coordinate P
 	 *
+	 *
 	 * [ cos(phi)  -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
+	 *
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
 	fun rotated(angle: Double): Coordinate = rotated(angle, Coordinate(0, 0))
@@ -116,9 +132,9 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	}
 	
 	/**
-	 * Hashcode for this object.
+	 * HashCode for this object.
 	 *
-	 * @return hashCode containing [xCoord] and [yCoord].
+	 * @return HashCode containing [xCoord] and [yCoord].
 	 */
 	override fun hashCode(): Int {
 		return xCoord.hashCode() - yCoord.hashCode()

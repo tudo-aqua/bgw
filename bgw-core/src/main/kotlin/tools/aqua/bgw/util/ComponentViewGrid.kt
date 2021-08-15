@@ -70,8 +70,8 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Returns grid cell content.
 	 *
-	 * @param columnIndex column index of cell.
-	 * @param rowIndex row index of cell.
+	 * @param columnIndex Column index of cell.
+	 * @param rowIndex Row index of cell.
 	 */
 	operator fun get(columnIndex: Int, rowIndex: Int): T? = grid[columnIndex][rowIndex] as? T
 	
@@ -79,8 +79,8 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets grid cell content.
 	 *
-	 * @param columnIndex column index of cell.
-	 * @param rowIndex row index of cell.
+	 * @param columnIndex Column index of cell.
+	 * @param rowIndex Row index of cell.
 	 *
 	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
 	 */
@@ -97,18 +97,18 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Returns grid cell centering mode.
 	 *
-	 * @param columnIndex column index of cell.
-	 * @param rowIndex row index of cell.
+	 * @param columnIndex Column index of cell.
+	 * @param rowIndex Row index of cell.
 	 */
 	fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment = centeringModes[columnIndex][rowIndex]
 	
 	/**
 	 * Sets grid cell centering mode.
 	 *
-	 * @param columnIndex column index of cell.
-	 * @param rowIndex row index of cell.
+	 * @param columnIndex Column index of cell.
+	 * @param rowIndex Row index of cell.
 	 *
-	 * @throws IllegalArgumentException if [columnIndex] or [rowIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [columnIndex] or [rowIndex] is out of grid range.
 	 */
 	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, alignment: Alignment) {
 		require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
@@ -121,10 +121,10 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets grid centering mode for whole column.
 	 *
-	 * @param columnIndex column index.
-	 * @param alignment new alignment.
+	 * @param columnIndex Column index.
+	 * @param alignment New alignment.
 	 *
-	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [columnIndex] is out of grid range.
 	 */
 	fun setColumnCenterMode(columnIndex: Int, alignment: Alignment) {
 		require(columnIndex in 0 until columns) {
@@ -138,10 +138,10 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets grid centering mode for whole row.
 	 *
-	 * @param rowIndex row index.
-	 * @param alignment new alignment.
+	 * @param rowIndex Row index.
+	 * @param alignment New alignment.
 	 *
-	 * @throws IllegalArgumentException if [rowIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [rowIndex] is out of grid range.
 	 */
 	fun setRowCenterMode(rowIndex: Int, alignment: Alignment) {
 		require(rowIndex in 0 until rows) {
@@ -155,7 +155,7 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets grid centering mode for all cells.
 	 *
-	 * @param alignment new alignment.
+	 * @param alignment New alignment.
 	 */
 	fun setCenterMode(alignment: Alignment) {
 		for (x in 0 until columns)
@@ -168,24 +168,28 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Returns whole row as [List].
 	 *
-	 * @param rowIndex row index.
+	 * @param rowIndex Row index.
 	 */
 	fun getRow(rowIndex: Int): List<T?> = List(columns) { grid[it][rowIndex] as? T }
 	
 	/**
-	 * Returns [List] all rows as another [List].
+	 * Returns [List] of all rows as another [List].
+	 *
+	 * @return [List] of all rows.
 	 */
 	fun getRows(): List<List<T?>> = (0 until rows).map { getRow(it) }
 	
 	/**
 	 * Returns whole column as [List].
 	 *
-	 * @param columnIndex column index.
+	 * @param columnIndex Column index.
 	 */
 	fun getColumn(columnIndex: Int): List<T?> = grid[columnIndex].toList() as List<T?>
 	
 	/**
-	 * Returns [List] all columns as another [List].
+	 * Returns [List] of all columns as another [List].
+	 *
+	 * @return [List] of all columns.
 	 */
 	fun getColumns(): List<List<T?>> = (0 until columns).map { getColumn(it) }
 	//endregion
@@ -194,9 +198,9 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Returns preferred column width ([COLUMN_WIDTH_AUTO] for auto).
 	 *
-	 * @param columnIndex column index.
+	 * @param columnIndex Column index.
 	 *
-	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [columnIndex] is out of grid range.
 	 */
 	fun getColumnWidth(columnIndex: Int): Double {
 		require(columnIndex in columnWidths.indices) {
@@ -209,8 +213,8 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets preferred column width ([COLUMN_WIDTH_AUTO] for auto).
 	 *
-	 * @param columnIndex column index.
-	 * @param columnWidth new column width.
+	 * @param columnIndex Column index.
+	 * @param columnWidth New column width.
 	 *
 	 * @throws IllegalArgumentException if [columnIndex] is out of grid range or [columnWidth] is negative.
 	 */
@@ -228,9 +232,9 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets preferred column width ([COLUMN_WIDTH_AUTO] for auto) for all columns.
 	 *
-	 * @param columnWidths new column widths.
+	 * @param columnWidths New column widths.
 	 *
-	 * @throws IllegalArgumentException if size of [columnWidths] does not match grid size
+	 * @throws IllegalArgumentException If size of [columnWidths] does not match grid size
 	 * or any columnWidth is negative.
 	 */
 	fun setColumnWidths(columnWidths: DoubleArray) {
@@ -247,9 +251,9 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Returns preferred row height ([ROW_HEIGHT_AUTO] for auto).
 	 *
-	 * @param rowIndex row index.
+	 * @param rowIndex Row index.
 	 *
-	 * @throws IllegalArgumentException if [rowIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [rowIndex] is out of grid range.
 	 */
 	fun getRowHeight(rowIndex: Int): Double {
 		require(rowIndex in rowHeights.indices) {
@@ -262,8 +266,8 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets preferred row height ([ROW_HEIGHT_AUTO] for auto).
 	 *
-	 * @param rowIndex row index.
-	 * @param rowHeight new row height.
+	 * @param rowIndex Row index.
+	 * @param rowHeight New row height.
 	 *
 	 * @throws IllegalArgumentException if [rowIndex] is out of grid range or [rowHeight] is negative.
 	 */
@@ -281,9 +285,9 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Sets preferred row height ([ROW_HEIGHT_AUTO] for auto) for all rows.
 	 *
-	 * @param rowHeights new row heights.
+	 * @param rowHeights New row heights.
 	 *
-	 * @throws IllegalArgumentException if size of [rowHeights] does not match grid size
+	 * @throws IllegalArgumentException If size of [rowHeights] does not match grid size
 	 * or any rowHeight is negative.
 	 */
 	fun setRowHeights(rowHeights: DoubleArray) {
@@ -302,12 +306,12 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Extends grid to given directions.
 	 *
-	 * @param left amount of columns to add to the left.
-	 * @param right amount of columns to add to the right.
-	 * @param top amount of rows to add on the top.
-	 * @param bottom amount of rows to add on the bottom.
+	 * @param left Amount of columns to add to the left.
+	 * @param right Amount of columns to add to the right.
+	 * @param top Amount of rows to add on the top.
+	 * @param bottom Amount of rows to add on the bottom.
 	 *
-	 * @throws IllegalArgumentException if any parameter is negative.
+	 * @throws IllegalArgumentException If any parameter is negative.
 	 */
 	fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0): Boolean {
 		if (left == 0 && right == 0 && top == 0 && bottom == 0)
@@ -433,10 +437,10 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Inserts the given amount of columns at the given position.
 	 *
-	 * @param columnIndex index after which the columns should be inserted.
-	 * @param count amount of columns to insert.
+	 * @param columnIndex Index after which the columns should be inserted.
+	 * @param count Amount of columns to insert.
 	 *
-	 * @throws IllegalArgumentException if [columnIndex] is out of grid range or [count] is negative.
+	 * @throws IllegalArgumentException If [columnIndex] is out of grid range or [count] is negative.
 	 */
 	fun addColumns(columnIndex: Int, count: Int) {
 		require(columnIndex in 0..columns) {
@@ -484,9 +488,9 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Removes column at given index.
 	 *
-	 * @param columnIndex index of column to be deleted.
+	 * @param columnIndex Index of column to be deleted.
 	 *
-	 * @throws IllegalArgumentException if [columnIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [columnIndex] is out of grid range.
 	 */
 	fun removeColumn(columnIndex: Int) {
 		require(columnIndex in 0 until columns) {
@@ -553,10 +557,10 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Inserts the given amount of rows at the given position.
 	 *
-	 * @param rowIndex index after which the rows should be inserted.
-	 * @param count amount of columns to insert.
+	 * @param rowIndex Index after which the rows should be inserted.
+	 * @param count Amount of columns to insert.
 	 *
-	 * @throws IllegalArgumentException if [rowIndex] is out of grid range or [count] is negative.
+	 * @throws IllegalArgumentException If [rowIndex] is out of grid range or [count] is negative.
 	 */
 	fun addRows(rowIndex: Int, count: Int) {
 		require(rowIndex in 0..rows) {
@@ -603,9 +607,9 @@ internal class ComponentViewGrid<T : ComponentView>(
 	/**
 	 * Removes row at given index.
 	 *
-	 * @param rowIndex index of row to be deleted.
+	 * @param rowIndex Index of row to be deleted.
 	 *
-	 * @throws IllegalArgumentException if [rowIndex] is out of grid range.
+	 * @throws IllegalArgumentException If [rowIndex] is out of grid range.
 	 */
 	fun removeRow(rowIndex: Int) {
 		require(rowIndex in 0 until rows) {
@@ -704,6 +708,8 @@ internal class ComponentViewGrid<T : ComponentView>(
 	
 	/**
 	 * Returns a [GridIterator] for this grid.
+	 *
+	 * @return [GridIterator] for this grid
 	 */
 	override fun iterator(): Iterator<GridIteratorElement<T>> = GridIterator()
 	

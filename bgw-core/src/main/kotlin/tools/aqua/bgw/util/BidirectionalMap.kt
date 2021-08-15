@@ -47,7 +47,7 @@ package tools.aqua.bgw.util
  *
  * @constructor Creates a map with the given set of elements mapping pair first -> pair.second.
  *
- * @param elements elements to be initialized in the map.
+ * @param elements Elements to be initialized in the map.
  */
 open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	private val map: MutableList<Pair<T, R>> = mutableListOf()
@@ -58,9 +58,11 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	
 	/**
 	 * The size of this map.
-	 * Returns the amount of pairs.
 	 */
 	val size: Int
+		/**
+		 * @return The amount of pairs.
+		 */
 		get() = map.size
 	
 	/**
@@ -123,18 +125,18 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Forward lookup for entry.
 	 *
-	 * @param entity relation key.
+	 * @param entity Relation key.
 	 *
 	 * @return B for query A if relation A -> B exists.
 	 *
-	 * @throws NoSuchElementException if no such element is found.
+	 * @throws NoSuchElementException If no such element is found.
 	 */
 	fun forward(entity: T): R = map.first { t -> t.first == entity }.second
 	
 	/**
 	 * Forward lookup for entry.
 	 *
-	 * @param entity relation key.
+	 * @param entity Relation key.
 	 *
 	 * @return B for query A if relation A -> B exists. Null otherwise.
 	 */
@@ -143,18 +145,18 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Backward lookup for entry.
 	 *
-	 * @param value relation key.
+	 * @param value Relation value.
 	 *
 	 * @return A for query B if relation A -> B exists.
 	 *
-	 * @throws NoSuchElementException if no such element is found.
+	 * @throws NoSuchElementException Ff no such element is found.
 	 */
 	fun backward(value: R): T = map.first { t -> t.second == value }.first
 	
 	/**
 	 * Backward lookup for entry.
 	 *
-	 * @param value relation key.
+	 * @param value Relation value.
 	 *
 	 * @return A for query B if relation A -> B exists. Null otherwise.
 	 */
@@ -163,8 +165,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Removes relation A -> B if it exists.
 	 *
-	 * @param entity relation key A.
-	 * @param value relation value B.
+	 * @param entity Relation key A.
+	 * @param value Relation value B.
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -176,7 +178,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Removes relation A -> B if it exists.
 	 *
-	 * @param element pair (Relation key A, Relation value B)
+	 * @param element Pair (Relation key A, Relation value B)
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -189,7 +191,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 * Removes by forward lookup.
 	 * Removes relation A -> * if it exists.
 	 *
-	 * @param entity relation key A.
+	 * @param entity Relation key A.
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -202,7 +204,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	 * Removes by backward lookup.
 	 * Removes relation * -> B.
 	 *
-	 * @param value relation value B.
+	 * @param value Relation value B.
 	 *
 	 * @return `true` if the element was removed, `false` if the element was not found.
 	 *
@@ -214,8 +216,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Returns whether relation A -> B exists in this map.
 	 *
-	 * @param entity relation key A.
-	 * @param value relation value B.
+	 * @param entity Relation key A.
+	 * @param value Relation value B.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
@@ -227,7 +229,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Returns whether relation A -> B exists in this map.
 	 *
-	 * @param pair relation pair A -> B.
+	 * @param pair Relation pair A -> B.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
@@ -239,7 +241,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Returns whether a relation A -> * exists.
 	 *
-	 * @param entity relation key A.
+	 * @param entity Relation key A.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
@@ -251,7 +253,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
 	/**
 	 * Returns whether a relation * -> B exists.
 	 *
-	 * @param value relation value B.
+	 * @param value Relation value B.
 	 *
 	 * @return `true` if the relation exists in this map, `false` otherwise.
 	 *
