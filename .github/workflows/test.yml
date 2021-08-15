@@ -4,13 +4,10 @@ name: Test
 
 # Controls when the action will run.
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
