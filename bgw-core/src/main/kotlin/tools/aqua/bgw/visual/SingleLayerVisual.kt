@@ -27,15 +27,19 @@ import tools.aqua.bgw.observable.LimitedDoubleProperty
 sealed class SingleLayerVisual : Visual() {
     /**
      * Property for the [transparency] / alpha channel for this [Visual].
-     * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
-     * Default: 1.
+     *
+     * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
+     *
+     * @see transparency
      */
     val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
 
     /**
      * The [transparency] / alpha channel for this [Visual].
-     * Must be set between 0 (full transparent) and 1 (non-transparent / solid).
-     * Default: 1.
+     *
+     * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
+     *
+     * @see transparencyProperty
      */
     var transparency: Double
         get() = transparencyProperty.value

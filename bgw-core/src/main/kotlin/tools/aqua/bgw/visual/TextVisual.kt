@@ -28,11 +28,11 @@ import tools.aqua.bgw.util.Font
 /**
  * A visual displaying text.
  *
- * @param text text to display.
+ * @param text Text to display.
  * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
  * @param alignment [Alignment] for the [text]. Default: [Alignment.CENTER].
- * @param offsetX the horizontal offset of the [text] from its anchorpoint. Default: 0.
- * @param offsetY the vertical offset of the [text] from its anchorpoint. Default: 0.
+ * @param offsetX The horizontal offset of the [text] from its anchorpoint. Default: 0.
+ * @param offsetY The vertical offset of the [text] from its anchorpoint. Default: 0.
  */
 open class TextVisual(
 	text: String,
@@ -43,11 +43,14 @@ open class TextVisual(
 ) : SingleLayerVisual() {
 	/**
 	 * [Property] for the displayed [text].
+	 *
+	 * @see text
 	 */
 	val textProperty: StringProperty = StringProperty(text)
 
 	/**
 	 * The displayed [text].
+	 *
 	 * @see textProperty
 	 */
 	var text: String
@@ -58,11 +61,14 @@ open class TextVisual(
 
 	/**
 	 * [Property] for the displayed [text] [Font].
+	 *
+	 * @see font
 	 */
 	val fontProperty: Property<Font> = Property(font)
 
 	/**
 	 * The displayed [text] [Font].
+	 *
 	 * @see fontProperty
 	 */
 	var font: Font
@@ -73,11 +79,14 @@ open class TextVisual(
 
 	/**
 	 * [Property] for the [text] [Alignment].
+	 *
+	 * @see alignment
 	 */
 	val alignmentProperty: Property<Alignment> = Property(alignment)
 
 	/**
 	 * The [text] [Alignment].
+	 *
 	 * @see alignmentProperty
 	 */
 	var alignment: Alignment
@@ -88,12 +97,15 @@ open class TextVisual(
 
 	/**
 	 * [Property] for the x-axis [text] offset.
+	 *
+	 * @see offsetX
 	 */
 	val offsetXProperty: DoubleProperty = DoubleProperty(offsetX)
 
 	/**
 	 * The x-axis [text] offset.
-	 * @see alignmentProperty
+	 *
+	 * @see offsetXProperty
 	 */
 	var offsetX: Double
 		get() = offsetXProperty.value
@@ -103,12 +115,15 @@ open class TextVisual(
 
 	/**
 	 * [Property] for the y-axis [text] offset.
+	 *
+	 * @see offsetY
 	 */
 	val offsetYProperty: DoubleProperty = DoubleProperty(offsetY)
 
 	/**
 	 * The y-axis [text] offset.
-	 * @see alignmentProperty
+	 *
+	 * @see offsetYProperty
 	 */
 	var offsetY: Double
 		get() = offsetYProperty.value

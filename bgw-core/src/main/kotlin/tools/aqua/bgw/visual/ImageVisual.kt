@@ -20,12 +20,14 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.Property
+import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
 /**
- * Visual showing an image.
+ * Visual showing an [Image].
+ *
  * The image gets stretched to the size of the component that this visual is embedded in.
  *
  * A sub-image can be loaded by passing offsetX/offsetY for the TOP_LEFT corner and width/height for the sub-image size.
@@ -33,11 +35,11 @@ import javax.imageio.ImageIO
  *
  * @constructor Loads an [ImageVisual] from a [BufferedImage].
  *
- * @param image image to show.
- * @param width width of sub-image. Pass -1 to use full width. Default: -1.
- * @param height height of sub-image. Pass -1 to use full height. Default: -1.
- * @param offsetX left bound of sub-image. Default: 0.
- * @param offsetY top bound of sub-image. Default: 0.
+ * @param image Image to show.
+ * @param width Width of sub-image. Pass -1 to use full width. Default: -1.
+ * @param height Height of sub-image. Pass -1 to use full height. Default: -1.
+ * @param offsetX Left bound of sub-image. Default: 0.
+ * @param offsetY Top bound of sub-image. Default: 0.
  */
 open class ImageVisual(
 	image: BufferedImage,
@@ -49,11 +51,15 @@ open class ImageVisual(
 	
 	/**
 	 * [Property] for the displayed [image].
+	 *
+	 * @see image
 	 */
 	val imageProperty: Property<BufferedImage>
 	
 	/**
 	 * The displayed [image].
+	 *
+	 * @see imageProperty
 	 */
 	var image: BufferedImage
 		get() = imageProperty.value
@@ -64,11 +70,11 @@ open class ImageVisual(
 	/**
 	 * Loads an [ImageVisual] from a path.
 	 *
-	 * @param path path to image file to show.
-	 * @param width width of sub-image. Pass -1 to use full width. Default: -1.
-	 * @param height height of sub-image. Pass -1 to use full height. Default: -1.
-	 * @param offsetX left bound of sub-image. Gets ignored if width is passed as -1. Default: 0.
-	 * @param offsetY top bound of sub-image. Gets ignored if height is passed as -1. Default: 0.
+	 * @param path Path to image file to show.
+	 * @param width Width of sub-image. Pass -1 to use full width. Default: -1.
+	 * @param height Height of sub-image. Pass -1 to use full height. Default: -1.
+	 * @param offsetX Left bound of sub-image. Gets ignored if width is passed as -1. Default: 0.
+	 * @param offsetY Top bound of sub-image. Gets ignored if height is passed as -1. Default: 0.
 	 */
 	constructor(
 		path: String,
@@ -81,11 +87,11 @@ open class ImageVisual(
 	/**
 	 * Loads an [ImageVisual] from a file.
 	 *
-	 * @param file image file to show.
-	 * @param width width of sub-image. Pass -1 to use full width. Default: -1.
-	 * @param height height of sub-image. Pass -1 to use full height. Default: -1.
-	 * @param offsetX left bound of sub-image. Gets ignored if width is passed as -1. Default: 0.
-	 * @param offsetY top bound of sub-image. Gets ignored if height is passed as -1. Default: 0.
+	 * @param file Image file to show.
+	 * @param width Width of sub-image. Pass -1 to use full width. Default: -1.
+	 * @param height Height of sub-image. Pass -1 to use full height. Default: -1.
+	 * @param offsetX Left bound of sub-image. Gets ignored if width is passed as -1. Default: 0.
+	 * @param offsetY Top bound of sub-image. Gets ignored if height is passed as -1. Default: 0.
 	 */
 	constructor(
 		file: File,
@@ -93,7 +99,7 @@ open class ImageVisual(
 		height: Int = -1,
 		offsetX: Int = 0,
 		offsetY: Int = 0
-	) : this(load(file.absolutePath), width, height, offsetX, offsetY)
+	) : this(file.absolutePath, width, height, offsetX, offsetY)
 	
 	init {
 		require(offsetX < image.width) { "OffsetX is larger than image width." }

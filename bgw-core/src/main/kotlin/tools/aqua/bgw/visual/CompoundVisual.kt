@@ -24,9 +24,12 @@ import tools.aqua.bgw.observable.ObservableList
 
 /**
  * A compound visual containing stacked [SingleLayerVisual]s.
+ *
  * Hint: Each [SingleLayerVisual] besides the bottom should have opacity in order to display all layers properly.
  *
- * @param children children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
+ * @constructor Creates a [CompoundVisual] with given children as [List].
+ *
+ * @param children Children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
  * gets displayed at the bottom of the stack.
  */
 open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
@@ -34,12 +37,16 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 	/**
 	 * [ObservableList] for the [children] of this stack.
 	 * The first [SingleLayerVisual] gets displayed at the bottom of the stack.
+	 *
+	 * @see children
 	 */
 	val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children)
 	
 	/**
 	 * The [children] of this stack.
 	 * The first [SingleLayerVisual] gets displayed at the bottom of the stack.
+	 *
+	 * @see childrenProperty
 	 */
 	var children: List<SingleLayerVisual>
 		get() = childrenProperty.toList()
@@ -49,9 +56,9 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 		}
 	
 	/**
-	 * [CompoundVisual] constructor with vararg parameter.
+	 * [CompoundVisual] constructor with vararg parameter for initial children.
 	 *
-	 * @param children children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
+	 * @param children Children [SingleLayerVisual]s in the order they should be displayed, where the first [SingleLayerVisual]
 	 * gets displayed at the bottom of the stack.
 	 */
 	constructor(vararg children: SingleLayerVisual) : this(children.toList())
