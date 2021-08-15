@@ -1,10 +1,6 @@
 package examples.concepts.userinput
 
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
-import tools.aqua.bgw.components.reposition
-import tools.aqua.bgw.components.resize
-import tools.aqua.bgw.components.rotate
-import tools.aqua.bgw.components.scale
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
