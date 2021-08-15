@@ -21,6 +21,11 @@ package tools.aqua.bgw.util
 
 /**
  * A Coordinate containing [xCoord] and [yCoord].
+ *
+ * @constructor Creates a [Coordinate] with given [xCoord] and [yCoord].
+ *
+ * @param xCoord The x coordinate.
+ * @param yCoord The y coordinate.
  */
 open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	

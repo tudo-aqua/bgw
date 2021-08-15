@@ -28,6 +28,8 @@ import tools.aqua.bgw.util.Font
  *
  * Whenever user input occurs the [text] field gets updated.
  *
+ * @constructor Creates a [TextArea].
+ *
  * @param posX Horizontal coordinate for this [TextArea]. Default: 0.
  * @param posY Vertical coordinate for this [TextArea]. Default: 0.
  * @param width Width for this [TextArea]. Default: [DEFAULT_TEXT_AREA_WIDTH].

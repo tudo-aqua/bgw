@@ -22,6 +22,8 @@ package tools.aqua.bgw.event
 /**
  * [Event] that gets raised for key inputs.
  *
+ * @constructor Creates a [KeyEvent].
+ *
  * @param keyCode Corresponding key code enum value.
  * @param character Corresponding character string.
  * @param controlDown Whether control key was pressed.

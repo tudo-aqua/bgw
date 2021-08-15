@@ -29,6 +29,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A simple [Button] with a [text].
  *
+ * @constructor Creates a [Button].
+ *
  * @param posX Horizontal coordinate for this [Button]. Default: 0.
  * @param posY Vertical coordinate for this [Button]. Default: 0.
  * @param width Width for this [Button]. Default: [DEFAULT_BUTTON_WIDTH].

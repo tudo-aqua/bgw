@@ -30,6 +30,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Defines a [LayoutView] that orders components in a grid structure.
  *
+ * @constructor Creates a [GridPane] with given [rows] and [columns].
+ *
  * @param posX Horizontal coordinate for this [GridPane]. Default: 0.
  * @param posY Vertical coordinate for this [GridPane]. Default: 0.
  * @param columns Initial column count.

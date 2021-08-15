@@ -27,6 +27,8 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
  *
  * Rotates [ComponentView] to given angle.
  *
+ * @constructor Creates a [RotationAnimation] for the given [ComponentView].
+ *
  * @param componentView [ComponentView] to animate.
  * @param fromAngle Initial angle. Default: Current [ComponentView.rotation].
  * @param toAngle Resulting angle. Default: Current [ComponentView.rotation].

@@ -60,6 +60,8 @@ import tools.aqua.bgw.visual.Visual
  * The [GameComponentView] at the highest index in the components list registers the next drag and drop gesture above
  * this [Satchel].
  *
+ * @constructor Creates a [Satchel].
+ *
  * @param posX horizontal coordinate for this [Satchel]. Default: 0.
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
  * @param width width for this [Satchel]. Default: [DEFAULT_SATCHEL_WIDTH].

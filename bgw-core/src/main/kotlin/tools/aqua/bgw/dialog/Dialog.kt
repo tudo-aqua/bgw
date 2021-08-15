@@ -41,7 +41,7 @@ class Dialog private constructor(
 	vararg val buttons: ButtonType
 ) {
 	/**
-	 * Creates a [Dialog].
+	 * Creates a Dialog.
 	 *
 	 * For exception dialogs refer to exception constructor.
 	 *
@@ -60,7 +60,7 @@ class Dialog private constructor(
 	}
 	
 	/**
-	 * Creates an [exception] [Dialog].
+	 * Creates an exception Dialog.
 	 *
 	 * For information dialogs refer to information constructor.
 	 *

@@ -27,6 +27,8 @@ import java.awt.Color
  * This class is used to represent a font.
  * For more customization of fonts, the CSS feature can be used.
  *
+ * @constructor Creates a [Font].
+ *
  * @param size Size of this Font in `px`. Maybe a floating-point value. Default: 14.
  * @param color Color of this font. Default: [java.awt.Color.BLACK].
  * @param family Font family as a String for this Font. Default: "Arial".

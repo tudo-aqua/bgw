@@ -21,6 +21,9 @@ package tools.aqua.bgw.components.uicomponents
 
 /**
  * A [TableColumn] may be used to represent a column in a [TableView].
+ *
+ * @constructor Creates a [TableColumn].
+ *
  * @see TableView
  */
 open class TableColumn<T>(

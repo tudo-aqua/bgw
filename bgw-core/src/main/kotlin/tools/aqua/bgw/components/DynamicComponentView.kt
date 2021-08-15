@@ -30,6 +30,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all [ComponentView]s that can be draggable.
  *
+ * @constructor Creates a [DynamicComponentView].
+ *
  * @param posX The X coordinate for this [DynamicComponentView] relative to its container.
  * @param posY The Y coordinate for this [DynamicComponentView] relative to its container.
  * @param width Width for this [DynamicComponentView].
@@ -39,7 +41,7 @@ import tools.aqua.bgw.visual.Visual
  * @see BoardGameScene
  * @see MenuScene
  */
-abstract class DynamicComponentView(
+abstract class DynamicComponentView internal constructor(
 	posX: Number,
 	posY: Number,
 	width: Number,

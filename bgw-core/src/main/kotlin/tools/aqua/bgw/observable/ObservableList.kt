@@ -27,6 +27,10 @@ import kotlin.streams.toList
 
 /**
  * An observable [ArrayList].
+ *
+ * @constructor Creates an [ObservableArrayList] with given initial elements.
+ *
+ * @param elements Initial elements in this [ObservableList].
  */
 open class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
@@ -37,6 +41,10 @@ open class ObservableArrayList<T>(elements: Collection<T> = listOf()) : Observab
 
 /**
  * An observable [LinkedList].
+ *
+ * @constructor Creates an [ObservableLinkedList] with given initial elements.
+ *
+ * @param elements Initial elements in this [ObservableList].
  */
 open class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
 	/**
@@ -47,6 +55,8 @@ open class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : Observa
 
 /**
  * An observable [List] implementation.
+ *
+ * @constructor Creates an [ObservableList].
  */
 abstract class ObservableList<T> : Observable(), Iterable<T> {
 	

@@ -30,6 +30,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * The current [Visual] is used to visualize the token.
  *
+ * @constructor Creates a [TokenView] with given [Visual].
+ *
  * @param posX Horizontal coordinate for this TokenView. Default: 0.
  * @param posY Vertical coordinate for this TokenView. Default: 0.
  * @param width Width for this TokenView. Default: [DEFAULT_TOKEN_WIDTH].

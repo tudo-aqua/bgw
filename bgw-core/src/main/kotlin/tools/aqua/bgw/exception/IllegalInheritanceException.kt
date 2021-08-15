@@ -21,6 +21,8 @@ package tools.aqua.bgw.exception
 
 /**
  * A [RuntimeException] that is thrown when trying to inherit from a top-level framework class which is prohibited.
+ *
+ * @constructor Creates an [IllegalInheritanceException].
  */
 internal class IllegalInheritanceException(inheritance: Any, supertype: Class<*>) :
 	RuntimeException(

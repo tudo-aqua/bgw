@@ -31,6 +31,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * The Visual at the [currentSide] value is used to visualize the dice.
  *
+ * @constructor Creates a [DiceView] with given [Visual]s.
+ *
  * @param posX Horizontal coordinate for this [DiceView]. Default: 0.
  * @param posY Vertical coordinate for this [DiceView]. Default: 0.
  * @param width Width for this [DiceView]. Default: [DEFAULT_DICE_WIDTH].

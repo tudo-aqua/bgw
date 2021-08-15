@@ -28,6 +28,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A basic [Label] displaying text.
  *
+ * @constructor Creates a [Label].
+ *
  * @param posX Horizontal coordinate for this [Label]. Default: 0.
  * @param posY Vertical coordinate for this [Label]. Default: 0.
  * @param width Width for this [Label]. Default: [Label.DEFAULT_LABEL_WIDTH].

@@ -21,5 +21,7 @@ package tools.aqua.bgw.event
 
 /**
  * [Event] baseclass.
+ *
+ * @constructor Empty constructor.
  */
 abstract class Event

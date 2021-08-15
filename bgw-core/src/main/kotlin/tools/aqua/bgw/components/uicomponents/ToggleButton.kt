@@ -39,6 +39,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
  *
+ * @constructor Creates a [ToggleButton].
+ *
  * @param posX Horizontal coordinate for this [ToggleButton]. Default: 0.
  * @param posY Vertical coordinate for this [ToggleButton]. Default: 0.
  * @param width Width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].

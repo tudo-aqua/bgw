@@ -39,6 +39,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
  *
+ * @constructor Creates a [RadioButton].
+ *
  * @param posX Horizontal coordinate for this [RadioButton]. Default: 0.
  * @param posY Vertical coordinate for this [RadioButton]. Default: 0.
  * @param width Width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].

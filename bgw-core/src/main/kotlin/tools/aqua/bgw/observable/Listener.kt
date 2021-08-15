@@ -46,6 +46,8 @@ fun interface IValueObservable<T> {
 
 /**
  * Basic observable.
+ *
+ * @constructor Empty constructor.
  */
 abstract class Observable {
 	/**
@@ -164,6 +166,8 @@ abstract class Observable {
 
 /**
  * Basic observable with value.
+ *
+ * @constructor Empty constructor.
  */
 abstract class ValueObservable<T> {
 	/**

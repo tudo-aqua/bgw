@@ -22,6 +22,8 @@ import tools.aqua.bgw.util.ComponentViewGrid.GridIterator
 /**
  * Data class containing meta info about current grid element returned by its [GridIterator].
  *
+ * @constructor Creates a [GridIteratorElement].
+ *
  * @param columnIndex Current column index.
  * @param rowIndex Current row index.
  * @param component Current component or `null` if there is no component present in this cell.

@@ -30,6 +30,8 @@ package tools.aqua.bgw.components.uicomponents
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the
  * [ToggleGroup].
  *
+ * @constructor Creates a [ToggleGroup].
+ *
  * @see ToggleButton
  * @see RadioButton
  */

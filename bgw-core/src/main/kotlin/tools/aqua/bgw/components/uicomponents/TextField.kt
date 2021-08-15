@@ -26,6 +26,8 @@ import tools.aqua.bgw.util.Font
  *
  * Whenever user input occurs the [text] field gets updated.
  *
+ * @constructor Creates a [TextField].
+ *
  * @param posX Horizontal coordinate for this [TextField]. Default: 0.
  * @param posY Vertical coordinate for this [TextField]. Default: 0.
  * @param width Width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].

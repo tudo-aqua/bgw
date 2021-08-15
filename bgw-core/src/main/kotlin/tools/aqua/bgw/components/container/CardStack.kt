@@ -33,6 +33,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * The positioning of contained [CardView]s gets ignored and the specified alignment gets used to position them instead.
  *
+ * @constructor Creates a [CardStack].
+ *
  * @param posX Horizontal coordinate for this [CardStack]. Default: 0.
  * @param posY Vertical coordinate for this [CardStack]. Default: 0.
  * @param width Width for this [CardStack]. Default: [DEFAULT_CARD_STACK_WIDTH].

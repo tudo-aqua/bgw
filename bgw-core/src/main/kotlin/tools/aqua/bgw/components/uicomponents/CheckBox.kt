@@ -30,6 +30,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A simple [CheckBox] with a [text].
  *
+ * @constructor Creates a [CheckBox].
+ *
  * @param posX Horizontal coordinate for this [CheckBox]. Default: 0.
  * @param posY Vertical coordinate for this [CheckBox]. Default: 0.
  * @param width Width for this [CheckBox]. Default: [DEFAULT_CHECKBOX_WIDTH].

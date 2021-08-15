@@ -36,6 +36,8 @@ import kotlin.math.floor
  *
  * It defines important fields and functions that are necessary to visualize inheriting components.
  *
+ * @constructor Creates a [ComponentView].
+ *
  * @param posX the X coordinate for this [ComponentView] relative to its container.
  * @param posY the Y coordinate for this [ComponentView] relative to its container.
  * @param width width for this [ComponentView].
@@ -47,7 +49,7 @@ import kotlin.math.floor
  *
  * @see IllegalInheritanceException
  */
-abstract class ComponentView(
+abstract class ComponentView internal constructor(
 	posX: Number,
 	posY: Number,
 	width: Number,

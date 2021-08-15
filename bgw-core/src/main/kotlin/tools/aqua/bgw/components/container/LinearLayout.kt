@@ -42,6 +42,8 @@ import tools.aqua.bgw.visual.Visual
  * Otherwise, the biggest possible spacing is used
  * so that all components are still withing bounds of the [LinearLayout].
  *
+ * @constructor Creates a [LinearLayout].
+ *
  * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
  * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
  * @param width width for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_WIDTH].

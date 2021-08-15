@@ -29,6 +29,8 @@ import java.awt.Color
 /**
  * A [ColorPicker] that allows to choose a [Color].
  *
+ * @constructor Creates a [ColorPicker].
+ *
  * @param posX Horizontal coordinate for this [ColorPicker]. Default: 0.
  * @param posY Vertical coordinate for this [ColorPicker]. Default: 0.
  * @param width Width for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_WIDTH].

@@ -23,5 +23,7 @@ import tools.aqua.bgw.animation.Animation
 
 /**
  * Gets raised when an [Animation] finished.
+ *
+ * @constructor Creates an [AnimationFinishedEvent].
  */
 class AnimationFinishedEvent : Event()

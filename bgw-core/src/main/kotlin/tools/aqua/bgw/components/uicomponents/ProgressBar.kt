@@ -30,6 +30,8 @@ import java.awt.Color
 /**
  * A [ProgressBar].
  *
+ * @constructor Creates a [ProgressBar].
+ *
  * @param posX Horizontal coordinate for this [ProgressBar]. Default: 0.
  * @param posY Vertical coordinate for this [ProgressBar]. Default: 0.
  * @param width Width for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_WIDTH].

@@ -28,6 +28,8 @@ import tools.aqua.bgw.util.Font
 /**
  * A visual displaying text.
  *
+ * @constructor Creates a [TextVisual] with given [text].
+ *
  * @param text Text to display.
  * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
  * @param alignment [Alignment] for the [text]. Default: [Alignment.CENTER].

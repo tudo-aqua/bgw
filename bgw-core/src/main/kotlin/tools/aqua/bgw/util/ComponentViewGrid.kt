@@ -26,6 +26,8 @@ import tools.aqua.bgw.core.Alignment
 
 /**
  * Internal class [ComponentViewGrid] boxing grid structure.
+ *
+ * @constructor Creates a [ComponentViewGrid].
  */
 internal class ComponentViewGrid<T : ComponentView>(
 	rows: Int,

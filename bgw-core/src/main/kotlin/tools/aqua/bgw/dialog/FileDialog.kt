@@ -24,6 +24,8 @@ import java.io.File
 /**
  * A [FileDialog] such as a file chooser or save dialog, depending on [FileDialogMode].
  *
+ * @constructor Creates a [FileDialog] with given [FileDialogMode].
+ *
  * @param mode The [Dialog]'s mode.
  * @param title The [Dialog]'s title text.
  * @param initialFileName The initial file name in the file name text box.

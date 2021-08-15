@@ -22,6 +22,8 @@ package tools.aqua.bgw.observable
 /**
  * Property baseclass providing observable fields.
  *
+ * @constructor Creates a [Property] with given initial value.
+ *
  * @param initialValue Initial value of this property.
  */
 open class Property<T>(initialValue: T) : ValueObservable<T>() {
@@ -66,6 +68,8 @@ open class Property<T>(initialValue: T) : ValueObservable<T>() {
 /**
  * A BooleanProperty.
  *
+ * @constructor Creates a [BooleanProperty] with given initial value.
+ *
  * @param initialValue Initial Value. Default: `false`.
  */
 open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
@@ -73,12 +77,16 @@ open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(in
 /**
  * An IntegerProperty.
  *
+ * @constructor Creates a [IntegerProperty] with given initial value.
+ *
  * @param initialValue Initial Value. Default: 0.
  */
 open class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
 
 /**
  * A DoubleProperty.
+ *
+ * @constructor Creates a [DoubleProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: 0.0.
  */
@@ -91,11 +99,13 @@ open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initial
  * Therefore [upperBoundInclusive] must be greater or equal to [lowerBoundInclusive].
  * The Range is constant and cannot be altered after object creation.
  *
- * @throws IllegalArgumentException If a value out of range is set as initialValue.
+ * @constructor Creates a [LimitedDoubleProperty] with given bounds and initial value.
  *
  * @param lowerBoundInclusive Lower bound inclusive. Default: -inf.
  * @param upperBoundInclusive Upper bound inclusive. Default: +inf.
  * @param initialValue Initial Value. Default: [lowerBoundInclusive].
+ *
+ * @throws IllegalArgumentException If a value out of range is set as initialValue.
  */
 open class LimitedDoubleProperty(
 	lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
@@ -154,6 +164,8 @@ open class LimitedDoubleProperty(
 
 /**
  * A StringProperty.
+ *
+ * @constructor Creates a [StringProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: Empty string.
  */

@@ -35,6 +35,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * Whenever the user selects an item, the [selectedItemProperty] gets updated.
  *
+ * @constructor Creates a [ComboBox].
+ *
  * @param posX Horizontal coordinate for this [ComboBox]. Default: 0.
  * @param posY Vertical coordinate for this [ComboBox]. Default: 0.
  * @param width Width for this [ComboBox]. Default: [DEFAULT_COMBOBOX_WIDTH].

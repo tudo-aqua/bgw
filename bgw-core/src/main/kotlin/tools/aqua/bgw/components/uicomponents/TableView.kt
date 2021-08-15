@@ -55,6 +55,8 @@ import tools.aqua.bgw.visual.Visual
  *
  *  |4         |nice string 3 |9!        |
  *
+ *  @constructor Creates a [TableView].
+ *
  * @param posX Horizontal coordinate for this [TableView]. Default: 0.
  * @param posY Vertical coordinate for this [TableView]. Default: 0.
  * @param width Width for this [TableView]. Default: [DEFAULT_TABLE_VIEW_WIDTH].

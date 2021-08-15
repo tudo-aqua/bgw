@@ -28,6 +28,8 @@ import tools.aqua.bgw.core.Scene
  *
  * Moves given [ComponentView] relative to parents anchor point.
  *
+ * @constructor Creates a [MovementAnimation] for the given [ComponentView].
+ *
  * @param componentView [ComponentView] to animate
  * @param fromX Initial X position. Default: Current [ComponentView.posX].
  * @param toX Resulting X position. Default: Current [ComponentView.posX].

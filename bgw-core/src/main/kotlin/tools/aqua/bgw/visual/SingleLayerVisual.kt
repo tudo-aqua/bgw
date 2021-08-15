@@ -23,6 +23,8 @@ import tools.aqua.bgw.observable.LimitedDoubleProperty
 
 /**
  * Baseclass for single layer visuals.
+ *
+ * @constructor Creates a [SingleLayerVisual].
  */
 sealed class SingleLayerVisual : Visual() {
     /**

@@ -23,6 +23,8 @@ import tools.aqua.bgw.observable.Observable
 
 /**
  * Visual baseclass.
+ *
+ * @constructor Creates a [Visual].
  */
 sealed class Visual : Observable() {
 	/**

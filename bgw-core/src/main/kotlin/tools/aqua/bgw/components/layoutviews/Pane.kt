@@ -28,6 +28,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [Pane] can be used to group [ComponentView]s for easier position management and layout.
  *
+ * @constructor Creates a [Pane].
+ *
  * @param posX Horizontal coordinate for this [Pane]. Default: 0.
  * @param posY Vertical coordinate for this [Pane]. Default: 0.
  * @param width Width for this [Pane].

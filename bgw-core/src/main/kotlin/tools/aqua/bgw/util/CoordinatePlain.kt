@@ -25,6 +25,8 @@ package tools.aqua.bgw.util
  * @constructor Creates a coordinate plain out of the two corners TOP_LEFT and BOTTOM_RIGHT.
  * TOP_LEFT corner coordinates must be smaller or equal in x and y direction than BOTTOM_RIGHT corner coordinate.
  *
+ * @constructor Creates a [CoordinatePlain] with given corner coordinates.
+ *
  * @param topLeftX The xCoord of the top left corner
  * @param topLeftY The yCoord of the top left corner
  * @param bottomRightX The xCoord of the bottom right corner

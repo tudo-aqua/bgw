@@ -26,6 +26,8 @@ package tools.aqua.bgw.dialog
  *
  * To generate e.g. "Image Files (*.png, *.jpg)" set [description] = "Image files" and [extensions] = ("png", "jpg").
  *
+ * @constructor Creates an [ExtensionFilter].
+ *
  * @param description File type description.
  * @param extensions File extensions.
  */

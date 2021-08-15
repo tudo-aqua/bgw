@@ -33,6 +33,8 @@ import tools.aqua.bgw.visual.Visual
  * The [formatFunction] is used to gain a [String] representation of each item.
  * If no [formatFunction] is specified the [toString] function gets used instead.
  *
+ * @constructor Creates a [ListView].
+ *
  * @param posX Horizontal coordinate for this [ListView]. Default: 0.
  * @param posY Vertical coordinate for this [ListView]. Default: 0.
  * @param width Width for this [ListView]. Default: [DEFAULT_LISTVIEW_WIDTH].
