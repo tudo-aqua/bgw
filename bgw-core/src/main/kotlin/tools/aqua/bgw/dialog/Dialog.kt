@@ -22,14 +22,14 @@ package tools.aqua.bgw.dialog
 /**
  * Shows a dialog containing the given [message] and [buttons].
  *
- * @constructor Internal constructor. Refer to secondary constructors.
+ * @constructor Private constructor. Refer to secondary constructors.
  *
- * @param dialogType the [DialogType] of the alert. Affects the displayed icon.
- * @param title title to be shown.
- * @param header headline to be shown in the dialogs content.
- * @param message message to be shown.
- * @param exception throwable to be shown in expandable content.
- * @param buttons buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
+ * @param dialogType The [DialogType] of the alert. Affects the displayed icon.
+ * @param title Title to be shown.
+ * @param header Headline to be shown in the dialogs content.
+ * @param message Message to be shown.
+ * @param exception [Throwable] to be shown in expandable content.
+ * @param buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
  * any [ButtonType]s.
  */
 class Dialog private constructor(
@@ -42,13 +42,14 @@ class Dialog private constructor(
 ) {
 	/**
 	 * Creates a [Dialog].
+	 *
 	 * For exception dialogs refer to exception constructor.
 	 *
-	 * @param dialogType the [DialogType] of the alert. Affects the displayed icon.
-	 * @param title title to be shown.
-	 * @param header headline to be shown in the dialogs content.
-	 * @param message message to be shown in the dialogs content.
-	 * @param buttons buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
+	 * @param dialogType The [DialogType] of the alert. Affects the displayed icon.
+	 * @param title Title to be shown.
+	 * @param header Headline to be shown in the dialogs content.
+	 * @param message Message to be shown in the dialogs content.
+	 * @param buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be used if you don't pass
 	 * any [ButtonType]s.
 	 */
 	constructor(dialogType: DialogType, title: String, header: String, message: String, vararg buttons: ButtonType) :
@@ -60,12 +61,13 @@ class Dialog private constructor(
 	
 	/**
 	 * Creates an [exception] [Dialog].
+	 *
 	 * For information dialogs refer to information constructor.
 	 *
-	 * @param title title to be shown.
-	 * @param header headline to be shown in the dialogs content.
-	 * @param message message to be shown.
-	 * @param exception throwable to be shown in expandable content.
+	 * @param title Title to be shown.
+	 * @param header Headline to be shown in the dialogs content.
+	 * @param message Message to be shown.
+	 * @param exception [Throwable] to be shown in expandable content.
 	 */
 	constructor(title: String, header: String, message: String, exception: Throwable) :
 			this(DialogType.EXCEPTION, title, header, message, exception, ButtonType.OK)

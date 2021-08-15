@@ -21,11 +21,13 @@ package tools.aqua.bgw.dialog
 
 /**
  * Extension filters for [FileDialog]s.
+ *
  * Maps a file type description to its extensions.
+ *
  * To generate e.g. "Image Files (*.png, *.jpg)" set [description] = "Image files" and [extensions] = ("png", "jpg").
  *
- * @param description file type description.
- * @param extensions file extensions.
+ * @param description File type description.
+ * @param extensions File extensions.
  */
 class ExtensionFilter(val description: String, vararg extensions: String) {
 	

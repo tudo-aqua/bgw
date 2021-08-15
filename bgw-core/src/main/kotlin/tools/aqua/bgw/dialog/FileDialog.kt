@@ -24,14 +24,14 @@ import java.io.File
 /**
  * A [FileDialog] such as a file chooser or save dialog, depending on [FileDialogMode].
  *
- * @param mode the dialog's mode.
- * @param title the dialog's title text.
- * @param initialFileName the initial file name in the file name text box.
- * @param initialDirectory the initial directory where to open the file chooser.
- * @param extensionFilters extensions filters for this file chooser.
+ * @param mode The [Dialog]'s mode.
+ * @param title The [Dialog]'s title text.
+ * @param initialFileName The initial file name in the file name text box.
+ * @param initialDirectory The initial directory where to open the file chooser.
+ * @param extensionFilters Extensions filters for this file chooser.
  *
- * @see tools.aqua.bgw.dialog.FileDialogMode
- * @see tools.aqua.bgw.dialog.ExtensionFilter
+ * @see FileDialogMode
+ * @see ExtensionFilter
  */
 data class FileDialog(
 	val mode: FileDialogMode,
