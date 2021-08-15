@@ -38,8 +38,8 @@ fun interface IValueObservable<T> {
 	/**
 	 * Indicates property update.
 	 *
-	 * @param oldValue old value of property.
-	 * @param newValue new value of property.
+	 * @param oldValue Old value of property.
+	 * @param newValue New value of property.
 	 */
 	fun update(oldValue: T, newValue: T)
 }
@@ -68,12 +68,14 @@ abstract class Observable {
 	
 	/**
 	 * Used by BGW framework containers to manage children.
+	 *
 	 * Should only be set by direct parent.
 	 */
 	private var internalListenerHandler: IObservable? = null
 	
 	/**
 	 * Used by BGW framework containers to manage children.
+	 *
 	 * Should only be set by direct parent.
 	 */
 	internal var internalListener: (() -> Unit)? = null
@@ -84,7 +86,7 @@ abstract class Observable {
 	/**
 	 * Sets [guiListener] and calls [IObservable.update].
 	 *
-	 * @param listener listener to add and notify.
+	 * @param listener Listener to add and notify.
 	 */
 	internal fun setGUIListenerAndInvoke(listener: () -> Unit) {
 		guiListener = listener
@@ -94,7 +96,7 @@ abstract class Observable {
 	/**
 	 * Sets [internalListener] and calls [IObservable.update].
 	 *
-	 * @param listener listener to add and notify.
+	 * @param listener Listener to add and notify.
 	 */
 	internal fun setInternalListenerAndInvoke(listener: () -> Unit) {
 		internalListener = listener
@@ -104,7 +106,7 @@ abstract class Observable {
 	/**
 	 * Adds a [listener] and calls [IObservable.update] on this new listener.
 	 *
-	 * @param listener listener to add and notify.
+	 * @param listener Listener to add and notify.
 	 */
 	fun addListenerAndInvoke(listener: IObservable) {
 		listeners.add(listener)
@@ -114,7 +116,7 @@ abstract class Observable {
 	/**
 	 * Adds a [listener] silently.
 	 *
-	 * @param listener listener to add
+	 * @param listener Listener to add
 	 */
 	fun addListener(listener: IObservable) {
 		listeners.add(listener)
@@ -123,7 +125,7 @@ abstract class Observable {
 	/**
 	 * Removes a [listener].
 	 *
-	 * @param listener listener to remove.
+	 * @param listener Listener to remove.
 	 *
 	 * @return `true` if the listener has been successfully removed, `false` if it was not found.
 	 */
@@ -184,12 +186,14 @@ abstract class ValueObservable<T> {
 	
 	/**
 	 * Used by BGW framework containers to manage children.
+	 *
 	 * Should only be set by direct parent.
 	 */
 	private var internalListenerHandler: IValueObservable<T>? = null
 	
 	/**
 	 * Used by BGW framework containers to manage children.
+	 *
 	 * Should only be set by direct parent.
 	 */
 	internal var internalListener: ((T, T) -> Unit)? = null
@@ -200,8 +204,8 @@ abstract class ValueObservable<T> {
 	/**
 	 * Sets [guiListener] and calls [IValueObservable.update].
 	 *
-	 * @param initialValue initial value to notify.
-	 * @param listener listener to add and notify.
+	 * @param initialValue Initial value to notify.
+	 * @param listener Listener to add and notify.
 	 */
 	internal fun setGUIListenerAndInvoke(initialValue: T, listener: ((T, T) -> Unit)) {
 		guiListener = listener
@@ -211,8 +215,8 @@ abstract class ValueObservable<T> {
 	/**
 	 * Sets [internalListener] and calls [IValueObservable.update].
 	 *
-	 * @param initialValue initial value to notify.
-	 * @param listener listener to add and notify.
+	 * @param initialValue Initial value to notify.
+	 * @param listener Listener to add and notify.
 	 */
 	internal fun setInternalListenerAndInvoke(initialValue: T, listener: ((T, T) -> Unit)) {
 		internalListener = listener
@@ -222,8 +226,8 @@ abstract class ValueObservable<T> {
 	/**
 	 * Adds a [listener] and calls [IValueObservable.update] on this new listener with given initial value.
 	 *
-	 * @param initialValue initial value to notify.
-	 * @param listener listener to add and notify.
+	 * @param initialValue Initial value to notify.
+	 * @param listener Listener to add and notify.
 	 */
 	fun addListenerAndInvoke(initialValue: T, listener: ((T, T) -> Unit)) {
 		listeners.add(listener)
@@ -258,8 +262,8 @@ abstract class ValueObservable<T> {
 	/**
 	 * Notifies [guiListener] by calling [IValueObservable.update].
 	 *
-	 * @param oldValue old value to notify.
-	 * @param newValue new value to notify.
+	 * @param oldValue Old value to notify.
+	 * @param newValue New value to notify.
 	 */
 	internal fun notifyGUIListener(oldValue: T, newValue: T) {
 		guiListenerHandler?.update(oldValue, newValue)
@@ -268,8 +272,8 @@ abstract class ValueObservable<T> {
 	/**
 	 * Notifies [internalListener] by calling [IValueObservable.update].
 	 *
-	 * @param oldValue old value to notify.
-	 * @param newValue new value to notify.
+	 * @param oldValue Old value to notify.
+	 * @param newValue New value to notify.
 	 */
 	internal fun notifyInternalListener(oldValue: T, newValue: T) {
 		internalListenerHandler?.update(oldValue, newValue)
@@ -278,8 +282,8 @@ abstract class ValueObservable<T> {
 	/**
 	 * Notifies all [listeners] by calling [IValueObservable.update].
 	 *
-	 * @param oldValue old value to notify.
-	 * @param newValue new value to notify.
+	 * @param oldValue Old value to notify.
+	 * @param newValue New value to notify.
 	 */
 	internal fun notifyChange(oldValue: T, newValue: T) {
 		listeners.forEach { it.update(oldValue, newValue) }

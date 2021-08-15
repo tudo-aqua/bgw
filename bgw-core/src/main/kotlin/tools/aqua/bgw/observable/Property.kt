@@ -22,7 +22,7 @@ package tools.aqua.bgw.observable
 /**
  * Property baseclass providing observable fields.
  *
- * @param initialValue initial value of this property.
+ * @param initialValue Initial value of this property.
  */
 open class Property<T>(initialValue: T) : ValueObservable<T>() {
 	
@@ -46,6 +46,7 @@ open class Property<T>(initialValue: T) : ValueObservable<T>() {
 	
 	/**
 	 * Overrides [value] of this property without notifying public listeners.
+	 *
 	 * Only notifies GUI listener.
 	 */
 	internal open fun setSilent(value: T) {
@@ -65,35 +66,36 @@ open class Property<T>(initialValue: T) : ValueObservable<T>() {
 /**
  * A BooleanProperty.
  *
- * @param initialValue initial Value. Default: `false`.
+ * @param initialValue Initial Value. Default: `false`.
  */
 open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
 
 /**
  * An IntegerProperty.
  *
- * @param initialValue initial Value. Default: 0.
+ * @param initialValue Initial Value. Default: 0.
  */
 open class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
 
 /**
  * A DoubleProperty.
  *
- * @param initialValue initial Value. Default: 0.0.
+ * @param initialValue Initial Value. Default: 0.0.
  */
 open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
 
 /**
  * A limited DoubleProperty to a value range. Value will be checked to be in range
  * [lowerBoundInclusive] to [upperBoundInclusive].
+ *
  * Therefore [upperBoundInclusive] must be greater or equal to [lowerBoundInclusive].
  * The Range is constant and cannot be altered after object creation.
  *
- * @throws IllegalArgumentException if a value out of range is set as initialValue.
+ * @throws IllegalArgumentException If a value out of range is set as initialValue.
  *
- * @param lowerBoundInclusive lower bound inclusive. Default: -inf.
- * @param upperBoundInclusive upper bound inclusive. Default: +inf.
- * @param initialValue initial Value. Default: [lowerBoundInclusive].
+ * @param lowerBoundInclusive Lower bound inclusive. Default: -inf.
+ * @param upperBoundInclusive Upper bound inclusive. Default: +inf.
+ * @param initialValue Initial Value. Default: [lowerBoundInclusive].
  */
 open class LimitedDoubleProperty(
 	lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,
@@ -126,6 +128,7 @@ open class LimitedDoubleProperty(
 	
 	/**
 	 * Overrides value of this property without notifying public listeners.
+	 *
 	 * Only notifies [guiListener].
 	 */
 	override fun setSilent(value: Double) {
@@ -152,6 +155,6 @@ open class LimitedDoubleProperty(
 /**
  * A StringProperty.
  *
- * @param initialValue initial Value. Default: Empty string.
+ * @param initialValue Initial Value. Default: Empty string.
  */
 open class StringProperty(initialValue: String = "") : Property<String>(initialValue)
