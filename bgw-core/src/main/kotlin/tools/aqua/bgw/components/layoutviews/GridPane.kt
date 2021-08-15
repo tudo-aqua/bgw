@@ -30,14 +30,14 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Defines a [LayoutView] that orders components in a grid structure.
  *
- * @param posX horizontal coordinate for this [GridPane]. Default: 0.
- * @param posY vertical coordinate for this [GridPane]. Default: 0.
- * @param columns initial column count.
- * @param rows initial row count.
- * @param spacing spacing between rows and columns. Default: [DEFAULT_GRID_SPACING].
- * @param layoutFromCenter whether the [GridPane] should anchor in the center (`true`) or top-Left (`false`).
+ * @param posX Horizontal coordinate for this [GridPane]. Default: 0.
+ * @param posY Vertical coordinate for this [GridPane]. Default: 0.
+ * @param columns Initial column count.
+ * @param rows Initial row count.
+ * @param spacing Spacing between rows and columns. Default: [DEFAULT_GRID_SPACING].
+ * @param layoutFromCenter Whether the [GridPane] should anchor in the center (`true`) or top-Left (`false`).
  * Default: `true`.
- * @param visual initial visual for this [GridPane]. Default: [Visual.EMPTY].
+ * @param visual Initial visual for this [GridPane]. Default: [Visual.EMPTY].
  */
 open class GridPane<T : ComponentView>(
 	posX: Number = 0,
@@ -55,15 +55,13 @@ open class GridPane<T : ComponentView>(
 	internal val grid: ComponentViewGrid<T> = ComponentViewGrid(rows = rows, columns = columns)
 	internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
 	internal var renderedColWidths = DoubleArray(columns) { 0.0 }
-
-
+	
 	/**
 	 * Current column count.
 	 */
 	val columns: Int
 		get() = grid.columns
-
-
+	
 	/**
 	 * Current row count.
 	 */
@@ -88,8 +86,8 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Returns [ComponentView] in specified cell. Returns `null` if there was no component.
 	 *
-	 * @param columnIndex column index in grid.
-	 * @param rowIndex row index in grid.
+	 * @param columnIndex Column index in grid.
+	 * @param rowIndex Row index in grid.
 	 */
 	operator fun get(columnIndex: Int, rowIndex: Int): T? =
 		grid[columnIndex, rowIndex]
@@ -99,8 +97,8 @@ open class GridPane<T : ComponentView>(
 	 * Overrides existing component in this cell.
 	 * Pass `null` to remove a component.
 	 *
-	 * @param columnIndex column index in grid.
-	 * @param rowIndex row index in grid.
+	 * @param columnIndex Column index in grid.
+	 * @param rowIndex Row index in grid.
 	 * @param component [ComponentView] to be added to the specified cell.
 	 */
 	operator fun set(columnIndex: Int, rowIndex: Int, component: T?) {
@@ -126,8 +124,8 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Returns centering mode as an [Alignment] of the specified cell.
 	 *
-	 * @param columnIndex column index in grid.
-	 * @param rowIndex row index in grid.
+	 * @param columnIndex Column index in grid.
+	 * @param rowIndex Row index in grid.
 	 */
 	fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment =
 		grid.getCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex)
@@ -136,9 +134,9 @@ open class GridPane<T : ComponentView>(
 	 * Sets centering mode of desired grid cell with given [Alignment].
 	 * Overrides existing mode in this cell.
 	 *
-	 * @param columnIndex column index in grid.
-	 * @param rowIndex row index in grid.
-	 * @param value new centering mode to be set for the specified cell.
+	 * @param columnIndex Column index in grid.
+	 * @param rowIndex Row index in grid.
+	 * @param value New centering mode to be set for the specified cell.
 	 */
 	fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
 		grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, alignment = value)
@@ -149,8 +147,8 @@ open class GridPane<T : ComponentView>(
 	 * Sets centering mode of desired column in grid with given [Alignment].
 	 * Overrides existing mode in the whole column.
 	 *
-	 * @param columnIndex column index in grid.
-	 * @param value new centering mode to be set for the whole column.
+	 * @param columnIndex Column index in grid.
+	 * @param value New centering mode to be set for the whole column.
 	 */
 	fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
 		grid.setColumnCenterMode(columnIndex = columnIndex, alignment = value)
@@ -161,8 +159,8 @@ open class GridPane<T : ComponentView>(
 	 * Sets centering mode of desired row in grid with given [Alignment].
 	 * Overrides existing mode in the whole row.
 	 *
-	 * @param rowIndex row index in grid.
-	 * @param value new centering mode to be set for the whole row.
+	 * @param rowIndex Row index in grid.
+	 * @param value New centering mode to be set for the whole row.
 	 */
 	fun setRowCenterMode(rowIndex: Int, value: Alignment) {
 		grid.setRowCenterMode(rowIndex = rowIndex, alignment = value)
@@ -173,7 +171,7 @@ open class GridPane<T : ComponentView>(
 	 * Sets centering mode of all cells in the grid with given [Alignment].
 	 * Overrides existing modes of all cells.
 	 *
-	 * @param value new centering mode to be set for all cells.
+	 * @param value New centering mode to be set for all cells.
 	 */
 	fun setCenterMode(value: Alignment) {
 		grid.setCenterMode(alignment = value)
@@ -183,7 +181,7 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Returns the set column width for the given column.
 	 *
-	 * @param columnIndex target column.
+	 * @param columnIndex Target column.
 	 *
 	 * @see setColumnWidth
 	 * @see setColumnWidths
@@ -196,10 +194,10 @@ open class GridPane<T : ComponentView>(
 	 * Manually set column width of one column.
 	 * Overrides automatic resizing based on content from this column.
 	 *
-	 * @param columnIndex target column.
-	 * @param columnWidth new column width. Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
+	 * @param columnIndex Target column.
+	 * @param columnWidth New column width. Use [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException if value was negative.
+	 * @throws IllegalArgumentException If value was negative.
 	 *
 	 * @see setColumnWidths
 	 * @see setAutoColumnWidth
@@ -215,9 +213,9 @@ open class GridPane<T : ComponentView>(
 	 * Overrides automatic resizing based on content from this column.
 	 *
 	 * @param columnWidths New column widths. Array index 0 get applied for the first column etc.
-	 * Use COLUMN_WIDTH_AUTO to restore automatic resizing behaviour.
+	 * Use [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException if Array size does not match column count or values were negative.
+	 * @throws IllegalArgumentException If Array size does not match column count or values were negative.
 	 *
 	 * @see setColumnWidth
 	 * @see setAutoColumnWidth
@@ -271,9 +269,9 @@ open class GridPane<T : ComponentView>(
 	 * Overrides automatic resizing based on content from this row.
 	 *
 	 * @param rowIndex Target row.
-	 * @param rowHeight New row height. Use ROW_HEIGHT_AUTO to restore automatic resizing behaviour.
+	 * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException if value was negative.
+	 * @throws IllegalArgumentException If value was negative.
 	 *
 	 * @see setRowHeights
 	 * @see setAutoColumnWidth
@@ -289,9 +287,9 @@ open class GridPane<T : ComponentView>(
 	 * Overrides automatic resizing based on content from this row.
 	 *
 	 * @param rowHeights New row heights. Array index 0 get applied for the first row etc.
-	 * Use ROW_HEIGHT_AUTO to restore automatic resizing behaviour.
+	 * Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
 	 *
-	 * @throws IllegalArgumentException if Array size does not match row count or values were negative.
+	 * @throws IllegalArgumentException If Array size does not match row count or values were negative.
 	 *
 	 * @see setRowHeight
 	 * @see setAutoRowHeight
@@ -329,19 +327,20 @@ open class GridPane<T : ComponentView>(
 	}
 	
 	/**
-	 * Grows grid by specified dimensions, filling new cells with NULL values.
+	 * Grows grid by specified dimensions, filling new cells with `null` values.
+	 *
 	 * New rows and columns get automatic resizing behaviour, specified as [COLUMN_WIDTH_AUTO] and [ROW_HEIGHT_AUTO].
 	 * Therefore, new empty rows and columns get rendered with height and width 0.0
 	 * e.g. invisible if not specified otherwise.
 	 *
-	 * @param left column count to be added to the left.
-	 * @param right column count to be added to the right.
-	 * @param top row count to be added on the top.
-	 * @param bottom row count to be added on the bottom.
+	 * @param left Column count to be added to the left.
+	 * @param right Column count to be added to the right.
+	 * @param top Row count to be added on the top.
+	 * @param bottom Row count to be added on the bottom.
 	 *
 	 * @return `true` if the grid has changed by this operation, `false` otherwise.
 	 *
-	 * @throws IllegalArgumentException if any value passed was negative.
+	 * @throws IllegalArgumentException If any value passed was negative.
 	 *
 	 * @see trim
 	 * @see removeEmptyColumns
@@ -364,9 +363,12 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Removes all empty outer rows and columns
 	 * e.g. all rows and columns counted from left, right, top and bottom that have no views in their cells.
+	 *
 	 * That means after calling the first and last row
 	 * as well as the first and last column have at least one component in their cells.
+	 *
 	 * Attributes [rows] and [columns] get updated according to new dimensions.
+	 *
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @return `true` if the grid has changed by this operation, `false` otherwise.
@@ -391,9 +393,9 @@ open class GridPane<T : ComponentView>(
 	
 	/**
 	 * Adds the desired amount of columns between column <b>columnIndex - 1</b> and <b>columnIndex</b>.
-	 * New columns get NULL-initialized.
+	 * New columns get `null`-initialized.
 	 *
-	 * @param columnIndex index on which the new column should be added
+	 * @param columnIndex Index on which the new column should be added
 	 * @param count Column count to be added. Default: 1
 	 *
 	 * @see addRows
@@ -408,7 +410,7 @@ open class GridPane<T : ComponentView>(
 	 * Removes the desired column in the grid. Removes all, views in the column.
 	 * If there is no column left in the grid, it gets trimmed to size 0x0.
 	 *
-	 * @param columnIndex Index of the column te be deleted.
+	 * @param columnIndex Index of the column to be deleted.
 	 *
 	 * @see addColumns
 	 * @see removeEmptyColumns
@@ -420,8 +422,11 @@ open class GridPane<T : ComponentView>(
 	
 	/**
 	 * Removes all empty columns e.g. all rows that have no views in their cells.
+	 *
 	 * That means after calling every column has at least one component in its cells.
+	 *
 	 * Attribute [columns] get updated according to new dimension.
+	 *
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @see addRows
@@ -434,7 +439,7 @@ open class GridPane<T : ComponentView>(
 	
 	/**
 	 * Adds the desired amount of rows between row <b>rowIndex</b> and <b>rowIndex + 1</b>.
-	 * New rows get NULL-initialized.
+	 * New rows get `null`-initialized.
 	 *
 	 * @param rowIndex Index after which the new row should be added
 	 * @param count Count of rows to be added. Default: 1
@@ -449,6 +454,7 @@ open class GridPane<T : ComponentView>(
 	
 	/**
 	 * Removes the desired row in the grid. Removes all, views in the row.
+	 *
 	 * If there is no row left in the grid, it gets trimmed to size 0x0.
 	 *
 	 * @param rowIndex Index of the row te be deleted.
@@ -463,8 +469,11 @@ open class GridPane<T : ComponentView>(
 	
 	/**
 	 * Removes all empty rows e.g. all rows that have no views in their cells.
+	 *
 	 * That means after calling every row has at least one component in its cells.
+	 *
 	 * Attribute [rows] gets updated according to new dimension.
+	 *
 	 * If the grid was empty the grid gets trimmed to size 0x0.
 	 *
 	 * @see addRows
@@ -478,7 +487,7 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Removes component from grid.
 	 *
-	 * @param component child to be removed.
+	 * @param component Child to be removed.
 	 */
 	override fun removeChild(component: ComponentView) {
 		val componentTriple = grid.find { it.component == component }
@@ -493,7 +502,7 @@ open class GridPane<T : ComponentView>(
 	/**
 	 * Function returning a contained child's coordinates within this [GridPane] relative to the top left corner.
 	 *
-	 * @param child child to find.
+	 * @param child Child to find.
 	 *
 	 * @return coordinate of given child in this [GridPane].
 	 */
@@ -510,26 +519,28 @@ open class GridPane<T : ComponentView>(
 	
 	/**
 	 * Returns an [Iterator] over the grid components.
+	 *
 	 * Iteration is columns-first which means that the iterator starts at cell [0,0] and then proceeds iterating through
 	 * the first row from left to right. When reaching the end of a row it proceeds to the next one resetting the column
 	 * pointer to 0.
 	 *
-	 * [Iterator.hasNext] returns true if at least one cell is left to iterate.
-	 * [Iterator.next] returns a data object [GridIteratorElement] that contains the current row and column as well as
+	 * [Iterator.hasNext] Returns true if at least one cell is left to iterate.
+	 *
+	 * [Iterator.next] Returns a data object [GridIteratorElement] that contains the current row and column as well as
 	 * the component itself. Refer to the [GridIteratorElement] documentation for further information.
 	 *
-	 * @return iterator over the grid components.
+	 * @return Iterator over the grid components.
 	 */
 	override fun iterator(): Iterator<GridIteratorElement<T>> = grid.iterator()
 	
 	companion object {
 		/**
-		 * Constant for auto column width.
+		 * Constant for automatic column width.
 		 */
 		const val COLUMN_WIDTH_AUTO: Double = -1.0
 		
 		/**
-		 * Constant for auto row height.
+		 * Constant for automatic row height.
 		 */
 		const val ROW_HEIGHT_AUTO: Double = -1.0
 	}

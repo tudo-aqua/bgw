@@ -20,21 +20,19 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.observable.IObservable
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [Pane] can be used to group [ComponentView]s for easier
- * position management and layout.
+ * A [Pane] can be used to group [ComponentView]s for easier position management and layout.
  *
- * @param posX horizontal coordinate for this [Pane]. Default: 0.
- * @param posY vertical coordinate for this [Pane]. Default: 0.
- * @param width width for this [Pane].
- * @param height height for this [Pane].
- * @param visual visual for this [Pane]. Default: [Visual.EMPTY].
+ * @param posX Horizontal coordinate for this [Pane]. Default: 0.
+ * @param posY Vertical coordinate for this [Pane]. Default: 0.
+ * @param width Width for this [Pane].
+ * @param height Height for this [Pane].
+ * @param visual Visual for this [Pane]. Default: [Visual.EMPTY].
  */
 open class Pane<T : ComponentView>(
     posX: Number = 0,
@@ -75,11 +73,12 @@ open class Pane<T : ComponentView>(
     }
     
     /**
-     * Adds an [ComponentView] to this [Pane].
+     * Adds a [ComponentView] to this [Pane].
      *
-     * @param component component to add.
-     * @throws IllegalArgumentException if [component] is already contained.
-     * @throws IllegalArgumentException if [index] is out of bounds for [components].
+     * @param component Component to add.
+     *
+     * @throws IllegalArgumentException If [component] is already contained.
+     * @throws IllegalArgumentException If [index] is out of bounds for [components].
      */
     @Suppress("DuplicatedCode")
     @Synchronized
@@ -99,11 +98,12 @@ open class Pane<T : ComponentView>(
     
     /**
      * Adds all [ComponentView]s passed as varargs to this [Pane].
+     *
      * Whenever a [ComponentView] is encountered, that is already contained, an
      * [IllegalArgumentException] is thrown and no further [ComponentView] is added.
      *
-     * @param components vararg [ComponentView]s to add.
-     * @throws IllegalArgumentException if an [ComponentView] is already contained.
+     * @param components Vararg [ComponentView]s to add.
+     * @throws IllegalArgumentException If an [ComponentView] is already contained.
      */
     fun addAll(vararg components: T) {
         try {
@@ -115,11 +115,12 @@ open class Pane<T : ComponentView>(
     
     /**
      * Adds all [ComponentView]s contained in [collection] to this [Pane].
+     *
      * Whenever an [ComponentView] is encountered, that is already contained, an
      * [IllegalArgumentException] is thrown and no further [ComponentView] is added.
      *
-     * @param collection collection containing the [ComponentView]s to add.
-     * @throws IllegalArgumentException if an [ComponentView] is already contained.
+     * @param collection [Collection] containing the [ComponentView]s to add.
+     * @throws IllegalArgumentException If an [ComponentView] is already contained.
      */
     @Synchronized
     fun addAll(collection: Collection<T>) {
@@ -133,7 +134,7 @@ open class Pane<T : ComponentView>(
     /**
      * Removes the [ComponentView] specified by the parameter from this [Pane].
      *
-     * @param component the [ComponentView] to remove.
+     * @param component The [ComponentView] to remove.
      */
     @Synchronized
     fun remove(component: T) {
@@ -142,7 +143,8 @@ open class Pane<T : ComponentView>(
     
     /**
      * Removes all [ComponentView]s from this [Pane].
-     * @return list of all removed components.
+     *
+     * @return [List] of all removed components.
      */
     @Synchronized
     fun removeAll(): List<T> {
@@ -154,6 +156,9 @@ open class Pane<T : ComponentView>(
     
     /**
      * Returns the size of the components list.
+     *
+     * @return Number of children.
+     *
      * @see components
      */
     fun numberOfComponents(): Int = observableComponents.size
@@ -181,18 +186,18 @@ open class Pane<T : ComponentView>(
     /**
      * Returning a contained child's coordinates within this container.
      *
-     * @param child child to find.
+     * @param child Child to find.
      *
-     * @return coordinate of given child in this container relative to containers anchor point.
+     * @return Coordinate of given child in this container relative to containers anchor point.
      */
     override fun getChildPosition(child: ComponentView): Coordinate = Coordinate(child.posX, child.posY)
     
     /**
      * Removes [component] from container's children.
      *
-     * @param component child to be removed.
+     * @param component Child to be removed.
      *
-     * @throws RuntimeException if the child's type is incompatible with container's type.
+     * @throws RuntimeException If the child's type is incompatible with container's type.
      */
     override fun removeChild(component: ComponentView) {
         try {
@@ -203,5 +208,8 @@ open class Pane<T : ComponentView>(
         }
     }
     
+    /**
+     * Returns an iterator over the elements of this object.
+     */
     override fun iterator(): Iterator<T> = observableComponents.iterator()
 }
