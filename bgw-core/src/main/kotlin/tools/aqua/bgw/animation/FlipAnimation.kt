@@ -24,14 +24,15 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A flip animation.
+ * A flip [Animation].
+ *
  * Sets background to given [fromVisual] than contracts background in half the given duration, switches to [toVisual]
  * and extends again in half the given duration.
  *
  * @param componentView [ComponentView] to animate.
- * @param fromVisual initial [Visual].
- * @param toVisual resulting [Visual].
- * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param fromVisual Initial [Visual].
+ * @param toVisual Resulting [Visual].
+ * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class FlipAnimation<T : ComponentView>(
 	componentView: T,

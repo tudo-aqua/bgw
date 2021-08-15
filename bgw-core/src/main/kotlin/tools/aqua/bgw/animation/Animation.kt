@@ -24,7 +24,7 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
 /**
  * [Animation] baseclass.
  *
- * @param duration duration in milliseconds.
+ * @param duration Duration in milliseconds.
  */
 sealed class Animation(val duration: Int) {
     

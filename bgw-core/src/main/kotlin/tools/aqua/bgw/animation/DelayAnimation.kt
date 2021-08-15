@@ -24,6 +24,6 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
 /**
  * An asynchronous delay that fires [onFinished] after given duration.
  *
- * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
+ * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  */
 class DelayAnimation(duration: Int = DEFAULT_ANIMATION_DURATION) : Animation(duration = duration)

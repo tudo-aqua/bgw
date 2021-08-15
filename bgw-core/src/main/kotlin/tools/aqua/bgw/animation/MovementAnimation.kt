@@ -24,15 +24,16 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 import tools.aqua.bgw.core.Scene
 
 /**
- * A movement animation.
+ * A movement [Animation].
+ *
  * Moves given [ComponentView] relative to parents anchor point.
  *
  * @param componentView [ComponentView] to animate
- * @param fromX initial X position. Default: Current [ComponentView.posX].
- * @param toX resulting X position. Default: Current [ComponentView.posX].
- * @param fromY initial Y position. Default: Current [ComponentView.posY].
- * @param toY resulting Y position. Default: Current [ComponentView.posY].
- * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param fromX Initial X position. Default: Current [ComponentView.posX].
+ * @param toX Resulting X position. Default: Current [ComponentView.posX].
+ * @param fromY Initial Y position. Default: Current [ComponentView.posY].
+ * @param toY Resulting Y position. Default: Current [ComponentView.posY].
+ * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class MovementAnimation<T : ComponentView>(
 	componentView: T,

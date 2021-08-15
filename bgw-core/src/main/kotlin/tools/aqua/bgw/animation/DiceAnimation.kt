@@ -24,17 +24,20 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 
 /**
- * A die roll [Animation].
+ * A dice roll [Animation].
+ *
  * Shuffles through die visuals for given [duration] and shows [toSide] in the end. Use the [speed] parameter
  * to define how many steps the animation should have.
+ *
  * For example:
+ *
  * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the [duration] of one
  * second.
  *
  * @param dice [DiceView] to animate.
- * @param toSide resulting side after roll.
- * @param duration duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
- * @param speed count of steps. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param toSide Resulting side after roll.
+ * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
+ * @param speed Count of steps. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class DiceAnimation<T : DiceView>(
 	dice: T,

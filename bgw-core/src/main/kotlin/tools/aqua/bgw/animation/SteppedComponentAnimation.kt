@@ -25,8 +25,8 @@ import tools.aqua.bgw.components.ComponentView
  * [SteppedComponentAnimation] baseclass.
  *
  * @param componentView [ComponentView] to animate.
- * @param duration duration in milliseconds.
- * @param speed speed in steps.
+ * @param duration Duration in milliseconds.
+ * @param speed Speed in steps.
  */
 sealed class SteppedComponentAnimation<T : ComponentView>(
 	componentView: T,
