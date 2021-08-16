@@ -52,13 +52,13 @@ comments:
   AbsentOrWrongFileLicense:
     active: false
     licenseTemplateFile: 'license.template'
-    licenseTemplateIsRegex: false
+#    licenseTemplateIsRegex: false
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
     active: false
-  DeprecatedBlockTag:
-    active: true
+#  DeprecatedBlockTag:
+#    active: true
   EndOfSentenceFormat:
     active: true
     endOfSentenceFormat: '([.?!][ \t\n\r\f<])|([.?!:]$)'
@@ -142,8 +142,8 @@ coroutines:
     active: false
   RedundantSuspendModifier:
     active: false
-  SleepInsteadOfDelay:
-    active: false
+#  SleepInsteadOfDelay:
+#    active: false
   SuspendFunWithFlowReturnType:
     active: false
 
@@ -192,8 +192,8 @@ exceptions:
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
   NotImplementedDeclaration:
     active: true
-  ObjectExtendsThrowable:
-    active: true
+#  ObjectExtendsThrowable:
+#    active: true
   PrintStackTrace:
     active: true
   RethrowCaughtException:
@@ -256,8 +256,8 @@ formatting:
   ArgumentListWrapping:
     active: true
     autoCorrect: false
-    indentSize: 4
-    maxLineLength: 120
+#    indentSize: 4
+#    maxLineLength: 120
   ChainWrapping:
     active: true
     autoCorrect: false
@@ -285,7 +285,7 @@ formatting:
   MaximumLineLength:
     active: true
     maxLineLength: 120
-    ignoreBackTickedIdentifier: false
+#    ignoreBackTickedIdentifier: false
   ModifierOrdering:
     active: true
     autoCorrect: false
@@ -334,10 +334,10 @@ formatting:
     active: true
     autoCorrect: false
     indentSize: 4
-    maxLineLength: 120
-  SpacingAroundAngleBrackets:
-    active: true
-    autoCorrect: false
+#    maxLineLength: 120
+#  SpacingAroundAngleBrackets:
+#    active: true
+#    autoCorrect: false
   SpacingAroundColon:
     active: true
     autoCorrect: false
@@ -365,9 +365,9 @@ formatting:
   SpacingAroundRangeOperator:
     active: true
     autoCorrect: false
-  SpacingAroundUnaryOperator:
-    active: true
-    autoCorrect: false
+#  SpacingAroundUnaryOperator:
+#    active: true
+#    autoCorrect: false
   SpacingBetweenDeclarationsWithAnnotations:
     active: true
     autoCorrect: false
@@ -430,8 +430,8 @@ naming:
   MemberNameEqualsClassName:
     active: true
     ignoreOverridden: false
-  NoNameShadowing:
-    active: true
+#  NoNameShadowing:
+#    active: true
   NonBooleanPropertyPrefixedWithIs:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
@@ -482,22 +482,22 @@ performance:
 
 potential-bugs:
   active: true
-  CastToNullableType:
-    active: true
+#  CastToNullableType:
+#    active: true
   Deprecation:
     active: true
-  DontDowncastCollectionTypes:
-    active: true
-  DoubleMutabilityForCollection:
-    active: true
+#  DontDowncastCollectionTypes:
+#    active: true
+#  DoubleMutabilityForCollection:
+#    active: true
   DuplicateCaseInWhenExpression:
     active: true
   EqualsAlwaysReturnsTrueOrFalse:
     active: true
   EqualsWithHashCodeExist:
     active: true
-  ExitOutsideMain:
-    active: true
+#  ExitOutsideMain:
+#    active: true
   ExplicitGarbageCollectionCall:
     active: true
   HasPlatformType:
@@ -537,16 +537,16 @@ potential-bugs:
     active: true
   UnnecessarySafeCall:
     active: true
-  UnreachableCatchBlock:
-    active: true
+#  UnreachableCatchBlock:
+#    active: true
   UnreachableCode:
     active: true
   UnsafeCallOnNullableType:
     active: true
   UnsafeCast:
     active: true
-  UnusedUnaryOperator:
-    active: true
+#  UnusedUnaryOperator:
+#    active: true
   UselessPostfixExpression:
     active: true
   WrongEqualsTypeParameter:
@@ -563,9 +563,9 @@ style:
     conversionFunctionPrefix: 'to'
   DataClassShouldBeImmutable:
     active: true
-  DestructuringDeclarationWithTooManyEntries:
-    active: true
-    maxDestructuringEntries: 3
+#  DestructuringDeclarationWithTooManyEntries:
+#    active: true
+#    maxDestructuringEntries: 3
   EqualsNullCall:
     active: true
   EqualsOnSignatureLine:
@@ -599,7 +599,7 @@ style:
   FunctionOnlyReturningConstant:
     active: true
     ignoreOverridableFunction: false
-    ignoreActualFunction: false
+#    ignoreActualFunction: false
     excludedFunctions: 'describeContents'
     excludeAnnotatedFunction: [ 'dagger.Provides' ]
   LibraryCodeMustSpecifyReturnType:
@@ -624,7 +624,7 @@ style:
     ignoreNamedArgument: true
     ignoreEnums: true
     ignoreRanges: false
-    ignoreExtensionFunctions: false
+#    ignoreExtensionFunctions: false
   MandatoryBracesIfStatements:
     active: false
   MandatoryBracesLoops:
@@ -639,16 +639,16 @@ style:
     active: true
   ModifierOrder:
     active: true
-  MultilineLambdaItParameter:
-    active: true
+#  MultilineLambdaItParameter:
+#    active: true
   NestedClassesVisibility:
     active: true
   NewLineAtEndOfFile:
     active: false
   NoTabs:
     active: false
-  ObjectLiteralToLambda:
-    active: true
+#  ObjectLiteralToLambda:
+#    active: true
   OptionalAbstractKeyword:
     active: true
   OptionalUnit:
@@ -693,8 +693,8 @@ style:
     active: true
   UnnecessaryApply:
     active: true
-  UnnecessaryFilter:
-    active: true
+#  UnnecessaryFilter:
+#    active: true
   UnnecessaryInheritance:
     active: true
   UnnecessaryLet:
@@ -726,10 +726,10 @@ style:
     active: true
   UseIfInsteadOfWhen:
     active: false
-  UseIsNullOrEmpty:
-    active: true
-  UseOrEmpty:
-    active: true
+#  UseIsNullOrEmpty:
+#    active: true
+#  UseOrEmpty:
+#    active: true
   UseRequire:
     active: true
   UseRequireNotNull:
