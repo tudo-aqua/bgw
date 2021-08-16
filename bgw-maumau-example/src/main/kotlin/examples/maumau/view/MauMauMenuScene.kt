@@ -11,6 +11,9 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 
+/**
+ * ViewController for the main menu scene.
+ */
 class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
     
     val continueGameButton: Button = Button(
@@ -20,9 +23,8 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         posY = 110,
         text = "Continue",
         font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
-    ).apply {
         visual = ImageVisual(BUTTON_BG_FILE)
-    }
+    )
     
     val newGameButton: Button = Button(
         height = 80,
@@ -30,20 +32,19 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
         posX = 50,
         posY = 220,
         text = "New Game",
-        font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC)
-    ).apply {
+        font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
         visual = ImageVisual(BUTTON_BG_FILE)
-    }
+    )
+    
     val exitButton: Button = Button(
         height = 80,
         width = 200,
         posX = 50,
         posY = 330,
         text = "Exit",
-        font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC)
-    ).apply {
+        font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
         visual = ImageVisual(BUTTON_BG_FILE)
-    }
+    )
     
     private val menuLabel: Label = Label(
         height = 100,

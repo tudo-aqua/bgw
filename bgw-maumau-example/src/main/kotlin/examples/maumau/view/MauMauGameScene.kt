@@ -61,7 +61,11 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//endregion stacks
 	
 	//region Jack selection
-	val buttonClubs: Button = Button(height = 200, width = 130, posX = 820, posY = 250).apply {
+	val buttonClubs: Button = Button(
+		height = 200,
+		width = 130,
+		posX = 820,
+		posY = 250,
 		visual = ImageVisual(
 			CARDS_FILE,
 			IMG_WIDTH,
@@ -69,9 +73,13 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			CardValue.ACE.ordinal * IMG_WIDTH,
 			CardSuit.CLUBS.ordinal * IMG_HEIGHT
 		)
-		isVisible = false
-	}
-	val buttonSpades: Button = Button(height = 200, width = 130, posX = 970, posY = 250).apply {
+	)
+	
+	val buttonSpades: Button = Button(
+		height = 200,
+		width = 130,
+		posX = 970,
+		posY = 250,
 		visual = ImageVisual(
 			CARDS_FILE,
 			IMG_WIDTH,
@@ -79,9 +87,13 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			CardValue.ACE.ordinal * IMG_WIDTH,
 			CardSuit.SPADES.ordinal * IMG_HEIGHT
 		)
-		isVisible = false
-	}
-	val buttonHearts: Button = Button(height = 200, width = 130, posX = 820, posY = 470).apply {
+	)
+	
+	val buttonHearts: Button = Button(
+		height = 200,
+		width = 130,
+		posX = 820,
+		posY = 470,
 		visual = ImageVisual(
 			CARDS_FILE,
 			IMG_WIDTH,
@@ -89,9 +101,13 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			CardValue.ACE.ordinal * IMG_WIDTH,
 			CardSuit.HEARTS.ordinal * IMG_HEIGHT
 		)
-		isVisible = false
-	}
-	val buttonDiamonds: Button = Button(height = 200, width = 130, posX = 970, posY = 470).apply {
+	)
+	
+	val buttonDiamonds: Button = Button(
+		height = 200,
+		width = 130,
+		posX = 970,
+		posY = 470,
 		visual = ImageVisual(
 			CARDS_FILE,
 			IMG_WIDTH,
@@ -99,8 +115,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			CardValue.ACE.ordinal * IMG_WIDTH,
 			CardSuit.DIAMONDS.ordinal * IMG_HEIGHT
 		)
-		isVisible = false
-	}
+	)
 	//endregion
 	
 	val hintButton: Button = Button(
@@ -109,9 +124,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		posX = 1430,
 		posY = 820,
 		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
-	).apply {
 		visual = ImageVisual(LIGHT_BULB_FILE)
-	}
+	)
 	
 	val mainMenuButton: Button = Button(
 		height = 100,
@@ -120,11 +134,15 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		posY = 20,
 		text = "Main menu",
 		font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
-	).apply {
 		visual = ImageVisual(BUTTON_BG_FILE)
-	}
+	)
 	
 	init {
+		buttonClubs.isVisible = false
+		buttonSpades.isVisible = false
+		buttonHearts.isVisible = false
+		buttonDiamonds.isVisible = false
+		
 		addComponents(
 			drawStack,
 			gameStack,

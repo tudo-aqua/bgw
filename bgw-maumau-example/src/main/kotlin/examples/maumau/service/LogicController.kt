@@ -8,21 +8,24 @@ import examples.maumau.view.Refreshable
 import java.util.*
 import kotlin.math.min
 
+/**
+ * Controller managing game actions.
+ */
 class LogicController(private val view: Refreshable) {
 	
 	/**
-	 * Current game instance
+	 * Current game instance.
 	 */
 	var game: MauMauGame = MauMauGame()
 	
 	/**
-	 * Sets up a new game
+	 * Sets up a new game.
 	 */
 	fun newGame() {
 		game = MauMauGame()
 		
 		//generate cards
-		game.mauMauCards.addAll(generateMauMauCards(EnumSet.allOf(CardSuit::class.java), CardValue.shortDeck()))
+		game.mauMauCards.addAll(generateMauMauCards(CardSuit.allSuits(), CardValue.shortDeck()))
 		
 		//fill drawStack
 		game.drawStack.shuffleBack(game.mauMauCards.toMutableList())
@@ -36,25 +39,28 @@ class LogicController(private val view: Refreshable) {
 		//initial card for playStack
 		game.gameStack.playCard(game.drawStack.drawCard().also { x -> game.nextSuit = x.cardSuit })
 		
-		//Refresh whole view
+		//refresh whole view
 		view.refreshAll()
 	}
 	
 	/**
-	 * Generates a full set of MauMauCards
+	 * Generates a full set of MauMauCards.
 	 */
-	private fun generateMauMauCards(suits: EnumSet<CardSuit>, values: EnumSet<CardValue>): MutableList<MauMauCard> {
+	private fun generateMauMauCards(suits: EnumSet<CardSuit>, values: EnumSet<CardValue>): List<MauMauCard> {
 		val cards: MutableList<MauMauCard> = ArrayList(suits.size * values.size)
+		
 		for (suit in suits) {
 			for (value in values) {
 				cards.add(MauMauCard(value, suit))
 			}
 		}
+		
 		return cards
 	}
 	
 	/**
-	 * Current player draws a card from drawStack, advances player
+	 * Current player draws a card from drawStack.
+	 * Advances player.
 	 */
 	fun drawCard() {
 		val currentPlayer = game.currentPlayer
@@ -172,15 +178,23 @@ class LogicController(private val view: Refreshable) {
 				|| card.cardSuit == game.nextSuit
 				|| card.cardValue == game.gameStack.peek().cardValue
 	
+	/**
+	 * Shows a hint for the next turn.
+	 */
 	fun showHint() {
 		val card = calculateHint()
 		
 		if (card == null)
-			view.refreshHintTakeCard()
+			view.refreshHintDrawCard()
 		else
 			view.refreshHintPlayCard(card)
 	}
 	
+	/**
+	 * Calculates a hint for the next turn.
+	 *
+	 * @return A [MauMauCard] to play or `null` to draw.
+	 */
 	private fun calculateHint(): MauMauCard? {
 		val cards = game.currentPlayer.hand.cards
 		

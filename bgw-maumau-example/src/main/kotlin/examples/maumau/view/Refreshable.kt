@@ -5,29 +5,64 @@ import examples.maumau.entity.MauMauPlayer
 
 interface Refreshable {
 	
+	/**
+	 * Indicates refresh on all components.
+	 */
 	fun refreshAll()
 	
+	/**
+	 * Indicates refresh after cards were drawn.
+	 */
 	fun refreshCardsDrawn(player: MauMauPlayer, cards: Collection<MauMauCard>) {
 		for (card in cards) {
 			refreshCardDrawn(player, card)
 		}
 	}
 	
+	/**
+	 * Indicates refresh after card was drawn.
+	 */
 	fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard)
 	
+	/**
+	 * Indicates refresh after card was played.
+	 */
 	fun refreshCardPlayed(card: MauMauCard, animated: Boolean)
 	
+	/**
+	 * Indicates refresh after game stack was shuffled back.
+	 */
 	fun refreshGameStackShuffledBack()
 	
+	/**
+	 * Indicates refresh after active player has changed.
+	 */
 	fun refreshAdvancePlayer()
 	
+	/**
+	 * Indicates refresh when player may take another turn.
+	 */
 	fun refreshPlayAgain()
 	
+	/**
+	 * Indicates refresh after suit was selected by jack.
+	 */
 	fun refreshSuitSelected()
 	
+	/**
+	 * Indicates that jack selection has to be shown.
+	 */
 	fun showJackEffectSelection()
 	
-	fun refreshHintTakeCard()
+	/**
+	 * Indicates to show hint to draw a card.
+	 */
+	fun refreshHintDrawCard()
 	
+	/**
+	 * Indicates to show hint to play a card.
+	 *
+	 * @param card Card to play.
+	 */
 	fun refreshHintPlayCard(card: MauMauCard)
 }

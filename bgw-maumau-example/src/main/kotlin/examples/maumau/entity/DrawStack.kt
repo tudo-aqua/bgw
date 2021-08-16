@@ -1,5 +1,8 @@
 package examples.maumau.entity
 
+/**
+ * The draw stack with hidden cards.
+ */
 class DrawStack : MauMauStack() {
 	
 	fun drawCard(): MauMauCard = cards.pop()
