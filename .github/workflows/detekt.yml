@@ -70,7 +70,8 @@ jobs:
       continue-on-error: true
       run: |
         echo ${{ github.workspace }}
-        echo ls ${{ github.workspace }}
+        echo $(ls)
+        echo $(ls ${{ github.workspace }})
         detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/detekt-rules.yml --report sarif:${{ github.workspace }}/detekt.sarif.json
 
     # Modifies the SARIF output produced by Detekt so that absolute URIs are relative
