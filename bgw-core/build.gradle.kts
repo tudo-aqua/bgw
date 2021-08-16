@@ -59,7 +59,7 @@ detekt {
 
 	// The directories where detekt looks for source files.
 	// Defaults to `files("src/main/java", "src/main/kotlin")`.
-	input = files("src/tools/aqua/bgw")
+	input = files("src/main/kotlin/tools/aqua/bgw")
 	
 	config = files("detekt-rules.yml")
 	
