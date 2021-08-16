@@ -29,7 +29,7 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
 sealed class Animation(val duration: Int) {
     
     /**
-     * [Boolean] indicating whether the [Animation] is currently playing.
+     * [Boolean] indicating whether the [Animation] is currently running.
      */
     var running: Boolean = false
     
