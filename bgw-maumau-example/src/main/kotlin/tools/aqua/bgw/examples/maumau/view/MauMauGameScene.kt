@@ -1,6 +1,5 @@
 package tools.aqua.bgw.examples.maumau.view
 
-import examples.maumau.main.*
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.components.container.CardStack
@@ -15,7 +14,6 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
-import tools.aqua.maumau.main.*
 import java.awt.Color
 
 class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
