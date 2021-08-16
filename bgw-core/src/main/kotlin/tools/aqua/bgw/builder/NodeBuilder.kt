@@ -291,8 +291,9 @@ internal class NodeBuilder {
 						background.style = nV
 				}
 				
+				fontProperty.guiListener = { _,_ -> updateStyle(node) }
+				internalCSSProperty.guiListener = { _,_ -> updateStyle(node) }
 				componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _,_ -> updateStyle(node) }
-				fontProperty.setGUIListenerAndInvoke(font) { _,_ -> updateStyle(node) }
 			}
 		}
 		

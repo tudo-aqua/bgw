@@ -50,10 +50,24 @@ sealed class UIComponent(
 	width = width,
 	height = height,
 	visual = visual) {
+	
+	/**
+	 * [Property] for the [internalCSS].
+	 *
+	 * @see internalCSS
+	 */
+	internal var internalCSSProperty : StringProperty = StringProperty("")
+	
 	/**
 	 * Field that is used for internal styling purposes.
+	 *
+	 * @see internalCSSProperty
 	 */
-	internal var internalCSS : String = ""
+	internal var internalCSS : String
+		get() = internalCSSProperty.value
+		set(value) {
+			internalCSSProperty.value = value
+		}
 
 	/**
 	 * [Property] for the [Font] of this [UIComponent]. Usage depends on subclass.
