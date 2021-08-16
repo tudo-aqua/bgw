@@ -16,7 +16,7 @@ on:
 env:
   # Release tag associated with version of Detekt to be installed
   # SARIF support (required for this workflow) was introduced in Detekt v1.15.0
-  DETEKT_RELEASE_TAG: v1.15.0
+  DETEKT_RELEASE_TAG: v1.18.0
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -69,7 +69,7 @@ jobs:
     - name: Run Detekt
       continue-on-error: true
       run: |
-        detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/detekt-rules.yml --report sarif:${{ github.workspace }}/detekt.sarif.json
+        detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/bgw-core/detekt-rules.yml --report sarif:${{ github.workspace }}/detekt.sarif.json
 
     # Modifies the SARIF output produced by Detekt so that absolute URIs are relative
     # This is so we can easily map results onto their source files
