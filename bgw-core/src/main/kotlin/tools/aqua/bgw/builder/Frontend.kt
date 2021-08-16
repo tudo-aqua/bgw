@@ -43,9 +43,11 @@ import tools.aqua.bgw.observable.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
+import java.awt.Toolkit
 import java.io.File
 import java.util.*
 import kotlin.math.min
+
 
 /**
  * Frontend JavaFX wrapper.
@@ -81,7 +83,6 @@ internal class Frontend : Application() {
 	}
 
 	companion object {
-		//region Internal attributes
 		/**
 		 * Current scene scale.
 		 */
@@ -101,6 +102,11 @@ internal class Frontend : Application() {
 		 * [BoardGameApplication] instance.
 		 */
 		internal lateinit var application: BoardGameApplication
+		
+		/**
+		 * Initial aspect ratio passed to [BoardGameApplication]
+		 */
+		internal lateinit var initialAspectRatio: AspectRatio
 
 		/**
 		 * Property for the window title.
@@ -123,7 +129,7 @@ internal class Frontend : Application() {
 		internal val widthProperty = LimitedDoubleProperty(
 			lowerBoundInclusive = 0,
 			upperBoundInclusive = Double.POSITIVE_INFINITY,
-			initialValue = DEFAULT_WINDOW_WIDTH
+			initialValue = 0
 		)
 
 		/**
@@ -132,7 +138,7 @@ internal class Frontend : Application() {
 		internal val heightProperty = LimitedDoubleProperty(
 			lowerBoundInclusive = 0,
 			upperBoundInclusive = Double.POSITIVE_INFINITY,
-			initialValue = DEFAULT_WINDOW_HEIGHT
+			initialValue = 0
 		)
 
 		/**
@@ -336,23 +342,31 @@ internal class Frontend : Application() {
 		 * @param stage application stage.
 		 */
 		internal fun startApplication(stage: Stage) {
-
 			primaryStage = stage.apply {
-
 				//Initialize default DECORATED stage style allowing minimizing
 				initStyle(StageStyle.DECORATED)
-
+				
+				val monitorHeight = Toolkit.getDefaultToolkit().screenSize.height
+				
+				//Set dimensions according to screen resolution and aspect ratio or, fixed height and width
+				height = if(heightProperty.value > 0) heightProperty.value else monitorHeight * DEFAULT_WINDOW_BORDER
+				width = if(widthProperty.value > 0) widthProperty.value else height * initialAspectRatio.ratio
+				
+				//reflect new window size
+				heightProperty.value = height
+				widthProperty.value = width
+				
 				//Set internal listeners as GUI listeners would get invoked in setSilent in FX -> BGW direction
 				maximizedProperty.setInternalListenerAndInvoke(maximizedProperty.value) { _, nV -> isMaximized = nV }
 				fullscreenProperty.setInternalListenerAndInvoke(fullscreenProperty.value) { _, nV ->
 					Platform.runLater { isFullScreen = nV }
 				}
-
-				widthProperty.setInternalListenerAndInvoke(widthProperty.value) { _, nV ->
+				
+				widthProperty.internalListener =  { _, nV ->
 					if (!isFullScreen && !isMaximized)
 						width = nV
 				}
-				heightProperty.setInternalListenerAndInvoke(heightProperty.value) { _, nV ->
+				heightProperty.internalListener = { _, nV ->
 					if (!isFullScreen && !isMaximized)
 						height = nV
 				}

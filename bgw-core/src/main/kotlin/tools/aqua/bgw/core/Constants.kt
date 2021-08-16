@@ -42,7 +42,12 @@ const val DEFAULT_WINDOW_WIDTH: Double = 1280.0
 /**
  * Default window height in non-maximized mode.
  */
-const val DEFAULT_WINDOW_HEIGHT: Double = 751.0
+const val DEFAULT_WINDOW_HEIGHT: Double = 747.0
+
+/**
+ * Default minimization factor of window.
+ */
+const val DEFAULT_WINDOW_BORDER: Double = 0.8
 
 /**
  * Default scene width in virtual pixels.

@@ -36,19 +36,48 @@ import java.util.*
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene].
  * Application starts by calling [show].
  *
+ * @constructor Creates the BoardGameApplication with optional title and aspect ratio.
+ * May only be called once per execution.
+ *
  * @param windowTitle Title for the application window. Gets displayed in the title bar.
- * Default: "BoardGameWork Application".
+ * Default: [DEFAULT_WINDOW_TITLE].
+ *
+ * @param aspectRatio Initial aspect ratio of application window. Default: empty [AspectRatio] constructor.
  *
  * @see BoardGameScene
  * @see MenuScene
  */
 @Suppress("LeakingThis")
-open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
+open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspectRatio : AspectRatio = AspectRatio()) {
+	
+	/**
+	 * Creates the BoardGameApplication with optional title and dimension.
+	 * May only be called once per execution.
+	 *
+	 * @param windowTitle Title for the application window. Gets displayed in the title bar.
+	 * Default: [DEFAULT_WINDOW_TITLE].
+	 *
+	 * @param width Initial window width. Default: [DEFAULT_WINDOW_WIDTH].
+	 * @param height Initial window height. Default: [DEFAULT_WINDOW_HEIGHT].
+	 */
+	constructor(
+		windowTitle: String = DEFAULT_WINDOW_TITLE,
+		width: Number = DEFAULT_WINDOW_WIDTH,
+		height: Number = DEFAULT_WINDOW_HEIGHT) : this(
+		windowTitle = windowTitle,
+		aspectRatio = AspectRatio(width = width, height = height)
+	) {
+		windowHeight = height
+		windowWidth = width
+	}
 	
 	init {
 		check(!instantiated) { "Unable to create second application." }
+		
 		instantiated = true
+		
 		Frontend.application = this
+		Frontend.initialAspectRatio = aspectRatio
 	}
 	
 	/**
@@ -68,7 +97,7 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE) {
 		set(value) {
 			Frontend.widthProperty.value = value.toDouble()
 		}
-	
+
 	/**
 	 * Sets this [BoardGameApplication]'s preferred height. Only affects non-maximized, non-fullscreen windows.
 	 */
