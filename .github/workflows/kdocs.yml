@@ -8,6 +8,9 @@ on:
     types:
       - completed
       
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+      
 # ----- #
 
 jobs:
@@ -35,3 +38,9 @@ jobs:
 
       - name: Rename docs/html folder
         run: mv ./docs/html ./docs/kotlin-docs
+
+      - name: Deploy to branch
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          BRANCH: gh-pages
+          FOLDER: docs
