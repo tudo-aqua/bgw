@@ -27,6 +27,18 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.konan
+          key: ${{ runner.os }}-gh-pages-${{ hashFiles('**/build.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gh-pages-
+            ${{ runner.os }}-
 
       - name: Run 'dokkaHtml' Gradle task
         uses: eskatos/gradle-command-action@v1
