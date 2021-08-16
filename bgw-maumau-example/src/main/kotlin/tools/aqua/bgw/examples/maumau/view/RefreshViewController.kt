@@ -1,14 +1,14 @@
-package examples.maumau.view
+package tools.aqua.bgw.examples.maumau.view
 
-import examples.main.CARDS_FILE
-import examples.main.IMG_HEIGHT
-import examples.main.IMG_WIDTH
-import examples.maumau.entity.MauMauCard
-import examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
+import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
+import tools.aqua.bgw.examples.maumau.main.CARDS_FILE
+import tools.aqua.bgw.examples.maumau.main.IMG_HEIGHT
+import tools.aqua.bgw.examples.maumau.main.IMG_WIDTH
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual

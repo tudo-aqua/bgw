@@ -1,10 +1,10 @@
-package examples.maumau.service
+package tools.aqua.bgw.examples.maumau.service
 
-import examples.maumau.entity.CardSuit
-import examples.maumau.entity.CardValue
-import examples.maumau.entity.MauMauCard
-import examples.maumau.entity.MauMauGame
-import examples.maumau.view.Refreshable
+import tools.aqua.bgw.examples.maumau.entity.CardSuit
+import tools.aqua.bgw.examples.maumau.entity.CardValue
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
+import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.util.*
 import kotlin.math.min
 

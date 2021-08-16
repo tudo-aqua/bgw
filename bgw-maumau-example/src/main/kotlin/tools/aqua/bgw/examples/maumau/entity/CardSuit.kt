@@ -1,4 +1,4 @@
-package examples.maumau.entity
+package tools.aqua.bgw.examples.maumau.entity
 
 import java.util.*
 

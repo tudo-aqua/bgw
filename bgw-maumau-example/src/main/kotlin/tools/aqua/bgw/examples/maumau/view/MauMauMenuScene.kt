@@ -1,7 +1,7 @@
-package examples.maumau.view
+package tools.aqua.bgw.examples.maumau.view
 
 
-import examples.main.BUTTON_BG_FILE
+import tools.aqua.bgw.examples.maumau.main.BUTTON_BG_FILE
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.MenuScene

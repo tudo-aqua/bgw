@@ -1,7 +1,7 @@
-package examples.maumau.view
+package tools.aqua.bgw.examples.maumau.view
 
-import examples.maumau.entity.MauMauCard
-import examples.maumau.entity.MauMauPlayer
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
+import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 
 interface Refreshable {
 	

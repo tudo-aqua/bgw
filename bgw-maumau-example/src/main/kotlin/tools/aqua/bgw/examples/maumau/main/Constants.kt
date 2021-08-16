@@ -1,4 +1,4 @@
-package examples.main
+package tools.aqua.bgw.examples.maumau.main
 
 const val IMG_HEIGHT: Int = 200
 const val IMG_WIDTH: Int = 130
