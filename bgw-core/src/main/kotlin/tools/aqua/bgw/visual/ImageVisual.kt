@@ -67,6 +67,27 @@ open class ImageVisual(
 			imageProperty.value = value
 		}
 	
+	init {
+		require(offsetX < image.width) { "OffsetX is larger than image width." }
+		require(offsetY < image.height) { "OffsetY is larger than image height." }
+		
+		require(width > 0 || width == -1) { "Width must be positive or -1." }
+		require(height > 0 || height == -1) { "Height must be positive or -1." }
+		
+		val subWidth = if (width != -1) width else image.width - offsetX
+		val subHeight = if (height != -1) height else image.height - offsetY
+		
+		require(subWidth > 0) { "Width exceeds image width." }
+		require(subHeight > 0) { "Height exceeds image height." }
+		
+		require(offsetX + subWidth <= image.width) { "Width of SubImage exceeds image bounds." }
+		require(offsetY + subHeight <= image.height) { "Height of SubImage exceeds image bounds." }
+		
+		val img = image.getSubimage(offsetX, offsetY, subWidth, subHeight)
+		
+		imageProperty = Property(img)
+	}
+	
 	/**
 	 * Loads an [ImageVisual] from a path.
 	 *
@@ -100,27 +121,6 @@ open class ImageVisual(
 		offsetX: Int = 0,
 		offsetY: Int = 0
 	) : this(file.absolutePath, width, height, offsetX, offsetY)
-	
-	init {
-		require(offsetX < image.width) { "OffsetX is larger than image width." }
-		require(offsetY < image.height) { "OffsetY is larger than image height." }
-		
-		require(width > 0 || width == -1) { "Width must be positive or -1." }
-		require(height > 0 || height == -1) { "Height must be positive or -1." }
-		
-		val subWidth = if (width != -1) width else image.width - offsetX
-		val subHeight = if (height != -1) height else image.height - offsetY
-		
-		require(subWidth > 0) { "Width exceeds image width." }
-		require(subHeight > 0) { "Height exceeds image height." }
-
-		require(offsetX + subWidth <= image.width) { "Width of SubImage exceeds image bounds." }
-		require(offsetY + subHeight <= image.height) { "Height of SubImage exceeds image bounds." }
-		
-		val img = image.getSubimage(offsetX, offsetY, subWidth, subHeight)
-		
-		imageProperty = Property(img)
-	}
 	
 	/**
 	 * Copies this [ImageVisual] to a new object.

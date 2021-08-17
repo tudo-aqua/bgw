@@ -52,16 +52,6 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 * If changes are made to this list, this [GameComponentContainer] gets re-rendered.
 	 */
 	internal val observableComponents: ObservableList<T> = ObservableLinkedList()
-	
-	/**
-	 * Internal onRemove handler.
-	 */
-	internal abstract fun T.onRemove()
-	
-	/**
-	 * Internal onAdd handler.
-	 */
-	internal abstract fun T.onAdd()
 
 	/**
 	 * [onAdd] gets invoked anytime after a [GameComponentView] is added to this
@@ -81,6 +71,16 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	var components: List<T> = observableComponents.toList()
 		get() = observableComponents.toList()
 		private set
+	
+	/**
+	 * Internal onRemove handler.
+	 */
+	internal abstract fun T.onRemove()
+	
+	/**
+	 * Internal onAdd handler.
+	 */
+	internal abstract fun T.onAdd()
 	
 	/**
 	 * Adds a [listener] on the [observableComponents] list.

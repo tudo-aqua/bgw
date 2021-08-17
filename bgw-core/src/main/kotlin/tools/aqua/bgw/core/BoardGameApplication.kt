@@ -50,6 +50,15 @@ import java.util.*
 @Suppress("LeakingThis")
 open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspectRatio : AspectRatio = AspectRatio()) {
 	
+	init {
+		check(!instantiated) { "Unable to create second application." }
+		
+		instantiated = true
+		
+		Frontend.application = this
+		Frontend.initialAspectRatio = aspectRatio
+	}
+	
 	/**
 	 * Creates the BoardGameApplication with optional title and dimension.
 	 * May only be called once per execution.
@@ -69,15 +78,6 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspe
 	) {
 		windowHeight = height
 		windowWidth = width
-	}
-	
-	init {
-		check(!instantiated) { "Unable to create second application." }
-		
-		instantiated = true
-		
-		Frontend.application = this
-		Frontend.initialAspectRatio = aspectRatio
 	}
 	
 	/**

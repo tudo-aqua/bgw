@@ -97,6 +97,12 @@ open class CardView(
 			if (currentSide == BACK)
 				visual = field
 		}
+	
+	init {
+		this.frontVisual = front
+		this.backVisual = back
+		this.currentSide = BACK
+	}
 
 	/**
 	 * Sets the [currentSide] to be displayed to [CardSide.FRONT].
@@ -117,12 +123,6 @@ open class CardView(
 	 */
 	fun showCardSide(side: CardSide) {
 		currentSide = side
-	}
-
-	init {
-		this.frontVisual = front
-		this.backVisual = back
-		this.currentSide = BACK
 	}
 
 	/**

@@ -197,6 +197,11 @@ internal class Frontend : Application() {
 		 * Current [ScaleMode].
 		 */
 		private var scaleMode = ScaleMode.FULL
+		
+		/**
+		 * A small value to add to stage with to force a refresh.
+		 */
+		private var epsilon: Double = 1.0
 		//endregion
 
 		//region Internal functions
@@ -486,12 +491,6 @@ internal class Frontend : Application() {
 				).play()
 			}
 		}
-
-
-		/**
-		 * a small value to add to stage with to force a refresh
-		 */
-		private var epsilon: Double = 1.0
 
 		/**
 		 * Forces the stage to refresh by alternately adding and removing a small value from stage width.

@@ -55,6 +55,10 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 			childrenProperty.addAll(value)
 		}
 	
+	init {
+		childrenProperty.internalListener = { notifyGUIListener() }
+	}
+	
 	/**
 	 * [CompoundVisual] constructor with vararg parameter for initial children.
 	 *
@@ -62,10 +66,6 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 	 * [SingleLayerVisual] gets displayed at the bottom of the stack.
 	 */
 	constructor(vararg children: SingleLayerVisual) : this(children.toList())
-	
-	init {
-		childrenProperty.internalListener = { notifyGUIListener() }
-	}
 	
 	/**
 	 * Copies this [CompoundVisual] to a new object recursively including children.

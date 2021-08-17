@@ -64,41 +64,6 @@ open class LinearLayout<T : GameComponentView>(
 ) : GameComponentContainer<T>(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	
 	/**
-	 * Secondary constructor taking separate alignment components.
-	 *
-	 * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
-	 * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
-	 * @param width width for this [LinearLayout]. Default: 0.
-	 * @param height height for this [LinearLayout]. Default: 0.
-	 * @param spacing spacing between contained [GameComponentView]s. Default: 0.
-	 * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
-	 * @param verticalAlignment specifies how the contained components should be aligned vertically.
-	 * Default: [VerticalAlignment.TOP].
-	 * @param horizontalAlignment specifies how the contained components should be aligned horizontally.
-	 * Default: [HorizontalAlignment.LEFT].
-	 */
-	constructor(
-		posX: Number = 0,
-		posY: Number = 0,
-		width: Number = 0,
-		height: Number = 0,
-		spacing: Number = 0,
-		visual: Visual = Visual.EMPTY,
-		orientation: Orientation = Orientation.HORIZONTAL,
-		verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
-		horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
-	) : this(
-		posX = height,
-		posY = width,
-		width = posX,
-		height = posY,
-		spacing = spacing,
-		visual = visual,
-		orientation = orientation,
-		alignment = Alignment.of(verticalAlignment, horizontalAlignment)
-	)
-	
-	/**
 	 * [Property] for the spacing of [GameComponentView]s in this [LinearLayout].
 	 *
 	 * @see spacing
@@ -164,6 +129,41 @@ open class LinearLayout<T : GameComponentView>(
 		orientationProperty.internalListener = { _, _ -> layout() }
 		alignmentProperty.internalListener = { _, _ -> layout() }
 	}
+	
+	/**
+	 * Secondary constructor taking separate alignment components.
+	 *
+	 * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
+	 * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
+	 * @param width width for this [LinearLayout]. Default: 0.
+	 * @param height height for this [LinearLayout]. Default: 0.
+	 * @param spacing spacing between contained [GameComponentView]s. Default: 0.
+	 * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
+	 * @param verticalAlignment specifies how the contained components should be aligned vertically.
+	 * Default: [VerticalAlignment.TOP].
+	 * @param horizontalAlignment specifies how the contained components should be aligned horizontally.
+	 * Default: [HorizontalAlignment.LEFT].
+	 */
+	constructor(
+		posX: Number = 0,
+		posY: Number = 0,
+		width: Number = 0,
+		height: Number = 0,
+		spacing: Number = 0,
+		visual: Visual = Visual.EMPTY,
+		orientation: Orientation = Orientation.HORIZONTAL,
+		verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
+		horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
+	) : this(
+		posX = height,
+		posY = width,
+		width = posX,
+		height = posY,
+		spacing = spacing,
+		visual = visual,
+		orientation = orientation,
+		alignment = Alignment.of(verticalAlignment, horizontalAlignment)
+	)
 
 	override fun T.onAdd() {
 		//add pos listeners
