@@ -50,36 +50,6 @@ import java.util.*
 @Suppress("LeakingThis")
 open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspectRatio : AspectRatio = AspectRatio()) {
 	
-	init {
-		check(!instantiated) { "Unable to create second application." }
-		
-		instantiated = true
-		
-		Frontend.application = this
-		Frontend.initialAspectRatio = aspectRatio
-	}
-	
-	/**
-	 * Creates the BoardGameApplication with optional title and dimension.
-	 * May only be called once per execution.
-	 *
-	 * @param windowTitle Title for the application window. Gets displayed in the title bar.
-	 * Default: [DEFAULT_WINDOW_TITLE].
-	 *
-	 * @param width Initial window width. Default: [DEFAULT_WINDOW_WIDTH].
-	 * @param height Initial window height. Default: [DEFAULT_WINDOW_HEIGHT].
-	 */
-	constructor(
-		windowTitle: String = DEFAULT_WINDOW_TITLE,
-		width: Number = DEFAULT_WINDOW_WIDTH,
-		height: Number = DEFAULT_WINDOW_HEIGHT) : this(
-		windowTitle = windowTitle,
-		aspectRatio = AspectRatio(width = width, height = height)
-	) {
-		windowHeight = height
-		windowWidth = width
-	}
-	
 	/**
 	 * Window title displayed in the title bar.
 	 */
@@ -157,7 +127,35 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspe
 	var onWindowClosed: (() -> Unit)? = null
 	
 	init {
+		check(!instantiated) { "Unable to create second application." }
+		
+		instantiated = true
+		
 		title = windowTitle
+		
+		Frontend.application = this
+		Frontend.initialAspectRatio = aspectRatio
+	}
+	
+	/**
+	 * Creates the BoardGameApplication with optional title and dimension.
+	 * May only be called once per execution.
+	 *
+	 * @param windowTitle Title for the application window. Gets displayed in the title bar.
+	 * Default: [DEFAULT_WINDOW_TITLE].
+	 *
+	 * @param width Initial window width. Default: [DEFAULT_WINDOW_WIDTH].
+	 * @param height Initial window height. Default: [DEFAULT_WINDOW_HEIGHT].
+	 */
+	constructor(
+		windowTitle: String = DEFAULT_WINDOW_TITLE,
+		width: Number = DEFAULT_WINDOW_WIDTH,
+		height: Number = DEFAULT_WINDOW_HEIGHT) : this(
+		windowTitle = windowTitle,
+		aspectRatio = AspectRatio(width = width, height = height)
+	) {
+		windowHeight = height
+		windowWidth = width
 	}
 	
 	/**
