@@ -278,7 +278,7 @@ internal abstract class FXConverters {
 		}
 		
 		/**
-		 * Converts the [Alignment] constant to [Pos]
+		 * Converts the [Alignment] constant to [Pos].
 		 */
 		internal fun Alignment.toFXPos(): Pos {
 			return when (this) {

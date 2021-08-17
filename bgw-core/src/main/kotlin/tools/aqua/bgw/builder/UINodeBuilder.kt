@@ -68,7 +68,7 @@ internal class UINodeBuilder {
 			}
 
 		/**
-		 * Builds [Labeled]
+		 * Builds [Labeled].
 		 */
 		private fun buildLabel(label: Label): Region {
 			val node = javafx.scene.control.Label()
@@ -106,7 +106,7 @@ internal class UINodeBuilder {
 		}
 
 		/**
-		 * Builds [TextField]
+		 * Builds [TextField].
 		 */
 		private fun buildTextField(textField: TextField): Region {
 			val node = javafx.scene.control.TextField(textField.textProperty.value)

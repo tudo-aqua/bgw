@@ -298,7 +298,7 @@ internal class NodeBuilder {
 		}
 		
 		/**
-		 * Updates nodes style property
+		 * Updates nodes style property.
 		 */
 		private fun UIComponent.updateStyle(node: Region) {
 			node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle

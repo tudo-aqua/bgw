@@ -104,7 +104,7 @@ internal class Frontend : Application() {
 		internal lateinit var application: BoardGameApplication
 		
 		/**
-		 * Initial aspect ratio passed to [BoardGameApplication]
+		 * Initial aspect ratio passed to [BoardGameApplication].
 		 */
 		internal lateinit var initialAspectRatio: AspectRatio
 
@@ -119,7 +119,7 @@ internal class Frontend : Application() {
 		internal val maximizedProperty = BooleanProperty(false)
 
 		/**
-		 * Property whether application is currently fullscreen
+		 * Property whether application is currently fullscreen.
 		 */
 		internal val fullscreenProperty = BooleanProperty(false)
 
