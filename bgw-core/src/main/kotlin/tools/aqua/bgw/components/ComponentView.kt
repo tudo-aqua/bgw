@@ -242,7 +242,7 @@ abstract class ComponentView internal constructor(
 	var rotation: Double
 		get() = rotationProperty.value
 		set(value) {
-			rotationProperty.value = (value - floor(value/360.0) * 360.0)
+			rotationProperty.value = value - floor(value/360.0) * 360.0
 		}
 	
 	/**
