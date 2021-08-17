@@ -193,14 +193,14 @@ internal class NodeBuilder {
 		 * Calculates rollback for [GridPane]s.
 		 */
 		private fun GridPane<*>.findRollback(component: ComponentView): (() -> Unit) {
-			val e = grid.find { iteratorElement ->
+			val element = grid.find { iteratorElement ->
 				iteratorElement.component == component
 			} ?: return {}
 			
-			val initialX = e.component!!.posX
-			val initialY = e.component.posY
-			val initialColumnIndex = e.columnIndex
-			val initialRowIndex = e.rowIndex
+			val initialX = element.component!!.posX
+			val initialY = element.component.posY
+			val initialColumnIndex = element.columnIndex
+			val initialRowIndex = element.rowIndex
 			
 			return {
 				posX = initialX

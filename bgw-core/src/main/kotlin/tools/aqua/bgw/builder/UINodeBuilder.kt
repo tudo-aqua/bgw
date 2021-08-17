@@ -311,7 +311,9 @@ internal class UINodeBuilder {
 		/**
 		 * Binds [LabeledUIComponent.alignmentProperty]. Framework -> JavaFX only.
 		 */
-		private fun javafx.beans.property.ObjectProperty<javafx.geometry.Pos>.bindAlignmentProperty(labeled: LabeledUIComponent) {
+		private fun javafx.beans.property.ObjectProperty<javafx.geometry.Pos>.bindAlignmentProperty(
+			labeled: LabeledUIComponent
+		) {
 			//Framework -> JavaFX
 			labeled.alignmentProperty.setGUIListenerAndInvoke(labeled.alignment) { _, nV -> value = nV.toFXPos() }
 		}

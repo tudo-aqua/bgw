@@ -337,8 +337,8 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		
 		var overlay: ColorVisual? = null
 		onDragGestureStarted = {
-			overlay =
-				((viewController.mauMauGameScene.gameStack.components.last().visual as CompoundVisual).children.last() as ColorVisual).apply {
+			overlay = ((viewController.mauMauGameScene.gameStack.components.last().visual as CompoundVisual)
+				.children.last() as ColorVisual).apply {
 					color = if (viewController.logicController.checkRules(
 							viewController.cardMap.backward(this@addInteraction)
 						)
@@ -353,7 +353,9 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		onDragGestureEnded = { _, _ ->
 			overlay?.transparency = 0.0
 		}
-		onMouseClicked = { viewController.logicController.playCard(viewController.cardMap.backward(this), true) }
+		onMouseClicked = {
+			viewController.logicController.playCard(viewController.cardMap.backward(this), true)
+		}
 	}
 	
 	/**
