@@ -37,14 +37,14 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
 	 *
 	 * @param component Child to be removed.
 	 *
-	 * @throws RuntimeException If the child's type is incompatible with scene's type.
+	 * @throws IllegalArgumentException If the child's type is incompatible with scene's type.
 	 */
 	override fun removeChild(component: ComponentView) {
 		try {
 			@Suppress("UNCHECKED_CAST")
 			this.scene.removeComponents(component as T)
 		} catch (_: ClassCastException) {
-			throw RuntimeException("$component type is incompatible with scene's type.")
+			throw IllegalArgumentException("$component type is incompatible with scene's type.")
 		}
 	}
 }

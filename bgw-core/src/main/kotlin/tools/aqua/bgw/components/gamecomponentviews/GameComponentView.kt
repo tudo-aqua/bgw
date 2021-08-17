@@ -44,9 +44,9 @@ sealed class GameComponentView(
 	visual: Visual
 ) : DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 	/**
-	 * @throws RuntimeException [GameComponentView] does not support children.
+	 * @throws UnsupportedOperationException [GameComponentView] does not support children.
 	 */
 	override fun removeChild(component: ComponentView) {
-		throw RuntimeException("This $this component has no children.")
+		throw UnsupportedOperationException("This $this component has no children.")
 	}
 }

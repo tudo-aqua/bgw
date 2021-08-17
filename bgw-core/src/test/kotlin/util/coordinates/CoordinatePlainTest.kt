@@ -17,7 +17,6 @@
 
 package util.coordinates
 
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.Coordinate
@@ -26,10 +25,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class CoordinatePlainTest {
-	
-	@BeforeEach
-	fun setUp() {
-	}
 	
 	@Test
 	@DisplayName("Test y coordinates flipped")

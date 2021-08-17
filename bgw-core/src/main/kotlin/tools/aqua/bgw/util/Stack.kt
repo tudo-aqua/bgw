@@ -38,9 +38,13 @@ open class Stack<T> {
      * Pops the topmost element in this [Stack].
      *
      * @return Topmost element in this [Stack].
+     *
+     * @throws NoSuchElementException If the stack is empty.
      */
     fun pop(): T {
-        if (data.size < 1) throw RuntimeException("Can not pop on empty KStack $this.")
+        if (data.size < 1)
+            throw NoSuchElementException("Can not pop on empty KStack $this.")
+        
         return data.removeAt(0)
     }
 
@@ -110,9 +114,13 @@ open class Stack<T> {
      * Returns the topmost element in this [Stack] but does not pop it.
      *
      * @return Topmost element in this [Stack].
+     *
+     * @throws NoSuchElementException If the stack is empty.
      */
     fun peek(): T {
-        if (data.size < 1) throw RuntimeException("Can not peek on empty KStack $this.")
+        if (data.size < 1)
+            throw NoSuchElementException("Can not peek on empty KStack $this.")
+        
         return data[0]
     }
 

@@ -24,29 +24,11 @@ package tools.aqua.bgw.components.uicomponents
  *
  * @constructor Creates a [TableColumn].
  *
+ * @param title The title for this [TableColumn]. It gets displayed in the header row of the [TableView].
+ * @param width The [width] for this [TableColumn].
+ * @param formatFunction The format function for this [TableColumn]. It gets applied to each item in the [TableView] to
+ * get a [String] for its cell.
+ *
  * @see TableView
  */
-open class TableColumn<T>(
-	/**
-	 * The title for this [TableColumn].
-	 *
-	 * It gets displayed in the header row of the [TableView].
-	 *
-	 * @see TableView
-	 */
-	val title: String,
-	
-	/**
-	 * The [width] for this [TableColumn].
-	 */
-	val width: Number,
-	
-	/**
-	 * The format function for this [TableColumn].
-	 *
-	 * It gets applied to each item in the [TableView] to get a [String] for its cell.
-	 *
-	 * @see TableView
-	 */
-	val formatFunction: (T) -> String,
-)
+open class TableColumn<T>(val title: String, val width: Number, val formatFunction: (T) -> String)

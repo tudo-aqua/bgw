@@ -137,9 +137,9 @@ sealed class UIComponent(
 		}
 	
 	/**
-	 * @throws RuntimeException If [GameComponentView] does not support children.
+	 * @throws UnsupportedOperationException If [GameComponentView] does not support children.
 	 */
 	override fun removeChild(component: ComponentView) {
-		throw RuntimeException("This $this ComponentView has no children.")
+		throw UnsupportedOperationException("This $this ComponentView has no children.")
 	}
 }

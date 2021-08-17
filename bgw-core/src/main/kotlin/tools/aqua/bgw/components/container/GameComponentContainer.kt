@@ -260,14 +260,14 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 *
 	 * @param component Child to be removed.
 	 *
-	 * @throws RuntimeException If the child's type is incompatible with container's type.
+	 * @throws IllegalArgumentException If the child's type is incompatible with container's type.
 	 */
 	override fun removeChild(component: ComponentView) {
 		try {
 			@Suppress("UNCHECKED_CAST")
 			this.remove(component as T)
 		} catch (_: ClassCastException) {
-			throw RuntimeException("$component type is incompatible with container's type.")
+			throw IllegalArgumentException("$component type is incompatible with container's type.")
 		}
 	}
 	

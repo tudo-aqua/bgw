@@ -35,7 +35,6 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
@@ -89,7 +88,7 @@ internal class NodeBuilder {
 		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
 			stackPane.onDragDetected = EventHandler {
 				if (this is DynamicComponentView && isDraggable && scene.draggedDataProperty.value == null) {
-					onDragDetected(scene, it)
+					onDragDetected(scene as BoardGameScene, it)
 				}
 			}
 			
@@ -103,7 +102,7 @@ internal class NodeBuilder {
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
 		
-		private fun DynamicComponentView.onDragDetected(scene: Scene<out ComponentView>, e: MouseEvent) {
+		private fun DynamicComponentView.onDragDetected(scene: BoardGameScene, e: MouseEvent) {
 			val mouseStartCoord = Coordinate(
 				xCoord = e.sceneX / Frontend.sceneScale,
 				yCoord = e.sceneY / Frontend.sceneScale
@@ -228,20 +227,13 @@ internal class NodeBuilder {
 			}
 		}
 		
-		private fun DynamicComponentView.findRollbackOnRoot(scene: Scene<out ComponentView>): (() -> Unit) {
+		private fun DynamicComponentView.findRollbackOnRoot(scene: BoardGameScene): (() -> Unit) {
 			val initialX = posX
 			val initialY = posY
 			return {
-				when (scene) {
-					is BoardGameScene -> {
-						posX = initialX
-						posY = initialY
-						scene.addComponents(this)
-					}
-					is MenuScene -> {
-						throw RuntimeException("DynamicView $this should not be contained in a MenuScene.")
-					}
-				}
+				posX = initialX
+				posY = initialY
+				scene.addComponents(this)
 			}
 		}
 		
