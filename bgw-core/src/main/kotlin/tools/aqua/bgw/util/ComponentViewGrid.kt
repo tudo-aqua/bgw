@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate", "unused", "Unchecked_Cast", "DuplicatedCode")
+@file:Suppress("MemberVisibilityCanBePrivate", "unused", "Unchecked_Cast", "DuplicatedCode", "TooManyFunctions")
 
 package tools.aqua.bgw.util
 

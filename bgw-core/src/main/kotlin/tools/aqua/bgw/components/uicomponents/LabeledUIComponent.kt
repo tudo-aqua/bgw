@@ -39,6 +39,7 @@ import tools.aqua.bgw.visual.Visual
  * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width.
  * @param visual Background [Visual].
  */
+@Suppress("LongParameterList")
 sealed class LabeledUIComponent(
     posX: Number,
     posY: Number,

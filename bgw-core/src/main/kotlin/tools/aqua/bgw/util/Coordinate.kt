@@ -141,7 +141,5 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 *
 	 * @return HashCode containing [xCoord] and [yCoord].
 	 */
-	override fun hashCode(): Int {
-		return xCoord.hashCode() - yCoord.hashCode()
-	}
+	override fun hashCode(): Int = xCoord.hashCode() - yCoord.hashCode()
 }

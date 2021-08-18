@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "TooManyFunctions")
 
 package tools.aqua.bgw.components.container
 

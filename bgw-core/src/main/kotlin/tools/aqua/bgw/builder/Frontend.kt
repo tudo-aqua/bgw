@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package tools.aqua.bgw.builder
 
 import javafx.animation.*

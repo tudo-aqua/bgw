@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate")
+@file:Suppress("MemberVisibilityCanBePrivate", "TooManyFunctions")
 
 package tools.aqua.bgw.builder
 
@@ -40,7 +40,7 @@ import javafx.scene.input.MouseEvent as FXMouseEvent
 /**
  * Helper class for conversion functions between BGW and JavaFX and backwards.
  */
-internal abstract class FXConverters {
+internal class FXConverters private constructor() {
 	companion object {
 		/**
 		 * Converts the [java.awt.Color] to [Color].

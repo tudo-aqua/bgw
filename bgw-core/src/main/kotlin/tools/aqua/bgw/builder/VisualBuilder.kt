@@ -83,11 +83,11 @@ internal class VisualBuilder {
         private fun buildColorVisual(visual: ColorVisual) = Pane().apply {
             visual.colorProperty.setGUIListenerAndInvoke(visual.color) { _, nV ->
                 style = "-fx-background-color: #${Integer.toHexString(nV.rgb).substring(2)};"
-                opacity = (nV.alpha / MAX_HEX) * visual.transparency
+                opacity = nV.alpha / MAX_HEX * visual.transparency
             }
 
             visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
-                opacity = (visual.color.alpha / MAX_HEX) * nV
+                opacity = visual.color.alpha / MAX_HEX * nV
             }
         }
 

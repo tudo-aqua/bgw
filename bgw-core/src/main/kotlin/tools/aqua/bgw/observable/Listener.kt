@@ -49,6 +49,7 @@ fun interface IValueObservable<T> {
  *
  * @constructor Empty constructor.
  */
+@Suppress("UnnecessaryAbstractClass")
 abstract class Observable {
 	/**
 	 * Holds all listeners on this property.
@@ -169,6 +170,7 @@ abstract class Observable {
  *
  * @constructor Empty constructor.
  */
+@Suppress("UnnecessaryAbstractClass")
 abstract class ValueObservable<T> {
 	/**
 	 * Holds all listeners on this property.
