@@ -120,6 +120,11 @@ class LogicController(private val view: Refreshable) {
 				playNoEffect(card, animated)
 		}
 		
+		if(currentPlayer.hand.cards.isEmpty()) {
+			view.refreshEndGame(currentPlayer)
+			return true
+		}
+		
 		if (advance) {
 			game.advancePlayer()
 			view.refreshAdvancePlayer()

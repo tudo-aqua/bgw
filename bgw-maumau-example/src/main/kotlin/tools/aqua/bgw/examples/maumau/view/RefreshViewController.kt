@@ -171,6 +171,16 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			}
 	}
 	
+	/**
+	 * Ends game.
+	 */
+	override fun refreshEndGame(playerWon: MauMauPlayer) {
+		viewController.showMenuScene(scene = viewController.mauMauPlayerWonMenuScene, fadeTime = 2000)
+	}
+	
+	/**
+	 * Advances active player.
+	 */
 	override fun refreshAdvancePlayer() {
 		val delay = DelayAnimation(1000)
 		

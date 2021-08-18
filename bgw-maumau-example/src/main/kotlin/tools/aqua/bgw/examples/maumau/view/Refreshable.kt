@@ -65,4 +65,11 @@ interface Refreshable {
 	 * @param card Card to play.
 	 */
 	fun refreshHintPlayCard(card: MauMauCard)
+	
+	/**
+	 * Indicates that the given [playerWon] won the game.
+	 *
+	 * @param playerWon Player that won.
+	 */
+	fun refreshEndGame(playerWon: MauMauPlayer)
 }

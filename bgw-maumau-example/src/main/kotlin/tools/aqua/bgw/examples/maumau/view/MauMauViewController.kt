@@ -19,6 +19,11 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	private val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
 	
 	/**
+	 * The player won menu scene.
+	 */
+	val mauMauPlayerWonMenuScene: MauMauPlayerWonScene = MauMauPlayerWonScene()
+	
+	/**
 	 * The main game scene.
 	 */
 	val mauMauGameScene: MauMauGameScene = MauMauGameScene()
@@ -116,5 +121,14 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
         mauMauMenuScene.exitButton.onMouseClicked = {
             exit()
         }
+		
+		mauMauPlayerWonMenuScene.newGameButton.onMouseClicked = {
+			logicController.newGame()
+			hideMenuScene()
+		}
+		
+		mauMauPlayerWonMenuScene.exitButton.onMouseClicked = {
+			exit()
+		}
     }
 }
