@@ -26,34 +26,6 @@ import java.util.function.UnaryOperator
 import kotlin.streams.toList
 
 /**
- * An observable [ArrayList].
- *
- * @constructor Creates an [ObservableArrayList] with given initial elements.
- *
- * @param elements Initial elements in this [ObservableList].
- */
-open class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
-	/**
-	 * List field.
-	 */
-	override val list: MutableList<T> = ArrayList(elements)
-}
-
-/**
- * An observable [LinkedList].
- *
- * @constructor Creates an [ObservableLinkedList] with given initial elements.
- *
- * @param elements Initial elements in this [ObservableList].
- */
-open class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
-	/**
-	 * List field.
-	 */
-	override val list: MutableList<T> = LinkedList(elements)
-}
-
-/**
  * An observable [List] implementation.
  *
  * @constructor Creates an [ObservableList].
