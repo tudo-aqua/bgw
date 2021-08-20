@@ -7,6 +7,10 @@ layout: default
 
 [LayoutViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
 [PaneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-pane/index.html
+[ContainerDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html
+[AreaDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html#area
+[MenuSceneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-menu-scene/index.html
+
 [GridPaneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/index.html
 [addRowsDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/add-rows.html
 [addColumnsDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/add-columns.html
@@ -52,7 +56,13 @@ layout: default
 There are two available LayoutViews: [Pane](#pane) and [GridPane](#gridpane).
 
 ## [Pane][PaneDoc]
+The [Pane][PaneDoc] arranges its contents in a new coordinate space in the size of the Pane.
+Elements added to the Pane align themselves relative to the top-left corner of the Pane.
+This can be used to group a set of components to move them simultaneously by altering the Pane's position. 
+A Pane is therefore quite similar to an [Area][AreaDoc] but can be used in [MenuScenes][MenuSceneDoc]. 
 
+*Note that a Pane is not a [Container][ContainerDoc] and therefore not draggable. 
+Use an [Area][AreaDoc] to combine components to a drag group.*
 
 
 ## [GridPane][GridPaneDoc]
