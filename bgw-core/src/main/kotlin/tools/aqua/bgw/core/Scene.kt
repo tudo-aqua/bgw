@@ -26,10 +26,10 @@ import tools.aqua.bgw.builder.DragTargetObject
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.RootComponent
-import tools.aqua.bgw.observable.DoubleProperty
+import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 

@@ -15,13 +15,15 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+@file:Suppress("unused")
+
+package tools.aqua.bgw.observable.properties
 
 /**
- * A BooleanProperty.
+ * A ReadonlyStringProperty.
  *
- * @constructor Creates a [BooleanProperty] with given initial value.
+ * @constructor Creates a [ReadonlyStringProperty] with given initial value.
  *
- * @param initialValue Initial Value. Default: `false`.
+ * @param initialValue Initial Value. Default: Empty string.
  */
-open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)
+open class ReadonlyStringProperty(initialValue: String = "") : ReadonlyProperty<String>(initialValue)

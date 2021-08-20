@@ -21,7 +21,7 @@ package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.*
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.Visual
 
 /**

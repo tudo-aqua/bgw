@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.properties
 
 /**
  * A limited DoubleProperty to a value range. Value will be checked to be in range

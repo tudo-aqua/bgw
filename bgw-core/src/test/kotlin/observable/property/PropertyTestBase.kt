@@ -18,7 +18,7 @@
 package observable.property
 
 import org.junit.jupiter.api.BeforeEach
-import tools.aqua.bgw.observable.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 
 open class PropertyTestBase {
 	protected val initialValue: Double = 13.0
