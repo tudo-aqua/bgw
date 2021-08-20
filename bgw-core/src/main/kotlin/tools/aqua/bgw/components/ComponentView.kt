@@ -26,6 +26,7 @@ import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.BooleanProperty
 import tools.aqua.bgw.observable.DoubleProperty
+import tools.aqua.bgw.observable.LimitedDoubleProperty
 import tools.aqua.bgw.observable.Property
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
@@ -277,7 +278,10 @@ abstract class ComponentView internal constructor(
 	 *
 	 * @see opacity
 	 */
-	val opacityProperty: DoubleProperty = DoubleProperty(1.0)
+	val opacityProperty: LimitedDoubleProperty = LimitedDoubleProperty(
+		lowerBoundInclusive = 0.0,
+		upperBoundInclusive = 1.0,
+		initialValue = 1.0)
 	
 	/**
 	 * Opacity of this [ComponentView].
