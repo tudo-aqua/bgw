@@ -1,6 +1,6 @@
 ---
 parent: Components
-title: Component View
+title: ComponentView
 nav_order: 1
 layout: default
 ---

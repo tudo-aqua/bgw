@@ -1,6 +1,6 @@
 ---
 parent: Components
-title: Dynamic Component View
+title: DynamicComponentView
 nav_order: 2
 layout: default
 ---
