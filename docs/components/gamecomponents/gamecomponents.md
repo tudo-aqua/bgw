@@ -5,8 +5,8 @@ nav_order: 3
 layout: default
 ---
 
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/componentview.html
-[DynamicView]: https://tudo-aqua.github.io/bgw/components/uicomponents/dynamiccomponentview.html
+[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
+[DynamicView]: https://tudo-aqua.github.io/bgw/components/dynamiccomponentview/dynamiccomponentview.html
 
 [GameComponentDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
 [ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
