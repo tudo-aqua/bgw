@@ -18,6 +18,11 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  # Release tag associated with version of Detekt to be installed
+  # SARIF support (required for this workflow) was introduced in Detekt v1.15.0
+  DETEKT_RELEASE_TAG: v1.15.0
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   github-pages-deploy:
@@ -45,6 +50,54 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gh-pages-
             ${{ runner.os }}-
+
+      # Gets the download URL associated with the $DETEKT_RELEASE_TAG
+      - name: Get Detekt download URL
+        id: detekt_info
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DETEKT_DOWNLOAD_URL=$( gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
+            query getReleaseAssetDownloadUrl($tagName: String!) {
+              repository(name: "detekt", owner: "detekt") {
+                release(tagName: $tagName) {
+                  releaseAssets(name: "detekt", first: 1) {
+                    nodes {
+                      downloadUrl
+                    }
+                  }
+                }
+              }
+            }
+          ' | \
+          jq --raw-output '.data.repository.release.releaseAssets.nodes[0].downloadUrl' )
+          echo "::set-output name=download_url::$DETEKT_DOWNLOAD_URL"
+
+      # Sets up the detekt cli
+      - name: Setup Detekt
+        run: |
+          dest=$( mktemp -d )
+          curl --request GET \
+            --url ${{ steps.detekt_info.outputs.download_url }} \
+            --silent \
+            --location \
+            --output $dest/detekt
+          chmod a+x $dest/detekt
+          echo $dest >> $GITHUB_PATH
+
+      # Performs static analysis using Detekt
+      - name: Run Detekt
+        continue-on-error: true
+        run: |
+          detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/bgw-core/detekt-rules.yml --report sarif:${{ github.workspace }}/results.sarif.json
+
+      - name: Run Detekt HTML
+        continue-on-error: true
+        run: |
+          detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/bgw-core/detekt-rules.yml --report html:${{ github.workspace }}/results.html
+
+      - name: Move Detekt to /detekt
+        run: cp -r ${{ github.workspace }}/results.html ./docs/detekt.html
 
       - name: Run 'dokkaHtml' Gradle task
         uses: eskatos/gradle-command-action@v1
