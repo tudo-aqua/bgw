@@ -97,7 +97,7 @@ jobs:
           detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/bgw-core/detekt-rules.yml --report html:${{ github.workspace }}/results.html
 
       - name: Move Detekt to /detekt
-        run: cp -r ${{ github.workspace }}/results.html ./docs/detekt
+        run: cp -r ${{ github.workspace }}/results.html ./docs/detekt.html
 
       - name: Run 'dokkaHtml' Gradle task
         uses: eskatos/gradle-command-action@v1
