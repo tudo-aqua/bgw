@@ -392,7 +392,7 @@ abstract class ComponentView internal constructor(
 		}
 	
 	/**
-	 * Gets invoked with an event whenever the mouse enters this [ComponentView].
+	 * Gets invoked with a [MouseEvent] whenever the mouse enters this [ComponentView].
 	 *
 	 * @see Event
 	 * @see isDisabledProperty
@@ -400,7 +400,7 @@ abstract class ComponentView internal constructor(
 	var onMouseEntered: ((MouseEvent) -> Unit)? = null
 	
 	/**
-	 * Gets invoked with an event whenever the mouse leaves this [ComponentView].
+	 * Gets invoked with a [MouseEvent] whenever the mouse leaves this [ComponentView].
 	 *
 	 * @see Event
 	 * @see isDisabledProperty
@@ -597,6 +597,8 @@ abstract class ComponentView internal constructor(
 	
 	/**
 	 * Removes this component from its parent.
+	 *
+	 * @return Returns the former parent.
 	 *
 	 * @throws IllegalStateException If this component is not contained in any container. Use parent field to check.
 	 *
