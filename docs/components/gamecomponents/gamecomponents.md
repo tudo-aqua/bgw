@@ -1,9 +1,13 @@
 ---
 parent: Components
 title: GameComponents
-nav_order: 1
+nav_order: 3
 layout: default
 ---
+
+[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/componentview.html
+[DynamicView]: https://tudo-aqua.github.io/bgw/components/uicomponents/dynamiccomponentview.html
+
 [GameComponentDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
 [ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
 [TokenDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
@@ -28,6 +32,11 @@ layout: default
 {:toc}
 </details>
 
+## Prior knowledge
+All GameComponentViews inherit from [ComponentView][ComponentViewDoc] and [DynamicView][DynamicView].
+It is therefore helpful to read those documentations first as the features from those superclasses don't get repeated here.
+
+## Introduction
 [GameComponentViews][GameComponentDoc] are used to model interactive game elements like cards, meeples or any other 
 form of game tokens.
 GameComponentViews can be added to [GameComponentContainers][ContainerDoc] and be made draggable as explained in 

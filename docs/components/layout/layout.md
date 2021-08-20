@@ -1,9 +1,12 @@
 ---
 parent: Components
 title: LayoutViews
-nav_order: 4
+nav_order: 6
 layout: default
 ---
+
+[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/componentview.html
+[DynamicView]: https://tudo-aqua.github.io/bgw/components/uicomponents/dynamiccomponentview.html
 
 [LayoutViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
 [PaneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-pane/index.html
@@ -52,6 +55,11 @@ layout: default
 {:toc}
 </details>
 
+## Prior knowledge
+All layout views inherit from [ComponentView][ComponentViewDoc].
+It is therefore helpful to read this documentation first as the features from this superclass doesn't get repeated here.
+
+## Introduction
 [LayoutViews][LayoutViewDoc] are used to arrange components.
 There are two available LayoutViews: [Pane](#pane) and [GridPane](#gridpane).
 
@@ -63,7 +71,6 @@ A Pane is therefore quite similar to an [Area][AreaDoc] but can be used in [Menu
 
 *Note that a Pane is not a [Container][ContainerDoc] and therefore not draggable. 
 Use an [Area][AreaDoc] to combine components to a drag group.*
-
 
 ## [GridPane][GridPaneDoc]
 The [GridPane][GridPaneDoc] arranges its contents in rows and columns. 

@@ -1,9 +1,12 @@
 ---
 parent: Components 
 title: Container
-nav_order: 2 
+nav_order: 4
 layout: default 
 ---
+
+[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/componentview.html
+[DynamicView]: https://tudo-aqua.github.io/bgw/components/uicomponents/dynamiccomponentview.html
 
 [BGADocs]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/
 [AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/index.html
@@ -33,6 +36,11 @@ layout: default
 {:toc}
 </details>
 
+## Prior knowledge
+All containers inherit from [ComponentView][ComponentViewDoc] and [DynamicView][DynamicView]. 
+It is therefore helpful to read those documentations first as the features from those superclasses don't get repeated here.
+
+## Introduction
 Containers can be used to group
 [GameComponentView][GameComponentView]s.
 
@@ -41,7 +49,6 @@ is the abstract baseclass for containers. Different implementations support diff
 contained components.
 
 ## Container features
-
 The Container features will be demonstrated using an [Area][AreaDoc], since [GameComponentContainer][ContainerDoc]
 is abstract and [Area][AreaDoc] is just one of the discrete implementations.
 
