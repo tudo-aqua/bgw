@@ -37,11 +37,12 @@ internal class AnimationBuilder {
 		internal fun build(scene: Scene<out ComponentView>, anim: Animation): javafx.animation.Animation =
 			when (anim) {
 				is MovementAnimation<*> -> buildMovementAnimation(scene, anim)
-				is RotationAnimation<*> -> addRotateAnimation(scene, anim)
-				is FlipAnimation<*> -> addFlipAnimation(scene, anim)
-				is DelayAnimation -> addDelayAnimation(scene, anim)
-				is DiceAnimation<*> -> addDiceAnimation(scene, anim)
-				is RandomizeAnimation<*> -> addRandomizeAnimation(scene, anim)
+				is RotationAnimation<*> -> buildRotateAnimation(scene, anim)
+				is ScaleAnimation<*> -> buildScaleAnimation(scene, anim)
+				is FlipAnimation<*> -> buildFlipAnimation(scene, anim)
+				is DelayAnimation -> buildDelayAnimation(scene, anim)
+				is DiceAnimation<*> -> buildDiceAnimation(scene, anim)
+				is RandomizeAnimation<*> -> buildRandomizeAnimation(scene, anim)
 			}
 		
 		/**
@@ -78,7 +79,7 @@ internal class AnimationBuilder {
 		/**
 		 * Builds [RotationAnimation].
 		 */
-		private fun addRotateAnimation(
+		private fun buildRotateAnimation(
 			scene: Scene<out ComponentView>,
 			anim: RotationAnimation<*>
 		): javafx.animation.Animation {
@@ -106,7 +107,29 @@ internal class AnimationBuilder {
 		/**
 		 * Builds [FlipAnimation].
 		 */
-		private fun addFlipAnimation(
+		private fun buildScaleAnimation(
+			scene: Scene<out ComponentView>,
+			anim: ScaleAnimation<*>
+		): javafx.animation.Animation {
+			val node = scene.componentsMap[anim.componentView]!!
+			
+			//Move node to initial position
+			node.scaleX = anim.fromScaleX
+			node.scaleY = anim.fromScaleY
+			
+			//set transition as relative movement
+			val animation = ScaleTransition(Duration.millis(anim.duration.toDouble()), node).apply {
+				toX = anim.toScaleX
+				toY = anim.toScaleY
+			}
+			
+			return animation
+		}
+		
+		/**
+		 * Builds [FlipAnimation].
+		 */
+		private fun buildFlipAnimation(
 			scene: Scene<out ComponentView>,
 			anim: FlipAnimation<*>
 		): javafx.animation.Animation {
@@ -141,7 +164,7 @@ internal class AnimationBuilder {
 		/**
 		 * Builds [DelayAnimation].
 		 */
-		private fun addDelayAnimation(
+		private fun buildDelayAnimation(
 			scene: Scene<out ComponentView>,
 			anim: DelayAnimation
 		): javafx.animation.Animation {
@@ -158,7 +181,7 @@ internal class AnimationBuilder {
 		/**
 		 * Builds [DiceAnimation].
 		 */
-		private fun addDiceAnimation(
+		private fun buildDiceAnimation(
 			scene: Scene<out ComponentView>,
 			anim: DiceAnimation<*>
 		): javafx.animation.Animation {
@@ -183,7 +206,7 @@ internal class AnimationBuilder {
 		/**
 		 * Builds [RandomizeAnimation].
 		 */
-		private fun addRandomizeAnimation(
+		private fun buildRandomizeAnimation(
 			scene: Scene<out ComponentView>,
 			anim: RandomizeAnimation<*>
 		): javafx.animation.Animation {
