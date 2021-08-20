@@ -270,7 +270,7 @@ abstract class ComponentView internal constructor(
 	/**
 	 * [Property] for the [opacity] of this [ComponentView].
 	 *
-	 * Should be in range 0.0 to 1.0.
+	 * Must be in range 0.0 to 1.0.
 	 *
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 	 *
