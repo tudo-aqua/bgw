@@ -71,19 +71,6 @@ jobs:
       run: |
         detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/bgw-core/detekt-rules.yml --report sarif:${{ github.workspace }}/detekt.sarif.json
 
-    # Modifies the SARIF output produced by Detekt so that absolute URIs are relative
-    # This is so we can easily map results onto their source files
-    # This can be removed once relative URI support lands in Detekt: https://git.io/JLBbA
-    - name: Make artifact location URIs relative
-      continue-on-error: true
-      run: |
-        echo "$(
-          jq \
-            --arg github_workspace ${{ github.workspace }} \
-            '. | ( .runs[].results[].locations[].physicalLocation.artifactLocation.uri |= if test($github_workspace) then .[($github_workspace | length | . + 1):] else . end )' \
-            ${{ github.workspace }}/detekt.sarif.json
-        )" > ${{ github.workspace }}/detekt.sarif.json
-
     # Uploads results to GitHub repository using the upload-sarif action
     - uses: github/codeql-action/upload-sarif@v1
       with:
