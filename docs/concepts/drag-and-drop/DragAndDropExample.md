@@ -8,6 +8,17 @@ layout: default
 
 # Drag and Drop
 
+[DynamicComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/dynamiccomponent/dynamiccomponentview.html
+[BoardGameApplicationDoc]: https://tudo-aqua.github.io/bgw/
+[TokenDoc]: https://tudo-aqua.github.io/bgw/components/gamecomponents/gamecomponents.html#generic-token
+[AreaDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html#area
+
+[DragEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/
+[TokenKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/
+[AreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/
+
+[DragDropExample]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example
+
 {: .no_toc}
 <details open markdown="block">
   <summary>
@@ -26,21 +37,21 @@ be possible to drag tokens into areas of the same color. Once the tokens have be
 should become non-draggable.
 
 The complete source code for this example can be
-found [here](https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example).
+found [here][DragDropExample].
 
 ## Prior knowledge
 
 Knowledge about the following components and concepts is necessary for this tutorial.
 
-- [BoardGameApplication]()
-- [DynamicComponent]()
-- [Area]()
-- [TokenView]()
+- [DynamicComponentView][DynamicComponentViewDoc]
+- [BoardGameApplication][BoardGameApplicationDoc]
+- [Token][TokenDoc]
+- [Area][AreaDoc]
 
 ## Component declaration
 
 To create a running example, the described components are wrapped in a
-[BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/).
+[BoardGameApplication][BoardGameApplicationDoc].
 
 ````kotlin
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
@@ -113,10 +124,10 @@ To fully enable the drag and drop gesture, another component that indicates, tha
 to be defined. To define accepting dropped components, the ``dropAcceptor`` property needs to be set for the receiving
 component. The property should return whether this component is a valid drop target for the ``draggedComponent``
 supplied in the
-[DragEvent](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/)
+[DragEvent][DragEventKDoc]
 passed as an argument. In this instance the ``redArea`` should only be accepting the ``redToken``, hence we only return
 true if the ``draggedComponent`` is a
-[TokenView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/)
+[Token][TokenKDoc]
 and is equal to the ``redToken``.
 
 ````kotlin
@@ -138,7 +149,7 @@ redArea.onDragDropped = { dragEvent ->
 ````
 
 The ``reposition`` function is applied to the ``draggedComponent``, because
-[Area](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/)
+[Area][AreaKDoc]
 does not have an automatic layout algorithm.
 
 The ``greenArea`` gets initialized accordingly:
