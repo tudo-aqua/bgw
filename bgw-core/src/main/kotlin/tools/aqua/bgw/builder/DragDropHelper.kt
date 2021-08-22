@@ -80,7 +80,10 @@ internal class DragDropHelper {
 					if (component != null) DragTargetObject(component, it, newMouseX, newMouseY) else null
 				}
 				.filter {
+					//TODO: Move rotated() to map above
 					val rotatedTarget = it.rotated()
+					
+					//TODO: Range does not consider scale here
 					rotatedTarget.mouseX in it.rangeX() && rotatedTarget.mouseY in it.rangeY()
 				}.toList()
 		
@@ -147,11 +150,13 @@ internal class DragDropHelper {
 					dragTargetObject.dragTargetStackPane,
 					dragTargetObject.mouseX,
 					dragTargetObject.mouseY,
+					//TODO: Scale not considered here
 					dragTargetObject.dragTarget.posX -
 							if (dragTargetObject.dragTarget.layoutFromCenter)
 								dragTargetObject.dragTarget.width / 2
 							else
 								0.0,
+					//TODO: Scale not considered here
 					dragTargetObject.dragTarget.posY -
 							if (dragTargetObject.dragTarget.layoutFromCenter)
 								dragTargetObject.dragTarget.height / 2
@@ -185,6 +190,7 @@ internal class DragDropHelper {
 			}.map {
 				Pair(it, parent.dragTarget.getChildPosition(it) ?: Coordinate(0.0, 0.0))
 			}.filter {
+				//TODO: Scale not considered here
 				parent.mouseX - parent.offsetX in it.second.xCoord..it.second.xCoord + it.first.width
 						&& parent.mouseY - parent.offsetY in it.second.yCoord..it.second.yCoord + it.first.height
 				
@@ -195,6 +201,7 @@ internal class DragDropHelper {
 						componentsMap[it.first]!!,
 						parent.mouseX,
 						parent.mouseY,
+						//TODO: Parent scale not passed here - must be multiplied for each layer
 						parent.offsetX + it.second.xCoord,
 						parent.offsetY + it.second.yCoord
 					),
