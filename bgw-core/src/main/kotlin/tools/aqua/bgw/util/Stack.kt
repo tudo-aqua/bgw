@@ -158,4 +158,9 @@ open class Stack<T> {
      * Shuffles this [Stack].
      */
     fun shuffle(): Unit = data.shuffle()
+    
+    //region temporary signatures
+    fun popOrNull(): T? = null
+    fun peekOrNull(): T? = null
+    //endregion
 }
