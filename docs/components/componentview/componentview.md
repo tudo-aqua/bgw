@@ -93,7 +93,7 @@ Handlers can be assigned like attribute values.
 To remove a handler assign ``null``. Read more about this topic [here][UserInputDoc].
 	
 #### Mouse movement events
-``var onMouseEntered: ((MouseEvent) -> Unit)?``: Gets invoked when the mouse enters this component.
+``onMouseEntered: ((MouseEvent) -> Unit)?``: Gets invoked when the mouse enters this component.
 	
 ``onMouseExited: ((MouseEvent) -> Unit)?``: Gets invoked when the mouse leaves this component.
 
