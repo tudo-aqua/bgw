@@ -23,10 +23,21 @@ package tools.aqua.bgw.util
  * [Stack] represents a Last In First Out (LIFO) data structure.
  * It provides useful functions to manipulate the [Stack].
  *
- * @constructor Creates an empty [Stack].
+ * @constructor Creates a [Stack] with ,given initial elements.
  */
-open class Stack<T> {
-    private val data = mutableListOf<T>()
+open class Stack<T>(elements: Collection<T>) {
+    
+    private val data = elements.toMutableList()
+    
+    /**
+     * Creates a [Stack] with vararg initial elements.
+     */
+    constructor(vararg element: T) : this(element.toList())
+    
+    /**
+     * Creates an empty [Stack].
+     */
+    constructor() : this(mutableListOf())
 
     /**
      * Size of this [Stack].
