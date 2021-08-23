@@ -32,7 +32,7 @@ class SortShuffleTest: StackTestBase() {
 		val orderedStack = Stack(IntRange(0, 1000).shuffled())
 		val comparisonStack = Stack(IntRange(0, 1000).toList())
 		
-		orderedStack.sort(Comparator.comparingInt{-it})
+		orderedStack.sort(Comparator.comparingInt{it})
 		
 		assertEquals(comparisonStack.peekAll(), orderedStack.peekAll())
 	}
