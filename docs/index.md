@@ -2,53 +2,49 @@
 layout: default title: Board Game Work nav_order: 1 has_children: false
 ---
 
-[BGADoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
+<!-- KDoc -->
+[BoardGameApplicationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
+[BoardGameSceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/index.html
+[MenuSceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-menu-scene/index.html
+[GameComponentKDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
+[StaticComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-static-component-view/index.html
+[LabelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
+[ButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-button/index.html
+[ContainerKDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
+[CardStackKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
+[LinearLayoutKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
 
-[BGA#showGameSceneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-game-scene.html
+[showGameSceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-game-scene.html
+[showMenuSceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-menu-scene.html
+[showKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show.html
+[addComponentsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-scene/add-components.html
 
-[BGA#showMenuSceneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-menu-scene.html
+<!-- GH-Pages Doc -->
+[UIComponentDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
+[LayoutViewDoc]: https://tudo-aqua.github.io/bgw/components/layout/layout.html
+[VisualsDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
 
-[BGA#showDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show.html
+<!-- Links -->
+[MauMauRules]: https://en.wikipedia.org/wiki/Mau-Mau_(card_game)
 
-[BGSDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/index.html
-
-[MSDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-menu-scene/index.html
-
-[Scene#addComponents]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-scene/add-components.html
-
-[StaticComponentViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-static-component-view/index.html
-
-[LabelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
-
-[ButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-button/index.html
-
-[GameComponentDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
-
-[ContainerDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
-
-[CardStackDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
-
-[LinearLayoutDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
-
-[visualsTutorial]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
-
+<!-- Start Page -->
 # Board Game Work
 
 This tutorial introduces the BoardGameWork framework. The upcoming section discusses the core features and how to set up
-the first game scene. The running example implements the [MauMau](https://en.wikipedia.org/wiki/Mau-Mau_(card_game)) 
+the first game scene. The running example implements the [MauMau][MauMauRules] 
 card game.
 
 ## Setup
 
-Each application starts with a [BoardGameApplication][BGADoc] instance. By default, the view controller class should
-inherit from [BoardGameApplication][BGADoc].
+Each application starts with a [BoardGameApplication][BoardGameApplicationKDoc] instance. By default, the view controller class should
+inherit from [BoardGameApplication][BoardGameApplicationKDoc].
 
 ````kotlin
 class MauMauViewController : BoardGameApplication(windowTitle = "MauMau")
 ````
 
-This creates a window in which the game can take place. For the game itself a [BoardGameScene][BGSDoc] and
-a [MenuScene][MSDoc] is declared.
+This creates a window in which the game can take place. For the game itself a [BoardGameScene][BoardGameSceneKDoc] and
+a [MenuScene][MenuSceneKDoc] is declared.
 
 ````kotlin
 class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
@@ -67,21 +63,21 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
 
 The menu scene gets a height of 500px and width of 300px while the game scene gets the default size of
 FullHD. The game scene gets an image as background and the menu scene solid white. To read more about
-visuals click [here][visualsTutorial].
+visuals click [here][VisualsDoc].
 
 ## BoardGameScene and MenuScene
 
 The MauMau example declares a game scene and a menu scene. In menu scenes draggable
-components are not usable, only [LayoutViews](https://tudo-aqua.github.io/bgw/components/layout/layout.html) and 
-[UIComponents](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html): In other words components 
-that extend [StaticComponentView][StaticComponentViewDoc].
+components are not usable, only [LayoutViews][LayoutViewDoc] and 
+[UIComponents][UIComponentDoc]: In other words components 
+that extend [StaticComponentView][StaticComponentViewKDoc].
 
-A [BoardGameApplication][BGADoc] can display one [BoardGameScene][BGSDoc] and one [MenuScene][MSDoc] at the same time.
+A [BoardGameApplication][BoardGameApplicationKDoc] can display one [BoardGameScene][BoardGameSceneKDoc] and one [MenuScene][MenuSceneKDoc] at the same time.
 While the menu scene is visible, the game scene gets blurred out.
 
-The scenes can be shown by calling [showGameScene()][BGA#showGameSceneDoc] and [showMenuScene()][BGA#showMenuSceneDoc]. 
+The scenes can be shown by calling [showGameScene()][showGameSceneKDoc] and [showMenuScene()][showMenuSceneKDoc]. 
 <br>
-The window gets shown by calling [show()][BGA#showDoc].
+The window gets shown by calling [show()][showKDoc].
 
 ````kotlin
 class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
@@ -105,9 +101,9 @@ ratio does not match the windows size, black bars will appear which can be style
 
 All components declared in this scene will relate its position and size to the declared coordinate space.
 
-In this example a [Label][LabelDoc] should display *"Main menu"* and three [Buttons][ButtonDoc]
+In this example a [Label][LabelKDoc] should display *"Main menu"* and three [Buttons][ButtonKDoc]
 display *"Continue"*, *"New Game"* and *"Exit"*. These components get declared and added to the scene by
-calling [addComponents()][Scene#addComponents] in the initializer block.
+calling [addComponents()][addComponentsKDoc] in the initializer block.
 
 ````kotlin
 class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
@@ -164,10 +160,10 @@ class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorV
 
 ## Declaring a BoardGameScene
 
-[BoardGameScenes][BGSDoc] are the main components of the game. BoardGameScenes behave just like menu scenes but can
-additionally contain [GameComponentViews][GameComponentDoc] and [GameContainerViews][ContainerDoc].
+[BoardGameScenes][BoardGameSceneKDoc] are the main components of the game. BoardGameScenes behave just like menu scenes but can
+additionally contain [GameComponentViews][GameComponentKDoc] and [GameContainerViews][ContainerKDoc].
 
-For the MauMau example two [CardStacks][CardStackDoc] and two player hands as [LinearLayouts][LinearlayoutDoc] are 
+For the MauMau example two [CardStacks][CardStackKDoc] and two player hands as [LinearLayouts][LinearLayoutKDoc] are 
 necessary.
 
 ````kotlin

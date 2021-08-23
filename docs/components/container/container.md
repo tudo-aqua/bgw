@@ -5,25 +5,27 @@ nav_order: 4
 layout: default 
 ---
 
+<!-- KDoc -->
+[BGADocs]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/
+[GameComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
+[ContainerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
+[AreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html
+[TokenKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
+[CardViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
+[CardStackKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
+[LinearLayoutKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
+[SatchelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html
+
+<!-- GH-Pages Doc -->
 [ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
 [DynamicView]: https://tudo-aqua.github.io/bgw/components/dynamiccomponentview/dynamiccomponentview.html
-
-[BGADocs]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/
-[AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/index.html
-[ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
-[GameComponentView]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
-[TokenDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
-[CardViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
-[AreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html
-[CardStackDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
-[LinearLayoutDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
-[SatchelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html
-
 [UIComponentsDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
 [ContainerExample]: https://tudo-aqua.github.io/bgw/components/container/container.html#complete-source-code-for-the-example
 
+<!-- Links -->
 [IterableDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/
 
+<!-- Start Page -->
 # Container
 
 {: .no_toc}
@@ -42,15 +44,15 @@ It is therefore helpful to read those documentations first as the features from 
 
 ## Introduction
 Containers can be used to group
-[GameComponentView][GameComponentView]s.
+[GameComponentViewKDoc][GameComponentViewKDoc]s.
 
-[GameComponentContainer][ContainerDoc]
+[GameComponentContainer][ContainerKDoc]
 is the abstract baseclass for containers. Different implementations support different styles of layouting for the
 contained components.
 
 ## Container features
-The Container features will be demonstrated using an [Area][AreaDoc], since [GameComponentContainer][ContainerDoc]
-is abstract and [Area][AreaDoc] is just one of the discrete implementations.
+The Container features will be demonstrated using an [Area][AreaKDoc], since [GameComponentContainer][ContainerKDoc]
+is abstract and [Area][AreaKDoc] is just one of the discrete implementations.
 
 The complete source code for this example can be
 found [here][ContainerExample].
@@ -96,7 +98,7 @@ area.remove(redToken)
 The ``redToken`` is removed from the ``area``, therefore the ``greenToken`` falls back down to index 0.
 
 There are some convenience functions for adding and removing multiple Components at once. Please refer to
-the [docs][AreaDoc] for an in-depth overview.
+the [docs][AreaKDoc] for an in-depth overview.
 
 ### onAdd and onRemove
 
@@ -104,7 +106,7 @@ It is possible to specify code that gets executed with the component as its rece
 from the container. This is helpful whenever some modifications need to be made to any components, after it is added or
 removed.
 
-In this example [TokenView][TokenDoc]s get resized when they are added to ``area``, and rotated by 45° when they are
+In this example [TokenView][TokenKDoc]s get resized when they are added to ``area``, and rotated by 45° when they are
 removed from ``area``. To achieve this behaviour, the ``onAdd`` and ``onRemove`` fields are set.
 
 ````kotlin
@@ -150,18 +152,18 @@ Listeners can be removed via the ``clearComponentsListners()`` or ``removeCompon
 
 ## Types of Containers
 
-### [Area][AreaDoc]
+### [Area][AreaKDoc]
 
 Area is the simplest form of a container. Its contained components are positioned relative to the top-left corner of the
 Area. No further layouting is provided by the Area.
 
-### [CardStack][CardStackDoc]
+### [CardStack][CardStackKDoc]
 
 CardStack is a special form of container. It can only contain
-[CardView][CardViewDoc]. 
+[CardView][CardViewKDoc]. 
 It should be used to visualize card stacks. It provides automatic layouting and alignment features.
 
-### [LinearLayout][LinearLayoutDoc]
+### [LinearLayout][LinearLayoutKDoc]
 
 LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined
 spacing. Additionally, an orientation and alignment may be specified. In this image a LinearLayout is used to 
@@ -169,7 +171,7 @@ visualize a hand of cards:
 
 ![image](LinearLayout.png)
 
-### [Satchel][SatchelDoc]
+### [Satchel][SatchelKDoc]
 
 A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an
 entity, where the user should not know what might get drawn next, or what is in the container.

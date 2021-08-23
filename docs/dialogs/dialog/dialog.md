@@ -5,6 +5,18 @@ nav_order: 1
 layout: default
 ---
 
+<!-- KDoc -->
+[BoardGameApplicationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
+[DialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog/index.html
+[DialogTypeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog-type/index.html
+[ButtonTypeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-button-type/index.html
+
+[showDialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-dialog.html
+
+<!-- Links -->
+[OptionalDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html
+
+<!-- Start Page -->
 # Dialog
 {: .no_toc}
 <details open markdown="block">
@@ -16,16 +28,16 @@ layout: default
 {:toc}
 </details>
 
-This section showcases the different types of [Dialogs](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog/index.html) 
+This section showcases the different types of [Dialogs][DialogKDoc]
 in the BGW framework. A Dialog can be used to
 display a popup informing the user about warnings, and errors or text.
 
 ## Dialog creation
 
-The [Dialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog/index.html) class provides two public constructors for two different types of dialogs:
+The [Dialog][DialogKDoc] class provides two public constructors for two different types of dialogs:
 
 ### Information Dialog
-In the information dialog's constructor the type of the dialog can be declared by the [DialogType](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog-type/index.html) as
+In the information dialog's constructor the type of the dialog can be declared by the [DialogType][DialogTypeKDoc] as
 
 * ``INFORMATION``
 * ``WARNING``
@@ -33,8 +45,8 @@ In the information dialog's constructor the type of the dialog can be declared b
 * ``CONFIRMATION``
 * ``NONE``
 
-which directly affects the displayed icon and default buttons. The buttons can be altered by passing [ButtonTypes](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-button-type/index.html).  
-Note that ``EXCEPTION`` may not be used, as it is created through the second constructor [here](https://tudo-aqua.github.io/bgw/dialogs/dialog/dialog.html#exception-dialog).
+which directly affects the displayed icon and default buttons. The buttons can be altered by passing [ButtonTypes][ButtonTypeKDoc].  
+Note that ``EXCEPTION`` may not be used, as it is created through the second constructor [here](#Exception dialog).
 Additionally, the ``title`` of the popup, the ``header`` and the ``content`` parameters have to be passed.
 The following code example creates a warning dialog informing the user about an empty player name:
 
@@ -63,15 +75,15 @@ Dialog(
 ````
 ![exception_dialog](exception_dialog.png)
 
-An example with all dialog types can be found [here](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/dialog/DialogExample.kt)
-
+An example with all dialog types can be found here: [View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/dialog/DialogExample.kt){:
+.btn }
 ## Showing a dialog
-To show a dialog the method [#showDialog](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-dialog.html) 
-in [BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html) 
+To show a dialog the method [#showDialog][showDialogKDoc] 
+in [BoardGameApplication][BoardGameApplicationKDoc] 
 has to be used.
 The operation blocks user input until the dialog is closed. The function returns an 
-[Optional](https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html) containing the chosen 
-[ButtonType](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-button-type/index.html). 
+[Optional][OptionalDoc] containing the chosen 
+[ButtonType][ButtonTypeKDoc]. 
 The Optional is empty if the dialog is closed by the *X* or in any other way aside selecting any button.
 
 ````kotlin

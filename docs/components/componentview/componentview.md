@@ -5,24 +5,28 @@ nav_order: 1
 layout: default
 ---
 
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
-[GameComponentContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
-[LayoutViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
-[SceneDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-scene/index.html
-[RootComponentDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-root-component/index.html
+<!-- KDoc -->
+[ComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
+[GameComponentContainerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
+[LayoutViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
+[SceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-scene/index.html
+[RootComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-root-component/index.html
 [VisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-visual/index.html
-[MouseEventDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-mouse-event/index.html
-[KeyEventDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-key-event/index.html
-[DragEventDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/index.html
-[UserInputDoc]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
+
+[MouseEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-mouse-event/index.html
+[KeyEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-key-event/index.html
+[DragEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/index.html
 
 [MovementAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/index.html
 [RotationAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/index.html
 
+<!-- GH-Pages Doc -->
 [VisualDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
 [DragDropDoc]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html
 [AnimationDocs]: https://tudo-aqua.github.io/bgw/concepts/animations/Animations.html
+[UserInputDoc]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
 
+<!-- Start Page -->
 # Component View
 
 {: .no_toc}
@@ -36,7 +40,7 @@ layout: default
 </details>
 
 ## Introduction
-[ComponentView][ComponentViewDoc] is the abstract baseclass of all framework components. 
+[ComponentView][ComponentViewKDoc] is the abstract baseclass of all framework components. 
 It defines important fields and functions that are necessary to visualize inheriting components.
 Most fields come as a pair of attribute and observable property.
 
@@ -83,9 +87,9 @@ Use this to label components for easier debugging and printing
 
 ``parent: ComponentView?``:
 The parent of this ComponentView.
-Its value is null if the component is not contained in any [GameComponentContainer][GameComponentContainerDoc],
-[LayoutView][LayoutViewDoc], or a [Scene][SceneDoc].
-If the component has been added directly to a scene, *parent* is equal to the scene's [RootComponent][RootComponentDoc].
+Its value is null if the component is not contained in any [GameComponentContainer][GameComponentContainerKDoc],
+[LayoutView][LayoutViewKDoc], or a [Scene][SceneKDoc].
+If the component has been added directly to a scene, *parent* is equal to the scene's [RootComponent][RootComponentKDoc].
 
 ### Event handler
 Event handlers et called by the framework if the associated event happened.
@@ -105,7 +109,7 @@ To remove a handler assign ``null``. Read more about this topic [here][UserInput
 ``onMouseClicked: ((MouseEvent) -> Unit)?``:Gets invoked when the mouse is clicked, i.e. pressed and released, inside
 this component.
 
-*Note: The [MouseEvent][MouseEventDoc]'s ``button`` attribute always contains the mouse button.*
+*Note: The [MouseEvent][MouseEventKDoc]'s ``button`` attribute always contains the mouse button.*
 
 #### Key events
 ``onKeyPressed: ((KeyEvent) -> Unit)?``:Gets invoked when a keyboard key is pressed while this component has focus.
@@ -115,23 +119,23 @@ this component.
 ``onKeyTyped: ((KeyEvent) -> Unit)?``:Gets invoked when a keyboard key is typed, i.e. pressed and released, while this 
 component has focus.
 
-*Note: The [KeyEvent][KeyEventDoc] always contains the key combination.*
+*Note: The [KeyEvent][KeyEventKDoc] always contains the key combination.*
 	
 #### Drag events
 *Read more about drag and drop [here][DragDropDoc]*
 	
-``onDragGestureEntered: ((DragEvent) -> Unit)?``: Gets invoked with a [DragEvent][DragEventDoc] containing the dragged 
+``onDragGestureEntered: ((DragEvent) -> Unit)?``: Gets invoked with a [DragEvent][DragEventKDoc] containing the dragged 
 component when the mouse enters this component while dragging.
 
-``onDragGestureExited: ((DragEvent) -> Unit)?``:  Gets invoked with a [DragEvent][DragEventDoc] containing the dragged
+``onDragGestureExited: ((DragEvent) -> Unit)?``:  Gets invoked with a [DragEvent][DragEventKDoc] containing the dragged
 component when the mouse leaves this component while dragging.
 
-``onDragDropped: ((DragEvent) -> Unit)?``:  Gets invoked with a [DragEvent][DragEventDoc] containing the dragged 
+``onDragDropped: ((DragEvent) -> Unit)?``:  Gets invoked with a [DragEvent][DragEventKDoc] containing the dragged 
 component after a successful drag and drop gesture.
 
 ``dropAcceptor: ((DragEvent) -> Boolean)?``: Gets invoked when a dragged component was released inside this component.
 Implement this function in such a way that it returns `true` if this component accepts the drop of the given component, 
-passed with the [DragEvent][DragEventDoc],, or `false` if a drop is not valid. The dragged component will snap back if 
+passed with the [DragEvent][DragEventKDoc],, or `false` if a drop is not valid. The dragged component will snap back if 
 all available drop targets return `false`.
 It is advised not to modify the Scene or its children in this function. The modification, for example adding the 
 component to a container should be done in ``onDragDropped`` as this function only gets invoked if this ``dropAccessor``
