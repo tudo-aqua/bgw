@@ -14,6 +14,7 @@ layout: default
 [MouseEventDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-mouse-event/index.html
 [KeyEventDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-key-event/index.html
 [DragEventDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/index.html
+[UserInputDoc]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
 
 [MovementAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/index.html
 [RotationAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/index.html
@@ -89,7 +90,7 @@ If the component has been added directly to a scene, *parent* is equal to the sc
 ### Event handler
 Event handlers et called by the framework if the associated event happened.
 Handlers can be assigned like attribute values.
-To remove a handler assign ``null``.
+To remove a handler assign ``null``. Read more about this topic [here][UserInputDoc].
 	
 #### Mouse movement events
 ``var onMouseEntered: ((MouseEvent) -> Unit)?``: Gets invoked when the mouse enters this component.
