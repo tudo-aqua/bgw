@@ -27,7 +27,7 @@ package tools.aqua.bgw.util
  */
 open class Stack<T>(elements: Collection<T>) {
     
-    private val data = elements.toMutableList()
+    private val data: MutableList<T> = elements.reversed().toMutableList()
     
     /**
      * Creates a [Stack] with vararg initial elements.
@@ -69,7 +69,7 @@ open class Stack<T>(elements: Collection<T>) {
      *
      * @throws IllegalArgumentException If numToPop is negative or greater than the [Stack]'s size.
      */
-    fun popAll(numToPop: Int): List<T> {
+    fun popAll(numToPop: Int = data.size): List<T> {
         when {
             numToPop < 0 ->
                 throw IllegalArgumentException("NumToPop must not be negative.")
@@ -140,8 +140,19 @@ open class Stack<T>(elements: Collection<T>) {
      * with the last pushed Element at the highest index.
      *
      * @return All elements in this [Stack] as [List].
+     *
+     * @throws IllegalArgumentException If numToPeekp is negative or greater than the [Stack]'s size.
      */
-    fun peekAll(): List<T> = data.asReversed()
+    fun peekAll(numToPeek: Int = data.size): List<T> {
+        when {
+            numToPeek < 0 ->
+                throw IllegalArgumentException("NumToPeek must not be negative.")
+            numToPeek > data.size ->
+                throw IllegalArgumentException("Not enough elements to peek in this KStack $this.")
+            else ->
+                return data.subList(0, numToPeek)
+        }
+    }
 
     /**
      * Returns the index of the first occurrence of the specified element in the [Stack],
@@ -163,12 +174,23 @@ open class Stack<T>(elements: Collection<T>) {
      *
      * @return `true` if the [Stack] contains elements, `false` otherwise.
      */
-    fun isNotEmpty(): Boolean = data.isNotEmpty()
+    fun isNotEmpty(): Boolean = !isEmpty()
 
     /**
      * Shuffles this [Stack].
      */
-    fun shuffle(): Unit = data.shuffle()
+    fun shuffle() {
+        data.shuffle()
+    }
+    
+    /**
+     * Sorts this [Stack].
+     *
+     * @param comparator Comparator for sorting.
+     */
+    fun sort(comparator: Comparator<in T>) {
+        data.sortWith(comparator)
+    }
     
     //region temporary signatures
     fun popOrNull(): T? = null
