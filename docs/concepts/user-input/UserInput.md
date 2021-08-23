@@ -37,7 +37,9 @@ Components can be enabled for drag and drop whenever they extend
 For a more detailed introduction for Drag and Drop
 head [here][DnDExample].
 
-The full source code for this example can be found here: [View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
+The full source code for this example can be found here: 
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
 .btn }
 
 ## Component declaration

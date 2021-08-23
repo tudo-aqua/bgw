@@ -60,6 +60,7 @@ for UIComponents.
 
 This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in
 this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found here:
+
 [View it on GitHub](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html#complete-source-code-for-the-example){:
 .btn }
 

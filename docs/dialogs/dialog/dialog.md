@@ -75,7 +75,9 @@ Dialog(
 ````
 ![exception_dialog](exception_dialog.png)
 
-An example with all dialog types can be found here: [View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/dialog/DialogExample.kt){:
+An example with all dialog types can be found here: 
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/dialog/DialogExample.kt){:
 .btn }
 ## Showing a dialog
 To show a dialog the method [#showDialog][showDialogKDoc] 

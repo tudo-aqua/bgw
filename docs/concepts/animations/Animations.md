@@ -42,7 +42,9 @@ the table.
 
 ![](animations.gif)
 
-The full example of the gif above can be found here: [View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt){:
+The full example of the gif above can be found here:
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt){:
 .btn }.
 
 Each [Animation][AnimationKDoc] has a
