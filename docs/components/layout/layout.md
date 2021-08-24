@@ -97,7 +97,7 @@ val content = grid[0,2]
 will retrieve the content of cell ``[0,2]``. Empty cells contain ``null``.
 
 ````kotlin
-grid[0,2] = Button("Hello")
+grid[0,2] = Button(text="Hello")
 ````
 will replace the content of cell ``[0,2]`` with a button. To remove elements use
 ````kotlin
