@@ -49,7 +49,7 @@ internal class LayoutNodeBuilder {
 		
 		private fun buildPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>): Region =
 			FXPane().apply {
-				pane.observableComponents.setGUIListenerAndInvoke {
+				pane.observableComponents.setGUIListenerAndInvoke(listOf()) { _, _ -> //TODO performance
 					refreshPane(scene, pane)
 				}
 			}

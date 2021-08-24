@@ -43,7 +43,7 @@ internal class ContainerNodeBuilder {
 				is Satchel -> buildSatchel(container)
 				is LinearLayout -> buildLinearLayout(container)
 			}.apply {
-				container.observableComponents.setGUIListenerAndInvoke {
+				container.observableComponents.setGUIListenerAndInvoke (listOf()) { _, _ -> //TODO performance
 					refresh(
 						scene,
 						container

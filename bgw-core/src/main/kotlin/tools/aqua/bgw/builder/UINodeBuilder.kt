@@ -122,7 +122,7 @@ internal class UINodeBuilder {
 		//TODO: apply format function to selected item and listen on format function changes
 		private fun <T> buildComboBox(comboBox: ComboBox<T>): Region {
 			val node = JFXComboBox<T>()
-			comboBox.observableItemsList.setGUIListenerAndInvoke {
+			comboBox.observableItemsList.setGUIListenerAndInvoke(listOf()) { _, newValue -> //TODO perforamance
 				node.items.clear()
 				comboBox.items.forEach { node.items.add(it) }
 				node.setCellFactory(comboBox)
@@ -202,7 +202,7 @@ internal class UINodeBuilder {
 			val node = javafx.scene.control.ListView<T>(FXCollections.observableArrayList())
 
 			listView.apply {
-				observableItemsList.setGUIListenerAndInvoke {
+				observableItemsList.setGUIListenerAndInvoke(listOf()) { _, newValue -> //TODO perforamance
 					node.items.clear()
 					listView.items.forEach { node.items.add(it) }
 				}
@@ -260,10 +260,10 @@ internal class UINodeBuilder {
 			val node = javafx.scene.control.TableView<T>().apply {
 				populateTableView(tableView)
 			}
-			tableView.items.guiListener = {
+			tableView.items.guiListener = { _, newValue -> //TODO perforamance
 				node.populateTableView(tableView)
 			}
-			tableView.columns.guiListener = {
+			tableView.columns.guiListener = { _, newValue -> //TODO perforamance
 				node.populateTableView(tableView)
 			}
 			node.isEditable = false

@@ -48,7 +48,7 @@ internal class SceneBuilder {
 			val pane = buildPane(scene)
 			
 			//register animations
-			scene.animations.guiListener = {
+			scene.animations.guiListener = { _, _ -> //TODO performance
 				scene.animations.list.stream().filter { t -> !t.running }.forEach { anim ->
 					AnimationBuilder.build(scene, anim).play()
 					anim.running = true
@@ -78,7 +78,9 @@ internal class SceneBuilder {
 				prefWidth = scene.width
 			}
 			
-			scene.rootComponents.setGUIListenerAndInvoke { pane.rebuild(scene) }
+			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { _, _ -> //TODO performance
+				pane.rebuild(scene)
+			}
 			scene.draggedDataProperty.setGUIListenerAndInvoke(
 				scene.draggedDataProperty.value
 			) { oV, nV ->
