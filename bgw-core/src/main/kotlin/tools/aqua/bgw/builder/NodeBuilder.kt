@@ -155,7 +155,6 @@ internal class NodeBuilder {
 				rollback
 			)
 			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragDataObject)
-			
 			removeFromParent()
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
