@@ -29,7 +29,6 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
-import kotlin.system.measureTimeMillis
 
 /**
  * SceneBuilder.
