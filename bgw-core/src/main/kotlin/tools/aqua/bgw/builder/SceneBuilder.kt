@@ -167,7 +167,6 @@ internal class SceneBuilder {
 					scene.componentsMap[it]
 				}
 				else {
-					scene.componentsMap.remove(it)
 					NodeBuilder.build(scene, it)
 				}
 			})
