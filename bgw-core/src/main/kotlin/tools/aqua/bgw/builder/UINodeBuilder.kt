@@ -29,7 +29,7 @@ import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
 import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.observable.properties.BooleanProperty
 import java.awt.Color
 
 /**

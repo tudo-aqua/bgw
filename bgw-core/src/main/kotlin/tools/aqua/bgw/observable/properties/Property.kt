@@ -17,7 +17,7 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.properties
 
 /**
  * Property baseclass providing observable fields.
@@ -26,42 +26,11 @@ package tools.aqua.bgw.observable
  *
  * @param initialValue Initial value of this property.
  */
-open class Property<T>(initialValue: T) : ValueObservable<T>() {
-	
-	/**
-	 * Value of this property.
-	 */
-	private var boxedValue: T = initialValue
-	
-	/**
-	 * Value of this property.
-	 */
-	open var value: T
-		get() = boxedValue
-		set(value) {
-			val savedValue = boxedValue
-			if (boxedValue != value) {
-				boxedValue = value
-				notifyChange(savedValue, value)
-			}
+open class Property<T>(initialValue: T) : ReadonlyProperty<T>(initialValue = initialValue) {
+	override var value: T
+		get() = super.value
+		public set(value) {
+			super.value = value
 		}
-	
-	/**
-	 * Overrides [value] of this property without notifying public listeners.
-	 *
-	 * Only notifies GUI listener.
-	 */
-	internal open fun setSilent(value: T) {
-		val savedValue = boxedValue
-		if (boxedValue != value) {
-			boxedValue = value
-			notifyGUIListener(savedValue, value)
-		}
-	}
-	
-	/**
-	 * Notifies all listeners with current value.
-	 */
-	fun notifyUnchanged(): Unit = notifyChange(boxedValue, boxedValue)
 }
 
