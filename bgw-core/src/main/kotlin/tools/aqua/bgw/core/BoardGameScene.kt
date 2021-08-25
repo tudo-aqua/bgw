@@ -20,7 +20,7 @@
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 

@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import java.awt.Color
 
 /**

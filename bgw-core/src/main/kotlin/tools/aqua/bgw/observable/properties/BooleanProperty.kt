@@ -15,13 +15,13 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.properties
 
 /**
- * A DoubleProperty.
+ * A BooleanProperty.
  *
- * @constructor Creates a [DoubleProperty] with given initial value.
+ * @constructor Creates a [BooleanProperty] with given initial value.
  *
- * @param initialValue Initial Value. Default: 0.0.
+ * @param initialValue Initial Value. Default: `false`.
  */
-open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
+open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)

@@ -21,7 +21,7 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.DEFAULT_COLOR_PICKER_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_COLOR_PICKER_WIDTH
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
