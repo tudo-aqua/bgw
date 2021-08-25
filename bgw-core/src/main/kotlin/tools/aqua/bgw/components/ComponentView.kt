@@ -31,6 +31,7 @@ import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 
 import tools.aqua.bgw.util.Coordinate
+import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 import kotlin.math.floor
 
@@ -88,12 +89,14 @@ abstract class ComponentView internal constructor(
 	 * [Property] for the horizontal position of this [ComponentView].
 	 *
 	 * @see posX
+	 * @see actualPosX
 	 */
 	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
 	
 	/**
 	 * Horizontal position of this [ComponentView].
 	 *
+	 * @see actualPosX
 	 * @see posXProperty
 	 */
 	var posX: Double
@@ -103,15 +106,27 @@ abstract class ComponentView internal constructor(
 		}
 	
 	/**
+	 * Horizontal position of this [ComponentView] considering scale.
+	 *
+	 * @see posX
+	 * @see posXProperty
+	 */
+	var actualPosX: Double
+		get() = posX + (width - actualWidth) / 2
+		private set(_) {}
+	
+	/**
 	 * [Property] for the vertical position of this [ComponentView].
 	 *
 	 * @see posY
+	 * @see actualPosY
 	 */
 	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
 	
 	/**
 	 * Vertical position of this [ComponentView].
 	 *
+	 * @see actualPosY
 	 * @see posYProperty
 	 */
 	var posY: Double
@@ -121,15 +136,27 @@ abstract class ComponentView internal constructor(
 		}
 	
 	/**
+	 * Vertical position of this [ComponentView] considering scale.
+	 *
+	 * @see posY
+	 * @see posYProperty
+	 */
+	var actualPosY: Double
+		get() = posY + (height - actualHeight)  / 2
+		private set(_) {}
+	
+	/**
 	 * [Property] for the [width] of this [ComponentView].
 	 *
 	 * @see width
+	 * @see actualWidth
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
 	 * The [width] for this [ComponentView].
 	 *
+	 * @see actualWidth
 	 * @see widthProperty
 	 */
 	var width: Double
@@ -138,17 +165,28 @@ abstract class ComponentView internal constructor(
 			widthProperty.value = value
 		}
 	
+	/**
+	 * The actual [width] for this [ComponentView] considering scale.
+	 *
+	 * @see width
+	 * @see widthProperty
+	 */
+	var actualWidth: Double
+		get() = width * scaleX
+		private set(_) {}
 	
 	/**
 	 * [Property] for the [height] of this [ComponentView].
 	 *
 	 * @see height
+	 * @see actualHeight
 	 */
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
 	 * The [height] for this [ComponentView].
 	 *
+	 * @see actualHeight
 	 * @see heightProperty
 	 */
 	var height: Double
@@ -156,6 +194,16 @@ abstract class ComponentView internal constructor(
 		set(value) {
 			heightProperty.value = value
 		}
+	
+	/**
+	 * The actual [height] for this [ComponentView] considering scale.
+	 *
+	 * @see height
+	 * @see heightProperty
+	 */
+	var actualHeight: Double
+		get() = height * scaleY
+		private set(_) {}
 	
 	/**
 	 * [Property] for the horizontal scale of this [ComponentView].
@@ -213,6 +261,16 @@ abstract class ComponentView internal constructor(
 			scaleX = value
 			scaleY = value
 		}
+	
+	//TODO: Docs
+	var layoutBounds : CoordinatePlain
+		get() = CoordinatePlain(
+			topLeftX = actualPosX,
+			topLeftY = actualPosY,
+			bottomRightX = actualPosX + actualWidth,
+			bottomRightY = actualPosX + actualWidth
+		)
+		private set(_) {}
 	
 	/**
 	 * [Property] for the rotation of this [ComponentView] in degrees.
@@ -640,4 +698,18 @@ abstract class ComponentView internal constructor(
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ComponentView): Coordinate? = null
+	
+	/**
+	 * Function returning a contained child's coordinates within this [ComponentView] with scale if supported.
+	 *
+	 * This method has to be overridden.
+	 *
+	 * Returns `null` on all [ComponentView]s not supporting this feature.
+	 *
+	 * @param child Child to find.
+	 *
+	 * @return Coordinate of given child in this [ComponentView] or `null` if not supported.
+	 */
+	@Suppress("FunctionOnlyReturningConstant")
+	internal open fun getActualChildPosition(child: ComponentView): Coordinate? = null
 }

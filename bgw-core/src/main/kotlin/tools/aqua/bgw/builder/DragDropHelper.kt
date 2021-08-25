@@ -28,6 +28,7 @@ import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.util.Coordinate
+import tools.aqua.bgw.util.CoordinatePlain
 
 /**
  * Drag and Drop helper methods.
@@ -56,6 +57,23 @@ internal class DragDropHelper {
 		}
 		
 		/**
+		 * Searches all visible and enabled components below mouse position.
+		 *
+		 * Note: Invisible and disabled components get returned by using findComponentsBelowMouse(...).
+		 *
+		 * @param mouseX mouse x coordinate.
+		 * @param mouseY mouse y coordinate.
+		 *
+		 * @return [List] of components.
+		 */
+		internal fun Scene<out ComponentView>.findActiveComponentsBelowMouse(
+			mouseX: Double,
+			mouseY: Double
+		): List<DragTargetObject> = findComponentsBelowMouse(mouseX, mouseY).filter {
+			it.dragTarget.isVisible && !it.dragTarget.isDisabled
+		}
+		
+		/**
 		 * Searches all components below mouse position.
 		 *
 		 * Note: Invisible or disabled components also get returned. Use findActiveComponentsBelowMouse(...).
@@ -77,32 +95,11 @@ internal class DragDropHelper {
 					val newMouseX = (mouseX - Frontend.sceneX) / Frontend.sceneScale
 					val newMouseY = (mouseY - Frontend.sceneY) / Frontend.sceneScale
 					
-					if (component != null) DragTargetObject(component, it, newMouseX, newMouseY) else null
+					if (component != null) DragTargetObject(component, it, Coordinate(newMouseX, newMouseY)) else null
 				}
 				.filter {
-					//TODO: Move rotated() to map above
-					val rotatedTarget = it.rotated()
-					
-					//TODO: Range does not consider scale here
-					rotatedTarget.mouseX in it.rangeX() && rotatedTarget.mouseY in it.rangeY()
+					it.dragTarget.layoutBounds.isCoordinateIn(it.rotated().mouseCoord)
 				}.toList()
-		
-		/**
-		 * Searches all visible and enabled components below mouse position.
-		 *
-		 * Note: Invisible and disabled components get returned by using findComponentsBelowMouse(...).
-		 *
-		 * @param mouseX mouse x coordinate.
-		 * @param mouseY mouse y coordinate.
-		 *
-		 * @return [List] of components.
-		 */
-		internal fun Scene<out ComponentView>.findActiveComponentsBelowMouse(
-			mouseX: Double,
-			mouseY: Double
-		): List<DragTargetObject> = findComponentsBelowMouse(mouseX, mouseY).filter {
-			it.dragTarget.isVisible && !it.dragTarget.isDisabled
-		}
 		
 		/**
 		 * Searches all components below mouse position.
@@ -146,20 +143,17 @@ internal class DragDropHelper {
 		): List<ComponentView> {
 			val availableSubTargets = searchAvailableDropTargetsRecursively(
 				DragTargetObject(
-					dragTargetObject.dragTarget,
-					dragTargetObject.dragTargetStackPane,
-					dragTargetObject.mouseX,
-					dragTargetObject.mouseY,
-					//TODO: Scale not considered here
-					dragTargetObject.dragTarget.posX -
+					dragTarget = dragTargetObject.dragTarget,
+					dragTargetStackPane = dragTargetObject.dragTargetStackPane,
+					mouseCoord = dragTargetObject.mouseCoord,
+					offsetX = dragTargetObject.dragTarget.actualPosX -
 							if (dragTargetObject.dragTarget.layoutFromCenter)
-								dragTargetObject.dragTarget.width / 2
+								dragTargetObject.dragTarget.actualWidth / 2
 							else
 								0.0,
-					//TODO: Scale not considered here
-					dragTargetObject.dragTarget.posY -
+					offsetY = dragTargetObject.dragTarget.actualPosY -
 							if (dragTargetObject.dragTarget.layoutFromCenter)
-								dragTargetObject.dragTarget.height / 2
+								dragTargetObject.dragTarget.actualHeight / 2
 							else
 								0.0
 				),
@@ -188,22 +182,22 @@ internal class DragDropHelper {
 				is Pane<*> -> parent.dragTarget.observableComponents
 				else -> listOf()
 			}.map {
-				Pair(it, parent.dragTarget.getChildPosition(it) ?: Coordinate(0.0, 0.0))
+				Pair(it, parent.dragTarget.getActualChildPosition(it) ?: Coordinate(0.0, 0.0))
 			}.filter {
-				//TODO: Scale not considered here
-				parent.mouseX - parent.offsetX in it.second.xCoord..it.second.xCoord + it.first.width
-						&& parent.mouseY - parent.offsetY in it.second.yCoord..it.second.yCoord + it.first.height
-				
+				CoordinatePlain(
+					topLeftX = it.second.xCoord,
+					bottomRightX = it.second.xCoord + it.first.width,
+					topLeftY = it.second.yCoord,
+					bottomRightY = it.second.yCoord + it.first.height
+				).isCoordinateIn(parent.anchor)
 			}.forEach {
 				searchAvailableDropTargetsRecursively(
 					DragTargetObject(
-						it.first,
-						componentsMap[it.first]!!,
-						parent.mouseX,
-						parent.mouseY,
-						//TODO: Parent scale not passed here - must be multiplied for each layer
-						parent.offsetX + it.second.xCoord,
-						parent.offsetY + it.second.yCoord
+						dragTarget = it.first,
+						dragTargetStackPane = componentsMap[it.first]!!,
+						mouseCoord = parent.mouseCoord,
+						offsetX = parent.offsetX + it.second.xCoord,
+						offsetY = parent.offsetY + it.second.yCoord
 					),
 					availableTargets
 				)
