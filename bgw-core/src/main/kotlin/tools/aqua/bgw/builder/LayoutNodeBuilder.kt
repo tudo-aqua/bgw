@@ -98,7 +98,6 @@ internal class LayoutNodeBuilder {
 				grid.getColumn(it).maxOf { entry -> entry?.let { t -> t.width + t.posY } ?: 0.0 }
 			}
 			
-			//TODO: Disable auto resizing if desired
 			gridView.width = gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
 			gridView.height =
 				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
