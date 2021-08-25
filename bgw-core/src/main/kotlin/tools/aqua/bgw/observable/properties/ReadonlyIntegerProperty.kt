@@ -15,13 +15,15 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+@file:Suppress("unused")
+
+package tools.aqua.bgw.observable.properties
 
 /**
- * An IntegerProperty.
+ * An ReadonlyIntegerProperty.
  *
- * @constructor Creates a [IntegerProperty] with given initial value.
+ * @constructor Creates a [ReadonlyIntegerProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: 0.
  */
-open class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
+open class ReadonlyIntegerProperty(initialValue: Int = 0) : ReadonlyProperty<Int>(initialValue)

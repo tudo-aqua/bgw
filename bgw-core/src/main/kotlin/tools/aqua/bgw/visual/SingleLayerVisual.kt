@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 
 /**
  * Baseclass for single layer visuals.

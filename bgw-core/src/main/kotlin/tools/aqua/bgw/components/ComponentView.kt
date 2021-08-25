@@ -24,9 +24,9 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.DoubleProperty
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 import kotlin.math.floor

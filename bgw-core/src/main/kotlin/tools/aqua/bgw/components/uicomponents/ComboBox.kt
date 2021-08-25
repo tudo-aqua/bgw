@@ -23,7 +23,7 @@ import tools.aqua.bgw.core.DEFAULT_COMBOBOX_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_COMBOBOX_WIDTH
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 

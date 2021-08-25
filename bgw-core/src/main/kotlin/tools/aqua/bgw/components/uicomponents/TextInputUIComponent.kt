@@ -19,8 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import tools.aqua.bgw.observable.Property
-import tools.aqua.bgw.observable.StringProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
