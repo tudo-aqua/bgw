@@ -78,8 +78,8 @@ internal class SceneBuilder {
 				prefWidth = scene.width
 			}
 			
-			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { _, _ -> //TODO performance
-				pane.rebuild(scene)
+			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { oldValue, _ -> //TODO performance
+				pane.rebuild(scene, oldValue)
 			}
 			scene.draggedDataProperty.setGUIListenerAndInvoke(
 				scene.draggedDataProperty.value
@@ -145,9 +145,9 @@ internal class SceneBuilder {
 		/**
 		 * Rebuilds pane on components changed.
 		 */
-		private fun Pane.rebuild(scene: Scene<out ComponentView>) {
+		private fun Pane.rebuild(scene: Scene<out ComponentView>, cachedComponents: List<ComponentView>) {
+			println("full rebuild")
 			children.clear()
-			scene.componentsMap.clear()
 			
 			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, nV ->
 				children.add(0, VisualBuilder.buildVisual(nV).apply {
@@ -158,8 +158,17 @@ internal class SceneBuilder {
 					scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
 				})
 			}
-			
-			scene.rootComponents.forEach { children.add(NodeBuilder.build(scene, it)) }
+			//remove removed components from componentsMap
+			(cachedComponents - scene.rootComponents).forEach{ scene.componentsMap.remove(it) }
+
+			children.addAll(scene.rootComponents.map {
+				if (cachedComponents.contains(it))
+					scene.componentsMap[it]
+				else {
+					scene.componentsMap.remove(it)
+					NodeBuilder.build(scene, it)
+				}
+			})
 		}
 		
 		/**
