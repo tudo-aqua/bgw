@@ -155,8 +155,9 @@ internal class NodeBuilder {
 				rollback
 			)
 			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragDataObject)
-			
+			val start = System.currentTimeMillis()
 			removeFromParent()
+			println(System.currentTimeMillis()-start)
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
 			scene.draggedDataProperty.value = dragDataObject

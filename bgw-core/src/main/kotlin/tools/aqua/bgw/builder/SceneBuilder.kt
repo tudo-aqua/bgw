@@ -29,6 +29,8 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
+import tools.aqua.bgw.visual.Visual
+import kotlin.system.measureTimeMillis
 
 /**
  * SceneBuilder.
@@ -79,7 +81,7 @@ internal class SceneBuilder {
 			}
 			
 			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { oldValue, _ -> //TODO performance
-				pane.rebuild(scene, oldValue)
+				println("pane.rebuild: ${measureTimeMillis { pane.rebuild(scene, oldValue) }}")
 			}
 			scene.draggedDataProperty.setGUIListenerAndInvoke(
 				scene.draggedDataProperty.value
@@ -146,24 +148,26 @@ internal class SceneBuilder {
 		 * Rebuilds pane on components changed.
 		 */
 		private fun Pane.rebuild(scene: Scene<out ComponentView>, cachedComponents: List<ComponentView>) {
-			println("full rebuild")
 			children.clear()
-			
-			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, nV ->
-				children.add(0, VisualBuilder.buildVisual(nV).apply {
-					prefWidthProperty().unbind()
-					prefWidthProperty().unbind()
-					prefHeight = scene.height
-					prefWidth = scene.width
-					scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
-				})
+
+			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oldValue, newValue ->
+				if (oldValue != newValue || scene.backgroundCache == null)
+					scene.backgroundCache = VisualBuilder.buildVisual(newValue).apply {
+						prefWidthProperty().unbind()
+						prefWidthProperty().unbind()
+						prefHeight = scene.height
+						prefWidth = scene.width
+						scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
+					}
+				children.add(0, scene.backgroundCache)
 			}
-			//remove removed components from componentsMap
+
 			(cachedComponents - scene.rootComponents).forEach{ scene.componentsMap.remove(it) }
 
 			children.addAll(scene.rootComponents.map {
-				if (cachedComponents.contains(it))
+				if (cachedComponents.contains(it)) {
 					scene.componentsMap[it]
+				}
 				else {
 					scene.componentsMap.remove(it)
 					NodeBuilder.build(scene, it)
