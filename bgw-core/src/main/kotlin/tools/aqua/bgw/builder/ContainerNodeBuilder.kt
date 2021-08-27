@@ -38,10 +38,10 @@ internal class ContainerNodeBuilder {
 			container: GameComponentContainer<out GameComponentView>
 		): Region =
 			Pane().apply {
-				container.observableComponents.setGUIListenerAndInvoke (listOf()) { oldValue, newValue ->
+				container.observableComponents.setGUIListenerAndInvoke(listOf()) { oldValue, newValue ->
 					children.clear()
 					//remove removed components from componentsMap
-					(oldValue - newValue).forEach{ scene.componentsMap.remove(it) }
+					(oldValue - newValue).forEach { scene.componentsMap.remove(it) }
 					//rebuild container with cached or newly build components
 					container.observableComponents.forEach {
 						if (it in oldValue) {
@@ -52,29 +52,5 @@ internal class ContainerNodeBuilder {
 					}
 				}
 			}
-
-		/**
-		 * Builds [Area].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildArea(container: GameComponentContainer<*>): Pane = Pane()
-
-		/**
-		 * Builds [CardStack].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildCardStack(container: GameComponentContainer<*>): Pane = Pane()
-
-		/**
-		 * Builds [Satchel].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildSatchel(container: GameComponentContainer<*>): Pane = Pane()
-
-		/**
-		 * Builds [LinearLayout].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildLinearLayout(container: GameComponentContainer<*>): Pane = Pane()
 	}
 }
