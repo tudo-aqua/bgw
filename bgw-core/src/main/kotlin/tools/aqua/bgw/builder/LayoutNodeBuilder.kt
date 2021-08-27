@@ -49,15 +49,10 @@ internal class LayoutNodeBuilder {
 		
 		private fun buildPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>): Region =
 			FXPane().apply {
-				pane.observableComponents.setGUIListenerAndInvoke(listOf()) { _, _ -> //TODO performance
-					refreshPane(scene, pane)
+				pane.observableComponents.setGUIListenerAndInvoke(listOf()) { oldValue, _ ->
+					buildChildren(scene, pane.observableComponents, oldValue.toSet())
 				}
 			}
-		
-		private fun FXPane.refreshPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>) {
-			children.clear()
-			children.addAll(pane.observableComponents.map { NodeBuilder.build(scene, it) })
-		}
 		
 		/**
 		 * Builds [GridPane].
