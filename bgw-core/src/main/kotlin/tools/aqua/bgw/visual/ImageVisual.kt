@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.File

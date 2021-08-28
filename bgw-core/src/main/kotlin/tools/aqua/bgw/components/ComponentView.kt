@@ -24,9 +24,12 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.Property
+
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.DoubleProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.Property
+
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 import kotlin.math.floor
@@ -269,7 +272,7 @@ abstract class ComponentView internal constructor(
 	/**
 	 * [Property] for the [opacity] of this [ComponentView].
 	 *
-	 * Should be in range 0.0 to 1.0.
+	 * Must be in range 0.0 to 1.0.
 	 *
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 	 *
@@ -277,7 +280,10 @@ abstract class ComponentView internal constructor(
 	 *
 	 * @see opacity
 	 */
-	val opacityProperty: DoubleProperty = DoubleProperty(1.0)
+	val opacityProperty: LimitedDoubleProperty = LimitedDoubleProperty(
+		lowerBoundInclusive = 0.0,
+		upperBoundInclusive = 1.0,
+		initialValue = 1.0)
 	
 	/**
 	 * Opacity of this [ComponentView].

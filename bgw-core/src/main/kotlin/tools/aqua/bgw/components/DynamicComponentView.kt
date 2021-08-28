@@ -23,8 +23,9 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.ReadonlyBooleanProperty
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -72,7 +73,7 @@ abstract class DynamicComponentView internal constructor(
 	 *
 	 * @see isDragged
 	 */
-	val isDraggedProperty: BooleanProperty = BooleanProperty(false)
+	val isDraggedProperty: ReadonlyBooleanProperty = ReadonlyBooleanProperty(false)
 	
 	/**
 	 * Reflects whether component is currently dragged or not.

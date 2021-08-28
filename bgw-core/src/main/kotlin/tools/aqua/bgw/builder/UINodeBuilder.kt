@@ -19,7 +19,6 @@ package tools.aqua.bgw.builder
 
 import com.jfoenix.controls.JFXComboBox
 import javafx.beans.property.ReadOnlyStringWrapper
-import javafx.collections.FXCollections
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
 import javafx.scene.control.TableColumn
@@ -29,7 +28,7 @@ import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXPos
 import tools.aqua.bgw.builder.FXConverters.Companion.toJavaFXOrientation
 import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.observable.BooleanProperty
+import tools.aqua.bgw.observable.properties.BooleanProperty
 import java.awt.Color
 
 /**
@@ -199,22 +198,21 @@ internal class UINodeBuilder {
 		 * Builds [ListView].
 		 */
 		private fun <T> buildListView(listView: ListView<T>): Region {
-			val node = javafx.scene.control.ListView<T>(FXCollections.observableArrayList())
+			val node = javafx.scene.control.ListView<T>()
 
 			listView.apply {
-				observableItemsList.setGUIListenerAndInvoke {
-					node.items.clear()
-					listView.items.forEach { node.items.add(it) }
+				items.setGUIListenerAndInvoke {
+					node.items.setAll(listView.items.list)
 				}
 				fontProperty.setGUIListenerAndInvoke(this.font) { _, font ->
 					node.cellFactory = javafx.util.Callback {
 						object : ListCell<T>() {
 							override fun updateItem(item: T, empty: Boolean) {
+								super.updateItem(item, empty);
+								
 								this.style = font.toFXFontCSS()
 								this.textFill = font.color.toFXColor()
-								if (!empty) {
-									this.text = listView.formatFunction?.invoke(item) ?: item.toString()
-								}
+								this.text = if(empty) "" else listView.formatFunction?.invoke(item) ?: item.toString()
 							}
 						}
 					}
@@ -281,6 +279,7 @@ internal class UINodeBuilder {
 				columns.add(TableColumn<T, String>(it.title).apply {
 					this.minWidth = it.width.toDouble()
 					this.isResizable = false
+					this.style = tableView.font.toFXFontCSS()
 					setCellValueFactory { data ->
 						ReadOnlyStringWrapper(it.formatFunction(data.value))
 					}

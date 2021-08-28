@@ -19,7 +19,7 @@ package observable.property
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import tools.aqua.bgw.observable.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import kotlin.test.assertFailsWith
 
 class LimitedDoublePropertyTest : PropertyTestBase() {

@@ -22,8 +22,8 @@ package tools.aqua.bgw.components.uicomponents
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.DEFAULT_CHECKBOX_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_CHECKBOX_WIDTH
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
