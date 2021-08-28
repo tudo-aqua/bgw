@@ -16,11 +16,11 @@ All notable changes to this project will be documented in this file.
 ### Added
  - Readonly Properties.
  - Scale Animation.
- - Additional constructors, default parameters and nullable functions for Stack
+ - Additional constructors, default parameters and nullable functions for Stack.
 
 ### Changed
 - Changed various Exception types to more meaningful ones.
-- Opacity property is now restricted to \[0.0, 1.0]
+- Opacity property is now restricted to \[0.0, 1.0].
 
 ### Removed
 - Items property from ListView as it was not observable.
