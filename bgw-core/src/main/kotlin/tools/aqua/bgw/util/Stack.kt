@@ -54,7 +54,7 @@ open class Stack<T>(elements: Collection<T>) {
 	 */
 	fun pop(): T {
 		if (data.isEmpty())
-			throw NoSuchElementException("Can not pop on empty KStack $this.")
+			throw NoSuchElementException("Can not pop on empty Stack $this.")
 
 		return data.removeLast()
 	}
@@ -78,7 +78,7 @@ open class Stack<T>(elements: Collection<T>) {
 	 */
 	fun popAll(numToPop: Int = data.size): List<T> {
 		require(numToPop >= 0) { "NumToPop must not be negative." }
-		require(numToPop <= data.size) { "Not enough elements to pop in this KStack $this." }
+		require(numToPop <= data.size) { "Not enough elements to pop in this Stack $this." }
 		return List(numToPop) { data.removeLast() }
 	}
 
@@ -132,7 +132,7 @@ open class Stack<T>(elements: Collection<T>) {
 	 */
 	fun peek(): T {
 		if (data.isEmpty())
-			throw NoSuchElementException("Can not peek on empty KStack $this.")
+			throw NoSuchElementException("Can not peek on empty Stack $this.")
 
 		return data.last()
 	}
@@ -154,7 +154,7 @@ open class Stack<T>(elements: Collection<T>) {
 	 */
 	fun peekAll(numToPeek: Int = data.size): List<T> {
 		require(numToPeek >= 0) { "NumToPeek must not be negative." }
-		require(numToPeek <= data.size) { "Not enough elements to peek in this KStack $this." }
+		require(numToPeek <= data.size) { "Not enough elements to peek in this Stack $this." }
 		return List(numToPeek) { data[data.size - it - 1] }
 	}
 
