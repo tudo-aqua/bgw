@@ -61,23 +61,9 @@ open class ListView<T>(
 	font = font,
 	visual = Visual.EMPTY) {
 	/**
-	 * [Property] for the items [List] for this [ListView].
-	 *
-	 * @see items
+	 * Items list.
 	 */
-	val observableItemsList: ObservableList<T> = ObservableArrayList()
-	
-	/**
-	 * Items list for [List] [ListView].
-	 *
-	 * @see observableItemsList
-	 */
-	var items: MutableList<T>
-		get() = observableItemsList.list
-		set(value) {
-			observableItemsList.clear()
-			observableItemsList.addAll(value)
-		}
+	val items: ObservableList<T> = ObservableArrayList(items)
 	
 	/**
 	 * [Property] for the [Orientation] of this [ListView].
@@ -118,8 +104,4 @@ open class ListView<T>(
 		set(value) {
 			formatFunctionProperty.value = value
 		}
-	
-	init {
-		observableItemsList.addAll(items)
-	}
 }
