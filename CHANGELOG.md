@@ -13,14 +13,21 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3] - To be released
 
-<!-- ### Added -->
-<!-- - Readonly Properties. -->
-<!-- - Scale Animation. -->
-<!-- - Additional constructors, default parameters and nullable functions for Stack -->
+### Added
+ - Readonly Properties.
+ - Scale Animation.
+ - Additional constructors, default parameters and nullable functions for Stack
 
 ### Changed
 - Changed various Exception types to more meaningful ones.
-<!-- - Opacity property is now restricted to \[0.0, 1.0] -->
+- Opacity property is now restricted to \[0.0, 1.0]
+
+### Removed
+- Items property from ListView as it was not observable.
+
+### Fixed
+- Items not being updated dynamically in ListView.
+- Font color in TableView.
 
 ## [0.2] - 10. Aug. 2021
 ### Added
