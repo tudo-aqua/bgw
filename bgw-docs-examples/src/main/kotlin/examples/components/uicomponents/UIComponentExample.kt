@@ -197,12 +197,17 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 		menuScene.addComponents(textField, textFieldLabel)
 
 		//ListView
-		val listView = ListView<Int>(posX = 50, posY = 800, width = 300, height = 200)
-		listView.formatFunction = {
-			"Value for this cell is $it"
+		val listView = ListView(
+			posX = 50,
+			posY = 800,
+			width = 300,
+			height = 200,
+			items = mutableListOf(42, 1337, 1, 2, 3)).apply {
+			formatFunction = {
+				"Value for this cell is $it"
+			}
 		}
 
-		listView.items = mutableListOf(42, 1337, 1, 2, 3)
 		val listViewLabel = Label(
 			posX = listView.posX,
 			posY = listView.posY - 50,
