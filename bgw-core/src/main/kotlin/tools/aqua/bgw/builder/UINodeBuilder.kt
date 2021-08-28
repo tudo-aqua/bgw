@@ -281,6 +281,7 @@ internal class UINodeBuilder {
 				columns.add(TableColumn<T, String>(it.title).apply {
 					this.minWidth = it.width.toDouble()
 					this.isResizable = false
+					this.style = tableView.font.toFXFontCSS()
 					setCellValueFactory { data ->
 						ReadOnlyStringWrapper(it.formatFunction(data.value))
 					}
