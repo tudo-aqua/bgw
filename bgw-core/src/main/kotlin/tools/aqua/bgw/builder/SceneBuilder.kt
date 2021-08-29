@@ -101,17 +101,11 @@ internal class SceneBuilder {
 		internal fun transformCoordinatesToScene(
 			mouseEvent: MouseEvent,
 			draggedDataObject: DragDataObject
-		): Coordinate {
-			val rotated = Coordinate(
+		): Coordinate = draggedDataObject.posStartCoord + Coordinate(
 				xCoord = mouseEvent.sceneX / Frontend.sceneScale - draggedDataObject.mouseStartCoord.xCoord,
 				yCoord = mouseEvent.sceneY / Frontend.sceneScale - draggedDataObject.mouseStartCoord.yCoord
 			).rotated(-draggedDataObject.relativeParentRotation)
-			
-			return Coordinate(
-				xCoord = draggedDataObject.posStartCoord.xCoord + rotated.xCoord,
-				yCoord = draggedDataObject.posStartCoord.yCoord + rotated.yCoord
-			)
-		}
+
 		
 		/**
 		 * Event handler for onMouseDragged.

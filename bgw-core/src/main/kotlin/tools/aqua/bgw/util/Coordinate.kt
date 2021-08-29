@@ -64,7 +64,7 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	)
 	
 	/**
-	 * Returns a new coordinate object containing multiplied [Coordinate] by [denominator].
+	 * Returns a new coordinate object containing multiplied [Coordinate] with [factor].
 	 *
 	 * @param factor factor to multiply with.
 	 *

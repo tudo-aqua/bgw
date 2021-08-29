@@ -208,7 +208,7 @@ internal class UINodeBuilder {
 					node.cellFactory = javafx.util.Callback {
 						object : ListCell<T>() {
 							override fun updateItem(item: T, empty: Boolean) {
-								super.updateItem(item, empty);
+								super.updateItem(item, empty)
 								
 								this.style = font.toFXFontCSS()
 								this.textFill = font.color.toFXColor()
