@@ -99,7 +99,7 @@ abstract class ValueObservable<T> {
 	 *
 	 * @param listener listener to add.
 	 */
-	fun addListener(listener: IValueObservable<T>) {
+	fun addListener(listener: ValueObserver<T>) {
 		listeners.add(listener)
 	}
 	
@@ -110,7 +110,7 @@ abstract class ValueObservable<T> {
 	 *
 	 * @return `true` if the listener has been successfully removed, `false` if it was not found.
 	 */
-	fun removeListener(listener: IValueObservable<T>): Boolean = listeners.remove(listener)
+	fun removeListener(listener: ValueObserver<T>): Boolean = listeners.remove(listener)
 	
 	/**
 	 * Removes all listeners.

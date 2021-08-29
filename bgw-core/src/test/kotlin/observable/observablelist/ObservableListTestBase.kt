@@ -18,9 +18,9 @@
 package observable.observablelist
 
 import org.junit.jupiter.api.BeforeEach
-import tools.aqua.bgw.observable.IValueObservable
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.ValueObserver
 
 open class ObservableListTestBase {
 	
@@ -40,7 +40,7 @@ open class ObservableListTestBase {
 	
 	protected fun checkNotified(count: Int = 1): Boolean = listener.invokedCount == count
 	
-	class TestListener<T> : IValueObservable<T> {
+	class TestListener<T> : ValueObserver<T> {
 		var invokedCount: Int = 0
 
 		override fun update(oldValue: T, newValue: T) {

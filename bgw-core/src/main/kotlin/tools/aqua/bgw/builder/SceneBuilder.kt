@@ -87,7 +87,7 @@ internal class SceneBuilder {
 				prefWidth = scene.width
 			}
 			
-			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { _, _ -> pane.rebuild(scene) }
+			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { oV, _ -> pane.rebuild(scene, oV) }
 			
 			return pane
 		}
