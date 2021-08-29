@@ -38,10 +38,10 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode.*
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.LimitedDoubleProperty
-import tools.aqua.bgw.observable.Property
-import tools.aqua.bgw.observable.StringProperty
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
@@ -324,12 +324,12 @@ internal class Frontend : Application() {
 		 *
 		 * @return [gamePane] for [boardGameScene], [menuPane] for [menuScene] and `null` for other parameters.
 		 */
-		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane? =
+		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane =
 			when (this) {
 				boardGameScene -> gamePane
 				menuScene -> menuPane
 				else -> null
-			}
+			}?:throw IllegalStateException()
 
 		/**
 		 * Returns scene associated to pane.

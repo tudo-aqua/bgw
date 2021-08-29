@@ -7,20 +7,15 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'docs/**'
   pull_request:
     branches:
       - main
-    paths:
-      - 'docs/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
   # Release tag associated with version of Detekt to be installed
-  # SARIF support (required for this workflow) was introduced in Detekt v1.15.0
   DETEKT_RELEASE_TAG: v1.15.0
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -86,11 +81,6 @@ jobs:
           echo $dest >> $GITHUB_PATH
 
       # Performs static analysis using Detekt
-      - name: Run Detekt
-        continue-on-error: true
-        run: |
-          detekt --input ${{ github.workspace }}/bgw-core/src/main/kotlin/tools/aqua/bgw/ --config ${{ github.workspace }}/bgw-core/detekt-rules.yml --report sarif:${{ github.workspace }}/results.sarif.json
-
       - name: Run Detekt HTML
         continue-on-error: true
         run: |

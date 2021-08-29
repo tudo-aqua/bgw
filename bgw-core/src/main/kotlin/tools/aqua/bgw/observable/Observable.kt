@@ -29,19 +29,19 @@ abstract class Observable {
 	/**
 	 * Holds all listeners on this property.
 	 */
-	private val listeners: MutableList<IObservable> = mutableListOf()
+	private val listeners: MutableList<Observer> = mutableListOf()
 	
 	/**
 	 * Used by renderer to listen on important properties for visualization.
 	 */
-	private var guiListenerHandler: IObservable? = null
+	private var guiListenerHandler: Observer? = null
 	
 	/**
 	 * Used by renderer to listen on important properties for visualization.
 	 */
 	internal var guiListener: (() -> Unit)? = null
 		set(value) {
-			guiListenerHandler = if (value == null) null else IObservable(value)
+			guiListenerHandler = if (value == null) null else Observer(value)
 		}
 	
 	/**
@@ -49,7 +49,7 @@ abstract class Observable {
 	 *
 	 * Should only be set by direct parent.
 	 */
-	private var internalListenerHandler: IObservable? = null
+	private var internalListenerHandler: Observer? = null
 	
 	/**
 	 * Used by BGW framework containers to manage children.
@@ -58,11 +58,11 @@ abstract class Observable {
 	 */
 	internal var internalListener: (() -> Unit)? = null
 		set(value) {
-			internalListenerHandler = if (value == null) null else IObservable(value)
+			internalListenerHandler = if (value == null) null else Observer(value)
 		}
 	
 	/**
-	 * Sets [guiListener] and calls [IObservable.update].
+	 * Sets [guiListener] and calls [Observer.update].
 	 *
 	 * @param listener Listener to add and notify.
 	 */
@@ -72,7 +72,7 @@ abstract class Observable {
 	}
 	
 	/**
-	 * Sets [internalListener] and calls [IObservable.update].
+	 * Sets [internalListener] and calls [Observer.update].
 	 *
 	 * @param listener Listener to add and notify.
 	 */
@@ -82,11 +82,11 @@ abstract class Observable {
 	}
 	
 	/**
-	 * Adds a [listener] and calls [IObservable.update] on this new listener.
+	 * Adds a [listener] and calls [Observer.update] on this new listener.
 	 *
 	 * @param listener Listener to add and notify.
 	 */
-	fun addListenerAndInvoke(listener: IObservable) {
+	fun addListenerAndInvoke(listener: Observer) {
 		listeners.add(listener)
 		listener.update()
 	}
@@ -96,7 +96,7 @@ abstract class Observable {
 	 *
 	 * @param listener Listener to add
 	 */
-	fun addListener(listener: IObservable) {
+	fun addListener(listener: Observer) {
 		listeners.add(listener)
 	}
 	
@@ -107,7 +107,7 @@ abstract class Observable {
 	 *
 	 * @return `true` if the listener has been successfully removed, `false` if it was not found.
 	 */
-	fun removeListener(listener: IObservable): Boolean = listeners.remove(listener)
+	fun removeListener(listener: Observer): Boolean = listeners.remove(listener)
 	
 	/**
 	 * Removes all listeners.
@@ -117,21 +117,21 @@ abstract class Observable {
 	}
 	
 	/**
-	 * Notifies [guiListener] by calling [IObservable.update].
+	 * Notifies [guiListener] by calling [Observer.update].
 	 */
 	internal fun notifyGUIListener() {
 		guiListenerHandler?.update()
 	}
 	
 	/**
-	 * Notifies [internalListener] by calling [IObservable.update].
+	 * Notifies [internalListener] by calling [Observer.update].
 	 */
 	internal fun notifyInternalListener() {
 		internalListenerHandler?.update()
 	}
 	
 	/**
-	 * Notifies all [listeners] by calling [IObservable.update].
+	 * Notifies all [listeners] by calling [Observer.update].
 	 */
 	fun notifyChange() {
 		listeners.forEach { it.update() }

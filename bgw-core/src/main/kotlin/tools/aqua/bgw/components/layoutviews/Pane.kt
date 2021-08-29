@@ -20,8 +20,8 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.observable.IObservable
-import tools.aqua.bgw.observable.IValueObservable
+import tools.aqua.bgw.observable.Observer
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
@@ -59,16 +59,16 @@ open class Pane<T : ComponentView>(
      *
      * @param listener The [IValueObservable] to add.
      */
-    fun addComponentsListener(listener: IValueObservable<List<T>>) {
+    fun addComponentsListener(listener: ValueObserver<List<T>>) {
         observableComponents.addListener(listener)
     }
     
     /**
-     * Removes the [IValueObservable] from the [observableComponents] list.
+     * Removes the [ValueObserver] from the [observableComponents] list.
      *
-     * @param listener The [IValueObservable] to remove.
+     * @param listener The [ValueObserver] to remove.
      */
-    fun removeComponentsListener(listener: IValueObservable<List<T>>) {
+    fun removeComponentsListener(listener: ValueObserver<List<T>>) {
         observableComponents.removeListener(listener)
     }
     
@@ -197,7 +197,18 @@ open class Pane<T : ComponentView>(
      *
      * @return Coordinate of given child in this container relative to containers anchor point.
      */
-    override fun getChildPosition(child: ComponentView): Coordinate = Coordinate(child.posX, child.posY)
+    override fun getChildPosition(child: ComponentView): Coordinate =
+        Coordinate(child.posX, child.posY)
+    
+    /**
+     * Returning a contained child's coordinates within this container with scale.
+     *
+     * @param child Child to find.
+     *
+     * @return Coordinate of given child in this container relative to containers anchor point.
+     */
+    override fun getActualChildPosition(child: ComponentView): Coordinate =
+        Coordinate(child.actualPosX, child.actualPosY)
     
     /**
      * Removes [component] from container's children.

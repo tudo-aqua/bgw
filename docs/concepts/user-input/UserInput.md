@@ -6,8 +6,17 @@ nav_order: 3
 layout: default
 ---
 
-[CompDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
+<!-- KDoc -->
+[BoardGameApplicationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
+[ComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
+[DynamicComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-dynamic-component-view/index.html
+[UIComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
 
+<!-- GH-Pages Doc -->
+[DnDExample]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html
+[UIComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
+
+<!-- Start Page -->
 # User Input
 {: .no_toc}
 <details open markdown="block">
@@ -21,19 +30,22 @@ layout: default
 
 The BGW framework uses events to communicate user input to Components. To execute code when a specific event is fired, a
 function reference, or a function literal can be set in
-[ComponentView][CompDoc]s. If components can be enabled for drag and drop, some additional handlers can be set.
+[ComponentView][ComponentViewKDoc]s. If components can be enabled for drag and drop, some additional handlers can be set.
 Components can be enabled for drag and drop whenever they extend
-[DynamicComponentView](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html).
+[DynamicComponentView][DynamicComponentViewKDoc].
 
 For a more detailed introduction for Drag and Drop
-head [here](https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html).
+head [here][DnDExample].
 
-The full source code for this example can be found [here](https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html#full-example-on-all-available-methods-of-dealing-with-user-input).
+The full source code for this example can be found here: 
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
+.btn }
 
 ## Component declaration
 
 To showcase the user input handling, the following components are declared and wrapped inside a 
-[BoardGameApplication](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html), 
+[BoardGameApplication][BoardGameApplicationKDoc], 
 to create a running example.
 
 ````kotlin
@@ -78,20 +90,16 @@ button.onMousePressed = { mouseEvent ->
 
 There are three types of components, that can handle user input differently. 
 
-- [ComponentViews](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html) have function references that can deal with mouse, key and drop events.
+- [ComponentViews][ComponentViewKDoc] have function references that can deal with mouse, key and drop events.
 
-- [DynamicComponentViews](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-dynamic-component-view/index.html) are ComponentViews that can be enabled for drag and drop, so they have additional 
+- [DynamicComponentViews][DynamicComponentViewKDoc] are ComponentViews that can be enabled for drag and drop, so they have additional 
     function references to deal with that.
     
-- [UIComponentViews](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html) are ComponentViews that may have additional ways of dealing with user input, 
-    for example text input. Please refer to the UIComponentView 
-  [doc](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html) 
-  or [guide](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html) 
-  to find additional information.
+- [UIComponentViews][UIComponentViewKDoc] are ComponentViews that may have additional ways of dealing with user input, for example text input. Please refer to the UIComponentView [doc][UIComponentViewKDoc] or [guide][UIComponentViewDoc] to find additional information.
   
 ## Full example on all available methods of dealing with user input
 
-This example uses all available fields that can be set to handle user input on [ComponentViews](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html) and [DynamicComponentViews](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-dynamic-component-view/index.html). 
+This example uses all available fields that can be set to handle user input on [ComponentViews][ComponentViewKDoc] and [DynamicComponentViews][DynamicComponentViewKDoc]. 
 
 [View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/userinput/UserInputExample.kt){:
 .btn }
@@ -169,7 +177,3 @@ class UserInputExample: BoardGameApplication("User input example") {
 	}
 }
 ````
-
-
-
-

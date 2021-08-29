@@ -18,10 +18,12 @@
 package tools.aqua.bgw.observable
 
 /**
- * An IntegerProperty.
- *
- * @constructor Creates a [IntegerProperty] with given initial value.
- *
- * @param initialValue Initial Value. Default: 0.
+ * Observer interface for observable Properties.
  */
-open class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)
+@FunctionalInterface
+fun interface Observer {
+	/**
+	 * Can be implemented to react on changes in the observed property.
+	 */
+	fun update()
+}

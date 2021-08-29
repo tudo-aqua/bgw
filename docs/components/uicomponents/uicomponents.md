@@ -5,16 +5,31 @@ nav_order: 5
 layout: default
 ---
 
+<!-- KDoc -->
+[LabelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
+[ButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-button/index.html
+[CheckBoxKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-check-box/index.html
+[ColorPickerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
+[ComboBoxKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
+[ProgressBarKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-progress-bar/index.html
+[ToggleButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-button/index.html
+[RadioButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-radio-button/index.html
+[ToggleGroupKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-group/index.html
+[TextAreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-area/index.html
+[TextFieldKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-field/index.html
+[ListViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-list-view/index.html
+[TableViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-table-view/index.html
+[TableColumnKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-table-column/index.html
+
+[UIComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.htm
+[LabeledUIComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-labeled-u-i-component/index.html
+[TextInputUIComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-input-u-i-component/index.html
+
+<!-- GH-Pages Doc -->
 [ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
+[UserInputDoc]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
 
-[UIComp]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
-
-[LUIComp]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-labeled-u-i-component/index.html
-
-[TIUIComp]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-input-u-i-component/index.html
-
-[UserInput]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
-
+<!-- Start Page -->
 # UIComponents
 
 {: .no_toc}
@@ -32,28 +47,27 @@ All ui components inherit from [ComponentView][ComponentViewDoc].
 It is therefore helpful to read this documentation first as the features from this superclass doesn't get repeated here.
 
 ## Introduction
-A [UIComponent][UIComp] may be used to present information to the user or retrieve input. There are three base classes
+A [UIComponent][UIComponentKDoc] may be used to present information to the user or retrieve input. There are three base classes
 for UIComponents.
 
-- [UIComponent][UIComp]: the baseclass for all UIComponents
-- [LabeledUIComponents][LUIComp]: extends UIComponent and provides additional fields to define a text e.g., a Button
+- [UIComponent][UIComponentKDoc]: the baseclass for all UIComponents
+- [LabeledUIComponents][LabeledUIComponentKDoc]: extends UIComponent and provides additional fields to define a text e.g., a Button
   with a text.
-- [TextInputUIComponents][TIUIComp]: extends UIComponent and provides a text input field for user defined text.
+- [TextInputUIComponents][TextInputUIComponentKDoc]: extends UIComponent and provides a text input field for user defined text.
 
 **NOTE:** UIComponents are ComponentViews. This means all methods of handling user input discussed in the
-[User Input Guide][UserInput] are also available to UIComponentViews.
+[User Input Guide][UserInputDoc] are also available to UIComponentViews.
 
 This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in
-this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found
-[here](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html#complete-source-code-for-the-example).
+this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found here:
+
+[View it on GitHub](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html#complete-source-code-for-the-example){:
+.btn }
 
 ![image](visualguide.png)
 
-[LabelDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
-
 ## Label
-
-A [Label][LabelDoc] is just a simple text. In this example a new label is instantiated with the text "I am a Label.",
+A [Label][LabelKDoc] is just a simple text. In this example a new label is instantiated with the text "I am a Label.",
 aligned to the center and with text wrapping enabled. Enabled text wrapping allows the text to wrap onto a new line if
 the width of the label is too small for the text.
 
@@ -68,11 +82,8 @@ private val outputLabel = Label(
 )
 ````
 
-[ButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-button/index.html
-
 ## Button
-
-A [Button][ButtonDoc] is a component that plays an animation when a mouse click is performed over the button.
+A [Button][ButtonKDoc] is a component that plays an animation when a mouse click is performed over the button.
 Additionally, a text may be defined to describe the button. In this example a new button is instantiated, and the ``
 onMouseClicked`` is set, so that the ``outputLabel`` displays "Someone pressed the Button!".
 
@@ -85,11 +96,8 @@ button.onMouseClicked = {
 
 ````
 
-[CheckBoxDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-check-box/index.html
-
 ## CheckBox
-
-A [CheckBox][CheckBoxDoc] is a component that can be checked or unchecked. It can be enabled to allow an indeterminate
+A [CheckBox][CheckBoxKDoc] is a component that can be checked or unchecked. It can be enabled to allow an indeterminate
 state. This can be used to express uncertainty. Whenever a CheckBox is clicked it changes its state in the following
 order:
 
@@ -129,11 +137,8 @@ checkBox.indeterminateProperty.addListener { _, newValue ->
 }
 ````
 
-[ColorPickerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
-
 ## ColorPicker
-
-A [ColorPicker][ColorPickerDoc] may be used to enable a user to specify a colour intuitively. The selected
+A [ColorPicker][ColorPickerKDoc] may be used to enable a user to specify a colour intuitively. The selected
 colour can be set and retrieved via the ``selectedColor`` property. To react to a new ``selectedColor``, a listener 
 may be added
 to the ``selectedColorProperty``. In this example the text colour of another label is changed, whenever a new colour is
@@ -157,11 +162,8 @@ colorPicker.selectedColorProperty.addListener { _, newValue ->
 }
 ````
 
-[ComboBoxDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
-
 ## ComboBox
-
-A [ComboBox][ComboBoxDoc] is a drop-down menu, where a user may choose an option. A ``prompt`` may be specified to
+A [ComboBox][ComboBoxKDoc] is a drop-down menu, where a user may choose an option. A ``prompt`` may be specified to
 inform the user, what is expected of him. The ComboBox has a type parameter to define a type for the objects that
 correspond to the options. One string per contained object is necessary to represent it as an option to the user. 
 There are two methods of obtaining said string.
@@ -199,11 +201,8 @@ comboBox.selectedItemProperty.addListener { _, newValue ->
 }
 ````
 
-[ProgressBarDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-progress-bar/index.html
-
 ## ProgressBar
-
-A [ProgressBar][ProgressBarDoc] is a coloured bar that can indicate progress to the user. The current progress and
+A [ProgressBar][ProgressBarKDoc] is a coloured bar that can indicate progress to the user. The current progress and
 colour can be retrieved and set via ``progress`` and ``barColor`` respectively.
 
 In this example a new ProgressBar is instantiated and the ``onMouseClicked`` is set, such that the progress of the 
@@ -234,20 +233,13 @@ progressBar.progressProperty.addListener { _, newValue ->
 }
 ````
 
-[ToggleButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-button/index.html
-
-[RadioButtonDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-radio-button/index.html
-
-[ToggleGroupDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-group/index.html
-
 ## ToggleButton and RadioButton
-
-A [ToggleButton][ToggleButtonDoc] can either be selected or not selected. A [RadioButton][RadioButtonDoc] is just a
+A [ToggleButton][ToggleButtonKDoc] can either be selected or not selected. A [RadioButton][RadioButtonKDoc] is just a
 ToggleButton with a different visual representation. It has exactly the same functionalities as a ToggleButton.
 
 To retrieve whether the ToggleButton is toggled on or off the ``isSelected`` field can be used.
 
-ToggleButtons have a feature where different ToggleButtons may be linked via a [ToggleGroup][ToggleGroupDoc].
+ToggleButtons have a feature where different ToggleButtons may be linked via a [ToggleGroup][ToggleGroupKDoc].
 ToggleGroups enforce a rule, where only one ToggleButton in a ToggleGroup may be selected at a time. So whenever a 
 ToggleButton in
 a ToggleGroup changes its selected state to ``true``, all other ToggleButtons in the ToggleGroup automatically have
@@ -277,14 +269,9 @@ radioButton.selectedProperty.addListener { _, newValue ->
 }
 ````
 
-[TextAreaDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-area/index.html
-
-[TextFieldDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-field/index.html
-
 ## TextArea and TextField
-
-[TextArea][TextAreaDoc] and [TextField][TextFieldDoc] can be used to allow users to type texts. The main difference
-between TextArea and TextField, is that [TextArea] has multiple lines of input, while [TextField] only has one. The
+[TextArea][TextAreaKDoc] and [TextField][TextFieldKDoc] can be used to allow users to type texts. The main difference
+between TextArea and TextField, is that [TextArea][TextAreanKDoc] has multiple lines of input, while [TextField][TextFieldKDoc] only has one. The
 text can be set and retrieved via ``text``. A prompt can be specified that informs the user, which textual input is
 requested. To react to user input, a listener on the ``textProperty`` can be added. Additionally, the
 ``onKeyPressed``, ``onKeyReleased`` and ``onKeyTyped`` handlers are a great way of executing code when textual input
@@ -305,19 +292,16 @@ textField.textProperty.addListener { _, newValue ->
 }
 ````
 
-[ListViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-list-view/index.html
-
 ## ListView
-
-A [ListView][ListViewDoc] can be used to display a list of strings. The ListView has a type parameter, so any type of
+A [ListView][ListViewKDoc] can be used to display a list of strings. The ListView has a type parameter, so any type of
 objects can be contained in the ListView. By default, the ``toString()`` function is applied to the contained objects to
 obtain a string representation of each object. A ``formatFunction`` can be set that gets used instead of
 the ``toString()`` function to obtain the string representations.
 
-In this example, a ListView typed to ``Int`` is instantiated.
+In this example, a ListView with initial `Int` items is created..
 
 ````kotlin
-val listView = ListView<Int>(posX = 50, posY = 800, width = 300, height = 200)
+val listView = ListView(posX = 50, posY = 800, width = 300, height = 200, items = mutableListOf(42, 1337, 1, 2, 3))
 ````
 
 A custom ``formatFunction`` is set, so the ListView displays "Value for this cell is" concatenated with the actual value
@@ -329,19 +313,8 @@ listView.formatFunction = {
 }
 ````
 
-Lastly, to specify the data model of the ListView, the ``items`` list is set.
-
-````kotlin
-listView.items = mutableListOf(42, 1337, 1, 2, 3)
-````
-
-[TableViewDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-table-view/index.html
-
-[TableColumnDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-table-column/index.html
-
 ## TableView
-
-A [TableView][TableViewDoc] can be used to display multiple representations of the same objects in pre-defined columns.
+A [TableView][TableViewKDoc] can be used to display multiple representations of the same objects in pre-defined columns.
 The TableView has a type parameter, so any type of objects can be contained in the TableView.
 
 In this example a TableView typed to ``Int`` is instantiated.
@@ -350,7 +323,7 @@ In this example a TableView typed to ``Int`` is instantiated.
 val table = TableView<Int>(posX = 450, posY = 800, width = 300, height = 200)
 ````
 
-Three custom [TableColumn][TableColumnDoc]s are added to the columns list of the TableView. A TableColumn consists of
+Three custom [TableColumn][TableColumnKDoc]s are added to the columns list of the TableView. A TableColumn consists of
 a ``title``, a ``width`` and a ``formatFunction`` that defines how to project a contained object to a string for this
 column.
 

@@ -6,18 +6,22 @@ nav_order: 3
 layout: default
 ---
 
-# Drag and Drop
-
-[DynamicComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/dynamiccomponent/dynamiccomponentview.html
-[BoardGameApplicationDoc]: https://tudo-aqua.github.io/bgw/
-[TokenDoc]: https://tudo-aqua.github.io/bgw/components/gamecomponents/gamecomponents.html#generic-token
-[AreaDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html#area
-
+<!-- KDoc -->
 [DragEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/
 [TokenKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/
 [AreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/
 
+<!-- GH-Pages Doc -->
+[BoardGameApplicationDoc]: https://tudo-aqua.github.io/bgw/
+[DynamicComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/dynamiccomponent/dynamiccomponentview.html
+[TokenDoc]: https://tudo-aqua.github.io/bgw/components/gamecomponents/gamecomponents.html#generic-token
+[AreaDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html#area
+
 [DragDropExample]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example
+
+<!-- Start Page -->
+# Drag and Drop
+
 
 {: .no_toc}
 <details open markdown="block">

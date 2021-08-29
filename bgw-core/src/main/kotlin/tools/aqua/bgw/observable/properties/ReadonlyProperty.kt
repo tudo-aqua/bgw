@@ -17,16 +17,18 @@
 
 @file:Suppress("unused")
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.properties
+
+import tools.aqua.bgw.observable.ValueObservable
 
 /**
  * Property baseclass providing observable fields.
  *
- * @constructor Creates a [Property] with given initial value.
+ * @constructor Creates a [ReadonlyProperty] with given initial value.
  *
  * @param initialValue Initial value of this property.
  */
-open class Property<T>(initialValue: T) : ValueObservable<T>() {
+open class ReadonlyProperty<T>(initialValue: T) : ValueObservable<T>() {
 	
 	/**
 	 * Value of this property.
@@ -38,7 +40,7 @@ open class Property<T>(initialValue: T) : ValueObservable<T>() {
 	 */
 	open var value: T
 		get() = boxedValue
-		set(value) {
+		internal set(value) {
 			val savedValue = boxedValue
 			if (boxedValue != value) {
 				boxedValue = value

@@ -5,6 +5,21 @@ nav_order: 1
 layout: default
 ---
 
+<!-- KDoc -->
+[SingleLayerVisualKDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html#singlelayervisual
+[ColorVisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-color-visual/
+[ImageVisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-image-visual/
+[TextVisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-text-visual/
+[CompoundVisualKDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html#compoundvisual
+
+[FontKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-font/
+
+<!-- Links -->
+[FileDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html
+[ColorDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Color.html
+[BufferedImageDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/image/BufferedImage.html
+
+<!-- Start Page -->
 # Visual
 
 {: .no_toc}
@@ -20,18 +35,17 @@ layout: default
 In this section we are going to showcase the different types of visuals in the BGW framework. Visuals are used to style
 game elements in the application. Fundamentally there are two types of Visuals:
 
-* [SingleLayerVisual](https://tudo-aqua.github.io/bgw/concepts/visual/visual.html#singlelayervisual)
-* [CompoundVisualVisual](https://tudo-aqua.github.io/bgw/concepts/visual/visual.html#compoundvisual)
+* [SingleLayerVisual][SingleLayerVisualKDoc]
+* [CompoundVisual][CompoundVisualKDoc]
 
-## [SingleLayerVisual](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-single-layer-visual/)
+## [SingleLayerVisual][SingleLayerVisualKDoc]
 
 A simple visual displaying its type of visualization.
 
-[ColorVisual]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-color-visual/
-### [ColorVisual][ColorVisual]
+### [ColorVisual][ColorVisualKDoc]
 
-The [ColorVisual][ColorVisual] displays a solid Color. It can either be created with RGB / RGBA values or
-via [java.awt.Color](https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Color.html). Additionally,
+The [ColorVisual][ColorVisualKDoc] displays a solid Color. It can either be created with RGB / RGBA values or
+via [java.awt.Color][ColorDoc]. Additionally,
 it declares static fields for various standard colors. The following statements result in the same *red* visual:
 
 ````kotlin
@@ -41,11 +55,10 @@ val visual3: ColorVisual = ColorVisual(java.awt.Color.RED)
 val visual4: ColorVisual = ColorVisual.RED
 ````
 
-[TextVisual]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-text-visual/
-### [TextVisual][TextVisual]
+### [TextVisual][TextVisualKDoc]
 
-The [TextVisual][TextVisual] displays one line of text. It can be created with the text to display as a string and an
-optional [Font](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-font/). The following example shows the code for a
+The [TextVisual][TextVisualKDoc] displays one line of text. It can be created with the text to display as a string and an
+optional [Font][FontKDoc]. The following example shows the code for a
 TextVisual that displays "Token" in white with bold text in Arial 18px size. All parameters in the font constructor are
 optional, so *fontStyle* for example is redundant as it contains the default value:
 ````kotlin
@@ -58,13 +71,12 @@ val visual: TextVisual = TextVisual("Token", Font(
 ))
 ````
 
-[ImageVisual]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-image-visual/
-### [ImageVisual][ImageVisual]
+### [ImageVisual][ImageVisualKDoc]
 
-The [ImageVisual][ImageVisual] displays a given image. It can either be created with
-a [BufferedImage](https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/image/BufferedImage.html) or
+The [ImageVisual][ImageVisualKDoc] displays a given image. It can either be created with
+a [BufferedImage][BufferedImageDoc] or
 by declaring the image file to load
-as [File](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html) or path string relative to the
+as [File][FileDoc] or path string relative to the
 application's resource folder. Additionally, the size and position of a sub-image can be passed in order to select from
 a texture map. The following code example shows how to load an image:
 
@@ -87,14 +99,15 @@ val visual: ImageVisual = ImageVisual(
 )
 ````
 
-The full example can be found [here](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/VisualsExample.kt).
+The full example can be found here:
 
-[CompoundVisual]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-compound-visual/
-## [CompoundVisual][CompoundVisual]
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/VisualsExample.kt){:
+.btn }
 
-[CompoundVisuals][CompoundVisual] can be used to stack multiple visuals. Therefore, if
-stacking [ColorVisuals](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-color-visual/)
-and [ImageVisuals](https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-image-visual/) they have to be partially transparent
+## [CompoundVisual][CompoundVisualKDoc]
+[CompoundVisuals][CompoundVisualKDoc] can be used to stack multiple visuals. Therefore, if
+stacking [ColorVisuals][ColorVisualKDoc]
+and [ImageVisuals][ImageVisualKDoc] they have to be partially transparent
 in order to see the Visual beyond. The Visuals get added in the order they got passed from bottom to top.
 CompoundVisuals can for example be used to create a Text with background Color (left), label a GameToken (center), or
 display valid drop targets (right):
@@ -117,4 +130,7 @@ visual = CompoundVisual(
   }
 )
 ````
-The full example can be found [here](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/CompoundVisualsExample.kt).
+The full example can be found here: 
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/CompoundVisualsExample.kt){:
+.btn }

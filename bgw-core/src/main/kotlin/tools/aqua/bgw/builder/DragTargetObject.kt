@@ -20,7 +20,6 @@ package tools.aqua.bgw.builder
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
-import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.util.Coordinate
 
 /**
@@ -36,28 +35,14 @@ import tools.aqua.bgw.util.Coordinate
 internal class DragTargetObject(
 	val dragTarget: ComponentView,
 	val dragTargetStackPane: StackPane,
-	val mouseX: Double,
-	val mouseY: Double,
+	val mouseCoord: Coordinate,
 	val offsetX: Double = 0.0,
 	val offsetY: Double = 0.0,
 ) {
-	/**
-	 * Returns a [ClosedFloatingPointRange] between xPos and xPos + width.
-	 */
-	internal fun rangeX(): ClosedFloatingPointRange<Double> =
-		if (dragTarget is GridPane<*>)
-			dragTarget.posX - dragTarget.width / 2..dragTarget.posX + dragTarget.width / 2
-		else
-			dragTarget.posX.rangeTo(dragTarget.posX + dragTarget.width)
 	
-	/**
-	 * Returns a [ClosedFloatingPointRange] between yPos and yPos + height.
-	 */
-	internal fun rangeY() =
-		if (dragTarget is GridPane<*>)
-			dragTarget.posY - dragTarget.height / 2..dragTarget.posY + dragTarget.height / 2
-		else
-			dragTarget.posY.rangeTo(dragTarget.posY + dragTarget.height)
+	var anchor: Coordinate
+		get() = mouseCoord - Coordinate(xCoord = offsetX, yCoord = offsetY)
+		private set(_) {}
 	
 	/**
 	 * Returns object rotated to parent.
@@ -68,13 +53,10 @@ internal class DragTargetObject(
 			offsetY + dragTarget.posY + dragTarget.height / 2
 		)
 		
-		val rotated = Coordinate(mouseX, mouseY).rotated(-dragTarget.rotation, parentCenter)
-		
 		return DragTargetObject(
 			dragTarget = dragTarget,
 			dragTargetStackPane = dragTargetStackPane,
-			mouseX = rotated.xCoord,
-			mouseY = rotated.yCoord,
+			mouseCoord = mouseCoord.rotated(-dragTarget.rotation, parentCenter),
 			offsetX = offsetX,
 			offsetY = offsetY
 		)

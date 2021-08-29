@@ -21,7 +21,6 @@ import javafx.event.EventHandler
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveComponentsBelowMouse
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
@@ -86,10 +85,20 @@ internal class NodeBuilder {
 		 * Registers events.
 		 */
 		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
-			stackPane.onDragDetected = EventHandler {
-				if (this is DynamicComponentView && isDraggable && scene.draggedDataProperty.value == null) {
-					onDragDetected(scene as BoardGameScene, it)
-				}
+			if(this is DynamicComponentView) {
+				registerDragEvents(stackPane, node, scene)
+			}
+			
+			stackPane.onMouseDragEntered = EventHandler{
+				val dragTarget = scene.draggedComponent?:return@EventHandler
+				scene.dragTargetsBelowMouse.add(this)
+				onDragGestureEntered?.invoke(DragEvent(dragTarget))
+			}
+			
+			stackPane.onMouseDragExited = EventHandler{
+				val dragTarget = scene.draggedComponent?:return@EventHandler
+				scene.dragTargetsBelowMouse.remove(this)
+				onDragGestureExited?.invoke(DragEvent(dragTarget))
 			}
 			
 			node.setOnMouseClicked { onMouseClicked?.invoke(it.toMouseEvent()) }
@@ -101,6 +110,25 @@ internal class NodeBuilder {
 			node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
+		
+		private fun DynamicComponentView.registerDragEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
+			val initialMouseTransparency = stackPane.isMouseTransparent
+			
+			stackPane.onDragDetected = EventHandler {
+				if (isDraggable && scene.draggedComponentProperty.value == null) {
+					onDragDetected(scene as BoardGameScene, it)
+					stackPane.isMouseTransparent = true
+					stackPane.startFullDrag()
+				}
+			}
+			
+			stackPane.onDragDropped = EventHandler{
+				//TODO: On drag dropped
+				scene.draggedComponentProperty.value = null
+				stackPane.isMouseTransparent = initialMouseTransparency
+			}
+		}
+		
 		
 		private fun DynamicComponentView.onDragDetected(scene: BoardGameScene, e: MouseEvent) {
 			val mouseStartCoord = Coordinate(
@@ -154,18 +182,18 @@ internal class NodeBuilder {
 				relativeParentRotation,
 				rollback
 			)
-			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragDataObject)
+			
+			val newCoords = SceneBuilder.transformCoordinatesToScene(e, dragDataObject)
+			
 			removeFromParent()
+			
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
-			scene.draggedDataProperty.value = dragDataObject
-			
+			scene.draggedComponentProperty.value = dragDataObject
 			scene.dragTargetsBelowMouse.clear()
-			scene.dragTargetsBelowMouse.addAll(scene.findActiveComponentsBelowMouse(e.sceneX, e.sceneY))
 			
 			isDragged = true
 			onDragGestureStarted?.invoke(DragEvent(this))
-			
 		}
 		
 		/**
@@ -274,8 +302,7 @@ internal class NodeBuilder {
 				node.isDisable = nV
 				background.isDisable = nV
 			}
-
-			//TODO: component style needs to update when internal css changes
+			
 			if (this is UIComponent) {
 				backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
 					if (nV.isNotEmpty())

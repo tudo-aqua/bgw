@@ -20,9 +20,9 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.Property
-import tools.aqua.bgw.observable.StringProperty
+import tools.aqua.bgw.observable.properties.DoubleProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font
 
 /**

@@ -15,13 +15,22 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+@file:Suppress("unused")
+
+package tools.aqua.bgw.observable.properties
 
 /**
- * A DoubleProperty.
+ * Property baseclass providing observable fields.
  *
- * @constructor Creates a [DoubleProperty] with given initial value.
+ * @constructor Creates a [Property] with given initial value.
  *
- * @param initialValue Initial Value. Default: 0.0.
+ * @param initialValue Initial value of this property.
  */
-open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())
+open class Property<T>(initialValue: T) : ReadonlyProperty<T>(initialValue = initialValue) {
+	override var value: T
+		get() = super.value
+		public set(value) {
+			super.value = value
+		}
+}
+

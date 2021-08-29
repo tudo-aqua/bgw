@@ -22,8 +22,8 @@ package tools.aqua.bgw.components.uicomponents
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.observable.Property
-import tools.aqua.bgw.observable.StringProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 

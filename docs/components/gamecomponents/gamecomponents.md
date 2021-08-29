@@ -5,9 +5,7 @@ nav_order: 3
 layout: default
 ---
 
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
-[DynamicView]: https://tudo-aqua.github.io/bgw/components/dynamiccomponentview/dynamiccomponentview.html
-
+<!-- KDoc -->
 [GameComponentDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
 [ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
 [TokenDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
@@ -17,9 +15,13 @@ layout: default
 [DiceDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-dice-view/index.html
 [DiceAnimationDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/index.html
 
+<!-- GH-Pages Doc -->
+[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
+[DynamicView]: https://tudo-aqua.github.io/bgw/components/dynamiccomponentview/dynamiccomponentview.html
 [DnDDoc]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html
 [AnimationDoc]: https://tudo-aqua.github.io/bgw/concepts/animations/Animations.html
 
+<!-- Start Page -->
 # GameComponentViews
 
 {: .no_toc}

@@ -23,14 +23,13 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.builder.DragDataObject
-import tools.aqua.bgw.builder.DragTargetObject
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.RootComponent
-import tools.aqua.bgw.observable.DoubleProperty
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.DoubleProperty
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 
@@ -49,21 +48,20 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	/**
 	 * [MutableList] containing all [ComponentView]s currently below mouse position while performing a drag gesture.
 	 */
-	internal val dragTargetsBelowMouse: MutableList<DragTargetObject> = mutableListOf()
+	internal val dragTargetsBelowMouse: MutableSet<ComponentView> = mutableSetOf()
 	
 	/**
-	 * [Property] for the currently dragged [ComponentView] encapsulated in a [DragDataObject]
+	 * [Property] for the currently dragged [DynamicComponentView]
 	 * or `null` if no [DynamicComponentView] is currently dragged.
 	 */
-	internal val draggedDataProperty: Property<DragDataObject?> = Property(null)
-
+	internal val draggedComponentProperty: Property<DragDataObject?> = Property(null)
+	
 	/**
 	 * Currently dragged [ComponentView] encapsulated in a [DragDataObject]
 	 * or `null` if no [DynamicComponentView] is currently dragged.
 	 */
 	val draggedComponent: DynamicComponentView?
-		get() = draggedDataProperty.value?.draggedComponent
-	
+		get() = draggedComponentProperty.value?.draggedComponent
 	
 	/**
 	 * The root node of this [Scene].
