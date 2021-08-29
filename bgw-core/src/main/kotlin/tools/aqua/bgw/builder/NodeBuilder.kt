@@ -86,7 +86,7 @@ internal class NodeBuilder {
 		 */
 		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
 			if(this is DynamicComponentView) {
-				registerDragEvents(stackPane, node, scene)
+				registerDragEvents(stackPane, scene)
 			}
 			
 			stackPane.onMouseDragEntered = EventHandler{
@@ -111,7 +111,7 @@ internal class NodeBuilder {
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
 		
-		private fun DynamicComponentView.registerDragEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
+		private fun DynamicComponentView.registerDragEvents(stackPane: StackPane, scene: Scene<out ComponentView>) {
 			val initialMouseTransparency = stackPane.isMouseTransparent
 			
 			stackPane.onDragDetected = EventHandler {

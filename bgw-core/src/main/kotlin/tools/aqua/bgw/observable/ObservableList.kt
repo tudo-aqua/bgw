@@ -30,7 +30,7 @@ import kotlin.streams.toList
  *
  * @constructor Creates an [ObservableList].
  */
-abstract class ObservableList<T> : Observable(), Iterable<T> {
+abstract class ObservableList<T> :ValueObservable<List<T>>(), Iterable<T> {
 	
 	/**
 	 * Returns the number of elements in this list.
@@ -122,9 +122,10 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
 	 */
 	operator fun set(index: Int, element: T): T {
+		val snapshot = this.toList()
 		val oldValue: T = list[index]
 		list[index] = element
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return oldValue
 	}
 	
@@ -134,8 +135,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @param element Element to be appended to this list.
 	 */
 	fun add(element: T): Boolean {
+		val snapshot = this.toList()
 		val result = list.add(element)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return result
 	}
 	
@@ -151,8 +153,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
 	 */
 	fun add(index: Int, element: T) {
+		val snapshot = this.toList()
 		list.add(index, element)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 	}
 	
 	/**
@@ -171,10 +174,11 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @return `true` if this list contained the specified element.
 	 */
 	fun remove(o: T): Boolean {
+		val snapshot = this.toList()
 		val result = list.remove(o)
 		
 		if (result)
-			notifyChange()
+			notifyChange(oldValue = snapshot, newValue = this.toList())
 		
 		return result
 	}
@@ -187,8 +191,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
 	 */
 	fun removeAt(index: Int): T {
+		val snapshot = this.toList()
 		val result = list.removeAt(index)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return result
 	}
 	
@@ -197,10 +202,11 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * or returns `null` if this list is empty.
 	 */
 	fun removeFirstOrNull(): T? {
+		val snapshot = this.toList()
 		val result = list.removeFirstOrNull()
 		
 		if (result != null)
-			notifyChange()
+			notifyChange(oldValue = snapshot, newValue = this.toList())
 		
 		return result
 	}
@@ -217,10 +223,11 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * or returns `null` if this list is empty.
 	 */
 	fun removeLastOrNull(): T? {
+		val snapshot = this.toList()
 		val result = list.removeLastOrNull()
 		
 		if (result != null)
-			notifyChange()
+			notifyChange(oldValue = snapshot, newValue = this.toList())
 		
 		return result
 	}
@@ -237,9 +244,10 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * Removes all elements from this list. The list will be empty after this call returns.
 	 */
 	fun clear() {
+		val snapshot = this.toList()
 		if (list.isNotEmpty()) {
 			list.clear()
-			notifyChange()
+			notifyChange(oldValue = snapshot, newValue = this.toList())
 		}
 	}
 	
@@ -258,8 +266,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @throws NullPointerException If the specified collection is null.
 	 */
 	fun addAll(elements: Collection<T>): Boolean {
+		val snapshot = this.toList()
 		val result = list.addAll(elements)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return result
 	}
 	
@@ -277,8 +286,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
 	 */
 	fun addAll(index: Int, elements: Collection<T>): Boolean {
+		val snapshot = this.toList()
 		val result = list.addAll(index, elements)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return result
 	}
 	
@@ -296,10 +306,11 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @see Collection.contains
 	 */
 	fun removeAll(elements: Collection<*>): Boolean {
+		val snapshot = this.toList()
 		val result = list.removeAll(elements)
 		
 		if (result)
-			notifyChange()
+			notifyChange(oldValue = snapshot, newValue = this.toList())
 		
 		return result
 	}
@@ -320,8 +331,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @see Collection.contains
 	 */
 	fun retainAll(elements: Collection<*>): Boolean {
+		val snapshot = this.toList()
 		val result = list.retainAll(elements)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return result
 	}
 	
@@ -382,10 +394,11 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @throws NullPointerException If the specified filter is null
 	 */
 	fun removeIf(filter: Predicate<in T>): Boolean {
+		val snapshot = this.toList()
 		val result = list.removeIf(filter)
 		
 		if (result)
-			notifyChange()
+			notifyChange(oldValue = snapshot, newValue = this.toList())
 		
 		return result
 	}
@@ -396,8 +409,9 @@ abstract class ObservableList<T> : Observable(), Iterable<T> {
 	 * @param operator The operator to apply to each element.
 	 */
 	fun replaceAll(operator: UnaryOperator<T>) {
+		val snapshot = this.toList()
 		list.replaceAll(operator)
-		notifyChange()
+		notifyChange(oldValue = snapshot, newValue = this.toList())
 	}
 	
 	/**

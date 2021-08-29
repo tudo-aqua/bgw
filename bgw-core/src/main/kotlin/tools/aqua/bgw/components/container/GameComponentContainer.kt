@@ -22,9 +22,9 @@ package tools.aqua.bgw.components.container
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.observable.Observer
 import tools.aqua.bgw.observable.ObservableLinkedList
 import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
@@ -83,16 +83,20 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	internal abstract fun T.onAdd()
 	
 	/**
-	 * Adds a [listener] on the [observableComponents] list.
+	 * Adds a [ValueObserver] on the [observableComponents] list.
+	 *
+	 * @param listener The [ValueObserver] to add.
 	 */
-	fun addComponentsListener(listener: Observer) {
+	fun addComponentsListener(listener: ValueObserver<List<T>>) {
 		observableComponents.addListener(listener)
 	}
 	
 	/**
 	 * Removes a [listener] from the [observableComponents] list.
+	 *
+	 * @param listener The [ValueObserver] to remove.
 	 */
-	fun removeComponentsListener(listener: Observer) {
+	fun removeComponentsListener(listener: ValueObserver<List<T>>) {
 		observableComponents.removeListener(listener)
 	}
 	
