@@ -166,7 +166,7 @@ class ContainerExample : BoardGameApplication("Container Example") {
 		}
 
 	init {
-		gameScene.addComponents(cardStack, alignmentControls, area, linearLayout, satchel, TokenView(visual = ColorVisual.MAGENTA).apply { isDraggable = true })
+		gameScene.addComponents(cardStack, alignmentControls, area, linearLayout, satchel,)
 		showGameScene(gameScene)
 		show()
 	}
@@ -184,7 +184,6 @@ class ContainerExample : BoardGameApplication("Container Example") {
 
 		return (0 until numCards)
 			.map { index ->
-				println("offsetX: ${DEFAULT_CARD_WIDTH * index}, offsetY ${DEFAULT_CARD_HEIGHT * row}")
 				ImageVisual(
 					path = "card_deck.png",
 					height = DEFAULT_CARD_HEIGHT.toInt(),
