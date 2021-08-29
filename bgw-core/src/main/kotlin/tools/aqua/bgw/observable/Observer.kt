@@ -23,7 +23,7 @@ package tools.aqua.bgw.observable
 @FunctionalInterface
 fun interface Observer {
 	/**
-	 * Can be implemented to react to changes in the observed property.
+	 * Can be implemented to react on changes in the observed property.
 	 */
 	fun update()
 }
