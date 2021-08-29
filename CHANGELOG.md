@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
  - Readonly Properties.
  - Scale Animation.
  - Additional constructors, default parameters and nullable functions for Stack.
+ - *div* and *times* operator for Coordinate.
 
 ### Changed
 - Changed various Exception types to more meaningful ones.
@@ -28,6 +29,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Items not being updated dynamically in ListView.
 - Font color in TableView.
+- Complete Drag and Drop reworking to account for scale, rotation, and nesting.
 
 ## [0.2] - 10. Aug. 2021
 ### Added
