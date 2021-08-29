@@ -22,7 +22,7 @@ package tools.aqua.bgw.components.container
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.observable.IObservable
+import tools.aqua.bgw.observable.Observer
 import tools.aqua.bgw.observable.ObservableLinkedList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.util.Coordinate
@@ -85,14 +85,14 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	/**
 	 * Adds a [listener] on the [observableComponents] list.
 	 */
-	fun addComponentsListener(listener: IObservable) {
+	fun addComponentsListener(listener: Observer) {
 		observableComponents.addListener(listener)
 	}
 	
 	/**
 	 * Removes a [listener] from the [observableComponents] list.
 	 */
-	fun removeComponentsListener(listener: IObservable) {
+	fun removeComponentsListener(listener: Observer) {
 		observableComponents.removeListener(listener)
 	}
 	

@@ -20,7 +20,7 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.observable.IObservable
+import tools.aqua.bgw.observable.Observer
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
@@ -56,14 +56,14 @@ open class Pane<T : ComponentView>(
     /**
      * Adds a [listener] on the [observableComponents] list.
      */
-    fun addComponentsListener(listener: IObservable) {
+    fun addComponentsListener(listener: Observer) {
         observableComponents.addListener(listener)
     }
     
     /**
      * Removes a [listener] from the [observableComponents] list.
      */
-    fun removeComponentsListener(listener: IObservable) {
+    fun removeComponentsListener(listener: Observer) {
         observableComponents.removeListener(listener)
     }
     
