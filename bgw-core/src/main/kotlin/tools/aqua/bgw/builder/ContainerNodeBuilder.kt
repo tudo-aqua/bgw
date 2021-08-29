@@ -37,52 +37,10 @@ internal class ContainerNodeBuilder {
 			scene: Scene<out ComponentView>,
 			container: GameComponentContainer<out GameComponentView>
 		): Region =
-			when (container) {
-				is Area -> buildArea(container)
-				is CardStack -> buildCardStack(container)
-				is Satchel -> buildSatchel(container)
-				is LinearLayout -> buildLinearLayout(container)
-			}.apply {
-				container.observableComponents.setGUIListenerAndInvoke {
-					refresh(
-						scene,
-						container
-					)
+			Pane().apply {
+				container.observableComponents.setGUIListenerAndInvoke(listOf()) { oldValue, _ ->
+					buildChildren(scene, container.observableComponents, oldValue.toSet())
 				}
 			}
-		
-		/**
-		 * Builds [Area].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildArea(container: GameComponentContainer<*>): Pane = Pane()
-		
-		/**
-		 * Builds [CardStack].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildCardStack(container: GameComponentContainer<*>): Pane = Pane()
-		
-		/**
-		 * Builds [Satchel].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildSatchel(container: GameComponentContainer<*>): Pane = Pane()
-		
-		/**
-		 * Builds [LinearLayout].
-		 */
-		@Suppress("UNUSED_PARAMETER")
-		private fun buildLinearLayout(container: GameComponentContainer<*>): Pane = Pane()
-		
-		/**
-		 * Refreshes children in this container.
-		 */
-		private fun Pane.refresh(scene: Scene<out ComponentView>, gameComponentContainer: GameComponentContainer<*>) {
-			children.clear()
-			gameComponentContainer.observableComponents.forEach {
-				children.add(NodeBuilder.build(scene, it))
-			}
-		}
 	}
 }

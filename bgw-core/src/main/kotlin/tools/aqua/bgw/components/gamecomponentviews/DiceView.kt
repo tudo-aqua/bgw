@@ -84,8 +84,9 @@ open class DiceView(
 	 * If [currentSide] is out of range, a [Visual.EMPTY] will be shown.
 	 */
 	fun setVisuals(visuals: List<Visual>) {
+		val snapshot = visuals.toList()
 		this.visuals.setSilent(visuals.onEach { it.copy() })
-		this.visuals.notifyChange()
+		this.visuals.notifyChange(oldValue = snapshot, newValue = visuals.toList())
 		
 		visualProperty.value = if (currentSide in visuals.indices)
 			visuals[currentSide]

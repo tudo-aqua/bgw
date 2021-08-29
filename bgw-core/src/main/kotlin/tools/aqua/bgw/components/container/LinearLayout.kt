@@ -122,7 +122,7 @@ open class LinearLayout<T : GameComponentView>(
 		}
 	
 	init {
-		observableComponents.setInternalListenerAndInvoke {
+		observableComponents.setInternalListenerAndInvoke(listOf()) { _, _ ->
 			layout()
 		}
 		spacingProperty.internalListener = { _, _ -> layout() }
@@ -167,8 +167,8 @@ open class LinearLayout<T : GameComponentView>(
 
 	override fun T.onAdd() {
 		//add pos listeners
-		posXProperty.internalListener = { _, _ -> observableComponents.internalListener?.invoke() }
-		posYProperty.internalListener = { _, _ -> observableComponents.internalListener?.invoke() }
+		posXProperty.internalListener = { _, _ -> observableComponents.internalListener?.invoke(listOf(), listOf()) }
+		posYProperty.internalListener = { _, _ -> observableComponents.internalListener?.invoke(listOf(), listOf()) }
 	}
 
 	override fun T.onRemove() {

@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.core
 
+import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.builder.DragDataObject
@@ -148,6 +149,11 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	 * [Map] for all [ComponentView]s to their [StackPane]s.
 	 */
 	internal val componentsMap: MutableMap<ComponentView, StackPane> = HashMap()
+
+	/**
+	 * Cache for the background of a [Scene].
+	 */
+	internal var backgroundCache: Region? = null
 	
 	/**
 	 * All [Animation]s currently playing.
