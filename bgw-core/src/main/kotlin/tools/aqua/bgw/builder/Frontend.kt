@@ -324,12 +324,12 @@ internal class Frontend : Application() {
 		 *
 		 * @return [gamePane] for [boardGameScene], [menuPane] for [menuScene] and `null` for other parameters.
 		 */
-		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane? =
+		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane =
 			when (this) {
 				boardGameScene -> gamePane
 				menuScene -> menuPane
 				else -> null
-			}
+			}?:throw IllegalStateException()
 
 		/**
 		 * Returns scene associated to pane.

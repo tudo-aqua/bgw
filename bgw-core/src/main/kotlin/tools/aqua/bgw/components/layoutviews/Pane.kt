@@ -192,7 +192,18 @@ open class Pane<T : ComponentView>(
      *
      * @return Coordinate of given child in this container relative to containers anchor point.
      */
-    override fun getChildPosition(child: ComponentView): Coordinate = Coordinate(child.posX, child.posY)
+    override fun getChildPosition(child: ComponentView): Coordinate =
+        Coordinate(child.posX, child.posY)
+    
+    /**
+     * Returning a contained child's coordinates within this container with scale.
+     *
+     * @param child Child to find.
+     *
+     * @return Coordinate of given child in this container relative to containers anchor point.
+     */
+    override fun getActualChildPosition(child: ComponentView): Coordinate =
+        Coordinate(child.actualPosX, child.actualPosY)
     
     /**
      * Removes [component] from container's children.

@@ -510,14 +510,31 @@ open class GridPane<T : ComponentView>(
 	 */
 	override fun getChildPosition(child: ComponentView): Coordinate? =
 		grid.filter { it.component == child }.map {
-			val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
-			val offsetX = cols.sum() + cols.size * spacing
-			
-			val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
-			val offsetY = rows.sum() + rows.size * spacing
-			
-			Coordinate(offsetX + child.posX, offsetY + child.posY)
+			getRelativeChildOffset(it) + Coordinate(xCoord = child.posX, yCoord = child.posY)
 		}.firstOrNull()
+	
+	/**
+	 * Function returning a contained child's coordinates within this [GridPane] relative to the top left corner with
+	 * scale.
+	 *
+	 * @param child Child to find.
+	 *
+	 * @return coordinate of given child in this [GridPane].
+	 */
+	override fun getActualChildPosition(child: ComponentView): Coordinate? =
+		grid.filter { it.component == child }.map {
+			getRelativeChildOffset(it) + Coordinate(xCoord = child.actualPosX, yCoord = child.actualPosY)
+		}.firstOrNull()
+	
+	private fun getRelativeChildOffset(it : GridIteratorElement<T>): Coordinate {
+		val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
+		val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
+		
+		return Coordinate(
+			xCoord = cols.sum() + cols.size * spacing,
+			yCoord = rows.sum() + rows.size * spacing
+		)
+	}
 	
 	/**
 	 * Returns an [Iterator] over the grid components.

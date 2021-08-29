@@ -45,8 +45,6 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * @param other [Coordinate] to add.
 	 *
 	 * @return New coordinate object containing added [xCoord] and [yCoord].
-	 *
-	 * @see minus
 	 */
 	operator fun plus(other: Coordinate): Coordinate = Coordinate(
 		xCoord + other.xCoord,
@@ -59,12 +57,34 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * @param other [Coordinate] to subtract.
 	 *
 	 * @return New coordinate object containing subtracted [xCoord] and [yCoord].
-	 *
-	 * @see minus
 	 */
 	operator fun minus(other: Coordinate): Coordinate = Coordinate(
 		xCoord - other.xCoord,
 		yCoord - other.yCoord
+	)
+	
+	/**
+	 * Returns a new coordinate object containing multiplied [Coordinate] by [denominator].
+	 *
+	 * @param factor factor to multiply with.
+	 *
+	 * @return New coordinate object containing multiplied [Coordinate] with [factor].
+	 */
+	operator fun times(factor: Number): Coordinate = Coordinate(
+		xCoord * factor.toDouble(),
+		yCoord * factor.toDouble()
+	)
+	
+	/**
+	 * Returns a new coordinate object containing divided [Coordinate] by [denominator].
+	 *
+	 * @param denominator denominator to divide by.
+	 *
+	 * @return New coordinate object containing divided [Coordinate] by [denominator].
+	 */
+	operator fun div(denominator: Number): Coordinate = Coordinate(
+		xCoord / denominator.toDouble(),
+		yCoord / denominator.toDouble()
 	)
 	
 	
