@@ -92,10 +92,10 @@ internal class LayoutNodeBuilder {
 			}
 			
 			gridView.renderedRowHeights = DoubleArray(grid.rows) {
-				grid.getRow(it).maxOf { entry -> entry?.let { t -> t.height + t.posY } ?: 0.0 }
+				grid.getRow(it).maxOf { entry -> entry?.let { t -> t.actualHeight + t.posY } ?: 0.0 }
 			}
 			gridView.renderedColWidths = DoubleArray(grid.columns) {
-				grid.getColumn(it).maxOf { entry -> entry?.let { t -> t.width + t.posY } ?: 0.0 }
+				grid.getColumn(it).maxOf { entry -> entry?.let { t -> t.actualWidth + t.posX } ?: 0.0 }
 			}
 			
 			gridView.width = gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
@@ -111,8 +111,8 @@ internal class LayoutNodeBuilder {
 				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
 				
 				children.add(node.apply {
-					layoutX = posX + component.posX
-					layoutY = posY + component.posY
+					layoutX = posX + component.posX + (component.actualWidth - component.width) / 2
+					layoutY = posY + component.posY + (component.actualHeight - component.height) / 2
 				})
 			}
 		}
