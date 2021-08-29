@@ -38,18 +38,8 @@ internal class ContainerNodeBuilder {
 			container: GameComponentContainer<out GameComponentView>
 		): Region =
 			Pane().apply {
-				container.observableComponents.setGUIListenerAndInvoke(listOf()) { oldValue, newValue ->
-					children.clear()
-					//remove removed components from componentsMap
-					(oldValue - newValue).forEach { scene.componentsMap.remove(it) }
-					//rebuild container with cached or newly build components
-					container.observableComponents.forEach {
-						if (it in oldValue) {
-							children.add(scene.componentsMap[it])
-						} else {
-							children.add(NodeBuilder.build(scene, it))
-						}
-					}
+				container.observableComponents.setGUIListenerAndInvoke(listOf()) { oldValue, _ ->
+					buildChildren(scene, container.observableComponents, oldValue.toSet())
 				}
 			}
 	}
