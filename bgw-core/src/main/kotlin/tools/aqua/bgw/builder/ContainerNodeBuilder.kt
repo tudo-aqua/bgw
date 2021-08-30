@@ -19,8 +19,9 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
+import tools.aqua.bgw.builder.NodeBuilder.Companion.buildChildren
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.container.*
+import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.Scene
 

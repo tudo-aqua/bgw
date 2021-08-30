@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.Node
 import javafx.scene.layout.Region
+import tools.aqua.bgw.builder.NodeBuilder.Companion.buildChildren
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
