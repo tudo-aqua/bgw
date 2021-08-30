@@ -111,13 +111,24 @@ internal class LayoutNodeBuilder {
 				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
 				
 				children.add(node.apply {
-					val sizeDeltaX = (component.actualWidth - component.width) / 2
-					val sizeDeltaY = (component.actualHeight - component.height) / 2
-					val rotationDeltaX = (component.layoutBounds.width - component.actualWidth) / 2
-					val rotationDeltaY = (component.layoutBounds.height - component.actualHeight) / 2
+					val nodeWidth = component.layoutBounds.width
+					val nodeHeight = component.layoutBounds.height
 					
-					layoutX = posX + component.posX + sizeDeltaX + rotationDeltaX
-					layoutY = posY + component.posY + sizeDeltaY + rotationDeltaY
+					//Calculate delta due to scale and rotation
+					val deltaX = (nodeWidth - component.width) / 2
+					val deltaY = (nodeHeight - component.height) / 2
+					
+					//Calculate anchor point for flush TOP_LEFT placement
+					val anchorX = posX + component.posX + deltaX
+					val anchorY = posY + component.posY + deltaY
+					
+					//Account for centering
+					val centerMode = gridView.getCellCenterMode(columnIndex = colIndex, rowIndex = rowIndex)
+					val remainingSpaceX = gridView.renderedColWidths[colIndex] - nodeWidth - component.posX
+					val remainingSpaceY = gridView.renderedRowHeights[rowIndex] - nodeHeight - component.posY
+					
+					layoutX = anchorX + remainingSpaceX * centerMode.horizontalAlignment.positionMultiplier
+					layoutY = anchorY + remainingSpaceY * centerMode.verticalAlignment.positionMultiplier
 				})
 			}
 		}
