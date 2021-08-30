@@ -17,10 +17,12 @@
 
 package util.coordinates
 
+import DOUBLE_TOLERANCE
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
+import kotlin.math.sqrt
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -60,5 +62,163 @@ class CoordinatePlainTest {
 		assertFailsWith<IllegalArgumentException> {
 			CoordinatePlain(Coordinate(0, 5), Coordinate(0, 0))
 		}
+	}
+	
+	@Test
+	@DisplayName("Test rotation by 45 degrees")
+	fun testRotation45Degrees() {
+		//Box is 50 x 50
+		val plainDimens = 50.0
+		val plainPos = 100.0
+		val expectedDimens = sqrt(plainDimens*plainDimens + plainDimens*plainDimens)
+		
+		val plain = CoordinatePlain(
+			plainPos,
+			plainPos,
+			plainPos + plainDimens,
+			plainPos + plainDimens)
+		
+		val rotated = plain.rotated(
+			45, Coordinate(
+			plainPos + plainDimens/2,
+			plainPos + plainDimens/2
+			)
+		)
+		
+		//Assert size
+		assertEquals(expectedDimens, rotated.width, DOUBLE_TOLERANCE)
+		assertEquals(expectedDimens, rotated.height, DOUBLE_TOLERANCE)
+		
+		//Assert corners
+		val expectedLow = plainPos + plainDimens/2 - expectedDimens/2
+		val expectedCenter = plainPos + plainDimens/2
+		val expectedHigh = plainPos + plainDimens/2 + expectedDimens/2
+		
+		assertEquals(expectedCenter, rotated.topLeft.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLow, rotated.topLeft.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedHigh, rotated.topRight.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedCenter, rotated.topRight.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedCenter, rotated.bottomRight.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHigh, rotated.bottomRight.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedLow, rotated.bottomLeft.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedCenter, rotated.bottomLeft.yCoord, DOUBLE_TOLERANCE)
+		
+		//Assert bounds
+		assertEquals(expectedLow, rotated.topLeftBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLow, rotated.topLeftBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedHigh, rotated.topRightBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLow, rotated.topRightBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedHigh, rotated.bottomRightBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHigh, rotated.bottomRightBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedLow, rotated.bottomLeftBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHigh, rotated.bottomLeftBound.yCoord, DOUBLE_TOLERANCE)
+	}
+	
+	@Test
+	@DisplayName("Test rotation by 90 on square")
+	fun testRotation90DegreesSquare() {
+		//Box is 50 x 50
+		val plain = CoordinatePlain(100, 100, 150, 150)
+		val rotated = plain.rotated(90, Coordinate(125,125))
+		
+		//Assert size
+		assertEquals(plain.width, rotated.width, DOUBLE_TOLERANCE)
+		assertEquals(plain.height, rotated.height, DOUBLE_TOLERANCE)
+		
+		//Assert corners
+		assertEquals(plain.topLeft.xCoord, rotated.bottomLeft.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.topLeft.yCoord, rotated.bottomLeft.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(plain.topRight.xCoord, rotated.topLeft.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.topRight.yCoord, rotated.topLeft.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(plain.bottomRight.xCoord, rotated.topRight.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.bottomRight.yCoord, rotated.topRight.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(plain.bottomLeft.xCoord, rotated.bottomRight.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.bottomLeft.yCoord, rotated.bottomRight.yCoord, DOUBLE_TOLERANCE)
+		
+		//Assert bounds
+		assertEquals(plain.topLeftBound.xCoord, rotated.topLeftBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.topLeftBound.yCoord, rotated.topLeftBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(plain.topRightBound.xCoord, rotated.topRightBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.topRightBound.yCoord, rotated.topRightBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(plain.bottomRightBound.xCoord, rotated.bottomRightBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.bottomRightBound.yCoord, rotated.bottomRightBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(plain.bottomLeftBound.xCoord, rotated.bottomLeftBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(plain.bottomLeftBound.yCoord, rotated.bottomLeftBound.yCoord, DOUBLE_TOLERANCE)
+	}
+	
+	@Test
+	@DisplayName("Test rotation by 90 on rectangle")
+	fun testRotation90DegreesRect() {
+		//Box is 100 x 50
+		val plainWidth = 100.0
+		val plainHeight = 50.0
+		val plainPos = 100.0
+		
+		val plain = CoordinatePlain(
+			plainPos,
+			plainPos,
+			plainPos + plainWidth,
+			plainPos + plainHeight)
+		
+		val rotated = plain.rotated(
+			90, Coordinate(
+				plainPos + plainWidth/2,
+				plainPos + plainHeight/2
+			)
+		)
+		
+		//Assert size
+		assertEquals(plain.height, rotated.width, DOUBLE_TOLERANCE)
+		assertEquals(plain.width, rotated.height, DOUBLE_TOLERANCE)
+		
+		
+		//Assert corners
+		val expectedLowX = plainPos + (plainWidth - plainHeight)/2
+		val expectedHighX = plainPos + plainWidth - (plainWidth - plainHeight)/2
+
+		val expectedLowY = plainPos - (plainWidth - plainHeight)/2
+		val expectedHighY = plainPos + plainHeight + (plainWidth - plainHeight)/2
+		
+		println(expectedLowX)
+		println(expectedHighX)
+		println(expectedLowY)
+		println(expectedHighY)
+		
+		assertEquals(expectedHighX, rotated.topLeft.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLowY, rotated.topLeft.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedHighX, rotated.topRight.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHighY, rotated.topRight.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedLowX, rotated.bottomRight.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHighY, rotated.bottomRight.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedLowX, rotated.bottomLeft.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLowY, rotated.bottomLeft.yCoord, DOUBLE_TOLERANCE)
+		
+		//Assert bounds
+		assertEquals(expectedLowX, rotated.topLeftBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLowY, rotated.topLeftBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedHighX, rotated.topRightBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedLowY, rotated.topRightBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedHighX, rotated.bottomRightBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHighY, rotated.bottomRightBound.yCoord, DOUBLE_TOLERANCE)
+		
+		assertEquals(expectedLowX, rotated.bottomLeftBound.xCoord, DOUBLE_TOLERANCE)
+		assertEquals(expectedHighY, rotated.bottomLeftBound.yCoord, DOUBLE_TOLERANCE)
 	}
 }
