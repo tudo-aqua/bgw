@@ -240,7 +240,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		dropAcceptor = { println("Try drop on TOKEN8"); true }
 	}
 	
-	val grid = GridPane<TokenView>(posX = 1000, posY = 600, columns = 2, rows = 2, spacing = 50, visual = ColorVisual.WHITE).apply {
+	val grid = GridPane<TokenView>(posX = 1000, posY = 600, columns = 2, rows = 2, spacing = 0, visual = ColorVisual.WHITE).apply {
 		//onMouseEntered = { visual = ColorVisual.YELLOW }
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.WHITE }
@@ -253,6 +253,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		//scale = 0.5
 		
 		dropAcceptor = { println("Try drop on GRID"); false }
+	}.apply {
+		setCenterMode(Alignment.CENTER)
 	}
 	
 	init {
