@@ -22,14 +22,17 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Changed various Exception types to more meaningful ones.
 - Opacity property is now restricted to \[0.0, 1.0].
+- Increased render performance by caching and only updating deltas.
 
 ### Removed
 - Items property from ListView as it was not observable.
 
 ### Fixed
 - Items not being updated dynamically in ListView.
+- Components in grid not aligned correctly and size calculation not accounting for scale and rotation.
 - Font color in TableView.
 - Complete Drag and Drop reworking to account for scale, rotation, and nesting.
+
 
 ## [0.2] - 10. Aug. 2021
 ### Added
