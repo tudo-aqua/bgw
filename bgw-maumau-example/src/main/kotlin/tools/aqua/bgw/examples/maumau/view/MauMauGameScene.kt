@@ -234,13 +234,13 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.RED }
 		onDragGestureExited = { visual = ColorVisual.RED }
-		rotation = 45.0
+		rotation = 30.0
 		scale = 2.0
 		
 		dropAcceptor = { println("Try drop on TOKEN8"); true }
 	}
 	
-	val grid = GridPane<TokenView>(posX = 1000, posY = 600, columns = 2, rows = 2, spacing = 50, visual = ColorVisual.WHITE).apply {
+	val grid = GridPane<TokenView>(posX = 1000, posY = 600, columns = 2, rows = 2, spacing = 0, visual = ColorVisual.WHITE).apply {
 		//onMouseEntered = { visual = ColorVisual.YELLOW }
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.WHITE }
