@@ -81,7 +81,7 @@ open class CardView(
 			field = value.copy()
 
 			if (currentSide == FRONT)
-				visual = field
+				super.visual = field
 		}
 
 	/**
@@ -95,7 +95,17 @@ open class CardView(
 			field = value.copy()
 
 			if (currentSide == BACK)
-				visual = field
+				super.visual = field
+		}
+	
+	override var visual: Visual
+		get() = super.visual
+		/**
+		 * Sets [frontVisual] and [backVisual] for this [CardView] as a copy of given [value].
+		 */
+		set(value) {
+			frontVisual = value
+			backVisual = value
 		}
 	
 	init {
