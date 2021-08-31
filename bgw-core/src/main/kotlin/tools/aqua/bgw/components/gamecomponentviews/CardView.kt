@@ -100,12 +100,9 @@ open class CardView(
 	
 	override var visual: Visual
 		get() = super.visual
-		/**
-		 * Sets [frontVisual] and [backVisual] for this [CardView] as a copy of given [value].
-		 */
-		set(value) {
-			frontVisual = value
-			backVisual = value
+		set(_) {
+			throw UnsupportedOperationException("Setting a single Visual for a CardView is not supported. " +
+						"Use `frontVisual` and `backVisual` setter instead.")
 		}
 	
 	init {
