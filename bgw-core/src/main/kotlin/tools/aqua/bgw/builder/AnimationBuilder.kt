@@ -21,10 +21,12 @@ package tools.aqua.bgw.builder
 
 import javafx.animation.*
 import javafx.application.Platform
+import javafx.event.EventHandler
 import javafx.util.Duration
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.AnimationFinishedEvent
 import kotlin.random.Random
@@ -39,6 +41,7 @@ internal class AnimationBuilder {
 				is MovementAnimation<*> -> buildMovementAnimation(scene, anim)
 				is RotationAnimation<*> -> buildRotateAnimation(scene, anim)
 				is ScaleAnimation<*> -> buildScaleAnimation(scene, anim)
+				is FadeAnimation<*> -> buildFadeAnimation(scene, anim)
 				is FlipAnimation<*> -> buildFlipAnimation(scene, anim)
 				is DelayAnimation -> buildDelayAnimation(scene, anim)
 				is DiceAnimation<*> -> buildDiceAnimation(scene, anim)
@@ -59,21 +62,19 @@ internal class AnimationBuilder {
 			node.layoutY = anim.fromY
 			
 			//set transition as relative movement
-			val animation = TranslateTransition(Duration.millis(anim.duration.toDouble()), node).apply {
+			return TranslateTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				byX = anim.toX - anim.fromX
 				byY = anim.toY - anim.fromY
+				
+				//set on finished
+				onFinished = EventHandler {
+					node.layoutX = anim.toX
+					node.layoutY = anim.toY
+					node.translateX = 0.0
+					node.translateY = 0.0
+					onFinished(scene, anim)
+				}
 			}
-			
-			//set on finished
-			animation.setOnFinished {
-				node.layoutX = anim.toX
-				node.layoutY = anim.toY
-				node.translateX = 0.0
-				node.translateY = 0.0
-				onFinished(scene, anim)
-			}
-			
-			return animation
 		}
 		
 		/**
@@ -89,19 +90,17 @@ internal class AnimationBuilder {
 			node.rotate = anim.fromAngle
 			
 			//set transition as relative movement
-			val animation = RotateTransition(Duration.millis(anim.duration.toDouble()), node).apply {
+			return RotateTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				byAngle = anim.toAngle - anim.fromAngle
+				
+				//set on finished
+				onFinished = EventHandler {
+					node.rotate = anim.toAngle
+					node.translateX = 0.0
+					node.translateY = 0.0
+					onFinished(scene, anim)
+				}
 			}
-			
-			//set on finished
-			animation.setOnFinished {
-				node.rotate = anim.toAngle
-				node.translateX = 0.0
-				node.translateY = 0.0
-				onFinished(scene, anim)
-			}
-			
-			return animation
 		}
 		
 		/**
@@ -113,17 +112,41 @@ internal class AnimationBuilder {
 		): javafx.animation.Animation {
 			val node = scene.componentsMap[anim.componentView]!!
 			
-			//Move node to initial position
+			//Set initial scale
 			node.scaleX = anim.fromScaleX
 			node.scaleY = anim.fromScaleY
 			
-			//set transition as relative movement
-			val animation = ScaleTransition(Duration.millis(anim.duration.toDouble()), node).apply {
+			return ScaleTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				toX = anim.toScaleX
 				toY = anim.toScaleY
+				
+				//set on finished
+				onFinished = EventHandler{
+					onFinished(scene, anim)
+				}
 			}
+		}
+		
+		/**
+		 * Builds [FlipAnimation].
+		 */
+		private fun buildFadeAnimation(
+			scene: Scene<out ComponentView>,
+			anim: FadeAnimation<*>
+		): javafx.animation.Animation {
+			val node = scene.componentsMap[anim.componentView]!!
 			
-			return animation
+			//Set initial opacity
+			node.opacity = anim.fromOpacity
+			
+			return FadeTransition(Duration.millis(anim.duration.toDouble()), node).apply {
+				fromValue = anim.fromOpacity
+				toValue = anim.toOpacity
+				
+				onFinished = EventHandler {
+					onFinished(scene, anim)
+				}
+			}
 		}
 		
 		/**
@@ -167,16 +190,13 @@ internal class AnimationBuilder {
 		private fun buildDelayAnimation(
 			scene: Scene<out ComponentView>,
 			anim: DelayAnimation
-		): javafx.animation.Animation {
-			val animation = PauseTransition(Duration.millis(anim.duration.toDouble()))
-			
-			//set on finished
-			animation.setOnFinished {
-				onFinished(scene, anim)
+		): javafx.animation.Animation = PauseTransition(
+			Duration.millis(anim.duration.toDouble())).apply {
+				//set on finished
+				onFinished = EventHandler {
+					onFinished(scene, anim)
+				}
 			}
-			
-			return animation
-		}
 		
 		/**
 		 * Builds [DiceAnimation].
@@ -189,7 +209,7 @@ internal class AnimationBuilder {
 			
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
-					setOnFinished {
+					onFinished = EventHandler {
 						anim.componentView.currentSide = Random.nextInt(anim.componentView.visuals.size)
 					}
 				}
@@ -215,13 +235,13 @@ internal class AnimationBuilder {
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					setOnFinished {
-						anim.componentView.visual = anim.visuals[Random.nextInt(anim.visuals.size)]
+						(anim.componentView as CardView).backVisual = anim.visuals[Random.nextInt(anim.visuals.size)]
 					}
 				}
 			}
 			
 			seq.setOnFinished {
-				anim.componentView.visual = anim.toVisual
+				(anim.componentView as CardView).backVisual = anim.toVisual
 				onFinished(scene, anim)
 			}
 			
@@ -233,6 +253,7 @@ internal class AnimationBuilder {
 		 */
 		private fun onFinished(scene: Scene<out ComponentView>, anim: Animation) {
 			scene.animations.remove(anim)
+			
 			Platform.runLater {
 				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}

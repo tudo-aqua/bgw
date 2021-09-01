@@ -55,19 +55,23 @@ open class DiceView(
 	/**
 	 * Current side that is displayed, 0-based.
 	 *
-	 * If index is greater than the amount of visuals stored in [visuals] or negative,
-	 * [Visual.EMPTY] will be displayed.
+	 * @throws IllegalArgumentException If index is greater than the amount of visuals stored in [visuals] or negative.
 	 */
 	var currentSide: Int = 0
 		set(value) {
 			if (field != value) {
-				field = value
+				require(value in visuals.indices) { "No visual for side $value available." }
 				
-				visualProperty.value = if (value in visuals.indices)
-					visuals[value]
-				else
-					Visual.EMPTY
+				field = value
+				visualProperty.value = visuals[value]
 			}
+		}
+	
+	override var visual: Visual
+		get() = super.visual
+		set(_){
+			throw UnsupportedOperationException("Setting a single Visual for a DiceView is not supported. " +
+					"Use `visuals` setter instead.")
 		}
 	
 	init {

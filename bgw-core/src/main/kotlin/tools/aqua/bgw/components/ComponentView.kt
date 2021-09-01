@@ -319,11 +319,11 @@ abstract class ComponentView internal constructor(
 	internal val visualProperty: Property<Visual> = Property(visual.copy())
 	
 	/**
-	 * Index of the current [Visual] in the visuals list.
+	 * Current [Visual].
 	 *
 	 * @see visualProperty
 	 */
-	var visual: Visual
+	open var visual: Visual
 		get() = visualProperty.value
 		/**
 		 * Sets a copy of the given [Visual] [value] to this field and refreshes GUI.

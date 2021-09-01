@@ -141,22 +141,21 @@ internal class SceneBuilder {
 				it.dropAcceptor?.invoke(DragEvent(draggedComponent)) ?: false
 			}
 			
-			if(validTargets.isEmpty()) {
+			if(validTargets.isEmpty())
 				dragDataObject.rollback()
-			}else {
-				//Create drop event containing all accepting drop targets
-				val dropEvent = DropEvent(draggedComponent, validTargets)
+			
+			//Create drop event containing all accepting drop targets
+			val dropEvent = DropEvent(draggedComponent, validTargets)
 				
-				//Invoke drag drop handler in dragged component
-				draggedComponent.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
+			//Invoke drag drop handler in dragged component
+			draggedComponent.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
 				
-				//Invoke drag drop handler on all accepting drag targets
-				validTargets.forEach { it.onDragDropped?.invoke(dragEvent) }
+			//Invoke drag drop handler on all accepting drag targets
+			validTargets.forEach { it.onDragDropped?.invoke(dragEvent) }
 				
-				//If dragged element was not added to a container, add it to the scene
-				if(draggedComponent.parent == null)
-					addComponents(draggedComponent)
-			}
+			//If dragged element was not added to a container, add it to the scene
+			if(draggedComponent.parent == null)
+				addComponents(draggedComponent)
 			
 			draggedComponent.isDragged = false
 			draggedComponentProperty.value = null
