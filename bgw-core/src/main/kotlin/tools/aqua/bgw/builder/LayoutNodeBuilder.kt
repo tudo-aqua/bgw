@@ -22,6 +22,8 @@ import javafx.scene.layout.Region
 import tools.aqua.bgw.builder.NodeBuilder.Companion.buildChildren
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.GridPane.Companion.COLUMN_WIDTH_AUTO
+import tools.aqua.bgw.components.layoutviews.GridPane.Companion.ROW_HEIGHT_AUTO
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Scene
@@ -88,10 +90,24 @@ internal class LayoutNodeBuilder {
 			}
 			
 			gridView.renderedRowHeights = DoubleArray(grid.rows) {
-				grid.getRow(it).maxOf { entry -> entry?.let { t -> t.layoutBounds.height + t.posY } ?: 0.0 }
+				grid.getRow(it).maxOf { entry -> entry?.let { t ->
+					val fixedHeight = grid.getRowHeight(it)
+					
+					if(fixedHeight == ROW_HEIGHT_AUTO)
+						t.layoutBounds.height + t.posY
+					else
+						fixedHeight
+				} ?: 0.0 }
 			}
 			gridView.renderedColWidths = DoubleArray(grid.columns) {
-				grid.getColumn(it).maxOf { entry -> entry?.let { t -> t.layoutBounds.width + t.posX } ?: 0.0 }
+				grid.getColumn(it).maxOf { entry -> entry?.let { t ->
+					val fixedWidth = grid.getColumnWidth(it)
+					
+					if(fixedWidth == COLUMN_WIDTH_AUTO)
+						t.layoutBounds.width + t.posX
+					else
+						fixedWidth
+				} ?: 0.0 }
 			}
 			
 			gridView.width = gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
