@@ -270,16 +270,18 @@ internal class NodeBuilder {
 		@Suppress("DuplicatedCode")
 		private fun ComponentView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
 			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
-				stackPane.layoutX = nV - if (layoutFromCenter) width / 2 else 0.0
+				stackPane.layoutX = nV - if (layoutFromCenter) actualWidth / 2 else 0.0
 			}
 			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
-				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
+				stackPane.layoutY = nV - if (layoutFromCenter) actualHeight / 2 else 0.0
 			}
 			scaleXProperty.setGUIListenerAndInvoke(scaleX) { _, nV ->
 				stackPane.scaleX = nV
+				posXProperty.notifyUnchanged()
 			}
 			scaleYProperty.setGUIListenerAndInvoke(scaleY) { _, nV ->
 				stackPane.scaleY = nV
+				posYProperty.notifyUnchanged()
 			}
 			
 			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }
@@ -288,10 +290,12 @@ internal class NodeBuilder {
 			heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
 				node.prefHeight = nV
 				background.prefHeight = nV
+				posYProperty.notifyUnchanged()
 			}
 			widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
 				node.prefWidth = nV
 				background.prefWidth = nV
+				posXProperty.notifyUnchanged()
 			}
 			
 			isVisibleProperty.setGUIListenerAndInvoke(isVisible) { _, nV ->
@@ -340,7 +344,7 @@ internal class NodeBuilder {
 				if (it in cached) {
 					children.add(scene.componentsMap[it])
 				} else {
-					children.add(NodeBuilder.build(scene, it))
+					children.add(build(scene, it))
 				}
 			}
 		}
