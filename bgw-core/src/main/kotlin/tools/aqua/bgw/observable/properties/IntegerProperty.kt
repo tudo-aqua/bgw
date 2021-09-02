@@ -15,6 +15,8 @@
  *    limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.bgw.observable.properties
 
 /**

@@ -57,7 +57,7 @@ internal class SceneBuilder {
 			pane.setOnMouseReleased { scene.onMouseReleased(it) }
 			
 			//register animations
-			scene.animations.guiListener = {
+			scene.animations.guiListener = { _, _ -> //TODO performance
 				scene.animations.list.stream().filter { t -> !t.running }.forEach { anim ->
 					AnimationBuilder.build(scene, anim).play()
 					anim.running = true
@@ -87,7 +87,7 @@ internal class SceneBuilder {
 				prefWidth = scene.width
 			}
 			
-			scene.rootComponents.setGUIListenerAndInvoke { pane.rebuild(scene) }
+			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { oV, _ -> pane.rebuild(scene, oV) }
 			
 			return pane
 		}
@@ -101,17 +101,11 @@ internal class SceneBuilder {
 		internal fun transformCoordinatesToScene(
 			mouseEvent: MouseEvent,
 			draggedDataObject: DragDataObject
-		): Coordinate {
-			val rotated = Coordinate(
+		): Coordinate = draggedDataObject.posStartCoord + Coordinate(
 				xCoord = mouseEvent.sceneX / Frontend.sceneScale - draggedDataObject.mouseStartCoord.xCoord,
 				yCoord = mouseEvent.sceneY / Frontend.sceneScale - draggedDataObject.mouseStartCoord.yCoord
 			).rotated(-draggedDataObject.relativeParentRotation)
-			
-			return Coordinate(
-				xCoord = draggedDataObject.posStartCoord.xCoord + rotated.xCoord,
-				yCoord = draggedDataObject.posStartCoord.yCoord + rotated.yCoord
-			)
-		}
+
 		
 		/**
 		 * Event handler for onMouseDragged.
@@ -147,22 +141,21 @@ internal class SceneBuilder {
 				it.dropAcceptor?.invoke(DragEvent(draggedComponent)) ?: false
 			}
 			
-			if(validTargets.isEmpty()) {
+			if(validTargets.isEmpty())
 				dragDataObject.rollback()
-			}else {
-				//Create drop event containing all accepting drop targets
-				val dropEvent = DropEvent(draggedComponent, validTargets)
+			
+			//Create drop event containing all accepting drop targets
+			val dropEvent = DropEvent(draggedComponent, validTargets)
 				
-				//Invoke drag drop handler in dragged component
-				draggedComponent.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
+			//Invoke drag drop handler in dragged component
+			draggedComponent.onDragGestureEnded?.invoke(dropEvent, validTargets.isNotEmpty())
 				
-				//Invoke drag drop handler on all accepting drag targets
-				validTargets.forEach { it.onDragDropped?.invoke(dragEvent) }
+			//Invoke drag drop handler on all accepting drag targets
+			validTargets.forEach { it.onDragDropped?.invoke(dragEvent) }
 				
-				//If dragged element was not added to a container, add it to the scene
-				if(draggedComponent.parent == null)
-					addComponents(draggedComponent)
-			}
+			//If dragged element was not added to a container, add it to the scene
+			if(draggedComponent.parent == null)
+				addComponents(draggedComponent)
 			
 			draggedComponent.isDragged = false
 			draggedComponentProperty.value = null
@@ -171,21 +164,31 @@ internal class SceneBuilder {
 		/**
 		 * Rebuilds pane on components changed.
 		 */
-		private fun Pane.rebuild(scene: Scene<out ComponentView>) {
+		private fun Pane.rebuild(scene: Scene<out ComponentView>, cachedComponents: List<ComponentView>) {
 			children.clear()
-			scene.componentsMap.clear()
-			
-			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, nV ->
-				children.add(0, VisualBuilder.buildVisual(nV).apply {
-					prefWidthProperty().unbind()
-					prefWidthProperty().unbind()
-					prefHeight = scene.height
-					prefWidth = scene.width
-					scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
-				})
+
+			scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oldValue, newValue ->
+				if (oldValue != newValue || scene.backgroundCache == null)
+					scene.backgroundCache = VisualBuilder.buildVisual(newValue).apply {
+						prefWidthProperty().unbind()
+						prefWidthProperty().unbind()
+						prefHeight = scene.height
+						prefWidth = scene.width
+						scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
+					}
+				children.add(0, scene.backgroundCache)
 			}
-			
-			scene.rootComponents.forEach { children.add(NodeBuilder.build(scene, it)) }
+
+			(cachedComponents - scene.rootComponents).forEach{ scene.componentsMap.remove(it) }
+
+			children.addAll(scene.rootComponents.map {
+				if (cachedComponents.contains(it)) {
+					scene.componentsMap[it]
+				}
+				else {
+					NodeBuilder.build(scene, it)
+				}
+			})
 		}
 		
 		/**

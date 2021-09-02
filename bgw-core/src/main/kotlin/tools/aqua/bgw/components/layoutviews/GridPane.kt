@@ -115,11 +115,14 @@ open class GridPane<T : ComponentView>(
 		grid[columnIndex, rowIndex] = component?.apply {
 			this.widthProperty.internalListener = { _, _ -> updateGui?.invoke() }
 			this.heightProperty.internalListener = { _, _ -> updateGui?.invoke() }
-			this.posXProperty.internalListener = { _, _ -> updateGui?.invoke() }
-			this.posYProperty.internalListener = { _, _ -> updateGui?.invoke() }
+			this.posXProperty.internalListener = { _, _ -> posXProperty.setSilent(0.0) /*updateGui?.invoke()*/ }
+			this.posYProperty.internalListener = { _, _ -> posYProperty.setSilent(0.0) /*updateGui?.invoke()*/ }
 			this.parent = this@GridPane
 		}
-
+		
+		//TODO: Remove hard reset of position
+		component?.posXProperty?.setSilent(0.0)
+		component?.posYProperty?.setSilent(0.0)
 		updateGui?.invoke()
 	}
 	

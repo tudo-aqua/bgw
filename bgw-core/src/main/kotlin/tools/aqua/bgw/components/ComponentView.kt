@@ -262,13 +262,18 @@ abstract class ComponentView internal constructor(
 			scaleY = value
 		}
 	
-	//TODO: Docs
+	/**
+	 * Returns a [CoordinatePlain] containing the component's corner [Coordinate]s and its layout bounds.
+	 */
 	var layoutBounds : CoordinatePlain
 		get() = CoordinatePlain(
 			topLeftX = actualPosX,
 			topLeftY = actualPosY,
 			bottomRightX = actualPosX + actualWidth,
-			bottomRightY = actualPosX + actualWidth
+			bottomRightY = actualPosY + actualHeight
+		).rotated(rotation, Coordinate(
+			xCoord = actualPosX + actualWidth/2,
+			yCoord = actualPosY + actualHeight/2)
 		)
 		private set(_) {}
 	
@@ -314,11 +319,11 @@ abstract class ComponentView internal constructor(
 	internal val visualProperty: Property<Visual> = Property(visual.copy())
 	
 	/**
-	 * Index of the current [Visual] in the visuals list.
+	 * Current [Visual].
 	 *
 	 * @see visualProperty
 	 */
-	var visual: Visual
+	open var visual: Visual
 		get() = visualProperty.value
 		/**
 		 * Sets a copy of the given [Visual] [value] to this field and refreshes GUI.

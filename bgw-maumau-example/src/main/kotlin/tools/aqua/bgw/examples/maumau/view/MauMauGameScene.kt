@@ -1,7 +1,5 @@
 package tools.aqua.bgw.examples.maumau.view
 
-import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.components.gamecomponentviews.CardView
@@ -9,6 +7,8 @@ import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.examples.maumau.entity.CardSuit
+import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.main.*
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle

@@ -19,6 +19,9 @@
 
 package tools.aqua.bgw.util
 
+import tools.aqua.bgw.util.Trig.Companion.cosD
+import tools.aqua.bgw.util.Trig.Companion.sinD
+
 /**
  * A Coordinate containing [xCoord] and [yCoord].
  *
@@ -64,7 +67,7 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	)
 	
 	/**
-	 * Returns a new coordinate object containing multiplied [Coordinate] by [denominator].
+	 * Returns a new coordinate object containing multiplied [Coordinate] with [factor].
 	 *
 	 * @param factor factor to multiply with.
 	 *
@@ -89,7 +92,7 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	
 	
 	/**
-	 * Rotates coordinate by angle degrees around center point.
+	 * Rotates [Coordinate] by [angle] degrees around center point.
 	 *
 	 * With
 	 *
@@ -104,9 +107,9 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 *
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
-	fun rotated(angle: Double, center: Coordinate): Coordinate = Coordinate(
-		xCoord = cos(angle) * (xCoord - center.xCoord) - sin(angle) * (yCoord - center.yCoord) + center.xCoord,
-		yCoord = sin(angle) * (xCoord - center.xCoord) + cos(angle) * (yCoord - center.yCoord) + center.yCoord
+	fun rotated(angle: Number, center: Coordinate): Coordinate = Coordinate(
+		xCoord = cosD(angle) * (xCoord - center.xCoord) - sinD(angle) * (yCoord - center.yCoord) + center.xCoord,
+		yCoord = sinD(angle) * (xCoord - center.xCoord) + cosD(angle) * (yCoord - center.yCoord) + center.yCoord
 	)
 	
 	/**
@@ -126,18 +129,6 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
 	fun rotated(angle: Double): Coordinate = rotated(angle, Coordinate(0, 0))
-	
-	/**
-	 * Sin function for angles in degrees.
-	 */
-	@Suppress("GrazieInspection")
-	private fun sin(degrees: Double) = kotlin.math.sin(Math.toRadians(degrees))
-	
-	/**
-	 * Cos function for angles in degrees.
-	 */
-	@Suppress("GrazieInspection")
-	private fun cos(degrees: Double) = kotlin.math.cos(Math.toRadians(degrees))
 	
 	/**
 	 * Prints [xCoord] and [yCoord] as String.

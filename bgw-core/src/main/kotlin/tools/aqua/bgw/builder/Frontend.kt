@@ -91,16 +91,6 @@ internal class Frontend : Application() {
 		internal var sceneScale: Double = 1.0
 
 		/**
-		 * Offset x of [boardGameScene] to full window size (black bars offset).
-		 */
-		internal var sceneX: Double = 0.0
-
-		/**
-		 * Offset y of [boardGameScene] to full window size (black bars offset).
-		 */
-		internal var sceneY: Double = 0.0
-
-		/**
 		 * [BoardGameApplication] instance.
 		 */
 		internal lateinit var application: BoardGameApplication
@@ -527,8 +517,6 @@ internal class Frontend : Application() {
 						//Set new content layout
 						layoutX = (sceneWidth - contentWidth) * horizontalSceneAlignment.positionMultiplier
 						layoutY = (sceneHeight - contentHeight) * verticalSceneAlignment.positionMultiplier
-						sceneX = layoutX
-						sceneY = layoutY
 
 						//Set new content scale
 						if (scaleMode != ScaleMode.NO_SCALE) {
@@ -544,11 +532,6 @@ internal class Frontend : Application() {
 								contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
 							translateY =
 								contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
-
-							sceneX = (sceneWidth - contentWidth * sceneScale) / 2 *
-									(1 + horizontalSceneAlignment.pivotMultiplier)
-							sceneY = (sceneHeight - contentHeight * sceneScale) / 2 *
-									(1 + verticalSceneAlignment.pivotMultiplier)
 						}
 
 						//Zoom detail

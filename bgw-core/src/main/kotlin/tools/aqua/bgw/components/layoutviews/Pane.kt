@@ -23,6 +23,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.observable.Observer
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
@@ -68,16 +69,20 @@ open class Pane<T : ComponentView>(
         private set
     
     /**
-     * Adds a [listener] on the [observableComponents] list.
+     * Adds the [IValueObservable] to the [observableComponents] list.
+     *
+     * @param listener The [IValueObservable] to add.
      */
-    fun addComponentsListener(listener: Observer) {
+    fun addComponentsListener(listener: ValueObserver<List<T>>) {
         observableComponents.addListener(listener)
     }
     
     /**
-     * Removes a [listener] from the [observableComponents] list.
+     * Removes the [ValueObserver] from the [observableComponents] list.
+     *
+     * @param listener The [ValueObserver] to remove.
      */
-    fun removeComponentsListener(listener: Observer) {
+    fun removeComponentsListener(listener: ValueObserver<List<T>>) {
         observableComponents.removeListener(listener)
     }
     

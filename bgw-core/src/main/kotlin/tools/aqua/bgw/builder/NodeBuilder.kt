@@ -86,7 +86,7 @@ internal class NodeBuilder {
 		 */
 		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
 			if(this is DynamicComponentView) {
-				registerDragEvents(stackPane, node, scene)
+				registerDragEvents(stackPane, scene)
 			}
 			
 			stackPane.onMouseDragEntered = EventHandler{
@@ -111,7 +111,7 @@ internal class NodeBuilder {
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
 		
-		private fun DynamicComponentView.registerDragEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
+		private fun DynamicComponentView.registerDragEvents(stackPane: StackPane, scene: Scene<out ComponentView>) {
 			val initialMouseTransparency = stackPane.isMouseTransparent
 			
 			stackPane.onDragDetected = EventHandler {
@@ -123,7 +123,6 @@ internal class NodeBuilder {
 			}
 			
 			stackPane.onDragDropped = EventHandler{
-				//TODO: On drag dropped
 				scene.draggedComponentProperty.value = null
 				stackPane.isMouseTransparent = initialMouseTransparency
 			}
@@ -270,16 +269,18 @@ internal class NodeBuilder {
 		@Suppress("DuplicatedCode")
 		private fun ComponentView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
 			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
-				stackPane.layoutX = nV - if (layoutFromCenter) width / 2 else 0.0
+				stackPane.layoutX = nV - if (layoutFromCenter) actualWidth / 2 else 0.0
 			}
 			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
-				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
+				stackPane.layoutY = nV - if (layoutFromCenter) actualHeight / 2 else 0.0
 			}
 			scaleXProperty.setGUIListenerAndInvoke(scaleX) { _, nV ->
 				stackPane.scaleX = nV
+				posXProperty.notifyUnchanged()
 			}
 			scaleYProperty.setGUIListenerAndInvoke(scaleY) { _, nV ->
 				stackPane.scaleY = nV
+				posYProperty.notifyUnchanged()
 			}
 			
 			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }
@@ -288,10 +289,12 @@ internal class NodeBuilder {
 			heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
 				node.prefHeight = nV
 				background.prefHeight = nV
+				posYProperty.notifyUnchanged()
 			}
 			widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
 				node.prefWidth = nV
 				background.prefWidth = nV
+				posXProperty.notifyUnchanged()
 			}
 			
 			isVisibleProperty.setGUIListenerAndInvoke(isVisible) { _, nV ->
@@ -320,6 +323,29 @@ internal class NodeBuilder {
 		 */
 		private fun UIComponent.updateStyle(node: Region) {
 			node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle
+		}
+		
+		/**
+		 * This function is used in various places to increase the performance of rebuilding a [Pane].
+		 *
+		 * @param scene the scene that is responsible for the building of this [Pane].
+		 * @param components the [ComponentView]s that should make up this [Pane]s children.
+		 * @param cached the [ComponentView]s that currently make up this [Pane]s children.
+		 */
+		internal fun javafx.scene.layout.Pane.buildChildren(
+			scene: Scene<out ComponentView>,
+			components: Iterable<ComponentView>,
+			cached: Set<ComponentView>
+		) {
+			children.clear()
+			(cached - components).forEach { scene.componentsMap.remove(it) }
+			components.forEach {
+				if (it in cached) {
+					children.add(scene.componentsMap[it])
+				} else {
+					children.add(build(scene, it))
+				}
+			}
 		}
 	}
 }

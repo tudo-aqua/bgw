@@ -19,8 +19,11 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.Node
 import javafx.scene.layout.Region
+import tools.aqua.bgw.builder.NodeBuilder.Companion.buildChildren
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.GridPane.Companion.COLUMN_WIDTH_AUTO
+import tools.aqua.bgw.components.layoutviews.GridPane.Companion.ROW_HEIGHT_AUTO
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Scene
@@ -49,15 +52,10 @@ internal class LayoutNodeBuilder {
 		
 		private fun buildPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>): Region =
 			FXPane().apply {
-				pane.observableComponents.setGUIListenerAndInvoke {
-					refreshPane(scene, pane)
+				pane.observableComponents.setGUIListenerAndInvoke(listOf()) { oldValue, _ ->
+					buildChildren(scene, pane.observableComponents, oldValue.toSet())
 				}
 			}
-		
-		private fun FXPane.refreshPane(scene: Scene<out ComponentView>, pane: Pane<out ComponentView>) {
-			children.clear()
-			children.addAll(pane.observableComponents.map { NodeBuilder.build(scene, it) })
-		}
 		
 		/**
 		 * Builds [GridPane].
@@ -92,13 +90,39 @@ internal class LayoutNodeBuilder {
 			}
 			
 			gridView.renderedRowHeights = DoubleArray(grid.rows) {
-				grid.getRow(it).maxOf { entry -> entry?.let { t -> t.height + t.posY } ?: 0.0 }
+				grid.getRow(it).maxOf { entry -> entry?.let { t ->
+					val fixedHeight = grid.getRowHeight(it)
+					
+					println(t.layoutBounds.height)
+					
+					if(t.layoutBounds.height == 75.0)
+						println(t.layoutBounds)
+					
+					if(fixedHeight == ROW_HEIGHT_AUTO)
+						t.layoutBounds.height + t.posY
+					else
+						fixedHeight
+				} ?: 0.0 }
 			}
 			gridView.renderedColWidths = DoubleArray(grid.columns) {
-				grid.getColumn(it).maxOf { entry -> entry?.let { t -> t.width + t.posY } ?: 0.0 }
+				grid.getColumn(it).maxOf { entry -> entry?.let { t ->
+					val fixedWidth = grid.getColumnWidth(it)
+					
+					if(fixedWidth == COLUMN_WIDTH_AUTO)
+						t.layoutBounds.width + t.posX
+					else
+						fixedWidth
+				} ?: 0.0 }
 			}
 			
-			gridView.width = gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
+			println("---")
+			gridView.renderedColWidths.forEach { println(it) }
+			println()
+			gridView.renderedRowHeights.forEach { println(it) }
+			println("---")
+			
+			gridView.width =
+				gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
 			gridView.height =
 				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
 			
@@ -111,8 +135,24 @@ internal class LayoutNodeBuilder {
 				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
 				
 				children.add(node.apply {
-					layoutX = posX + component.posX
-					layoutY = posY + component.posY
+					val nodeWidth = component.layoutBounds.width
+					val nodeHeight = component.layoutBounds.height
+					
+					//Calculate delta due to scale and rotation
+					val deltaX = (nodeWidth - component.width) / 2
+					val deltaY = (nodeHeight - component.height) / 2
+					
+					//Calculate anchor point for flush TOP_LEFT placement
+					val anchorX = posX + component.posX + deltaX
+					val anchorY = posY + component.posY + deltaY
+					
+					//Account for centering
+					val centerMode = gridView.getCellCenterMode(columnIndex = colIndex, rowIndex = rowIndex)
+					val remainingSpaceX = gridView.renderedColWidths[colIndex] - nodeWidth - component.posX
+					val remainingSpaceY = gridView.renderedRowHeights[rowIndex] - nodeHeight - component.posY
+					
+					layoutX = anchorX + remainingSpaceX * centerMode.horizontalAlignment.positionMultiplier
+					layoutY = anchorY + remainingSpaceY * centerMode.verticalAlignment.positionMultiplier
 				})
 			}
 		}

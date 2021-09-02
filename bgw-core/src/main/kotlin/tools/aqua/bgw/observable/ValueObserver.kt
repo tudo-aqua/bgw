@@ -23,7 +23,7 @@ package tools.aqua.bgw.observable
 @FunctionalInterface
 fun interface ValueObserver<T> {
 	/**
-	 * Can be implemented to react to changes to the observed property.
+	 * Can be implemented to react on changes to the observed property.
 	 *
 	 * @param oldValue Old value of property.
 	 * @param newValue New value of property.
