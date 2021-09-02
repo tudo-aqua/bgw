@@ -93,6 +93,11 @@ internal class LayoutNodeBuilder {
 				grid.getRow(it).maxOf { entry -> entry?.let { t ->
 					val fixedHeight = grid.getRowHeight(it)
 					
+					println(t.layoutBounds.height)
+					
+					if(t.layoutBounds.height == 75.0)
+						println(t.layoutBounds)
+					
 					if(fixedHeight == ROW_HEIGHT_AUTO)
 						t.layoutBounds.height + t.posY
 					else
@@ -110,7 +115,14 @@ internal class LayoutNodeBuilder {
 				} ?: 0.0 }
 			}
 			
-			gridView.width = gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
+			println("---")
+			gridView.renderedColWidths.forEach { println(it) }
+			println()
+			gridView.renderedRowHeights.forEach { println(it) }
+			println("---")
+			
+			gridView.width =
+				gridView.renderedColWidths.sum() + (gridView.renderedColWidths.size - 1) * gridView.spacing
 			gridView.height =
 				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
 			

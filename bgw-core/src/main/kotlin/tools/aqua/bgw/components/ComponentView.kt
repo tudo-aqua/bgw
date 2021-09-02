@@ -270,7 +270,7 @@ abstract class ComponentView internal constructor(
 			topLeftX = actualPosX,
 			topLeftY = actualPosY,
 			bottomRightX = actualPosX + actualWidth,
-			bottomRightY = actualPosX + actualWidth
+			bottomRightY = actualPosY + actualHeight
 		).rotated(rotation, Coordinate(
 			xCoord = actualPosX + actualWidth/2,
 			yCoord = actualPosY + actualHeight/2)

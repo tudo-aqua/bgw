@@ -71,6 +71,7 @@ open class CoordinatePlain private constructor(
 	init {
 		val minX = minOf(topLeft.xCoord, topRight.xCoord, bottomLeft.xCoord, bottomRight.xCoord)
 		val maxX = maxOf(topLeft.xCoord, topRight.xCoord, bottomLeft.xCoord, bottomRight.xCoord)
+		
 		val minY = minOf(topLeft.yCoord, topRight.yCoord, bottomLeft.yCoord, bottomRight.yCoord)
 		val maxY = maxOf(topLeft.yCoord, topRight.yCoord, bottomLeft.yCoord, bottomRight.yCoord)
 		

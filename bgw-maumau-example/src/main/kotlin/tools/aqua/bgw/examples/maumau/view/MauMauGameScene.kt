@@ -200,7 +200,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	}
 	
 	
-	val token5 = TokenView(posX = 0, posY = 0, width = 50, height = 50, visual = ColorVisual.RED).apply {
+	val token5 = TokenView(posX = 0, posY = 0, width = 100, height = 50, visual = ColorVisual.RED).apply {
 		//onMouseEntered = { visual = ColorVisual.YELLOW }
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.RED }
@@ -209,7 +209,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		dropAcceptor = { println("Try drop on TOKEN5"); true }
 	}
 	
-	val token6 = TokenView(posX = 0, posY = 0, width = 50, height = 50, visual = ColorVisual.RED).apply {
+	val token6 = TokenView(posX = 0, posY = 0, width = 100, height = 50, visual = ColorVisual.RED).apply {
 		//onMouseEntered = { visual = ColorVisual.YELLOW }
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.RED }
@@ -219,7 +219,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		dropAcceptor = { println("Try drop on TOKEN6"); true }
 	}
 	
-	val token7 = TokenView(posX = 0, posY = 0, width = 50, height = 50, visual = ColorVisual.RED).apply {
+	val token7 = TokenView(posX = 0, posY = 0, width = 100, height = 50, visual = ColorVisual.RED).apply {
 		//onMouseEntered = { visual = ColorVisual.YELLOW }
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.RED }
@@ -229,7 +229,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		dropAcceptor = { println("Try drop on TOKEN7"); true }
 	}
 	
-	val token8 = TokenView(posX = 0, posY = 0, width = 50, height = 50, visual = ColorVisual.RED).apply {
+	val token8 = TokenView(posX = 0, posY = 0, width = 100, height = 50, visual = ColorVisual.RED).apply {
 		//onMouseEntered = { visual = ColorVisual.YELLOW }
 		onDragGestureEntered = { visual = ColorVisual.GREEN }
 		//onMouseExited = { visual = ColorVisual.RED }
