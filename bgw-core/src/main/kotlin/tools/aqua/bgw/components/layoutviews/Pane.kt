@@ -20,6 +20,8 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.GameComponentContainer
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.observable.Observer
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
@@ -45,7 +47,19 @@ open class Pane<T : ComponentView>(
 ) : LayoutView<T>(posX = posX, posY = posY, width = width, height = height, visual = visual), Iterable<T> {
     
     internal val observableComponents: ObservableArrayList<T> = ObservableArrayList()
-    
+
+    /**
+     * [onAdd] gets invoked anytime after a [ComponentView] is added to this
+     * [Pane] with the added [ComponentView] as its receiver.
+     */
+    var onAdd : (T.() -> Unit)? = null
+
+    /**
+     * [onRemove] gets invoked anytime after a [ComponentView] is removed from this
+     * [Pane] with the removed [ComponentView] as its receiver.
+     */
+    var onRemove : (T.() -> Unit)? = null
+
     /**
      * [ComponentView]s that are contained in this [Pane].
      */
@@ -94,8 +108,12 @@ open class Pane<T : ComponentView>(
         require(index in 0..observableComponents.size) {
             "Index $index is out of list range."
         }
-        
-        observableComponents.add(index, component.apply { parent = this@Pane })
+
+        observableComponents.add(index, component)
+        component.apply {
+            parent = this@Pane
+            onAdd?.invoke(this)
+        }
     }
     
     /**
@@ -132,30 +150,59 @@ open class Pane<T : ComponentView>(
             throw IllegalArgumentException(e.message)
         }
     }
-    
+
     /**
      * Removes the [ComponentView] specified by the parameter from this [Pane].
      *
      * @param component The [ComponentView] to remove.
+     *
+     * @return `true` if the [Pane] was altered by the call, `false` otherwise.
      */
     @Synchronized
-    fun remove(component: T) {
-        observableComponents.remove(component.apply { parent = null })
+    fun remove(component: T): Boolean {
+        if (observableComponents.remove(component)) {
+            component.parent = null
+            onRemove?.invoke(component)
+            return true
+        }
+        return false
     }
-    
+
     /**
      * Removes all [ComponentView]s from this [Pane].
      *
-     * @return [List] of all removed components.
+     * @return List of all removed components.
      */
     @Synchronized
-    fun removeAll(): List<T> {
+    fun clear(): List<T> {
         val tmp = observableComponents.toList()
-        observableComponents.forEach { it.parent = null }
-        observableComponents.clear()
+        tmp.map { remove(it) }
         return tmp
     }
-    
+
+    /**
+     * Removes all [ComponentView]s contained in [collection] from this [Pane].
+     *
+     * @param collection The [ComponentView]s to remove.
+     *
+     * @return `true` if the [Pane] was altered by the call, `false` otherwise.
+     */
+    @Synchronized
+    fun removeAll(collection: Collection<T>) : Boolean =
+        collection.map { remove(it) }.fold(false) { x,y -> x || y }
+
+    /**
+     * Removes all [ComponentView]s matching the [predicate] from this [Pane].
+     *
+     * @param predicate The predicate to evaluate.
+     *
+     * @return `true` if the [Pane] was altered by the call, `false` otherwise.
+     */
+    @Synchronized
+    fun removeAll(predicate: (T) -> Boolean): Boolean =
+        components.map { if (predicate(it)) remove(it) else false }.fold(false) { x, y -> x || y }
+
+
     /**
      * Returns the size of the components list.
      *
