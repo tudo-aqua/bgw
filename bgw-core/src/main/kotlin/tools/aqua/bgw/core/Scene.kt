@@ -104,6 +104,13 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 		set(value) {
 			backgroundProperty.value = value
 		}
+
+
+	/**
+	 * Returns all root components that are currently contained in this [Scene].
+	 */
+	val components : List<T>
+	get() = rootComponents.toList()
 	
 	/**
 	 * [Property] for the [opacity] of the [background] of this [Scene].
