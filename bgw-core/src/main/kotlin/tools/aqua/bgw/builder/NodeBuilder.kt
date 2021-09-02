@@ -123,7 +123,6 @@ internal class NodeBuilder {
 			}
 			
 			stackPane.onDragDropped = EventHandler{
-				//TODO: On drag dropped
 				scene.draggedComponentProperty.value = null
 				stackPane.isMouseTransparent = initialMouseTransparency
 			}
