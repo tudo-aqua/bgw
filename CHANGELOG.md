@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - Components in grid not aligned correctly and size calculation not accounting for scale and rotation.
 - Font color in TableView.
 - Complete Drag and Drop reworking to account for scale, rotation, and nesting.
+- ColorVisuals with colors near black caused CSS parse error
 
 
 ## [0.2] - 10. Aug. 2021
