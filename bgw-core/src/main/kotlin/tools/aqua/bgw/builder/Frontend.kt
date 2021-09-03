@@ -38,10 +38,10 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode.*
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.LimitedDoubleProperty
-import tools.aqua.bgw.observable.Property
-import tools.aqua.bgw.observable.StringProperty
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 import java.awt.Color
@@ -89,16 +89,6 @@ internal class Frontend : Application() {
 		 * Current scene scale.
 		 */
 		internal var sceneScale: Double = 1.0
-
-		/**
-		 * Offset x of [boardGameScene] to full window size (black bars offset).
-		 */
-		internal var sceneX: Double = 0.0
-
-		/**
-		 * Offset y of [boardGameScene] to full window size (black bars offset).
-		 */
-		internal var sceneY: Double = 0.0
 
 		/**
 		 * [BoardGameApplication] instance.
@@ -324,12 +314,12 @@ internal class Frontend : Application() {
 		 *
 		 * @return [gamePane] for [boardGameScene], [menuPane] for [menuScene] and `null` for other parameters.
 		 */
-		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane? =
+		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane =
 			when (this) {
 				boardGameScene -> gamePane
 				menuScene -> menuPane
 				else -> null
-			}
+			}?:throw IllegalStateException()
 
 		/**
 		 * Returns scene associated to pane.
@@ -527,8 +517,6 @@ internal class Frontend : Application() {
 						//Set new content layout
 						layoutX = (sceneWidth - contentWidth) * horizontalSceneAlignment.positionMultiplier
 						layoutY = (sceneHeight - contentHeight) * verticalSceneAlignment.positionMultiplier
-						sceneX = layoutX
-						sceneY = layoutY
 
 						//Set new content scale
 						if (scaleMode != ScaleMode.NO_SCALE) {
@@ -544,11 +532,6 @@ internal class Frontend : Application() {
 								contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
 							translateY =
 								contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
-
-							sceneX = (sceneWidth - contentWidth * sceneScale) / 2 *
-									(1 + horizontalSceneAlignment.pivotMultiplier)
-							sceneY = (sceneHeight - contentHeight * sceneScale) / 2 *
-									(1 + verticalSceneAlignment.pivotMultiplier)
 						}
 
 						//Zoom detail

@@ -15,13 +15,15 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+@file:Suppress("unused")
+
+package tools.aqua.bgw.observable.properties
 
 /**
- * A StringProperty.
+ * A ReadonlyDoubleProperty.
  *
- * @constructor Creates a [StringProperty] with given initial value.
+ * @constructor Creates a [ReadonlyDoubleProperty] with given initial value.
  *
- * @param initialValue Initial Value. Default: Empty string.
+ * @param initialValue Initial Value. Default: 0.0.
  */
-open class StringProperty(initialValue: String = "") : Property<String>(initialValue)
+open class ReadonlyDoubleProperty(initialValue: Number = 0.0) : ReadonlyProperty<Double>(initialValue.toDouble())

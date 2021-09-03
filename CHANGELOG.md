@@ -13,14 +13,30 @@ All notable changes to this project will be documented in this file.
 
 ## [0.3] - To be released
 
-<!-- ### Added -->
-<!-- - Readonly Properties. -->
-<!-- - Scale Animation. -->
-<!-- - Additional constructors, default parameters and nullable functions for Stack -->
+### Added
+ - Value ``Scene.components`` for getting a snapshot of the currently contained root components of a ``Scene``.
+ - ``onAdd`` and ``onRemove`` function references in ``Pane``.
+ - Readonly Properties.
+ - Scale Animation.
+ - Additional constructors, default parameters and nullable functions for Stack.
+ - *div* and *times* operator for Coordinate.
 
 ### Changed
+- Changed ``removeAll()`` in ``Pane`` to now accept a collection of components to remove.
 - Changed various Exception types to more meaningful ones.
-<!-- - Opacity property is now restricted to \[0.0, 1.0] -->
+- Opacity property is now restricted to \[0.0, 1.0].
+- Increased render performance by caching and only updating deltas.
+
+### Removed
+- Items property from ListView as it was not observable.
+
+### Fixed
+- Items not being updated dynamically in ListView.
+- Components in grid not aligned correctly and size calculation not accounting for scale and rotation.
+- Font color in TableView.
+- Complete Drag and Drop reworking to account for scale, rotation, and nesting.
+- ColorVisuals with colors near black caused CSS parse error
+
 
 ## [0.2] - 10. Aug. 2021
 ### Added

@@ -56,24 +56,32 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 	private val buttonMovement: Button = Button(posX = 500, posY = 700, text = "Move").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonRotation: Button = Button(posX = 700, posY = 700, text = "Rotate").apply {
+	private val buttonRotation: Button = Button(posX = 650, posY = 700, text = "Rotate").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonFlip: Button = Button(posX = 900, posY = 700, text = "Flip").apply {
+	private val buttonOpacity: Button = Button(posX = 800, posY = 700, text = "Fade").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonRandomize: Button = Button(posX = 1100, posY = 700, text = "Randomize").apply {
+	private val buttonStretch: Button = Button(posX = 950, posY = 700, text = "Scale").apply {
 		visual = ColorVisual.WHITE
 	}
-	private val buttonDie: Button = Button(posX = 1300, posY = 700, text = "Roll").apply {
+	private val buttonFlip: Button = Button(posX = 1100, posY = 700, text = "Flip").apply {
+		visual = ColorVisual.WHITE
+	}
+	private val buttonRandomize: Button = Button(posX = 1250, posY = 700, text = "Randomize").apply {
+		visual = ColorVisual.WHITE
+	}
+	private val buttonDie: Button = Button(posX = 1400, posY = 700, text = "Roll").apply {
 		visual = ColorVisual.WHITE
 	}
 	
-	private val cardMovement: CardView = CardView(posX = 495, posY = 450, front = imageFront, back = imageBack)
-	private val cardRotation: CardView = CardView(posX = 695, posY = 450, front = imageFront, back = imageBack)
-	private val cardFlip: CardView = CardView(posX = 895, posY = 450, front = imageFront, back = imageBack)
-	private val cardRandomize: CardView = CardView(posX = 1095, posY = 450, front = imageFront, back = imageBack)
-	private val die: DiceView = DiceView(posX = 1320, posY = 500, visuals = dieVisuals)
+	private val cardMovement: CardView = CardView(posX = 500, posY = 450, front = imageFront, back = imageBack)
+	private val cardRotation: CardView = CardView(posX = 650, posY = 450, front = imageFront, back = imageBack)
+	private val cardOpacity: CardView = CardView(posX = 800, posY = 450, front = imageFront, back = imageBack)
+	private val cardStretch: CardView = CardView(posX = 950, posY = 450, front = imageFront, back = imageBack)
+	private val cardFlip: CardView = CardView(posX = 1100, posY = 450, front = imageFront, back = imageBack)
+	private val cardRandomize: CardView = CardView(posX = 1250, posY = 450, front = imageFront, back = imageBack)
+	private val die: DiceView = DiceView(posX = 1400, posY = 500, visuals = dieVisuals)
 	
 	init {
 		buttonDelay.onMouseClicked = {
@@ -101,6 +109,25 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 				RotationAnimation(
 					componentView = cardRotation,
 					byAngle = 180.0,
+					duration = 1000
+				)
+			)
+		}
+		buttonOpacity.onMouseClicked = {
+			gameScene.playAnimation(
+				FadeAnimation(
+					componentView = cardOpacity,
+					fromOpacity = 1.0,
+					toOpacity = 0.0,
+					duration = 1000
+				)
+			)
+		}
+		buttonStretch.onMouseClicked = {
+			gameScene.playAnimation(
+				ScaleAnimation(
+					componentView = cardStretch,
+					byScale = 0.5,
 					duration = 1000
 				)
 			)
@@ -141,8 +168,9 @@ class AnimationExample : BoardGameApplication("Visuals example") {
 			)
 		}
 		
-		gameScene.addComponents(buttonDelay, buttonMovement, buttonRotation, buttonFlip, buttonRandomize, buttonDie)
-		gameScene.addComponents(cardMovement, cardRotation, cardFlip, cardRandomize, die)
+		gameScene.addComponents(buttonDelay, buttonMovement, buttonRotation,
+			buttonOpacity, buttonStretch, buttonFlip, buttonRandomize, buttonDie,
+			cardMovement, cardRotation, cardOpacity, cardStretch, cardFlip, cardRandomize, die)
 		showGameScene(gameScene)
 		show()
 	}

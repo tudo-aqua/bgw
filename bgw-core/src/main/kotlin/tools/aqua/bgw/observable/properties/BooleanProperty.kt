@@ -15,15 +15,13 @@
  *    limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.properties
 
 /**
- * Observable interface for observable Properties.
+ * A BooleanProperty.
+ *
+ * @constructor Creates a [BooleanProperty] with given initial value.
+ *
+ * @param initialValue Initial Value. Default: `false`.
  */
-@FunctionalInterface
-fun interface IObservable {
-	/**
-	 * Indicates property update.
-	 */
-	fun update()
-}
+open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)

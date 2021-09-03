@@ -29,19 +29,19 @@ abstract class ValueObservable<T> {
 	/**
 	 * Holds all listeners on this property.
 	 */
-	private val listeners: MutableList<IValueObservable<T>> = mutableListOf()
+	private val listeners: MutableList<ValueObserver<T>> = mutableListOf()
 	
 	/**
 	 * Used by renderer to listen on important properties for visualization.
 	 */
-	private var guiListenerHandler: IValueObservable<T>? = null
+	private var guiListenerHandler: ValueObserver<T>? = null
 	
 	/**
 	 * Used by renderer to listen on important properties for visualization.
 	 */
 	internal var guiListener: ((T, T) -> Unit)? = null
 		set(value) {
-			guiListenerHandler = if (value == null) null else IValueObservable(value)
+			guiListenerHandler = if (value == null) null else ValueObserver(value)
 		}
 	
 	/**
@@ -49,7 +49,7 @@ abstract class ValueObservable<T> {
 	 *
 	 * Should only be set by direct parent.
 	 */
-	private var internalListenerHandler: IValueObservable<T>? = null
+	private var internalListenerHandler: ValueObserver<T>? = null
 	
 	/**
 	 * Used by BGW framework containers to manage children.
@@ -58,11 +58,11 @@ abstract class ValueObservable<T> {
 	 */
 	internal var internalListener: ((T, T) -> Unit)? = null
 		set(value) {
-			internalListenerHandler = if (value == null) null else IValueObservable(value)
+			internalListenerHandler = if (value == null) null else ValueObserver(value)
 		}
 	
 	/**
-	 * Sets [guiListener] and calls [IValueObservable.update].
+	 * Sets [guiListener] and calls [ValueObserver.update].
 	 *
 	 * @param initialValue Initial value to notify.
 	 * @param listener Listener to add and notify.
@@ -73,7 +73,7 @@ abstract class ValueObservable<T> {
 	}
 	
 	/**
-	 * Sets [internalListener] and calls [IValueObservable.update].
+	 * Sets [internalListener] and calls [ValueObserver.update].
 	 *
 	 * @param initialValue Initial value to notify.
 	 * @param listener Listener to add and notify.
@@ -84,7 +84,7 @@ abstract class ValueObservable<T> {
 	}
 	
 	/**
-	 * Adds a [listener] and calls [IValueObservable.update] on this new listener with given initial value.
+	 * Adds a [listener] and calls [ValueObserver.update] on this new listener with given initial value.
 	 *
 	 * @param initialValue Initial value to notify.
 	 * @param listener Listener to add and notify.
@@ -99,7 +99,7 @@ abstract class ValueObservable<T> {
 	 *
 	 * @param listener listener to add.
 	 */
-	fun addListener(listener: ((T, T) -> Unit)) {
+	fun addListener(listener: ValueObserver<T>) {
 		listeners.add(listener)
 	}
 	
@@ -110,7 +110,7 @@ abstract class ValueObservable<T> {
 	 *
 	 * @return `true` if the listener has been successfully removed, `false` if it was not found.
 	 */
-	fun removeListener(listener: ((T, T) -> Unit)): Boolean = listeners.remove(listener)
+	fun removeListener(listener: ValueObserver<T>): Boolean = listeners.remove(listener)
 	
 	/**
 	 * Removes all listeners.
@@ -120,7 +120,7 @@ abstract class ValueObservable<T> {
 	}
 	
 	/**
-	 * Notifies [guiListener] by calling [IValueObservable.update].
+	 * Notifies [guiListener] by calling [ValueObserver.update].
 	 *
 	 * @param oldValue Old value to notify.
 	 * @param newValue New value to notify.
@@ -130,7 +130,7 @@ abstract class ValueObservable<T> {
 	}
 	
 	/**
-	 * Notifies [internalListener] by calling [IValueObservable.update].
+	 * Notifies [internalListener] by calling [ValueObserver.update].
 	 *
 	 * @param oldValue Old value to notify.
 	 * @param newValue New value to notify.
@@ -140,7 +140,7 @@ abstract class ValueObservable<T> {
 	}
 	
 	/**
-	 * Notifies all [listeners] by calling [IValueObservable.update].
+	 * Notifies all [listeners] by calling [ValueObserver.update].
 	 *
 	 * @param oldValue Old value to notify.
 	 * @param newValue New value to notify.

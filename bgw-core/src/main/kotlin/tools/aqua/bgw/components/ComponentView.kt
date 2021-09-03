@@ -24,10 +24,14 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.exception.IllegalInheritanceException
-import tools.aqua.bgw.observable.BooleanProperty
-import tools.aqua.bgw.observable.DoubleProperty
-import tools.aqua.bgw.observable.Property
+
+import tools.aqua.bgw.observable.properties.BooleanProperty
+import tools.aqua.bgw.observable.properties.DoubleProperty
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.Property
+
 import tools.aqua.bgw.util.Coordinate
+import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 import kotlin.math.floor
 
@@ -85,12 +89,14 @@ abstract class ComponentView internal constructor(
 	 * [Property] for the horizontal position of this [ComponentView].
 	 *
 	 * @see posX
+	 * @see actualPosX
 	 */
 	val posXProperty: DoubleProperty = DoubleProperty(posX.toDouble())
 	
 	/**
 	 * Horizontal position of this [ComponentView].
 	 *
+	 * @see actualPosX
 	 * @see posXProperty
 	 */
 	var posX: Double
@@ -100,15 +106,27 @@ abstract class ComponentView internal constructor(
 		}
 	
 	/**
+	 * Horizontal position of this [ComponentView] considering scale.
+	 *
+	 * @see posX
+	 * @see posXProperty
+	 */
+	var actualPosX: Double
+		get() = posX + (width - actualWidth) / 2
+		private set(_) {}
+	
+	/**
 	 * [Property] for the vertical position of this [ComponentView].
 	 *
 	 * @see posY
+	 * @see actualPosY
 	 */
 	val posYProperty: DoubleProperty = DoubleProperty(posY.toDouble())
 	
 	/**
 	 * Vertical position of this [ComponentView].
 	 *
+	 * @see actualPosY
 	 * @see posYProperty
 	 */
 	var posY: Double
@@ -118,15 +136,27 @@ abstract class ComponentView internal constructor(
 		}
 	
 	/**
+	 * Vertical position of this [ComponentView] considering scale.
+	 *
+	 * @see posY
+	 * @see posYProperty
+	 */
+	var actualPosY: Double
+		get() = posY + (height - actualHeight)  / 2
+		private set(_) {}
+	
+	/**
 	 * [Property] for the [width] of this [ComponentView].
 	 *
 	 * @see width
+	 * @see actualWidth
 	 */
 	val widthProperty: DoubleProperty = DoubleProperty(width.toDouble())
 	
 	/**
 	 * The [width] for this [ComponentView].
 	 *
+	 * @see actualWidth
 	 * @see widthProperty
 	 */
 	var width: Double
@@ -135,17 +165,28 @@ abstract class ComponentView internal constructor(
 			widthProperty.value = value
 		}
 	
+	/**
+	 * The actual [width] for this [ComponentView] considering scale.
+	 *
+	 * @see width
+	 * @see widthProperty
+	 */
+	var actualWidth: Double
+		get() = width * scaleX
+		private set(_) {}
 	
 	/**
 	 * [Property] for the [height] of this [ComponentView].
 	 *
 	 * @see height
+	 * @see actualHeight
 	 */
 	val heightProperty: DoubleProperty = DoubleProperty(height.toDouble())
 	
 	/**
 	 * The [height] for this [ComponentView].
 	 *
+	 * @see actualHeight
 	 * @see heightProperty
 	 */
 	var height: Double
@@ -153,6 +194,16 @@ abstract class ComponentView internal constructor(
 		set(value) {
 			heightProperty.value = value
 		}
+	
+	/**
+	 * The actual [height] for this [ComponentView] considering scale.
+	 *
+	 * @see height
+	 * @see heightProperty
+	 */
+	var actualHeight: Double
+		get() = height * scaleY
+		private set(_) {}
 	
 	/**
 	 * [Property] for the horizontal scale of this [ComponentView].
@@ -212,6 +263,21 @@ abstract class ComponentView internal constructor(
 		}
 	
 	/**
+	 * Returns a [CoordinatePlain] containing the component's corner [Coordinate]s and its layout bounds.
+	 */
+	var layoutBounds : CoordinatePlain
+		get() = CoordinatePlain(
+			topLeftX = actualPosX,
+			topLeftY = actualPosY,
+			bottomRightX = actualPosX + actualWidth,
+			bottomRightY = actualPosY + actualHeight
+		).rotated(rotation, Coordinate(
+			xCoord = actualPosX + actualWidth/2,
+			yCoord = actualPosY + actualHeight/2)
+		)
+		private set(_) {}
+	
+	/**
 	 * [Property] for the rotation of this [ComponentView] in degrees.
 	 *
 	 * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
@@ -253,11 +319,11 @@ abstract class ComponentView internal constructor(
 	internal val visualProperty: Property<Visual> = Property(visual.copy())
 	
 	/**
-	 * Index of the current [Visual] in the visuals list.
+	 * Current [Visual].
 	 *
 	 * @see visualProperty
 	 */
-	var visual: Visual
+	open var visual: Visual
 		get() = visualProperty.value
 		/**
 		 * Sets a copy of the given [Visual] [value] to this field and refreshes GUI.
@@ -269,7 +335,7 @@ abstract class ComponentView internal constructor(
 	/**
 	 * [Property] for the [opacity] of this [ComponentView].
 	 *
-	 * Should be in range 0.0 to 1.0.
+	 * Must be in range 0.0 to 1.0.
 	 *
 	 * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 	 *
@@ -277,7 +343,10 @@ abstract class ComponentView internal constructor(
 	 *
 	 * @see opacity
 	 */
-	val opacityProperty: DoubleProperty = DoubleProperty(1.0)
+	val opacityProperty: LimitedDoubleProperty = LimitedDoubleProperty(
+		lowerBoundInclusive = 0.0,
+		upperBoundInclusive = 1.0,
+		initialValue = 1.0)
 	
 	/**
 	 * Opacity of this [ComponentView].
@@ -634,4 +703,18 @@ abstract class ComponentView internal constructor(
 	 */
 	@Suppress("FunctionOnlyReturningConstant")
 	internal open fun getChildPosition(child: ComponentView): Coordinate? = null
+	
+	/**
+	 * Function returning a contained child's coordinates within this [ComponentView] with scale if supported.
+	 *
+	 * This method has to be overridden.
+	 *
+	 * Returns `null` on all [ComponentView]s not supporting this feature.
+	 *
+	 * @param child Child to find.
+	 *
+	 * @return Coordinate of given child in this [ComponentView] or `null` if not supported.
+	 */
+	@Suppress("FunctionOnlyReturningConstant")
+	internal open fun getActualChildPosition(child: ComponentView): Coordinate? = null
 }

@@ -22,9 +22,9 @@ package tools.aqua.bgw.components.container
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.observable.IObservable
 import tools.aqua.bgw.observable.ObservableLinkedList
 import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 
@@ -83,16 +83,20 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	internal abstract fun T.onAdd()
 	
 	/**
-	 * Adds a [listener] on the [observableComponents] list.
+	 * Adds a [ValueObserver] on the [observableComponents] list.
+	 *
+	 * @param listener The [ValueObserver] to add.
 	 */
-	fun addComponentsListener(listener: IObservable) {
+	fun addComponentsListener(listener: ValueObserver<List<T>>) {
 		observableComponents.addListener(listener)
 	}
 	
 	/**
 	 * Removes a [listener] from the [observableComponents] list.
+	 *
+	 * @param listener The [ValueObserver] to remove.
 	 */
-	fun removeComponentsListener(listener: IObservable) {
+	fun removeComponentsListener(listener: ValueObserver<List<T>>) {
 		observableComponents.removeListener(listener)
 	}
 	
@@ -253,7 +257,18 @@ sealed class GameComponentContainer<T : GameComponentView>(
 	 *
 	 * @return Coordinate of given child in this container relative to containers anchor point.
 	 */
-	override fun getChildPosition(child: ComponentView): Coordinate? = Coordinate(child.posX, child.posY)
+	override fun getChildPosition(child: ComponentView): Coordinate? =
+		Coordinate(child.posX, child.posY)
+	
+	/**
+	 * Returning a contained child's coordinates within this container with scale.
+	 *
+	 * @param child Child to find.
+	 *
+	 * @return Coordinate of given child in this container relative to containers anchor point.
+	 */
+	override fun getActualChildPosition(child: ComponentView): Coordinate? =
+		Coordinate(child.actualPosX, child.actualPosY)
 	
 	/**
 	 * Removes [component] from container's children.

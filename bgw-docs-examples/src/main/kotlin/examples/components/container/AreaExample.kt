@@ -28,7 +28,7 @@ class AreaExample : BoardGameApplication("Area example") {
             this.rotation += 45
         }
         
-        area.addComponentsListener {
+        area.addComponentsListener { _, _ ->
             numberOfComponentsLabel.text = "Number of components in this area: ${area.numberOfComponents()}"
         }
 

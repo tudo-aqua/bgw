@@ -298,10 +298,10 @@ objects can be contained in the ListView. By default, the ``toString()`` functio
 obtain a string representation of each object. A ``formatFunction`` can be set that gets used instead of
 the ``toString()`` function to obtain the string representations.
 
-In this example, a ListView typed to ``Int`` is instantiated.
+In this example, a ListView with initial `Int` items is created..
 
 ````kotlin
-val listView = ListView<Int>(posX = 50, posY = 800, width = 300, height = 200)
+val listView = ListView(posX = 50, posY = 800, width = 300, height = 200, items = mutableListOf(42, 1337, 1, 2, 3))
 ````
 
 A custom ``formatFunction`` is set, so the ListView displays "Value for this cell is" concatenated with the actual value
@@ -311,12 +311,6 @@ of the contained object.
 listView.formatFunction = {
 	"Value for this cell is $it"
 }
-````
-
-Lastly, to specify the data model of the ListView, the ``items`` list is set.
-
-````kotlin
-listView.items = mutableListOf(42, 1337, 1, 2, 3)
 ````
 
 ## TableView

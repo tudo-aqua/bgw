@@ -19,6 +19,9 @@
 
 package tools.aqua.bgw.util
 
+import tools.aqua.bgw.util.Trig.Companion.cosD
+import tools.aqua.bgw.util.Trig.Companion.sinD
+
 /**
  * A Coordinate containing [xCoord] and [yCoord].
  *
@@ -45,8 +48,6 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * @param other [Coordinate] to add.
 	 *
 	 * @return New coordinate object containing added [xCoord] and [yCoord].
-	 *
-	 * @see minus
 	 */
 	operator fun plus(other: Coordinate): Coordinate = Coordinate(
 		xCoord + other.xCoord,
@@ -59,17 +60,39 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * @param other [Coordinate] to subtract.
 	 *
 	 * @return New coordinate object containing subtracted [xCoord] and [yCoord].
-	 *
-	 * @see minus
 	 */
 	operator fun minus(other: Coordinate): Coordinate = Coordinate(
 		xCoord - other.xCoord,
 		yCoord - other.yCoord
 	)
 	
+	/**
+	 * Returns a new coordinate object containing multiplied [Coordinate] with [factor].
+	 *
+	 * @param factor factor to multiply with.
+	 *
+	 * @return New coordinate object containing multiplied [Coordinate] with [factor].
+	 */
+	operator fun times(factor: Number): Coordinate = Coordinate(
+		xCoord * factor.toDouble(),
+		yCoord * factor.toDouble()
+	)
 	
 	/**
-	 * Rotates coordinate by angle degrees around center point.
+	 * Returns a new coordinate object containing divided [Coordinate] by [denominator].
+	 *
+	 * @param denominator denominator to divide by.
+	 *
+	 * @return New coordinate object containing divided [Coordinate] by [denominator].
+	 */
+	operator fun div(denominator: Number): Coordinate = Coordinate(
+		xCoord / denominator.toDouble(),
+		yCoord / denominator.toDouble()
+	)
+	
+	
+	/**
+	 * Rotates [Coordinate] by [angle] degrees around center point.
 	 *
 	 * With
 	 *
@@ -84,9 +107,9 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 *
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
-	fun rotated(angle: Double, center: Coordinate): Coordinate = Coordinate(
-		xCoord = cos(angle) * (xCoord - center.xCoord) - sin(angle) * (yCoord - center.yCoord) + center.xCoord,
-		yCoord = sin(angle) * (xCoord - center.xCoord) + cos(angle) * (yCoord - center.yCoord) + center.yCoord
+	fun rotated(angle: Number, center: Coordinate): Coordinate = Coordinate(
+		xCoord = cosD(angle) * (xCoord - center.xCoord) - sinD(angle) * (yCoord - center.yCoord) + center.xCoord,
+		yCoord = sinD(angle) * (xCoord - center.xCoord) + cosD(angle) * (yCoord - center.yCoord) + center.yCoord
 	)
 	
 	/**
@@ -106,18 +129,6 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 	 * [ sin(phi)   cos(phi) ]   [ Py - Zy ]   [ Zy ]   [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
 	 */
 	fun rotated(angle: Double): Coordinate = rotated(angle, Coordinate(0, 0))
-	
-	/**
-	 * Sin function for angles in degrees.
-	 */
-	@Suppress("GrazieInspection")
-	private fun sin(degrees: Double) = kotlin.math.sin(Math.toRadians(degrees))
-	
-	/**
-	 * Cos function for angles in degrees.
-	 */
-	@Suppress("GrazieInspection")
-	private fun cos(degrees: Double) = kotlin.math.cos(Math.toRadians(degrees))
 	
 	/**
 	 * Prints [xCoord] and [yCoord] as String.

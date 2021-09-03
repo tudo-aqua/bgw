@@ -21,7 +21,6 @@ import javafx.event.EventHandler
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import tools.aqua.bgw.builder.DragDropHelper.Companion.findActiveComponentsBelowMouse
 import tools.aqua.bgw.builder.FXConverters.Companion.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
@@ -86,10 +85,20 @@ internal class NodeBuilder {
 		 * Registers events.
 		 */
 		private fun ComponentView.registerEvents(stackPane: StackPane, node: Region, scene: Scene<out ComponentView>) {
-			stackPane.onDragDetected = EventHandler {
-				if (this is DynamicComponentView && isDraggable && scene.draggedDataProperty.value == null) {
-					onDragDetected(scene as BoardGameScene, it)
-				}
+			if(this is DynamicComponentView) {
+				registerDragEvents(stackPane, scene)
+			}
+			
+			stackPane.onMouseDragEntered = EventHandler{
+				val dragTarget = scene.draggedComponent?:return@EventHandler
+				scene.dragTargetsBelowMouse.add(this)
+				onDragGestureEntered?.invoke(DragEvent(dragTarget))
+			}
+			
+			stackPane.onMouseDragExited = EventHandler{
+				val dragTarget = scene.draggedComponent?:return@EventHandler
+				scene.dragTargetsBelowMouse.remove(this)
+				onDragGestureExited?.invoke(DragEvent(dragTarget))
 			}
 			
 			node.setOnMouseClicked { onMouseClicked?.invoke(it.toMouseEvent()) }
@@ -101,6 +110,24 @@ internal class NodeBuilder {
 			node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
 			node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
 		}
+		
+		private fun DynamicComponentView.registerDragEvents(stackPane: StackPane, scene: Scene<out ComponentView>) {
+			val initialMouseTransparency = stackPane.isMouseTransparent
+			
+			stackPane.onDragDetected = EventHandler {
+				if (isDraggable && scene.draggedComponentProperty.value == null) {
+					onDragDetected(scene as BoardGameScene, it)
+					stackPane.isMouseTransparent = true
+					stackPane.startFullDrag()
+				}
+			}
+			
+			stackPane.onDragDropped = EventHandler{
+				scene.draggedComponentProperty.value = null
+				stackPane.isMouseTransparent = initialMouseTransparency
+			}
+		}
+		
 		
 		private fun DynamicComponentView.onDragDetected(scene: BoardGameScene, e: MouseEvent) {
 			val mouseStartCoord = Coordinate(
@@ -154,19 +181,18 @@ internal class NodeBuilder {
 				relativeParentRotation,
 				rollback
 			)
-			val newCoords = DragDropHelper.transformCoordinatesToScene(e, dragDataObject)
+			
+			val newCoords = SceneBuilder.transformCoordinatesToScene(e, dragDataObject)
 			
 			removeFromParent()
+			
 			posX = newCoords.xCoord
 			posY = newCoords.yCoord
-			scene.draggedDataProperty.value = dragDataObject
-			
+			scene.draggedComponentProperty.value = dragDataObject
 			scene.dragTargetsBelowMouse.clear()
-			scene.dragTargetsBelowMouse.addAll(scene.findActiveComponentsBelowMouse(e.sceneX, e.sceneY))
 			
 			isDragged = true
 			onDragGestureStarted?.invoke(DragEvent(this))
-			
 		}
 		
 		/**
@@ -243,16 +269,18 @@ internal class NodeBuilder {
 		@Suppress("DuplicatedCode")
 		private fun ComponentView.registerObservers(stackPane: StackPane, node: Region, background: Region) {
 			posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
-				stackPane.layoutX = nV - if (layoutFromCenter) width / 2 else 0.0
+				stackPane.layoutX = nV - if (layoutFromCenter) actualWidth / 2 else 0.0
 			}
 			posYProperty.setGUIListenerAndInvoke(posY) { _, nV ->
-				stackPane.layoutY = nV - if (layoutFromCenter) height / 2 else 0.0
+				stackPane.layoutY = nV - if (layoutFromCenter) actualHeight / 2 else 0.0
 			}
 			scaleXProperty.setGUIListenerAndInvoke(scaleX) { _, nV ->
 				stackPane.scaleX = nV
+				posXProperty.notifyUnchanged()
 			}
 			scaleYProperty.setGUIListenerAndInvoke(scaleY) { _, nV ->
 				stackPane.scaleY = nV
+				posYProperty.notifyUnchanged()
 			}
 			
 			rotationProperty.setGUIListenerAndInvoke(rotation) { _, nV -> stackPane.rotate = nV }
@@ -261,10 +289,12 @@ internal class NodeBuilder {
 			heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
 				node.prefHeight = nV
 				background.prefHeight = nV
+				posYProperty.notifyUnchanged()
 			}
 			widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
 				node.prefWidth = nV
 				background.prefWidth = nV
+				posXProperty.notifyUnchanged()
 			}
 			
 			isVisibleProperty.setGUIListenerAndInvoke(isVisible) { _, nV ->
@@ -275,8 +305,7 @@ internal class NodeBuilder {
 				node.isDisable = nV
 				background.isDisable = nV
 			}
-
-			//TODO: component style needs to update when internal css changes
+			
 			if (this is UIComponent) {
 				backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
 					if (nV.isNotEmpty())
@@ -294,6 +323,29 @@ internal class NodeBuilder {
 		 */
 		private fun UIComponent.updateStyle(node: Region) {
 			node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle
+		}
+		
+		/**
+		 * This function is used in various places to increase the performance of rebuilding a [Pane].
+		 *
+		 * @param scene the scene that is responsible for the building of this [Pane].
+		 * @param components the [ComponentView]s that should make up this [Pane]s children.
+		 * @param cached the [ComponentView]s that currently make up this [Pane]s children.
+		 */
+		internal fun javafx.scene.layout.Pane.buildChildren(
+			scene: Scene<out ComponentView>,
+			components: Iterable<ComponentView>,
+			cached: Set<ComponentView>
+		) {
+			children.clear()
+			(cached - components).forEach { scene.componentsMap.remove(it) }
+			components.forEach {
+				if (it in cached) {
+					children.add(scene.componentsMap[it])
+				} else {
+					children.add(build(scene, it))
+				}
+			}
 		}
 	}
 }

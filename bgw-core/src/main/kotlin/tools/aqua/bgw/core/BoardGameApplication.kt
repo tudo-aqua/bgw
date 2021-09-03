@@ -23,7 +23,7 @@ import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.observable.Property
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.Visual
 import java.io.File
 import java.util.*
