@@ -7,3 +7,8 @@
 [![KDocs](https://img.shields.io/badge/KDoc-Overview-yellowgreen)](https://tudo-aqua.github.io/bgw/kotlin-docs/)
 [![Detekt-Pages](https://img.shields.io/badge/Detekt-Report-yellowgreen)](https://tudo-aqua.github.io/bgw/detekt)
 
+------------
+
+BoardGameWork is a framework for creating 2D board game applications. 
+
+Read on [how to get started](https://tudo-aqua.github.io/bgw/), or take a look at the complete [API documentation](https://tudo-aqua.github.io/bgw/kotlin-docs/).
