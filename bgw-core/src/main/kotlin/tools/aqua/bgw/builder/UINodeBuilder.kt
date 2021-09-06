@@ -101,6 +101,9 @@ internal class UINodeBuilder {
 
 			node.textProperty().bindTextProperty(textArea)
 			node.promptText = textArea.prompt
+			textArea.onUpdatePrompt = {
+				node.promptText = it
+			}
 			return node
 		}
 
@@ -112,6 +115,9 @@ internal class UINodeBuilder {
 
 			node.textProperty().bindTextProperty(textField)
 			node.promptText = textField.prompt
+			textField.onUpdatePrompt = {
+				node.promptText = it
+			}
 			return node
 		}
 

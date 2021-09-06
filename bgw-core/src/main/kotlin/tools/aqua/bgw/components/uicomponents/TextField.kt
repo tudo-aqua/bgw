@@ -39,17 +39,25 @@ import tools.aqua.bgw.util.Font
  * @see TextArea
  */
 open class TextField(
-	posX: Number = 0,
-	posY: Number = 0,
-	width: Number = DEFAULT_TEXT_FIELD_WIDTH,
-	height: Number = DEFAULT_TEXT_FIELD_HEIGHT,
-	text: String = "",
-	font: Font = Font(),
-	val prompt: String = "",
+    posX: Number = 0,
+    posY: Number = 0,
+    width: Number = DEFAULT_TEXT_FIELD_WIDTH,
+    height: Number = DEFAULT_TEXT_FIELD_HEIGHT,
+    text: String = "",
+    font: Font = Font(),
+    prompt: String = "",
+    internal var onUpdatePrompt: ((prompt: String) -> Unit)? = null,
 ) : TextInputUIComponent(
-	posX = posX,
-	posY = posY,
-	width = width,
-	height = height,
-	text = text,
-	font = font)
+    posX = posX,
+    posY = posY,
+    width = width,
+    height = height,
+    text = text,
+    font = font
+) {
+    var prompt = prompt
+        set(value) {
+            field = value
+            onUpdatePrompt?.invoke(value)
+        }
+}
