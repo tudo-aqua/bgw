@@ -39,7 +39,7 @@ import tools.aqua.bgw.util.Font
  *        This gets displayed as a prompt to the user whenever the label is an empty string.
  *        Default: empty string.
  *
- *  @see TextField
+ * @see TextField
  */
 open class TextArea(
 	posX: Number = 0,
@@ -48,11 +48,12 @@ open class TextArea(
 	height: Number = DEFAULT_TEXT_AREA_HEIGHT,
 	text: String = "",
 	font: Font = Font(),
-	val prompt: String = "",
+	prompt: String = "",
 ) : TextInputUIComponent(
 	posX = posX,
 	posY = posY,
 	width = width,
 	height = height,
 	text = text,
+	prompt = prompt,
 	font = font)

@@ -33,8 +33,9 @@ import tools.aqua.bgw.util.Font
  * @param width Width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
  * @param height Height for this [TextField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
  * @param text Initial text for this [TextField]. Default: empty String.
- * @param prompt Prompt for this [TextField]. This gets displayed as a prompt to the user whenever the label is an
- * empty string. Default: empty string.
+ * @param prompt Prompt for this [TextArea].
+ *        This gets displayed as a prompt to the user whenever the label is an empty string.
+ *        Default: empty string.
  *
  * @see TextArea
  */
@@ -45,11 +46,12 @@ open class TextField(
 	height: Number = DEFAULT_TEXT_FIELD_HEIGHT,
 	text: String = "",
 	font: Font = Font(),
-	val prompt: String = "",
+	prompt: String = "",
 ) : TextInputUIComponent(
 	posX = posX,
 	posY = posY,
 	width = width,
 	height = height,
 	text = text,
+	prompt = prompt,
 	font = font)

@@ -100,7 +100,7 @@ internal class UINodeBuilder {
 			val node = javafx.scene.control.TextArea(textArea.textProperty.value)
 
 			node.textProperty().bindTextProperty(textArea)
-			node.promptText = textArea.prompt
+			node.promptTextProperty().bindPromptProperty(textArea)
 			return node
 		}
 
@@ -111,7 +111,7 @@ internal class UINodeBuilder {
 			val node = javafx.scene.control.TextField(textField.textProperty.value)
 
 			node.textProperty().bindTextProperty(textField)
-			node.promptText = textField.prompt
+			node.promptTextProperty().bindPromptProperty(textField)
 			return node
 		}
 
@@ -295,6 +295,16 @@ internal class UINodeBuilder {
 			labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
 			//JavaFX -> Framework
 			addListener { _, _, new -> labeled.text = new }
+		}
+
+		/**
+		 * Binds [TextInputUIComponent.promptProperty].
+		 */
+		private fun javafx.beans.property.StringProperty.bindPromptProperty(labeled: TextInputUIComponent) {
+			//Framework -> JavaFX
+			labeled.promptProperty.setGUIListenerAndInvoke(labeled.prompt) { _, nV -> value = nV }
+			//JavaFX -> Framework
+			addListener { _, _, new -> labeled.prompt = new }
 		}
 
 		/**
