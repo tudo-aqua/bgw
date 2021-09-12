@@ -32,7 +32,7 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [TextInputUIComponent].
  * @param height Height for this [TextInputUIComponent].
  * @param text Text for this [TextInputUIComponent].
- * @param prompt Prompt for this [TextArea].
+ * @param prompt Prompt for this [TextInputUIComponent].
  * @param font Font to be used for the [text].
  */
 sealed class TextInputUIComponent(
