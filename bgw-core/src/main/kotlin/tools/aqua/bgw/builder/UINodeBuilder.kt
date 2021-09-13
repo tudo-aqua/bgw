@@ -303,8 +303,6 @@ internal class UINodeBuilder {
 		private fun javafx.beans.property.StringProperty.bindPromptProperty(labeled: TextInputUIComponent) {
 			//Framework -> JavaFX
 			labeled.promptProperty.setGUIListenerAndInvoke(labeled.prompt) { _, nV -> value = nV }
-			//JavaFX -> Framework
-			addListener { _, _, new -> labeled.prompt = new }
 		}
 
 		/**
