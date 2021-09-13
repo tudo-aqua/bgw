@@ -36,8 +36,8 @@ import tools.aqua.bgw.util.Font
  * @param height Height for this [TextArea]. Default: [DEFAULT_TEXT_AREA_HEIGHT].
  * @param text Initial text for this [TextArea]. Default: empty String.
  * @param prompt Prompt for this [TextArea].
- *        This gets displayed as a prompt to the user whenever the label is an empty string.
- *        Default: empty string.
+ *        This gets displayed as a prompt to the user whenever the label is an empty String.
+ *        Default: empty String.
  *
  * @see TextField
  */
