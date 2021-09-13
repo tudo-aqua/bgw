@@ -43,7 +43,7 @@ nav_order: 3
 The [Stack][StackKDoc] class is a kotlin implementation of the common stack collection.
 
 ## Creation
-The stack can be created with initial elements as a constructor parameter, either as collection or varargs, or as an empty stack with no constructor parameters
+The stack can be created with initial elements as a constructor parameter, either as collection or varargs, or as an empty stack with no constructor parameters.
 
 ````kotlin
 val emptyStack: Stack<String> = Stack()
