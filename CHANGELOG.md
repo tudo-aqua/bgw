@@ -11,7 +11,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.3] - To be released
+## [0.3] - 09. Sep. 2021
 
 ### Added
  - Value ``Scene.components`` for getting a snapshot of the currently contained root components of a ``Scene``.
