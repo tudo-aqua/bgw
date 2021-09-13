@@ -89,23 +89,30 @@ internal class LayoutNodeBuilder {
 				}
 			}
 			
+			//Calculate row heights
 			gridView.renderedRowHeights = DoubleArray(grid.rows) {
-				grid.getRow(it).maxOf { entry -> entry?.let { t ->
-					val fixedHeight = grid.getRowHeight(it)
-					if(fixedHeight == ROW_HEIGHT_AUTO)
-						t.layoutBounds.height + t.posY
-					else
-						fixedHeight
-				} ?: 0.0 }
+				var height = grid.getRowHeight(it)
+				
+				if(height == ROW_HEIGHT_AUTO) {
+					height = grid.getRow(it).filterNotNull().maxOfOrNull { entry ->
+						entry.let { t -> t.layoutBounds.height + t.posY }
+					}?:0.0
+				}
+				
+				height
 			}
+			
+			//Calculate column widths
 			gridView.renderedColWidths = DoubleArray(grid.columns) {
-				grid.getColumn(it).maxOf { entry -> entry?.let { t ->
-					val fixedWidth = grid.getColumnWidth(it)
-					if(fixedWidth == COLUMN_WIDTH_AUTO)
-						t.layoutBounds.width + t.posX
-					else
-						fixedWidth
-				} ?: 0.0 }
+				var width = grid.getColumnWidth(it)
+				
+				if(width == COLUMN_WIDTH_AUTO) {
+					width = grid.getColumn(it).filterNotNull().maxOfOrNull { entry ->
+						entry.let { t -> t.layoutBounds.width + t.posX }
+					}?:0.0
+				}
+				
+				width
 			}
 			
 			gridView.width =
