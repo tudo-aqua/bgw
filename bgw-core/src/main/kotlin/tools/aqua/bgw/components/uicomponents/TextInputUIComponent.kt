@@ -32,6 +32,7 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [TextInputUIComponent].
  * @param height Height for this [TextInputUIComponent].
  * @param text Text for this [TextInputUIComponent].
+ * @param prompt Prompt for this [TextInputUIComponent].
  * @param font Font to be used for the [text].
  */
 sealed class TextInputUIComponent(
@@ -40,6 +41,7 @@ sealed class TextInputUIComponent(
 	width: Number,
 	height: Number,
 	text: String,
+	prompt: String,
 	font: Font,
 ) : UIComponent(
 	posX = posX,
@@ -65,5 +67,23 @@ sealed class TextInputUIComponent(
 		get() = textProperty.value
 		set(value) {
 			textProperty.value = value
+		}
+	
+	/**
+	 * [Property] for the prompt of this [TextInputUIComponent].
+	 *
+	 * @see prompt
+	 */
+	val promptProperty: StringProperty = StringProperty(prompt)
+	
+	/**
+	 * Prompt of this [TextInputUIComponent].
+	 *
+	 * @see promptProperty
+	 */
+	var prompt: String
+		get() = promptProperty.value
+		set(value) {
+			promptProperty.value = value
 		}
 }
