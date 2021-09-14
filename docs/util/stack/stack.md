@@ -40,11 +40,12 @@ nav_order: 3
 
 
 ## Usage
-The [Stack][StackKDoc] class is a kotlin implementation of the common stack collection.
+The [Stack][StackKDoc] utility class is a kotlin implementation of the common stack collection. 
+The stack may become useful for many board game applications like card stacks, money stacks, etc.
 
 ## Creation
 The stack can be created with initial elements as a constructor parameter, either as collection or varargs, or as an empty stack with no constructor parameters.
-
+The elements get added from the tail to the head such that the first element in the collection will be popped first and the last element gets the highest index.
 ````kotlin
 val emptyStack: Stack<String> = Stack()
 val collectionStack: Stack<String> = Stack(listOf("ONE", "SIX", "TEN"))
