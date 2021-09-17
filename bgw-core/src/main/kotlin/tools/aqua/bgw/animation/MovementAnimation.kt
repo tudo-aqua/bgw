@@ -103,10 +103,10 @@ class MovementAnimation<T : ComponentView>(
 			val pathToDestination = scene.findPathToChild(toComponentViewPosition).dropLast(1)
 			
 			//Sum relative positions
-			val componentAbsoluteX = pathToComponent.sumOf { it.posX }
-			val componentAbsoluteY = pathToComponent.sumOf { it.posY }
-			val destinationAbsoluteX = pathToDestination.sumOf { it.posX }
-			val destinationAbsoluteY = pathToDestination.sumOf { it.posY }
+			val componentAbsoluteX = pathToComponent.sumOf { it.parent?.getChildPosition(it)?.xCoord?:it.posX }
+			val componentAbsoluteY = pathToComponent.sumOf { it.parent?.getChildPosition(it)?.yCoord?:it.posY }
+			val destinationAbsoluteX = pathToDestination.sumOf { it.parent?.getChildPosition(it)?.xCoord?:it.posX }
+			val destinationAbsoluteY = pathToDestination.sumOf { it.parent?.getChildPosition(it)?.yCoord?:it.posY }
 			
 			return MovementAnimation(
 				componentView = componentView,
