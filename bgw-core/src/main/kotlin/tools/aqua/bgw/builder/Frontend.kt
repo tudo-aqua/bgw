@@ -422,13 +422,13 @@ internal class Frontend : Application() {
 			Optional.ofNullable(
 				when (dialog.mode) {
 					OPEN_FILE ->
-						listOf(FileChooserBuilder.buildFileChooser(dialog).showOpenDialog(primaryStage))
+						FileChooserBuilder.buildFileChooser(dialog).showOpenDialog(primaryStage)?.let { listOf(it) }
 					OPEN_MULTIPLE_FILES ->
 						FileChooserBuilder.buildFileChooser(dialog).showOpenMultipleDialog(primaryStage)
 					SAVE_FILE ->
-						listOf(FileChooserBuilder.buildFileChooser(dialog).showSaveDialog(primaryStage))
+						FileChooserBuilder.buildFileChooser(dialog).showSaveDialog(primaryStage)?.let { listOf(it) }
 					CHOOSE_DIRECTORY ->
-						listOf(FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage))
+						FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage)?.let { listOf(it) }
 				}
 			)
 		

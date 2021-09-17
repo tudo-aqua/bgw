@@ -11,6 +11,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4] - To be released
+
+### Fixed
+- Race condition while changing GameScenes caused by slow renderer.
+- FileDialogs returning list of nulls instead of empty optional.
+
 ## [0.3] - 09. Sep. 2021
 
 ### Added
