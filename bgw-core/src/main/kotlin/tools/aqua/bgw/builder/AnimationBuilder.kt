@@ -55,7 +55,7 @@ internal class AnimationBuilder {
 			scene: Scene<out ComponentView>,
 			anim: MovementAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.componentsMap[anim.componentView]!!
+			val node = mapNode(scene, anim.componentView)
 			
 			//Move node to initial position
 			node.layoutX = anim.fromX
@@ -84,7 +84,7 @@ internal class AnimationBuilder {
 			scene: Scene<out ComponentView>,
 			anim: RotationAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.componentsMap[anim.componentView]!!
+			val node = mapNode(scene, anim.componentView)
 			
 			//Move node to initial position
 			node.rotate = anim.fromAngle
@@ -110,7 +110,7 @@ internal class AnimationBuilder {
 			scene: Scene<out ComponentView>,
 			anim: ScaleAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.componentsMap[anim.componentView]!!
+			val node = mapNode(scene, anim.componentView)
 			
 			//Set initial scale
 			node.scaleX = anim.fromScaleX
@@ -134,7 +134,7 @@ internal class AnimationBuilder {
 			scene: Scene<out ComponentView>,
 			anim: FadeAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.componentsMap[anim.componentView]!!
+			val node = mapNode(scene, anim.componentView)
 			
 			//Set initial opacity
 			node.opacity = anim.fromOpacity
@@ -156,7 +156,7 @@ internal class AnimationBuilder {
 			scene: Scene<out ComponentView>,
 			anim: FlipAnimation<*>
 		): javafx.animation.Animation {
-			val node = scene.componentsMap[anim.componentView]!!
+			val node = mapNode(scene, anim.componentView)
 			val fromVisual = VisualBuilder.buildVisual(anim.fromVisual)
 			val toVisual = VisualBuilder.buildVisual(anim.toVisual).apply { scaleX = 0.0 }
 			
@@ -258,5 +258,11 @@ internal class AnimationBuilder {
 				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 		}
+		
+		/**
+		 * Maps [ComponentView] to FX node.
+		 */
+		private fun mapNode(scene: Scene<out ComponentView>, componentView : ComponentView) =
+			checkNotNull(scene.componentsMap[componentView]) { "Creating animation for node that is not in scene." }
 	}
 }

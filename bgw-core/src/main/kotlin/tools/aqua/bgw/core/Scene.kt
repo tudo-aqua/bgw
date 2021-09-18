@@ -279,9 +279,9 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 			return listOf(rootNode)
 		}
 		
-		checkNotNull(node.parent) { "Encountered component $node that is not contained in a scene." }
+		val parent = checkNotNull(node.parent) { "Encountered component $node that is not contained in a scene." }
 		
-		return mutableListOf(node) + findPathToChild(node.parent!!)
+		return mutableListOf(node) + findPathToChild(parent)
 	}
 	
 	/**

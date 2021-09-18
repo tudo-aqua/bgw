@@ -148,7 +148,7 @@ internal class NodeBuilder {
 				}
 				is GridPane<*> -> {
 					//calculate position in grid
-					posStartCoord += parent.getChildPosition(this)!!
+					posStartCoord += parent.getChildPosition(this)?: Coordinate()
 					
 					//add layout from center bias
 					if (parent.layoutFromCenter) {
@@ -175,7 +175,7 @@ internal class NodeBuilder {
 			
 			val dragDataObject = DragDataObject(
 				this,
-				scene.componentsMap[this]!!,
+				checkNotNull(scene.componentsMap[this]),
 				mouseStartCoord,
 				posStartCoord,
 				relativeParentRotation,
@@ -222,7 +222,10 @@ internal class NodeBuilder {
 				iteratorElement.component == component
 			} ?: return {}
 			
-			val initialX = element.component!!.posX
+			if(element.component == null)
+				throw ConcurrentModificationException("Grid was modified while calculating drag drop rollback.")
+			
+			val initialX = element.component.posX
 			val initialY = element.component.posY
 			val initialColumnIndex = element.columnIndex
 			val initialRowIndex = element.rowIndex
