@@ -37,7 +37,7 @@ class Dialog private constructor(
 	val title: String,
 	val header: String,
 	val message: String,
-	val exception: Throwable? = null,
+	val exception: Throwable,
 	vararg val buttons: ButtonType
 ) {
 	/**
@@ -53,7 +53,7 @@ class Dialog private constructor(
 	 * any [ButtonType]s.
 	 */
 	constructor(dialogType: DialogType, title: String, header: String, message: String, vararg buttons: ButtonType) :
-			this(dialogType, title, header, message, null, *buttons) {
+			this(dialogType, title, header, message, Exception(), *buttons) {
 		require(dialogType != DialogType.EXCEPTION) {
 			"To create an Exception dialog use exception dialog constructor."
 		}

@@ -53,7 +53,7 @@ internal class DialogBuilder {
 			
 			//Add expandable content for exception stack trace in case of AlertType.EXCEPTION
 			if (dialog.dialogType == DialogType.EXCEPTION) {
-				dialogPane.expandableContent = TextArea(dialog.exception!!.stackTraceToString()).apply {
+				dialogPane.expandableContent = TextArea(dialog.exception.stackTraceToString()).apply {
 					isEditable = false
 					isWrapText = true
 					maxWidth = Double.MAX_VALUE

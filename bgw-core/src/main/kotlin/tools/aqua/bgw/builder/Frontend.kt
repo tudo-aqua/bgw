@@ -339,7 +339,7 @@ internal class Frontend : Application() {
 		 * @param stage application stage.
 		 */
 		internal fun startApplication(stage: Stage) {
-			primaryStage = stage.apply {
+			val primaryStage = stage.apply {
 				//Initialize default DECORATED stage style allowing minimizing
 				initStyle(StageStyle.DECORATED)
 				
@@ -367,6 +367,7 @@ internal class Frontend : Application() {
 					if (!isFullScreen && !isMaximized)
 						height = nV
 				}
+				titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
 				
 				maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }
 				fullScreenProperty().addListener { _, _, nV -> fullscreenProperty.setSilent(nV) }
@@ -386,18 +387,15 @@ internal class Frontend : Application() {
 			menuScene?.let { menuPane = buildMenu(it) }
 			boardGameScene?.let { gamePane = buildGame(it) }
 			
-			titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV ->
-				primaryStage?.title = nV
-			}
-			
 			backgroundProperty.setGUIListenerAndInvoke(backgroundProperty.value) { _, nV ->
 				backgroundPane.children.clear()
 				backgroundPane.children.add(VisualBuilder.buildVisual(nV).apply {
-					prefWidthProperty().bind(primaryStage!!.widthProperty())
-					prefHeightProperty().bind(primaryStage!!.heightProperty())
+					prefWidthProperty().bind(primaryStage.widthProperty())
+					prefHeightProperty().bind(primaryStage.heightProperty())
 				})
 			}
 			
+			this.primaryStage = primaryStage
 			updateScene()
 		}
 		
@@ -465,8 +463,7 @@ internal class Frontend : Application() {
 					interpolator = Interpolator.EASE_OUT
 					onFinished = EventHandler {
 						if (!fadeIn) {
-							if (boardGameScene != null) boardGameScene!!.unlock()
-							
+							boardGameScene?.unlock()
 							updateScene()
 						}
 					}
