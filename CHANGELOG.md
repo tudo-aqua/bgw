@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Empty grid columns and rows no longer get rendered size 0.0 in case of fixed dimensions.
 - Race condition while changing GameScenes caused by slow renderer.
 - FileDialogs returning list of nulls instead of empty optional.
+- BoardGameScene getting shown blurred if showGameScene gets called after hideMenuScene.
 
 ## [0.3] - 09. Sep. 2021
 
