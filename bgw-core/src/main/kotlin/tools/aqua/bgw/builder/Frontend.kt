@@ -456,14 +456,17 @@ internal class Frontend : Application() {
 		 */
 		private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
 			menuPane?.apply {
-				FadeTransition(Duration.millis(fadeTime / 2), menuPane).apply {
+				if (!fadeIn)
+					menuPane = null
+					
+				FadeTransition(Duration.millis(fadeTime / 2), this).apply {
 					fromValue = if (fadeIn) 0.0 else 1.0
 					toValue = if (fadeIn) 1.0 else 0.0
 					interpolator = Interpolator.EASE_OUT
 					onFinished = EventHandler {
 						if (!fadeIn) {
-							menuPane = null
 							if (boardGameScene != null) boardGameScene!!.unlock()
+							
 							updateScene()
 						}
 					}
