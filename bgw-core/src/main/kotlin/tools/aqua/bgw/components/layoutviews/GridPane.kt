@@ -513,7 +513,7 @@ open class GridPane<T : ComponentView>(
 	 */
 	override fun getChildPosition(child: ComponentView): Coordinate? =
 		grid.filter { it.component == child }.map {
-			getRelativeChildOffset(it) + Coordinate(xCoord = child.posX, yCoord = child.posY)
+			getRelativeChildOffset(it)
 		}.firstOrNull()
 	
 	/**
@@ -526,7 +526,11 @@ open class GridPane<T : ComponentView>(
 	 */
 	override fun getActualChildPosition(child: ComponentView): Coordinate? =
 		grid.filter { it.component == child }.map {
-			getRelativeChildOffset(it) + Coordinate(xCoord = child.actualPosX, yCoord = child.actualPosY)
+			val offset = getRelativeChildOffset(it)
+			Coordinate(
+				xCoord = offset.xCoord * scaleX,
+				yCoord = offset.yCoord * scaleY
+			)
 		}.firstOrNull()
 	
 	private fun getRelativeChildOffset(it : GridIteratorElement<T>): Coordinate {

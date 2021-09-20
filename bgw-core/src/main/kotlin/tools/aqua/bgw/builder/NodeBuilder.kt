@@ -150,11 +150,6 @@ internal class NodeBuilder {
 					//calculate position in grid
 					posStartCoord += parent.getChildPosition(this)?: Coordinate()
 					
-					//add layout from center bias
-					if (parent.layoutFromCenter) {
-						posStartCoord -= Coordinate(parent.width / 2, parent.height / 2)
-					}
-					
 					parent.findRollback(this)
 				}
 				is Pane<*> -> {

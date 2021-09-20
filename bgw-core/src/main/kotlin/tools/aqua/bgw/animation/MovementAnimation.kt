@@ -77,8 +77,10 @@ class MovementAnimation<T : ComponentView>(
 	 */
 	constructor(componentView: T, byX: Number = 0.0, byY: Number = 0.0, duration: Int = 1000) : this(
 		componentView = componentView,
-		toX = componentView.posX + byX.toDouble(),
-		toY = componentView.posY + byY.toDouble(),
+		fromX = componentView.parent?.getChildPosition(componentView)?.xCoord?:componentView.posX,
+		fromY = componentView.parent?.getChildPosition(componentView)?.yCoord?:componentView.posY,
+		toX = (componentView.parent?.getChildPosition(componentView)?.xCoord?:componentView.posX) + byX.toDouble(),
+		toY = (componentView.parent?.getChildPosition(componentView)?.yCoord?:componentView.posY) + byY.toDouble(),
 		duration = duration
 	)
 	
@@ -102,21 +104,42 @@ class MovementAnimation<T : ComponentView>(
 			val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
 			val pathToDestination = scene.findPathToChild(toComponentViewPosition).dropLast(1)
 			
-			//Sum relative positions
-			val componentAbsoluteX = pathToComponent.sumOf {
-				it.parent?.getActualChildPosition(it)?.xCoord?:it.actualPosX }
-			val componentAbsoluteY = pathToComponent.sumOf {
-				it.parent?.getActualChildPosition(it)?.yCoord?:it.actualPosY }
+			//Sum relative positions and rotation and multiply scale
+			var componentAbsoluteX = 0.0
+			var componentAbsoluteY = 0.0
+			var destinationAbsoluteX = 0.0
+			var destinationAbsoluteY = 0.0
 			
-			val destinationAbsoluteX = pathToDestination.sumOf {
-				it.parent?.getActualChildPosition(it)?.xCoord?:it.actualPosX }
-			val destinationAbsoluteY = pathToDestination.sumOf {
-				it.parent?.getActualChildPosition(it)?.yCoord?:it.actualPosY }
+			var componentScaleX = 1.0
+			var componentScaleY = 1.0
+			var destinationScaleX = 1.0
+			var destinationScaleY = 1.0
+			
+			var componentRotation = 0.0
+			var destinationRotation = 0.0
+			
+			pathToComponent.forEach {
+				val pos = it.parent?.getActualChildPosition(it)
+				componentAbsoluteX += pos?.xCoord?:it.actualPosX
+				componentAbsoluteY += pos?.yCoord?:it.actualPosY
+				componentScaleX *= it.scaleX
+				componentScaleY *= it.scaleY
+				componentRotation += it.rotation
+			}
+			
+			pathToDestination.forEach {
+				val pos = it.parent?.getActualChildPosition(it)
+				destinationAbsoluteX += pos?.xCoord?:it.actualPosX
+				destinationAbsoluteY += pos?.yCoord?:it.actualPosY
+				destinationScaleX *= it.scaleX
+				destinationScaleY *= it.scaleY
+				destinationRotation += it.rotation
+			}
 			
 			return MovementAnimation(
 				componentView = componentView,
-				byX = destinationAbsoluteX - componentAbsoluteX,
-				byY = destinationAbsoluteY - componentAbsoluteY,
+				byX = (destinationAbsoluteX - componentAbsoluteX) / componentScaleX,
+				byY = (destinationAbsoluteY - componentAbsoluteY) / componentScaleY,
 				duration = duration
 			)
 		}
