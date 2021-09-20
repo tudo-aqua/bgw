@@ -149,7 +149,11 @@ open class CoordinatePlain private constructor(
 		bottomRight = bottomRight.rotated(angle, center),
 	)
 	
-	override fun toString(): String {
-		return "CoordinatePlain(topLeft=$topLeft, topRight=$topRight, bottomLeft=$bottomLeft, bottomRight=$bottomRight, width=$width, height=$height)"
-	}
+	override fun toString(): String =
+		"CoordinatePlain(topLeft=$topLeft," +
+			" topRight=$topRight," +
+			" bottomLeft=$bottomLeft," +
+			" bottomRight=$bottomRight," +
+			" width=$width," +
+			" height=$height)"
 }

@@ -103,6 +103,7 @@ internal class FXConverters private constructor() {
 		/**
 		 * Converts the [javafx.scene.input.KeyCode] to [KeyCode].
 		 */
+		@Suppress("LongMethod")
 		internal fun FXKeyCode.toKeyCode(): KeyCode = when (this) {
 			FXKeyCode.SHIFT -> KeyCode.SHIFT
 			FXKeyCode.CONTROL -> KeyCode.CONTROL

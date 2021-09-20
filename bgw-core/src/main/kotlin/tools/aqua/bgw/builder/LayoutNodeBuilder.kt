@@ -120,35 +120,43 @@ internal class LayoutNodeBuilder {
 			gridView.height =
 				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
 			
-			nodes.forEach { triple ->
-				val colIndex = triple.first.first
-				val rowIndex = triple.first.second
-				val component = triple.second
-				val node = triple.third
-				val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
-				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
+			nodes.forEach { triple -> refreshGridNode(gridView, triple) }
+		}
+		
+		/**
+		 * Refreshes grid node.
+		 */
+		private fun FXPane.refreshGridNode(
+			gridView: GridPane<out ComponentView>,
+			triple: Triple<Pair<Int, Int>, ComponentView, Node>) {
+			
+			val colIndex = triple.first.first
+			val rowIndex = triple.first.second
+			val component = triple.second
+			val node = triple.third
+			val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
+			val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
+			
+			children.add(node.apply {
+				val nodeWidth = component.layoutBounds.width
+				val nodeHeight = component.layoutBounds.height
 				
-				children.add(node.apply {
-					val nodeWidth = component.layoutBounds.width
-					val nodeHeight = component.layoutBounds.height
-					
-					//Calculate delta due to scale and rotation
-					val deltaX = (nodeWidth - component.width) / 2
-					val deltaY = (nodeHeight - component.height) / 2
-					
-					//Calculate anchor point for flush TOP_LEFT placement
-					val anchorX = posX + component.posX + deltaX
-					val anchorY = posY + component.posY + deltaY
-					
-					//Account for centering
-					val centerMode = gridView.getCellCenterMode(columnIndex = colIndex, rowIndex = rowIndex)
-					val remainingSpaceX = gridView.renderedColWidths[colIndex] - nodeWidth - component.posX
-					val remainingSpaceY = gridView.renderedRowHeights[rowIndex] - nodeHeight - component.posY
-					
-					layoutX = anchorX + remainingSpaceX * centerMode.horizontalAlignment.positionMultiplier
-					layoutY = anchorY + remainingSpaceY * centerMode.verticalAlignment.positionMultiplier
-				})
-			}
+				//Calculate delta due to scale and rotation
+				val deltaX = (nodeWidth - component.width) / 2
+				val deltaY = (nodeHeight - component.height) / 2
+				
+				//Calculate anchor point for flush TOP_LEFT placement
+				val anchorX = posX + component.posX + deltaX
+				val anchorY = posY + component.posY + deltaY
+				
+				//Account for centering
+				val centerMode = gridView.getCellCenterMode(columnIndex = colIndex, rowIndex = rowIndex)
+				val remainingSpaceX = gridView.renderedColWidths[colIndex] - nodeWidth - component.posX
+				val remainingSpaceY = gridView.renderedRowHeights[rowIndex] - nodeHeight - component.posY
+				
+				layoutX = anchorX + remainingSpaceX * centerMode.horizontalAlignment.positionMultiplier
+				layoutY = anchorY + remainingSpaceY * centerMode.verticalAlignment.positionMultiplier
+			})
 		}
 	}
 }

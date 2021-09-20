@@ -17,6 +17,9 @@
 
 package tools.aqua.bgw.util
 
+/**
+ * Utility class for trigonometry functions.
+ */
 class Trig {
 	companion object{
 		/**
