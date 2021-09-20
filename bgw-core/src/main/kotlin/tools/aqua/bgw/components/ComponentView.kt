@@ -112,7 +112,12 @@ abstract class ComponentView internal constructor(
 	 * @see posXProperty
 	 */
 	var actualPosX: Double
-		get() = posX + (width - actualWidth) / 2
+		get() {
+			val parent = parent
+			val offset = if(parent != null && parent.layoutFromCenter) parent.actualWidth/2 else 0.0
+			
+			return posX + (width - actualWidth) / 2 - offset
+		}
 		private set(_) {}
 	
 	/**
@@ -142,7 +147,12 @@ abstract class ComponentView internal constructor(
 	 * @see posYProperty
 	 */
 	var actualPosY: Double
-		get() = posY + (height - actualHeight)  / 2
+		get() {
+			val parent = parent
+			val offset = if(parent != null && parent.layoutFromCenter) parent.actualHeight/2 else 0.0
+			
+			return posY + (height - actualHeight) / 2 - offset
+		}
 		private set(_) {}
 	
 	/**
