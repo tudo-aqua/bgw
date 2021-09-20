@@ -9,7 +9,7 @@ nav_order: 1
 [CoordinateDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/index.html
 [CoordinatePlain]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate-plain/index.html
 [rotatedKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate/rotated.html
-[inInKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate-plain/is-in.html
+[rotatedPlainKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-coordinate-plain/rotated.html
 
 <!-- Start Page -->
 # Coordinates
@@ -44,6 +44,7 @@ The equals function returns true if and only if ````coord1.xCoord == coord2.xCoo
 
 Additionally, the [rotated][rotatedKDoc] function can be used to rotate the coordinate by a given angle around a center point.
 
+Common Operators **plus, minus, times** and **divide** are defined.
 ## [CoordinatePlain][CoordinatePlain]
 A [CoordinatePlain][CoordinatePlain] represents a right-angled plain with four corners. These can be accessed by:
 ````kotlin
@@ -61,7 +62,7 @@ val width: Double
 
 The CoordinatePlain can be created by specifying the top-left and bottom-right corner either with Coordinates or X and Y position.
 
-The function [isIn][isInKDoc] can be used to check whether a coordinate is inside this 2D plain.
+The function [rotated][rotatedPlainKDoc] function can be used to rotate the 2D plain by a given angle around a center point.
 
 
 
