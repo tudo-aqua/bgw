@@ -527,9 +527,12 @@ open class GridPane<T : ComponentView>(
 	override fun getActualChildPosition(child: ComponentView): Coordinate? =
 		grid.filter { it.component == child }.map {
 			val offset = getRelativeChildOffset(it)
+			val parentOffsetX = if(child.layoutFromCenter) child.actualWidth/2 else 0.0
+			val parentOffsetY = if(child.layoutFromCenter) child.actualHeight/2 else 0.0
+			
 			Coordinate(
-				xCoord = offset.xCoord * scaleX - actualWidth/2 + if(child.layoutFromCenter) child.actualWidth/2 else 0.0,
-				yCoord = offset.yCoord * scaleY - actualHeight/2 + if(child.layoutFromCenter) child.actualHeight/2 else 0.0,
+				xCoord = offset.xCoord * scaleX - actualWidth/2 + parentOffsetX,
+				yCoord = offset.yCoord * scaleY - actualHeight/2 + parentOffsetY,
 			)
 		}.firstOrNull()
 	
@@ -537,17 +540,16 @@ open class GridPane<T : ComponentView>(
 		val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
 		val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
 		
-		val cellOffsetX = (renderedColWidths[it.columnIndex] - (it.component?.actualWidth?:0.0)) / 2
-		val cellOffsetY = (renderedRowHeights[it.rowIndex] - (it.component?.actualHeight?:0.0)) / 2
+		val cellOffsetX = (renderedColWidths[it.columnIndex] - (it.component?.actualWidth?:0.0))
+		val cellOffsetY = (renderedRowHeights[it.rowIndex] - (it.component?.actualHeight?:0.0))
 		
-		println(Coordinate(
-			xCoord = cols.sum() + cols.size * spacing + cellOffsetX,
-			yCoord = rows.sum() + rows.size * spacing + cellOffsetY
-		))
+		val cellAlignment = getCellCenterMode(columnIndex = it.columnIndex, rowIndex = it.rowIndex)
+		val cellAlignmentX = cellAlignment.horizontalAlignment.positionMultiplier
+		val cellAlignmentY = cellAlignment.verticalAlignment.positionMultiplier
 		
 		return Coordinate(
-			xCoord = cols.sum() + cols.size * spacing + cellOffsetX,
-			yCoord = rows.sum() + rows.size * spacing + cellOffsetY
+			xCoord = cols.sum() + cols.size * spacing + cellOffsetX * cellAlignmentX,
+			yCoord = rows.sum() + rows.size * spacing + cellOffsetY * cellAlignmentY
 		)
 	}
 	
