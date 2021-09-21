@@ -126,7 +126,7 @@ class MovementAnimation<T : ComponentView>(
 				componentScaleY *= it.scaleY
 				componentRotation += it.rotation
 			}
-			
+
 			pathToDestination.forEach {
 				val pos = it.parent?.getActualChildPosition(it)
 				destinationAbsoluteX += pos?.xCoord?:it.actualPosX
@@ -134,12 +134,17 @@ class MovementAnimation<T : ComponentView>(
 				destinationScaleX *= it.scaleX
 				destinationScaleY *= it.scaleY
 				destinationRotation += it.rotation
+				
+				println("Adding ${pos?.xCoord?:it.actualPosX} ${pos?.yCoord?:it.actualPosY}")
 			}
+			
+			println("From: $componentAbsoluteX $componentAbsoluteY")
+			println("To:   $destinationAbsoluteX $destinationAbsoluteY")
 			
 			return MovementAnimation(
 				componentView = componentView,
-				byX = (destinationAbsoluteX - componentAbsoluteX) / componentScaleX,
-				byY = (destinationAbsoluteY - componentAbsoluteY) / componentScaleY,
+				byX = destinationAbsoluteX - componentAbsoluteX,
+				byY = destinationAbsoluteY - componentAbsoluteY,
 				duration = duration
 			)
 		}

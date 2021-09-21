@@ -148,7 +148,7 @@ internal class NodeBuilder {
 				}
 				is GridPane<*> -> {
 					//calculate position in grid
-					posStartCoord += parent.getChildPosition(this)?: Coordinate()
+					posStartCoord += parent.getActualChildPosition(this)?: Coordinate()
 					
 					parent.findRollback(this)
 				}

@@ -528,8 +528,8 @@ open class GridPane<T : ComponentView>(
 		grid.filter { it.component == child }.map {
 			val offset = getRelativeChildOffset(it)
 			Coordinate(
-				xCoord = offset.xCoord * scaleX,
-				yCoord = offset.yCoord * scaleY
+				xCoord = offset.xCoord * scaleX - actualWidth/2 + if(child.layoutFromCenter) child.actualWidth/2 else 0.0,
+				yCoord = offset.yCoord * scaleY - actualHeight/2 + if(child.layoutFromCenter) child.actualHeight/2 else 0.0,
 			)
 		}.firstOrNull()
 	
@@ -537,9 +537,17 @@ open class GridPane<T : ComponentView>(
 		val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
 		val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
 		
+		val cellOffsetX = (renderedColWidths[it.columnIndex] - (it.component?.actualWidth?:0.0)) / 2
+		val cellOffsetY = (renderedRowHeights[it.rowIndex] - (it.component?.actualHeight?:0.0)) / 2
+		
+		println(Coordinate(
+			xCoord = cols.sum() + cols.size * spacing + cellOffsetX,
+			yCoord = rows.sum() + rows.size * spacing + cellOffsetY
+		))
+		
 		return Coordinate(
-			xCoord = cols.sum() + cols.size * spacing,
-			yCoord = rows.sum() + rows.size * spacing
+			xCoord = cols.sum() + cols.size * spacing + cellOffsetX,
+			yCoord = rows.sum() + rows.size * spacing + cellOffsetY
 		)
 	}
 	
