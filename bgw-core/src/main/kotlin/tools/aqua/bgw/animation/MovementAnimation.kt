@@ -134,12 +134,7 @@ class MovementAnimation<T : ComponentView>(
 				destinationScaleX *= it.scaleX
 				destinationScaleY *= it.scaleY
 				destinationRotation += it.rotation
-				
-				println("Adding ${pos?.xCoord?:it.actualPosX} ${pos?.yCoord?:it.actualPosY}")
 			}
-			
-			println("From: $componentAbsoluteX $componentAbsoluteY")
-			println("To:   $destinationAbsoluteX $destinationAbsoluteY")
 			
 			return MovementAnimation(
 				componentView = componentView,
