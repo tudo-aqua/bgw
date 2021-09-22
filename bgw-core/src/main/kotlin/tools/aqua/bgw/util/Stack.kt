@@ -28,6 +28,12 @@ package tools.aqua.bgw.util
 open class Stack<T>(elements: Collection<T>) {
 
 	private val data: ArrayDeque<T> = ArrayDeque(elements)
+	
+	/**
+	 * Size of this [Stack].
+	 */
+	val size: Int
+		get() = data.size
 
 	/**
 	 * Creates a [Stack] with vararg initial elements.
@@ -38,12 +44,6 @@ open class Stack<T>(elements: Collection<T>) {
 	 * Creates an empty [Stack].
 	 */
 	constructor() : this(listOf())
-
-	/**
-	 * Size of this [Stack].
-	 */
-	val size: Int
-		get() = data.size
 
 	/**
 	 * Pops the topmost element in this [Stack].

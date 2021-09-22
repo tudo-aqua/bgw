@@ -142,18 +142,13 @@ internal class NodeBuilder {
 				yCoord = pathToChild.sumOf { t -> t.posY }
 			)
 			
-			val rollback: (() -> Unit) = when (val parent = pathToChild[1]) {
+			val rollback: (() -> Unit) = when (val parent = parent) {
 				is GameComponentContainer<*> -> {
 					parent.findRollback(this as GameComponentView)
 				}
 				is GridPane<*> -> {
 					//calculate position in grid
-					posStartCoord += parent.getChildPosition(this)!!
-					
-					//add layout from center bias
-					if (parent.layoutFromCenter) {
-						posStartCoord -= Coordinate(parent.width / 2, parent.height / 2)
-					}
+					posStartCoord += parent.getActualChildPosition(this)?: Coordinate()
 					
 					parent.findRollback(this)
 				}
@@ -175,7 +170,7 @@ internal class NodeBuilder {
 			
 			val dragDataObject = DragDataObject(
 				this,
-				scene.componentsMap[this]!!,
+				checkNotNull(scene.componentsMap[this]),
 				mouseStartCoord,
 				posStartCoord,
 				relativeParentRotation,
@@ -200,17 +195,15 @@ internal class NodeBuilder {
 		 */
 		private fun GameComponentContainer<*>.findRollback(component: GameComponentView): (() -> Unit) {
 			val index = observableComponents.indexOf(component)
-			val initialX = posX
-			val initialY = posY
+			val initialX = component.posX
+			val initialY = component.posY
 			
 			return {
-				posX = initialX
-				posY = initialY
+				component.posX = initialX
+				component.posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(this as GameComponentContainer<GameComponentView>).add(
-					component,
-					min(observableComponents.size, index)
-				)
+				(this as GameComponentContainer<GameComponentView>)
+					.add(component, min(observableComponents.size, index))
 			}
 		}
 		
@@ -222,17 +215,19 @@ internal class NodeBuilder {
 				iteratorElement.component == component
 			} ?: return {}
 			
-			val initialX = element.component!!.posX
+			if(element.component == null)
+				throw ConcurrentModificationException("Grid was modified while calculating drag drop rollback.")
+			
+			val initialX = element.component.posX
 			val initialY = element.component.posY
 			val initialColumnIndex = element.columnIndex
 			val initialRowIndex = element.rowIndex
 			
 			return {
-				posX = initialX
-				posY = initialY
+				component.posX = initialX
+				component.posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(parent as GridPane<ComponentView>)[initialColumnIndex, initialRowIndex] =
-					this@findRollback as ComponentView
+				(this as GridPane<ComponentView>)[initialColumnIndex, initialRowIndex] = component
 			}
 		}
 		
@@ -241,21 +236,21 @@ internal class NodeBuilder {
 		 */
 		private fun Pane<*>.findRollback(component: ComponentView): (() -> Unit) {
 			val index = observableComponents.indexOf(component)
-			val initialX = posX
-			val initialY = posY
+			val initialX = component.posX
+			val initialY = component.posY
 			
 			return {
-				posX = initialX
-				posY = initialY
+				component.posX = initialX
+				component.posY = initialY
 				@Suppress("UNCHECKED_CAST")
-				(parent as Pane<ComponentView>)
-					.add(this as ComponentView, min(observableComponents.size, index))
+				(this as Pane<ComponentView>).add(this as ComponentView, min(observableComponents.size, index))
 			}
 		}
 		
 		private fun DynamicComponentView.findRollbackOnRoot(scene: BoardGameScene): (() -> Unit) {
 			val initialX = posX
 			val initialY = posY
+			
 			return {
 				posX = initialX
 				posY = initialY
@@ -338,7 +333,7 @@ internal class NodeBuilder {
 			cached: Set<ComponentView>
 		) {
 			children.clear()
-			(cached - components).forEach { scene.componentsMap.remove(it) }
+			(cached - components.toSet()).forEach { scene.componentsMap.remove(it) }
 			components.forEach {
 				if (it in cached) {
 					children.add(scene.componentsMap[it])

@@ -315,11 +315,11 @@ internal class Frontend : Application() {
 		 * @return [gamePane] for [boardGameScene], [menuPane] for [menuScene] and `null` for other parameters.
 		 */
 		internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane =
-			when (this) {
+			checkNotNull(when (this) {
 				boardGameScene -> gamePane
 				menuScene -> menuPane
 				else -> null
-			}?:throw IllegalStateException()
+			})
 		
 		/**
 		 * Returns scene associated to pane.
@@ -339,7 +339,7 @@ internal class Frontend : Application() {
 		 * @param stage application stage.
 		 */
 		internal fun startApplication(stage: Stage) {
-			primaryStage = stage.apply {
+			val primaryStage = stage.apply {
 				//Initialize default DECORATED stage style allowing minimizing
 				initStyle(StageStyle.DECORATED)
 				
@@ -367,6 +367,7 @@ internal class Frontend : Application() {
 					if (!isFullScreen && !isMaximized)
 						height = nV
 				}
+				titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
 				
 				maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }
 				fullScreenProperty().addListener { _, _, nV -> fullscreenProperty.setSilent(nV) }
@@ -386,18 +387,15 @@ internal class Frontend : Application() {
 			menuScene?.let { menuPane = buildMenu(it) }
 			boardGameScene?.let { gamePane = buildGame(it) }
 			
-			titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV ->
-				primaryStage?.title = nV
-			}
-			
 			backgroundProperty.setGUIListenerAndInvoke(backgroundProperty.value) { _, nV ->
 				backgroundPane.children.clear()
 				backgroundPane.children.add(VisualBuilder.buildVisual(nV).apply {
-					prefWidthProperty().bind(primaryStage!!.widthProperty())
-					prefHeightProperty().bind(primaryStage!!.heightProperty())
+					prefWidthProperty().bind(primaryStage.widthProperty())
+					prefHeightProperty().bind(primaryStage.heightProperty())
 				})
 			}
 			
+			this.primaryStage = primaryStage
 			updateScene()
 		}
 		
@@ -422,13 +420,13 @@ internal class Frontend : Application() {
 			Optional.ofNullable(
 				when (dialog.mode) {
 					OPEN_FILE ->
-						listOf(FileChooserBuilder.buildFileChooser(dialog).showOpenDialog(primaryStage))
+						FileChooserBuilder.buildFileChooser(dialog).showOpenDialog(primaryStage)?.let { listOf(it) }
 					OPEN_MULTIPLE_FILES ->
 						FileChooserBuilder.buildFileChooser(dialog).showOpenMultipleDialog(primaryStage)
 					SAVE_FILE ->
-						listOf(FileChooserBuilder.buildFileChooser(dialog).showSaveDialog(primaryStage))
+						FileChooserBuilder.buildFileChooser(dialog).showSaveDialog(primaryStage)?.let { listOf(it) }
 					CHOOSE_DIRECTORY ->
-						listOf(FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage))
+						FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage)?.let { listOf(it) }
 				}
 			)
 		
@@ -456,14 +454,16 @@ internal class Frontend : Application() {
 		 */
 		private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
 			menuPane?.apply {
-				FadeTransition(Duration.millis(fadeTime / 2), menuPane).apply {
+				if (!fadeIn)
+					menuPane = null
+					
+				FadeTransition(Duration.millis(fadeTime / 2), this).apply {
 					fromValue = if (fadeIn) 0.0 else 1.0
 					toValue = if (fadeIn) 1.0 else 0.0
 					interpolator = Interpolator.EASE_OUT
 					onFinished = EventHandler {
 						if (!fadeIn) {
-							menuPane = null
-							if (boardGameScene != null) boardGameScene!!.unlock()
+							boardGameScene?.unlock()
 							updateScene()
 						}
 					}

@@ -89,23 +89,30 @@ internal class LayoutNodeBuilder {
 				}
 			}
 			
+			//Calculate row heights
 			gridView.renderedRowHeights = DoubleArray(grid.rows) {
-				grid.getRow(it).maxOf { entry -> entry?.let { t ->
-					val fixedHeight = grid.getRowHeight(it)
-					if(fixedHeight == ROW_HEIGHT_AUTO)
-						t.layoutBounds.height + t.posY
-					else
-						fixedHeight
-				} ?: 0.0 }
+				var height = grid.getRowHeight(it)
+				
+				if(height == ROW_HEIGHT_AUTO) {
+					height = grid.getRow(it).filterNotNull().maxOfOrNull { entry ->
+						entry.let { t -> t.layoutBounds.height + t.posY }
+					}?:0.0
+				}
+				
+				height
 			}
+			
+			//Calculate column widths
 			gridView.renderedColWidths = DoubleArray(grid.columns) {
-				grid.getColumn(it).maxOf { entry -> entry?.let { t ->
-					val fixedWidth = grid.getColumnWidth(it)
-					if(fixedWidth == COLUMN_WIDTH_AUTO)
-						t.layoutBounds.width + t.posX
-					else
-						fixedWidth
-				} ?: 0.0 }
+				var width = grid.getColumnWidth(it)
+				
+				if(width == COLUMN_WIDTH_AUTO) {
+					width = grid.getColumn(it).filterNotNull().maxOfOrNull { entry ->
+						entry.let { t -> t.layoutBounds.width + t.posX }
+					}?:0.0
+				}
+				
+				width
 			}
 			
 			gridView.width =
@@ -113,35 +120,43 @@ internal class LayoutNodeBuilder {
 			gridView.height =
 				gridView.renderedRowHeights.sum() + (gridView.renderedRowHeights.size - 1) * gridView.spacing
 			
-			nodes.forEach { triple ->
-				val colIndex = triple.first.first
-				val rowIndex = triple.first.second
-				val component = triple.second
-				val node = triple.third
-				val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
-				val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
+			nodes.forEach { triple -> refreshGridNode(gridView, triple) }
+		}
+		
+		/**
+		 * Refreshes grid node.
+		 */
+		private fun FXPane.refreshGridNode(
+			gridView: GridPane<out ComponentView>,
+			triple: Triple<Pair<Int, Int>, ComponentView, Node>) {
+			
+			val colIndex = triple.first.first
+			val rowIndex = triple.first.second
+			val component = triple.second
+			val node = triple.third
+			val posX = (0 until colIndex).sumOf { gridView.renderedColWidths[it] } + colIndex * gridView.spacing
+			val posY = (0 until rowIndex).sumOf { gridView.renderedRowHeights[it] } + rowIndex * gridView.spacing
+			
+			children.add(node.apply {
+				val nodeWidth = component.layoutBounds.width
+				val nodeHeight = component.layoutBounds.height
 				
-				children.add(node.apply {
-					val nodeWidth = component.layoutBounds.width
-					val nodeHeight = component.layoutBounds.height
-					
-					//Calculate delta due to scale and rotation
-					val deltaX = (nodeWidth - component.width) / 2
-					val deltaY = (nodeHeight - component.height) / 2
-					
-					//Calculate anchor point for flush TOP_LEFT placement
-					val anchorX = posX + component.posX + deltaX
-					val anchorY = posY + component.posY + deltaY
-					
-					//Account for centering
-					val centerMode = gridView.getCellCenterMode(columnIndex = colIndex, rowIndex = rowIndex)
-					val remainingSpaceX = gridView.renderedColWidths[colIndex] - nodeWidth - component.posX
-					val remainingSpaceY = gridView.renderedRowHeights[rowIndex] - nodeHeight - component.posY
-					
-					layoutX = anchorX + remainingSpaceX * centerMode.horizontalAlignment.positionMultiplier
-					layoutY = anchorY + remainingSpaceY * centerMode.verticalAlignment.positionMultiplier
-				})
-			}
+				//Calculate delta due to scale and rotation
+				val deltaX = (nodeWidth - component.width) / 2
+				val deltaY = (nodeHeight - component.height) / 2
+				
+				//Calculate anchor point for flush TOP_LEFT placement
+				val anchorX = posX + component.posX + deltaX
+				val anchorY = posY + component.posY + deltaY
+				
+				//Account for centering
+				val centerMode = gridView.getCellCenterMode(columnIndex = colIndex, rowIndex = rowIndex)
+				val remainingSpaceX = gridView.renderedColWidths[colIndex] - nodeWidth - component.posX
+				val remainingSpaceY = gridView.renderedRowHeights[rowIndex] - nodeHeight - component.posY
+				
+				layoutX = anchorX + remainingSpaceX * centerMode.horizontalAlignment.positionMultiplier
+				layoutY = anchorY + remainingSpaceY * centerMode.verticalAlignment.positionMultiplier
+			})
 		}
 	}
 }

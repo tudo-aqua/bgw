@@ -191,11 +191,6 @@ class CoordinatePlainTest {
 		val expectedLowY = plainPos - (plainWidth - plainHeight)/2
 		val expectedHighY = plainPos + plainHeight + (plainWidth - plainHeight)/2
 		
-		println(expectedLowX)
-		println(expectedHighX)
-		println(expectedLowY)
-		println(expectedHighY)
-		
 		assertEquals(expectedHighX, rotated.topLeft.xCoord, DOUBLE_TOLERANCE)
 		assertEquals(expectedLowY, rotated.topLeft.yCoord, DOUBLE_TOLERANCE)
 		

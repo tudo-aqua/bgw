@@ -34,10 +34,9 @@ import tools.aqua.bgw.util.Font
  * @param posY Vertical coordinate for this [TextArea]. Default: 0.
  * @param width Width for this [TextArea]. Default: [DEFAULT_TEXT_AREA_WIDTH].
  * @param height Height for this [TextArea]. Default: [DEFAULT_TEXT_AREA_HEIGHT].
+ * @param prompt Prompt for this [TextArea]. This gets displayed as a prompt to the user whenever the label is an empty
+ * string. Default: empty string.
  * @param text Initial text for this [TextArea]. Default: empty String.
- * @param prompt Prompt for this [TextArea].
- *        This gets displayed as a prompt to the user whenever the label is an empty string.
- *        Default: empty string.
  *
  *  @see TextField
  */
@@ -47,12 +46,13 @@ open class TextArea(
 	width: Number = DEFAULT_TEXT_AREA_WIDTH,
 	height: Number = DEFAULT_TEXT_AREA_HEIGHT,
 	text: String = "",
-	font: Font = Font(),
-	val prompt: String = "",
+	prompt: String = "",
+	font: Font = Font()
 ) : TextInputUIComponent(
 	posX = posX,
 	posY = posY,
 	width = width,
 	height = height,
 	text = text,
+	prompt = prompt,
 	font = font)

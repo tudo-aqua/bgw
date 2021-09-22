@@ -1,3 +1,4 @@
+[0.4]: https://github.com/tudo-aqua/bgw/releases/tag/v0.4
 [0.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.3
 [0.2]: https://github.com/tudo-aqua/bgw/releases/tag/v0.2
 [0.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.1
@@ -10,6 +11,16 @@
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.4] - To be released
+
+### Fixed
+- Empty grid columns and rows no longer get rendered size 0.0 in case of fixed dimensions.
+- Race condition while changing GameScenes caused by slow renderer.
+- FileDialogs returning list of nulls instead of empty optional.
+- Snap back from Drag and Drop.
+- MovementAnimation#toComponentView offset when animating to GridPane.
+- BoardGameScene getting shown blurred if showGameScene gets called after hideMenuScene.
 
 ## [0.3] - 09. Sep. 2021
 
