@@ -4,6 +4,7 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.examples.sudoku.entity.Difficulty
+import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 import tools.aqua.bgw.examples.sudoku.service.LogicController
 
 /**
@@ -67,7 +68,10 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 	}
 	
 	private fun registerGameEvents() {
-		sudokuGameScene.keyCapture.onKeyPressed = { setValue(it) }
+		sudokuGameScene.hintButton.onKeyPressed = { setValue(it) }
+		sudokuGameScene.hintButton.onMouseClicked = {
+			logicController.requestHint()
+		}
 	}
 	
 	private fun setValue(e: KeyEvent) {
@@ -77,9 +81,9 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 			return
 		
 		if (e.keyCode.isDigit() && e.keyCode != KeyCode.NUMPAD0) {
-			logicController.setValue(cell.boxIndex, cell.rowIndex, cell.colIndex, e.keyCode.string.toInt())
+			logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, e.keyCode.string.toInt()))
 		} else if (e.keyCode == KeyCode.DELETE) {
-			logicController.setValue(cell.boxIndex, cell.rowIndex, cell.colIndex, null)
+			logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, null))
 		}
 	}
 }

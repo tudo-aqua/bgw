@@ -17,7 +17,7 @@ class SudokuBox(boxIndex : Int, size : Number, spacing : Number) : GridPane<Sudo
 	init {
 		for(i in 0..2){
 			for (j in 0..2) {
-				this[i,j] = SudokuCell(boxIndex, i, j, size).apply {
+				this[i,j] = SudokuCell(boxIndex, j, i, size).apply {
 					selectedEvent = { this@SudokuBox.selectedEvent?.invoke(it) }
 				}
 			}

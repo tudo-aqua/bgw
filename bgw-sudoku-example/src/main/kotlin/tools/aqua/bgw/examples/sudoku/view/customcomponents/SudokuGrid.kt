@@ -1,6 +1,7 @@
 package tools.aqua.bgw.examples.sudoku.view.customcomponents
 
 import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 import tools.aqua.bgw.visual.ColorVisual
 
 class SudokuGrid(
@@ -43,9 +44,17 @@ class SudokuGrid(
 	}
 	
 	operator fun set(box: Int, row: Int, col: Int, value: Int?) {
-		get(box % 3, box / 3)?.get(row, col)?.value = value
+		getCell(box, row, col).value = value
 	}
 	
-	operator fun get(box: Int, row: Int, col: Int, value: Int?): Int? =
-		get(box % 3, box / 3)?.get(col, row)?.value
+	operator fun get(box: Int, row: Int, col: Int): Int? = getCell(box, row, col).value
+	
+	fun showHint(tuple: Collection<SudokuTuple>) {
+		tuple.forEach {
+			getCell(it.box, it.row, it.col).visual = ColorVisual(255,150,150)
+		}
+	}
+	
+	private fun getCell(box: Int, row: Int, col: Int) : SudokuCell =
+		get(box % 3, box / 3)?.get(col, row)!!
 }

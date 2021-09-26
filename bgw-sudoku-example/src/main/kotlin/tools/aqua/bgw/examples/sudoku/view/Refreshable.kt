@@ -1,6 +1,10 @@
 package tools.aqua.bgw.examples.sudoku.view
 
+import tools.aqua.bgw.examples.sudoku.entity.Sudoku
+import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
+
 interface Refreshable {
-	fun refreshInit(initialSudoku: Array<Array<Array<Int?>>>)
-	fun refreshSetValue(box: Int, row: Int, col: Int, value: Int?)
+	fun refreshInit(initialSudoku: Sudoku)
+	fun refreshSetValue(tuple : SudokuTuple)
+	fun refreshHint(tuple : Collection<SudokuTuple>)
 }
