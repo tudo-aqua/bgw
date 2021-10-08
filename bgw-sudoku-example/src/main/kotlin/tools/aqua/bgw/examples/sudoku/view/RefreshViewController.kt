@@ -1,5 +1,6 @@
 package tools.aqua.bgw.examples.sudoku.view
 
+import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
 import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 
@@ -16,11 +17,21 @@ class RefreshViewController(private val viewController: SudokuViewController) : 
 		}
 	}
 	
+	override fun refreshTimer(time: String) {
+		BoardGameApplication.runOnGUIThread {
+			viewController.sudokuGameScene.timer.text = time
+		}
+	}
+	
 	override fun refreshSetValue(tuple : SudokuTuple) {
 		viewController.sudokuGameScene.sudokuGrid[tuple.box, tuple.row, tuple.col] = tuple.value
 	}
 	
 	override fun refreshHint(tuple: Collection<SudokuTuple>) {
 		viewController.sudokuGameScene.sudokuGrid.showHint(tuple)
+	}
+	
+	override fun refreshWon() {
+		println("You won!")
 	}
 }

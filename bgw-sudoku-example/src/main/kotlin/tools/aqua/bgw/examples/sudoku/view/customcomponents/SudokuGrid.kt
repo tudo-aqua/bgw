@@ -41,6 +41,8 @@ class SudokuGrid(
 	fun setFixed(box: Int, row: Int, col: Int, value: Int?) {
 		if(value != null)
 			get(box % 3, box / 3)?.get(col, row)?.setFixedValue(value)
+		else
+			get(box % 3, box / 3)?.get(col, row)?.clear()
 	}
 	
 	operator fun set(box: Int, row: Int, col: Int, value: Int?) {
@@ -52,6 +54,13 @@ class SudokuGrid(
 	fun showHint(tuple: Collection<SudokuTuple>) {
 		tuple.forEach {
 			getCell(it.box, it.row, it.col).visual = ColorVisual(255,150,150)
+		}
+	}
+	
+	fun clearHints() {
+		forEach { box -> box.component?.forEach { cell ->
+				cell.component?.visual = ColorVisual.WHITE
+			}
 		}
 	}
 	

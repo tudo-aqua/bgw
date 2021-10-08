@@ -1,4 +1,4 @@
-package tools.aqua.bgw.examples.sudoku.view
+package tools.aqua.bgw.examples.sudoku.view.scenes
 
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -8,6 +8,7 @@ import tools.aqua.bgw.examples.sudoku.view.customcomponents.SudokuGrid
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
 class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
@@ -42,7 +43,7 @@ class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 		text = "0:00:00",
 		font = Font(size = 20),
 		alignment = Alignment.TOP_RIGHT,
-	)
+	).apply { isVisible = false }
 	
 	val hintButton: Button = Button(
 		height = 80,
@@ -52,7 +53,15 @@ class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 		visual = ImageVisual("light-bulb.png")
 	)
 	
+	val clearHintsButton: Button = Button(
+		height = 80,
+		width = 80,
+		posX = 1530,
+		posY = 920,
+		visual = TextVisual("clear")
+	)
+	
 	init {
-		addComponents(sudokuGrid, menuButton, settingsButton, hintButton, timer)
+		addComponents(sudokuGrid, menuButton, settingsButton, hintButton, clearHintsButton, timer)
 	}
 }

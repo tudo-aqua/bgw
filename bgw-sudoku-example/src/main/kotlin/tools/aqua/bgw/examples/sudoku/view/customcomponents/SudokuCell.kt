@@ -49,6 +49,12 @@ class SudokuCell(
 		isFixed = true
 	}
 	
+	fun clear() {
+		text = ""
+		font = blueFont
+		isFixed = false
+	}
+	
 	private fun select() {
 		visual = ColorVisual(255, 238, 143)
 	}

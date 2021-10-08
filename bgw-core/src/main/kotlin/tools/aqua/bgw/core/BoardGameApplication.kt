@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.core
 
+import javafx.application.Platform
 import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -268,5 +269,9 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspe
 		 * Static holder for instantiation of BoardGameApplication.
 		 */
 		private var instantiated: Boolean = false
+		
+		fun runOnGUIThread(task : Runnable) {
+			Platform.runLater(task)
+		}
 	}
 }
