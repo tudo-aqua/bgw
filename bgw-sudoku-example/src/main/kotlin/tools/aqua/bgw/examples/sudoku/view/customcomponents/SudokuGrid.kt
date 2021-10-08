@@ -64,6 +64,6 @@ class SudokuGrid(
 		}
 	}
 	
-	private fun getCell(box: Int, row: Int, col: Int) : SudokuCell =
+	fun getCell(box: Int, row: Int, col: Int) : SudokuCell =
 		get(box % 3, box / 3)?.get(col, row)!!
 }

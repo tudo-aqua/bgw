@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
@@ -87,9 +88,9 @@ internal class SceneBuilder {
 				prefHeight = scene.height
 				prefWidth = scene.width
 				
-				setOnKeyTyped { scene.onKeyTyped?.invoke(it.toKeyEvent()) }
-				setOnKeyPressed { scene.onKeyPressed?.invoke(it.toKeyEvent()) }
-				setOnKeyReleased { scene.onKeyReleased?.invoke(it.toKeyEvent()) }
+				addEventFilter(KeyEvent.KEY_TYPED) { scene.onKeyTyped?.invoke(it.toKeyEvent()) }
+				addEventFilter(KeyEvent.KEY_PRESSED) { scene.onKeyPressed?.invoke(it.toKeyEvent()) }
+				addEventFilter(KeyEvent.KEY_RELEASED) { scene.onKeyReleased?.invoke(it.toKeyEvent()) }
 			}
 			
 			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { oV, _ -> pane.rebuild(scene, oV) }

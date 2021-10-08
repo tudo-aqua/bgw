@@ -2,7 +2,6 @@ package tools.aqua.bgw.examples.sudoku.view
 
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.KeyCode
-import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.examples.sudoku.entity.Difficulty
 import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 import tools.aqua.bgw.examples.sudoku.service.LogicController
@@ -47,9 +46,9 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 	/**
 	 * Timer
 	 */
-	private val timer : Timer = Timer()
-	private val timerRunning : Boolean = false
-	private val startTime : Long = 0L
+	private val timer: Timer = Timer()
+	private val timerRunning: Boolean = false
+	private val startTime: Long = 0L
 	
 	init {
 		sudokuMenuScene.registerEvents()
@@ -60,10 +59,11 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 			delay = 0,
 			period = 100
 		) {
-			if(timerRunning) {
+			if (timerRunning) {
 				val millis = System.currentTimeMillis() - startTime
 				
-				sudokuGameScene.timer.text = String.format("%02d:%02d:%02d",
+				sudokuGameScene.timer.text = String.format(
+					"%02d:%02d:%02d",
 					TimeUnit.MILLISECONDS.toHours(millis),
 					TimeUnit.MILLISECONDS.toMinutes(millis) -
 							TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
@@ -104,14 +104,14 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 	}
 	
 	private fun SudokuSettingsScene.registerEvents() {
-		showTimerToggleButton.button.selectedProperty.addListener{ _, nV ->
+		showTimerToggleButton.button.selectedProperty.addListener { _, nV ->
 			logicController.settings.showTimer.value = nV
 		}
 		
-		instantCheckToggleButton.button.selectedProperty.addListener{ _, nV ->
+		instantCheckToggleButton.button.selectedProperty.addListener { _, nV ->
 			logicController.settings.instantCheck.value = nV
 			
-			if(nV)
+			if (nV)
 				logicController.checkSudoku()
 			else
 				sudokuGameScene.sudokuGrid.clearHints()
@@ -123,9 +123,15 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 	}
 	
 	private fun SudokuGameScene.registerEvents() {
-		onKeyPressed = { setValue(it) }
+		onKeyPressed = {
+			when {
+				it.keyCode.isArrow() -> moveCursor(it.keyCode)
+				it.keyCode.isDigit() -> setValue(it.keyCode)
+				it.keyCode == KeyCode.DELETE -> deleteValue()
+			}
+		}
 		
-		logicController.settings.showTimer.addListener{ _, nV ->
+		logicController.settings.showTimer.addListener { _, nV ->
 			timer.isVisible = nV
 		}
 		
@@ -145,16 +151,64 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 		}
 	}
 	
-	private fun setValue(e: KeyEvent) {
+	private fun setValue(digit: KeyCode) {
 		val cell = sudokuGameScene.sudokuGrid.selectedCell ?: return
 		
-		if (cell.isFixed)
+		if (cell.isFixed || digit == KeyCode.NUMPAD0)
 			return
 		
-		if (e.keyCode.isDigit() && e.keyCode != KeyCode.NUMPAD0) {
-			logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, e.keyCode.string.toInt()))
-		} else if (e.keyCode == KeyCode.DELETE) {
-			logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, null))
+		logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, digit.string.toInt()))
+	}
+	
+	private fun deleteValue() {
+		val cell = sudokuGameScene.sudokuGrid.selectedCell ?: return
+		
+		logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, null))
+	}
+	
+	private fun moveCursor(arrow: KeyCode) {
+		val selectedCell = sudokuGameScene.sudokuGrid.selectedCell ?: return
+		
+		var box = selectedCell.boxIndex
+		var col = selectedCell.colIndex
+		var row = selectedCell.rowIndex
+		
+		when (arrow) {
+			KeyCode.UP -> {
+				if (row == 0) {
+					box = Math.floorMod(box - 3, 9)
+					row = 2
+				} else {
+					row--
+				}
+			}
+			KeyCode.DOWN -> {
+				if (row == 2) {
+					box = (box + 3) % 9
+					row = 0
+				} else {
+					row++
+				}
+			}
+			KeyCode.LEFT -> {
+				if (col == 0) {
+					box += if (box % 3 != 0) -1 else 2
+					col = 2
+				} else {
+					col--
+				}
+			}
+			KeyCode.RIGHT -> {
+				if (col == 2) {
+					box -= if (box % 3 != 2) -1 else 2
+					col = 0
+				} else {
+					col++
+				}
+			}
+			else -> throw IllegalArgumentException()
 		}
+		
+		sudokuGameScene.sudokuGrid.getCell(box, row, col).select()
 	}
 }

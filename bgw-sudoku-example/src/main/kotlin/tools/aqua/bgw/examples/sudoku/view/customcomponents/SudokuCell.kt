@@ -39,7 +39,6 @@ class SudokuCell(
 	init {
 		onMouseClicked = {
 			select()
-			selectedEvent?.invoke(CellSelectedEvent(this))
 		}
 	}
 	
@@ -55,7 +54,8 @@ class SudokuCell(
 		isFixed = false
 	}
 	
-	private fun select() {
+	fun select() {
+		selectedEvent?.invoke(CellSelectedEvent(this))
 		visual = ColorVisual(255, 238, 143)
 	}
 	
