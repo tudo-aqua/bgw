@@ -1,12 +1,26 @@
 package tools.aqua.bgw.examples.sudoku.service
 
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
-import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
+import tools.aqua.bgw.examples.sudoku.entity.Sudoku.SudokuTuple
 
 class SudokuChecker {
 	companion object {
+		/**
+		 * Checks given sudoku for errors and returns them.
+		 *
+		 * @param sudoku Sudoku to check.
+		 *
+		 * @return Set of errors in given sudoku.
+		 */
 		fun checkSudoku(sudoku: Sudoku): Set<SudokuTuple> = checkBoxes(sudoku) + checkRows(sudoku) + checkCols(sudoku)
 		
+		/**
+		 * Checks given sudoku for errors in boxes and returns them.
+		 *
+		 * @param sudoku Sudoku to check.
+		 *
+		 * @return Set of errors in given sudoku.
+		 */
 		private fun checkBoxes(sudoku: Sudoku): Set<SudokuTuple> {
 			val errors = mutableSetOf<SudokuTuple>()
 			
@@ -25,6 +39,13 @@ class SudokuChecker {
 			return errors
 		}
 		
+		/**
+		 * Checks given sudoku for errors in rows and returns them.
+		 *
+		 * @param sudoku Sudoku to check.
+		 *
+		 * @return Set of errors in given sudoku.
+		 */
 		private fun checkRows(sudoku: Sudoku): Set<SudokuTuple> {
 			val errors = mutableSetOf<SudokuTuple>()
 			
@@ -45,6 +66,13 @@ class SudokuChecker {
 			return errors
 		}
 		
+		/**
+		 * Checks given sudoku for errors in columns and returns them.
+		 *
+		 * @param sudoku Sudoku to check.
+		 *
+		 * @return Set of errors in given sudoku.
+		 */
 		private fun checkCols(sudoku: Sudoku): Set<SudokuTuple> {
 			val errors = mutableSetOf<SudokuTuple>()
 			
@@ -65,6 +93,13 @@ class SudokuChecker {
 			return errors
 		}
 		
+		/**
+		 * Checks for duplicate digits in list and returns them.
+		 *
+		 * @param digits List of digits.
+		 *
+		 * @return Set of duplicate digits in given list.
+		 */
 		private fun checkDuplicates(digits : List<SudokuTuple>) : Set<SudokuTuple> {
 			val errors = mutableSetOf<SudokuTuple>()
 			
@@ -76,6 +111,11 @@ class SudokuChecker {
 			return errors
 		}
 		
+		/**
+		 * Checks whether given sudoku is full.
+		 *
+		 * @return `true` if all cells contain a digit, `false` otherwise.
+		 */
 		fun checkFull(sudoku: Sudoku): Boolean =
 			!sudoku.grid.any { box -> box.any { row -> row.any { col -> col.value == null } } }
 	}

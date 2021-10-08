@@ -3,18 +3,13 @@ package tools.aqua.bgw.examples.sudoku.view
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.examples.sudoku.entity.Difficulty
-import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 import tools.aqua.bgw.examples.sudoku.service.LogicController
 import tools.aqua.bgw.examples.sudoku.view.scenes.SudokuGameScene
 import tools.aqua.bgw.examples.sudoku.view.scenes.SudokuMenuScene
 import tools.aqua.bgw.examples.sudoku.view.scenes.SudokuSettingsScene
-import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.concurrent.scheduleAtFixedRate
-
 
 /**
- * Main tools.aqua.bgw.examples.sudoku.view controller.
+ * Main ViewController.
  */
 class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 	
@@ -43,41 +38,19 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 	 */
 	private val logicController: LogicController = LogicController(refreshViewController)
 	
-	/**
-	 * Timer
-	 */
-	private val timer: Timer = Timer()
-	private val timerRunning: Boolean = false
-	private val startTime: Long = 0L
-	
 	init {
 		sudokuMenuScene.registerEvents()
 		sudokuSettingsScene.registerEvents()
 		sudokuGameScene.registerEvents()
-		
-		timer.scheduleAtFixedRate(
-			delay = 0,
-			period = 100
-		) {
-			if (timerRunning) {
-				val millis = System.currentTimeMillis() - startTime
-				
-				sudokuGameScene.timer.text = String.format(
-					"%02d:%02d:%02d",
-					TimeUnit.MILLISECONDS.toHours(millis),
-					TimeUnit.MILLISECONDS.toMinutes(millis) -
-							TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-					TimeUnit.MILLISECONDS.toSeconds(millis) -
-							TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-				)
-			}
-		}
 		
 		showGameScene(sudokuGameScene)
 		showMenuScene(sudokuMenuScene)
 		show()
 	}
 	
+	/**
+	 * Registers events for [sudokuMenuScene].
+	 */
 	private fun SudokuMenuScene.registerEvents() {
 		continueGameButton.onMouseClicked = {
 			hideMenuScene()
@@ -103,6 +76,9 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 		}
 	}
 	
+	/**
+	 * Registers events for [sudokuSettingsScene].
+	 */
 	private fun SudokuSettingsScene.registerEvents() {
 		showTimerToggleButton.button.selectedProperty.addListener { _, nV ->
 			logicController.settings.showTimer.value = nV
@@ -112,7 +88,7 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 			logicController.settings.instantCheck.value = nV
 			
 			if (nV)
-				logicController.checkSudoku()
+				logicController.showErrors()
 			else
 				sudokuGameScene.sudokuGrid.clearHints()
 		}
@@ -122,12 +98,15 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 		}
 	}
 	
+	/**
+	 * Registers events for [sudokuGameScene].
+	 */
 	private fun SudokuGameScene.registerEvents() {
 		onKeyPressed = {
 			when {
-				it.keyCode.isArrow() -> moveCursor(it.keyCode)
-				it.keyCode.isDigit() -> setValue(it.keyCode)
-				it.keyCode == KeyCode.DELETE -> deleteValue()
+				it.keyCode.isArrow() -> onCursorMoved(it.keyCode)
+				it.keyCode.isDigit() -> onDigitEntered(it.keyCode)
+				it.keyCode == KeyCode.DELETE -> onValueDeleted()
 			}
 		}
 		
@@ -151,22 +130,35 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 		}
 	}
 	
-	private fun setValue(digit: KeyCode) {
+	/**
+	 * Enters a digit into the grid.
+	 *
+	 * @param digit Pressed digit.
+	 */
+	private fun onDigitEntered(digit: KeyCode) {
 		val cell = sudokuGameScene.sudokuGrid.selectedCell ?: return
 		
 		if (cell.isFixed || digit == KeyCode.NUMPAD0)
 			return
 		
-		logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, digit.string.toInt()))
+		logicController.setValue(cell.boxIndex, cell.rowIndex, cell.colIndex, digit.string.toInt())
 	}
 	
-	private fun deleteValue() {
+	/**
+	 * Deletes a digit from the grid.
+	 */
+	private fun onValueDeleted() {
 		val cell = sudokuGameScene.sudokuGrid.selectedCell ?: return
 		
-		logicController.setValue(SudokuTuple(cell.boxIndex, cell.rowIndex, cell.colIndex, null))
+		logicController.setValue(cell.boxIndex, cell.rowIndex, cell.colIndex, null)
 	}
 	
-	private fun moveCursor(arrow: KeyCode) {
+	/**
+	 * Moves the cursor.
+	 *
+	 * @param arrow Pressed arrow key.
+	 */
+	private fun onCursorMoved(arrow: KeyCode) {
 		val selectedCell = sudokuGameScene.sudokuGrid.selectedCell ?: return
 		
 		var box = selectedCell.boxIndex

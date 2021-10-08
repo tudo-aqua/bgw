@@ -2,9 +2,13 @@ package tools.aqua.bgw.examples.sudoku.view
 
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
-import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 
 class RefreshViewController(private val viewController: SudokuViewController) : Refreshable {
+	/**
+	 * Refresh to init new game.
+	 *
+	 * @param initialSudoku New sudoku
+	 */
 	override fun refreshInit(initialSudoku: Sudoku) {
 		val grid = viewController.sudokuGameScene.sudokuGrid
 		
@@ -17,20 +21,41 @@ class RefreshViewController(private val viewController: SudokuViewController) : 
 		}
 	}
 	
+	/**
+	 * Refresh to set a digit.
+	 *
+	 * @param box Box index.
+	 * @param row Row index.
+	 * @param col Column index.
+	 * @param value Value to set or `null` to clear cell.
+	 */
+	override fun refreshSetValue(box: Int, row: Int, col: Int, value: Int?) {
+		viewController.sudokuGameScene.sudokuGrid[box, row, col] = value
+	}
+	
+	/**
+	 * Refresh to show error hints.
+	 *
+	 * @param errors Errors to show in grid.
+	 */
+	override fun refreshHint(errors: Collection<Sudoku.SudokuTuple>) {
+		viewController.sudokuGameScene.sudokuGrid.showHint(errors)
+	}
+	
+	/**
+	 * Refresh to update timer label.
+	 *
+	 * @param time New time.
+	 */
 	override fun refreshTimer(time: String) {
 		BoardGameApplication.runOnGUIThread {
 			viewController.sudokuGameScene.timer.text = time
 		}
 	}
 	
-	override fun refreshSetValue(tuple : SudokuTuple) {
-		viewController.sudokuGameScene.sudokuGrid[tuple.box, tuple.row, tuple.col] = tuple.value
-	}
-	
-	override fun refreshHint(tuple: Collection<SudokuTuple>) {
-		viewController.sudokuGameScene.sudokuGrid.showHint(tuple)
-	}
-	
+	/**
+	 * Refresh to show that game is finished.
+	 */
 	override fun refreshWon() {
 		println("You won!")
 	}

@@ -10,10 +10,13 @@ import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
 
 /**
- * ViewController for the tools.aqua.bgw.examples.sudoku.main menu scene.
+ * MainMenu scene.
  */
 class SudokuMenuScene : MenuScene(width = 300, height = 600, background = ColorVisual(Color.WHITE)) {
 	
+	/**
+	 * [Label] for the title.
+	 */
 	private val titleLabel : Label = Label(
 		height = 100,
 		width = 200,
@@ -23,10 +26,29 @@ class SudokuMenuScene : MenuScene(width = 300, height = 600, background = ColorV
 		font = Font(fontWeight = Font.FontWeight.BOLD)
 	)
 	
+	/**
+	 * [Button] "Continue"
+	 */
 	val continueGameButton: Button = MenuButton(position = 1, text = "Continue")
+	
+	/**
+	 * [Button] "New Easy Game"
+	 */
 	val newGameEasyButton: Button = MenuButton(position = 2, text = "New Easy Game")
+	
+	/**
+	 * [Button] "New Medium Game"
+	 */
 	val newGameMediumButton: Button = MenuButton(position = 3, text = "New Medium Game")
+	
+	/**
+	 * [Button] "New Hard Game"
+	 */
 	val newGameHardButton: Button = MenuButton(position = 4, text = "New Hard Game")
+	
+	/**
+	 * [Button] "Exit"
+	 */
 	val exitButton: Button = MenuButton(position = 5, text = "Exit")
 	
 	init {

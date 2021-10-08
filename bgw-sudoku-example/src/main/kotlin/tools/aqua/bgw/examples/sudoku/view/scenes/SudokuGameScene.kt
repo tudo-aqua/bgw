@@ -11,10 +11,19 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ * The game scene.
+ */
 class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 	
+	/**
+	 * Sudoku grid.
+	 */
 	val sudokuGrid: SudokuGrid = SudokuGrid(posX = 960, posY = 540, size = 900, majorSpacing = 5, minorSpacing = 2)
 	
+	/**
+	 * Menu button.
+	 */
 	val menuButton : Button = Button(
 		height = 50,
 		width = 120,
@@ -25,6 +34,9 @@ class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 		font = Font(color = Color.WHITE)
 	)
 	
+	/**
+	 * Settings button.
+	 */
 	val settingsButton : Button = Button(
 		height = menuButton.height,
 		width = menuButton.width,
@@ -35,6 +47,9 @@ class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 		font = Font(color = Color.WHITE)
 	)
 	
+	/**
+	 * Label with timer.
+	 */
 	val timer : Label = Label(
 		height = 50,
 		width = 200,
@@ -45,6 +60,9 @@ class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 		alignment = Alignment.TOP_RIGHT,
 	).apply { isVisible = false }
 	
+	/**
+	 * Button for error hints.
+	 */
 	val hintButton: Button = Button(
 		height = 80,
 		width = 80,
@@ -53,6 +71,9 @@ class SudokuGameScene : BoardGameScene(background = ColorVisual.WHITE) {
 		visual = ImageVisual("light-bulb.png")
 	)
 	
+	/**
+	 * Button to clear error hints.
+	 */
 	val clearHintsButton: Button = Button(
 		height = 80,
 		width = 80,

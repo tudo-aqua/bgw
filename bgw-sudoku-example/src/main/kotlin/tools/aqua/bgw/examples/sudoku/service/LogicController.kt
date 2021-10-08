@@ -3,7 +3,6 @@ package tools.aqua.bgw.examples.sudoku.service
 import tools.aqua.bgw.examples.sudoku.entity.Difficulty
 import tools.aqua.bgw.examples.sudoku.entity.Settings
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
-import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 import tools.aqua.bgw.examples.sudoku.service.SudokuChecker.Companion.checkSudoku
 import tools.aqua.bgw.examples.sudoku.view.Refreshable
 import java.util.*
@@ -16,46 +15,78 @@ import kotlin.streams.toList
  */
 class LogicController(private val view: Refreshable) {
 	
-	var sudoku: Sudoku = Sudoku()
+	/**
+	 * Settings instance.
+	 */
 	val settings: Settings = Settings()
 	
 	/**
-	 * Timer
+	 * current sudoku instance.
+	 */
+	var sudoku: Sudoku = Sudoku()
+	
+	
+	/**
+	 * Timer started time in millis.
 	 */
 	private var startTime: Long = 0L
+	
+	/**
+	 * Whether the timer is running.
+	 */
 	private var timerRunning: Boolean = false
-	private val timer: Timer = Timer().apply {
-		scheduleAtFixedRate(
-			delay = 0,
-			period = 100
-		) {
-			if (timerRunning) {
-				val millis = System.currentTimeMillis() - startTime
-				
-				view.refreshTimer(
-					String.format(
-						"%02d:%02d:%02d",
-						TimeUnit.MILLISECONDS.toHours(millis),
-						TimeUnit.MILLISECONDS.toMinutes(millis) -
-								TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-						TimeUnit.MILLISECONDS.toSeconds(millis) -
-								TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+	
+	init {
+		Timer().apply {
+			scheduleAtFixedRate(
+				delay = 0,
+				period = 100
+			) {
+				if (timerRunning) {
+					val millis = System.currentTimeMillis() - startTime
+					
+					view.refreshTimer(
+						String.format(
+							"%02d:%02d:%02d",
+							TimeUnit.MILLISECONDS.toHours(millis),
+							TimeUnit.MILLISECONDS.toMinutes(millis) -
+									TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+							TimeUnit.MILLISECONDS.toSeconds(millis) -
+									TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+						)
 					)
-				)
+				}
 			}
 		}
 	}
 	
+	/**
+	 * Creates a new game for given difficulty.
+	 *
+	 * @param difficulty Selected difficulty.
+	 */
 	fun newGame(difficulty: Difficulty) {
 		sudoku = getRandomSudoku(difficulty)
 		startTime = System.currentTimeMillis()
 		timerRunning = true
+		
+		settings.currentDifficulty = difficulty
 		view.refreshInit(sudoku)
 	}
 	
+	/**
+	 * Returns a random sudoku for given difficulty.
+	 *
+	 * @param difficulty Selected difficulty.
+	 */
 	private fun getRandomSudoku(difficulty: Difficulty): Sudoku {
 		val formatted = Array(9) { Array(3) { Array(3) { Sudoku.SudokuCell() } } }
-		val sudokuInput = checkNotNull(readRandomSudoku(difficulty))
+		val sudokuInput = checkNotNull(javaClass.classLoader.getResourceAsStream(difficulty.file)
+			?.bufferedReader()
+			?.lines()
+			?.toList()
+			?.randomOrNull()
+		)
 		
 		check(sudokuInput.length == 81)
 		
@@ -72,20 +103,28 @@ class LogicController(private val view: Refreshable) {
 		return Sudoku(formatted)
 	}
 	
-	private fun readRandomSudoku(difficulty: Difficulty) =
-		javaClass.classLoader.getResourceAsStream(difficulty.file)?.bufferedReader()?.lines()?.toList()?.randomOrNull()
-	
-	fun setValue(tuple: SudokuTuple) {
-		if (sudoku.grid[tuple.box][tuple.row][tuple.col].isFixed)
+	/**
+	 * Sets a new value for the selected cell.
+	 *
+	 * @param box Box index.
+	 * @param row Row index.
+	 * @param col Column index.
+	 * @param value Value to set or `null` to clear cell.
+	 */
+	fun setValue(box: Int, row: Int, col: Int, value: Int? = null) {
+		if (sudoku.grid[box][row][col].isFixed)
 			return
 		
-		sudoku[tuple.box, tuple.row, tuple.col] = tuple.value
-		view.refreshSetValue(tuple)
+		sudoku[box, row, col] = value
+		view.refreshSetValue(box, row, col, value)
 		
-		checkSudoku()
+		showErrors()
 	}
 	
-	fun checkSudoku() {
+	/**
+	 * Checks for errors in current sudoku and refreshes GUI.
+	 */
+	fun showErrors() {
 		val isFull = SudokuChecker.checkFull(sudoku)
 		if (isFull || settings.instantCheck.value) {
 			val errors = checkSudoku(sudoku)
@@ -97,6 +136,9 @@ class LogicController(private val view: Refreshable) {
 		}
 	}
 	
+	/**
+	 * Calculates and shows error hints.
+	 */
 	fun requestHint() {
 		view.refreshHint(checkSudoku(sudoku))
 	}
