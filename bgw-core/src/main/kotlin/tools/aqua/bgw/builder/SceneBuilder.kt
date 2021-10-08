@@ -20,6 +20,7 @@ package tools.aqua.bgw.builder
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
+import tools.aqua.bgw.builder.FXConverters.Companion.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.Companion.toMouseEvent
 import tools.aqua.bgw.builder.Frontend.Companion.mapToPane
 import tools.aqua.bgw.components.ComponentView
@@ -85,6 +86,10 @@ internal class SceneBuilder {
 			val pane = Pane().apply {
 				prefHeight = scene.height
 				prefWidth = scene.width
+				
+				setOnKeyTyped { scene.onKeyTyped?.invoke(it.toKeyEvent()) }
+				setOnKeyPressed { scene.onKeyPressed?.invoke(it.toKeyEvent()) }
+				setOnKeyReleased { scene.onKeyReleased?.invoke(it.toKeyEvent()) }
 			}
 			
 			scene.rootComponents.setGUIListenerAndInvoke (listOf()) { oV, _ -> pane.rebuild(scene, oV) }
