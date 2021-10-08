@@ -32,7 +32,7 @@ class SudokuGrid(
 	/**
 	 * Currently selected cell.
 	 */
-	var selectedCell : SudokuCell? = null
+	var selectedCell: SudokuCell? = null
 	
 	/**
 	 * Event raised upon selection of a cell.
@@ -65,7 +65,7 @@ class SudokuGrid(
 	fun setFixed(box: Int, row: Int, col: Int, value: Int?) {
 		Sudoku.checkBounds(box = box, row = row, col = col, value = value)
 		
-		if(value != null)
+		if (value != null)
 			get(box % 3, box / 3)?.get(col, row)?.setFixedValue(value)
 		else
 			get(box % 3, box / 3)?.get(col, row)?.clear()
@@ -109,7 +109,7 @@ class SudokuGrid(
 	 *
 	 * @return The [SudokuCell].
 	 */
-	fun getCell(box: Int, row: Int, col: Int) : SudokuCell {
+	fun getCell(box: Int, row: Int, col: Int): SudokuCell {
 		Sudoku.checkBounds(box = box, row = row, col = col)
 		
 		return requireNotNull(get(box % 3, box / 3)?.get(col, row))
@@ -127,10 +127,22 @@ class SudokuGrid(
 	}
 	
 	/**
+	 * Marks all cells in green.
+	 */
+	fun showWon() {
+		forEach { box ->
+			box.component?.forEach { cell ->
+				cell.component?.visual = ColorVisual(wonColor)
+			}
+		}
+	}
+	
+	/**
 	 * Clears all hints.
 	 */
 	fun clearHints() {
-		forEach { box -> box.component?.forEach { cell ->
+		forEach { box ->
+			box.component?.forEach { cell ->
 				cell.component?.visual = ColorVisual.WHITE
 			}
 		}

@@ -22,3 +22,8 @@ val selectedColor : Color = Color(255, 238, 143)
  * [Color] for errors in cells
  */
 val errorColor : Color = Color(255,150,150)
+
+/**
+ * [Color] for for finished game
+ */
+val wonColor : Color = Color(150,255,150)

@@ -57,6 +57,6 @@ class RefreshViewController(private val viewController: SudokuViewController) : 
 	 * Refresh to show that game is finished.
 	 */
 	override fun refreshWon() {
-		println("You won!")
+		viewController.sudokuGameScene.sudokuGrid.showWon()
 	}
 }
