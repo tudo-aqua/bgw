@@ -1,6 +1,7 @@
 package tools.aqua.bgw.examples.sudoku.service
 
 import tools.aqua.bgw.examples.sudoku.entity.Difficulty
+import tools.aqua.bgw.examples.sudoku.entity.Settings
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
 import tools.aqua.bgw.examples.sudoku.entity.SudokuTuple
 import tools.aqua.bgw.examples.sudoku.service.SudokuChecker.Companion.checkSudoku
@@ -13,6 +14,7 @@ import kotlin.streams.toList
 class LogicController(private val view: Refreshable) {
 	
 	var sudoku : Sudoku = Sudoku()
+	val settings : Settings = Settings()
 	
 	fun newGame(difficulty: Difficulty) {
 		sudoku = getRandomSudoku(difficulty)
