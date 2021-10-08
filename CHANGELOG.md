@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5] - To be released
 ### Added
 - Scene wide key events.
+- Sudoku example.
 
 ## [0.4] - 22. Sep. 2021
 ### Fixed
