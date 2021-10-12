@@ -540,8 +540,8 @@ open class GridPane<T : ComponentView>(
 		val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
 		val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
 		
-		val cellOffsetX = (renderedColWidths[it.columnIndex] - (it.component?.actualWidth?:0.0))
-		val cellOffsetY = (renderedRowHeights[it.rowIndex] - (it.component?.actualHeight?:0.0))
+		val cellOffsetX = renderedColWidths[it.columnIndex] - (it.component?.actualWidth?:0.0)
+		val cellOffsetY = renderedRowHeights[it.rowIndex] - (it.component?.actualHeight?:0.0)
 		
 		val cellAlignment = getCellCenterMode(columnIndex = it.columnIndex, rowIndex = it.rowIndex)
 		val cellAlignmentX = cellAlignment.horizontalAlignment.positionMultiplier

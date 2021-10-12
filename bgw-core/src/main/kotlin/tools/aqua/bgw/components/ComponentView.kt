@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate", "GrazieInspection")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "TooManyFunctions", "GrazieInspection")
 
 package tools.aqua.bgw.components
 

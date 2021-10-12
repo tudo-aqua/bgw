@@ -259,7 +259,7 @@ internal class ComponentViewGrid<T : ComponentView>(
 	 */
 	fun getRowHeight(rowIndex: Int): Double {
 		require(rowIndex in rowHeights.indices) {
-			"ColumnIndex out of grid range."
+			"RowIndex out of grid range."
 		}
 		
 		return rowHeights[rowIndex]
@@ -275,7 +275,7 @@ internal class ComponentViewGrid<T : ComponentView>(
 	 */
 	fun setRowHeight(rowIndex: Int, rowHeight: Double) {
 		require(rowIndex in rowHeights.indices) {
-			"ColumnIndex out of grid range."
+			"RowIndex out of grid range."
 		}
 		require(rowHeight >= 0 || rowHeight == ROW_HEIGHT_AUTO) {
 			"Parameter must be positive or ROW_HEIGHT_AUTO."
