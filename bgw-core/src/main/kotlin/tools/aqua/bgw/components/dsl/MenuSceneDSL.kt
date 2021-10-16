@@ -100,8 +100,8 @@ internal fun MenuScene.toggleGroup(func: ToggleGroupBuilder.() -> Unit): ToggleG
  * to set the [ToggleGroup] on every [ToggleButton].
  */
 internal class ToggleGroupBuilder {
-    internal val buttons = mutableListOf<ToggleButton>()
-    internal fun build(): Pair<ToggleGroup, List<ToggleButton>> {
+    internal val buttons = mutableListOf<BinaryStateButton>()
+    internal fun build(): Pair<ToggleGroup, List<BinaryStateButton>> {
         val toggleGroup = ToggleGroup()
         buttons.forEach { it.toggleGroup = toggleGroup }
         return Pair(toggleGroup, buttons)
@@ -163,7 +163,7 @@ internal fun MenuScene.toggleButton(func: ToggleButton.() -> Unit): ToggleButton
  *
  * @return the new [RadioButton].
  */
-internal fun MenuScene.radioButton(func: ToggleButton.() -> Unit): RadioButton {
+internal fun MenuScene.radioButton(func: BinaryStateButton.() -> Unit): RadioButton {
     val btn = RadioButton().apply(func)
     addComponents(btn)
     return btn

@@ -60,6 +60,8 @@ internal class UINodeBuilder {
 					buildTextField(uiComponent)
 				is ToggleButton ->
 					buildToggleButton(uiComponent)
+				is RadioButton ->
+					buildRadioButton(uiComponent)
 				is ColorPicker ->
 					buildColorPicker(uiComponent)
 				is ProgressBar ->
@@ -226,19 +228,35 @@ internal class UINodeBuilder {
 		}
 
 		/**
-		 * Builds [ToggleButton] or [RadioButton].
+		 * Builds [ToggleButton].
 		 */
 		private fun buildToggleButton(toggleButton: ToggleButton): Region {
-			val node = if (toggleButton is RadioButton)
-				com.jfoenix.controls.JFXRadioButton()
-			else
-				com.jfoenix.controls.JFXToggleButton()
-
+			val node = com.jfoenix.controls.JFXToggleButton()
+			
 			node.selectedProperty().bindBooleanProperty(toggleButton.selectedProperty)
-
+			
 			return node
 		}
-
+		
+		/**
+		 * Builds [RadioButton].
+		 */
+		private fun buildRadioButton(radioButton: RadioButton): Region {
+			val node = com.jfoenix.controls.JFXRadioButton().apply {
+				isSelected = radioButton.isSelected
+				selectedProperty().addListener { _, _, nV -> radioButton.isSelected = nV }
+			}
+			
+			radioButton.selectedProperty.guiListener = { _, nV -> node.selectedProperty().value =
+				if (nV || !radioButton.toggleGroup.buttons.none { it.isSelected })
+					nV
+				else
+					true //Reselect if attempting to deselect last radio button
+			}
+			
+			return node
+		}
+		
 		/**
 		 * Builds [ProgressBar].
 		 */
@@ -334,7 +352,7 @@ internal class UINodeBuilder {
 
 			//JavaFX -> Framework
 			value = booleanProperty.value
-			addListener { _, _, new -> booleanProperty.value = new }
+			addListener { _, _, nV -> booleanProperty.value = nV }
 		}
 	}
 }
