@@ -46,8 +46,31 @@ internal class AnimationBuilder {
 				is DelayAnimation -> buildDelayAnimation(scene, anim)
 				is DiceAnimation<*> -> buildDiceAnimation(scene, anim)
 				is RandomizeAnimation<*> -> buildRandomizeAnimation(scene, anim)
+				is SequentialAnimation -> buildSequentialAnimation(scene, anim)
+				is ParallelAnimation -> buildParallelAnimation(scene, anim)
 			}
-		
+
+		private fun buildParallelAnimation(
+			scene: Scene<out ComponentView>,
+			animation: ParallelAnimation
+		): javafx.animation.Animation =
+			ParallelTransition(*animation.animations.map { build(scene, it) }.toTypedArray()).apply {
+				onFinished = EventHandler {
+					onFinished(scene, animation)
+				}
+			}
+
+
+		private fun buildSequentialAnimation(
+			scene: Scene<out ComponentView>,
+			animation: SequentialAnimation
+		): javafx.animation.Animation =
+			SequentialTransition(*animation.animations.map { build(scene, it) }.toTypedArray()).apply {
+				onFinished = EventHandler {
+					onFinished(scene, animation)
+				}
+			}
+
 		/**
 		 * Builds [MovementAnimation].
 		 */
@@ -56,16 +79,16 @@ internal class AnimationBuilder {
 			anim: MovementAnimation<*>
 		): Transition {
 			val node = mapNode(scene, anim.componentView)
-			
+
 			//Move node to initial position
 			node.layoutX = anim.fromX
 			node.layoutY = anim.fromY
-			
+
 			//set transition as relative movement
 			return TranslateTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				byX = anim.toX - anim.fromX
 				byY = anim.toY - anim.fromY
-				
+
 				//set on finished
 				onFinished = EventHandler {
 					node.layoutX = anim.toX
@@ -76,7 +99,7 @@ internal class AnimationBuilder {
 				}
 			}
 		}
-		
+
 		/**
 		 * Builds [RotationAnimation].
 		 */
@@ -85,14 +108,14 @@ internal class AnimationBuilder {
 			anim: RotationAnimation<*>
 		): Transition {
 			val node = mapNode(scene, anim.componentView)
-			
+
 			//Move node to initial position
 			node.rotate = anim.fromAngle
-			
+
 			//set transition as relative movement
 			return RotateTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				byAngle = anim.toAngle - anim.fromAngle
-				
+
 				//set on finished
 				onFinished = EventHandler {
 					node.rotate = anim.toAngle
@@ -102,7 +125,7 @@ internal class AnimationBuilder {
 				}
 			}
 		}
-		
+
 		/**
 		 * Builds [FlipAnimation].
 		 */
@@ -111,22 +134,22 @@ internal class AnimationBuilder {
 			anim: ScaleAnimation<*>
 		): Transition {
 			val node = mapNode(scene, anim.componentView)
-			
+
 			//Set initial scale
 			node.scaleX = anim.fromScaleX
 			node.scaleY = anim.fromScaleY
-			
+
 			return ScaleTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				toX = anim.toScaleX
 				toY = anim.toScaleY
-				
+
 				//set on finished
-				onFinished = EventHandler{
+				onFinished = EventHandler {
 					onFinished(scene, anim)
 				}
 			}
 		}
-		
+
 		/**
 		 * Builds [FlipAnimation].
 		 */
@@ -135,20 +158,20 @@ internal class AnimationBuilder {
 			anim: FadeAnimation<*>
 		): Transition {
 			val node = mapNode(scene, anim.componentView)
-			
+
 			//Set initial opacity
 			node.opacity = anim.fromOpacity
-			
+
 			return FadeTransition(Duration.millis(anim.duration.toDouble()), node).apply {
 				fromValue = anim.fromOpacity
 				toValue = anim.toOpacity
-				
+
 				onFinished = EventHandler {
 					onFinished(scene, anim)
 				}
 			}
 		}
-		
+
 		/**
 		 * Builds [FlipAnimation].
 		 */
@@ -159,7 +182,7 @@ internal class AnimationBuilder {
 			val node = mapNode(scene, anim.componentView)
 			val fromVisual = VisualBuilder.buildVisual(anim.fromVisual)
 			val toVisual = VisualBuilder.buildVisual(anim.toVisual).apply { scaleX = 0.0 }
-			
+
 			val animation1 = ScaleTransition(Duration.millis(anim.duration / 2.0), fromVisual).apply {
 				fromX = 1.0
 				toX = 0.0
@@ -168,22 +191,22 @@ internal class AnimationBuilder {
 				fromX = 0.0
 				toX = 1.0
 			}
-			
-			
+
+
 			node.children[0] = fromVisual
 			animation1.setOnFinished {
 				node.children[0] = toVisual
 				animation2.play()
 			}
-			
+
 			//set on finished
 			animation2.setOnFinished {
 				onFinished(scene, anim)
 			}
-			
+
 			return animation1
 		}
-		
+
 		/**
 		 * Builds [DelayAnimation].
 		 */
@@ -191,13 +214,14 @@ internal class AnimationBuilder {
 			scene: Scene<out ComponentView>,
 			anim: DelayAnimation
 		): Transition = PauseTransition(
-			Duration.millis(anim.duration.toDouble())).apply {
-				//set on finished
-				onFinished = EventHandler {
-					onFinished(scene, anim)
-				}
+			Duration.millis(anim.duration.toDouble())
+		).apply {
+			//set on finished
+			onFinished = EventHandler {
+				onFinished(scene, anim)
 			}
-		
+		}
+
 		/**
 		 * Builds [DiceAnimation].
 		 */
@@ -206,7 +230,7 @@ internal class AnimationBuilder {
 			anim: DiceAnimation<*>
 		): Transition {
 			val seq = SequentialTransition()
-			
+
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					onFinished = EventHandler {
@@ -214,15 +238,15 @@ internal class AnimationBuilder {
 					}
 				}
 			}
-			
+
 			seq.setOnFinished {
 				anim.componentView.currentSide = anim.toSide
 				onFinished(scene, anim)
 			}
-			
+
 			return seq
 		}
-		
+
 		/**
 		 * Builds [RandomizeAnimation].
 		 */
@@ -231,7 +255,7 @@ internal class AnimationBuilder {
 			anim: RandomizeAnimation<*>
 		): Transition {
 			val seq = SequentialTransition()
-			
+
 			repeat(anim.speed) {
 				seq.children += PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
 					setOnFinished {
@@ -239,30 +263,30 @@ internal class AnimationBuilder {
 					}
 				}
 			}
-			
+
 			seq.setOnFinished {
 				(anim.componentView as CardView).backVisual = anim.toVisual
 				onFinished(scene, anim)
 			}
-			
+
 			return seq
 		}
-		
+
 		/**
 		 * Removes [anim] from animations list and invokes [Animation.onFinished].
 		 */
 		private fun onFinished(scene: Scene<out ComponentView>, anim: Animation) {
 			scene.animations.remove(anim)
-			
+
 			Platform.runLater {
 				anim.onFinished?.invoke(AnimationFinishedEvent())
 			}
 		}
-		
+
 		/**
 		 * Maps [ComponentView] to FX node.
 		 */
-		private fun mapNode(scene: Scene<out ComponentView>, componentView : ComponentView) =
+		private fun mapNode(scene: Scene<out ComponentView>, componentView: ComponentView) =
 			checkNotNull(scene.componentsMap[componentView]) { "Creating animation for node that is not in scene." }
 	}
 }
