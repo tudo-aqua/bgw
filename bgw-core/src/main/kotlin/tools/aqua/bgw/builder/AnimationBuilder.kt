@@ -54,7 +54,7 @@ internal class AnimationBuilder {
 		private fun buildMovementAnimation(
 			scene: Scene<out ComponentView>,
 			anim: MovementAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val node = mapNode(scene, anim.componentView)
 			
 			//Move node to initial position
@@ -83,7 +83,7 @@ internal class AnimationBuilder {
 		private fun buildRotateAnimation(
 			scene: Scene<out ComponentView>,
 			anim: RotationAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val node = mapNode(scene, anim.componentView)
 			
 			//Move node to initial position
@@ -109,7 +109,7 @@ internal class AnimationBuilder {
 		private fun buildScaleAnimation(
 			scene: Scene<out ComponentView>,
 			anim: ScaleAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val node = mapNode(scene, anim.componentView)
 			
 			//Set initial scale
@@ -133,7 +133,7 @@ internal class AnimationBuilder {
 		private fun buildFadeAnimation(
 			scene: Scene<out ComponentView>,
 			anim: FadeAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val node = mapNode(scene, anim.componentView)
 			
 			//Set initial opacity
@@ -155,7 +155,7 @@ internal class AnimationBuilder {
 		private fun buildFlipAnimation(
 			scene: Scene<out ComponentView>,
 			anim: FlipAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val node = mapNode(scene, anim.componentView)
 			val fromVisual = VisualBuilder.buildVisual(anim.fromVisual)
 			val toVisual = VisualBuilder.buildVisual(anim.toVisual).apply { scaleX = 0.0 }
@@ -190,7 +190,7 @@ internal class AnimationBuilder {
 		private fun buildDelayAnimation(
 			scene: Scene<out ComponentView>,
 			anim: DelayAnimation
-		): javafx.animation.Animation = PauseTransition(
+		): Transition = PauseTransition(
 			Duration.millis(anim.duration.toDouble())).apply {
 				//set on finished
 				onFinished = EventHandler {
@@ -204,7 +204,7 @@ internal class AnimationBuilder {
 		private fun buildDiceAnimation(
 			scene: Scene<out ComponentView>,
 			anim: DiceAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val seq = SequentialTransition()
 			
 			repeat(anim.speed) {
@@ -229,7 +229,7 @@ internal class AnimationBuilder {
 		private fun buildRandomizeAnimation(
 			scene: Scene<out ComponentView>,
 			anim: RandomizeAnimation<*>
-		): javafx.animation.Animation {
+		): Transition {
 			val seq = SequentialTransition()
 			
 			repeat(anim.speed) {
