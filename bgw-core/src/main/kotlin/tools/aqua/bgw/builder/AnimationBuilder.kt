@@ -50,6 +50,9 @@ internal class AnimationBuilder {
 				is ParallelAnimation -> buildParallelAnimation(scene, anim)
 			}
 
+		/**
+		 * Builds [ParallelAnimation].
+		 */
 		private fun buildParallelAnimation(
 			scene: Scene<out ComponentView>,
 			animation: ParallelAnimation
@@ -60,7 +63,9 @@ internal class AnimationBuilder {
 				}
 			}
 
-
+		/**
+		 * Builds [SequentialAnimation].
+		 */
 		private fun buildSequentialAnimation(
 			scene: Scene<out ComponentView>,
 			animation: SequentialAnimation
