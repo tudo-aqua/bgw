@@ -1,0 +1,2 @@
+version = rootProject.version
+
