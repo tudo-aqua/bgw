@@ -6,8 +6,8 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "tools.aqua"
-version = "0.0.1"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
 	mavenCentral()

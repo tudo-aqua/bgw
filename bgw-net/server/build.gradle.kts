@@ -6,7 +6,7 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "tools.aqua"
+rootProject.group
 version = rootProject.version
 
 repositories {
