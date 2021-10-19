@@ -9,18 +9,21 @@ import kotlinx.serialization.json.JsonElement
 sealed class Message()
 
 @Serializable
-data class CreateGame(val password: String, val numPlayers: Int) : Message()
+sealed class Request : Message()
 
 @Serializable
-data class JoinGame(val id: Int, val password: String, val name: String, val playerIndex: Int) : Message()
+data class CreateGameRequest(val password: String, val numPlayers: Int) : Request()
 
 @Serializable
-data class GameMessage(val payload: JsonElement)
+data class JoinGameRequest(val id: Int, val password: String, val name: String, val playerIndex: Int) : Request()
+
+@Serializable
+data class GameMessageRequest(val payload: JsonElement) : Request()
 
 
 //Response
 @Serializable
-sealed class Response()
+sealed class Response() : Message()
 
 @Serializable
 data class CreateGameResponse(val state : State, val id: Int?) : Response()
