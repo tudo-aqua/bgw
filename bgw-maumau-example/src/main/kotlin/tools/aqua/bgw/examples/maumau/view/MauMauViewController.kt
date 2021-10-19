@@ -1,5 +1,6 @@
 package tools.aqua.bgw.examples.maumau.view
 
+import CreateGameRequest
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
@@ -7,7 +8,6 @@ import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
-import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.client.BoardGameSession
 import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.ColorVisual
@@ -51,6 +51,8 @@ class MauMauViewController(private val session: BoardGameSession) : BoardGameApp
 		registerGameEvents()
 		registerMenuEvents()
 
+		session.onResponseReceived = { println(it) }
+		session.send(CreateGameRequest("abc", 4))
 		mauMauGameScene.addComponents(Button(100,100, 100, 100, visual = ColorVisual.MAGENTA).apply {
 			onMouseClicked = { session.close() }
 		})
@@ -105,8 +107,6 @@ class MauMauViewController(private val session: BoardGameSession) : BoardGameApp
 	 * @param event Drag event.
 	 */
 	private fun elementDropped(event: DragEvent) {
-		session.onMessageReceived = { println(it) }
-		session.send("Hi")
 		logicController.playCard(cardMap.backward(event.draggedComponent as CardView), false)
 	}
 	
