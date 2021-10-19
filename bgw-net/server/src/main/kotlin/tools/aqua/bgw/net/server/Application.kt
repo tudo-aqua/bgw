@@ -4,6 +4,7 @@ import io.ktor.application.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.routing.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.isActive
 import java.util.*
 
 
@@ -21,11 +22,15 @@ fun Application.module() {
 			try {
 				send("You are connected! There are ${connections.count()} users here.")
 				for (frame in incoming) {
-					frame as? Frame.Text ?: continue
-					val receivedText = frame.readText()
-					val textWithUsername = "[${thisConnection.name}]: $receivedText"
-					connections.forEach {
-						it.session.send(textWithUsername)
+					when (frame) {
+						is Frame.Text -> {
+							val receivedText = frame.readText()
+							val textWithUsername = "[${thisConnection.name}]: $receivedText"
+							connections.forEach {
+								it.session.send(textWithUsername)
+							}
+						}
+						else -> continue
 					}
 				}
 			} catch (e: Exception) {
