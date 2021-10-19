@@ -1,17 +1,21 @@
 package tools.aqua.bgw.examples.maumau.view
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
+import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.client.BoardGameSession
 import tools.aqua.bgw.util.BidirectionalMap
+import tools.aqua.bgw.visual.ColorVisual
 
 /**
  * Main view controller.
  */
-class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
+class MauMauViewController(private val session: BoardGameSession) : BoardGameApplication(windowTitle = "MauMau") {
 	
 	/**
 	 * The main menu scene.
@@ -46,7 +50,10 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	init {
 		registerGameEvents()
 		registerMenuEvents()
-		
+
+		mauMauGameScene.addComponents(Button(100,100, 100, 100, visual = ColorVisual.MAGENTA).apply {
+			onMouseClicked = { session.close() }
+		})
 		showGameScene(mauMauGameScene)
 		showMenuScene(mauMauMenuScene)
 		show()
@@ -98,6 +105,8 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	 * @param event Drag event.
 	 */
 	private fun elementDropped(event: DragEvent) {
+		session.onMessageReceived = { println(it) }
+		session.send("Hi")
 		logicController.playCard(cardMap.backward(event.draggedComponent as CardView), false)
 	}
 	
