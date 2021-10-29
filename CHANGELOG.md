@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5] - To be released
 ### Added
+- ``ParallelAnimation`` and ``SequentialAnimation``.
 - Scene wide key events.
 - Sudoku example.
 
