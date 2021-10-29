@@ -14,12 +14,14 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.5] - To be released
+
 ### Added
 - ``ParallelAnimation`` and ``SequentialAnimation``.
 - Scene wide key events.
 - Sudoku example.
 
 ## [0.4] - 22. Sep. 2021
+
 ### Fixed
 - Empty grid columns and rows no longer get rendered size 0.0 in case of fixed dimensions.
 - Race condition while changing GameScenes caused by slow renderer.

@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "LongParameterList")
 
 package tools.aqua.bgw.components.uicomponents
 
