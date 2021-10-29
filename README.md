@@ -12,3 +12,5 @@
 BoardGameWork is a framework for creating 2D board game applications. 
 
 Read on [how to get started](https://tudo-aqua.github.io/bgw/), or take a look at the complete [API documentation](https://tudo-aqua.github.io/bgw/kotlin-docs/).
+
+Examples are available for [MauMau](https://github.com/tudo-aqua/bgw/tree/dev/bgw-maumau-example) and [Sudoku](https://github.com/tudo-aqua/bgw/tree/dev/bgw-sudoku-example).

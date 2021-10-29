@@ -26,6 +26,7 @@ import tools.aqua.bgw.builder.DragDataObject
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.RootComponent
+import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
@@ -166,6 +167,29 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 	 * All [Animation]s currently playing.
 	 */
 	internal val animations: ObservableList<Animation> = ObservableArrayList()
+	
+	/**
+	 * Gets invoked with a [KeyEvent] whenever a key is pressed.
+	 *
+	 * @see KeyEvent
+	 */
+	var onKeyPressed: ((KeyEvent) -> Unit)? = null
+	
+	/**
+	 * Gets invoked with a [KeyEvent] whenever a key is released.
+	 *
+	 * @see KeyEvent
+	 */
+	var onKeyReleased: ((KeyEvent) -> Unit)? = null
+	
+	/**
+	 * Gets invoked with a [KeyEvent] whenever a key is typed.
+	 * Gets invoked after [onKeyPressed].
+	 *
+	 * @see KeyEvent
+	 * @see onKeyPressed
+	 */
+	var onKeyTyped: ((KeyEvent) -> Unit)? = null
 	
 	/**
 	 * Adds all given [ComponentView]s to the root node and [rootComponents] list.
