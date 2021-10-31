@@ -18,7 +18,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - ``ParallelAnimation`` and ``SequentialAnimation``.
 - Scene wide key events.
+- BoardGameApplication.runOnGUIThread function to update components from asynchronous environments.
 - Sudoku example.
+- Tetris example.
 
 ## [0.4] - 22. Sep. 2021
 
