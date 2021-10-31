@@ -18,9 +18,23 @@ All notable changes to this project will be documented in this file.
 ### Added
 - ``ParallelAnimation`` and ``SequentialAnimation``.
 - Scene wide key events.
-- BoardGameApplication.runOnGUIThread function to update components from asynchronous environments.
+- ``BoardGameApplication.runOnGUIThread`` function to update components from asynchronous environments.
 - Sudoku example.
 - Tetris example.
+
+### Changed
+ - Moved examples to dedicated sub-module
+ - Disable deselection of last ``RadioButton`` in ``ToggleGroup``.
+ - Empty grid columns and rows no longer get rendered size 0.0 in case of fixed dimensions. 
+
+### Fixed
+ - Drag and drop target for custom inter-cell-alignments
+ - Offset for grids nested in grid cells.
+ - ``MovementAnimation.toComponentView`` missing ``layoutFromCenter`` offset for ``Grid``
+ - ``MovementAnimation.toComponentView`` now working with ``scale``.
+ - wrong parent in rollback search for containers after drag and drop.
+ - ``BoardGameScene`` getting shown blurred if ``showGameScene`` gets called after ``hideMenuScene``.
+ - ``FileDialogs`` returning list of nulls instead of ``Optional.EMPTY``.
 
 ## [0.4] - 22. Sep. 2021
 
