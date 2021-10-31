@@ -17,6 +17,7 @@ layout: default
 [GameComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
 [lockKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html
 [unlockKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html
+[runOnGUIThreadKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/-companion/run-on-g-u-i-thread.html
 
 <!-- GH-Pages Doc -->
 [VisualDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
@@ -49,6 +50,8 @@ The full example of the gif above can be found here:
 
 Each [Animation][AnimationKDoc] has a
 duration, a running attribute and an ``onFinished`` EventHandler that gets invoked after the animation has finished.
+
+**Note: UI changes may not be done directly from this asynchronous onFinished environment. Use [BoardGameApplication#runOnGUIThread][runOnGUIThreadKDoc] to alter properties of ComponentViews!**
 
 ## [DelayAnimation][DelayAnimationKDoc]
 
