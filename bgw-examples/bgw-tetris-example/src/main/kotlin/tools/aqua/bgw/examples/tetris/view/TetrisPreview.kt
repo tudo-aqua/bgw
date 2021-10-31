@@ -6,6 +6,13 @@ import tools.aqua.bgw.examples.tetris.entity.Piece
 import tools.aqua.bgw.examples.tetris.entity.Tile
 import tools.aqua.bgw.visual.ColorVisual
 
+/**
+ * Custom component for tetris previews.
+ *
+ * @param posX Horizontal coordinate for this [TetrisPreview].
+ * @param posY Vertical coordinate for this [TetrisPreview].
+ * @param cellSize Cell size in x and y direction.
+ */
 class TetrisPreview(posX : Number, posY : Number, cellSize : Number) : GridPane<Label>(
 	posX = posX,
 	posY = posY,
@@ -22,6 +29,11 @@ class TetrisPreview(posX : Number, posY : Number, cellSize : Number) : GridPane<
 		}
 	}
 	
+	/**
+	 * Shows given [Piece].
+	 *
+	 * @param piece [Piece] to display.
+	 */
 	fun show(piece : Piece) {
 		val minY = 4 - piece.tiles.size
 		val minX = if(piece.tiles[0].size == 3) 0 else 1

@@ -22,16 +22,14 @@ class TetrisViewController : BoardGameApplication(windowTitle = "Tetris") {
 	/**
 	 * Logic controller instance.
 	 */
-	val logicController: LogicController = LogicController(refreshViewController)
+	private val logicController: LogicController = LogicController(refreshViewController)
 	
 	init {
 		tetrisGameScene.registerEvents()
 		
 		onWindowClosed = {
-			logicController.timer.cancel()
+			logicController.stopTimer()
 		}
-		
-		logicController.tetris.points.addListener{ _, nV -> tetrisGameScene.pointsLabel.text = "$nV Points"}
 		
 		showGameScene(tetrisGameScene)
 		show()
@@ -44,8 +42,7 @@ class TetrisViewController : BoardGameApplication(windowTitle = "Tetris") {
 		onKeyPressed = {
 			when {
 				it.keyCode.isArrow() -> logicController.navigate(it.keyCode)
-				it.keyCode == KeyCode.ENTER -> logicController.apply { if(!running) { nextPiece(); start(400) } }
-				it.keyCode == KeyCode.BACK_SPACE -> logicController.nextPiece()
+				it.keyCode == KeyCode.ENTER -> logicController.startGame()
 			}
 		}
 	}
