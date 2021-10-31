@@ -58,21 +58,21 @@ duration, a running attribute and an ``onFinished`` EventHandler that gets invok
 
 ## [SequentialAnimation][SequentialKDoc]
 
-A SequentialAnimation is an Animation that consists of multiple animations, that get played in sequence. 
+A SequentialAnimation is an [Animation][AnimationKDoc] that consists of multiple animations, that get played in sequence. 
 This is useful to combine multiple animations into a single one. 
 An example on how to create and play a SequentialAnimation can be found below:
 
 ````kotlin
 gameScene.playAnimation(
     SequentialAnimation(
-        DelayAnimation(duration = 1000).apply {
-	        onFinished = { println("First DelayAnimation finished!") }
+        DelayAnimation(duration = 1000).apply { 
+            onFinished = { println("First DelayAnimation finished!") }
         },
-        DelayAnimation(duration = 2000).apply {
+        DelayAnimation(duration = 2000).apply { 
             onFinished = { println("Second DelayAnimation finished!") }
         },
-    ).apply {
-	    onFinished = { println("SequentialAnimation finished!") }
+    ).apply { 
+        onFinished = { println("SequentialAnimation finished!") }
     }
 )
 ````
@@ -81,21 +81,21 @@ The resulting SequentialAnimation will play for 3000ms and print some informatio
 
 ## [ParallelAnimation][ParallelKDoc]
 
-A ParallelAnimation is an Animation that consists of multiple animations, that get played in parallel.
+A ParallelAnimation is an [Animation][AnimationKDoc] that consists of multiple animations, that get played in parallel.
 This is useful to combine multiple animations into a single one.
 An example on how to create and play a ParallelAnimation can be found below:
 
 ````kotlin
 gameScene.playAnimation(
     ParallelAnimation(
-        DelayAnimation(duration = 1000).apply {
-	        onFinished = { println("First DelayAnimation finished!") }
+        DelayAnimation(duration = 1000).apply { 
+            onFinished = { println("First DelayAnimation finished!") }
         },
-        DelayAnimation(duration = 2000).apply {
+        DelayAnimation(duration = 2000).apply { 
             onFinished = { println("Second DelayAnimation finished!") }
         },
-    ).apply {
-	    onFinished = { println("SequentialAnimation finished!") }
+    ).apply { 
+        onFinished = { println("ParallelAnimation finished!") }
     }
 )
 ````
