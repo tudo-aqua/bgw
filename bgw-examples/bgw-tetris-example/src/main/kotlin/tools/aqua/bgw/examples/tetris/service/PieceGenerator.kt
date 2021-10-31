@@ -4,13 +4,22 @@ import tools.aqua.bgw.examples.tetris.entity.Color
 import tools.aqua.bgw.examples.tetris.entity.Piece
 import tools.aqua.bgw.examples.tetris.entity.Tile
 
+/**
+ * Utility class to generate random pieces.
+ */
 class PieceGenerator {
+	/**
+	 * Set of all available pieces.
+	 */
 	private val pieces : Set<Piece>
 	
 	init {
 		this.pieces = generatePieces()
 	}
 	
+	/**
+	 * Generates a set of all available pieces.
+	 */
 	private fun generatePieces(): Set<Piece> {
 		val pieceBox = Piece(Array(2) { Array(2) { Tile(Color.YELLOW) } })
 		val pieceString = Piece(Array(4) { Array(1) { Tile(Color.CYAN) } })
@@ -27,6 +36,13 @@ class PieceGenerator {
 		return setOf(pieceBox,pieceString, pieceT, pieceL1, pieceL2, pieceZ1, pieceZ2)
 	}
 	
+	/**
+	 * Returns a random piece.
+	 */
 	fun getRandomPiece() : Piece = pieces.random()
+	
+	/**
+	 * Returns 3 random pieces.
+	 */
 	fun generate3(): Array<Piece> = arrayOf(getRandomPiece(), getRandomPiece(), getRandomPiece())
 }

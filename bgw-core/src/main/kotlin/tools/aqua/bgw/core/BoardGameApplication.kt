@@ -20,7 +20,9 @@
 package tools.aqua.bgw.core
 
 import javafx.application.Platform
+import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.builder.Frontend
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
@@ -270,6 +272,10 @@ open class BoardGameApplication(windowTitle: String = DEFAULT_WINDOW_TITLE, aspe
 		 */
 		private var instantiated: Boolean = false
 		
+		/**
+		 * Executes given [task] on the UI thread. Use this method to update properties of [ComponentView]s from
+		 * asynchronous environments like [Animation.onFinished] events.
+		 */
 		fun runOnGUIThread(task : Runnable) {
 			Platform.runLater(task)
 		}
