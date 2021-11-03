@@ -15,7 +15,7 @@ import tools.aqua.bgw.visual.ColorVisual
 /**
  * Main view controller.
  */
-class MauMauViewController(private val session: BoardGameSession) : BoardGameApplication(windowTitle = "MauMau") {
+class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	
 	/**
 	 * The main menu scene.
@@ -50,12 +50,6 @@ class MauMauViewController(private val session: BoardGameSession) : BoardGameApp
 	init {
 		registerGameEvents()
 		registerMenuEvents()
-
-		session.onResponseReceived = { println(it) }
-		session.send(CreateGameRequest("abc", 4))
-		mauMauGameScene.addComponents(Button(100,100, 100, 100, visual = ColorVisual.MAGENTA).apply {
-			onMouseClicked = { session.close() }
-		})
 		showGameScene(mauMauGameScene)
 		showMenuScene(mauMauMenuScene)
 		show()
