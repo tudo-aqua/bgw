@@ -9,7 +9,7 @@ import org.json.JSONObject
 
 
 //This is only a playground
-
+//Classes to define Turns
 @Serializable
 data class Turn(val player: Player, val direction: Direction, val steps : Int)
 
@@ -23,8 +23,10 @@ enum class Direction() {
 }
 
 fun main() {
+	//encode a Turn object to JSON string
 	val jsonString = Json.encodeToString<Turn>(Turn(player = Player("player1"), direction = Direction.LEFT, steps = 7))
 	println(jsonString)
+	//define the schema
 	val schemaVariable = "\"\$schema\": \"http://json-schema.org/draft-07/schema\"" //WARUM KANN MAN $ IN MULTILINE STRINGS NICHT ESCAPEN???
 	val schemaString = """
 		{
@@ -52,7 +54,9 @@ fun main() {
 			}
 		}
 	""".trimIndent()
+	//load the schema
 	val schema = SchemaLoader.load(JSONObject(schemaString))
+	//try validating the Turn object JSON string
 	try {
 		schema.validate(JSONObject(jsonString))
 	} catch (e : ValidationException) {
