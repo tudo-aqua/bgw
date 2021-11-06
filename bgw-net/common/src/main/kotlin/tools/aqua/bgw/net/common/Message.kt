@@ -1,41 +1,47 @@
+package tools.aqua.bgw.net.common
+
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
 //Message
 @Serializable
 sealed class Message
 
+//hin und rückrichtung
 @Serializable
-data class GameMessage(val payload: JsonElement) : Message()
+data class GameActionMessage(val payload: JsonElement) : Message()
 
 //Request
 @Serializable
 sealed class Request : Message()
 
 @Serializable
-data class CreateGameRequest(val id: String, val password: String) : Request()
+data class CreateGameMessage(val gameID: String, val sessionID : String, val password: String) : Request()
 
 @Serializable
-data class JoinGameRequest(val id: String, val password: String, val name: String) : Request()
+data class JoinGameMessage(val sessionId: String, val password: String, val greeting: String) : Request()
 
 @Serializable
-object DisconnectFromGameRequest : Request()
+object LeaveGameMessage : Request()
 
 //Response
 @Serializable
 sealed class Response : Message()
 
 @Serializable
-data class GameMessageResponse(val state: GameMessageState) : Response()
+data class GameActionResponse(val state: GameMessageState) : Response() //TODO error message
 
 @Serializable
-data class CreateGameResponse(val state: CreateGameState) : Response()
+data class CreateGameResponse(val state: CreateGameState) : Response() //TODO error message
 
 @Serializable
-data class JoinGameResponse(val state: JoinGameState) : Response()
+data class JoinGameResponse(val state: JoinGameState) : Response() //TODO error message
 
 @Serializable
-data class DisconnectFromGameResponse(val state: DisconnectFromGameState) : Response()
+data class LeaveGameResponse(val state: DisconnectFromGameState) : Response() //TODO error message
 
 //State
 @Serializable
