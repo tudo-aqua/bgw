@@ -6,6 +6,7 @@ plugins {
 	id("com.vaadin") version "0.14.6.0"
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.5.31"
+	kotlin("plugin.serialization") version "1.5.31"
 }
 
 group = rootProject.group
@@ -20,6 +21,7 @@ repositories {
 extra["vaadinVersion"] = "14.7.3"
 
 dependencies {
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	implementation("com.vaadin:vaadin-spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
