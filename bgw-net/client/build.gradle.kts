@@ -12,11 +12,13 @@ version = rootProject.version
 
 repositories {
 	mavenCentral()
+	maven(url = "https://jitpack.io")
 }
 
 dependencies {
 	implementation("io.ktor:ktor-client-websockets:$ktor_version")
 	implementation("io.ktor:ktor-client-cio:$ktor_version")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+	implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
 	implementation(project(":bgw-net:common"))
 }
