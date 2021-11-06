@@ -7,6 +7,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.Route
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -16,12 +17,18 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
 
 @SpringBootApplication
-class DemoApplication
+class Application
+
+/**
+ * Idle timeout constant for WebSocket (in milliseconds).
+ */
+const val IDLE_TIMEOUT : Long = 30000
 
 fun main(args: Array<String>) {
-	runApplication<DemoApplication>(*args)
+	runApplication<Application>(*args)
 }
 
 @Route
@@ -35,16 +42,22 @@ class MainView : VerticalLayout() {
 @Configuration
 @EnableWebSocket
 class WebSocketServerConfiguration : WebSocketConfigurer {
+
+	@Bean
+	fun createWebSocketContainer()  = ServletServerContainerFactoryBean().apply {
+			setMaxSessionIdleTimeout(IDLE_TIMEOUT)
+		}
+
+
 	override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
 		registry.addHandler(MyWebsocketHandler(), "/chat")
 	}
-
 }
 
 @Component
 class MyWebsocketHandler : TextWebSocketHandler() {
 	override fun handleTransportError(session: WebSocketSession, throwable: Throwable) {
-		println("handleTransportError")
+		println("handleTransportError: ${throwable.localizedMessage}")
 	}
 
 	override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
@@ -56,6 +69,8 @@ class MyWebsocketHandler : TextWebSocketHandler() {
 	}
 
 	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-		println("received $message")
+		println(message.payload)
+		println("ich bin ${session}")
+		session.sendMessage(TextMessage("echo: ${message.payload}"))
 	}
 }
