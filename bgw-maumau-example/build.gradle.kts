@@ -16,9 +16,6 @@ repositories {
 dependencies {
 	implementation(kotlin("stdlib-jdk8"))
 	implementation(project(":bgw-core"))
-	implementation(project(":bgw-net:client"))
-	implementation(project(":bgw-net:common"))
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 }
 
 tasks.withType<KotlinCompile> {
