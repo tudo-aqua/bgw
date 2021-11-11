@@ -3,7 +3,10 @@ package tools.aqua.bgw.net.client
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.everit.json.schema.PrimitiveValidationStrategy
+import org.everit.json.schema.Schema
 import org.everit.json.schema.ValidationException
+import org.everit.json.schema.Validator
 import org.everit.json.schema.loader.SchemaLoader
 import org.json.JSONObject
 
@@ -13,7 +16,7 @@ import org.json.JSONObject
 //Classes to define Turns
 //these could be implemented by students based on the schema (maybe even generated)
 @Serializable
-data class Turn(val player: Player, val direction: Direction, val steps : Int)
+data class Turn(val player: Player, val direction: Direction, val steps: Int, val meeple: Meeple)
 
 @Serializable
 data class Player(val name: String)
@@ -24,19 +27,36 @@ enum class Direction() {
 	RIGHT
 }
 
+@Serializable
+sealed class Meeple
+
+@Serializable
+data class Tower(val height: Int, val error: Boolean) : Meeple()
+
+@Serializable
+data class King(val name: String) : Meeple()
+
 fun main() {
 	//encode a Turn object to JSON string
 	//this string would arrive at the server
-	val jsonString = Json.encodeToString<Turn>(Turn(player = Player("player1"), direction = Direction.LEFT, steps = 7))
+	val jsonString = Json.encodeToString<Turn>(
+		Turn(
+			player = Player("player1"),
+			direction = Direction.LEFT,
+			steps = 7,
+			King("hi")
+		)
+	)
 	println(jsonString)
 	//define the schema
 	//this schema would be stored on the server (developed by students)
-	val schemaVariable = "\"\$schema\": \"http://json-schema.org/draft-07/schema\"" //WARUM KANN MAN $ IN MULTILINE STRINGS NICHT ESCAPEN???
+	val schemaVariable =
+		"\"\$schema\": \"http://json-schema.org/draft-07/schema\"" //WARUM KANN MAN $ IN MULTILINE STRINGS NICHT ESCAPEN???
 	val schemaString = """
 		{
 			$schemaVariable,
 			"type": "object",
-			"required": ["player","direction","steps"],
+			"required": ["player","direction","steps", "meeple"],
 			"properties": {
 				"player": {
 					"type": "object",
@@ -46,7 +66,8 @@ fun main() {
 							"type": "string",
 							"maxLength": 10
 						}
-					}
+					},
+					"additionalProperties": false
 				},
 				"direction": {
 					"type": "string",
@@ -54,8 +75,32 @@ fun main() {
 				},
 				"steps": {
 					"type": "integer"
+				},
+				"meeple": {
+					"type": "object",
+					"oneOf": [
+						{
+							"type": "object",
+							"required": ["type", "name"],
+							"properties": {
+					            "type": { "const": "tools.aqua.bgw.net.client.King" },
+								"name": { "type": "string" }
+							},
+							"additionalProperties": false
+						},
+						{ 
+							"type": "object",
+							"required": ["type", "height"],
+							"properties": {
+					            "type": { "const": "tools.aqua.bgw.net.client.Tower" },
+								"height": { "type": "integer" }
+							},
+							"additionalProperties": false
+						}
+					]
 				}
-			}
+			},
+			"additionalProperties": false
 		}
 	""".trimIndent()
 	//load the schema
@@ -64,8 +109,10 @@ fun main() {
 	//try validating the Turn object JSON string
 	try {
 		schema.validate(JSONObject(jsonString))
-	} catch (e : ValidationException) {
-		println("validation failed")
+	} catch (e: ValidationException) {
+		println("validation failed with error(s): ${e.allMessages.joinToString(prefix = "\n", separator = "\n", postfix = "\n") { 
+			it
+		}}")
 	}
 }
 
