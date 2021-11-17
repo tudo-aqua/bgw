@@ -25,19 +25,19 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
 /**
- * [RadioButton] is a subclass of [ToggleButton] with a different visual representation.
+ * [RadioButton] is analogous to a [ToggleButton] with a different visual representation but cannot be deselected.
  *
  * A [RadioButton] may be used as a [Button] that is either selected or not selected.
- * An important feature of [ToggleButton]s is the [ToggleGroup].
+ * An important feature of [RadioButton]s is the [ToggleGroup].
  *
- * [ToggleGroup]s can be used to group [ToggleButton]s.
+ * [ToggleGroup]s can be used to group [RadioButton]s.
  *
- * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
- * Only one [ToggleButton] may be selected in a [ToggleGroup].
- * This means whenever a [ToggleButton] changes its selected state to `true`,
- * all other [ToggleButton]s in the same [ToggleGroup] get deselected.
+ * All [RadioButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
+ * Only one [RadioButton] may be selected in a [ToggleGroup].
+ * This means whenever a [RadioButton] changes its selected state to `true`,
+ * all other [RadioButton]s in the same [ToggleGroup] get deselected.
  *
- * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the ToggleGroup.
+ * An exception to this rule is, whenever a new [RadioButton] that is currently selected gets added to the ToggleGroup.
  *
  * @constructor Creates a [RadioButton].
  *
@@ -45,8 +45,8 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [RadioButton]. Default: 0.
  * @param width Width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
  * @param height Height for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_HEIGHT].
- * @param isSelected The initial state for this [RadioButton]. Default: false.
- * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: null.
+ * @param isSelected The initial state for this [RadioButton]. Default: `false`.
+ * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
  *
  * @see ToggleButton
@@ -59,9 +59,9 @@ open class RadioButton(
 	height: Number = DEFAULT_RADIO_BUTTON_HEIGHT,
 	font: Font = Font(),
 	isSelected: Boolean = false,
-	toggleGroup: ToggleGroup? = null,
+	toggleGroup: ToggleGroup = ToggleGroup(),
 	visual: Visual = Visual.EMPTY
-) : ToggleButton(
+) : BinaryStateButton(
 	posX = posX,
 	posY = posY,
 	width = width,
@@ -69,4 +69,5 @@ open class RadioButton(
 	font = font,
 	isSelected = isSelected,
 	toggleGroup = toggleGroup,
-	visual = visual)
+	visual = visual
+)

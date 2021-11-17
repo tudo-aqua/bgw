@@ -22,13 +22,13 @@ package tools.aqua.bgw.components.uicomponents
 /**
  * A [ToggleGroup] may be set as an attribute in [ToggleButton] or [RadioButton].
  *
- * All [ToggleButton]s that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
- * Only one [ToggleButton] may be selected in a [ToggleGroup].
- * This means whenever a [ToggleButton] changes its selected state to `true`,
- * all other [ToggleButton]s in the same [ToggleGroup] get deselected.
+ * All Buttons that keep the same instance of a [ToggleGroup] belong to that [ToggleGroup].
+ * Only one Button may be selected in a [ToggleGroup].
+ * This means whenever a Button changes its selected state to `true`,
+ * all other Buttons in the same [ToggleGroup] get deselected.
  *
- * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added to the
- * [ToggleGroup].
+ * An exception to this rule is, whenever a new [ToggleButton] or [RadioButton] that is currently selected gets added to
+ * the [ToggleGroup].
  *
  * @constructor Creates a [ToggleGroup].
  *
@@ -36,18 +36,18 @@ package tools.aqua.bgw.components.uicomponents
  * @see RadioButton
  */
 open class ToggleGroup {
-	private val buttons: MutableList<ToggleButton> = mutableListOf()
+	internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
 	
-	internal fun addButton(toggleButton: ToggleButton) {
-		buttons.add(toggleButton)
+	internal fun addButton(button: BinaryStateButton) {
+		buttons.add(button)
 	}
 	
-	internal fun removeButton(toggleButton: ToggleButton) {
-		buttons.remove(toggleButton)
+	internal fun removeButton(button: BinaryStateButton) {
+		buttons.remove(button)
 	}
 	
-	internal fun buttonSelectedStateChanged(toggleButton: ToggleButton) {
-		if (toggleButton.isSelected)
-			buttons.forEach { if (it != toggleButton) it.isSelected = false }
+	internal fun buttonSelectedStateChanged(button: BinaryStateButton) {
+		if (button.isSelected)
+			buttons.forEach { if (it != button) it.isSelected = false }
 	}
 }

@@ -19,10 +19,10 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_WIDTH
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_WIDTH
-import tools.aqua.bgw.observable.properties.BooleanProperty
-import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
@@ -46,61 +46,28 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].
  * @param height Height for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_HEIGHT].
  * @param font Font to be used for this [ToggleButton]. Default: default [Font] constructor.
- * @param isSelected The initial state for this [ToggleButton]. Default: false.
- * @param toggleGroup The ToggleGroup of this [ToggleButton]. Default: `null`.
+ * @param isSelected The initial state for this [ToggleButton]. Default: `false`.
+ * @param toggleGroup The ToggleGroup of this [ToggleButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY].
  *
  * @see ToggleGroup
  */
-open class ToggleButton(
+class ToggleButton(
 	posX: Number = 0,
 	posY: Number = 0,
-	width: Number = DEFAULT_TOGGLE_BUTTON_WIDTH,
-	height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
+	width: Number = DEFAULT_RADIO_BUTTON_WIDTH,
+	height: Number = DEFAULT_RADIO_BUTTON_HEIGHT,
 	font: Font = Font(),
 	isSelected: Boolean = false,
-	toggleGroup: ToggleGroup? = null,
+	toggleGroup: ToggleGroup = ToggleGroup(),
 	visual: Visual = Visual.EMPTY
-) : UIComponent(
+) : BinaryStateButton(
 	posX = posX,
 	posY = posY,
 	width = width,
 	height = height,
 	font = font,
-	visual = visual) {
-	/**
-	 * The ToggleGroup of this ToggleButton.
-	 *
-	 * @see ToggleGroup
-	 */
-	var toggleGroup: ToggleGroup? = toggleGroup
-		set(value) {
-			toggleGroup?.removeButton(this)
-			value?.addButton(this)
-			field = value
-		}
-	
-	/**
-	 * [Property] for the selected state of this [ToggleButton].
-	 *
-	 * @see isSelected
-	 */
-	val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
-	
-	/**
-	 * Selected state for this [ToggleButton].
-	 *
-	 * @see selectedProperty
-	 */
-	var isSelected: Boolean
-		get() = selectedProperty.value
-		set(value) {
-			selectedProperty.value = value
-		}
-	
-	init {
-		this.toggleGroup = toggleGroup
-		selectedProperty.internalListener = { _, _ -> toggleGroup?.buttonSelectedStateChanged(this) }
-	}
-}
-
+	isSelected = isSelected,
+	toggleGroup = toggleGroup,
+	visual = visual
+)

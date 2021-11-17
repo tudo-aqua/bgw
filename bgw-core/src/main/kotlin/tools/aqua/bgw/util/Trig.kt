@@ -20,7 +20,7 @@ package tools.aqua.bgw.util
 /**
  * Utility class for trigonometry functions.
  */
-class Trig {
+class Trig private constructor() {
 	companion object{
 		/**
 		 * Sin function for angles in degrees.

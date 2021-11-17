@@ -529,7 +529,7 @@ open class GridPane<T : ComponentView>(
 			val offset = getRelativeChildOffset(it)
 			val parentOffsetX = if(child.layoutFromCenter) child.actualWidth/2 else 0.0
 			val parentOffsetY = if(child.layoutFromCenter) child.actualHeight/2 else 0.0
-			
+
 			Coordinate(
 				xCoord = offset.xCoord * scaleX - actualWidth/2 + parentOffsetX,
 				yCoord = offset.yCoord * scaleY - actualHeight/2 + parentOffsetY,
@@ -542,11 +542,11 @@ open class GridPane<T : ComponentView>(
 		
 		val cellOffsetX = renderedColWidths[it.columnIndex] - (it.component?.actualWidth?:0.0)
 		val cellOffsetY = renderedRowHeights[it.rowIndex] - (it.component?.actualHeight?:0.0)
-		
+
 		val cellAlignment = getCellCenterMode(columnIndex = it.columnIndex, rowIndex = it.rowIndex)
 		val cellAlignmentX = cellAlignment.horizontalAlignment.positionMultiplier
 		val cellAlignmentY = cellAlignment.verticalAlignment.positionMultiplier
-		
+
 		return Coordinate(
 			xCoord = cols.sum() + cols.size * spacing + cellOffsetX * cellAlignmentX,
 			yCoord = rows.sum() + rows.size * spacing + cellOffsetY * cellAlignmentY

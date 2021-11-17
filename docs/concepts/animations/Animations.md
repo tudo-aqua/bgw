@@ -13,10 +13,14 @@ layout: default
 [RandomizeAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-randomize-animation/
 [DiceAnimationKDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/
 [DelayAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/
+[SequentialKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-sequential-animation/
+[ParallelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-parallel-animation/
+
 
 [GameComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
 [lockKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html
 [unlockKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html
+[runOnGUIThreadKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/-companion/run-on-g-u-i-thread.html
 
 <!-- GH-Pages Doc -->
 [VisualDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
@@ -49,6 +53,54 @@ The full example of the gif above can be found here:
 
 Each [Animation][AnimationKDoc] has a
 duration, a running attribute and an ``onFinished`` EventHandler that gets invoked after the animation has finished.
+
+**Note: UI changes may not be done directly from this asynchronous onFinished environment. Use [BoardGameApplication#runOnGUIThread][runOnGUIThreadKDoc] to alter properties of ComponentViews!**
+
+## [SequentialAnimation][SequentialKDoc]
+
+A SequentialAnimation is an [Animation][AnimationKDoc] that consists of multiple animations, that get played in sequence. 
+This is useful to combine multiple animations into a single one. 
+An example on how to create and play a SequentialAnimation can be found below:
+
+````kotlin
+gameScene.playAnimation(
+    SequentialAnimation(
+        DelayAnimation(duration = 1000).apply { 
+            onFinished = { println("First DelayAnimation finished!") }
+        },
+        DelayAnimation(duration = 2000).apply { 
+            onFinished = { println("Second DelayAnimation finished!") }
+        },
+    ).apply { 
+        onFinished = { println("SequentialAnimation finished!") }
+    }
+)
+````
+
+The resulting SequentialAnimation will play for 3000ms and print some information on which Animations have finished playing.
+
+## [ParallelAnimation][ParallelKDoc]
+
+A ParallelAnimation is an [Animation][AnimationKDoc] that consists of multiple animations, that get played in parallel.
+This is useful to combine multiple animations into a single one.
+An example on how to create and play a ParallelAnimation can be found below:
+
+````kotlin
+gameScene.playAnimation(
+    ParallelAnimation(
+        DelayAnimation(duration = 1000).apply { 
+            onFinished = { println("First DelayAnimation finished!") }
+        },
+        DelayAnimation(duration = 2000).apply { 
+            onFinished = { println("Second DelayAnimation finished!") }
+        },
+    ).apply { 
+        onFinished = { println("ParallelAnimation finished!") }
+    }
+)
+````
+
+The resulting ParallelAnimation will play for 2000ms and print some information on which animations have finished playing.
 
 ## [DelayAnimation][DelayAnimationKDoc]
 
