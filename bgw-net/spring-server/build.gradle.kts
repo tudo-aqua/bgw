@@ -15,7 +15,6 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
 	mavenCentral()
-	maven(url = "https://jitpack.io")
 }
 
 extra["vaadinVersion"] = "14.7.3"
@@ -26,7 +25,8 @@ dependencies {
 	implementation("com.vaadin:vaadin-spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
+	implementation(project(":bgw-net:common"))
+	//implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

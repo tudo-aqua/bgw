@@ -11,8 +11,17 @@ import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import kotlin.Exception
 
+fun main() {
+	val client = BoardGameClient("127.0.0.1", 8080, "chat")
+	client.connect()
+	Thread.sleep(1000)
+	client.send("Hello")
+	Thread.sleep(1000)
+	client.send("Hello")
+}
+
 class BoardGameClient(host: String, port: Int, endpoint: String) {
-	private val wsClient: WebSocketClient = MyWebSocketClient(URI.create("$host:$port/$endpoint"))
+	private val wsClient: WebSocketClient = MyWebSocketClient(URI.create("ws://$host:$port/$endpoint"))
 
 	inner class MyWebSocketClient(uri: URI) : WebSocketClient(uri) {
 		override fun onOpen(handshakedata: ServerHandshake?) {
@@ -20,11 +29,12 @@ class BoardGameClient(host: String, port: Int, endpoint: String) {
 		}
 
 		override fun onMessage(message: String?) {
-			requireNotNull(message) {
-				//TODO exception handling
-			}
-			val bgwMessage : Message = Json.decodeFromString(message)
-			messageMapping(bgwMessage)
+			println("$message")
+//			requireNotNull(message) {
+//				//TODO exception handling
+//			}
+//			val bgwMessage : Message = Json.decodeFromString(message)
+//			messageMapping(bgwMessage)
 		}
 
 		override fun onClose(code: Int, reason: String?, remote: Boolean) {
@@ -47,6 +57,10 @@ class BoardGameClient(host: String, port: Int, endpoint: String) {
 				is UserDisconnectedNotification -> onUserLeft?.invoke(message)
 			}
 		}
+	}
+
+	fun send(string: String) {
+		wsClient.send(string)
 	}
 
 	fun connect() {
@@ -81,6 +95,10 @@ class BoardGameClient(host: String, port: Int, endpoint: String) {
 
 	var onLeaveGameResponse : ((LeaveGameResponse) -> Unit)? = null
 
+	fun sendGameActionMessage(payload: JsonElement) {
+		val msg : Message = GameActionMessage(Json.encodeToJsonElement(payload))
+		wsClient.send(Json.encodeToString(msg))
+	}
 
 	var onGameActionResponse : ((GameActionResponse) -> Unit)? = null
 
@@ -90,5 +108,4 @@ class BoardGameClient(host: String, port: Int, endpoint: String) {
 	var onUserJoined : ((UserJoinedNotification) -> Unit)? = null
 
 	var onUserLeft : ((UserDisconnectedNotification) -> Unit)? = null
-
 }

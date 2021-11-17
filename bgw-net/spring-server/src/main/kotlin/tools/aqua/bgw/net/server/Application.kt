@@ -22,11 +22,6 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @SpringBootApplication
 class Application
 
-/**
- * Idle timeout constant for WebSocket (in milliseconds).
- */
-const val IDLE_TIMEOUT : Long = 30000
-
 fun main(args: Array<String>) {
 	runApplication<Application>(*args)
 }
@@ -39,38 +34,3 @@ class MainView : VerticalLayout() {
 	}
 }
 
-@Configuration
-@EnableWebSocket
-class WebSocketServerConfiguration : WebSocketConfigurer {
-
-	@Bean
-	fun createWebSocketContainer()  = ServletServerContainerFactoryBean().apply {
-			setMaxSessionIdleTimeout(IDLE_TIMEOUT)
-		}
-
-
-	override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-		registry.addHandler(MyWebsocketHandler(), "/chat")
-	}
-}
-
-@Component
-class MyWebsocketHandler : TextWebSocketHandler() {
-	override fun handleTransportError(session: WebSocketSession, throwable: Throwable) {
-		println("handleTransportError: ${throwable.localizedMessage}")
-	}
-
-	override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-		println("closed")
-	}
-
-	override fun afterConnectionEstablished(session: WebSocketSession) {
-		println("established")
-	}
-
-	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-		println(message.payload)
-		println("ich bin ${session}")
-		session.sendMessage(TextMessage("echo: ${message.payload}"))
-	}
-}
