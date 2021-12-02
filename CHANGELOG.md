@@ -13,7 +13,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.5] - To be released
+## [0.5] - 31. Oct. 2021
 
 ### Added
 - ``ParallelAnimation`` and ``SequentialAnimation``.
