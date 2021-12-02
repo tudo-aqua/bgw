@@ -45,7 +45,7 @@ the table.
 
 The full example of the gif above can be found here:
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/animation/AnimationExample.kt){:
 .btn }.
 
 Each [Animation][AnimationKDoc] has a

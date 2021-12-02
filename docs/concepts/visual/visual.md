@@ -101,7 +101,7 @@ val visual: ImageVisual = ImageVisual(
 
 The full example can be found here:
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/VisualsExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/VisualsExample.kt){:
 .btn }
 
 ## [CompoundVisual][CompoundVisualKDoc]
@@ -132,5 +132,5 @@ visual = CompoundVisual(
 ````
 The full example can be found here: 
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/CompoundVisualsExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/CompoundVisualsExample.kt){:
 .btn }

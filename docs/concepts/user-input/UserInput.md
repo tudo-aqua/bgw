@@ -39,7 +39,7 @@ head [here][DnDExample].
 
 The full source code for this example can be found here: 
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
 .btn }
 
 ## Component declaration
@@ -101,7 +101,7 @@ There are three types of components, that can handle user input differently.
 
 This example uses all available fields that can be set to handle user input on [ComponentViews][ComponentViewKDoc] and [DynamicComponentViews][DynamicComponentViewKDoc]. 
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/userinput/UserInputExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/userinput/UserInputExample.kt){:
 .btn }
 
 ````kotlin
