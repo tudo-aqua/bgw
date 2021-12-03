@@ -190,7 +190,7 @@ greenArea.onDragDropped = { dragEvent ->
 
 ## Complete source code for the example
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
 .btn }
 
 ````kotlin

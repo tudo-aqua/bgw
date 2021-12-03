@@ -351,7 +351,7 @@ table.items.addAll(listView.items)
 
 ## Complete source code for the example
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/components/uicomponents/UIComponentExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/components/uicomponents/UIComponentExample.kt){:
 .btn }
 
 ````kotlin

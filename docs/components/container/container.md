@@ -178,7 +178,7 @@ entity, where the user should not know what might get drawn next, or what is in 
 
 ## Complete source code for the example
 
-[View it on GitHub](https://github.com/tudo-aqua/bgw/blob/main/bgw-docs-examples/src/main/kotlin/examples/components/container/AreaExample.kt){:
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/components/container/AreaExample.kt){:
 .btn }
 
 ````kotlin
