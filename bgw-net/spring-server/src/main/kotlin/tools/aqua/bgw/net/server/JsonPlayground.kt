@@ -1,4 +1,4 @@
-package tools.aqua.bgw.net.client
+package tools.aqua.bgw.net.server
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -7,10 +7,6 @@ import kotlinx.serialization.json.Json
 
 @Serializable
 data class Person(val name: String, val age: Int)
-
-fun main() {
-	println(Json.encodeToString(Person("Max", 21)))
-}
 
 //this is only a playground
 
@@ -84,7 +80,7 @@ fun not_main() {
 							"type": "object",
 							"required": ["type", "name"],
 							"properties": {
-					            "type": { "const": "tools.aqua.bgw.net.client.King" },
+					            "type": { "const": "tools.aqua.bgw.net.server.King" },
 								"name": { "type": "string" }
 							},
 							"additionalProperties": false
@@ -93,7 +89,7 @@ fun not_main() {
 							"type": "object",
 							"required": ["type", "height"],
 							"properties": {
-					            "type": { "const": "tools.aqua.bgw.net.client.Tower" },
+					            "type": { "const": "tools.aqua.bgw.net.server.Tower" },
 								"height": { "type": "integer" }
 							},
 							"additionalProperties": false

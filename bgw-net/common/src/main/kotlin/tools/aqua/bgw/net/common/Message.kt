@@ -1,25 +1,30 @@
 package tools.aqua.bgw.net.common
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
 //Message
 @Serializable
 sealed class Message
 
-//hin und rückrichtung
 @Serializable
-data class GameActionMessage(val payload: JsonElement) : Message()
+sealed class GameMessage() : Message()
+
+@Serializable
+data class InitializeGameMessage(val payload: JsonElement) : GameMessage()
+
+@Serializable
+data class GameActionMessage(val payload: JsonElement, val prettyPrint: String) : GameMessage()
+
+@Serializable
+data class EndGameMessage(val payload: JsonElement) : GameMessage()
 
 //Request
 @Serializable
 sealed class Request : Message()
 
 @Serializable
-data class CreateGameMessage(val gameID: String, val sessionID : String, val password: String) : Request()
+data class CreateGameMessage(val gameID: String, val sessionID : String) : Request()
 
 @Serializable
 data class JoinGameMessage(val sessionId: String, val password: String, val greeting: String) : Request()
@@ -32,20 +37,35 @@ object LeaveGameMessage : Request()
 sealed class Response : Message()
 
 @Serializable
-data class GameActionResponse(val state: GameMessageState) : Response() //TODO error message
+data class InitializeGameResponse(val status: GameMessageStatus) : Response() //TODO error message
 
 @Serializable
-data class CreateGameResponse(val state: CreateGameState) : Response() //TODO error message
+data class GameActionResponse(val status: GameMessageStatus) : Response() //TODO error message
 
 @Serializable
-data class JoinGameResponse(val state: JoinGameState) : Response() //TODO error message
+data class EndGameResponse(val status: GameMessageStatus) : Response() //TODO error message
 
 @Serializable
-data class LeaveGameResponse(val state: DisconnectFromGameState) : Response() //TODO error message
+data class CreateGameResponse(val responseStatus: CreateGameResponseStatus) : Response() //TODO error message
 
-//State
 @Serializable
-enum class CreateGameState {
+data class JoinGameResponse(val responseStatus: JoinGameResponseStatus) : Response() //TODO error message
+
+@Serializable
+data class LeaveGameResponse(val responseStatus: DisconnectFromGameResponseStatus) : Response() //TODO error message
+
+//Status
+@Serializable
+enum class InitializeConnectionResponseStatus {
+	SUCCESS,
+
+	INVALID_NAME,
+
+	SERVER_ERROR
+}
+
+@Serializable
+enum class CreateGameResponseStatus {
 	/**
 	 * Created the game successfully.
 	 */
@@ -68,7 +88,7 @@ enum class CreateGameState {
 }
 
 @Serializable
-enum class JoinGameState {
+enum class JoinGameResponseStatus {
 	/**
 	 * Joined the game successfully.
 	 */
@@ -97,7 +117,7 @@ enum class JoinGameState {
 }
 
 @Serializable
-enum class DisconnectFromGameState {
+enum class DisconnectFromGameResponseStatus {
 	/**
 	 * Disconnected from the game successfully.
 	 */
@@ -114,8 +134,9 @@ enum class DisconnectFromGameState {
 	SERVER_ERROR
 }
 
+
 @Serializable
-enum class GameMessageState {
+enum class GameMessageStatus {
 	/**
 	 * The message was valid and broadcast to all other connected players.
 	 */
@@ -149,7 +170,7 @@ enum class GameMessageState {
 sealed class Notification : Message()
 
 @Serializable
-data class UserJoinedNotification(val name: String) : Notification()
+data class UserJoinedNotification(val greetingMessage: String) : Notification()
 
 @Serializable
-data class UserDisconnectedNotification(val name: String) : Notification()
+data class UserDisconnectedNotification(val goodbyeMessage: String) : Notification()
