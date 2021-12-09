@@ -3,14 +3,9 @@ package tools.aqua.bgw.net.server.entity
 import kotlin.jvm.Throws
 
 interface ObjectRepository<T> {
-	fun add(obj: T)
+	fun add(obj: T) : Boolean
 
-	fun remove(obj: T)
+	fun remove(obj: T) : Boolean
 
 	fun getAll() : List<T>
-
-	@Throws(NoSuchElementException::class)
-	fun getById(string: String) : T
-
-	fun existsId(string: String) : Boolean
 }

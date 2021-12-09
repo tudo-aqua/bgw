@@ -7,17 +7,21 @@ import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.PlayerRepository
 
-//@Service
-//class PlayerService(@Autowired val playerRepository: PlayerRepository) {
-//	fun createPlayer(session: WebSocketSession) {
-//		playerRepository.add(Player(session, null))
-//	}
-//
-//	fun deletePlayer(session: WebSocketSession) {
-//		playerRepository.remove(playerRepository.getById(session.id))
-//	}
-//
-//	fun getPlayerByID(id: String) : Player {
-//		return playerRepository.getById(id)
-//	}
-//}
+@Service
+class PlayerService(@Autowired val playerRepository: PlayerRepository) {
+	fun createPlayer(session: WebSocketSession) {
+		val playerName = session.attributes["playerName"] ?: error("playerName attribute missing") //TODO
+		with(Player(playerName as String, null, session)) {
+			playerRepository.add(this)
+			session.attributes["player"] = this
+		}
+	}
+
+	fun deletePlayer(session: WebSocketSession) {
+		val player = session.attributes["player"] ?: error("player attribute missing") //TODO
+		playerRepository.remove(player as Player)
+	}
+
+	fun getAll() : List<Player> = playerRepository.getAll()
+
+}

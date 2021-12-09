@@ -1,20 +1,18 @@
 package tools.aqua.bgw.net.server.entity
 
-class Game(val gameID: String, val sessionID: String, val password: String, initiator: Player) {
-	val players: MutableList<Player> = mutableListOf(initiator)
+class Game(val gameID: String, val sessionID: String, val owner: Player) {
+	private val mutablePlayers: MutableList<Player> = mutableListOf(owner)
 
-	override fun equals(other: Any?): Boolean {
-		if (other is Game) {
-			return sessionID == other.sessionID
-		}
-		return false
-	}
+	val players: List<Player>
+	get() = mutablePlayers.toList()
+
+	fun remove(player: Player) = mutablePlayers.remove(player)
+
+	fun add(player: Player) = mutablePlayers.add(player)
+
+	override fun equals(other: Any?): Boolean = if (other is Game) sessionID == other.sessionID else false
 
 	override fun hashCode(): Int {
-		var result = gameID.hashCode()
-		result = 31 * result + sessionID.hashCode()
-		result = 31 * result + password.hashCode()
-		result = 31 * result + players.hashCode()
-		return result
+		return sessionID.hashCode()
 	}
 }

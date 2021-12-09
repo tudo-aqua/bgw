@@ -1,7 +1,13 @@
 package tools.aqua.bgw.net.common
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+
+fun Message.encode() : String {
+	return Json.encodeToString<Message>(this)
+}
 
 //Message
 @Serializable
@@ -27,10 +33,10 @@ sealed class Request : Message()
 data class CreateGameMessage(val gameID: String, val sessionID : String) : Request()
 
 @Serializable
-data class JoinGameMessage(val sessionId: String, val password: String, val greeting: String) : Request()
+data class JoinGameMessage(val sessionId: String, val greeting: String) : Request()
 
 @Serializable
-object LeaveGameMessage : Request()
+data class LeaveGameMessage(val goodbyeMessage: String) : Request()
 
 //Response
 @Serializable
@@ -52,18 +58,9 @@ data class CreateGameResponse(val responseStatus: CreateGameResponseStatus) : Re
 data class JoinGameResponse(val responseStatus: JoinGameResponseStatus) : Response() //TODO error message
 
 @Serializable
-data class LeaveGameResponse(val responseStatus: DisconnectFromGameResponseStatus) : Response() //TODO error message
+data class LeaveGameResponse(val responseStatus: LeaveGameResponseStatus) : Response() //TODO error message
 
 //Status
-@Serializable
-enum class InitializeConnectionResponseStatus {
-	SUCCESS,
-
-	INVALID_NAME,
-
-	SERVER_ERROR
-}
-
 @Serializable
 enum class CreateGameResponseStatus {
 	/**
@@ -106,9 +103,9 @@ enum class JoinGameResponseStatus {
 	INVALID_ID,
 
 	/**
-	 * The specified password was invalid for the game specified by the id.
+	 * A player with the same player name is already part of the game.
 	 */
-	INVALID_PASSWORD,
+	PLAYER_NAME_ALREADY_TAKEN,
 
 	/**
 	 * Something on the server went wrong.
@@ -117,7 +114,7 @@ enum class JoinGameResponseStatus {
 }
 
 @Serializable
-enum class DisconnectFromGameResponseStatus {
+enum class LeaveGameResponseStatus {
 	/**
 	 * Disconnected from the game successfully.
 	 */

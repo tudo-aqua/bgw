@@ -10,11 +10,7 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import kotlin.Exception
-
-fun main() {
-	val client = BoardGameClient("Fabian", "127.0.0.1", 8080)
-	client.connect()
-}
+import kotlin.properties.ObservableProperty
 
 class BoardGameClient(val playerName: String, host: String, port: Int, endpoint: String = "chat") {
 
@@ -22,7 +18,7 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 
 	private inner class MyWebSocketClient(uri: URI) : WebSocketClient(uri) {
 		override fun onOpen(handshakedata: ServerHandshake?) {
-			println("opened: $handshakedata")
+			this@BoardGameClient.onOpen?.invoke()
 		}
 
 		override fun onMessage(message: String?) {
@@ -36,6 +32,7 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 
 		override fun onClose(code: Int, reason: String?, remote: Boolean) {
 			println("closed with code: $code and reason: $reason")
+			this@BoardGameClient.onClose?.invoke(code, reason ?: "n/a", remote)
 		}
 
 		override fun onError(ex: Exception?) {
@@ -60,12 +57,15 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 		}
 	}
 
+	var onOpen : (() -> Unit)? = null
+
+	var onClose : ((code: Int, reason: String, remote: Boolean) -> Unit)? = null
+
+
 	fun connect() {
 		wsClient.addHeader("PlayerName", playerName)
 		wsClient.addHeader("SoPraSecret", "geheim")
 		wsClient.connectBlocking()
-//		val initMessage : Message = InitializeConnectionRequest(name = playerName)
-//		wsClient.send(Json.encodeToString(initMessage))
 	}
 
 	fun disconnect() {
@@ -75,23 +75,23 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 
 	fun createGame(gameID: String, sessionID: String) {
 		val message: Message = CreateGameMessage(gameID, sessionID)
-		wsClient.send(Json.encodeToString(message))
+		wsClient.send(message.encode())
 	}
 
 	var onCreateGameResponse: ((CreateGameResponse) -> Unit)? = null
 
 
-	fun joinGame(sessionID: String, password: String, greetingMessage: String) {
-		val message: Message = JoinGameMessage(sessionID, password, greetingMessage)
-		wsClient.send(Json.encodeToString(message))
+	fun joinGame(sessionID: String, greetingMessage: String) {
+		val message: Message = JoinGameMessage(sessionID, greetingMessage)
+		wsClient.send(message.encode())
 	}
 
 	var onJoinGameResponse: ((JoinGameResponse) -> Unit)? = null
 
 
-	fun leaveGame() {
-		val message: Message = LeaveGameMessage
-		wsClient.send(Json.encodeToString(message))
+	fun leaveGame(goodbyeMessage: String) {
+		val message: Message = LeaveGameMessage(goodbyeMessage)
+		wsClient.send(message.encode())
 	}
 
 	var onLeaveGameResponse: ((LeaveGameResponse) -> Unit)? = null
