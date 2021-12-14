@@ -20,7 +20,7 @@ sealed class GameMessage() : Message()
 data class InitializeGameMessage(val payload: JsonElement) : GameMessage()
 
 @Serializable
-data class GameActionMessage(val payload: JsonElement, val prettyPrint: String) : GameMessage()
+data class GameActionMessage(val payload: JsonElement, val prettyPrint: String, val sender: String) : GameMessage()
 
 @Serializable
 data class EndGameMessage(val payload: JsonElement) : GameMessage()

@@ -13,10 +13,7 @@ data class Person(val name: String, val age: Int)
 //Classes to define Turns
 //these could be implemented by students based on the schema (maybe even generated)
 @Serializable
-data class Turn(val player: Player, val direction: Direction, val steps: Int, val meeple: Meeple)
-
-@Serializable
-data class Player(val name: String)
+data class Turn(val direction: Direction, val steps: Int, val meeple: Meeple)
 
 @Serializable
 enum class Direction() {
@@ -38,7 +35,6 @@ fun not_main() {
 	//this string would arrive at the server
 	val jsonString = Json.encodeToString<Turn>(
 		Turn(
-			player = Player("player1"),
 			direction = Direction.LEFT,
 			steps = 7,
 			King("Ludwig")

@@ -26,12 +26,4 @@ fun main(args: Array<String>) {
 	runApplication<Application>(*args)
 }
 
-@Route
-class MainView : VerticalLayout() {
-	init {
-		add("Hello World")
-		add(Button("ich bin der knopf!").apply { addClickListener { println("performing backend code") } })
-	}
-}
-
 

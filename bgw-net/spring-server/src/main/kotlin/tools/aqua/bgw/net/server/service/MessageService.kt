@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.*
+import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
 import java.lang.UnsupportedOperationException
 
@@ -37,16 +38,7 @@ class MessageService(
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
 		if (status == GameMessageStatus.SUCCESS) {
 			player.session.sendMessage(TextMessage(GameActionResponse(status).encode()))
-			(game!!.players - player).map(Player::session).forEach {
-				it.sendMessage(
-					TextMessage(
-						GameActionMessage(
-							gameActionMessage.payload,
-							gameActionMessage.prettyPrint
-						).encode()
-					)
-				)
-			}
+			game?.broadcastMessage(player, gameActionMessage.copy(sender = player.name))
 		}
 	}
 
@@ -94,6 +86,12 @@ class MessageService(
 					session.sendMessage(TextMessage(message))
 				}
 			}
+		}
+	}
+
+	private fun Game.broadcastMessage(sender: Player, msg: Message) {
+		(players - sender).map(Player::session).forEach {
+			it.sendMessage(TextMessage(msg.encode()))
 		}
 	}
 

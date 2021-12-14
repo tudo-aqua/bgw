@@ -31,32 +31,28 @@ data class GameAction(val string: String, val int: Int)
 class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 	lateinit var client: BoardGameClient
 
-	inner class CreateGamePane() : Pane<UIComponent>(posX = 50, posY = 200, height = 50, width = 550) {
-		private val greetingField = TextField().apply {
-			resize(100, 50)
-			reposition(0, 0)
-			prompt = "greeting"
-		}
-
+	inner class CreateGamePane() : Pane<UIComponent>(posX = 50, posY = 200, height = 50, width = 400) {
 		private val gameIdField = TextField().apply {
 			resize(100, 50)
-			reposition(150, 0)
+			reposition(0, 0)
 			prompt = "GameID"
 		}
 
 		private val sessionIDField = TextField().apply {
 			resize(100, 50)
-			reposition(300, 0)
+			reposition(150, 0)
 			prompt = "SessionID"
 		}
 
 		private val createGameButton = Button().apply {
 			resize(100, 50)
-			reposition(450, 0)
+			reposition(300, 0)
 			visual = ColorVisual.LIGHT_GRAY
 			text = "CREATE"
 			onMouseClicked = {
 				client.createGame(gameIdField.text, sessionIDField.text)
+				gameIdField.text = ""
+				sessionIDField.text = ""
 			}
 		}
 
@@ -66,32 +62,28 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 
 	}
 
-	inner class JoinGamePane() : Pane<UIComponent>(posX = 50, posY = 400, height = 50, width = 550) {
+	inner class JoinGamePane() : Pane<UIComponent>(posX = 50, posY = 400, height = 50, width = 400) {
 		private val greetingField = TextField().apply {
 			resize(100, 50)
 			reposition(0, 0)
 			prompt = "greeting"
 		}
 
-		private val gameIdField = TextField().apply {
-			resize(100, 50)
-			reposition(150, 0)
-			prompt = "GameID"
-		}
-
 		private val sessionIDField = TextField().apply {
 			resize(100, 50)
-			reposition(300, 0)
+			reposition(150, 0)
 			prompt = "SessionID"
 		}
 
 		private val joinGameButton = Button().apply {
 			resize(100, 50)
-			reposition(450, 0)
+			reposition(300, 0)
 			visual = ColorVisual.LIGHT_GRAY
 			text = "JOIN"
 			onMouseClicked = {
 				client.joinGame(sessionIDField.text, greetingField.text)
+				greetingField.text = ""
+				sessionIDField.text = ""
 			}
 		}
 
@@ -100,32 +92,28 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 		}
 	}
 
-	inner class SendActionPane() : Pane<UIComponent>(posX = 50, posY = 600, height = 50, width = 550) {
-		private val greetingField = TextField().apply {
-			resize(100, 50)
-			reposition(0, 0)
-			prompt = "greeting"
-		}
-
+	inner class SendActionPane() : Pane<UIComponent>(posX = 50, posY = 600, height = 50, width = 400) {
 		private val stringField = TextField().apply {
 			resize(100, 50)
-			reposition(150, 0)
+			reposition(0, 0)
 			prompt = "string"
 		}
 
 		private val intField = TextField().apply {
 			resize(100, 50)
-			reposition(300, 0)
+			reposition(150, 0)
 			prompt = "int"
 		}
 
 		private val sendButton = Button().apply {
 			resize(100, 50)
-			reposition(450, 0)
+			reposition(300, 0)
 			visual = ColorVisual.LIGHT_GRAY
 			text = "SEND"
 			onMouseClicked = {
 				client.sendGameActionMessage(GameAction(stringField.text, intField.text.toInt()))
+				stringField.text = ""
+				intField.text = ""
 			}
 		}
 
@@ -136,7 +124,7 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 
 	private val leaveGameButton = Button().apply {
 		resize(100, 50)
-		reposition(500, 700)
+		reposition(350, 800)
 		visual = ColorVisual.LIGHT_GRAY
 		text = "LEAVE"
 		onMouseClicked = {
@@ -147,11 +135,18 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 	private val playerNameField = TextField().apply {
 		resize(100, 50)
 		reposition(50, 100)
+		prompt = "Player Name"
+	}
+
+	private val secretField = TextField().apply {
+		resize(100, 50)
+		reposition(200, 100)
+		prompt = "Secret"
 	}
 
 	private val connectButton = Button().apply {
 		resize(100, 50)
-		reposition(200, 100)
+		reposition(350, 100)
 		visual = ColorVisual.LIGHT_GRAY
 		text = "Connect"
 	}
@@ -185,17 +180,17 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			client.disconnect()
 			log.items.add("Disconnected")
 			removeComponents(disconnectButton, createGame, joinGame, sendAction, leaveGameButton)
-			addComponents(playerNameField, connectButton)
+			addComponents(playerNameField, secretField, connectButton)
 		}
 		connectButton.onMouseClicked = {
-			client = BoardGameClient(playerNameField.text, "127.0.0.1", 8080)
+			client = BoardGameClient(playerNameField.text, secretField.text, "127.0.0.1", 8080)
 			client.init()
 			client.connect()
 			playerNameField.text = ""
-			removeComponents(playerNameField, connectButton)
+			removeComponents(playerNameField, secretField, connectButton)
 			addComponents(disconnectButton, createGame, joinGame, sendAction, leaveGameButton)
 		}
-		addComponents(playerNameField, connectButton, log)
+		addComponents(playerNameField, secretField, connectButton, log)
 		opacity = 1.0
 	}
 
@@ -240,9 +235,9 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 				log.items.add("$it")
 			}
 		}
-		onGameActionReceived = {
+		onGameActionReceived = { payload, sender ->
 			BoardGameApplication.runOnGUIThread() {
-				log.items.add("${Json.decodeFromJsonElement<GameAction>(it)}")
+				log.items.add("$sender sent ${Json.decodeFromJsonElement<GameAction>(payload)}")
 			}
 		}
 	}

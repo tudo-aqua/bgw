@@ -12,7 +12,7 @@ import java.net.URI
 import kotlin.Exception
 import kotlin.properties.ObservableProperty
 
-class BoardGameClient(val playerName: String, host: String, port: Int, endpoint: String = "chat") {
+class BoardGameClient(val playerName: String, private val secret: String, host: String, port: Int, endpoint: String = "chat") {
 
 	private val wsClient: WebSocketClient = MyWebSocketClient(URI.create("ws://$host:$port/$endpoint"))
 
@@ -46,7 +46,7 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 				is InitializeGameResponse -> onInitializeGameResponse?.invoke(message)
 				is EndGameMessage -> onEndGameReceived?.invoke(message.payload)
 				is EndGameResponse -> onEndGameResponse?.invoke(message)
-				is GameActionMessage -> onGameActionReceived?.invoke(message.payload)
+				is GameActionMessage -> onGameActionReceived?.invoke(message.payload, message.sender)
 				is CreateGameResponse -> onCreateGameResponse?.invoke(message)
 				is GameActionResponse -> onGameActionResponse?.invoke(message)
 				is JoinGameResponse -> onJoinGameResponse?.invoke(message)
@@ -64,7 +64,7 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 
 	fun connect() {
 		wsClient.addHeader("PlayerName", playerName)
-		wsClient.addHeader("SoPraSecret", "geheim")
+		wsClient.addHeader("SoPraSecret", secret)
 		wsClient.connectBlocking()
 	}
 
@@ -102,7 +102,7 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 
 	@PublishedApi
 	internal fun sendGameActionMessage(payload: JsonElement, pretty: String) {
-		send(Json.encodeToString<Message>(GameActionMessage(payload, pretty)))
+		send(Json.encodeToString<Message>(GameActionMessage(payload, pretty, playerName)))
 	}
 
 	inline fun <reified T> sendGameActionMessage(payload: T) {
@@ -129,7 +129,7 @@ class BoardGameClient(val playerName: String, host: String, port: Int, endpoint:
 
 	var onGameActionResponse: ((GameActionResponse) -> Unit)? = null
 
-	var onGameActionReceived: ((payload: JsonElement) -> Unit)? = null
+	var onGameActionReceived: ((payload: JsonElement, sender: String) -> Unit)? = null
 
 
 	var onInitializeGameResponse: ((InitializeGameResponse) -> Unit)? = null

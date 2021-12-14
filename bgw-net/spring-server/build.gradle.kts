@@ -28,6 +28,7 @@ dependencies {
 	implementation(project(":bgw-net:common"))
 	//implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
 dependencyManagement {
