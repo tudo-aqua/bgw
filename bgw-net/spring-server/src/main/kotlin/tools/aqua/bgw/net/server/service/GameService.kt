@@ -1,6 +1,7 @@
 package tools.aqua.bgw.net.server.service
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.net.server.entity.Game
@@ -50,6 +51,12 @@ class GameService(@Autowired private val gameRepository: GameRepository) {
 				}
 			}
 		}
+
+	@Synchronized
+	@Scheduled(fixedRate = 60000)
+	fun removeOrphanedGames() {
+
+	}
 
 	fun getBySessionID(sessionID: String): Game? = gameRepository.getBySessionID(sessionID)
 
