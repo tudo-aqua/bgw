@@ -21,17 +21,22 @@ repositories {
 extra["vaadinVersion"] = "14.7.3"
 
 dependencies {
+	implementation(project(":bgw-net:common"))
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-websocket")
-	implementation("com.vaadin:vaadin-spring-boot-starter")
+	//implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation(project(":bgw-net:common"))
-	//implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("com.vladmihalcea:hibernate-types-52:2.14.0")
 	runtimeOnly("org.postgresql", "postgresql")
+
+	implementation("com.vaadin:vaadin-spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 dependencyManagement {
