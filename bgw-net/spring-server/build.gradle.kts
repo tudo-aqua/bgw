@@ -7,6 +7,7 @@ plugins {
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.5.31"
 	kotlin("plugin.serialization") version "1.5.31"
+	kotlin("plugin.jpa") version "1.5.0"
 }
 
 group = rootProject.group
@@ -21,6 +22,7 @@ extra["vaadinVersion"] = "14.7.3"
 
 dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	implementation("com.vaadin:vaadin-spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -29,6 +31,7 @@ dependencies {
 	//implementation("com.github.everit-org.json-schema:org.everit.json.schema:1.14.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	runtimeOnly("org.postgresql", "postgresql")
 }
 
 dependencyManagement {
