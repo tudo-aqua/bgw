@@ -16,6 +16,8 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 
 	private val wsClient: WebSocketClient = MyWebSocketClient(URI.create("ws://$host:$port/$endpoint"))
 
+	val initGameClass = GameActionMessage::class
+
 	private inner class MyWebSocketClient(uri: URI) : WebSocketClient(uri) {
 		override fun onOpen(handshakedata: ServerHandshake?) {
 			this@BoardGameClient.onOpen?.invoke()
@@ -43,10 +45,10 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 			when (message) {
 				is Request -> throw Exception("Client received a request") //TODO error handling
 				is InitializeGameMessage -> onInitializeGameReceived?.invoke(message.payload)
-				is InitializeGameResponse -> onInitializeGameResponse?.invoke(message)
 				is EndGameMessage -> onEndGameReceived?.invoke(message.payload)
-				is EndGameResponse -> onEndGameResponse?.invoke(message)
 				is GameActionMessage -> onGameActionReceived?.invoke(message.payload, message.sender)
+				is InitializeGameResponse -> onInitializeGameResponse?.invoke(message)
+				is EndGameResponse -> onEndGameResponse?.invoke(message)
 				is CreateGameResponse -> onCreateGameResponse?.invoke(message)
 				is GameActionResponse -> onGameActionResponse?.invoke(message)
 				is JoinGameResponse -> onJoinGameResponse?.invoke(message)

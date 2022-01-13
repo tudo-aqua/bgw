@@ -18,6 +18,7 @@ class PlayerService(@Autowired val playerRepository: PlayerRepository) {
 
 	fun deletePlayer(session: WebSocketSession) {
 		val player = session.attributes["player"] ?: error("player attribute missing") //TODO
+		//TODO remove from its game
 		playerRepository.remove(player as Player)
 	}
 

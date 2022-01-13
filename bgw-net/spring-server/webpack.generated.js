@@ -25,7 +25,7 @@ const themePartRegex = /(\\|\/)themes\1[\s\S]*?\1/;
 const frontendFolder = require('path').resolve(__dirname, 'frontend');
 
 const fileNameOfTheFlowGeneratedMainEntryPoint = require('path').resolve(__dirname, 'target/frontend/generated-flow-imports.js');
-const mavenOutputFolderForFlowBundledFiles = require('path').resolve(__dirname, '');
+const mavenOutputFolderForFlowBundledFiles = require('path').resolve(__dirname, 'build/resources/main/META-INF/VAADIN');
 
 const devmodeGizmoJS = '@vaadin/flow-frontend/VaadinDevmodeGizmo.js'
 
@@ -47,7 +47,7 @@ const projectStaticAssetsFolders = [
   frontendFolder
 ];
 
-const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, '../VAADIN/static');
+const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, 'build/resources/main/META-INF/VAADIN/static');
 
 // Folders in the project which can contain application themes
 const themeProjectFolders = projectStaticAssetsFolders.map((folder) =>
@@ -95,26 +95,23 @@ if (watchDogPort) {
 }
 
 const flowFrontendThemesFolder = path.resolve(flowFrontendFolder, 'themes');
-const frontendGeneratedFolder = path.resolve(frontendFolder, "generated");
 const themeOptions = {
   devMode: devMode,
-  // The following matches ./frontend/generated/theme.js
+  // The following matches target/frontend/themes/theme-generated.js
   // and for theme in JAR that is copied to target/frontend/themes/
   themeResourceFolder: flowFrontendThemesFolder,
   themeProjectFolders: themeProjectFolders,
   projectStaticAssetsOutputFolder: projectStaticAssetsOutputFolder,
-  frontendGeneratedFolder: frontendGeneratedFolder
 };
 let themeName = undefined;
 let themeWatchFolders = undefined;
 if (devMode) {
-  // Current theme name is being extracted from theme.js located in
-  // frontend/generated folder
-  themeName = extractThemeName(frontendGeneratedFolder);
+  // Current theme name is being extracted from theme-generated.js located in
+  // target/frontend/themes folder
+  themeName = extractThemeName(flowFrontendThemesFolder);
   const parentThemePaths = findParentThemes(themeName, themeOptions);
-  const currentThemeFolders = [...projectStaticAssetsFolders
-    .map((folder) => path.resolve(folder, "themes", themeName)),
-    path.resolve(flowFrontendThemesFolder, themeName)];
+  const currentThemeFolders = projectStaticAssetsFolders
+    .map((folder) => path.resolve(folder, "themes", themeName));
   // Watch the components folders for component styles update in both
   // current theme and parent themes. Other folders or CSS files except
   // 'styles.css' should be referenced from `styles.css` anyway, so no need
@@ -181,15 +178,10 @@ module.exports = {
 
   module: {
     rules: [
-      ...(transpile ? [
-        {
-        test: /\.tsx?$/,
-        use: [ BabelMultiTargetPlugin.loader(), 'ts-loader' ],
-      }
-      ] : [{
+      {
         test: /\.tsx?$/,
         use: ['ts-loader']
-      }]),
+      },
       ...(transpile ? [{ // Files that Babel has to transpile
         test: /\.js$/,
         use: [BabelMultiTargetPlugin.loader()]
@@ -202,8 +194,7 @@ module.exports = {
             options: {
               url: (url, resourcePath) => {
                 // Only translate files from node_modules
-                const resolve = resourcePath.match(/(\\|\/)node_modules\1/)
-                  && fs.existsSync(path.resolve(path.dirname(resourcePath), url));
+                const resolve = resourcePath.match(/(\\|\/)node_modules\1/);
                 const themeResource = resourcePath.match(themePartRegex) && url.match(/^themes\/[\s\S]*?\//);
                 return resolve || themeResource;
               },
@@ -287,7 +278,7 @@ module.exports = {
 
     ...(devMode && themeName ? [new ExtraWatchWebpackPlugin({
       files: [],
-      dirs: themeWatchFolders
+      dirs: [...themeWatchFolders]
     }), new ThemeLiveReloadPlugin(processThemeResourcesCallback)] : []),
 
     new StatsPlugin({
@@ -313,8 +304,7 @@ module.exports = {
     // have its own loader based on browser quirks.
     new CopyWebpackPlugin([{
       from: `${baseDir}/node_modules/@webcomponents/webcomponentsjs`,
-      to: `${build}/webcomponentsjs/`,
-      ignore: ['*.md', '*.json']
+      to: `${build}/webcomponentsjs/`
     }]),
   ]
 };

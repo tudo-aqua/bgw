@@ -9,12 +9,13 @@ import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
+import tools.aqua.bgw.net.server.player
 import java.lang.UnsupportedOperationException
 
 @Service
 class MessageService(
 	@Autowired private val gameService: GameService,
-	@Autowired private val validationService: ValidationService
+	@Autowired private val validationService: ValidationService,
 ) {
 	fun handleMessage(session: WebSocketSession, messageString: String) {
 		when (val message: Message = Json.decodeFromString<Message>(messageString)) {
@@ -30,10 +31,17 @@ class MessageService(
 	}
 
 	private fun handleGameActionMessage(wsSession: WebSocketSession, gameActionMessage: GameActionMessage) {
-		val player = wsSession.getPlayer()
+		val player = wsSession.player
 		val game = player.game
 		val status = if (game != null) {
-			//TODO validation
+			try {
+				if (validationService.validate(gameActionMessage.payload, game.gameID))
+					GameMessageStatus.SUCCESS
+				else
+					GameMessageStatus.INVALID_JSON
+			} catch (exception: JsonSchemaNotFoundException) {
+				GameMessageStatus.SCHEMA_NOT_FOUND
+			}
 			GameMessageStatus.SUCCESS
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
 		if (status == GameMessageStatus.SUCCESS) {
@@ -44,7 +52,7 @@ class MessageService(
 
 
 	private fun handleCreateGameMessage(wsSession: WebSocketSession, createGameMessage: CreateGameMessage) {
-		val player = wsSession.getPlayer()
+		val player = wsSession.player
 		val createGameResponseStatus = gameService.createGame(
 			createGameMessage.gameID,
 			createGameMessage.sessionID,
@@ -54,7 +62,7 @@ class MessageService(
 	}
 
 	private fun handleJoinGameMessage(wsSession: WebSocketSession, joinGameMessage: JoinGameMessage) {
-		val player = wsSession.getPlayer()
+		val player = wsSession.player
 		val joinGameResponseStatus = gameService.joinGame(
 			player,
 			joinGameMessage.sessionId
@@ -62,24 +70,19 @@ class MessageService(
 		wsSession.sendMessage(TextMessage(JoinGameResponse(joinGameResponseStatus).encode()))
 
 		if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
-			val notification = UserJoinedNotification("${player.name}: ${joinGameMessage.greeting}")
-			val message = notification.encode()
-			gameService.getBySessionID(joinGameMessage.sessionId)?.let {
-				(it.players - player).map(Player::session).forEach { session ->
-					session.sendMessage(TextMessage(message))
-				}
-			}
+			val notification = UserJoinedNotification(joinGameMessage.greeting, player.name)
+			gameService.getBySessionID(joinGameMessage.sessionId)?.broadcastMessage(player, notification)
 		}
 	}
 
 	private fun handleLeaveGameMessage(wsSession: WebSocketSession, leaveGameMessage: LeaveGameMessage) {
-		val player = wsSession.getPlayer()
+		val player = wsSession.player
 		val game = player.game
 		val leaveGameResponseStatus = gameService.leaveGame(player)
 		wsSession.sendMessage(TextMessage(LeaveGameResponse(leaveGameResponseStatus).encode()))
 
 		if (leaveGameResponseStatus == LeaveGameResponseStatus.SUCCESS) {
-			val notification = UserDisconnectedNotification("${player.name}: ${leaveGameMessage.goodbyeMessage}")
+			val notification = UserDisconnectedNotification(leaveGameMessage.goodbyeMessage, player.name)
 			val message = notification.encode()
 			game?.let {
 				it.players.map(Player::session).forEach { session ->
@@ -89,14 +92,15 @@ class MessageService(
 		}
 	}
 
-	private fun Game.broadcastMessage(sender: Player, msg: Message) {
-		(players - sender).map(Player::session).forEach {
+	fun broadcastNotification(game: Game, msg: Message) {
+		game.players.map(Player::session).forEach {
 			it.sendMessage(TextMessage(msg.encode()))
 		}
 	}
 
-	private fun WebSocketSession.getPlayer(): Player {
-		val player = attributes["player"] ?: error("missing attribute") //TODO
-		if (player is Player) return player else error("wrong type") //TODO
+	private fun Game.broadcastMessage(sender: Player, msg: Message) {
+		(players - sender).map(Player::session).forEach {
+			it.sendMessage(TextMessage(msg.encode()))
+		}
 	}
 }

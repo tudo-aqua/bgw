@@ -1,9 +1,9 @@
 package tools.aqua.bgw.net.server.service
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpStatus
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.stereotype.Component
@@ -14,10 +14,11 @@ import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
-import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import org.springframework.web.socket.server.HandshakeInterceptor
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
+import tools.aqua.bgw.net.common.UserDisconnectedNotification
+import tools.aqua.bgw.net.server.player
 import java.lang.Exception
 
 /**
@@ -31,7 +32,7 @@ class WebSocketServerConfiguration(@Autowired private val wsHandler: MyWebsocket
 
 	@Bean
 	fun createWebSocketContainer() = ServletServerContainerFactoryBean().apply {
-		setMaxSessionIdleTimeout(IDLE_TIMEOUT)
+		//setMaxSessionIdleTimeout(IDLE_TIMEOUT)
 	}
 
 
@@ -74,6 +75,9 @@ class MyWebsocketHandler(
 	@Autowired private val messageService: MessageService,
 	@Autowired private val gameService: GameService,
 ) : TextWebSocketHandler() {
+
+	private val logger = LoggerFactory.getLogger(javaClass)
+
 	override fun handleTransportError(session: WebSocketSession, throwable: Throwable) {
 		println("handleTransportError: ${throwable.localizedMessage} $throwable")
 		throw throwable
@@ -82,11 +86,20 @@ class MyWebsocketHandler(
 	override fun afterConnectionEstablished(session: WebSocketSession) {
 		playerService.createPlayer(session)
 		println(playerService.getAll())
+		logger.info("User with session id ${session.id} connected")
 	}
 
 	override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
+		val player = session.player
+		val game = player.game
+		gameService.leaveGame(player)
+		game?.let {
+			messageService.broadcastNotification(
+				game,
+				UserDisconnectedNotification("disconnected", player.name))
+		}
 		playerService.deletePlayer(session)
-		println(playerService.getAll())
+		logger.info("User with session id ${session.id} disconnected")
 	}
 
 	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {

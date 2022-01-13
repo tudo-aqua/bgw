@@ -1,5 +1,6 @@
 package tools.aqua.bgw.net.common
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -167,7 +168,7 @@ enum class GameMessageStatus {
 sealed class Notification : Message()
 
 @Serializable
-data class UserJoinedNotification(val greetingMessage: String) : Notification()
+data class UserJoinedNotification(val greetingMessage: String, val sender: String) : Notification()
 
 @Serializable
-data class UserDisconnectedNotification(val goodbyeMessage: String) : Notification()
+data class UserDisconnectedNotification(val goodbyeMessage: String, val sender: String) : Notification()

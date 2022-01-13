@@ -1,21 +1,27 @@
 package tools.aqua.bgw.net.server.service
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.*
+import tools.aqua.bgw.net.server.ORPHANED_GAME_CHECK_RATE
+import tools.aqua.bgw.net.server.TIME_UNTIL_ORPHANED
 import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.GameRepository
 import tools.aqua.bgw.net.server.entity.Player
 
 @Service
 class GameService(@Autowired private val gameRepository: GameRepository) {
+
+	private val logger = LoggerFactory.getLogger(javaClass)
+
 	@Synchronized
-	fun createGame(gameID: String, sessionID: String, owner: Player): CreateGameResponseStatus {
-		val status = if (owner.game == null) {
-			val game = Game(gameID, sessionID, owner)
+	fun createGame(gameID: String, sessionID: String, initializer: Player): CreateGameResponseStatus {
+		val status = if (initializer.game == null) {
+			val game = Game(gameID, sessionID, initializer)
 			if (gameRepository.add(game)) {
-				owner.game = game
+				initializer.game = game
 				CreateGameResponseStatus.SUCCESS
 			} else CreateGameResponseStatus.GAME_WITH_ID_ALREADY_EXISTS
 		} else CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
@@ -53,9 +59,20 @@ class GameService(@Autowired private val gameRepository: GameRepository) {
 		}
 
 	@Synchronized
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = ORPHANED_GAME_CHECK_RATE)
 	fun removeOrphanedGames() {
-
+		logger.info("Started looking for orphaned games")
+		var numRemoved = 0
+		gameRepository.getAll().forEach { game ->
+			game.orphanCandidateSince?.let {
+				if (it + TIME_UNTIL_ORPHANED < System.currentTimeMillis()) {
+					gameRepository.remove(game)
+					numRemoved++
+					logger.info("Removed game with id ${game.gameID} because it was orphaned")
+				}
+			}
+		}
+		logger.info("Stopped looking for orphaned games. $numRemoved games have been removed")
 	}
 
 	fun getBySessionID(sessionID: String): Game? = gameRepository.getBySessionID(sessionID)
