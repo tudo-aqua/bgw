@@ -30,6 +30,13 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+	//json kotlin schema
+	implementation("net.pwall.json:json-kotlin-schema:0.31")
+
+	implementation("com.networknt:json-schema-validator:1.0.65")
+
+//	implementation("com.qindesign:snowy-json:0.15.0")
+
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("com.vladmihalcea:hibernate-types-52:2.14.0")
 	runtimeOnly("org.postgresql", "postgresql")

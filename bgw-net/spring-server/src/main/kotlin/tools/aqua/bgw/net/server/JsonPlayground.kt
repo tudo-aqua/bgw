@@ -1,5 +1,8 @@
 package tools.aqua.bgw.net.server
 
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.networknt.schema.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -101,11 +104,11 @@ fun not_main() {
 	//val schema = SchemaLoader.load(JSONObject(schemaString))
 	//try validating the Turn object JSON string
 	//try {
-		//schema.validate(JSONObject(jsonString))
+	//schema.validate(JSONObject(jsonString))
 	//} catch (e: ValidationException) {
-		//println("validation failed with error(s): ${e.allMessages.joinToString(prefix = "\n", separator = "\n", postfix = "\n") {
-			//it
-		//}}")
+	//println("validation failed with error(s): ${e.allMessages.joinToString(prefix = "\n", separator = "\n", postfix = "\n") {
+	//it
+	//}}")
 	//}
 }
 

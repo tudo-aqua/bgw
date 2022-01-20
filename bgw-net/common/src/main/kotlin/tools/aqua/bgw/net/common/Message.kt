@@ -18,13 +18,13 @@ sealed class Message
 sealed class GameMessage() : Message()
 
 @Serializable
-data class InitializeGameMessage(val payload: JsonElement) : GameMessage()
+data class InitializeGameMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
 @Serializable
-data class GameActionMessage(val payload: JsonElement, val prettyPrint: String, val sender: String) : GameMessage()
+data class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
 @Serializable
-data class EndGameMessage(val payload: JsonElement) : GameMessage()
+data class EndGameMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
 //Request
 @Serializable

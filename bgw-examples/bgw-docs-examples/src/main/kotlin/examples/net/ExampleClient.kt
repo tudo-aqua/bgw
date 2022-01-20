@@ -1,6 +1,7 @@
 package examples.net
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import tools.aqua.bgw.components.layoutviews.Pane
@@ -237,7 +238,7 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 		}
 		onGameActionReceived = { payload, sender ->
 			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$sender sent ${Json.decodeFromJsonElement<GameAction>(payload)}")
+				log.items.add("$sender sent ${Json.decodeFromString<GameAction>(payload)}")
 			}
 		}
 	}
