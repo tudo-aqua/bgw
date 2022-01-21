@@ -10,7 +10,7 @@
       "type": "string"
     },
     "int": {
-      "type": "string"
+      "type": "integer"
     }
   },
   "additionalProperties": false

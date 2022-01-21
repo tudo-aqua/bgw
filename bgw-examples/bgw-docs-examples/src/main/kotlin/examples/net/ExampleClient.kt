@@ -15,7 +15,10 @@ import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.visual.ColorVisual
 
 fun main() {
-	ExampleClient().show()
+	ExampleClient().apply {
+		show()
+		exit()
+	}
 }
 
 class ExampleClient : BoardGameApplication() {
@@ -28,6 +31,9 @@ class ExampleClient : BoardGameApplication() {
 
 @Serializable
 data class GameAction(val string: String, val int: Int)
+
+@Serializable
+data class InvalidGameAction(val invalidString: String, val invalidInt : Int)
 
 class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 	lateinit var client: BoardGameClient
@@ -52,8 +58,6 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			text = "CREATE"
 			onMouseClicked = {
 				client.createGame(gameIdField.text, sessionIDField.text)
-				gameIdField.text = ""
-				sessionIDField.text = ""
 			}
 		}
 
@@ -83,8 +87,6 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			text = "JOIN"
 			onMouseClicked = {
 				client.joinGame(sessionIDField.text, greetingField.text)
-				greetingField.text = ""
-				sessionIDField.text = ""
 			}
 		}
 
@@ -110,11 +112,9 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			resize(100, 50)
 			reposition(300, 0)
 			visual = ColorVisual.LIGHT_GRAY
-			text = "SEND"
+			text = "SEND VALID"
 			onMouseClicked = {
 				client.sendGameActionMessage(GameAction(stringField.text, intField.text.toInt()))
-				stringField.text = ""
-				intField.text = ""
 			}
 		}
 
@@ -123,9 +123,39 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 		}
 	}
 
+	inner class SendInvalidActionPane() : Pane<UIComponent>(posX = 50, posY = 800, height = 50, width = 400) {
+		private val stringField = TextField().apply {
+			resize(100, 50)
+			reposition(0, 0)
+			prompt = "string"
+		}
+
+		private val intField = TextField().apply {
+			resize(100, 50)
+			reposition(150, 0)
+			prompt = "int"
+		}
+
+		private val sendButton = Button().apply {
+			resize(100, 50)
+			reposition(300, 0)
+			visual = ColorVisual.LIGHT_GRAY
+			text = "SEND INVALID"
+			onMouseClicked = {
+				client.sendGameActionMessage(InvalidGameAction(stringField.text, intField.text.toInt()))
+			}
+		}
+
+
+
+		init {
+			this.addAll(stringField, intField, sendButton)
+		}
+	}
+
 	private val leaveGameButton = Button().apply {
 		resize(100, 50)
-		reposition(350, 800)
+		reposition(350, 1000)
 		visual = ColorVisual.LIGHT_GRAY
 		text = "LEAVE"
 		onMouseClicked = {
@@ -142,6 +172,7 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 	private val secretField = TextField().apply {
 		resize(100, 50)
 		reposition(200, 100)
+		text = "geheim"
 		prompt = "Secret"
 	}
 
@@ -176,20 +207,21 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 
 	private val sendAction = SendActionPane()
 
+	private val sendInvalidAction = SendInvalidActionPane()
+
 	init {
 		disconnectButton.onMouseClicked = {
 			client.disconnect()
 			log.items.add("Disconnected")
-			removeComponents(disconnectButton, createGame, joinGame, sendAction, leaveGameButton)
+			removeComponents(disconnectButton, createGame, joinGame, sendAction, sendInvalidAction, leaveGameButton)
 			addComponents(playerNameField, secretField, connectButton)
 		}
 		connectButton.onMouseClicked = {
 			client = BoardGameClient(playerNameField.text, secretField.text, "127.0.0.1", 8080)
 			client.init()
 			client.connect()
-			playerNameField.text = ""
 			removeComponents(playerNameField, secretField, connectButton)
-			addComponents(disconnectButton, createGame, joinGame, sendAction, leaveGameButton)
+			addComponents(disconnectButton, createGame, joinGame, sendAction, sendInvalidAction, leaveGameButton)
 		}
 		addComponents(playerNameField, secretField, connectButton, log)
 		opacity = 1.0
