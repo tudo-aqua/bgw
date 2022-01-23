@@ -44,9 +44,9 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 		private fun messageMapping(message: Message) {
 			when (message) {
 				is Request -> throw Exception("Client received a request") //TODO error handling
-				is InitializeGameMessage -> onInitializeGameReceived?.invoke(message.payload, message.sender)
-				is EndGameMessage -> onEndGameReceived?.invoke(message.payload, message.sender)
-				is GameActionMessage -> onGameActionReceived?.invoke(message.payload, message.sender)
+				is InitializeGameMessage -> onInitializeGameReceived?.invoke(message)
+				is EndGameMessage -> onEndGameReceived?.invoke(message)
+				is GameActionMessage -> onGameActionReceived?.invoke(message)
 				is InitializeGameResponse -> onInitializeGameResponse?.invoke(message)
 				is EndGameResponse -> onEndGameResponse?.invoke(message)
 				is CreateGameResponse -> onCreateGameResponse?.invoke(message)
@@ -102,46 +102,31 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 		wsClient.send(message)
 	}
 
-	@PublishedApi
-	internal fun sendGameActionMessage(payload: String, pretty: String) {
+	fun sendGameActionMessage(payload: String, pretty: String) {
 		send(Json.encodeToString<Message>(GameActionMessage(payload, pretty, "")))
 	}
 
-	inline fun <reified T> sendGameActionMessage(payload: T) {
-		sendGameActionMessage(Json.encodeToString(payload), payload.toString())
-	}
-
-	@PublishedApi
-	internal fun sendInitializeGameMessage(payload: String, pretty: String) {
+	fun sendInitializeGameMessage(payload: String, pretty: String) {
 		send(Json.encodeToString<Message>(InitializeGameMessage(payload, pretty, "")))
 	}
 
-	inline fun <reified T> sendInitializeGameMessage(payload: T) {
-		sendInitializeGameMessage(Json.encodeToString(payload), payload.toString())
-	}
-
-	@PublishedApi
-	internal fun sendEndGameMessage(payload: String, pretty: String) {
+	fun sendEndGameMessage(payload: String, pretty: String) {
 		send(Json.encodeToString<Message>(EndGameMessage(payload, pretty, "")))
-	}
-
-	inline fun <reified T> sendEndGameMessage(payload: T) {
-		sendEndGameMessage(Json.encodeToString(payload), payload.toString())
 	}
 
 	var onGameActionResponse: ((GameActionResponse) -> Unit)? = null
 
-	var onGameActionReceived: ((payload: String, sender: String) -> Unit)? = null
+	var onGameActionReceived: ((GameActionMessage) -> Unit)? = null
 
 
 	var onInitializeGameResponse: ((InitializeGameResponse) -> Unit)? = null
 
-	var onInitializeGameReceived: ((payload: String, sender: String) -> Unit)? = null
+	var onInitializeGameReceived: ((InitializeGameMessage) -> Unit)? = null
 
 
 	var onEndGameResponse: ((EndGameResponse) -> Unit)? = null
 
-	var onEndGameReceived: ((payload: String, sender: String) -> Unit)? = null
+	var onEndGameReceived: ((EndGameMessage) -> Unit)? = null
 
 	var onUserJoined: ((UserJoinedNotification) -> Unit)? = null
 

@@ -12,6 +12,9 @@ import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.player
 import java.lang.UnsupportedOperationException
 
+/**
+ * This service handles the text messages received by the web socket server.
+ */
 @Service
 class MessageService(
 	@Autowired private val gameService: GameService,
@@ -31,15 +34,17 @@ class MessageService(
 	private fun handleGameMessage(wsSession: WebSocketSession, gameMessage: GameMessage) {
 		val player = wsSession.player
 		val game = player.game
+		var errors : List<String>? = null
 		val status = if (game != null) try {
-			if (validationService.validate(gameMessage, game.gameID))
+			errors = validationService.validate(gameMessage, game.gameID)
+			if (errors == null)
 				GameMessageStatus.SUCCESS
 			else
 				GameMessageStatus.INVALID_JSON
 		} catch (exception: JsonSchemaNotFoundException) {
 			GameMessageStatus.SCHEMA_NOT_FOUND
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
-		player.session.sendMessage(TextMessage(GameActionResponse(status).encode()))
+		player.session.sendMessage(TextMessage(GameActionResponse(status, errors).encode()))
 		if (status == GameMessageStatus.SUCCESS) {
 			game?.broadcastMessage(
 				player,
@@ -91,7 +96,7 @@ class MessageService(
 		}
 	}
 
-	fun broadcastNotification(game: Game, msg: Message) {
+	fun broadcastNotification(game: Game, msg: Notification) {
 		game.players.map(Player::session).forEach {
 			it.sendMessage(TextMessage(msg.encode()))
 		}

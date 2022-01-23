@@ -2,6 +2,7 @@ package examples.net
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import tools.aqua.bgw.components.layoutviews.Pane
@@ -17,7 +18,9 @@ import tools.aqua.bgw.visual.ColorVisual
 fun main() {
 	ExampleClient().apply {
 		show()
-		exit()
+		onWindowClosed = {
+			exit()
+		}
 	}
 }
 
@@ -33,7 +36,11 @@ class ExampleClient : BoardGameApplication() {
 data class GameAction(val string: String, val int: Int)
 
 @Serializable
-data class InvalidGameAction(val invalidString: String, val invalidInt : Int)
+data class InvalidGameAction(val invalidString: String, val invalidInt : Int) {
+	init {
+
+	}
+}
 
 class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 	lateinit var client: BoardGameClient
@@ -114,7 +121,8 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			visual = ColorVisual.LIGHT_GRAY
 			text = "SEND VALID"
 			onMouseClicked = {
-				client.sendGameActionMessage(GameAction(stringField.text, intField.text.toInt()))
+				val action = GameAction(stringField.text, intField.text.toInt())
+				client.sendGameActionMessage(Json.encodeToString(action), action.toString())
 			}
 		}
 
@@ -142,7 +150,8 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			visual = ColorVisual.LIGHT_GRAY
 			text = "SEND INVALID"
 			onMouseClicked = {
-				client.sendGameActionMessage(InvalidGameAction(stringField.text, intField.text.toInt()))
+				val invalidAction = InvalidGameAction(stringField.text, intField.text.toInt())
+				client.sendGameActionMessage(Json.encodeToString(invalidAction), invalidAction.toString())
 			}
 		}
 
@@ -268,9 +277,9 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 				log.items.add("$it")
 			}
 		}
-		onGameActionReceived = { payload, sender ->
+		onGameActionReceived = {
 			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$sender sent ${Json.decodeFromString<GameAction>(payload)}")
+				log.items.add("${it.sender} sent ${Json.decodeFromString<GameAction>(it.payload)}")
 			}
 		}
 	}

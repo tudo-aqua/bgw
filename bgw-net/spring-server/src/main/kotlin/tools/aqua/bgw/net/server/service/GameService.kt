@@ -11,6 +11,9 @@ import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.GameRepository
 import tools.aqua.bgw.net.server.entity.Player
 
+/**
+ * This service handles all interactions associated with [Game].
+ */
 @Service
 class GameService(@Autowired private val gameRepository: GameRepository) {
 
@@ -58,6 +61,14 @@ class GameService(@Autowired private val gameRepository: GameRepository) {
 			}
 		}
 
+	/**
+	 * Looks for orphaned Games and removes them.
+	 *
+	 * A Game is considered orphaned when
+	 * [Game.orphanCandidateSince] - [System.currentTimeMillis] > [TIME_UNTIL_ORPHANED]
+	 *
+	 * This function is scheduled to run on a fixed rate every [ORPHANED_GAME_CHECK_RATE] milliseconds.
+	 */
 	@Synchronized
 	@Scheduled(fixedRate = ORPHANED_GAME_CHECK_RATE)
 	fun removeOrphanedGames() {
@@ -68,7 +79,7 @@ class GameService(@Autowired private val gameRepository: GameRepository) {
 				if (it + TIME_UNTIL_ORPHANED < System.currentTimeMillis()) {
 					gameRepository.remove(game)
 					numRemoved++
-					logger.info("Removed game with id ${game.gameID} because it was orphaned")
+					logger.info("Removed game with id ${game.sessionID} because it was orphaned")
 				}
 			}
 		}

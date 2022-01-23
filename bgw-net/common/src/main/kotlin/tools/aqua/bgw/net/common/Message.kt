@@ -44,13 +44,13 @@ data class LeaveGameMessage(val goodbyeMessage: String) : Request()
 sealed class Response : Message()
 
 @Serializable
-data class InitializeGameResponse(val status: GameMessageStatus) : Response() //TODO error message
+data class InitializeGameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response() //TODO error message
 
 @Serializable
-data class GameActionResponse(val status: GameMessageStatus) : Response() //TODO error message
+data class GameActionResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response() //TODO error message
 
 @Serializable
-data class EndGameResponse(val status: GameMessageStatus) : Response() //TODO error message
+data class EndGameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response() //TODO error message
 
 @Serializable
 data class CreateGameResponse(val responseStatus: CreateGameResponseStatus) : Response() //TODO error message

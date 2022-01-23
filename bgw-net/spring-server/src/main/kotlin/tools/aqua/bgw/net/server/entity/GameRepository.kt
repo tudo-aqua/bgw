@@ -2,6 +2,9 @@ package tools.aqua.bgw.net.server.entity
 
 import org.springframework.stereotype.Repository
 
+/**
+ * Holds all currently active Games.
+ */
 @Repository
 class GameRepository: ObjectRepository<Game> {
 	private val gameSet: MutableSet<Game> = mutableSetOf()

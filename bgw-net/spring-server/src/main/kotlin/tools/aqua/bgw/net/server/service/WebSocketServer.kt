@@ -21,20 +21,17 @@ import tools.aqua.bgw.net.common.UserDisconnectedNotification
 import tools.aqua.bgw.net.server.player
 import java.lang.Exception
 
-/**
- * Idle timeout constant for WebSocket (in milliseconds).
- */
-const val IDLE_TIMEOUT: Long = 600000
-
 @Configuration
 @EnableWebSocket
 class WebSocketServerConfiguration(@Autowired private val wsHandler: MyWebsocketHandler) : WebSocketConfigurer {
 
+	/**
+	 * Not really needed anymore. An idle timeout could be configured here.
+	 */
 	@Bean
 	fun createWebSocketContainer() = ServletServerContainerFactoryBean().apply {
 		//setMaxSessionIdleTimeout(IDLE_TIMEOUT)
 	}
-
 
 	override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
 		registry
@@ -42,8 +39,14 @@ class WebSocketServerConfiguration(@Autowired private val wsHandler: MyWebsocket
 			.addInterceptors(MyHandshakeInterceptor())
 	}
 }
-
-class MyHandshakeInterceptor() : HandshakeInterceptor {
+/**
+ * Checks if the soprasecret HTTP header is matching the current SoPra secret.
+ * Checks if the playername HTTP header is set and if its set,
+ * assigns it as the playerName attribute to the session.
+ * 
+ * Only allows establishment of web socket session if both checks succeed.
+ */
+class MyHandshakeInterceptor : HandshakeInterceptor {
 	override fun beforeHandshake(
 		request: ServerHttpRequest,
 		response: ServerHttpResponse,
@@ -61,12 +64,16 @@ class MyHandshakeInterceptor() : HandshakeInterceptor {
 		return isSuccess
 	}
 
+	/**
+	 * Does nothing.
+	 */
 	override fun afterHandshake(
 		request: ServerHttpRequest,
 		response: ServerHttpResponse,
 		wsHandler: WebSocketHandler,
 		exception: Exception?
-	) {}
+	) {
+	}
 }
 
 @Component
@@ -78,17 +85,26 @@ class MyWebsocketHandler(
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
+	/**
+	 * Logs the transport error.
+	 */
 	override fun handleTransportError(session: WebSocketSession, throwable: Throwable) {
-		println("handleTransportError: ${throwable.localizedMessage} $throwable")
-		throw throwable
+		logger.info("A transport error occurred for user with session id ${session.id}. Error Message: ${throwable.localizedMessage}")
 	}
 
+	/**
+	 * Creates a new [Player] and associates it with the [WebSocketSession]
+	 */
 	override fun afterConnectionEstablished(session: WebSocketSession) {
 		playerService.createPlayer(session)
 		println(playerService.getAll())
 		logger.info("User with session id ${session.id} connected")
 	}
 
+	/**
+	 * First removes the [Player] associated with the [WebSocketSession] from its [Game].
+	 * Then deletes the player.
+	 */
 	override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
 		val player = session.player
 		val game = player.game
@@ -96,12 +112,16 @@ class MyWebsocketHandler(
 		game?.let {
 			messageService.broadcastNotification(
 				game,
-				UserDisconnectedNotification("disconnected", player.name))
+				UserDisconnectedNotification("disconnected", player.name)
+			)
 		}
 		playerService.deletePlayer(session)
 		logger.info("User with session id ${session.id} disconnected")
 	}
 
+	/**
+	 * Delegates the handling of the message payload to [messageService].
+	 */
 	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
 		messageService.handleMessage(session, message.payload)
 		println(gameService.getAll())

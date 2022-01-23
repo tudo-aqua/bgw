@@ -1,7 +1,5 @@
 package tools.aqua.bgw.net.server.entity
 
-import kotlin.jvm.Throws
-
 interface ObjectRepository<T> {
 	fun add(obj: T) : Boolean
 

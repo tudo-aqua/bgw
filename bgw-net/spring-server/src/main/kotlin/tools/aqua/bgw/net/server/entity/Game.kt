@@ -2,6 +2,11 @@ package tools.aqua.bgw.net.server.entity
 
 class Game(val gameID: String, val sessionID: String, initializer: Player) {
 	private val mutablePlayers: MutableList<Player> = mutableListOf(initializer)
+
+	/**
+	 * This is set to [System.currentTimeMillis] whenever the last [Player] leaves this [Game].
+	 * It is set to null whenever a [Player] joins this [Game].
+	 */
 	var orphanCandidateSince: Long? = null
 		private set
 

@@ -21,94 +21,55 @@ import javax.annotation.PostConstruct
 import kotlin.jvm.Throws
 
 interface ValidationService {
+	/**
+	 * Validates the payload of [GameMessage] with the matching Schema (Init, Game, End) of the [GameSchema] Entity,
+	 * identified by [gameID]. Returns a list of validation errors or null if validation was successful.
+	 *
+	 * @param message The [GameMessage] with the payload, that gets validated.
+	 * @param gameID The identifier for the [GameSchema] Entity in the Database.
+	 *
+	 * @return a [List] of [String] representations of the validation errors that occurred during validation
+	 * or null if there were no errors.
+	 *
+	 * @throws JsonSchemaNotFoundException whenever [gameID] did not resolve to a [GameSchema] entity.
+	 */
 	@Throws(JsonSchemaNotFoundException::class)
-	fun validate(message: GameMessage, gameID: String): Boolean
+	fun validate(message: GameMessage, gameID: String): List<String>?
 
-	fun flushSchemas()
+	/**
+	 * Instructs the [ValidationService] implementation to clear it schema cache.
+	 * Should be called whenever a [GameSchema] entity is removed or updated in the database.
+	 */
+	fun flushSchemaCache()
 }
 
 /**
- * uses pwall567/json-kotlin-schema to validate
+ * Indicates that a key could not be resolved to a [GameSchema] entity in the database.
  */
-//@Service
-class JsonKotlinSchemaValidator(private val gameSchemaRepository: GameSchemaRepository) : ValidationService {
-	private data class ActualSchema(val init: JSONSchema, val action: JSONSchema, val end: JSONSchema)
+class JsonSchemaNotFoundException : Exception()
 
-	//TODO load
-	private lateinit var metaSchema: JSONSchema
-
-	val logger = LoggerFactory.getLogger(javaClass)
-
-	private val schemaMap = mutableMapOf<String, ActualSchema>()
-
-	override fun validate(message: GameMessage, gameID: String): Boolean {
-		println("im validatin !!!!!!!!!!!!!!!!!!!!!")
-		val gameSchema = schemaMap[gameID] ?: with(gameSchemaRepository.findById(gameID)) {
-			if (isPresent) {
-				val dbEntity = get()
-				ActualSchema(
-					init = JSONSchema.parse(dbEntity.initActionSchema),
-					action = JSONSchema.parse(dbEntity.gameActionSchema),
-					end = JSONSchema.parse(dbEntity.endActionSchema)
-				).also { schemaMap[gameID] = it }
-			} else
-				throw JsonSchemaNotFoundException()
-		}
-
-		return when (message) {
-			is InitializeGameMessage -> {
-				validate(message.payload, gameSchema.init)
-			}
-			is GameActionMessage -> {
-				validate(message.payload, gameSchema.action)
-			}
-			is EndGameMessage -> {
-				validate(message.payload, gameSchema.end)
-			}
-		}
-	}
-
-	override fun flushSchemas() = schemaMap.clear()
-
-	private fun validate(msg: String, schema: JSONSchema) = schema.validate(msg)
-
-	/**
-	 * Loads default schemas into the database.
-	 */
-	@PostConstruct
-	fun init() {
-		javaClass.getResource(EXAMPLE_SCHEMA_JSON_URL_STRING)?.let {
-			val schemaString = it.readText()
-			gameSchemaRepository.save(
-				GameSchema(
-					gameID = "example",
-					initActionSchema = schemaString,
-					gameActionSchema = schemaString,
-					endActionSchema = schemaString,
-				)
-			)
-		} ?: logger.warn("example_schema could not be loaded")
-	}
-}
-
-
-class JsonSchemaNotFoundException() : Exception()
-
+/**
+ * Implementation of [ValidationService]. It uses the networknt/json-schema-validator and Jackson to validate.
+ */
 @Service
 class JsonSchemaValidator(val gameSchemaRepository: GameSchemaRepository) : ValidationService {
 	private data class ActualSchema(val init: JsonSchema, val action: JsonSchema, val end: JsonSchema)
 
+	val mapper = ObjectMapper()
+
 	val logger = LoggerFactory.getLogger(javaClass)
 
 	private val schemaMap = mutableMapOf<String, ActualSchema>()
 
-	override fun validate(message: GameMessage, gameID: String): Boolean {
+	override fun validate(message: GameMessage, gameID: String): List<String>? {
 		val gameSchema = schemaMap[gameID] ?: with(gameSchemaRepository.findById(gameID)) {
 			if (isPresent) {
 				val dbEntity = get()
 				ActualSchema(
-					init = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(dbEntity.initActionSchema),
-					action = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(dbEntity.gameActionSchema),
+					init = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+						.getSchema(dbEntity.initActionSchema),
+					action = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+						.getSchema(dbEntity.gameActionSchema),
 					end = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(dbEntity.endActionSchema)
 				).also { schemaMap[gameID] = it }
 			} else
@@ -116,23 +77,36 @@ class JsonSchemaValidator(val gameSchemaRepository: GameSchemaRepository) : Vali
 		}
 		return when (message) {
 			is InitializeGameMessage -> {
-				gameSchema.init.validate(ObjectMapper().readTree(message.payload)).also { println(it) }.size == 0
+				with(gameSchema.init.validate(mapper.readTree(message.payload))) {
+					if (isEmpty()) null else map { it.message }
+				}
 			}
 			is GameActionMessage -> {
-				gameSchema.action.validate(ObjectMapper().readTree(message.payload)).also { println(it) }.size == 0
+				with(gameSchema.init.validate(mapper.readTree(message.payload))) {
+					if (isEmpty()) null else map { it.message }
+				}
 			}
 			is EndGameMessage -> {
-				gameSchema.end.validate(ObjectMapper().readTree(message.payload)).also { println(it) }.size == 0
+				with(gameSchema.init.validate(mapper.readTree(message.payload))) {
+					if (isEmpty()) null else map { it.message }
+				}
 			}
 		}
 	}
 
-	override fun flushSchemas() = schemaMap.clear()
+	override fun flushSchemaCache() = schemaMap.clear()
 
+	/**
+	 * This method loads the example schema located at [EXAMPLE_SCHEMA_JSON_URL_STRING] into the database.
+	 */
 	@PostConstruct
 	fun initExample() {
-		val schema = javaClass.getResource(EXAMPLE_SCHEMA_JSON_URL_STRING).readText()
-		gameSchemaRepository.save(GameSchema("example", schema, schema, schema))
+		val schema = javaClass.getResource(EXAMPLE_SCHEMA_JSON_URL_STRING)?.readText()
+		if (schema == null) {
+			logger.warn("Failed to load example schema from resources")
+		} else {
+			gameSchemaRepository.save(GameSchema("example", schema, schema, schema))
+		}
 	}
 
 }

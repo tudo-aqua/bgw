@@ -6,6 +6,9 @@ import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.PlayerRepository
 
+/**
+ * This service handles creation and deletion of players from [PlayerRepository].
+ */
 @Service
 class PlayerService(@Autowired val playerRepository: PlayerRepository) {
 	fun createPlayer(session: WebSocketSession) {
@@ -18,10 +21,8 @@ class PlayerService(@Autowired val playerRepository: PlayerRepository) {
 
 	fun deletePlayer(session: WebSocketSession) {
 		val player = session.attributes["player"] ?: error("player attribute missing") //TODO
-		//TODO remove from its game
 		playerRepository.remove(player as Player)
 	}
 
 	fun getAll() : List<Player> = playerRepository.getAll()
-
 }

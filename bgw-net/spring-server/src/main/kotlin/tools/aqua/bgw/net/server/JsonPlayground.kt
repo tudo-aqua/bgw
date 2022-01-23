@@ -33,6 +33,10 @@ data class Tower(val height: Int, val error: Boolean) : Meeple()
 @Serializable
 data class King(val name: String) : Meeple()
 
+class Car(val name: String, val age: Int) {
+
+}
+
 fun not_main() {
 	//encode a Turn object to JSON string
 	//this string would arrive at the server
