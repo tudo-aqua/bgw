@@ -1,5 +1,7 @@
 package tools.aqua.bgw.net.server.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,8 +22,11 @@ class MessageService(
 	@Autowired private val gameService: GameService,
 	@Autowired private val validationService: ValidationService,
 ) {
+	private val mapper = ObjectMapper().registerModule(kotlinModule())
 	fun handleMessage(session: WebSocketSession, messageString: String) {
-		when (val message: Message = Json.decodeFromString<Message>(messageString)) {
+		val message: Message = mapper.readValue(messageString, Message::class.java)
+		println(message)
+		when (message) {
 			is Response -> throw UnsupportedOperationException()
 			is Notification -> throw UnsupportedOperationException()
 			is GameMessage -> handleGameMessage(session, message)
@@ -44,7 +49,7 @@ class MessageService(
 		} catch (exception: JsonSchemaNotFoundException) {
 			GameMessageStatus.SCHEMA_NOT_FOUND
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
-		player.session.sendMessage(TextMessage(GameActionResponse(status, errors).encode()))
+		player.session.sendMessage(TextMessage(mapper.writeValueAsString(GameActionResponse(status, errors))))
 		if (status == GameMessageStatus.SUCCESS) {
 			game?.broadcastMessage(
 				player,
@@ -64,7 +69,7 @@ class MessageService(
 			createGameMessage.sessionID,
 			player
 		)
-		wsSession.sendMessage(TextMessage(CreateGameResponse(createGameResponseStatus).encode()))
+		wsSession.sendMessage(TextMessage(mapper.writeValueAsString(CreateGameResponse(createGameResponseStatus))))
 	}
 
 	private fun handleJoinGameMessage(wsSession: WebSocketSession, joinGameMessage: JoinGameMessage) {
@@ -73,7 +78,7 @@ class MessageService(
 			player,
 			joinGameMessage.sessionId
 		)
-		wsSession.sendMessage(TextMessage(JoinGameResponse(joinGameResponseStatus).encode()))
+		wsSession.sendMessage(TextMessage(mapper.writeValueAsString(JoinGameResponse(joinGameResponseStatus))))
 		if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
 			val notification = UserJoinedNotification(joinGameMessage.greeting, player.name)
 			gameService.getBySessionID(joinGameMessage.sessionId)?.broadcastMessage(player, notification)
@@ -84,10 +89,10 @@ class MessageService(
 		val player = wsSession.player
 		val game = player.game
 		val leaveGameResponseStatus = gameService.leaveGame(player)
-		wsSession.sendMessage(TextMessage(LeaveGameResponse(leaveGameResponseStatus).encode()))
+		wsSession.sendMessage(TextMessage(mapper.writeValueAsString(LeaveGameResponse(leaveGameResponseStatus))))
 		if (leaveGameResponseStatus == LeaveGameResponseStatus.SUCCESS) {
 			val notification = UserDisconnectedNotification(leaveGameMessage.goodbyeMessage, player.name)
-			val message = notification.encode()
+			val message = mapper.writeValueAsString(notification)
 			game?.let {
 				it.players.map(Player::session).forEach { session ->
 					session.sendMessage(TextMessage(message))
@@ -98,13 +103,13 @@ class MessageService(
 
 	fun broadcastNotification(game: Game, msg: Notification) {
 		game.players.map(Player::session).forEach {
-			it.sendMessage(TextMessage(msg.encode()))
+			it.sendMessage(TextMessage(mapper.writeValueAsString(msg)))
 		}
 	}
 
 	private fun Game.broadcastMessage(sender: Player, msg: Message) {
 		(players - sender).map(Player::session).forEach {
-			it.sendMessage(TextMessage(msg.encode()))
+			it.sendMessage(TextMessage(mapper.writeValueAsString(msg)))
 		}
 	}
 }

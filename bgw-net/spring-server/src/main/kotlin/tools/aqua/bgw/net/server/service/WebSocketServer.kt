@@ -103,6 +103,7 @@ class MyWebsocketHandler(
 	 */
 	override fun handleTransportError(session: WebSocketSession, throwable: Throwable) {
 		logger.info("A transport error occurred for user with session id ${session.id}. Error Message: ${throwable.localizedMessage}")
+		throw throwable
 	}
 
 	/**
@@ -136,7 +137,7 @@ class MyWebsocketHandler(
 	 * Delegates the handling of the message payload to [messageService].
 	 */
 	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
+		println(message.payload)
 		messageService.handleMessage(session, message.payload)
-		println(gameService.getAll())
 	}
 }

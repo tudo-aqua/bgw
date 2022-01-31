@@ -1,22 +1,27 @@
 package tools.aqua.bgw.net.client
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import tools.aqua.bgw.net.common.*
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.encodeToJsonElement
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.net.URI
 import kotlin.Exception
-import kotlin.properties.ObservableProperty
 
-class BoardGameClient(val playerName: String, private val secret: String, host: String, port: Int, endpoint: String = "chat") {
+class BoardGameClient<IG, GA, EG>(
+	val playerName: String,
+	private val secret: String,
+	private val initGameClass: Class<IG>,
+	private val gameActionClass: Class<GA>,
+	private val endGameClass: Class<EG>,
+	host: String,
+	port: Int,
+	endpoint: String = "chat",
+) {
+	private val mapper = ObjectMapper().registerModule(kotlinModule())
 
 	private val wsClient: WebSocketClient = MyWebSocketClient(URI.create("ws://$host:$port/$endpoint"))
 
-	val initGameClass = GameActionMessage::class
 
 	private inner class MyWebSocketClient(uri: URI) : WebSocketClient(uri) {
 		override fun onOpen(handshakedata: ServerHandshake?) {
@@ -27,7 +32,7 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 			requireNotNull(message) {
 				//TODO exception handling
 			}
-			val bgwMessage: Message = Json.decodeFromString(message)
+			val bgwMessage: Message = mapper.readValue(message, Message::class.java)
 			messageMapping(bgwMessage)
 
 		}
@@ -44,9 +49,18 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 		private fun messageMapping(message: Message) {
 			when (message) {
 				is Request -> throw Exception("Client received a request") //TODO error handling
-				is InitializeGameMessage -> onInitializeGameReceived?.invoke(message)
-				is EndGameMessage -> onEndGameReceived?.invoke(message)
-				is GameActionMessage -> onGameActionReceived?.invoke(message)
+				is InitializeGameMessage -> onInitializeGameReceived?.invoke(
+					mapper.readValue(message.payload, initGameClass),
+					message.sender
+				)
+				is EndGameMessage -> onEndGameReceived?.invoke(
+					mapper.readValue(message.payload, endGameClass),
+					message.sender
+				)
+				is GameActionMessage -> onGameActionReceived?.invoke(
+					mapper.readValue(message.payload, gameActionClass),
+					message.sender
+				)
 				is InitializeGameResponse -> onInitializeGameResponse?.invoke(message)
 				is EndGameResponse -> onEndGameResponse?.invoke(message)
 				is CreateGameResponse -> onCreateGameResponse?.invoke(message)
@@ -59,9 +73,9 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 		}
 	}
 
-	var onOpen : (() -> Unit)? = null
+	var onOpen: (() -> Unit)? = null
 
-	var onClose : ((code: Int, reason: String, remote: Boolean) -> Unit)? = null
+	var onClose: ((code: Int, reason: String, remote: Boolean) -> Unit)? = null
 
 
 	fun connect() {
@@ -77,7 +91,7 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 
 	fun createGame(gameID: String, sessionID: String) {
 		val message: Message = CreateGameMessage(gameID, sessionID)
-		wsClient.send(message.encode())
+		wsClient.send(mapper.writeValueAsString(message))
 	}
 
 	var onCreateGameResponse: ((CreateGameResponse) -> Unit)? = null
@@ -85,7 +99,7 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 
 	fun joinGame(sessionID: String, greetingMessage: String) {
 		val message: Message = JoinGameMessage(sessionID, greetingMessage)
-		wsClient.send(message.encode())
+		wsClient.send(mapper.writeValueAsString(message))
 	}
 
 	var onJoinGameResponse: ((JoinGameResponse) -> Unit)? = null
@@ -93,7 +107,7 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 
 	fun leaveGame(goodbyeMessage: String) {
 		val message: Message = LeaveGameMessage(goodbyeMessage)
-		wsClient.send(message.encode())
+		wsClient.send(mapper.writeValueAsString(message))
 	}
 
 	var onLeaveGameResponse: ((LeaveGameResponse) -> Unit)? = null
@@ -102,31 +116,39 @@ class BoardGameClient(val playerName: String, private val secret: String, host: 
 		wsClient.send(message)
 	}
 
-	fun sendGameActionMessage(payload: String, pretty: String) {
-		send(Json.encodeToString<Message>(GameActionMessage(payload, pretty, "")))
+	fun sendGameActionMessage(payload: GA) {
+		send(mapper.writeValueAsString(GameActionMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
 	}
 
-	fun sendInitializeGameMessage(payload: String, pretty: String) {
-		send(Json.encodeToString<Message>(InitializeGameMessage(payload, pretty, "")))
+	fun sendInitializeGameMessage(payload: IG) {
+		send(
+			mapper.writeValueAsString(
+				InitializeGameMessage(
+					mapper.writeValueAsString(payload),
+					payload.toString(),
+					""
+				)
+			)
+		)
 	}
 
-	fun sendEndGameMessage(payload: String, pretty: String) {
-		send(Json.encodeToString<Message>(EndGameMessage(payload, pretty, "")))
+	fun sendEndGameMessage(payload: EG) {
+		send(mapper.writeValueAsString(EndGameMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
 	}
 
 	var onGameActionResponse: ((GameActionResponse) -> Unit)? = null
 
-	var onGameActionReceived: ((GameActionMessage) -> Unit)? = null
+	var onGameActionReceived: ((payload: GA, sender: String) -> Unit)? = null
 
 
 	var onInitializeGameResponse: ((InitializeGameResponse) -> Unit)? = null
 
-	var onInitializeGameReceived: ((InitializeGameMessage) -> Unit)? = null
+	var onInitializeGameReceived: ((payload: IG, sender: String) -> Unit)? = null
 
 
 	var onEndGameResponse: ((EndGameResponse) -> Unit)? = null
 
-	var onEndGameReceived: ((EndGameMessage) -> Unit)? = null
+	var onEndGameReceived: ((payload: EG, sender: String) -> Unit)? = null
 
 	var onUserJoined: ((UserJoinedNotification) -> Unit)? = null
 

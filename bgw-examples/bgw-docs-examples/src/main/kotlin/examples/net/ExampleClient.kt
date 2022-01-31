@@ -1,10 +1,5 @@
 package examples.net
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromJsonElement
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.ListView
@@ -32,18 +27,12 @@ class ExampleClient : BoardGameApplication() {
 	}
 }
 
-@Serializable
 data class GameAction(val string: String, val int: Int)
 
-@Serializable
-data class InvalidGameAction(val invalidString: String, val invalidInt : Int) {
-	init {
+data class InitGameAction(val invalidString: String, val invalidInt: Int)
 
-	}
-}
-
-class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
-	lateinit var client: BoardGameClient
+class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
+	lateinit var client: BoardGameClient<InitGameAction, GameAction, Any>
 
 	inner class CreateGamePane() : Pane<UIComponent>(posX = 50, posY = 200, height = 50, width = 400) {
 		private val gameIdField = TextField().apply {
@@ -122,7 +111,7 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			text = "SEND VALID"
 			onMouseClicked = {
 				val action = GameAction(stringField.text, intField.text.toInt())
-				client.sendGameActionMessage(Json.encodeToString(action), action.toString())
+				client.sendGameActionMessage(action)
 			}
 		}
 
@@ -150,11 +139,10 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			visual = ColorVisual.LIGHT_GRAY
 			text = "SEND INVALID"
 			onMouseClicked = {
-				val invalidAction = InvalidGameAction(stringField.text, intField.text.toInt())
-				client.sendGameActionMessage(Json.encodeToString(invalidAction), invalidAction.toString())
+				val initGameAction = InitGameAction(stringField.text, intField.text.toInt())
+				client.sendInitializeGameMessage(initGameAction)
 			}
 		}
-
 
 
 		init {
@@ -226,7 +214,15 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 			addComponents(playerNameField, secretField, connectButton)
 		}
 		connectButton.onMouseClicked = {
-			client = BoardGameClient(playerNameField.text, secretField.text, "127.0.0.1", 8080)
+			client = BoardGameClient(
+				playerName = playerNameField.text,
+				secret = secretField.text,
+				initGameClass = InitGameAction::class.java,
+				gameActionClass = GameAction::class.java,
+				endGameClass = Any::class.java,
+				host = "127.0.0.1",
+				port = 8080
+			)
 			client.init()
 			client.connect()
 			removeComponents(playerNameField, secretField, connectButton)
@@ -236,7 +232,7 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 		opacity = 1.0
 	}
 
-	fun BoardGameClient.init() {
+	fun BoardGameClient<InitGameAction, GameAction, Any>.init() {
 		onOpen = {
 			BoardGameApplication.runOnGUIThread() {
 				log.items.add("Connection is now open")
@@ -277,9 +273,9 @@ class ClientMenuScene() : MenuScene(background = ColorVisual.WHITE) {
 				log.items.add("$it")
 			}
 		}
-		onGameActionReceived = {
+		onGameActionReceived = { payload, sender ->
 			BoardGameApplication.runOnGUIThread() {
-				log.items.add("${it.sender} sent ${Json.decodeFromString<GameAction>(it.payload)}")
+				log.items.add("$sender sent $payload")
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 plugins {
 	kotlin("jvm")
-	kotlin("plugin.serialization") version "1.5.31"
 }
 
 group = rootProject.group
@@ -11,8 +10,8 @@ repositories {
 }
 
 dependencies {
-	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
-
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.13.1")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 	implementation("org.java-websocket:Java-WebSocket:1.5.2")
 	implementation(project(":bgw-net:common"))
 }

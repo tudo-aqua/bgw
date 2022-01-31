@@ -6,7 +6,6 @@ plugins {
 	id("com.vaadin") version "0.14.6.0"
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.5.31"
-	kotlin("plugin.serialization") version "1.5.31"
 	kotlin("plugin.jpa") version "1.5.0"
 }
 
@@ -31,7 +30,6 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	//json kotlin schema
-	implementation("net.pwall.json:json-kotlin-schema:0.31")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 	implementation("com.networknt:json-schema-validator:1.0.65")
 

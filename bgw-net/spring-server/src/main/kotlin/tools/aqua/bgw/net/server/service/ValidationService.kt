@@ -4,10 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.networknt.schema.JsonSchema
 import com.networknt.schema.JsonSchemaFactory
 import com.networknt.schema.SpecVersion
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.decodeFromJsonElement
-import net.pwall.json.schema.JSONSchema
 import org.dom4j.datatype.InvalidSchemaException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
