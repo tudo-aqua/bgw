@@ -17,19 +17,19 @@ data class GameSchema(
 		nullable = false,
 		columnDefinition = "jsonb"
 	)
-	val initActionSchema: String,
+	var initActionSchema: String,
 
 	@Type(type = "json")
 	@Column(
 		nullable = false,
 		columnDefinition = "jsonb"
 	)
-	val gameActionSchema: String,
+	var gameActionSchema: String,
 
 	@Type(type = "json")
 	@Column(
 		nullable = false,
 		columnDefinition = "jsonb"
 	)
-	val endActionSchema: String,
+	var endActionSchema: String,
 )

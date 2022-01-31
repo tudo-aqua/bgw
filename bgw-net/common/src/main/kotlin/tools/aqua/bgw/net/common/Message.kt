@@ -1,5 +1,6 @@
 package tools.aqua.bgw.net.common
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -12,57 +13,74 @@ fun Message.encode() : String {
 
 //Message
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 sealed class Message
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 sealed class GameMessage() : Message()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class InitializeGameMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class EndGameMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
 //Request
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 sealed class Request : Message()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class CreateGameMessage(val gameID: String, val sessionID : String) : Request()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class JoinGameMessage(val sessionId: String, val greeting: String) : Request()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class LeaveGameMessage(val goodbyeMessage: String) : Request()
 
 //Response
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 sealed class Response : Message()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class InitializeGameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response() //TODO error message
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class GameActionResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response() //TODO error message
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class EndGameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response() //TODO error message
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class CreateGameResponse(val responseStatus: CreateGameResponseStatus) : Response() //TODO error message
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class JoinGameResponse(val responseStatus: JoinGameResponseStatus) : Response() //TODO error message
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class LeaveGameResponse(val responseStatus: LeaveGameResponseStatus) : Response() //TODO error message
 
 //Status
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 enum class CreateGameResponseStatus {
 	/**
 	 * Created the game successfully.
@@ -86,6 +104,7 @@ enum class CreateGameResponseStatus {
 }
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 enum class JoinGameResponseStatus {
 	/**
 	 * Joined the game successfully.
@@ -115,6 +134,7 @@ enum class JoinGameResponseStatus {
 }
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 enum class LeaveGameResponseStatus {
 	/**
 	 * Disconnected from the game successfully.
@@ -134,6 +154,7 @@ enum class LeaveGameResponseStatus {
 
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 enum class GameMessageStatus {
 	/**
 	 * The message was valid and broadcast to all other connected players.
@@ -165,10 +186,13 @@ enum class GameMessageStatus {
 
 //Notification
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 sealed class Notification : Message()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class UserJoinedNotification(val greetingMessage: String, val sender: String) : Notification()
 
 @Serializable
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 data class UserDisconnectedNotification(val goodbyeMessage: String, val sender: String) : Notification()
