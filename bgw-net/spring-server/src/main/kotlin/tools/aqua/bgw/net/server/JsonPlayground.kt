@@ -1,8 +1,9 @@
 package tools.aqua.bgw.net.server
 
-import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.networknt.schema.*
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -25,15 +26,33 @@ enum class Direction() {
 }
 
 @Serializable
-sealed class Meeple
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
+//@JsonSubTypes(
+//	JsonSubTypes.Type(value = Tower::class, name = "Tower"),
 
-@Serializable
+//	JsonSubTypes.Type(value = King::class, name = "King")
+//)
+sealed class Meeple()
+
 data class Tower(val height: Int, val error: Boolean) : Meeple()
 
-@Serializable
 data class King(val name: String) : Meeple()
 
-class Car(val name: String, val age: Int) {
+data class Car(val name: String, val numWheels: Int)
+
+class Client<T>(private val clazz: Class<T>) {
+	private val om = ObjectMapper().registerModule(kotlinModule())
+
+	fun serializeIt(obj: T) : String {
+		return om.writeValueAsString(obj)
+	}
+
+	fun deserializeIt(string: String) {
+		onDeserialization?.invoke(om.readValue(string, clazz))
+	}
+
+	var onDeserialization : ((T) -> Unit)? = null
+}
 
 }
 

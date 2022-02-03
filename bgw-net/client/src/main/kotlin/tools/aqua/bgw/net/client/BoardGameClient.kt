@@ -10,7 +10,7 @@ import kotlin.Exception
 
 class BoardGameClient<IG, GA, EG>(
 	val playerName: String,
-	private val secret: String,
+	secret: String,
 	private val initGameClass: Class<IG>,
 	private val gameActionClass: Class<GA>,
 	private val endGameClass: Class<EG>,
@@ -22,6 +22,10 @@ class BoardGameClient<IG, GA, EG>(
 
 	private val wsClient: WebSocketClient = MyWebSocketClient(URI.create("ws://$host:$port/$endpoint"))
 
+	init {
+		wsClient.addHeader("PlayerName", playerName)
+		wsClient.addHeader("SoPraSecret", secret)
+	}
 
 	private inner class MyWebSocketClient(uri: URI) : WebSocketClient(uri) {
 		override fun onOpen(handshakedata: ServerHandshake?) {
@@ -29,38 +33,45 @@ class BoardGameClient<IG, GA, EG>(
 		}
 
 		override fun onMessage(message: String?) {
-			requireNotNull(message) {
-				//TODO exception handling
+			try {
+				val bgwMessage: Message = mapper.readValue(message, Message::class.java)
+				messageMapping(bgwMessage)
+			} catch (e: Exception) {
+				onError?.invoke(e)
 			}
-			val bgwMessage: Message = mapper.readValue(message, Message::class.java)
-			messageMapping(bgwMessage)
-
 		}
 
 		override fun onClose(code: Int, reason: String?, remote: Boolean) {
-			println("closed with code: $code and reason: $reason")
 			this@BoardGameClient.onClose?.invoke(code, reason ?: "n/a", remote)
 		}
 
 		override fun onError(ex: Exception?) {
-			println(ex?.localizedMessage)
+			onError?.invoke(ex!!)
 		}
 
 		private fun messageMapping(message: Message) {
 			when (message) {
-				is Request -> throw Exception("Client received a request") //TODO error handling
-				is InitializeGameMessage -> onInitializeGameReceived?.invoke(
-					mapper.readValue(message.payload, initGameClass),
-					message.sender
-				)
-				is EndGameMessage -> onEndGameReceived?.invoke(
-					mapper.readValue(message.payload, endGameClass),
-					message.sender
-				)
-				is GameActionMessage -> onGameActionReceived?.invoke(
-					mapper.readValue(message.payload, gameActionClass),
-					message.sender
-				)
+				is Request -> throw Exception("Client received a request")
+				is InitializeGameMessage ->
+					onGameActionReceived?.invoke(
+						mapper.readValue(message.payload, gameActionClass),
+						message.sender
+
+					)
+
+				is EndGameMessage ->
+					onGameActionReceived?.invoke(
+						mapper.readValue(message.payload, gameActionClass),
+						message.sender
+
+					)
+
+				is GameActionMessage ->
+					onGameActionReceived?.invoke(
+						mapper.readValue(message.payload, gameActionClass),
+						message.sender
+
+					)
 				is InitializeGameResponse -> onInitializeGameResponse?.invoke(message)
 				is EndGameResponse -> onEndGameResponse?.invoke(message)
 				is CreateGameResponse -> onCreateGameResponse?.invoke(message)
@@ -73,14 +84,14 @@ class BoardGameClient<IG, GA, EG>(
 		}
 	}
 
+	var onError: ((throwable: Throwable) -> Unit)? = { throw it }
+
 	var onOpen: (() -> Unit)? = null
 
 	var onClose: ((code: Int, reason: String, remote: Boolean) -> Unit)? = null
 
 
 	fun connect() {
-		wsClient.addHeader("PlayerName", playerName)
-		wsClient.addHeader("SoPraSecret", secret)
 		wsClient.connectBlocking()
 	}
 
