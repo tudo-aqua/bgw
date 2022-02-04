@@ -10,6 +10,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameSchemaRepository
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.player
 import java.lang.UnsupportedOperationException
@@ -19,10 +20,21 @@ import java.lang.UnsupportedOperationException
  */
 @Service
 class MessageService(
-	@Autowired private val gameService: GameService,
-	@Autowired private val validationService: ValidationService,
+	private val gameService: GameService,
+	private val validationService: ValidationService,
+	private val gameSchemaRepository: GameSchemaRepository,
 ) {
 	private val mapper = ObjectMapper().registerModule(kotlinModule())
+
+	private fun WebSocketSession.sendMessage(message: Message) =
+		sendMessage(TextMessage(mapper.writeValueAsString(message)))
+
+	private fun Game.broadcastMessage(sender: Player, msg: Message) {
+		for (session in (players - sender).map(Player::session)) {
+			session.sendMessage(msg)
+		}
+	}
+
 	fun handleMessage(session: WebSocketSession, messageString: String) {
 		val message: Message = mapper.readValue(messageString, Message::class.java)
 		println(message)
@@ -39,7 +51,7 @@ class MessageService(
 	private fun handleGameMessage(wsSession: WebSocketSession, gameMessage: GameMessage) {
 		val player = wsSession.player
 		val game = player.game
-		var errors : List<String>? = null
+		var errors: List<String>? = null
 		val status = if (game != null) try {
 			errors = validationService.validate(gameMessage, game.gameID)
 			if (errors == null)
@@ -49,7 +61,7 @@ class MessageService(
 		} catch (exception: JsonSchemaNotFoundException) {
 			GameMessageStatus.SCHEMA_NOT_FOUND
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
-		player.session.sendMessage(TextMessage(mapper.writeValueAsString(GameActionResponse(status, errors))))
+		player.session.sendMessage(GameActionResponse(status, errors))
 		if (status == GameMessageStatus.SUCCESS) {
 			game?.broadcastMessage(
 				player,
@@ -64,12 +76,15 @@ class MessageService(
 
 	private fun handleCreateGameMessage(wsSession: WebSocketSession, createGameMessage: CreateGameMessage) {
 		val player = wsSession.player
-		val createGameResponseStatus = gameService.createGame(
-			createGameMessage.gameID,
-			createGameMessage.sessionID,
-			player
-		)
-		wsSession.sendMessage(TextMessage(mapper.writeValueAsString(CreateGameResponse(createGameResponseStatus))))
+		val createGameResponseStatus =
+			if (!gameSchemaRepository.existsById(createGameMessage.gameID))
+				CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
+			else gameService.createGame(
+				createGameMessage.gameID,
+				createGameMessage.sessionID,
+				player
+			)
+		wsSession.sendMessage(CreateGameResponse(createGameResponseStatus))
 	}
 
 	private fun handleJoinGameMessage(wsSession: WebSocketSession, joinGameMessage: JoinGameMessage) {
@@ -78,7 +93,7 @@ class MessageService(
 			player,
 			joinGameMessage.sessionId
 		)
-		wsSession.sendMessage(TextMessage(mapper.writeValueAsString(JoinGameResponse(joinGameResponseStatus))))
+		wsSession.sendMessage(JoinGameResponse(joinGameResponseStatus))
 		if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
 			val notification = UserJoinedNotification(joinGameMessage.greeting, player.name)
 			gameService.getBySessionID(joinGameMessage.sessionId)?.broadcastMessage(player, notification)
@@ -89,7 +104,7 @@ class MessageService(
 		val player = wsSession.player
 		val game = player.game
 		val leaveGameResponseStatus = gameService.leaveGame(player)
-		wsSession.sendMessage(TextMessage(mapper.writeValueAsString(LeaveGameResponse(leaveGameResponseStatus))))
+		wsSession.sendMessage(LeaveGameResponse(leaveGameResponseStatus))
 		if (leaveGameResponseStatus == LeaveGameResponseStatus.SUCCESS) {
 			val notification = UserDisconnectedNotification(leaveGameMessage.goodbyeMessage, player.name)
 			val message = mapper.writeValueAsString(notification)
@@ -102,14 +117,8 @@ class MessageService(
 	}
 
 	fun broadcastNotification(game: Game, msg: Notification) {
-		game.players.map(Player::session).forEach {
-			it.sendMessage(TextMessage(mapper.writeValueAsString(msg)))
-		}
-	}
-
-	private fun Game.broadcastMessage(sender: Player, msg: Message) {
-		(players - sender).map(Player::session).forEach {
-			it.sendMessage(TextMessage(mapper.writeValueAsString(msg)))
+		for (session in game.players.map(Player::session)) {
+			session.sendMessage(msg)
 		}
 	}
 }

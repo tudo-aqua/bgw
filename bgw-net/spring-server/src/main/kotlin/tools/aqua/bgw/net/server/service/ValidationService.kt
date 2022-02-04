@@ -4,15 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.networknt.schema.JsonSchema
 import com.networknt.schema.JsonSchemaFactory
 import com.networknt.schema.SpecVersion
-import org.dom4j.datatype.InvalidSchemaException
+import com.networknt.schema.ValidationMessage
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.net.server.EXAMPLE_SCHEMA_JSON_URL_STRING
-import tools.aqua.bgw.net.server.META_SCHEMA_JSON_URL_STRING
 import tools.aqua.bgw.net.server.entity.GameSchema
 import tools.aqua.bgw.net.server.entity.GameSchemaRepository
-import java.io.File
 import javax.annotation.PostConstruct
 import kotlin.jvm.Throws
 
@@ -51,9 +50,9 @@ class JsonSchemaNotFoundException : Exception()
 class JsonSchemaValidator(val gameSchemaRepository: GameSchemaRepository) : ValidationService {
 	private data class ActualSchema(val init: JsonSchema, val action: JsonSchema, val end: JsonSchema)
 
-	val mapper = ObjectMapper()
+	private val mapper = ObjectMapper()
 
-	val logger = LoggerFactory.getLogger(javaClass)
+	private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
 	private val schemaMap = mutableMapOf<String, ActualSchema>()
 
@@ -68,25 +67,13 @@ class JsonSchemaValidator(val gameSchemaRepository: GameSchemaRepository) : Vali
 						.getSchema(dbEntity.gameActionSchema),
 					end = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(dbEntity.endActionSchema)
 				).also { schemaMap[gameID] = it }
-			} else
-				throw JsonSchemaNotFoundException()
+			} else throw JsonSchemaNotFoundException()
 		}
+		fun Iterable<ValidationMessage>.stringsOrNull() = map(ValidationMessage::getMessage).ifEmpty { null }
 		return when (message) {
-			is InitializeGameMessage -> {
-				with(gameSchema.init.validate(mapper.readTree(message.payload))) {
-					if (isEmpty()) null else map { it.message }
-				}
-			}
-			is GameActionMessage -> {
-				with(gameSchema.init.validate(mapper.readTree(message.payload))) {
-					if (isEmpty()) null else map { it.message }
-				}
-			}
-			is EndGameMessage -> {
-				with(gameSchema.init.validate(mapper.readTree(message.payload))) {
-					if (isEmpty()) null else map { it.message }
-				}
-			}
+			is InitializeGameMessage -> gameSchema.init.validate(mapper.readTree(message.payload)).stringsOrNull()
+			is GameActionMessage -> gameSchema.action.validate(mapper.readTree(message.payload)).stringsOrNull()
+			is EndGameMessage -> gameSchema.end.validate(mapper.readTree(message.payload)).stringsOrNull()
 		}
 	}
 

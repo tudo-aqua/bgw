@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 sealed class Message
 
-sealed class GameMessage() : Message()
+sealed class GameMessage : Message()
 
 data class InitializeGameMessage(val payload: String, val prettyPrint: String, val sender: String) : GameMessage()
 
@@ -51,14 +51,19 @@ enum class CreateGameResponseStatus {
 	ALREADY_ASSOCIATED_WITH_GAME,
 
 	/**
-	 * A Game with the specified ID already exists on the server. No Game was created.
+	 * A Session with the specified ID already exists on the server. No Game was created.
 	 */
-	GAME_WITH_ID_ALREADY_EXISTS,
+	SESSION_WITH_ID_ALREADY_EXISTS,
+
+	/**
+	 * There was no Game associated with the GameID. No Game was created.
+	 */
+	GAME_ID_DOES_NOT_EXIST,
 
 	/**
 	 * Something on the server went wrong. No Game was created.
 	 */
-	SERVER_ERROR
+	SERVER_ERROR,
 }
 
 enum class JoinGameResponseStatus {
@@ -76,7 +81,7 @@ enum class JoinGameResponseStatus {
 	/**
 	 * No game with the specified id was found on the server.
 	 */
-	INVALID_ID,
+	INVALID_SESSION_ID,
 
 	/**
 	 * A player with the same player name is already part of the game.
@@ -118,7 +123,7 @@ enum class GameMessageStatus {
 	NO_ASSOCIATED_GAME,
 
 	/**
-	 * The specified JSON schema was not found on the server.
+	 * The JSON schema was not found on the server.
 	 * Message was rejected.
 	 */
 	SCHEMA_NOT_FOUND,

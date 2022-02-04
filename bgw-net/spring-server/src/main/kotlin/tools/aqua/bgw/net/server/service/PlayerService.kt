@@ -10,7 +10,7 @@ import tools.aqua.bgw.net.server.entity.PlayerRepository
  * This service handles creation and deletion of players from [PlayerRepository].
  */
 @Service
-class PlayerService(@Autowired val playerRepository: PlayerRepository) {
+class PlayerService(val playerRepository: PlayerRepository) {
 	fun createPlayer(session: WebSocketSession) {
 		val playerName = session.attributes["playerName"] ?: error("playerName attribute missing") //TODO
 		with(Player(playerName as String, null, session)) {

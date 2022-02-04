@@ -137,7 +137,6 @@ class MyWebsocketHandler(
 	 * Delegates the handling of the message payload to [messageService].
 	 */
 	override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-		println(message.payload)
 		messageService.handleMessage(session, message.payload)
 	}
 }

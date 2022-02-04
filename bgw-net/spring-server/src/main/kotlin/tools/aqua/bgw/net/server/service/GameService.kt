@@ -1,7 +1,6 @@
 package tools.aqua.bgw.net.server.service
 
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.*
@@ -15,7 +14,7 @@ import tools.aqua.bgw.net.server.entity.Player
  * This service handles all interactions associated with [Game].
  */
 @Service
-class GameService(@Autowired private val gameRepository: GameRepository) {
+class GameService(private val gameRepository: GameRepository) {
 
 	private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -26,7 +25,7 @@ class GameService(@Autowired private val gameRepository: GameRepository) {
 			if (gameRepository.add(game)) {
 				initializer.game = game
 				CreateGameResponseStatus.SUCCESS
-			} else CreateGameResponseStatus.GAME_WITH_ID_ALREADY_EXISTS
+			} else CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS
 		} else CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
 		return status
 	}
@@ -51,7 +50,7 @@ class GameService(@Autowired private val gameRepository: GameRepository) {
 		} else {
 			val game = gameRepository.getBySessionID(sessionID)
 			when {
-				game == null -> JoinGameResponseStatus.INVALID_ID
+				game == null -> JoinGameResponseStatus.INVALID_SESSION_ID
 				game.players.any { it.name == player.name } -> JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN
 				else -> {
 					game.add(player)

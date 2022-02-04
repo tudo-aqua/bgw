@@ -13,8 +13,8 @@ import tools.aqua.bgw.net.server.entity.PlayerRepository
  */
 @Service
 class FrontendService(
-	@Autowired private val playerRepository: PlayerRepository,
-	@Autowired private val gameRepository: GameRepository
+	private val playerRepository: PlayerRepository,
+	private val gameRepository: GameRepository
 ) {
 	val activePlayers: List<Player>
 		get() = playerRepository.getAll()
