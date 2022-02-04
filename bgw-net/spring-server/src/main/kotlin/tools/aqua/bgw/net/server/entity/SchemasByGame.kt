@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity(name = "Game")
 @TypeDef(name = "json", typeClass = JsonType::class)
-data class GameSchema(
+data class SchemasByGame(
 	@Id
 	@Column(nullable = false, updatable = false)
 	val gameID: String,

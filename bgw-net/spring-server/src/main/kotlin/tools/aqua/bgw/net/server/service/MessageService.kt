@@ -2,15 +2,12 @@ package tools.aqua.bgw.net.server.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.net.server.entity.Game
-import tools.aqua.bgw.net.server.entity.GameSchemaRepository
+import tools.aqua.bgw.net.server.entity.SchemasByGameRepository
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.player
 import java.lang.UnsupportedOperationException
@@ -22,7 +19,7 @@ import java.lang.UnsupportedOperationException
 class MessageService(
 	private val gameService: GameService,
 	private val validationService: ValidationService,
-	private val gameSchemaRepository: GameSchemaRepository,
+	private val schemasByGameRepository: SchemasByGameRepository,
 ) {
 	private val mapper = ObjectMapper().registerModule(kotlinModule())
 
@@ -77,7 +74,7 @@ class MessageService(
 	private fun handleCreateGameMessage(wsSession: WebSocketSession, createGameMessage: CreateGameMessage) {
 		val player = wsSession.player
 		val createGameResponseStatus =
-			if (!gameSchemaRepository.existsById(createGameMessage.gameID))
+			if (!schemasByGameRepository.existsById(createGameMessage.gameID))
 				CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
 			else gameService.createGame(
 				createGameMessage.gameID,
