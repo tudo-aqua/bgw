@@ -56,7 +56,7 @@ class MessageService(
 			else
 				GameMessageStatus.INVALID_JSON
 		} catch (exception: JsonSchemaNotFoundException) {
-			GameMessageStatus.SCHEMA_NOT_FOUND
+			GameMessageStatus.SERVER_ERROR
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
 		player.session.sendMessage(GameActionResponse(status, errors))
 		if (status == GameMessageStatus.SUCCESS) {

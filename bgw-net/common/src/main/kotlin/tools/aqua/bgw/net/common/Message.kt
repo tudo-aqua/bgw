@@ -123,12 +123,6 @@ enum class GameMessageStatus {
 	NO_ASSOCIATED_GAME,
 
 	/**
-	 * The JSON schema was not found on the server.
-	 * Message was rejected.
-	 */
-	SCHEMA_NOT_FOUND,
-
-	/**
 	 * the payload did not match the specified schema.
 	 * Message was rejected.
 	 */
