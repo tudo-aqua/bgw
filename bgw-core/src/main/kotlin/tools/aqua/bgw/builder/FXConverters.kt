@@ -68,7 +68,7 @@ internal class FXConverters private constructor() {
 				Font.FontStyle.OBLIQUE -> "oblique"
 			}
 			return "-fx-font-size: ${size}px;" +
-					"-fx-font-family: $family;" +
+					"-fx-font-family: '$family';" +
 					"-fx-font-weight: $weight;" +
 					"-fx-font-style: $style;" +
 					"-fx-text-fill: " +
