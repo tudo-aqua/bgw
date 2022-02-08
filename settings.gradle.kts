@@ -1,5 +1,5 @@
 rootProject.name = "bgw"
-include("bgw-core")
+include("bgw-ui")
 include("bgw-examples")
 include("bgw-examples:bgw-maumau-example")
 include("bgw-examples:bgw-sudoku-example")
