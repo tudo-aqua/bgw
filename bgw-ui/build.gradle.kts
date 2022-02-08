@@ -3,18 +3,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+//	id("org.openjfx.javafxplugin") version "0.0.11"
 	id("org.jetbrains.dokka") version "1.4.32"
 	id("io.gitlab.arturbosch.detekt") version "1.18.0"
 	id("org.cadixdev.licenser") version "0.6.1"
 	id("com.dorongold.task-tree") version "2.1.0" // example usage: ./gradlew publish taskTree
 	`maven-publish`
 	kotlin("jvm")
+//	java
 	signing
 }
 
 group = "tools.aqua"
 version = rootProject.version
-var javaFxVersion: String = "12.0.1"
+var javaFxVersion: String = "17.0.2"
 extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 repositories {
@@ -22,26 +24,58 @@ repositories {
 }
 
 dependencies {
+//	implementation(kotlin("stdlib"))
 	implementation(kotlin("stdlib-jdk8"))
-	implementation("com.jfoenix", "jfoenix", "9.0.1")
-	
 	testImplementation(kotlin("test"))
 	
-	dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.32")
+	dokkaGfmPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.0")
 
+	/*
+	 * jfoenix - Applies styles to JavaFX controls.
+	 */
+	implementation(group="com.jfoenix", name="jfoenix", version="9.0.10")
+	
+	/*
+	 * javafx.base - Defines the base APIs for the JavaFX UI toolkit, including APIs for bindings, properties,
+	 * collections, and events.
+	 */
 	implementation(group="org.openjfx", name="javafx-base", version=javaFxVersion, classifier="win")
 	implementation(group="org.openjfx", name="javafx-base", version=javaFxVersion, classifier="mac")
 	implementation(group="org.openjfx", name="javafx-base", version=javaFxVersion, classifier="linux")
+	
+	/*
+	 * javafx.controls  - Defines the UI controls, charts, and skins that are available for the JavaFX UI toolkit.
+	 */
 	implementation(group="org.openjfx", name="javafx-controls", version=javaFxVersion, classifier="win")
 	implementation(group="org.openjfx", name="javafx-controls", version=javaFxVersion, classifier="mac")
 	implementation(group="org.openjfx", name="javafx-controls", version=javaFxVersion, classifier="linux")
-	implementation(group="org.openjfx", name="javafx-fxml", version=javaFxVersion, classifier="win")
-	implementation(group="org.openjfx", name="javafx-fxml", version=javaFxVersion, classifier="mac")
-	implementation(group="org.openjfx", name="javafx-fxml", version=javaFxVersion, classifier="linux")
+	
+	/*
+	 * javafx.graphics  - Defines the core scenegraph APIs for the JavaFX UI toolkit (such as layout containers,
+	 * application lifecycle, shapes, transformations, canvas, input, painting, image handling, and effects), as well
+	 * as APIs for animation, css, concurrency, geometry, printing, and windowing.
+	 */
 	implementation(group="org.openjfx", name="javafx-graphics", version=javaFxVersion, classifier="win")
 	implementation(group="org.openjfx", name="javafx-graphics", version=javaFxVersion, classifier="mac")
 	implementation(group="org.openjfx", name="javafx-graphics", version=javaFxVersion, classifier="linux")
+	
+	/* UNUSED MODULES:
+	 * javafx.fxml - Defines the FXML APIs for the JavaFX UI toolkit.
+	 *
+	 * javafx.media - Defines APIs for playback of media and audio content, as part of the JavaFX UI toolkit, including
+	                    MediaView and MediaPlayer.
+	 * javafx.swing - Defines APIs for the JavaFX / Swing interop support included with the JavaFX UI toolkit, including
+	                    SwingNode (for embedding Swing inside a JavaFX application) and JFXPanel (for embedding JavaFX
+	                    inside a Swing application).
+	 * javafx.web - Defines APIs for the WebView functionality contained within the JavaFX UI toolkit.
+	 */
 }
+
+//javafx {
+//	version = javaFxVersion
+//	modules("javafx.base", "javafx.controls", "javafx.graphics")
+////	configuration = "compileOnly"
+//}
 
 tasks.test {
 	useJUnitPlatform()
@@ -64,12 +98,12 @@ val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
 java {
 	withSourcesJar()
 	withJavadocJar()
+	modularity.inferModulePath.set(true)
 }
 
 publishing {
 	publications {
 		create<MavenPublication>("maven") {
-
 			from(components["java"])
 
 			pom {
