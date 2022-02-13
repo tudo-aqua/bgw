@@ -18,7 +18,7 @@ import java.awt.Color
 /**
  * ViewController for the main menu scene.
  */
-class MauMauJoinGameScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
+class MauMauJoinGameMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
     
     private val menuLabel: Label = Label(
         height = MENU_ITEM_HEIGHT,
@@ -60,7 +60,7 @@ class MauMauJoinGameScene : MenuScene(width = 300, height = 500, background = Co
                 this[0,4] = joinGameButton
                 this[0,5] = backButton
                 
-                setColumnWidth(0, 300)
+                setColumnWidth(0, this@MauMauJoinGameMenuScene.width)
                 setCenterMode(Alignment.CENTER)
             }
         )

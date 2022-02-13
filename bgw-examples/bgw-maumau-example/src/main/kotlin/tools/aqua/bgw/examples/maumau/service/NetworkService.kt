@@ -1,8 +1,6 @@
 package tools.aqua.bgw.examples.maumau.service
 
-import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.CardValue
-import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
 import tools.aqua.bgw.examples.maumau.net.GameActionMessage
@@ -10,11 +8,15 @@ import tools.aqua.bgw.examples.maumau.net.GameOverMessage
 import tools.aqua.bgw.examples.maumau.net.InitGameMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.common.CreateGameResponseStatus
+import tools.aqua.bgw.net.common.GameMessageStatus
+import tools.aqua.bgw.net.common.JoinGameResponseStatus
+import tools.aqua.bgw.net.common.LeaveGameResponseStatus
 
 /**
  * Service for handling network communication.
  */
-class NetworkService(private val view: Refreshable) {
+class NetworkService(private val view: Refreshable, private val logicController: LogicController) {
 	/**
 	 * Network client.
 	 */
@@ -27,13 +29,11 @@ class NetworkService(private val view: Refreshable) {
 	 * @param name Player name.
 	 * @param sessionID Session ID to host.
 	 */
-	fun tryHostGame(address: String, name: String, sessionID: String): Boolean {
+	fun tryHostGame(address: String, name: String, sessionID: String): Unit {
 		if (!tryConnect(address, name))
-			return false
+			return
 		
 		client.createGame(GAME_ID, sessionID)
-		client.sendGameActionMessage(GameActionMessage(GameAction.PLAY, CardSuit.HEARTS, CardValue.SEVEN))
-		return true
 	}
 	
 	/**
@@ -43,13 +43,11 @@ class NetworkService(private val view: Refreshable) {
 	 * @param name Player name.
 	 * @param sessionID Session ID to join to.
 	 */
-	fun tryJoinGame(address: String, name: String, sessionID: String): Boolean {
+	fun tryJoinGame(address: String, name: String, sessionID: String): Unit {
 		if (!tryConnect(address, name))
-			return false
+			return
 		
 		client.joinGame(sessionID, "greeting")
-		client.sendGameActionMessage(GameActionMessage(GameAction.DRAW, CardSuit.CLUBS, CardValue.FIVE))
-		return true
 	}
 	
 	/**
@@ -87,25 +85,53 @@ class NetworkService(private val view: Refreshable) {
 			println("Connection closed with code: $code and reason: $reason")
 		}
 		onCreateGameResponse = {
-			println("$it")
+			BoardGameApplication.runOnGUIThread {
+				when (it.responseStatus) {
+					CreateGameResponseStatus.SUCCESS -> view.onCreateGameSuccess()
+					CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME -> view.onCreateGameError("You are already in a game.")
+					CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS -> view.onCreateGameError("Session id already exists.")
+					CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST -> error(it)
+					CreateGameResponseStatus.SERVER_ERROR -> view.onServerError()
+				}
+			}
 		}
 		onJoinGameResponse = {
-			println("$it")
+			BoardGameApplication.runOnGUIThread {
+				when (it.responseStatus) {
+					JoinGameResponseStatus.SUCCESS -> view.onJoinGameSuccess()
+					JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME -> view.onCreateGameError("You are already in a game.")
+					JoinGameResponseStatus.INVALID_SESSION_ID -> view.onCreateGameError("Session id invalid.")
+					JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN -> view.onJoinGameError("Player name is already taken.")
+					JoinGameResponseStatus.SERVER_ERROR -> view.onServerError()
+				}
+			}
 		}
 		onLeaveGameResponse = {
-			println("$it")
+			BoardGameApplication.runOnGUIThread {
+				when (it.responseStatus) {
+					LeaveGameResponseStatus.SUCCESS -> {}
+					LeaveGameResponseStatus.NO_ASSOCIATED_GAME -> error(it)
+					LeaveGameResponseStatus.SERVER_ERROR -> view.onServerError()
+				}
+			}
 		}
-		onUserJoined = {
-			println("$it")
-		}
-		onUserLeft = {
-			println("$it")
-		}
+		onUserJoined = { BoardGameApplication.runOnGUIThread { view.onUserJoined(it.sender) } }
+		onUserLeft = { BoardGameApplication.runOnGUIThread { view.onUserLeft(it.sender) } }
+		
 		onGameActionResponse = {
-			println("$it")
+			BoardGameApplication.runOnGUIThread {
+				when (it.status) {
+					GameMessageStatus.SUCCESS -> view.onGameActionAccepted()
+					GameMessageStatus.NO_ASSOCIATED_GAME -> error(it)
+					GameMessageStatus.INVALID_JSON -> error(it)
+					GameMessageStatus.SERVER_ERROR -> view.onServerError()
+				}
+			}
 		}
-		onGameActionReceived = { payload, sender ->
-			println("$sender sent $payload")
+		onGameActionReceived = { payload, _ ->
+			BoardGameApplication.runOnGUIThread {
+				logicController.doTurn(payload)
+			}
 		}
 	}
 	

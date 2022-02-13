@@ -4,6 +4,8 @@ import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.CARDS_FILE
@@ -324,7 +326,55 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 * @param message Message to display.
 	 */
 	override fun showConnectWarningDialog(title:String, message:String) {
+		viewController.showDialog(Dialog(
+			dialogType = DialogType.WARNING,
+			title = title,
+			header = title,
+			message = message,
+		))
+	}
 	
+	override fun onCreateGameSuccess() {
+		viewController.showMenuScene(viewController.mauMauWaitForOpponentMenuScene.also { it.startAnimation() })
+		viewController.logicController.newGame()
+	}
+	
+	override fun onJoinGameSuccess() {
+		viewController.hideMenuScene()
+	}
+	
+	override fun onCreateGameError(message: String) {
+		viewController.showDialog(Dialog(
+			dialogType = DialogType.ERROR,
+			title = "Error creating game",
+			header = "Error creating game",
+			message = message
+		))
+	}
+	
+	override fun onJoinGameError(message: String) {
+		viewController.showDialog(Dialog(
+			dialogType = DialogType.ERROR,
+			title = "Error joining game",
+			header = "Error joining game",
+			message = message
+		))
+	}
+	
+	override fun onGameActionAccepted() {
+		TODO("Not yet implemented")
+	}
+	
+	override fun onUserJoined(sender: String) {
+		TODO("Not yet implemented")
+	}
+	
+	override fun onUserLeft(sender: String) {
+		TODO("Not yet implemented")
+	}
+	
+	override fun onServerError() {
+		TODO("Not yet implemented")
 	}
 	//endregion
 	

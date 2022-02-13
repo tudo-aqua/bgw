@@ -79,7 +79,17 @@ interface Refreshable {
 	 * @param title Title line.
 	 * @param message Message to display.
 	 */
-	fun showConnectWarningDialog(title:String, message:String) {
+	fun showConnectWarningDialog(title:String, message:String)
 	
-	}
+	fun onCreateGameSuccess()
+	fun onJoinGameSuccess()
+	
+	fun onCreateGameError(message: String)
+	fun onJoinGameError(message: String)
+	fun onGameActionAccepted()
+	
+	fun onUserJoined(sender: String)
+	fun onUserLeft(sender: String)
+	
+	fun onServerError()
 }

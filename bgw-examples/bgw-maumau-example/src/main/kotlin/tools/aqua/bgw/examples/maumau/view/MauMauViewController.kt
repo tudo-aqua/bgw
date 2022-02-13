@@ -22,12 +22,17 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	/**
 	 * The host game menu scene.
 	 */
-	private val mauMauHostGameMenuScene: MauMauHostGameScene = MauMauHostGameScene()
+	private val mauMauHostGameMenuScene: MauMauHostGameMenuScene = MauMauHostGameMenuScene()
 	
 	/**
 	 * The join game menu scene.
 	 */
-	private val mauMauJoinGameMenuScene: MauMauJoinGameScene = MauMauJoinGameScene()
+	private val mauMauJoinGameMenuScene: MauMauJoinGameMenuScene = MauMauJoinGameMenuScene()
+	
+	/**
+	 * The waiting for opponent menu scene.
+	 */
+	val mauMauWaitForOpponentMenuScene: MauMauWaitForOpponentMenuScene = MauMauWaitForOpponentMenuScene()
 	
 	/**
 	 * The player won menu scene.
@@ -52,7 +57,7 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	/**
 	 * Network service instance.
 	 */
-	val networkService: NetworkService = NetworkService(refreshViewController)
+	val networkService: NetworkService = NetworkService(refreshViewController, logicController)
 	
 	/**
 	 * CardMap mapping entity cards onto view components.
@@ -152,12 +157,8 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
 			val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(name, sessionID)
-				&& networkService.tryHostGame(address, name, sessionID)
-			) {
-				logicController.newGame()
-				hideMenuScene()
-			}
+			if (networkService.validateInputs(name, sessionID))
+				networkService.tryHostGame(address, name, sessionID)
 		}
 		
 		mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
@@ -172,11 +173,8 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
 			val gameID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(name, gameID)
-				&& networkService.tryJoinGame(address, name, gameID)
-			) {
-				hideMenuScene()
-			}
+			if (networkService.validateInputs(name, gameID))
+				networkService.tryJoinGame(address, name, gameID)
 		}
 		
 		mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }

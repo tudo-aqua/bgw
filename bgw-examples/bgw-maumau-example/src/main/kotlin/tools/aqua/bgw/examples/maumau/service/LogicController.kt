@@ -4,6 +4,7 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.net.GameActionMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.util.*
 import kotlin.math.min
@@ -225,5 +226,9 @@ class LogicController(private val view: Refreshable) {
 		
 		//Hint 5: Take card
 		return null
+	}
+	
+	fun doTurn(action: GameActionMessage) {
+		error("Not yet implemented")
 	}
 }
