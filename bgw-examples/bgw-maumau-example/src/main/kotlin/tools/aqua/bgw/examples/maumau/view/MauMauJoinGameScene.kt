@@ -30,7 +30,7 @@ class MauMauJoinGameScene : MenuScene(width = 300, height = 500, background = Co
     val addressText: TextField = TextField(
         height = MENU_ITEM_HEIGHT,
         width = MENU_ITEM_WIDTH,
-        text = "127.0.0.1:5432",
+        text = "127.0.0.1:8080",
         prompt = "Server address: 127.0.0.1:8080"
     )
     

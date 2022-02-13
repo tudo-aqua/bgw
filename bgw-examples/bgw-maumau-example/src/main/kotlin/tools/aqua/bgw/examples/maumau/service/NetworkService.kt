@@ -1,5 +1,8 @@
 package tools.aqua.bgw.examples.maumau.service
 
+import tools.aqua.bgw.examples.maumau.entity.CardSuit
+import tools.aqua.bgw.examples.maumau.entity.CardValue
+import tools.aqua.bgw.examples.maumau.entity.GameAction
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
 import tools.aqua.bgw.examples.maumau.net.GameActionMessage
@@ -29,6 +32,7 @@ class NetworkService(private val view: Refreshable) {
 			return false
 		
 		client.createGame(GAME_ID, sessionID)
+		client.sendGameActionMessage(GameActionMessage(GameAction.PLAY, CardSuit.HEARTS, CardValue.SEVEN))
 		return true
 	}
 	
@@ -44,6 +48,7 @@ class NetworkService(private val view: Refreshable) {
 			return false
 		
 		client.joinGame(sessionID, "greeting")
+		client.sendGameActionMessage(GameActionMessage(GameAction.DRAW, CardSuit.CLUBS, CardValue.FIVE))
 		return true
 	}
 	
