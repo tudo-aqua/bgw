@@ -13,6 +13,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6] - To be released
+
+### Changed
+- Renamed module bgw-core to bgw-ui
+
 ## [0.5] - 31. Oct. 2021
 
 ### Added
