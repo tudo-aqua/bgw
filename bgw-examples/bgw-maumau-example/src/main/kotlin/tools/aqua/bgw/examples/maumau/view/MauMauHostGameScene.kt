@@ -40,10 +40,10 @@ class MauMauHostGameScene : MenuScene(width = 300, height = 500, background = Co
         prompt = "Your Name"
     )
     
-    val gameIDText: TextField = TextField(
+    val sessionIDText: TextField = TextField(
         height = MENU_ITEM_HEIGHT,
         width = MENU_ITEM_WIDTH,
-        prompt = "gameID"
+        prompt = "sessionID"
     )
 
     val joinGameButton: Button = MenuButton("Host Game")
@@ -56,7 +56,7 @@ class MauMauHostGameScene : MenuScene(width = 300, height = 500, background = Co
                 this[0,0] = menuLabel
                 this[0,1] = addressText
                 this[0,2] = nameText
-                this[0,3] = gameIDText
+                this[0,3] = sessionIDText
                 this[0,4] = joinGameButton
                 this[0,5] = backButton
                 

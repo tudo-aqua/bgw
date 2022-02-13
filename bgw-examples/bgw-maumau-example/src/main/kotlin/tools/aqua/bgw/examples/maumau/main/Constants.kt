@@ -13,4 +13,7 @@ const val LIGHT_BULB_FILE: String = "assets/light-bulb.png"
 const val MENU_ITEM_HEIGHT = 60
 const val MENU_ITEM_WIDTH = 200
 
+const val GAME_ID = "MauMau"
+const val NETWORK_SECRET = "geheim"
+
 val MENU_BUTTON_FONT = Font(color = Color.WHITE, fontStyle = Font.FontStyle.ITALIC)

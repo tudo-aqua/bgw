@@ -150,10 +150,10 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauHostGameMenuScene.joinGameButton.onMouseClicked = {
 			val address = mauMauHostGameMenuScene.addressText.text.trim()
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
-			val gameID = mauMauHostGameMenuScene.gameIDText.text.trim()
+			val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(name, gameID)
-				&& networkService.tryHostGame(address, name, gameID.toInt())
+			if (networkService.validateInputs(name, sessionID)
+				&& networkService.tryHostGame(address, name, sessionID)
 			) {
 				logicController.newGame()
 				hideMenuScene()
@@ -170,10 +170,10 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauJoinGameMenuScene.joinGameButton.onMouseClicked = {
 			val address = mauMauHostGameMenuScene.addressText.text.trim()
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
-			val gameID = mauMauHostGameMenuScene.gameIDText.text.trim()
+			val gameID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
 			if (networkService.validateInputs(name, gameID)
-				&& networkService.tryJoinGame(address, name, gameID.toInt())
+				&& networkService.tryJoinGame(address, name, gameID)
 			) {
 				hideMenuScene()
 			}
