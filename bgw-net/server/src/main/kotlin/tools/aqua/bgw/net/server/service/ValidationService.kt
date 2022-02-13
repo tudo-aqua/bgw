@@ -8,12 +8,14 @@ import com.networknt.schema.ValidationMessage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import tools.aqua.bgw.net.common.*
-import tools.aqua.bgw.net.server.EXAMPLE_SCHEMA_JSON_URL_STRING
+import tools.aqua.bgw.net.common.EndGameMessage
+import tools.aqua.bgw.net.common.GameActionMessage
+import tools.aqua.bgw.net.common.GameMessage
+import tools.aqua.bgw.net.common.InitializeGameMessage
+import tools.aqua.bgw.net.server.*
 import tools.aqua.bgw.net.server.entity.SchemasByGame
 import tools.aqua.bgw.net.server.entity.SchemasByGameRepository
 import javax.annotation.PostConstruct
-import kotlin.jvm.Throws
 
 interface ValidationService {
 	/**
@@ -77,19 +79,29 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
 		}
 	}
 
-	override fun flushSchemaCache() = schemaMap.clear()
+	override fun flushSchemaCache(): Unit = schemaMap.clear()
 
 	/**
 	 * This method loads the example schema located at [EXAMPLE_SCHEMA_JSON_URL_STRING] into the database.
 	 */
 	@PostConstruct
 	fun initExample() {
-		val schema = javaClass.getResource(EXAMPLE_SCHEMA_JSON_URL_STRING)?.readText()
-		if (schema == null) {
+		val exampleSchema = javaClass.getResource(EXAMPLE_SCHEMA_JSON_URL_STRING)?.readText()
+		
+		val maumauInitSchema = javaClass.getResource(MAUMAU_INIT_SCHEMA_JSON_URL_STRING)?.readText()
+		val maumauGameSchema = javaClass.getResource(MAUMAU_GAME_SCHEMA_JSON_URL_STRING)?.readText()
+		val maumauEndSchema = javaClass.getResource(MAUMAU_END_SCHEMA_JSON_URL_STRING)?.readText()
+		
+		if (exampleSchema == null) {
 			logger.warn("Failed to load example schema from resources")
 		} else {
-			schemasByGameRepository.save(SchemasByGame("example", schema, schema, schema))
+			schemasByGameRepository.save(SchemasByGame(EXAMPLE_GAME_ID, exampleSchema, exampleSchema, exampleSchema))
+		}
+		
+		if (maumauInitSchema == null || maumauGameSchema == null || maumauEndSchema == null) {
+			logger.warn("Failed to load maumau schemas from resources")
+		} else {
+			schemasByGameRepository.save(SchemasByGame(MAUMAU_GAME_ID, maumauInitSchema, maumauGameSchema, maumauEndSchema))
 		}
 	}
-
 }
