@@ -72,4 +72,14 @@ interface Refreshable {
 	 * @param playerWon Player that won.
 	 */
 	fun refreshEndGame(playerWon: MauMauPlayer)
+	
+	/**
+	 * Shows a warning dialog for wrong inputs in host/join menu.
+	 *
+	 * @param title Title line.
+	 * @param message Message to display.
+	 */
+	fun showConnectWarningDialog(title:String, message:String) {
+	
+	}
 }

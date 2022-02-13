@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "required": [
+    "action",
+    "card_suit",
+    "card_value"
+  ],
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "card_suit": {
+      "type": "string"
+    },
+    "card_value": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

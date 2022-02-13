@@ -1,14 +1,13 @@
 package tools.aqua.bgw.examples.maumau.view
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
+import tools.aqua.bgw.examples.maumau.service.NetworkService
 import tools.aqua.bgw.util.BidirectionalMap
-import tools.aqua.bgw.visual.ColorVisual
 
 /**
  * Main view controller.
@@ -19,6 +18,16 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	 * The main menu scene.
 	 */
 	private val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene()
+	
+	/**
+	 * The host game menu scene.
+	 */
+	private val mauMauHostGameMenuScene: MauMauHostGameScene = MauMauHostGameScene()
+	
+	/**
+	 * The join game menu scene.
+	 */
+	private val mauMauJoinGameMenuScene: MauMauJoinGameScene = MauMauJoinGameScene()
 	
 	/**
 	 * The player won menu scene.
@@ -41,13 +50,20 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	val logicController: LogicController = LogicController(refreshViewController)
 	
 	/**
+	 * Network service instance.
+	 */
+	val networkService: NetworkService = NetworkService(refreshViewController)
+	
+	/**
 	 * CardMap mapping entity cards onto view components.
 	 */
 	val cardMap: BidirectionalMap<MauMauCard, CardView> = BidirectionalMap()
 	
 	init {
 		registerGameEvents()
-		registerMenuEvents()
+		registerMainMenuEvents()
+		registerHostMenuEvents()
+		registerJoinMenuEvents()
 		showGameScene(mauMauGameScene)
 		showMenuScene(mauMauMenuScene)
 		show()
@@ -105,31 +121,66 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	/**
 	 * Registers events in the main menu scene.
 	 */
-	private fun registerMenuEvents() {
-		mauMauGameScene.mainMenuButton.onMouseClicked = {
-			showMenuScene(mauMauMenuScene)
-		}
+	private fun registerMainMenuEvents() {
+		mauMauGameScene.mainMenuButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
 		
-		mauMauMenuScene.continueGameButton.onMouseClicked = {
+		mauMauMenuScene.continueGameButton.onMouseClicked = { hideMenuScene() }
+		
+		mauMauMenuScene.newLocalGameButton.onMouseClicked = {
+			logicController.newGame()
 			hideMenuScene()
 		}
-        
-        mauMauMenuScene.newGameButton.onMouseClicked = {
-            logicController.newGame()
-            hideMenuScene()
-        }
-        
-        mauMauMenuScene.exitButton.onMouseClicked = {
-            exit()
-        }
+		
+		mauMauMenuScene.hostGameButton.onMouseClicked = { showMenuScene(mauMauHostGameMenuScene) }
+		mauMauMenuScene.joinGameButton.onMouseClicked = { showMenuScene(mauMauJoinGameMenuScene) }
+		mauMauMenuScene.exitButton.onMouseClicked = { exit() }
 		
 		mauMauPlayerWonMenuScene.newGameButton.onMouseClicked = {
 			logicController.newGame()
 			hideMenuScene()
 		}
 		
-		mauMauPlayerWonMenuScene.exitButton.onMouseClicked = {
-			exit()
+		mauMauPlayerWonMenuScene.exitButton.onMouseClicked = { exit() }
+	}
+	
+	/**
+	 * Registers events in the host game menu scene.
+	 */
+	private fun registerHostMenuEvents() {
+		mauMauHostGameMenuScene.joinGameButton.onMouseClicked = {
+			val address = mauMauHostGameMenuScene.addressText.text.trim()
+			val name = mauMauHostGameMenuScene.nameText.text.trim()
+			val gameID = mauMauHostGameMenuScene.gameIDText.text.trim()
+			
+			if (networkService.validateInputs(name, gameID)
+				&& networkService.tryHostGame(address, name, gameID.toInt())
+			) {
+				logicController.newGame()
+				hideMenuScene()
+			}
 		}
-    }
+		
+		mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
+	}
+	
+	/**
+	 * Registers events in the join game menu scene.
+	 */
+	private fun registerJoinMenuEvents() {
+		mauMauJoinGameMenuScene.joinGameButton.onMouseClicked = {
+			val address = mauMauHostGameMenuScene.addressText.text.trim()
+			val name = mauMauHostGameMenuScene.nameText.text.trim()
+			val gameID = mauMauHostGameMenuScene.gameIDText.text.trim()
+			
+			if (networkService.validateInputs(name, gameID)
+				&& networkService.tryJoinGame(address, name, gameID.toInt())
+			) {
+				hideMenuScene()
+			}
+		}
+		
+		mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
+	}
+	
+	
 }

@@ -316,6 +316,16 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		//hide suit selection
 		showJackEffectSelection(false)
 	}
+	
+	/**
+	 * Shows a warning dialog for wrong inputs in host/join menu.
+	 *
+	 * @param title Title line.
+	 * @param message Message to display.
+	 */
+	override fun showConnectWarningDialog(title:String, message:String) {
+	
+	}
 	//endregion
 	
 	//region extension functions

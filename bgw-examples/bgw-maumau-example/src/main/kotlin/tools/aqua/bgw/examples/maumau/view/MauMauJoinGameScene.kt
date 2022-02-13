@@ -4,7 +4,8 @@ package tools.aqua.bgw.examples.maumau.view
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.components.uicomponents.LabeledUIComponent
+import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_HEIGHT
@@ -17,31 +18,48 @@ import java.awt.Color
 /**
  * ViewController for the main menu scene.
  */
-class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
+class MauMauJoinGameScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
     
     private val menuLabel: Label = Label(
         height = MENU_ITEM_HEIGHT,
         width = MENU_ITEM_WIDTH,
-        text = "Main menu",
+        text = "Join Game",
         font = Font(fontWeight = Font.FontWeight.BOLD)
     )
     
-    val continueGameButton: Button = MenuButton("Continue")
-    val newLocalGameButton: Button = MenuButton("New Local Game")
-    val hostGameButton: Button = MenuButton("Host Game")
+    val addressText: TextField = TextField(
+        height = MENU_ITEM_HEIGHT,
+        width = MENU_ITEM_WIDTH,
+        text = "127.0.0.1:5432",
+        prompt = "Server address: 127.0.0.1:8080"
+    )
+    
+    val nameText: TextField = TextField(
+        height = MENU_ITEM_HEIGHT,
+        width = MENU_ITEM_WIDTH,
+        prompt = "Your Name"
+    )
+    
+    val gameIDText: TextField = TextField(
+        height = MENU_ITEM_HEIGHT,
+        width = MENU_ITEM_WIDTH,
+        prompt = "gameID"
+    )
+
     val joinGameButton: Button = MenuButton("Join Game")
-    val exitButton: Button = MenuButton("Exit")
+    
+    val backButton: Button = MenuButton("← Back")
     
     init {
         addComponents(
-            GridPane<LabeledUIComponent>(columns = 1, rows = 6, spacing = 15, layoutFromCenter = false).apply {
+            GridPane<UIComponent>(columns = 1, rows = 6, spacing = 15, layoutFromCenter = false).apply {
                 this[0,0] = menuLabel
-                this[0,1] = continueGameButton
-                this[0,2] = newLocalGameButton
-                this[0,3] = hostGameButton
+                this[0,1] = addressText
+                this[0,2] = nameText
+                this[0,3] = gameIDText
                 this[0,4] = joinGameButton
-                this[0,5] = exitButton
-    
+                this[0,5] = backButton
+                
                 setColumnWidth(0, 300)
                 setCenterMode(Alignment.CENTER)
             }
