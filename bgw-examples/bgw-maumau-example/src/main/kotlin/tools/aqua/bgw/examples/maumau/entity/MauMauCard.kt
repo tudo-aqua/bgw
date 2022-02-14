@@ -9,10 +9,19 @@ package tools.aqua.bgw.examples.maumau.entity
  * @param cardSuit Suit of this card.
  */
 class MauMauCard(val cardValue: CardValue, val cardSuit: CardSuit) {
+	
+	/**
+	 * Deserializes exchange format to [MauMauCard]
+	 */
+	constructor(cardValue: String, cardSuit: String) : this(CardValue.valueOf(cardValue),	CardSuit.valueOf(cardSuit))
+	
+	/**
+	 * Serializes [MauMauCard] for exchange format
+	 */
+	fun serialize() : String = "${cardValue}_${cardSuit}"
+	
 	/**
 	 * Converts card into readable string representation.
 	 */
-	override fun toString(): String {
-		return "MauMauCard(cardValue=$cardValue, cardSuit=$cardSuit)"
-	}
+	override fun toString(): String = "MauMauCard(cardValue=$cardValue, cardSuit=$cardSuit)"
 }

@@ -4,7 +4,10 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
-import tools.aqua.bgw.net.common.*
+import tools.aqua.bgw.net.common.CreateGameResponse
+import tools.aqua.bgw.net.common.CreateGameResponseStatus
+import tools.aqua.bgw.net.common.JoinGameResponse
+import tools.aqua.bgw.net.common.JoinGameResponseStatus
 
 class MauMauNetworkClient(
 	playerName: String,
@@ -33,10 +36,10 @@ class MauMauNetworkClient(
 		
 		onCreateGameResponse = this::onCreateGameResponse
 		onJoinGameResponse = this::onJoinGameResponse
-		onLeaveGameResponse = this::onLeaveGameResponse
 		
-		onGameActionResponse = this::onGameActionResponse
+		onInitializeGameReceived = this::onInitializeGameReceived
 		onGameActionReceived = this::onGameActionReceived
+		onEndGameReceived = this::onEndGameReceived
 	}
 	
 	private fun onCreateGameResponse(response : CreateGameResponse) {
@@ -63,30 +66,21 @@ class MauMauNetworkClient(
 		}
 	}
 	
-	private fun onLeaveGameResponse(response: LeaveGameResponse) {
+	private fun onInitializeGameReceived(message : InitGameMessage, sender : String) {
+		println(message)
 		BoardGameApplication.runOnGUIThread {
-			when (response.responseStatus) {
-				LeaveGameResponseStatus.SUCCESS -> {}
-				LeaveGameResponseStatus.NO_ASSOCIATED_GAME -> error(response)
-				LeaveGameResponseStatus.SERVER_ERROR -> view.onServerError()
-			}
-		}
-	}
-	
-	private fun onGameActionResponse(response: GameActionResponse)  {
-		BoardGameApplication.runOnGUIThread {
-			when (response.status) {
-				GameMessageStatus.SUCCESS -> view.onGameActionAccepted()
-				GameMessageStatus.NO_ASSOCIATED_GAME -> error(response)
-				GameMessageStatus.INVALID_JSON -> error(response)
-				GameMessageStatus.SERVER_ERROR -> view.onServerError()
-			}
+			//logicController.doTurn(payload)
 		}
 	}
 	
 	private fun onGameActionReceived(message : GameActionMessage, sender : String) {
+		println(message)
 		BoardGameApplication.runOnGUIThread {
 			//logicController.doTurn(payload)
 		}
+	}
+	
+	private fun onEndGameReceived(message : GameOverMessage, sender : String) {
+		println(message)
 	}
 }

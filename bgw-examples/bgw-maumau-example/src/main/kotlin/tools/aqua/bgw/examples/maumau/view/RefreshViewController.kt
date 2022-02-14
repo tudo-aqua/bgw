@@ -36,7 +36,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 */
 	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
 		//Find hand to refresh
-		val playerHandView = if (player == viewController.logicController.game.currentPlayer)
+		val playerHandView = if (player == viewController.logicController.currentPlayer())
 			viewController.mauMauGameScene.currentPlayerHand
 		else
 			viewController.mauMauGameScene.otherPlayerHand
@@ -47,7 +47,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		playerHandView.add(cardView)
 		
 		//show card front if player is currently active
-		if (player == viewController.logicController.game.currentPlayer)
+		if (player == viewController.logicController.currentPlayer())
 			cardView.showFront()
 		
 		//update label
@@ -291,15 +291,16 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		
 		//Add elements to hands
 		viewController.mauMauGameScene.currentPlayerHand.clear()
-		for (i in 0 until game.currentPlayer.hand.cards.size) {
+		viewController.mauMauGameScene.otherPlayerHand.clear()
+		
+		for (i in 0 until game.players[0].hand.cards.size) {
 			viewController.mauMauGameScene.currentPlayerHand.add(
-				viewController.cardMap.forward(game.currentPlayer.hand.cards[i]).apply { showFront() }
+				viewController.cardMap.forward(game.players[0].hand.cards[i]).apply { showFront() }
 			)
 		}
-		viewController.mauMauGameScene.otherPlayerHand.clear()
-		for (i in 0 until game.otherPlayer.hand.cards.size) {
+		for (i in 0 until game.players[1].hand.cards.size) {
 			viewController.mauMauGameScene.otherPlayerHand.add(
-				viewController.cardMap.forward(game.otherPlayer.hand.cards[i]).apply { showBack() }
+				viewController.cardMap.forward(game.players[1].hand.cards[i]).apply { showBack() }
 			)
 		}
 		

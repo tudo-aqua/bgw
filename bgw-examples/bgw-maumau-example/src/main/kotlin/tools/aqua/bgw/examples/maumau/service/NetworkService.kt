@@ -1,6 +1,8 @@
 package tools.aqua.bgw.examples.maumau.service
 
+import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
+import tools.aqua.bgw.examples.maumau.net.InitGameMessage
 import tools.aqua.bgw.examples.maumau.net.MauMauNetworkClient
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.net.InetAddress
@@ -120,4 +122,16 @@ class NetworkService(private val view: Refreshable) {
 	 * Tries parsing [port] into an ip port.
 	 */
 	private fun validatePort(port : String) : Boolean = (port.toIntOrNull() ?: false) in 1..65534
+	
+	/**
+	 * Send initialize game message to connected opponent.
+	 */
+	fun sendInit(game : MauMauGame) {
+		client.sendInitializeGameMessage(InitGameMessage(
+			game.drawStack.cards.map { it.serialize() },
+			game.gameStack.cards.map { it.serialize() },
+			game.players[0].hand.cards.map { it.serialize() },
+			game.players[1].hand.cards.map { it.serialize() }
+		))
+	}
 }

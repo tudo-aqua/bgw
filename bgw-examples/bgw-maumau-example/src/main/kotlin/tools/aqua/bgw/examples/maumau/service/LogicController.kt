@@ -1,23 +1,29 @@
 package tools.aqua.bgw.examples.maumau.service
 
-import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.CardValue
-import tools.aqua.bgw.examples.maumau.entity.MauMauCard
-import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.net.GameActionMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.util.*
-import kotlin.math.min
 
 /**
  * Controller managing game actions.
  */
-class LogicController(private val view: Refreshable) {
+class LogicController(private val view: Refreshable, private val networkService: NetworkService) {
 	
 	/**
 	 * Current game instance.
 	 */
 	var game: MauMauGame = MauMauGame()
+	
+	/**
+	 * Current game state
+	 */
+	var gameState : GameState = GameState.MAIN_MENU
+	
+	/**
+	 *
+	 */
+	var isHost : Boolean = false
 	
 	/**
 	 * Sets up a new game.
@@ -33,8 +39,8 @@ class LogicController(private val view: Refreshable) {
 		
 		//draw 5 for each player
 		for (i in 0..4) {
-			game.currentPlayer.hand.addCard(game.drawStack.drawCard())
-			game.otherPlayer.hand.addCard(game.drawStack.drawCard())
+			game.players[0].hand.addCard(game.drawStack.drawCard())
+			game.players[1].hand.addCard(game.drawStack.drawCard())
 		}
 		
 		//initial card for playStack
@@ -42,21 +48,10 @@ class LogicController(private val view: Refreshable) {
 		
 		//refresh whole view
 		view.refreshAll()
-	}
-	
-	/**
-	 * Generates a full set of MauMauCards.
-	 */
-	private fun generateMauMauCards(suits: EnumSet<CardSuit>, values: EnumSet<CardValue>): List<MauMauCard> {
-		val cards: MutableList<MauMauCard> = ArrayList(suits.size * values.size)
 		
-		for (suit in suits) {
-			for (value in values) {
-				cards.add(MauMauCard(value, suit))
-			}
+		if(isHost) {
+			networkService.sendInit(game)
 		}
-		
-		return cards
 	}
 	
 	/**
@@ -64,7 +59,7 @@ class LogicController(private val view: Refreshable) {
 	 * Advances player.
 	 */
 	fun drawCard() {
-		val currentPlayer = game.currentPlayer
+		val currentPlayer = currentPlayer()
 		
 		val card = game.drawStack.drawCard()
 		currentPlayer.hand.addCard(card)
@@ -76,7 +71,7 @@ class LogicController(private val view: Refreshable) {
 		
 		view.refreshCardsDrawn(currentPlayer, mutableListOf(card))
 		
-		game.advancePlayer()
+		advancePlayer()
 		view.refreshAdvancePlayer()
 	}
 	
@@ -84,18 +79,18 @@ class LogicController(private val view: Refreshable) {
 	 * Select a suit by jack effect, advances player
 	 */
 	fun selectSuit(suit: CardSuit) {
-		game.nextSuit = suit
+		/*game.nextSuit = suit
 		view.refreshSuitSelected()
 		
 		game.advancePlayer()
-		view.refreshAdvancePlayer()
+		view.refreshAdvancePlayer()*/
 	}
 	
 	/**
 	 * Play a card to the GameStack if allowed, advances player
 	 */
 	fun playCard(card: MauMauCard, animated: Boolean): Boolean {
-		if (!checkRules(card))
+		/*if (!checkRules(card))
 			return false
 		
 		val currentPlayer = game.currentPlayer
@@ -131,7 +126,7 @@ class LogicController(private val view: Refreshable) {
 			view.refreshAdvancePlayer()
 		} else {
 			view.refreshPlayAgain()
-		}
+		}*/
 		
 		return true
 	}
@@ -140,24 +135,24 @@ class LogicController(private val view: Refreshable) {
 	 * Play a card without effect
 	 */
 	private fun playNoEffect(card: MauMauCard, animated: Boolean) {
-		game.nextSuit = card.cardSuit
+		/*game.nextSuit = card.cardSuit
 		game.gameStack.playCard(card)
-		view.refreshCardPlayed(card, animated)
+		view.refreshCardPlayed(card, animated)*/
 	}
 	
 	/**
 	 * Play a jack card and show suit selection
 	 */
 	private fun playJackEffect(card: MauMauCard, animated: Boolean) {
-		playNoEffect(card, animated)
-		view.showJackEffectSelection()
+		/*playNoEffect(card, animated)
+		view.showJackEffectSelection()*/
 	}
 	
 	/**
 	 * Play a seven card and let opponent draw two
 	 */
 	private fun playSevenEffect(card: MauMauCard, animated: Boolean) {
-		playNoEffect(card, animated)
+		/*playNoEffect(card, animated)
 		
 		//information for refresh
 		val cards = mutableListOf<MauMauCard>()
@@ -173,7 +168,7 @@ class LogicController(private val view: Refreshable) {
 			game.shuffleGameStackBack()
 			view.refreshGameStackShuffledBack()
 		}
-		view.refreshCardsDrawn(game.otherPlayer, cards)
+		view.refreshCardsDrawn(game.otherPlayer, cards)*/
 	}
 	
 	/**
@@ -188,12 +183,12 @@ class LogicController(private val view: Refreshable) {
 	 * Shows a hint for the next turn.
 	 */
 	fun showHint() {
-		val card = calculateHint()
+		/*val card = calculateHint()
 		
 		if (card == null)
 			view.refreshHintDrawCard()
 		else
-			view.refreshHintPlayCard(card)
+			view.refreshHintPlayCard(card)*/
 	}
 	
 	/**
@@ -202,7 +197,7 @@ class LogicController(private val view: Refreshable) {
 	 * @return A [MauMauCard] to play or `null` to draw.
 	 */
 	private fun calculateHint(): MauMauCard? {
-		val cards = game.currentPlayer.hand.cards
+		/*val cards = game.currentPlayer.hand.cards
 		
 		//Hint 1: Play 8
 		var hint: List<MauMauCard> = cards.filter { it.cardValue == CardValue.EIGHT && checkRules(it) }
@@ -224,11 +219,49 @@ class LogicController(private val view: Refreshable) {
 		if (hint.isNotEmpty())
 			return hint.first()
 		
-		//Hint 5: Take card
+		//Hint 5: Take card*/
 		return null
 	}
 	
 	fun doTurn(action: GameActionMessage) {
 		error("Not yet implemented")
 	}
+	
+	
+	//region helper
+	/**
+	 * returns current player
+	 */
+	fun currentPlayer() : MauMauPlayer = when(gameState) {
+		GameState.PLAYER_ONE_TURN -> game.players[0]
+		GameState.PLAYER_TWO_TURN -> game.players[1]
+		else -> error("Wrong GameState: $gameState")
+	}
+	
+	/**
+	 * Switches active player.
+	 */
+	fun advancePlayer() {
+		gameState = when(gameState) {
+			GameState.PLAYER_ONE_TURN -> GameState.PLAYER_TWO_TURN
+			GameState.PLAYER_TWO_TURN -> GameState.PLAYER_ONE_TURN
+			else -> error("Wrong GameState to advance player: $gameState")
+		}
+	}
+	
+	/**
+	 * Generates a full set of MauMauCards.
+	 */
+	private fun generateMauMauCards(suits: EnumSet<CardSuit>, values: EnumSet<CardValue>): List<MauMauCard> {
+		val cards: MutableList<MauMauCard> = ArrayList(suits.size * values.size)
+		
+		for (suit in suits) {
+			for (value in values) {
+				cards.add(MauMauCard(value, suit))
+			}
+		}
+		
+		return cards
+	}
+	//endregion
 }

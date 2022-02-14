@@ -4,6 +4,7 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
+import tools.aqua.bgw.examples.maumau.entity.GameState
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
 import tools.aqua.bgw.examples.maumau.service.NetworkService
@@ -12,7 +13,7 @@ import tools.aqua.bgw.util.BidirectionalMap
 /**
  * Main view controller.
  */
-class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
+class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	
 	/**
 	 * The main menu scene.
@@ -50,14 +51,14 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	private val refreshViewController: RefreshViewController = RefreshViewController(this)
 	
 	/**
-	 * Logic controller instance.
-	 */
-	val logicController: LogicController = LogicController(refreshViewController)
-	
-	/**
 	 * Network service instance.
 	 */
-	val networkService: NetworkService = NetworkService(refreshViewController)
+	private val networkService: NetworkService = NetworkService(refreshViewController)
+	
+	/**
+	 * Logic controller instance.
+	 */
+	val logicController: LogicController = LogicController(refreshViewController, networkService)
 	
 	/**
 	 * CardMap mapping entity cards onto view components.
@@ -67,6 +68,7 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	init {
 		registerGameEvents()
 		registerMainMenuEvents()
+		registerPlayerWonMenuEvents()
 		registerHostMenuEvents()
 		registerJoinMenuEvents()
 		showGameScene(mauMauGameScene)
@@ -78,6 +80,11 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	 * Registers events in the main game scene.
 	 */
 	private fun registerGameEvents() {
+		mauMauGameScene.mainMenuButton.onMouseClicked = {
+			showMenuScene(mauMauMenuScene)
+			logicController.gameState = GameState.MAIN_MENU
+		}
+		
 		//Register hint button to calculate hint for current player
 		mauMauGameScene.hintButton.onMouseClicked = {
 			logicController.showHint()
@@ -127,22 +134,35 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	 * Registers events in the main menu scene.
 	 */
 	private fun registerMainMenuEvents() {
-		mauMauGameScene.mainMenuButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
-		
-		mauMauMenuScene.continueGameButton.onMouseClicked = { hideMenuScene() }
+		mauMauMenuScene.continueGameButton.onMouseClicked = { /*hideMenuScene()*/ } //TODO
 		
 		mauMauMenuScene.newLocalGameButton.onMouseClicked = {
 			logicController.newGame()
 			hideMenuScene()
+			logicController.gameState = GameState.PLAYER_ONE_TURN
 		}
 		
-		mauMauMenuScene.hostGameButton.onMouseClicked = { showMenuScene(mauMauHostGameMenuScene) }
-		mauMauMenuScene.joinGameButton.onMouseClicked = { showMenuScene(mauMauJoinGameMenuScene) }
-		mauMauMenuScene.exitButton.onMouseClicked = { exit() }
+		mauMauMenuScene.hostGameButton.onMouseClicked = {
+			showMenuScene(mauMauHostGameMenuScene)
+			logicController.gameState = GameState.HOST_GAME_MENU
+		}
 		
+		mauMauMenuScene.joinGameButton.onMouseClicked = {
+			showMenuScene(mauMauJoinGameMenuScene)
+			logicController.gameState = GameState.JOIN_GAME_MENU
+		}
+		
+		mauMauMenuScene.exitButton.onMouseClicked = { exit() }
+	}
+	
+	/**
+	 * Registers events in the player won menu scene.
+	 */
+	private fun registerPlayerWonMenuEvents() {
 		mauMauPlayerWonMenuScene.newGameButton.onMouseClicked = {
 			logicController.newGame()
 			hideMenuScene()
+			logicController.gameState = GameState.PLAYER_ONE_TURN
 		}
 		
 		mauMauPlayerWonMenuScene.exitButton.onMouseClicked = { exit() }
@@ -179,6 +199,4 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 		
 		mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
 	}
-	
-	
 }

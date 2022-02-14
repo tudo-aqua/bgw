@@ -1,7 +1,8 @@
 package tools.aqua.bgw.examples.maumau.net
 
-import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.CardValue
-
-data class InitGameMessage(val stack : List<Pair<CardSuit, CardValue>>)
-
+data class InitGameMessage(
+	val drawStack: List<String>,
+	val gameStack: List<String>,
+	val hostCards: List<String>,
+	val yourCards: List<String>
+)
