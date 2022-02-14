@@ -337,7 +337,6 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	
 	override fun onCreateGameSuccess() {
 		viewController.showMenuScene(viewController.mauMauWaitForOpponentMenuScene.also { it.startAnimation() })
-		viewController.logicController.newGame()
 	}
 	
 	override fun onJoinGameSuccess() {
@@ -368,6 +367,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	
 	override fun onUserJoined(sender: String) {
 		viewController.hideMenuScene()
+		viewController.logicController.newGame()
 	}
 	
 	override fun onUserLeft(sender: String) {

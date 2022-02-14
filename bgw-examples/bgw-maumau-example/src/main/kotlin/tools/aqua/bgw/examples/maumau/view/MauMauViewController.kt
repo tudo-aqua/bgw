@@ -145,11 +145,13 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauMenuScene.hostGameButton.onMouseClicked = {
 			showMenuScene(mauMauHostGameMenuScene)
 			logicController.gameState = GameState.HOST_GAME_MENU
+			logicController.isHost = true
 		}
 		
 		mauMauMenuScene.joinGameButton.onMouseClicked = {
 			showMenuScene(mauMauJoinGameMenuScene)
 			logicController.gameState = GameState.JOIN_GAME_MENU
+			logicController.isHost = false
 		}
 		
 		mauMauMenuScene.exitButton.onMouseClicked = { exit() }

@@ -127,11 +127,12 @@ class NetworkService(private val view: Refreshable) {
 	 * Send initialize game message to connected opponent.
 	 */
 	fun sendInit(game : MauMauGame) {
-		client.sendInitializeGameMessage(InitGameMessage(
-			game.drawStack.cards.map { it.serialize() },
+		print("Sending Greeting")
+		client.sendInitializeGameMessage(InitGameMessage("Hallo"))
+			/*game.drawStack.cards.map { it.serialize() },
 			game.gameStack.cards.map { it.serialize() },
 			game.players[0].hand.cards.map { it.serialize() },
 			game.players[1].hand.cards.map { it.serialize() }
-		))
+		))*/
 	}
 }

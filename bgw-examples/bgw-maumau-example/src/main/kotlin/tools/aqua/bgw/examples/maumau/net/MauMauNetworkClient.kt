@@ -40,6 +40,10 @@ class MauMauNetworkClient(
 		onInitializeGameReceived = this::onInitializeGameReceived
 		onGameActionReceived = this::onGameActionReceived
 		onEndGameReceived = this::onEndGameReceived
+		
+		onInitializeGameResponse = { println(it) }
+		onGameActionResponse = { println(it) }
+		onEndGameResponse = { println(it) }
 	}
 	
 	private fun onCreateGameResponse(response : CreateGameResponse) {

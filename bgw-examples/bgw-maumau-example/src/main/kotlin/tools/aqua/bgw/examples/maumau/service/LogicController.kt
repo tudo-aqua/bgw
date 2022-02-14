@@ -49,6 +49,7 @@ class LogicController(private val view: Refreshable, private val networkService:
 		//refresh whole view
 		view.refreshAll()
 		
+		print(isHost)
 		if(isHost) {
 			networkService.sendInit(game)
 		}
