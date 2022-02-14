@@ -27,7 +27,7 @@ interface Refreshable {
 	/**
 	 * Indicates refresh after card was played.
 	 */
-	fun refreshCardPlayed(card: MauMauCard, animated: Boolean)
+	fun refreshCardPlayed(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean)
 	
 	/**
 	 * Indicates refresh after game stack was shuffled back.
@@ -86,7 +86,6 @@ interface Refreshable {
 	
 	fun onCreateGameError(message: String)
 	fun onJoinGameError(message: String)
-	fun onGameActionAccepted()
 	
 	fun onUserJoined(sender: String)
 	fun onUserLeft(sender: String)

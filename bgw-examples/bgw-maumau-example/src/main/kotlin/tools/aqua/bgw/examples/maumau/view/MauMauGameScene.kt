@@ -31,7 +31,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		visual = ColorVisual(255, 255, 255, 50)
 	)
 	
-	var otherPlayerHand: LinearLayout<CardView> = LinearLayout<CardView>(
+	var otherPlayerHand: LinearLayout<CardView> = LinearLayout(
 		height = 220,
 		width = 800,
 		posX = 560,
@@ -39,9 +39,9 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		spacing = -50,
 		alignment = Alignment.CENTER,
 		visual = ColorVisual(255, 255, 255, 50)
-	).apply {
-		rotation = 180.0
-	}
+	)/*.apply {
+		rotation = 180.0 //TODO: Fix MovementAnimation.toComponentView Bug and re-enable rotation
+	}*/
 	//endregion
 	
 	//region Stacks
@@ -67,7 +67,6 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		width = (gameStack.posX + gameStack.width) - drawStack.posX,
 		posX = drawStack.posX,
 		posY = 620,
-		text = "Waiting for opponents turn",
 		font = Font(size = 26, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD)
 	).apply { isVisible = false }
 	//endregion stacks

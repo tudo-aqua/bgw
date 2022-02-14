@@ -85,8 +85,16 @@ class MauMauNetworkClient(
 		
 		BoardGameApplication.runOnGUIThread {
 			when(GameAction.valueOf(message.action)) {
-				GameAction.PLAY ->
-					logicController.playCard(SerializationUtil.deserializeMauMauCard(message.card), true)
+				GameAction.PLAY -> {
+					val card = SerializationUtil.deserializeMauMauCard(message.card)
+					
+					logicController.game.apply {
+						players[1].hand.removeCard(card)
+						gameStack.playCard(card)
+						nextSuit = card.cardSuit
+					}
+					logicController.view.refreshCardPlayed(card = card, animated = true, isCurrentPlayer = false)
+				}
 				GameAction.DRAW -> {
 					val card = logicController.game.drawStack.drawCard()
 					logicController.game.players[1].hand.addCard(card)

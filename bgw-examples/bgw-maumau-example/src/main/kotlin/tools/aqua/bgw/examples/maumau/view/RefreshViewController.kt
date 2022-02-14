@@ -33,7 +33,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	/**
 	 * Refreshes after card was drawn.
 	 */
-	override fun refreshCardDrawn(card: MauMauCard, isCurrentPlayer : Boolean) {
+	override fun refreshCardDrawn(card: MauMauCard, isCurrentPlayer: Boolean) {
 		//find hand to refresh
 		val playerHandView = if (isCurrentPlayer)
 			viewController.mauMauGameScene.currentPlayerHand
@@ -54,7 +54,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			viewController.logicController.game.drawStack.size().toString()
 		
 		//add event handlers to drawn card
-		if(isCurrentPlayer) cardView.addInteraction() else cardView.addSneakInteraction()
+		if (isCurrentPlayer) cardView.addInteraction() else cardView.addSneakInteraction()
 		
 		//hide suit selection
 		showJackEffectSelection(false)
@@ -66,11 +66,15 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	/**
 	 * Refreshes after card was played.
 	 */
-	override fun refreshCardPlayed(card: MauMauCard, animated: Boolean) {
+	override fun refreshCardPlayed(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
 		val cardView = viewController.cardMap.forward(card)
+		val hand =
+			if (isCurrentPlayer) viewController.mauMauGameScene.currentPlayerHand
+			else viewController.mauMauGameScene.otherPlayerHand
 		
 		//remove event handlers
 		cardView.removeInteraction()
+		cardView.showFront()
 		
 		//hide suit selection
 		showJackEffectSelection(false)
@@ -85,7 +89,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			)
 			
 			anim.onFinished = {
-				viewController.mauMauGameScene.currentPlayerHand.remove(cardView)
+				hand.remove(cardView)
 				viewController.mauMauGameScene.gameStack.add(cardView)
 				
 				cardView.posX = 0.0
@@ -99,7 +103,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			viewController.mauMauGameScene.lock()
 			viewController.mauMauGameScene.playAnimation(anim)
 		} else {
-			viewController.mauMauGameScene.currentPlayerHand.remove(cardView)
+			hand.remove(cardView)
 			viewController.mauMauGameScene.gameStack.push(cardView)
 			
 			cardView.posX = 0.0
@@ -321,13 +325,15 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 * @param title Title line.
 	 * @param message Message to display.
 	 */
-	override fun showConnectWarningDialog(title:String, message:String) {
-		viewController.showDialog(Dialog(
-			dialogType = DialogType.WARNING,
-			title = title,
-			header = title,
-			message = message,
-		))
+	override fun showConnectWarningDialog(title: String, message: String) {
+		viewController.showDialog(
+			Dialog(
+				dialogType = DialogType.WARNING,
+				title = title,
+				header = title,
+				message = message,
+			)
+		)
 	}
 	
 	override fun onCreateGameSuccess() {
@@ -339,21 +345,25 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	override fun onCreateGameError(message: String) {
-		viewController.showDialog(Dialog(
-			dialogType = DialogType.ERROR,
-			title = "Error creating game",
-			header = "Error creating game",
-			message = message
-		))
+		viewController.showDialog(
+			Dialog(
+				dialogType = DialogType.ERROR,
+				title = "Error creating game",
+				header = "Error creating game",
+				message = message
+			)
+		)
 	}
 	
 	override fun onJoinGameError(message: String) {
-		viewController.showDialog(Dialog(
-			dialogType = DialogType.ERROR,
-			title = "Error joining game",
-			header = "Error joining game",
-			message = message
-		))
+		viewController.showDialog(
+			Dialog(
+				dialogType = DialogType.ERROR,
+				title = "Error joining game",
+				header = "Error joining game",
+				message = message
+			)
+		)
 	}
 	
 	override fun onInitializeGameReceived() {
@@ -367,10 +377,6 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		viewController.mauMauGameScene.unlock()
 	}
 	
-	override fun onGameActionAccepted() {
-		TODO("Not yet implemented")
-	}
-	
 	override fun onUserJoined(sender: String) {
 		viewController.mauMauWaitForOpponentMenuScene.onOpponentConnected(sender)
 	}
@@ -380,7 +386,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	override fun onServerError() {
-		TODO("Not yet implemented")
+		error("Server error")
 	}
 	
 	//endregion
@@ -416,16 +422,16 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		onDragGestureStarted = {
 			overlay = ((viewController.mauMauGameScene.gameStack.components.last().visual as CompoundVisual)
 				.children.last() as ColorVisual).apply {
-					color = if (viewController.logicController.checkRules(
-							viewController.cardMap.backward(this@addInteraction)
-						)
+				color = if (viewController.logicController.checkRules(
+						viewController.cardMap.backward(this@addInteraction)
 					)
-						Color.GREEN
-					else
-						Color.RED
-					
-					transparency = 0.5
-				}
+				)
+					Color.GREEN
+				else
+					Color.RED
+				
+				transparency = 0.5
+			}
 		}
 		onDragGestureEnded = { _, _ ->
 			overlay?.transparency = 0.0

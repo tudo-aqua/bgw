@@ -81,11 +81,19 @@ class NetworkService(private val logicController: LogicController) {
 		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.DRAW, card = card))
 	}
 	
+	fun sendCardPlayed(card: MauMauCard) {
+		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.PLAY, card = card))
+	}
+	
 	/**
 	 * Sends [GameAction.END_TURN] to connected opponent.
 	 */
 	fun sendEndTurn() {
 		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.END_TURN))
+	}
+	
+	fun sendEndGame() {
+		TODO("Not yet implemented")
 	}
 	//endregion
 	

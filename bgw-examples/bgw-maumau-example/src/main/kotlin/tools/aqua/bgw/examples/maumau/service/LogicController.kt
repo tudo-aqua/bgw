@@ -126,44 +126,46 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Play a card to the GameStack if allowed, advances player
 	 */
-	fun playCard(card: MauMauCard, animated: Boolean): Boolean {
-		/*if (!checkRules(card))
+	fun playCard(card: MauMauCard, animated: Boolean, ) : Boolean {
+		if (!checkRules(card))
 			return false
 		
-		val currentPlayer = game.currentPlayer
+		val currentPlayer = game.players[0]
 		var advance = true
 		
 		currentPlayer.hand.removeCard(card)
 		
 		when (card.cardValue) {
-			CardValue.SEVEN ->
-				playSevenEffect(card, animated)
+			/*CardValue.SEVEN ->
+				playSevenEffect(card, animated)*/
 			
 			CardValue.EIGHT -> {
 				playNoEffect(card, animated)
 				advance = false
 			}
 			
-			CardValue.JACK -> {
+			/*CardValue.JACK -> {
 				playJackEffect(card, animated)
 				advance = false
-			}
+			}*/
 			
 			else ->
 				playNoEffect(card, animated)
 		}
+		networkService.sendCardPlayed(card)
 		
 		if(currentPlayer.hand.cards.isEmpty()) {
+			networkService.sendEndGame()
 			view.refreshEndGame(currentPlayer)
 			return true
 		}
 		
 		if (advance) {
-			game.advancePlayer()
+			networkService.sendEndTurn()
 			view.refreshAdvancePlayer()
 		} else {
 			view.refreshPlayAgain()
-		}*/
+		}
 		
 		return true
 	}
@@ -172,9 +174,9 @@ class LogicController(val view: Refreshable) {
 	 * Play a card without effect
 	 */
 	private fun playNoEffect(card: MauMauCard, animated: Boolean) {
-		/*game.nextSuit = card.cardSuit
+		game.nextSuit = card.cardSuit
 		game.gameStack.playCard(card)
-		view.refreshCardPlayed(card, animated)*/
+		view.refreshCardPlayed(card, animated, true)
 	}
 	
 	/**
