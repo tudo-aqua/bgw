@@ -361,7 +361,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		))
 	}
 	
-	override fun onInitializeGameRecieved() {
+	override fun onInitializeGameReceived() {
 		viewController.hideMenuScene()
 	}
 	

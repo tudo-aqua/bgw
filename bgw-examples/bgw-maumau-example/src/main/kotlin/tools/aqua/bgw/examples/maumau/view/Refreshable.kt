@@ -92,5 +92,5 @@ interface Refreshable {
 	fun onUserLeft(sender: String)
 	
 	fun onServerError()
-	fun onInitializeGameRecieved()
+	fun onInitializeGameReceived()
 }

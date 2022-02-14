@@ -131,6 +131,9 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauMenuScene.continueGameButton.onMouseClicked = { /*hideMenuScene()*/ } //TODO
 		
 		mauMauMenuScene.newLocalGameButton.onMouseClicked = {
+			logicController.isOnline = false
+			logicController.isHost = true
+			
 			logicController.newGame()
 			hideMenuScene()
 			logicController.gameState = GameState.PLAYER_ONE_TURN
@@ -139,12 +142,14 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauMenuScene.hostGameButton.onMouseClicked = {
 			showMenuScene(mauMauHostGameMenuScene)
 			logicController.gameState = GameState.HOST_GAME_MENU
+			logicController.isOnline = true
 			logicController.isHost = true
 		}
 		
 		mauMauMenuScene.joinGameButton.onMouseClicked = {
 			showMenuScene(mauMauJoinGameMenuScene)
 			logicController.gameState = GameState.JOIN_GAME_MENU
+			logicController.isOnline = true
 			logicController.isHost = false
 		}
 		

@@ -72,11 +72,9 @@ class MauMauNetworkClient(
 	
 	private fun onInitializeGameReceived(message : InitGameMessage, sender : String) {
 		println("Received init message: $message")
-		
-		logicController.initGame(message)
-		
 		BoardGameApplication.runOnGUIThread {
-			logicController.view.refreshAll()
+			logicController.initGame(message)
+			logicController.view.onInitializeGameReceived()
 		}
 	}
 	

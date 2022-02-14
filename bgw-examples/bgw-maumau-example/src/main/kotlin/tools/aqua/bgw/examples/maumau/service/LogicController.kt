@@ -54,6 +54,14 @@ class LogicController(val view: Refreshable) {
 		}
 	}
 	
+	/**
+	 * Initializes game with given cards.
+	 *
+	 * @param drawStack Draw stack cards.
+	 * @param gameStack First card on Game Stack.
+	 * @param hostCards Hand of host player.
+	 * @param opponentCards Hand of opponent (i.e. you, if joined).
+	 */
 	fun initGame(
 		drawStack: List<MauMauCard>,
 		gameStack: MauMauCard,
@@ -72,6 +80,20 @@ class LogicController(val view: Refreshable) {
 		game.players[1].hand.cards.addAll(if(!isHost) hostCards else opponentCards)
 		
 		view.refreshAll()
+	}
+	
+	/**
+	 * Processes [InitGameMessage] to initialize game conditions transmitted by host.
+	 *
+	 * @param message Init conditions.
+	 */
+	fun initGame(message: InitGameMessage) {
+		initGame(
+			drawStack = message.drawStack.map { SerializationUtil.deserializeMauMauCard(it) },
+			gameStack = SerializationUtil.deserializeMauMauCard(message.gameStack.first()),
+			hostCards = message.hostCards.map { SerializationUtil.deserializeMauMauCard(it) },
+			opponentCards = message.yourCards.map { SerializationUtil.deserializeMauMauCard(it) }
+		)
 	}
 	
 	/**
@@ -282,10 +304,6 @@ class LogicController(val view: Refreshable) {
 		}
 		
 		return cards
-	}
-	
-	fun initGame(message: InitGameMessage) {
-		TODO("Not yet implemented")
 	}
 	//endregion
 }

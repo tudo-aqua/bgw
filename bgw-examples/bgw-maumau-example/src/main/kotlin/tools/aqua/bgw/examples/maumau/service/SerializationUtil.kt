@@ -1,12 +1,25 @@
 package tools.aqua.bgw.examples.maumau.service
 
+import tools.aqua.bgw.examples.maumau.entity.CardSuit
+import tools.aqua.bgw.examples.maumau.entity.CardValue
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.net.InitGameMessage
 
 class SerializationUtil {
 	companion object {
-		fun deserializeInitMessage(payload: String) {
 		
+		/**
+		 * Serializes [MauMauCard] for exchange format
+		 */
+		fun MauMauCard.serialize() : String = "${cardValue}_${cardSuit}"
+		
+		/**
+		 * Deserializes exchange format to [MauMauCard]
+		 */
+		fun deserializeMauMauCard(payload: String) : MauMauCard {
+			val split = payload.split("_")
+			return MauMauCard(cardSuit = CardSuit.valueOf(split[1]), cardValue = CardValue.valueOf(split[0]))
 		}
 		
 		fun serializeInitMessage(game: MauMauGame): InitGameMessage = InitGameMessage(
