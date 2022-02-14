@@ -3,17 +3,13 @@
   "type": "object",
   "required": [
     "action",
-    "card_suit",
-    "card_value"
+    "card"
   ],
   "properties": {
     "action": {
       "type": "string"
     },
-    "card_suit": {
-      "type": "string"
-    },
-    "card_value": {
+    "card": {
       "type": "string"
     }
   },

@@ -71,20 +71,20 @@ class MauMauNetworkClient(
 	}
 	
 	private fun onInitializeGameReceived(message : InitGameMessage, sender : String) {
-		println(message)
+		println("Received init message: $message")
 		BoardGameApplication.runOnGUIThread {
-			//logicController.doTurn(payload)
+			view.onInitializeGameRecieved()
 		}
 	}
 	
 	private fun onGameActionReceived(message : GameActionMessage, sender : String) {
-		println(message)
+		println("Received game message: $message")
 		BoardGameApplication.runOnGUIThread {
 			//logicController.doTurn(payload)
 		}
 	}
 	
 	private fun onEndGameReceived(message : GameOverMessage, sender : String) {
-		println(message)
+		println("Received end message: $message")
 	}
 }

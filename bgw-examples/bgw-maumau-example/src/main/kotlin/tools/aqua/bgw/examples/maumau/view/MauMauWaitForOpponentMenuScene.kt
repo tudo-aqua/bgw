@@ -1,11 +1,13 @@
 package tools.aqua.bgw.examples.maumau.view
 
 
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_HEIGHT
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_WIDTH
+import tools.aqua.bgw.examples.maumau.view.custom_components.MenuButton
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
@@ -29,8 +31,14 @@ class MauMauWaitForOpponentMenuScene : MenuScene(width = 300, height = 500, back
         font = Font(fontWeight = Font.FontWeight.BOLD)
     )
     
+    val startGameButton: Button = MenuButton("Start Game").apply {
+        posX = (300- MENU_ITEM_WIDTH) / 2.0
+        posY = 400.0
+        isVisible = false
+    }
+    
     init {
-        addComponents(menuLabel)
+        addComponents(menuLabel, startGameButton)
     }
     
     /**
@@ -47,6 +55,12 @@ class MauMauWaitForOpponentMenuScene : MenuScene(width = 300, height = 500, back
                 dots++
             }
         }
+    }
+    
+    fun onOpponentConnected(name : String) {
+        stopAnimation()
+        menuLabel.text = "$name connected."
+        startGameButton.isVisible = true
     }
     
     /**

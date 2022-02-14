@@ -1,8 +1,10 @@
 package tools.aqua.bgw.examples.maumau.net
 
-import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 
-data class GameActionMessage(val gameAction : GameAction, val cardSuit: CardSuit, val cardValue: CardValue)
+@Suppress("DataClassPrivateConstructor")
+data class GameActionMessage private constructor(val action : String, val card : String) {
+	constructor(gameAction : GameAction, card: MauMauCard) : this(gameAction.toString(), card.serialize())
+}
 

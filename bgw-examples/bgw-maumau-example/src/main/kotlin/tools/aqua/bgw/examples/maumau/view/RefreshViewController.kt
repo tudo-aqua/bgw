@@ -340,7 +340,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	override fun onJoinGameSuccess() {
-		viewController.hideMenuScene()
+		viewController.showMenuScene(viewController.mauMauWaitForOpponentMenuScene.also { it.startAnimation() })
 	}
 	
 	override fun onCreateGameError(message: String) {
@@ -361,22 +361,26 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		))
 	}
 	
+	override fun onInitializeGameRecieved() {
+		viewController.hideMenuScene()
+	}
+	
 	override fun onGameActionAccepted() {
 		TODO("Not yet implemented")
 	}
 	
 	override fun onUserJoined(sender: String) {
-		viewController.hideMenuScene()
-		viewController.logicController.newGame()
+		viewController.mauMauWaitForOpponentMenuScene.onOpponentConnected(sender)
 	}
 	
 	override fun onUserLeft(sender: String) {
-		TODO("Not yet implemented")
+		println("$sender left.")
 	}
 	
 	override fun onServerError() {
 		TODO("Not yet implemented")
 	}
+	
 	//endregion
 	
 	//region extension functions

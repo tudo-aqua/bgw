@@ -154,6 +154,11 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 			logicController.isHost = false
 		}
 		
+		mauMauWaitForOpponentMenuScene.startGameButton.onMouseClicked = {
+			hideMenuScene()
+			logicController.newGame()
+		}
+		
 		mauMauMenuScene.exitButton.onMouseClicked = { exit() }
 	}
 	

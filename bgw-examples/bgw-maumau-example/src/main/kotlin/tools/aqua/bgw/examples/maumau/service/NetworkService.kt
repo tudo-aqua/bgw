@@ -65,6 +65,19 @@ class NetworkService(private val view: Refreshable) {
 	}
 	
 	/**
+	 * Send initialize game message to connected opponent.
+	 */
+	fun sendInit(game : MauMauGame) {
+		client.sendInitializeGameMessage(InitGameMessage(
+			drawStack = game.drawStack.cards.map { it.serialize() },
+			gameStack = game.gameStack.cards.map { it.serialize() },
+			hostCards = game.players[0].hand.cards.map { it.serialize() },
+			yourCards = game.players[1].hand.cards.map { it.serialize() }
+		))
+	}
+	
+	//region helper
+	/**
 	 * Checks [address], [name] and [gameID] for not being empty,
 	 * [address] to be parsable to an ip and port and [gameID] for being a positive integer.
 	 */
@@ -122,17 +135,5 @@ class NetworkService(private val view: Refreshable) {
 	 * Tries parsing [port] into an ip port.
 	 */
 	private fun validatePort(port : String) : Boolean = (port.toIntOrNull() ?: false) in 1..65534
-	
-	/**
-	 * Send initialize game message to connected opponent.
-	 */
-	fun sendInit(game : MauMauGame) {
-		print("Sending Greeting")
-		client.sendInitializeGameMessage(InitGameMessage("Hallo"))
-			/*game.drawStack.cards.map { it.serialize() },
-			game.gameStack.cards.map { it.serialize() },
-			game.players[0].hand.cards.map { it.serialize() },
-			game.players[1].hand.cards.map { it.serialize() }
-		))*/
-	}
+	//endregion
 }
