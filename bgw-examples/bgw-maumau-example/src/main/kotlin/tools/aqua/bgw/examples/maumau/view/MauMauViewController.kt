@@ -7,7 +7,6 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.GameState
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
-import tools.aqua.bgw.examples.maumau.service.NetworkService
 import tools.aqua.bgw.util.BidirectionalMap
 
 /**
@@ -51,14 +50,9 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	private val refreshViewController: RefreshViewController = RefreshViewController(this)
 	
 	/**
-	 * Network service instance.
-	 */
-	private val networkService: NetworkService = NetworkService(refreshViewController)
-	
-	/**
 	 * Logic controller instance.
 	 */
-	val logicController: LogicController = LogicController(refreshViewController, networkService)
+	val logicController: LogicController = LogicController(refreshViewController)
 	
 	/**
 	 * CardMap mapping entity cards onto view components.
@@ -184,8 +178,8 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
 			val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(address, name, sessionID))
-				networkService.tryHostGame(address, name, sessionID)
+			if (logicController.networkService.validateInputs(address, name, sessionID))
+				logicController.networkService.tryHostGame(address, name, sessionID)
 		}
 		
 		mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
@@ -200,8 +194,8 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 			val name = mauMauJoinGameMenuScene.nameText.text.trim()
 			val gameID = mauMauJoinGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(address, name, gameID))
-				networkService.tryJoinGame(address, name, gameID)
+			if (logicController.networkService.validateInputs(address, name, gameID))
+				logicController.networkService.tryJoinGame(address, name, gameID)
 		}
 		
 		mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }

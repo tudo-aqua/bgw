@@ -2,15 +2,13 @@ package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.net.InitGameMessage
 import tools.aqua.bgw.examples.maumau.net.MauMauNetworkClient
-import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.net.InetAddress
 
 /**
  * Service for handling network communication.
  */
-class NetworkService(private val view: Refreshable) {
+class NetworkService(private val logicController: LogicController) {
 	/**
 	 * Network client.
 	 */
@@ -57,7 +55,7 @@ class NetworkService(private val view: Refreshable) {
 			playerName = name,
 			host = addr[0],
 			port = addr[1].toInt(),
-			view = view,
+			logicController = logicController,
 		)
 		client.connect()
 		
@@ -68,12 +66,7 @@ class NetworkService(private val view: Refreshable) {
 	 * Send initialize game message to connected opponent.
 	 */
 	fun sendInit(game : MauMauGame) {
-		client.sendInitializeGameMessage(InitGameMessage(
-			drawStack = game.drawStack.cards.map { it.serialize() },
-			gameStack = game.gameStack.cards.map { it.serialize() },
-			hostCards = game.players[0].hand.cards.map { it.serialize() },
-			yourCards = game.players[1].hand.cards.map { it.serialize() }
-		))
+		client.sendInitializeGameMessage(SerializationUtil.serializeInitMessage(game))
 	}
 	
 	//region helper
@@ -83,7 +76,7 @@ class NetworkService(private val view: Refreshable) {
 	 */
 	fun validateInputs(address: String, name: String, gameID: String): Boolean {
 		if(address.isEmpty()) {
-			view.showConnectWarningDialog(
+			logicController.view.showConnectWarningDialog(
 				title = "Address is empty",
 				message = "Please fill in the address field."
 			)
@@ -91,14 +84,14 @@ class NetworkService(private val view: Refreshable) {
 		
 		val split = address.split(":")
 		if(split.size != 2 || !validateIP(split[0]) || !validatePort(split[1])) {
-			view.showConnectWarningDialog(
+			logicController.view.showConnectWarningDialog(
 				title = "Address invalid",
 				message = "Address is invalid. Must be in format 127.0.0.1:8080"
 			)
 		}
 		
 		if (name.isEmpty()) {
-			view.showConnectWarningDialog(
+			logicController.view.showConnectWarningDialog(
 				title = "Name is empty",
 				message = "Please fill in the name field."
 			)
@@ -106,7 +99,7 @@ class NetworkService(private val view: Refreshable) {
 		}
 		
 		if (gameID.isEmpty()) {
-			view.showConnectWarningDialog(
+			logicController.view.showConnectWarningDialog(
 				title = "gameID is empty",
 				message = "Please fill in the gameID field."
 			)
