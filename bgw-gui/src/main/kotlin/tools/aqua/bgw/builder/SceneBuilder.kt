@@ -77,6 +77,17 @@ internal class SceneBuilder {
 					pane.children.add(lockPane)
 			}
 			
+			//register lock pane for menu
+			val internalLockPane = Pane().apply {
+				prefHeightProperty().bind(pane.heightProperty())
+				prefWidthProperty().bind(pane.widthProperty())
+			}
+			scene.internalLockedProperty.guiListener = { _, nV ->
+				pane.children.remove(internalLockPane)
+				if (nV)
+					pane.children.add(internalLockPane)
+			}
+			
 			return pane
 		}
 		

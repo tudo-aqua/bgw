@@ -29,11 +29,4 @@ class SerializationUtil {
 			yourCards = game.players[1].hand.cards.map { it.serialize() }
 			)
 	}
-	
-	data class GameInitData(
-		val drawStack: List<String>,
-		val gameStack: List<String>,
-		val hostCards: List<String>,
-		val yourCards: List<String>
-	)
 }

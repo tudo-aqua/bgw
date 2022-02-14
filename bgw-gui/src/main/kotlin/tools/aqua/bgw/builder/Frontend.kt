@@ -209,7 +209,7 @@ internal class Frontend : Application() {
 			scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
 				if (primaryStage != null) {
 					menuPane = buildMenu(scene)
-					boardGameScene?.lock()
+					boardGameScene?.internalLockedProperty?.value = true
 					
 					updateScene()
 					fadeMenu(true, fadeTime)
@@ -295,7 +295,7 @@ internal class Frontend : Application() {
 			
 			if (activePanes.size == 2) {
 				gamePane?.effect = GaussianBlur(DEFAULT_BLUR_RADIUS)
-				boardGameScene?.lock()
+				boardGameScene?.internalLockedProperty?.value = true
 			}
 			
 			scenePane = Pane().apply {
@@ -463,7 +463,7 @@ internal class Frontend : Application() {
 					interpolator = Interpolator.EASE_OUT
 					onFinished = EventHandler {
 						if (!fadeIn) {
-							boardGameScene?.unlock()
+							boardGameScene?.internalLockedProperty?.value = false
 							updateScene()
 						}
 					}

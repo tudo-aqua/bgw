@@ -6,6 +6,7 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
+import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
@@ -15,6 +16,8 @@ import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	//region Player hands
@@ -58,6 +61,15 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	)
 	val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 320)
 	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 320)
+	
+	val waitForOpponentLabel: Label =	Label(
+		height = 50,
+		width = (gameStack.posX + gameStack.width) - drawStack.posX,
+		posX = drawStack.posX,
+		posY = 620,
+		text = "Waiting for opponents turn",
+		font = Font(size = 26, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD)
+	).apply { isVisible = false }
 	//endregion stacks
 	
 	//region Jack selection
@@ -137,6 +149,9 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 		visual = ImageVisual(BUTTON_BG_FILE)
 	)
 	
+	private var dots = 1
+	private val timer = Timer()
+	
 	init {
 		buttonClubs.isVisible = false
 		buttonSpades.isVisible = false
@@ -150,6 +165,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			otherPlayerHand,
 			drawStackInfo,
 			gameStackInfo,
+			waitForOpponentLabel,
 			buttonDiamonds,
 			buttonHearts,
 			buttonSpades,
@@ -157,5 +173,21 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			hintButton,
 			mainMenuButton
 		)
+	}
+	
+	/**
+	 * Starts the dot animation.
+	 */
+	fun startAnimation() {
+		timer.scheduleAtFixedRate(
+			delay = 0,
+			period = 500
+		) {
+			BoardGameApplication.runOnGUIThread {
+				waitForOpponentLabel.text = "Waiting for opponents turn" + ".".repeat(dots)
+				dots %= 3
+				dots++
+			}
+		}
 	}
 }

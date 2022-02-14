@@ -362,6 +362,12 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	override fun onInitializeGameReceived() {
+		viewController.mauMauGameScene.apply {
+			waitForOpponentLabel.isVisible = true
+			startAnimation()
+			lock()
+		}
+		
 		viewController.hideMenuScene()
 	}
 	

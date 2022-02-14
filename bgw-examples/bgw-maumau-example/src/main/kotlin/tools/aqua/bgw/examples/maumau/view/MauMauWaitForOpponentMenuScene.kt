@@ -27,7 +27,6 @@ class MauMauWaitForOpponentMenuScene : MenuScene(width = 300, height = 500, back
         width = MENU_ITEM_WIDTH,
         posX = (300- MENU_ITEM_WIDTH) / 2,
         posY = (500 - MENU_ITEM_HEIGHT) / 2,
-        text = "Waiting for opponent.",
         font = Font(fontWeight = Font.FontWeight.BOLD)
     )
     
