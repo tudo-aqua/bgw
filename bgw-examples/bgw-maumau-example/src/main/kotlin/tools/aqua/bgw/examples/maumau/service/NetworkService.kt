@@ -1,7 +1,10 @@
 package tools.aqua.bgw.examples.maumau.service
 
+import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
+import tools.aqua.bgw.examples.maumau.net.GameActionMessage
 import tools.aqua.bgw.examples.maumau.net.MauMauNetworkClient
 import java.net.InetAddress
 
@@ -10,10 +13,11 @@ import java.net.InetAddress
  */
 class NetworkService(private val logicController: LogicController) {
 	/**
-	 * Network client.
+	 * Network client. Nullable for offline games.
 	 */
-	private lateinit var client: MauMauNetworkClient
+	private var client: MauMauNetworkClient? = null
 	
+	//region Connection
 	/**
 	 * Connects to server and starts a new game session.
 	 *
@@ -25,7 +29,7 @@ class NetworkService(private val logicController: LogicController) {
 		if (!tryConnect(address, name))
 			return
 		
-		client.createGame(GAME_ID, sessionID)
+		client?.createGame(GAME_ID, sessionID)
 	}
 	
 	/**
@@ -39,7 +43,7 @@ class NetworkService(private val logicController: LogicController) {
 		if (!tryConnect(address, name))
 			return
 		
-		client.joinGame(sessionID, "greeting")
+		client?.joinGame(sessionID, "greeting")
 	}
 	
 	/**
@@ -49,25 +53,41 @@ class NetworkService(private val logicController: LogicController) {
 	 * @param name Player name.
 	 */
 	private fun tryConnect(address: String, name: String): Boolean {
-		val addr = address.split(":")
+		val split = address.split(":")
 		
 		client = MauMauNetworkClient(
 			playerName = name,
-			host = addr[0],
-			port = addr[1].toInt(),
+			host = split[0],
+			port = split[1].toInt(),
 			logicController = logicController,
-		)
-		client.connect()
+		).apply { connect() }
 		
 		return true //TODO: Check status after bgw-net error handling upgrade
 	}
+	//endregion
 	
+	//region Send actions
 	/**
 	 * Send initialize game message to connected opponent.
 	 */
 	fun sendInit(game : MauMauGame) {
-		client.sendInitializeGameMessage(SerializationUtil.serializeInitMessage(game))
+		client?.sendInitializeGameMessage(SerializationUtil.serializeInitMessage(game))
 	}
+	
+	/**
+	 * Send [GameAction.DRAW] action to connected opponent.
+	 */
+	fun sendCardDrawn(card: MauMauCard) {
+		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.DRAW, card = card))
+	}
+	
+	/**
+	 * Sends [GameAction.END_TURN] to connected opponent.
+	 */
+	fun sendEndTurn() {
+		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.END_TURN))
+	}
+	//endregion
 	
 	//region helper
 	/**

@@ -4,7 +4,6 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.GameState
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
 import tools.aqua.bgw.util.BidirectionalMap
@@ -76,7 +75,6 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	private fun registerGameEvents() {
 		mauMauGameScene.mainMenuButton.onMouseClicked = {
 			showMenuScene(mauMauMenuScene)
-			logicController.gameState = GameState.MAIN_MENU
 		}
 		
 		//Register hint button to calculate hint for current player
@@ -136,19 +134,16 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 			
 			logicController.newGame()
 			hideMenuScene()
-			logicController.gameState = GameState.PLAYER_ONE_TURN
 		}
 		
 		mauMauMenuScene.hostGameButton.onMouseClicked = {
 			showMenuScene(mauMauHostGameMenuScene)
-			logicController.gameState = GameState.HOST_GAME_MENU
 			logicController.isOnline = true
 			logicController.isHost = true
 		}
 		
 		mauMauMenuScene.joinGameButton.onMouseClicked = {
 			showMenuScene(mauMauJoinGameMenuScene)
-			logicController.gameState = GameState.JOIN_GAME_MENU
 			logicController.isOnline = true
 			logicController.isHost = false
 		}
@@ -168,7 +163,6 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauPlayerWonMenuScene.newGameButton.onMouseClicked = {
 			logicController.newGame()
 			hideMenuScene()
-			logicController.gameState = GameState.PLAYER_ONE_TURN
 		}
 		
 		mauMauPlayerWonMenuScene.exitButton.onMouseClicked = { exit() }

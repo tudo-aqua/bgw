@@ -4,6 +4,6 @@ enum class GameAction {
 	PLAY,
 	DRAW,
 	DRAW_TWO,
-	SUSPEND,
 	REQUEST_COLOR,
+	END_TURN,
 }

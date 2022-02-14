@@ -1,6 +1,5 @@
 package tools.aqua.bgw.examples.maumau.view
 
-import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.gamecomponentviews.CardView
@@ -36,7 +35,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 */
 	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
 		//Find hand to refresh
-		val playerHandView = if (player == viewController.logicController.currentPlayer())
+		/*val playerHandView = if (player == viewController.logicController.currentPlayer())
 			viewController.mauMauGameScene.currentPlayerHand
 		else
 			viewController.mauMauGameScene.otherPlayerHand
@@ -61,7 +60,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		showJackEffectSelection(false)
 		
 		//Clear overlay
-		hintOverlay?.transparency = 0.0
+		hintOverlay?.transparency = 0.0*/
 	}
 	
 	/**
@@ -184,7 +183,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 * Advances active player.
 	 */
 	override fun refreshAdvancePlayer() {
-		val delay = DelayAnimation(1000)
+		/*val delay = DelayAnimation(1000)
 		
 		delay.onFinished = {
 			//swap playerHands
@@ -224,7 +223,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		}
 		
 		viewController.mauMauGameScene.lock()
-		viewController.mauMauGameScene.playAnimation(delay)
+		viewController.mauMauGameScene.playAnimation(delay)*/
 	}
 	
 	/**

@@ -1,6 +1,9 @@
 package tools.aqua.bgw.examples.maumau.service
 
-import tools.aqua.bgw.examples.maumau.entity.*
+import tools.aqua.bgw.examples.maumau.entity.CardSuit
+import tools.aqua.bgw.examples.maumau.entity.CardValue
+import tools.aqua.bgw.examples.maumau.entity.MauMauCard
+import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.net.GameActionMessage
 import tools.aqua.bgw.examples.maumau.net.InitGameMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
@@ -20,11 +23,6 @@ class LogicController(val view: Refreshable) {
 	 * Network service instance.
 	 */
 	val networkService: NetworkService = NetworkService(this)
-	
-	/**
-	 * Current game state
-	 */
-	var gameState: GameState = GameState.MAIN_MENU
 	
 	/**
 	 *
@@ -49,9 +47,7 @@ class LogicController(val view: Refreshable) {
 			opponentCards = cards.subList(6, 11)
 		)
 		
-		if (isOnline) {
-			networkService.sendInit(game)
-		}
+		networkService.sendInit(game)
 	}
 	
 	/**
@@ -101,19 +97,18 @@ class LogicController(val view: Refreshable) {
 	 * Advances player.
 	 */
 	fun drawCard() {
-		val currentPlayer = currentPlayer()
-		
 		val card = game.drawStack.drawCard()
-		currentPlayer.hand.addCard(card)
+		game.players[0].hand.addCard(card)
 		
 		if (game.drawStack.isEmpty()) {
 			game.shuffleGameStackBack()
-			view.refreshGameStackShuffledBack()
+			view.refreshGameStackShuffledBack() //TODO: Send shuffled stack on network
 		}
 		
-		view.refreshCardsDrawn(currentPlayer, mutableListOf(card))
+		networkService.sendCardDrawn(card)
+		view.refreshCardDrawn(game.players[0], card)
 		
-		advancePlayer()
+		networkService.sendEndTurn()
 		view.refreshAdvancePlayer()
 	}
 	
@@ -271,25 +266,6 @@ class LogicController(val view: Refreshable) {
 	
 	
 	//region helper
-	/**
-	 * returns current player
-	 */
-	fun currentPlayer(): MauMauPlayer = when (gameState) {
-		GameState.PLAYER_ONE_TURN -> game.players[0]
-		GameState.PLAYER_TWO_TURN -> game.players[1]
-		else -> error("Wrong GameState: $gameState")
-	}
-	
-	/**
-	 * Switches active player.
-	 */
-	fun advancePlayer() {
-		gameState = when (gameState) {
-			GameState.PLAYER_ONE_TURN -> GameState.PLAYER_TWO_TURN
-			GameState.PLAYER_TWO_TURN -> GameState.PLAYER_ONE_TURN
-			else -> error("Wrong GameState to advance player: $gameState")
-		}
-	}
 	
 	/**
 	 * Generates a full set of MauMauCards.
