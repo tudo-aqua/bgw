@@ -57,7 +57,7 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	/**
 	 * Network service instance.
 	 */
-	val networkService: NetworkService = NetworkService(refreshViewController, logicController)
+	val networkService: NetworkService = NetworkService(refreshViewController)
 	
 	/**
 	 * CardMap mapping entity cards onto view components.
@@ -157,7 +157,7 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
 			val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(name, sessionID))
+			if (networkService.validateInputs(address, name, sessionID))
 				networkService.tryHostGame(address, name, sessionID)
 		}
 		
@@ -169,11 +169,11 @@ class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	 */
 	private fun registerJoinMenuEvents() {
 		mauMauJoinGameMenuScene.joinGameButton.onMouseClicked = {
-			val address = mauMauHostGameMenuScene.addressText.text.trim()
-			val name = mauMauHostGameMenuScene.nameText.text.trim()
-			val gameID = mauMauHostGameMenuScene.sessionIDText.text.trim()
+			val address = mauMauJoinGameMenuScene.addressText.text.trim()
+			val name = mauMauJoinGameMenuScene.nameText.text.trim()
+			val gameID = mauMauJoinGameMenuScene.sessionIDText.text.trim()
 			
-			if (networkService.validateInputs(name, gameID))
+			if (networkService.validateInputs(address, name, gameID))
 				networkService.tryJoinGame(address, name, gameID)
 		}
 		

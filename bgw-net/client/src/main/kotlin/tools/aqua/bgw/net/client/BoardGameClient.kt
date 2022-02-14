@@ -2,13 +2,12 @@ package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
-import tools.aqua.bgw.net.common.*
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import tools.aqua.bgw.net.common.*
 import java.net.URI
-import kotlin.Exception
 
-class BoardGameClient<IG, GA, EG>(
+open class BoardGameClient<IG, GA, EG>(
 	val playerName: String,
 	secret: String,
 	private val initGameClass: Class<IG>,

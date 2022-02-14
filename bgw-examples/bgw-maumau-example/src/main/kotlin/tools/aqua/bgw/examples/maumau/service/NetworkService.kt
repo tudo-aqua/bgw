@@ -1,26 +1,18 @@
 package tools.aqua.bgw.examples.maumau.service
 
-import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
-import tools.aqua.bgw.examples.maumau.net.GameActionMessage
-import tools.aqua.bgw.examples.maumau.net.GameOverMessage
-import tools.aqua.bgw.examples.maumau.net.InitGameMessage
+import tools.aqua.bgw.examples.maumau.net.MauMauNetworkClient
 import tools.aqua.bgw.examples.maumau.view.Refreshable
-import tools.aqua.bgw.net.client.BoardGameClient
-import tools.aqua.bgw.net.common.CreateGameResponseStatus
-import tools.aqua.bgw.net.common.GameMessageStatus
-import tools.aqua.bgw.net.common.JoinGameResponseStatus
-import tools.aqua.bgw.net.common.LeaveGameResponseStatus
+import java.net.InetAddress
 
 /**
  * Service for handling network communication.
  */
-class NetworkService(private val view: Refreshable, private val logicController: LogicController) {
+class NetworkService(private val view: Refreshable) {
 	/**
 	 * Network client.
 	 */
-	private lateinit var client: BoardGameClient<InitGameMessage, GameActionMessage, GameOverMessage>
+	private lateinit var client: MauMauNetworkClient
 	
 	/**
 	 * Connects to server and starts a new game session.
@@ -29,7 +21,7 @@ class NetworkService(private val view: Refreshable, private val logicController:
 	 * @param name Player name.
 	 * @param sessionID Session ID to host.
 	 */
-	fun tryHostGame(address: String, name: String, sessionID: String): Unit {
+	fun tryHostGame(address: String, name: String, sessionID: String) {
 		if (!tryConnect(address, name))
 			return
 		
@@ -43,7 +35,7 @@ class NetworkService(private val view: Refreshable, private val logicController:
 	 * @param name Player name.
 	 * @param sessionID Session ID to join to.
 	 */
-	fun tryJoinGame(address: String, name: String, sessionID: String): Unit {
+	fun tryJoinGame(address: String, name: String, sessionID: String) {
 		if (!tryConnect(address, name))
 			return
 		
@@ -59,86 +51,37 @@ class NetworkService(private val view: Refreshable, private val logicController:
 	private fun tryConnect(address: String, name: String): Boolean {
 		val addr = address.split(":")
 		
-		client = BoardGameClient(
+		client = MauMauNetworkClient(
 			playerName = name,
-			secret = NETWORK_SECRET,
-			initGameClass = InitGameMessage::class.java,
-			gameActionClass = GameActionMessage::class.java,
-			endGameClass = GameOverMessage::class.java,
 			host = addr[0],
-			port = addr[1].toInt()
+			port = addr[1].toInt(),
+			view = view,
 		)
-		client.init()
 		client.connect()
 		
 		return true //TODO: Check status after bgw-net error handling upgrade
 	}
 	
 	/**
-	 * Sets listeners for network events
+	 * Checks [address], [name] and [gameID] for not being empty,
+	 * [address] to be parsable to an ip and port and [gameID] for being a positive integer.
 	 */
-	private fun BoardGameClient<InitGameMessage, GameActionMessage, GameOverMessage>.init() {
-		onOpen = {
-			println("Connection is now open")
+	fun validateInputs(address: String, name: String, gameID: String): Boolean {
+		if(address.isEmpty()) {
+			view.showConnectWarningDialog(
+				title = "Address is empty",
+				message = "Please fill in the address field."
+			)
 		}
-		onClose = { code, reason, _ ->
-			println("Connection closed with code: $code and reason: $reason")
-		}
-		onCreateGameResponse = {
-			BoardGameApplication.runOnGUIThread {
-				when (it.responseStatus) {
-					CreateGameResponseStatus.SUCCESS -> view.onCreateGameSuccess()
-					CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME -> view.onCreateGameError("You are already in a game.")
-					CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS -> view.onCreateGameError("Session id already exists.")
-					CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST -> error(it)
-					CreateGameResponseStatus.SERVER_ERROR -> view.onServerError()
-				}
-			}
-		}
-		onJoinGameResponse = {
-			BoardGameApplication.runOnGUIThread {
-				when (it.responseStatus) {
-					JoinGameResponseStatus.SUCCESS -> view.onJoinGameSuccess()
-					JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME -> view.onCreateGameError("You are already in a game.")
-					JoinGameResponseStatus.INVALID_SESSION_ID -> view.onCreateGameError("Session id invalid.")
-					JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN -> view.onJoinGameError("Player name is already taken.")
-					JoinGameResponseStatus.SERVER_ERROR -> view.onServerError()
-				}
-			}
-		}
-		onLeaveGameResponse = {
-			BoardGameApplication.runOnGUIThread {
-				when (it.responseStatus) {
-					LeaveGameResponseStatus.SUCCESS -> {}
-					LeaveGameResponseStatus.NO_ASSOCIATED_GAME -> error(it)
-					LeaveGameResponseStatus.SERVER_ERROR -> view.onServerError()
-				}
-			}
-		}
-		onUserJoined = { BoardGameApplication.runOnGUIThread { view.onUserJoined(it.sender) } }
-		onUserLeft = { BoardGameApplication.runOnGUIThread { view.onUserLeft(it.sender) } }
 		
-		onGameActionResponse = {
-			BoardGameApplication.runOnGUIThread {
-				when (it.status) {
-					GameMessageStatus.SUCCESS -> view.onGameActionAccepted()
-					GameMessageStatus.NO_ASSOCIATED_GAME -> error(it)
-					GameMessageStatus.INVALID_JSON -> error(it)
-					GameMessageStatus.SERVER_ERROR -> view.onServerError()
-				}
-			}
+		val split = address.split(":")
+		if(split.size != 2 || !validateIP(split[0]) || !validatePort(split[1])) {
+			view.showConnectWarningDialog(
+				title = "Address invalid",
+				message = "Address is invalid. Must be in format 127.0.0.1:8080"
+			)
 		}
-		onGameActionReceived = { payload, _ ->
-			BoardGameApplication.runOnGUIThread {
-				logicController.doTurn(payload)
-			}
-		}
-	}
-	
-	/**
-	 * Checks name and gameId for not being empty and gameId for being a positive integer.
-	 */
-	fun validateInputs(name: String, gameID: String): Boolean {
+		
 		if (name.isEmpty()) {
 			view.showConnectWarningDialog(
 				title = "Name is empty",
@@ -157,4 +100,24 @@ class NetworkService(private val view: Refreshable, private val logicController:
 		
 		return true
 	}
+	
+	/**
+	 * Tries parsing [ip] into a hostname.
+	 *
+	 * @return 'true' if InetAddress.getByName returns a valid connection.
+	 */
+	private fun validateIP(ip : String) : Boolean {
+		val converted : InetAddress?
+		try {
+			converted = InetAddress.getByName(ip)
+		}catch(_ : Exception){
+			return false
+		}
+		return converted != null
+	}
+	
+	/**
+	 * Tries parsing [port] into an ip port.
+	 */
+	private fun validatePort(port : String) : Boolean = (port.toIntOrNull() ?: false) in 1..65534
 }

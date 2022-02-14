@@ -366,7 +366,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	override fun onUserJoined(sender: String) {
-		TODO("Not yet implemented")
+		viewController.hideMenuScene()
 	}
 	
 	override fun onUserLeft(sender: String) {
