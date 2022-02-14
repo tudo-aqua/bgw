@@ -45,12 +45,12 @@ open class BoardGameScene(
 	 * @see lock
 	 * @see unlock
 	 */
-	internal val lockedProperty = BooleanProperty(false)
+	val lockedProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
 	 * Property that indicates if this [BoardGameScene] is locked from user input because of menu scene.
 	 */
-	internal val internalLockedProperty = BooleanProperty(false)
+	internal val internalLockedProperty: BooleanProperty = BooleanProperty(false)
 	
 	/**
 	 * Locks [Scene] from any user input.

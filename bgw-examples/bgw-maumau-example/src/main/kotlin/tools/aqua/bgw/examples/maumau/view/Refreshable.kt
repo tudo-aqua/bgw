@@ -13,16 +13,16 @@ interface Refreshable {
 	/**
 	 * Indicates refresh after cards were drawn.
 	 */
-	fun refreshCardsDrawn(player: MauMauPlayer, cards: Collection<MauMauCard>) {
+	fun refreshCardsDrawn(cards: Collection<MauMauCard>, isCurrentPlayer: Boolean) {
 		for (card in cards) {
-			refreshCardDrawn(player, card)
+			refreshCardDrawn(card, isCurrentPlayer)
 		}
 	}
 	
 	/**
 	 * Indicates refresh after card was drawn.
 	 */
-	fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard)
+	fun refreshCardDrawn(card: MauMauCard, isCurrentPlayer: Boolean)
 	
 	/**
 	 * Indicates refresh after card was played.
@@ -93,4 +93,5 @@ interface Refreshable {
 	
 	fun onServerError()
 	fun onInitializeGameReceived()
+	fun refreshEndTurn()
 }

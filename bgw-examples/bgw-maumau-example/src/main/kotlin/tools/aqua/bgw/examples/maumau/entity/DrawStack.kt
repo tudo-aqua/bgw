@@ -7,6 +7,8 @@ class DrawStack : MauMauStack() {
 	
 	fun drawCard(): MauMauCard = cards.pop()
 	
+	fun drawTwo(): List<MauMauCard> = listOf(cards.pop(), cards.pop())
+	
 	fun shuffleBack(cards: List<MauMauCard>) {
 		this.cards.addAll(cards.shuffled())
 	}

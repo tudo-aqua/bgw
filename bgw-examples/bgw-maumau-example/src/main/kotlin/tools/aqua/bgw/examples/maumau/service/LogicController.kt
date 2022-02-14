@@ -106,7 +106,7 @@ class LogicController(val view: Refreshable) {
 		}
 		
 		networkService.sendCardDrawn(card)
-		view.refreshCardDrawn(game.players[0], card)
+		view.refreshCardDrawn(card, true)
 		
 		networkService.sendEndTurn()
 		view.refreshAdvancePlayer()

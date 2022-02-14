@@ -1,8 +1,10 @@
 package tools.aqua.bgw.examples.maumau.net
 
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.examples.maumau.entity.GameAction
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
 import tools.aqua.bgw.examples.maumau.service.LogicController
+import tools.aqua.bgw.examples.maumau.service.SerializationUtil
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.common.CreateGameResponse
 import tools.aqua.bgw.net.common.CreateGameResponseStatus
@@ -80,7 +82,28 @@ class MauMauNetworkClient(
 	
 	private fun onGameActionReceived(message : GameActionMessage, sender : String) {
 		println("Received game message: $message")
+		
 		BoardGameApplication.runOnGUIThread {
+			when(GameAction.valueOf(message.action)) {
+				GameAction.PLAY ->
+					logicController.playCard(SerializationUtil.deserializeMauMauCard(message.card), true)
+				GameAction.DRAW -> {
+					val card = logicController.game.drawStack.drawCard()
+					logicController.game.players[1].hand.addCard(card)
+					logicController.view.refreshCardDrawn(card, false)
+				}
+				GameAction.DRAW_TWO -> {
+					val cards = logicController.game.drawStack.drawTwo()
+					logicController.game.players[1].hand.addCards(cards)
+					logicController.view.refreshCardsDrawn(cards, false)
+				}
+				GameAction.REQUEST_COLOR -> TODO()
+				GameAction.END_TURN -> {
+					logicController.view.refreshEndTurn()
+				}
+			}
+		
+			
 			//logicController.doTurn(payload)
 		}
 	}

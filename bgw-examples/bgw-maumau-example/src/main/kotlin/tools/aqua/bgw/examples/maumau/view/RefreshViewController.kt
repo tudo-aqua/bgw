@@ -33,9 +33,9 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	/**
 	 * Refreshes after card was drawn.
 	 */
-	override fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard) {
-		//Find hand to refresh
-		/*val playerHandView = if (player == viewController.logicController.currentPlayer())
+	override fun refreshCardDrawn(card: MauMauCard, isCurrentPlayer : Boolean) {
+		//find hand to refresh
+		val playerHandView = if (isCurrentPlayer)
 			viewController.mauMauGameScene.currentPlayerHand
 		else
 			viewController.mauMauGameScene.otherPlayerHand
@@ -46,7 +46,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		playerHandView.add(cardView)
 		
 		//show card front if player is currently active
-		if (player == viewController.logicController.currentPlayer())
+		if (isCurrentPlayer)
 			cardView.showFront()
 		
 		//update label
@@ -54,13 +54,13 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			viewController.logicController.game.drawStack.size().toString()
 		
 		//add event handlers to drawn card
-		cardView.addInteraction()
+		if(isCurrentPlayer) cardView.addInteraction() else cardView.addSneakInteraction()
 		
 		//hide suit selection
 		showJackEffectSelection(false)
 		
-		//Clear overlay
-		hintOverlay?.transparency = 0.0*/
+		//clear overlay
+		hintOverlay?.transparency = 0.0
 	}
 	
 	/**
@@ -183,6 +183,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 * Advances active player.
 	 */
 	override fun refreshAdvancePlayer() {
+		viewController.mauMauGameScene.lock()
 		/*val delay = DelayAnimation(1000)
 		
 		delay.onFinished = {
@@ -307,12 +308,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		viewController.mauMauGameScene.currentPlayerHand.components.forEach { it.addInteraction() }
 		viewController.mauMauGameScene.otherPlayerHand.components.forEach { t ->
 			t.removeInteraction()
-			t.onMouseEntered = {
-				viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.backVisual, t.frontVisual))
-			}
-			t.onMouseExited = {
-				viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.frontVisual, t.backVisual))
-			}
+			t.addSneakInteraction()
 		}
 		
 		//hide suit selection
@@ -361,13 +357,14 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	override fun onInitializeGameReceived() {
-		viewController.mauMauGameScene.apply {
-			waitForOpponentLabel.isVisible = true
-			startAnimation()
-			lock()
-		}
+		viewController.mauMauGameScene.startAnimation()
+		viewController.mauMauGameScene.lock()
 		
 		viewController.hideMenuScene()
+	}
+	
+	override fun refreshEndTurn() {
+		viewController.mauMauGameScene.unlock()
 	}
 	
 	override fun onGameActionAccepted() {
@@ -435,6 +432,15 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		}
 		onMouseClicked = {
 			viewController.logicController.playCard(viewController.cardMap.backward(this), true)
+		}
+	}
+	
+	private fun CardView.addSneakInteraction() {
+		onMouseEntered = {
+			viewController.mauMauGameScene.playAnimation(FlipAnimation(this, backVisual, frontVisual))
+		}
+		onMouseExited = {
+			viewController.mauMauGameScene.playAnimation(FlipAnimation(this, frontVisual, backVisual))
 		}
 	}
 	

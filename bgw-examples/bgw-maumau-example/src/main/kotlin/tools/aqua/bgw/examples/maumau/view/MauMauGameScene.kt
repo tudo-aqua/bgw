@@ -62,7 +62,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 	val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 320)
 	val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 320)
 	
-	val waitForOpponentLabel: Label =	Label(
+	private val waitForOpponentLabel: Label =	Label(
 		height = 50,
 		width = (gameStack.posX + gameStack.width) - drawStack.posX,
 		posX = drawStack.posX,
@@ -173,6 +173,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 			hintButton,
 			mainMenuButton
 		)
+		
+		lockedProperty.addListener{ _, nV -> waitForOpponentLabel.isVisible = nV}
 	}
 	
 	/**
