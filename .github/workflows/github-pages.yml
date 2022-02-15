@@ -26,6 +26,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Copy docs to legacy location
+        run: cp -r ./bgw-docs/src/main/jekyll ./docs
+
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:

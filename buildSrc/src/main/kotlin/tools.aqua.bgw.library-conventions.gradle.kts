@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The BoardGameWork Authors
+ * Copyright 2021-2022 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,11 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.bgw.library-conventions") }
+import org.gradle.kotlin.dsl.`java-library`
 
-mavenMetadata {
-  name.set("BoardGameWork Network Common Code")
-  description.set("A framework for board game applications.")
-}
+plugins {
+  id("tools.aqua.bgw.kotlin-conventions")
+  id("tools.aqua.bgw.publish-conventions")
 
-dependencies {
-  implementation(kotlin("stdlib"))
-  implementation("com.fasterxml.jackson.core", "jackson-annotations", libs.versions.jackson.get())
+  `java-library`
 }
