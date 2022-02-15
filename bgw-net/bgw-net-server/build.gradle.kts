@@ -20,7 +20,7 @@ repositories {
 extra["vaadinVersion"] = "14.7.3"
 
 dependencies {
-	implementation(project(":bgw-net:common"))
+	implementation(project(":bgw-net:bgw-net-common"))
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
