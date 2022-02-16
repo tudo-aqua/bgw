@@ -7,10 +7,9 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.net.server.entity.Game
-import tools.aqua.bgw.net.server.entity.SchemasByGameRepository
 import tools.aqua.bgw.net.server.entity.Player
+import tools.aqua.bgw.net.server.entity.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
-import java.lang.UnsupportedOperationException
 
 /**
  * This service handles the text messages received by the web socket server.
@@ -58,7 +57,13 @@ class MessageService(
 		} catch (exception: JsonSchemaNotFoundException) {
 			GameMessageStatus.SERVER_ERROR
 		} else GameMessageStatus.NO_ASSOCIATED_GAME
-		player.session.sendMessage(GameActionResponse(status, errors))
+		
+		player.session.sendMessage(when (gameMessage) {
+			is InitializeGameMessage -> InitializeGameResponse(status, errors)
+			is GameActionMessage ->GameActionResponse(status, errors)
+			is EndGameMessage -> EndGameResponse(status, errors)
+		})
+		
 		if (status == GameMessageStatus.SUCCESS) {
 			game?.broadcastMessage(
 				player,
