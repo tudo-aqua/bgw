@@ -3,7 +3,7 @@ package tools.aqua.bgw.examples.maumau.entity
 enum class GameAction {
 	PLAY,
 	DRAW,
-	DRAW_TWO,
-	REQUEST_COLOR,
+	REQUEST_DRAW_TWO,
+	REQUEST_SUIT,
 	END_TURN,
 }

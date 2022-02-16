@@ -1,8 +1,6 @@
 package tools.aqua.bgw.examples.maumau.service
 
-import tools.aqua.bgw.examples.maumau.entity.GameAction
-import tools.aqua.bgw.examples.maumau.entity.MauMauCard
-import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.net.GameActionMessage
 import tools.aqua.bgw.examples.maumau.net.MauMauNetworkClient
@@ -70,19 +68,44 @@ class NetworkService(private val logicController: LogicController) {
 	/**
 	 * Send initialize game message to connected opponent.
 	 */
-	fun sendInit(game : MauMauGame) {
+	fun sendInit(game: MauMauGame) {
 		client?.sendInitializeGameMessage(SerializationUtil.serializeInitMessage(game))
 	}
 	
 	/**
 	 * Send [GameAction.DRAW] action to connected opponent.
 	 */
-	fun sendCardDrawn(card: MauMauCard) {
-		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.DRAW, card = card))
+	fun sendCardDrawn() {
+		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.DRAW))
 	}
 	
+	/**
+	 * Send [GameAction.REQUEST_DRAW_TWO] action to connected opponent.
+	 */
+	fun sendDrawTwoRequest() {
+		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.REQUEST_DRAW_TWO))
+	}
+	
+	/**
+	 * Send [GameAction.PLAY] action to connected opponent.
+	 */
 	fun sendCardPlayed(card: MauMauCard) {
 		client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.PLAY, card = card))
+	}
+	
+	/**
+	 * Send [GameAction.REQUEST_SUIT] action to connected opponent.
+	 */
+	fun sendSuitSelected(suit: CardSuit) {
+		client?.sendGameActionMessage(
+			GameActionMessage(
+				gameAction = GameAction.REQUEST_SUIT,
+				card = MauMauCard(
+					cardValue = CardValue.ACE,
+					cardSuit = suit
+				)
+			)
+		)
 	}
 	
 	/**
@@ -103,7 +126,7 @@ class NetworkService(private val logicController: LogicController) {
 	 * [address] to be parsable to an ip and port and [gameID] for being a positive integer.
 	 */
 	fun validateInputs(address: String, name: String, gameID: String): Boolean {
-		if(address.isEmpty()) {
+		if (address.isEmpty()) {
 			logicController.view.showConnectWarningDialog(
 				title = "Address is empty",
 				message = "Please fill in the address field."
@@ -111,7 +134,7 @@ class NetworkService(private val logicController: LogicController) {
 		}
 		
 		val split = address.split(":")
-		if(split.size != 2 || !validateIP(split[0]) || !validatePort(split[1])) {
+		if (split.size != 2 || !validateIP(split[0]) || !validatePort(split[1])) {
 			logicController.view.showConnectWarningDialog(
 				title = "Address invalid",
 				message = "Address is invalid. Must be in format 127.0.0.1:8080"
@@ -142,11 +165,11 @@ class NetworkService(private val logicController: LogicController) {
 	 *
 	 * @return 'true' if InetAddress.getByName returns a valid connection.
 	 */
-	private fun validateIP(ip : String) : Boolean {
-		val converted : InetAddress?
+	private fun validateIP(ip: String): Boolean {
+		val converted: InetAddress?
 		try {
 			converted = InetAddress.getByName(ip)
-		}catch(_ : Exception){
+		} catch (_: Exception) {
 			return false
 		}
 		return converted != null
@@ -155,6 +178,6 @@ class NetworkService(private val logicController: LogicController) {
 	/**
 	 * Tries parsing [port] into an ip port.
 	 */
-	private fun validatePort(port : String) : Boolean = (port.toIntOrNull() ?: false) in 1..65534
+	private fun validatePort(port: String): Boolean = (port.toIntOrNull() ?: false) in 1..65534
 	//endregion
 }

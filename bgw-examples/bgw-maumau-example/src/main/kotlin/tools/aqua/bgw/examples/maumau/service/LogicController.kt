@@ -105,7 +105,7 @@ class LogicController(val view: Refreshable) {
 			view.refreshGameStackShuffledBack() //TODO: Send shuffled stack on network
 		}
 		
-		networkService.sendCardDrawn(card)
+		networkService.sendCardDrawn()
 		view.refreshCardDrawn(card, true)
 		
 		networkService.sendEndTurn()
@@ -116,11 +116,13 @@ class LogicController(val view: Refreshable) {
 	 * Select a suit by jack effect, advances player
 	 */
 	fun selectSuit(suit: CardSuit) {
-		/*game.nextSuit = suit
+		game.nextSuit = suit
+		
+		networkService.sendSuitSelected(suit)
 		view.refreshSuitSelected()
 		
-		game.advancePlayer()
-		view.refreshAdvancePlayer()*/
+		networkService.sendEndTurn()
+		view.refreshAdvancePlayer()
 	}
 	
 	/**
@@ -133,26 +135,27 @@ class LogicController(val view: Refreshable) {
 		val currentPlayer = game.players[0]
 		var advance = true
 		
+		networkService.sendCardPlayed(card)
 		currentPlayer.hand.removeCard(card)
 		
 		when (card.cardValue) {
-			/*CardValue.SEVEN ->
-				playSevenEffect(card, animated)*/
+			CardValue.SEVEN -> {
+				playSevenEffect(card, animated)
+			}
 			
 			CardValue.EIGHT -> {
 				playNoEffect(card, animated)
 				advance = false
 			}
 			
-			/*CardValue.JACK -> {
+			CardValue.JACK -> {
 				playJackEffect(card, animated)
 				advance = false
-			}*/
+			}
 			
 			else ->
 				playNoEffect(card, animated)
 		}
-		networkService.sendCardPlayed(card)
 		
 		if(currentPlayer.hand.cards.isEmpty()) {
 			networkService.sendEndGame()
@@ -183,31 +186,28 @@ class LogicController(val view: Refreshable) {
 	 * Play a jack card and show suit selection
 	 */
 	private fun playJackEffect(card: MauMauCard, animated: Boolean) {
-		/*playNoEffect(card, animated)
-		view.showJackEffectSelection()*/
+		playNoEffect(card, animated)
+		view.showJackEffectSelection()
 	}
 	
 	/**
 	 * Play a seven card and let opponent draw two
 	 */
 	private fun playSevenEffect(card: MauMauCard, animated: Boolean) {
-		/*playNoEffect(card, animated)
+		playNoEffect(card, animated)
 		
 		//information for refresh
-		val cards = mutableListOf<MauMauCard>()
+		val cards = game.drawStack.drawTwo() //TODO: Handle shuffle back
+		game.players[1].hand.addCards(cards)
 		
-		//draw 2
-		repeat(min(game.drawStack.size(), 2)) {
-			val tmpCard = game.drawStack.drawCard()
-			game.otherPlayer.hand.addCard(tmpCard)
-			cards.add(tmpCard)
-		}
 		
 		if (game.drawStack.isEmpty()) {
 			game.shuffleGameStackBack()
 			view.refreshGameStackShuffledBack()
 		}
-		view.refreshCardsDrawn(game.otherPlayer, cards)*/
+		
+		networkService.sendDrawTwoRequest()
+		view.refreshCardsDrawn(cards, false)
 	}
 	
 	/**

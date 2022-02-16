@@ -100,12 +100,17 @@ class MauMauNetworkClient(
 					logicController.game.players[1].hand.addCard(card)
 					logicController.view.refreshCardDrawn(card, false)
 				}
-				GameAction.DRAW_TWO -> {
+				GameAction.REQUEST_DRAW_TWO -> {
 					val cards = logicController.game.drawStack.drawTwo()
-					logicController.game.players[1].hand.addCards(cards)
-					logicController.view.refreshCardsDrawn(cards, false)
+					logicController.game.players[0].hand.addCards(cards)
+					logicController.view.refreshCardsDrawn(cards, true)
 				}
-				GameAction.REQUEST_COLOR -> TODO()
+				GameAction.REQUEST_SUIT -> {
+					val suit = SerializationUtil.deserializeMauMauCard(message.card).cardSuit
+					
+					logicController.game.nextSuit = suit
+					logicController.view.refreshSuitSelected()
+				}
 				GameAction.END_TURN -> {
 					logicController.view.refreshEndTurn()
 				}
