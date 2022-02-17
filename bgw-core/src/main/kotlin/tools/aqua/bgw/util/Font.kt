@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.util
 
+import javafx.scene.text.Font
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.util.Font.FontWeight
 import java.awt.Color

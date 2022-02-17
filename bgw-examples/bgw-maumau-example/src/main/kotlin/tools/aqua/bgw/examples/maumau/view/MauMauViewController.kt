@@ -1,17 +1,19 @@
 package tools.aqua.bgw.examples.maumau.view
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
 import tools.aqua.bgw.util.BidirectionalMap
+import tools.aqua.bgw.visual.ColorVisual
 
 /**
  * Main view controller.
  */
-class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
+class MauMauViewController() : BoardGameApplication(windowTitle = "MauMau") {
 	
 	/**
 	 * The main menu scene.
@@ -46,7 +48,6 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	init {
 		registerGameEvents()
 		registerMenuEvents()
-		
 		showGameScene(mauMauGameScene)
 		showMenuScene(mauMauMenuScene)
 		show()
