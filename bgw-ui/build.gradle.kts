@@ -40,14 +40,14 @@ dependencies {
      */
     implementation(group = "org.openjfx", name = "javafx-base", version = javaFxVersion, classifier = "win")
     implementation(group = "org.openjfx", name = "javafx-base", version = javaFxVersion, classifier = "mac")
-    implementation(group = "org.openjfx", name = "javafx-base", version = javaFxVersion, classifier = "mac-aarch64")
+    //implementation(group = "org.openjfx", name = "javafx-base", version = javaFxVersion, classifier = "mac-aarch64")
     implementation(group = "org.openjfx", name = "javafx-base", version = javaFxVersion, classifier = "linux")
     /*
      * javafx.controls  - Defines the UI controls, charts, and skins that are available for the JavaFX UI toolkit.
      */
     implementation(group = "org.openjfx", name = "javafx-controls", version = javaFxVersion, classifier = "win")
     implementation(group = "org.openjfx", name = "javafx-controls", version = javaFxVersion, classifier = "mac")
-    implementation(group = "org.openjfx", name = "javafx-controls", version = javaFxVersion, classifier = "mac-aarch64")
+    //implementation(group = "org.openjfx", name = "javafx-controls", version = javaFxVersion, classifier = "mac-aarch64")
     implementation(group = "org.openjfx", name = "javafx-controls", version = javaFxVersion, classifier = "linux")
 
     /*
@@ -57,7 +57,7 @@ dependencies {
      */
     implementation(group = "org.openjfx", name = "javafx-graphics", version = javaFxVersion, classifier = "win")
     implementation(group = "org.openjfx", name = "javafx-graphics", version = javaFxVersion, classifier = "mac")
-    implementation(group = "org.openjfx", name = "javafx-graphics", version = javaFxVersion, classifier = "mac-aarch64")
+    //implementation(group = "org.openjfx", name = "javafx-graphics", version = javaFxVersion, classifier = "mac-aarch64")
     implementation(group = "org.openjfx", name = "javafx-graphics", version = javaFxVersion, classifier = "linux")
 
     /* UNUSED MODULES:
