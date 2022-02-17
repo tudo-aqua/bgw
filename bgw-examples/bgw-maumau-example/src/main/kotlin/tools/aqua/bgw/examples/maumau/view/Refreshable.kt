@@ -13,21 +13,21 @@ interface Refreshable {
 	/**
 	 * Indicates refresh after cards were drawn.
 	 */
-	fun refreshCardsDrawn(player: MauMauPlayer, cards: Collection<MauMauCard>) {
+	fun refreshCardsDrawn(cards: Collection<MauMauCard>, isCurrentPlayer: Boolean) {
 		for (card in cards) {
-			refreshCardDrawn(player, card)
+			refreshCardDrawn(card, isCurrentPlayer)
 		}
 	}
 	
 	/**
 	 * Indicates refresh after card was drawn.
 	 */
-	fun refreshCardDrawn(player: MauMauPlayer, card: MauMauCard)
+	fun refreshCardDrawn(card: MauMauCard, isCurrentPlayer: Boolean)
 	
 	/**
 	 * Indicates refresh after card was played.
 	 */
-	fun refreshCardPlayed(card: MauMauCard, animated: Boolean)
+	fun refreshCardPlayed(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean)
 	
 	/**
 	 * Indicates refresh after game stack was shuffled back.
@@ -72,4 +72,25 @@ interface Refreshable {
 	 * @param playerWon Player that won.
 	 */
 	fun refreshEndGame(playerWon: MauMauPlayer)
+	
+	/**
+	 * Shows a warning dialog for wrong inputs in host/join menu.
+	 *
+	 * @param title Title line.
+	 * @param message Message to display.
+	 */
+	fun showConnectWarningDialog(title:String, message:String)
+	
+	fun onCreateGameSuccess()
+	fun onJoinGameSuccess()
+	
+	fun onCreateGameError(message: String)
+	fun onJoinGameError(message: String)
+	
+	fun onUserJoined(sender: String)
+	fun onUserLeft(sender: String)
+	
+	fun onServerError()
+	fun onInitializeGameReceived()
+	fun refreshEndTurn()
 }

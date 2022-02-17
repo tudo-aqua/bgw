@@ -10,6 +10,11 @@ class MauMauGame {
 	val mauMauCards: MutableCollection<MauMauCard> = ArrayList()
 	
 	/**
+	 * Players.
+	 */
+	val players = listOf(MauMauPlayer(), MauMauPlayer())
+	
+	/**
 	 * The draw stack.
 	 */
 	val drawStack: DrawStack = DrawStack()
@@ -18,16 +23,6 @@ class MauMauGame {
 	 * The game stack.
 	 */
 	val gameStack: GameStack = GameStack()
-	
-	/**
-	 * The player currently active.
-	 */
-	var currentPlayer: MauMauPlayer = MauMauPlayer()
-	
-	/**
-	 * The player currently inactive.
-	 */
-	var otherPlayer: MauMauPlayer = MauMauPlayer()
 	
 	/**
 	 * Next suit to be placed. May differ from topmost game stack card due to jack selection.
@@ -39,14 +34,5 @@ class MauMauGame {
 	 */
 	fun shuffleGameStackBack() {
 		drawStack.shuffleBack(gameStack.shuffleBack())
-	}
-	
-	/**
-	 * Switches active player.
-	 */
-	fun advancePlayer() {
-		val tmp = currentPlayer
-		currentPlayer = otherPlayer
-		otherPlayer = tmp
 	}
 }

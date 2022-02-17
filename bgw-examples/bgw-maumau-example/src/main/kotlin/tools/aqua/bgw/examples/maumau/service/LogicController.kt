@@ -4,14 +4,15 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.net.GameActionMessage
+import tools.aqua.bgw.examples.maumau.net.InitGameMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.util.*
-import kotlin.math.min
 
 /**
  * Controller managing game actions.
  */
-class LogicController(private val view: Refreshable) {
+class LogicController(val view: Refreshable) {
 	
 	/**
 	 * Current game instance.
@@ -19,43 +20,76 @@ class LogicController(private val view: Refreshable) {
 	var game: MauMauGame = MauMauGame()
 	
 	/**
+	 * Network service instance.
+	 */
+	val networkService: NetworkService = NetworkService(this)
+	
+	/**
+	 *
+	 */
+	var isHost: Boolean = false
+	
+	/**
+	 *
+	 */
+	var isOnline: Boolean = false
+	
+	/**
 	 * Sets up a new game.
 	 */
 	fun newGame() {
+		val cards = generateMauMauCards(CardSuit.allSuits(), CardValue.shortDeck()).shuffled()
+		
+		initGame(
+			drawStack = cards.subList(11, cards.size),
+			gameStack = cards[0],
+			hostCards = cards.subList(1,6),
+			opponentCards = cards.subList(6, 11)
+		)
+		
+		networkService.sendInit(game)
+	}
+	
+	/**
+	 * Initializes game with given cards.
+	 *
+	 * @param drawStack Draw stack cards.
+	 * @param gameStack First card on Game Stack.
+	 * @param hostCards Hand of host player.
+	 * @param opponentCards Hand of opponent (i.e. you, if joined).
+	 */
+	fun initGame(
+		drawStack: List<MauMauCard>,
+		gameStack: MauMauCard,
+		hostCards: List<MauMauCard>,
+		opponentCards: List<MauMauCard>
+	) {
 		game = MauMauGame()
 		
-		//generate cards
-		game.mauMauCards.addAll(generateMauMauCards(CardSuit.allSuits(), CardValue.shortDeck()))
+		game.mauMauCards.addAll(drawStack + gameStack + hostCards + opponentCards)
 		
-		//fill drawStack
-		game.drawStack.shuffleBack(game.mauMauCards.toMutableList())
+		game.drawStack.cards.addAll(drawStack)
+		game.gameStack.cards.add(gameStack)
+		game.nextSuit = gameStack.cardSuit
 		
-		//draw 5 for each player
-		for (i in 0..4) {
-			game.currentPlayer.hand.addCard(game.drawStack.drawCard())
-			game.otherPlayer.hand.addCard(game.drawStack.drawCard())
-		}
+		game.players[0].hand.cards.addAll(if(isHost) hostCards else opponentCards)
+		game.players[1].hand.cards.addAll(if(!isHost) hostCards else opponentCards)
 		
-		//initial card for playStack
-		game.gameStack.playCard(game.drawStack.drawCard().also { x -> game.nextSuit = x.cardSuit })
-		
-		//refresh whole view
 		view.refreshAll()
 	}
 	
 	/**
-	 * Generates a full set of MauMauCards.
+	 * Processes [InitGameMessage] to initialize game conditions transmitted by host.
+	 *
+	 * @param message Init conditions.
 	 */
-	private fun generateMauMauCards(suits: EnumSet<CardSuit>, values: EnumSet<CardValue>): List<MauMauCard> {
-		val cards: MutableList<MauMauCard> = ArrayList(suits.size * values.size)
-		
-		for (suit in suits) {
-			for (value in values) {
-				cards.add(MauMauCard(value, suit))
-			}
-		}
-		
-		return cards
+	fun initGame(message: InitGameMessage) {
+		initGame(
+			drawStack = message.drawStack.map { SerializationUtil.deserializeMauMauCard(it) },
+			gameStack = SerializationUtil.deserializeMauMauCard(message.gameStack.first()),
+			hostCards = message.hostCards.map { SerializationUtil.deserializeMauMauCard(it) },
+			opponentCards = message.yourCards.map { SerializationUtil.deserializeMauMauCard(it) }
+		)
 	}
 	
 	/**
@@ -63,19 +97,18 @@ class LogicController(private val view: Refreshable) {
 	 * Advances player.
 	 */
 	fun drawCard() {
-		val currentPlayer = game.currentPlayer
-		
 		val card = game.drawStack.drawCard()
-		currentPlayer.hand.addCard(card)
+		game.players[0].hand.addCard(card)
 		
 		if (game.drawStack.isEmpty()) {
 			game.shuffleGameStackBack()
-			view.refreshGameStackShuffledBack()
+			view.refreshGameStackShuffledBack() //TODO: Send shuffled stack on network
 		}
 		
-		view.refreshCardsDrawn(currentPlayer, mutableListOf(card))
+		networkService.sendCardDrawn()
+		view.refreshCardDrawn(card, true)
 		
-		game.advancePlayer()
+		networkService.sendEndTurn()
 		view.refreshAdvancePlayer()
 	}
 	
@@ -84,27 +117,31 @@ class LogicController(private val view: Refreshable) {
 	 */
 	fun selectSuit(suit: CardSuit) {
 		game.nextSuit = suit
+		
+		networkService.sendSuitSelected(suit)
 		view.refreshSuitSelected()
 		
-		game.advancePlayer()
+		networkService.sendEndTurn()
 		view.refreshAdvancePlayer()
 	}
 	
 	/**
 	 * Play a card to the GameStack if allowed, advances player
 	 */
-	fun playCard(card: MauMauCard, animated: Boolean): Boolean {
+	fun playCard(card: MauMauCard, animated: Boolean, ) : Boolean {
 		if (!checkRules(card))
 			return false
 		
-		val currentPlayer = game.currentPlayer
+		val currentPlayer = game.players[0]
 		var advance = true
 		
+		networkService.sendCardPlayed(card)
 		currentPlayer.hand.removeCard(card)
 		
 		when (card.cardValue) {
-			CardValue.SEVEN ->
+			CardValue.SEVEN -> {
 				playSevenEffect(card, animated)
+			}
 			
 			CardValue.EIGHT -> {
 				playNoEffect(card, animated)
@@ -121,12 +158,13 @@ class LogicController(private val view: Refreshable) {
 		}
 		
 		if(currentPlayer.hand.cards.isEmpty()) {
+			networkService.sendEndGame()
 			view.refreshEndGame(currentPlayer)
 			return true
 		}
 		
 		if (advance) {
-			game.advancePlayer()
+			networkService.sendEndTurn()
 			view.refreshAdvancePlayer()
 		} else {
 			view.refreshPlayAgain()
@@ -141,7 +179,7 @@ class LogicController(private val view: Refreshable) {
 	private fun playNoEffect(card: MauMauCard, animated: Boolean) {
 		game.nextSuit = card.cardSuit
 		game.gameStack.playCard(card)
-		view.refreshCardPlayed(card, animated)
+		view.refreshCardPlayed(card, animated, true)
 	}
 	
 	/**
@@ -159,20 +197,17 @@ class LogicController(private val view: Refreshable) {
 		playNoEffect(card, animated)
 		
 		//information for refresh
-		val cards = mutableListOf<MauMauCard>()
+		val cards = game.drawStack.drawTwo() //TODO: Handle shuffle back
+		game.players[1].hand.addCards(cards)
 		
-		//draw 2
-		repeat(min(game.drawStack.size(), 2)) {
-			val tmpCard = game.drawStack.drawCard()
-			game.otherPlayer.hand.addCard(tmpCard)
-			cards.add(tmpCard)
-		}
 		
 		if (game.drawStack.isEmpty()) {
 			game.shuffleGameStackBack()
 			view.refreshGameStackShuffledBack()
 		}
-		view.refreshCardsDrawn(game.otherPlayer, cards)
+		
+		networkService.sendDrawTwoRequest()
+		view.refreshCardsDrawn(cards, false)
 	}
 	
 	/**
@@ -187,12 +222,12 @@ class LogicController(private val view: Refreshable) {
 	 * Shows a hint for the next turn.
 	 */
 	fun showHint() {
-		val card = calculateHint()
+		/*val card = calculateHint()
 		
 		if (card == null)
 			view.refreshHintDrawCard()
 		else
-			view.refreshHintPlayCard(card)
+			view.refreshHintPlayCard(card)*/
 	}
 	
 	/**
@@ -201,7 +236,7 @@ class LogicController(private val view: Refreshable) {
 	 * @return A [MauMauCard] to play or `null` to draw.
 	 */
 	private fun calculateHint(): MauMauCard? {
-		val cards = game.currentPlayer.hand.cards
+		/*val cards = game.currentPlayer.hand.cards
 		
 		//Hint 1: Play 8
 		var hint: List<MauMauCard> = cards.filter { it.cardValue == CardValue.EIGHT && checkRules(it) }
@@ -223,7 +258,30 @@ class LogicController(private val view: Refreshable) {
 		if (hint.isNotEmpty())
 			return hint.first()
 		
-		//Hint 5: Take card
+		//Hint 5: Take card*/
 		return null
 	}
+	
+	fun doTurn(action: GameActionMessage) {
+		error("Not yet implemented")
+	}
+	
+	
+	//region helper
+	
+	/**
+	 * Generates a full set of MauMauCards.
+	 */
+	private fun generateMauMauCards(suits: EnumSet<CardSuit>, values: EnumSet<CardValue>): List<MauMauCard> {
+		val cards: MutableList<MauMauCard> = ArrayList(suits.size * values.size)
+		
+		for (suit in suits) {
+			for (value in values) {
+				cards.add(MauMauCard(value, suit))
+			}
+		}
+		
+		return cards
+	}
+	//endregion
 }
