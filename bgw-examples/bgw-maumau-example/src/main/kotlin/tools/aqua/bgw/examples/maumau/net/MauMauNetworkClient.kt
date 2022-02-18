@@ -85,6 +85,7 @@ class MauMauNetworkClient(
 		
 		BoardGameApplication.runOnGUIThread {
 			when(GameAction.valueOf(message.action)) {
+				//Enemy has played a card
 				GameAction.PLAY -> {
 					val card = SerializationUtil.deserializeMauMauCard(message.card)
 					
@@ -95,29 +96,34 @@ class MauMauNetworkClient(
 					}
 					logicController.view.refreshCardPlayed(card = card, animated = true, isCurrentPlayer = false)
 				}
+				
+				//Enemy has drawn a card
 				GameAction.DRAW -> {
 					val card = logicController.game.drawStack.drawCard()
 					logicController.game.players[1].hand.addCard(card)
-					logicController.view.refreshCardDrawn(card, false)
+					logicController.view.refreshCardDrawn(card = card, isCurrentPlayer = false)
 				}
+				
+				//Enemy has played a seven effect and requests to draw two
 				GameAction.REQUEST_DRAW_TWO -> {
 					val cards = logicController.game.drawStack.drawTwo()
 					logicController.game.players[0].hand.addCards(cards)
-					logicController.view.refreshCardsDrawn(cards, true)
+					logicController.view.refreshCardsDrawn(cards = cards, isCurrentPlayer = true)
 				}
+				
+				//Enemy has played a jack and request suit
 				GameAction.REQUEST_SUIT -> {
 					val suit = SerializationUtil.deserializeMauMauCard(message.card).cardSuit
 					
 					logicController.game.nextSuit = suit
 					logicController.view.refreshSuitSelected()
 				}
+				
+				//Enemy has ended his turn
 				GameAction.END_TURN -> {
 					logicController.view.refreshEndTurn()
 				}
 			}
-		
-			
-			//logicController.doTurn(payload)
 		}
 	}
 	
