@@ -1,4 +1,4 @@
-package tools.aqua.bgw.examples.maumau.net
+package tools.aqua.bgw.examples.maumau.service.messages
 
 import tools.aqua.bgw.examples.maumau.entity.GameAction
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard

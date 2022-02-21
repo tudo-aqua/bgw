@@ -6,6 +6,7 @@ import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.LogicController
+import tools.aqua.bgw.examples.maumau.view.scenes.*
 import tools.aqua.bgw.util.BidirectionalMap
 
 /**
@@ -85,7 +86,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		//Set onClick handler for draw stack
 		mauMauGameScene.drawStack.onMouseClicked = {
 			if (!logicController.game.drawStack.isEmpty())
-				logicController.drawCard()
+				logicController.drawCard(isCurrentPlayer = true, advance = true)
 		}
 		
 		//Set drag drop acceptor and handler for game stack
@@ -93,10 +94,10 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		mauMauGameScene.gameStack.onDragDropped = this::elementDropped
 		
 		//Set onClick handler for jack selection
-		mauMauGameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS) }
-		mauMauGameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS) }
-		mauMauGameScene.buttonSpades.onMousePressed = { logicController.selectSuit(CardSuit.SPADES) }
-		mauMauGameScene.buttonClubs.onMousePressed = { logicController.selectSuit(CardSuit.CLUBS) }
+		mauMauGameScene.buttonDiamonds.onMousePressed = { logicController.selectSuit(CardSuit.DIAMONDS, true) }
+		mauMauGameScene.buttonHearts.onMousePressed = { logicController.selectSuit(CardSuit.HEARTS, true) }
+		mauMauGameScene.buttonSpades.onMousePressed = { logicController.selectSuit(CardSuit.SPADES, true) }
+		mauMauGameScene.buttonClubs.onMousePressed = { logicController.selectSuit(CardSuit.CLUBS, true) }
 	}
 	
 	/**
@@ -119,7 +120,11 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	 * @param event Drag event.
 	 */
 	private fun elementDropped(event: DragEvent) {
-		logicController.playCard(cardMap.backward(event.draggedComponent as CardView), false)
+		logicController.playCard(
+			card = cardMap.backward(event.draggedComponent as CardView),
+			animated = false,
+			isCurrentPlayer = true
+		)
 	}
 	
 	/**

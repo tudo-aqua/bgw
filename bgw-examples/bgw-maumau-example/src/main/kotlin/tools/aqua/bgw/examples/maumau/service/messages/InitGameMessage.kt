@@ -1,4 +1,4 @@
-package tools.aqua.bgw.examples.maumau.net
+package tools.aqua.bgw.examples.maumau.service.messages
 
 data class InitGameMessage(
 	val drawStack: List<String>,

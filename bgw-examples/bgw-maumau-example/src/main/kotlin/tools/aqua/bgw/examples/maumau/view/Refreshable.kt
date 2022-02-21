@@ -11,13 +11,9 @@ interface Refreshable {
 	fun refreshAll()
 	
 	/**
-	 * Indicates refresh after cards were drawn.
+	 * Refresh on game init received from network.
 	 */
-	fun refreshCardsDrawn(cards: Collection<MauMauCard>, isCurrentPlayer: Boolean) {
-		for (card in cards) {
-			refreshCardDrawn(card, isCurrentPlayer)
-		}
-	}
+	fun onInitializeGameReceived()
 	
 	/**
 	 * Indicates refresh after card was drawn.
@@ -48,6 +44,11 @@ interface Refreshable {
 	 * Indicates refresh after suit was selected by jack.
 	 */
 	fun refreshSuitSelected()
+	
+	/**
+	 * Refresh next player.
+	 */
+	fun refreshEndTurn()
 	
 	/**
 	 * Indicates that jack selection has to be shown.
@@ -81,16 +82,42 @@ interface Refreshable {
 	 */
 	fun showConnectWarningDialog(title:String, message:String)
 	
+	//region Network join handshake
+	/**
+	 * Show dialog waiting for opponents.
+	 */
 	fun onCreateGameSuccess()
+	
+	/**
+	 * Show dialog waiting for host.
+	 */
 	fun onJoinGameSuccess()
 	
+	/**
+	 * Refresh on user joined.
+	 */
+	fun onUserJoined(sender: String)
+	
+	/**
+	 * Refresh on user left.
+	 */
+	fun onUserLeft(sender: String)
+	//endregion
+	
+	//region Network errors
+	/**
+	 * Show error message from creating a game.
+	 */
 	fun onCreateGameError(message: String)
+	
+	/**
+	 * Show error message from joining a game.
+	 */
 	fun onJoinGameError(message: String)
 	
-	fun onUserJoined(sender: String)
-	fun onUserLeft(sender: String)
-	
+	/**
+	 * Show generic server error
+	 */
 	fun onServerError()
-	fun onInitializeGameReceived()
-	fun refreshEndTurn()
+	//endregion
 }

@@ -19,15 +19,6 @@ class MauMauHand {
 	}
 	
 	/**
-	 * Adds all cards to this hand.
-	 *
-	 * @param cardList Cards to be added.
-	 */
-	fun addCards(cardList: List<MauMauCard>) {
-		cards.addAll(cards)
-	}
-	
-	/**
 	 * Removes a card from this hand.
 	 *
 	 * @param card Card to be removed.

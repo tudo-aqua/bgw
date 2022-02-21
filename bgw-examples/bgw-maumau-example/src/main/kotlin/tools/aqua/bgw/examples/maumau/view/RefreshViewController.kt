@@ -369,7 +369,6 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	override fun onInitializeGameReceived() {
 		viewController.mauMauGameScene.startAnimation()
 		viewController.mauMauGameScene.lock()
-		
 		viewController.hideMenuScene()
 	}
 	
@@ -437,7 +436,11 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			overlay?.transparency = 0.0
 		}
 		onMouseClicked = {
-			viewController.logicController.playCard(viewController.cardMap.backward(this), true)
+			viewController.logicController.playCard(
+				card = viewController.cardMap.backward(this),
+				animated = true,
+				isCurrentPlayer = true
+			)
 		}
 	}
 	

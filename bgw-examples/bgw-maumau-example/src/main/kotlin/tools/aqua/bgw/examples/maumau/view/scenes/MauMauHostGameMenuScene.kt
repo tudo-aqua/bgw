@@ -1,4 +1,4 @@
-package tools.aqua.bgw.examples.maumau.view
+package tools.aqua.bgw.examples.maumau.view.scenes
 
 
 import tools.aqua.bgw.components.layoutviews.GridPane
@@ -18,12 +18,12 @@ import java.awt.Color
 /**
  * ViewController for the main menu scene.
  */
-class MauMauJoinGameMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
+class MauMauHostGameMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
     
     private val menuLabel: Label = Label(
         height = MENU_ITEM_HEIGHT,
         width = MENU_ITEM_WIDTH,
-        text = "Join Game",
+        text = "Host Game",
         font = Font(fontWeight = Font.FontWeight.BOLD)
     )
     
@@ -46,7 +46,7 @@ class MauMauJoinGameMenuScene : MenuScene(width = 300, height = 500, background 
         prompt = "sessionID"
     )
 
-    val joinGameButton: Button = MenuButton("Join Game")
+    val joinGameButton: Button = MenuButton("Host Game")
     
     val backButton: Button = MenuButton("← Back")
     
@@ -60,7 +60,7 @@ class MauMauJoinGameMenuScene : MenuScene(width = 300, height = 500, background 
                 this[0,4] = joinGameButton
                 this[0,5] = backButton
                 
-                setColumnWidth(0, this@MauMauJoinGameMenuScene.width)
+                setColumnWidth(0, this@MauMauHostGameMenuScene.width)
                 setCenterMode(Alignment.CENTER)
             }
         )

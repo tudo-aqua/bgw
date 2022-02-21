@@ -4,8 +4,7 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
-import tools.aqua.bgw.examples.maumau.net.GameActionMessage
-import tools.aqua.bgw.examples.maumau.net.InitGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import java.util.*
 
@@ -34,6 +33,7 @@ class LogicController(val view: Refreshable) {
 	 */
 	var isOnline: Boolean = false
 	
+	//region init
 	/**
 	 * Sets up a new game.
 	 */
@@ -91,83 +91,95 @@ class LogicController(val view: Refreshable) {
 			opponentCards = message.yourCards.map { SerializationUtil.deserializeMauMauCard(it) }
 		)
 	}
+	//endregion
 	
 	/**
 	 * Current player draws a card from drawStack.
 	 * Advances player.
 	 */
-	fun drawCard() {
+	fun drawCard(isCurrentPlayer: Boolean, advance : Boolean) {
+		val player = getPlayer(isCurrentPlayer)
 		val card = game.drawStack.drawCard()
-		game.players[0].hand.addCard(card)
+		
+		player.hand.addCard(card)
+		view.refreshCardDrawn(card, isCurrentPlayer)
+		
+		if(isCurrentPlayer) {
+			networkService.sendCardDrawn()
+		}
 		
 		if (game.drawStack.isEmpty()) {
 			game.shuffleGameStackBack()
 			view.refreshGameStackShuffledBack() //TODO: Send shuffled stack on network
 		}
 		
-		networkService.sendCardDrawn()
-		view.refreshCardDrawn(card, true)
-		
-		networkService.sendEndTurn()
-		view.refreshAdvancePlayer()
+		if(advance) {
+			networkService.sendEndTurn()
+			view.refreshAdvancePlayer()
+		}
 	}
 	
 	/**
 	 * Select a suit by jack effect, advances player
 	 */
-	fun selectSuit(suit: CardSuit) {
+	fun selectSuit(suit: CardSuit, isCurrentPlayer: Boolean) {
 		game.nextSuit = suit
-		
-		networkService.sendSuitSelected(suit)
 		view.refreshSuitSelected()
 		
-		networkService.sendEndTurn()
-		view.refreshAdvancePlayer()
+		if(isCurrentPlayer) {
+			networkService.sendSuitSelected(suit)
+			networkService.sendEndTurn()
+			view.refreshAdvancePlayer()
+		}
 	}
 	
 	/**
 	 * Play a card to the GameStack if allowed, advances player
 	 */
-	fun playCard(card: MauMauCard, animated: Boolean, ) : Boolean {
-		if (!checkRules(card))
+	fun playCard(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) : Boolean {
+		if (isCurrentPlayer && !checkRules(card))
 			return false
 		
-		val currentPlayer = game.players[0]
+		val player = getPlayer(isCurrentPlayer)
 		var advance = true
 		
-		networkService.sendCardPlayed(card)
-		currentPlayer.hand.removeCard(card)
+		player.hand.removeCard(card)
+		if(isCurrentPlayer) {
+			networkService.sendCardPlayed(card)
+		}
 		
 		when (card.cardValue) {
 			CardValue.SEVEN -> {
-				playSevenEffect(card, animated)
+				playSevenEffect(card, animated, isCurrentPlayer)
 			}
 			
 			CardValue.EIGHT -> {
-				playNoEffect(card, animated)
+				playNoEffect(card, animated, isCurrentPlayer)
 				advance = false
 			}
 			
 			CardValue.JACK -> {
-				playJackEffect(card, animated)
+				playJackEffect(card, animated, isCurrentPlayer)
 				advance = false
 			}
 			
 			else ->
-				playNoEffect(card, animated)
+				playNoEffect(card, animated, isCurrentPlayer)
 		}
 		
-		if(currentPlayer.hand.cards.isEmpty()) {
-			networkService.sendEndGame()
-			view.refreshEndGame(currentPlayer)
-			return true
-		}
-		
-		if (advance) {
-			networkService.sendEndTurn()
-			view.refreshAdvancePlayer()
-		} else {
-			view.refreshPlayAgain()
+		if (isCurrentPlayer) {
+			if(player.hand.cards.isEmpty()) {
+				networkService.sendEndGame()
+				view.refreshEndGame(player)
+				return true
+			}
+			
+			if (advance) {
+				networkService.sendEndTurn()
+				view.refreshAdvancePlayer()
+			} else {
+				view.refreshPlayAgain()
+			}
 		}
 		
 		return true
@@ -176,38 +188,40 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Play a card without effect
 	 */
-	private fun playNoEffect(card: MauMauCard, animated: Boolean) {
+	private fun playNoEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) {
 		game.nextSuit = card.cardSuit
 		game.gameStack.playCard(card)
-		view.refreshCardPlayed(card, animated, true)
+		view.refreshCardPlayed(card, animated, isCurrentPlayer)
 	}
 	
 	/**
 	 * Play a jack card and show suit selection
 	 */
-	private fun playJackEffect(card: MauMauCard, animated: Boolean) {
-		playNoEffect(card, animated)
+	private fun playJackEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) {
+		playNoEffect(card, animated, isCurrentPlayer)
 		view.showJackEffectSelection()
 	}
 	
 	/**
 	 * Play a seven card and let opponent draw two
 	 */
-	private fun playSevenEffect(card: MauMauCard, animated: Boolean) {
-		playNoEffect(card, animated)
+	private fun playSevenEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) {
+		playNoEffect(card, animated, isCurrentPlayer)
 		
 		//information for refresh
-		val cards = game.drawStack.drawTwo() //TODO: Handle shuffle back
-		game.players[1].hand.addCards(cards)
+//		val cards = game.drawStack.drawTwo() //TODO: Handle shuffle back
+//		game.players[1].hand.addCards(cards)
+//		xxxxxx
+//
+//		if (game.drawStack.isEmpty()) {
+//			game.shuffleGameStackBack()
+//			view.refreshGameStackShuffledBack()
+//		}
 		
-		
-		if (game.drawStack.isEmpty()) {
-			game.shuffleGameStackBack()
-			view.refreshGameStackShuffledBack()
+		if(isCurrentPlayer) {
+			networkService.sendDrawTwoRequest()
 		}
-		
-		networkService.sendDrawTwoRequest()
-		view.refreshCardsDrawn(cards, false)
+		//view.refreshCardsDrawn(cards, false)
 	}
 	
 	/**
@@ -222,12 +236,12 @@ class LogicController(val view: Refreshable) {
 	 * Shows a hint for the next turn.
 	 */
 	fun showHint() {
-		/*val card = calculateHint()
+		val card = calculateHint()
 		
 		if (card == null)
 			view.refreshHintDrawCard()
 		else
-			view.refreshHintPlayCard(card)*/
+			view.refreshHintPlayCard(card)
 	}
 	
 	/**
@@ -236,7 +250,7 @@ class LogicController(val view: Refreshable) {
 	 * @return A [MauMauCard] to play or `null` to draw.
 	 */
 	private fun calculateHint(): MauMauCard? {
-		/*val cards = game.currentPlayer.hand.cards
+		val cards = getPlayer(true).hand.cards
 		
 		//Hint 1: Play 8
 		var hint: List<MauMauCard> = cards.filter { it.cardValue == CardValue.EIGHT && checkRules(it) }
@@ -262,12 +276,11 @@ class LogicController(val view: Refreshable) {
 		return null
 	}
 	
-	fun doTurn(action: GameActionMessage) {
-		error("Not yet implemented")
-	}
-	
-	
 	//region helper
+	/**
+	 * Returns player instance
+	 */
+	private fun getPlayer(isCurrentPlayer: Boolean) = game.players[if(isCurrentPlayer) 0 else 1]
 	
 	/**
 	 * Generates a full set of MauMauCards.

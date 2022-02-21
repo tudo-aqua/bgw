@@ -8,6 +8,7 @@ import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.common.*
 import tools.aqua.bgw.visual.ColorVisual
 
 fun main() {
@@ -34,7 +35,7 @@ data class InitGameAction(val invalidString: String, val invalidInt: Int)
 class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
 	lateinit var client: BoardGameClient<InitGameAction, GameAction, Any>
 
-	inner class CreateGamePane() : Pane<UIComponent>(posX = 50, posY = 200, height = 50, width = 400) {
+	inner class CreateGamePane : Pane<UIComponent>(posX = 50, posY = 200, height = 50, width = 400) {
 		private val gameIdField = TextField().apply {
 			resize(100, 50)
 			reposition(0, 0)
@@ -63,7 +64,7 @@ class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
 
 	}
 
-	inner class JoinGamePane() : Pane<UIComponent>(posX = 50, posY = 400, height = 50, width = 400) {
+	inner class JoinGamePane : Pane<UIComponent>(posX = 50, posY = 400, height = 50, width = 400) {
 		private val greetingField = TextField().apply {
 			resize(100, 50)
 			reposition(0, 0)
@@ -91,7 +92,7 @@ class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
 		}
 	}
 
-	inner class SendActionPane() : Pane<UIComponent>(posX = 50, posY = 600, height = 50, width = 400) {
+	inner class SendActionPane : Pane<UIComponent>(posX = 50, posY = 600, height = 50, width = 400) {
 		private val stringField = TextField().apply {
 			resize(100, 50)
 			reposition(0, 0)
@@ -120,7 +121,7 @@ class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
 		}
 	}
 
-	inner class SendInvalidActionPane() : Pane<UIComponent>(posX = 50, posY = 800, height = 50, width = 400) {
+	inner class SendInvalidActionPane : Pane<UIComponent>(posX = 50, posY = 800, height = 50, width = 400) {
 		private val stringField = TextField().apply {
 			resize(100, 50)
 			reposition(0, 0)
@@ -214,16 +215,7 @@ class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
 			addComponents(playerNameField, secretField, connectButton)
 		}
 		connectButton.onMouseClicked = {
-			client = BoardGameClient(
-				playerName = playerNameField.text,
-				secret = secretField.text,
-				initGameClass = InitGameAction::class.java,
-				gameActionClass = GameAction::class.java,
-				endGameClass = Any::class.java,
-				host = "127.0.0.1",
-				port = 8080
-			)
-			client.init()
+			client = ExampleBoardGameClient()
 			client.connect()
 			removeComponents(playerNameField, secretField, connectButton)
 			addComponents(disconnectButton, createGame, joinGame, sendAction, sendInvalidAction, leaveGameButton)
@@ -232,50 +224,57 @@ class ClientMenuScene : MenuScene(background = ColorVisual.WHITE) {
 		opacity = 1.0
 	}
 
-	fun BoardGameClient<InitGameAction, GameAction, Any>.init() {
-		onOpen = {
-			BoardGameApplication.runOnGUIThread() {
+	inner class ExampleBoardGameClient : BoardGameClient<InitGameAction, GameAction, Any>(playerName = playerNameField.text,
+		secret = secretField.text,
+		initGameClass = InitGameAction::class.java,
+		gameActionClass = GameAction::class.java,
+		endGameClass = Any::class.java,
+		host = "127.0.0.1",
+		port = 8080) {
+		
+		override fun onOpen() {
+			BoardGameApplication.runOnGUIThread {
 				log.items.add("Connection is now open")
 			}
 		}
-		onClose = { code, reason, _ ->
-			BoardGameApplication.runOnGUIThread() {
+		override fun onClose (code : Int, reason : String, remote : Boolean) {
+			BoardGameApplication.runOnGUIThread {
 				log.items.add("Connection closed with code: $code and reason: $reason")
 			}
 		}
-		onCreateGameResponse = {
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$it")
+		override fun onCreateGameResponse(response : CreateGameResponse) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$response")
 			}
 		}
-		onJoinGameResponse = {
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$it")
+		override fun onJoinGameResponse(response : JoinGameResponse) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$response")
 			}
 		}
-		onLeaveGameResponse = {
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$it")
+		override fun onLeaveGameResponse(response : LeaveGameResponse) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$response")
 			}
 		}
-		onUserJoined = {
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$it")
+		override fun onUserJoined(notification : UserJoinedNotification) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$notification")
 			}
 		}
-		onUserLeft = {
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$it")
+		override fun onUserLeft(notification : UserDisconnectedNotification) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$notification")
 			}
 		}
-		onGameActionResponse = {
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$it")
+		override fun onGameActionResponse(response : GameActionResponse) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$response")
 			}
 		}
-		onGameActionReceived = { payload, sender ->
-			BoardGameApplication.runOnGUIThread() {
-				log.items.add("$sender sent $payload")
+		override fun onGameActionReceived(message : GameAction, sender : String) {
+			BoardGameApplication.runOnGUIThread {
+				log.items.add("$sender sent $message")
 			}
 		}
 	}

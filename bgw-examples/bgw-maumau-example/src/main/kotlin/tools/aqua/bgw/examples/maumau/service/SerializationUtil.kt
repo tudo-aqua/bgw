@@ -4,7 +4,7 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
-import tools.aqua.bgw.examples.maumau.net.InitGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
 
 class SerializationUtil {
 	companion object {

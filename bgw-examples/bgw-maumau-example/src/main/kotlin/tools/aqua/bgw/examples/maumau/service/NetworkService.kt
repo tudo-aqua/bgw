@@ -2,8 +2,7 @@ package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.net.GameActionMessage
-import tools.aqua.bgw.examples.maumau.net.MauMauNetworkClient
+import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
 import java.net.InetAddress
 
 /**
@@ -13,7 +12,7 @@ class NetworkService(private val logicController: LogicController) {
 	/**
 	 * Network client. Nullable for offline games.
 	 */
-	private var client: MauMauNetworkClient? = null
+	private var client: NetworkClientService? = null
 	
 	//region Connection
 	/**
@@ -53,7 +52,7 @@ class NetworkService(private val logicController: LogicController) {
 	private fun tryConnect(address: String, name: String): Boolean {
 		val split = address.split(":")
 		
-		client = MauMauNetworkClient(
+		client = NetworkClientService(
 			playerName = name,
 			host = split[0],
 			port = split[1].toInt(),
@@ -120,7 +119,7 @@ class NetworkService(private val logicController: LogicController) {
 	}
 	//endregion
 	
-	//region helper
+	//region Helper
 	/**
 	 * Checks [address], [name] and [gameID] for not being empty,
 	 * [address] to be parsable to an ip and port and [gameID] for being a positive integer.

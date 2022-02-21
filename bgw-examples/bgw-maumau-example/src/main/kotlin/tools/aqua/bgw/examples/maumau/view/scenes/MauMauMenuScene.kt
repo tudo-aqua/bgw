@@ -1,4 +1,4 @@
-package tools.aqua.bgw.examples.maumau.view
+package tools.aqua.bgw.examples.maumau.view.scenes
 
 
 import tools.aqua.bgw.components.layoutviews.GridPane
