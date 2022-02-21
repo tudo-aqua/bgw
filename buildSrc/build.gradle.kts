@@ -27,26 +27,22 @@ repositories {
 }
 
 dependencies {
-  implementation("com.diffplug.spotless", "spotless-plugin-gradle", libs.versions.spotless.get())
-  implementation("com.dorongold.plugins", "task-tree", libs.versions.tasktree.get())
-  implementation("com.github.ben-manes", "gradle-versions-plugin", libs.versions.versions.get())
-  implementation("com.vaadin", "vaadin-gradle-plugin", libs.versions.vaadinPlugin.get())
-  implementation("de.gesellix", "docker-client", libs.versions.dockerClient.get())
-  implementation("io.github.gradle-nexus", "publish-plugin", libs.versions.nexusPublish.get())
-  implementation("io.gitlab.arturbosch.detekt", "detekt-gradle-plugin", libs.versions.detekt.get())
-  implementation("io.ktor", "ktor-server-core", libs.versions.ktor.get())
-  implementation("io.ktor", "ktor-server-netty", libs.versions.ktor.get())
-  implementation(
-      "io.spring.gradle", "dependency-management-plugin", libs.versions.dependencyManagement.get())
-  implementation("me.qoomon", "gradle-git-versioning-plugin", libs.versions.gitVersioning.get())
-  implementation("org.apache.commons", "commons-compress", libs.versions.commonsCompress.get())
-  implementation("org.jetbrains.dokka", "dokka-gradle-plugin", libs.versions.kotlin.get())
-  implementation("org.jetbrains.kotlin", "kotlin-allopen", libs.versions.kotlin.get())
-  implementation("org.jetbrains.kotlin", "kotlin-gradle-plugin", libs.versions.kotlin.get())
-  implementation("org.jetbrains.kotlin", "kotlin-noarg", libs.versions.kotlin.get())
-  implementation("org.jetbrains.kotlinx", "kover", libs.versions.kover.get())
-  implementation(
-      "org.springframework.boot", "spring-boot-gradle-plugin", libs.versions.spring.get())
+  implementation(libs.bundles.gradle.kotlin.full)
+  implementation(libs.bundles.ktor.netty)
+
+  implementation(libs.commons.compress)
+  implementation(libs.dockerClient)
+
+  implementation(libs.gradle.bmVersions)
+  implementation(libs.gradle.dependencyManagement)
+  implementation(libs.gradle.detekt)
+  implementation(libs.gradle.gitVersioning)
+  implementation(libs.gradle.kover)
+  implementation(libs.gradle.nexusPublish)
+  implementation(libs.gradle.spotless)
+  implementation(libs.gradle.spring.boot)
+  implementation(libs.gradle.taskTree)
+  implementation(libs.gradle.vaadin)
 
   // black magic from https://github.com/gradle/gradle/issues/15383
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

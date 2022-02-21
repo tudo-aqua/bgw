@@ -62,12 +62,10 @@ java {
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-  dokkaGfmPlugin("org.jetbrains.dokka", "kotlin-as-java-plugin", libs.versions.kotlin.get())
+  dokkaGfmPlugin(libs.dokka.javadoc)
 
-  testImplementation(kotlin("test-junit5"))
-  testImplementation(platform("org.junit:junit-bom:${libs.versions.junit.get()}"))
-  testImplementation("org.junit.jupiter", "junit-jupiter")
-  testImplementation("org.assertj", "assertj-core", libs.versions.assertj.get())
+  testImplementation(platform(libs.junit.bom))
+  testImplementation(libs.bundles.test)
 }
 
 tasks.test {

@@ -25,19 +25,15 @@ mavenMetadata {
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
 
-  implementation(
-      "org.jetbrains.kotlinx",
-      "kotlinx-serialization-json",
-      libs.versions.kotlinxSerialization.get())
+  implementation(libs.kotlinx.serialization.json)
 
   // json kotlin schema
-  implementation(
-      "com.fasterxml.jackson.module", "jackson-module-kotlin", libs.versions.jackson.get())
-  implementation("com.networknt", "json-schema-validator", libs.versions.jsonSchemaValidator.get())
+  implementation(libs.jackson.kotlin)
+  implementation(libs.jsonSchemaValidator)
 
-  implementation("org.springframework.boot", "spring-boot-starter-data-jpa")
-  implementation("com.vladmihalcea", "hibernate-types-55", libs.versions.hibernateTypes.get())
-  runtimeOnly("org.postgresql", "postgresql")
+  implementation(libs.spring.boot.jpa)
+  implementation(libs.hibernateTypes)
+  runtimeOnly(libs.postgreSQL.jdbc)
 
-  implementation("org.springframework.boot", "spring-boot-starter-websocket")
+  implementation(libs.spring.boot.websocket)
 }
