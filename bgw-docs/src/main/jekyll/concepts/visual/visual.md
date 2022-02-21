@@ -2,17 +2,16 @@
 parent: Concepts
 title: Visual
 nav_order: 1
-layout: default
 ---
 
 <!-- KDoc -->
-[SingleLayerVisualKDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html#singlelayervisual
-[ColorVisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-color-visual/
-[ImageVisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-image-visual/
-[TextVisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-text-visual/
-[CompoundVisualKDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html#compoundvisual
+[SingleLayerVisualKDoc]: ../../concepts/visual/visual.html#singlelayervisual
+[ColorVisualKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.visual/-color-visual/
+[ImageVisualKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.visual/-image-visual/
+[TextVisualKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.visual/-text-visual/
+[CompoundVisualKDoc]: ../../concepts/visual/visual.html#compoundvisual
 
-[FontKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-font/
+[FontKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-font/
 
 <!-- Links -->
 [FileDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html
@@ -21,8 +20,8 @@ layout: default
 
 <!-- Start Page -->
 # Visual
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents

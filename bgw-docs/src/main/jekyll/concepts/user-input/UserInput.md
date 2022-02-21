@@ -3,22 +3,22 @@ parent: Concepts
 title: User Input 
 has_toc: true 
 nav_order: 3 
-layout: default
 ---
 
 <!-- KDoc -->
-[BoardGameApplicationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
-[ComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
-[DynamicComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-dynamic-component-view/index.html
-[UIComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
+[BoardGameApplicationKDoc]: ../..//bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html
+[ComponentViewKDoc]: ../..//bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-component-view/index.html
+[DynamicComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-dynamic-component-view/index.html
+[UIComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
 
 <!-- GH-Pages Doc -->
-[DnDExample]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html
-[UIComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
+[DnDExample]: ../../concepts/drag-and-drop/DragAndDropExample.md
+[UIComponentViewDoc]: ../../components/uicomponents/uicomponents.md
 
 <!-- Start Page -->
 # User Input
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -30,7 +30,7 @@ layout: default
 
 The BGW framework uses events to communicate user input to Components. To execute code when a specific event is fired, a
 function reference, or a function literal can be set in
-[ComponentView][ComponentViewKDoc]s. If components can be enabled for drag and drop, some additional handlers can be set.
+[ComponentView][ComponentViewKDoc]s. If /components can be enabled for drag and drop, some additional handlers can be set.
 Components can be enabled for drag and drop whenever they extend
 [DynamicComponentView][DynamicComponentViewKDoc].
 
@@ -44,7 +44,7 @@ The full source code for this example can be found here:
 
 ## Component declaration
 
-To showcase the user input handling, the following components are declared and wrapped inside a 
+To showcase the user input handling, the following /components are declared and wrapped inside a 
 [BoardGameApplication][BoardGameApplicationKDoc], 
 to create a running example.
 
@@ -64,7 +64,7 @@ There are two ways to specify code that should get executed when a specific even
 
 The first option is assigning a function with a fitting signature. In the following example the ``handleMouseClicked``
 function is declared and gets assigned to ``onMouseClicked`` on the ``button``. This is useful if the same code should
-be assigned on different components, or if the reference gets removed and re-added frequently.
+be assigned on different /components, or if the reference gets removed and re-added frequently.
 
 ````kotlin
 private fun handleMouseClicked(mouseEvent: MouseEvent) {
@@ -88,7 +88,7 @@ button.onMousePressed = { mouseEvent ->
 
 ## Distinction between ComponentViews, DynamicComponentViews and UIComponentViews
 
-There are three types of components, that can handle user input differently. 
+There are three types of /components, that can handle user input differently. 
 
 - [ComponentViews][ComponentViewKDoc] have function references that can deal with mouse, key and drop events.
 

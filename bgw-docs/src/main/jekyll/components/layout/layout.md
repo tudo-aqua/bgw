@@ -2,54 +2,53 @@
 parent: Components
 title: LayoutViews
 nav_order: 6
-layout: default
 ---
 
 <!-- KDoc -->
-[LayoutViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
-[PaneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-pane/index.html
-[MenuSceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-menu-scene/index.html
+[LayoutViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
+[PaneKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-pane/index.html
+[MenuSceneKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-menu-scene/index.html
 
-[GridPaneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/index.html
-[growKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/grow.html
+[GridPaneKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/index.html
+[growKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/grow.html
 
-[addRowsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/add-rows.html
-[addColumnsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/add-columns.html
-[trimKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/trim.html
+[addRowsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/add-rows.html
+[addColumnsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/add-columns.html
+[trimKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/trim.html
 
-[removeRowKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-row.html
-[removeColumnKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-column.html
-[removeEmptyRowsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-empty-rows.html
-[removeEmptyColumnsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-empty-columns.html
+[removeRowKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-row.html
+[removeColumnKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-column.html
+[removeEmptyRowsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-empty-rows.html
+[removeEmptyColumnsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/remove-empty-columns.html
 
-[setRowHeightKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-row-height.html
-[setRowHeightsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-row-heights.html
-[setColumnWidthKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-column-width.html
-[setColumnWidthsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-column-widths.html
+[setRowHeightKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-row-height.html
+[setRowHeightsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-row-heights.html
+[setColumnWidthKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-column-width.html
+[setColumnWidthsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-column-widths.html
 
-[setAutoRowHeightKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-row-height.html
-[setAutoRowHeightsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-row-heights.html
-[setAutoColumnWidthKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-column-width.html
-[setAutoColumnWidthsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-column-widths.html
+[setAutoRowHeightKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-row-height.html
+[setAutoRowHeightsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-row-heights.html
+[setAutoColumnWidthKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-column-width.html
+[setAutoColumnWidthsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-auto-column-widths.html
 
-[setCellCenterModeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-cell-center-mode.html
-[setRowCenterModeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-row-center-mode.html
-[setColumnCenterModeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-column-center-mode.html
-[setCenterModeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/set-center-mode.html
+[setCellCenterModeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-cell-center-mode.html
+[setRowCenterModeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-row-center-mode.html
+[setColumnCenterModeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-column-center-mode.html
+[setCenterModeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/set-center-mode.html
 
-[GridIteratorElementKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-grid-iterator-element/index.html
-[AUTO_ROW_HEIGHT]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/-companion/-r-o-w_-h-e-i-g-h-t_-a-u-t-o.html
-[AUTO_COLUMN_WIDTH]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-grid-pane/-companion/-c-o-l-u-m-n_-w-i-d-t-h_-a-u-t-o.html
+[GridIteratorElementKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-grid-iterator-element/index.html
+[AUTO_ROW_HEIGHT]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/-companion/-r-o-w_-h-e-i-g-h-t_-a-u-t-o.html
+[AUTO_COLUMN_WIDTH]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/-companion/-c-o-l-u-m-n_-w-i-d-t-h_-a-u-t-o.html
 
 <!-- GH-Pages Doc -->
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
-[ContainerDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html
-[AreaDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html#area
+[ComponentViewDoc]: ../../components/componentview/componentview.md
+[ContainerDoc]: ../../components/container/container.md
+[AreaDoc]: ../../components/container/container.md#area
 
 <!-- Start Page -->
 # LayoutViews
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -64,17 +63,17 @@ All layout views inherit from [ComponentView][ComponentViewDoc].
 It is therefore helpful to read this documentation first as the features from this superclass doesn't get repeated here.
 
 ## Introduction
-[LayoutViews][LayoutViewKDoc] are used to arrange components.
+[LayoutViews][LayoutViewKDoc] are used to arrange /components.
 There are two available LayoutViews: [Pane](#pane) and [GridPane](#gridpane).
 
 ## [Pane][PaneKDoc]
 The [Pane][PaneKDoc] arranges its contents in a new coordinate space in the size of the Pane.
 Elements added to the Pane align themselves relative to the top-left corner of the Pane.
-This can be used to group a set of components to move them simultaneously by altering the Pane's position. 
+This can be used to group a set of /components to move them simultaneously by altering the Pane's position. 
 A Pane is therefore quite similar to an [Area][AreaDoc] but can be used in [MenuScenes][MenuSceneKDoc]. 
 
 *Note that a Pane is not a [Container][ContainerDoc] and therefore not draggable. 
-Use an [Area][AreaDoc] to combine components to a drag group.*
+Use an [Area][AreaDoc] to combine /components to a drag group.*
 
 ## [GridPane][GridPaneKDoc]
 The [GridPane][GridPaneKDoc] arranges its contents in rows and columns. 
@@ -119,7 +118,7 @@ To automatically remove all empty rows / columns use [removeEmptyRows][removeEmp
 
 Using [trim][trimKDoc] removes all empty outer rows and columns.
 
-### Iterating grid components
+### Iterating grid /components
 The grid implements the Iterable interface which means that it can be iterated by using its iterator, in foreach loops, and in streams.
 
 The iterator returns [GridIteratorElements][GridIteratorElementKDoc] that contain the component and the current columnIndex and rowIndex.
@@ -136,7 +135,7 @@ To restore automatic behaviour pass [AUTO_ROW_HEIGHT] / [AUTO_COLUMN_WIDTH] or u
 [setAutoColumnWidth][setAutoColumnWidthKDoc] / [setAutoColumnWidths][setAutoColumnWidthsKDoc]
 
 ### Changing centering behaviour
-By default, components get centered in their cells if the cell's size is larger than the component.
+By default, /components get centered in their cells if the cell's size is larger than the component.
 This can be changed for each cell by calling [setCellCenterMode][setCellCenterModeKDoc]. 
 
 To change behaviour for entire rows or columns use [setRowCenterMode][setRowCenterModeKDoc] and [setColumnCenterMode][setColumnCenterModeKDoc].

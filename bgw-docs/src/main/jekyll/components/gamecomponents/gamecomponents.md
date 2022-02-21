@@ -2,29 +2,28 @@
 parent: Components
 title: GameComponents
 nav_order: 3
-layout: default
 ---
 
 <!-- KDoc -->
-[GameComponentDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
-[ContainerDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
-[TokenDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
-[CardDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
-[CardStackDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
-[LinearLayoutDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
-[DiceDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-dice-view/index.html
-[DiceAnimationDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/index.html
+[GameComponentDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
+[ContainerDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-game-component-container/index.html
+[TokenDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
+[CardDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
+[CardStackDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-card-stack/index.html
+[LinearLayoutDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-linear-layout/index.html
+[DiceDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-dice-view/index.html
+[DiceAnimationDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-dice-animation/index.html
 
 <!-- GH-Pages Doc -->
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
-[DynamicView]: https://tudo-aqua.github.io/bgw/components/dynamiccomponentview/dynamiccomponentview.html
-[DnDDoc]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html
-[AnimationDoc]: https://tudo-aqua.github.io/bgw/concepts/animations/Animations.html
+[ComponentViewDoc]: ../../components/componentview/componentview.md
+[DynamicView]: ../../components/dynamiccomponentview/dynamiccomponentview.md
+[DnDDoc]: ../../concepts/drag-and-drop/DragAndDropExample.md
+[AnimationDoc]: ../../concepts/animations/Animations.md
 
 <!-- Start Page -->
 # GameComponentViews
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents

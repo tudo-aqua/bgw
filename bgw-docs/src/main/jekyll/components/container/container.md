@@ -2,33 +2,32 @@
 parent: Components 
 title: Container
 nav_order: 4
-layout: default 
 ---
 
 <!-- KDoc -->
-[BGADocs]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/
-[GameComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
-[ContainerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
-[AreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-area/index.html
-[TokenKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
-[CardViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
-[CardStackKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-card-stack/index.html
-[LinearLayoutKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-linear-layout/index.html
-[SatchelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-satchel/index.html
+[BGADocs]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/
+[GameComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
+[ContainerKDoc]: ../../bpwdgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-game-component-container/index.html
+[AreaKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-area/index.html
+[TokenKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
+[CardViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
+[CardStackKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-card-stack/index.html
+[LinearLayoutKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-linear-layout/index.html
+[SatchelKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-satchel/index.html
 
 <!-- GH-Pages Doc -->
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
-[DynamicView]: https://tudo-aqua.github.io/bgw/components/dynamiccomponentview/dynamiccomponentview.html
-[UIComponentsDoc]: https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html
-[ContainerExample]: https://tudo-aqua.github.io/bgw/components/container/container.html#complete-source-code-for-the-example
+[ComponentViewDoc]: ../../components/componentview/componentview.md
+[DynamicView]: ../../components/dynamiccomponentview/dynamiccomponentview.md
+[UIComponentsDoc]: ../../components/uicomponents/uicomponents.md
+[ContainerExample]: ../../components/container/container.md#complete-source-code-for-the-example
 
 <!-- Links -->
 [IterableDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/
 
 <!-- Start Page -->
 # Container
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -48,7 +47,7 @@ Containers can be used to group
 
 [GameComponentContainer][ContainerKDoc]
 is the abstract baseclass for containers. Different implementations support different styles of layouting for the
-contained components.
+contained /components.
 
 ## Container features
 The Container features will be demonstrated using an [Area][AreaKDoc], since [GameComponentContainer][ContainerKDoc]
@@ -57,7 +56,7 @@ is abstract and [Area][AreaKDoc] is just one of the discrete implementations.
 The complete source code for this example can be
 found [here][ContainerExample].
 
-To create a running example, the required components are wrapped in a
+To create a running example, the required /components are wrapped in a
 [BoardGameApplication][BGADocs].
 
 ````kotlin
@@ -74,7 +73,7 @@ class AreaExample : BoardGameApplication("Area example") {
 
 ### Add and remove
 
-The most important feature of a container is to add to and remove components from it.
+The most important feature of a container is to add to and remove /components from it.
 
 Adding a Component is as simple as calling the ``add()`` function with the component as its argument. Optionally an 
 index
@@ -103,7 +102,7 @@ the [docs][AreaKDoc] for an in-depth overview.
 ### onAdd and onRemove
 
 It is possible to specify code that gets executed with the component as its receiver, after it gets added or removed
-from the container. This is helpful whenever some modifications need to be made to any components, after it is added or
+from the container. This is helpful whenever some modifications need to be made to any /components, after it is added or
 removed.
 
 In this example [TokenView][TokenKDoc]s get resized when they are added to ``area``, and rotated by 45° when they are
@@ -120,12 +119,12 @@ area.onRemove = {
 
 ### Listeners
 
-Listeners for the components list may be added to a container. They get invoked any time the components list changes its
-state. In this example a Label gets updated with the number of components currently contained in ``area``.
+Listeners for the /components list may be added to a container. They get invoked any time the /components list changes its
+state. In this example a Label gets updated with the number of /components currently contained in ``area``.
 
 ````kotlin
 area.addComponentsListener {
-	numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+	numberOfComponentsLabel.label = "Number of /components in this area: ${area.numberOfComponents()}"
 }
 ````
 
@@ -133,13 +132,13 @@ Listeners can be removed via the ``clearComponentsListners()`` or ``removeCompon
 
 ## Useful hints for dealing with containers
 
-- Containers provide an iterator over their components list via
+- Containers provide an iterator over their /components list via
   the [Iterable][IterableDoc] interface.
   
-- The position of components contained in any containers with automatic layouting should never be modified, since the
+- The position of /components contained in any containers with automatic layouting should never be modified, since the
   containers handle positioning.
 
-- When using non-automatic layouting containers, do not forget to position the contained components. Especially if they
+- When using non-automatic layouting containers, do not forget to position the contained /components. Especially if they
   get added after a drag and drop gesture.
 
 - Any Component can only ever be contained in one container at a time. Trying to add an already contained component to
@@ -154,7 +153,7 @@ Listeners can be removed via the ``clearComponentsListners()`` or ``removeCompon
 
 ### [Area][AreaKDoc]
 
-Area is the simplest form of a container. Its contained components are positioned relative to the top-left corner of the
+Area is the simplest form of a container. Its contained /components are positioned relative to the top-left corner of the
 Area. No further layouting is provided by the Area.
 
 ### [CardStack][CardStackKDoc]
@@ -165,7 +164,7 @@ It should be used to visualize card stacks. It provides automatic layouting and 
 
 ### [LinearLayout][LinearLayoutKDoc]
 
-LinearLayout spaces its components dynamically based on its dimensions, the components dimensions, and the user defined
+LinearLayout spaces its /components dynamically based on its dimensions, the /components dimensions, and the user defined
 spacing. Additionally, an orientation and alignment may be specified. In this image a LinearLayout is used to 
 visualize a hand of cards:
 
@@ -173,7 +172,7 @@ visualize a hand of cards:
 
 ### [Satchel][SatchelKDoc]
 
-A satchel hides its components and reveals them, when they are removed. This container can be used to visualize an
+A satchel hides its /components and reveals them, when they are removed. This container can be used to visualize an
 entity, where the user should not know what might get drawn next, or what is in the container.
 
 ## Complete source code for the example
@@ -204,7 +203,7 @@ class AreaExample : BoardGameApplication("Area example") {
     }
 
     area.addComponentsListener {
-      numberOfComponentsLabel.label = "Number of components in this area: ${area.numberOfComponents()}"
+      numberOfComponentsLabel.label = "Number of /components in this area: ${area.numberOfComponents()}"
     }
 
     area.add(greenToken)

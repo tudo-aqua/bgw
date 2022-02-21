@@ -1,17 +1,16 @@
 ---
 parent : Dialogs 
 title: FileDialog 
-nav_order: 2 
-layout: default
+nav_order: 2
 ---
 
 <!-- KDoc -->
-[BoardGameApplicationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
-[DialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog/index.html
-[FileDialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog/index.html
-[FileDialogModeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-file-dialog-mode/index.html
+[BoardGameApplicationKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html
+[DialogKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-dialog/index.html
+[FileDialogKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-file-dialog/index.html
+[FileDialogModeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-file-dialog-mode/index.html
 
-[showFileDialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-file-dialog.html
+[showFileDialogKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/show-file-dialog.html
 
 <!-- Links -->
 [OptionalDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html
@@ -20,6 +19,7 @@ layout: default
 <!-- Start Page -->
 # FileDialog
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
