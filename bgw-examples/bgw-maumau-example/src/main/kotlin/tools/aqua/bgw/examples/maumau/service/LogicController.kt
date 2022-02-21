@@ -96,8 +96,8 @@ class LogicController(val view: Refreshable) {
 	 */
 	fun initGame(message: InitGameMessage) {
 		initGame(
-			player1 = message.players[0],
-			player2 = message.players[1],
+			player1 = message.players[1],
+			player2 = message.players[0],
 			drawStack = message.drawStack.map { SerializationUtil.deserializeMauMauCard(it) },
 			gameStack = SerializationUtil.deserializeMauMauCard(message.gameStack.first()),
 			hostCards = message.hostCards.map { SerializationUtil.deserializeMauMauCard(it) },
