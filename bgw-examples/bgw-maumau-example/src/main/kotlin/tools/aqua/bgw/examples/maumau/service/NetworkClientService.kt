@@ -112,8 +112,9 @@ class NetworkClientService(
 	}
 	
 	override fun onEndGameReceived(message: GameOverMessage, sender: String) {
-		println("$sender won")
-		view.refreshEndGame(sender)
+		BoardGameApplication.runOnGUIThread {
+			view.refreshEndGame(sender)
+		}
 	}
 	//endregion
 }
