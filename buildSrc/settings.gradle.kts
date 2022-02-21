@@ -15,14 +15,6 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.bgw.library-conventions") }
-
-mavenMetadata {
-  name.set("BoardGameWork Network Common Code")
-  description.set("A framework for board game applications.")
-}
-
-dependencies {
-  implementation(kotlin("stdlib"))
-  implementation("com.fasterxml.jackson.core", "jackson-annotations", libs.versions.jackson.get())
+dependencyResolutionManagement {
+  versionCatalogs { create("libs") { from(files("../gradle/libs.versions.toml")) } }
 }
