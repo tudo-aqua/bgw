@@ -7,7 +7,6 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
-import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.CARDS_FILE
 import tools.aqua.bgw.examples.maumau.main.IMG_HEIGHT
 import tools.aqua.bgw.examples.maumau.main.IMG_WIDTH
@@ -180,7 +179,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	/**
 	 * Ends game.
 	 */
-	override fun refreshEndGame(playerWon: MauMauPlayer) {
+	override fun refreshEndGame(playerWon: String) {
 		viewController.showMenuScene(
 			scene = viewController.mauMauPlayerWonMenuScene.apply { this.playerWon = playerWon },
 			fadeTime = 2000

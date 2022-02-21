@@ -112,7 +112,8 @@ class NetworkClientService(
 	}
 	
 	override fun onEndGameReceived(message: GameOverMessage, sender: String) {
-		println("Received end message: $message")
+		println("$sender won")
+		view.refreshEndGame(sender)
 	}
 	//endregion
 }

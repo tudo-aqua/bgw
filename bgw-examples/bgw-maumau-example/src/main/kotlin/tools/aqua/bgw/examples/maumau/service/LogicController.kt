@@ -191,7 +191,7 @@ class LogicController(val view: Refreshable) {
 		if (isCurrentPlayer) {
 			if (player.hand.cards.isEmpty()) {
 				networkService.sendEndGame()
-				view.refreshEndGame(player)
+				view.refreshEndGame(player.name)
 				return true
 			}
 			

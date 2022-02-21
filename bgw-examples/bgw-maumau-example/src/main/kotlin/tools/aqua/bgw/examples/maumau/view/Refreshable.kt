@@ -1,7 +1,6 @@
 package tools.aqua.bgw.examples.maumau.view
 
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
-import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 
 interface Refreshable {
 	
@@ -77,7 +76,7 @@ interface Refreshable {
 	 *
 	 * @param playerWon Player that won.
 	 */
-	fun refreshEndGame(playerWon: MauMauPlayer)
+	fun refreshEndGame(playerWon: String)
 	
 	/**
 	 * Shows a warning dialog for wrong inputs in host/join menu.

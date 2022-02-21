@@ -4,7 +4,6 @@ package tools.aqua.bgw.examples.maumau.view.scenes
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.MenuScene
-import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.BUTTON_BG_FILE
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle
@@ -17,10 +16,10 @@ import java.awt.Color
  */
 class MauMauPlayerWonScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
     
-    var playerWon : MauMauPlayer = MauMauPlayer("Alice")
+    var playerWon : String = "Alice"
         set(value) {
             field = value
-            playerWonLabel.text = "${value.name} won the game."
+            playerWonLabel.text = "$value won the game."
         }
     
     private val menuLabel: Label = Label(
