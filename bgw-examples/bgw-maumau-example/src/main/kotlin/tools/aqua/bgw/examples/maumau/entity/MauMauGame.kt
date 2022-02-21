@@ -12,7 +12,7 @@ class MauMauGame {
 	/**
 	 * Players.
 	 */
-	val players = listOf(MauMauPlayer(), MauMauPlayer())
+	val players = mutableListOf(MauMauPlayer(), MauMauPlayer())
 	
 	/**
 	 * The draw stack.

@@ -31,9 +31,14 @@ interface Refreshable {
 	fun refreshGameStackShuffledBack()
 	
 	/**
-	 * Indicates refresh after active player has changed.
+	 * Indicates refresh after active player has ended turn.
 	 */
-	fun refreshAdvancePlayer()
+	fun refreshAdvanceOnlinePlayer()
+	
+	/**
+	 * Indicates swap after active player has changed.
+	 */
+	fun refreshSwapPlayers()
 	
 	/**
 	 * Indicates refresh when player may take another turn.

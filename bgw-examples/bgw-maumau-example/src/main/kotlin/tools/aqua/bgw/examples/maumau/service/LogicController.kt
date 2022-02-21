@@ -43,7 +43,7 @@ class LogicController(val view: Refreshable) {
 		initGame(
 			drawStack = cards.subList(11, cards.size),
 			gameStack = cards[0],
-			hostCards = cards.subList(1,6),
+			hostCards = cards.subList(1, 6),
 			opponentCards = cards.subList(6, 11)
 		)
 		
@@ -58,7 +58,7 @@ class LogicController(val view: Refreshable) {
 	 * @param hostCards Hand of host player.
 	 * @param opponentCards Hand of opponent (i.e. you, if joined).
 	 */
-	fun initGame(
+	private fun initGame(
 		drawStack: List<MauMauCard>,
 		gameStack: MauMauCard,
 		hostCards: List<MauMauCard>,
@@ -72,8 +72,8 @@ class LogicController(val view: Refreshable) {
 		game.gameStack.cards.add(gameStack)
 		game.nextSuit = gameStack.cardSuit
 		
-		game.players[0].hand.cards.addAll(if(isHost) hostCards else opponentCards)
-		game.players[1].hand.cards.addAll(if(!isHost) hostCards else opponentCards)
+		game.players[0].hand.cards.addAll(if (isHost) hostCards else opponentCards)
+		game.players[1].hand.cards.addAll(if (!isHost) hostCards else opponentCards)
 		
 		view.refreshAll()
 	}
@@ -97,14 +97,14 @@ class LogicController(val view: Refreshable) {
 	 * Current player draws a card from drawStack.
 	 * Advances player.
 	 */
-	fun drawCard(isCurrentPlayer: Boolean, advance : Boolean) {
+	fun drawCard(isCurrentPlayer: Boolean, advance: Boolean) {
 		val player = getPlayer(isCurrentPlayer)
 		val card = game.drawStack.drawCard()
 		
 		player.hand.addCard(card)
 		view.refreshCardDrawn(card, isCurrentPlayer)
 		
-		if(isCurrentPlayer) {
+		if (isOnline && isCurrentPlayer) {
 			networkService.sendCardDrawn()
 		}
 		
@@ -113,9 +113,13 @@ class LogicController(val view: Refreshable) {
 			view.refreshGameStackShuffledBack() //TODO: Send shuffled stack on network
 		}
 		
-		if(advance) {
-			networkService.sendEndTurn()
-			view.refreshAdvancePlayer()
+		if (advance) {
+			if (isOnline) {
+				networkService.sendEndTurn()
+				view.refreshAdvanceOnlinePlayer()
+			} else {
+				advanceSwapPlayers()
+			}
 		}
 	}
 	
@@ -126,17 +130,19 @@ class LogicController(val view: Refreshable) {
 		game.nextSuit = suit
 		view.refreshSuitSelected()
 		
-		if(isCurrentPlayer) {
+		if (isOnline && isCurrentPlayer) {
 			networkService.sendSuitSelected(suit)
 			networkService.sendEndTurn()
-			view.refreshAdvancePlayer()
+			view.refreshAdvanceOnlinePlayer()
+		} else {
+			advanceSwapPlayers()
 		}
 	}
 	
 	/**
 	 * Play a card to the GameStack if allowed, advances player
 	 */
-	fun playCard(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) : Boolean {
+	fun playCard(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean): Boolean {
 		if (isCurrentPlayer && !checkRules(card))
 			return false
 		
@@ -144,7 +150,7 @@ class LogicController(val view: Refreshable) {
 		var advance = true
 		
 		player.hand.removeCard(card)
-		if(isCurrentPlayer) {
+		if (isCurrentPlayer) {
 			networkService.sendCardPlayed(card)
 		}
 		
@@ -168,15 +174,19 @@ class LogicController(val view: Refreshable) {
 		}
 		
 		if (isCurrentPlayer) {
-			if(player.hand.cards.isEmpty()) {
+			if (player.hand.cards.isEmpty()) {
 				networkService.sendEndGame()
 				view.refreshEndGame(player)
 				return true
 			}
 			
 			if (advance) {
-				networkService.sendEndTurn()
-				view.refreshAdvancePlayer()
+				if (isOnline) {
+					networkService.sendEndTurn()
+					view.refreshAdvanceOnlinePlayer()
+				} else {
+					advanceSwapPlayers()
+				}
 			} else {
 				view.refreshPlayAgain()
 			}
@@ -188,7 +198,7 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Play a card without effect
 	 */
-	private fun playNoEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) {
+	private fun playNoEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
 		game.nextSuit = card.cardSuit
 		game.gameStack.playCard(card)
 		view.refreshCardPlayed(card, animated, isCurrentPlayer)
@@ -197,7 +207,7 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Play a jack card and show suit selection
 	 */
-	private fun playJackEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) {
+	private fun playJackEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
 		playNoEffect(card, animated, isCurrentPlayer)
 		view.showJackEffectSelection()
 	}
@@ -205,23 +215,17 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Play a seven card and let opponent draw two
 	 */
-	private fun playSevenEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer : Boolean) {
+	private fun playSevenEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
 		playNoEffect(card, animated, isCurrentPlayer)
 		
-		//information for refresh
-//		val cards = game.drawStack.drawTwo() //TODO: Handle shuffle back
-//		game.players[1].hand.addCards(cards)
-//		xxxxxx
-//
-//		if (game.drawStack.isEmpty()) {
-//			game.shuffleGameStackBack()
-//			view.refreshGameStackShuffledBack()
-//		}
-		
-		if(isCurrentPlayer) {
-			networkService.sendDrawTwoRequest()
+		if (isCurrentPlayer) {
+			if (isOnline) {
+				networkService.sendDrawTwoRequest()
+			} else {
+				drawCard(isCurrentPlayer = false, advance = false)
+				drawCard(isCurrentPlayer = false, advance = false)
+			}
 		}
-		//view.refreshCardsDrawn(cards, false)
 	}
 	
 	/**
@@ -242,6 +246,11 @@ class LogicController(val view: Refreshable) {
 			view.refreshHintDrawCard()
 		else
 			view.refreshHintPlayCard(card)
+	}
+	
+	private fun advanceSwapPlayers() {
+		game.players.reverse()
+		view.refreshSwapPlayers()
 	}
 	
 	/**
@@ -280,7 +289,7 @@ class LogicController(val view: Refreshable) {
 	/**
 	 * Returns player instance
 	 */
-	private fun getPlayer(isCurrentPlayer: Boolean) = game.players[if(isCurrentPlayer) 0 else 1]
+	private fun getPlayer(isCurrentPlayer: Boolean) = game.players[if (isCurrentPlayer) 0 else 1]
 	
 	/**
 	 * Generates a full set of MauMauCards.

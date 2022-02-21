@@ -3,6 +3,7 @@ package tools.aqua.bgw.examples.maumau.service
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
+import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
 import java.net.InetAddress
 
 /**
@@ -115,7 +116,7 @@ class NetworkService(private val logicController: LogicController) {
 	}
 	
 	fun sendEndGame() {
-		TODO("Not yet implemented")
+		client?.sendEndGameMessage(GameOverMessage("Looser!"))
 	}
 	//endregion
 	

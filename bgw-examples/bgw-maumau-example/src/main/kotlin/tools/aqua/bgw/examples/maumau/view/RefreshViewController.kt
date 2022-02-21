@@ -1,5 +1,6 @@
 package tools.aqua.bgw.examples.maumau.view
 
+import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.gamecomponentviews.CardView
@@ -184,51 +185,57 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	/**
-	 * Advances active player.
+	 * Locks gameScene.
 	 */
-	override fun refreshAdvancePlayer() {
+	override fun refreshAdvanceOnlinePlayer() {
 		viewController.mauMauGameScene.lock()
-		/*val delay = DelayAnimation(1000)
+	}
+	
+	override fun refreshSwapPlayers() {
+		viewController.mauMauGameScene.lock()
 		
-		delay.onFinished = {
-			//swap playerHands
-			val tmp = viewController.mauMauGameScene.currentPlayerHand
-			viewController.mauMauGameScene.currentPlayerHand = viewController.mauMauGameScene.otherPlayerHand
-			viewController.mauMauGameScene.otherPlayerHand = tmp
-			
-			//swap hand positions
-			val tmpPosY = viewController.mauMauGameScene.currentPlayerHand.posY
-			viewController.mauMauGameScene.currentPlayerHand.posY = viewController.mauMauGameScene.otherPlayerHand.posY
-			viewController.mauMauGameScene.otherPlayerHand.posY = tmpPosY
-			
-			//add interaction and show front for all cards in currentPlayerHand
-			viewController.mauMauGameScene.currentPlayerHand.components.forEach { t ->
-				t.addInteraction()
-				t.showFront()
-				t.onMouseEntered = null
-				t.onMouseExited = null
+		val delay = DelayAnimation(1000).apply {
+			onFinished = {
+				//swap playerHands
+//				val tmp = viewController.mauMauGameScene.currentPlayerHand
+//				viewController.mauMauGameScene.currentPlayerHand = viewController.mauMauGameScene.otherPlayerHand
+//				viewController.mauMauGameScene.otherPlayerHand = tmp
+//
+//				//swap hand positions
+//				val tmpPosY = viewController.mauMauGameScene.currentPlayerHand.posY
+//				viewController.mauMauGameScene.currentPlayerHand.posY = viewController.mauMauGameScene.otherPlayerHand.posY
+//				viewController.mauMauGameScene.otherPlayerHand.posY = tmpPosY
+//
+//				//add interaction and show front for all cards in currentPlayerHand
+//				viewController.mauMauGameScene.currentPlayerHand.components.forEach { t ->
+//					t.addInteraction()
+//					t.showFront()
+//					t.onMouseEntered = null
+//					t.onMouseExited = null
+//				}
+//
+//				//add interaction and show back for all cards in otherPlayerHand
+//				viewController.mauMauGameScene.otherPlayerHand.components.forEach { t ->
+//					t.removeInteraction()
+//					t.showBack()
+//					t.onMouseEntered = {
+//						viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.backVisual, t.frontVisual))
+//					}
+//					t.onMouseExited = {
+//						viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.frontVisual, t.backVisual))
+//					}
+//				}
+//
+//				viewController.mauMauGameScene.currentPlayerHand.rotation += 180.0
+//				viewController.mauMauGameScene.otherPlayerHand.rotation += 180.0
+				refreshHands()
+				viewController.mauMauGameScene.unlock()
 			}
-			
-			//add interaction and show back for all cards in otherPlayerHand
-			viewController.mauMauGameScene.otherPlayerHand.components.forEach { t ->
-				t.removeInteraction()
-				t.showBack()
-				t.onMouseEntered = {
-					viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.backVisual, t.frontVisual))
-				}
-				t.onMouseExited = {
-					viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.frontVisual, t.backVisual))
-				}
-			}
-			
-			viewController.mauMauGameScene.currentPlayerHand.rotation += 180.0
-			viewController.mauMauGameScene.otherPlayerHand.rotation += 180.0
-			
-			viewController.mauMauGameScene.unlock()
 		}
 		
 		viewController.mauMauGameScene.lock()
-		viewController.mauMauGameScene.playAnimation(delay)*/
+		viewController.mauMauGameScene.playAnimation(delay)
+		
 	}
 	
 	/**
@@ -294,6 +301,14 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 			viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 		
 		//Add elements to hands
+		refreshHands()
+		
+		//hide suit selection
+		showJackEffectSelection(false)
+	}
+	
+	private fun refreshHands() {
+		val game = viewController.logicController.game
 		viewController.mauMauGameScene.currentPlayerHand.clear()
 		viewController.mauMauGameScene.otherPlayerHand.clear()
 		
@@ -309,14 +324,14 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		}
 		
 		//Add EventHandler for cards on Hand
-		viewController.mauMauGameScene.currentPlayerHand.components.forEach { it.addInteraction() }
-		viewController.mauMauGameScene.otherPlayerHand.components.forEach { t ->
-			t.removeInteraction()
-			t.addSneakInteraction()
+		viewController.mauMauGameScene.currentPlayerHand.components.forEach {
+			it.addInteraction()
+			it.removeSneakInteraction()
 		}
-		
-		//hide suit selection
-		showJackEffectSelection(false)
+		viewController.mauMauGameScene.otherPlayerHand.components.forEach {
+			it.removeInteraction()
+			it.addSneakInteraction()
+		}
 	}
 	
 	/**
@@ -444,6 +459,19 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 		}
 	}
 	
+	/**
+	 * Removes interactivity from card.
+	 */
+	private fun CardView.removeInteraction() {
+		isDraggable = false
+		onMouseClicked = null
+		onMouseEntered = null
+		onMouseExited = null
+	}
+	
+	/**
+	 * Removes sneak peek interactivity to card.
+	 */
 	private fun CardView.addSneakInteraction() {
 		onMouseEntered = {
 			viewController.mauMauGameScene.playAnimation(FlipAnimation(this, backVisual, frontVisual))
@@ -454,12 +482,10 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	}
 	
 	/**
-	 * Removes interactivity from card.
+	 * Removes sneak peek interactivity from card.
 	 */
-	private fun CardView.removeInteraction() {
-		isDraggable = false
-		onMouseClicked = null
-		onMouseEntered = null
+	private fun CardView.removeSneakInteraction() {
+		onMouseEntered  =null
 		onMouseExited = null
 	}
 	//endregion
