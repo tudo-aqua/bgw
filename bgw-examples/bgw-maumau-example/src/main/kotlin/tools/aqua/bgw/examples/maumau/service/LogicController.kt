@@ -40,10 +40,11 @@ class LogicController(val view: Refreshable) {
 	fun newGame(game: MauMauGame) {
 		newGame(game.players[0].name, game.players[1].name)
 	}
+	
 	/**
 	 * Sets up a new game.
 	 */
-	fun newGame(player1 : String = "Player 1", player2 : String = "Player 2") {
+	fun newGame(player1: String = "Player 1", player2: String = "Player 2") {
 		val cards = generateMauMauCards(CardSuit.allSuits(), CardValue.shortDeck()).shuffled()
 		
 		initGame(
@@ -67,8 +68,8 @@ class LogicController(val view: Refreshable) {
 	 * @param opponentCards Hand of opponent (i.e. you, if joined).
 	 */
 	private fun initGame(
-		player1 : String,
-		player2 : String,
+		player1: String,
+		player2: String,
 		drawStack: List<MauMauCard>,
 		gameStack: MauMauCard,
 		hostCards: List<MauMauCard>,
@@ -142,12 +143,14 @@ class LogicController(val view: Refreshable) {
 		game.nextSuit = suit
 		view.refreshSuitSelected()
 		
-		if (isOnline && isCurrentPlayer) {
-			networkService.sendSuitSelected(suit)
-			networkService.sendEndTurn()
-			view.refreshAdvanceOnlinePlayer()
-		} else {
-			advanceSwapPlayers()
+		if (isCurrentPlayer) {
+			if (isOnline) {
+				networkService.sendSuitSelected(suit)
+				networkService.sendEndTurn()
+				view.refreshAdvanceOnlinePlayer()
+			} else {
+				advanceSwapPlayers()
+			}
 		}
 	}
 	
@@ -221,7 +224,10 @@ class LogicController(val view: Refreshable) {
 	 */
 	private fun playJackEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
 		playNoEffect(card, animated, isCurrentPlayer)
-		view.showJackEffectSelection()
+		
+		if (isCurrentPlayer) {
+			view.showJackEffectSelection()
+		}
 	}
 	
 	/**
