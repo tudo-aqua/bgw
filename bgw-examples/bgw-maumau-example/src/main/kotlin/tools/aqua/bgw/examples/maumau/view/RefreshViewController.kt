@@ -181,7 +181,10 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 	 * Ends game.
 	 */
 	override fun refreshEndGame(playerWon: MauMauPlayer) {
-		viewController.showMenuScene(scene = viewController.mauMauPlayerWonMenuScene, fadeTime = 2000)
+		viewController.showMenuScene(
+			scene = viewController.mauMauPlayerWonMenuScene.apply { this.playerWon = playerWon },
+			fadeTime = 2000
+		)
 	}
 	
 	/**

@@ -23,6 +23,7 @@ class SerializationUtil {
 		}
 		
 		fun serializeInitMessage(game: MauMauGame): InitGameMessage = InitGameMessage(
+			players = game.players.map { it.name },
 			drawStack = game.drawStack.cards.map { it.serialize() },
 			gameStack = game.gameStack.cards.map { it.serialize() },
 			hostCards = game.players[0].hand.cards.map { it.serialize() },

@@ -35,12 +35,20 @@ class LogicController(val view: Refreshable) {
 	
 	//region init
 	/**
+	 * Sets up a new game with cloned players.
+	 */
+	fun newGame(game: MauMauGame) {
+		newGame(game.players[0].name, game.players[1].name)
+	}
+	/**
 	 * Sets up a new game.
 	 */
-	fun newGame() {
+	fun newGame(player1 : String = "Player 1", player2 : String = "Player 2") {
 		val cards = generateMauMauCards(CardSuit.allSuits(), CardValue.shortDeck()).shuffled()
 		
 		initGame(
+			player1 = player1,
+			player2 = player2,
 			drawStack = cards.subList(11, cards.size),
 			gameStack = cards[0],
 			hostCards = cards.subList(1, 6),
@@ -59,12 +67,14 @@ class LogicController(val view: Refreshable) {
 	 * @param opponentCards Hand of opponent (i.e. you, if joined).
 	 */
 	private fun initGame(
+		player1 : String,
+		player2 : String,
 		drawStack: List<MauMauCard>,
 		gameStack: MauMauCard,
 		hostCards: List<MauMauCard>,
 		opponentCards: List<MauMauCard>
 	) {
-		game = MauMauGame()
+		game = MauMauGame(player1, player2)
 		
 		game.mauMauCards.addAll(drawStack + gameStack + hostCards + opponentCards)
 		
@@ -85,6 +95,8 @@ class LogicController(val view: Refreshable) {
 	 */
 	fun initGame(message: InitGameMessage) {
 		initGame(
+			player1 = message.players[0],
+			player2 = message.players[1],
 			drawStack = message.drawStack.map { SerializationUtil.deserializeMauMauCard(it) },
 			gameStack = SerializationUtil.deserializeMauMauCard(message.gameStack.first()),
 			hostCards = message.hostCards.map { SerializationUtil.deserializeMauMauCard(it) },

@@ -3,7 +3,7 @@ package tools.aqua.bgw.examples.maumau.entity
 /**
  * Class representing a game of MauMau.
  */
-class MauMauGame {
+class MauMauGame(player1 : String = "Player 1", player2 : String = "Player 2") {
 	/**
 	 * Collection of all cards in the game.
 	 */
@@ -12,7 +12,7 @@ class MauMauGame {
 	/**
 	 * Players.
 	 */
-	val players = mutableListOf(MauMauPlayer(), MauMauPlayer())
+	val players: MutableList<MauMauPlayer> = mutableListOf(MauMauPlayer(player1), MauMauPlayer(player2))
 	
 	/**
 	 * The draw stack.

@@ -2,6 +2,7 @@ package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
 import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
 import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
@@ -53,7 +54,10 @@ class NetworkClientService(
 	}
 	
 	override fun onUserJoined(notification: UserJoinedNotification) {
-		BoardGameApplication.runOnGUIThread { logicController.view.onUserJoined(notification.sender) }
+		BoardGameApplication.runOnGUIThread {
+			logicController.game.players[1] = MauMauPlayer(notification.sender)
+			logicController.view.onUserJoined(notification.sender)
+		}
 	}
 	
 	override fun onUserLeft(notification: UserDisconnectedNotification) {

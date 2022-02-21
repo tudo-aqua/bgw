@@ -5,6 +5,7 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
+import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.service.LogicController
 import tools.aqua.bgw.examples.maumau.view.scenes.*
 import tools.aqua.bgw.util.BidirectionalMap
@@ -131,7 +132,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	 * Registers events in the main menu scene.
 	 */
 	private fun registerMainMenuEvents() {
-		mauMauMenuScene.continueGameButton.onMouseClicked = { /*hideMenuScene()*/ } //TODO
+		mauMauMenuScene.continueGameButton.onMouseClicked = { hideMenuScene() }
 		
 		mauMauMenuScene.newLocalGameButton.onMouseClicked = {
 			logicController.isOnline = false
@@ -155,7 +156,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 		
 		mauMauWaitForOpponentMenuScene.startGameButton.onMouseClicked = {
 			hideMenuScene()
-			logicController.newGame()
+			logicController.newGame(logicController.game)
 			mauMauGameScene.startAnimation()
 		}
 		
@@ -167,7 +168,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	 */
 	private fun registerPlayerWonMenuEvents() {
 		mauMauPlayerWonMenuScene.newGameButton.onMouseClicked = {
-			logicController.newGame()
+			logicController.newGame(logicController.game)
 			hideMenuScene()
 			mauMauGameScene.unlock()
 		}
@@ -179,13 +180,15 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 	 * Registers events in the host game menu scene.
 	 */
 	private fun registerHostMenuEvents() {
-		mauMauHostGameMenuScene.joinGameButton.onMouseClicked = {
+		mauMauHostGameMenuScene.hostGameButton.onMouseClicked = {
 			val address = mauMauHostGameMenuScene.addressText.text.trim()
 			val name = mauMauHostGameMenuScene.nameText.text.trim()
 			val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 			
-			if (logicController.networkService.validateInputs(address, name, sessionID))
+			if (logicController.networkService.validateInputs(address, name, sessionID)) {
 				logicController.networkService.tryHostGame(address, name, sessionID)
+				logicController.game.players[0] = MauMauPlayer(name)
+			}
 		}
 		
 		mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }

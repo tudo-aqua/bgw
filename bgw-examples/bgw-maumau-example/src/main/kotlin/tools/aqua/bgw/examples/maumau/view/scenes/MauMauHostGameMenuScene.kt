@@ -46,7 +46,7 @@ class MauMauHostGameMenuScene : MenuScene(width = 300, height = 500, background 
         prompt = "sessionID"
     )
 
-    val joinGameButton: Button = MenuButton("Host Game")
+    val hostGameButton: Button = MenuButton("Host Game")
     
     val backButton: Button = MenuButton("← Back")
     
@@ -57,7 +57,7 @@ class MauMauHostGameMenuScene : MenuScene(width = 300, height = 500, background 
                 this[0,1] = addressText
                 this[0,2] = nameText
                 this[0,3] = sessionIDText
-                this[0,4] = joinGameButton
+                this[0,4] = hostGameButton
                 this[0,5] = backButton
                 
                 setColumnWidth(0, this@MauMauHostGameMenuScene.width)
