@@ -4,12 +4,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
-import javax.annotation.PostConstruct
 
 @SpringBootApplication
-class Application {
-
-}
+class Application
 
 fun main(args: Array<String>) {
 	runApplication<Application>(*args)
@@ -17,5 +14,5 @@ fun main(args: Array<String>) {
 
 @Configuration
 @EnableScheduling
-class AppConfig()
+class AppConfig
 

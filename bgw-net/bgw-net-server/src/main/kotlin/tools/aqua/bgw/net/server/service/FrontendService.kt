@@ -1,6 +1,5 @@
 package tools.aqua.bgw.net.server.service
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.GameRepository

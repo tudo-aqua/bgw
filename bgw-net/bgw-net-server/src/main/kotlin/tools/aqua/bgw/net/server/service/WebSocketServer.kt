@@ -1,7 +1,7 @@
 package tools.aqua.bgw.net.server.service
 
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.server.ServerHttpRequest
@@ -20,7 +20,6 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 import tools.aqua.bgw.net.common.UserDisconnectedNotification
 import tools.aqua.bgw.net.server.entity.KeyValueRepository
 import tools.aqua.bgw.net.server.player
-import java.lang.Exception
 
 @Configuration
 @EnableWebSocket
@@ -33,7 +32,7 @@ class WebSocketServerConfiguration(
 	 * Not really needed anymore. An idle timeout could be configured here.
 	 */
 	@Bean
-	fun createWebSocketContainer() = ServletServerContainerFactoryBean().apply {
+	fun createWebSocketContainer(): ServletServerContainerFactoryBean = ServletServerContainerFactoryBean().apply {
 		//setMaxSessionIdleTimeout(IDLE_TIMEOUT)
 	}
 
@@ -52,7 +51,7 @@ class WebSocketServerConfiguration(
  * Only allows establishment of web socket session if both checks succeed.
  */
 class MyHandshakeInterceptor(private val keyValueRepository: KeyValueRepository) : HandshakeInterceptor {
-	val logger = LoggerFactory.getLogger(javaClass)
+	private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
 	override fun beforeHandshake(
 		request: ServerHttpRequest,
@@ -107,7 +106,7 @@ class MyWebsocketHandler(
 	}
 
 	/**
-	 * Creates a new [Player] and associates it with the [WebSocketSession]
+	 * Creates a new player and associates it with the [WebSocketSession].
 	 */
 	override fun afterConnectionEstablished(session: WebSocketSession) {
 		playerService.createPlayer(session)
@@ -116,7 +115,7 @@ class MyWebsocketHandler(
 	}
 
 	/**
-	 * First removes the [Player] associated with the [WebSocketSession] from its [Game].
+	 * First removes the player associated with the [WebSocketSession] from its game.
 	 * Then deletes the player.
 	 */
 	override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {

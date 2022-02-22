@@ -113,7 +113,7 @@ enum class LeaveGameResponseStatus {
 
 enum class GameMessageStatus {
 	/**
-	 * The message was valid and broadcast to all other connected players.
+	 * The message was valid and broadcast to all the other connected players.
 	 */
 	SUCCESS,
 

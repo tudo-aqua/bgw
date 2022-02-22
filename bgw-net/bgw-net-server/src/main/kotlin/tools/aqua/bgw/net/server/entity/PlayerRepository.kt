@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository
 class PlayerRepository : ObjectRepository<Player> {
 	private val playerSet : MutableSet<Player> = mutableSetOf()
 
-	override fun add(obj: Player) = playerSet.add(obj)
+	override fun add(obj: Player): Boolean = playerSet.add(obj)
 
-	override fun remove(obj: Player) = playerSet.remove(obj)
+	override fun remove(obj: Player): Boolean = playerSet.remove(obj)
 
 	override fun getAll(): List<Player> {
 		return playerSet.toList()

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository
 class GameRepository: ObjectRepository<Game> {
 	private val gameSet: MutableSet<Game> = mutableSetOf()
 
-	override fun add(obj: Game) = gameSet.add(obj)
+	override fun add(obj: Game): Boolean = gameSet.add(obj)
 
 
-	override fun remove(obj: Game) = gameSet.remove(obj)
+	override fun remove(obj: Game): Boolean = gameSet.remove(obj)
 
 
 	override fun getAll(): List<Game> {
