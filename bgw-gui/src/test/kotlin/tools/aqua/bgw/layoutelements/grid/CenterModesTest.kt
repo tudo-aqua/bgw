@@ -20,7 +20,7 @@ package tools.aqua.bgw.layoutelements.grid
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.core.Alignment
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class CenterModesTest : GridPaneTestBase() {
 	@Test

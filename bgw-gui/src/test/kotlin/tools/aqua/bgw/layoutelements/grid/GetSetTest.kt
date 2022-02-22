@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test
 import tools.aqua.bgw.components.layoutviews.GridPane.Companion.COLUMN_WIDTH_AUTO
 import tools.aqua.bgw.components.layoutviews.GridPane.Companion.ROW_HEIGHT_AUTO
 import tools.aqua.bgw.components.uicomponents.Label
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNull
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.assertThrows
 
 class GetSetTest : GridPaneTestBase() {
 	
@@ -60,7 +60,7 @@ class GetSetTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Get and set spacing negative")
 	fun testGetSetSpacingNegative() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.spacing = -1.0
 		}
 	}
@@ -122,11 +122,11 @@ class GetSetTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Set column width negative")
 	fun testGetSetColumnWidthNegative() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.setColumnWidth(1, -0.5)
 		}
-		
-		assertFailsWith<IllegalArgumentException> {
+
+		assertThrows<IllegalArgumentException> {
 			grid.setColumnWidth(1, -42)
 		}
 	}
@@ -188,11 +188,11 @@ class GetSetTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Set row height negative")
 	fun testGetSetRowHeightNegative() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.setRowHeight(1, -0.5)
 		}
-		
-		assertFailsWith<IllegalArgumentException> {
+
+		assertThrows<IllegalArgumentException> {
 			grid.setRowHeight(1, -42)
 		}
 	}

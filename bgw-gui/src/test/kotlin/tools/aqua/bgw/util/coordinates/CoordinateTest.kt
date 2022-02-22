@@ -22,8 +22,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.DOUBLE_TOLERANCE
 import tools.aqua.bgw.util.Coordinate
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 
 class CoordinateTest {
 	

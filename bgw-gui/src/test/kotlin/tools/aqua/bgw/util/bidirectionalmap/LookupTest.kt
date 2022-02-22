@@ -19,8 +19,8 @@ package tools.aqua.bgw.util.bidirectionalmap
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertThrows
 
 class LookupTest : BidirectionalMapTestBase() {
 	@Test
@@ -40,7 +40,7 @@ class LookupTest : BidirectionalMapTestBase() {
 	@Test
 	@DisplayName("Test forward lookup on non-existing element")
 	fun testForwardNonExisting() {
-		assertFailsWith<NoSuchElementException> {
+		assertThrows<NoSuchElementException> {
 			map.forward(5)
 		}
 		assertEquals(null, map.forwardOrNull(5))
@@ -49,7 +49,7 @@ class LookupTest : BidirectionalMapTestBase() {
 	@Test
 	@DisplayName("Test backward lookup on non-existing element")
 	fun testBackwardNonExisting() {
-		assertFailsWith<NoSuchElementException> {
+		assertThrows<NoSuchElementException> {
 			map.backward(5)
 		}
 		assertEquals(null, map.backwardOrNull(5))

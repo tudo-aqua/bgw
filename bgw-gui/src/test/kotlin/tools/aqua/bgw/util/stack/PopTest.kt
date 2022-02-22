@@ -17,10 +17,11 @@
 
 package tools.aqua.bgw.util.stack
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertThrows
 
 class PopTest : StackTestBase() {
 	
@@ -28,7 +29,7 @@ class PopTest : StackTestBase() {
 	@DisplayName("Test pop on empty Stack")
 	fun testPopOnEmptyStack() {
 		assertEquals(0, emptyStack.size)
-		assertFailsWith<NoSuchElementException> { emptyStack.pop() }
+		assertThrows<NoSuchElementException> { emptyStack.pop() }
 	}
 	
 	@Test
@@ -52,7 +53,7 @@ class PopTest : StackTestBase() {
 		assertEquals(1, stack.size)
 		assertEquals(order[4], stack.pop())
 		assertEquals(0, stack.size)
-		assertFailsWith<NoSuchElementException> { stack.pop() }
+		assertThrows<NoSuchElementException> { stack.pop() }
 	}
 	
 	@Test
@@ -107,7 +108,7 @@ class PopTest : StackTestBase() {
 	fun testPopAllForZero() {
 		assertEquals(5, stack.size)
 		
-		assertEquals(listOf(), stack.popAll(0))
+		assertThat(stack.popAll(0)).isEmpty()
 		
 		assertEquals(5, stack.size)
 	}
@@ -116,8 +117,8 @@ class PopTest : StackTestBase() {
 	@DisplayName("Test popAll for negative argument")
 	fun testPopAllForNegative() {
 		assertEquals(5, stack.size)
-		
-		assertFailsWith<IllegalArgumentException> { stack.popAll(-1) }
+
+		assertThrows<IllegalArgumentException> { stack.popAll(-1) }
 		
 		assertEquals(5, stack.size)
 	}
@@ -127,7 +128,7 @@ class PopTest : StackTestBase() {
 	fun testPopAllForLarge() {
 		assertEquals(5, stack.size)
 		
-		assertFailsWith<IllegalArgumentException> { stack.popAll(6) }
+		assertThrows<IllegalArgumentException> { stack.popAll(6) }
 		
 		assertEquals(5, stack.size)
 	}

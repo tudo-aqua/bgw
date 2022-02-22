@@ -20,9 +20,9 @@ package tools.aqua.bgw.util.bidirectionalmap
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.BidirectionalMap
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertThrows
 
 class ConstructorTest : BidirectionalMapTestBase() {
 	@Test
@@ -50,8 +50,8 @@ class ConstructorTest : BidirectionalMapTestBase() {
 	fun testConstructorWithDuplicateKey() {
 		val item1 = Pair(0, 1)
 		val item2 = Pair(0, 2)
-		
-		assertFailsWith<IllegalArgumentException> {
+
+		assertThrows<IllegalArgumentException> {
 			BidirectionalMap(item1, item2)
 		}
 	}
@@ -61,8 +61,8 @@ class ConstructorTest : BidirectionalMapTestBase() {
 	fun testConstructorWithDuplicateValue() {
 		val item1 = Pair(0, 1)
 		val item2 = Pair(1, 1)
-		
-		assertFailsWith<IllegalArgumentException> {
+
+		assertThrows<IllegalArgumentException> {
 			BidirectionalMap(item1, item2)
 		}
 	}

@@ -19,10 +19,11 @@ package tools.aqua.bgw.observable.observablelist
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertThrows
 
 class RemoveTest : ObservableListTestBase() {
 	@Test
@@ -60,10 +61,10 @@ class RemoveTest : ObservableListTestBase() {
 	@Test
 	@DisplayName("Test remove at index out of bounds")
 	fun testRemoveAtOutOfBounds() {
-		assertFailsWith<IndexOutOfBoundsException> {
+		assertThrows<IndexOutOfBoundsException> {
 			list.removeAt(-1)
 		}
-		assertFailsWith<IndexOutOfBoundsException> {
+		assertThrows<IndexOutOfBoundsException> {
 			list.removeAt(5)
 		}
 	}
@@ -93,8 +94,8 @@ class RemoveTest : ObservableListTestBase() {
 		assertEquals(-4, list.removeFirst())
 		
 		checkNotified(5)
-		
-		assertFailsWith<NoSuchElementException> {
+
+		assertThrows<NoSuchElementException> {
 			list.removeFirst()
 		}
 	}
@@ -124,8 +125,8 @@ class RemoveTest : ObservableListTestBase() {
 		assertEquals(13, list.removeLast())
 		
 		checkNotified(5)
-		
-		assertFailsWith<NoSuchElementException> {
+
+		assertThrows<NoSuchElementException> {
 			list.removeLast()
 		}
 	}

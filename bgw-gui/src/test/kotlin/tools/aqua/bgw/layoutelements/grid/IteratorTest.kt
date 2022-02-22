@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import java.util.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertThrows
 
 class IteratorTest : GridPaneTestBase() {
 	@Test
@@ -51,7 +51,7 @@ class IteratorTest : GridPaneTestBase() {
 		}
 		
 		assertFalse { iterator.hasNext() }
-		assertFailsWith<NoSuchElementException> { iterator.next() }
+		assertThrows<NoSuchElementException> { iterator.next() }
 	}
 	
 	@Test
@@ -62,6 +62,6 @@ class IteratorTest : GridPaneTestBase() {
 		val iterator = emptyGrid.iterator()
 		
 		assertFalse { iterator.hasNext() }
-		assertFailsWith<NoSuchElementException> { iterator.next() }
+		assertThrows<NoSuchElementException> { iterator.next() }
 	}
 }
