@@ -32,12 +32,12 @@ Tho we recommend installing a JDK Build that already includes JavaFX to ensure y
 
 Start by adding the latest version of BGW as a dependency to your project.
 
-####Gradle
+#### Gradle
 ```gradle
 implementation("tools.aqua:bgw-core:0.5")
 ```
 
-####Maven
+#### Maven
 ```xml
 <dependency>
   <groupId>tools.aqua</groupId>
@@ -48,14 +48,14 @@ implementation("tools.aqua:bgw-core:0.5")
 
 You also need to specify the correct JVM target in your build system.
 
-####Gradle
+#### Gradle
 ```gradle
 compileKotlin {
-    kotlinOptions.jvmTarget= "11"
+    kotlinOptions.jvmTarget = "11"
 }
 ```
 
-####Maven
+#### Maven
 ```xml
 <configuration>
     <jvmTarget>11</jvmTarget>
