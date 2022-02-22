@@ -29,7 +29,10 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
-detekt { config = files(rootProject.file("contrib/detekt-rules.yml")) }
+detekt {
+  basePath = rootProject.projectDir.absolutePath
+  config = files(rootProject.file("contrib/detekt-rules.yml"))
+}
 
 spotless { kotlin { defaultFormat(rootProject) } }
 
