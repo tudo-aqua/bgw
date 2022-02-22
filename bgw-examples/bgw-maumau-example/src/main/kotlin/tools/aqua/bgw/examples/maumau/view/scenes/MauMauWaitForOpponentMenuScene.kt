@@ -65,7 +65,7 @@ class MauMauWaitForOpponentMenuScene : MenuScene(width = 300, height = 500, back
     /**
      * Stops the dot animation.
      */
-    fun stopAnimation() {
+    private fun stopAnimation() {
         timer.cancel()
     }
 }

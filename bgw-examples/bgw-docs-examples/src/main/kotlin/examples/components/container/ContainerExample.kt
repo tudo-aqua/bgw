@@ -164,7 +164,7 @@ class ContainerExample : BoardGameApplication("Container Example") {
 		}
 
 	init {
-		gameScene.addComponents(cardStack, alignmentControls, area, linearLayout, satchel,)
+		gameScene.addComponents(cardStack, alignmentControls, area, linearLayout, satchel)
 		showGameScene(gameScene)
 		show()
 	}

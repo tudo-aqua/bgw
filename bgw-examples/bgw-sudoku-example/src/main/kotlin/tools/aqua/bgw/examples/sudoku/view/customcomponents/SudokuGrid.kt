@@ -37,7 +37,7 @@ class SudokuGrid(
 	/**
 	 * Event raised upon selection of a cell.
 	 */
-	var selectedEvent: ((CellSelectedEvent) -> Unit)? = null
+	private var selectedEvent: ((CellSelectedEvent) -> Unit)? = null
 	
 	init {
 		val cellSize = size.toDouble() / 9

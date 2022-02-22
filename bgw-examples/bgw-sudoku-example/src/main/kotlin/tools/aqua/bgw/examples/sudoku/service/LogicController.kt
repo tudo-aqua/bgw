@@ -131,7 +131,7 @@ class LogicController(private val view: Refreshable) {
 			
 			if (errors.isNotEmpty())
 				view.refreshHint(errors)
-			else if (errors.isEmpty() && isFull)
+			else if (isFull)
 				view.refreshWon()
 		}
 	}

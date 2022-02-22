@@ -103,7 +103,7 @@ class SudokuChecker {
 		private fun checkDuplicates(digits : List<SudokuTuple>) : Set<SudokuTuple> {
 			val errors = mutableSetOf<SudokuTuple>()
 			
-			(digits subtract digits.distinctBy { it.value }).forEach {
+			(digits subtract digits.distinctBy { it.value }.toSet()).forEach {
 				if (it.value != null)
 					errors.addAll(digits.filter { t -> it.value == t.value })
 			}
