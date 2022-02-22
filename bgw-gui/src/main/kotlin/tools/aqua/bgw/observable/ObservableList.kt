@@ -307,7 +307,7 @@ abstract class ObservableList<T> :ValueObservable<List<T>>(), Iterable<T> {
 	 */
 	fun removeAll(elements: Collection<*>): Boolean {
 		val snapshot = this.toList()
-		val result = list.removeAll(elements)
+		val result = list.removeAll(elements.toSet())
 		
 		if (result)
 			notifyChange(oldValue = snapshot, newValue = this.toList())
@@ -332,7 +332,7 @@ abstract class ObservableList<T> :ValueObservable<List<T>>(), Iterable<T> {
 	 */
 	fun retainAll(elements: Collection<*>): Boolean {
 		val snapshot = this.toList()
-		val result = list.retainAll(elements)
+		val result = list.retainAll(elements.toSet())
 		notifyChange(oldValue = snapshot, newValue = this.toList())
 		return result
 	}

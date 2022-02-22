@@ -15,7 +15,7 @@
  *    limitations under the License.
  */
 
-@file:Suppress("TooManyFunctions")
+@file:Suppress("TooManyFunctions", "MemberVisibilityCanBePrivate")
 
 package tools.aqua.bgw.builder
 
