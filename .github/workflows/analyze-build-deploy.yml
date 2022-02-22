@@ -38,6 +38,7 @@ jobs:
     - name: Run Spotless checks
       id: spotlessCheck
       uses: gradle/gradle-build-action@v2
+      continue-on-error: true  # Remove when applied
       with:
         arguments: spotlessCheck
 
