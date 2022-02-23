@@ -189,7 +189,7 @@ naming:
   NoNameShadowing:
     active: true
   NonBooleanPropertyPrefixedWithIs:
-    active: true
+    active: false
   ObjectPropertyNaming:
     active: true
   PackageNaming:
@@ -268,7 +268,7 @@ potential-bugs:
   #NullCheckOnMutableProperty:
   #  active: true
   NullableToStringCall:
-    active: true
+    active: false
   RedundantElseInWhen:
     active: true
   UnconditionalJumpStatementInLoop:
@@ -377,11 +377,11 @@ style:
   OptionalAbstractKeyword:
     active: true
   OptionalUnit:
-    active: true
+    active: false
   OptionalWhenBraces:
-    active: true
+    active: false
   PreferToOverPairSyntax:
-    active: true
+    active: false
   ProtectedMemberInFinalClass:
     active: true
   RedundantExplicitType:
@@ -422,7 +422,7 @@ style:
   UnnecessaryLet:
     active: true
   UnnecessaryParentheses:
-    active: true
+    active: false
   UntilInsteadOfRangeTo:
     active: true
   UnusedImports:
@@ -440,7 +440,7 @@ style:
   UseCheckOrError:
     active: true
   UseDataClass:
-    active: true
+    active: false
     allowVars: true
   UseEmptyCounterpart:
     active: true
