@@ -63,11 +63,11 @@ enum class CardValue {
   companion object {
     /** Returns a complete deck from ACE to KING including TWO to SIX. */
     @Suppress("unused")
-    fun completeDeck(): EnumSet<CardValue> = EnumSet.of(
-      ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
-    )
-  
+    fun completeDeck(): EnumSet<CardValue> =
+        EnumSet.of(ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING)
+
     /** Returns a short deck from ACE to KING excluding TWO to SIX. */
-    fun shortDeck(): EnumSet<CardValue> = EnumSet.of(ACE, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING)
+    fun shortDeck(): EnumSet<CardValue> =
+        EnumSet.of(ACE, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING)
   }
 }

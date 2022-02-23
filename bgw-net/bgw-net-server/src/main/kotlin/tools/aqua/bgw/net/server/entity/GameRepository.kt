@@ -29,6 +29,6 @@ class GameRepository : ObjectRepository<Game> {
   override fun remove(obj: Game): Boolean = gameSet.remove(obj)
 
   override fun getAll(): List<Game> = gameSet.toList()
-  
+
   fun getBySessionID(sessionID: String): Game? = gameSet.find { it.sessionID == sessionID }
 }

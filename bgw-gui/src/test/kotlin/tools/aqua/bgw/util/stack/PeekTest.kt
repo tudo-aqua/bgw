@@ -17,14 +17,16 @@
 
 package tools.aqua.bgw.util.stack
 
-import org.assertj.core.api.Assertions.assertThat as assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/** Test peek function in Stack. */
 class PeekTest : StackTestBase() {
 
+  /** Tests peek on empty stack. */
   @Test
   @DisplayName("Test peek on empty Stack")
   fun testPeekOnEmptyStack() {
@@ -32,6 +34,7 @@ class PeekTest : StackTestBase() {
     assertThrows<NoSuchElementException> { emptyStack.peek() }
   }
 
+  /** Tests peekOrNull on empty stack. */
   @Test
   @DisplayName("Test peekOrNull on empty Stack")
   fun testPeekOrNullOnEmptyStack() {
@@ -39,6 +42,7 @@ class PeekTest : StackTestBase() {
     assertEquals(null, emptyStack.peekOrNull())
   }
 
+  /** Tests peek on filled stack. */
   @Test
   @DisplayName("Test peek")
   fun testPeek() {
@@ -47,6 +51,7 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekOrNull on filled stack. */
   @Test
   @DisplayName("Test peekOrNull")
   fun testPeekOrNull() {
@@ -55,6 +60,15 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll on empty stack. */
+  @Test
+  @DisplayName("Test peekAll for on empty stack")
+  fun testPeekAllOnEmptyStack() {
+    assertEquals(0, emptyStack.size)
+    assertThrows<IllegalArgumentException> { emptyStack.peekAll() }
+  }
+
+  /** Tests peekAll on filled stack. */
   @Test
   @DisplayName("Test peekAll for all elements")
   fun testPeekAllForAll() {
@@ -65,6 +79,7 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll for subset on filled stack. */
   @Test
   @DisplayName("Test peekAll for some elements")
   fun testPeekAllForSome() {
@@ -75,6 +90,7 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll for one element on filled stack. */
   @Test
   @DisplayName("Test peekAll for one element")
   fun testPeekAllForOne() {
@@ -85,6 +101,7 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll for zero elements on filled stack. */
   @Test
   @DisplayName("Test peekAll for zero argument")
   fun testPeekAllForZero() {
@@ -95,6 +112,7 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll for a negative count on filled stack. */
   @Test
   @DisplayName("Test peekAll for negative argument")
   fun testPeekAllForNegative() {
@@ -105,6 +123,7 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll with larger amount than existing on filled stack. */
   @Test
   @DisplayName("Test peekAll for large argument")
   fun testPeekAllForLarge() {

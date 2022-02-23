@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
+import java.awt.Color
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -29,12 +30,11 @@ import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_WIDTH
 import tools.aqua.bgw.examples.maumau.view.customcomponents.MenuButton
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
-import java.awt.Color
 
 /** Join game [MenuScene]. */
 class MauMauJoinGameMenuScene :
     MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
-  
+
   /** The menu [Label]. */
   private val menuLabel: Label =
       Label(
@@ -42,7 +42,7 @@ class MauMauJoinGameMenuScene :
           width = MENU_ITEM_WIDTH,
           text = "Join Game",
           font = Font(fontWeight = Font.FontWeight.BOLD))
-  
+
   /** [TextField] for the hostname or address and port. */
   val addressText: TextField =
       TextField(
@@ -50,18 +50,18 @@ class MauMauJoinGameMenuScene :
           width = MENU_ITEM_WIDTH,
           text = "127.0.0.1:8080",
           prompt = "Server address: 127.0.0.1:8080")
-  
+
   /** [TextField] for the player's name. */
   val nameText: TextField =
       TextField(height = MENU_ITEM_HEIGHT, width = MENU_ITEM_WIDTH, prompt = "Your Name")
-  
+
   /** [TextField] for the session id. */
   val sessionIDText: TextField =
       TextField(height = MENU_ITEM_HEIGHT, width = MENU_ITEM_WIDTH, prompt = "sessionID")
-  
+
   /** Join game [Button]. */
   val joinGameButton: Button = MenuButton("Join Game")
-  
+
   /** Back [Button]. */
   val backButton: Button = MenuButton("← Back")
 

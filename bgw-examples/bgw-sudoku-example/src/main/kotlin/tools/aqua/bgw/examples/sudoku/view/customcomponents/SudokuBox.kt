@@ -37,10 +37,8 @@ class SudokuBox(boxIndex: Int, size: Number, spacing: Number) :
         spacing = spacing,
         layoutFromCenter = true,
         visual = Visual.EMPTY) {
-  
-  /**
-   * Event when selecting a sudoku cell.
-   */
+
+  /** Event when selecting a sudoku cell. */
   var selectedEvent: ((CellSelectedEvent) -> Unit)? = null
 
   init {

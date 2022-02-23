@@ -17,4 +17,5 @@
 
 package tools.aqua.bgw
 
+/** Constant for accepted tolerance in double rounding. */
 const val DOUBLE_TOLERANCE: Double = 0.00000000000002

@@ -29,7 +29,7 @@ import tools.aqua.bgw.examples.maumau.service.Serialization.serialize
  */
 @Suppress("DataClassPrivateConstructor")
 data class GameActionMessage private constructor(val action: String, val card: String) {
-  
+
   /**
    * GameActionMessage data class for serialization.
    *

@@ -141,7 +141,7 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
    */
   private fun onCursorMoved(keyCode: KeyCode) {
     require(keyCode.isArrow()) { "$keyCode is not an arrow key." }
-    
+
     val selectedCell = sudokuGameScene.sudokuGrid.selectedCell ?: return
 
     var box = selectedCell.boxIndex

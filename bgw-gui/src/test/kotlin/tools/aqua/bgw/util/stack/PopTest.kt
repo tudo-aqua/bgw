@@ -23,8 +23,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/** Test pop function in Stack. */
 class PopTest : StackTestBase() {
 
+  /** Tests pop on empty stack. */
   @Test
   @DisplayName("Test pop on empty Stack")
   fun testPopOnEmptyStack() {
@@ -32,6 +34,7 @@ class PopTest : StackTestBase() {
     assertThrows<NoSuchElementException> { emptyStack.pop() }
   }
 
+  /** Tests popOrNull on empty stack. */
   @Test
   @DisplayName("Test popOrNull on empty Stack")
   fun testPopOrNullOnEmptyStack() {
@@ -39,6 +42,7 @@ class PopTest : StackTestBase() {
     assertEquals(null, emptyStack.popOrNull())
   }
 
+  /** Tests pop on filled stack. */
   @Test
   @DisplayName("Test pop")
   fun testPop() {
@@ -56,6 +60,7 @@ class PopTest : StackTestBase() {
     assertThrows<NoSuchElementException> { stack.pop() }
   }
 
+  /** Tests popOrNull on filled stack. */
   @Test
   @DisplayName("Test popOrNull")
   fun testPopOrNull() {
@@ -73,6 +78,15 @@ class PopTest : StackTestBase() {
     assertEquals(null, stack.popOrNull())
   }
 
+  /** Tests popAll on empty stack. */
+  @Test
+  @DisplayName("Test popAll on empty stack")
+  fun testPopAllOnEmptyStack() {
+    assertEquals(0, emptyStack.size)
+    assertThrows<IllegalArgumentException> { emptyStack.popAll() }
+  }
+
+  /** Tests popAll on filled stack. */
   @Test
   @DisplayName("Test popAll for all elements")
   fun testPopAllForAll() {
@@ -83,6 +97,7 @@ class PopTest : StackTestBase() {
     assertEquals(0, stack.size)
   }
 
+  /** Tests popAll for subset on filled stack. */
   @Test
   @DisplayName("Test popAll for some elements")
   fun testPopAllForSome() {
@@ -93,6 +108,7 @@ class PopTest : StackTestBase() {
     assertEquals(2, stack.size)
   }
 
+  /** Tests popAll for one element on filled stack. */
   @Test
   @DisplayName("Test popAll for one element")
   fun testPopAllForOne() {
@@ -103,6 +119,7 @@ class PopTest : StackTestBase() {
     assertEquals(4, stack.size)
   }
 
+  /** Tests popAll for zero elements on filled stack. */
   @Test
   @DisplayName("Test popAll for zero argument")
   fun testPopAllForZero() {
@@ -113,6 +130,7 @@ class PopTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests popAll for a negative count on filled stack. */
   @Test
   @DisplayName("Test popAll for negative argument")
   fun testPopAllForNegative() {
@@ -123,6 +141,7 @@ class PopTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests popAll with larger amount than existing on filled stack. */
   @Test
   @DisplayName("Test popAll for large argument")
   fun testPopAllForLarge() {

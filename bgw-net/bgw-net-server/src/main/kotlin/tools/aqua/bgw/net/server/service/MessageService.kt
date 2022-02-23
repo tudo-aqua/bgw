@@ -37,7 +37,7 @@ class MessageService(
 ) {
   private val mapper = ObjectMapper().registerModule(kotlinModule())
 
-  private fun WebSocketSession.sendMessage(message: Message) : Unit =
+  private fun WebSocketSession.sendMessage(message: Message): Unit =
       sendMessage(TextMessage(mapper.writeValueAsString(message)))
 
   private fun Game.broadcastMessage(sender: Player, msg: Message) {

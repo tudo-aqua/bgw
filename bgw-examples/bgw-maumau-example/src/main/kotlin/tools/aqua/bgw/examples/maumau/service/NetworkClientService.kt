@@ -50,7 +50,7 @@ class NetworkClientService(
         endGameClass = GameOverMessage::class.java,
         host = host,
         port = port) {
-  
+
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
 

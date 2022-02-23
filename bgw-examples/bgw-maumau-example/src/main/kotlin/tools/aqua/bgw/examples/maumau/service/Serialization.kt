@@ -34,7 +34,7 @@ object Serialization {
     return MauMauCard(
         cardSuit = CardSuit.valueOf(split[1]), cardValue = CardValue.valueOf(split[0]))
   }
-  
+
   /** Serializes game into game initialization exchange format. */
   fun serializeInitMessage(game: MauMauGame): InitGameMessage =
       InitGameMessage(
