@@ -22,6 +22,6 @@ import tools.aqua.bgw.event.Event
 /**
  * Event for cell selection.
  *
- * @param cell Selected [SudokuCell].
+ * @property cell Selected [SudokuCell].
  */
 class CellSelectedEvent(val cell: SudokuCell) : Event()

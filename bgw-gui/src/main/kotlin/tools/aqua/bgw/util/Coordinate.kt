@@ -19,8 +19,8 @@
 
 package tools.aqua.bgw.util
 
-import tools.aqua.bgw.util.Trig.Companion.cosD
-import tools.aqua.bgw.util.Trig.Companion.sinD
+import tools.aqua.bgw.util.Trig.cosD
+import tools.aqua.bgw.util.Trig.sinD
 
 /**
  * A Coordinate containing [xCoord] and [yCoord].

@@ -36,8 +36,9 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * @constructor Creates a [DiceAnimation] for the given [DiceView].
  *
+ * @param T Generic [DiceView].
  * @param dice [DiceView] to animate.
- * @param toSide Resulting side after roll.
+ * @property toSide Resulting side after roll.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of steps. Default: [DEFAULT_ANIMATION_SPEED].
  */

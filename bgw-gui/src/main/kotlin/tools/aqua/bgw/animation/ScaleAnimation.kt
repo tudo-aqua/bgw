@@ -29,6 +29,7 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * @constructor Creates a [ScaleAnimation] for the given [ComponentView].
  *
+ * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate
  * @param fromScaleX Initial X position. Default: Current [ComponentView.posX].
  * @param toScaleX Resulting X position. Default: Current [ComponentView.posX].

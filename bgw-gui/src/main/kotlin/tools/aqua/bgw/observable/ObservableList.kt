@@ -127,9 +127,9 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun add(element: T): Boolean {
     val snapshot = this.toList()
-    val result = list.add(element)
+    val isAdded = list.add(element)
     notifyChange(oldValue = snapshot, newValue = this.toList())
-    return result
+    return isAdded
   }
 
   /**
@@ -166,11 +166,11 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun remove(o: T): Boolean {
     val snapshot = this.toList()
-    val result = list.remove(o)
+    val isRemoved = list.remove(o)
 
-    if (result) notifyChange(oldValue = snapshot, newValue = this.toList())
+    if (isRemoved) notifyChange(oldValue = snapshot, newValue = this.toList())
 
-    return result
+    return isRemoved
   }
 
   /**
@@ -182,9 +182,9 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun removeAt(index: Int): T {
     val snapshot = this.toList()
-    val result = list.removeAt(index)
+    val isRemoved = list.removeAt(index)
     notifyChange(oldValue = snapshot, newValue = this.toList())
-    return result
+    return isRemoved
   }
 
   /**
@@ -193,11 +193,11 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun removeFirstOrNull(): T? {
     val snapshot = this.toList()
-    val result = list.removeFirstOrNull()
+    val isRemoved = list.removeFirstOrNull()
 
-    if (result != null) notifyChange(oldValue = snapshot, newValue = this.toList())
+    if (isRemoved != null) notifyChange(oldValue = snapshot, newValue = this.toList())
 
-    return result
+    return isRemoved
   }
 
   /**
@@ -213,11 +213,11 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun removeLastOrNull(): T? {
     val snapshot = this.toList()
-    val result = list.removeLastOrNull()
+    val isRemoved = list.removeLastOrNull()
 
-    if (result != null) notifyChange(oldValue = snapshot, newValue = this.toList())
+    if (isRemoved != null) notifyChange(oldValue = snapshot, newValue = this.toList())
 
-    return result
+    return isRemoved
   }
 
   /**
@@ -252,9 +252,9 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun addAll(elements: Collection<T>): Boolean {
     val snapshot = this.toList()
-    val result = list.addAll(elements)
+    val isAdded = list.addAll(elements)
     notifyChange(oldValue = snapshot, newValue = this.toList())
-    return result
+    return isAdded
   }
 
   /**
@@ -272,9 +272,9 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun addAll(index: Int, elements: Collection<T>): Boolean {
     val snapshot = this.toList()
-    val result = list.addAll(index, elements)
+    val isAdded = list.addAll(index, elements)
     notifyChange(oldValue = snapshot, newValue = this.toList())
-    return result
+    return isAdded
   }
 
   /**
@@ -293,11 +293,11 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun removeAll(elements: Collection<*>): Boolean {
     val snapshot = this.toList()
-    val result = list.removeAll(elements.toSet())
+    val isRemoved = list.removeAll(elements.toSet())
 
-    if (result) notifyChange(oldValue = snapshot, newValue = this.toList())
+    if (isRemoved) notifyChange(oldValue = snapshot, newValue = this.toList())
 
-    return result
+    return isRemoved
   }
 
   /**
@@ -319,9 +319,9 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun retainAll(elements: Collection<*>): Boolean {
     val snapshot = this.toList()
-    val result = list.retainAll(elements.toSet())
+    val isRetained = list.retainAll(elements.toSet())
     notifyChange(oldValue = snapshot, newValue = this.toList())
-    return result
+    return isRetained
   }
 
   /**
@@ -380,11 +380,11 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    */
   fun removeIf(filter: Predicate<in T>): Boolean {
     val snapshot = this.toList()
-    val result = list.removeIf(filter)
+    val isRemoved = list.removeIf(filter)
 
-    if (result) notifyChange(oldValue = snapshot, newValue = this.toList())
+    if (isRemoved) notifyChange(oldValue = snapshot, newValue = this.toList())
 
-    return result
+    return isRemoved
   }
 
   /**

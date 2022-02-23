@@ -24,7 +24,7 @@ import kotlin.streams.toList
 import tools.aqua.bgw.examples.sudoku.entity.Difficulty
 import tools.aqua.bgw.examples.sudoku.entity.Settings
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
-import tools.aqua.bgw.examples.sudoku.service.SudokuChecker.Companion.checkSudoku
+import tools.aqua.bgw.examples.sudoku.service.SudokuChecker.checkSudoku
 import tools.aqua.bgw.examples.sudoku.view.Refreshable
 
 /** Controller managing game actions. */
@@ -50,7 +50,8 @@ class LogicController(private val view: Refreshable) {
 
           view.refreshTimer(
               String.format(
-                  "%02d:%02d:%02d",
+                  locale = Locale.getDefault(),
+                  format = "%02d:%02d:%02d",
                   TimeUnit.MILLISECONDS.toHours(millis),
                   TimeUnit.MILLISECONDS.toMinutes(millis) -
                       TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
@@ -84,13 +85,9 @@ class LogicController(private val view: Refreshable) {
     val formatted = Array(9) { Array(3) { Array(3) { Sudoku.SudokuCell() } } }
     val sudokuInput =
         checkNotNull(
-            javaClass
-                .classLoader
-                .getResourceAsStream(difficulty.file)
-                ?.bufferedReader()
-                ?.lines()
-                ?.toList()
-                ?.randomOrNull())
+            javaClass.classLoader.getResourceAsStream(difficulty.file)?.run {
+              bufferedReader().lines().toList().randomOrNull()
+            })
 
     check(sudokuInput.length == 81)
 

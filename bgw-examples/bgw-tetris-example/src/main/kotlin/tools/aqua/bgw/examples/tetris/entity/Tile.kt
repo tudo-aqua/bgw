@@ -22,17 +22,17 @@ import tools.aqua.bgw.visual.ImageVisual
 /**
  * Tile representation.
  *
- * @param color The Tile's color.
+ * @property color The Tile's color.
  */
 data class Tile(val color: Color?) {
   /** Associated [ImageVisual]. */
-  val imageVisual: ImageVisual? = color?.imageVisual?.copy()
+  val imageVisual: ImageVisual? = color?.run { imageVisual.copy() }
 }
 
 /**
  * Enum for available colors.
  *
- * @param imageVisual Associated [ImageVisual].
+ * @property imageVisual Associated [ImageVisual].
  */
 enum class Color(val imageVisual: ImageVisual) {
   GRAY(ImageVisual("gray.png")),

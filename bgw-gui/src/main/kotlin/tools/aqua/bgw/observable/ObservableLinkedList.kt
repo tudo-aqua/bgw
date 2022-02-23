@@ -24,9 +24,10 @@ import java.util.*
  *
  * @constructor Creates an [ObservableLinkedList] with given initial elements.
  *
+ * @param T Type of [List] elements.
  * @param elements Initial elements in this [ObservableList].
  */
-open class ObservableLinkedList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
+open class ObservableLinkedList<T>(elements: Collection<T> = emptyList()) : ObservableList<T>() {
   /** List field. */
   override val list: MutableList<T> = LinkedList(elements)
 }

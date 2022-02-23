@@ -38,6 +38,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates an [Area].
  *
+ * @param T Generic [GameComponentView].
  * @param posX Horizontal coordinate for this [Area]. Default: 0.
  * @param posY Vertical coordinate for this [Area]. Default: 0.
  * @param width Width for this [Area]. Default: [DEFAULT_AREA_WIDTH].

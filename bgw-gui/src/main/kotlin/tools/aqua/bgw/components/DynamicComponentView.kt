@@ -19,8 +19,6 @@
 
 package tools.aqua.bgw.components
 
-import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.observable.properties.BooleanProperty
@@ -39,8 +37,8 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [DynamicComponentView].
  * @param visual Visual for this [DynamicComponentView].
  *
- * @see BoardGameScene
- * @see MenuScene
+ * @see tools.aqua.bgw.core.BoardGameScene
+ * @see tools.aqua.bgw.core.MenuScene
  */
 abstract class DynamicComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) :

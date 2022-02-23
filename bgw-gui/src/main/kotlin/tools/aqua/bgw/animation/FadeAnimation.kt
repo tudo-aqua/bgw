@@ -29,7 +29,8 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * @constructor Creates a [FadeAnimation] for the given [ComponentView].
  *
- * @param componentView [ComponentView] to animate
+ * @param T Generic [ComponentView].
+ * @param componentView [ComponentView] to animate.
  * @param fromOpacity Initial opacity. Default: Current [ComponentView.opacity].
  * @param toOpacity Resulting opacity. Default: Current [ComponentView.opacity].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].

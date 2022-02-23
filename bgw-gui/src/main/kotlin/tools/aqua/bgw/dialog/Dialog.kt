@@ -24,12 +24,12 @@ package tools.aqua.bgw.dialog
  *
  * @constructor Private constructor. Refer to secondary constructors.
  *
- * @param dialogType The [DialogType] of the alert. Affects the displayed icon.
- * @param title Title to be shown.
- * @param header Headline to be shown in the dialogs content.
- * @param message Message to be shown.
- * @param exception [Throwable] to be shown in expandable content.
- * @param buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
+ * @property dialogType The [DialogType] of the alert. Affects the displayed icon.
+ * @property title Title to be shown.
+ * @property header Headline to be shown in the dialogs content.
+ * @property message Message to be shown.
+ * @property exception [Throwable] to be shown in expandable content.
+ * @property buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
  * used if you don't pass any [ButtonType]s.
  */
 class Dialog
@@ -59,7 +59,7 @@ private constructor(
       header: String,
       message: String,
       vararg buttons: ButtonType
-  ) : this(dialogType, title, header, message, Exception(), *buttons) {
+  ) : this(dialogType, title, header, message, Exception("empty"), *buttons) {
     require(dialogType != DialogType.EXCEPTION) {
       "To create an Exception dialog use exception dialog constructor."
     }

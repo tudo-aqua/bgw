@@ -36,6 +36,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [CardStack].
  *
+ * @param T Generic [CardView].
  * @param posX Horizontal coordinate for this [CardStack]. Default: 0.
  * @param posY Vertical coordinate for this [CardStack]. Default: 0.
  * @param width Width for this [CardStack]. Default: [DEFAULT_CARD_STACK_WIDTH].

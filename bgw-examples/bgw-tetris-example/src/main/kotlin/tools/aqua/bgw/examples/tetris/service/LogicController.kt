@@ -119,7 +119,7 @@ class LogicController(private val view: Refreshable) {
           blocked = true
         }
         KeyCode.UP -> rotatePiece()
-        else -> throw IllegalStateException("$keyCode is not an arrow key.")
+        else -> error("$keyCode is not an arrow key.")
       }
       view.refresh(tetris)
     }
@@ -198,7 +198,7 @@ class LogicController(private val view: Refreshable) {
             offsetX = -1
             Piece(Array(1) { Array(4) { t -> tetris.currentPiece.tiles[t][0] } })
           }
-          else -> throw IllegalStateException()
+          else -> error("Invalid piece height.")
         }
 
     // Move to the right if out of bounds

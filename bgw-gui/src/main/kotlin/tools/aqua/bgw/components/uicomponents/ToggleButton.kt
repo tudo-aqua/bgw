@@ -19,8 +19,6 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_HEIGHT
-import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_WIDTH
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_WIDTH
 import tools.aqua.bgw.util.Font
@@ -56,8 +54,8 @@ import tools.aqua.bgw.visual.Visual
 class ToggleButton(
     posX: Number = 0,
     posY: Number = 0,
-    width: Number = DEFAULT_RADIO_BUTTON_WIDTH,
-    height: Number = DEFAULT_RADIO_BUTTON_HEIGHT,
+    width: Number = DEFAULT_TOGGLE_BUTTON_WIDTH,
+    height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
     font: Font = Font(),
     isSelected: Boolean = false,
     toggleGroup: ToggleGroup = ToggleGroup(),

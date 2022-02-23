@@ -35,9 +35,9 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.util.Duration
 import kotlin.math.min
-import tools.aqua.bgw.builder.FXConverters.Companion.toButtonType
-import tools.aqua.bgw.builder.SceneBuilder.Companion.buildGame
-import tools.aqua.bgw.builder.SceneBuilder.Companion.buildMenu
+import tools.aqua.bgw.builder.FXConverters.toButtonType
+import tools.aqua.bgw.builder.SceneBuilder.buildGame
+import tools.aqua.bgw.builder.SceneBuilder.buildMenu
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -57,7 +57,7 @@ internal class Frontend : Application() {
   override fun start(primaryStage: Stage) {
     Thread.setDefaultUncaughtExceptionHandler { _, e ->
       e.printStackTrace()
-      showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message ?: "", e))
+      showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message.orEmpty(), e))
     }
 
     startApplication(primaryStage)
@@ -161,7 +161,7 @@ internal class Frontend : Application() {
       scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
         if (primaryStage != null) {
           menuPane = buildMenu(scene)
-          boardGameScene?.internalLockedProperty?.value = true
+          boardGameScene?.run { internalLockedProperty.value = true }
 
           updateScene()
           fadeMenu(true, fadeTime)
@@ -245,7 +245,7 @@ internal class Frontend : Application() {
 
       if (activePanes.size == 2) {
         gamePane?.effect = GaussianBlur(DEFAULT_BLUR_RADIUS)
-        boardGameScene?.internalLockedProperty?.value = true
+        boardGameScene?.run { internalLockedProperty.value = true }
       }
 
       scenePane =
@@ -430,7 +430,7 @@ internal class Frontend : Application() {
               onFinished =
                   EventHandler {
                     if (!fadeIn) {
-                      boardGameScene?.internalLockedProperty?.value = false
+                      boardGameScene?.run { internalLockedProperty.value = false }
                       updateScene()
                     }
                   }

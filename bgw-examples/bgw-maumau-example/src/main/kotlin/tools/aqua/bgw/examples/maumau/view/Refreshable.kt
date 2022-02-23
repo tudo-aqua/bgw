@@ -100,7 +100,7 @@ interface Refreshable {
   /** Show error message from joining a game. */
   fun onJoinGameError(message: String)
 
-  /** Show generic server error */
+  /** Show generic server error. */
   fun onServerError()
   // endregion
 }

@@ -26,11 +26,11 @@ import java.io.File
  *
  * @constructor Creates a [FileDialog] with given [FileDialogMode].
  *
- * @param mode The [Dialog]'s mode.
- * @param title The [Dialog]'s title text.
- * @param initialFileName The initial file name in the file name text box.
- * @param initialDirectory The initial directory where to open the file chooser.
- * @param extensionFilters Extensions filters for this file chooser.
+ * @property mode The [Dialog]'s mode.
+ * @property title The [Dialog]'s title text.
+ * @property initialFileName The initial file name in the file name text box.
+ * @property initialDirectory The initial directory where to open the file chooser.
+ * @property extensionFilters Extensions filters for this file chooser.
  *
  * @see FileDialogMode
  * @see ExtensionFilter
@@ -40,5 +40,5 @@ data class FileDialog(
     val title: String = "",
     val initialFileName: String = "",
     val initialDirectory: File? = null,
-    val extensionFilters: List<ExtensionFilter> = listOf()
+    val extensionFilters: List<ExtensionFilter> = emptyList()
 )

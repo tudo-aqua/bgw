@@ -30,6 +30,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [Pane].
  *
+ * @param T Generic [ComponentView].
  * @param posX Horizontal coordinate for this [Pane]. Default: 0.
  * @param posY Vertical coordinate for this [Pane]. Default: 0.
  * @param width Width for this [Pane].
@@ -92,6 +93,7 @@ open class Pane<T : ComponentView>(
    * Adds a [ComponentView] to this [Pane].
    *
    * @param component Component to add.
+   * @param index Index at which [component] will be added (Z-Height).
    *
    * @throws IllegalArgumentException If [component] is already contained.
    * @throws IllegalArgumentException If [index] is out of bounds for [components].

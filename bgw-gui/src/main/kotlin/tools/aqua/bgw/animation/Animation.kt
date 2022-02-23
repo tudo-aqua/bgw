@@ -24,12 +24,12 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
 /**
  * [Animation] baseclass.
  *
- * @param duration Duration in milliseconds.
+ * @property duration Duration in milliseconds.
  */
 sealed class Animation(val duration: Int) {
 
   /** [Boolean] indicating whether the [Animation] is currently running. */
-  var running: Boolean = false
+  var isRunning: Boolean = false
 
   /** Gets invoked when [Animation] has finished. */
   var onFinished: ((AnimationFinishedEvent) -> Unit)? = null

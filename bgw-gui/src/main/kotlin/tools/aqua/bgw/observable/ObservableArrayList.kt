@@ -22,9 +22,10 @@ package tools.aqua.bgw.observable
  *
  * @constructor Creates an [ObservableArrayList] with given initial elements.
  *
+ * @param T Type of [List] elements.
  * @param elements Initial elements in this [ObservableList].
  */
-open class ObservableArrayList<T>(elements: Collection<T> = listOf()) : ObservableList<T>() {
+open class ObservableArrayList<T>(elements: Collection<T> = emptyList()) : ObservableList<T>() {
   /** List field. */
   override val list: MutableList<T> = ArrayList(elements)
 }

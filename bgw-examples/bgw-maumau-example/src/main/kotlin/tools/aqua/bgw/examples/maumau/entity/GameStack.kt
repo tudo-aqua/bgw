@@ -17,11 +17,11 @@
 
 package tools.aqua.bgw.examples.maumau.entity
 
-/** The game stack with open cards */
+/** The game stack with open cards. */
 class GameStack : MauMauStack() {
 
   /**
-   * Adds [card] on top of this stack
+   * Adds [card] on top of this stack.
    *
    * @param card Card to be played and therefore added to this stack.
    */

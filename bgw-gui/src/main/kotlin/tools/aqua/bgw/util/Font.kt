@@ -30,11 +30,11 @@ import tools.aqua.bgw.util.Font.FontWeight
  *
  * @constructor Creates a [Font].
  *
- * @param size Size of this Font in `px`. Maybe a floating-point value. Default: 14.
- * @param color Color of this font. Default: [java.awt.Color.BLACK].
- * @param family Font family as a String for this Font. Default: "Arial".
- * @param fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
- * @param fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
+ * @property size Size of this Font in `px`. Maybe a floating-point value. Default: 14.
+ * @property color Color of this font. Default: [java.awt.Color.BLACK].
+ * @property family Font family as a String for this Font. Default: "Arial".
+ * @property fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
+ * @property fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
  *
  * @see FontStyle
  */

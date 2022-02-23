@@ -17,9 +17,7 @@
 
 package tools.aqua.bgw.observable.observablelist
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,7 +27,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
   @Test
   @DisplayName("Test indices")
   fun testIndices() {
-    assertEquals((0 until 5), list.indices)
+    assertEquals(0 until 5, list.indices)
 
     checkNotNotified()
   }

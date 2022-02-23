@@ -30,6 +30,7 @@ import tools.aqua.bgw.core.Scene
  *
  * @constructor Creates a [MovementAnimation] for the given [ComponentView].
  *
+ * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate
  * @param fromX Initial X position. Default: Current [ComponentView.posX].
  * @param toX Resulting X position. Default: Current [ComponentView.posX].
@@ -86,6 +87,7 @@ class MovementAnimation<T : ComponentView>(
      * Creates a [MovementAnimation] to another component's position. Moves given [ComponentView]
      * relative to parents anchor point.
      *
+     * @param T Generic [ComponentView].
      * @param componentView [ComponentView] to animate
      * @param toComponentViewPosition Defines the destination [ComponentView] to move the given
      * component to.

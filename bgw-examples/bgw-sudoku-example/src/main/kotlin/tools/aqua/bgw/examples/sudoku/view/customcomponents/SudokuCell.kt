@@ -25,9 +25,9 @@ import tools.aqua.bgw.visual.ColorVisual
 /**
  * A box of the sudoku containing 9 [SudokuCell]s.
  *
- * @param boxIndex Index of the box. Must be in 0..8.
- * @param rowIndex Index of the row. Must be in 0..2.
- * @param colIndex Index of the column. Must be in 0..2.
+ * @property boxIndex Index of the box. Must be in 0..8.
+ * @property rowIndex Index of the row. Must be in 0..2.
+ * @property colIndex Index of the column. Must be in 0..2.
  * @param size Size of this cell.
  */
 class SudokuCell(val boxIndex: Int, val rowIndex: Int, val colIndex: Int, size: Number) :
@@ -38,7 +38,7 @@ class SudokuCell(val boxIndex: Int, val rowIndex: Int, val colIndex: Int, size: 
 
   /** [Property] for the [value] of this cell. */
   private val valueProperty =
-      Property<Int?>(null).apply { this.addListener { _, nV -> text = nV?.toString() ?: "" } }
+      Property<Int?>(null).apply { this.addListener { _, nV -> text = nV?.toString().orEmpty() } }
 
   /** Value of this cell. */
   var value: Int?

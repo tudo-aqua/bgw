@@ -24,6 +24,6 @@ package tools.aqua.bgw.event
  *
  * @constructor Creates a [MouseEvent] with given [button].
  *
- * @param button Corresponding mouse button enum value.
+ * @property button Corresponding mouse button enum value.
  */
 class MouseEvent(val button: MouseButtonType) : InputEvent()

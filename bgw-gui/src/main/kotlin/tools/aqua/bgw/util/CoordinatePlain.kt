@@ -24,10 +24,10 @@ package tools.aqua.bgw.util
  *
  * @constructor Creates a [CoordinatePlain] with given corner coordinates.
  *
- * @param topLeft Top left corner coordinate.
- * @param topRight Top right corner coordinate.
- * @param bottomLeft Bottom left corner coordinate.
- * @param bottomRight Bottom right corner coordinate.
+ * @property topLeft Top left corner coordinate.
+ * @property topRight Top right corner coordinate.
+ * @property bottomLeft Bottom left corner coordinate.
+ * @property bottomRight Bottom right corner coordinate.
  *
  * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
  * than BOTTOM_RIGHT corner coordinate.

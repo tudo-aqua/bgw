@@ -133,9 +133,9 @@ open class BoardGameApplication(
   var onWindowClosed: (() -> Unit)? = null
 
   init {
-    check(!instantiated) { "Unable to create second application." }
+    check(!isInstantiated) { "Unable to create second application." }
 
-    instantiated = true
+    isInstantiated = true
 
     title = windowTitle
 
@@ -263,7 +263,7 @@ open class BoardGameApplication(
 
   companion object {
     /** Static holder for instantiation of BoardGameApplication. */
-    private var instantiated: Boolean = false
+    private var isInstantiated: Boolean = false
 
     /**
      * Executes given [task] on the UI thread. Use this method to update properties of

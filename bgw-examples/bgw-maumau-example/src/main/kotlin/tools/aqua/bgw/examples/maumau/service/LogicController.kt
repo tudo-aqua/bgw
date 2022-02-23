@@ -66,6 +66,8 @@ class LogicController(val view: Refreshable) {
   /**
    * Initializes game with given cards.
    *
+   * @param player1 Local player.
+   * @param player2 Remote or secondary player.
    * @param drawStack Draw stack cards.
    * @param gameStack First card on Game Stack.
    * @param hostCards Hand of host player.
@@ -136,7 +138,7 @@ class LogicController(val view: Refreshable) {
     }
   }
 
-  /** Select a suit by jack effect, advances player */
+  /** Select a suit by jack effect, advances player. */
   fun selectSuit(suit: CardSuit, isCurrentPlayer: Boolean) {
     game.nextSuit = suit
     view.refreshSuitSelected()
@@ -152,7 +154,7 @@ class LogicController(val view: Refreshable) {
     }
   }
 
-  /** Play a card to the GameStack if allowed, advances player */
+  /** Play a card to the GameStack if allowed, advances player. */
   fun playCard(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean): Boolean {
     if (isCurrentPlayer && !checkRules(card)) return false
 
@@ -201,14 +203,14 @@ class LogicController(val view: Refreshable) {
     return true
   }
 
-  /** Play a card without effect */
+  /** Play a card without effect. */
   private fun playNoEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
     game.nextSuit = card.cardSuit
     game.gameStack.playCard(card)
     view.refreshCardPlayed(card, animated, isCurrentPlayer)
   }
 
-  /** Play a jack card and show suit selection */
+  /** Play a jack card and show suit selection. */
   private fun playJackEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
     playNoEffect(card, animated, isCurrentPlayer)
 
@@ -217,7 +219,7 @@ class LogicController(val view: Refreshable) {
     }
   }
 
-  /** Play a seven card and let opponent draw two */
+  /** Play a seven card and let opponent draw two. */
   private fun playSevenEffect(card: MauMauCard, animated: Boolean, isCurrentPlayer: Boolean) {
     playNoEffect(card, animated, isCurrentPlayer)
 
@@ -231,7 +233,7 @@ class LogicController(val view: Refreshable) {
     }
   }
 
-  /** Checks play rules */
+  /** Checks play rules. */
   fun checkRules(card: MauMauCard): Boolean =
       card.cardValue == CardValue.JACK ||
           card.cardSuit == game.nextSuit ||
@@ -278,7 +280,7 @@ class LogicController(val view: Refreshable) {
   }
 
   // region helper
-  /** Returns player instance */
+  /** Returns player instance. */
   private fun getPlayer(isCurrentPlayer: Boolean) = game.players[if (isCurrentPlayer) 0 else 1]
 
   /** Generates a full set of MauMauCards. */

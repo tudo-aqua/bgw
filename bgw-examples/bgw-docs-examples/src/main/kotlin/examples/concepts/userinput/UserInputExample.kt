@@ -37,14 +37,8 @@ class UserInputExample : BoardGameApplication("User input example") {
 
   private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
-  @Suppress("UNUSED_PARAMETER")
-  private fun handleMouseClicked(mouseEvent: MouseEvent) {
-    button.text = "someone clicked on me!"
-  }
-
   init {
     // handling user input on ComponentView
-
     button.onMouseClicked = this::handleMouseClicked
 
     button.onMousePressed = { mouseEvent -> button.text = "pressed ${mouseEvent.button}" }
@@ -74,5 +68,10 @@ class UserInputExample : BoardGameApplication("User input example") {
 
     showGameScene(gameScene.apply { addComponents(button, token) })
     show()
+  }
+
+  @Suppress("UNUSED_PARAMETER")
+  private fun handleMouseClicked(mouseEvent: MouseEvent) {
+    button.text = "someone clicked on me!"
   }
 }

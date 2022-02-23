@@ -24,11 +24,12 @@ package tools.aqua.bgw.components.uicomponents
  *
  * @constructor Creates a [TableColumn].
  *
- * @param title The title for this [TableColumn]. It gets displayed in the header row of the
+ * @param T [TableView] content type.
+ * @property title The title for this [TableColumn]. It gets displayed in the header row of the
  * [TableView].
- * @param width The [width] for this [TableColumn].
- * @param formatFunction The format function for this [TableColumn]. It gets applied to each item in
- * the [TableView] to get a [String] for its cell.
+ * @property width The [width] for this [TableColumn].
+ * @property formatFunction The format function for this [TableColumn]. It gets applied to each item
+ * in the [TableView] to get a [String] for its cell.
  *
  * @see TableView
  */

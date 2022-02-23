@@ -32,9 +32,10 @@ import tools.aqua.bgw.util.Font
  * @param posY Vertical coordinate for this [TextField]. Default: 0.
  * @param width Width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
  * @param height Height for this [TextField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
+ * @param text Initial text for this [TextField]. Default: empty String.
  * @param prompt Prompt for this [TextField]. This gets displayed as a prompt to the user whenever
  * the label is an empty string. Default: empty string.
- * @param text Initial text for this [TextField]. Default: empty String.
+ * @param font [Font] to be used to display [text].
  *
  * @see TextArea
  */

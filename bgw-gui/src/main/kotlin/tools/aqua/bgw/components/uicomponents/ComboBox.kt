@@ -37,13 +37,14 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [ComboBox].
  *
+ * @param T Generic [ComboBox] content.
  * @param posX Horizontal coordinate for this [ComboBox]. Default: 0.
  * @param posY Vertical coordinate for this [ComboBox]. Default: 0.
  * @param width Width for this [ComboBox]. Default: [DEFAULT_COMBOBOX_WIDTH].
  * @param height Height for this [ComboBox]. Default: [DEFAULT_COMBOBOX_HEIGHT].
- * @param prompt Prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever
- * the [selectedItemProperty] value is `null`.Default: empty string.
  * @param font [Font] to be used for the options. Default: default [Font] constructor.
+ * @property prompt Prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever
+ * the [selectedItemProperty] value is `null`.Default: empty string.
  * @param items The initial selection of items. Default: empty list.
  * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
  */
@@ -54,7 +55,7 @@ open class ComboBox<T>(
     height: Number = DEFAULT_COMBOBOX_HEIGHT,
     font: Font = Font(),
     val prompt: String = "",
-    items: List<T> = listOf(),
+    items: List<T> = emptyList(),
     formatFunction: ((T) -> String)? = null,
 ) :
     UIComponent(
@@ -76,7 +77,7 @@ open class ComboBox<T>(
    *
    * @see observableItemsList
    */
-  var items: MutableList<T>
+  var items: List<T>
     get() = observableItemsList.list
     set(value) {
       observableItemsList.clear()

@@ -24,12 +24,12 @@ import tools.aqua.bgw.util.Coordinate
 /**
  * [DragDataObject] data class.
  *
- * @param draggedComponent currently dragged [DynamicComponentView].
- * @param draggedStackPane stackPane of currently dragged [DynamicComponentView].
- * @param mouseStartCoord mouse coordinate relative to [draggedComponent] at drag start.
- * @param posStartCoord coordinate of [draggedComponent] at drag start.
- * @param relativeParentRotation rotation of [draggedComponent] relative to parent.
- * @param rollback rollback function to roll back changes made during drag.
+ * @property draggedComponent currently dragged [DynamicComponentView].
+ * @property draggedStackPane stackPane of currently dragged [DynamicComponentView].
+ * @property mouseStartCoord mouse coordinate relative to [draggedComponent] at drag start.
+ * @property posStartCoord coordinate of [draggedComponent] at drag start.
+ * @property relativeParentRotation rotation of [draggedComponent] relative to parent.
+ * @property rollback rollback function to roll back changes made during drag.
  */
 internal class DragDataObject(
     val draggedComponent: DynamicComponentView,

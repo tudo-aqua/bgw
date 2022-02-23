@@ -24,6 +24,7 @@ package tools.aqua.bgw.observable.properties
  *
  * @constructor Creates a [Property] with given initial value.
  *
+ * @param T Type of boxed data.
  * @param initialValue Initial value of this property.
  */
 open class Property<T>(initialValue: T) : ReadonlyProperty<T>(initialValue = initialValue) {

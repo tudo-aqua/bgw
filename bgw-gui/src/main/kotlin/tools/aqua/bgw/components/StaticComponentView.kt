@@ -32,6 +32,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [StaticComponentView].
  *
+ * @param T Generic [ComponentView].
  * @param posX The X coordinate for this [StaticComponentView] relative to its container.
  * @param posY The Y coordinate for this [StaticComponentView] relative to its container.
  * @param width Width for this [StaticComponentView].

@@ -61,14 +61,14 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
             text = "I am a CheckBox.",
             alignment = Alignment.CENTER_LEFT)
 
-    checkBox.allowIndeterminate = true
+    checkBox.isIndeterminateAllowed = true
 
-    checkBox.checkedProperty.addListener { _, newValue ->
+    checkBox.isCheckedProperty.addListener { _, newValue ->
       outputLabel.text =
           if (newValue) "The check box is checked!" else "The check box is unchecked!"
     }
 
-    checkBox.indeterminateProperty.addListener { _, newValue ->
+    checkBox.isIndeterminateProperty.addListener { _, newValue ->
       if (newValue) outputLabel.text = "The check box is indeterminate!"
     }
 
@@ -101,7 +101,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 
     comboBox.formatFunction = { "Option ${it.toInt()}" }
 
-    comboBox.items = mutableListOf(0.0, 1.0, 2.0)
+    comboBox.items = listOf(0.0, 1.0, 2.0)
 
     comboBox.selectedItemProperty.addListener { _, newValue ->
       outputLabel.text = "Combo box selection is : $newValue"

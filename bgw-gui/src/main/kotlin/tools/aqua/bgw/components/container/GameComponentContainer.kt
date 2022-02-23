@@ -33,6 +33,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * It provides the list to store [GameComponentView]s and some useful methods to work on said list.
  *
+ * @param T Generic [GameComponentView].
  * @param posX horizontal coordinate for this [GameComponentContainer].
  * @param posY vertical coordinate for this [GameComponentContainer].
  * @param width width for this [GameComponentContainer].
@@ -106,6 +107,7 @@ sealed class GameComponentContainer<T : GameComponentView>(
    * Adds a [GameComponentView] to this [GameComponentContainer].
    *
    * @param component Component to add.
+   * @param index Index at which [component] will be added (Z-Height).
    *
    * @throws IllegalArgumentException If [component] is already contained.
    * @throws IllegalArgumentException If [index] is out of bounds for [components].

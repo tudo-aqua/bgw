@@ -26,7 +26,7 @@ import tools.aqua.bgw.components.ComponentView
  *
  * @constructor Creates a [DragEvent] containing [draggedComponent].
  *
- * @param draggedComponent Currently dragged [ComponentView].
+ * @property draggedComponent Currently dragged [ComponentView].
  *
  * @see DropEvent
  */

@@ -77,9 +77,9 @@ class FileDialogExample : BoardGameApplication("FileDialog example") {
                       mode = FileDialogMode.CHOOSE_DIRECTORY,
                       title = "Choose directory",
                   ))
-                  .ifPresent {
+                  .ifPresent { l ->
                     println("Chosen Directory:")
-                    it.forEach { t -> println(t) }
+                    l.forEach { t -> println(t) }
                   }
             }
       }

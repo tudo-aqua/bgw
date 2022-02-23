@@ -25,8 +25,8 @@ package tools.aqua.bgw.animation
  *
  * @constructor creates a new [SequentialAnimation].
  *
- * @param animations The [Animation]s that this [SequentialAnimation] should contain. Lowest index
- * is played first, the highest index is played last.
+ * @property animations The [Animation]s that this [SequentialAnimation] should contain. Lowest
+ * index is played first, the highest index is played last.
  */
 data class SequentialAnimation(val animations: List<Animation>) :
     Animation(animations.sumOf(Animation::duration)) {

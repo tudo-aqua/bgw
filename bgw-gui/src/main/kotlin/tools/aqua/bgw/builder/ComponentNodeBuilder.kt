@@ -25,23 +25,21 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 
 /** [ComponentNodeBuilder]. Factory for all BGW components. */
-internal class ComponentNodeBuilder {
-  companion object {
-    /** Switches between GameComponents. */
-    internal fun buildGameComponent(gameComponentView: GameComponentView): Region =
-        when (gameComponentView) {
-          is CardView -> buildCardView(gameComponentView)
-          is DiceView -> buildDiceView(gameComponentView)
-          is TokenView -> buildToken(gameComponentView)
-        }
+object ComponentNodeBuilder {
+  /** Switches between GameComponents. */
+  internal fun buildGameComponent(gameComponentView: GameComponentView): Region =
+      when (gameComponentView) {
+        is CardView -> buildCardView(gameComponentView)
+        is DiceView -> buildDiceView(gameComponentView)
+        is TokenView -> buildToken(gameComponentView)
+      }
 
-    /** Builds [CardView]. */
-    @Suppress("UNUSED_PARAMETER") private fun buildCardView(cardView: CardView): Region = Pane()
+  /** Builds [CardView]. */
+  @Suppress("UNUSED_PARAMETER") private fun buildCardView(cardView: CardView): Region = Pane()
 
-    /** Builds [DiceView]. */
-    @Suppress("UNUSED_PARAMETER") private fun buildDiceView(diceView: DiceView): Region = Pane()
+  /** Builds [DiceView]. */
+  @Suppress("UNUSED_PARAMETER") private fun buildDiceView(diceView: DiceView): Region = Pane()
 
-    /** Builds [TokenView]. */
-    @Suppress("UNUSED_PARAMETER") private fun buildToken(tokenView: TokenView): Region = Pane()
-  }
+  /** Builds [TokenView]. */
+  @Suppress("UNUSED_PARAMETER") private fun buildToken(tokenView: TokenView): Region = Pane()
 }

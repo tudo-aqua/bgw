@@ -34,16 +34,14 @@ import tools.aqua.bgw.core.MenuScene
  * To initiate a new description of a menu scene, simply call the `dsl` function, which then returns
  * the resulting [MenuScene].
  */
-internal class MenuSceneBuilder {
-  companion object {
-    /**
-     * Initiates a new description of a menu scene.
-     *
-     * @return the resulting [MenuScene]
-     */
-    fun dsl(height: Number, width: Number, func: MenuScene.() -> Unit): MenuScene =
-        MenuScene(height = height, width = width).apply(func)
-  }
+object MenuSceneBuilder {
+  /**
+   * Initiates a new description of a menu scene.
+   *
+   * @return the resulting [MenuScene]
+   */
+  fun dsl(height: Number, width: Number, func: MenuScene.() -> Unit): MenuScene =
+      MenuScene(height = height, width = width).apply(func)
 }
 
 /** Sets the componentStyle of the receiver [UIComponent] to the return value of [func]. */
@@ -219,6 +217,7 @@ internal fun <T> MenuScene.tableView(func: TableView<T>.() -> Unit): TableView<T
 /**
  * Creates a new [TableColumn] and adds it to the receiver [TableView].
  *
+ * @param T Generic [TableView] content.
  * @param title the title for the new [TableColumn].
  * @param width the width for the new [TableColumn].
  * @param func the new formatFunction for the new [TableColumn].
@@ -230,6 +229,7 @@ internal fun <T> TableView<T>.column(title: String, width: Number, func: T.() ->
 /**
  * Sets the data model for the receiver [TableView].
  *
+ * @param T Generic [TableView] content.
  * @param data the data to set.
  */
 internal fun <T> TableView<T>.data(data: List<T>) {
@@ -240,6 +240,7 @@ internal fun <T> TableView<T>.data(data: List<T>) {
 /**
  * Appends the supplied [data] to the data model of the receiver [TableView].
  *
+ * @param T Generic [TableView] content.
  * @param data the data to append.
  */
 internal fun <T> TableView<T>.appendData(data: List<T>) {
@@ -252,6 +253,8 @@ internal fun <T> TableView<T>.appendData(data: List<T>) {
  * Creates a new [TextArea], applies the [func] and adds it to the receiver [MenuScene].
  *
  * @param prompt the prompt for the new [TextArea].
+ * @param func the new formatFunction for the new [TextArea].
+ *
  * @return the new [TextArea].
  */
 internal fun MenuScene.textArea(prompt: String, func: TextArea.() -> Unit): TextArea {
@@ -266,6 +269,8 @@ internal fun MenuScene.textArea(prompt: String, func: TextArea.() -> Unit): Text
  * Creates a new [TextField], applies the [func] and adds it to the receiver [MenuScene].
  *
  * @param prompt the prompt for the new [TextField].
+ * @param func the new formatFunction for the new [TextField].
+ *
  * @return the new [TextField].
  */
 internal fun MenuScene.textField(prompt: String, func: TextField.() -> Unit): TextField {
@@ -292,7 +297,10 @@ internal fun MenuScene.progressBar(func: ProgressBar.() -> Unit): ProgressBar {
 /**
  * Creates a new [ComboBox], applies the [func] and adds it to the receiver [MenuScene].
  *
+ * @param T Generic [MenuScene] content.
  * @param prompt the prompt for the new [ComboBox].
+ * @param func the new formatFunction for the new [ComboBox].
+ *
  * @return the new [ComboBox].
  */
 internal fun <T> MenuScene.comboBox(prompt: String, func: ComboBox<T>.() -> Unit): ComboBox<T> {
@@ -307,6 +315,8 @@ internal fun <T> MenuScene.comboBox(prompt: String, func: ComboBox<T>.() -> Unit
  * Creates a new [ColorPicker], applies the [func] and adds it to the receiver [MenuScene].
  *
  * @param initialColor the initial [Color] for the new [ColorPicker].
+ * @param func the new formatFunction for the new [ColorPicker].
+ *
  * @return the new [ColorPicker].
  */
 internal fun MenuScene.colorPicker(initialColor: Color, func: ColorPicker.() -> Unit): ColorPicker {

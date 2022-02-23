@@ -24,8 +24,9 @@ import tools.aqua.bgw.util.ComponentViewGrid.GridIterator
  *
  * @constructor Creates a [GridIteratorElement].
  *
- * @param columnIndex Current column index.
- * @param rowIndex Current row index.
- * @param component Current component or `null` if there is no component present in this cell.
+ * @param T Type of boxed [component].
+ * @property columnIndex Current column index.
+ * @property rowIndex Current row index.
+ * @property component Current component or `null` if there is no component present in this cell.
  */
 data class GridIteratorElement<T>(val columnIndex: Int, val rowIndex: Int, val component: T?)

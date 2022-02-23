@@ -20,44 +20,42 @@ package tools.aqua.bgw.builder
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
 import javafx.scene.control.TextArea
-import tools.aqua.bgw.builder.FXConverters.Companion.toFXAlertType
-import tools.aqua.bgw.builder.FXConverters.Companion.toFXButtonType
+import tools.aqua.bgw.builder.FXConverters.toFXAlertType
+import tools.aqua.bgw.builder.FXConverters.toFXButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
 
 /** DialogBuilder. Factory for all BGW dialogs. */
-internal class DialogBuilder {
-  companion object {
-    /** Builds dialogs. */
-    internal fun build(dialog: Dialog): Alert =
-        Alert(dialog.dialogType.toFXAlertType()).apply {
-          title = dialog.title
-          headerText = dialog.header
-          contentText = dialog.message
+object DialogBuilder {
+  /** Builds dialogs. */
+  internal fun build(dialog: Dialog): Alert =
+      Alert(dialog.dialogType.toFXAlertType()).apply {
+        title = dialog.title
+        headerText = dialog.header
+        contentText = dialog.message
 
-          // If user specified buttons, clear defaults and set custom
-          if (dialog.buttons.isNotEmpty()) {
-            buttonTypes.clear()
-            buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
-            buttonTypes.clear()
-          } else if (dialog.dialogType == DialogType.CONFIRMATION) {
-            buttonTypes.clear()
-            buttonTypes.addAll(ButtonType.YES, ButtonType.NO)
-          } else if (dialog.dialogType == DialogType.NONE) {
-            buttonTypes.add(ButtonType.OK)
-          }
-
-          // Add expandable content for exception stack trace in case of AlertType.EXCEPTION
-          if (dialog.dialogType == DialogType.EXCEPTION) {
-            dialogPane.expandableContent =
-                TextArea(dialog.exception.stackTraceToString()).apply {
-                  isEditable = false
-                  isWrapText = true
-                  maxWidth = Double.MAX_VALUE
-                  maxHeight = Double.MAX_VALUE
-                }
-            buttonTypes.add(ButtonType.OK)
-          }
+        // If user specified buttons, clear defaults and set custom
+        if (dialog.buttons.isNotEmpty()) {
+          buttonTypes.clear()
+          buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
+          buttonTypes.clear()
+        } else if (dialog.dialogType == DialogType.CONFIRMATION) {
+          buttonTypes.clear()
+          buttonTypes.addAll(ButtonType.YES, ButtonType.NO)
+        } else if (dialog.dialogType == DialogType.NONE) {
+          buttonTypes.add(ButtonType.OK)
         }
-  }
+
+        // Add expandable content for exception stack trace in case of AlertType.EXCEPTION
+        if (dialog.dialogType == DialogType.EXCEPTION) {
+          dialogPane.expandableContent =
+              TextArea(dialog.exception.stackTraceToString()).apply {
+                isEditable = false
+                isWrapText = true
+                maxWidth = Double.MAX_VALUE
+                maxHeight = Double.MAX_VALUE
+              }
+          buttonTypes.add(ButtonType.OK)
+        }
+      }
 }

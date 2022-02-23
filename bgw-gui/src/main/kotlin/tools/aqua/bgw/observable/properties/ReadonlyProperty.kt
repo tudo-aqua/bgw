@@ -26,6 +26,7 @@ import tools.aqua.bgw.observable.ValueObservable
  *
  * @constructor Creates a [ReadonlyProperty] with given initial value.
  *
+ * @param T Type of boxed data.
  * @param initialValue Initial value of this property.
  */
 open class ReadonlyProperty<T>(initialValue: T) : ValueObservable<T>() {

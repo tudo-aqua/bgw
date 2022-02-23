@@ -37,6 +37,7 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for BGW scenes.
  *
+ * @param T Generic [ComponentView].
  * @param width [Scene] width in virtual coordinates.
  * @param height [Scene] height in virtual coordinates.
  * @param background [Scene] [background] [Visual].

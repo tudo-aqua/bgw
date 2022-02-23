@@ -24,11 +24,11 @@ package tools.aqua.bgw.event
  *
  * @constructor Creates a [KeyEvent].
  *
- * @param keyCode Corresponding key code enum value.
- * @param character Corresponding character string.
- * @param controlDown Whether control key was pressed.
- * @param shiftDown Whether shift key was pressed.
- * @param altDown Whether alt key was pressed.
+ * @property keyCode Corresponding key code enum value.
+ * @property character Corresponding character string.
+ * @property controlDown Whether control key was pressed.
+ * @property shiftDown Whether shift key was pressed.
+ * @property altDown Whether alt key was pressed.
  */
 class KeyEvent(
     val keyCode: KeyCode = KeyCode.UNDEFINED,

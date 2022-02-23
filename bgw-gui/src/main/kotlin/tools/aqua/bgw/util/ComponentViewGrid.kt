@@ -73,6 +73,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    *
    * @param columnIndex Column index of cell.
    * @param rowIndex Row index of cell.
+   * @param value Cell content to be set.
    *
    * @throws IllegalArgumentException if [columnIndex] is out of grid range.
    */
@@ -100,6 +101,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    *
    * @param columnIndex Column index of cell.
    * @param rowIndex Row index of cell.
+   * @param alignment [Alignment] to be set as center mode.
    *
    * @throws IllegalArgumentException If [columnIndex] or [rowIndex] is out of grid range.
    */

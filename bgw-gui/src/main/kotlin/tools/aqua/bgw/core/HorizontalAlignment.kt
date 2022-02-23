@@ -22,8 +22,8 @@ package tools.aqua.bgw.core
 /**
  * Used to define horizontal centering behaviour.
  *
- * @param positionMultiplier Internal position multiplier.
- * @param pivotMultiplier Internal pivot multiplier.
+ * @property positionMultiplier Internal position multiplier.
+ * @property pivotMultiplier Internal pivot multiplier.
  *
  * @see BoardGameScene
  * @see BoardGameApplication

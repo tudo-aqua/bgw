@@ -27,8 +27,8 @@ import tools.aqua.bgw.core.VerticalAlignment.TOP
 /**
  * Used to define a centering behaviour. Encapsulates [VerticalAlignment] and [HorizontalAlignment].
  *
- * @param verticalAlignment Vertical alignment component.
- * @param horizontalAlignment Horizontal alignment component.
+ * @property verticalAlignment Vertical alignment component.
+ * @property horizontalAlignment Horizontal alignment component.
  *
  * @see BoardGameScene
  * @see BoardGameApplication

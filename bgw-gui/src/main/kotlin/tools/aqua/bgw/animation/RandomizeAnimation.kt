@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
@@ -36,11 +35,12 @@ import tools.aqua.bgw.visual.Visual
  * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the
  * [duration] of one second.
  *
- * @constructor Creates a [RandomizeAnimation] for the given [ComponentView].
+ * @constructor Creates a [RandomizeAnimation] for the given [GameComponentView].
  *
+ * @param T Generic [GameComponentView].
  * @param componentView [GameComponentView] to animate.
- * @param visuals [List] of [Visual]s to shuffle through.
- * @param toVisual Resulting [Visual] after shuffle.
+ * @property visuals [List] of [Visual]s to shuffle through.
+ * @property toVisual Resulting [Visual] after shuffle.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of steps. Default: [DEFAULT_ANIMATION_SPEED].
  */

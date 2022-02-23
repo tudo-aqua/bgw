@@ -29,7 +29,7 @@ package tools.aqua.bgw.dialog
  *
  * @constructor Creates an [ExtensionFilter].
  *
- * @param description File type description.
+ * @property description File type description.
  * @param extensions File extensions.
  */
 class ExtensionFilter(val description: String, vararg extensions: String) {

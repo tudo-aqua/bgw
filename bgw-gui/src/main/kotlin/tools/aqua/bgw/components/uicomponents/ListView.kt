@@ -35,6 +35,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [ListView].
  *
+ * @param T Generic [ListView] content.
  * @param posX Horizontal coordinate for this [ListView]. Default: 0.
  * @param posY Vertical coordinate for this [ListView]. Default: 0.
  * @param width Width for this [ListView]. Default: [DEFAULT_LISTVIEW_WIDTH].
@@ -49,7 +50,7 @@ open class ListView<T>(
     posY: Number = 0,
     width: Number = DEFAULT_LISTVIEW_WIDTH,
     height: Number = DEFAULT_LISTVIEW_HEIGHT,
-    items: List<T> = listOf(),
+    items: List<T> = emptyList(),
     font: Font = Font(),
     orientation: Orientation = Orientation.VERTICAL,
     formatFunction: ((T) -> String)? = null

@@ -43,12 +43,14 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [LinearLayout].
  *
+ * @param T Generic [GameComponentView].
  * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
  * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
  * @param width width for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_WIDTH].
  * @param height height for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_HEIGHT].
  * @param spacing spacing between contained [GameComponentView]s. Default:
  * [DEFAULT_LINEAR_LAYOUT_SPACING].
+ * @param visual [Visual] to be used for this [LinearLayout].
  * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
  * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default:
  * [Alignment.TOP_LEFT].
@@ -125,7 +127,7 @@ open class LinearLayout<T : GameComponentView>(
     }
 
   init {
-    observableComponents.setInternalListenerAndInvoke(listOf()) { _, _ -> layout() }
+    observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ -> layout() }
     spacingProperty.internalListener = { _, _ -> layout() }
     orientationProperty.internalListener = { _, _ -> layout() }
     alignmentProperty.internalListener = { _, _ -> layout() }
@@ -139,6 +141,7 @@ open class LinearLayout<T : GameComponentView>(
    * @param width width for this [LinearLayout]. Default: 0.
    * @param height height for this [LinearLayout]. Default: 0.
    * @param spacing spacing between contained [GameComponentView]s. Default: 0.
+   * @param visual [Visual] to be used for this [LinearLayout].
    * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
    * @param verticalAlignment specifies how the contained components should be aligned vertically.
    * Default: [VerticalAlignment.TOP].
@@ -169,11 +172,11 @@ open class LinearLayout<T : GameComponentView>(
     // add pos listeners
     posXProperty.internalListener =
         { _, _ ->
-          observableComponents.internalListener?.invoke(listOf(), listOf())
+          observableComponents.internalListener?.invoke(emptyList(), emptyList())
         }
     posYProperty.internalListener =
         { _, _ ->
-          observableComponents.internalListener?.invoke(listOf(), listOf())
+          observableComponents.internalListener?.invoke(emptyList(), emptyList())
         }
   }
 

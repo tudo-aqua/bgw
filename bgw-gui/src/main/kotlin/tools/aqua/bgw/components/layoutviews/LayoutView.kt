@@ -26,6 +26,7 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Baseclass for all layout components.
  *
+ * @param T Generic [ComponentView].
  * @param posX Horizontal coordinate for this [LayoutView].
  * @param posY Vertical coordinate for this [LayoutView].
  * @param width Width for this [LayoutView].

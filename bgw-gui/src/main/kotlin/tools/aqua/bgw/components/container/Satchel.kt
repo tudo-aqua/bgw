@@ -61,6 +61,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [Satchel].
  *
+ * @param T Generic [GameComponentView].
  * @param posX horizontal coordinate for this [Satchel]. Default: 0.
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
  * @param width width for this [Satchel]. Default: [DEFAULT_SATCHEL_WIDTH].

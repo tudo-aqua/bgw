@@ -46,6 +46,8 @@ package tools.aqua.bgw.util
  *
  * @constructor Creates a map with the given set of elements mapping pair first -> pair.second.
  *
+ * @param T Type of domain elements.
+ * @param R Type of co-domain elements.
  * @param elements Elements to be initialized in the map.
  */
 open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {

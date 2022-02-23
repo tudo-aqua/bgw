@@ -32,6 +32,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [GridPane] with given [rows] and [columns].
  *
+ * @param T Generic [ComponentView].
  * @param posX Horizontal coordinate for this [GridPane]. Default: 0.
  * @param posY Vertical coordinate for this [GridPane]. Default: 0.
  * @param columns Initial column count.
@@ -77,7 +78,7 @@ open class GridPane<T : ComponentView>(
     }
 
   init {
-    this.layoutFromCenter = layoutFromCenter
+    this.isLayoutFromCenter = layoutFromCenter
   }
 
   /**
@@ -121,8 +122,10 @@ open class GridPane<T : ComponentView>(
         }
 
     // TODO: Remove hard reset of position
-    component?.posXProperty?.setSilent(0.0)
-    component?.posYProperty?.setSilent(0.0)
+    component?.run {
+      posXProperty.setSilent(0.0)
+      posYProperty.setSilent(0.0)
+    }
     updateGui?.invoke()
   }
 
@@ -360,11 +363,11 @@ open class GridPane<T : ComponentView>(
    * @see removeRow
    */
   fun grow(left: Int = 0, right: Int = 0, top: Int = 0, bottom: Int = 0): Boolean {
-    val result = grid.grow(left = left, right = right, top = top, bottom = bottom)
+    val hasGrown = grid.grow(left = left, right = right, top = top, bottom = bottom)
 
-    if (result) updateGui?.invoke()
+    if (hasGrown) updateGui?.invoke()
 
-    return result
+    return hasGrown
   }
 
   /**
@@ -390,11 +393,11 @@ open class GridPane<T : ComponentView>(
    * @see removeRow
    */
   fun trim(): Boolean {
-    val result = grid.trim()
+    val hasTrimmed = grid.trim()
 
-    if (result) updateGui?.invoke()
+    if (hasTrimmed) updateGui?.invoke()
 
-    return result
+    return hasTrimmed
   }
 
   /**
@@ -529,8 +532,8 @@ open class GridPane<T : ComponentView>(
           .filter { it.component == child }
           .map {
             val offset = getRelativeChildOffset(it)
-            val parentOffsetX = if (child.layoutFromCenter) child.actualWidth / 2 else 0.0
-            val parentOffsetY = if (child.layoutFromCenter) child.actualHeight / 2 else 0.0
+            val parentOffsetX = if (child.isLayoutFromCenter) child.actualWidth / 2 else 0.0
+            val parentOffsetY = if (child.isLayoutFromCenter) child.actualHeight / 2 else 0.0
 
             Coordinate(
                 xCoord = offset.xCoord * scaleX - actualWidth / 2 + parentOffsetX,

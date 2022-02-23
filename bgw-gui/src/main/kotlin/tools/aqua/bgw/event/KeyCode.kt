@@ -22,8 +22,8 @@ package tools.aqua.bgw.event
 /**
  * Enum for available key codes.
  *
- * @param string Key name.
- * @param keyTypeMask Mask for the key's type.
+ * @property string Key name.
+ * @property keyTypeMask Mask for the key's type.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 enum class KeyCode(val string: String, private val keyTypeMask: Int) {
@@ -478,34 +478,32 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
   // endregion
 
   /** Integer mask for KeyCode type. */
-  class KeyType {
-    companion object {
-      /** Modifier keys like Shift or Ctrl. */
-      internal const val MODIFIER = 1 shl 7
+  object KeyType {
+    /** Modifier keys like Shift or Ctrl. */
+    internal const val MODIFIER = 1 shl 7
 
-      /** All letter keys A-Z. */
-      internal const val LETTER = 1 shl 6
+    /** All letter keys A-Z. */
+    internal const val LETTER = 1 shl 6
 
-      /** All digits 0-9 on Key- and Numpad. */
-      internal const val DIGIT = 1 shl 5
+    /** All digits 0-9 on Key- and Numpad. */
+    internal const val DIGIT = 1 shl 5
 
-      /** All Keys on numpad. */
-      internal const val NUMPAD = 1 shl 4
+    /** All Keys on numpad. */
+    internal const val NUMPAD = 1 shl 4
 
-      /** Arrow keys. */
-      internal const val ARROW = 1 shl 3
+    /** Arrow keys. */
+    internal const val ARROW = 1 shl 3
 
-      /** Navigation keys like arrows and page up / down. */
-      internal const val NAVIGATION = 1 shl 2
+    /** Navigation keys like arrows and page up / down. */
+    internal const val NAVIGATION = 1 shl 2
 
-      /** Whitespace like Space or Tab. */
-      internal const val WHITESPACE = 1 shl 1
+    /** Whitespace like Space or Tab. */
+    internal const val WHITESPACE = 1 shl 1
 
-      /** F1-F12 Keys. */
-      internal const val FUNCTION = 1
+    /** F1-F12 Keys. */
+    internal const val FUNCTION = 1
 
-      /** Default case. */
-      internal const val OTHER = 0
-    }
+    /** Default case. */
+    internal const val OTHER = 0
   }
 }

@@ -37,7 +37,7 @@ open class Stack<T>(elements: Collection<T>) {
   constructor(vararg element: T) : this(element.toList())
 
   /** Creates an empty [Stack]. */
-  constructor() : this(listOf())
+  constructor() : this(emptyList())
 
   /**
    * Pops the topmost element in this [Stack].

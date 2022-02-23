@@ -40,10 +40,10 @@ import tools.aqua.bgw.visual.Visual
  * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
  * @param alignment [Alignment] to be used for the [text] Default: [Alignment.CENTER].
  * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
- * @param isChecked The initial checked state. Default: `false`.
- * @param allowIndeterminate The initial [allowIndeterminate] state. Default: `false`.
- * @param isIndeterminate The initial [isIndeterminate] state. Default: `false`.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
+ * @param isChecked The initial checked state. Default: `false`.
+ * @param allowIndeterminate The initial [isIndeterminateAllowed] state. Default: `false`.
+ * @param isIndeterminate The initial [isIndeterminate] state. Default: `false`.
  */
 open class CheckBox(
     posX: Number = 0,
@@ -72,37 +72,37 @@ open class CheckBox(
   /**
    * [Property] for the checked state.
    *
-   * @see checked
+   * @see isChecked
    */
-  val checkedProperty: BooleanProperty = BooleanProperty(isChecked)
+  val isCheckedProperty: BooleanProperty = BooleanProperty(isChecked)
 
   /**
    * The checked state.
    *
-   * @see checkedProperty
+   * @see isCheckedProperty
    */
-  var checked: Boolean
-    get() = checkedProperty.value
+  var isChecked: Boolean
+    get() = isCheckedProperty.value
     set(value) {
-      checkedProperty.value = value
+      isCheckedProperty.value = value
     }
 
   /**
    * [Property] for whether this component allows an indeterminate state.
    *
-   * @see allowIndeterminate
+   * @see isIndeterminateAllowed
    */
-  val allowIndeterminateProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
+  val isIndeterminateAllowedProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
 
   /**
    * [Boolean] whether this component allows an indeterminate state.
    *
-   * @see allowIndeterminateProperty
+   * @see isIndeterminateAllowedProperty
    */
-  var allowIndeterminate: Boolean
-    get() = allowIndeterminateProperty.value
+  var isIndeterminateAllowed: Boolean
+    get() = isIndeterminateAllowedProperty.value
     set(value) {
-      allowIndeterminateProperty.value = value
+      isIndeterminateAllowedProperty.value = value
     }
 
   /**
@@ -110,16 +110,16 @@ open class CheckBox(
    *
    * @see isIndeterminate
    */
-  val indeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
+  val isIndeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 
   /**
    * [Boolean] whether this component in the indeterminate state.
    *
-   * @see indeterminateProperty
+   * @see isIndeterminateProperty
    */
   var isIndeterminate: Boolean
-    get() = indeterminateProperty.value
+    get() = isIndeterminateProperty.value
     set(value) {
-      indeterminateProperty.value = value
+      isIndeterminateProperty.value = value
     }
 }

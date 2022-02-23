@@ -24,7 +24,6 @@ import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
-import tools.aqua.bgw.exception.IllegalInheritanceException
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
@@ -46,10 +45,11 @@ import tools.aqua.bgw.visual.Visual
  * @param height height for this [ComponentView].
  * @param visual visual for this [ComponentView].
  *
- * @throws IllegalInheritanceException inheriting from this [Class] is not advised, because it
- * cannot be rendered and trying to do so will result in an [IllegalInheritanceException].
+ * @throws tools.aqua.bgw.exception.IllegalInheritanceException inheriting from this [Class] is not
+ * advised, because it cannot be rendered and trying to do so will result in an
+ * [tools.aqua.bgw.exception.IllegalInheritanceException].
  *
- * @see IllegalInheritanceException
+ * @see tools.aqua.bgw.exception.IllegalInheritanceException
  */
 abstract class ComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) {
@@ -74,7 +74,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Field that indicates whether posX and posY denote the center or top left of this
    * [ComponentView].
    */
-  internal var layoutFromCenter: Boolean = false
+  internal var isLayoutFromCenter: Boolean = false
 
   /** Name field only for debugging purposes. Has no effect on rendering. */
   var name: String = javaClass.name + "@" + Integer.toHexString(this.hashCode())
@@ -108,7 +108,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   var actualPosX: Double
     get() {
       val parent = parent
-      val offset = if (parent != null && parent.layoutFromCenter) parent.actualWidth / 2 else 0.0
+      val offset = if (parent != null && parent.isLayoutFromCenter) parent.actualWidth / 2 else 0.0
 
       return posX + (width - actualWidth) / 2 - offset
     }
@@ -143,7 +143,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   var actualPosY: Double
     get() {
       val parent = parent
-      val offset = if (parent != null && parent.layoutFromCenter) parent.actualHeight / 2 else 0.0
+      val offset = if (parent != null && parent.isLayoutFromCenter) parent.actualHeight / 2 else 0.0
 
       return posY + (height - actualHeight) / 2 - offset
     }

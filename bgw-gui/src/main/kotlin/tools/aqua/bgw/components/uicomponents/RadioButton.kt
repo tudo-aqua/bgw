@@ -47,6 +47,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [RadioButton]. Default: 0.
  * @param width Width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
  * @param height Height for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_HEIGHT].
+ * @param font [Font] to be used to display text.
  * @param isSelected The initial state for this [RadioButton]. Default: `false`.
  * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]

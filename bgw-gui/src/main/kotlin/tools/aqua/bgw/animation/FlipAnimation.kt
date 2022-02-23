@@ -31,9 +31,10 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [FlipAnimation] for the given [ComponentView].
  *
+ * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate.
- * @param fromVisual Initial [Visual].
- * @param toVisual Resulting [Visual].
+ * @property fromVisual Initial [Visual].
+ * @property toVisual Resulting [Visual].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class FlipAnimation<T : ComponentView>(

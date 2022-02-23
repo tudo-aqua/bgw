@@ -39,19 +39,19 @@ class SudokuMenuScene :
           text = "Main menu",
           font = Font(fontWeight = Font.FontWeight.BOLD))
 
-  /** [Button] "Continue" */
+  /** [Button] "Continue". */
   val continueGameButton: Button = MenuButton(position = 1, text = "Continue")
 
-  /** [Button] "New Easy Game" */
+  /** [Button] "New Easy Game". */
   val newGameEasyButton: Button = MenuButton(position = 2, text = "New Easy Game")
 
-  /** [Button] "New Medium Game" */
+  /** [Button] "New Medium Game". */
   val newGameMediumButton: Button = MenuButton(position = 3, text = "New Medium Game")
 
-  /** [Button] "New Hard Game" */
+  /** [Button] "New Hard Game". */
   val newGameHardButton: Button = MenuButton(position = 4, text = "New Hard Game")
 
-  /** [Button] "Exit" */
+  /** [Button] "Exit". */
   val exitButton: Button = MenuButton(position = 5, text = "Exit")
 
   init {

@@ -18,17 +18,17 @@
 package tools.aqua.bgw.examples.sudoku.entity
 
 /**
- * Enum class for the three difficulties
+ * Enum class for the three difficulties.
  *
- * @param file csv file for sudoku puzzles
+ * @property file csv file for sudoku puzzles.
  */
 enum class Difficulty(val file: String) {
-  /** Easy difficulty */
+  /** Easy difficulty. */
   EASY("easy.csv"),
 
-  /** Medium difficulty */
+  /** Medium difficulty. */
   MEDIUM("medium.csv"),
 
-  /** Hard difficulty */
+  /** Hard difficulty. */
   HARD("hard.csv")
 }

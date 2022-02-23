@@ -18,14 +18,12 @@
 package tools.aqua.bgw.util
 
 /** Utility class for trigonometry functions. */
-class Trig private constructor() {
-  companion object {
-    /** Sin function for angles in degrees. */
-    @Suppress("GrazieInspection")
-    fun sinD(degrees: Number): Double = kotlin.math.sin(Math.toRadians(degrees.toDouble()))
+object Trig {
+  /** Sin function for angles in degrees. */
+  @Suppress("GrazieInspection")
+  fun sinD(degrees: Number): Double = kotlin.math.sin(Math.toRadians(degrees.toDouble()))
 
-    /** Cos function for angles in degrees. */
-    @Suppress("GrazieInspection")
-    fun cosD(degrees: Number): Double = kotlin.math.cos(Math.toRadians(degrees.toDouble()))
-  }
+  /** Cos function for angles in degrees. */
+  @Suppress("GrazieInspection")
+  fun cosD(degrees: Number): Double = kotlin.math.cos(Math.toRadians(degrees.toDouble()))
 }

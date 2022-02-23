@@ -153,7 +153,7 @@ formatting:
   active: false
 
 naming:
-  # Mostly enabled. Rationale: principle of least surprise
+  # Mostly enabled. Rationale: principle of the least surprise
   active: true
   BooleanPropertyNaming:
     active: true
