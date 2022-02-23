@@ -17,15 +17,15 @@
 
 package tools.aqua.bgw.container.area
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
-import kotlin.test.assertContains
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class AddElementTest : AreaTestBase() {
     
@@ -35,7 +35,7 @@ class AddElementTest : AreaTestBase() {
         //simple add
         assertTrue(tokenViewArea.components.isEmpty())
         tokenViewArea.add(redTokenView)
-        assertContains(tokenViewArea.components, redTokenView)
+        assertThat(tokenViewArea.components).contains(redTokenView)
         assertEquals(tokenViewArea, redTokenView.parent)
     }
 

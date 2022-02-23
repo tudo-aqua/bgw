@@ -17,4 +17,8 @@
 
 plugins { id("tools.aqua.bgw.jekyll-conventions") }
 
-dependencies { includedKDoc(project(":bgw-gui", "kdoc")) }
+dependencies {
+  includedKDoc(project(":bgw-gui", "kdoc"))
+  includedKDoc(project(":bgw-net:bgw-net-client", "kdoc"))
+  includedKDoc(project(":bgw-net:bgw-net-common", "kdoc"))
+}

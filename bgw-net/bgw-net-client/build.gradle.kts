@@ -26,8 +26,7 @@ val jacksonVersion = "2.13.1"
 
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
-  implementation("com.fasterxml.jackson.core", "jackson-databind", libs.versions.jackson.get())
-  implementation(
-      "com.fasterxml.jackson.module", "jackson-module-kotlin", libs.versions.jackson.get())
-  implementation("org.java-websocket", "Java-WebSocket", libs.versions.javaWebSocket.get())
+  implementation(libs.jackson.databind)
+  implementation(libs.jackson.kotlin)
+  implementation(libs.javaWebSocket)
 }

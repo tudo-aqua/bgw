@@ -20,14 +20,14 @@ package tools.aqua.bgw.observable.property
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.assertThrows
 
 class LimitedDoublePropertyTest : PropertyTestBase() {
 	
 	@Test
 	@DisplayName("Test upperBound < lowerBound")
 	fun testBoundsWrongOrderEqual() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			LimitedDoubleProperty(10, 5, 0)
 		}
 	}
@@ -42,7 +42,7 @@ class LimitedDoublePropertyTest : PropertyTestBase() {
 	@Test
 	@DisplayName("Test initial value out of bounds")
 	fun testInitialValueOutOfBounds() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			LimitedDoubleProperty(0, 10, 15)
 		}
 	}
@@ -50,7 +50,7 @@ class LimitedDoublePropertyTest : PropertyTestBase() {
 	@Test
 	@DisplayName("Notify Unchanged invoking all listener")
 	fun testSetOutOfBounds() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			property.value = -7.0
 		}
 	}

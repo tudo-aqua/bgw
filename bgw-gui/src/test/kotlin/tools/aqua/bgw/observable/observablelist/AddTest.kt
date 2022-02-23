@@ -19,8 +19,8 @@ package tools.aqua.bgw.observable.observablelist
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertThrows
 
 class AddTest : ObservableListTestBase() {
 	@Test
@@ -62,11 +62,11 @@ class AddTest : ObservableListTestBase() {
 	@Test
 	@DisplayName("Test add at index out of bounds")
 	fun testAddIndexOutOfBounds() {
-		assertFailsWith<IndexOutOfBoundsException> {
+		assertThrows<IndexOutOfBoundsException> {
 			list.add(-1, 42)
 		}
-		
-		assertFailsWith<IndexOutOfBoundsException> {
+
+		assertThrows<IndexOutOfBoundsException> {
 			list.add(6, 42)
 		}
 	}
@@ -102,11 +102,11 @@ class AddTest : ObservableListTestBase() {
 	@Test
 	@DisplayName("Test add all at index out of bounds")
 	fun testAddAllAtIndexOutOfBounds() {
-		assertFailsWith<IndexOutOfBoundsException> {
+		assertThrows<IndexOutOfBoundsException> {
 			list.addAll(-1, listOf(-1, -2))
 		}
-		
-		assertFailsWith<IndexOutOfBoundsException> {
+
+		assertThrows<IndexOutOfBoundsException> {
 			list.addAll(6, listOf(-1, -2))
 		}
 	}

@@ -1,31 +1,30 @@
 ---
 parent: Util
-layout: default
 title: BiDirectionalMap
 nav_order: 2
 ---
 
 <!-- KDoc -->
-[BiDirectionalMapKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/index.html
-[addKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/add.html
-[removeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/remove.html
-[containsKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/contains.html
-[containsForwardKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/contains-forward.html
-[containsBackwardKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/contains-backward.html
-[forwardKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/forward.html
-[forwardOrNullKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/forward-or-null.html
-[backwardKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/backward.html
-[backwardOrNullKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/backward-or-null.html
-[getDomainKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/get-domain.html
-[getCoDomainKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-bidirectional-map/get-co-domain.html
+[BiDirectionalMapKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/index.html
+[addKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/add.html
+[removeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/remove.html
+[containsKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/contains.html
+[containsForwardKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/contains-forward.html
+[containsBackwardKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/contains-backward.html
+[forwardKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/forward.html
+[forwardOrNullKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/forward-or-null.html
+[backwardKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/backward.html
+[backwardOrNullKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/backward-or-null.html
+[getDomainKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/get-domain.html
+[getCoDomainKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-bidirectional-map/get-co-domain.html
 
 <!-- Links -->
 [IllegalArgumentExceptionDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/
 
 <!-- Start Page -->
 # BiDirectionalMap
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -38,7 +37,7 @@ nav_order: 2
 ## Use case
 [BiDirectionalMaps][BiDirectionalMapKDoc] can be used to model relationships where every key has exactly one value and 
 vice versa.
-It may for example be used to map domain model objects to the corresponding view components. The map enables mapping in both directions.
+It may for example be used to map domain model objects to the corresponding view /components. The map enables mapping in both directions.
 
 ## Creation
 The map takes two generic parameters for the type of the domain and co-domain objects. 

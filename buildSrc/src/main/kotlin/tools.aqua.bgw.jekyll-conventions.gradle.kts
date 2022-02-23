@@ -18,7 +18,6 @@
 import org.gradle.accessors.dm.LibrariesForLibs
 import tools.aqua.JekyllBuildTask
 import tools.aqua.KtorServeTask
-import tools.aqua.defaultFormat
 
 plugins {
   id("tools.aqua.bgw.base-conventions")
@@ -40,11 +39,15 @@ tasks {
       registering(JekyllBuildTask::class) {
         dependsOn(includedKDoc)
         jekyllContainerVersion.set(libs.versions.jekyllDocker)
-        includedResources.put("kotlin-docs", includedKDoc.resolvedConfiguration.files.single())
-        buildEnvironment.put("PAGES_REPO_NWO", "tudo-aqua/bgw")
+        includedKDoc.resolvedConfiguration.resolvedArtifacts.forEach {
+          includedResources.put("${it.name}-kdoc", it.file)
+        }
       }
 
   @Suppress("UNUSED_VARIABLE")
   val jekyllServe by
-      registering(KtorServeTask::class) { serverRoot.set(jekyllBuild.flatMap { it.output }) }
+      registering(KtorServeTask::class) {
+        serverRoot.set(jekyllBuild.flatMap { it.output })
+        baseURL.set("/bgw")
+      }
 }

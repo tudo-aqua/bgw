@@ -2,34 +2,33 @@
 parent: Components
 title: ComponentView
 nav_order: 1
-layout: default
 ---
 
 <!-- KDoc -->
-[ComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
-[GameComponentContainerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.container/-game-component-container/index.html
-[LayoutViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
-[SceneKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-scene/index.html
-[RootComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-root-component/index.html
-[VisualKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.visual/-visual/index.html
+[ComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-component-view/index.html
+[GameComponentContainerKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-game-component-container/index.html
+[LayoutViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-layout-view/index.html
+[SceneKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-scene/index.html
+[RootComponentKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-root-component/index.html
+[VisualKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.visual/-visual/index.html
 
-[MouseEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-mouse-event/index.html
-[KeyEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-key-event/index.html
-[DragEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/index.html
+[MouseEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-mouse-event/index.html
+[KeyEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-key-event/index.html
+[DragEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-drag-event/index.html
 
-[MovementAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/index.html
-[RotationAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/index.html
+[MovementAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-movement-animation/index.html
+[RotationAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-rotation-animation/index.html
 
 <!-- GH-Pages Doc -->
-[VisualDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
-[DragDropDoc]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html
-[AnimationDocs]: https://tudo-aqua.github.io/bgw/concepts/animations/Animations.html
-[UserInputDoc]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
+[VisualDoc]: ../../concepts/visual/visual.md
+[DragDropDoc]: ../../concepts/drag-and-drop/DragAndDropExample.md
+[AnimationDocs]: ../../concepts/animations/Animations.md
+[UserInputDoc]: ../../concepts/user-input/UserInput.md
 
 <!-- Start Page -->
 # Component View
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -40,8 +39,8 @@ layout: default
 </details>
 
 ## Introduction
-[ComponentView][ComponentViewKDoc] is the abstract baseclass of all framework components. 
-It defines important fields and functions that are necessary to visualize inheriting components.
+[ComponentView][ComponentViewKDoc] is the abstract baseclass of all framework /components. 
+It defines important fields and functions that are necessary to visualize inheriting /components.
 Most fields come as a pair of attribute and observable property.
 
 ## Properties
@@ -71,9 +70,9 @@ Must be in range 0.0 to 1.0.
 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
 
 ``isVisible``/``isVisibleProperty: BooleanProperty``: Visibility of this component. 
-Visible components may still be opaque due to opacity property.
+Visible /components may still be opaque due to opacity property.
 
-*Note that invisible components no longer trigger mouse click events, components with opacity = 0.0 still do.*
+*Note that invisible /components no longer trigger mouse click events, /components with opacity = 0.0 still do.*
 	
 ``isDisabled: Boolean``/``isDisabledProperty: BooleanProperty``:Controls if user input events cause input functions of 
 this component to get invoked
@@ -83,7 +82,7 @@ this component to get invoked
 ``name: String``:
 Name field only for debugging purposes.
 Has no effect on rendering.
-Use this to label components for easier debugging and printing
+Use this to label /components for easier debugging and printing
 
 ``parent: ComponentView?``:
 The parent of this ComponentView.

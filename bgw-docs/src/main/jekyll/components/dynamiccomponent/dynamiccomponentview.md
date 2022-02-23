@@ -2,18 +2,17 @@
 parent: Components
 title: DynamicComponentView
 nav_order: 2
-layout: default
 ---
 
 <!-- KDoc -->
-[DynamicComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-dynamic-component-view/index.html
-[ComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components/-component-view/index.html
-[DragEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/index.html
+[DynamicComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-dynamic-component-view/index.html
+[ComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-component-view/index.html
+[DragEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-drag-event/index.html
 
 <!-- Start Page -->
 # Dynamic Component View
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -31,7 +30,7 @@ It introduces properties and functions referring to the drag and drop feature of
 ``isDraggable: Boolean`` / ``isDraggableProperty: BooleanProperty``:
 
 Set this attribute / property to ``true`` to enable the drag and drop feature for this [DynamicComponentView][DynamicComponentViewKDoc].
-Draggable components can be picked up by holding the left mouse button and follow the cursor until the mouse button gets released. 
+Draggable /components can be picked up by holding the left mouse button and follow the cursor until the mouse button gets released. 
 	
 
 ``isDragged: Boolean`` ``isDraggedProperty: BooleanProperty``:

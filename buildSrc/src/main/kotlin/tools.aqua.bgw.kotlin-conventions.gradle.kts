@@ -29,7 +29,10 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
-detekt { config = files(rootProject.file("contrib/detekt-rules.yml")) }
+detekt {
+  basePath = rootProject.projectDir.absolutePath
+  config = files(rootProject.file("contrib/detekt-rules.yml"))
+}
 
 spotless { kotlin { defaultFormat(rootProject) } }
 
@@ -62,12 +65,10 @@ java {
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-  dokkaGfmPlugin("org.jetbrains.dokka", "kotlin-as-java-plugin", libs.versions.kotlin.get())
+  dokkaGfmPlugin(libs.dokka.javadoc)
 
-  testImplementation(kotlin("test-junit5"))
-  testImplementation(platform("org.junit:junit-bom:${libs.versions.junit.get()}"))
-  testImplementation("org.junit.jupiter", "junit-jupiter")
-  testImplementation("org.assertj", "assertj-core", libs.versions.assertj.get())
+  testImplementation(platform(libs.junit.bom))
+  testImplementation(libs.bundles.test)
 }
 
 tasks.test {
@@ -78,7 +79,7 @@ tasks.test {
 tasks.withType<KotlinCompile> {
   kotlinOptions {
     jvmTarget = "11"
-    // allWarningsAsErrors = true
+    allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }
 }

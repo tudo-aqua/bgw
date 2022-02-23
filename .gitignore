@@ -215,3 +215,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,java,windows,intellij+all,linux,macos
+
+webpack.generated.js

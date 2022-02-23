@@ -38,11 +38,19 @@ version = "0.0.0-SNAPSHOT"
 gitVersioning.apply {
   describeTagPattern = Pattern.compile("v(?<version>.*)")
   refs {
-    branch(".*") {
+    considerTagsOnBranches = true
+    tag("v(?<version>.*)") { version = "\${ref.version}" }
+    branch("((?!main).*|main.+|)") { // everything but main
+      version = "\${describe.tag.version}-\${ref.slug}-\${describe.distance}-\${commit.short}-SNAPSHOT"
+    }
+    branch("main") {
       version = "\${describe.tag.version}-\${describe.distance}-\${commit.short}-SNAPSHOT"
     }
-    tag("v(?<version>.*)") { version = "\${ref.version}" }
   }
+}
+
+val printVersion by tasks.registering {
+  logger.error(version.toString())
 }
 
 spotless {

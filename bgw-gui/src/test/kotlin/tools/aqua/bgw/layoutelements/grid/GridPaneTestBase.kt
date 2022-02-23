@@ -24,8 +24,8 @@ import tools.aqua.bgw.components.uicomponents.ColorPicker
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.Alignment
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 
 abstract class GridPaneTestBase {
 	private lateinit var alignments: Array<Array<Alignment>>

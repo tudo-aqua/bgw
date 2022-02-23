@@ -19,8 +19,8 @@ package tools.aqua.bgw.util.bidirectionalmap
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class ContainsTest : BidirectionalMapTestBase() {
 	@Test

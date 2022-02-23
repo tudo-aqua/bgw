@@ -19,8 +19,8 @@ package tools.aqua.bgw.container.area
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 
 class RemoveElementTest : AreaTestBase() {
     

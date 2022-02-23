@@ -1,34 +1,33 @@
 ---
 parent: Util
-layout: default
 title: Stack
 nav_order: 3
 ---
 
 <!-- KDoc -->
-[StackKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/index.html
-[peekKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/peek.html
-[peekOrNullKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/peek-or-null.html
-[peekAllKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/peek-all.html
-[pushKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/push.html
-[pushAllKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/push-all.html
-[popKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/pop.html
-[popOrNullKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/pop-or-null.html
-[popAllKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/pop-all.html
-[sizeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/index.html
-[isEmptyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/is-empty.html
-[isNotEmptyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/is-not-empty.html
-[clearKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/clear.html
-[sortKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/sort.html
-[shuffleKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/shuffle.html
-[indexOfKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.util/-stack/index-of.html
+[StackKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/index.html
+[peekKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/peek.html
+[peekOrNullKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/peek-or-null.html
+[peekAllKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/peek-all.html
+[pushKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/push.html
+[pushAllKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/push-all.html
+[popKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/pop.html
+[popOrNullKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/pop-or-null.html
+[popAllKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/pop-all.html
+[sizeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/index.html
+[isEmptyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/is-empty.html
+[isNotEmptyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/is-not-empty.html
+[clearKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/clear.html
+[sortKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/sort.html
+[shuffleKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/shuffle.html
+[indexOfKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.util/-stack/index-of.html
 
 [NoSuchElementExceptionKDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-no-such-element-exception/
 
 <!-- Start Page -->
 # Stack
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents

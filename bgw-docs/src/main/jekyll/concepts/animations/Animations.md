@@ -2,33 +2,33 @@
 parent: Concepts
 title: Animations
 nav_order: 2
-layout: default
 ---
 
 <!-- KDoc -->
-[AnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-animation/
-[MovementAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-movement-animation/
-[RotationAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-rotation-animation/
-[FlipAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-flip-animation/
-[RandomizeAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-randomize-animation/
-[DiceAnimationKDoc]:https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-dice-animation/
-[DelayAnimationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-delay-animation/
-[SequentialKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-sequential-animation/
-[ParallelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.animation/-parallel-animation/
+[AnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-animation/
+[MovementAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-movement-animation/
+[RotationAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-rotation-animation/
+[FlipAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-flip-animation/
+[RandomizeAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-randomize-animation/
+[DiceAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-dice-animation/
+[DelayAnimationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-delay-animation/
+[SequentialKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-sequential-animation/
+[ParallelKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-parallel-animation/
 
 
-[GameComponentViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
-[lockKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/lock.html
-[unlockKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-scene/unlock.html
-[runOnGUIThreadKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/-companion/run-on-g-u-i-thread.html
+[GameComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
+[lockKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-scene/lock.html
+[unlockKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-scene/unlock.html
+[runOnGUIThreadKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/-companion/run-on-g-u-i-thread.html
 
 <!-- GH-Pages Doc -->
-[VisualDoc]: https://tudo-aqua.github.io/bgw/concepts/visual/visual.html
-[DelayAnimationDoc]: https://tudo-aqua.github.io/bgw/concepts/animations/Animations.html#delayanimation
+[VisualDoc]: ../../concepts/visual/visual.md
+[DelayAnimationDoc]: ../../concepts/animations/Animations.md#delayanimation
 
 <!-- Start Page -->
-## Animations
+# Animations
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents

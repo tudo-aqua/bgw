@@ -1,29 +1,26 @@
 ---
 parent: Concepts 
-title: Drag and Drop 
-has_toc: true 
+title: Drag and Drop
 nav_order: 3
-layout: default
 ---
 
 <!-- KDoc -->
-[DragEventKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.event/-drag-event/
-[TokenKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.gamecomponentviews/-token-view/
-[AreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.examples.components.container/-area/
+[DragEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-drag-event/
+[TokenKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-token-view/
+[AreaKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.examples.components.container/-area/
 
 <!-- GH-Pages Doc -->
-[BoardGameApplicationDoc]: https://tudo-aqua.github.io/bgw/
-[DynamicComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/dynamiccomponent/dynamiccomponentview.html
-[TokenDoc]: https://tudo-aqua.github.io/bgw/components/gamecomponents/gamecomponents.html#generic-token
-[AreaDoc]: https://tudo-aqua.github.io/bgw/components/container/container.html#area
+[BoardGameApplicationDoc]: ../../
+[DynamicComponentViewDoc]: ../../components/dynamiccomponent/dynamiccomponentview.md
+[TokenDoc]: ../../components/gamecomponents/gamecomponents.md#generic-token
+[AreaDoc]: ../../components/container/container.md#area
 
-[DragDropExample]: https://tudo-aqua.github.io/bgw/concepts/drag-and-drop/DragAndDropExample.html#complete-source-code-for-the-example
+[DragDropExample]: ../../concepts/drag-and-drop/DragAndDropExample.md#complete-source-code-for-the-example
 
 <!-- Start Page -->
 # Drag and Drop
-
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -45,7 +42,7 @@ found [here][DragDropExample].
 
 ## Prior knowledge
 
-Knowledge about the following components and concepts is necessary for this tutorial.
+Knowledge about the following /components and /concepts is necessary for this tutorial.
 
 - [DynamicComponentView][DynamicComponentViewDoc]
 - [BoardGameApplication][BoardGameApplicationDoc]
@@ -54,7 +51,7 @@ Knowledge about the following components and concepts is necessary for this tuto
 
 ## Component declaration
 
-To create a running example, the described components are wrapped in a
+To create a running example, the described /components are wrapped in a
 [BoardGameApplication][BoardGameApplicationDoc].
 
 ````kotlin
@@ -125,7 +122,7 @@ greenToken.onDragGestureEnded = { _, success ->
 ## Make a component act as a target for a drag and drop gesture
 
 To fully enable the drag and drop gesture, another component that indicates, that the drag and gesture was a success has
-to be defined. To define accepting dropped components, the ``dropAcceptor`` property needs to be set for the receiving
+to be defined. To define accepting dropped /components, the ``dropAcceptor`` property needs to be set for the receiving
 component. The property should return whether this component is a valid drop target for the ``draggedComponent``
 supplied in the
 [DragEvent][DragEventKDoc]
@@ -185,7 +182,7 @@ greenArea.onDragDropped = { dragEvent ->
 - If the dragged component does not get added to the scene, container or layout after a valid drag and drop gesture, it
   is no longer contained anywhere in the scene.
 - Keep in mind that when dealing with situations, where multiple ``dropAcceptor`` invocations might return ``true``,
-  that the event ``onDragDropped`` gets invoked on multiple components and no guarantee is given for the order of
+  that the event ``onDragDropped`` gets invoked on multiple /components and no guarantee is given for the order of
   invocations.
 
 ## Complete source code for the example

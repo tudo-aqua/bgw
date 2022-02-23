@@ -19,10 +19,10 @@ package tools.aqua.bgw.observable.observablelist
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertThrows
 
 class SingleListFunctionTests : ObservableListTestBase() {
 	
@@ -53,12 +53,12 @@ class SingleListFunctionTests : ObservableListTestBase() {
 			assertEquals(unordered[i], list[i])
 		
 		checkNotified()
-		
-		assertFailsWith<IndexOutOfBoundsException> {
+
+		assertThrows<IndexOutOfBoundsException> {
 			list[-1] = 0
 		}
-		
-		assertFailsWith<IndexOutOfBoundsException> {
+
+		assertThrows<IndexOutOfBoundsException> {
 			list[5] = 0
 		}
 	}
@@ -119,11 +119,11 @@ class SingleListFunctionTests : ObservableListTestBase() {
 	fun testSubList() {
 		//13,25,17,13,-4
 		assertEquals(listOf(25, 17, 13), list.subList(1, 4))
-		assertEquals(listOf(), list.subList(1, 1))
+		assertEquals(emptyList<Int>(), list.subList(1, 1))
 		
 		checkNotNotified()
-		
-		assertFailsWith<IllegalArgumentException> {
+
+		assertThrows<IllegalArgumentException> {
 			list.subList(2, 1)
 		}
 	}

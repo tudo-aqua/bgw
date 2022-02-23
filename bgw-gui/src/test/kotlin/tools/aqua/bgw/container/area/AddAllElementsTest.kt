@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.container.area
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -24,9 +25,8 @@ import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
-import kotlin.test.assertContains
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class AddAllElementsTest : AreaTestBase() {
 	
@@ -43,8 +43,8 @@ class AddAllElementsTest : AreaTestBase() {
 	fun addAllElementsNonEmptyList() {
 		//add list with elements
 		tokenViewArea.addAll(listOf(redTokenView, greenTokenView))
-		assertContains(tokenViewArea.components, redTokenView)
-		assertContains(tokenViewArea.components, greenTokenView)
+		assertThat(tokenViewArea.components).contains(redTokenView)
+		assertThat(tokenViewArea.components).contains(greenTokenView)
 	}
 	
 	@Test
@@ -53,14 +53,14 @@ class AddAllElementsTest : AreaTestBase() {
 		//add list with one element already contained in tokenAreaContainer
 		tokenViewArea.addAll(listOf(redTokenView, greenTokenView))
 		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(listOf(blueTokenView, redTokenView)) }
-		assertContains(tokenViewArea.components, blueTokenView)
+		assertThat(tokenViewArea.components).contains(blueTokenView)
 		//add list with one element already contained in another Container
 		val cyanToken = TokenView(visual = ColorVisual(Color.CYAN))
 		val otherAreaContainer = Area<TokenView>()
 		otherAreaContainer.add(cyanToken)
 		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(listOf(cyanToken)) }
 		assertFalse { tokenViewArea.components.contains(cyanToken) }
-		assertContains(otherAreaContainer.components, cyanToken)
+		assertThat(otherAreaContainer.components).contains(cyanToken)
 	}
 	
 	@Test
@@ -75,8 +75,8 @@ class AddAllElementsTest : AreaTestBase() {
 	fun addAllElementsVarArgsNonEmptyList() {
 		//add list with elements
 		tokenViewArea.addAll(listOf(redTokenView, greenTokenView))
-		assertContains(tokenViewArea.components, redTokenView)
-		assertContains(tokenViewArea.components, greenTokenView)
+		assertThat(tokenViewArea.components).contains(redTokenView)
+		assertThat(tokenViewArea.components).contains(greenTokenView)
 	}
 	
 	@Test
@@ -85,13 +85,13 @@ class AddAllElementsTest : AreaTestBase() {
 		//add list with one element already contained in tokenAreaContainer
 		tokenViewArea.addAll(redTokenView, greenTokenView)
 		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(blueTokenView, redTokenView) }
-		assertContains(tokenViewArea.components, blueTokenView)
+		assertThat(tokenViewArea.components).contains(blueTokenView)
 		//add list with one element already contained in another Container
 		val cyanToken = TokenView(visual = ColorVisual(Color.CYAN))
 		val otherAreaContainer = Area<TokenView>()
 		otherAreaContainer.add(cyanToken)
 		assertThrows<IllegalArgumentException> { tokenViewArea.addAll(cyanToken) }
 		assertFalse { tokenViewArea.components.contains(cyanToken) }
-		assertContains(otherAreaContainer.components, cyanToken)
+		assertThat(otherAreaContainer.components).contains(cyanToken)
 	}
 }

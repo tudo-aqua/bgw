@@ -2,37 +2,36 @@
 parent: Concepts
 title: Observable
 nav_order: 4
-layout: default
 ---
 
 <!-- KDoc -->
-[ObservableKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable/index.html
-[addListenerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-value-observable/add-listener.html
-[addListenerAndInvokeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-value-observable/add-listener-and-invoke.html
-[notifyUnchangedKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-property/notify-unchanged.html
+[ObservableKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-observable/index.html
+[addListenerKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-value-observable/add-listener.html
+[addListenerAndInvokeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-value-observable/add-listener-and-invoke.html
+[notifyUnchangedKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-property/notify-unchanged.html
 
-[PropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-property/index.html
-[BooleanPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-boolean-property/index.html
-[IntegerPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-integer-property/index.html
-[DoublePropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-double-property/index.html
-[LimitedDoublePropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable.properties/-limited-double-property/index.html
-[StringPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-string-property/index.html
+[PropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-property/index.html
+[BooleanPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-boolean-property/index.html
+[IntegerPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-integer-property/index.html
+[DoublePropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-double-property/index.html
+[LimitedDoublePropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable.properties/-limited-double-property/index.html
+[StringPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-string-property/index.html
 
-[ReadonlyPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable.properties/-readonly-property/index.html
-[ReadonlyBooleanPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-readonly-boolean-property/index.html
-[ReadonlyIntegerPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-readonly-integer-property/index.html
-[ReadonlyDoublePropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-readonly-double-property/index.html
-[ReadonlyStringPropertyKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-readonly-string-property/index.html
+[ReadonlyPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable.properties/-readonly-property/index.html
+[ReadonlyBooleanPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-readonly-boolean-property/index.html
+[ReadonlyIntegerPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-readonly-integer-property/index.html
+[ReadonlyDoublePropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-readonly-double-property/index.html
+[ReadonlyStringPropertyKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-readonly-string-property/index.html
 
-[ObservableListKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable-list/index.html
-[ObservableArrayListKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable-array-list/index.html
-[ObservableLinkedListKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.observable/-observable-linked-list/index.html
+[ObservableListKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-observable-list/index.html
+[ObservableArrayListKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-observable-array-list/index.html
+[ObservableLinkedListKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.observable/-observable-linked-list/index.html
 
 [IllegalArgumentExceptionKDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/
 <!-- Start Page -->
 # Observable
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents

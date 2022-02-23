@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.HorizontalAlignment
 import tools.aqua.bgw.core.VerticalAlignment
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class AlignmentConversionTest {
     @Test

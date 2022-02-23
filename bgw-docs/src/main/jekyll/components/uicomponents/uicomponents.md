@@ -1,38 +1,36 @@
 ---
 parent: Components 
-title: UIComponents 
-nav_order: 5
-layout: default
+title: UIComponents
 ---
 
 <!-- KDoc -->
-[LabelKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-label/index.html
-[ButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-button/index.html
-[CheckBoxKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-check-box/index.html
-[ColorPickerKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
-[ComboBoxKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
-[ProgressBarKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-progress-bar/index.html
-[ToggleButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-button/index.html
-[RadioButtonKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-radio-button/index.html
-[ToggleGroupKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-toggle-group/index.html
-[TextAreaKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-area/index.html
-[TextFieldKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-field/index.html
-[ListViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-list-view/index.html
-[TableViewKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-table-view/index.html
-[TableColumnKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-table-column/index.html
+[LabelKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-label/index.html
+[ButtonKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-button/index.html
+[CheckBoxKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-check-box/index.html
+[ColorPickerKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-color-picker/index.html
+[ComboBoxKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
+[ProgressBarKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-progress-bar/index.html
+[ToggleButtonKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-toggle-button/index.html
+[RadioButtonKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-radio-button/index.html
+[ToggleGroupKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-toggle-group/index.html
+[TextAreaKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-text-area/index.html
+[TextFieldKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-text-field/index.html
+[ListViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-list-view/index.html
+[TableViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-table-view/index.html
+[TableColumnKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-table-column/index.html
 
-[UIComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
-[LabeledUIComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-labeled-u-i-component/index.html
-[TextInputUIComponentKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.components.uicomponents/-text-input-u-i-component/index.html
+[UIComponentKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
+[LabeledUIComponentKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-labeled-u-i-component/index.html
+[TextInputUIComponentKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-text-input-u-i-component/index.html
 
 <!-- GH-Pages Doc -->
-[ComponentViewDoc]: https://tudo-aqua.github.io/bgw/components/componentview/componentview.html
-[UserInputDoc]: https://tudo-aqua.github.io/bgw/concepts/user-input/UserInput.html
+[ComponentViewDoc]: ../../componentview/componentview.md
+[UserInputDoc]: ../../concepts/user-input/UserInput.md
 
 <!-- Start Page -->
 # UIComponents
-
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents
@@ -43,7 +41,7 @@ layout: default
 </details>
 
 ## Prior knowledge
-All ui components inherit from [ComponentView][ComponentViewDoc].
+All ui /components inherit from [ComponentView][ComponentViewDoc].
 It is therefore helpful to read this documentation first as the features from this superclass doesn't get repeated here.
 
 ## Introduction
@@ -61,7 +59,7 @@ for UIComponents.
 This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in
 this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found here:
 
-[View it on GitHub](https://tudo-aqua.github.io/bgw/components/uicomponents/uicomponents.html#complete-source-code-for-the-example){:
+[View it on GitHub](components/uicomponents/uicomponents.html#complete-source-code-for-the-example){:
 .btn }
 
 ![image](visualguide.png)

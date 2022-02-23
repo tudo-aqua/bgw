@@ -178,14 +178,14 @@ constructor(
     val tar = temporaryDir.resolve("source-files.tar")
 
     logger.debug("Copying Jekyll source files from ${source.get()} into $sourceDir")
-    fileOps.copy {
+    fileOps.sync {
       from(source)
       into(sourceDir)
     }
 
     includedResources.get().forEach { (subDir, resource) ->
       logger.debug("Adding source files from $resource to ${sourceDir.resolve(subDir)}")
-      fileOps.copy {
+      fileOps.sync {
         from(archiveOps.zipTree(resource))
         into(sourceDir.resolve(subDir))
       }
@@ -245,13 +245,13 @@ constructor(
     }
 
     logger.debug("Extracting result tar from $tar to $resultDir")
-    fileOps.copy {
+    fileOps.sync {
       from(archiveOps.tarTree(tar))
       into(resultDir)
     }
 
     logger.debug("Copying site from $resultDir/jekyll/_site to ${output.get()}")
-    fileOps.copy {
+    fileOps.sync {
       from(resultDir.resolve("jekyll/_site"))
       into(output)
     }
@@ -281,6 +281,9 @@ open class KtorServeTask @Inject constructor(objects: ObjectFactory) : DefaultTa
   /** The port to listen on. Defaults to `8080`. */
   @Input @Optional val port: Property<Int> = objects.property<Int>().convention(8080)
 
+  /** The base URL to serve on. Defaults to `/`. */
+  @Input @Optional val baseURL: Property<String> = objects.property<String>().convention("/")
+
   /**
    * Run the server, wait for user input and shut it down after a line has been read on standard
    * input.
@@ -290,16 +293,18 @@ open class KtorServeTask @Inject constructor(objects: ObjectFactory) : DefaultTa
     val server =
         embeddedServer(Netty, port = port.get(), watchPaths = emptyList()) {
               routing {
-                static("/") {
+                static(baseURL.get()) {
                   staticRootFolder = serverRoot.get().asFile
                   files(".")
+                  file("/", "index.html")
                   default("index.html")
                 }
               }
             }
             .start()
     try {
-      logger.warn("Serving on localhost:${port.get()}, press [return] to end.")
+      logger.warn(
+          "Serving on http://localhost:${port.get()}${baseURL.get()}, press [return] to end.")
       systemIn.bufferedReader().readLine() // do not close system input!
     } finally {
       server.stop(1000, 1000)

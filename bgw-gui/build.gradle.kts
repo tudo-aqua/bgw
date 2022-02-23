@@ -24,19 +24,19 @@ mavenMetadata {
 
 dependencies {
   /* jfoenix - Applies styles to JavaFX controls. */
-  implementation("com.jfoenix", "jfoenix", libs.versions.jfoenix.get())
+  implementation(libs.jfoenix)
 
   /*
-  * UNUSED MODULES:
-  * javafx.fxml - Defines the FXML APIs for the JavaFX UI toolkit.
-  *
-  * javafx.media - Defines APIs for playback of media and audio content, as part of the JavaFX UI toolkit, including
-  *                  MediaView and MediaPlayer.
-  * javafx.swing - Defines APIs for the JavaFX / Swing interop support included with the JavaFX UI toolkit, including
-  *                  SwingNode (for embedding Swing inside a JavaFX application) and JFXPanel (for embedding JavaFX
-  *                  inside a Swing application).
-  * javafx.web - Defines APIs for the WebView functionality contained within the JavaFX UI toolkit.
-  */
+   * UNUSED MODULES:
+   * javafx.fxml - Defines the FXML APIs for the JavaFX UI toolkit.
+   *
+   * javafx.media - Defines APIs for playback of media and audio content, as part of the JavaFX UI toolkit, including
+   *                  MediaView and MediaPlayer.
+   * javafx.swing - Defines APIs for the JavaFX / Swing interop support included with the JavaFX UI toolkit, including
+   *                  SwingNode (for embedding Swing inside a JavaFX application) and JFXPanel (for embedding JavaFX
+   *                  inside a Swing application).
+   * javafx.web - Defines APIs for the WebView functionality contained within the JavaFX UI toolkit.
+   */
 
   listOf("win", "mac", "linux" /*, "mac-aarch64" */).forEach { os ->
     /*
@@ -47,9 +47,9 @@ dependencies {
      *   application lifecycle, shapes, transformations, canvas, input, painting, image handling, and effects), as well
      *   as APIs for animation, css, concurrency, geometry, printing, and windowing.
      */
-
-    listOf("base", "controls", "graphics").forEach { module ->
-      implementation("org.openjfx", "javafx-$module", libs.versions.openjfx.get(), classifier = os)
+    libs.bundles.openjfx.small.get().forEach { dep ->
+      implementation(
+          dep.module.group, dep.module.name, dep.versionConstraint.requiredVersion, classifier = os)
     }
   }
 }

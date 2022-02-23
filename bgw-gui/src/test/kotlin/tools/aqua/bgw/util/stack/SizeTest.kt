@@ -17,11 +17,12 @@
 
 package tools.aqua.bgw.util.stack
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class SizeTest: StackTestBase() {
 	@Test
@@ -43,7 +44,7 @@ class SizeTest: StackTestBase() {
 	@DisplayName("Test clear on empty stack")
 	fun testClearEmptyStack() {
 		assertEquals(0, emptyStack.size)
-		assertEquals(listOf(), emptyStack.clear())
+		assertThat(emptyStack.clear()).isEmpty()
 		assertEquals(0, emptyStack.size)
 	}
 	

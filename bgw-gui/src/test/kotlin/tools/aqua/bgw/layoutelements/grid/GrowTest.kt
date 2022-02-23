@@ -19,7 +19,7 @@ package tools.aqua.bgw.layoutelements.grid
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.assertThrows
 
 class GrowTest : GridPaneTestBase() {
 	@Test
@@ -84,7 +84,7 @@ class GrowTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Don't grow to the left for negative parameter")
 	fun testDontGrowLeftForNegativeParameter() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.grow(-1, 0, 0, 0)
 		}
 		
@@ -95,7 +95,7 @@ class GrowTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Don't grow to the right for negative parameter")
 	fun testDontGrowRightForNegativeParameter() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.grow(0, -1, 0, 0)
 		}
 		
@@ -106,7 +106,7 @@ class GrowTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Don't grow on the top for negative parameter")
 	fun testDontGrowTopForNegativeParameter() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.grow(0, 0, -1, 0)
 		}
 		
@@ -117,7 +117,7 @@ class GrowTest : GridPaneTestBase() {
 	@Test
 	@DisplayName("Don't grow on the bottom for negative parameter")
 	fun testDontGrowBottomForNegativeParameter() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			grid.grow(0, 0, 0, -1)
 		}
 		

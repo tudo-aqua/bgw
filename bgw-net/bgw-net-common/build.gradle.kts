@@ -22,7 +22,4 @@ mavenMetadata {
   description.set("A framework for board game applications.")
 }
 
-dependencies {
-  implementation(kotlin("stdlib"))
-  implementation("com.fasterxml.jackson.core", "jackson-annotations", libs.versions.jackson.get())
-}
+dependencies { implementation(libs.jackson.annotations) }

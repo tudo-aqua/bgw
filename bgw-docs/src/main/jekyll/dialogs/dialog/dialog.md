@@ -1,17 +1,16 @@
 ---
 parent : Dialogs
 title: Dialog 
-nav_order: 1 
-layout: default
+nav_order: 1
 ---
 
 <!-- KDoc -->
-[BoardGameApplicationKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/index.html
-[DialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog/index.html
-[DialogTypeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-dialog-type/index.html
-[ButtonTypeKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.dialog/-button-type/index.html
+[BoardGameApplicationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html
+[DialogKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-dialog/index.html
+[DialogTypeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-dialog-type/index.html
+[ButtonTypeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-button-type/index.html
 
-[showDialogKDoc]: https://tudo-aqua.github.io/bgw/kotlin-docs/bgw-core/tools.aqua.bgw.core/-board-game-application/show-dialog.html
+[showDialogKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/show-dialog.html
 
 <!-- Links -->
 [OptionalDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html
@@ -19,6 +18,7 @@ layout: default
 <!-- Start Page -->
 # Dialog
 {: .no_toc}
+
 <details open markdown="block">
   <summary>
     Table of contents

@@ -17,10 +17,12 @@
 
 package tools.aqua.bgw.util.stack
 
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertThrows
+import org.assertj.core.api.Assertions.assertThat as assertThat
 
 class PeekTest: StackTestBase() {
 	
@@ -28,7 +30,7 @@ class PeekTest: StackTestBase() {
 	@DisplayName("Test peek on empty Stack")
 	fun testPeekOnEmptyStack() {
 		assertEquals(0, emptyStack.size)
-		assertFailsWith<NoSuchElementException> { emptyStack.peek() }
+		assertThrows<NoSuchElementException> { emptyStack.peek() }
 	}
 	
 	@Test
@@ -88,8 +90,8 @@ class PeekTest: StackTestBase() {
 	@DisplayName("Test peekAll for zero argument")
 	fun testPeekAllForZero() {
 		assertEquals(5, stack.size)
-		
-		assertEquals(listOf(), stack.peekAll(0))
+
+		assertThat(stack.peekAll(0)).isEmpty()
 		
 		assertEquals(5, stack.size)
 	}
@@ -98,8 +100,8 @@ class PeekTest: StackTestBase() {
 	@DisplayName("Test peekAll for negative argument")
 	fun testPeekAllForNegative() {
 		assertEquals(5, stack.size)
-		
-		assertFailsWith<IllegalArgumentException> { stack.peekAll(-1) }
+
+		assertThrows<IllegalArgumentException> { stack.peekAll(-1) }
 		
 		assertEquals(5, stack.size)
 	}
@@ -108,8 +110,8 @@ class PeekTest: StackTestBase() {
 	@DisplayName("Test peekAll for large argument")
 	fun testPeekAllForLarge() {
 		assertEquals(5, stack.size)
-		
-		assertFailsWith<IllegalArgumentException> { stack.peekAll(6) }
+
+		assertThrows<IllegalArgumentException> { stack.peekAll(6) }
 		
 		assertEquals(5, stack.size)
 	}

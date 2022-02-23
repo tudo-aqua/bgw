@@ -17,10 +17,11 @@
 
 package tools.aqua.bgw.util.bidirectionalmap
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.BidirectionalMap
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 
 class DomainTest : BidirectionalMapTestBase() {
 	@Test
@@ -38,12 +39,12 @@ class DomainTest : BidirectionalMapTestBase() {
 	@Test
 	@DisplayName("Test empty domain")
 	fun testEmptyDomain() {
-		assertEquals(setOf(), BidirectionalMap<Int, Int>().getDomain())
+		assertThat(BidirectionalMap<Int, Int>().getDomain()).isEmpty()
 	}
 	
 	@Test
 	@DisplayName("Test empty co-domain")
 	fun testEmptyCoDomain() {
-		assertEquals(setOf(), BidirectionalMap<Int, Int>().getCoDomain())
+		assertThat(BidirectionalMap<Int, Int>().getCoDomain()).isEmpty()
 	}
 }

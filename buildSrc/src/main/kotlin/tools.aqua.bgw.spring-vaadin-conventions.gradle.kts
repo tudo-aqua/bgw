@@ -50,15 +50,22 @@ plugins {
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
-extra["vaadinVersion"] = libs.versions.vaadin.get()
+extra["vaadinVersion"] = libs.versions.vaadin.framework.get()
 
-dependencyManagement { imports { mavenBom("com.vaadin:vaadin-bom:${libs.versions.vaadin.get()}") } }
+val vaadinBom = libs.vaadin.bom.get()
+
+dependencyManagement {
+  imports {
+    mavenBom(
+        "${vaadinBom.module.group}:${vaadinBom.module.name}:${vaadinBom.versionConstraint.requiredVersion}")
+  }
+}
 
 dependencies {
   implementation(kotlin("reflect"))
-  implementation("com.vaadin", "vaadin-spring-boot-starter")
+  implementation(libs.spring.boot.vaadin)
 
-  developmentOnly("org.springframework.boot", "spring-boot-devtools")
+  developmentOnly(libs.spring.boot.devtools)
 
-  testImplementation("org.springframework.boot", "spring-boot-starter-test")
+  testImplementation(libs.spring.boot.test)
 }

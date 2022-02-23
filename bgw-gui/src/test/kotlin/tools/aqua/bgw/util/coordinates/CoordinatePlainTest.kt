@@ -23,8 +23,8 @@ import tools.aqua.bgw.DOUBLE_TOLERANCE
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
 import kotlin.math.sqrt
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.assertThrows
 
 class CoordinatePlainTest {
 	
@@ -45,10 +45,10 @@ class CoordinatePlainTest {
 	@Test
 	@DisplayName("Test x coordinates flipped")
 	fun testXInWrongOrder() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			CoordinatePlain(5, 0, 0, 0)
 		}
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			CoordinatePlain(Coordinate(5, 0), Coordinate(0, 0))
 		}
 	}
@@ -56,10 +56,10 @@ class CoordinatePlainTest {
 	@Test
 	@DisplayName("Test y coordinates flipped")
 	fun testYInWrongOrder() {
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			CoordinatePlain(0, 5, 0, 0)
 		}
-		assertFailsWith<IllegalArgumentException> {
+		assertThrows<IllegalArgumentException> {
 			CoordinatePlain(Coordinate(0, 5), Coordinate(0, 0))
 		}
 	}
