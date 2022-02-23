@@ -1,18 +1,18 @@
 /*
- *    Copyright 2021 The BoardGameWork Authors
- *    SPDX-License-Identifier: Apache-2.0
+ * Copyright 2021-2022 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 @file:Suppress("unused")
@@ -26,8 +26,8 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A flip [Animation].
  *
- * Sets background to given [fromVisual] than contracts background in half the given duration, switches to [toVisual]
- * and extends again in half the given duration.
+ * Sets background to given [fromVisual] than contracts background in half the given duration,
+ * switches to [toVisual] and extends again in half the given duration.
  *
  * @constructor Creates a [FlipAnimation] for the given [ComponentView].
  *
@@ -37,8 +37,8 @@ import tools.aqua.bgw.visual.Visual
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class FlipAnimation<T : ComponentView>(
-	componentView: T,
-	val fromVisual: Visual,
-	val toVisual: Visual,
-	duration: Int = DEFAULT_ANIMATION_SPEED
+    componentView: T,
+    val fromVisual: Visual,
+    val toVisual: Visual,
+    duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration)

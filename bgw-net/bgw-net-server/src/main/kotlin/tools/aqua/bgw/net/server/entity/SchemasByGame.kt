@@ -1,35 +1,38 @@
+/*
+ * Copyright 2022 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tools.aqua.bgw.net.server.entity
 
 import com.vladmihalcea.hibernate.type.json.JsonType
+import javax.persistence.*
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
-import javax.persistence.*
 
 @Entity(name = "Game")
 @TypeDef(name = "json", typeClass = JsonType::class)
 data class SchemasByGame(
-	@Id
-	@Column(nullable = false, updatable = false)
-	val gameID: String,
-
-	@Type(type = "json")
-	@Column(
-		nullable = false,
-		columnDefinition = "jsonb"
-	)
-	var initActionSchema: String,
-
-	@Type(type = "json")
-	@Column(
-		nullable = false,
-		columnDefinition = "jsonb"
-	)
-	var gameActionSchema: String,
-
-	@Type(type = "json")
-	@Column(
-		nullable = false,
-		columnDefinition = "jsonb"
-	)
-	var endActionSchema: String,
+    @Id @Column(nullable = false, updatable = false) val gameID: String,
+    @Type(type = "json")
+    @Column(nullable = false, columnDefinition = "jsonb")
+    var initActionSchema: String,
+    @Type(type = "json")
+    @Column(nullable = false, columnDefinition = "jsonb")
+    var gameActionSchema: String,
+    @Type(type = "json")
+    @Column(nullable = false, columnDefinition = "jsonb")
+    var endActionSchema: String,
 )

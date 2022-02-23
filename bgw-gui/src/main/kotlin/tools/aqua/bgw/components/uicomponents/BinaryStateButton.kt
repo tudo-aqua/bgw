@@ -1,18 +1,18 @@
 /*
- *    Copyright 2021 The BoardGameWork Authors
- *    SPDX-License-Identifier: Apache-2.0
+ * Copyright 2021-2022 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 @file:Suppress("unused", "LongParameterList")
@@ -39,54 +39,49 @@ import tools.aqua.bgw.visual.Visual
  * @see ToggleGroup
  */
 sealed class BinaryStateButton(
-	posX: Number,
-	posY: Number,
-	width: Number,
-	height: Number,
-	font: Font,
-	isSelected: Boolean,
-	toggleGroup: ToggleGroup,
-	visual: Visual
-) : UIComponent(
-	posX = posX,
-	posY = posY,
-	width = width,
-	height = height,
-	font = font,
-	visual = visual) {
-	/**
-	 * The ToggleGroup of this ToggleButton.
-	 *
-	 * @see ToggleGroup
-	 */
-	var toggleGroup: ToggleGroup = toggleGroup
-		set(value) {
-			toggleGroup.removeButton(this)
-			value.addButton(this)
-			field = value
-		}
-	
-	/**
-	 * [Property] for the selected state of this [ToggleButton].
-	 *
-	 * @see isSelected
-	 */
-	val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
-	
-	/**
-	 * Selected state for this [ToggleButton].
-	 *
-	 * @see selectedProperty
-	 */
-	var isSelected: Boolean
-		get() = selectedProperty.value
-		set(value) {
-			selectedProperty.value = value
-		}
-	
-	init {
-		this.toggleGroup = toggleGroup
-		selectedProperty.internalListener = { _, _ -> toggleGroup.buttonSelectedStateChanged(this) }
-	}
-}
+    posX: Number,
+    posY: Number,
+    width: Number,
+    height: Number,
+    font: Font,
+    isSelected: Boolean,
+    toggleGroup: ToggleGroup,
+    visual: Visual
+) :
+    UIComponent(
+        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
+  /**
+   * The ToggleGroup of this ToggleButton.
+   *
+   * @see ToggleGroup
+   */
+  var toggleGroup: ToggleGroup = toggleGroup
+    set(value) {
+      toggleGroup.removeButton(this)
+      value.addButton(this)
+      field = value
+    }
 
+  /**
+   * [Property] for the selected state of this [ToggleButton].
+   *
+   * @see isSelected
+   */
+  val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
+
+  /**
+   * Selected state for this [ToggleButton].
+   *
+   * @see selectedProperty
+   */
+  var isSelected: Boolean
+    get() = selectedProperty.value
+    set(value) {
+      selectedProperty.value = value
+    }
+
+  init {
+    this.toggleGroup = toggleGroup
+    selectedProperty.internalListener = { _, _ -> toggleGroup.buttonSelectedStateChanged(this) }
+  }
+}
