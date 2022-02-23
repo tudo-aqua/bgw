@@ -42,7 +42,7 @@ class SortShuffleTest : StackTestBase() {
     // order has changed
     assertTrue { orderedStack.peekAll().minus(comparisonStack.peekAll().toSet()).isEmpty() }
   }
-  
+
   /** Test sort on large number of elements. */
   @Test
   @DisplayName("Test sort")

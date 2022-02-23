@@ -31,7 +31,7 @@ class SizeTest : StackTestBase() {
     assertEquals(5, stack.size)
     assertEquals(0, emptyStack.size)
   }
-  
+
   /** Test clear on filled stack. */
   @Test
   @DisplayName("Test clear")
@@ -40,7 +40,7 @@ class SizeTest : StackTestBase() {
     assertEquals(order, stack.clear())
     assertEquals(0, emptyStack.size)
   }
-  
+
   /** Test clear on empty stack. */
   @Test
   @DisplayName("Test clear on empty stack")
@@ -49,7 +49,7 @@ class SizeTest : StackTestBase() {
     assertThat(emptyStack.clear()).isEmpty()
     assertEquals(0, emptyStack.size)
   }
-  
+
   /** Test isEmpty and isNotEmpty. */
   @Test
   @DisplayName("Test isEmpty and isNotEmpty")
@@ -62,14 +62,14 @@ class SizeTest : StackTestBase() {
     assertTrue { emptyStack.isEmpty() }
     assertFalse { emptyStack.isNotEmpty() }
   }
-  
+
   /** Test indexOf on existing element. */
   @Test
   @DisplayName("Test indexOf on existing element")
   fun testIndexOfExisting() {
     assertEquals(2, stack.indexOf(order[2]))
   }
-  
+
   /** Test indexOf on duplicate element. */
   @Test
   @DisplayName("Test indexOf on duplicate element")
@@ -77,7 +77,7 @@ class SizeTest : StackTestBase() {
     stack.push(order[2])
     assertEquals(2, stack.indexOf(order[2]))
   }
-  
+
   /** Test indexOf on non-existing element. */
   @Test
   @DisplayName("Test indexOf on non-existing element")

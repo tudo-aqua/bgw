@@ -25,20 +25,22 @@ import org.junit.jupiter.api.Test
 import tools.aqua.bgw.DOUBLE_TOLERANCE
 import tools.aqua.bgw.util.Coordinate
 
-/** Test coordinate functions */
+/** Test Coordinate functions */
 class CoordinateTest {
   /** Coordinate A */
   private lateinit var coordinateA: Coordinate
-  
+
   /** Coordinate B */
   private lateinit var coordinateB: Coordinate
 
+  /** Resets coordinates before each run. */
   @BeforeEach
   fun setUp() {
     coordinateA = Coordinate(50, 100)
     coordinateB = Coordinate(-30, 25)
   }
 
+  /** Tests getters of x and y coord. */
   @Test
   @DisplayName("Test get")
   fun testGet() {
@@ -46,6 +48,7 @@ class CoordinateTest {
     assertEquals(100.0, coordinateA.yCoord)
   }
 
+  /** Tests adding two coordinates. */
   @Test
   @DisplayName("Test plus")
   fun testPlus() {
@@ -54,6 +57,7 @@ class CoordinateTest {
     assertEquals(125.0, coordinateC.yCoord)
   }
 
+  /** Tests subtracting two coordinates. */
   @Test
   @DisplayName("Test minus")
   fun testMinus() {
@@ -62,6 +66,7 @@ class CoordinateTest {
     assertEquals(75.0, coordinateC.yCoord)
   }
 
+  /** Tests rotation coordinates. */
   @Test
   @DisplayName("Test rotation")
   fun testRotation() {
@@ -70,6 +75,7 @@ class CoordinateTest {
     assertEquals(50.0, coordinateC.yCoord, DOUBLE_TOLERANCE)
   }
 
+  /** Tests rotation coordinates around pivot. */
   @Test
   @DisplayName("Test rotation around pivot")
   fun testRotationPivot() {
@@ -78,6 +84,7 @@ class CoordinateTest {
     assertEquals(50.0, coordinateC.yCoord, DOUBLE_TOLERANCE)
   }
 
+  /** Tests equals and hashCode on coordinates. */
   @Test
   @DisplayName("Test equals and hashCode")
   fun testEquals() {

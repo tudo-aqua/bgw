@@ -23,19 +23,19 @@ import org.junit.jupiter.api.Test
 
 /** Test push function in Stack. */
 class PushTest : StackTestBase() {
-  
+
   /** Tests push on empty stack. */
   @Test
   @DisplayName("Test push on empty Stack")
   fun testPushOnEmptyStack() {
     assertEquals(0, emptyStack.size)
-  
+
     emptyStack.push(42)
-    
+
     assertEquals(1, emptyStack.size)
     assertEquals(42, emptyStack.peek())
   }
-  
+
   /** Tests push on filled stack. */
   @Test
   @DisplayName("Test push")
@@ -47,7 +47,7 @@ class PushTest : StackTestBase() {
     assertEquals(6, stack.size)
     assertEquals(42, stack.peek())
   }
-  
+
   /** Tests push without elements. */
   @Test
   @DisplayName("Test pushAll without elements in varargs")
@@ -58,7 +58,7 @@ class PushTest : StackTestBase() {
 
     assertEquals(5, stack.size)
   }
-  
+
   /** Tests push with empty list of elements. */
   @Test
   @DisplayName("Test pushAll with empty list")
@@ -69,7 +69,7 @@ class PushTest : StackTestBase() {
 
     assertEquals(5, stack.size)
   }
-  
+
   /** Tests push with one element in varargs. */
   @Test
   @DisplayName("Test pushAll with one element in varargs")
@@ -81,7 +81,7 @@ class PushTest : StackTestBase() {
     assertEquals(6, stack.size)
     assertEquals(42, stack.peek())
   }
-  
+
   /** Tests push with one element in list. */
   @Test
   @DisplayName("Test pushAll with one element in list")
@@ -93,7 +93,7 @@ class PushTest : StackTestBase() {
     assertEquals(6, stack.size)
     assertEquals(42, stack.peek())
   }
-  
+
   /** Tests push with multiple elements in varargs. */
   @Test
   @DisplayName("Test pushAll with multiple elements in varargs")
@@ -107,7 +107,7 @@ class PushTest : StackTestBase() {
     assertEquals(96, stack.pop())
     assertEquals(42, stack.pop())
   }
-  
+
   /** Tests push with multiple elements in list. */
   @Test
   @DisplayName("Test pushAll with multiple elements in list")

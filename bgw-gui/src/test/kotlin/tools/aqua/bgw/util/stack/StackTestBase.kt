@@ -27,7 +27,7 @@ open class StackTestBase {
 
   /** Stack filled with given order. */
   protected lateinit var stack: Stack<Int>
-  
+
   /** An empty stack. */
   protected lateinit var emptyStack: Stack<Int>
 

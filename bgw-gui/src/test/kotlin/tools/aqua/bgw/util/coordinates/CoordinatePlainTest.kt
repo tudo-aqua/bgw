@@ -26,10 +26,12 @@ import tools.aqua.bgw.DOUBLE_TOLERANCE
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
 
+/** Test CoordinatePlain functions */
 class CoordinatePlainTest {
 
+  /** Test corner coordinates. */
   @Test
-  @DisplayName("Test y coordinates flipped")
+  @DisplayName("Test corner coordinates")
   fun testCorners() {
     val plain = CoordinatePlain(0, 0, 5, 7)
 
@@ -42,6 +44,7 @@ class CoordinatePlainTest {
     assertEquals(5.0, plain.width)
   }
 
+  /** Test x coordinates flipped. */
   @Test
   @DisplayName("Test x coordinates flipped")
   fun testXInWrongOrder() {
@@ -49,6 +52,7 @@ class CoordinatePlainTest {
     assertThrows<IllegalArgumentException> { CoordinatePlain(Coordinate(5, 0), Coordinate(0, 0)) }
   }
 
+  /** Test y coordinates flipped. */
   @Test
   @DisplayName("Test y coordinates flipped")
   fun testYInWrongOrder() {
@@ -56,6 +60,7 @@ class CoordinatePlainTest {
     assertThrows<IllegalArgumentException> { CoordinatePlain(Coordinate(0, 5), Coordinate(0, 0)) }
   }
 
+  /** Test rotation by 45 degrees. */
   @Test
   @DisplayName("Test rotation by 45 degrees")
   fun testRotation45Degrees() {
@@ -104,6 +109,7 @@ class CoordinatePlainTest {
     assertEquals(expectedHigh, rotated.bottomLeftBound.yCoord, DOUBLE_TOLERANCE)
   }
 
+  /** Test rotation by 90 degrees on square. */
   @Test
   @DisplayName("Test rotation by 90 on square")
   fun testRotation90DegreesSquare() {
@@ -142,6 +148,7 @@ class CoordinatePlainTest {
     assertEquals(plain.bottomLeftBound.yCoord, rotated.bottomLeftBound.yCoord, DOUBLE_TOLERANCE)
   }
 
+  /** Test rotation by 90 on rectangle. */
   @Test
   @DisplayName("Test rotation by 90 on rectangle")
   fun testRotation90DegreesRect() {
