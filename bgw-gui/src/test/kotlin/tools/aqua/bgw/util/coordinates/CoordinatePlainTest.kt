@@ -26,7 +26,7 @@ import tools.aqua.bgw.DOUBLE_TOLERANCE
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
 
-/** Test CoordinatePlain functions */
+/** Test CoordinatePlain functions. */
 class CoordinatePlainTest {
 
   /** Test corner coordinates. */
