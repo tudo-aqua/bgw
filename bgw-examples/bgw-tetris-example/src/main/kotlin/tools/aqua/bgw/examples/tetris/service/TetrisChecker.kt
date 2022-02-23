@@ -36,7 +36,7 @@ object TetrisChecker {
       offsetY: Int = 0,
       offsetX: Int = 0
   ): Boolean {
-    val grid = tetris.tetris
+    val grid = tetris.tetrisGrid
 
     for (y in 0 until piece.height) {
       for (x in 0 until piece.width) {
@@ -61,7 +61,7 @@ object TetrisChecker {
    */
   fun isRowFull(tetris: Tetris, row: Int): Boolean {
     for (x in 0 until 10) {
-      if (tetris.tetris[row][x].imageVisual == null) return false
+      if (tetris.tetrisGrid[row][x].imageVisual == null) return false
     }
     return true
   }

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "SpreadOperator")
 
 package tools.aqua.bgw.dialog
 

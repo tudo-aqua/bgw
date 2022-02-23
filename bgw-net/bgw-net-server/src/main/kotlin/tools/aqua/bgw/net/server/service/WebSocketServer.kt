@@ -135,10 +135,13 @@ class MyWebsocketHandler(
     val player = session.player
     val game = player.game
     gameService.leaveGame(player)
-    game?.let {
+    
+    if(game != null) {
       messageService.broadcastNotification(
-          game, UserDisconnectedNotification("disconnected", player.name))
+        game, UserDisconnectedNotification("disconnected", player.name)
+      )
     }
+
     playerService.deletePlayer(session)
     logger.info("User with session id ${session.id} disconnected")
   }

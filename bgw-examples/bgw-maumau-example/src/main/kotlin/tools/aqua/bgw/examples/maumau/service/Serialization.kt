@@ -23,7 +23,7 @@ import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
 
-object SerializationUtil {
+object Serialization {
   /** Serializes [MauMauCard] for exchange format. */
   fun MauMauCard.serialize(): String = "${cardValue}_${cardSuit}"
 

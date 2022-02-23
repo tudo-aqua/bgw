@@ -24,7 +24,7 @@ package tools.aqua.bgw.examples.tetris.entity
  */
 class Tetris(previewPieces: Array<Piece>) {
   /** Current tetris grid. */
-  val tetris: Array<Array<Tile>> = Array(20) { Array(10) { Tile(null) } }
+  val tetrisGrid: Array<Array<Tile>> = Array(20) { Array(10) { Tile(null) } }
 
   /** The three preview tiles. */
   val preview: Array<Piece> = previewPieces

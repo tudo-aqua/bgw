@@ -24,14 +24,14 @@ import tools.aqua.bgw.net.server.service.GameService
  * The interval between consecutive checks for orphaned games in milliseconds.
  * @see [GameService.removeOrphanedGames]
  */
-const val ORPHANED_GAME_CHECK_RATE: Long = 20000L
+const val ORPHANED_GAME_CHECK_RATE: Long = 20_000L
 
 /**
  * The duration a game has to be without any players until it is considered orphaned.
  * @see [GameService.removeOrphanedGames]
  * @see [Game]
  */
-const val TIME_UNTIL_ORPHANED: Long = 60000L
+const val TIME_UNTIL_ORPHANED: Long = 60_000L
 
 /** The String representation of the example game id. */
 const val EXAMPLE_GAME_ID: String = "example"

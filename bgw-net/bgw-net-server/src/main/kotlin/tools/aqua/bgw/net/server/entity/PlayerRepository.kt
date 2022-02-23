@@ -28,7 +28,5 @@ class PlayerRepository : ObjectRepository<Player> {
 
   override fun remove(obj: Player): Boolean = playerSet.remove(obj)
 
-  override fun getAll(): List<Player> {
-    return playerSet.toList()
-  }
+  override fun getAll(): List<Player> = playerSet.toList()
 }

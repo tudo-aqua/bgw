@@ -31,25 +31,23 @@ class Game(val gameID: String, val sessionID: String, initializer: Player) {
     get() = mutablePlayers.toList()
 
   fun remove(player: Player): Boolean {
-    val result = mutablePlayers.remove(player)
+    val isRemoved = mutablePlayers.remove(player)
     if (mutablePlayers.isEmpty()) {
       orphanCandidateSince = System.currentTimeMillis()
     }
-    return result
+    return isRemoved
   }
 
   fun add(player: Player): Boolean {
-    val result = mutablePlayers.add(player)
+    val isAdded = mutablePlayers.add(player)
     if (mutablePlayers.isNotEmpty()) {
       orphanCandidateSince = null
     }
-    return result
+    return isAdded
   }
 
   override fun equals(other: Any?): Boolean =
       if (other is Game) sessionID == other.sessionID else false
 
-  override fun hashCode(): Int {
-    return sessionID.hashCode()
-  }
+  override fun hashCode(): Int = sessionID.hashCode()
 }

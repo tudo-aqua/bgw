@@ -39,8 +39,6 @@ enum class CardSuit {
      *
      * @return The complete [EnumSet].
      */
-    fun allSuits(): EnumSet<CardSuit> {
-      return EnumSet.of(CLUBS, SPADES, HEARTS, DIAMONDS)
-    }
+    fun allSuits(): EnumSet<CardSuit> = EnumSet.of(CLUBS, SPADES, HEARTS, DIAMONDS)
   }
 }

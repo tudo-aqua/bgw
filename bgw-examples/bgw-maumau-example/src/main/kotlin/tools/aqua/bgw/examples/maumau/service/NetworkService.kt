@@ -17,11 +17,11 @@
 
 package tools.aqua.bgw.examples.maumau.service
 
-import java.net.InetAddress
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
 import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
+import java.net.InetAddress
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
@@ -80,7 +80,7 @@ class NetworkService(private val logicController: LogicController) {
   // region Send actions
   /** Send initialize game message to connected opponent. */
   fun sendInit(game: MauMauGame) {
-    client?.sendInitializeGameMessage(SerializationUtil.serializeInitMessage(game))
+    client?.sendInitializeGameMessage(Serialization.serializeInitMessage(game))
   }
 
   /** Send [GameAction.DRAW] action to connected opponent. */
@@ -165,6 +165,6 @@ class NetworkService(private val logicController: LogicController) {
   }
 
   /** Tries parsing [port] into an ip port. */
-  private fun validatePort(port: String): Boolean = (port.toIntOrNull() ?: false) in 1..65534
+  private fun validatePort(port: String): Boolean = (port.toIntOrNull() ?: false) in 1..65_534
   // endregion
 }

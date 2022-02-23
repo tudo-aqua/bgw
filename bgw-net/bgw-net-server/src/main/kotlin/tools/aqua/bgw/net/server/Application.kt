@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("SpreadOperator")
+
 package tools.aqua.bgw.net.server
 
 import org.springframework.boot.autoconfigure.SpringBootApplication

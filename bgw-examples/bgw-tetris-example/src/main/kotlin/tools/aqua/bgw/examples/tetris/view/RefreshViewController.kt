@@ -83,7 +83,7 @@ class RefreshViewController(private val viewController: TetrisViewController) : 
    */
   private fun refreshTetris(tetris: Tetris) {
     val viewGrid = viewController.tetrisGameScene.tetrisGrid
-    val tetrisGrid = tetris.tetris
+    val tetrisGrid = tetris.tetrisGrid
 
     for (y in tetrisGrid.indices) {
       for (x in 0 until tetrisGrid[0].size) {

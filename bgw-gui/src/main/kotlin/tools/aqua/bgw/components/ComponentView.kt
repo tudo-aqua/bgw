@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.components
 
-import kotlin.math.floor
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
@@ -31,6 +30,7 @@ import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
+import kotlin.math.floor
 
 /**
  * [ComponentView] is the abstract baseclass of all framework components.
@@ -616,11 +616,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @throws IllegalArgumentException If the given [scalar] is negative.
    */
   fun scale(scalar: Number) {
-    val scalarDoubleValue = scalar.toDouble()
-    require(scalarDoubleValue >= 0) {
-      "Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
-    }
-    this.scale = scalarDoubleValue
+    this.scale = checkScalarPositive(scalar)
   }
 
   /**
@@ -632,11 +628,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @throws IllegalArgumentException If the given [scalar] is negative.
    */
   fun scaleX(scalar: Number) {
-    val scalarDoubleValue = scalar.toDouble()
-    require(scalarDoubleValue >= 0) {
-      "Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
-    }
-    this.scaleX = scalarDoubleValue
+    this.scaleX = checkScalarPositive(scalar)
   }
 
   /**
@@ -647,11 +639,22 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @throws IllegalArgumentException If the given [scalar] is negative.
    */
   fun scaleY(scalar: Number) {
+    this.scaleY = checkScalarPositive(scalar)
+  }
+  
+  /**
+   * Checks given [scalar] for being positive.
+   *
+   * @param scalar scalar to be checked.
+   *
+   * @throws IllegalArgumentException If the given [scalar] is negative.
+   */
+  private fun checkScalarPositive(scalar: Number) : Double {
     val scalarDoubleValue = scalar.toDouble()
     require(scalarDoubleValue >= 0) {
       "Only non-negative scalars are allowed. Provided scalar was $scalarDoubleValue."
     }
-    this.scaleY = scalarDoubleValue
+    return scalarDoubleValue
   }
 
   /**

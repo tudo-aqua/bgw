@@ -104,10 +104,10 @@ class LogicController(val view: Refreshable) {
     initGame(
         player1 = message.players[1],
         player2 = message.players[0],
-        drawStack = message.drawStack.map { SerializationUtil.deserializeMauMauCard(it) },
-        gameStack = SerializationUtil.deserializeMauMauCard(message.gameStack.first()),
-        hostCards = message.hostCards.map { SerializationUtil.deserializeMauMauCard(it) },
-        opponentCards = message.yourCards.map { SerializationUtil.deserializeMauMauCard(it) })
+        drawStack = message.drawStack.map { Serialization.deserializeMauMauCard(it) },
+        gameStack = Serialization.deserializeMauMauCard(message.gameStack.first()),
+        hostCards = message.hostCards.map { Serialization.deserializeMauMauCard(it) },
+        opponentCards = message.yourCards.map { Serialization.deserializeMauMauCard(it) })
   }
   // endregion
 

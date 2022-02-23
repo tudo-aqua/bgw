@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "SpreadOperator")
 
 package tools.aqua.bgw.builder
 
@@ -23,13 +23,13 @@ import javafx.animation.*
 import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.util.Duration
-import kotlin.random.Random
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.AnimationFinishedEvent
+import kotlin.random.Random
 
 /** AnimationBuilder. Factory for BGW animations. */
 object AnimationBuilder {

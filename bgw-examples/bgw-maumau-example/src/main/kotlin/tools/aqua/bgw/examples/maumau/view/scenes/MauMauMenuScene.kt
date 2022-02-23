@@ -26,7 +26,7 @@ import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_HEIGHT
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_WIDTH
-import tools.aqua.bgw.examples.maumau.view.custom_components.MenuButton
+import tools.aqua.bgw.examples.maumau.view.customcomponents.MenuButton
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 

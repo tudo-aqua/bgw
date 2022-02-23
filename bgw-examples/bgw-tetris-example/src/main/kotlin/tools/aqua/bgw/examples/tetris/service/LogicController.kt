@@ -159,7 +159,7 @@ class LogicController(private val view: Refreshable) {
       for (y in 0 until piece.height) {
         for (x in 0 until piece.width) {
           piece.tiles[y][x]?.let {
-            tetris.tetris[y + tetris.currentYPosition - 1][x + tetris.currentXPosition - 1] = it
+            tetris.tetrisGrid[y + tetris.currentYPosition - 1][x + tetris.currentXPosition - 1] = it
           }
         }
       }
@@ -226,7 +226,7 @@ class LogicController(private val view: Refreshable) {
    */
   private fun clearRows() {
     synchronized(mutex) {
-      val grid = tetris.tetris
+      val grid = tetris.tetrisGrid
       var row = 19
       var cleared = 0
 

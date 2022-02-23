@@ -20,7 +20,7 @@ package tools.aqua.bgw.examples.maumau.entity
 import java.util.*
 
 /** Abstract baseclass for the stacks in the game. */
-abstract class MauMauStack {
+open class MauMauStack private constructor() {
   /** The cards currently in this stack. */
   val cards: Stack<MauMauCard> = Stack<MauMauCard>()
 

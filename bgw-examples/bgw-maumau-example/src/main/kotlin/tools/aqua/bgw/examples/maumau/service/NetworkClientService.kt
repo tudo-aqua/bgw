@@ -100,7 +100,7 @@ class NetworkClientService(
         // Enemy has played a card
         GameAction.PLAY -> {
           logicController.playCard(
-              card = SerializationUtil.deserializeMauMauCard(message.card),
+              card = Serialization.deserializeMauMauCard(message.card),
               animated = true,
               isCurrentPlayer = false)
         }
@@ -119,7 +119,7 @@ class NetworkClientService(
         // Enemy has played a jack and request suit
         GameAction.REQUEST_SUIT -> {
           logicController.selectSuit(
-              suit = SerializationUtil.deserializeMauMauCard(message.card).cardSuit,
+              suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
               isCurrentPlayer = false)
         }
 

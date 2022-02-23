@@ -137,16 +137,18 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
   /**
    * Moves the cursor.
    *
-   * @param arrow Pressed arrow key.
+   * @param keyCode Pressed arrow key.
    */
-  private fun onCursorMoved(arrow: KeyCode) {
+  private fun onCursorMoved(keyCode: KeyCode) {
+    require(keyCode.isArrow()) { "$keyCode is not an arrow key." }
+    
     val selectedCell = sudokuGameScene.sudokuGrid.selectedCell ?: return
 
     var box = selectedCell.boxIndex
     var col = selectedCell.colIndex
     var row = selectedCell.rowIndex
 
-    when (arrow) {
+    when (keyCode) {
       KeyCode.UP -> {
         if (row == 0) {
           box = Math.floorMod(box - 3, 9)
@@ -179,7 +181,7 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
           col++
         }
       }
-      else -> throw IllegalArgumentException()
+      else -> error("$keyCode is not an arrow key.")
     }
 
     sudokuGameScene.sudokuGrid.getCell(box, row, col).select()

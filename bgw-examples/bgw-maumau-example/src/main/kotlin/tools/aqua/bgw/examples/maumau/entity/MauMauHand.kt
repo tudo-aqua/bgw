@@ -36,7 +36,5 @@ class MauMauHand {
    *
    * @param card Card to be removed.
    */
-  fun removeCard(card: MauMauCard): Boolean {
-    return cards.remove(card)
-  }
+  fun removeCard(card: MauMauCard): Boolean = cards.remove(card)
 }

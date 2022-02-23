@@ -62,13 +62,10 @@ enum class CardValue {
 
   companion object {
     @Suppress("unused")
-    fun completeDeck(): EnumSet<CardValue> {
-      return EnumSet.of(
-          ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING)
-    }
+    fun completeDeck(): EnumSet<CardValue> = EnumSet.of(
+      ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
+    )
 
-    fun shortDeck(): EnumSet<CardValue> {
-      return EnumSet.of(ACE, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING)
-    }
+    fun shortDeck(): EnumSet<CardValue> = EnumSet.of(ACE, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING)
   }
 }

@@ -27,7 +27,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.Alignment
 
-abstract class GridPaneTestBase {
+open class GridPaneTestBase {
   private lateinit var alignments: Array<Array<Alignment>>
   private val labels: Array<Label> = Array(3) { Label() }
   private val buttons: Array<Button> = Array(3) { Button() }

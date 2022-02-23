@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.view.custom_components
+package tools.aqua.bgw.examples.maumau.view.customcomponents
 
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.examples.maumau.main.BUTTON_BG_FILE
