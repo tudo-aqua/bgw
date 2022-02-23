@@ -25,9 +25,12 @@ import org.junit.jupiter.api.Test
 import tools.aqua.bgw.DOUBLE_TOLERANCE
 import tools.aqua.bgw.util.Coordinate
 
+/** Test coordinate functions */
 class CoordinateTest {
-
+  /** Coordinate A */
   private lateinit var coordinateA: Coordinate
+  
+  /** Coordinate B */
   private lateinit var coordinateB: Coordinate
 
   @BeforeEach

@@ -62,10 +62,10 @@ class PeekTest : StackTestBase() {
 
   /** Tests peekAll on empty stack. */
   @Test
-  @DisplayName("Test peekAll for on empty stack")
+  @DisplayName("Test peekAll on empty stack")
   fun testPeekAllOnEmptyStack() {
     assertEquals(0, emptyStack.size)
-    assertThrows<IllegalArgumentException> { emptyStack.peekAll() }
+    assertEquals(0, emptyStack.peekAll().size)
   }
 
   /** Tests peekAll on filled stack. */

@@ -18,20 +18,21 @@
 package tools.aqua.bgw.util.stack
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test size property in Stack. */
 class SizeTest : StackTestBase() {
+  /** Test size on filled stack. */
   @Test
   @DisplayName("Test size")
   fun testSize() {
     assertEquals(5, stack.size)
     assertEquals(0, emptyStack.size)
   }
-
+  
+  /** Test clear on filled stack. */
   @Test
   @DisplayName("Test clear")
   fun testClear() {
@@ -39,7 +40,8 @@ class SizeTest : StackTestBase() {
     assertEquals(order, stack.clear())
     assertEquals(0, emptyStack.size)
   }
-
+  
+  /** Test clear on empty stack. */
   @Test
   @DisplayName("Test clear on empty stack")
   fun testClearEmptyStack() {
@@ -47,7 +49,8 @@ class SizeTest : StackTestBase() {
     assertThat(emptyStack.clear()).isEmpty()
     assertEquals(0, emptyStack.size)
   }
-
+  
+  /** Test isEmpty and isNotEmpty. */
   @Test
   @DisplayName("Test isEmpty and isNotEmpty")
   fun testIsEmpty() {
@@ -59,20 +62,23 @@ class SizeTest : StackTestBase() {
     assertTrue { emptyStack.isEmpty() }
     assertFalse { emptyStack.isNotEmpty() }
   }
-
+  
+  /** Test indexOf on existing element. */
   @Test
   @DisplayName("Test indexOf on existing element")
   fun testIndexOfExisting() {
     assertEquals(2, stack.indexOf(order[2]))
   }
-
+  
+  /** Test indexOf on duplicate element. */
   @Test
   @DisplayName("Test indexOf on duplicate element")
   fun testIndexOfDuplicate() {
     stack.push(order[2])
     assertEquals(2, stack.indexOf(order[2]))
   }
-
+  
+  /** Test indexOf on non-existing element. */
   @Test
   @DisplayName("Test indexOf on non-existing element")
   fun testIndexOfNonExisting() {

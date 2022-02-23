@@ -83,7 +83,7 @@ class PopTest : StackTestBase() {
   @DisplayName("Test popAll on empty stack")
   fun testPopAllOnEmptyStack() {
     assertEquals(0, emptyStack.size)
-    assertThrows<IllegalArgumentException> { emptyStack.popAll() }
+    assertEquals(0, emptyStack.popAll().size)
   }
 
   /** Tests popAll on filled stack. */

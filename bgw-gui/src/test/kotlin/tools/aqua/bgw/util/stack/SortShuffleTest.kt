@@ -17,14 +17,14 @@
 
 package tools.aqua.bgw.util.stack
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.util.Stack
 
+/** Test sort and shuffle functions in Stack. */
 class SortShuffleTest : StackTestBase() {
+  /** Test shuffle on large number of elements. */
   @Test
   @DisplayName("Test shuffle")
   fun testShuffle() {
@@ -40,9 +40,10 @@ class SortShuffleTest : StackTestBase() {
     assertNotEquals(comparisonStack.peekAll(), orderedStack.peekAll())
 
     // order has changed
-    assertTrue { orderedStack.peekAll().minus(comparisonStack.peekAll()).isEmpty() }
+    assertTrue { orderedStack.peekAll().minus(comparisonStack.peekAll().toSet()).isEmpty() }
   }
-
+  
+  /** Test sort on large number of elements. */
   @Test
   @DisplayName("Test sort")
   fun testSort() {

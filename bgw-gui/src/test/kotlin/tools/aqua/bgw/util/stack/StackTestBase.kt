@@ -20,12 +20,18 @@ package tools.aqua.bgw.util.stack
 import org.junit.jupiter.api.BeforeEach
 import tools.aqua.bgw.util.Stack
 
+/** Test base for Stack tests. */
 open class StackTestBase {
+  /** initial order of elements in stack. */
   protected val order: List<Int> = listOf(3, 2, 5, 4, 1)
 
+  /** Stack filled with given order. */
   protected lateinit var stack: Stack<Int>
+  
+  /** An empty stack. */
   protected lateinit var emptyStack: Stack<Int>
 
+  /** Fills stacks with given orders before tests. */
   @BeforeEach
   fun setUp() {
     stack = Stack(order.reversed())
