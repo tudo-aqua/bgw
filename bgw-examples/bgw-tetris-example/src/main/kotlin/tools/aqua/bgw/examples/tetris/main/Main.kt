@@ -19,6 +19,7 @@ package tools.aqua.bgw.examples.tetris.main
 
 import tools.aqua.bgw.examples.tetris.view.TetrisViewController
 
+/** Entry point. */
 fun main() {
   TetrisViewController()
 }

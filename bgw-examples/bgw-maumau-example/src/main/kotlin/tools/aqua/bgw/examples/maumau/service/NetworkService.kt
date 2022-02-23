@@ -110,7 +110,8 @@ class NetworkService(private val logicController: LogicController) {
   fun sendEndTurn() {
     client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.END_TURN))
   }
-
+  
+  /** Sends End game message to connected opponent. */
   fun sendEndGame() {
     client?.sendEndGameMessage(GameOverMessage("Looser!"))
   }

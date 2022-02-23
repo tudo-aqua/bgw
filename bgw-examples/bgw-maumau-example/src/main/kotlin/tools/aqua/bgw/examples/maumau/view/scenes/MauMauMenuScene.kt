@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import java.awt.Color
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -29,22 +28,33 @@ import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_WIDTH
 import tools.aqua.bgw.examples.maumau.view.customcomponents.MenuButton
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import java.awt.Color
 
-/** ViewController for the main menu scene. */
+/** Main [MenuScene]. */
 class MauMauMenuScene :
     MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
-
+  
+  /** The menu [Label]. */
   private val menuLabel: Label =
       Label(
           height = MENU_ITEM_HEIGHT,
           width = MENU_ITEM_WIDTH,
           text = "Main menu",
           font = Font(fontWeight = Font.FontWeight.BOLD))
-
+  
+  /** Continue game [Button]. */
   val continueGameButton: Button = MenuButton("Continue")
+  
+  /** New local game [Button]. */
   val newLocalGameButton: Button = MenuButton("New Local Game")
+  
+  /** Host game [Button]. */
   val hostGameButton: Button = MenuButton("Host Game")
+  
+  /** Join game [Button]. */
   val joinGameButton: Button = MenuButton("Join Game")
+  
+  /** Exit game [Button]. */
   val exitButton: Button = MenuButton("Exit")
 
   init {

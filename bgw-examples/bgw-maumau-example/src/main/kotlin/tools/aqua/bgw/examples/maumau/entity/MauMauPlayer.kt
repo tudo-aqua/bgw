@@ -17,7 +17,11 @@
 
 package tools.aqua.bgw.examples.maumau.entity
 
-/** Class representing a player. */
+/**
+ * Class representing a player.
+ *
+ * @property name Player name.
+ */
 class MauMauPlayer(val name: String) {
 
   /** Instance of the player`s hand cards. */

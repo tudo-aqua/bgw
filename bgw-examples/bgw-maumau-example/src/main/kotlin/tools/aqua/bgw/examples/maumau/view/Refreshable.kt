@@ -19,6 +19,7 @@ package tools.aqua.bgw.examples.maumau.view
 
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 
+/** Refreshable interface. */
 interface Refreshable {
 
   /** Indicates refresh on all components. */

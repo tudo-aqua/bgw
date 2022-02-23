@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.examples.maumau.entity
 
+/** Enum for bgw-net game actions. */
 enum class GameAction {
   PLAY,
   DRAW,

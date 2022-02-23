@@ -20,6 +20,7 @@ package tools.aqua.bgw.examples.sudoku.view
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
 
+/** ViewController for refreshes. */
 class RefreshViewController(private val viewController: SudokuViewController) : Refreshable {
   /**
    * Refresh to init new game.

@@ -17,6 +17,15 @@
 
 package tools.aqua.bgw.examples.maumau.service.messages
 
+/**
+ * InitGameMessage data class for serialization.
+ *
+ * @property players [List] of players.
+ * @property drawStack [List] of draw stack cards.
+ * @property gameStack [List] of game tack cards.
+ * @property hostCards [List] of host player's cards.
+ * @property yourCards [List] of your cards.
+ */
 data class InitGameMessage(
     val players: List<String>,
     val drawStack: List<String>,

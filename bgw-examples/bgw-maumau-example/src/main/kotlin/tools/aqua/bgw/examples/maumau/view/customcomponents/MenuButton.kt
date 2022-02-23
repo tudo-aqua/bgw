@@ -24,6 +24,11 @@ import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_HEIGHT
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_WIDTH
 import tools.aqua.bgw.visual.ImageVisual
 
+/**
+ * A MenuButton with default properties.
+ *
+ * @param text Text to be displayed.
+ */
 class MenuButton(text: String) :
     Button(
         height = MENU_ITEM_HEIGHT,

@@ -19,6 +19,7 @@ package tools.aqua.bgw.examples.sudoku.view
 
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
 
+/** Refreshable interface. */
 interface Refreshable {
   /**
    * Refresh to init new game.

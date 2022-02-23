@@ -34,6 +34,7 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 
+/** ViewController for refreshes. */
 class RefreshViewController(private val viewController: MauMauViewController) : Refreshable {
 
   /** texture map for cards. */

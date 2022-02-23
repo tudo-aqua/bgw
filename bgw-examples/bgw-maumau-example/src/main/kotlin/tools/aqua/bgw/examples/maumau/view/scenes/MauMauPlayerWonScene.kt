@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.MenuScene
@@ -26,17 +25,13 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
+import java.awt.Color
 
-/** ViewController for the main menu scene. */
+/** Player won [MenuScene]. */
 class MauMauPlayerWonScene :
     MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) {
-
-  var playerWon: String = "Alice"
-    set(value) {
-      field = value
-      playerWonLabel.text = "$value won the game."
-    }
-
+  
+  /** The menu [Label]. */
   private val menuLabel: Label =
       Label(
           height = 100,
@@ -45,7 +40,8 @@ class MauMauPlayerWonScene :
           posY = 0,
           text = "Game over!",
           font = Font(fontWeight = Font.FontWeight.BOLD))
-
+  
+  /** The winning player name [Label]. */
   private val playerWonLabel: Label =
       Label(
           height = 100,
@@ -54,7 +50,15 @@ class MauMauPlayerWonScene :
           posY = 100,
           text = "",
           font = Font(fontWeight = Font.FontWeight.BOLD))
-
+  
+  /** The winning player name. */
+  var playerWon: String = "Alice"
+    set(value) {
+      field = value
+      playerWonLabel.text = "$value won the game."
+    }
+  
+  /** New game [Button]. */
   val newGameButton: Button =
       Button(
           height = 80,
@@ -64,7 +68,8 @@ class MauMauPlayerWonScene :
           text = "New Game",
           font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC),
           visual = ImageVisual(BUTTON_BG_FILE))
-
+  
+  /** Exit game [Button]. */
   val exitButton: Button =
       Button(
           height = 80,

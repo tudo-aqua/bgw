@@ -20,6 +20,7 @@ package tools.aqua.bgw.examples.sudoku.service
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku
 import tools.aqua.bgw.examples.sudoku.entity.Sudoku.SudokuTuple
 
+/** Checks given sudoku. */
 object SudokuChecker {
   /**
    * Checks given sudoku for errors and returns them.

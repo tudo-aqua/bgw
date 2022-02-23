@@ -23,6 +23,7 @@ import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
 
+/** Serialization helper for network communication. */
 object Serialization {
   /** Serializes [MauMauCard] for exchange format. */
   fun MauMauCard.serialize(): String = "${cardValue}_${cardSuit}"
@@ -33,7 +34,8 @@ object Serialization {
     return MauMauCard(
         cardSuit = CardSuit.valueOf(split[1]), cardValue = CardValue.valueOf(split[0]))
   }
-
+  
+  /** Serializes game into game initialization exchange format. */
   fun serializeInitMessage(game: MauMauGame): InitGameMessage =
       InitGameMessage(
           players = game.players.map { it.name },

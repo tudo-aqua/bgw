@@ -28,6 +28,14 @@ import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.common.*
 
+/**
+ * [BoardGameClient] implementation for network communication.
+ *
+ * @param playerName Your player name.
+ * @param host Host address or name
+ * @param port Destination port.
+ * @property logicController [LogicController] instance for refreshes.
+ */
 class NetworkClientService(
     playerName: String,
     host: String,
@@ -42,7 +50,8 @@ class NetworkClientService(
         endGameClass = GameOverMessage::class.java,
         host = host,
         port = port) {
-
+  
+  /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
 
   // region Connect response

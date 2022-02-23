@@ -17,9 +17,6 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import java.awt.Color
-import java.util.*
-import kotlin.concurrent.scheduleAtFixedRate
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.components.gamecomponentviews.CardView
@@ -35,9 +32,14 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
+import java.awt.Color
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
+/** Main game scene for MauMau. */
 class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
   // region Player hands
+  /** Player one's hand. */
   var currentPlayerHand: LinearLayout<CardView> =
       LinearLayout(
           height = 220,
@@ -47,7 +49,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
           spacing = -50,
           alignment = Alignment.CENTER,
           visual = ColorVisual(255, 255, 255, 50))
-
+  
+  /** Player two's hand. */
   var otherPlayerHand: LinearLayout<CardView> =
       LinearLayout(
           height = 220,
@@ -62,6 +65,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
   // endregion
 
   // region Stacks
+  /** The draw stack. */
   val drawStack: CardStack<CardView> =
       CardStack(
           height = 200,
@@ -69,6 +73,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
           posX = 750,
           posY = 360,
           visual = ColorVisual(255, 255, 255, 50))
+  
+  /** The game stack. */
   val gameStack: CardStack<CardView> =
       CardStack(
           height = 200,
@@ -76,9 +82,14 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
           posX = 1040,
           posY = 360,
           visual = ColorVisual(255, 255, 255, 50))
+  
+  /** The draw stack info label. */
   val drawStackInfo: Label = Label(height = 40, width = 130, posX = 750, posY = 320)
+  
+  /** The game stack info label. */
   val gameStackInfo: Label = Label(height = 40, width = 130, posX = 1040, posY = 320)
-
+  
+  /** The label indication waiting for the opponent's turn. */
   private val waitForOpponentLabel: Label =
       Label(
               height = 50,
@@ -90,6 +101,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
   // endregion stacks
 
   // region Jack selection
+  /** Button "CLUBS" for jack selection. */
   val buttonClubs: Button =
       Button(
           height = 200,
@@ -103,7 +115,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
                   IMG_HEIGHT,
                   CardValue.ACE.ordinal * IMG_WIDTH,
                   CardSuit.CLUBS.ordinal * IMG_HEIGHT))
-
+  
+  /** Button "SPADES" for jack selection. */
   val buttonSpades: Button =
       Button(
           height = 200,
@@ -117,7 +130,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
                   IMG_HEIGHT,
                   CardValue.ACE.ordinal * IMG_WIDTH,
                   CardSuit.SPADES.ordinal * IMG_HEIGHT))
-
+  
+  /** Button "HEARTS" for jack selection. */
   val buttonHearts: Button =
       Button(
           height = 200,
@@ -131,7 +145,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
                   IMG_HEIGHT,
                   CardValue.ACE.ordinal * IMG_WIDTH,
                   CardSuit.HEARTS.ordinal * IMG_HEIGHT))
-
+  
+  /** Button "DIAMONDS" for jack selection. */
   val buttonDiamonds: Button =
       Button(
           height = 200,
@@ -146,7 +161,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
                   CardValue.ACE.ordinal * IMG_WIDTH,
                   CardSuit.DIAMONDS.ordinal * IMG_HEIGHT))
   // endregion
-
+  
+  /** Hint button. */
   val hintButton: Button =
       Button(
           height = 80,
@@ -155,7 +171,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
           posY = 820,
           font = Font(20.0, fontStyle = FontStyle.ITALIC, color = Color.WHITE),
           visual = ImageVisual(LIGHT_BULB_FILE))
-
+  
+  /** Main menu button. */
   val mainMenuButton: Button =
       Button(
           height = 100,

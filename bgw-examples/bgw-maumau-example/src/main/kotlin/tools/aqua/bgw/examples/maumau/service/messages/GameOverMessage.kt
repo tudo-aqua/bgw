@@ -17,4 +17,9 @@
 
 package tools.aqua.bgw.examples.maumau.service.messages
 
+/**
+ * GameOverMessage data class for serialization.
+ *
+ * @property winner The winner name.
+ */
 data class GameOverMessage(val winner: String)

@@ -19,6 +19,7 @@ package tools.aqua.bgw.examples.tetris.view
 
 import tools.aqua.bgw.examples.tetris.entity.Tetris
 
+/** Refreshable interface. */
 interface Refreshable {
   /**
    * Refreshes tetris grid.
