@@ -17,15 +17,15 @@
 
 package tools.aqua.bgw.observable.observablelist
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/** Test remove function in ObservableList. */
 class RemoveTest : ObservableListTestBase() {
+  
+  /** Test remove. */
   @Test
   @DisplayName("Test remove")
   fun testRemove() {
@@ -41,7 +41,8 @@ class RemoveTest : ObservableListTestBase() {
 
     assertFalse(list.remove(42))
   }
-
+  
+  /** Test remove at index. */
   @Test
   @DisplayName("Test remove at index")
   fun testRemoveAt() {
@@ -55,14 +56,16 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified()
   }
-
+  
+  /** Test remove at index out of bounds. */
   @Test
   @DisplayName("Test remove at index out of bounds")
   fun testRemoveAtOutOfBounds() {
     assertThrows<IndexOutOfBoundsException> { list.removeAt(-1) }
     assertThrows<IndexOutOfBoundsException> { list.removeAt(5) }
   }
-
+  
+  /** Test remove first or null. */
   @Test
   @DisplayName("Test remove first or null")
   fun testRemoveFirstOrNull() {
@@ -76,7 +79,8 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified(5)
   }
-
+  
+  /** Test remove first. */
   @Test
   @DisplayName("Test remove first")
   fun testRemoveFirst() {
@@ -91,7 +95,8 @@ class RemoveTest : ObservableListTestBase() {
 
     assertThrows<NoSuchElementException> { list.removeFirst() }
   }
-
+  
+  /** Test remove last or null. */
   @Test
   @DisplayName("Test remove last or null")
   fun testRemoveLastOrNull() {
@@ -105,7 +110,8 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified(5)
   }
-
+  
+  /** Test remove last. */
   @Test
   @DisplayName("Test remove last")
   fun testRemoveLast() {
@@ -120,7 +126,8 @@ class RemoveTest : ObservableListTestBase() {
 
     assertThrows<NoSuchElementException> { list.removeLast() }
   }
-
+  
+  /** Test clear. */
   @Test
   @DisplayName("Test clear")
   fun testClear() {
@@ -133,7 +140,8 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified(1)
   }
-
+  
+  /** Test remove all. */
   @Test
   @DisplayName("Test remove all")
   fun testRemoveAll() {
@@ -153,7 +161,8 @@ class RemoveTest : ObservableListTestBase() {
     // Only notified once
     checkNotified(1)
   }
-
+  
+  /** Test retain all. */
   @Test
   @DisplayName("Test retain all")
   fun testRetainAll() {
@@ -173,7 +182,8 @@ class RemoveTest : ObservableListTestBase() {
     // Only notified once
     checkNotified(1)
   }
-
+  
+  /** Test remove if. */
   @Test
   @DisplayName("Test remove if")
   fun testRemoveIf() {
@@ -192,7 +202,8 @@ class RemoveTest : ObservableListTestBase() {
     // Only notified once
     checkNotified(1)
   }
-
+  
+  /** Test replace all. */
   @Test
   @DisplayName("Test replace all")
   fun testReplaceAll() {

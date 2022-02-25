@@ -22,7 +22,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/** Test add function in ObservableList. */
 class AddTest : ObservableListTestBase() {
+  
+  /** Test add. */
   @Test
   @DisplayName("Test add")
   fun testAdd() {
@@ -33,7 +36,8 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-
+  
+  /** Test add at index 0. */
   @Test
   @DisplayName("Test add at index 0")
   fun testAddIndexAtStart() {
@@ -44,7 +48,8 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-
+  
+  /** Test add at last index. */
   @Test
   @DisplayName("Test add at last index")
   fun testAddIndexAtEnd() {
@@ -55,7 +60,8 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-
+  
+  /** Test add at index out of bounds. */
   @Test
   @DisplayName("Test add at index out of bounds")
   fun testAddIndexOutOfBounds() {
@@ -63,7 +69,8 @@ class AddTest : ObservableListTestBase() {
 
     assertThrows<IndexOutOfBoundsException> { list.add(6, 42) }
   }
-
+  
+  /** Test add all. */
   @Test
   @DisplayName("Test add all")
   fun testAddAll() {
@@ -76,7 +83,8 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-
+  
+  /** Test add all at index. */
   @Test
   @DisplayName("Test add all at index")
   fun testAddAllAtIndex() {
@@ -89,7 +97,8 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-
+  
+  /** Test add all at index out of bounds. */
   @Test
   @DisplayName("Test add all at index out of bounds")
   fun testAddAllAtIndexOutOfBounds() {

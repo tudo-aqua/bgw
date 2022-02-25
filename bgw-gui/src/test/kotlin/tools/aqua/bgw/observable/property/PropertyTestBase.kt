@@ -38,10 +38,10 @@ open class PropertyTestBase {
   /** Property field */
   protected lateinit var property: LimitedDoubleProperty
   
-  /** [TestListener] 1. */
+  /** [TestListener] 1 catching update invocation. */
   protected val listener1: TestListener = TestListener()
   
-  /** [TestListener] 2. */
+  /** [TestListener] 2 catching update invocation. */
   protected val listener2: TestListener = TestListener()
   
   /** The internal listener. */
@@ -62,8 +62,14 @@ open class PropertyTestBase {
 
   /** Test listener registering callback invocation. */
   class TestListener : ((Double, Double) -> Unit) {
+  
+    /** Tracks invocation count. */
     var invokedCount: Int = 0
+  
+    /** Tracks old value. */
     var oldValue: Double? = null
+  
+    /** Tracks new value. */
     var newValue: Double? = null
 
     override fun invoke(oV: Double, nV: Double) {

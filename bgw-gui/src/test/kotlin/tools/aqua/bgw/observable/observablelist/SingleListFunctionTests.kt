@@ -22,8 +22,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/** Test single functions in ObservableList. */
 class SingleListFunctionTests : ObservableListTestBase() {
-
+  
+  /** Test indices. */
   @Test
   @DisplayName("Test indices")
   fun testIndices() {
@@ -31,7 +33,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-
+  
+  /** Test get. */
   @Test
   @DisplayName("Test get")
   fun testGet() {
@@ -39,7 +42,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-
+  
+  /** Test set. */
   @Test
   @DisplayName("Test set")
   fun testSet() {
@@ -54,7 +58,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     assertThrows<IndexOutOfBoundsException> { list[5] = 0 }
   }
-
+  
+  /** Test size. */
   @Test
   @DisplayName("Test size")
   fun testSize() {
@@ -66,7 +71,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-
+  
+  /** Test isEmpty and isNotEmpty. */
   @Test
   @DisplayName("Test isEmpty and isNotEmpty")
   fun testIsEmpty() {
@@ -78,7 +84,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-
+  
+  /** Test contains. */
   @Test
   @DisplayName("Test contains")
   fun testContains() {
@@ -89,7 +96,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-
+  
+  /** Test indexOf and lastIndexOf. */
   @Test
   @DisplayName("Test indexOf and lastIndexOf")
   fun testIndexOf() {
@@ -105,7 +113,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-
+  
+  /** Test subList. */
   @Test
   @DisplayName("Test subList")
   fun testSubList() {
@@ -117,7 +126,8 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     assertThrows<IllegalArgumentException> { list.subList(2, 1) }
   }
-
+  
+  /** Test sort. */
   @Test
   @DisplayName("Test sort")
   fun testSort() {
