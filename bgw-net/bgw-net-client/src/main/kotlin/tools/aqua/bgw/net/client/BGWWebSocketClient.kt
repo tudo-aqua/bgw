@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.client
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import java.net.URI
@@ -57,7 +58,7 @@ class BGWWebSocketClient<IG, GA, EG>(
     private val endGameClass: Class<EG>,
 ) : WebSocketClient(uri) {
 
-  /** Object mapper instance for JSON serialization */
+  /** Object mapper instance for JSON serialization. */
   private val mapper = ObjectMapper().registerModule(kotlinModule())
 
   init {
@@ -150,14 +151,16 @@ class BGWWebSocketClient<IG, GA, EG>(
   override fun onMessage(message: String?) {
     try {
       messageMapping(mapper.readValue(message, Message::class.java))
-    } catch (e: Exception) {
-      onError(e)
+    } catch (ise: IllegalArgumentException) {
+      onError(ise)
+    } catch (jse: JsonProcessingException) {
+      onError(jse)
     }
   }
 
   /** Maps incoming messages onto appropriate handlers. */
   private fun messageMapping(message: Message) {
-    check(message !is Request) { "Client received a request" }
+    require(message !is Request) { "Client received a request" }
 
     when (message) {
       is InitializeGameMessage ->

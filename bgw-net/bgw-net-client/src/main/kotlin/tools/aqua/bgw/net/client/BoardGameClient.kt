@@ -35,7 +35,7 @@ import tools.aqua.bgw.net.common.response.*
  * @param IG Generic for the [InitializeGameMessage].
  * @param GA Generic for the [GameActionMessage].
  * @param EG Generic for the [EndGameMessage].
- * @param playerName The player name.
+ * @property playerName The player name.
  * @param host The server ip or hostname.
  * @param port The server port.
  * @param endpoint The server endpoint.
