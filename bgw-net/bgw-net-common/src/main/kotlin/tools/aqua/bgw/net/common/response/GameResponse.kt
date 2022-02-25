@@ -25,4 +25,5 @@ import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
  * @property status Status code.
  * @property errorMessages List of errors.
  */
-sealed class GameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response()
+sealed class GameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) :
+    Response()

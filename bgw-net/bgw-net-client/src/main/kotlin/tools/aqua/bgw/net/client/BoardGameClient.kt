@@ -17,12 +17,7 @@
 
 package tools.aqua.bgw.net.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.kotlinModule
 import java.net.URI
-import org.java_websocket.client.WebSocketClient
-import org.java_websocket.handshake.ServerHandshake
-import tools.aqua.bgw.net.common.Message
 import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
 import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
 import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
@@ -31,154 +26,225 @@ import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
-import tools.aqua.bgw.net.common.request.Request
 import tools.aqua.bgw.net.common.response.*
 
+/**
+ * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
+ * override it's open functions. By default, these do nothing if not overridden.
+ *
+ * @param IG Generic for the [InitializeGameMessage].
+ * @param GA Generic for the [GameActionMessage].
+ * @param EG Generic for the [EndGameMessage].
+ * @param playerName The player name.
+ * @param host The server ip or hostname.
+ * @param port The server port.
+ * @param endpoint The server endpoint.
+ * @param secret The server secret.
+ * @param initGameClass The [InitializeGameMessage] class.
+ * @param gameActionClass The [GameActionMessage] class.
+ * @param endGameClass The [EndGameMessage] class.
+ */
 open class BoardGameClient<IG, GA, EG>
 protected constructor(
     val playerName: String,
-    secret: String,
-    private val initGameClass: Class<IG>,
-    private val gameActionClass: Class<GA>,
-    private val endGameClass: Class<EG>,
     host: String,
     port: Int,
     endpoint: String = "chat",
+    secret: String,
+    initGameClass: Class<IG>,
+    gameActionClass: Class<GA>,
+    endGameClass: Class<EG>,
 ) {
 
-  private val mapper = ObjectMapper().registerModule(kotlinModule())
-
-  private val wsClient: WebSocketClient =
-      MyWebSocketClient(URI.create("ws://$host:$port/$endpoint"))
+  /** WebSocketClient handling network communication. */
+  private val wsClient: BGWWebSocketClient<IG, GA, EG>
 
   init {
-    wsClient.addHeader("PlayerName", playerName)
-    wsClient.addHeader("SoPraSecret", secret)
+    @Suppress("LeakingThis")
+    wsClient =
+        BGWWebSocketClient(
+            uri = URI.create("ws://$host:$port/$endpoint"),
+            playerName = playerName,
+            secret = secret,
+            callback = this,
+            initGameClass = initGameClass,
+            gameActionClass = gameActionClass,
+            endGameClass = endGameClass)
   }
 
   // region Connect / Disconnect
+  /** Connects to the remote server, blocking. */
   // TODO: isConnected flag
   fun connect() {
     wsClient.connectBlocking()
   }
 
+  /** Disconnects from the remote server. */
   fun disconnect() {
     wsClient.closeBlocking()
   }
 
+  /**
+   * Called when an error occurred. By default, this method throws the incoming exception. Override
+   * to implement error handling.
+   *
+   * @throws Throwable Throws [throwable].
+   */
   open fun onError(throwable: Throwable) {
     throw throwable
   }
 
+  /** Called after an opening handshake has been performed and the [BoardGameClient] send data. */
   open fun onOpen() {}
 
+  /**
+   * Called after the websocket connection has been closed.
+   *
+   * @param code The codes can be looked up here: [org.java_websocket.framing.CloseFrame].
+   * @param reason Additional information string.
+   * @param remote Returns whether the closing of the connection was initiated by the remote host.
+   */
   open fun onClose(code: Int, reason: String, remote: Boolean) {}
   // endregion
 
   // region Create / Join / Leave game
+  /**
+   * Creates a new game session on the server by sending a [CreateGameMessage].
+   *
+   * @param gameID ID of the current game to be used.
+   * @param sessionID Unique id for the new session to be created on the server.
+   */
   fun createGame(gameID: String, sessionID: String) {
-    val message: Message = CreateGameMessage(gameID, sessionID)
-    wsClient.send(mapper.writeValueAsString(message))
+    wsClient.sendRequest(CreateGameMessage(gameID, sessionID))
   }
 
+  /**
+   * Joins an existing game session on the server by sending a [JoinGameMessage].
+   *
+   * @param sessionID Unique id for the existing session to join to.#
+   * @param greetingMessage Greeting message to be broadcast to all other players in this session.
+   */
   fun joinGame(sessionID: String, greetingMessage: String) {
-    val message: Message = JoinGameMessage(sessionID, greetingMessage)
-    wsClient.send(mapper.writeValueAsString(message))
+    wsClient.sendRequest(JoinGameMessage(sessionID, greetingMessage))
   }
 
+  /**
+   * Leaves the current game session by sending a [LeaveGameMessage].
+   *
+   * @param goodbyeMessage Goodbye message to be broadcast to all other players in this session.
+   */
   fun leaveGame(goodbyeMessage: String) {
-    val message: Message = LeaveGameMessage(goodbyeMessage)
-    wsClient.send(mapper.writeValueAsString(message))
+    wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
 
+  /**
+   * Called when server sent a [CreateGameResponse] after a [CreateGameMessage] was sent.
+   *
+   * @param response The [CreateGameResponse] received from the server.
+   */
   open fun onCreateGameResponse(response: CreateGameResponse) {}
 
+  /**
+   * Called when server sent a [JoinGameResponse] after a [JoinGameMessage] was sent.
+   *
+   * @param response The [JoinGameResponse] received from the server.
+   */
   open fun onJoinGameResponse(response: JoinGameResponse) {}
 
+  /**
+   * Called when server sent a [LeaveGameResponse] after a [LeaveGameMessage] was sent.
+   *
+   * @param response The [LeaveGameResponse] received from the server.
+   */
   open fun onLeaveGameResponse(response: LeaveGameResponse) {}
 
+  /**
+   * Called when a user joined the session and the server sent a [UserJoinedNotification].
+   *
+   * @param notification The [UserJoinedNotification] received from the server.
+   */
   open fun onUserJoined(notification: UserJoinedNotification) {}
 
+  /**
+   * Called when a user left the session and the server sent a [UserDisconnectedNotification].
+   *
+   * @param notification The [UserDisconnectedNotification] received from the server.
+   */
   open fun onUserLeft(notification: UserDisconnectedNotification) {}
   // endregion
 
   // region Send messages
+  /**
+   * Sends a [GameActionMessage] to all connected players.
+   *
+   * @param payload The [GameActionMessage] payload.
+   */
   fun sendGameActionMessage(payload: GA) {
-    send(
-        mapper.writeValueAsString(
-            GameActionMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
+    wsClient.sendGameActionMessage(payload)
   }
 
+  /**
+   * Sends an [InitializeGameMessage] to all connected players.
+   *
+   * @param payload The [InitializeGameMessage] payload.
+   */
   fun sendInitializeGameMessage(payload: IG) {
-    send(
-        mapper.writeValueAsString(
-            InitializeGameMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
+    wsClient.sendInitializeGameMessage(payload)
   }
 
+  /**
+   * Sends an [EndGameMessage] to all connected players.
+   *
+   * @param payload The [EndGameMessage] payload.
+   */
   fun sendEndGameMessage(payload: EG) {
-    send(
-        mapper.writeValueAsString(
-            EndGameMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
+    wsClient.sendEndGameMessage(payload)
   }
 
-  private fun send(message: String) {
-    wsClient.send(message)
-  }
-
+  /**
+   * Called when server sent a [GameActionResponse] after a [GameActionMessage] was sent.
+   *
+   * @param response The [GameActionResponse] received from the server.
+   */
   open fun onGameActionResponse(response: GameActionResponse) {}
 
+  /**
+   * Called when an opponent sent a [GameActionMessage].
+   *
+   * @param message The [GameActionMessage] received from the opponent.
+   * @param sender The opponents identification.
+   */
   open fun onGameActionReceived(message: GA, sender: String) {}
 
+  /**
+   * Called when server sent a [InitializeGameResponse] after a [InitializeGameMessage] was sent.
+   *
+   * @param response The [InitializeGameResponse] received from the server.
+   */
   open fun onInitializeGameResponse(response: InitializeGameResponse) {}
 
+  /**
+   * Called when an opponent sent a [InitializeGameMessage].
+   *
+   * @param message The [InitializeGameMessage] received from the opponent.
+   * @param sender The opponents identification.
+   */
   open fun onInitializeGameReceived(message: IG, sender: String) {}
 
+  /**
+   * Called when server sent a [EndGameResponse] after a [EndGameMessage] was sent.
+   *
+   * @param response The [EndGameResponse] received from the server.
+   */
   open fun onEndGameResponse(response: EndGameResponse) {}
 
+  /**
+   * Called when an opponent sent a [EndGameMessage].
+   *
+   * @param message The [EndGameMessage] received from the opponent.
+   * @param sender The opponents identification.
+   */
   open fun onEndGameReceived(message: EG, sender: String) {}
   // endregion
 
-  private inner class MyWebSocketClient(uri: URI) : WebSocketClient(uri) {
-    override fun onOpen(handshakedata: ServerHandshake?) {
-      this@BoardGameClient.onOpen()
-    }
-
-    override fun onMessage(message: String?) {
-      try {
-        val bgwMessage: Message = mapper.readValue(message, Message::class.java)
-        messageMapping(bgwMessage)
-      } catch (e: Exception) {
-        onError(e)
-      }
-    }
-
-    override fun onClose(code: Int, reason: String?, remote: Boolean) {
-      this@BoardGameClient.onClose(code, reason ?: "n/a", remote)
-    }
-
-    override fun onError(ex: Exception?) {
-      this@BoardGameClient.onError(ex!!)
-    }
-
-    private fun messageMapping(message: Message) {
-      when (message) {
-        is Request -> throw Exception("Client received a request")
-        is InitializeGameMessage ->
-            onInitializeGameReceived(
-                mapper.readValue(message.payload, initGameClass), message.sender)
-        is EndGameMessage ->
-            onEndGameReceived(mapper.readValue(message.payload, endGameClass), message.sender)
-        is GameActionMessage ->
-            onGameActionReceived(mapper.readValue(message.payload, gameActionClass), message.sender)
-        is InitializeGameResponse -> onInitializeGameResponse(message)
-        is EndGameResponse -> onEndGameResponse(message)
-        is CreateGameResponse -> onCreateGameResponse(message)
-        is GameActionResponse -> onGameActionResponse(message)
-        is JoinGameResponse -> onJoinGameResponse(message)
-        is LeaveGameResponse -> onLeaveGameResponse(message)
-        is UserJoinedNotification -> onUserJoined(message)
-        is UserDisconnectedNotification -> onUserLeft(message)
-      }
-    }
-  }
 }

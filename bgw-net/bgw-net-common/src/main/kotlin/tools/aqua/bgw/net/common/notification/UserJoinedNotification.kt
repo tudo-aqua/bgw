@@ -24,4 +24,4 @@ package tools.aqua.bgw.net.common.notification
  * @param sender Sender identification.
  */
 class UserJoinedNotification(greetingMessage: String, sender: String) :
-	Notification(message = greetingMessage, sender = sender)
+    Notification(message = greetingMessage, sender = sender)

@@ -50,11 +50,11 @@ class NetworkClientService(
     BoardGameClient<InitGameMessage, GameActionMessage, GameOverMessage>(
         playerName = playerName,
         secret = NETWORK_SECRET,
+        host = host,
+        port = port,
         initGameClass = InitGameMessage::class.java,
         gameActionClass = GameActionMessage::class.java,
-        endGameClass = GameOverMessage::class.java,
-        host = host,
-        port = port) {
+        endGameClass = GameOverMessage::class.java) {
 
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
