@@ -22,9 +22,13 @@ import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.container.GameComponentViewContainerTestBase
 
+/** Test base for Area. */
 abstract class AreaTestBase : GameComponentViewContainerTestBase() {
+  
+  /** An area containing token views. */
   protected lateinit var tokenViewArea: Area<TokenView>
 
+  /** Initializes empty [Area] before each test. */
   @BeforeEach
   fun areaContainerViewSetup() {
     tokenViewArea = Area()

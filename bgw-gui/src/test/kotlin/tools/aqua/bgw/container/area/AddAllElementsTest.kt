@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.container.area
 
-import java.awt.Color
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -27,9 +26,12 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.visual.ColorVisual
+import java.awt.Color
 
+/** Test addAll function in Area. */
 class AddAllElementsTest : AreaTestBase() {
 
+  /** Add an empty list. */
   @Test
   @DisplayName("Add an empty list")
   fun addAllElementsEmptyList() {
@@ -37,7 +39,8 @@ class AddAllElementsTest : AreaTestBase() {
     tokenViewArea.addAll(listOf())
     assertTrue { tokenViewArea.components.isEmpty() }
   }
-
+  
+  /** Add a list containing two componentViews. */
   @Test
   @DisplayName("Add a list containing two componentViews")
   fun addAllElementsNonEmptyList() {
@@ -46,7 +49,8 @@ class AddAllElementsTest : AreaTestBase() {
     assertThat(tokenViewArea.components).contains(redTokenView)
     assertThat(tokenViewArea.components).contains(greenTokenView)
   }
-
+  
+  /** Add a list containing two componentViews, where one is already contained. */
   @Test
   @DisplayName("Add a list containing two componentViews, where one is already contained")
   fun addAllElementsAlreadyContained() {
@@ -64,14 +68,16 @@ class AddAllElementsTest : AreaTestBase() {
     assertFalse { tokenViewArea.components.contains(cyanToken) }
     assertThat(otherAreaContainer.components).contains(cyanToken)
   }
-
+  
+  /** Add an empty list. */
   @Test
   @DisplayName("Add an empty list")
   fun addAllElementsVarArgsEmptyList() {
     tokenViewArea.addAll()
     assertTrue { tokenViewArea.components.isEmpty() }
   }
-
+  
+  /** Add a list containing two componentViews. */
   @Test
   @DisplayName("Add a list containing two componentViews")
   fun addAllElementsVarArgsNonEmptyList() {
@@ -80,7 +86,8 @@ class AddAllElementsTest : AreaTestBase() {
     assertThat(tokenViewArea.components).contains(redTokenView)
     assertThat(tokenViewArea.components).contains(greenTokenView)
   }
-
+  
+  /** Add a list containing two componentViews, where one is already contained. */
   @Test
   @DisplayName("Add a list containing two componentViews, where one is already contained")
   fun addAllElementsVarArgsAlreadyContained() {

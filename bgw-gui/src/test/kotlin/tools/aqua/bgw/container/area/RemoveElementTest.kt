@@ -22,8 +22,10 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test remove function in Area. */
 class RemoveElementTest : AreaTestBase() {
 
+  /** Removes an element. */
   @Test
   @DisplayName("Removes an element")
   fun removeElement() {
@@ -36,7 +38,8 @@ class RemoveElementTest : AreaTestBase() {
     tokenViewArea.remove(redTokenView)
     assertEquals(listOf(blueTokenView, greenTokenView), tokenViewArea.components)
   }
-
+  
+  /** Remove all Elements. */
   @Test
   @DisplayName("Remove all Elements")
   fun removeAllElements() {

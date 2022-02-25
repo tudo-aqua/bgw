@@ -18,53 +18,55 @@
 package tools.aqua.bgw.container.area
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 
+/** Test add function in Area. */
 class AddElementTest : AreaTestBase() {
 
+  /** Add an element. */
   @Test
   @DisplayName("Add an element")
   fun addElement() {
-    // simple add
     assertTrue(tokenViewArea.components.isEmpty())
     tokenViewArea.add(redTokenView)
     assertThat(tokenViewArea.components).contains(redTokenView)
     assertEquals(tokenViewArea, redTokenView.parent)
   }
-
+  
+  /** Add an element that is already contained in this. */
   @Test
   @DisplayName("Add an element that is already contained in this")
   fun addElementAlreadyContainedInThis() {
-    // add already contained in this
     tokenViewArea.add(redTokenView)
     assertThrows<IllegalArgumentException> { tokenViewArea.add(redTokenView) }
   }
-
+  
+  /** Add an element that is already contained in another container. */
   @Test
   @DisplayName("Add an element that is already contained in another container")
   fun addElementAlreadyContainedInOther() {
-    // add already contained in other container
     Area<TokenView>().add(blueTokenView)
     assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView) }
   }
-
+  
+  /** Add element with custom index. */
   @Test
   @DisplayName("Add element with custom index")
   fun addElementWithIndex() {
     // add with index
     tokenViewArea.add(redTokenView, 0)
+    
     // index out of bounds
     assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView, 2) }
     assertFalse { tokenViewArea.components.contains(blueTokenView) }
     assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView, -1) }
     assertFalse { tokenViewArea.components.contains(blueTokenView) }
+    
     // add in between two elements
     tokenViewArea.add(blueTokenView, 1)
     assertEquals(listOf(redTokenView, blueTokenView), tokenViewArea.components)

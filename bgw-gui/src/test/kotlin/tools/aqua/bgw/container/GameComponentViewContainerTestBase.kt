@@ -17,20 +17,28 @@
 
 package tools.aqua.bgw.container
 
-import java.awt.Color
 import org.junit.jupiter.api.BeforeEach
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.visual.ColorVisual
+import java.awt.Color
 
+/** Test base for GameComponentViewContainers. */
 open class GameComponentViewContainerTestBase {
+  
+  /** A red [TokenView]. */
   protected lateinit var redTokenView: TokenView
-  protected lateinit var blueTokenView: TokenView
+  
+  /** A green [TokenView]. */
   protected lateinit var greenTokenView: TokenView
-
+  
+  /** A blue [TokenView]. */
+  protected lateinit var blueTokenView: TokenView
+  
+  /** Initializes tokens. */
   @BeforeEach
   fun setup() {
     redTokenView = TokenView(50, 50, 0, 0, ColorVisual(Color.RED))
-    blueTokenView = TokenView(50, 50, 0, 0, ColorVisual(Color.BLUE))
     greenTokenView = TokenView(50, 50, 0, 0, ColorVisual(Color.GREEN))
+    blueTokenView = TokenView(50, 50, 0, 0, ColorVisual(Color.BLUE))
   }
 }
