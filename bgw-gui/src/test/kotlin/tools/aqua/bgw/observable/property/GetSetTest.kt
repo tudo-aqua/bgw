@@ -22,7 +22,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class GetSetTest : PropertyTestBase() {
-
+  
+  /** Get and set invoking all listeners. */
   @Test
   @DisplayName("Get and set invoking all listeners")
   fun testGetSet() {
@@ -45,7 +46,8 @@ class GetSetTest : PropertyTestBase() {
     assertEquals(initialValue, guiListener.oldValue)
     assertEquals(newValue, guiListener.newValue)
   }
-
+  
+  /** Get and set same value invoking no listeners. */
   @Test
   @DisplayName("Get and set same value invoking no listeners")
   fun testGetSetSameValue() {

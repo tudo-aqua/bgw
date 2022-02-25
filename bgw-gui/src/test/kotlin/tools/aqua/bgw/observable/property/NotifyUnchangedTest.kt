@@ -21,8 +21,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test notifyUnchanged function in Property. */
 class NotifyUnchangedTest : PropertyTestBase() {
 
+  /** Notify Unchanged invoking all listener. */
   @Test
   @DisplayName("Notify Unchanged invoking all listener")
   fun testNotifyUnchanged() {
