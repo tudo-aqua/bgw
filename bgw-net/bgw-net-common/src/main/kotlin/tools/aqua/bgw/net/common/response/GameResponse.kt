@@ -17,9 +17,12 @@
 
 package tools.aqua.bgw.net.common.response
 
+import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
+
 /**
- * Response upon [tools.aqua.bgw.net.common.request.CreateGameMessage].
+ * Baseclass for game responses.
  *
  * @property status Status code.
+ * @property errorMessages List of errors.
  */
-class CreateGameResponse(val status: CreateGameResponseStatus) : Response()
+sealed class GameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) : Response()

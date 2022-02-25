@@ -22,8 +22,8 @@ import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
 /**
  * Response upon [tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage].
  *
- * @property status Status code.
- * @property errorMessages List of errors.
+ * @param status Status code.
+ * @param errorMessages List of errors.
  */
-data class InitializeGameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) :
-    Response()
+class InitializeGameResponse(status: GameMessageStatus, errorMessages: List<String>?) :
+    GameResponse(status = status, errorMessages = errorMessages)

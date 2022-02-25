@@ -20,9 +20,9 @@ package tools.aqua.bgw.net.common.gamemessage
 /**
  * Message indicating a game action that was performed by the [sender].
  *
- * @property payload Data to be transmitted.
- * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
- * @property sender Sender identification.
+ * @param payload Data to be transmitted.
+ * @param prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
+ * @param sender Sender identification.
  */
-data class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) :
-    GameMessage()
+class GameActionMessage(payload: String, prettyPrint: String, sender: String) :
+    GameMessage(payload = payload, prettyPrint = prettyPrint, sender = sender)

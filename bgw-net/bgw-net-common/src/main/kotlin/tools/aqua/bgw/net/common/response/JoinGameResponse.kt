@@ -22,4 +22,4 @@ package tools.aqua.bgw.net.common.response
  *
  * @property status Status code.
  */
-data class JoinGameResponse(val status: JoinGameResponseStatus) : Response() {}
+class JoinGameResponse(val status: JoinGameResponseStatus) : Response()

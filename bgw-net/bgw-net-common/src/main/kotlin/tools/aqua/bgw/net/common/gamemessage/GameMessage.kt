@@ -19,5 +19,11 @@ package tools.aqua.bgw.net.common.gamemessage
 
 import tools.aqua.bgw.net.common.Message
 
-/** Baseclass for game messages. */
-sealed class GameMessage : Message()
+/**
+ * Baseclass for game messages.
+ *
+ * @property payload Data to be transmitted.
+ * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
+ * @property sender Sender identification.
+ */
+sealed class GameMessage(val payload: String, val prettyPrint: String, val sender: String) : Message()

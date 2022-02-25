@@ -22,4 +22,4 @@ package tools.aqua.bgw.net.common.response
  *
  * @property status Status code.
  */
-data class LeaveGameResponse(val status: LeaveGameResponseStatus) : Response()
+class LeaveGameResponse(val status: LeaveGameResponseStatus) : Response()

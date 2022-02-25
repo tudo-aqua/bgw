@@ -20,8 +20,8 @@ package tools.aqua.bgw.net.common.notification
 /**
  * Notification indicating disconnection of a player.
  *
- * @property goodbyeMessage Goodbye message of the [sender].
- * @property sender Sender identification.
+ * @param goodbyeMessage Goodbye message of the [sender].
+ * @param sender Sender identification.
  */
-data class UserDisconnectedNotification(val goodbyeMessage: String, val sender: String) :
-    Notification()
+class UserDisconnectedNotification(goodbyeMessage: String, sender: String) :
+    Notification(message = goodbyeMessage, sender = sender)

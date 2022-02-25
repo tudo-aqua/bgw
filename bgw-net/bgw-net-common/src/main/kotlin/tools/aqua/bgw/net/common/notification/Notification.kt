@@ -19,5 +19,10 @@ package tools.aqua.bgw.net.common.notification
 
 import tools.aqua.bgw.net.common.Message
 
-/** Baseclass for notifications. */
-sealed class Notification : Message()
+/**
+ * Baseclass for notifications.
+ *
+ * @property message Message of the [sender].
+ * @property sender Sender identification.
+ */
+sealed class Notification(val message: String, val sender: String) : Message()
