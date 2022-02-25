@@ -92,9 +92,21 @@ class MessageService(
       game?.broadcastMessage(
           player,
           when (gameMessage) {
-            is EndGameMessage -> gameMessage.copy(sender = player.name)
-            is GameActionMessage -> gameMessage.copy(sender = player.name)
-            is InitializeGameMessage -> gameMessage.copy(sender = player.name)
+            is EndGameMessage ->
+                EndGameMessage(
+                    payload = gameMessage.payload,
+                    prettyPrint = gameMessage.prettyPrint,
+                    sender = player.name)
+            is GameActionMessage ->
+                GameActionMessage(
+                    payload = gameMessage.payload,
+                    prettyPrint = gameMessage.prettyPrint,
+                    sender = player.name)
+            is InitializeGameMessage ->
+                InitializeGameMessage(
+                    payload = gameMessage.payload,
+                    prettyPrint = gameMessage.prettyPrint,
+                    sender = player.name)
           })
     }
   }
