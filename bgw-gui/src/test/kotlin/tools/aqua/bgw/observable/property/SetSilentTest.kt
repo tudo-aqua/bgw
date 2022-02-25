@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test setSilent function in Property. */
 class SetSilentTest : PropertyTestBase() {
 
   /** Set silent only invoking GUI listener. */

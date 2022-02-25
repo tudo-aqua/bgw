@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test getter and setter in Property. */
 class GetSetTest : PropertyTestBase() {
 
   /** Get and set invoking all listeners. */

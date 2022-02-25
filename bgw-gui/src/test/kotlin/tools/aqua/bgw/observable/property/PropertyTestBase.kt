@@ -35,7 +35,7 @@ open class PropertyTestBase {
   /** Upper bound for [LimitedDoubleProperty]. */
   private val upperBound: Double = 50.0
 
-  /** Property field */
+  /** Property field. */
   protected lateinit var property: LimitedDoubleProperty
 
   /** [TestListener] 1 catching update invocation. */
