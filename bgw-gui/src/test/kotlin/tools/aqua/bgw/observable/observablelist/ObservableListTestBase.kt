@@ -27,32 +27,32 @@ open class ObservableListTestBase {
 
   /** The [ObservableList]. */
   protected lateinit var list: ObservableList<Int>
-  
+
   /** Unordered values in [list]. */
   protected val unordered: List<Int> = listOf(13, 25, 17, 13, -4)
-  
+
   /** Ordered values in [list]. */
   protected val ordered: List<Int> = listOf(-4, 13, 13, 17, 25)
-  
+
   /** [TestListener] catching update invocation. */
   private val listener: TestListener<List<Int>> = TestListener()
-  
+
   /** Fills the list with the unordered elements and registers listener before each test. */
   @BeforeEach
   fun setUp() {
     list = ObservableArrayList(unordered)
     list.addListener(listener)
   }
-  
+
   /** Returns 'false' iff the listener got invoked. */
   protected fun checkNotNotified(): Boolean = listener.invokedCount == 0
-  
+
   /** Returns 'true' iff the listener got invoked. */
   protected fun checkNotified(count: Int = 1): Boolean = listener.invokedCount == count
-  
+
   /** Test listener registering callback invocation. */
   class TestListener<T> : ValueObserver<T> {
-    
+
     /** Tracks invocation count. */
     var invokedCount: Int = 0
 

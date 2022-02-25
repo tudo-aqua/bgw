@@ -24,7 +24,7 @@ import org.junit.jupiter.api.assertThrows
 
 /** Test single functions in ObservableList. */
 class SingleListFunctionTests : ObservableListTestBase() {
-  
+
   /** Test indices. */
   @Test
   @DisplayName("Test indices")
@@ -33,7 +33,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-  
+
   /** Test get. */
   @Test
   @DisplayName("Test get")
@@ -42,7 +42,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-  
+
   /** Test set. */
   @Test
   @DisplayName("Test set")
@@ -58,7 +58,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     assertThrows<IndexOutOfBoundsException> { list[5] = 0 }
   }
-  
+
   /** Test size. */
   @Test
   @DisplayName("Test size")
@@ -71,7 +71,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-  
+
   /** Test isEmpty and isNotEmpty. */
   @Test
   @DisplayName("Test isEmpty and isNotEmpty")
@@ -84,7 +84,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-  
+
   /** Test contains. */
   @Test
   @DisplayName("Test contains")
@@ -96,7 +96,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-  
+
   /** Test indexOf and lastIndexOf. */
   @Test
   @DisplayName("Test indexOf and lastIndexOf")
@@ -113,7 +113,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotNotified()
   }
-  
+
   /** Test subList. */
   @Test
   @DisplayName("Test subList")
@@ -126,7 +126,7 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     assertThrows<IllegalArgumentException> { list.subList(2, 1) }
   }
-  
+
   /** Test sort. */
   @Test
   @DisplayName("Test sort")

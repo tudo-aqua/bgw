@@ -24,49 +24,49 @@ import org.junit.jupiter.api.Test
 
 /** Test contains function in BidirectionalMap. */
 class ContainsTest : BidirectionalMapTestBase() {
-  
+
   /** Test contains of existing relation. */
   @Test
   @DisplayName("Test contains of existing relation")
   fun testContainsExistingRelation() {
     assertTrue(map.contains(0, 1))
   }
-  
+
   /** Test contains of relation with existing key and non-existing value. */
   @Test
   @DisplayName("Test contains of relation with existing key and non-existing value")
   fun testContainsRelationExistingKey() {
     assertFalse(map.contains(0, 5))
   }
-  
+
   /** Test contains of relation with non-existing key and existing value. */
   @Test
   @DisplayName("Test contains of relation with non-existing key and existing value")
   fun testContainsRelationExistingValue() {
     assertFalse(map.contains(5, 1))
   }
-  
+
   /** Test contains forward on existing key. */
   @Test
   @DisplayName("Test contains forward on existing key")
   fun testContainsForwardExisting() {
     assertTrue(map.containsForward(0))
   }
-  
+
   /** Test contains forward on non-existing key. */
   @Test
   @DisplayName("Test contains forward on non-existing key")
   fun testContainsForwardNonExisting() {
     assertFalse(map.containsForward(5))
   }
-  
+
   /** Test contains backward on existing value. */
   @Test
   @DisplayName("Test contains backward on existing value")
   fun testContainsBackwardExisting() {
     assertTrue(map.containsBackward(1))
   }
-  
+
   /** Test contains backward on non-existing value. */
   @Test
   @DisplayName("Test contains backward on non-existing value")

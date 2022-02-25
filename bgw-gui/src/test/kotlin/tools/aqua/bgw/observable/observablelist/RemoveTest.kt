@@ -24,7 +24,7 @@ import org.junit.jupiter.api.assertThrows
 
 /** Test remove function in ObservableList. */
 class RemoveTest : ObservableListTestBase() {
-  
+
   /** Test remove. */
   @Test
   @DisplayName("Test remove")
@@ -41,7 +41,7 @@ class RemoveTest : ObservableListTestBase() {
 
     assertFalse(list.remove(42))
   }
-  
+
   /** Test remove at index. */
   @Test
   @DisplayName("Test remove at index")
@@ -56,7 +56,7 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified()
   }
-  
+
   /** Test remove at index out of bounds. */
   @Test
   @DisplayName("Test remove at index out of bounds")
@@ -64,7 +64,7 @@ class RemoveTest : ObservableListTestBase() {
     assertThrows<IndexOutOfBoundsException> { list.removeAt(-1) }
     assertThrows<IndexOutOfBoundsException> { list.removeAt(5) }
   }
-  
+
   /** Test remove first or null. */
   @Test
   @DisplayName("Test remove first or null")
@@ -79,7 +79,7 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified(5)
   }
-  
+
   /** Test remove first. */
   @Test
   @DisplayName("Test remove first")
@@ -95,7 +95,7 @@ class RemoveTest : ObservableListTestBase() {
 
     assertThrows<NoSuchElementException> { list.removeFirst() }
   }
-  
+
   /** Test remove last or null. */
   @Test
   @DisplayName("Test remove last or null")
@@ -110,7 +110,7 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified(5)
   }
-  
+
   /** Test remove last. */
   @Test
   @DisplayName("Test remove last")
@@ -126,7 +126,7 @@ class RemoveTest : ObservableListTestBase() {
 
     assertThrows<NoSuchElementException> { list.removeLast() }
   }
-  
+
   /** Test clear. */
   @Test
   @DisplayName("Test clear")
@@ -140,7 +140,7 @@ class RemoveTest : ObservableListTestBase() {
 
     checkNotified(1)
   }
-  
+
   /** Test remove all. */
   @Test
   @DisplayName("Test remove all")
@@ -161,7 +161,7 @@ class RemoveTest : ObservableListTestBase() {
     // Only notified once
     checkNotified(1)
   }
-  
+
   /** Test retain all. */
   @Test
   @DisplayName("Test retain all")
@@ -182,7 +182,7 @@ class RemoveTest : ObservableListTestBase() {
     // Only notified once
     checkNotified(1)
   }
-  
+
   /** Test remove if. */
   @Test
   @DisplayName("Test remove if")
@@ -202,7 +202,7 @@ class RemoveTest : ObservableListTestBase() {
     // Only notified once
     checkNotified(1)
   }
-  
+
   /** Test replace all. */
   @Test
   @DisplayName("Test replace all")

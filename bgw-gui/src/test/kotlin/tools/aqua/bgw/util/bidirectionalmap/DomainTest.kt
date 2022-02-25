@@ -25,28 +25,28 @@ import tools.aqua.bgw.util.BidirectionalMap
 
 /** Test domain function in BidirectionalMap. */
 class DomainTest : BidirectionalMapTestBase() {
-  
+
   /** Test domain. */
   @Test
   @DisplayName("Test domain")
   fun testDomain() {
     assertEquals(setOf(0, 2), map.getDomain())
   }
-  
+
   /** Test co-domain. */
   @Test
   @DisplayName("Test co-domain")
   fun testCoDomain() {
     assertEquals(setOf(1, 3), map.getCoDomain())
   }
-  
+
   /** Test empty domain. */
   @Test
   @DisplayName("Test empty domain")
   fun testEmptyDomain() {
     assertThat(BidirectionalMap<Int, Int>().getDomain()).isEmpty()
   }
-  
+
   /** Test empty co-domain. */
   @Test
   @DisplayName("Test empty co-domain")

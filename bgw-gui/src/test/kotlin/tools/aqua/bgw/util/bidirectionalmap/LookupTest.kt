@@ -24,7 +24,7 @@ import org.junit.jupiter.api.assertThrows
 
 /** Test lookup function in BidirectionalMap. */
 class LookupTest : BidirectionalMapTestBase() {
-  
+
   /** Test forward lookup on existing element. */
   @Test
   @DisplayName("Test forward lookup on existing element")
@@ -32,7 +32,7 @@ class LookupTest : BidirectionalMapTestBase() {
     assertEquals(1, map.forward(0))
     assertEquals(1, map.forwardOrNull(0))
   }
-  
+
   /** Test backward lookup on existing element. */
   @Test
   @DisplayName("Test backward lookup on existing element")
@@ -40,7 +40,7 @@ class LookupTest : BidirectionalMapTestBase() {
     assertEquals(0, map.backward(1))
     assertEquals(0, map.backwardOrNull(1))
   }
-  
+
   /** Test forward lookup on non-existing element. */
   @Test
   @DisplayName("Test forward lookup on non-existing element")
@@ -48,7 +48,7 @@ class LookupTest : BidirectionalMapTestBase() {
     assertThrows<NoSuchElementException> { map.forward(5) }
     assertEquals(null, map.forwardOrNull(5))
   }
-  
+
   /** Test backward lookup on non-existing element. */
   @Test
   @DisplayName("Test backward lookup on non-existing element")

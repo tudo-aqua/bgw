@@ -24,7 +24,7 @@ import org.junit.jupiter.api.assertThrows
 
 /** Test add function in ObservableList. */
 class AddTest : ObservableListTestBase() {
-  
+
   /** Test add. */
   @Test
   @DisplayName("Test add")
@@ -36,7 +36,7 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-  
+
   /** Test add at index 0. */
   @Test
   @DisplayName("Test add at index 0")
@@ -48,7 +48,7 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-  
+
   /** Test add at last index. */
   @Test
   @DisplayName("Test add at last index")
@@ -60,7 +60,7 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-  
+
   /** Test add at index out of bounds. */
   @Test
   @DisplayName("Test add at index out of bounds")
@@ -69,7 +69,7 @@ class AddTest : ObservableListTestBase() {
 
     assertThrows<IndexOutOfBoundsException> { list.add(6, 42) }
   }
-  
+
   /** Test add all. */
   @Test
   @DisplayName("Test add all")
@@ -83,7 +83,7 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-  
+
   /** Test add all at index. */
   @Test
   @DisplayName("Test add all at index")
@@ -97,7 +97,7 @@ class AddTest : ObservableListTestBase() {
 
     checkNotified()
   }
-  
+
   /** Test add all at index out of bounds. */
   @Test
   @DisplayName("Test add all at index out of bounds")

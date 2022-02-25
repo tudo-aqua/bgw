@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 
 /** Test peek function in BidirectionalMap. */
 class AddTest : BidirectionalMapTestBase() {
-  
+
   /** Test add new pair. */
   @Test
   @DisplayName("Test add new pair")
@@ -33,7 +33,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(3, map.size)
     assertTrue(map.contains(4, 5))
   }
-  
+
   /** Test adding a key already existing. */
   @Test
   @DisplayName("Test adding a key already existing")
@@ -43,7 +43,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(2, map.size)
     assertFalse(map.contains(0, 5))
   }
-  
+
   /** Test adding a value already existing. */
   @Test
   @DisplayName("Test adding a value already existing")
@@ -53,7 +53,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(2, map.size)
     assertFalse(map.contains(5, 1))
   }
-  
+
   /** Test adding a key already existing as value. */
   @Test
   @DisplayName("Test adding a key already existing as value")
@@ -63,7 +63,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(3, map.size)
     assertTrue(map.contains(3, 5))
   }
-  
+
   /** Test adding a value already existing as key. */
   @Test
   @DisplayName("Test adding a value already existing as key")
@@ -73,7 +73,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(3, map.size)
     assertTrue(map.contains(5, 0))
   }
-  
+
   /** Test adding new values by addAll. */
   @Test
   @DisplayName("Test adding new values by addAll")
@@ -84,7 +84,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertTrue(map.contains(5, 6))
     assertTrue(map.contains(7, 8))
   }
-  
+
   /** Test adding new and old values by addAll. */
   @Test
   @DisplayName("Test adding new and old values by addAll")
@@ -94,7 +94,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(3, map.size)
     assertTrue(map.contains(5, 6))
   }
-  
+
   /** Test adding new, old and invalid values by addAll. */
   @Test
   @DisplayName("Test adding new, old and invalid values by addAll")
@@ -105,7 +105,7 @@ class AddTest : BidirectionalMapTestBase() {
     assertFalse(map.contains(5, 6))
     assertFalse(map.contains(0, 5))
   }
-  
+
   /** Test adding old values by addAll. */
   @Test
   @DisplayName("Test adding old values by addAll")

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class SetSilentTest : PropertyTestBase() {
-  
+
   /** Set silent only invoking GUI listener. */
   @Test
   @DisplayName("Set silent only invoking GUI listener")
@@ -46,7 +46,7 @@ class SetSilentTest : PropertyTestBase() {
     assertEquals(initialValue, guiListener.oldValue)
     assertEquals(newValue, guiListener.newValue)
   }
-  
+
   /** Set silent same value invoking no listeners. */
   @Test
   @DisplayName("Set silent same value invoking no listeners")

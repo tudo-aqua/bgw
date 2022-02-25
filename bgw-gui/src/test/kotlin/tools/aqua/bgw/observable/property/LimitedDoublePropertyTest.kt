@@ -31,7 +31,7 @@ class LimitedDoublePropertyTest : PropertyTestBase() {
   fun testBoundsWrongOrderEqual() {
     assertThrows<IllegalArgumentException> { LimitedDoubleProperty(10, 5, 0) }
   }
-  
+
   /** Test upperBound = lowerBound. */
   @Test
   @DisplayName("Test upperBound = lowerBound")
@@ -39,14 +39,14 @@ class LimitedDoublePropertyTest : PropertyTestBase() {
     val newProperty = LimitedDoubleProperty(10, 10, 10)
     newProperty.value = 10.0
   }
-  
+
   /** Test initial value out of bounds. */
   @Test
   @DisplayName("Test initial value out of bounds")
   fun testInitialValueOutOfBounds() {
     assertThrows<IllegalArgumentException> { LimitedDoubleProperty(0, 10, 15) }
   }
-  
+
   /** Notify Unchanged invoking all listener. */
   @Test
   @DisplayName("Notify Unchanged invoking all listener")

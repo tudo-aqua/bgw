@@ -25,7 +25,7 @@ open class BidirectionalMapTestBase {
 
   /** BidirectionalMap initially filled with pairs (0,1) and (2,3). */
   protected lateinit var map: BidirectionalMap<Int, Int>
-  
+
   /** Fills BidirectionalMap with pairs (0,1) and (2,3) before tests. */
   @BeforeEach
   fun setUp() {

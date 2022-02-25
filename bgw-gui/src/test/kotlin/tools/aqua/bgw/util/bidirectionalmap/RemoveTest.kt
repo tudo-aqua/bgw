@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
 
 /** Test remove function in BidirectionalMap. */
 class RemoveTest : BidirectionalMapTestBase() {
-  /** Test remove of existing relation .*/
+  /** Test remove of existing relation . */
   @Test
   @DisplayName("Test remove of existing relation")
   fun testRemoveExistingRelation() {
@@ -31,7 +31,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertFalse(map.contains(0, 1))
     assertEquals(1, map.size)
   }
-  
+
   /** Test remove of relation with existing key and non-existing value. */
   @Test
   @DisplayName("Test remove of relation with existing key and non-existing value")
@@ -40,7 +40,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertTrue(map.contains(0, 1))
     assertEquals(2, map.size)
   }
-  
+
   /** Test remove of relation with non-existing key and existing value. */
   @Test
   @DisplayName("Test remove of relation with non-existing key and existing value")
@@ -49,7 +49,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertTrue(map.contains(0, 1))
     assertEquals(2, map.size)
   }
-  
+
   /** Test remove forward on existing key. */
   @Test
   @DisplayName("Test remove forward on existing key")
@@ -58,7 +58,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertFalse(map.contains(0, 1))
     assertEquals(1, map.size)
   }
-  
+
   /** Test remove forward on non-existing key. */
   @Test
   @DisplayName("Test remove forward on non-existing key")
@@ -66,7 +66,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertFalse(map.removeForward(5))
     assertEquals(2, map.size)
   }
-  
+
   /** Test remove backward on existing value. */
   @Test
   @DisplayName("Test remove backward on existing value")
@@ -75,7 +75,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertFalse(map.contains(0, 1))
     assertEquals(1, map.size)
   }
-  
+
   /** Test remove backward on non-existing value. */
   @Test
   @DisplayName("Test remove backward on non-existing value")
@@ -83,7 +83,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertFalse(map.removeBackward(5))
     assertEquals(2, map.size)
   }
-  
+
   /** Test clear. */
   @Test
   @DisplayName("Test clear")
@@ -91,7 +91,7 @@ class RemoveTest : BidirectionalMapTestBase() {
     map.clear()
     assertEquals(0, map.size)
   }
-  
+
   /** Test isEmpty and isNotEmpty. */
   @Test
   @DisplayName("Test isEmpty and isNotEmpty")

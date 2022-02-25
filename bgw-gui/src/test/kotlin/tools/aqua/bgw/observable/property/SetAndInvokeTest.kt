@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
 class SetAndInvokeTest : PropertyTestBase() {
-  
+
   /** Test add listener silently. */
   @Test
   @DisplayName("Test add listener silently")
@@ -78,7 +78,7 @@ class SetAndInvokeTest : PropertyTestBase() {
     assertEquals(initialValue, testListener.oldValue)
     assertEquals(initialValue, testListener.newValue)
   }
-  
+
   /** Test and invoke listener. */
   @Test
   @DisplayName("Test and invoke listener")
@@ -135,7 +135,7 @@ class SetAndInvokeTest : PropertyTestBase() {
     assertEquals(initialValue, testListener.oldValue)
     assertEquals(initialValue, testListener.newValue)
   }
-  
+
   /** Test set and invoke internalListener. */
   @Test
   @DisplayName("Test set and invoke internalListener")
@@ -192,7 +192,7 @@ class SetAndInvokeTest : PropertyTestBase() {
     assertEquals(initialValue, testListener.oldValue)
     assertEquals(initialValue, testListener.newValue)
   }
-  
+
   /** Test set and invoke GUIListener. */
   @Test
   @DisplayName("Test set and invoke GUIListener")

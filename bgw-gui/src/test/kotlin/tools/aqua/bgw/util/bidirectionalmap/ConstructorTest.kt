@@ -26,7 +26,7 @@ import tools.aqua.bgw.util.BidirectionalMap
 
 /** Test constructor in BidirectionalMap. */
 class ConstructorTest : BidirectionalMapTestBase() {
-  
+
   /** Test empty constructor. */
   @Test
   @DisplayName("Test empty constructor")
@@ -35,7 +35,7 @@ class ConstructorTest : BidirectionalMapTestBase() {
 
     assertTrue(lMap.isEmpty())
   }
-  
+
   /** Test constructor with elements. */
   @Test
   @DisplayName("Test constructor with elements")
@@ -48,7 +48,7 @@ class ConstructorTest : BidirectionalMapTestBase() {
     assertTrue(lMap.contains(item1.first, item1.second))
     assertTrue(lMap.contains(item2.first, item2.second))
   }
-  
+
   /** Test constructor with duplicate key. */
   @Test
   @DisplayName("Test constructor with duplicate key")
@@ -58,7 +58,7 @@ class ConstructorTest : BidirectionalMapTestBase() {
 
     assertThrows<IllegalArgumentException> { BidirectionalMap(item1, item2) }
   }
-  
+
   /** Test constructor with duplicate value. */
   @Test
   @DisplayName("Test constructor with duplicate value")
@@ -68,7 +68,7 @@ class ConstructorTest : BidirectionalMapTestBase() {
 
     assertThrows<IllegalArgumentException> { BidirectionalMap(item1, item2) }
   }
-  
+
   /** Test constructor with duplicate pairs. */
   @Test
   @DisplayName("Test constructor with duplicate pairs")
