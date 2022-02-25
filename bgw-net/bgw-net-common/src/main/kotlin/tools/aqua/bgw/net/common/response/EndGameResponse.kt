@@ -19,5 +19,11 @@ package tools.aqua.bgw.net.common.response
 
 import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
 
+/**
+ * Response upon [tools.aqua.bgw.net.common.gamemessage.EndGameMessage].
+ *
+ * @property status Status code.
+ * @property errorMessages List of errors.
+ */
 data class EndGameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) :
-    Response() // TODO error message
+    Response()

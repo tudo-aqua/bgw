@@ -19,4 +19,5 @@ package tools.aqua.bgw.net.common.response
 
 import tools.aqua.bgw.net.common.Message
 
+/** Baseclass for server responses. */
 sealed class Response : Message()

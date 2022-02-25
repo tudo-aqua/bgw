@@ -17,4 +17,9 @@
 
 package tools.aqua.bgw.net.common.request
 
+/**
+ * Message indicating leaving the current game session.
+ *
+ * @property goodbyeMessage Goodbye message to be broadcast to all other players in this session.
+ */
 data class LeaveGameMessage(val goodbyeMessage: String) : Request()

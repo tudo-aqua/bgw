@@ -17,6 +17,9 @@
 
 package tools.aqua.bgw.net.common.response
 
-data class JoinGameResponse(val responseStatus: JoinGameResponseStatus) :
-    Response() { // TODO error message
-}
+/**
+ * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
+ *
+ * @property status Status code.
+ */
+data class JoinGameResponse(val status: JoinGameResponseStatus) : Response() {}

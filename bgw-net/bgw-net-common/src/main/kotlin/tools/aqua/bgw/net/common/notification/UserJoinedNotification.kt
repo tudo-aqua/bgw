@@ -17,4 +17,10 @@
 
 package tools.aqua.bgw.net.common.notification
 
+/**
+ * Notification indicating disconnection of a player.
+ *
+ * @property greetingMessage Greeting message of the [sender].
+ * @property sender Sender identification.
+ */
 data class UserJoinedNotification(val greetingMessage: String, val sender: String) : Notification()

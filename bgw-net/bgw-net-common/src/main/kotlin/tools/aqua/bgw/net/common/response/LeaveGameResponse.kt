@@ -17,5 +17,9 @@
 
 package tools.aqua.bgw.net.common.response
 
-data class LeaveGameResponse(val responseStatus: LeaveGameResponseStatus) :
-    Response() // TODO error message
+/**
+ * Response upon [tools.aqua.bgw.net.common.request.LeaveGameMessage].
+ *
+ * @property status Status code.
+ */
+data class LeaveGameResponse(val status: LeaveGameResponseStatus) : Response()

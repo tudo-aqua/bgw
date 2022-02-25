@@ -17,6 +17,9 @@
 
 package tools.aqua.bgw.net.common.response
 
-data class CreateGameResponse(val responseStatus: CreateGameResponseStatus) :
-    Response() { // TODO error message
-}
+/**
+ * Response upon [tools.aqua.bgw.net.common.request.CreateGameMessage].
+ *
+ * @property status Status code.
+ */
+data class CreateGameResponse(val status: CreateGameResponseStatus) : Response()

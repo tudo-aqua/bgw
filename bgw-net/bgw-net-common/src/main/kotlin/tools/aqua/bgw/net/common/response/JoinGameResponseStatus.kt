@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.common.response
 
+/** Status codes for join game responses. */
 enum class JoinGameResponseStatus {
   /** Joined the game successfully. */
   SUCCESS,

@@ -62,7 +62,7 @@ class NetworkClientService(
   // region Connect response
   override fun onCreateGameResponse(response: CreateGameResponse) {
     BoardGameApplication.runOnGUIThread {
-      when (response.responseStatus) {
+      when (response.status) {
         CreateGameResponseStatus.SUCCESS -> view.onCreateGameSuccess()
         CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
             view.onCreateGameError("You are already in a game.")
@@ -76,7 +76,7 @@ class NetworkClientService(
 
   override fun onJoinGameResponse(response: JoinGameResponse) {
     BoardGameApplication.runOnGUIThread {
-      when (response.responseStatus) {
+      when (response.status) {
         JoinGameResponseStatus.SUCCESS -> view.onJoinGameSuccess()
         JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
             view.onCreateGameError("You are already in a game.")

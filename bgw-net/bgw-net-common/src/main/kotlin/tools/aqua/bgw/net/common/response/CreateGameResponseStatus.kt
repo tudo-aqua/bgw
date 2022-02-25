@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.common.response
 
+/** Status codes for game responses. */
 enum class CreateGameResponseStatus {
   /** Created the game successfully. */
   SUCCESS,

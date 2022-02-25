@@ -19,4 +19,5 @@ package tools.aqua.bgw.net.common.notification
 
 import tools.aqua.bgw.net.common.Message
 
+/** Baseclass for notifications. */
 sealed class Notification : Message()

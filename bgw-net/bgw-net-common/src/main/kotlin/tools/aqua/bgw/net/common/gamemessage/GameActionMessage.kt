@@ -17,5 +17,12 @@
 
 package tools.aqua.bgw.net.common.gamemessage
 
+/**
+ * Message indicating a game action that was performed by the [sender].
+ *
+ * @property payload Data to be transmitted.
+ * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
+ * @property sender Sender identification.
+ */
 data class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) :
     GameMessage()

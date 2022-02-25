@@ -19,5 +19,6 @@ package tools.aqua.bgw.net.common
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 
+/** Baseclass for server messages. */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 abstract class Message internal constructor()

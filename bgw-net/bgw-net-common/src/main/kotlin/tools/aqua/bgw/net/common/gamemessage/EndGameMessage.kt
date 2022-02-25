@@ -17,5 +17,15 @@
 
 package tools.aqua.bgw.net.common.gamemessage
 
-data class EndGameMessage(val payload: String, val prettyPrint: String, val sender: String) :
-    GameMessage()
+/**
+ * Message indicating the end of a game.
+ *
+ * @property payload Data to be transmitted.
+ * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
+ * @property sender Sender identification.
+ */
+data class EndGameMessage(
+    val payload: String,
+    val prettyPrint: String = payload,
+    val sender: String
+) : GameMessage()

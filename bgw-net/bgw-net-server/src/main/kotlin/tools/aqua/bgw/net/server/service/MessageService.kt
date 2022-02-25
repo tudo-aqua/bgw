@@ -113,11 +113,11 @@ class MessageService(
 
   private fun handleJoinGameMessage(wsSession: WebSocketSession, joinGameMessage: JoinGameMessage) {
     val player = wsSession.player
-    val joinGameResponseStatus = gameService.joinGame(player, joinGameMessage.sessionId)
+    val joinGameResponseStatus = gameService.joinGame(player, joinGameMessage.sessionID)
     wsSession.sendMessage(JoinGameResponse(joinGameResponseStatus))
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
       val notification = UserJoinedNotification(joinGameMessage.greeting, player.name)
-      gameService.getBySessionID(joinGameMessage.sessionId)?.broadcastMessage(player, notification)
+      gameService.getBySessionID(joinGameMessage.sessionID)?.broadcastMessage(player, notification)
     }
   }
 

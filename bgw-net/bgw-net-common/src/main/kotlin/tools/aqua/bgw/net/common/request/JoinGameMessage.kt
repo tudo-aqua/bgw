@@ -17,4 +17,10 @@
 
 package tools.aqua.bgw.net.common.request
 
-data class JoinGameMessage(val sessionId: String, val greeting: String) : Request()
+/**
+ * Message indicating joining an existing game session with given [sessionID].
+ *
+ * @property sessionID Unique id for the existing session to join to.
+ * @property greeting Greeting message to be broadcast to all other players in this session.
+ */
+data class JoinGameMessage(val sessionID: String, val greeting: String) : Request()

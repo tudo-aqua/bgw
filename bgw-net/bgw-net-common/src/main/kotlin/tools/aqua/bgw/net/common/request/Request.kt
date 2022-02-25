@@ -19,4 +19,5 @@ package tools.aqua.bgw.net.common.request
 
 import tools.aqua.bgw.net.common.Message
 
+/** Baseclass for server requests. */
 sealed class Request : Message()

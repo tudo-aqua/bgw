@@ -19,4 +19,5 @@ package tools.aqua.bgw.net.common.gamemessage
 
 import tools.aqua.bgw.net.common.Message
 
-sealed class GameMessage : Message() {}
+/** Baseclass for game messages. */
+sealed class GameMessage : Message()

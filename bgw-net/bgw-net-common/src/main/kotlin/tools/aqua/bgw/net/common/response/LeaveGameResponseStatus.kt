@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.common.response
 
+/** Status codes for leave game responses. */
 enum class LeaveGameResponseStatus {
   /** Disconnected from the game successfully. */
   SUCCESS,

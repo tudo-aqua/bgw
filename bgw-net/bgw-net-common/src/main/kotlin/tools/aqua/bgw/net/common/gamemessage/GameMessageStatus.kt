@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.common.gamemessage
 
+/** Status codes for game messages. */
 enum class GameMessageStatus {
   /** The message was valid and broadcast to all the other connected players. */
   SUCCESS,
@@ -24,7 +25,7 @@ enum class GameMessageStatus {
   /** This connection was not associated with a game. */
   NO_ASSOCIATED_GAME,
 
-  /** the payload did not match the specified schema. Message was rejected. */
+  /** The payload did not match the specified schema. Message was rejected. */
   INVALID_JSON,
 
   /** Something went wrong on the server. */
