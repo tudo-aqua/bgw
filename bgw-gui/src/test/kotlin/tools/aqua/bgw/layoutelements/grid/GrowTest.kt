@@ -21,7 +21,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
+/** Test grow function on Grid. */
 class GrowTest : GridPaneTestBase() {
+  
+  /** Grow to the left. */
   @Test
   @DisplayName("Grow to the left")
   fun testGrowLeft() {
@@ -31,7 +34,8 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged(columns = 2..4, columnBias = -2)
   }
-
+  
+  /** Grow to the right. */
   @Test
   @DisplayName("Grow to the right")
   fun testGrowRight() {
@@ -41,7 +45,8 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged()
   }
-
+  
+  /** Grow on the top. */
   @Test
   @DisplayName("Grow on the top")
   fun testGrowTop() {
@@ -51,7 +56,8 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged(rows = 2..4, rowBias = -2)
   }
-
+  
+  /** Grow on the bottom. */
   @Test
   @DisplayName("Grow on the bottom")
   fun testGrowBottom() {
@@ -61,7 +67,8 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged()
   }
-
+  
+  /** Grow on all sides. */
   @Test
   @DisplayName("Grow on all sides")
   fun testGrowAllSides() {
@@ -71,7 +78,8 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged(columns = 1..3, rows = 1..3, columnBias = -1, rowBias = -1)
   }
-
+  
+  /** Don't grow by passing 0. */
   @Test
   @DisplayName("Don't grow by passing 0")
   fun testDontGrow() {
@@ -80,7 +88,8 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-
+  
+  /** Don't grow to the left for negative parameter. */
   @Test
   @DisplayName("Don't grow to the left for negative parameter")
   fun testDontGrowLeftForNegativeParameter() {
@@ -89,7 +98,8 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-
+  
+  /** Don't grow to the right for negative parameter. */
   @Test
   @DisplayName("Don't grow to the right for negative parameter")
   fun testDontGrowRightForNegativeParameter() {
@@ -98,7 +108,8 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-
+  
+  /** Don't grow on the top for negative parameter. */
   @Test
   @DisplayName("Don't grow on the top for negative parameter")
   fun testDontGrowTopForNegativeParameter() {
@@ -107,7 +118,8 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-
+  
+  /** Don't grow on the bottom for negative parameter. */
   @Test
   @DisplayName("Don't grow on the bottom for negative parameter")
   fun testDontGrowBottomForNegativeParameter() {

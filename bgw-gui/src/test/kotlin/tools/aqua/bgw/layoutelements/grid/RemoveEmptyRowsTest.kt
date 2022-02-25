@@ -21,8 +21,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test remove empty rows function in Grid. */
 class RemoveEmptyRowsTest : GridPaneTestBase() {
 
+  /** Remove empty rows from full grid. */
   @Test
   @DisplayName("Remove empty rows from full grid")
   fun testRemoveEmptyRowsOnFullGrid() {
@@ -32,7 +34,8 @@ class RemoveEmptyRowsTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-
+  
+  /** Remove empty rows from partially full grid. */
   @Test
   @DisplayName("Remove empty rows from partially full grid")
   fun testRemoveEmptyRowsOnPartiallyFullGrid() {
@@ -50,7 +53,8 @@ class RemoveEmptyRowsTest : GridPaneTestBase() {
     assertEquals(null, grid[1, 2])
     assertEquals(null, grid[2, 2])
   }
-
+  
+  /** Remove empty first row. */
   @Test
   @DisplayName("Remove empty first row")
   fun testRemoveEmptyFirstRow() {
@@ -64,7 +68,8 @@ class RemoveEmptyRowsTest : GridPaneTestBase() {
     // Rows 0-1 contain former rows 1-2
     testUnchanged(rows = 0..1, rowBias = 1)
   }
-
+  
+  /** Remove empty last row. */
   @Test
   @DisplayName("Remove empty last row")
   fun testRemoveEmptyLastRow() {
@@ -78,7 +83,8 @@ class RemoveEmptyRowsTest : GridPaneTestBase() {
     // Rows 0-1 unchanged
     testUnchanged(rows = 0..1)
   }
-
+  
+  /** Remove empty middle row. */
   @Test
   @DisplayName("Remove empty middle row")
   fun testRemoveEmptyMiddleRow() {
@@ -95,7 +101,8 @@ class RemoveEmptyRowsTest : GridPaneTestBase() {
     // Row 1 contains former row 2
     testUnchanged(rows = 1..1, rowBias = 1)
   }
-
+  
+  /** Remove empty rows from empty grid. */
   @Test
   @DisplayName("Remove empty rows from empty grid")
   fun testRemoveEmptyRowsFromEmptyGrid() {

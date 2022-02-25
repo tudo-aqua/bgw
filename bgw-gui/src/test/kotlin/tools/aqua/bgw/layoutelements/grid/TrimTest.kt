@@ -21,8 +21,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test trim function in Grid. */
 class TrimTest : GridPaneTestBase() {
 
+  /** Trim full grid. */
   @Test
   @DisplayName("Trim full grid")
   fun testTrimFullGrid() {
@@ -32,7 +34,8 @@ class TrimTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-
+  
+  /** Trim partially full grid. */
   @Test
   @DisplayName("Trim partially full grid")
   fun testTrimPartiallyFullGrid() {
@@ -49,7 +52,8 @@ class TrimTest : GridPaneTestBase() {
     assertEquals(null, grid[1, 2])
     assertEquals(null, grid[2, 2])
   }
-
+  
+  /** Trim first row. */
   @Test
   @DisplayName("Trim first row")
   fun testTrimFirstRow() {
@@ -63,7 +67,8 @@ class TrimTest : GridPaneTestBase() {
     // Rows 0-1 contain former rows 1-2
     testUnchanged(rows = 0..1, rowBias = 1)
   }
-
+  
+  /** Trim first column. */
   @Test
   @DisplayName("Trim first column")
   fun testTrimFirstColumn() {
@@ -77,7 +82,8 @@ class TrimTest : GridPaneTestBase() {
     // Columns 0-1 contain former columns 1-2
     testUnchanged(columns = 0..1, columnBias = 1)
   }
-
+  
+  /** Trim last row. */
   @Test
   @DisplayName("Trim last row")
   fun testTrimLastRow() {
@@ -91,7 +97,8 @@ class TrimTest : GridPaneTestBase() {
     // Rows 0-1 unchanged
     testUnchanged(rows = 0..1)
   }
-
+  
+  /** Trim last column. */
   @Test
   @DisplayName("Trim last column")
   fun testTrimLastColumn() {
@@ -105,7 +112,8 @@ class TrimTest : GridPaneTestBase() {
     // Columns 0-1 unchanged
     testUnchanged(columns = 0..1)
   }
-
+  
+  /** Don't trim middle row. */
   @Test
   @DisplayName("Don't trim middle row")
   fun testDontTrimMiddleRow() {
@@ -120,7 +128,8 @@ class TrimTest : GridPaneTestBase() {
     testNull(columns = 1..1)
     testUnchanged(columns = 2..2)
   }
-
+  
+  /** Don't trim middle column. */
   @Test
   @DisplayName("Don't trim middle column")
   fun testDontTrimMiddleColumn() {

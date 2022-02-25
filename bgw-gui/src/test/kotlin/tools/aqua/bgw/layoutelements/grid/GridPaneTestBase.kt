@@ -27,15 +27,29 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.Alignment
 
+/** Test base for Grid. */
 open class GridPaneTestBase {
+  
+  /** Alignments in grid. */
   private lateinit var alignments: Array<Array<Alignment>>
+  
+  /** 3 labels. */
   private val labels: Array<Label> = Array(3) { Label() }
+  
+  /** 3 buttons. */
   private val buttons: Array<Button> = Array(3) { Button() }
+  
+  /** 3 colorPickers. */
   private val colorPickers: Array<ColorPicker> = Array(3) { ColorPicker() }
-
+  
+  
+  /** The grid. */
   protected lateinit var grid: GridPane<UIComponent>
+  
+  /** Initial grid contents. */
   protected val contents: Array<Array<out UIComponent>> = arrayOf(labels, buttons, colorPickers)
-
+  
+  /** Initializes grid before each test. */
   @BeforeEach
   fun setUp() {
     grid = GridPane(rows = 3, columns = 3)
@@ -52,7 +66,15 @@ open class GridPaneTestBase {
       }
     }
   }
-
+  
+  /**
+   * Asserts given column and row ranges with given offsets to contain the initial values.
+   *
+   * @param columns Columns to be checked.
+   * @param rows Rows to be checked.
+   * @param columnBias Column offset when looking up initial values.
+   * @param rowBias Row offset when looking up initial values.
+   */
   protected fun testUnchanged(
       columns: IntRange = 0..2,
       rows: IntRange = 0..2,
@@ -66,7 +88,13 @@ open class GridPaneTestBase {
       }
     }
   }
-
+  
+  /**
+   * Asserts given column and row range to be all null.
+   *
+   * @param columns Columns to be checked.
+   * @param rows Rows to be checked.
+   */
   protected fun testNull(columns: IntRange = 0..2, rows: IntRange = 0..2) {
     for (i in columns) {
       for (j in rows) {
@@ -74,7 +102,15 @@ open class GridPaneTestBase {
       }
     }
   }
-
+  
+  /**
+   * Asserts grid dimensions to equal given row and column count.
+   *
+   * @param columns Expected column count.
+   * @param rows Expected column count.
+   *
+   * @return 'true' iff [columns] == #columns && [rows] == #rows.
+   */
   protected fun checkSize(columns: Int = 3, rows: Int = 3) {
     assertEquals(columns, grid.columns)
     assertEquals(rows, grid.rows)

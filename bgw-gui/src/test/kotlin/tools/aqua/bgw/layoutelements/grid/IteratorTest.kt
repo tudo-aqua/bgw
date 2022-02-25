@@ -17,17 +17,18 @@
 
 package tools.aqua.bgw.layoutelements.grid
 
-import java.util.*
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.UIComponent
+import java.util.*
 
+/** Test iterator in Grid. */
 class IteratorTest : GridPaneTestBase() {
+  
+  /** Iterator order test. */
   @Test
   @DisplayName("Iterator order test")
   fun testIteratorFullOrder() {
@@ -54,6 +55,7 @@ class IteratorTest : GridPaneTestBase() {
     assertThrows<NoSuchElementException> { iterator.next() }
   }
 
+  /** Iterator test on empty grid. */
   @Test
   @DisplayName("Iterator test on empty grid")
   fun testIteratorOnEmptyGrid() {

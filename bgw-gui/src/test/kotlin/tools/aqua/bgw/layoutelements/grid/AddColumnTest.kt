@@ -20,8 +20,10 @@ package tools.aqua.bgw.layoutelements.grid
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test addColumn function on Grid. */
 class AddColumnTest : GridPaneTestBase() {
 
+  /** Add column at start. */
   @Test
   @DisplayName("Add column at start")
   fun testAddColumnAtStart() {
@@ -36,7 +38,8 @@ class AddColumnTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(4, 3)
   }
-
+  
+  /** Add column at end. */
   @Test
   @DisplayName("Add column at end")
   fun testAddColumnAtEnd() {
@@ -51,7 +54,8 @@ class AddColumnTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(4, 3)
   }
-
+  
+  /** Add multiple columns in middle. */
   @Test
   @DisplayName("Add multiple columns in middle")
   fun testAddMultipleColumnsInMiddle() {

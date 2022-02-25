@@ -20,8 +20,10 @@ package tools.aqua.bgw.layoutelements.grid
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
+/** Test addRow function on Grid. */
 class AddRowTest : GridPaneTestBase() {
-
+  
+  /** Add row at start. */
   @Test
   @DisplayName("Add row at start")
   fun testAddRowAtStart() {
@@ -36,7 +38,8 @@ class AddRowTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(3, 4)
   }
-
+  
+  /** Add row at end. */
   @Test
   @DisplayName("Add row at end")
   fun testAddRowAtEnd() {
@@ -51,7 +54,8 @@ class AddRowTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(3, 4)
   }
-
+  
+  /** Add multiple rows in middle. */
   @Test
   @DisplayName("Add multiple rows in middle")
   fun testAddMultipleRowsInMiddle() {

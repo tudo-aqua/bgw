@@ -22,7 +22,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.core.Alignment
 
+/** Test center modes function on Grid. */
 class CenterModesTest : GridPaneTestBase() {
+  
+  /** Set single cell's center mode. */
   @Test
   @DisplayName("Set single cell's center mode")
   fun testSetSingleCenterMode() {
@@ -30,7 +33,8 @@ class CenterModesTest : GridPaneTestBase() {
 
     assertEquals(Alignment.TOP_LEFT, grid.getCellCenterMode(1, 2))
   }
-
+  
+  /** Set row's center mode. */
   @Test
   @DisplayName("Set row's center mode")
   fun testSetRowCenterMode() {
@@ -43,7 +47,8 @@ class CenterModesTest : GridPaneTestBase() {
     }
     testUnchanged(rows = 2..2)
   }
-
+  
+  /** Set columns' center mode. */
   @Test
   @DisplayName("Set columns' center mode")
   fun testSetColumnCenterMode() {
@@ -56,7 +61,8 @@ class CenterModesTest : GridPaneTestBase() {
     }
     testUnchanged(columns = 2..2)
   }
-
+  
+  /** Set global center mode. */
   @Test
   @DisplayName("Set global center mode")
   fun testSetGlobalCenterMode() {
