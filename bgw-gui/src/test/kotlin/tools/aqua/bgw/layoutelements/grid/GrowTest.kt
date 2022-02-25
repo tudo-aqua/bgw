@@ -23,7 +23,7 @@ import org.junit.jupiter.api.assertThrows
 
 /** Test grow function on Grid. */
 class GrowTest : GridPaneTestBase() {
-  
+
   /** Grow to the left. */
   @Test
   @DisplayName("Grow to the left")
@@ -34,7 +34,7 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged(columns = 2..4, columnBias = -2)
   }
-  
+
   /** Grow to the right. */
   @Test
   @DisplayName("Grow to the right")
@@ -45,7 +45,7 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged()
   }
-  
+
   /** Grow on the top. */
   @Test
   @DisplayName("Grow on the top")
@@ -56,7 +56,7 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged(rows = 2..4, rowBias = -2)
   }
-  
+
   /** Grow on the bottom. */
   @Test
   @DisplayName("Grow on the bottom")
@@ -67,7 +67,7 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged()
   }
-  
+
   /** Grow on all sides. */
   @Test
   @DisplayName("Grow on all sides")
@@ -78,7 +78,7 @@ class GrowTest : GridPaneTestBase() {
 
     testUnchanged(columns = 1..3, rows = 1..3, columnBias = -1, rowBias = -1)
   }
-  
+
   /** Don't grow by passing 0. */
   @Test
   @DisplayName("Don't grow by passing 0")
@@ -88,7 +88,7 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-  
+
   /** Don't grow to the left for negative parameter. */
   @Test
   @DisplayName("Don't grow to the left for negative parameter")
@@ -98,7 +98,7 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-  
+
   /** Don't grow to the right for negative parameter. */
   @Test
   @DisplayName("Don't grow to the right for negative parameter")
@@ -108,7 +108,7 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-  
+
   /** Don't grow on the top for negative parameter. */
   @Test
   @DisplayName("Don't grow on the top for negative parameter")
@@ -118,7 +118,7 @@ class GrowTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-  
+
   /** Don't grow on the bottom for negative parameter. */
   @Test
   @DisplayName("Don't grow on the bottom for negative parameter")

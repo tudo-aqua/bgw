@@ -34,7 +34,7 @@ class TrimTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-  
+
   /** Trim partially full grid. */
   @Test
   @DisplayName("Trim partially full grid")
@@ -52,7 +52,7 @@ class TrimTest : GridPaneTestBase() {
     assertEquals(null, grid[1, 2])
     assertEquals(null, grid[2, 2])
   }
-  
+
   /** Trim first row. */
   @Test
   @DisplayName("Trim first row")
@@ -67,7 +67,7 @@ class TrimTest : GridPaneTestBase() {
     // Rows 0-1 contain former rows 1-2
     testUnchanged(rows = 0..1, rowBias = 1)
   }
-  
+
   /** Trim first column. */
   @Test
   @DisplayName("Trim first column")
@@ -82,7 +82,7 @@ class TrimTest : GridPaneTestBase() {
     // Columns 0-1 contain former columns 1-2
     testUnchanged(columns = 0..1, columnBias = 1)
   }
-  
+
   /** Trim last row. */
   @Test
   @DisplayName("Trim last row")
@@ -97,7 +97,7 @@ class TrimTest : GridPaneTestBase() {
     // Rows 0-1 unchanged
     testUnchanged(rows = 0..1)
   }
-  
+
   /** Trim last column. */
   @Test
   @DisplayName("Trim last column")
@@ -112,7 +112,7 @@ class TrimTest : GridPaneTestBase() {
     // Columns 0-1 unchanged
     testUnchanged(columns = 0..1)
   }
-  
+
   /** Don't trim middle row. */
   @Test
   @DisplayName("Don't trim middle row")
@@ -128,7 +128,7 @@ class TrimTest : GridPaneTestBase() {
     testNull(columns = 1..1)
     testUnchanged(columns = 2..2)
   }
-  
+
   /** Don't trim middle column. */
   @Test
   @DisplayName("Don't trim middle column")

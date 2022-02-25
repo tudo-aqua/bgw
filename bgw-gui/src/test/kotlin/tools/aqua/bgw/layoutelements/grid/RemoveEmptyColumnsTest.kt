@@ -34,7 +34,7 @@ class RemoveEmptyColumnsTest : GridPaneTestBase() {
     checkSize()
     testUnchanged()
   }
-  
+
   /** Remove empty columns from partially full grid. */
   @Test
   @DisplayName("Remove empty columns from partially full grid")
@@ -53,7 +53,7 @@ class RemoveEmptyColumnsTest : GridPaneTestBase() {
     assertEquals(null, grid[1, 2])
     assertEquals(null, grid[2, 2])
   }
-  
+
   /** Remove empty first column. */
   @Test
   @DisplayName("Remove empty first column")
@@ -68,7 +68,7 @@ class RemoveEmptyColumnsTest : GridPaneTestBase() {
     // Columns 0-1 contain former columns 1-2
     testUnchanged(columns = 0..1, columnBias = 1)
   }
-  
+
   /** Remove empty last column. */
   @Test
   @DisplayName("Remove empty last column")
@@ -83,7 +83,7 @@ class RemoveEmptyColumnsTest : GridPaneTestBase() {
     // Columns 0-1 unchanged
     testUnchanged(columns = 0..1)
   }
-  
+
   /** Remove empty middle column. */
   @Test
   @DisplayName("Remove empty middle column")
@@ -101,7 +101,7 @@ class RemoveEmptyColumnsTest : GridPaneTestBase() {
     // Column 1 contains former column 2
     testUnchanged(columns = 1..1, columnBias = 1)
   }
-  
+
   /** Remove empty columns from empty grid. */
   @Test
   @DisplayName("Remove empty columns from empty grid")

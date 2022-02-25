@@ -24,7 +24,7 @@ import tools.aqua.bgw.container.GameComponentViewContainerTestBase
 
 /** Test base for Area. */
 abstract class AreaTestBase : GameComponentViewContainerTestBase() {
-  
+
   /** An area containing token views. */
   protected lateinit var tokenViewArea: Area<TokenView>
 

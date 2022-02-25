@@ -29,26 +29,25 @@ import tools.aqua.bgw.core.Alignment
 
 /** Test base for Grid. */
 open class GridPaneTestBase {
-  
+
   /** Alignments in grid. */
   private lateinit var alignments: Array<Array<Alignment>>
-  
+
   /** 3 labels. */
   private val labels: Array<Label> = Array(3) { Label() }
-  
+
   /** 3 buttons. */
   private val buttons: Array<Button> = Array(3) { Button() }
-  
+
   /** 3 colorPickers. */
   private val colorPickers: Array<ColorPicker> = Array(3) { ColorPicker() }
-  
-  
+
   /** The grid. */
   protected lateinit var grid: GridPane<UIComponent>
-  
+
   /** Initial grid contents. */
   protected val contents: Array<Array<out UIComponent>> = arrayOf(labels, buttons, colorPickers)
-  
+
   /** Initializes grid before each test. */
   @BeforeEach
   fun setUp() {
@@ -66,7 +65,7 @@ open class GridPaneTestBase {
       }
     }
   }
-  
+
   /**
    * Asserts given column and row ranges with given offsets to contain the initial values.
    *
@@ -88,7 +87,7 @@ open class GridPaneTestBase {
       }
     }
   }
-  
+
   /**
    * Asserts given column and row range to be all null.
    *
@@ -102,7 +101,7 @@ open class GridPaneTestBase {
       }
     }
   }
-  
+
   /**
    * Asserts grid dimensions to equal given row and column count.
    *

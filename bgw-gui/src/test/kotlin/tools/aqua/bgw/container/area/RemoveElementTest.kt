@@ -38,7 +38,7 @@ class RemoveElementTest : AreaTestBase() {
     tokenViewArea.remove(redTokenView)
     assertEquals(listOf(blueTokenView, greenTokenView), tokenViewArea.components)
   }
-  
+
   /** Remove all Elements. */
   @Test
   @DisplayName("Remove all Elements")

@@ -38,7 +38,7 @@ class AddColumnTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(4, 3)
   }
-  
+
   /** Add column at end. */
   @Test
   @DisplayName("Add column at end")
@@ -54,7 +54,7 @@ class AddColumnTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(4, 3)
   }
-  
+
   /** Add multiple columns in middle. */
   @Test
   @DisplayName("Add multiple columns in middle")

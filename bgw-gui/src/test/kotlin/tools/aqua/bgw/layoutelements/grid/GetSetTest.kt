@@ -28,7 +28,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 
 /** Test get set functions on Grid. */
 class GetSetTest : GridPaneTestBase() {
-  
+
   /** Get and set. */
   @Test
   @DisplayName("Get and set")
@@ -37,7 +37,7 @@ class GetSetTest : GridPaneTestBase() {
     grid[1, 2] = item
     assertEquals(item, grid[1, 2])
   }
-  
+
   /** Get and set null. */
   @Test
   @DisplayName("Get and set null")
@@ -45,7 +45,7 @@ class GetSetTest : GridPaneTestBase() {
     grid[1, 2] = null
     assertNull(grid[1, 2])
   }
-  
+
   /** Get and set spacing. */
   @Test
   @DisplayName("Get and set spacing")
@@ -53,7 +53,7 @@ class GetSetTest : GridPaneTestBase() {
     grid.spacing = 42.0
     assertEquals(42.0, grid.spacing)
   }
-  
+
   /** Get and set spacing to zero. */
   @Test
   @DisplayName("Get and set spacing to zero")
@@ -61,14 +61,14 @@ class GetSetTest : GridPaneTestBase() {
     grid.spacing = 0.0
     assertEquals(0.0, grid.spacing)
   }
-  
+
   /** Get and set spacing negative. */
   @Test
   @DisplayName("Get and set spacing negative")
   fun testGetSetSpacingNegative() {
     assertThrows<IllegalArgumentException> { grid.spacing = -1.0 }
   }
-  
+
   /** Set column width. */
   @Test
   @DisplayName("Set column width")
@@ -79,7 +79,7 @@ class GetSetTest : GridPaneTestBase() {
     assertEquals(42.0, grid.getColumnWidth(1))
     assertEquals(COLUMN_WIDTH_AUTO, grid.getColumnWidth(2))
   }
-  
+
   /** Set column widths. */
   @Test
   @DisplayName("Set column widths")
@@ -90,7 +90,7 @@ class GetSetTest : GridPaneTestBase() {
       assertEquals(42.0, grid.getColumnWidth(i))
     }
   }
-  
+
   /** Set auto column width. */
   @Test
   @DisplayName("Set auto column width")
@@ -102,7 +102,7 @@ class GetSetTest : GridPaneTestBase() {
     assertEquals(COLUMN_WIDTH_AUTO, grid.getColumnWidth(1))
     assertEquals(42.0, grid.getColumnWidth(2))
   }
-  
+
   /** Set auto column widths. */
   @Test
   @DisplayName("Set auto column widths")
@@ -114,21 +114,21 @@ class GetSetTest : GridPaneTestBase() {
       assertEquals(COLUMN_WIDTH_AUTO, grid.getColumnWidth(i))
     }
   }
-  
+
   /** Set column width to zero. */
   @Test
   @DisplayName("Set column width to zero")
   fun testGetSetColumnWidthZero() {
     grid.setColumnWidth(1, 0)
   }
-  
+
   /** Set column width to minus one. */
   @Test
   @DisplayName("Set column width to minus one")
   fun testGetSetColumnWidthMinusOne() {
     grid.setColumnWidth(1, -1)
   }
-  
+
   /** Set column width negative. */
   @Test
   @DisplayName("Set column width negative")
@@ -137,7 +137,7 @@ class GetSetTest : GridPaneTestBase() {
 
     assertThrows<IllegalArgumentException> { grid.setColumnWidth(1, -42) }
   }
-  
+
   /** Set row height. */
   @Test
   @DisplayName("Set row height")
@@ -148,7 +148,7 @@ class GetSetTest : GridPaneTestBase() {
     assertEquals(42.0, grid.getRowHeight(1))
     assertEquals(ROW_HEIGHT_AUTO, grid.getRowHeight(2))
   }
-  
+
   /** Set row heights. */
   @Test
   @DisplayName("Set row heights")
@@ -159,7 +159,7 @@ class GetSetTest : GridPaneTestBase() {
       assertEquals(42.0, grid.getRowHeight(i), "index $i")
     }
   }
-  
+
   /** Set auto row height. */
   @Test
   @DisplayName("Set auto row height")
@@ -171,7 +171,7 @@ class GetSetTest : GridPaneTestBase() {
     assertEquals(ROW_HEIGHT_AUTO, grid.getRowHeight(1))
     assertEquals(42.0, grid.getRowHeight(2))
   }
-  
+
   /** Set auto row heights. */
   @Test
   @DisplayName("Set auto row heights")
@@ -183,21 +183,21 @@ class GetSetTest : GridPaneTestBase() {
       assertEquals(ROW_HEIGHT_AUTO, grid.getRowHeight(i))
     }
   }
-  
+
   /** Set row height to zero. */
   @Test
   @DisplayName("Set row height to zero")
   fun testGetSetRowHeightZero() {
     grid.setRowHeight(1, 0)
   }
-  
+
   /** Set row height to minus one. */
   @Test
   @DisplayName("Set row height to minus one")
   fun testGetSetRowHeightMinusOne() {
     grid.setRowHeight(1, -1)
   }
-  
+
   /** Set row height negative. */
   @Test
   @DisplayName("Set row height negative")

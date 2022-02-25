@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 
 /** Test addRow function on Grid. */
 class AddRowTest : GridPaneTestBase() {
-  
+
   /** Add row at start. */
   @Test
   @DisplayName("Add row at start")
@@ -38,7 +38,7 @@ class AddRowTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(3, 4)
   }
-  
+
   /** Add row at end. */
   @Test
   @DisplayName("Add row at end")
@@ -54,7 +54,7 @@ class AddRowTest : GridPaneTestBase() {
     // Grid size should be updated
     checkSize(3, 4)
   }
-  
+
   /** Add multiple rows in middle. */
   @Test
   @DisplayName("Add multiple rows in middle")

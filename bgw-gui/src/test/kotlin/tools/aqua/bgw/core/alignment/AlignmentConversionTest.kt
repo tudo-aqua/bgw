@@ -26,7 +26,7 @@ import tools.aqua.bgw.core.VerticalAlignment
 
 /** Test [Alignment] conversion into [HorizontalAlignment] and [VerticalAlignment]. */
 class AlignmentConversionTest {
-  
+
   /** Test the horizontalAlignment field of Alignment. */
   @Test
   @DisplayName("Test the horizontalAlignment field of Alignment")
@@ -41,7 +41,7 @@ class AlignmentConversionTest {
     assertEquals(HorizontalAlignment.RIGHT, Alignment.CENTER_RIGHT.horizontalAlignment)
     assertEquals(HorizontalAlignment.CENTER, Alignment.CENTER.horizontalAlignment)
   }
-  
+
   /** Test the verticalAlignment field of Alignment. */
   @Test
   @DisplayName("Test the verticalAlignment field of Alignment")

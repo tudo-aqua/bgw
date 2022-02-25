@@ -37,7 +37,7 @@ class AddElementTest : AreaTestBase() {
     assertThat(tokenViewArea.components).contains(redTokenView)
     assertEquals(tokenViewArea, redTokenView.parent)
   }
-  
+
   /** Add an element that is already contained in this. */
   @Test
   @DisplayName("Add an element that is already contained in this")
@@ -45,7 +45,7 @@ class AddElementTest : AreaTestBase() {
     tokenViewArea.add(redTokenView)
     assertThrows<IllegalArgumentException> { tokenViewArea.add(redTokenView) }
   }
-  
+
   /** Add an element that is already contained in another container. */
   @Test
   @DisplayName("Add an element that is already contained in another container")
@@ -53,20 +53,20 @@ class AddElementTest : AreaTestBase() {
     Area<TokenView>().add(blueTokenView)
     assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView) }
   }
-  
+
   /** Add element with custom index. */
   @Test
   @DisplayName("Add element with custom index")
   fun addElementWithIndex() {
     // add with index
     tokenViewArea.add(redTokenView, 0)
-    
+
     // index out of bounds
     assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView, 2) }
     assertFalse { tokenViewArea.components.contains(blueTokenView) }
     assertThrows<IllegalArgumentException> { tokenViewArea.add(blueTokenView, -1) }
     assertFalse { tokenViewArea.components.contains(blueTokenView) }
-    
+
     // add in between two elements
     tokenViewArea.add(blueTokenView, 1)
     assertEquals(listOf(redTokenView, blueTokenView), tokenViewArea.components)
