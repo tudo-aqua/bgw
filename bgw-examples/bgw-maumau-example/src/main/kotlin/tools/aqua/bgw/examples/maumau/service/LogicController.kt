@@ -182,7 +182,9 @@ class LogicController(val view: Refreshable) {
         playJackEffect(card, animated, isCurrentPlayer)
         advance = false
       }
-      else -> playNoEffect(card, animated, isCurrentPlayer)
+      else -> {
+        playNoEffect(card, animated, isCurrentPlayer)
+      }
     }
 
     if (isCurrentPlayer) {
