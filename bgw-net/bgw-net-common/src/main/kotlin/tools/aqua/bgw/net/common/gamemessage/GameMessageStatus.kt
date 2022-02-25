@@ -15,9 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.gamemessage
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+enum class GameMessageStatus {
+  /** The message was valid and broadcast to all the other connected players. */
+  SUCCESS,
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+  /** This connection was not associated with a game. */
+  NO_ASSOCIATED_GAME,
+
+  /** the payload did not match the specified schema. Message was rejected. */
+  INVALID_JSON,
+
+  /** Something went wrong on the server. */
+  SERVER_ERROR
+}

@@ -15,9 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.response
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+enum class LeaveGameResponseStatus {
+  /** Disconnected from the game successfully. */
+  SUCCESS,
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+  /** This connection was not associated with a game. */
+  NO_ASSOCIATED_GAME,
+
+  /** Something on the server went wrong. */
+  SERVER_ERROR
+}

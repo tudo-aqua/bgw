@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.notification
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+data class UserJoinedNotification(val greetingMessage: String, val sender: String) : Notification()

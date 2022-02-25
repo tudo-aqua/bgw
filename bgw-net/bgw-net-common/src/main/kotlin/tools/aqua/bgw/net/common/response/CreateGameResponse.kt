@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.response
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+data class CreateGameResponse(val responseStatus: CreateGameResponseStatus) :
+    Response() { // TODO error message
+}

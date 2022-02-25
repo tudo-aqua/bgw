@@ -15,9 +15,24 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.response
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+enum class JoinGameResponseStatus {
+  /** Joined the game successfully. */
+  SUCCESS,
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+  /**
+   * This connection is already associated with a game on the server and can not join another game
+   * at this time. Disconnect from the current game to connect to another game.
+   */
+  ALREADY_ASSOCIATED_WITH_GAME,
+
+  /** No game with the specified id was found on the server. */
+  INVALID_SESSION_ID,
+
+  /** A player with the same player name is already part of the game. */
+  PLAYER_NAME_ALREADY_TAKEN,
+
+  /** Something on the server went wrong. */
+  SERVER_ERROR
+}

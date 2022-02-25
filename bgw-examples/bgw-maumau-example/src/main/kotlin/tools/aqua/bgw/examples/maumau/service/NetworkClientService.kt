@@ -26,7 +26,12 @@ import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
 import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
-import tools.aqua.bgw.net.common.*
+import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
+import tools.aqua.bgw.net.common.notification.UserJoinedNotification
+import tools.aqua.bgw.net.common.response.CreateGameResponse
+import tools.aqua.bgw.net.common.response.CreateGameResponseStatus
+import tools.aqua.bgw.net.common.response.JoinGameResponse
+import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
 
 /**
  * [BoardGameClient] implementation for network communication.

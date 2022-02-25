@@ -22,7 +22,17 @@ import com.fasterxml.jackson.module.kotlin.kotlinModule
 import java.net.URI
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
-import tools.aqua.bgw.net.common.*
+import tools.aqua.bgw.net.common.Message
+import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
+import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
+import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
+import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
+import tools.aqua.bgw.net.common.notification.UserJoinedNotification
+import tools.aqua.bgw.net.common.request.CreateGameMessage
+import tools.aqua.bgw.net.common.request.JoinGameMessage
+import tools.aqua.bgw.net.common.request.LeaveGameMessage
+import tools.aqua.bgw.net.common.request.Request
+import tools.aqua.bgw.net.common.response.*
 
 open class BoardGameClient<IG, GA, EG>
 protected constructor(

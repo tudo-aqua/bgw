@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.response
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+import tools.aqua.bgw.net.common.Message
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+sealed class Response : Message()

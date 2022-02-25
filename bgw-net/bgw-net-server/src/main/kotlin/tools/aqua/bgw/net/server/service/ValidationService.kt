@@ -26,10 +26,10 @@ import javax.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import tools.aqua.bgw.net.common.EndGameMessage
-import tools.aqua.bgw.net.common.GameActionMessage
-import tools.aqua.bgw.net.common.GameMessage
-import tools.aqua.bgw.net.common.InitializeGameMessage
+import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
+import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
+import tools.aqua.bgw.net.common.gamemessage.GameMessage
+import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
 import tools.aqua.bgw.net.server.*
 import tools.aqua.bgw.net.server.entity.SchemasByGame
 import tools.aqua.bgw.net.server.entity.SchemasByGameRepository

@@ -15,9 +15,21 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.common.response
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+enum class CreateGameResponseStatus {
+  /** Created the game successfully. */
+  SUCCESS,
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
-abstract class Message internal constructor()
+  /** This connection was already associated with a game on the server. No Game was created. */
+  ALREADY_ASSOCIATED_WITH_GAME,
+
+  /** A Session with the specified ID already exists on the server. No Game was created. */
+  SESSION_WITH_ID_ALREADY_EXISTS,
+
+  /** There was no Game associated with the GameID. No Game was created. */
+  GAME_ID_DOES_NOT_EXIST,
+
+  /** Something on the server went wrong. No Game was created. */
+  SERVER_ERROR,
+}
