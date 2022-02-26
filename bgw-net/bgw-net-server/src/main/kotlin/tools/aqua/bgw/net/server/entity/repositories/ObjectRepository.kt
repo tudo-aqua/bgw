@@ -17,11 +17,7 @@
 
 package tools.aqua.bgw.net.server.entity.repositories
 
-/**
- * Repository of objects.
- *
- * @param T Type of manages objects.
- */
+/** Repository of objects. */
 sealed class ObjectRepository<T> {
   /** All active and orphaned game instances. */
   protected val objectSet: MutableSet<T> = mutableSetOf()
