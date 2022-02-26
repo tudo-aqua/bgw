@@ -15,16 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.server.entity
+package tools.aqua.bgw.net.server.entity.repositories
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import org.springframework.stereotype.Repository
+import tools.aqua.bgw.net.server.entity.Game
 
-@Entity
-@Table(name = "GENERIC_KEY_VALUE_STORE")
-class KeyValueStoreEntry(
-    @Id @Column(name = "key_for_entry", nullable = false, updatable = false) val key: String,
-    @Column(name = "value_for_entry", nullable = false) var value: String,
-)
+/** Holds all currently active Games. */
+@Repository
+class GameRepository : ObjectRepository<Game>() {
+  /**
+   * Returns [Game] instance associated with [sessionID].
+   *
+   * @param sessionID Session ID to search.
+   *
+   * @return [Game] instance associated with [sessionID], 'null' if no game was found.
+   */
+  fun getBySessionID(sessionID: String): Game? = objectSet.find { it.sessionID == sessionID }
+}

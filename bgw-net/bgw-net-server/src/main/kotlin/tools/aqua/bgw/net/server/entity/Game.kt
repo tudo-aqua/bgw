@@ -17,8 +17,21 @@
 
 package tools.aqua.bgw.net.server.entity
 
+/**
+ * Class representing a game session holding IDs and currently connected players.
+ *
+ * @property gameID The game ID this instance is associated to.
+ * @property sessionID Unique ID identifying this session.
+ * @param initializer Instance of the host player.
+ */
 class Game(val gameID: String, val sessionID: String, initializer: Player) {
+
+  /** All players currently in this game instance. */
   private val mutablePlayers: MutableList<Player> = mutableListOf(initializer)
+
+  /** public accessor for connected players as immutable player list. */
+  val players: List<Player>
+    get() = mutablePlayers.toList()
 
   /**
    * This is set to [System.currentTimeMillis] whenever the last [Player] leaves this [Game]. It is
@@ -27,27 +40,39 @@ class Game(val gameID: String, val sessionID: String, initializer: Player) {
   var orphanCandidateSince: Long? = null
     private set
 
-  val players: List<Player>
-    get() = mutablePlayers.toList()
+  /**
+   * Removes given player from this game and updates orphaned status.
+   *
+   * @param player Player to be removed from this game
+   *
+   * @return 'true' iff the [player] was in the players list and was successfully removed.
+   */
+  fun remove(player: Player): Boolean =
+      mutablePlayers.remove(player).also { updateOrphanedStatus() }
 
-  fun remove(player: Player): Boolean {
-    val isRemoved = mutablePlayers.remove(player)
-    if (mutablePlayers.isEmpty()) {
-      orphanCandidateSince = System.currentTimeMillis()
-    }
-    return isRemoved
+  /**
+   * Adds given player to this game and updates orphaned status.
+   *
+   * @param player Player to be added to this game
+   *
+   * @return 'true' iff the [player] was successfully added.
+   */
+  fun add(player: Player): Boolean = mutablePlayers.add(player).also { updateOrphanedStatus() }
+
+  /**
+   * Sets [orphanCandidateSince] to [System.currentTimeMillis] if [orphanCandidateSince] is
+   * currently 'null' and the [mutablePlayers] list is empty.
+   */
+  private fun updateOrphanedStatus() {
+    orphanCandidateSince =
+        if (orphanCandidateSince == null && mutablePlayers.isEmpty()) System.currentTimeMillis()
+        else null
   }
 
-  fun add(player: Player): Boolean {
-    val isAdded = mutablePlayers.add(player)
-    if (mutablePlayers.isNotEmpty()) {
-      orphanCandidateSince = null
-    }
-    return isAdded
-  }
-
+  /** Checks for equal sessionID as it must be unique. */
   override fun equals(other: Any?): Boolean =
       if (other is Game) sessionID == other.sessionID else false
 
+  /** Hashes sessionID as it must be unique. */
   override fun hashCode(): Int = sessionID.hashCode()
 }

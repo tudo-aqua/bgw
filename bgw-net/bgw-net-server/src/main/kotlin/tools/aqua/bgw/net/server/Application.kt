@@ -24,10 +24,17 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 
+/** Spring boot application main class. */
 @SpringBootApplication class Application
 
+/**
+ * Spring boot entry point.
+ *
+ * @param args Program arguments.
+ */
 fun main(args: Array<String>) {
   runApplication<Application>(*args)
 }
 
+/** Spring boot application config class. */
 @Configuration @EnableScheduling class AppConfig

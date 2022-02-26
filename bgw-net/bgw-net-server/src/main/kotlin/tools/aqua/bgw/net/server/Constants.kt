@@ -17,7 +17,9 @@
 
 package tools.aqua.bgw.net.server
 
+import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.service.GameService
 
 /**
@@ -64,3 +66,10 @@ const val MAUMAU_END_SCHEMA_JSON_URL_STRING: String = "/maumau_end_schema.json"
 
 /** The String representation of the URL of the meta_schema.json relative to projects resources. */
 const val META_SCHEMA_JSON_URL_STRING: String = "/meta_schema.json"
+
+/** Player instance. */
+val WebSocketSession.player: Player
+  get() {
+    val player = attributes["player"] ?: error("missing attribute") // TODO
+    if (player is Player) return player else error("wrong type") // TODO
+  }

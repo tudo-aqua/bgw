@@ -20,7 +20,6 @@ package tools.aqua.bgw.net.client
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
-import java.net.URI
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import tools.aqua.bgw.net.common.Message
@@ -31,6 +30,7 @@ import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.Request
 import tools.aqua.bgw.net.common.response.*
+import java.net.URI
 
 /**
  * [WebSocketClient] for network communication in BGW applications. Handles sending data to the
@@ -43,10 +43,10 @@ import tools.aqua.bgw.net.common.response.*
  * @param uri The server uri containing host, port and endpoint.
  * @param playerName The player name.
  * @param secret The server secret.
- * @param callback Callback to the [BoardGameClient] for message marshalling.
- * @param initGameClass The [InitializeGameMessage] class.
- * @param gameActionClass The [GameActionMessage] class.
- * @param endGameClass The [EndGameMessage] class.
+ * @property callback Callback to the [BoardGameClient] for message marshalling.
+ * @property initGameClass The [InitializeGameMessage] class.
+ * @property gameActionClass The [GameActionMessage] class.
+ * @property endGameClass The [EndGameMessage] class.
  */
 class BGWWebSocketClient<IG, GA, EG>(
     uri: URI,

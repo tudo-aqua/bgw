@@ -26,8 +26,8 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponseStatus
 import tools.aqua.bgw.net.server.ORPHANED_GAME_CHECK_RATE
 import tools.aqua.bgw.net.server.TIME_UNTIL_ORPHANED
 import tools.aqua.bgw.net.server.entity.Game
-import tools.aqua.bgw.net.server.entity.GameRepository
 import tools.aqua.bgw.net.server.entity.Player
+import tools.aqua.bgw.net.server.entity.repositories.GameRepository
 
 /** This service handles all interactions associated with [Game]. */
 @Service

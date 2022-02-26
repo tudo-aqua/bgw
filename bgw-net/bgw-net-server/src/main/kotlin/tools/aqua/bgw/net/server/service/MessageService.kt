@@ -33,7 +33,7 @@ import tools.aqua.bgw.net.common.request.LeaveGameMessage
 import tools.aqua.bgw.net.common.response.*
 import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
-import tools.aqua.bgw.net.server.entity.SchemasByGameRepository
+import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
 
 /** This service handles the text messages received by the web socket server. */

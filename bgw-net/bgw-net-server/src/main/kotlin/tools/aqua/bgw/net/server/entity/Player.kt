@@ -19,10 +19,19 @@ package tools.aqua.bgw.net.server.entity
 
 import org.springframework.web.socket.WebSocketSession
 
+/**
+ * Class representing a connected player.
+ *
+ * @property name The player's name.
+ * @property game Associated [Game].
+ * @property session Associated [WebSocketSession].
+ */
 class Player(val name: String, var game: Game?, val session: WebSocketSession) {
 
+  /** Compares session as it must be unique. */
   override fun equals(other: Any?): Boolean =
       if (other is Player) session == other.session else false
 
+  /** Hashes session as it must be unique. */
   override fun hashCode(): Int = session.hashCode()
 }

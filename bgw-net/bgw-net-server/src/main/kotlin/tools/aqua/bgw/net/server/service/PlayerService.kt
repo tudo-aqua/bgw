@@ -20,7 +20,7 @@ package tools.aqua.bgw.net.server.service
 import org.springframework.stereotype.Service
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.Player
-import tools.aqua.bgw.net.server.entity.PlayerRepository
+import tools.aqua.bgw.net.server.entity.repositories.PlayerRepository
 
 /** This service handles creation and deletion of players from [PlayerRepository]. */
 @Service

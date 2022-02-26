@@ -15,23 +15,36 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.server.entity
+package tools.aqua.bgw.net.server.entity.tables
 
 import com.vladmihalcea.hibernate.type.json.JsonType
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Id
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 
+/**
+ * Table structure for game entries.
+ *
+ * @property gameID The game ID. ID field.
+ * @property initActionSchema Schema for init game action messages.
+ * @property gameActionSchema Schema for game action messages.
+ * @property endActionSchema Schema for end game action messages.
+ */
 @Entity(name = "Game")
 @TypeDef(name = "json", typeClass = JsonType::class)
-data class SchemasByGame(
+class SchemasByGame(
     @Id @Column(nullable = false, updatable = false) val gameID: String,
+    //
     @Type(type = "json")
     @Column(nullable = false, columnDefinition = "jsonb")
     var initActionSchema: String,
+    //
     @Type(type = "json")
     @Column(nullable = false, columnDefinition = "jsonb")
     var gameActionSchema: String,
+    //
     @Type(type = "json")
     @Column(nullable = false, columnDefinition = "jsonb")
     var endActionSchema: String,

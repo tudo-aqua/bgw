@@ -31,8 +31,8 @@ import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
 import tools.aqua.bgw.net.common.gamemessage.GameMessage
 import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
 import tools.aqua.bgw.net.server.*
-import tools.aqua.bgw.net.server.entity.SchemasByGame
-import tools.aqua.bgw.net.server.entity.SchemasByGameRepository
+import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
+import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 
 interface ValidationService {
   /**

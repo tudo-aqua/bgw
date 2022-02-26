@@ -15,20 +15,9 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.server.entity
+package tools.aqua.bgw.net.server.entity.tables
 
-import org.springframework.stereotype.Repository
+import org.springframework.data.repository.CrudRepository
 
-/** Holds all currently active Games. */
-@Repository
-class GameRepository : ObjectRepository<Game> {
-  private val gameSet: MutableSet<Game> = mutableSetOf()
-
-  override fun add(obj: Game): Boolean = gameSet.add(obj)
-
-  override fun remove(obj: Game): Boolean = gameSet.remove(obj)
-
-  override fun getAll(): List<Game> = gameSet.toList()
-
-  fun getBySessionID(sessionID: String): Game? = gameSet.find { it.sessionID == sessionID }
-}
+/** Interface for key value pair repository. */
+interface KeyValueRepository : CrudRepository<KeyValueStoreEntry, String>

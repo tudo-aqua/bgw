@@ -35,7 +35,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 import org.springframework.web.socket.server.HandshakeInterceptor
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
-import tools.aqua.bgw.net.server.entity.KeyValueRepository
+import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 import tools.aqua.bgw.net.server.player
 
 @Configuration

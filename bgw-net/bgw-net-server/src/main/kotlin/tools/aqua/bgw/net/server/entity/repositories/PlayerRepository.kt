@@ -15,18 +15,10 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.server.entity
+package tools.aqua.bgw.net.server.entity.repositories
 
 import org.springframework.stereotype.Repository
+import tools.aqua.bgw.net.server.entity.Player
 
 /** Holds all currently connected players. */
-@Repository
-class PlayerRepository : ObjectRepository<Player> {
-  private val playerSet: MutableSet<Player> = mutableSetOf()
-
-  override fun add(obj: Player): Boolean = playerSet.add(obj)
-
-  override fun remove(obj: Player): Boolean = playerSet.remove(obj)
-
-  override fun getAll(): List<Player> = playerSet.toList()
-}
+@Repository class PlayerRepository : ObjectRepository<Player>()
