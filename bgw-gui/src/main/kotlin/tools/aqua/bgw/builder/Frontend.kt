@@ -156,6 +156,7 @@ internal class Frontend : Application() {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
+      val oldScene = menuScene
       menuScene = scene
 
       scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
@@ -164,7 +165,8 @@ internal class Frontend : Application() {
           boardGameScene?.run { internalLockedProperty.value = true }
 
           updateScene()
-          fadeMenu(true, fadeTime)
+
+          if (oldScene == null) fadeMenu(true, fadeTime)
         }
       }
     }
