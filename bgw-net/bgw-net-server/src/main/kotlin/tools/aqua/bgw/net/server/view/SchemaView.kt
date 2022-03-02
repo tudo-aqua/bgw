@@ -17,63 +17,57 @@
 
 package tools.aqua.bgw.net.server.view
 
-import com.fasterxml.jackson.core.exc.StreamReadException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.vaadin.flow.component.dependency.CssImport
-import com.vaadin.flow.component.messages.MessageList
-import com.vaadin.flow.component.messages.MessageListItem
-import com.vaadin.flow.component.notification.Notification
-import com.vaadin.flow.component.notification.NotificationVariant
+import com.networknt.schema.JsonSchema
+import com.networknt.schema.JsonSchemaFactory
+import com.networknt.schema.SpecVersion
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.upload.Upload
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
-import org.springframework.beans.factory.annotation.Autowired
-import tools.aqua.bgw.net.server.service.validation.ValidationService
+import org.slf4j.LoggerFactory
+import tools.aqua.bgw.net.server.META_SCHEMA_JSON_URL_STRING
+
 
 @Route(value = "schema", layout = MainLayout::class)
 @PageTitle("BGW-Net | JSON Schemas")
-@CssImport(value = "./styles/message.css", themeFor = "vaadin-message")
-class SchemaView(@Autowired private val validationService: ValidationService) : VerticalLayout() {
-  private val buffer: MemoryBuffer = MemoryBuffer()
-  private val upload: Upload = Upload(buffer)
-  private val msgList = MessageList()
+class SchemaView(
+    //@Autowired private val frontendService: FrontendService,
+    //@Autowired private val validationService: ValidationService
+) : VerticalLayout() {
+    private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
+    private val upload: Upload = Upload(buffer)
 
-  init {
-    configureUpload()
-    add(VerticalLayout(upload, msgList))
-  }
+    private val logger = LoggerFactory.getLogger(javaClass)
 
-  private fun notify(msg: String, variant: NotificationVariant = NotificationVariant.LUMO_PRIMARY) {
-    val notification = Notification(msg, 5000, Notification.Position.TOP_CENTER)
-    notification.addThemeVariants(variant)
-    notification.open()
-  }
+    init {
+        upload.addSucceededListener {
+            val fileName = it.fileName
+            val inputStream = buffer.getInputStream(fileName)
 
-  private fun configureUpload() {
-    upload.addSucceededListener {
-      val fileName = it.fileName
-      val inputStream = buffer.inputStream
+            // val s: Scanner = Scanner(inputStream).useDelimiter("\\A")
+            // val result = if (s.hasNext()) s.next() else ""
 
-      var results: List<String> = listOf()
+            val json: String = javaClass.getResource(META_SCHEMA_JSON_URL_STRING)!!.readText()
+            //
+            val metaSchema: JsonSchema =
+                JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(json)
 
-      try {
-        val mapper = ObjectMapper()
-        val schemaNode: JsonNode = mapper.readTree(inputStream)
-        results = validationService.validateMetaSchema(schemaNode)
-      } catch (_: StreamReadException) {
-        notify(
-            "Couldn't parse JSON Schema! Please upload a .json File",
-            NotificationVariant.LUMO_ERROR)
-      }
+            val mapper = ObjectMapper()
+            val schemaNode: JsonNode = mapper.readTree(inputStream)
 
-      msgList.setItems(results.map { result -> MessageListItem(result) })
+            val results = metaSchema.validate(schemaNode)
 
-      if (results.isEmpty())
-          notify("$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
-      else notify("$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
+            logger.info("Size=${results.size}")
+            logger.info("Donezo")
+
+            // Do something with the file data
+            // processFile(inputStream, fileName)
+        }
+
+        width = "400px"
+        add(upload)
     }
-  }
 }
