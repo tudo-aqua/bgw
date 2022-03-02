@@ -55,7 +55,11 @@ class MainLayout : AppLayout() {
         RouterLink("SoPra Secret", SoPraSecretForm::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
+    val schemaLink =
+        RouterLink("JSON Schema", SchemaView::class.java).apply {
+          highlightCondition = HighlightConditions.sameLocation()
+        }
 
-    addToDrawer(VerticalLayout(connectionsLink, secretLink))
+    addToDrawer(VerticalLayout(connectionsLink, secretLink, schemaLink))
   }
 }
