@@ -17,4 +17,57 @@
 
 package tools.aqua.bgw.net.server.view
 
-class SchemaView
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.networknt.schema.JsonSchema
+import com.networknt.schema.JsonSchemaFactory
+import com.networknt.schema.SpecVersion
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.upload.Upload
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
+import com.vaadin.flow.router.PageTitle
+import com.vaadin.flow.router.Route
+import org.slf4j.LoggerFactory
+import tools.aqua.bgw.net.server.META_SCHEMA_JSON_URL_STRING
+
+
+@Route(value = "schema", layout = MainLayout::class)
+@PageTitle("BGW-Net | JSON Schemas")
+class SchemaView(
+    //@Autowired private val frontendService: FrontendService,
+    //@Autowired private val validationService: ValidationService
+) : VerticalLayout() {
+    private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
+    private val upload: Upload = Upload(buffer)
+
+    private val logger = LoggerFactory.getLogger(javaClass)
+
+    init {
+        upload.addSucceededListener {
+            val fileName = it.fileName
+            val inputStream = buffer.getInputStream(fileName)
+
+            // val s: Scanner = Scanner(inputStream).useDelimiter("\\A")
+            // val result = if (s.hasNext()) s.next() else ""
+
+            val json: String = javaClass.getResource(META_SCHEMA_JSON_URL_STRING)!!.readText()
+            //
+            val metaSchema: JsonSchema =
+                JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(json)
+
+            val mapper = ObjectMapper()
+            val schemaNode: JsonNode = mapper.readTree(inputStream)
+
+            val results = metaSchema.validate(schemaNode)
+
+            logger.info("Size=${results.size}")
+            logger.info("Donezo")
+
+            // Do something with the file data
+            // processFile(inputStream, fileName)
+        }
+
+        width = "400px"
+        add(upload)
+    }
+}

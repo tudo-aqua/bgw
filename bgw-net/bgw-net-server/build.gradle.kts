@@ -26,6 +26,7 @@ dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
 
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.spring.boot.devtools)
 
   // json kotlin schema
   implementation(libs.jackson.kotlin)
