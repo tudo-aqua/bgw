@@ -180,7 +180,7 @@ object SceneBuilder {
       if (oldValue != newValue || scene.backgroundCache == null) {
         val newBackground =
             VisualBuilder.buildVisual(newValue).apply {
-              prefWidthProperty().unbind()
+              prefHeightProperty().unbind()
               prefWidthProperty().unbind()
               prefHeight = scene.height
               prefWidth = scene.width
