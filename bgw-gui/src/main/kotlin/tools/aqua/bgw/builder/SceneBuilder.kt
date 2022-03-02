@@ -177,18 +177,23 @@ object SceneBuilder {
     children.clear()
 
     scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oldValue, newValue ->
-      if (oldValue != newValue || scene.backgroundCache == null)
-          scene.backgroundCache =
-              VisualBuilder.buildVisual(newValue).apply {
-                prefWidthProperty().unbind()
-                prefWidthProperty().unbind()
-                prefHeight = scene.height
-                prefWidth = scene.width
-                scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV ->
-                  opacity = nV
-                }
-              }
-      children.add(0, scene.backgroundCache)
+      if (oldValue != newValue || scene.backgroundCache == null) {
+        val newBackground =
+            VisualBuilder.buildVisual(newValue).apply {
+              prefHeightProperty().unbind()
+              prefWidthProperty().unbind()
+              prefHeight = scene.height
+              prefWidth = scene.width
+              scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
+            }
+
+        if (scene.backgroundCache != null) {
+          children.remove(scene.backgroundCache)
+        }
+
+        children.add(0, newBackground)
+        scene.backgroundCache = newBackground
+      }
     }
 
     (cachedComponents - scene.rootComponents).forEach { scene.componentsMap.remove(it) }
