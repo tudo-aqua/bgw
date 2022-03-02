@@ -27,6 +27,7 @@ import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.*
+import tools.aqua.bgw.util.Font
 
 // region Core
 /** Default window title. */
@@ -195,4 +196,9 @@ const val DEFAULT_TABLE_VIEW_WIDTH: Double = 400.0
 
 /** Default [TableView] height. */
 const val DEFAULT_TABLE_VIEW_HEIGHT: Double = 500.0
+// endregion
+
+// region Util
+/** Default [Font] size. */
+const val DEFAULT_FONT_SIZE: Double = 14.0
 // endregion
