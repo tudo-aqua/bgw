@@ -281,9 +281,9 @@ open class BoardGameApplication(
      * @throws AccessDeniedException if the file can't be read
      * @return A boolean weather the file could be loaded or not
      */
-    fun loadFont(font : File) : Boolean {
-      if(!font.exists()) throw NoSuchFileException(font)
-      if(!font.canRead()) throw AccessDeniedException(font)
+    fun loadFont(font: File): Boolean {
+      if (!font.exists()) throw NoSuchFileException(font)
+      if (!font.canRead()) throw AccessDeniedException(font)
       val jfxFont = JFXFont.loadFont(font.inputStream(), DEFAULT_FONT_SIZE) ?: return false
       return JFXFont.getFamilies().contains(jfxFont.family)
     }
