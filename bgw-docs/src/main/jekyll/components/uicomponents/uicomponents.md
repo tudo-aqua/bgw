@@ -23,6 +23,8 @@ title: UIComponents
 [LabeledUIComponentKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-labeled-u-i-component/index.html
 [TextInputUIComponentKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-text-input-u-i-component/index.html
 
+[BoardGameApplicationKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html
+
 <!-- GH-Pages Doc -->
 [ComponentViewDoc]: ../../componentview/componentview.md
 [UserInputDoc]: ../../concepts/user-input/UserInput.md
@@ -345,6 +347,27 @@ Lastly, to specify the data model for the TableView, some ints are added to the 
 
 ````kotlin
 table.items.addAll(listView.items)
+````
+
+## Loading custom fonts
+
+The [UIComponent][UIComponentKDoc] class has a parameter font, which can be passed. This means all derived component classes like e.g. [Label][LabelKDoc] can be constructed with a custom font.
+
+In order to load a custom font use the [BoardGameApplication][BoardGameApplicationKDoc] class.
+
+````kotlin
+// Load Roboto-Regular.ttf from root of resource folder 
+val resource = UIComponentExample::class.java.getResource("/Roboto-Regular.ttf") ?: throw FileNotFoundException()
+val fontFile = File(resource.toURI())
+BoardGameApplication.loadFont(fontFile)
+````
+Now the font is registered and ready to use.
+
+````kotlin
+private val label = Label(
+  text = "I am a Label.",
+  font = Font(family = "Roboto")
+)
 ````
 
 ## Complete source code for the example
