@@ -19,46 +19,6 @@ jobs:
     - name: Validate Gradle artifacts
       uses: gradle/wrapper-validation-action@v1
 
-  spotless:
-    name: Run Spotless
-    needs: safety-check
-    runs-on: ubuntu-latest
-    steps:
-    - name: Initial Setup
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # Required for version number generation & diff generation
-
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-      with:
-        distribution: temurin
-        java-version: ${{ env.JDK_VERSION }}
-
-    - name: Run Spotless checks
-      id: spotlessCheck
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: spotlessCheck
-
-    - name: Apply Spotless fixes
-      if: failure()
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: spotlessApply
-
-    - name: Generate diff
-      if: failure()
-      shell: sh
-      run: 'git diff > spotless.patch'
-
-    - name: Upload diff
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: Spotless Patch
-        path: spotless.patch
-
   detekt:
     name: Generate Detekt report
     needs: safety-check
