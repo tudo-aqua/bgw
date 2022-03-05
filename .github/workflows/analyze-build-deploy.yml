@@ -21,6 +21,15 @@ jobs:
 
   spotless:
     name: Run Spotless
+    on:
+      push:
+        branches:
+          - main
+          - dev
+      pull_request:
+        branches:
+          - main
+          - dev
     needs: safety-check
     runs-on: ubuntu-latest
     steps:
