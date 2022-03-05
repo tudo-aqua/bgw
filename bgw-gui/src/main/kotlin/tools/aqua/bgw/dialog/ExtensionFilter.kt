@@ -32,18 +32,22 @@ package tools.aqua.bgw.dialog
  * @property description File type description.
  * @property extensions File extensions.
  */
-data class ExtensionFilter internal constructor(val description: String, internal val extensions : List<String>) {
+data class ExtensionFilter
+internal constructor(val description: String, internal val extensions: List<String>) {
 
   /**
    * Creates an [ExtensionFilter].
    *
    * Maps a file type description to its extensions.
    *
-   * To generate e.g. "Image Files (*.png, *.jpg)" set [description] = "Image files" and [extensions]
-   * = ("png", "jpg").
+   * To generate e.g. "Image Files (*.png, *.jpg)" set [description] = "Image files" and
+   * [extensions] = ("png", "jpg").
    *
    * @param description File type description.
    * @param extensions File extensions.
    */
-  constructor(description: String, vararg extensions: String) : this(description, extensions.asList())
+  constructor(
+      description: String,
+      vararg extensions: String
+  ) : this(description, extensions.asList())
 }

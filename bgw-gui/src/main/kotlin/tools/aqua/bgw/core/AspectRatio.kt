@@ -22,15 +22,19 @@ package tools.aqua.bgw.core
  *
  * @property ratio Ratio as fraction.
  */
-data class AspectRatio internal constructor(internal val ratio: Double = DEFAULT_WINDOW_WIDTH / DEFAULT_WINDOW_HEIGHT) {
-  companion object{
+data class AspectRatio
+internal constructor(internal val ratio: Double = DEFAULT_WINDOW_WIDTH / DEFAULT_WINDOW_HEIGHT) {
+  companion object {
     /**
-     * Creates an aspect ratio out of width and height. May be for example 1920 : 1080 as well as 16 : 9.
+     * Creates an aspect ratio out of width and height. May be for example 1920 : 1080 as well as 16
+     * : 9.
      *
      * @param width Width of ratio. Default: [DEFAULT_WINDOW_WIDTH].
      * @param height Height of ratio. Default: [DEFAULT_WINDOW_HEIGHT].
      */
-    fun of(width: Number = DEFAULT_WINDOW_WIDTH, height: Number = DEFAULT_WINDOW_HEIGHT) : AspectRatio =
-      AspectRatio(width.toDouble() / height.toDouble())
+    fun of(
+        width: Number = DEFAULT_WINDOW_WIDTH,
+        height: Number = DEFAULT_WINDOW_HEIGHT
+    ): AspectRatio = AspectRatio(width.toDouble() / height.toDouble())
   }
 }
