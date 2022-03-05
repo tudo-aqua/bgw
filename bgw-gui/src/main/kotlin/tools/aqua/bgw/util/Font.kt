@@ -21,6 +21,7 @@ package tools.aqua.bgw.util
 
 import java.awt.Color
 import javafx.scene.text.Font
+import tools.aqua.bgw.core.DEFAULT_FONT_SIZE
 import tools.aqua.bgw.util.Font.FontStyle
 import tools.aqua.bgw.util.Font.FontWeight
 
@@ -39,7 +40,7 @@ import tools.aqua.bgw.util.Font.FontWeight
  * @see FontStyle
  */
 class Font(
-    val size: Number = 14,
+    val size: Number = DEFAULT_FONT_SIZE,
     val color: Color = Color.BLACK,
     val family: String = "Arial",
     val fontWeight: FontWeight = FontWeight.NORMAL,
