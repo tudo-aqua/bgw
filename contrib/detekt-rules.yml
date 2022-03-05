@@ -377,7 +377,7 @@ style:
   OptionalAbstractKeyword:
     active: true
   OptionalUnit:
-    active: false
+    active: true
   OptionalWhenBraces:
     active: false
   PreferToOverPairSyntax:
@@ -440,7 +440,7 @@ style:
   UseCheckOrError:
     active: true
   UseDataClass:
-    active: false
+    active: true
     allowVars: true
   UseEmptyCounterpart:
     active: true
