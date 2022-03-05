@@ -5,10 +5,14 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
   pull_request_target:
     branches:
       - main
-       - dev
+      - dev
   workflow_dispatch:
 
 env:
