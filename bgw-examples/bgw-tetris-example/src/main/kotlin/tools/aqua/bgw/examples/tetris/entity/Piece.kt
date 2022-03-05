@@ -22,10 +22,28 @@ package tools.aqua.bgw.examples.tetris.entity
  *
  * @property tiles Tiles array, rows first
  */
-class Piece(val tiles: Array<Array<Tile?>>) {
+data class Piece(val tiles: Array<Array<Tile?>>) {
   /** The height of this piece. */
   val height: Int = tiles.size
 
   /** The width of this piece. */
   val width: Int = tiles[0].size
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is Piece) return false
+
+    if (!tiles.contentDeepEquals(other.tiles)) return false
+    if (height != other.height) return false
+    if (width != other.width) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = tiles.contentDeepHashCode()
+    result = 31 * result + height
+    result = 31 * result + width
+    return result
+  }
 }

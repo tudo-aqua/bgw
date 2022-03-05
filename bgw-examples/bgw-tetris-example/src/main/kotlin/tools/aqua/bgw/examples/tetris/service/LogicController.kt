@@ -37,10 +37,10 @@ class LogicController(private val view: Refreshable) {
   private val generator: PieceGenerator = PieceGenerator()
 
   /** Running state. */
-  private var running: Boolean = false
+  private var isRunning: Boolean = false
 
   /** Blocked state from down button. */
-  private var blocked: Boolean = false
+  private var isBlocked: Boolean = false
 
   /** Counter for delay. */
   private var counter: Int = 10
@@ -54,12 +54,12 @@ class LogicController(private val view: Refreshable) {
   /** Starts game. When called while game is already running, nothing happens. */
   fun startGame() {
     synchronized(mutex) {
-      if (!running) {
+      if (!isRunning) {
         nextPiece()
 
         startTimer(400)
 
-        running = true
+        isRunning = true
         view.hideStartInstructions()
       }
     }
@@ -106,7 +106,7 @@ class LogicController(private val view: Refreshable) {
   fun navigate(keyCode: KeyCode) {
     require(keyCode.isArrow()) { "$keyCode is not an arrow key." }
 
-    if (blocked || !running) return
+    if (isBlocked || !isRunning) return
 
     synchronized(mutex) {
       when (keyCode) {
@@ -116,7 +116,7 @@ class LogicController(private val view: Refreshable) {
             if (!TetrisChecker.checkCollision(tetris = tetris, offsetX = 1)) tetris.right()
         KeyCode.DOWN -> {
           while (!TetrisChecker.checkCollision(tetris = tetris, offsetY = 1)) tetris.down()
-          blocked = true
+          isBlocked = true
         }
         KeyCode.UP -> rotatePiece()
         else -> error("$keyCode is not an arrow key.")
@@ -166,7 +166,7 @@ class LogicController(private val view: Refreshable) {
 
       clearRows()
       nextPiece()
-      blocked = false
+      isBlocked = false
     }
   }
 
@@ -262,7 +262,7 @@ class LogicController(private val view: Refreshable) {
 
   /** Sets lost state and stops game. */
   private fun loose() {
-    running = false
+    isRunning = false
     view.loose()
 
     stopTimer()

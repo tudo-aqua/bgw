@@ -163,7 +163,7 @@ class LogicController(val view: Refreshable) {
     if (isCurrentPlayer && !checkRules(card)) return false
 
     val player = getPlayer(isCurrentPlayer)
-    var advance = true
+    var isAdvancing = true
 
     player.hand.removeCard(card)
     if (isCurrentPlayer) {
@@ -176,11 +176,11 @@ class LogicController(val view: Refreshable) {
       }
       CardValue.EIGHT -> {
         playNoEffect(card, animated, isCurrentPlayer)
-        advance = false
+        isAdvancing = false
       }
       CardValue.JACK -> {
         playJackEffect(card, animated, isCurrentPlayer)
-        advance = false
+        isAdvancing = false
       }
       else -> {
         playNoEffect(card, animated, isCurrentPlayer)
@@ -194,7 +194,7 @@ class LogicController(val view: Refreshable) {
         return true
       }
 
-      if (advance) {
+      if (isAdvancing) {
         if (isOnline) {
           networkService.sendEndTurn()
           view.refreshAdvanceOnlinePlayer()

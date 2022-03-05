@@ -91,13 +91,13 @@ class TetrisGameScene : BoardGameScene(background = ColorVisual.WHITE) {
             }
 
             for (i in 0 until columns) {
-              this[i, 0]!!.visual = Color.GRAY.imageVisual.copy()
-              this[i, 21]!!.visual = Color.GRAY.imageVisual.copy()
+              this[i, 0]?.visual = Color.GRAY.imageVisual.copy()
+              this[i, 21]?.visual = Color.GRAY.imageVisual.copy()
             }
 
             for (i in 1 until rows - 1) {
-              this[0, i]!!.visual = Color.GRAY.imageVisual.copy()
-              this[11, i]!!.visual = Color.GRAY.imageVisual.copy()
+              this[0, i]?.visual = Color.GRAY.imageVisual.copy()
+              this[11, i]?.visual = Color.GRAY.imageVisual.copy()
             }
           }
 

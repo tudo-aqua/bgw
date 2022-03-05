@@ -32,14 +32,14 @@ package tools.aqua.bgw.dialog
  * @property buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
  * used if you don't pass any [ButtonType]s.
  */
-class Dialog
-private constructor(
+data class Dialog
+internal constructor(
     val dialogType: DialogType,
     val title: String,
     val header: String,
     val message: String,
     val exception: Throwable,
-    vararg val buttons: ButtonType
+    val buttons: List<ButtonType>
 ) {
   /**
    * Creates a Dialog.
@@ -59,7 +59,7 @@ private constructor(
       header: String,
       message: String,
       vararg buttons: ButtonType
-  ) : this(dialogType, title, header, message, Exception("empty"), *buttons) {
+  ) : this(dialogType, title, header, message, Exception("empty"), buttons.asList()) {
     require(dialogType != DialogType.EXCEPTION) {
       "To create an Exception dialog use exception dialog constructor."
     }
@@ -80,5 +80,5 @@ private constructor(
       header: String,
       message: String,
       exception: Throwable
-  ) : this(DialogType.EXCEPTION, title, header, message, exception, ButtonType.OK)
+  ) : this(DialogType.EXCEPTION, title, header, message, exception, listOf(ButtonType.OK))
 }

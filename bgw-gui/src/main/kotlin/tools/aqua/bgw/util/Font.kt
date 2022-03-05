@@ -39,7 +39,7 @@ import tools.aqua.bgw.util.Font.FontWeight
  *
  * @see FontStyle
  */
-class Font(
+data class Font(
     val size: Number = DEFAULT_FONT_SIZE,
     val color: Color = Color.BLACK,
     val family: String = "Arial",

@@ -158,7 +158,7 @@ open class BoardGameApplication(
       windowTitle: String = DEFAULT_WINDOW_TITLE,
       width: Number = DEFAULT_WINDOW_WIDTH,
       height: Number = DEFAULT_WINDOW_HEIGHT
-  ) : this(windowTitle = windowTitle, aspectRatio = AspectRatio(width = width, height = height)) {
+  ) : this(windowTitle = windowTitle, aspectRatio = AspectRatio.of(width = width, height = height)) {
     windowHeight = height
     windowWidth = width
   }
