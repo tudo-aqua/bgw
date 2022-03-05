@@ -1,11 +1,7 @@
-name: Analyze, Build and Deploy
+name: Code style
 
 on:
   push:
-    branches:
-      - main
-      - dev
-  pull_request:
     branches:
       - main
       - dev
