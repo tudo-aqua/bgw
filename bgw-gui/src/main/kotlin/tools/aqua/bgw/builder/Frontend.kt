@@ -86,6 +86,9 @@ internal class Frontend : Application() {
     /** Initial aspect ratio passed to [BoardGameApplication]. */
     internal lateinit var initialAspectRatio: AspectRatio
 
+    /** Initial window mode passed to [BoardGameApplication]. */
+    internal var initialWindowMode: WindowMode? = null
+
     // region Properties
     /** Property for the window title. */
     internal val titleProperty: StringProperty = StringProperty()
@@ -94,7 +97,7 @@ internal class Frontend : Application() {
     internal val isMaximizedProperty = BooleanProperty(false)
 
     /** Property whether application is currently fullscreen. */
-    internal val isFullscreenProperty = BooleanProperty(false)
+    internal val isFullScreenProperty = BooleanProperty(false)
 
     /** Property for the current application width. */
     internal val widthProperty =
@@ -297,8 +300,8 @@ internal class Frontend : Application() {
      * @param stage application stage.
      */
     internal fun startApplication(stage: Stage) {
-      // Create dummy scene for fullscreen
       stage.apply {
+        // Create dummy scene for fullscreen
         scene = Scene(Label())
 
         // Initialize default DECORATED stage style allowing minimizing
@@ -325,15 +328,31 @@ internal class Frontend : Application() {
 
         titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
 
+        // Override isMaximized and isFullscreen if initial value was passed
+        when (initialWindowMode) {
+          WindowMode.NORMAL -> {
+            isMaximizedProperty.value = false
+            isFullScreenProperty.value = false
+          }
+          WindowMode.MAXIMIZED -> {
+            isMaximizedProperty.value = true
+            isFullScreenProperty.value = false
+          }
+          WindowMode.FULLSCREEN -> {
+            isFullScreenProperty.value = true
+          }
+          null -> {}
+        }
+
         isMaximizedProperty.setGUIListenerAndInvoke(isMaximizedProperty.value) { _, nV ->
           isMaximized = nV
         }
-        isFullscreenProperty.setGUIListenerAndInvoke(isFullscreenProperty.value) { _, nV ->
+        isFullScreenProperty.setGUIListenerAndInvoke(isFullScreenProperty.value) { _, nV ->
           isFullScreen = nV
         }
 
         maximizedProperty().addListener { _, _, nV -> isMaximizedProperty.setSilent(nV) }
-        fullScreenProperty().addListener { _, _, nV -> isFullscreenProperty.setSilent(nV) }
+        fullScreenProperty().addListener { _, _, nV -> isFullScreenProperty.setSilent(nV) }
 
         heightProperty().addListener { _, _, nV ->
           heightProperty.setSilent(nV.toDouble())

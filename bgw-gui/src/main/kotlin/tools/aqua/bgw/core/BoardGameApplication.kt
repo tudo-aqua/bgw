@@ -48,13 +48,17 @@ import tools.aqua.bgw.visual.Visual
  * @param aspectRatio Initial aspect ratio of application window. Default: empty [AspectRatio]
  * constructor.
  *
+ * @param windowMode Initial window mode. Overrides [isMaximized] and [isFullScreen] if passed.
+ * Refer to [WindowMode] docs for further information about the effects.
+ *
  * @see BoardGameScene
  * @see MenuScene
  */
 @Suppress("LeakingThis")
 open class BoardGameApplication(
     windowTitle: String = DEFAULT_WINDOW_TITLE,
-    aspectRatio: AspectRatio = AspectRatio()
+    aspectRatio: AspectRatio = AspectRatio(),
+    windowMode: WindowMode? = null
 ) {
 
   /** Window title displayed in the title bar. */
@@ -100,9 +104,9 @@ open class BoardGameApplication(
    * default window.
    */
   var isFullScreen: Boolean
-    get() = Frontend.isFullscreenProperty.value
+    get() = Frontend.isFullScreenProperty.value
     set(value) {
-      Frontend.isFullscreenProperty.value = value
+      Frontend.isFullScreenProperty.value = value
     }
 
   /**
@@ -142,6 +146,7 @@ open class BoardGameApplication(
 
     Frontend.application = this
     Frontend.initialAspectRatio = aspectRatio
+    Frontend.initialWindowMode = windowMode
   }
 
   /**
@@ -152,14 +157,21 @@ open class BoardGameApplication(
    * [DEFAULT_WINDOW_TITLE].
    *
    * @param width Initial window width. Default: [DEFAULT_WINDOW_WIDTH].
+   *
    * @param height Initial window height. Default: [DEFAULT_WINDOW_HEIGHT].
+   *
+   * @param windowMode Initial window mode. Overrides [isMaximized] and [isFullScreen] if passed.
+   * Refer to [WindowMode] docs for further information about the effects.
    */
   constructor(
       windowTitle: String = DEFAULT_WINDOW_TITLE,
       width: Number = DEFAULT_WINDOW_WIDTH,
-      height: Number = DEFAULT_WINDOW_HEIGHT
+      height: Number = DEFAULT_WINDOW_HEIGHT,
+      windowMode: WindowMode? = null
   ) : this(
-      windowTitle = windowTitle, aspectRatio = AspectRatio.of(width = width, height = height)) {
+      windowTitle = windowTitle,
+      aspectRatio = AspectRatio.of(width = width, height = height),
+      windowMode = windowMode) {
     windowHeight = height
     windowWidth = width
   }
