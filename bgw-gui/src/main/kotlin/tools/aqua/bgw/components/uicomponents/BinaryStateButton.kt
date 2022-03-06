@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
@@ -31,7 +32,10 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [BinaryStateButton].
  * @param width Width for this [BinaryStateButton].
  * @param height Height for this [BinaryStateButton].
+ * @param text Text to be displayed for this [BinaryStateButton].
  * @param font Font to be used for this [BinaryStateButton].
+ * @param alignment Alignment to be used for the [text].
+ * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width.
  * @param isSelected The initial state for this [BinaryStateButton].
  * @param toggleGroup The ToggleGroup of this [BinaryStateButton].
  * @param visual Background [Visual].
@@ -43,13 +47,24 @@ sealed class BinaryStateButton(
     posY: Number,
     width: Number,
     height: Number,
+    text: String,
     font: Font,
+    alignment: Alignment,
+    isWrapText: Boolean,
     isSelected: Boolean,
     toggleGroup: ToggleGroup,
     visual: Visual
 ) :
-    UIComponent(
-        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
+    LabeledUIComponent(
+        posX = posX,
+        posY = posY,
+        width = width,
+        height = height,
+        text = text,
+        font = font,
+        alignment = alignment,
+        isWrapText = isWrapText,
+        visual = visual) {
   /**
    * The ToggleGroup of this ToggleButton.
    *
