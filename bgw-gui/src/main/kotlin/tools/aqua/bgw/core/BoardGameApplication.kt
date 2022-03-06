@@ -90,20 +90,20 @@ open class BoardGameApplication(
    * `true` for maximized mode, `false` for default window size.
    */
   var isMaximized: Boolean
-    get() = Frontend.maximizedProperty.value
+    get() = Frontend.isMaximizedProperty.value
     set(value) {
-      Frontend.maximizedProperty.value = value
+      Frontend.isMaximizedProperty.value = value
     }
 
-  //	/**
-  //	 * Sets this [BoardGameApplication]'s fullscreen mode.
-  //     * `true` for fullscreen mode, `false` for default window.
-  //	 */
-  //	var isFullScreen : Boolean
-  //        get() = Frontend.fullscreenProperty.value
-  //        set(value) {
-  //            Frontend.fullscreenProperty.value = value
-  //        }
+  /**
+   * Sets this [BoardGameApplication]'s fullscreen mode. `true` for fullscreen mode, `false` for
+   * default window.
+   */
+  var isFullScreen: Boolean
+    get() = Frontend.isFullscreenProperty.value
+    set(value) {
+      Frontend.isFullscreenProperty.value = value
+    }
 
   /**
    * Background [Visual] for the [BoardGameApplication].
