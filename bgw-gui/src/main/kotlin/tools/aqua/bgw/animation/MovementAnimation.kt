@@ -22,6 +22,7 @@ package tools.aqua.bgw.animation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.util.Coordinate
 
 /**
  * A movement [Animation].
@@ -104,26 +105,17 @@ class MovementAnimation<T : ComponentView>(
       val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
       val pathToDestination = scene.findPathToChild(toComponentViewPosition).dropLast(1)
 
-      // Sum relative positions and rotation and multiply scale
+      // Sum relative positions and rotation
+      var componentRotation = 0.0
       var componentAbsoluteX = 0.0
       var componentAbsoluteY = 0.0
       var destinationAbsoluteX = 0.0
       var destinationAbsoluteY = 0.0
 
-      var componentScaleX = 1.0
-      var componentScaleY = 1.0
-      var destinationScaleX = 1.0
-      var destinationScaleY = 1.0
-
-      var componentRotation = 0.0
-      var destinationRotation = 0.0
-
       pathToComponent.forEach {
         val pos = it.parent?.getActualChildPosition(it)
         componentAbsoluteX += pos?.xCoord ?: it.actualPosX
         componentAbsoluteY += pos?.yCoord ?: it.actualPosY
-        componentScaleX *= it.scaleX
-        componentScaleY *= it.scaleY
         componentRotation += it.rotation
       }
 
@@ -131,15 +123,18 @@ class MovementAnimation<T : ComponentView>(
         val pos = it.parent?.getActualChildPosition(it)
         destinationAbsoluteX += pos?.xCoord ?: it.actualPosX
         destinationAbsoluteY += pos?.yCoord ?: it.actualPosY
-        destinationScaleX *= it.scaleX
-        destinationScaleY *= it.scaleY
-        destinationRotation += it.rotation
       }
+
+      val vector =
+          Coordinate(
+                  xCoord = destinationAbsoluteX - componentAbsoluteX,
+                  yCoord = destinationAbsoluteY - componentAbsoluteY)
+              .rotated(-componentRotation)
 
       return MovementAnimation(
           componentView = componentView,
-          byX = destinationAbsoluteX - componentAbsoluteX,
-          byY = destinationAbsoluteY - componentAbsoluteY,
+          byX = vector.xCoord,
+          byY = vector.yCoord,
           duration = duration)
     }
   }
