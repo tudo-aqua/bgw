@@ -99,26 +99,20 @@ open class GridPane<T : ComponentView>(
    */
   operator fun set(columnIndex: Int, rowIndex: Int, component: T?) {
     grid[columnIndex, rowIndex]?.apply {
-      this.widthProperty.internalListener = null
-      this.heightProperty.internalListener = null
-      this.posXProperty.internalListener = null
-      this.posYProperty.internalListener = null
-      this.parent = null
+      widthProperty.internalListener = null
+      heightProperty.internalListener = null
+      posXProperty.internalListener = null
+      posYProperty.internalListener = null
+      parent = null
     }
 
     grid[columnIndex, rowIndex] =
         component?.apply {
-          this.widthProperty.internalListener = { _, _ -> updateGui?.invoke() }
-          this.heightProperty.internalListener = { _, _ -> updateGui?.invoke() }
-          this.posXProperty.internalListener =
-              { _, _ ->
-                posXProperty.setSilent(0.0) /*updateGui?.invoke()*/
-              }
-          this.posYProperty.internalListener =
-              { _, _ ->
-                posYProperty.setSilent(0.0) /*updateGui?.invoke()*/
-              }
-          this.parent = this@GridPane
+          widthProperty.internalListener = { _, _ -> updateGui?.invoke() }
+          heightProperty.internalListener = { _, _ -> updateGui?.invoke() }
+          posXProperty.internalListener = { _, _ -> posXProperty.setSilent(0.0) }
+          posYProperty.internalListener = { _, _ -> posYProperty.setSilent(0.0) }
+          parent = this@GridPane
         }
 
     // TODO: Remove hard reset of position
