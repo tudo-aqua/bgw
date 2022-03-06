@@ -176,6 +176,7 @@ object SceneBuilder {
   private fun Pane.rebuild(scene: Scene<out ComponentView>, cachedComponents: List<ComponentView>) {
     children.clear()
 
+    scene.backgroundCache = null
     scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oldValue, newValue ->
       if (oldValue != newValue || scene.backgroundCache == null) {
         val newBackground =
