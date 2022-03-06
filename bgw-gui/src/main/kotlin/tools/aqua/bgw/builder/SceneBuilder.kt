@@ -166,7 +166,10 @@ object SceneBuilder {
     validTargets.forEach { it.onDragDropped?.invoke(dragEvent) }
 
     // If dragged element was not added to a container, add it to the scene
-    if (draggedComponent.parent == null) addComponents(draggedComponent)
+    if (draggedComponent.parent == dragGestureRootNode) {
+      draggedComponent.parent = null
+      addComponents(draggedComponent)
+    }
 
     draggedComponent.isDragged = false
     draggedComponentProperty.value = null

@@ -176,7 +176,7 @@ object NodeBuilder {
     val newCoords = SceneBuilder.transformCoordinatesToScene(e, dragDataObject)
 
     removeFromParent()
-
+    parent = scene.dragGestureRootNode
     posX = newCoords.xCoord
     posY = newCoords.yCoord
     scene.draggedComponentProperty.value = dragDataObject
@@ -195,6 +195,7 @@ object NodeBuilder {
     return {
       component.posX = initialX
       component.posY = initialY
+      component.parent = null
       @Suppress("UNCHECKED_CAST")
       (this as GameComponentContainer<GameComponentView>).add(
           component, min(observableComponents.size, index))
@@ -218,6 +219,7 @@ object NodeBuilder {
     return {
       component.posX = initialX
       component.posY = initialY
+      component.parent = null
       @Suppress("UNCHECKED_CAST")
       (this as GridPane<ComponentView>)[initialColumnIndex, initialRowIndex] = component
     }
@@ -232,6 +234,7 @@ object NodeBuilder {
     return {
       component.posX = initialX
       component.posY = initialY
+      component.parent = null
       @Suppress("UNCHECKED_CAST")
       (this as Pane<ComponentView>).add(
           this as ComponentView, min(observableComponents.size, index))
@@ -245,6 +248,7 @@ object NodeBuilder {
     return {
       posX = initialX
       posY = initialY
+      parent = null
       scene.addComponents(this)
     }
   }
