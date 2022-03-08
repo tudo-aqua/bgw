@@ -215,6 +215,23 @@ open class GridPane<T : ComponentView>(
    * Manually set column width of all columns. Overrides automatic resizing based on content from
    * this column.
    *
+   * @param columnWidth New column width for all columns. Use [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
+   *
+   * @throws IllegalArgumentException If value is negative.
+   *
+   * @see setColumnWidth
+   * @see setAutoColumnWidth
+   * @see setAutoColumnWidths
+   */
+  fun setColumnWidths(columnWidth: Number) {
+    grid.setColumnWidths(columnWidth = columnWidth.toDouble())
+    updateGui?.invoke()
+  }
+
+  /**
+   * Manually set column width of all columns. Overrides automatic resizing based on content from
+   * this column.
+   *
    * @param columnWidths New column widths. Array index 0 get applied for the first column etc. Use
    * [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
    *
@@ -283,6 +300,24 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeight(rowIndex: Int, rowHeight: Number) {
     grid.setRowHeight(rowIndex = rowIndex, rowHeight = rowHeight.toDouble())
+    updateGui?.invoke()
+  }
+
+  /**
+   * Manually set row height of all rows. Overrides automatic resizing based on content from this
+   * row.
+   *
+   * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
+   *
+   * @throws IllegalArgumentException If Array size does not match row count or values were
+   * negative.
+   *
+   * @see setRowHeight
+   * @see setAutoRowHeight
+   * @see setAutoRowHeights
+   */
+  fun setRowHeights(rowHeight: Number) {
+    grid.setRowHeights(rowHeight = rowHeight.toDouble())
     updateGui?.invoke()
   }
 

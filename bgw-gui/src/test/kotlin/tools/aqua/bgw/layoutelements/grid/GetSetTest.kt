@@ -80,10 +80,21 @@ class GetSetTest : GridPaneTestBase() {
     assertEquals(COLUMN_WIDTH_AUTO, grid.getColumnWidth(2))
   }
 
-  /** Set column widths. */
+  /** Set column widths with single value. */
   @Test
-  @DisplayName("Set column widths")
-  fun testGetSetColumnWidths() {
+  @DisplayName("Set column widths with single value")
+  fun testGetSetColumnWidthsWithSingleValue() {
+    grid.setColumnWidths(42)
+
+    for (i in 0..2) {
+      assertEquals(42.0, grid.getColumnWidth(i))
+    }
+  }
+
+  /** Set column widths with array. */
+  @Test
+  @DisplayName("Set column widths with array")
+  fun testGetSetColumnWidthsWithArray() {
     grid.setColumnWidths(DoubleArray(3) { 42.0 })
 
     for (i in 0..2) {
@@ -149,10 +160,21 @@ class GetSetTest : GridPaneTestBase() {
     assertEquals(ROW_HEIGHT_AUTO, grid.getRowHeight(2))
   }
 
-  /** Set row heights. */
+  /** Set row heights with single value. */
   @Test
-  @DisplayName("Set row heights")
-  fun testGetSetRowHeights() {
+  @DisplayName("Set row heights with single value")
+  fun testGetSetRowHeightsWithSingleValue() {
+    grid.setRowHeights(42)
+
+    for (i in 0..2) {
+      assertEquals(42.0, grid.getRowHeight(i), "index $i")
+    }
+  }
+
+  /** Set row heights with array. */
+  @Test
+  @DisplayName("Set row heights with array")
+  fun testGetSetRowHeightsWithArray() {
     grid.setRowHeights(DoubleArray(3) { 42.0 })
 
     for (i in 0..2) {
