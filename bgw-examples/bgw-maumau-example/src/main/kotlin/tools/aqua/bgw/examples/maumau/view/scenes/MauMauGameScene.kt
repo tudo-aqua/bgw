@@ -44,14 +44,14 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
   /** Player one's hand. */
   var currentPlayerHand: LinearLayout<CardView> =
       LinearLayout<CardView>(
-              height = 220,
-              width = 800,
-              posX = 560,
-              posY = 750,
+              height = 400,
+              width = 400,
+              posX = 600,
+              posY = 600,
               spacing = -50,
-              alignment = Alignment.CENTER_LEFT,
+              alignment = Alignment.CENTER,
               visual = ColorVisual(255, 255, 255, 50))
-          .apply { rotation = 90.0 }
+          .apply { rotation = 20.0 }
 
   /** Player two's hand. */
   var otherPlayerHand: LinearLayout<CardView> =
@@ -222,7 +222,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
               setColumnWidths(200)
               setRowHeights(200)
             }
-            .apply { rotation = 45.0 })
+            .apply { rotation = 0.0 },
+    TokenView(898,598,4,4, ColorVisual.BLACK))
 
     lockedProperty.addListener { _, nV -> waitForOpponentLabel.isVisible = nV }
   }

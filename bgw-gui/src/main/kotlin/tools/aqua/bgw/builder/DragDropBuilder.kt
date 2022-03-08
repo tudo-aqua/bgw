@@ -65,17 +65,25 @@ object DragDropBuilder {
     val mouseStartCoord =
         Coordinate(xCoord = e.sceneX / Frontend.sceneScale, yCoord = e.sceneY / Frontend.sceneScale)
 
-    var posStartCoord =
-        Coordinate(
-            xCoord = pathToChild.sumOf { t -> t.actualPosX },
-            yCoord = pathToChild.sumOf { t -> t.actualPosY })
+    var posStartCoord = Coordinate()
+    var relativeRotation = 0.0
+    pathToChild.forEach{
+      posStartCoord= posStartCoord.rotated(it.rotation, Coordinate(it.actualWidth/2, it.actualHeight/2))
+      posStartCoord += Coordinate(it.actualPosX, it.actualPosY)
+      relativeRotation += it.rotation
+    }
+
+    //Move center to current posX/posY
+    posStartCoord -= Coordinate(xCoord = width/2, yCoord = height/2)
+
+    //Translate to center
+    posStartCoord += Coordinate(xCoord = width/2, yCoord = height/2).rotated(relativeRotation)
+
+
 
     if (parent is GridPane<*>) posStartCoord += parent.getActualChildPosition(this) ?: Coordinate()
 
     val rollback: (() -> Unit) = findRollback(scene)
-
-    val relativeRotation =
-        rotation + if (pathToChild.size > 1) pathToChild.drop(1).sumOf { t -> t.rotation } else 0.0
 
     val dragDataObject =
         DragDataObject(
