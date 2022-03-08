@@ -59,32 +59,33 @@ object DragDropBuilder {
 
   /** Adds onDragDetected to [DynamicComponentView]. */
   private fun DynamicComponentView.onDragDetected(scene: BoardGameScene, e: MouseEvent) {
-    val parent = parent
-    val pathToChild = scene.findPathToChild(this)
+    // Find path to component
+    val pathToComponent = scene.findPathToChild(this)
 
+    // Sum rotation
+    val relativeRotation = pathToComponent.sumOf { it.rotation }
+
+    // Save mouse start coords
     val mouseStartCoord =
         Coordinate(xCoord = e.sceneX / Frontend.sceneScale, yCoord = e.sceneY / Frontend.sceneScale)
 
+    // calculate drag start position of component
     var posStartCoord = Coordinate()
-    var relativeRotation = 0.0
-    pathToChild.forEach{
-      posStartCoord= posStartCoord.rotated(it.rotation, Coordinate(it.actualWidth/2, it.actualHeight/2))
-      posStartCoord += Coordinate(it.actualPosX, it.actualPosY)
-      relativeRotation += it.rotation
+    pathToComponent.forEach {
+      // Rotate coordinate plain and correct for positioning in container
+      posStartCoord =
+          posStartCoord.rotated(it.rotation, Coordinate(it.actualWidth / 2, it.actualHeight / 2)) +
+              (it.parent?.getActualChildPosition(this) ?: Coordinate(it.actualPosX, it.actualPosY))
     }
+    // Move rotation center to current posX/posY and translate to center
+    posStartCoord +=
+        Coordinate(xCoord = -width / 2, yCoord = -height / 2) +
+            Coordinate(xCoord = width / 2, yCoord = height / 2).rotated(relativeRotation)
 
-    //Move center to current posX/posY
-    posStartCoord -= Coordinate(xCoord = width/2, yCoord = height/2)
-
-    //Translate to center
-    posStartCoord += Coordinate(xCoord = width/2, yCoord = height/2).rotated(relativeRotation)
-
-
-
-    if (parent is GridPane<*>) posStartCoord += parent.getActualChildPosition(this) ?: Coordinate()
-
+    // Calculate rollback
     val rollback: (() -> Unit) = findRollback(scene)
 
+    // Create DragDataObject
     val dragDataObject =
         DragDataObject(
             draggedComponent = this,
@@ -97,10 +98,11 @@ object DragDropBuilder {
             initialRotation = rotation,
             rollback = rollback)
 
-    val newCoords = SceneBuilder.transformCoordinatesToScene(e, dragDataObject)
-
+    // Remove component from node graph
     removeFromParent()
 
+    // Transform coordinates to scene
+    val newCoords = SceneBuilder.transformCoordinatesToScene(e, dragDataObject)
     posX = newCoords.xCoord
     posY = newCoords.yCoord
     rotation = relativeRotation
