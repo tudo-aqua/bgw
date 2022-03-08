@@ -74,8 +74,12 @@ object DragDropBuilder {
     pathToComponent.forEach {
       // Rotate coordinate plain and correct for positioning in container
       posStartCoord =
-          posStartCoord.rotated(it.rotation, Coordinate(if(it.isLayoutFromCenter) 0 else it.actualWidth / 2, if(it.isLayoutFromCenter) 0 else it.actualHeight / 2)) +
-              (it.parent?.getActualChildPosition(this) ?: Coordinate(it.actualPosX, it.actualPosY))
+          posStartCoord.rotated(
+              it.rotation,
+              Coordinate(
+                  if (it.isLayoutFromCenter) 0 else it.actualWidth / 2,
+                  if (it.isLayoutFromCenter) 0 else it.actualHeight / 2)) +
+              (it.parent?.getActualChildPosition(it) ?: Coordinate(it.actualPosX, it.actualPosY))
     }
     // Move rotation center to current posX/posY and translate to center
     posStartCoord +=
