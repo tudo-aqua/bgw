@@ -121,7 +121,6 @@ object SceneBuilder {
                   yCoord =
                       mouseEvent.sceneY / Frontend.sceneScale -
                           draggedDataObject.mouseStartCoord.yCoord)
-              .rotated(-draggedDataObject.relativeParentRotation)
 
   /** Event handler for onMouseDragged. */
   private fun BoardGameScene.onMouseDragged(e: MouseEvent) {
