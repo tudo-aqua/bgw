@@ -112,15 +112,13 @@ object SceneBuilder {
   internal fun transformCoordinatesToScene(
       mouseEvent: MouseEvent,
       draggedDataObject: DragDataObject
-  ): Coordinate =
-      draggedDataObject.posStartCoord +
-          Coordinate(
-              xCoord =
-                  mouseEvent.sceneX / Frontend.sceneScale -
-                      draggedDataObject.mouseStartCoord.xCoord,
-              yCoord =
-                  mouseEvent.sceneY / Frontend.sceneScale -
-                      draggedDataObject.mouseStartCoord.yCoord)
+  ): Coordinate = draggedDataObject.posStartCoord + Coordinate(
+                  xCoord =
+                      mouseEvent.sceneX / Frontend.sceneScale -
+                          draggedDataObject.mouseStartCoord.xCoord,
+                  yCoord =
+                      mouseEvent.sceneY / Frontend.sceneScale -
+                          draggedDataObject.mouseStartCoord.yCoord)
 
   /** Event handler for onMouseDragged. */
   private fun BoardGameScene.onMouseDragged(e: MouseEvent) {

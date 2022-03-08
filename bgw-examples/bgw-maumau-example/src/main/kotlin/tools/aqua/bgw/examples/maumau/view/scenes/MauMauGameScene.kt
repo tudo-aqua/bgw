@@ -23,6 +23,8 @@ import kotlin.concurrent.scheduleAtFixedRate
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
@@ -41,14 +43,15 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
   // region Player hands
   /** Player one's hand. */
   var currentPlayerHand: LinearLayout<CardView> =
-      LinearLayout(
-          height = 220,
-          width = 800,
-          posX = 560,
-          posY = 750,
-          spacing = -50,
-          alignment = Alignment.CENTER,
-          visual = ColorVisual(255, 255, 255, 50))
+      LinearLayout<CardView>(
+              height = 220,
+              width = 800,
+              posX = 560,
+              posY = 750,
+              spacing = -50,
+              alignment = Alignment.CENTER_LEFT,
+              visual = ColorVisual(255, 255, 255, 50))
+          .apply { rotation = 90.0 }
 
   /** Player two's hand. */
   var otherPlayerHand: LinearLayout<CardView> =
@@ -205,7 +208,21 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
         buttonSpades,
         buttonClubs,
         hintButton,
-        mainMenuButton)
+        mainMenuButton,
+        GridPane<TokenView>(400, 400, 2, 2, 20, visual = ColorVisual.WHITE)
+            .apply {
+              this[0, 0] = TokenView(0, 0, 200, 200, ColorVisual.GREEN).apply { isDraggable = true }
+              this[0, 1] = TokenView(0, 0, 100, 200, ColorVisual.RED).apply { isDraggable = true }
+              this[1, 0] = TokenView(0, 0, 200, 100, ColorVisual.BLUE).apply { isDraggable = true }
+              this[1, 1] =
+                  TokenView(0, 0, 100, 100, ColorVisual.YELLOW).apply {
+                    rotation = 20.0
+                    isDraggable = true
+                  }
+              setColumnWidths(200)
+              setRowHeights(200)
+            }
+            .apply { rotation = 45.0 })
 
     lockedProperty.addListener { _, nV -> waitForOpponentLabel.isVisible = nV }
   }
