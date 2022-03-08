@@ -115,12 +115,12 @@ object SceneBuilder {
   ): Coordinate =
       draggedDataObject.posStartCoord +
           Coordinate(
-                  xCoord =
-                      mouseEvent.sceneX / Frontend.sceneScale -
-                          draggedDataObject.mouseStartCoord.xCoord,
-                  yCoord =
-                      mouseEvent.sceneY / Frontend.sceneScale -
-                          draggedDataObject.mouseStartCoord.yCoord)
+              xCoord =
+                  mouseEvent.sceneX / Frontend.sceneScale -
+                      draggedDataObject.mouseStartCoord.xCoord,
+              yCoord =
+                  mouseEvent.sceneY / Frontend.sceneScale -
+                      draggedDataObject.mouseStartCoord.yCoord)
 
   /** Event handler for onMouseDragged. */
   private fun BoardGameScene.onMouseDragged(e: MouseEvent) {
@@ -153,7 +153,12 @@ object SceneBuilder {
           it.dropAcceptor?.invoke(DragEvent(draggedComponent)) ?: false
         }
 
-    if (validTargets.isEmpty()) dragDataObject.rollback()
+    if (validTargets.isEmpty()) {
+      draggedComponent.posX = dragDataObject.initialPosX
+      draggedComponent.posY = dragDataObject.initialPosY
+      draggedComponent.rotation = dragDataObject.initialRotation
+      dragDataObject.rollback()
+    }
 
     // Create drop event containing all accepting drop targets
     val dropEvent = DropEvent(draggedComponent, validTargets)

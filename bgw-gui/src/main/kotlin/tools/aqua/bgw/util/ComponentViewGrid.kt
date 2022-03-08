@@ -216,6 +216,22 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
   /**
    * Sets preferred column width ([COLUMN_WIDTH_AUTO] for auto) for all columns.
    *
+   * @param columnWidth New column width.
+   *
+   * @throws IllegalArgumentException If size of [columnWidths] does not match grid size or any
+   * columnWidth is negative.
+   */
+  fun setColumnWidths(columnWidth: Double) {
+    require(columnWidth >= 0 || columnWidth == COLUMN_WIDTH_AUTO) {
+      "Parameter value must be positive or COLUMN_WIDTH_AUTO."
+    }
+
+    this.columnWidths.fill(columnWidth)
+  }
+
+  /**
+   * Sets preferred column width ([COLUMN_WIDTH_AUTO] for auto) for all columns.
+   *
    * @param columnWidths New column widths.
    *
    * @throws IllegalArgumentException If size of [columnWidths] does not match grid size or any
@@ -258,6 +274,22 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
     }
 
     rowHeights[rowIndex] = rowHeight
+  }
+
+  /**
+   * Sets preferred row height ([ROW_HEIGHT_AUTO] for auto) for all rows.
+   *
+   * @param rowHeight New row height fo all rows.
+   *
+   * @throws IllegalArgumentException If size of [rowHeights] does not match grid size or any
+   * rowHeight is negative.
+   */
+  fun setRowHeights(rowHeight: Double) {
+    require(rowHeight >= 0 || rowHeight == ROW_HEIGHT_AUTO) {
+      "Parameter values must be positive or ROW_HEIGHT_AUTO."
+    }
+
+    this.rowHeights.fill(rowHeight)
   }
 
   /**

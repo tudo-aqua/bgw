@@ -215,7 +215,8 @@ open class GridPane<T : ComponentView>(
    * Manually set column width of all columns. Overrides automatic resizing based on content from
    * this column.
    *
-   * @param columnWidth New column width for all columns. Use [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
+   * @param columnWidth New column width for all columns. Use [COLUMN_WIDTH_AUTO] to restore
+   * automatic resizing behaviour.
    *
    * @throws IllegalArgumentException If value is negative.
    *
