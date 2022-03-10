@@ -17,11 +17,10 @@
 
 package tools.aqua.bgw.net.server.service
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.networknt.schema.JsonSchema
-import com.networknt.schema.JsonSchemaFactory
-import com.networknt.schema.SpecVersion
-import com.networknt.schema.ValidationMessage
+import com.networknt.schema.*
+import java.io.FileNotFoundException
 import javax.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -51,6 +50,8 @@ interface ValidationService {
    */
   @Throws(JsonSchemaNotFoundException::class)
   fun validate(message: GameMessage, gameID: String): List<String>?
+
+  fun validate(schemaNode: JsonNode): List<String>
 
   /**
    * Instructs the [ValidationService] implementation to clear it schema cache. Should be called
@@ -100,6 +101,7 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
                     .also { schemaMap[gameID] = it }
               } else throw JsonSchemaNotFoundException()
             }
+
     fun Iterable<ValidationMessage>.stringsOrNull() =
         map(ValidationMessage::getMessage).ifEmpty { null }
     return when (message) {
@@ -109,6 +111,15 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
           gameSchema.action.validate(mapper.readTree(message.payload)).stringsOrNull()
       is EndGameMessage -> gameSchema.end.validate(mapper.readTree(message.payload)).stringsOrNull()
     }
+  }
+
+  override fun validate(schemaNode: JsonNode): List<String> {
+    val factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+    val resource =
+        javaClass.getResourceAsStream(META_SCHEMA_JSON_URL_STRING) ?: throw FileNotFoundException()
+    val metaSchema = factory.getSchema(resource)
+    val results = metaSchema.validate(schemaNode)
+    return results.map { it.message }
   }
 
   override fun flushSchemaCache(): Unit = schemaMap.clear()

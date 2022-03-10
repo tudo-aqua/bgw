@@ -27,10 +27,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.HighlightConditions
 import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
-import com.vaadin.flow.theme.material.Material
+import com.vaadin.flow.theme.lumo.Lumo
 
 @CssImport("./styles/styles.css")
-@Theme(Material::class, variant = Material.LIGHT)
+@Theme(Lumo::class, variant = Lumo.LIGHT)
 class MainLayout : AppLayout() {
   init {
     createHeader()
