@@ -26,5 +26,4 @@ import tools.aqua.bgw.net.common.Message
  * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
  * @property sender Sender identification.
  */
-class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) :
-    Message()
+class GameActionMessage(val payload: String, val prettyPrint: String,val sender: String) : Message()

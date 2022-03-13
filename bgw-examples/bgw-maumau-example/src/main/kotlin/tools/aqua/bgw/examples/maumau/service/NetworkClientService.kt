@@ -56,6 +56,7 @@ class NetworkClientService(
     ) {
 
   /** [Refreshable] instance. */
+  /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
 
   // region Connect response
@@ -107,9 +108,9 @@ class NetworkClientService(
         // Enemy has played a card
         GameActionType.PLAY -> {
           logicController.playCard(
-              card = Serialization.deserializeMauMauCard(message.card),
-              animated = true,
-              isCurrentPlayer = false)
+            card = Serialization.deserializeMauMauCard(message.card),
+            animated = true,
+            isCurrentPlayer = false)
         }
 
         // Enemy has drawn a card
@@ -126,8 +127,8 @@ class NetworkClientService(
         // Enemy has played a jack and request suit
         GameActionType.REQUEST_SUIT -> {
           logicController.selectSuit(
-              suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
-              isCurrentPlayer = false)
+            suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
+            isCurrentPlayer = false)
         }
 
         // Enemy has ended his turn
