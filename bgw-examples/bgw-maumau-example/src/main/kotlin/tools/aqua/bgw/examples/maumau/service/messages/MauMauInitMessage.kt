@@ -15,16 +15,23 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.gamemessage
+package tools.aqua.bgw.examples.maumau.service.messages
 
-import tools.aqua.bgw.net.common.Message
+import tools.aqua.bgw.net.common.GameAction
 
 /**
- * Baseclass for game messages.
+ * InitGameMessage data class for serialization.
  *
- * @property payload Data to be transmitted.
- * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
- * @property sender Sender identification.
+ * @property players [List] of players.
+ * @property drawStack [List] of draw stack cards.
+ * @property gameStack [List] of game tack cards.
+ * @property hostCards [List] of host player's cards.
+ * @property yourCards [List] of your cards.
  */
-sealed class GameMessage(val payload: String, val prettyPrint: String, val sender: String) :
-    Message()
+data class MauMauInitMessage(
+    val players: List<String>,
+    val drawStack: List<String>,
+    val gameStack: List<String>,
+    val hostCards: List<String>,
+    val yourCards: List<String>,
+) : GameAction()

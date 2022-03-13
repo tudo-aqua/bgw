@@ -17,47 +17,41 @@
 
 package tools.aqua.bgw.net.client
 
-import java.net.URI
-import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
-import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
-import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
+import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionReceiver
+import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
 import tools.aqua.bgw.net.common.response.*
+import java.lang.reflect.Method
+import java.net.URI
+
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
  * override it's open functions. By default, these do nothing if not overridden.
  *
- * @param IG Generic for the [InitializeGameMessage].
- * @param GA Generic for the [GameActionMessage].
- * @param EG Generic for the [EndGameMessage].
- * @property playerName The player name.
+ * @param playerName The player name.
  * @param host The server ip or hostname.
  * @param port The server port.
  * @param endpoint The server endpoint.
  * @param secret The server secret.
- * @param initGameClass The [InitializeGameMessage] class.
- * @param gameActionClass The [GameActionMessage] class.
- * @param endGameClass The [EndGameMessage] class.
  */
-open class BoardGameClient<IG, GA, EG>
+open class BoardGameClient
 protected constructor(
-    val playerName: String,
+    playerName: String,
     host: String,
     port: Int,
     endpoint: String = "chat",
     secret: String,
-    initGameClass: Class<IG>,
-    gameActionClass: Class<GA>,
-    endGameClass: Class<EG>,
+    val schemas : Set<Class<out GameAction>>
 ) {
 
   /** WebSocketClient handling network communication. */
-  private val wsClient: BGWWebSocketClient<IG, GA, EG>
+  private val wsClient: BGWWebSocketClient
 
   init {
     @Suppress("LeakingThis")
@@ -66,11 +60,108 @@ protected constructor(
             uri = URI.create("ws://$host:$port/$endpoint"),
             playerName = playerName,
             secret = secret,
-            callback = this,
-            initGameClass = initGameClass,
-            gameActionClass = gameActionClass,
-            endGameClass = endGameClass)
+            callback = this)
+
+
   }
+
+
+
+
+
+
+
+
+
+
+
+  fun testReflection() {
+    println("Test reflection 1")
+
+    val methods = getAnnotatedReceivers()
+    methods.forEach { (k, v) -> println("$k -> $v")  }
+
+    println("End Test reflection")
+  }
+
+
+  private fun getAnnotatedReceivers(): Map<Class<out GameAction>, Method> {
+    val map = mutableMapOf<Class<out GameAction>, Method>()
+    val annotatedMethods = mutableListOf<Method>()
+    var clazz : Class<*> = this::class.java
+
+    //Retrieve all annotated methods
+    while (clazz != Any::class.java) {
+      for (method in clazz.declaredMethods) {
+        if (method.isAnnotationPresent(GameActionReceiver::class.java)) {
+          annotatedMethods.add(method)
+        }
+      }
+      clazz = clazz.superclass
+    }
+
+    //Create mapping
+    for(method in annotatedMethods) {
+      val params : Array<Class<*>> = method.parameterTypes
+
+      //Check parameter count
+      if(params.size != 2) {
+        System.err.println("Found function ${method.name} annotated with @GameActionReceiver that does not declare the expected parameter count. Ignoring.")
+        continue
+      }
+
+      //Check first parameter is subclass of GameAction
+      val receiver = params[0]
+      if(!GameAction::class.java.isAssignableFrom(receiver)) {
+        System.err.println("Found function ${method.name} annotated with @GameActionReceiver with first parameter not conforming to GameAction which was expected. Ignoring.")
+        continue
+      }
+
+      //Check second parameter is String
+      if(!String::class.java.isAssignableFrom(params[1])) {
+        System.err.println("Found function ${method.name} annotated with @GameActionReceiver with second parameter not conforming to String which was expected. Ignoring.")
+        continue
+      }
+
+      //Check first parameter is in schemas set
+      val schema = matchSchema(receiver)
+      if(schema == null) {
+        System.err.println("Found function ${method.name} annotated with @GameActionReceiver with first parameter not in schema list passed to BoardGameClient constructor. Ignoring.")
+        continue
+      }
+
+      //Check for duplicate method
+      if(map.containsKey(schema)) {
+        System.err.println("Multiple functions annotated with @GameActionReceiver found that declare receiver parameter $receiver. Ignoring duplicate.")
+        continue
+      }
+
+      map[schema] = method
+    }
+    return map
+  }
+
+  private fun matchSchema(type : Class<*>) : Class<out GameAction>? {
+    for(schema in schemas) {
+      if (schema.isAssignableFrom(type)) {
+        return schema
+      }
+    }
+    return null
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // region Connect / Disconnect
   /** Connects to the remote server, blocking. */
@@ -173,32 +264,14 @@ protected constructor(
   open fun onUserLeft(notification: UserDisconnectedNotification) {}
   // endregion
 
-  // region Send messages
+  // region Game messages
   /**
    * Sends a [GameActionMessage] to all connected players.
    *
    * @param payload The [GameActionMessage] payload.
    */
-  fun sendGameActionMessage(payload: GA) {
+  fun sendGameActionMessage(payload: GameAction) { //TODO: ANY
     wsClient.sendGameActionMessage(payload)
-  }
-
-  /**
-   * Sends an [InitializeGameMessage] to all connected players.
-   *
-   * @param payload The [InitializeGameMessage] payload.
-   */
-  fun sendInitializeGameMessage(payload: IG) {
-    wsClient.sendInitializeGameMessage(payload)
-  }
-
-  /**
-   * Sends an [EndGameMessage] to all connected players.
-   *
-   * @param payload The [EndGameMessage] payload.
-   */
-  fun sendEndGameMessage(payload: EG) {
-    wsClient.sendEndGameMessage(payload)
   }
 
   /**
@@ -214,37 +287,6 @@ protected constructor(
    * @param message The [GameActionMessage] received from the opponent.
    * @param sender The opponents identification.
    */
-  open fun onGameActionReceived(message: GA, sender: String) {}
-
-  /**
-   * Called when server sent a [InitializeGameResponse] after a [InitializeGameMessage] was sent.
-   *
-   * @param response The [InitializeGameResponse] received from the server.
-   */
-  open fun onInitializeGameResponse(response: InitializeGameResponse) {}
-
-  /**
-   * Called when an opponent sent a [InitializeGameMessage].
-   *
-   * @param message The [InitializeGameMessage] received from the opponent.
-   * @param sender The opponents identification.
-   */
-  open fun onInitializeGameReceived(message: IG, sender: String) {}
-
-  /**
-   * Called when server sent a [EndGameResponse] after a [EndGameMessage] was sent.
-   *
-   * @param response The [EndGameResponse] received from the server.
-   */
-  open fun onEndGameResponse(response: EndGameResponse) {}
-
-  /**
-   * Called when an opponent sent a [EndGameMessage].
-   *
-   * @param message The [EndGameMessage] received from the opponent.
-   * @param sender The opponents identification.
-   */
-  open fun onEndGameReceived(message: EG, sender: String) {}
+   open fun <T : GameAction> onGameActionReceived(message: T, sender: String) {} //TODO: ANY
   // endregion
-
 }
