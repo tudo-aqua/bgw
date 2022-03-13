@@ -26,6 +26,7 @@ import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
@@ -55,7 +56,6 @@ class NetworkClientService(
         port = port,
     ) {
 
-  /** [Refreshable] instance. */
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
 
@@ -101,6 +101,10 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
+  override fun onGameActionReceived(message: GameAction, sender: String) {
+
+  }
+
   @GameActionReceiver
   fun onGameActionReceived(message: MauMauGameAction, sender: String) {
     BoardGameApplication.runOnGUIThread {

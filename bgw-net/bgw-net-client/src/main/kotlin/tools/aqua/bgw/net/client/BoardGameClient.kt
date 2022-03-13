@@ -33,6 +33,7 @@ import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.GameActionResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.LeaveGameResponse
+import kotlin.reflect.jvm.javaMethod
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
