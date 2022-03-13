@@ -36,7 +36,7 @@ class NetworkService(private val logicController: LogicController) {
                 port = 0,
                 logicController = logicController,
             )
-            .apply { testReflection() }
+            .apply { testReflection2() }
   }
 
   // region Connection
