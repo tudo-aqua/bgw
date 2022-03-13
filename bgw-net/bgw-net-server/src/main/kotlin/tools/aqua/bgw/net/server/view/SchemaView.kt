@@ -31,7 +31,7 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
-import tools.aqua.bgw.net.server.service.ValidationService
+import tools.aqua.bgw.net.server.service.validation.ValidationService
 
 @Route(value = "schema", layout = MainLayout::class)
 @PageTitle("BGW-Net | JSON Schemas")
