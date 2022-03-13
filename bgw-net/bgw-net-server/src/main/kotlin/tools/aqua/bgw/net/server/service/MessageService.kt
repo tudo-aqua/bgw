@@ -35,13 +35,16 @@ import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
+import tools.aqua.bgw.net.server.service.validation.JsonSchemaNotFoundException
+import tools.aqua.bgw.net.server.service.validation.ValidationService
+import java.util.*
 
 /** This service handles the text messages received by the web socket server. */
 @Service
 class MessageService(
-    private val gameService: GameService,
-    private val validationService: ValidationService,
-    private val schemasByGameRepository: SchemasByGameRepository,
+  private val gameService: GameService,
+  private val validationService: ValidationService,
+  private val schemasByGameRepository: SchemasByGameRepository,
 ) {
   private val mapper = ObjectMapper().registerModule(kotlinModule())
 
@@ -70,19 +73,19 @@ class MessageService(
   private fun handleGameMessage(wsSession: WebSocketSession, gameMessage: GameActionMessage) {
     val player = wsSession.player
     val game = player.game
-    var errors: List<String>? = null
+    var errors: Optional<List<String>> = Optional.empty()
     val status =
         if (game != null)
             try {
               errors = validationService.validate(gameMessage, game.gameID)
-              if (errors == null) GameActionResponseStatus.SUCCESS
+              if (errors.isEmpty) GameActionResponseStatus.SUCCESS
               else GameActionResponseStatus.INVALID_JSON
             } catch (exception: JsonSchemaNotFoundException) {
               GameActionResponseStatus.SERVER_ERROR
             }
         else GameActionResponseStatus.NO_ASSOCIATED_GAME
 
-    player.session.sendMessage(GameActionResponse(status, errors))
+    player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyList() }))
 
     if (status == GameActionResponseStatus.SUCCESS) {
       game?.broadcastMessage(
