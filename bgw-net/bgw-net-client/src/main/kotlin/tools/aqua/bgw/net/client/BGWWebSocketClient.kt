@@ -74,7 +74,8 @@ class BGWWebSocketClient(
   fun sendGameActionMessage(payload: GameAction) {
     send(
         mapper.writeValueAsString(
-            GameActionMessage(mapper.writeValueAsString(payload), payload.toString(), ""))) //TODO: Enter sender
+            GameActionMessage(
+                mapper.writeValueAsString(payload), payload.toString(), ""))) // TODO: Enter sender
   }
   // endregion
 
@@ -132,7 +133,8 @@ class BGWWebSocketClient(
 
     when (message) {
       is GameActionMessage ->
-          callback.onGameActionReceived(mapper.readValue(message.payload, GameAction::class.java), message.sender)
+          callback.onGameActionReceived(
+              mapper.readValue(message.payload, GameAction::class.java), message.sender)
       is GameActionResponse -> callback.onGameActionResponse(message)
       is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)
