@@ -17,18 +17,20 @@
 
 package tools.aqua.bgw.net.client
 
+import java.lang.reflect.Method
+import java.net.URI
 import tools.aqua.bgw.net.common.GameAction
-import tools.aqua.bgw.net.common.annotations.GameActionReceiver
+import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
 import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
-import tools.aqua.bgw.net.common.response.*
-import java.lang.reflect.Method
-import java.net.URI
-
+import tools.aqua.bgw.net.common.response.CreateGameResponse
+import tools.aqua.bgw.net.common.response.GameActionResponse
+import tools.aqua.bgw.net.common.response.JoinGameResponse
+import tools.aqua.bgw.net.common.response.LeaveGameResponse
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
@@ -46,12 +48,13 @@ protected constructor(
     host: String,
     port: Int,
     endpoint: String = "chat",
-    secret: String,
-    val schemas : Set<Class<out GameAction>>
+    secret: String
 ) {
 
   /** WebSocketClient handling network communication. */
   private val wsClient: BGWWebSocketClient
+
+  private val gameActionReceivers: Map<Class<out GameAction>, Method>
 
   init {
     @Suppress("LeakingThis")
@@ -62,106 +65,8 @@ protected constructor(
             secret = secret,
             callback = this)
 
-
+    gameActionReceivers = getAnnotatedReceivers(this::class.java)
   }
-
-
-
-
-
-
-
-
-
-
-
-  fun testReflection() {
-    println("Test reflection 1")
-
-    val methods = getAnnotatedReceivers()
-    methods.forEach { (k, v) -> println("$k -> $v")  }
-
-    println("End Test reflection")
-  }
-
-
-  private fun getAnnotatedReceivers(): Map<Class<out GameAction>, Method> {
-    val map = mutableMapOf<Class<out GameAction>, Method>()
-    val annotatedMethods = mutableListOf<Method>()
-    var clazz : Class<*> = this::class.java
-
-    //Retrieve all annotated methods
-    while (clazz != Any::class.java) {
-      for (method in clazz.declaredMethods) {
-        if (method.isAnnotationPresent(GameActionReceiver::class.java)) {
-          annotatedMethods.add(method)
-        }
-      }
-      clazz = clazz.superclass
-    }
-
-    //Create mapping
-    for(method in annotatedMethods) {
-      val params : Array<Class<*>> = method.parameterTypes
-
-      //Check parameter count
-      if(params.size != 2) {
-        System.err.println("Found function ${method.name} annotated with @GameActionReceiver that does not declare the expected parameter count. Ignoring.")
-        continue
-      }
-
-      //Check first parameter is subclass of GameAction
-      val receiver = params[0]
-      if(!GameAction::class.java.isAssignableFrom(receiver)) {
-        System.err.println("Found function ${method.name} annotated with @GameActionReceiver with first parameter not conforming to GameAction which was expected. Ignoring.")
-        continue
-      }
-
-      //Check second parameter is String
-      if(!String::class.java.isAssignableFrom(params[1])) {
-        System.err.println("Found function ${method.name} annotated with @GameActionReceiver with second parameter not conforming to String which was expected. Ignoring.")
-        continue
-      }
-
-      //Check first parameter is in schemas set
-      val schema = matchSchema(receiver)
-      if(schema == null) {
-        System.err.println("Found function ${method.name} annotated with @GameActionReceiver with first parameter not in schema list passed to BoardGameClient constructor. Ignoring.")
-        continue
-      }
-
-      //Check for duplicate method
-      if(map.containsKey(schema)) {
-        System.err.println("Multiple functions annotated with @GameActionReceiver found that declare receiver parameter $receiver. Ignoring duplicate.")
-        continue
-      }
-
-      map[schema] = method
-    }
-    return map
-  }
-
-  private fun matchSchema(type : Class<*>) : Class<out GameAction>? {
-    for(schema in schemas) {
-      if (schema.isAssignableFrom(type)) {
-        return schema
-      }
-    }
-    return null
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // region Connect / Disconnect
   /** Connects to the remote server, blocking. */
@@ -270,7 +175,7 @@ protected constructor(
    *
    * @param payload The [GameActionMessage] payload.
    */
-  fun sendGameActionMessage(payload: GameAction) { //TODO: ANY
+  fun sendGameActionMessage(payload: GameAction) { // TODO: ANY
     wsClient.sendGameActionMessage(payload)
   }
 
@@ -287,6 +192,6 @@ protected constructor(
    * @param message The [GameActionMessage] received from the opponent.
    * @param sender The opponents identification.
    */
-   open fun <T : GameAction> onGameActionReceived(message: T, sender: String) {} //TODO: ANY
+  open fun <T : GameAction> onGameActionReceived(message: T, sender: String) {} // TODO: ANY
   // endregion
 }

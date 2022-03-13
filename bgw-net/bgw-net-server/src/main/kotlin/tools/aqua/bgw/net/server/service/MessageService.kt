@@ -75,7 +75,8 @@ class MessageService(
         if (game != null)
             try {
               errors = validationService.validate(gameMessage, game.gameID)
-              if (errors == null) GameActionResponseStatus.SUCCESS else GameActionResponseStatus.INVALID_JSON
+              if (errors == null) GameActionResponseStatus.SUCCESS
+              else GameActionResponseStatus.INVALID_JSON
             } catch (exception: JsonSchemaNotFoundException) {
               GameActionResponseStatus.SERVER_ERROR
             }
@@ -84,10 +85,12 @@ class MessageService(
     player.session.sendMessage(GameActionResponse(status, errors))
 
     if (status == GameActionResponseStatus.SUCCESS) {
-      game?.broadcastMessage(player, GameActionMessage(
-                    payload = gameMessage.payload,
-                    prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name))
+      game?.broadcastMessage(
+          player,
+          GameActionMessage(
+              payload = gameMessage.payload,
+              prettyPrint = gameMessage.prettyPrint,
+              sender = player.name))
     }
   }
 

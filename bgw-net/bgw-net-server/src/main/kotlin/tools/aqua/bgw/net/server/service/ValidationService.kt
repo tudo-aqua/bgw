@@ -99,8 +99,11 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
               } else throw JsonSchemaNotFoundException()
             }
 
-    return gameSchema.action.validate(mapper.readTree(message.payload))
-      .map(ValidationMessage::getMessage).ifEmpty { null }
+    return gameSchema
+        .action
+        .validate(mapper.readTree(message.payload))
+        .map(ValidationMessage::getMessage)
+        .ifEmpty { null }
   }
 
   override fun validate(schemaNode: JsonNode): List<String> {

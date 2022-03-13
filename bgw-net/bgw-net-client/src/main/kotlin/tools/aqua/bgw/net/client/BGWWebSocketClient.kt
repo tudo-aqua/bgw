@@ -20,6 +20,7 @@ package tools.aqua.bgw.net.client
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
+import java.net.URI
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import tools.aqua.bgw.net.common.GameAction
@@ -29,7 +30,6 @@ import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.Request
 import tools.aqua.bgw.net.common.response.*
-import java.net.URI
 
 /**
  * [WebSocketClient] for network communication in BGW applications. Handles sending data to the
@@ -71,7 +71,7 @@ class BGWWebSocketClient(
    *
    * @param payload The [GameActionMessage] payload.
    */
-  fun sendGameActionMessage(payload: GameAction) { //TODO: ANY
+  fun sendGameActionMessage(payload: GameAction) { // TODO: ANY
     send(
         mapper.writeValueAsString(
             GameActionMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
@@ -133,13 +133,12 @@ class BGWWebSocketClient(
     when (message) {
       is GameActionMessage ->
           callback.onGameActionReceived(
-              mapper.readValue(message.payload, GameAction::class.java), message.sender) //TODO: ANY
+              mapper.readValue(message.payload, GameAction::class.java),
+              message.sender) // TODO: ANY
       is GameActionResponse -> callback.onGameActionResponse(message)
-
       is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)
       is LeaveGameResponse -> callback.onLeaveGameResponse(message)
-
       is UserJoinedNotification -> callback.onUserJoined(message)
       is UserDisconnectedNotification -> callback.onUserLeft(message)
     }

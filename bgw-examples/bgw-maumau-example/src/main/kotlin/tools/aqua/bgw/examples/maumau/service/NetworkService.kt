@@ -20,8 +20,8 @@ package tools.aqua.bgw.examples.maumau.service
 import java.net.InetAddress
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
@@ -29,12 +29,14 @@ class NetworkService(private val logicController: LogicController) {
   private var client: NetworkClientService? = null
 
   fun testReflection() {
-    client = NetworkClientService(
-        playerName = "",
-        host = "",
-        port = 0,
-        logicController = logicController,
-      ).apply { testReflection() }
+    client =
+        NetworkClientService(
+                playerName = "",
+                host = "",
+                port = 0,
+                logicController = logicController,
+            )
+            .apply { testReflection() }
   }
 
   // region Connection
