@@ -29,7 +29,8 @@ import tools.aqua.bgw.net.common.GameAction
  * @property card Played card as String.
  */
 @Suppress("DataClassPrivateConstructor")
-data class MauMauGameAction private constructor(val action: String, val card: String) : GameAction() {
+data class MauMauGameAction private constructor(val action: String, val card: String) :
+    GameAction() {
 
   /**
    * GameActionMessage data class for serialization.
@@ -38,7 +39,7 @@ data class MauMauGameAction private constructor(val action: String, val card: St
    * @param card Played card as [MauMauCard].
    */
   constructor(
-    gameAction: GameActionType,
-    card: MauMauCard? = null
+      gameAction: GameActionType,
+      card: MauMauCard? = null
   ) : this(gameAction.toString(), card?.serialize().orEmpty())
 }
