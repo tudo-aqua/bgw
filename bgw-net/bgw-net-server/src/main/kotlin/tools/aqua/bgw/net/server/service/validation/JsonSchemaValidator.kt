@@ -1,3 +1,20 @@
+/*
+ * Copyright 2022 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tools.aqua.bgw.net.server.service.validation
 
 import com.fasterxml.jackson.databind.JsonNode
@@ -5,6 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.networknt.schema.JsonSchema
 import com.networknt.schema.JsonSchemaFactory
 import com.networknt.schema.SpecVersion
+import java.io.FileNotFoundException
+import java.util.*
+import javax.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -12,9 +32,6 @@ import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.server.*
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
-import java.io.FileNotFoundException
-import java.util.*
-import javax.annotation.PostConstruct
 
 /**
  * Implementation of [ValidationService]. It uses the networknt/json-schema-validator and Jackson to
@@ -22,7 +39,7 @@ import javax.annotation.PostConstruct
  */
 @Service
 class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) :
-	ValidationService {
+    ValidationService {
 
   private val mapper = ObjectMapper()
 
@@ -32,8 +49,7 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
       JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
           .getSchema(
               javaClass.getResourceAsStream(META_SCHEMA_JSON_URL_STRING)
-                  ?: throw FileNotFoundException()
-          )
+                  ?: throw FileNotFoundException())
 
   private val schemaMap = mutableMapOf<String, List<JsonSchema>>()
 
@@ -54,8 +70,7 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
   }
 
   override fun validate(schemaNode: JsonNode): List<String> =
-    metaSchema.validate(schemaNode).map { it.message }
-
+      metaSchema.validate(schemaNode).map { it.message }
 
   override fun flushSchemaCache(): Unit = schemaMap.clear()
 

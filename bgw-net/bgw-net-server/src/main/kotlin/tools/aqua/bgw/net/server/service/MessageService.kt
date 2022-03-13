@@ -19,6 +19,7 @@ package tools.aqua.bgw.net.server.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
+import java.util.*
 import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
@@ -37,14 +38,13 @@ import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
 import tools.aqua.bgw.net.server.service.validation.JsonSchemaNotFoundException
 import tools.aqua.bgw.net.server.service.validation.ValidationService
-import java.util.*
 
 /** This service handles the text messages received by the web socket server. */
 @Service
 class MessageService(
-  private val gameService: GameService,
-  private val validationService: ValidationService,
-  private val schemasByGameRepository: SchemasByGameRepository,
+    private val gameService: GameService,
+    private val validationService: ValidationService,
+    private val schemasByGameRepository: SchemasByGameRepository,
 ) {
   private val mapper = ObjectMapper().registerModule(kotlinModule())
 

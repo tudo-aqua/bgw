@@ -48,4 +48,3 @@ interface ValidationService {
    */
   fun flushSchemaCache()
 }
-
