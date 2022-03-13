@@ -74,7 +74,8 @@ class BGWWebSocketClient(
   fun sendGameActionMessage(payload: GameAction) {
     send(
         mapper.writeValueAsString(
-            GameActionMessage(mapper.writeValueAsString(payload), payload.toString(), ""))) //TODO: Enter sender
+            GameActionMessage(
+                mapper.writeValueAsString(payload), payload.toString(), ""))) // TODO: Enter sender
   }
   // endregion
 
