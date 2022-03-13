@@ -21,7 +21,7 @@ import java.lang.reflect.Method
 import tools.aqua.bgw.net.common.GameAction
 
 object GameActionReceiverProcessor {
-  fun getAnnotatedReceivers(target: Class<*>): Map<Class<out GameAction>, Method> {
+  fun getAnnotatedReceivers(target: Class<*>): MutableMap<Class<out GameAction>, Method> {
     val map = mutableMapOf<Class<out GameAction>, Method>()
     val annotatedMethods = mutableListOf<Method>()
     var clazz: Class<*> = target

@@ -20,6 +20,7 @@ package tools.aqua.bgw.net.client
 import java.lang.reflect.Method
 import java.net.URI
 import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
 import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
@@ -31,6 +32,7 @@ import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.GameActionResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.LeaveGameResponse
+import kotlin.reflect.jvm.javaMethod
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
@@ -42,6 +44,7 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  * @param endpoint The server endpoint.
  * @param secret The server secret.
  */
+@Suppress("LeakingThis")
 open class BoardGameClient
 protected constructor(
     playerName: String,
@@ -54,10 +57,10 @@ protected constructor(
   /** WebSocketClient handling network communication. */
   private val wsClient: BGWWebSocketClient
 
+  /** Mapper for incoming message handlers. */
   private val gameActionReceivers: Map<Class<out GameAction>, Method>
 
   init {
-    @Suppress("LeakingThis")
     wsClient =
         BGWWebSocketClient(
             uri = URI.create("ws://$host:$port/$endpoint"),
@@ -66,6 +69,14 @@ protected constructor(
             callback = this)
 
     gameActionReceivers = getAnnotatedReceivers(this::class.java)
+
+    //Set Fallback
+    if(!gameActionReceivers.containsKey(GameAction::class.java))
+      gameActionReceivers[GameAction::class.java] = this::onGameActionReceived.javaMethod!!
+  }
+
+  fun testReflection2() {
+    gameActionReceivers.forEach { (k, v) -> println("$k -> $v")  }
   }
 
   // region Connect / Disconnect
@@ -175,7 +186,7 @@ protected constructor(
    *
    * @param payload The [GameActionMessage] payload.
    */
-  fun sendGameActionMessage(payload: GameAction) { // TODO: ANY
+  fun sendGameActionMessage(payload: GameAction) {
     wsClient.sendGameActionMessage(payload)
   }
 
@@ -187,11 +198,18 @@ protected constructor(
   open fun onGameActionResponse(response: GameActionResponse) {}
 
   /**
-   * Called when an opponent sent a [GameActionMessage].
+   * Called when an opponent sent a [GameActionMessage]. This method is supposed to act as a fallback solution if not
+   * for all Subclasses of [GameAction] a dedicated handler was registered using [GameActionReceiver] annotation.
    *
-   * @param message The [GameActionMessage] received from the opponent.
+   * Register a message receiver for a message type 'ExampleGameAction' by declaring a function
+   *
+   * fun yourFunctionName(yourParameterName1 : ExampleGameAction, yourParameterName2: String) { }
+   *
+   * The BGW framework will automatically choose a function to invoke based on the declared parameter types.
+   *
+   * @param message The [GameAction] received from the opponent.
    * @param sender The opponents identification.
    */
-  open fun <T : GameAction> onGameActionReceived(message: T, sender: String) {} // TODO: ANY
+  open fun onGameActionReceived(message: GameAction, sender: String) {}
   // endregion
 }
