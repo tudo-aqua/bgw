@@ -19,6 +19,7 @@ package tools.aqua.bgw.net.client
 
 import java.lang.reflect.Method
 import java.net.URI
+import kotlin.reflect.jvm.javaMethod
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
@@ -32,7 +33,6 @@ import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.GameActionResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.LeaveGameResponse
-import kotlin.reflect.jvm.javaMethod
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
@@ -70,13 +70,13 @@ protected constructor(
 
     gameActionReceivers = getAnnotatedReceivers(this::class.java)
 
-    //Set Fallback
-    if(!gameActionReceivers.containsKey(GameAction::class.java))
-      gameActionReceivers[GameAction::class.java] = this::onGameActionReceived.javaMethod!!
+    // Set Fallback
+    if (!gameActionReceivers.containsKey(GameAction::class.java))
+        gameActionReceivers[GameAction::class.java] = this::onGameActionReceived.javaMethod!!
   }
 
   fun testReflection2() {
-    gameActionReceivers.forEach { (k, v) -> println("$k -> $v")  }
+    gameActionReceivers.forEach { (k, v) -> println("$k -> $v") }
   }
 
   // region Connect / Disconnect
@@ -198,18 +198,24 @@ protected constructor(
   open fun onGameActionResponse(response: GameActionResponse) {}
 
   /**
-   * Called when an opponent sent a [GameActionMessage]. This method is supposed to act as a fallback solution if not
-   * for all Subclasses of [GameAction] a dedicated handler was registered using [GameActionReceiver] annotation.
+   * Called when an opponent sent a [GameActionMessage]. This method is supposed to act as a
+   * fallback solution if not for all Subclasses of [GameAction] a dedicated handler was registered
+   * using [GameActionReceiver] annotation.
    *
    * Register a message receiver for a message type 'ExampleGameAction' by declaring a function
    *
    * fun yourFunctionName(yourParameterName1 : ExampleGameAction, yourParameterName2: String) { }
    *
-   * The BGW framework will automatically choose a function to invoke based on the declared parameter types.
+   * The BGW framework will automatically choose a function to invoke based on the declared
+   * parameter types.
    *
    * @param message The [GameAction] received from the opponent.
    * @param sender The opponents identification.
    */
-  open fun onGameActionReceived(message: GameAction, sender: String) {}
+  open fun onGameActionReceived(message: GameAction, sender: String) {
+    System.err.println(
+        "An incoming GameAction has been handled by the fallback function. " +
+            "Override onGameActionReceived or create dedicated handler for message type ${message.javaClass.canonicalName}.")
+  }
   // endregion
 }

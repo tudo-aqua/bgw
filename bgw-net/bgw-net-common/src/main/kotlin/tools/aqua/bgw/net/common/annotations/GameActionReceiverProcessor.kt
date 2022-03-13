@@ -43,28 +43,32 @@ object GameActionReceiverProcessor {
       // Check parameter count
       if (params.size != 2) {
         System.err.println(
-            "Found function $method annotated with @GameActionReceiver that does not declare the expected parameter count. Ignoring.")
+            "Found function $method annotated with @GameActionReceiver that does not declare " +
+                "the expected parameter count. Ignoring.")
         continue
       }
 
       // Check first parameter is subclass of GameAction
       if (!GameAction::class.java.isAssignableFrom(params[0])) {
         System.err.println(
-            "Found function $method annotated with @GameActionReceiver with first parameter not conforming to GameAction which was expected. Ignoring.")
+            "Found function $method annotated with @GameActionReceiver with first parameter " +
+                "not conforming to GameAction which was expected. Ignoring.")
         continue
       }
 
       // Check second parameter is String
       if (!String::class.java.isAssignableFrom(params[1])) {
         System.err.println(
-            "Found function $method annotated with @GameActionReceiver with second parameter not conforming to String which was expected. Ignoring.")
+            "Found function $method annotated with @GameActionReceiver with second parameter " +
+                "not conforming to String which was expected. Ignoring.")
         continue
       }
 
       @Suppress("UNCHECKED_CAST")
       map.putIfAbsent(params[0] as Class<out GameAction>, method)?.run {
         System.err.println(
-            "Found function $method annotated with @GameActionReceiver that has the same parameter types as $this. Ignoring duplicate.")
+            "Found function $method annotated with @GameActionReceiver that has the same parameter " +
+                "types as $this. Ignoring duplicate.")
       }
     }
     return map
