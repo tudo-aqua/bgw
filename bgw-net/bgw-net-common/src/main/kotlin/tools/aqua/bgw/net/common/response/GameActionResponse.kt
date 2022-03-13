@@ -17,13 +17,10 @@
 
 package tools.aqua.bgw.net.common.response
 
-import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
-
 /**
- * Response upon [tools.aqua.bgw.net.common.gamemessage.GameActionMessage].
+ * Response upon [tools.aqua.bgw.net.common.message.GameActionMessage].
  *
- * @param status Status code.
- * @param errorMessages List of errors.
+ * @property status Status code.
+ * @property errorMessages List of errors.
  */
-class GameActionResponse(status: GameMessageStatus, errorMessages: List<String>?) :
-    GameResponse(status = status, errorMessages = errorMessages)
+class GameActionResponse(val status: GameActionResponseStatus, val errorMessages: List<String>?) : Response()

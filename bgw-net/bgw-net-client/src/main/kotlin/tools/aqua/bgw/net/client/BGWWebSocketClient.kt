@@ -20,42 +20,32 @@ package tools.aqua.bgw.net.client
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
-import java.net.URI
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.Message
-import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
-import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
-import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
+import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.Request
 import tools.aqua.bgw.net.common.response.*
+import java.net.URI
 
 /**
  * [WebSocketClient] for network communication in BGW applications. Handles sending data to the
  * remote server and marshals incoming messages to the appropriate event handlers in the
  * [BoardGameClient].
  *
- * @param IG Generic for the [InitializeGameMessage].
- * @param GA Generic for the [GameActionMessage].
- * @param EG Generic for the [EndGameMessage].
  * @param uri The server uri containing host, port and endpoint.
  * @param playerName The player name.
  * @param secret The server secret.
  * @property callback Callback to the [BoardGameClient] for message marshalling.
- * @property initGameClass The [InitializeGameMessage] class.
- * @property gameActionClass The [GameActionMessage] class.
- * @property endGameClass The [EndGameMessage] class.
  */
-class BGWWebSocketClient<IG, GA, EG>(
+class BGWWebSocketClient(
     uri: URI,
     playerName: String,
     secret: String,
-    private val callback: BoardGameClient<IG, GA, EG>,
-    private val initGameClass: Class<IG>,
-    private val gameActionClass: Class<GA>,
-    private val endGameClass: Class<EG>,
+    private val callback: BoardGameClient
 ) : WebSocketClient(uri) {
 
   /** Object mapper instance for JSON serialization. */
@@ -81,32 +71,10 @@ class BGWWebSocketClient<IG, GA, EG>(
    *
    * @param payload The [GameActionMessage] payload.
    */
-  fun sendGameActionMessage(payload: GA) {
+  fun sendGameActionMessage(payload: GameAction) { //TODO: ANY
     send(
         mapper.writeValueAsString(
             GameActionMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
-  }
-
-  /**
-   * Sends an [InitializeGameMessage] to all connected players.
-   *
-   * @param payload The [InitializeGameMessage] payload.
-   */
-  fun sendInitializeGameMessage(payload: IG) {
-    send(
-        mapper.writeValueAsString(
-            InitializeGameMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
-  }
-
-  /**
-   * Sends an [EndGameMessage] to all connected players.
-   *
-   * @param payload The [EndGameMessage] payload.
-   */
-  fun sendEndGameMessage(payload: EG) {
-    send(
-        mapper.writeValueAsString(
-            EndGameMessage(mapper.writeValueAsString(payload), payload.toString(), "")))
   }
   // endregion
 
@@ -163,21 +131,15 @@ class BGWWebSocketClient<IG, GA, EG>(
     require(message !is Request) { "Client received a request" }
 
     when (message) {
-      is InitializeGameMessage ->
-          callback.onInitializeGameReceived(
-              mapper.readValue(message.payload, initGameClass), message.sender)
       is GameActionMessage ->
           callback.onGameActionReceived(
-              mapper.readValue(message.payload, gameActionClass), message.sender)
-      is EndGameMessage ->
-          callback.onEndGameReceived(
-              mapper.readValue(message.payload, endGameClass), message.sender)
-      is InitializeGameResponse -> callback.onInitializeGameResponse(message)
-      is EndGameResponse -> callback.onEndGameResponse(message)
-      is CreateGameResponse -> callback.onCreateGameResponse(message)
+              mapper.readValue(message.payload, GameAction::class.java), message.sender) //TODO: ANY
       is GameActionResponse -> callback.onGameActionResponse(message)
+
+      is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)
       is LeaveGameResponse -> callback.onLeaveGameResponse(message)
+
       is UserJoinedNotification -> callback.onUserJoined(message)
       is UserDisconnectedNotification -> callback.onUserLeft(message)
     }

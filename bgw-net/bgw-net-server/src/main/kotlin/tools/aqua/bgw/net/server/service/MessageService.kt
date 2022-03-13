@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.Message
-import tools.aqua.bgw.net.common.gamemessage.*
+import tools.aqua.bgw.net.common.message.*
 import tools.aqua.bgw.net.common.notification.Notification
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
@@ -60,14 +60,14 @@ class MessageService(
     when (message) {
       is Response -> throw UnsupportedOperationException()
       is Notification -> throw UnsupportedOperationException()
-      is GameMessage -> handleGameMessage(session, message)
+      is GameActionMessage -> handleGameMessage(session, message)
       is CreateGameMessage -> handleCreateGameMessage(session, message)
       is JoinGameMessage -> handleJoinGameMessage(session, message)
       is LeaveGameMessage -> handleLeaveGameMessage(session, message)
     }
   }
 
-  private fun handleGameMessage(wsSession: WebSocketSession, gameMessage: GameMessage) {
+  private fun handleGameMessage(wsSession: WebSocketSession, gameMessage: GameActionMessage) {
     val player = wsSession.player
     val game = player.game
     var errors: List<String>? = null
@@ -75,39 +75,19 @@ class MessageService(
         if (game != null)
             try {
               errors = validationService.validate(gameMessage, game.gameID)
-              if (errors == null) GameMessageStatus.SUCCESS else GameMessageStatus.INVALID_JSON
+              if (errors == null) GameActionResponseStatus.SUCCESS else GameActionResponseStatus.INVALID_JSON
             } catch (exception: JsonSchemaNotFoundException) {
-              GameMessageStatus.SERVER_ERROR
+              GameActionResponseStatus.SERVER_ERROR
             }
-        else GameMessageStatus.NO_ASSOCIATED_GAME
+        else GameActionResponseStatus.NO_ASSOCIATED_GAME
 
-    player.session.sendMessage(
-        when (gameMessage) {
-          is InitializeGameMessage -> InitializeGameResponse(status, errors)
-          is GameActionMessage -> GameActionResponse(status, errors)
-          is EndGameMessage -> EndGameResponse(status, errors)
-        })
+    player.session.sendMessage(GameActionResponse(status, errors))
 
-    if (status == GameMessageStatus.SUCCESS) {
-      game?.broadcastMessage(
-          player,
-          when (gameMessage) {
-            is EndGameMessage ->
-                EndGameMessage(
+    if (status == GameActionResponseStatus.SUCCESS) {
+      game?.broadcastMessage(player, GameActionMessage(
                     payload = gameMessage.payload,
                     prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name)
-            is GameActionMessage ->
-                GameActionMessage(
-                    payload = gameMessage.payload,
-                    prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name)
-            is InitializeGameMessage ->
-                InitializeGameMessage(
-                    payload = gameMessage.payload,
-                    prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name)
-          })
+                    sender = player.name))
     }
   }
 
