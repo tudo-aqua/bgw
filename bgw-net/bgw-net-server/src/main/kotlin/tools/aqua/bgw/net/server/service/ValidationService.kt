@@ -25,10 +25,7 @@ import javax.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
-import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
-import tools.aqua.bgw.net.common.gamemessage.GameMessage
-import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
+import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.server.*
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
@@ -49,7 +46,7 @@ interface ValidationService {
    * entity.
    */
   @Throws(JsonSchemaNotFoundException::class)
-  fun validate(message: GameMessage, gameID: String): List<String>?
+  fun validate(message: GameActionMessage, gameID: String): List<String>?
 
   fun validate(schemaNode: JsonNode): List<String>
 
@@ -82,7 +79,7 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
 
   private val schemaMap = mutableMapOf<String, ActualSchema>()
 
-  override fun validate(message: GameMessage, gameID: String): List<String>? {
+  override fun validate(message: GameActionMessage, gameID: String): List<String>? {
     val gameSchema =
         schemaMap[gameID]
             ?: with(schemasByGameRepository.findById(gameID)) {
@@ -102,15 +99,8 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
               } else throw JsonSchemaNotFoundException()
             }
 
-    fun Iterable<ValidationMessage>.stringsOrNull() =
-        map(ValidationMessage::getMessage).ifEmpty { null }
-    return when (message) {
-      is InitializeGameMessage ->
-          gameSchema.init.validate(mapper.readTree(message.payload)).stringsOrNull()
-      is GameActionMessage ->
-          gameSchema.action.validate(mapper.readTree(message.payload)).stringsOrNull()
-      is EndGameMessage -> gameSchema.end.validate(mapper.readTree(message.payload)).stringsOrNull()
-    }
+    return gameSchema.action.validate(mapper.readTree(message.payload))
+      .map(ValidationMessage::getMessage).ifEmpty { null }
   }
 
   override fun validate(schemaNode: JsonNode): List<String> {

@@ -17,9 +17,10 @@
 
 package tools.aqua.bgw.examples.maumau.service.messages
 
-import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.examples.maumau.entity.GameActionType
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.service.Serialization.serialize
+import tools.aqua.bgw.net.common.GameAction
 
 /**
  * GameActionMessage data class for serialization.
@@ -28,16 +29,16 @@ import tools.aqua.bgw.examples.maumau.service.Serialization.serialize
  * @property card Played card as String.
  */
 @Suppress("DataClassPrivateConstructor")
-data class GameActionMessage private constructor(val action: String, val card: String) {
+data class MauMauGameAction private constructor(val action: String, val card: String) : GameAction() {
 
   /**
    * GameActionMessage data class for serialization.
    *
-   * @param gameAction Associated game action as [GameAction].
+   * @param gameAction Associated game action as [GameActionType].
    * @param card Played card as [MauMauCard].
    */
   constructor(
-      gameAction: GameAction,
-      card: MauMauCard? = null
+    gameAction: GameActionType,
+    card: MauMauCard? = null
   ) : this(gameAction.toString(), card?.serialize().orEmpty())
 }

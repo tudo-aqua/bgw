@@ -15,21 +15,19 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service.messages
+package tools.aqua.bgw.net.common.response
 
-/**
- * InitGameMessage data class for serialization.
- *
- * @property players [List] of players.
- * @property drawStack [List] of draw stack cards.
- * @property gameStack [List] of game tack cards.
- * @property hostCards [List] of host player's cards.
- * @property yourCards [List] of your cards.
- */
-data class InitGameMessage(
-    val players: List<String>,
-    val drawStack: List<String>,
-    val gameStack: List<String>,
-    val hostCards: List<String>,
-    val yourCards: List<String>,
-)
+/** Status codes for game messages. */
+enum class GameActionResponseStatus {
+  /** The message was valid and broadcast to all the other connected players. */
+  SUCCESS,
+
+  /** This connection was not associated with a game. */
+  NO_ASSOCIATED_GAME,
+
+  /** The payload did not match the specified schema. Message was rejected. */
+  INVALID_JSON,
+
+  /** Something went wrong on the server. */
+  SERVER_ERROR
+}
