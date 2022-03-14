@@ -49,7 +49,7 @@ class BGWWebSocketClient(
 ) : WebSocketClient(uri) {
 
   /** Object mapper instance for JSON serialization. */
-  private val mapper = ObjectMapper().registerModule(kotlinModule())
+  internal val mapper = ObjectMapper().registerModule(kotlinModule())
 
   init {
     addHeader("PlayerName", playerName)
@@ -134,10 +134,7 @@ class BGWWebSocketClient(
     require(message !is Request) { "Client received a request" }
 
     when (message) {
-      is GameActionMessage ->
-          callback.invokeAnnotatedReceiver(
-              mapper.readValue(message.payload, GameAction::class.java),
-              message.sender)
+      is GameActionMessage -> callback.invokeAnnotatedReceiver(message)
       is GameActionResponse -> callback.onGameActionResponse(message)
       is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)
