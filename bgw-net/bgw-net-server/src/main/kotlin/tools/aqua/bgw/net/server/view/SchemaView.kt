@@ -62,7 +62,7 @@ class SchemaView(@Autowired private val validationService: ValidationService) : 
       try {
         val mapper = ObjectMapper()
         val schemaNode: JsonNode = mapper.readTree(inputStream)
-        results = validationService.validate(schemaNode)
+        results = validationService.validateMetaSchema(schemaNode)
       } catch (_: StreamReadException) {
         notify(
             "Couldn't parse JSON Schema! Please upload a .json File",
@@ -71,9 +71,8 @@ class SchemaView(@Autowired private val validationService: ValidationService) : 
 
       msgList.setItems(results.map { result -> MessageListItem(result) })
 
-      if (results.isNotEmpty()) {
-        notify("$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
-      } else notify("$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
+      if (results.isEmpty()) notify("$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
+      else notify("$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
     }
   }
 }
