@@ -15,11 +15,6 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service.messages
+package tools.aqua.bgw.net.common
 
-/**
- * GameOverMessage data class for serialization.
- *
- * @property winner The winner name.
- */
-data class GameOverMessage(val winner: String)
+open class GameAction

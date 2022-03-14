@@ -15,15 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.server.service.validation
 
-import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
-
-/**
- * Baseclass for game responses.
- *
- * @property status Status code.
- * @property errorMessages List of errors.
- */
-sealed class GameResponse(val status: GameMessageStatus, val errorMessages: List<String>?) :
-    Response()
+/** Indicates that a key could not be resolved to a schema entity in the database. */
+class JsonSchemaNotFoundException : Exception()

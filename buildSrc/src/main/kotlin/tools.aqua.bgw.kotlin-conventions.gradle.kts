@@ -79,7 +79,7 @@ tasks.test {
 tasks.withType<KotlinCompile> {
   kotlinOptions {
     jvmTarget = "11"
-    allWarningsAsErrors = true
+    // allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }
 }

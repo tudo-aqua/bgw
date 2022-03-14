@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.common.message
 
-import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
+import tools.aqua.bgw.net.common.Message
 
 /**
- * Response upon [tools.aqua.bgw.net.common.gamemessage.EndGameMessage].
+ * Message indicating a game action that was performed by the [sender].
  *
- * @param status Status code.
- * @param errorMessages List of errors.
+ * @property payload Data to be transmitted.
+ * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
+ * @property sender Sender identification.
  */
-class EndGameResponse(status: GameMessageStatus, errorMessages: List<String>?) :
-    GameResponse(status = status, errorMessages = errorMessages)
+class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) :
+    Message()

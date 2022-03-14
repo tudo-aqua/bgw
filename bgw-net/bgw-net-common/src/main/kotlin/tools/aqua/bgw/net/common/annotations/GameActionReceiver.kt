@@ -15,14 +15,8 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.gamemessage
+package tools.aqua.bgw.net.common.annotations
 
-/**
- * Message indicating the end of a game.
- *
- * @param payload Data to be transmitted.
- * @param prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
- * @param sender Sender identification.
- */
-class EndGameMessage(payload: String, prettyPrint: String = payload, sender: String) :
-    GameMessage(payload = payload, prettyPrint = prettyPrint, sender = sender)
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
+annotation class GameActionReceiver

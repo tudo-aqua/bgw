@@ -17,59 +17,66 @@
 
 package tools.aqua.bgw.net.client
 
+import java.lang.reflect.Method
 import java.net.URI
-import tools.aqua.bgw.net.common.gamemessage.EndGameMessage
-import tools.aqua.bgw.net.common.gamemessage.GameActionMessage
-import tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage
+import kotlin.reflect.jvm.javaMethod
+import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionReceiver
+import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
+import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
-import tools.aqua.bgw.net.common.response.*
+import tools.aqua.bgw.net.common.response.CreateGameResponse
+import tools.aqua.bgw.net.common.response.GameActionResponse
+import tools.aqua.bgw.net.common.response.JoinGameResponse
+import tools.aqua.bgw.net.common.response.LeaveGameResponse
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
  * override it's open functions. By default, these do nothing if not overridden.
  *
- * @param IG Generic for the [InitializeGameMessage].
- * @param GA Generic for the [GameActionMessage].
- * @param EG Generic for the [EndGameMessage].
- * @property playerName The player name.
+ * @param playerName The player name.
  * @param host The server ip or hostname.
  * @param port The server port.
  * @param endpoint The server endpoint.
  * @param secret The server secret.
- * @param initGameClass The [InitializeGameMessage] class.
- * @param gameActionClass The [GameActionMessage] class.
- * @param endGameClass The [EndGameMessage] class.
  */
-open class BoardGameClient<IG, GA, EG>
+@Suppress("LeakingThis")
+open class BoardGameClient
 protected constructor(
-    val playerName: String,
+    playerName: String,
     host: String,
     port: Int,
     endpoint: String = "chat",
-    secret: String,
-    initGameClass: Class<IG>,
-    gameActionClass: Class<GA>,
-    endGameClass: Class<EG>,
+    secret: String
 ) {
 
   /** WebSocketClient handling network communication. */
-  private val wsClient: BGWWebSocketClient<IG, GA, EG>
+  private val wsClient: BGWWebSocketClient
+
+  /** Mapper for incoming message handlers. */
+  private val gameActionReceivers: Map<Class<out GameAction>, Method>
 
   init {
-    @Suppress("LeakingThis")
     wsClient =
         BGWWebSocketClient(
             uri = URI.create("ws://$host:$port/$endpoint"),
             playerName = playerName,
             secret = secret,
-            callback = this,
-            initGameClass = initGameClass,
-            gameActionClass = gameActionClass,
-            endGameClass = endGameClass)
+            callback = this)
+
+    gameActionReceivers = getAnnotatedReceivers(this::class.java)
+
+    // Set Fallback
+    if (!gameActionReceivers.containsKey(GameAction::class.java))
+        gameActionReceivers[GameAction::class.java] = this::onGameActionReceived.javaMethod!!
+  }
+
+  fun testReflection2() {
+    gameActionReceivers.forEach { (k, v) -> println("$k -> $v") }
   }
 
   // region Connect / Disconnect
@@ -173,32 +180,14 @@ protected constructor(
   open fun onUserLeft(notification: UserDisconnectedNotification) {}
   // endregion
 
-  // region Send messages
+  // region Game messages
   /**
    * Sends a [GameActionMessage] to all connected players.
    *
    * @param payload The [GameActionMessage] payload.
    */
-  fun sendGameActionMessage(payload: GA) {
+  fun sendGameActionMessage(payload: GameAction) {
     wsClient.sendGameActionMessage(payload)
-  }
-
-  /**
-   * Sends an [InitializeGameMessage] to all connected players.
-   *
-   * @param payload The [InitializeGameMessage] payload.
-   */
-  fun sendInitializeGameMessage(payload: IG) {
-    wsClient.sendInitializeGameMessage(payload)
-  }
-
-  /**
-   * Sends an [EndGameMessage] to all connected players.
-   *
-   * @param payload The [EndGameMessage] payload.
-   */
-  fun sendEndGameMessage(payload: EG) {
-    wsClient.sendEndGameMessage(payload)
   }
 
   /**
@@ -209,42 +198,24 @@ protected constructor(
   open fun onGameActionResponse(response: GameActionResponse) {}
 
   /**
-   * Called when an opponent sent a [GameActionMessage].
+   * Called when an opponent sent a [GameActionMessage]. This method is supposed to act as a
+   * fallback solution if not for all Subclasses of [GameAction] a dedicated handler was registered
+   * using [GameActionReceiver] annotation.
    *
-   * @param message The [GameActionMessage] received from the opponent.
+   * Register a message receiver for a message type 'ExampleGameAction' by declaring a function
+   *
+   * fun yourFunctionName(yourParameterName1 : ExampleGameAction, yourParameterName2: String) { }
+   *
+   * The BGW framework will automatically choose a function to invoke based on the declared
+   * parameter types.
+   *
+   * @param message The [GameAction] received from the opponent.
    * @param sender The opponents identification.
    */
-  open fun onGameActionReceived(message: GA, sender: String) {}
-
-  /**
-   * Called when server sent a [InitializeGameResponse] after a [InitializeGameMessage] was sent.
-   *
-   * @param response The [InitializeGameResponse] received from the server.
-   */
-  open fun onInitializeGameResponse(response: InitializeGameResponse) {}
-
-  /**
-   * Called when an opponent sent a [InitializeGameMessage].
-   *
-   * @param message The [InitializeGameMessage] received from the opponent.
-   * @param sender The opponents identification.
-   */
-  open fun onInitializeGameReceived(message: IG, sender: String) {}
-
-  /**
-   * Called when server sent a [EndGameResponse] after a [EndGameMessage] was sent.
-   *
-   * @param response The [EndGameResponse] received from the server.
-   */
-  open fun onEndGameResponse(response: EndGameResponse) {}
-
-  /**
-   * Called when an opponent sent a [EndGameMessage].
-   *
-   * @param message The [EndGameMessage] received from the opponent.
-   * @param sender The opponents identification.
-   */
-  open fun onEndGameReceived(message: EG, sender: String) {}
+  open fun onGameActionReceived(message: GameAction, sender: String) {
+    System.err.println(
+        "An incoming GameAction has been handled by the fallback function. " +
+            "Override onGameActionReceived or create dedicated handler for message type ${message.javaClass.canonicalName}.")
+  }
   // endregion
-
 }

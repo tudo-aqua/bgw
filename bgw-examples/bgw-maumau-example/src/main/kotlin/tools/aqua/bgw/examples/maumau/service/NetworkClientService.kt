@@ -18,14 +18,16 @@
 package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.core.BoardGameApplication
-import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.examples.maumau.entity.GameActionType
 import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
-import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
-import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
-import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitMessage
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.response.CreateGameResponse
@@ -47,14 +49,12 @@ class NetworkClientService(
     port: Int,
     val logicController: LogicController,
 ) :
-    BoardGameClient<InitGameMessage, GameActionMessage, GameOverMessage>(
+    BoardGameClient(
         playerName = playerName,
         secret = NETWORK_SECRET,
         host = host,
         port = port,
-        initGameClass = InitGameMessage::class.java,
-        gameActionClass = GameActionMessage::class.java,
-        endGameClass = GameOverMessage::class.java) {
+    ) {
 
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
@@ -101,18 +101,14 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
-  override fun onInitializeGameReceived(message: InitGameMessage, sender: String) {
-    BoardGameApplication.runOnGUIThread {
-      logicController.initGame(message)
-      view.onInitializeGameReceived()
-    }
-  }
+  override fun onGameActionReceived(message: GameAction, sender: String) {}
 
-  override fun onGameActionReceived(message: GameActionMessage, sender: String) {
+  @GameActionReceiver
+  fun onGameActionReceived(message: MauMauGameAction, sender: String) {
     BoardGameApplication.runOnGUIThread {
-      when (GameAction.valueOf(message.action)) {
+      when (GameActionType.valueOf(message.action)) {
         // Enemy has played a card
-        GameAction.PLAY -> {
+        GameActionType.PLAY -> {
           logicController.playCard(
               card = Serialization.deserializeMauMauCard(message.card),
               animated = true,
@@ -120,32 +116,41 @@ class NetworkClientService(
         }
 
         // Enemy has drawn a card
-        GameAction.DRAW -> {
+        GameActionType.DRAW -> {
           logicController.drawCard(isCurrentPlayer = false, advance = false)
         }
 
         // Enemy has played a seven effect and requests to draw two
-        GameAction.REQUEST_DRAW_TWO -> {
+        GameActionType.REQUEST_DRAW_TWO -> {
           logicController.drawCard(isCurrentPlayer = true, advance = false)
           logicController.drawCard(isCurrentPlayer = true, advance = false)
         }
 
         // Enemy has played a jack and request suit
-        GameAction.REQUEST_SUIT -> {
+        GameActionType.REQUEST_SUIT -> {
           logicController.selectSuit(
               suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
               isCurrentPlayer = false)
         }
 
         // Enemy has ended his turn
-        GameAction.END_TURN -> {
+        GameActionType.END_TURN -> {
           view.refreshEndTurn()
         }
       }
     }
   }
 
-  override fun onEndGameReceived(message: GameOverMessage, sender: String) {
+  @GameActionReceiver
+  private fun onGameActionReceived(message: MauMauInitMessage, sender: String) {
+    BoardGameApplication.runOnGUIThread {
+      logicController.initGame(message)
+      view.onInitializeGameReceived()
+    }
+  }
+
+  @GameActionReceiver
+  private fun onGameActionReceived(message: MauMauEndGameMessage, sender: String) {
     BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
   }
   // endregion
