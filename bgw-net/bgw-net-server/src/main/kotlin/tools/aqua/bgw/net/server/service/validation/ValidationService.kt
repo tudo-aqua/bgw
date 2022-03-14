@@ -23,7 +23,12 @@ import java.util.*
 import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 
+/** Service for Json validation. */
 interface ValidationService {
+
+  /** The meta schema to validate schemas against. */
+  val metaSchema: JsonSchema
+
   /**
    * Validates the payload of [GameActionMessage] against all schemas for this [gameID].
    * Returns [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
@@ -45,7 +50,7 @@ interface ValidationService {
    * Returns a list of validation errors.
    *
    * @param reference The [reference] schema to validate [schemaNode] against.
-   * @param schemaNode The schema to be validated against the [refrence] schema.
+   * @param schemaNode The schema to be validated against the [reference] schema.
    *
    * @return a [List] of [String] representations of the validation errors that occurred during
    * validation.
@@ -61,7 +66,7 @@ interface ValidationService {
    * @return a [List] of [String] representations of the validation errors that occurred during
    * validation.
    */
-  fun validateMetaSchema(schemaNode: JsonNode): List<String>
+  fun validateMetaSchema(schemaNode: JsonNode): List<String> = validate(metaSchema, schemaNode)
 
   /**
    * Instructs the [ValidationService] implementation to clear it schema cache. Should be called
