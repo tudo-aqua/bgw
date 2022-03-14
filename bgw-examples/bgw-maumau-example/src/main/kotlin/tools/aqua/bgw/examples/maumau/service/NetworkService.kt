@@ -22,6 +22,7 @@ import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
@@ -81,6 +82,10 @@ class NetworkService(private val logicController: LogicController) {
   /** Send initialize game message to connected opponent. */
   fun sendInit(game: MauMauGame) {
     client?.sendGameActionMessage(Serialization.serializeInitMessage(game))
+  }
+
+  fun sendStackShuffled(game: MauMauGame) {
+    client?.sendGameActionMessage(Serialization.serializeStacksShuffledMessage(game))
   }
 
   /** Send [GameActionType.DRAW] action to connected opponent. */
@@ -167,5 +172,5 @@ class NetworkService(private val logicController: LogicController) {
 
   /** Tries parsing [port] into an ip port. */
   private fun validatePort(port: String): Boolean = (port.toIntOrNull() ?: false) in 1..65_534
-  // endregion
+	// endregion
 }

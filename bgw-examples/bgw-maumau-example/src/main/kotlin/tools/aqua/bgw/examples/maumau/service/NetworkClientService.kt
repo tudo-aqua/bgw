@@ -24,6 +24,7 @@ import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
@@ -107,6 +108,16 @@ class NetworkClientService(
     BoardGameApplication.runOnGUIThread {
       logicController.initGame(message)
       view.onInitializeGameReceived()
+    }
+  }
+
+  /** GameActionReceiver for [MauMauInitGameAction]. */
+  @GameActionReceiver
+  fun onShuffleDrawStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
+    println("Received MauMauShuffleStackGameAction $message from $sender")
+    BoardGameApplication.runOnGUIThread {
+      logicController.shuffleStack(message)
+      view.onShuffleStackReceived()
     }
   }
 

@@ -2,14 +2,19 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
   "required": [
-    "players",
-    "drawStack",
-    "gameStack",
     "hostCards",
-    "yourCards"
+    "yourCards",
+    "drawStack",
+    "gameStack"
   ],
   "properties": {
-    "players": {
+    "hostCards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "yourCards": {
       "type": "array",
       "items": {
         "type": "string"
@@ -22,22 +27,7 @@
       }
     },
     "gameStack": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "hostCards": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "yourCards": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "type": "string"
     }
   },
   "additionalProperties": false
