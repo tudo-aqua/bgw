@@ -18,29 +18,50 @@
 package tools.aqua.bgw.net.server.service.validation
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.networknt.schema.JsonSchema
 import java.util.*
 import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 
 interface ValidationService {
   /**
-   * Validates the payload of [GameActionMessage] with the matching Schema (Init, Game, End) of the
-   * [SchemasByGame] Entity, identified by [gameID]. Returns a list of validation errors or null if
-   * validation was successful.
+   * Validates the payload of [GameActionMessage] against all schemas for this [gameID].
+   * Returns [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
    *
    * @param message The [GameActionMessage] with the payload, that gets validated.
-   * @param gameID The identifier for the [SchemasByGame] Entity in the Database.
+   * @param gameID The identifier for the [SchemasByGame] entities in the Database.
    *
    * @return a [List] of [String] representations of the validation errors that occurred during
    * validation or [Optional.EMPTY] if there were no errors.
    *
-   * @throws JsonSchemaNotFoundException whenever [gameID] did not resolve to a [SchemasByGame]
+   * @throws JsonSchemaNotFoundException whenever [gameID] did not resolve to any [SchemasByGame]
    * entity.
    */
   @Throws(JsonSchemaNotFoundException::class)
   fun validate(message: GameActionMessage, gameID: String): Optional<List<String>>
 
-  fun validate(schemaNode: JsonNode): List<String>
+  /**
+   * Validates the [schemaNode] against the [reference] schema.
+   * Returns a list of validation errors.
+   *
+   * @param reference The [reference] schema to validate [schemaNode] against.
+   * @param schemaNode The schema to be validated against the [refrence] schema.
+   *
+   * @return a [List] of [String] representations of the validation errors that occurred during
+   * validation.
+   */
+  fun validate(reference : JsonSchema, schemaNode: JsonNode): List<String>
+
+  /**
+   * Validates the [schemaNode] against the meta schema.
+   * Returns a list of validation errors.
+   *
+   * @param schemaNode The schema to be validated against the meta schema.
+   *
+   * @return a [List] of [String] representations of the validation errors that occurred during
+   * validation.
+   */
+  fun validateMetaSchema(schemaNode: JsonNode): List<String>
 
   /**
    * Instructs the [ValidationService] implementation to clear it schema cache. Should be called
