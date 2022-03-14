@@ -48,7 +48,5 @@ sealed class ObjectRepository<T> {
    *
    * @return [objectSet] as immutable list.
    */
-  fun getAll(): List<T> {
-    @Suppress("UNNECESSARY_SAFE_CALL", "USELESS_ELVIS") return objectSet?.toList() ?: listOf()
-  }
+  fun getAll(): List<T> = objectSet.toList()
 }
