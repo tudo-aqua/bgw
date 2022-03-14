@@ -19,6 +19,7 @@ package tools.aqua.bgw.net.server.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
+import org.atmosphere.annotation.AnnotationUtil.logger
 import java.util.*
 import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
@@ -53,13 +54,14 @@ class MessageService(
 
   private fun Game.broadcastMessage(sender: Player, msg: Message) {
     for (session in (players - sender).map(Player::session)) {
+      logger.info("Broadcast $msg to $session")
       session.sendMessage(msg)
     }
   }
 
   fun handleMessage(session: WebSocketSession, messageString: String) {
     val message: Message = mapper.readValue(messageString, Message::class.java)
-    println(message)
+    logger.info("Message is $message")
     when (message) {
       is Response -> throw UnsupportedOperationException()
       is Notification -> throw UnsupportedOperationException()
@@ -106,15 +108,20 @@ class MessageService(
         if (schemasByGameRepository.findAll().none { it.gameID == createGameMessage.gameID })
             CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
         else gameService.createGame(createGameMessage.gameID, createGameMessage.sessionID, player)
+
     wsSession.sendMessage(CreateGameResponse(createGameResponseStatus))
   }
 
   private fun handleJoinGameMessage(wsSession: WebSocketSession, joinGameMessage: JoinGameMessage) {
     val player = wsSession.player
     val joinGameResponseStatus = gameService.joinGame(player, joinGameMessage.sessionID)
+
     wsSession.sendMessage(JoinGameResponse(joinGameResponseStatus))
+
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
       val notification = UserJoinedNotification(joinGameMessage.greeting, player.name)
+
+      logger.info("Starting broadcast join message")
       gameService.getBySessionID(joinGameMessage.sessionID)?.broadcastMessage(player, notification)
     }
   }
