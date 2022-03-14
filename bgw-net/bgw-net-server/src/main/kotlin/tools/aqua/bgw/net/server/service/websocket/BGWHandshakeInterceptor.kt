@@ -15,7 +15,7 @@ import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
  *
  * Only allows establishment of web socket session if both checks succeed.
  */
-class MyHandshakeInterceptor(private val keyValueRepository: KeyValueRepository) :
+class BGWHandshakeInterceptor(private val keyValueRepository: KeyValueRepository) :
 	HandshakeInterceptor {
   private val logger: Logger = LoggerFactory.getLogger(javaClass)
 

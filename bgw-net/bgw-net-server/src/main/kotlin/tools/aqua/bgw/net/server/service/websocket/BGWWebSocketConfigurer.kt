@@ -27,8 +27,8 @@ import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 
 @Configuration
 @EnableWebSocket
-class WebSocketServerConfiguration(
-  private val wsHandler: MyWebsocketHandler,
+class BGWWebSocketConfigurer(
+  private val wsHandler: BGWWebsocketHandler,
   private val keyValueRepository: KeyValueRepository
 ) : WebSocketConfigurer {
 
@@ -42,7 +42,7 @@ class WebSocketServerConfiguration(
   override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
     registry
         .addHandler(wsHandler, "/chat")
-        .addInterceptors(MyHandshakeInterceptor(keyValueRepository))
+        .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
   }
 }
 
