@@ -22,6 +22,7 @@ import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 
 /** Serialization helper for network communication. */
 object Serialization {
@@ -38,9 +39,15 @@ object Serialization {
   /** Serializes game into game initialization exchange format. */
   fun serializeInitMessage(game: MauMauGame): MauMauInitGameAction =
       MauMauInitGameAction(
-          players = game.players.map { it.name },
           drawStack = game.drawStack.cards.map { it.serialize() },
-          gameStack = game.gameStack.cards.map { it.serialize() },
+          gameStack = game.gameStack.cards.first().serialize(),
           hostCards = game.players[0].hand.cards.map { it.serialize() },
           yourCards = game.players[1].hand.cards.map { it.serialize() })
+
+  /** Serializes stack cards into exchange format. */
+  fun serializeStacksShuffledMessage(game: MauMauGame): MauMauShuffleStackGameAction =
+      MauMauShuffleStackGameAction(
+          drawStack = game.drawStack.cards.map { it.serialize() },
+          gameStack = game.gameStack.cards.first().serialize(),
+      )
 }

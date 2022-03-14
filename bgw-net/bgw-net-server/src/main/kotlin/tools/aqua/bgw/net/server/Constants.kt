@@ -46,24 +46,6 @@ const val MAUMAU_GAME_ID: String = "MauMau"
  */
 const val EXAMPLE_SCHEMA_JSON_URL_STRING: String = "/example_schema.json"
 
-/**
- * The String representation of the URL of the maumau_init_schema.json relative to projects
- * resources.
- */
-const val MAUMAU_INIT_SCHEMA_JSON_URL_STRING: String = "/maumau_init_schema.json"
-
-/**
- * The String representation of the URL of the maumau_game_schema.json relative to projects
- * resources.
- */
-const val MAUMAU_GAME_SCHEMA_JSON_URL_STRING: String = "/maumau_game_schema.json"
-
-/**
- * The String representation of the URL of the maumau_end_schema.json relative to projects
- * resources.
- */
-const val MAUMAU_END_SCHEMA_JSON_URL_STRING: String = "/maumau_end_schema.json"
-
 /** The String representation of the URL of the meta_schema.json relative to projects resources. */
 const val META_SCHEMA_JSON_URL_STRING: String = "/meta_schema.json"
 

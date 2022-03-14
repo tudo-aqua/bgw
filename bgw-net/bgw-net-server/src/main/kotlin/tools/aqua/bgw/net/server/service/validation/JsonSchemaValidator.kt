@@ -29,7 +29,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.message.GameActionMessage
-import tools.aqua.bgw.net.server.*
+import tools.aqua.bgw.net.server.EXAMPLE_SCHEMA_JSON_URL_STRING
+import tools.aqua.bgw.net.server.MAUMAU_GAME_ID
+import tools.aqua.bgw.net.server.META_SCHEMA_JSON_URL_STRING
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 
@@ -110,24 +112,16 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
    */
   @PostConstruct
   fun initExample() {
-    val exampleSchema = javaClass.getResource(EXAMPLE_SCHEMA_JSON_URL_STRING)?.readText()
-
-    val maumauInitSchema = javaClass.getResource(MAUMAU_INIT_SCHEMA_JSON_URL_STRING)?.readText()
-    val maumauGameSchema = javaClass.getResource(MAUMAU_GAME_SCHEMA_JSON_URL_STRING)?.readText()
-    val maumauEndSchema = javaClass.getResource(MAUMAU_END_SCHEMA_JSON_URL_STRING)?.readText()
-
-    if (exampleSchema == null) {
-      logger.warn("Failed to load example schema from resources")
-    } else {
-      schemasByGameRepository.save(SchemasByGame(EXAMPLE_GAME_ID, exampleSchema))
-    }
-
-    if (maumauInitSchema == null || maumauGameSchema == null || maumauEndSchema == null) {
-      logger.warn("Failed to load maumau schemas from resources")
-    } else {
-      schemasByGameRepository.save(SchemasByGame(MAUMAU_GAME_ID, maumauInitSchema))
-      schemasByGameRepository.save(SchemasByGame(MAUMAU_GAME_ID, maumauGameSchema))
-      schemasByGameRepository.save(SchemasByGame(MAUMAU_GAME_ID, maumauEndSchema))
-    }
+    setOf(
+        EXAMPLE_SCHEMA_JSON_URL_STRING,
+        "./maumauschemas/game_action_schema.json",
+        "./maumauschemas/game_end_schema.json",
+        "./maumauschemas/game_init_schema.json",
+        "./maumauschemas/shuffle_stack_schema.json")
+        .mapNotNull { t ->
+          javaClass.getResource(t)?.readText()
+              ?: null.also { logger.warn("Failed to load schema from resources: $t") }
+        }
+        .forEach { schemasByGameRepository.save(SchemasByGame(MAUMAU_GAME_ID, it)) }
   }
 }

@@ -83,6 +83,10 @@ class NetworkService(private val logicController: LogicController) {
     client?.sendGameActionMessage(Serialization.serializeInitMessage(game))
   }
 
+  fun sendStackShuffled(game: MauMauGame) {
+    client?.sendGameActionMessage(Serialization.serializeStacksShuffledMessage(game))
+  }
+
   /** Send [GameActionType.DRAW] action to connected opponent. */
   fun sendCardDrawn() {
     client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.DRAW))
