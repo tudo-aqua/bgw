@@ -91,18 +91,16 @@ class GameService(private val gameRepository: GameRepository) {
   @Synchronized
   @Scheduled(fixedRate = ORPHANED_GAME_CHECK_RATE)
   fun removeOrphanedGames() {
-    logger.info("Started looking for orphaned games")
     var numRemoved = 0
     gameRepository.getAll().forEach { game ->
       game.orphanCandidateSince?.let {
         if (it + TIME_UNTIL_ORPHANED < System.currentTimeMillis()) {
           gameRepository.remove(game)
           numRemoved++
-          logger.info("Removed game with id ${game.sessionID} because it was orphaned")
+          logger.info("Removed game with id ${game.sessionID} because it was orphaned.")
         }
       }
     }
-    logger.info("Stopped looking for orphaned games. $numRemoved games have been removed")
   }
 
   fun getBySessionID(sessionID: String): Game? = gameRepository.getBySessionID(sessionID)
