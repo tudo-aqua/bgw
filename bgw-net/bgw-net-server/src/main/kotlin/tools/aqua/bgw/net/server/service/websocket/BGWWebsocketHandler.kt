@@ -13,7 +13,7 @@ import tools.aqua.bgw.net.server.service.MessageService
 import tools.aqua.bgw.net.server.service.PlayerService
 
 @Component
-class MyWebsocketHandler(
+class BGWWebsocketHandler(
 	private val playerService: PlayerService,
 	private val messageService: MessageService,
 	private val gameService: GameService,
