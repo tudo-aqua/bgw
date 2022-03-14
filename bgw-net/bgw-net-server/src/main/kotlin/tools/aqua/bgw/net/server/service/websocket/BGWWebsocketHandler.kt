@@ -27,6 +27,7 @@ import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.server.player
 import tools.aqua.bgw.net.server.service.GameService
 import tools.aqua.bgw.net.server.service.MessageService
+import tools.aqua.bgw.net.server.service.MessageService.Companion.broadcastMessage
 import tools.aqua.bgw.net.server.service.PlayerService
 
 @Component
@@ -58,13 +59,10 @@ class BGWWebsocketHandler(
    */
   override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
     val player = session.player
-    val game = player.game
+
     gameService.leaveGame(player)
 
-    if (game != null) {
-      messageService.broadcastNotification(
-          game, UserDisconnectedNotification("disconnected", player.name))
-    }
+    player.game?.broadcastMessage(player, UserDisconnectedNotification("disconnected", player.name))
 
     playerService.deletePlayer(session)
     logger.info("User with session id ${session.id} disconnected")
@@ -73,7 +71,7 @@ class BGWWebsocketHandler(
 
   /** Delegates the handling of the message payload to [messageService]. */
   override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-    logger.info("received message ${message.payload}")
+    logger.info("Received message ${message.payload}")
     messageService.handleMessage(session, message.payload)
   }
 }
