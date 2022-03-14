@@ -48,10 +48,10 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
               javaClass.getResourceAsStream(META_SCHEMA_JSON_URL_STRING)
                   ?: throw FileNotFoundException())
 
-  /** Object mapper for Json (de)serialization */
+  /** Object mapper for Json (de)serialization. */
   private val mapper = ObjectMapper()
 
-  /** The logger instance */
+  /** The logger instance. */
   private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
   /** Schema map that caches schemas loaded from database to increase validation performance. */

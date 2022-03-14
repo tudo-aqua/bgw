@@ -26,7 +26,6 @@ import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
-import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
@@ -101,6 +100,7 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
+  /** GameActionReceiver for [MauMauInitGameAction]. */
   @GameActionReceiver
   fun onInitReceived(message: MauMauInitGameAction, sender: String) {
     println("Received InitGameAction $message from $sender")
@@ -110,6 +110,7 @@ class NetworkClientService(
     }
   }
 
+  /** GameActionReceiver for [MauMauGameAction]. */
   @GameActionReceiver
   private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
     println("Received GameAction $message from $sender")
@@ -118,9 +119,9 @@ class NetworkClientService(
         // Enemy has played a card
         GameActionType.PLAY -> {
           logicController.playCard(
-            card = Serialization.deserializeMauMauCard(message.card),
-            animated = true,
-            isCurrentPlayer = false)
+              card = Serialization.deserializeMauMauCard(message.card),
+              animated = true,
+              isCurrentPlayer = false)
         }
 
         // Enemy has drawn a card
@@ -137,8 +138,8 @@ class NetworkClientService(
         // Enemy has played a jack and request suit
         GameActionType.REQUEST_SUIT -> {
           logicController.selectSuit(
-            suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
-            isCurrentPlayer = false)
+              suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
+              isCurrentPlayer = false)
         }
 
         // Enemy has ended his turn
@@ -149,6 +150,7 @@ class NetworkClientService(
     }
   }
 
+  /** GameActionReceiver for [MauMauEndGameAction]. */
   @GameActionReceiver
   fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
     println("Received EndGameAction $message from $sender")

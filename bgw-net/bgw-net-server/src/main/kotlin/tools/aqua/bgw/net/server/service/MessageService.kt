@@ -47,7 +47,7 @@ class MessageService(
     private val validationService: ValidationService,
     private val schemasByGameRepository: SchemasByGameRepository,
 ) {
-  //region Handle messages
+  // region Handle messages
   /**
    * Handles incoming messages.
    *
@@ -58,15 +58,15 @@ class MessageService(
    */
   @Throws(UnsupportedOperationException::class)
   fun handleMessage(session: WebSocketSession, messageString: String): Unit =
-    when (val message = mapper.readValue(messageString, Message::class.java)) {
-      is GameActionMessage -> handleGameMessage(session, message)
-      is CreateGameMessage -> handleCreateGameMessage(session, message)
-      is JoinGameMessage -> handleJoinGameMessage(session, message)
-      is LeaveGameMessage -> handleLeaveGameMessage(session, message)
-      is Notification -> throw UnsupportedOperationException("Server received notification.")
-      is Response -> throw UnsupportedOperationException("Server received response.")
-      else -> throw UnsupportedOperationException("Unsupported message type.")
-    }
+      when (val message = mapper.readValue(messageString, Message::class.java)) {
+        is GameActionMessage -> handleGameMessage(session, message)
+        is CreateGameMessage -> handleCreateGameMessage(session, message)
+        is JoinGameMessage -> handleJoinGameMessage(session, message)
+        is LeaveGameMessage -> handleLeaveGameMessage(session, message)
+        is Notification -> throw UnsupportedOperationException("Server received notification.")
+        is Response -> throw UnsupportedOperationException("Server received response.")
+        else -> throw UnsupportedOperationException("Unsupported message type.")
+      }
 
   /**
    * Handles incoming [GameActionMessage].
@@ -95,9 +95,7 @@ class MessageService(
       game?.broadcastMessage(
           player,
           GameActionMessage(
-              payload = msg.payload,
-              prettyPrint = msg.prettyPrint,
-              sender = player.name))
+              payload = msg.payload, prettyPrint = msg.prettyPrint, sender = player.name))
     }
   }
 
@@ -160,11 +158,11 @@ class MessageService(
       }
     }
   }
-  //endregion
+  // endregion
 
-  //region Send messages
+  // region Send messages
   companion object {
-    /** Object mapper for Json (de)serialization */
+    /** Object mapper for Json (de)serialization. */
     private val mapper = ObjectMapper().registerModule(kotlinModule())
 
     internal fun Game.broadcastMessage(sender: Player, msg: Message) {
@@ -175,7 +173,7 @@ class MessageService(
     }
 
     private fun WebSocketSession.sendMessage(message: Message) =
-      sendMessage(TextMessage(mapper.writeValueAsString(message)))
+        sendMessage(TextMessage(mapper.writeValueAsString(message)))
   }
-  //endregion
+  // endregion
 }

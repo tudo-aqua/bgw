@@ -133,10 +133,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
 
   /** Registers events in the main menu scene. */
   private fun registerMainMenuEvents() {
-    mauMauMenuScene.continueGameButton.onMouseClicked =
-        {
-          hideMenuScene()
-        }
+    mauMauMenuScene.continueGameButton.onMouseClicked = { hideMenuScene() }
 
     mauMauMenuScene.newLocalGameButton.onMouseClicked =
         {
