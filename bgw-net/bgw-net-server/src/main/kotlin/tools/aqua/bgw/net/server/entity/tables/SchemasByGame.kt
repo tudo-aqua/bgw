@@ -18,11 +18,9 @@
 package tools.aqua.bgw.net.server.entity.tables
 
 import com.vladmihalcea.hibernate.type.json.JsonType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
+import javax.persistence.*
 
 /**
  * Table structure for game entries.
@@ -33,10 +31,11 @@ import org.hibernate.annotations.TypeDef
 @Entity(name = "Game")
 @TypeDef(name = "json", typeClass = JsonType::class)
 class SchemasByGame(
-    @Id @Column(nullable = false, updatable = false) val gameID: String,
+    @Column(nullable = false, updatable = false)
+    var gameID: String,
     //
     @Id
     @Type(type = "json")
-    @Column(nullable = false, columnDefinition = "jsonb")
+    @Column(nullable = false, updatable = false, columnDefinition = "jsonb")
     var schema: String,
 )
