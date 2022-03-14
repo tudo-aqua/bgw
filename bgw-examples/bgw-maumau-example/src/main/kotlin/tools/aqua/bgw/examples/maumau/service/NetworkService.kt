@@ -20,24 +20,14 @@ package tools.aqua.bgw.examples.maumau.service
 import java.net.InetAddress
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
   /** Network client. Nullable for offline games. */
   private var client: NetworkClientService? = null
-
-  fun testReflection() {
-    client =
-        NetworkClientService(
-                playerName = "",
-                host = "",
-                port = 0,
-                logicController = logicController,
-            )
-            .apply { testReflection2() }
-  }
 
   // region Connection
   /**
@@ -124,7 +114,7 @@ class NetworkService(private val logicController: LogicController) {
 
   /** Sends End game message to connected opponent. */
   fun sendEndGame() {
-    client?.sendGameActionMessage(MauMauEndGameMessage("Looser!"))
+    client?.sendGameActionMessage(MauMauEndGameAction("Looser!"))
   }
   // endregion
 

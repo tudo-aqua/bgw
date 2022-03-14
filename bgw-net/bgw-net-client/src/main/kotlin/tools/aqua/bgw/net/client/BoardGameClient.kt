@@ -68,15 +68,9 @@ protected constructor(
             secret = secret,
             callback = this)
 
-    gameActionReceivers = getAnnotatedReceivers(this::class.java)
-
-    // Set Fallback
-    if (!gameActionReceivers.containsKey(GameAction::class.java))
-        gameActionReceivers[GameAction::class.java] = this::onGameActionReceived.javaMethod!!
-  }
-
-  fun testReflection2() {
-    gameActionReceivers.forEach { (k, v) -> println("$k -> $v") }
+    gameActionReceivers = getAnnotatedReceivers(this::class.java).apply {
+      putIfAbsent(GameAction::class.java, this@BoardGameClient::onGameActionReceived.javaMethod!!) // Set Fallback
+    }
   }
 
   // region Connect / Disconnect
@@ -216,6 +210,18 @@ protected constructor(
     System.err.println(
         "An incoming GameAction has been handled by the fallback function. " +
             "Override onGameActionReceived or create dedicated handler for message type ${message.javaClass.canonicalName}.")
+  }
+
+  /**
+   * Invokes dedicated annotated receiver function for [action] parameter or fallback if not found.
+   *
+   * @param action The [GameAction] received from the opponent that is to be delegated.
+   * @param sender The opponents identification.
+   */
+  internal fun invokeAnnotatedReceiver(action: GameAction, sender: String) {
+    checkNotNull(gameActionReceivers.getOrDefault(action::class.java, gameActionReceivers[GameAction::class.java])) {
+      "No receiver for $action was found but catchall should have been applicable."
+    }.invoke(this, action, sender)
   }
   // endregion
 }

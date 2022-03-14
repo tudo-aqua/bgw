@@ -28,7 +28,7 @@ import tools.aqua.bgw.net.common.GameAction
  * @property hostCards [List] of host player's cards.
  * @property yourCards [List] of your cards.
  */
-data class MauMauInitMessage(
+data class MauMauInitGameAction(
     val players: List<String>,
     val drawStack: List<String>,
     val gameStack: List<String>,

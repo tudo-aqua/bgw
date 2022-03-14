@@ -135,8 +135,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
   private fun registerMainMenuEvents() {
     mauMauMenuScene.continueGameButton.onMouseClicked =
         {
-          logicController.networkService.testReflection()
-          // hideMenuScene()
+          hideMenuScene()
         }
 
     mauMauMenuScene.newLocalGameButton.onMouseClicked =

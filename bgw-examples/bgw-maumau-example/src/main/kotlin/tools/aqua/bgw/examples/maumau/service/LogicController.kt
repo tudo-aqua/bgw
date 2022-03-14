@@ -22,7 +22,7 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 
 /**
@@ -100,11 +100,11 @@ class LogicController(val view: Refreshable) {
   }
 
   /**
-   * Processes [MauMauInitMessage] to initialize game conditions transmitted by host.
+   * Processes [MauMauInitGameAction] to initialize game conditions transmitted by host.
    *
    * @param message Init conditions.
    */
-  fun initGame(message: MauMauInitMessage) {
+  fun initGame(message: MauMauInitGameAction) {
     initGame(
         player1 = message.players[1],
         player2 = message.players[0],

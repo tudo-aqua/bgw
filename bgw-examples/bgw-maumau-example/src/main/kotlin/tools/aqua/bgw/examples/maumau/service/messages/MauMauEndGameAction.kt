@@ -24,4 +24,4 @@ import tools.aqua.bgw.net.common.GameAction
  *
  * @property winner The winner name.
  */
-data class MauMauEndGameMessage(val winner: String) : GameAction()
+data class MauMauEndGameAction(val winner: String) : GameAction()

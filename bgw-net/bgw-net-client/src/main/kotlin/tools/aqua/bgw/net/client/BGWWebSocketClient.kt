@@ -135,9 +135,9 @@ class BGWWebSocketClient(
 
     when (message) {
       is GameActionMessage ->
-          callback.onGameActionReceived(
+          callback.invokeAnnotatedReceiver(
               mapper.readValue(message.payload, GameAction::class.java),
-              message.sender) // TODO: Mapping to correct class
+              message.sender)
       is GameActionResponse -> callback.onGameActionResponse(message)
       is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)
