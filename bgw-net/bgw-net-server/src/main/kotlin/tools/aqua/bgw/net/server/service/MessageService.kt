@@ -47,9 +47,6 @@ class MessageService(
     private val validationService: ValidationService,
     private val schemasByGameRepository: SchemasByGameRepository,
 ) {
-  /** Object mapper for Json (de)serialization */
-  private val mapper = ObjectMapper().registerModule(kotlinModule())
-
   //region Handle messages
   /**
    * Handles incoming messages.
@@ -166,14 +163,19 @@ class MessageService(
   //endregion
 
   //region Send messages
-  private fun WebSocketSession.sendMessage(message: Message) =
-    sendMessage(TextMessage(mapper.writeValueAsString(message)))
+  companion object {
+    /** Object mapper for Json (de)serialization */
+    private val mapper = ObjectMapper().registerModule(kotlinModule())
 
-  private fun Game.broadcastMessage(sender: Player, msg: Message) {
-    for (session in (players - sender).map(Player::session)) {
-      logger.info("Broadcast $msg to $session")
-      session.sendMessage(msg)
+    internal fun Game.broadcastMessage(sender: Player, msg: Message) {
+      for (session in (players - sender).map(Player::session)) {
+        logger.info("Broadcast $msg to $session")
+        session.sendMessage(msg)
+      }
     }
+
+    private fun WebSocketSession.sendMessage(message: Message) =
+      sendMessage(TextMessage(mapper.writeValueAsString(message)))
   }
   //endregion
 }
