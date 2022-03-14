@@ -70,6 +70,7 @@ object GameActionReceiverProcessor {
             "Found function $method annotated with @GameActionReceiver that has the same parameter " +
                 "types as $this. Ignoring duplicate.")
       }
+      method.isAccessible = true
     }
     return map
   }
