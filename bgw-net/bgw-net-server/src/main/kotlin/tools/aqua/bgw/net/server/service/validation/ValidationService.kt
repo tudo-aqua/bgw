@@ -30,8 +30,8 @@ interface ValidationService {
   val metaSchema: JsonSchema
 
   /**
-   * Validates the payload of [GameActionMessage] against all schemas for this [gameID].
-   * Returns [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
+   * Validates the payload of [GameActionMessage] against all schemas for this [gameID]. Returns
+   * [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
    *
    * @param message The [GameActionMessage] with the payload, that gets validated.
    * @param gameID The identifier for the [SchemasByGame] entities in the Database.
@@ -46,8 +46,7 @@ interface ValidationService {
   fun validate(message: GameActionMessage, gameID: String): Optional<List<String>>
 
   /**
-   * Validates the [schemaNode] against the [reference] schema.
-   * Returns a list of validation errors.
+   * Validates the [schemaNode] against the [reference] schema. Returns a list of validation errors.
    *
    * @param reference The [reference] schema to validate [schemaNode] against.
    * @param schemaNode The schema to be validated against the [reference] schema.
@@ -55,11 +54,10 @@ interface ValidationService {
    * @return a [List] of [String] representations of the validation errors that occurred during
    * validation.
    */
-  fun validate(reference : JsonSchema, schemaNode: JsonNode): List<String>
+  fun validate(reference: JsonSchema, schemaNode: JsonNode): List<String>
 
   /**
-   * Validates the [schemaNode] against the meta schema.
-   * Returns a list of validation errors.
+   * Validates the [schemaNode] against the meta schema. Returns a list of validation errors.
    *
    * @param schemaNode The schema to be validated against the meta schema.
    *

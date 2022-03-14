@@ -71,7 +71,8 @@ class SchemaView(@Autowired private val validationService: ValidationService) : 
 
       msgList.setItems(results.map { result -> MessageListItem(result) })
 
-      if (results.isEmpty()) notify("$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
+      if (results.isEmpty())
+          notify("$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
       else notify("$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
     }
   }

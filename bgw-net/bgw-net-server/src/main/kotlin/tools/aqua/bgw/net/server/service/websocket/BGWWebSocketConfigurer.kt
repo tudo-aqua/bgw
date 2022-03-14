@@ -28,8 +28,8 @@ import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 @Configuration
 @EnableWebSocket
 class BGWWebSocketConfigurer(
-  private val wsHandler: BGWWebsocketHandler,
-  private val keyValueRepository: KeyValueRepository
+    private val wsHandler: BGWWebsocketHandler,
+    private val keyValueRepository: KeyValueRepository
 ) : WebSocketConfigurer {
 
   /** Not really needed anymore. An idle timeout could be configured here. */
@@ -45,4 +45,3 @@ class BGWWebSocketConfigurer(
         .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
   }
 }
-

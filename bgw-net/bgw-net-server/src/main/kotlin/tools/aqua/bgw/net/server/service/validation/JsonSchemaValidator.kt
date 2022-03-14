@@ -43,10 +43,10 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
 
   /** The meta schema to validate schemas against. */
   override val metaSchema: JsonSchema =
-    JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
-      .getSchema(
-        javaClass.getResourceAsStream(META_SCHEMA_JSON_URL_STRING)
-          ?: throw FileNotFoundException())
+      JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+          .getSchema(
+              javaClass.getResourceAsStream(META_SCHEMA_JSON_URL_STRING)
+                  ?: throw FileNotFoundException())
 
   /** Object mapper for Json deserialization */
   private val mapper = ObjectMapper()
@@ -58,8 +58,8 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
   private val schemaCache = mutableMapOf<String, List<JsonSchema>>()
 
   /**
-   * Validates the payload of [GameActionMessage] against all schemas for this [gameID].
-   * Returns [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
+   * Validates the payload of [GameActionMessage] against all schemas for this [gameID]. Returns
+   * [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
    *
    * @param message The [GameActionMessage] with the payload, that gets validated.
    * @param gameID The identifier for the [SchemasByGame] entities in the Database.
@@ -73,22 +73,21 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
   override fun validate(message: GameActionMessage, gameID: String): Optional<List<String>> {
     val payload = mapper.readTree(message.payload)
     val errors =
-      (schemaCache[gameID]
-            ?: schemasByGameRepository
-                .findAll()
-                .filter { it.gameID == gameID }
-                .map {
-                  JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(it.schema)
-                }
-                .also { schemaCache[gameID] = it })
-        .map { validate(it, payload) }
+        (schemaCache[gameID]
+                ?: schemasByGameRepository
+                    .findAll()
+                    .filter { it.gameID == gameID }
+                    .map {
+                      JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(it.schema)
+                    }
+                    .also { schemaCache[gameID] = it })
+            .map { validate(it, payload) }
 
     return if (errors.any { it.isEmpty() }) Optional.empty() else Optional.of(errors.flatten())
   }
 
   /**
-   * Validates the [schemaNode] against the [reference] schema.
-   * Returns a list of validation errors.
+   * Validates the [schemaNode] against the [reference] schema. Returns a list of validation errors.
    *
    * @param reference The [reference] schema to validate [schemaNode] against.
    * @param schemaNode The schema to be validated against the [reference] schema.
@@ -96,8 +95,8 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
    * @return a [List] of [String] representations of the validation errors that occurred during
    * validation.
    */
-  override fun validate(reference : JsonSchema, schemaNode: JsonNode): List<String> =
-    reference.validate(schemaNode).map { it.message }
+  override fun validate(reference: JsonSchema, schemaNode: JsonNode): List<String> =
+      reference.validate(schemaNode).map { it.message }
 
   /**
    * Instructs the [ValidationService] implementation to clear it schema cache. Should be called
