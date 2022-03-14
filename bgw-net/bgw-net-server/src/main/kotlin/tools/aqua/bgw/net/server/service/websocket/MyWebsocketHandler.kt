@@ -31,8 +31,8 @@ class MyWebsocketHandler(
   /** Creates a new player and associates it with the [WebSocketSession]. */
   override fun afterConnectionEstablished(session: WebSocketSession) {
     playerService.createPlayer(session)
-    println(playerService.getAll())
     logger.info("User with session id ${session.id} connected")
+    logger.info("Connected players:" + playerService.getAll())
   }
 
   /**
@@ -52,10 +52,12 @@ class MyWebsocketHandler(
 
     playerService.deletePlayer(session)
     logger.info("User with session id ${session.id} disconnected")
+    logger.info("Connected players:" + playerService.getAll())
   }
 
   /** Delegates the handling of the message payload to [messageService]. */
   override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
+    logger.info("received message ${message.payload}")
     messageService.handleMessage(session, message.payload)
   }
 }
