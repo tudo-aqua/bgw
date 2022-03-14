@@ -1,3 +1,20 @@
+/*
+ * Copyright 2022 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tools.aqua.bgw.net.server.service.websocket
 
 import org.slf4j.Logger
@@ -16,14 +33,14 @@ import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
  * Only allows establishment of web socket session if both checks succeed.
  */
 class BGWHandshakeInterceptor(private val keyValueRepository: KeyValueRepository) :
-	HandshakeInterceptor {
+    HandshakeInterceptor {
   private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
   override fun beforeHandshake(
-	  request: ServerHttpRequest,
-	  response: ServerHttpResponse,
-	  wsHandler: WebSocketHandler,
-	  attributes: MutableMap<String, Any>
+      request: ServerHttpRequest,
+      response: ServerHttpResponse,
+      wsHandler: WebSocketHandler,
+      attributes: MutableMap<String, Any>
   ): Boolean {
     val secret: String =
         try {
@@ -46,9 +63,9 @@ class BGWHandshakeInterceptor(private val keyValueRepository: KeyValueRepository
 
   /** Does nothing. */
   override fun afterHandshake(
-	  request: ServerHttpRequest,
-	  response: ServerHttpResponse,
-	  wsHandler: WebSocketHandler,
-	  exception: Exception?
+      request: ServerHttpRequest,
+      response: ServerHttpResponse,
+      wsHandler: WebSocketHandler,
+      exception: Exception?
   ) {}
 }
