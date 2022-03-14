@@ -17,9 +17,7 @@
 
 package tools.aqua.bgw.net.client
 
-import java.lang.reflect.Method
-import java.net.URI
-import kotlin.reflect.jvm.javaMethod
+import com.fasterxml.jackson.databind.JsonMappingException
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
@@ -33,6 +31,9 @@ import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.GameActionResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.LeaveGameResponse
+import java.lang.reflect.Method
+import java.net.URI
+import kotlin.reflect.jvm.javaMethod
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
@@ -213,15 +214,20 @@ protected constructor(
   }
 
   /**
-   * Invokes dedicated annotated receiver function for [action] parameter or fallback if not found.
+   * Invokes dedicated annotated receiver function for [message] parameter or fallback if not found.
    *
-   * @param action The [GameAction] received from the opponent that is to be delegated.
-   * @param sender The opponents identification.
+   * @param message The [GameActionMessage] received from the opponent that is to be delegated.
    */
-  internal fun invokeAnnotatedReceiver(action: GameAction, sender: String) {
-    checkNotNull(gameActionReceivers.getOrDefault(action::class.java, gameActionReceivers[GameAction::class.java])) {
-      "No receiver for $action was found but catchall should have been applicable."
-    }.invoke(this, action, sender)
+  internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
+    for(receiver in gameActionReceivers.entries) {
+      val target = receiver.key
+      val method = receiver.value
+      try{
+        method.invoke(this, wsClient.mapper.readValue(message.payload, target), message.sender)
+        return
+      }catch (_ : JsonMappingException) {}
+    }
+    error("No receiver triggered.") //TODO: remove
   }
   // endregion
 }
