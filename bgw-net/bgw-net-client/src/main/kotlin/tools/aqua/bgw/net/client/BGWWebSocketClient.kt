@@ -121,10 +121,8 @@ class BGWWebSocketClient(
     try {
       messageMapping(mapper.readValue(message, Message::class.java))
     } catch (ise: IllegalArgumentException) {
-      ise.printStackTrace()
       onError(ise)
     } catch (jse: JsonProcessingException) {
-      jse.printStackTrace()
       onError(jse)
     }
   }

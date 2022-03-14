@@ -22,7 +22,6 @@ import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {

@@ -18,6 +18,9 @@
 package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.JsonMappingException
+import java.lang.reflect.Method
+import java.net.URI
+import kotlin.reflect.jvm.javaMethod
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
@@ -31,9 +34,6 @@ import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.GameActionResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.LeaveGameResponse
-import java.lang.reflect.Method
-import java.net.URI
-import kotlin.reflect.jvm.javaMethod
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
@@ -69,9 +69,12 @@ protected constructor(
             secret = secret,
             callback = this)
 
-    gameActionReceivers = getAnnotatedReceivers(this::class.java).apply {
-      putIfAbsent(GameAction::class.java, this@BoardGameClient::onGameActionReceived.javaMethod!!) // Set Fallback
-    }
+    gameActionReceivers =
+        getAnnotatedReceivers(this::class.java).apply {
+          putIfAbsent(
+              GameAction::class.java,
+              this@BoardGameClient::onGameActionReceived.javaMethod!!) // Set Fallback
+        }
   }
 
   // region Connect / Disconnect
@@ -219,15 +222,15 @@ protected constructor(
    * @param message The [GameActionMessage] received from the opponent that is to be delegated.
    */
   internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
-    for(receiver in gameActionReceivers.entries) {
+    for (receiver in gameActionReceivers.entries) {
       val target = receiver.key
       val method = receiver.value
-      try{
+      try {
         method.invoke(this, wsClient.mapper.readValue(message.payload, target), message.sender)
         return
-      }catch (_ : JsonMappingException) {}
+      } catch (_: JsonMappingException) {}
     }
-    error("No receiver triggered.") //TODO: remove
+    error("No receiver triggered.") // TODO: remove
   }
   // endregion
 }
