@@ -101,15 +101,26 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
-  /*private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
+  @GameActionReceiver
+  fun onInitReceived(message: MauMauInitGameAction, sender: String) {
+    println("Received InitGameAction $message from $sender")
+    BoardGameApplication.runOnGUIThread {
+      logicController.initGame(message)
+      view.onInitializeGameReceived()
+    }
+  }
+
+  @GameActionReceiver
+  private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
+    println("Received GameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       when (GameActionType.valueOf(message.action)) {
         // Enemy has played a card
         GameActionType.PLAY -> {
           logicController.playCard(
-              card = Serialization.deserializeMauMauCard(message.card),
-              animated = true,
-              isCurrentPlayer = false)
+            card = Serialization.deserializeMauMauCard(message.card),
+            animated = true,
+            isCurrentPlayer = false)
         }
 
         // Enemy has drawn a card
@@ -126,8 +137,8 @@ class NetworkClientService(
         // Enemy has played a jack and request suit
         GameActionType.REQUEST_SUIT -> {
           logicController.selectSuit(
-              suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
-              isCurrentPlayer = false)
+            suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
+            isCurrentPlayer = false)
         }
 
         // Enemy has ended his turn
@@ -138,30 +149,10 @@ class NetworkClientService(
     }
   }
 
-  private fun onGameActionReceived(message: MauMauInitGameAction, sender: String) {
-    BoardGameApplication.runOnGUIThread {
-      logicController.initGame(message)
-      view.onInitializeGameReceived()
-    }
-  }
-
-  private fun onGameActionReceived(message: MauMauEndGameAction, sender: String) {
-    BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
-  }*/
-
-  @GameActionReceiver
-  fun onInitReceived(message: MauMauInitGameAction, sender: String) {
-    println("Received InitGameAction $message from $sender")
-  }
-
-  @GameActionReceiver
-  private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
-    println("Received GameAction $message from $sender")
-  }
-
   @GameActionReceiver
   fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
     println("Received EndGameAction $message from $sender")
+    BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
   }
   // endregion
 }
