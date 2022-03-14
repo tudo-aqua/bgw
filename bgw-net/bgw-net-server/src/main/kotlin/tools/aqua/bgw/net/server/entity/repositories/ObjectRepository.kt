@@ -17,7 +17,10 @@
 
 package tools.aqua.bgw.net.server.entity.repositories
 
+import org.springframework.stereotype.Repository
+
 /** Repository of objects. */
+@Repository
 sealed class ObjectRepository<T> {
   /** All active and orphaned game instances. */
   protected val objectSet: MutableSet<T> = mutableSetOf()
@@ -45,7 +48,5 @@ sealed class ObjectRepository<T> {
    *
    * @return [objectSet] as immutable list.
    */
-  fun getAll(): List<T> {
-    @Suppress("UNNECESSARY_SAFE_CALL", "USELESS_ELVIS") return objectSet?.toList() ?: listOf()
-  }
+  fun getAll(): List<T> = objectSet.toList()
 }
