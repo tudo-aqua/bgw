@@ -103,7 +103,7 @@ class MessageService(
   ) {
     val player = wsSession.player
     val createGameResponseStatus =
-        if (!schemasByGameRepository.existsById(createGameMessage.gameID))
+        if (schemasByGameRepository.findAll().none { it.gameID == createGameMessage.gameID })
             CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
         else gameService.createGame(createGameMessage.gameID, createGameMessage.sessionID, player)
     wsSession.sendMessage(CreateGameResponse(createGameResponseStatus))
