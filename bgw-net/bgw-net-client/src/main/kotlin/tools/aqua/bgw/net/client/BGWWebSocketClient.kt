@@ -121,8 +121,10 @@ class BGWWebSocketClient(
     try {
       messageMapping(mapper.readValue(message, Message::class.java))
     } catch (ise: IllegalArgumentException) {
+      ise.printStackTrace()
       onError(ise)
     } catch (jse: JsonProcessingException) {
+      jse.printStackTrace()
       onError(jse)
     }
   }
@@ -134,7 +136,7 @@ class BGWWebSocketClient(
     when (message) {
       is GameActionMessage ->
           callback.onGameActionReceived(
-              mapper.readValue(message.payload, GameAction::class.java), message.sender)
+              mapper.readValue(message.payload, GameAction::class.java), message.sender) //TODO: Mapping to correct class
       is GameActionResponse -> callback.onGameActionResponse(message)
       is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)

@@ -101,8 +101,6 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
-  override fun onGameActionReceived(message: GameAction, sender: String) {}
-
   @GameActionReceiver
   fun onGameActionReceived(message: MauMauGameAction, sender: String) {
     BoardGameApplication.runOnGUIThread {
