@@ -22,14 +22,10 @@ import tools.aqua.bgw.net.common.GameAction
 /**
  * InitGameMessage data class for serialization.
  *
- * @property hostCards [List] of host player's cards.
- * @property yourCards [List] of your cards.
  * @property drawStack [List] of draw stack cards.
  * @property gameStack The game stack card.
  */
-data class MauMauInitGameAction(
-    val hostCards: List<String>,
-    val yourCards: List<String>,
+data class MauMauShuffleStackGameAction(
     val drawStack: List<String>,
     val gameStack: String,
 ) : GameAction()

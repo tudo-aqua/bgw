@@ -378,9 +378,34 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
   }
 
   override fun onInitializeGameReceived() {
-    viewController.mauMauGameScene.startAnimation()
-    viewController.mauMauGameScene.lock()
-    viewController.hideMenuScene()
+    viewController.apply {
+      mauMauGameScene.startAnimation()
+      mauMauGameScene.lock()
+      hideMenuScene()
+    }
+  }
+
+  override fun onShuffleStackReceived() {
+    viewController.apply {
+      // Add components to stacks
+      mauMauGameScene.drawStack.clear()
+      mauMauGameScene.drawStack.addAll(
+          logicController.game.drawStack.cards.asReversed().map { card ->
+            cardMap.forward(card).apply { showBack() }
+          })
+
+      mauMauGameScene.gameStack.clear()
+      mauMauGameScene.gameStack.addAll(
+          logicController.game.gameStack.cards.asReversed().map { card ->
+            cardMap.forward(card).apply { showFront() }
+          })
+
+      // update labels
+      mauMauGameScene.drawStackInfo.textProperty.value =
+          logicController.game.drawStack.size().toString()
+      mauMauGameScene.gameStackInfo.textProperty.value =
+          logicController.game.gameStack.cards.peek().cardSuit.toString()
+    }
   }
 
   override fun refreshEndTurn() {
