@@ -21,12 +21,12 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.entity.GameActionType
 import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
-import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
@@ -101,10 +101,30 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
-  override fun onGameActionReceived(message: GameAction, sender: String) {}
-
+  /** GameActionReceiver for [MauMauInitGameAction]. */
   @GameActionReceiver
-  fun onGameActionReceived(message: MauMauGameAction, sender: String) {
+  private fun onInitReceived(message: MauMauInitGameAction, sender: String) {
+    println("Received InitGameAction $message from $sender")
+    BoardGameApplication.runOnGUIThread {
+      logicController.initGame(message)
+      view.onInitializeGameReceived()
+    }
+  }
+
+  /** GameActionReceiver for [MauMauInitGameAction]. */
+  @GameActionReceiver
+  private fun onShuffleDrawStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
+    println("Received MauMauShuffleStackGameAction $message from $sender")
+    BoardGameApplication.runOnGUIThread {
+      logicController.shuffleStack(message)
+      view.onShuffleStackReceived()
+    }
+  }
+
+  /** GameActionReceiver for [MauMauGameAction]. */
+  @GameActionReceiver
+  private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
+    println("Received GameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       when (GameActionType.valueOf(message.action)) {
         // Enemy has played a card
@@ -141,16 +161,10 @@ class NetworkClientService(
     }
   }
 
+  /** GameActionReceiver for [MauMauEndGameAction]. */
   @GameActionReceiver
-  private fun onGameActionReceived(message: MauMauInitMessage, sender: String) {
-    BoardGameApplication.runOnGUIThread {
-      logicController.initGame(message)
-      view.onInitializeGameReceived()
-    }
-  }
-
-  @GameActionReceiver
-  private fun onGameActionReceived(message: MauMauEndGameMessage, sender: String) {
+  private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
+    println("Received EndGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
   }
   // endregion
