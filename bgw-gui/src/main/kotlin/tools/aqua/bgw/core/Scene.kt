@@ -74,6 +74,9 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    */
   @Suppress("LeakingThis") val rootNode: RootComponent<T> = RootComponent(this)
 
+  /** The drag gesture temporary root node. */
+  @Suppress("LeakingThis") internal val dragGestureRootNode: RootComponent<T> = RootComponent(this)
+
   /** The width of this [Scene] in virtual coordinates. */
   val width: Double = width.toDouble()
 
