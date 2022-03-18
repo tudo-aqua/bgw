@@ -17,4 +17,6 @@
 
 package tools.aqua.bgw.net.common
 
-abstract class GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClass
+
+@GameActionClass abstract class GameAction

@@ -21,7 +21,10 @@ import java.lang.reflect.Method
 import tools.aqua.bgw.net.common.GameAction
 
 object GameActionReceiverProcessor {
-  fun getAnnotatedReceivers(target: Class<*>): MutableMap<Class<out GameAction>, Method> {
+  fun getAnnotatedReceivers(
+      target: Class<*>,
+      classes: Set<Class<out GameAction>>
+  ): MutableMap<Class<out GameAction>, Method> {
     val map = mutableMapOf<Class<out GameAction>, Method>()
     val annotatedMethods = mutableListOf<Method>()
     var clazz: Class<*> = target
@@ -64,14 +67,30 @@ object GameActionReceiverProcessor {
         continue
       }
 
-      @Suppress("UNCHECKED_CAST")
-      map.putIfAbsent(params[0] as Class<out GameAction>, method)?.run {
+      // Check target type exists in target classes set
+      @Suppress("UNCHECKED_CAST") val targetClass = params[0] as Class<out GameAction>
+      if (!classes.contains(targetClass)) {
+        System.err.println(
+            "Found function $method annotated with @GameActionReceiver with target type $targetClass " +
+                "but no class $targetClass annotated with @GameActionClass that extends GameAction has been found. " +
+                "Ignoring.")
+        continue
+      }
+
+      map.putIfAbsent(targetClass, method)?.run {
         System.err.println(
             "Found function $method annotated with @GameActionReceiver that has the same parameter " +
                 "types as $this. Ignoring duplicate.")
       }
       method.isAccessible = true
     }
+
+    (classes - map.keys - GameAction::class.java).forEach {
+      System.err.println(
+          "GameAction $it has no valid receiver function. Incoming messages will be delegated to catchall" +
+              " function onGameActionReceived. Consider adding a handler.")
+    }
+
     return map
   }
 }

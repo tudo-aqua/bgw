@@ -18,10 +18,11 @@
 package tools.aqua.bgw.examples.maumau.service.messages
 
 import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClass
 
 /**
  * GameOverMessage data class for serialization.
  *
  * @property winner The winner name.
  */
-data class MauMauEndGameAction(val winner: String) : GameAction()
+@GameActionClass data class MauMauEndGameAction(val winner: String) : GameAction()

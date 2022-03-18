@@ -22,6 +22,7 @@ import java.lang.reflect.Method
 import java.net.URI
 import kotlin.reflect.jvm.javaMethod
 import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClassProcessor.getAnnotatedClasses
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
 import tools.aqua.bgw.net.common.message.GameActionMessage
@@ -58,6 +59,9 @@ protected constructor(
   /** WebSocketClient handling network communication. */
   private val wsClient: BGWWebSocketClient
 
+  /** All classes annotated with @GameActionClass. */
+  private val gameActionClasses: Set<Class<out GameAction>>
+
   /** Mapper for incoming message handlers. */
   private val gameActionReceivers: Map<Class<out GameAction>, Method>
 
@@ -69,8 +73,9 @@ protected constructor(
             secret = secret,
             callback = this)
 
+    gameActionClasses = getAnnotatedClasses()
     gameActionReceivers =
-        getAnnotatedReceivers(this::class.java).apply {
+        getAnnotatedReceivers(this::class.java, gameActionClasses).apply {
           putIfAbsent(
               GameAction::class.java,
               this@BoardGameClient::onGameActionReceived.javaMethod!!) // Set Fallback

@@ -15,14 +15,8 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.bgw.library-conventions") }
+package tools.aqua.bgw.net.common.annotations
 
-mavenMetadata {
-  name.set("BoardGameWork Network Common Code")
-  description.set("A framework for board game applications.")
-}
-
-dependencies {
-  implementation(libs.jackson.annotations)
-  implementation(libs.guava)
-}
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+annotation class GameActionClass

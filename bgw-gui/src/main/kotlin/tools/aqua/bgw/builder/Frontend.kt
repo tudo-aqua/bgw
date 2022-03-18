@@ -345,8 +345,9 @@ internal class Frontend : Application() {
 
               if (nV != null) icons.add(nV.image.toFXImage())
             }
-            fullscreenExitCombinationProperty.setGUIListenerAndInvoke(fullscreenExitCombinationProperty.value) { _, nV ->
-              //fullScreenExitKeyCombination = nV.toFXKeyCombination()
+            fullscreenExitCombinationProperty.setGUIListenerAndInvoke(
+                fullscreenExitCombinationProperty.value) { _, nV ->
+              // fullScreenExitKeyCombination = nV.toFXKeyCombination()
             }
 
             maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }

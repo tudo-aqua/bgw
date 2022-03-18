@@ -18,6 +18,7 @@
 package tools.aqua.bgw.examples.maumau.service.messages
 
 import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClass
 
 /**
  * InitGameMessage data class for serialization.
@@ -27,6 +28,7 @@ import tools.aqua.bgw.net.common.GameAction
  * @property drawStack [List] of draw stack cards.
  * @property gameStack The game stack card.
  */
+@GameActionClass
 data class MauMauInitGameAction(
     val hostCards: List<String>,
     val yourCards: List<String>,

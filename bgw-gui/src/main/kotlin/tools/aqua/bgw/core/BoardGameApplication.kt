@@ -73,9 +73,10 @@ open class BoardGameApplication(
     }
 
   /**
-   * Specifies the KeyCombination that will allow the user to exit full screen mode.
-   * A value of KeyCombination.NO_MATCH will not match any KeyEvent and will make it so the user is not able to escape
-   * from Full Screen mode. 'null' indicates that the default platform specific key combination should be used.
+   * Specifies the KeyCombination that will allow the user to exit full screen mode. A value of
+   * KeyCombination.NO_MATCH will not match any KeyEvent and will make it so the user is not able to
+   * escape from Full Screen mode. 'null' indicates that the default platform specific key
+   * combination should be used.
    */
   var fullscreenExitCombination: Any?
     get() = Frontend.fullscreenExitCombinationProperty.value
