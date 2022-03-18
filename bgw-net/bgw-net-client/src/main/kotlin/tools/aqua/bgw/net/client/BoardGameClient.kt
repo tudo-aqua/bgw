@@ -253,7 +253,7 @@ protected constructor(
                   ?: checkNotNull(this@BoardGameClient::onGameActionReceived.javaMethod)
 
           // Invoke receiver
-          method.invoke(payload, message.sender)
+          method.invoke(this@BoardGameClient, payload, message.sender)
 
           return@launch
         } catch (_: JsonMappingException) {}
