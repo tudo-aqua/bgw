@@ -103,7 +103,7 @@ class NetworkClientService(
   // region Game messages
   /** GameActionReceiver for [MauMauInitGameAction]. */
   @GameActionReceiver
-  fun onInitReceived(message: MauMauInitGameAction, sender: String) {
+  private fun onInitReceived(message: MauMauInitGameAction, sender: String) {
     println("Received InitGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       logicController.initGame(message)
@@ -113,7 +113,7 @@ class NetworkClientService(
 
   /** GameActionReceiver for [MauMauInitGameAction]. */
   @GameActionReceiver
-  fun onShuffleDrawStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
+  private fun onShuffleDrawStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
     println("Received MauMauShuffleStackGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       logicController.shuffleStack(message)
@@ -163,7 +163,7 @@ class NetworkClientService(
 
   /** GameActionReceiver for [MauMauEndGameAction]. */
   @GameActionReceiver
-  fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
+  private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
     println("Received EndGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
   }
