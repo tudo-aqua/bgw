@@ -36,6 +36,7 @@ import javafx.stage.StageStyle
 import javafx.util.Duration
 import kotlin.math.min
 import tools.aqua.bgw.builder.FXConverters.toButtonType
+import tools.aqua.bgw.builder.FXConverters.toFXImage
 import tools.aqua.bgw.builder.SceneBuilder.buildGame
 import tools.aqua.bgw.builder.SceneBuilder.buildMenu
 import tools.aqua.bgw.core.*
@@ -48,6 +49,7 @@ import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
 /** Frontend JavaFX wrapper. */
@@ -87,6 +89,9 @@ internal class Frontend : Application() {
 
     /** Property for the window title. */
     internal val titleProperty: StringProperty = StringProperty()
+
+    /** Property for the window icon. */
+    internal val iconProperty: Property<ImageVisual?> = Property(null)
 
     /** Property whether application is currently maximized. */
     internal val maximizedProperty = BooleanProperty(false)
@@ -333,6 +338,11 @@ internal class Frontend : Application() {
                   if (!isFullScreen && !isMaximized) height = nV
                 }
             titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
+            iconProperty.setGUIListenerAndInvoke(iconProperty.value) { _, nV ->
+              icons.clear()
+
+              if (nV != null) icons.add(nV.image.toFXImage())
+            }
 
             maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }
             fullScreenProperty().addListener { _, _, nV -> fullscreenProperty.setSilent(nV) }
