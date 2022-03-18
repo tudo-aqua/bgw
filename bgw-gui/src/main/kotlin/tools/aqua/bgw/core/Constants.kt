@@ -143,8 +143,7 @@ const val DEFAULT_TOGGLE_BUTTON_WIDTH: Double = DEFAULT_BUTTON_WIDTH
 const val DEFAULT_TOGGLE_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
 
 /** Default [RadioButton] width. */
-const val DEFAULT_RADIO_BUTTON_WIDTH: Double =
-    DEFAULT_BUTTON_HEIGHT // Note: Used height here for square
+const val DEFAULT_RADIO_BUTTON_WIDTH: Double = DEFAULT_BUTTON_WIDTH
 
 /** Default [RadioButton] height. */
 const val DEFAULT_RADIO_BUTTON_HEIGHT: Double = DEFAULT_BUTTON_HEIGHT
