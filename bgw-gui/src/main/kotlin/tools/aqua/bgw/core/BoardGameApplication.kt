@@ -30,6 +30,7 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -62,6 +63,13 @@ open class BoardGameApplication(
     get() = Frontend.titleProperty.value
     set(value) {
       Frontend.titleProperty.value = value
+    }
+
+  /** Window icon displayed in the title and task bar. */
+  var icon: ImageVisual?
+    get() = Frontend.iconProperty.value
+    set(value) {
+      Frontend.iconProperty.value = value
     }
 
   /**
