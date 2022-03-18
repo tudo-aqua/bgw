@@ -78,7 +78,7 @@ class MessageService(
     val player = session.player
     val game = player.game
     var errors: Optional<List<String>> = Optional.empty()
-    val status =
+    /*val status =
         if (game != null)
             try {
               errors = validationService.validate(msg, game.gameID)
@@ -87,16 +87,16 @@ class MessageService(
             } catch (exception: JsonSchemaNotFoundException) {
               GameActionResponseStatus.SERVER_ERROR
             }
-        else GameActionResponseStatus.NO_ASSOCIATED_GAME
+        else GameActionResponseStatus.NO_ASSOCIATED_GAME*/
 
-    player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyList() }))
+    player.session.sendMessage(GameActionResponse(GameActionResponseStatus.SUCCESS, errors.orElseGet { emptyList() }))
 
-    if (status == GameActionResponseStatus.SUCCESS) {
-      game?.broadcastMessage(
-          player,
-          GameActionMessage(
-              payload = msg.payload, prettyPrint = msg.prettyPrint, sender = player.name))
-    }
+    //if (status == GameActionResponseStatus.SUCCESS) {
+    game?.broadcastMessage(
+        player,
+        GameActionMessage(
+            payload = msg.payload, prettyPrint = msg.prettyPrint, sender = player.name))
+    //}
   }
 
   /**
