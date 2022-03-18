@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.JsonMappingException
@@ -74,12 +76,11 @@ protected constructor(
             callback = this)
 
     gameActionClasses = getAnnotatedClasses()
-    gameActionReceivers =
-        getAnnotatedReceivers(this::class.java, gameActionClasses).apply {
+    gameActionReceivers = getAnnotatedReceivers(this::class.java, gameActionClasses) /*.apply {
           putIfAbsent(
               GameAction::class.java,
               this@BoardGameClient::onGameActionReceived.javaMethod!!) // Set Fallback
-        }
+        }*/
   }
 
   // region Connect / Disconnect
@@ -227,15 +228,26 @@ protected constructor(
    * @param message The [GameActionMessage] received from the opponent that is to be delegated.
    */
   internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
-    for (receiver in gameActionReceivers.entries) {
-      val target = receiver.key
-      val method = receiver.value
+    for (target in gameActionClasses) {
       try {
-        method.invoke(this, wsClient.mapper.readValue(message.payload, target), message.sender)
+        // Try de-serializing payload into target type
+        val payload = wsClient.mapper.readValue(message.payload, target)
+
+        // Find receiver method for target, or catchall fallback if none specified
+        val method =
+            gameActionReceivers.getOrDefault(target, gameActionReceivers[GameAction::class.java])
+                ?: this::onGameActionReceived.javaMethod!!
+
+        // Invoke receiver
+        method.invoke(payload, message.sender)
+
         return
       } catch (_: JsonMappingException) {}
     }
-    error("No receiver triggered.") // TODO: remove
+
+    System.err.println(
+        "Received GameActionMessage $message but no target class was Found. " +
+            "Create class annotated @GameActionClass extending GameAction in your classpath.")
   }
   // endregion
 }
