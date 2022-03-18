@@ -117,7 +117,11 @@ object LayoutNodeBuilder {
         gridView.renderedRowHeights.sum() +
             (gridView.renderedRowHeights.size - 1) * gridView.spacing
 
-    nodes.forEach { triple -> refreshGridNode(gridView, triple) }
+    nodes.forEach { triple ->
+      refreshGridNode(gridView, triple)
+      triple.second.heightProperty.guiListener = { _, _ -> refreshGrid(scene, gridView) }
+      triple.second.widthProperty.guiListener = { _, _ -> refreshGrid(scene, gridView) }
+    }
   }
 
   /** Refreshes grid node. */
