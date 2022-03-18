@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TOGGLE_BUTTON_WIDTH
 import tools.aqua.bgw.util.Font
@@ -44,7 +45,11 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [ToggleButton]. Default: 0.
  * @param width Width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].
  * @param height Height for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_HEIGHT].
+ * @param text Text to be displayed for this [ToggleButton].
  * @param font Font to be used for this [ToggleButton]. Default: default [Font] constructor.
+ * @param alignment Alignment to be used for this [ToggleButton].
+ * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width. Default:
+ * `false`.
  * @param isSelected The initial state for this [ToggleButton]. Default: `false`.
  * @param toggleGroup The ToggleGroup of this [ToggleButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY].
@@ -56,7 +61,10 @@ class ToggleButton(
     posY: Number = 0,
     width: Number = DEFAULT_TOGGLE_BUTTON_WIDTH,
     height: Number = DEFAULT_TOGGLE_BUTTON_HEIGHT,
+    text: String = "",
     font: Font = Font(),
+    alignment: Alignment = Alignment.CENTER_LEFT,
+    isWrapText: Boolean = false,
     isSelected: Boolean = false,
     toggleGroup: ToggleGroup = ToggleGroup(),
     visual: Visual = Visual.EMPTY
@@ -66,7 +74,10 @@ class ToggleButton(
         posY = posY,
         width = width,
         height = height,
+        text = text,
         font = font,
+        alignment = alignment,
+        isWrapText = isWrapText,
         isSelected = isSelected,
         toggleGroup = toggleGroup,
         visual = visual)

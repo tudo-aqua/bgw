@@ -17,12 +17,23 @@
 
 package tools.aqua.bgw.builder
 
-import com.jfoenix.controls.JFXComboBox
+import com.jfoenix.controls.*
 import java.awt.Color
+import javafx.beans.property.BooleanProperty as FXBooleanProperty
+import javafx.beans.property.ObjectProperty as FXObjectProperty
 import javafx.beans.property.ReadOnlyStringWrapper
+import javafx.beans.property.StringProperty as FXStringProperty
+import javafx.geometry.Pos
+import javafx.scene.control.ColorPicker as FXColorPicker
+import javafx.scene.control.Label as FXLabel
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
+import javafx.scene.control.ListView as FXListView
+import javafx.scene.control.ProgressBar as FXProgressBar
 import javafx.scene.control.TableColumn
+import javafx.scene.control.TableView as FXTableView
+import javafx.scene.control.TextArea as FXTextArea
+import javafx.scene.control.TextField as FXTextField
 import javafx.scene.layout.Region
 import tools.aqua.bgw.builder.FXConverters.toFXColor
 import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
@@ -50,75 +61,214 @@ object UINodeBuilder {
         is ProgressBar -> buildProgressBar(uiComponent)
       }
 
+  // region Build components
   /** Builds [Labeled]. */
-  private fun buildLabel(label: Label): Region {
-    val node = javafx.scene.control.Label()
-    node.textProperty().bindTextProperty(label)
-    node.alignmentProperty().bindAlignmentProperty(label)
-    label.bindWrapText(node)
-    return node
-  }
-
-  private fun LabeledUIComponent.bindWrapText(labeled: Labeled): Unit =
-      isWrapTextProperty.setGUIListenerAndInvoke(isWrapText) { _, newValue ->
-        labeled.isWrapText = newValue
+  private fun buildLabel(label: Label): Region =
+      FXLabel().apply {
+        textProperty().bindTextProperty(label)
+        alignmentProperty().bindAlignmentProperty(label)
+        bindWrapTextProperty(label.isWrapTextProperty)
       }
 
   /** Builds [Button]. */
-  private fun buildButton(button: Button): Region {
-    val node = com.jfoenix.controls.JFXButton()
-    node.textProperty().bindTextProperty(button)
-    node.alignmentProperty().bindAlignmentProperty(button)
-    button.bindWrapText(node)
-    return node
-  }
+  private fun buildButton(button: Button): Region =
+      JFXButton().apply {
+        textProperty().bindTextProperty(button)
+        alignmentProperty().bindAlignmentProperty(button)
+        bindWrapTextProperty(button.isWrapTextProperty)
+      }
 
   /** Builds [TextArea]. */
-  private fun buildTextArea(textArea: TextArea): Region {
-    val node = javafx.scene.control.TextArea(textArea.textProperty.value)
-
-    node.textProperty().bindTextProperty(textArea)
-    node.promptTextProperty().bindPromptProperty(textArea)
-    return node
-  }
+  private fun buildTextArea(textArea: TextArea): Region =
+      FXTextArea(textArea.textProperty.value).apply {
+        textProperty().bindTextProperty(textArea)
+        promptTextProperty().bindPromptProperty(textArea)
+      }
 
   /** Builds [TextField]. */
-  private fun buildTextField(textField: TextField): Region {
-    val node = javafx.scene.control.TextField(textField.textProperty.value)
-
-    node.textProperty().bindTextProperty(textField)
-    node.promptTextProperty().bindPromptProperty(textField)
-    return node
-  }
+  private fun buildTextField(textField: TextField): Region =
+      FXTextField(textField.textProperty.value).apply {
+        textProperty().bindTextProperty(textField)
+        promptTextProperty().bindPromptProperty(textField)
+      }
 
   /** Builds [ComboBox]. */
   // TODO: apply format function to selected item and listen on format function changes
-  private fun <T> buildComboBox(comboBox: ComboBox<T>): Region {
-    val node = JFXComboBox<T>()
-    comboBox.observableItemsList.setGUIListenerAndInvoke(emptyList()) { _, _ ->
-      node.items.clear()
-      comboBox.items.forEach { node.items.add(it) }
-      node.setCellFactory(comboBox)
-    }
-    node.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
-      comboBox.selectedItem = newValue
-    }
-    comboBox.selectedItemProperty.setInternalListenerAndInvoke(comboBox.selectedItem) { _, newValue
-      ->
-      if (newValue != null) {
-        node.selectionModel.select(newValue)
+  private fun <T> buildComboBox(comboBox: ComboBox<T>): Region =
+      JFXComboBox<T>().apply {
+        comboBox.observableItemsList.setGUIListenerAndInvoke(emptyList()) { _, _ ->
+          items.clear()
+          comboBox.items.forEach { items.add(it) }
+          setCellFactory(comboBox)
+        }
+        selectionModel.selectedItemProperty().addListener { _, _, newValue ->
+          comboBox.selectedItem = newValue
+        }
+        comboBox.selectedItemProperty.setInternalListenerAndInvoke(comboBox.selectedItem) {
+            _,
+            newValue ->
+          if (newValue != null) {
+            selectionModel.select(newValue)
+          }
+        }
+        promptText = comboBox.prompt
+        // font
+        comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, _ ->
+          buttonCell.style = comboBox.font.toFXFontCSS()
+          buttonCell.textFill = comboBox.font.color.toFXColor()
+          setCellFactory(comboBox)
+        }
       }
-    }
-    node.promptText = comboBox.prompt
-    // font
-    comboBox.fontProperty.setGUIListenerAndInvoke(comboBox.font) { _, _ ->
-      node.buttonCell.style = comboBox.font.toFXFontCSS()
-      node.buttonCell.textFill = comboBox.font.color.toFXColor()
-      node.setCellFactory(comboBox)
-    }
-    return node
+
+  /** Builds [CheckBox]. */
+  private fun buildCheckBox(checkBox: CheckBox): Region =
+      JFXCheckBox().apply {
+        textProperty().bindTextProperty(checkBox)
+        allowIndeterminateProperty().bindBooleanProperty(checkBox.isIndeterminateAllowedProperty)
+        indeterminateProperty().bindBooleanProperty(checkBox.isIndeterminateProperty)
+        selectedProperty().bindBooleanProperty(checkBox.isCheckedProperty)
+        alignmentProperty().bindAlignmentProperty(checkBox)
+        bindWrapTextProperty(checkBox.isWrapTextProperty)
+      }
+
+  /** Builds [ColorPicker]. */
+  private fun buildColorPicker(colorPicker: ColorPicker): Region =
+      FXColorPicker().apply {
+        colorPicker.selectedColorProperty.setGUIListenerAndInvoke(colorPicker.selectedColor) {
+            _,
+            newValue ->
+          value = newValue.toFXColor()
+        }
+        valueProperty().addListener { _, _, nV ->
+          colorPicker.selectedColor =
+              Color(nV.red.toFloat(), nV.green.toFloat(), nV.blue.toFloat(), nV.opacity.toFloat())
+        }
+      }
+
+  /** Builds [ListView]. */
+  private fun <T> buildListView(listView: ListView<T>): Region =
+      FXListView<T>().apply {
+        listView.let {
+          it.items.setGUIListenerAndInvoke(emptyList()) { _, _ ->
+            items.setAll(listView.items.list)
+          }
+          it.fontProperty.setGUIListenerAndInvoke(it.font) { _, font ->
+            cellFactory =
+                javafx.util.Callback {
+                  object : ListCell<T>() {
+                    override fun updateItem(item: T, empty: Boolean) {
+                      super.updateItem(item, empty)
+
+                      this.style = font.toFXFontCSS()
+                      this.textFill = font.color.toFXColor()
+                      this.text =
+                          if (empty) ""
+                          else listView.formatFunction?.invoke(item) ?: item.toString()
+                    }
+                  }
+                }
+          }
+          it.orientationProperty.setGUIListenerAndInvoke(it.orientation) { _, nV ->
+            orientationProperty().value = nV.toJavaFXOrientation()
+          }
+        }
+      }
+
+  /** Builds [ToggleButton]. */
+  private fun buildToggleButton(toggleButton: ToggleButton): Region =
+      JFXToggleButton().apply {
+        textProperty().bindTextProperty(toggleButton)
+        alignmentProperty().bindAlignmentProperty(toggleButton)
+        selectedProperty().bindBooleanProperty(toggleButton.selectedProperty)
+        bindWrapTextProperty(toggleButton.isWrapTextProperty)
+      }
+
+  /** Builds [RadioButton]. */
+  private fun buildRadioButton(radioButton: RadioButton): Region =
+      JFXRadioButton().apply {
+        textProperty().bindTextProperty(radioButton)
+        alignmentProperty().bindAlignmentProperty(radioButton)
+        selectedProperty().addListener { _, _, nV -> radioButton.isSelected = nV }
+
+        radioButton.selectedProperty.setGUIListenerAndInvoke(radioButton.isSelected) { _, nV ->
+          selectedProperty().value =
+              if (nV || !radioButton.toggleGroup.buttons.none { it.isSelected }) nV
+              else true // Reselect if attempting to deselect last radio button
+        }
+      }
+
+  /** Builds [ProgressBar]. */
+  private fun buildProgressBar(progressBar: ProgressBar): Region =
+      FXProgressBar().apply {
+        progressBar.progressProperty.setGUIListenerAndInvoke(progressBar.progress) { _, nV ->
+          progress = if (nV < 0.0) 0.0 else nV
+        }
+        progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) { _, nV ->
+          progressBar.internalCSS =
+              "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
+        }
+      }
+
+  /** Builds [TableView]. */
+  private fun <T> buildTableView(tableView: TableView<T>): Region =
+      FXTableView<T>().apply {
+        populateTableView(tableView)
+        tableView.items.guiListener = { _, _ -> populateTableView(tableView) }
+        tableView.columns.guiListener = { _, _ -> populateTableView(tableView) }
+        isEditable = false
+      }
+  // endregion
+
+  // region Bind properties
+  /** Binds [TextInputUIComponent.textProperty]. */
+  private fun FXStringProperty.bindTextProperty(labeled: TextInputUIComponent) {
+    // Framework -> JavaFX
+    labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
+    // JavaFX -> Framework
+    addListener { _, _, new -> labeled.text = new }
   }
 
+  /** Binds [LabeledUIComponent.textProperty]. */
+  private fun FXStringProperty.bindTextProperty(labeled: LabeledUIComponent) {
+    // Framework -> JavaFX
+    labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
+    // JavaFX -> Framework
+    addListener { _, _, new -> labeled.text = new }
+  }
+
+  /** Binds [TextInputUIComponent.promptProperty]. */
+  private fun FXStringProperty.bindPromptProperty(labeled: TextInputUIComponent) {
+    // Framework -> JavaFX
+    labeled.promptProperty.setGUIListenerAndInvoke(labeled.prompt) { _, nV -> value = nV }
+  }
+
+  /** Binds [LabeledUIComponent.alignmentProperty]. Framework -> JavaFX only. */
+  private fun FXObjectProperty<Pos>.bindAlignmentProperty(labeled: LabeledUIComponent) {
+    // Framework -> JavaFX
+    labeled.alignmentProperty.setGUIListenerAndInvoke(labeled.alignment) { _, nV ->
+      value = nV.toFXPos()
+    }
+  }
+
+  /** Binds [LabeledUIComponent.isWrapTextProperty]. */
+  private fun Labeled.bindWrapTextProperty(booleanProperty: BooleanProperty) {
+    // Framework -> JavaFX
+    booleanProperty.setGUIListenerAndInvoke(booleanProperty.value) { _, newValue ->
+      isWrapText = newValue
+    }
+  }
+
+  /** Binds [BooleanProperty]. */
+  private fun FXBooleanProperty.bindBooleanProperty(booleanProperty: BooleanProperty) {
+    // Framework -> JavaFX
+    booleanProperty.setGUIListenerAndInvoke(booleanProperty.value) { _, nV -> value = nV }
+
+    // JavaFX -> Framework
+    addListener { _, _, nV -> booleanProperty.value = nV }
+  }
+  // endregion
+
+  // region Helper
   /** Sets [ComboBox] cell factory . */
   private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
     cellFactory =
@@ -136,115 +286,8 @@ object UINodeBuilder {
         }
   }
 
-  /** Builds [CheckBox]. */
-  private fun buildCheckBox(checkBox: CheckBox): Region {
-    val node = com.jfoenix.controls.JFXCheckBox()
-    node.textProperty().bindTextProperty(checkBox)
-    node.allowIndeterminateProperty().bindBooleanProperty(checkBox.isIndeterminateAllowedProperty)
-    node.indeterminateProperty().bindBooleanProperty(checkBox.isIndeterminateProperty)
-    node.selectedProperty().bindBooleanProperty(checkBox.isCheckedProperty)
-    node.alignmentProperty().bindAlignmentProperty(checkBox)
-    checkBox.bindWrapText(node)
-    return node
-  }
-
-  /** Builds [ColorPicker]. */
-  private fun buildColorPicker(colorPicker: ColorPicker): Region =
-      javafx.scene.control.ColorPicker().apply {
-        colorPicker.selectedColorProperty.setGUIListenerAndInvoke(colorPicker.selectedColor) {
-            _,
-            newValue ->
-          this.value = newValue.toFXColor()
-        }
-        this.valueProperty().addListener { _, _, newValue ->
-          colorPicker.selectedColor =
-              Color(
-                  newValue.red.toFloat(),
-                  newValue.green.toFloat(),
-                  newValue.blue.toFloat(),
-                  newValue.opacity.toFloat())
-        }
-      }
-
-  /** Builds [ListView]. */
-  private fun <T> buildListView(listView: ListView<T>): Region {
-    val node = javafx.scene.control.ListView<T>()
-
-    listView.apply {
-      items.setGUIListenerAndInvoke(emptyList()) { _, _ -> node.items.setAll(listView.items.list) }
-      fontProperty.setGUIListenerAndInvoke(this.font) { _, font ->
-        node.cellFactory =
-            javafx.util.Callback {
-              object : ListCell<T>() {
-                override fun updateItem(item: T, empty: Boolean) {
-                  super.updateItem(item, empty)
-
-                  this.style = font.toFXFontCSS()
-                  this.textFill = font.color.toFXColor()
-                  this.text =
-                      if (empty) "" else listView.formatFunction?.invoke(item) ?: item.toString()
-                }
-              }
-            }
-      }
-      orientationProperty.setGUIListenerAndInvoke(this.orientation) { _, nV ->
-        node.orientationProperty().value = nV.toJavaFXOrientation()
-      }
-    }
-
-    return node
-  }
-
-  /** Builds [ToggleButton]. */
-  private fun buildToggleButton(toggleButton: ToggleButton): Region {
-    val node = com.jfoenix.controls.JFXToggleButton()
-
-    node.selectedProperty().bindBooleanProperty(toggleButton.selectedProperty)
-
-    return node
-  }
-
-  /** Builds [RadioButton]. */
-  private fun buildRadioButton(radioButton: RadioButton): Region {
-    val node =
-        com.jfoenix.controls.JFXRadioButton().apply {
-          isSelected = radioButton.isSelected
-          selectedProperty().addListener { _, _, nV -> radioButton.isSelected = nV }
-        }
-
-    radioButton.selectedProperty.guiListener =
-        { _, nV ->
-          node.selectedProperty().value =
-              if (nV || !radioButton.toggleGroup.buttons.none { it.isSelected }) nV
-              else true // Reselect if attempting to deselect last radio button
-        }
-
-    return node
-  }
-
-  /** Builds [ProgressBar]. */
-  private fun buildProgressBar(progressBar: ProgressBar): Region =
-      javafx.scene.control.ProgressBar().apply {
-        progressBar.progressProperty.setGUIListenerAndInvoke(progressBar.progress) { _, nV ->
-          this.progress = if (nV < 0.0) 0.0 else nV
-        }
-        progressBar.barColorProperty.setGUIListenerAndInvoke(progressBar.barColor) { _, nV ->
-          progressBar.internalCSS =
-              "-fx-accent: rgba(${nV.red},${nV.green},${nV.blue},${nV.alpha});"
-        }
-      }
-
-  /** Builds [TableView]. */
-  private fun <T> buildTableView(tableView: TableView<T>): Region {
-    val node = javafx.scene.control.TableView<T>().apply { populateTableView(tableView) }
-    tableView.items.guiListener = { _, _ -> node.populateTableView(tableView) }
-    tableView.columns.guiListener = { _, _ -> node.populateTableView(tableView) }
-    node.isEditable = false
-    return node
-  }
-
   /** Sets [TableView] children. */
-  private fun <T> javafx.scene.control.TableView<T>.populateTableView(tableView: TableView<T>) {
+  private fun <T> FXTableView<T>.populateTableView(tableView: TableView<T>) {
     items.clear()
     items.addAll(tableView.items)
     columns.clear()
@@ -258,50 +301,5 @@ object UINodeBuilder {
           })
     }
   }
-
-  /** Binds [TextInputUIComponent.textProperty]. */
-  private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: TextInputUIComponent) {
-    // Framework -> JavaFX
-    labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
-    // JavaFX -> Framework
-    addListener { _, _, new -> labeled.text = new }
-  }
-
-  /** Binds [LabeledUIComponent.textProperty]. */
-  private fun javafx.beans.property.StringProperty.bindTextProperty(labeled: LabeledUIComponent) {
-    // Framework -> JavaFX
-    labeled.textProperty.setGUIListenerAndInvoke(labeled.text) { _, nV -> value = nV }
-    // JavaFX -> Framework
-    addListener { _, _, new -> labeled.text = new }
-  }
-
-  /** Binds [TextInputUIComponent.promptProperty]. */
-  private fun javafx.beans.property.StringProperty.bindPromptProperty(
-      labeled: TextInputUIComponent
-  ) {
-    // Framework -> JavaFX
-    labeled.promptProperty.setGUIListenerAndInvoke(labeled.prompt) { _, nV -> value = nV }
-  }
-
-  /** Binds [LabeledUIComponent.alignmentProperty]. Framework -> JavaFX only. */
-  private fun javafx.beans.property.ObjectProperty<javafx.geometry.Pos>.bindAlignmentProperty(
-      labeled: LabeledUIComponent
-  ) {
-    // Framework -> JavaFX
-    labeled.alignmentProperty.setGUIListenerAndInvoke(labeled.alignment) { _, nV ->
-      value = nV.toFXPos()
-    }
-  }
-
-  /** Binds [BooleanProperty]. */
-  private fun javafx.beans.property.BooleanProperty.bindBooleanProperty(
-      booleanProperty: BooleanProperty
-  ) {
-    // Framework -> JavaFX
-    booleanProperty.guiListener = { _, nV -> value = nV }
-
-    // JavaFX -> Framework
-    value = booleanProperty.value
-    addListener { _, _, nV -> booleanProperty.value = nV }
-  }
+  // endregion
 }

@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_RADIO_BUTTON_WIDTH
 import tools.aqua.bgw.util.Font
@@ -41,13 +42,17 @@ import tools.aqua.bgw.visual.Visual
  * An exception to this rule is, whenever a new [RadioButton] that is currently selected gets added
  * to the ToggleGroup.
  *
+ * Note: Field isWrapText inherited from [BinaryStateButton] has no effect on [RadioButton]s.
+ *
  * @constructor Creates a [RadioButton].
  *
  * @param posX Horizontal coordinate for this [RadioButton]. Default: 0.
  * @param posY Vertical coordinate for this [RadioButton]. Default: 0.
  * @param width Width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
  * @param height Height for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_HEIGHT].
+ * @param text Text to be displayed for this [RadioButton].
  * @param font [Font] to be used to display text.
+ * @param alignment Alignment to be used for this [RadioButton].
  * @param isSelected The initial state for this [RadioButton]. Default: `false`.
  * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
@@ -60,7 +65,9 @@ open class RadioButton(
     posY: Number = 0,
     width: Number = DEFAULT_RADIO_BUTTON_WIDTH,
     height: Number = DEFAULT_RADIO_BUTTON_HEIGHT,
+    text: String = "",
     font: Font = Font(),
+    alignment: Alignment = Alignment.CENTER_LEFT,
     isSelected: Boolean = false,
     toggleGroup: ToggleGroup = ToggleGroup(),
     visual: Visual = Visual.EMPTY
@@ -70,7 +77,10 @@ open class RadioButton(
         posY = posY,
         width = width,
         height = height,
+        text = text,
         font = font,
+        alignment = alignment,
+        isWrapText = false,
         isSelected = isSelected,
         toggleGroup = toggleGroup,
         visual = visual)
