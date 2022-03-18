@@ -334,15 +334,15 @@ internal class Frontend : Application() {
             }
 
         titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
-            iconProperty.setGUIListenerAndInvoke(iconProperty.value) { _, nV ->
-              icons.clear()
+        iconProperty.setGUIListenerAndInvoke(iconProperty.value) { _, nV ->
+          icons.clear()
 
-              if (nV != null) icons.add(nV.image.toFXImage())
-            }
-            fullscreenExitCombinationProperty.setGUIListenerAndInvoke(
-                fullscreenExitCombinationProperty.value) { _, nV ->
-              // fullScreenExitKeyCombination = nV.toFXKeyCombination()
-            }
+          if (nV != null) icons.add(nV.image.toFXImage())
+        }
+        fullscreenExitCombinationProperty.setGUIListenerAndInvoke(
+            fullscreenExitCombinationProperty.value) { _, nV ->
+          // fullScreenExitKeyCombination = nV.toFXKeyCombination()
+        }
 
         // Override isMaximized and isFullscreen if initial value was passed
         when (initialWindowMode) {
