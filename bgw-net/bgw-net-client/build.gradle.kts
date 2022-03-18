@@ -26,6 +26,7 @@ val jacksonVersion = "2.13.1"
 
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
+  implementation(libs.kotlinx.coroutines.core)
   implementation(libs.jackson.databind)
   implementation(libs.jackson.kotlin)
   implementation(libs.javaWebSocket)

@@ -15,12 +15,15 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import java.lang.reflect.Method
 import java.net.URI
 import kotlin.reflect.jvm.javaMethod
+import kotlinx.coroutines.*
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionClassProcessor.getAnnotatedClasses
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
@@ -46,6 +49,7 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  * @param endpoint The server endpoint.
  * @param secret The server secret.
  */
+@OptIn(DelicateCoroutinesApi::class)
 @Suppress("LeakingThis")
 open class BoardGameClient
 protected constructor(
@@ -60,10 +64,13 @@ protected constructor(
   private val wsClient: BGWWebSocketClient
 
   /** All classes annotated with @GameActionClass. */
-  private val gameActionClasses: Set<Class<out GameAction>>
+  private var gameActionClasses: Set<Class<out GameAction>>? = null
 
   /** Mapper for incoming message handlers. */
-  private val gameActionReceivers: Map<Class<out GameAction>, Method>
+  private var gameActionReceivers: Map<Class<out GameAction>, Method>? = null
+
+  /** Coroutines job for initializing annotation processing */
+  private val initializationJob: Job
 
   init {
     wsClient =
@@ -73,12 +80,14 @@ protected constructor(
             secret = secret,
             callback = this)
 
-    gameActionClasses = getAnnotatedClasses()
-    gameActionReceivers =
-        getAnnotatedReceivers(this::class.java, gameActionClasses).apply {
-          putIfAbsent(
-              GameAction::class.java,
-              this@BoardGameClient::onGameActionReceived.javaMethod!!) // Set Fallback
+    initializationJob =
+        GlobalScope.launch {
+          val annotatedClasses = getAnnotatedClasses()
+          val annotatedFunctions =
+              getAnnotatedReceivers(this@BoardGameClient::class.java, annotatedClasses)
+
+          gameActionClasses = annotatedClasses
+          gameActionReceivers = annotatedFunctions
         }
   }
 
@@ -227,15 +236,33 @@ protected constructor(
    * @param message The [GameActionMessage] received from the opponent that is to be delegated.
    */
   internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
-    for (receiver in gameActionReceivers.entries) {
-      val target = receiver.key
-      val method = receiver.value
-      try {
-        method.invoke(this, wsClient.mapper.readValue(message.payload, target), message.sender)
-        return
-      } catch (_: JsonMappingException) {}
+    GlobalScope.launch {
+      if (!initializationJob.isCompleted) initializationJob.join()
+
+      val targetClasses = checkNotNull(gameActionClasses)
+      val targetReceivers = checkNotNull(gameActionReceivers)
+
+      for (target in targetClasses) {
+        try {
+          // Try de-serializing payload into target type
+          val payload = wsClient.mapper.readValue(message.payload, target)
+
+          // Find receiver method for target, or catchall fallback if none specified
+          val method =
+              targetReceivers.getOrDefault(target, targetReceivers[GameAction::class.java])
+                  ?: checkNotNull(this@BoardGameClient::onGameActionReceived.javaMethod)
+
+          // Invoke receiver
+          method.invoke(payload, message.sender)
+
+          return@launch
+        } catch (_: JsonMappingException) {}
+      }
+
+      System.err.println(
+          "Received GameActionMessage $message but no target class was Found. " +
+              "Create class annotated @GameActionClass extending GameAction in your classpath.")
     }
-    error("No receiver triggered.") // TODO: remove
   }
   // endregion
 }
