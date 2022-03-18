@@ -106,5 +106,5 @@ interface Refreshable {
 
   /** Show generic server error. */
   fun onServerError()
-	// endregion
+  // endregion
 }
