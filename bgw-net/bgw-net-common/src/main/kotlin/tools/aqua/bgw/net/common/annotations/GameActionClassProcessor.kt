@@ -22,11 +22,33 @@ import tools.aqua.bgw.net.common.GameAction
 
 object GameActionClassProcessor {
 
+  /**
+   * Packages excluded from classpath search for @GameAction annotation. Improves performance by
+   * filtering illegal packages instead of loading them.
+   */
+  private val forbiddenPackagePrefix =
+      listOf(
+          "META-INF",
+          "kotlin",
+          "javax",
+          "javafx",
+          "com.jfoenix",
+          "tools.aqua.bgw",
+          "com.sun",
+          "com.google",
+          "com.fasterxml",
+          "org.java_websocket",
+          "org.jetbrains",
+          "org.intellij",
+          "org.slf4j",
+          "org.checkerframework")
+
   @Suppress("UNCHECKED_CAST")
   fun getAnnotatedClasses(): Set<Class<out GameAction>> =
       ClassPath.from(ClassLoader.getSystemClassLoader())
           .allClasses
-          .mapNotNull { clazz -> clazz.loadOrNull() }
+          .filter { it.isCandidate() }
+          .mapNotNull { it.loadOrNull() }
           .filter {
             val isGameAction = GameAction::class.java.isAssignableFrom(it)
             val isAnnotationPresent = it.isAnnotationPresent(GameActionClass::class.java)
@@ -45,6 +67,10 @@ object GameActionClassProcessor {
           }
           .toSet() as
           Set<Class<out GameAction>>
+
+  private fun ClassPath.ClassInfo.isCandidate(): Boolean =
+      packageName.startsWith("tools.aqua.bgw.examples") ||
+          forbiddenPackagePrefix.none { packageName.startsWith(it) }
 
   private fun ClassPath.ClassInfo.loadOrNull(): Class<*>? =
       try {
