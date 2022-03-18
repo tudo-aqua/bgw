@@ -24,18 +24,24 @@ import tools.aqua.bgw.util.Coordinate
 /**
  * [DragDataObject] data class.
  *
- * @property draggedComponent currently dragged [DynamicComponentView].
- * @property draggedStackPane stackPane of currently dragged [DynamicComponentView].
- * @property mouseStartCoord mouse coordinate relative to [draggedComponent] at drag start.
- * @property posStartCoord coordinate of [draggedComponent] at drag start.
- * @property relativeParentRotation rotation of [draggedComponent] relative to parent.
- * @property rollback rollback function to roll back changes made during drag.
+ * @property draggedComponent Currently dragged [DynamicComponentView].
+ * @property draggedStackPane StackPane of currently dragged [DynamicComponentView].
+ * @property mouseStartCoord Mouse coordinate relative to [draggedComponent] at drag start.
+ * @property posStartCoord Coordinate of [draggedComponent] at drag start.
+ * @property relativeRotation Rotation of [draggedComponent] relative to scene.
+ * @property initialPosX The initial posX of the [draggedComponent].
+ * @property initialPosY The initial posY of the [draggedComponent].
+ * @property initialRotation The initial rotation of the [draggedComponent].
+ * @property rollback Rollback function to roll back changes made during drag.
  */
-internal class DragDataObject(
+internal data class DragDataObject(
     val draggedComponent: DynamicComponentView,
     val draggedStackPane: StackPane,
-    var mouseStartCoord: Coordinate,
-    var posStartCoord: Coordinate,
-    var relativeParentRotation: Double,
-    var rollback: (() -> Unit) = {}
+    val mouseStartCoord: Coordinate,
+    val posStartCoord: Coordinate,
+    val relativeRotation: Double,
+    val initialPosX: Double,
+    val initialPosY: Double,
+    val initialRotation: Double,
+    val rollback: (() -> Unit) = {}
 )

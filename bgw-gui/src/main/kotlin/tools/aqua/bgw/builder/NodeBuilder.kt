@@ -18,10 +18,9 @@
 package tools.aqua.bgw.builder
 
 import javafx.event.EventHandler
-import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import kotlin.math.min
+import tools.aqua.bgw.builder.DragDropBuilder.registerDragEvents
 import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.toMouseEvent
@@ -30,15 +29,12 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.UIComponent
-import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
-import tools.aqua.bgw.util.Coordinate
 
 /** NodeBuilder. Factory for all BGW nodes. */
 object NodeBuilder {
@@ -105,152 +101,6 @@ object NodeBuilder {
     node.setOnKeyPressed { onKeyPressed?.invoke(it.toKeyEvent()) }
     node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
     node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
-  }
-
-  private fun DynamicComponentView.registerDragEvents(
-      stackPane: StackPane,
-      scene: Scene<out ComponentView>
-  ) {
-    val isMouseInitiallyTransparent = stackPane.isMouseTransparent
-
-    stackPane.onDragDetected =
-        EventHandler {
-          if (isDraggable && scene.draggedComponentProperty.value == null) {
-            onDragDetected(scene as BoardGameScene, it)
-            stackPane.isMouseTransparent = true
-            stackPane.startFullDrag()
-          }
-        }
-
-    stackPane.onDragDropped =
-        EventHandler {
-          scene.draggedComponentProperty.value = null
-          stackPane.isMouseTransparent = isMouseInitiallyTransparent
-        }
-  }
-
-  private fun DynamicComponentView.onDragDetected(scene: BoardGameScene, e: MouseEvent) {
-    val mouseStartCoord =
-        Coordinate(xCoord = e.sceneX / Frontend.sceneScale, yCoord = e.sceneY / Frontend.sceneScale)
-
-    val pathToChild = scene.findPathToChild(this)
-
-    var posStartCoord =
-        Coordinate(
-            xCoord = pathToChild.sumOf { t -> t.posX }, yCoord = pathToChild.sumOf { t -> t.posY })
-
-    val rollback: (() -> Unit) =
-        when (val parent = parent) {
-          is GameComponentContainer<*> -> {
-            parent.findRollback(this as GameComponentView)
-          }
-          is GridPane<*> -> {
-            // calculate position in grid
-            posStartCoord += parent.getActualChildPosition(this) ?: Coordinate()
-
-            parent.findRollback(this)
-          }
-          is Pane<*> -> {
-            parent.findRollback(this)
-          }
-          scene.rootNode -> {
-            findRollbackOnRoot(scene)
-          }
-          else -> {
-            {}
-          }
-        }
-
-    val relativeParentRotation =
-        if (pathToChild.size > 1) pathToChild.drop(1).sumOf { t -> t.rotation } else 0.0
-
-    val dragDataObject =
-        DragDataObject(
-            this,
-            checkNotNull(scene.componentsMap[this]),
-            mouseStartCoord,
-            posStartCoord,
-            relativeParentRotation,
-            rollback)
-
-    val newCoords = SceneBuilder.transformCoordinatesToScene(e, dragDataObject)
-
-    removeFromParent()
-    parent = scene.dragGestureRootNode
-    posX = newCoords.xCoord
-    posY = newCoords.yCoord
-    scene.draggedComponentProperty.value = dragDataObject
-    scene.dragTargetsBelowMouse.clear()
-
-    isDragged = true
-    onDragGestureStarted?.invoke(DragEvent(this))
-  }
-
-  /** Calculates rollback for [GameComponentContainer]s. */
-  private fun GameComponentContainer<*>.findRollback(component: GameComponentView): (() -> Unit) {
-    val index = observableComponents.indexOf(component)
-    val initialX = component.posX
-    val initialY = component.posY
-
-    return {
-      component.posX = initialX
-      component.posY = initialY
-      component.parent = null
-      @Suppress("UNCHECKED_CAST")
-      (this as GameComponentContainer<GameComponentView>).add(
-          component, min(observableComponents.size, index))
-    }
-  }
-
-  /** Calculates rollback for [GridPane]s. */
-  private fun GridPane<*>.findRollback(component: ComponentView): (() -> Unit) {
-    val element =
-        grid.find { iteratorElement -> iteratorElement.component == component } ?: return {}
-
-    if (element.component == null)
-        throw ConcurrentModificationException(
-            "Grid was modified while calculating drag drop rollback.")
-
-    val initialX = element.component.posX
-    val initialY = element.component.posY
-    val initialColumnIndex = element.columnIndex
-    val initialRowIndex = element.rowIndex
-
-    return {
-      component.posX = initialX
-      component.posY = initialY
-      component.parent = null
-      @Suppress("UNCHECKED_CAST")
-      (this as GridPane<ComponentView>)[initialColumnIndex, initialRowIndex] = component
-    }
-  }
-
-  /** Calculates rollback for [Pane]s. */
-  private fun Pane<*>.findRollback(component: ComponentView): (() -> Unit) {
-    val index = observableComponents.indexOf(component)
-    val initialX = component.posX
-    val initialY = component.posY
-
-    return {
-      component.posX = initialX
-      component.posY = initialY
-      component.parent = null
-      @Suppress("UNCHECKED_CAST")
-      (this as Pane<ComponentView>).add(
-          this as ComponentView, min(observableComponents.size, index))
-    }
-  }
-
-  private fun DynamicComponentView.findRollbackOnRoot(scene: BoardGameScene): (() -> Unit) {
-    val initialX = posX
-    val initialY = posY
-
-    return {
-      posX = initialX
-      posY = initialY
-      parent = null
-      scene.addComponents(this)
-    }
   }
 
   /** Registers observers. */
