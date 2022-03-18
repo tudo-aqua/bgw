@@ -93,6 +93,8 @@ internal class Frontend : Application() {
     /** Property for the window icon. */
     internal val iconProperty: Property<ImageVisual?> = Property(null)
 
+    internal val fullscreenExitCombinationProperty: Property<Any?> = Property(null)
+
     /** Property whether application is currently maximized. */
     internal val maximizedProperty = BooleanProperty(false)
 
@@ -342,6 +344,9 @@ internal class Frontend : Application() {
               icons.clear()
 
               if (nV != null) icons.add(nV.image.toFXImage())
+            }
+            fullscreenExitCombinationProperty.setGUIListenerAndInvoke(fullscreenExitCombinationProperty.value) { _, nV ->
+              //fullScreenExitKeyCombination = nV.toFXKeyCombination()
             }
 
             maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }
