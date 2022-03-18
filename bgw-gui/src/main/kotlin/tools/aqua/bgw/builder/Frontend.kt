@@ -29,6 +29,7 @@ import javafx.application.Platform
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
 import javafx.scene.Scene
+import javafx.scene.control.Label
 import javafx.scene.effect.GaussianBlur
 import javafx.scene.layout.Pane
 import javafx.stage.Stage
@@ -85,14 +86,18 @@ internal class Frontend : Application() {
     /** Initial aspect ratio passed to [BoardGameApplication]. */
     internal lateinit var initialAspectRatio: AspectRatio
 
+    /** Initial window mode passed to [BoardGameApplication]. */
+    internal var initialWindowMode: WindowMode? = null
+
+    // region Properties
     /** Property for the window title. */
     internal val titleProperty: StringProperty = StringProperty()
 
     /** Property whether application is currently maximized. */
-    internal val maximizedProperty = BooleanProperty(false)
+    internal val isMaximizedProperty = BooleanProperty(false)
 
     /** Property whether application is currently fullscreen. */
-    internal val fullscreenProperty = BooleanProperty(false)
+    internal val isFullScreenProperty = BooleanProperty(false)
 
     /** Property for the current application width. */
     internal val widthProperty =
@@ -257,7 +262,7 @@ internal class Frontend : Application() {
             children.addAll(activePanes)
           }
 
-      primaryStage?.scene = Scene(scenePane)
+      primaryStage?.scene?.root = scenePane
 
       primaryStage?.forceRefresh()
     }
@@ -295,59 +300,71 @@ internal class Frontend : Application() {
      * @param stage application stage.
      */
     internal fun startApplication(stage: Stage) {
-      val primaryStage =
-          stage.apply {
-            // Initialize default DECORATED stage style allowing minimizing
-            initStyle(StageStyle.DECORATED)
+      stage.apply {
+        // Create dummy scene for fullscreen
+        scene = Scene(Label())
 
-            val monitorHeight = Toolkit.getDefaultToolkit().screenSize.height
+        // Initialize default DECORATED stage style allowing minimizing
+        initStyle(StageStyle.DECORATED)
 
-            // Set dimensions according to screen resolution and aspect ratio or, fixed height and
-            // width
-            height =
-                if (heightProperty.value > 0) heightProperty.value
-                else monitorHeight * DEFAULT_WINDOW_BORDER
-            width =
-                if (widthProperty.value > 0) widthProperty.value
-                else height * initialAspectRatio.ratio
+        val monitorHeight = Toolkit.getDefaultToolkit().screenSize.height
 
-            // reflect new window size
-            heightProperty.value = height
-            widthProperty.value = width
+        // Set dimensions according to screen resolution and aspect ratio or, fixed height and width
+        height =
+            if (heightProperty.value > 0) heightProperty.value
+            else monitorHeight * DEFAULT_WINDOW_BORDER
+        width =
+            if (widthProperty.value > 0) widthProperty.value else height * initialAspectRatio.ratio
 
-            // Set internal listeners as GUI listeners would get invoked in setSilent in FX -> BGW
-            // direction
-            maximizedProperty.setInternalListenerAndInvoke(maximizedProperty.value) { _, nV ->
-              isMaximized = nV
-            }
-            fullscreenProperty.setInternalListenerAndInvoke(fullscreenProperty.value) { _, nV ->
-              Platform.runLater { isFullScreen = nV }
+        // reflect new window size
+        heightProperty.value = height
+        widthProperty.value = width
+
+        widthProperty.internalListener = { _, nV -> if (!isFullScreen && !isMaximized) width = nV }
+        heightProperty.internalListener =
+            { _, nV ->
+              if (!isFullScreen && !isMaximized) height = nV
             }
 
-            widthProperty.internalListener =
-                { _, nV ->
-                  if (!isFullScreen && !isMaximized) width = nV
-                }
-            heightProperty.internalListener =
-                { _, nV ->
-                  if (!isFullScreen && !isMaximized) height = nV
-                }
-            titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
+        titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
 
-            maximizedProperty().addListener { _, _, nV -> maximizedProperty.setSilent(nV) }
-            fullScreenProperty().addListener { _, _, nV -> fullscreenProperty.setSilent(nV) }
-
-            heightProperty().addListener { _, _, nV ->
-              heightProperty.setSilent(nV.toDouble())
-              sizeChanged()
-            }
-            widthProperty().addListener { _, _, nV ->
-              widthProperty.setSilent(nV.toDouble())
-              sizeChanged()
-            }
-
-            show()
+        // Override isMaximized and isFullscreen if initial value was passed
+        when (initialWindowMode) {
+          WindowMode.NORMAL -> {
+            isMaximizedProperty.value = false
+            isFullScreenProperty.value = false
           }
+          WindowMode.MAXIMIZED -> {
+            isMaximizedProperty.value = true
+            isFullScreenProperty.value = false
+          }
+          WindowMode.FULLSCREEN -> {
+            isFullScreenProperty.value = true
+          }
+          null -> {}
+        }
+
+        isMaximizedProperty.setGUIListenerAndInvoke(isMaximizedProperty.value) { _, nV ->
+          isMaximized = nV
+        }
+        isFullScreenProperty.setGUIListenerAndInvoke(isFullScreenProperty.value) { _, nV ->
+          isFullScreen = nV
+        }
+
+        maximizedProperty().addListener { _, _, nV -> isMaximizedProperty.setSilent(nV) }
+        fullScreenProperty().addListener { _, _, nV -> isFullScreenProperty.setSilent(nV) }
+
+        heightProperty().addListener { _, _, nV ->
+          heightProperty.setSilent(nV.toDouble())
+          sizeChanged()
+        }
+        widthProperty().addListener { _, _, nV ->
+          widthProperty.setSilent(nV.toDouble())
+          sizeChanged()
+        }
+
+        show()
+      }
 
       menuScene?.let { menuPane = buildMenu(it) }
       boardGameScene?.let { gamePane = buildGame(it) }
@@ -356,12 +373,13 @@ internal class Frontend : Application() {
         backgroundPane.children.clear()
         backgroundPane.children.add(
             VisualBuilder.buildVisual(nV).apply {
-              prefWidthProperty().bind(primaryStage.widthProperty())
-              prefHeightProperty().bind(primaryStage.heightProperty())
+              prefWidthProperty().bind(stage.widthProperty())
+              prefHeightProperty().bind(stage.heightProperty())
             })
       }
 
-      this.primaryStage = primaryStage
+      this.primaryStage = stage
+
       updateScene()
     }
 
