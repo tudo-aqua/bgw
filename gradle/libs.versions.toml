@@ -15,6 +15,7 @@ jekyllDocker = "4.2.0"
 junit = "5.8.2"
 ktor = "2.0.0-beta-1"
 openjfx = "12.0.2"
+guava = "31.1-jre"
 
 [libraries]
 
@@ -31,6 +32,8 @@ hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", vers
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 
 javaWebSocket = { group = "org.java-websocket", name = "Java-WebSocket", version = "1.5.2" }
 

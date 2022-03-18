@@ -22,7 +22,8 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
-import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 
 /**
@@ -100,18 +101,31 @@ class LogicController(val view: Refreshable) {
   }
 
   /**
-   * Processes [InitGameMessage] to initialize game conditions transmitted by host.
+   * Processes [MauMauInitGameAction] to initialize game conditions transmitted by host.
    *
    * @param message Init conditions.
    */
-  fun initGame(message: InitGameMessage) {
+  fun initGame(message: MauMauInitGameAction) {
     initGame(
-        player1 = message.players[1],
-        player2 = message.players[0],
+        player1 = "Host",
+        player2 = "Opponent",
         drawStack = message.drawStack.map { Serialization.deserializeMauMauCard(it) },
-        gameStack = Serialization.deserializeMauMauCard(message.gameStack.first()),
+        gameStack = Serialization.deserializeMauMauCard(message.gameStack),
         hostCards = message.hostCards.map { Serialization.deserializeMauMauCard(it) },
         opponentCards = message.yourCards.map { Serialization.deserializeMauMauCard(it) })
+  }
+
+  /**
+   * Processes [MauMauShuffleStackGameAction] to refresh stacks after shuffle.
+   *
+   * @param message New stacks.
+   */
+  fun shuffleStack(message: MauMauShuffleStackGameAction) {
+    game.drawStack.cards.clear()
+    game.drawStack.cards.addAll(message.drawStack.map { Serialization.deserializeMauMauCard(it) })
+
+    game.gameStack.cards.clear()
+    game.gameStack.cards.add(Serialization.deserializeMauMauCard(message.gameStack))
   }
   // endregion
 
@@ -129,7 +143,8 @@ class LogicController(val view: Refreshable) {
 
     if (game.drawStack.isEmpty()) {
       game.shuffleGameStackBack()
-      view.refreshGameStackShuffledBack() // TODO: Send shuffled stack on network
+      view.refreshGameStackShuffledBack()
+      networkService.sendStackShuffled(game)
     }
 
     if (advance) {

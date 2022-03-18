@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("UseDataClass")
+
 package tools.aqua.bgw.net.server.service
 
 import org.springframework.stereotype.Service

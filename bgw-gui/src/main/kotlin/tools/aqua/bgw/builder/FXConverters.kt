@@ -19,10 +19,14 @@
 
 package tools.aqua.bgw.builder
 
+import java.awt.image.BufferedImage
 import java.util.*
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType as FXButtonType
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
+import javafx.scene.image.WritableImage
 import javafx.scene.input.KeyCode as FXKeyCode
 import javafx.scene.input.KeyEvent as FXKeyEvent
 import javafx.scene.input.MouseButton
@@ -48,6 +52,18 @@ object FXConverters {
           blue / VisualBuilder.MAX_HEX,
           alpha / VisualBuilder.MAX_HEX,
       )
+
+  /** Converts the [BufferedImage] to [Image]. */
+  internal fun BufferedImage.toFXImage(): Image =
+      ImageView(
+              WritableImage(width, height).apply {
+                pixelWriter.let {
+                  repeat(this@toFXImage.width) { x ->
+                    repeat(this@toFXImage.height) { y -> it.setArgb(x, y, getRGB(x, y)) }
+                  }
+                }
+              })
+          .image
 
   /** Converts the BGW [Font] to [javafx.scene.text.Font]. */
   internal fun Font.toFXFontCSS(): String {

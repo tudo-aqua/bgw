@@ -19,11 +19,13 @@ package tools.aqua.bgw.net.server.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
+import java.util.*
+import org.atmosphere.annotation.AnnotationUtil.logger
 import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.Message
-import tools.aqua.bgw.net.common.gamemessage.*
+import tools.aqua.bgw.net.common.message.*
 import tools.aqua.bgw.net.common.notification.Notification
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
@@ -35,6 +37,8 @@ import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
+import tools.aqua.bgw.net.server.service.validation.JsonSchemaNotFoundException
+import tools.aqua.bgw.net.server.service.validation.ValidationService
 
 /** This service handles the text messages received by the web socket server. */
 @Service
@@ -43,106 +47,109 @@ class MessageService(
     private val validationService: ValidationService,
     private val schemasByGameRepository: SchemasByGameRepository,
 ) {
-  private val mapper = ObjectMapper().registerModule(kotlinModule())
+  // region Handle messages
+  /**
+   * Handles incoming messages.
+   *
+   * @param session Sender [WebSocketSession].
+   * @param messageString The message.
+   *
+   * @throws UnsupportedOperationException For unsupported message types.
+   */
+  @Throws(UnsupportedOperationException::class)
+  fun handleMessage(session: WebSocketSession, messageString: String): Unit =
+      when (val message = mapper.readValue(messageString, Message::class.java)) {
+        is GameActionMessage -> handleGameMessage(session, message)
+        is CreateGameMessage -> handleCreateGameMessage(session, message)
+        is JoinGameMessage -> handleJoinGameMessage(session, message)
+        is LeaveGameMessage -> handleLeaveGameMessage(session, message)
+        is Notification -> throw UnsupportedOperationException("Server received notification.")
+        is Response -> throw UnsupportedOperationException("Server received response.")
+        else -> throw UnsupportedOperationException("Unsupported message type.")
+      }
 
-  private fun WebSocketSession.sendMessage(message: Message) =
-      sendMessage(TextMessage(mapper.writeValueAsString(message)))
-
-  private fun Game.broadcastMessage(sender: Player, msg: Message) {
-    for (session in (players - sender).map(Player::session)) {
-      session.sendMessage(msg)
-    }
-  }
-
-  fun handleMessage(session: WebSocketSession, messageString: String) {
-    val message: Message = mapper.readValue(messageString, Message::class.java)
-    println(message)
-    when (message) {
-      is Response -> throw UnsupportedOperationException()
-      is Notification -> throw UnsupportedOperationException()
-      is GameMessage -> handleGameMessage(session, message)
-      is CreateGameMessage -> handleCreateGameMessage(session, message)
-      is JoinGameMessage -> handleJoinGameMessage(session, message)
-      is LeaveGameMessage -> handleLeaveGameMessage(session, message)
-    }
-  }
-
-  private fun handleGameMessage(wsSession: WebSocketSession, gameMessage: GameMessage) {
-    val player = wsSession.player
+  /**
+   * Handles incoming [GameActionMessage].
+   *
+   * @param session The [WebSocketSession].
+   * @param msg The [GameActionMessage] that was received.
+   */
+  private fun handleGameMessage(session: WebSocketSession, msg: GameActionMessage) {
+    val player = session.player
     val game = player.game
-    var errors: List<String>? = null
+    var errors: Optional<List<String>> = Optional.empty()
     val status =
         if (game != null)
             try {
-              errors = validationService.validate(gameMessage, game.gameID)
-              if (errors == null) GameMessageStatus.SUCCESS else GameMessageStatus.INVALID_JSON
+              errors = validationService.validate(msg, game.gameID)
+              if (errors.isEmpty) GameActionResponseStatus.SUCCESS
+              else GameActionResponseStatus.INVALID_JSON
             } catch (exception: JsonSchemaNotFoundException) {
-              GameMessageStatus.SERVER_ERROR
+              GameActionResponseStatus.SERVER_ERROR
             }
-        else GameMessageStatus.NO_ASSOCIATED_GAME
+        else GameActionResponseStatus.NO_ASSOCIATED_GAME
 
-    player.session.sendMessage(
-        when (gameMessage) {
-          is InitializeGameMessage -> InitializeGameResponse(status, errors)
-          is GameActionMessage -> GameActionResponse(status, errors)
-          is EndGameMessage -> EndGameResponse(status, errors)
-        })
+    player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyList() }))
 
-    if (status == GameMessageStatus.SUCCESS) {
+    if (status == GameActionResponseStatus.SUCCESS) {
       game?.broadcastMessage(
           player,
-          when (gameMessage) {
-            is EndGameMessage ->
-                EndGameMessage(
-                    payload = gameMessage.payload,
-                    prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name)
-            is GameActionMessage ->
-                GameActionMessage(
-                    payload = gameMessage.payload,
-                    prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name)
-            is InitializeGameMessage ->
-                InitializeGameMessage(
-                    payload = gameMessage.payload,
-                    prettyPrint = gameMessage.prettyPrint,
-                    sender = player.name)
-          })
+          GameActionMessage(
+              payload = msg.payload, prettyPrint = msg.prettyPrint, sender = player.name))
     }
   }
 
-  private fun handleCreateGameMessage(
-      wsSession: WebSocketSession,
-      createGameMessage: CreateGameMessage
-  ) {
-    val player = wsSession.player
+  /**
+   * Handles incoming [CreateGameMessage].
+   *
+   * @param session The [WebSocketSession].
+   * @param msg The [CreateGameMessage] that was received.
+   */
+  private fun handleCreateGameMessage(session: WebSocketSession, msg: CreateGameMessage) {
+    val player = session.player
     val createGameResponseStatus =
-        if (!schemasByGameRepository.existsById(createGameMessage.gameID))
+        if (schemasByGameRepository.findAll().none { it.gameID == msg.gameID })
             CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
-        else gameService.createGame(createGameMessage.gameID, createGameMessage.sessionID, player)
-    wsSession.sendMessage(CreateGameResponse(createGameResponseStatus))
+        else gameService.createGame(msg.gameID, msg.sessionID, player)
+
+    session.sendMessage(CreateGameResponse(createGameResponseStatus))
   }
 
-  private fun handleJoinGameMessage(wsSession: WebSocketSession, joinGameMessage: JoinGameMessage) {
-    val player = wsSession.player
-    val joinGameResponseStatus = gameService.joinGame(player, joinGameMessage.sessionID)
-    wsSession.sendMessage(JoinGameResponse(joinGameResponseStatus))
+  /**
+   * Handles incoming [JoinGameMessage].
+   *
+   * @param session The [WebSocketSession].
+   * @param msg The [JoinGameMessage] that was received.
+   */
+  private fun handleJoinGameMessage(session: WebSocketSession, msg: JoinGameMessage) {
+    val player = session.player
+    val joinGameResponseStatus = gameService.joinGame(player, msg.sessionID)
+
+    session.sendMessage(JoinGameResponse(joinGameResponseStatus))
+
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
-      val notification = UserJoinedNotification(joinGameMessage.greeting, player.name)
-      gameService.getBySessionID(joinGameMessage.sessionID)?.broadcastMessage(player, notification)
+      val notification = UserJoinedNotification(msg.greeting, player.name)
+
+      logger.info("Starting broadcast join message")
+      gameService.getBySessionID(msg.sessionID)?.broadcastMessage(player, notification)
     }
   }
 
-  private fun handleLeaveGameMessage(
-      wsSession: WebSocketSession,
-      leaveGameMessage: LeaveGameMessage
-  ) {
-    val player = wsSession.player
+  /**
+   * Handles incoming [LeaveGameMessage].
+   *
+   * @param session The [WebSocketSession].
+   * @param msg The [LeaveGameMessage] that was received.
+   */
+  private fun handleLeaveGameMessage(session: WebSocketSession, msg: LeaveGameMessage) {
+    val player = session.player
     val game = player.game
     val leaveGameResponseStatus = gameService.leaveGame(player)
-    wsSession.sendMessage(LeaveGameResponse(leaveGameResponseStatus))
+
+    session.sendMessage(LeaveGameResponse(leaveGameResponseStatus))
+
     if (leaveGameResponseStatus == LeaveGameResponseStatus.SUCCESS) {
-      val notification = UserDisconnectedNotification(leaveGameMessage.goodbyeMessage, player.name)
+      val notification = UserDisconnectedNotification(msg.goodbyeMessage, player.name)
       val message = mapper.writeValueAsString(notification)
       game?.let {
         it.players.map(Player::session).forEach { session ->
@@ -151,10 +158,22 @@ class MessageService(
       }
     }
   }
+  // endregion
 
-  fun broadcastNotification(game: Game, msg: Notification) {
-    for (session in game.players.map(Player::session)) {
-      session.sendMessage(msg)
+  // region Send messages
+  companion object {
+    /** Object mapper for Json (de)serialization. */
+    private val mapper = ObjectMapper().registerModule(kotlinModule())
+
+    internal fun Game.broadcastMessage(sender: Player, msg: Message) {
+      for (session in (players - sender).map(Player::session)) {
+        logger.info("Broadcast $msg to $session")
+        session.sendMessage(msg)
+      }
     }
+
+    private fun WebSocketSession.sendMessage(message: Message) =
+        sendMessage(TextMessage(mapper.writeValueAsString(message)))
   }
+  // endregion
 }

@@ -28,6 +28,9 @@ interface Refreshable {
   /** Refresh on game init received from network. */
   fun onInitializeGameReceived()
 
+  /** Refresh on shuffle stacks received from network. */
+  fun onShuffleStackReceived()
+
   /** Indicates refresh after card was drawn. */
   fun refreshCardDrawn(card: MauMauCard, isCurrentPlayer: Boolean)
 

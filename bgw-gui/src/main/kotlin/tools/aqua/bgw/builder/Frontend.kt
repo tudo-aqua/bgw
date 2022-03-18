@@ -37,6 +37,7 @@ import javafx.stage.StageStyle
 import javafx.util.Duration
 import kotlin.math.min
 import tools.aqua.bgw.builder.FXConverters.toButtonType
+import tools.aqua.bgw.builder.FXConverters.toFXImage
 import tools.aqua.bgw.builder.SceneBuilder.buildGame
 import tools.aqua.bgw.builder.SceneBuilder.buildMenu
 import tools.aqua.bgw.core.*
@@ -49,6 +50,7 @@ import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
 /** Frontend JavaFX wrapper. */
@@ -92,6 +94,11 @@ internal class Frontend : Application() {
     // region Properties
     /** Property for the window title. */
     internal val titleProperty: StringProperty = StringProperty()
+
+    /** Property for the window icon. */
+    internal val iconProperty: Property<ImageVisual?> = Property(null)
+
+    internal val fullscreenExitCombinationProperty: Property<Any?> = Property(null)
 
     /** Property whether application is currently maximized. */
     internal val isMaximizedProperty = BooleanProperty(false)
@@ -327,6 +334,15 @@ internal class Frontend : Application() {
             }
 
         titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
+            iconProperty.setGUIListenerAndInvoke(iconProperty.value) { _, nV ->
+              icons.clear()
+
+              if (nV != null) icons.add(nV.image.toFXImage())
+            }
+            fullscreenExitCombinationProperty.setGUIListenerAndInvoke(
+                fullscreenExitCombinationProperty.value) { _, nV ->
+              // fullScreenExitKeyCombination = nV.toFXKeyCombination()
+            }
 
         // Override isMaximized and isFullscreen if initial value was passed
         when (initialWindowMode) {

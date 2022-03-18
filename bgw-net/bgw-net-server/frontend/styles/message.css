@@ -1,0 +1,9 @@
+[part="header"] {
+    display: none;
+}
+[part="avatar"] {
+    display: none;
+}
+[part="message"] {
+    color: red;
+}

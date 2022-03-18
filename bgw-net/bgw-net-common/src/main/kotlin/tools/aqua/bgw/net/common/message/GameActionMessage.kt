@@ -15,19 +15,16 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.gamemessage
+package tools.aqua.bgw.net.common.message
 
-/** Status codes for game messages. */
-enum class GameMessageStatus {
-  /** The message was valid and broadcast to all the other connected players. */
-  SUCCESS,
+import tools.aqua.bgw.net.common.Message
 
-  /** This connection was not associated with a game. */
-  NO_ASSOCIATED_GAME,
-
-  /** The payload did not match the specified schema. Message was rejected. */
-  INVALID_JSON,
-
-  /** Something went wrong on the server. */
-  SERVER_ERROR
-}
+/**
+ * Message indicating a game action that was performed by the [sender].
+ *
+ * @property payload Data to be transmitted.
+ * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
+ * @property sender Sender identification.
+ */
+class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) :
+    Message()

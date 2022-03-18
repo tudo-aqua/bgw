@@ -17,24 +17,45 @@
 
 package tools.aqua.bgw.net.server.view
 
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
+import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.dom.ThemeList
 import com.vaadin.flow.router.HighlightConditions
 import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
-import com.vaadin.flow.theme.material.Material
+import com.vaadin.flow.theme.lumo.Lumo
 
 @CssImport("./styles/styles.css")
-@Theme(Material::class, variant = Material.LIGHT)
+@Theme(Lumo::class, variant = Lumo.LIGHT)
 class MainLayout : AppLayout() {
   init {
     createHeader()
     createDrawer()
+    createToggleButton()
+  }
+
+  private fun createToggleButton() {
+    val toggleButton =
+        Button(Icon(VaadinIcon.ADJUST)) {
+          val themeList: ThemeList = UI.getCurrent().element.themeList
+          if (themeList.contains(Lumo.DARK)) {
+            themeList.remove(Lumo.DARK)
+          } else {
+            themeList.add(Lumo.DARK)
+          }
+        }
+    toggleButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
+    addToNavbar(toggleButton)
   }
 
   private fun createHeader() {
@@ -55,7 +76,11 @@ class MainLayout : AppLayout() {
         RouterLink("SoPra Secret", SoPraSecretForm::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
+    val schemaLink =
+        RouterLink("JSON Schema", SchemaView::class.java).apply {
+          highlightCondition = HighlightConditions.sameLocation()
+        }
 
-    addToDrawer(VerticalLayout(connectionsLink, secretLink))
+    addToDrawer(VerticalLayout(connectionsLink, secretLink, schemaLink))
   }
 }

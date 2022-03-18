@@ -25,6 +25,11 @@ import tools.aqua.bgw.net.server.entity.repositories.PlayerRepository
 /** This service handles creation and deletion of players from [PlayerRepository]. */
 @Service
 class PlayerService(val playerRepository: PlayerRepository) {
+  /**
+   * Creates a new [Player] with given [session].
+   *
+   * @param session The new player's [WebSocketSession].
+   */
   fun createPlayer(session: WebSocketSession) {
     val playerName =
         session.attributes["playerName"] ?: error("playerName attribute missing") // TODO
@@ -34,10 +39,20 @@ class PlayerService(val playerRepository: PlayerRepository) {
     }
   }
 
+  /**
+   * Deletes a [Player] with given [session].
+   *
+   * @param session The player's [WebSocketSession].
+   */
   fun deletePlayer(session: WebSocketSession) {
     val player = session.attributes["player"] ?: error("player attribute missing") // TODO
     playerRepository.remove(player as Player)
   }
 
+  /**
+   * Returns all connected players.
+   *
+   * @return [List] of all connected players.
+   */
   fun getAll(): List<Player> = playerRepository.getAll()
 }

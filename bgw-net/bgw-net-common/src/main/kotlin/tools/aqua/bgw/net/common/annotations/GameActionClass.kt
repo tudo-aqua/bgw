@@ -15,15 +15,8 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.common.annotations
 
-import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
-
-/**
- * Response upon [tools.aqua.bgw.net.common.gamemessage.InitializeGameMessage].
- *
- * @param status Status code.
- * @param errorMessages List of errors.
- */
-class InitializeGameResponse(status: GameMessageStatus, errorMessages: List<String>?) :
-    GameResponse(status = status, errorMessages = errorMessages)
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+annotation class GameActionClass

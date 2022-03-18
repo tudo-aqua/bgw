@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.gamemessage
+package tools.aqua.bgw.examples.maumau.entity
 
-/**
- * Message indicating a game action that was performed by the [sender].
- *
- * @param payload Data to be transmitted.
- * @param prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
- * @param sender Sender identification.
- */
-class GameActionMessage(payload: String, prettyPrint: String, sender: String) :
-    GameMessage(payload = payload, prettyPrint = prettyPrint, sender = sender)
+/** Enum for bgw-net game actions. */
+enum class GameActionType {
+  PLAY,
+  DRAW,
+  REQUEST_DRAW_TWO,
+  REQUEST_SUIT,
+  END_TURN,
+}

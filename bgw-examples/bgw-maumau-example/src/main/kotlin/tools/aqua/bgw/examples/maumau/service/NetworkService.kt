@@ -20,8 +20,8 @@ package tools.aqua.bgw.examples.maumau.service
 import java.net.InetAddress
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
-import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
@@ -80,40 +80,44 @@ class NetworkService(private val logicController: LogicController) {
   // region Send actions
   /** Send initialize game message to connected opponent. */
   fun sendInit(game: MauMauGame) {
-    client?.sendInitializeGameMessage(Serialization.serializeInitMessage(game))
+    client?.sendGameActionMessage(Serialization.serializeInitMessage(game))
   }
 
-  /** Send [GameAction.DRAW] action to connected opponent. */
+  fun sendStackShuffled(game: MauMauGame) {
+    client?.sendGameActionMessage(Serialization.serializeStacksShuffledMessage(game))
+  }
+
+  /** Send [GameActionType.DRAW] action to connected opponent. */
   fun sendCardDrawn() {
-    client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.DRAW))
+    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.DRAW))
   }
 
-  /** Send [GameAction.REQUEST_DRAW_TWO] action to connected opponent. */
+  /** Send [GameActionType.REQUEST_DRAW_TWO] action to connected opponent. */
   fun sendDrawTwoRequest() {
-    client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.REQUEST_DRAW_TWO))
+    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.REQUEST_DRAW_TWO))
   }
 
-  /** Send [GameAction.PLAY] action to connected opponent. */
+  /** Send [GameActionType.PLAY] action to connected opponent. */
   fun sendCardPlayed(card: MauMauCard) {
-    client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.PLAY, card = card))
+    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.PLAY, card = card))
   }
 
-  /** Send [GameAction.REQUEST_SUIT] action to connected opponent. */
+  /** Send [GameActionType.REQUEST_SUIT] action to connected opponent. */
   fun sendSuitSelected(suit: CardSuit) {
     client?.sendGameActionMessage(
-        GameActionMessage(
-            gameAction = GameAction.REQUEST_SUIT,
+        MauMauGameAction(
+            gameAction = GameActionType.REQUEST_SUIT,
             card = MauMauCard(cardValue = CardValue.ACE, cardSuit = suit)))
   }
 
-  /** Sends [GameAction.END_TURN] to connected opponent. */
+  /** Sends [GameActionType.END_TURN] to connected opponent. */
   fun sendEndTurn() {
-    client?.sendGameActionMessage(GameActionMessage(gameAction = GameAction.END_TURN))
+    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.END_TURN))
   }
 
   /** Sends End game message to connected opponent. */
   fun sendEndGame() {
-    client?.sendEndGameMessage(GameOverMessage("Looser!"))
+    client?.sendGameActionMessage(MauMauEndGameAction("Looser!"))
   }
   // endregion
 

@@ -15,14 +15,23 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.gamemessage
+package tools.aqua.bgw.examples.maumau.service.messages
+
+import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClass
 
 /**
- * Message indicating the end of a game.
+ * InitGameMessage data class for serialization.
  *
- * @param payload Data to be transmitted.
- * @param prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
- * @param sender Sender identification.
+ * @property hostCards [List] of host player's cards.
+ * @property yourCards [List] of your cards.
+ * @property drawStack [List] of draw stack cards.
+ * @property gameStack The game stack card.
  */
-class EndGameMessage(payload: String, prettyPrint: String = payload, sender: String) :
-    GameMessage(payload = payload, prettyPrint = prettyPrint, sender = sender)
+@GameActionClass
+data class MauMauInitGameAction(
+    val hostCards: List<String>,
+    val yourCards: List<String>,
+    val drawStack: List<String>,
+    val gameStack: String,
+) : GameAction()

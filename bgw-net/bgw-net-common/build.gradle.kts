@@ -22,4 +22,7 @@ mavenMetadata {
   description.set("A framework for board game applications.")
 }
 
-dependencies { implementation(libs.jackson.annotations) }
+dependencies {
+  implementation(libs.jackson.annotations)
+  implementation(libs.guava)
+}

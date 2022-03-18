@@ -30,6 +30,7 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -66,6 +67,25 @@ open class BoardGameApplication(
     get() = Frontend.titleProperty.value
     set(value) {
       Frontend.titleProperty.value = value
+    }
+
+  /** Window icon displayed in the title and task bar. */
+  var icon: ImageVisual?
+    get() = Frontend.iconProperty.value
+    set(value) {
+      Frontend.iconProperty.value = value
+    }
+
+  /**
+   * Specifies the KeyCombination that will allow the user to exit full screen mode. A value of
+   * KeyCombination.NO_MATCH will not match any KeyEvent and will make it so the user is not able to
+   * escape from Full Screen mode. 'null' indicates that the default platform specific key
+   * combination should be used.
+   */
+  var fullscreenExitCombination: Any?
+    get() = Frontend.fullscreenExitCombinationProperty.value
+    set(value) {
+      Frontend.fullscreenExitCombinationProperty.value = value
     }
 
   /**

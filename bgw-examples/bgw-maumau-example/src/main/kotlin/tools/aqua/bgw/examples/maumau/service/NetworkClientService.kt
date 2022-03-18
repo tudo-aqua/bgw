@@ -18,14 +18,16 @@
 package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.core.BoardGameApplication
-import tools.aqua.bgw.examples.maumau.entity.GameAction
+import tools.aqua.bgw.examples.maumau.entity.GameActionType
 import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
-import tools.aqua.bgw.examples.maumau.service.messages.GameActionMessage
-import tools.aqua.bgw.examples.maumau.service.messages.GameOverMessage
-import tools.aqua.bgw.examples.maumau.service.messages.InitGameMessage
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
 import tools.aqua.bgw.net.common.notification.UserJoinedNotification
 import tools.aqua.bgw.net.common.response.CreateGameResponse
@@ -47,14 +49,12 @@ class NetworkClientService(
     port: Int,
     val logicController: LogicController,
 ) :
-    BoardGameClient<InitGameMessage, GameActionMessage, GameOverMessage>(
+    BoardGameClient(
         playerName = playerName,
         secret = NETWORK_SECRET,
         host = host,
         port = port,
-        initGameClass = InitGameMessage::class.java,
-        gameActionClass = GameActionMessage::class.java,
-        endGameClass = GameOverMessage::class.java) {
+    ) {
 
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
@@ -101,18 +101,34 @@ class NetworkClientService(
   // endregion
 
   // region Game messages
-  override fun onInitializeGameReceived(message: InitGameMessage, sender: String) {
+  /** GameActionReceiver for [MauMauInitGameAction]. */
+  @GameActionReceiver
+  private fun onInitReceived(message: MauMauInitGameAction, sender: String) {
+    println("Received InitGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       logicController.initGame(message)
       view.onInitializeGameReceived()
     }
   }
 
-  override fun onGameActionReceived(message: GameActionMessage, sender: String) {
+  /** GameActionReceiver for [MauMauInitGameAction]. */
+  @GameActionReceiver
+  private fun onShuffleDrawStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
+    println("Received MauMauShuffleStackGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
-      when (GameAction.valueOf(message.action)) {
+      logicController.shuffleStack(message)
+      view.onShuffleStackReceived()
+    }
+  }
+
+  /** GameActionReceiver for [MauMauGameAction]. */
+  @GameActionReceiver
+  private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
+    println("Received GameAction $message from $sender")
+    BoardGameApplication.runOnGUIThread {
+      when (GameActionType.valueOf(message.action)) {
         // Enemy has played a card
-        GameAction.PLAY -> {
+        GameActionType.PLAY -> {
           logicController.playCard(
               card = Serialization.deserializeMauMauCard(message.card),
               animated = true,
@@ -120,32 +136,35 @@ class NetworkClientService(
         }
 
         // Enemy has drawn a card
-        GameAction.DRAW -> {
+        GameActionType.DRAW -> {
           logicController.drawCard(isCurrentPlayer = false, advance = false)
         }
 
         // Enemy has played a seven effect and requests to draw two
-        GameAction.REQUEST_DRAW_TWO -> {
+        GameActionType.REQUEST_DRAW_TWO -> {
           logicController.drawCard(isCurrentPlayer = true, advance = false)
           logicController.drawCard(isCurrentPlayer = true, advance = false)
         }
 
         // Enemy has played a jack and request suit
-        GameAction.REQUEST_SUIT -> {
+        GameActionType.REQUEST_SUIT -> {
           logicController.selectSuit(
               suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
               isCurrentPlayer = false)
         }
 
         // Enemy has ended his turn
-        GameAction.END_TURN -> {
+        GameActionType.END_TURN -> {
           view.refreshEndTurn()
         }
       }
     }
   }
 
-  override fun onEndGameReceived(message: GameOverMessage, sender: String) {
+  /** GameActionReceiver for [MauMauEndGameAction]. */
+  @GameActionReceiver
+  private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
+    println("Received EndGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
   }
   // endregion

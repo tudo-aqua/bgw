@@ -15,15 +15,14 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.examples.maumau.service.messages
 
-import tools.aqua.bgw.net.common.gamemessage.GameMessageStatus
+import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClass
 
 /**
- * Response upon [tools.aqua.bgw.net.common.gamemessage.EndGameMessage].
+ * GameOverMessage data class for serialization.
  *
- * @param status Status code.
- * @param errorMessages List of errors.
+ * @property winner The winner name.
  */
-class EndGameResponse(status: GameMessageStatus, errorMessages: List<String>?) :
-    GameResponse(status = status, errorMessages = errorMessages)
+@GameActionClass data class MauMauEndGameAction(val winner: String) : GameAction()
