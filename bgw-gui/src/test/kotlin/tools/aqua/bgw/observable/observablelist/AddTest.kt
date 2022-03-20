@@ -29,10 +29,29 @@ class AddTest : ObservableListTestBase() {
   @Test
   @DisplayName("Test add")
   fun testAdd() {
+    assertEquals(5, list.size)
+
     list.add(42)
 
-    for (i in 0 until list.size - 1) assertEquals(unordered[i], list[i])
+    assertEquals(6, list.size)
+
+    checkListDeepEquals(list, unordered)
+
     assertEquals(42, list[5])
+
+    checkNotified()
+  }
+
+  /** Test add empty list. */
+  @Test
+  @DisplayName("Test add empty list")
+  fun testAddEmptyList() {
+    assertEquals(0, emptyList.size)
+
+    emptyList.add(42)
+
+    assertEquals(1, emptyList.size)
+    assertEquals(42, emptyList[0])
 
     checkNotified()
   }
@@ -41,7 +60,11 @@ class AddTest : ObservableListTestBase() {
   @Test
   @DisplayName("Test add at index 0")
   fun testAddIndexAtStart() {
+    assertEquals(5, list.size)
+
     list.add(0, 42)
+
+    assertEquals(6, list.size)
 
     for (i in 0 until list.size - 1) assertEquals(unordered[i], list[i + 1])
     assertEquals(42, list[0])
@@ -53,9 +76,14 @@ class AddTest : ObservableListTestBase() {
   @Test
   @DisplayName("Test add at last index")
   fun testAddIndexAtEnd() {
+    assertEquals(5, list.size)
+
     list.add(5, 42)
 
-    for (i in 0 until list.size - 1) assertEquals(unordered[i], list[i])
+    assertEquals(6, list.size)
+
+    checkListDeepEquals(list, unordered)
+
     assertEquals(42, list[5])
 
     checkNotified()
@@ -77,9 +105,13 @@ class AddTest : ObservableListTestBase() {
     // 13,25,17,13,-4
     val resultList = listOf(13, 25, 17, 13, -4, -1, -2)
 
+    assertEquals(5, list.size)
+
     list.addAll(listOf(-1, -2))
 
-    for (i in list.indices) assertEquals(resultList[i], list[i])
+    assertEquals(7, list.size)
+
+    checkListDeepEquals(list, resultList)
 
     checkNotified()
   }
@@ -91,9 +123,13 @@ class AddTest : ObservableListTestBase() {
     // 13,25,17,13,-4
     val resultList = listOf(13, 25, -1, -2, 17, 13, -4)
 
+    assertEquals(5, list.size)
+
     list.addAll(2, listOf(-1, -2))
 
-    for (i in list.indices) assertEquals(resultList[i], list[i])
+    assertEquals(7, list.size)
+
+    checkListDeepEquals(list, resultList)
 
     checkNotified()
   }
@@ -105,5 +141,71 @@ class AddTest : ObservableListTestBase() {
     assertThrows<IndexOutOfBoundsException> { list.addAll(-1, listOf(-1, -2)) }
 
     assertThrows<IndexOutOfBoundsException> { list.addAll(6, listOf(-1, -2)) }
+  }
+
+  /** Test set all. */
+  @Test
+  @DisplayName("Test set all")
+  fun testSetAll() {
+    // 13,25,17,13,-4
+    val resultList = listOf(-1, -2)
+
+    assertEquals(5, list.size)
+
+    list.setAll(listOf(-1, -2))
+
+    assertEquals(2, list.size)
+
+    checkListDeepEquals(list, resultList)
+
+    checkNotified()
+  }
+
+  /** Test set all current list empty. */
+  @Test
+  @DisplayName("Test set all current list empty")
+  fun testSetAllCurrentListEmpty() {
+    // 13,25,17,13,-4
+    val resultList = listOf(-1, -2)
+
+    assertEquals(0, emptyList.size)
+
+    emptyList.setAll(listOf(-1, -2))
+
+    assertEquals(2, emptyList.size)
+
+    checkListDeepEquals(emptyList, resultList)
+
+    checkNotified()
+  }
+
+  /** Test set all new list empty. */
+  @Test
+  @DisplayName("Test set all new list empty")
+  fun testSetAllNewListEmpty() {
+    assertEquals(5, list.size)
+
+    list.setAll(emptyList())
+
+    assertEquals(0, list.size)
+
+    checkNotified()
+  }
+
+  /** Test set all same elements. */
+  @Test
+  @DisplayName("Test set all same elements")
+  fun testSetAllSameElements() {
+    val snapshot = list.toList()
+
+    assertEquals(5, list.size)
+
+    list.setAll(list.toList())
+
+    assertEquals(5, list.size)
+
+    checkListDeepEquals(list, snapshot)
+
+    checkNotNotified()
   }
 }
