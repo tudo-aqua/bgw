@@ -19,9 +19,9 @@
 
 package tools.aqua.bgw.observable.lists
 
-import tools.aqua.bgw.observable.ValueObservable
 import java.util.*
 import java.util.function.Consumer
+import tools.aqua.bgw.observable.ValueObservable
 
 /**
  * An observable [List] implementation.

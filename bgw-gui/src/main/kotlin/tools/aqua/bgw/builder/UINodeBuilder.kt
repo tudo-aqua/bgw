@@ -22,8 +22,9 @@ import java.awt.Color
 import javafx.beans.property.BooleanProperty as FXBooleanProperty
 import javafx.beans.property.ObjectProperty as FXObjectProperty
 import javafx.beans.property.ReadOnlyStringWrapper
-import javafx.collections.ListChangeListener
 import javafx.beans.property.StringProperty as FXStringProperty
+import javafx.collections.ListChangeListener
+import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.ColorPicker as FXColorPicker
 import javafx.scene.control.Label as FXLabel
@@ -32,14 +33,18 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.ListView as FXListView
 import javafx.scene.control.ProgressBar as FXProgressBar
 import javafx.scene.control.TableColumn
-import javafx.scene.layout.Background
 import javafx.scene.control.TableView as FXTableView
 import javafx.scene.control.TextArea as FXTextArea
 import javafx.scene.control.TextField as FXTextField
+import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.Region
+import javafx.util.Callback
 import tools.aqua.bgw.builder.FXConverters.toFXColor
 import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.toFXPos
+import tools.aqua.bgw.builder.FXConverters.toFXSelectionMode
 import tools.aqua.bgw.builder.FXConverters.toJavaFXOrientation
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.observable.properties.BooleanProperty
@@ -150,36 +155,67 @@ object UINodeBuilder {
   /** Builds [ListView]. */
   private fun <T> buildListView(listView: ListView<T>): Region =
       FXListView<T>().apply {
-        listView.let {
-          it.items.setGUIListenerAndInvoke(emptyList()) { _, _ ->
-            items.setAll(listView.items.list)
-          }
-          it.fontProperty.setGUIListenerAndInvoke(it.font) { _, font ->
-            cellFactory =
-                javafx.util.Callback {
-                  object : ListCell<T>() {
-                    override fun updateItem(item: T, empty: Boolean) {
-                      super.updateItem(item, empty)
-                      background = Background.EMPTY
-                      style = font.toFXFontCSS()
-                      textFill = font.color.toFXColor()
-                      text =
-                          if (empty) ""
-                          else listView.formatFunction?.invoke(item) ?: item.toString()
-                    }
-                  }
-                }
-          }
-          it.orientationProperty.setGUIListenerAndInvoke(it.orientation) { _, nV ->
-            orientationProperty().value = nV.toJavaFXOrientation()
-          }
+        cellFactory = buildListViewCellFactory(listView)
 
-          selectionModel.selectedItems.addListener(ListChangeListener { _ -> })
-          selectionModel.selectedIndices
+        listView.items.setGUIListenerAndInvoke(emptyList()) { _, _ ->
+          items.setAll(listView.items.toList())
+        }
 
-          background = Background.EMPTY
+        listView.orientationProperty.setGUIListenerAndInvoke(listView.orientation) { _, nV ->
+          orientationProperty().value = nV.toJavaFXOrientation()
+        }
+
+        listView.selectionModeProperty.setGUIListenerAndInvoke(listView.selectionMode) { oV, nV ->
+          selectionModel.selectionMode = nV.toFXSelectionMode()
+
+          if (oV == SelectionMode.NONE || nV == SelectionMode.NONE) selectionModel.clearSelection()
+        }
+
+        selectionModel.selectedItems.addListener(
+            ListChangeListener {
+              if (listView.selectionMode != SelectionMode.NONE)
+                  listView.selectedItemsList.setAll(selectionModel.selectedItems.toList())
+            })
+        selectionModel.selectedIndices.addListener(
+            ListChangeListener {
+              if (listView.selectionMode != SelectionMode.NONE)
+                  listView.selectedIndicesList.setAll(selectionModel.selectedIndices.toList())
+            })
+
+        background = Background.EMPTY
+      }
+
+  /** Builds [ListView] cell factory. */
+  private fun <T> buildListViewCellFactory(
+      node: ListView<T>
+  ): Callback<javafx.scene.control.ListView<T>, ListCell<T>> = Callback {
+    object : ListCell<T>() {
+      override fun updateItem(item: T, empty: Boolean) {
+        super.updateItem(item, empty)
+        background = Background.EMPTY
+
+        node.fontProperty.setGUIListenerAndInvoke(node.font) { _, font ->
+          style = font.toFXFontCSS()
+          textFill = font.color.toFXColor()
+        }
+
+        node.formatFunctionProperty.setGUIListenerAndInvoke(node.formatFunction) { _, nV ->
+          text = if (empty) "" else nV?.invoke(item) ?: item.toString()
+        }
+
+        if (node.selectionMode != SelectionMode.NONE && isSelected) {
+          node.selectionBackgroundProperty.setGUIListenerAndInvoke(node.selectionBackground) { _, nV
+            ->
+            background =
+                Background(BackgroundFill(nV.color.toFXColor(), CornerRadii.EMPTY, Insets.EMPTY))
+          }
+          node.selectionStyleProperty.setGUIListenerAndInvoke(node.selectionStyle) { _, nV ->
+            if (style.isNotBlank()) style = nV
+          }
         }
       }
+    }
+  }
 
   /** Builds [ToggleButton]. */
   private fun buildToggleButton(toggleButton: ToggleButton): Region =

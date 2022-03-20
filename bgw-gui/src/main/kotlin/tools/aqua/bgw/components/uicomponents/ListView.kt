@@ -23,6 +23,7 @@ import tools.aqua.bgw.core.DEFAULT_LISTVIEW_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_LISTVIEW_WIDTH
 import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
+import tools.aqua.bgw.observable.lists.ReadonlyObservableList
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -44,21 +45,23 @@ import tools.aqua.bgw.visual.Visual
  * @param items Initial list of items for this [ListView]. Default: empty list.
  * @param font [Font] to be used for this [ListView]. Default: default [Font] constructor.
  * @param orientation Orientation for this [ListView]. Default: [Orientation.VERTICAL].
- * @param selectionMode Selection mode to be used for this [ListView]. Default: [SelectionMode.NONE].
- * @param selectionBackground Background for selected items in this [ListView]. Default: [ColorVisual.BLUE].
+ * @param selectionMode Selection mode to be used for this [ListView]. Default:
+ * [SelectionMode.SINGLE].
+ * @param selectionBackground Background for selected items in this [ListView]. Default:
+ * [ColorVisual.BLUE].
  * @param formatFunction The [formatFunction] that is used to represent the items. Default: `null`.
  */
 open class ListView<T>(
-  posX: Number = 0,
-  posY: Number = 0,
-  width: Number = DEFAULT_LISTVIEW_WIDTH,
-  height: Number = DEFAULT_LISTVIEW_HEIGHT,
-  items: List<T> = emptyList(),
-  font: Font = Font(),
-  orientation: Orientation = Orientation.VERTICAL,
-  selectionMode : SelectionMode = SelectionMode.NONE,
-  selectionBackground : ColorVisual = ColorVisual.BLUE,
-  formatFunction: ((T) -> String)? = null
+    posX: Number = 0,
+    posY: Number = 0,
+    width: Number = DEFAULT_LISTVIEW_WIDTH,
+    height: Number = DEFAULT_LISTVIEW_HEIGHT,
+    items: List<T> = emptyList(),
+    font: Font = Font(),
+    orientation: Orientation = Orientation.VERTICAL,
+    selectionMode: SelectionMode = SelectionMode.SINGLE,
+    selectionBackground: ColorVisual = ColorVisual.BLUE,
+    formatFunction: ((T) -> String)? = null
 ) :
     UIComponent(
         posX = posX,
@@ -111,12 +114,33 @@ open class ListView<T>(
       formatFunctionProperty.value = value
     }
 
-  //TODO: Docs + getter
-  val selectionModeProperty : Property<SelectionMode> = Property(selectionMode)
-  val selectionBackground : Property<ColorVisual> = Property(selectionBackground)
-  val selectionStyleProperty : Property<String> = Property("")
+  // TODO: Docs
+  val selectionModeProperty: Property<SelectionMode> = Property(selectionMode)
+  var selectionMode: SelectionMode
+    get() = selectionModeProperty.value
+    set(value) {
+      selectionModeProperty.value = value
+    }
 
-  //TODO: Docs
-  val selectedItems : ObservableList<T> = ObservableArrayList()
-  val selectedIndices : ObservableList<Int> = ObservableArrayList()
+  val selectionBackgroundProperty: Property<ColorVisual> = Property(selectionBackground)
+  var selectionBackground: ColorVisual
+    get() = selectionBackgroundProperty.value
+    set(value) {
+      selectionBackgroundProperty.value = value
+    }
+
+  val selectionStyleProperty: Property<String> = Property("")
+  var selectionStyle: String
+    get() = selectionStyleProperty.value
+    set(value) {
+      selectionStyleProperty.value = value
+    }
+
+  internal val selectedItemsList: ObservableList<T> = ObservableArrayList()
+  val selectedItems: ReadonlyObservableList<T>
+    get() = selectedItemsList
+
+  internal val selectedIndicesList: ObservableList<Int> = ObservableArrayList()
+  val selectedIndices: ReadonlyObservableList<Int>
+    get() = selectedIndicesList
 }

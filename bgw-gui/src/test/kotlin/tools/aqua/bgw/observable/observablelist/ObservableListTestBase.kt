@@ -19,9 +19,9 @@ package tools.aqua.bgw.observable.observablelist
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
-import tools.aqua.bgw.observable.ValueObserver
 
 /** Test base for [ObservableList]. */
 open class ObservableListTestBase {
@@ -58,9 +58,8 @@ open class ObservableListTestBase {
   /** Returns 'true' iff the listener got invoked. */
   protected fun checkNotified(count: Int = 1): Boolean = listener.invokedCount == count
 
-  protected fun <T> checkListDeepEquals(list : ObservableList<T>, reference : List<T>) {
-    for (i in reference.indices)
-      assertEquals(reference[i], list[i])
+  protected fun <T> checkListDeepEquals(list: ObservableList<T>, reference: List<T>) {
+    for (i in reference.indices) assertEquals(reference[i], list[i])
   }
 
   /** Test listener registering callback invocation. */

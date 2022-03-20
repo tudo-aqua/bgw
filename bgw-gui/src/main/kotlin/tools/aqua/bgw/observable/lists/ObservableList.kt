@@ -165,8 +165,9 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
   }
 
   /**
-   * Sets all elements in the specified collection as the new contents of this list, in the order that
-   * they are returned by the specified collection's Iterator. Clears all items currently in this list.
+   * Sets all elements in the specified collection as the new contents of this list, in the order
+   * that they are returned by the specified collection's Iterator. Clears all items currently in
+   * this list.
    *
    * The behavior of this operation is undefined if the specified collection is modified while the
    * operation is in progress (This implies that the behavior of this call is undefined if the
@@ -178,11 +179,10 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @throws NullPointerException If the specified collection is null.
    */
-  fun setAll(elements: Collection<T>) : Boolean {
+  fun setAll(elements: Collection<T>): Boolean {
     val snapshot = this.toList()
 
-    if(list.size == elements.size && list.zip(elements).all { (t1, t2) -> t1 === t2 })
-      return false
+    if (list.size == elements.size && list.zip(elements).all { (t1, t2) -> t1 === t2 }) return false
 
     list.clear()
     val isAdded = list.addAll(elements)

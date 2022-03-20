@@ -21,9 +21,11 @@ package tools.aqua.bgw.builder
 
 import java.awt.image.BufferedImage
 import java.util.*
+import javafx.geometry.Orientation as FXOrientation
 import javafx.geometry.Pos
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType as FXButtonType
+import javafx.scene.control.SelectionMode as FXSelectionMode
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
@@ -33,6 +35,7 @@ import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent as FXMouseEvent
 import javafx.scene.paint.Color
 import tools.aqua.bgw.components.uicomponents.Orientation
+import tools.aqua.bgw.components.uicomponents.SelectionMode
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.DialogType
@@ -269,10 +272,18 @@ object FXConverters {
       }
 
   /** Converts the [Orientation] constant to [javafx.geometry.Orientation]. */
-  internal fun Orientation.toJavaFXOrientation(): javafx.geometry.Orientation =
+  internal fun Orientation.toJavaFXOrientation(): FXOrientation =
       when (this) {
-        Orientation.HORIZONTAL -> javafx.geometry.Orientation.HORIZONTAL
-        Orientation.VERTICAL -> javafx.geometry.Orientation.VERTICAL
+        Orientation.HORIZONTAL -> FXOrientation.HORIZONTAL
+        Orientation.VERTICAL -> FXOrientation.VERTICAL
+      }
+
+  /** Converts the [SelectionMode] constant to [javafx.scene.control.SelectionMode]. */
+  internal fun SelectionMode.toFXSelectionMode(): FXSelectionMode? =
+      when (this) {
+        SelectionMode.SINGLE -> FXSelectionMode.SINGLE
+        SelectionMode.MULTIPLE -> FXSelectionMode.MULTIPLE
+        SelectionMode.NONE -> null
       }
 
   /** Converts the [Alignment] constant to [Pos]. */

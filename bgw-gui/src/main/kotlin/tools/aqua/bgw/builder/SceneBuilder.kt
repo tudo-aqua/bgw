@@ -53,7 +53,7 @@ object SceneBuilder {
     // register animations
     scene.animations.guiListener =
         { _, _ -> // TODO performance
-          scene.animations.list.stream().filter { t -> !t.isRunning }.forEach { anim ->
+          scene.animations.filter { t -> !t.isRunning }.forEach { anim ->
             AnimationBuilder.build(scene, anim).play()
             anim.isRunning = true
           }

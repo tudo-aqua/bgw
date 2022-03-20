@@ -78,7 +78,7 @@ open class ComboBox<T>(
    * @see observableItemsList
    */
   var items: List<T>
-    get() = observableItemsList.list
+    get() = observableItemsList.toList()
     set(value) {
       observableItemsList.clear()
       observableItemsList.addAll(value)
