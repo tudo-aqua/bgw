@@ -22,6 +22,7 @@ import java.awt.Color
 import javafx.beans.property.BooleanProperty as FXBooleanProperty
 import javafx.beans.property.ObjectProperty as FXObjectProperty
 import javafx.beans.property.ReadOnlyStringWrapper
+import javafx.collections.ListChangeListener
 import javafx.beans.property.StringProperty as FXStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.ColorPicker as FXColorPicker
@@ -31,6 +32,7 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.ListView as FXListView
 import javafx.scene.control.ProgressBar as FXProgressBar
 import javafx.scene.control.TableColumn
+import javafx.scene.layout.Background
 import javafx.scene.control.TableView as FXTableView
 import javafx.scene.control.TextArea as FXTextArea
 import javafx.scene.control.TextField as FXTextField
@@ -158,10 +160,10 @@ object UINodeBuilder {
                   object : ListCell<T>() {
                     override fun updateItem(item: T, empty: Boolean) {
                       super.updateItem(item, empty)
-
-                      this.style = font.toFXFontCSS()
-                      this.textFill = font.color.toFXColor()
-                      this.text =
+                      background = Background.EMPTY
+                      style = font.toFXFontCSS()
+                      textFill = font.color.toFXColor()
+                      text =
                           if (empty) ""
                           else listView.formatFunction?.invoke(item) ?: item.toString()
                     }
@@ -171,6 +173,11 @@ object UINodeBuilder {
           it.orientationProperty.setGUIListenerAndInvoke(it.orientation) { _, nV ->
             orientationProperty().value = nV.toJavaFXOrientation()
           }
+
+          selectionModel.selectedItems.addListener(ListChangeListener { _ -> })
+          selectionModel.selectedIndices
+
+          background = Background.EMPTY
         }
       }
 
