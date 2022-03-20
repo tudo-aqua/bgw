@@ -18,8 +18,8 @@
 package tools.aqua.bgw.observable.observablelist
 
 import org.junit.jupiter.api.BeforeEach
-import tools.aqua.bgw.observable.ObservableArrayList
-import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.lists.ObservableArrayList
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.ValueObserver
 
 /** Test base for [ObservableList]. */

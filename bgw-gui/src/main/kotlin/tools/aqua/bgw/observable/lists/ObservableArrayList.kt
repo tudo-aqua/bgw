@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.lists
 
 /**
  * An observable [ArrayList].
