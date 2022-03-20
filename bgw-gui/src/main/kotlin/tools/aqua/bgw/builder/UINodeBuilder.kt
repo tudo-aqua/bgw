@@ -182,6 +182,10 @@ object UINodeBuilder {
                   listView.selectedIndicesList.setAll(selectionModel.selectedIndices.toList())
             })
 
+        listView.onSelectionEvent = { selectionModel.clearAndSelect(it) }
+        listView.onSelectAllEvent = { selectionModel.selectAll() }
+        listView.onSelectNoneEvent = { selectionModel.clearSelection() }
+
         background = Background.EMPTY
       }
 
