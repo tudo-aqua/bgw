@@ -37,7 +37,6 @@ import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
-import tools.aqua.bgw.net.server.service.validation.JsonSchemaNotFoundException
 import tools.aqua.bgw.net.server.service.validation.ValidationService
 
 /** This service handles the text messages received by the web socket server. */
@@ -79,24 +78,25 @@ class MessageService(
     val game = player.game
     var errors: Optional<List<String>> = Optional.empty()
     /*val status =
-        if (game != null)
-            try {
-              errors = validationService.validate(msg, game.gameID)
-              if (errors.isEmpty) GameActionResponseStatus.SUCCESS
-              else GameActionResponseStatus.INVALID_JSON
-            } catch (exception: JsonSchemaNotFoundException) {
-              GameActionResponseStatus.SERVER_ERROR
-            }
-        else GameActionResponseStatus.NO_ASSOCIATED_GAME*/
+    if (game != null)
+        try {
+          errors = validationService.validate(msg, game.gameID)
+          if (errors.isEmpty) GameActionResponseStatus.SUCCESS
+          else GameActionResponseStatus.INVALID_JSON
+        } catch (exception: JsonSchemaNotFoundException) {
+          GameActionResponseStatus.SERVER_ERROR
+        }
+    else GameActionResponseStatus.NO_ASSOCIATED_GAME*/
 
-    player.session.sendMessage(GameActionResponse(GameActionResponseStatus.SUCCESS, errors.orElseGet { emptyList() }))
+    player.session.sendMessage(
+        GameActionResponse(GameActionResponseStatus.SUCCESS, errors.orElseGet { emptyList() }))
 
-    //if (status == GameActionResponseStatus.SUCCESS) {
+    // if (status == GameActionResponseStatus.SUCCESS) {
     game?.broadcastMessage(
         player,
         GameActionMessage(
             payload = msg.payload, prettyPrint = msg.prettyPrint, sender = player.name))
-    //}
+    // }
   }
 
   /**
