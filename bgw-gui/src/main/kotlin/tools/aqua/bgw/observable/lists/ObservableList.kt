@@ -17,10 +17,9 @@
 
 @file:Suppress("unused", "MemberVisibilityCanBePrivate", "TooManyFunctions")
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.observable.lists
 
 import java.util.*
-import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.function.UnaryOperator
 import kotlin.streams.toList
@@ -30,78 +29,7 @@ import kotlin.streams.toList
  *
  * @constructor Creates an [ObservableList].
  */
-abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
-
-  /** Returns the number of elements in this list. */
-  val size: Int
-    get() = list.size
-
-  /** All available indices of this list as IntRange i.e. 0..size()-1. */
-  val indices: IntRange
-    get() = 0 until size
-
-  /** List field. */
-  abstract val list: MutableList<T>
-
-  /**
-   * Returns `true` if this list contains no elements.
-   *
-   * @return `true` if this list contains no elements.
-   */
-  fun isEmpty(): Boolean = list.size == 0
-
-  /**
-   * Returns `true` if this list contains elements.
-   *
-   * @return `true` if this list contains elements.
-   */
-  fun isNotEmpty(): Boolean = !isEmpty()
-
-  /**
-   * Returns `true` if this list contains the specified element.
-   *
-   * More formally, returns `true` if and only if this list contains at least one element `e` such
-   * that `Objects.equals(o, e)`.
-   *
-   * @param o Element whose presence in this list is to be tested.
-   *
-   * @return `true` if this list contains the specified element, `false` otherwise.
-   */
-  operator fun contains(o: Any?): Boolean = list.contains(o)
-
-  /**
-   * Returns the index of the first occurrence of the specified element in this list, or -1 if this
-   * list does not contain the element.
-   *
-   * More formally, returns the lowest index `i` such that `Objects.equals(o, get(i))`, or -1 if
-   * there is no such index.
-   *
-   * @return First index of the element, or -1 if the list does not contain the element.
-   */
-  fun indexOf(o: Any?): Int = list.indexOf(o)
-
-  /**
-   * Returns the index of the last occurrence of the specified element in this list, or -1 if this
-   * list does not contain the element.
-   *
-   * More formally, returns the highest index `i` such that `Objects.equals(o, get(i))`, or -1 if
-   * there is no such index.
-   *
-   * @return Last index of the element, or -1 if the list does not contain the element.
-   */
-  fun lastIndexOf(o: Any?): Int = list.lastIndexOf(o)
-
-  /**
-   * Returns the element at the specified position in this list.
-   *
-   * @param index Index of the element to return.
-   *
-   * @return The element at the specified position in this list.
-   *
-   * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
-   */
-  operator fun get(index: Int): T = list[index]
-
+abstract class ObservableList<T> : ReadonlyObservableList<T>() {
   /**
    * Replaces the element at the specified position in this list with the specified element.
    *
@@ -237,6 +165,33 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
   }
 
   /**
+   * Sets all elements in the specified collection as the new contents of this list, in the order
+   * that they are returned by the specified collection's Iterator. Clears all items currently in
+   * this list.
+   *
+   * The behavior of this operation is undefined if the specified collection is modified while the
+   * operation is in progress (This implies that the behavior of this call is undefined if the
+   * specified collection is this list, and this list is nonempty).
+   *
+   * @param elements [Collection] containing elements to be set as new contents of this list.
+   *
+   * @return `true` if this list changed as a result of the call.
+   *
+   * @throws NullPointerException If the specified collection is null.
+   */
+  fun setAll(elements: Collection<T>): Boolean {
+    val snapshot = this.toList()
+
+    if (list.size == elements.size && list.zip(elements).all { (t1, t2) -> t1 === t2 }) return false
+
+    list.clear()
+    val isAdded = list.addAll(elements)
+    notifyChange(oldValue = snapshot, newValue = this.toList())
+
+    return isAdded
+  }
+
+  /**
    * Appends all elements in the specified collection to the end of this list, in the order that
    * they are returned by the specified collection's Iterator.
    *
@@ -356,16 +311,6 @@ abstract class ObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
    * toIndex).
    */
   fun subList(fromIndex: Int, toIndex: Int): List<T> = list.subList(fromIndex, toIndex)
-
-  /** ForEach action. */
-  fun forEach(action: Consumer<in T>): Unit = list.forEach(action)
-
-  /**
-   * Creates a *fail-fast* [Spliterator] over the elements in this list.
-   *
-   * @return A [Spliterator] over the elements in this list
-   */
-  fun spliterator(): Spliterator<T> = list.spliterator()
 
   /**
    * Removes all elements of this collection that satisfy the given predicate.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 The BoardGameWork Authors
+ * Copyright 2022 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +15,16 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.observable
+package tools.aqua.bgw.components.uicomponents
 
-import java.util.*
+/** Enum indicating allowed selection mode. */
+enum class SelectionMode {
+  /** Enum constant indicating that NO selection is possible. */
+  NONE,
 
-/**
- * An observable [LinkedList].
- *
- * @constructor Creates an [ObservableLinkedList] with given initial elements.
- *
- * @param T Type of [List] elements.
- * @param elements Initial elements in this [ObservableList].
- */
-open class ObservableLinkedList<T>(elements: Collection<T> = emptyList()) : ObservableList<T>() {
-  /** List field. */
-  override val list: MutableList<T> = LinkedList(elements)
+  /** Enum constant indicating that only a single element may be selected. */
+  SINGLE,
+
+  /** Enum constant indicating that any number of selected elements is valid. */
+  MULTIPLE
 }

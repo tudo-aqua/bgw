@@ -21,7 +21,7 @@ package tools.aqua.bgw.components.gamecomponentviews
 
 import tools.aqua.bgw.core.DEFAULT_DICE_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_DICE_WIDTH
-import tools.aqua.bgw.observable.ObservableArrayList
+import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
 
 /**

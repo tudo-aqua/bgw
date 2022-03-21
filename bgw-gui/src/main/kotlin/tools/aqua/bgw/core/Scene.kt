@@ -27,8 +27,8 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.observable.ObservableArrayList
-import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.lists.ObservableArrayList
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.CoordinatePlain

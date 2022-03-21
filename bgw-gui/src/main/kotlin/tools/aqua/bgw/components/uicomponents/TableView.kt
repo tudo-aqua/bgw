@@ -21,8 +21,8 @@ package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.DEFAULT_TABLE_VIEW_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TABLE_VIEW_WIDTH
-import tools.aqua.bgw.observable.ObservableArrayList
-import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.lists.ObservableArrayList
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 

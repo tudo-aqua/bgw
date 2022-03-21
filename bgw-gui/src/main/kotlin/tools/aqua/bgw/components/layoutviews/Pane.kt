@@ -20,8 +20,8 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.observable.ObservableArrayList
 import tools.aqua.bgw.observable.ValueObserver
+import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 

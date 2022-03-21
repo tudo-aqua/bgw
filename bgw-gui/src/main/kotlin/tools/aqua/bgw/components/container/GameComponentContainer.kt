@@ -22,9 +22,9 @@ package tools.aqua.bgw.components.container
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.observable.ObservableLinkedList
-import tools.aqua.bgw.observable.ObservableList
 import tools.aqua.bgw.observable.ValueObserver
+import tools.aqua.bgw.observable.lists.ObservableLinkedList
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.visual.Visual
 

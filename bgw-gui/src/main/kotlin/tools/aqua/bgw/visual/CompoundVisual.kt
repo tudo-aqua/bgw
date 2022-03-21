@@ -19,8 +19,8 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.ObservableArrayList
-import tools.aqua.bgw.observable.ObservableList
+import tools.aqua.bgw.observable.lists.ObservableArrayList
+import tools.aqua.bgw.observable.lists.ObservableList
 
 /**
  * A compound visual containing stacked [SingleLayerVisual]s.
