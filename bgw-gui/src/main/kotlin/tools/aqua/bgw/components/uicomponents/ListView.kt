@@ -44,6 +44,7 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [ListView]. Default: [DEFAULT_LISTVIEW_HEIGHT].
  * @param items Initial list of items for this [ListView]. Default: empty list.
  * @param font [Font] to be used for this [ListView]. Default: default [Font] constructor.
+ * @param visual Background [Visual]. Default: [ColorVisual.WHITE].
  * @param orientation Orientation for this [ListView]. Default: [Orientation.VERTICAL].
  * @param selectionMode Selection mode to be used for this [ListView]. Default:
  * [SelectionMode.SINGLE].
@@ -58,18 +59,14 @@ open class ListView<T>(
     height: Number = DEFAULT_LISTVIEW_HEIGHT,
     items: List<T> = emptyList(),
     font: Font = Font(),
+    visual: Visual = ColorVisual.WHITE,
     orientation: Orientation = Orientation.VERTICAL,
     selectionMode: SelectionMode = SelectionMode.SINGLE,
     selectionBackground: ColorVisual = ColorVisual.BLUE,
     formatFunction: ((T) -> String)? = null
 ) :
     UIComponent(
-        posX = posX,
-        posY = posY,
-        width = width,
-        height = height,
-        font = font,
-        visual = Visual.EMPTY) {
+        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
   /** Items list. */
   val items: ObservableList<T> = ObservableArrayList(items)
 
