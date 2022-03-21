@@ -35,7 +35,7 @@ class AddTest : ObservableListTestBase() {
 
     assertEquals(6, list.size)
 
-    checkListDeepEquals(list, unordered)
+    checkListDeepEquals(list, unordered.toMutableList().apply { add(42) })
 
     assertEquals(42, list[5])
 
@@ -82,9 +82,7 @@ class AddTest : ObservableListTestBase() {
 
     assertEquals(6, list.size)
 
-    checkListDeepEquals(list, unordered)
-
-    assertEquals(42, list[5])
+    checkListDeepEquals(list, unordered.toMutableList().apply { add(42) })
 
     checkNotified()
   }
