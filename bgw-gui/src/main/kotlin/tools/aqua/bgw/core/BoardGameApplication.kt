@@ -29,6 +29,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
+import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -78,14 +79,34 @@ open class BoardGameApplication(
 
   /**
    * Specifies the KeyCombination that will allow the user to exit full screen mode. A value of
-   * KeyCombination.NO_MATCH will not match any KeyEvent and will make it so the user is not able to
-   * escape from Full Screen mode. 'null' indicates that the default platform specific key
-   * combination should be used.
+   * 'null' will not match any KeyEvent and will make it so the user is not able to escape from
+   * fullscreen mode.
+   *
+   * The 'character' field in the [KeyEvent] is unused.
+   *
+   * @see isFullScreen
+   * @see fullscreenExitCombinationHint
    */
-  var fullscreenExitCombination: Any?
+  var fullscreenExitCombination: KeyEvent?
     get() = Frontend.fullscreenExitCombinationProperty.value
     set(value) {
       Frontend.fullscreenExitCombinationProperty.value = value
+    }
+
+  /**
+   * Specifies the KeyCombination hint that will be shown upon entering fullscreen mode. Hint will
+   * only be shown if an exit combination other than 'null' has been set.
+   *
+   * A value of 'null' will result in the default text being shown. An empty string will result in
+   * no text being shown despite [fullscreenExitCombination] being set.
+   *
+   * @see isFullScreen
+   * @see fullscreenExitCombination
+   */
+  var fullscreenExitCombinationHint: String?
+    get() = Frontend.fullscreenExitCombinationHintProperty.value
+    set(value) {
+      Frontend.fullscreenExitCombinationHintProperty.value = value
     }
 
   /**
