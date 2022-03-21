@@ -30,6 +30,8 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.input.KeyCode as FXKeyCode
+import javafx.scene.input.KeyCodeCombination
+import javafx.scene.input.KeyCombination
 import javafx.scene.input.KeyEvent as FXKeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent as FXMouseEvent
@@ -219,6 +221,122 @@ object FXConverters {
         FXKeyCode.F12 -> KeyCode.F12
         else -> KeyCode.UNDEFINED
       }
+
+  /** Converts the [KeyCode] to [javafx.scene.input.KeyCode]. */
+  @Suppress("LongMethod")
+  internal fun KeyCode.toFXKeyCode(): FXKeyCode =
+      when (this) {
+        KeyCode.SHIFT -> FXKeyCode.SHIFT
+        KeyCode.CONTROL -> FXKeyCode.CONTROL
+        KeyCode.ALT -> FXKeyCode.ALT
+        KeyCode.ALT_GRAPH -> FXKeyCode.ALT_GRAPH
+        KeyCode.WINDOWS -> FXKeyCode.WINDOWS
+        KeyCode.CONTEXT_MENU -> FXKeyCode.CONTEXT_MENU
+        KeyCode.TAB -> FXKeyCode.TAB
+        KeyCode.CAPS -> FXKeyCode.CAPS
+        KeyCode.ENTER -> FXKeyCode.ENTER
+        KeyCode.SPACE -> FXKeyCode.SPACE
+        KeyCode.BACK_SPACE -> FXKeyCode.BACK_SPACE
+        KeyCode.PAUSE -> FXKeyCode.PAUSE
+        KeyCode.SCROLL_LOCK -> FXKeyCode.SCROLL_LOCK
+        KeyCode.ESCAPE -> FXKeyCode.ESCAPE
+        KeyCode.DELETE -> FXKeyCode.DELETE
+        KeyCode.HOME_POS1 -> FXKeyCode.HOME
+        KeyCode.END -> FXKeyCode.END
+        KeyCode.PAGE_UP -> FXKeyCode.PAGE_UP
+        KeyCode.PAGE_DOWN -> FXKeyCode.PAGE_DOWN
+        KeyCode.LEFT -> FXKeyCode.LEFT
+        KeyCode.UP -> FXKeyCode.UP
+        KeyCode.RIGHT -> FXKeyCode.RIGHT
+        KeyCode.DOWN -> FXKeyCode.DOWN
+        KeyCode.PRINT_SCREEN -> FXKeyCode.PRINTSCREEN
+        KeyCode.INSERT -> FXKeyCode.INSERT
+        KeyCode.DIGIT0 -> FXKeyCode.DIGIT0
+        KeyCode.DIGIT1 -> FXKeyCode.DIGIT1
+        KeyCode.DIGIT2 -> FXKeyCode.DIGIT2
+        KeyCode.DIGIT3 -> FXKeyCode.DIGIT3
+        KeyCode.DIGIT4 -> FXKeyCode.DIGIT4
+        KeyCode.DIGIT5 -> FXKeyCode.DIGIT5
+        KeyCode.DIGIT6 -> FXKeyCode.DIGIT6
+        KeyCode.DIGIT7 -> FXKeyCode.DIGIT7
+        KeyCode.DIGIT8 -> FXKeyCode.DIGIT8
+        KeyCode.DIGIT9 -> FXKeyCode.DIGIT9
+        KeyCode.CIRCUMFLEX -> FXKeyCode.DEAD_CIRCUMFLEX
+        KeyCode.ACUTE -> FXKeyCode.DEAD_ACUTE
+        KeyCode.A -> FXKeyCode.A
+        KeyCode.B -> FXKeyCode.B
+        KeyCode.C -> FXKeyCode.C
+        KeyCode.D -> FXKeyCode.D
+        KeyCode.E -> FXKeyCode.E
+        KeyCode.F -> FXKeyCode.F
+        KeyCode.G -> FXKeyCode.G
+        KeyCode.H -> FXKeyCode.H
+        KeyCode.I -> FXKeyCode.I
+        KeyCode.J -> FXKeyCode.J
+        KeyCode.K -> FXKeyCode.K
+        KeyCode.L -> FXKeyCode.L
+        KeyCode.M -> FXKeyCode.M
+        KeyCode.N -> FXKeyCode.N
+        KeyCode.O -> FXKeyCode.O
+        KeyCode.P -> FXKeyCode.P
+        KeyCode.Q -> FXKeyCode.Q
+        KeyCode.R -> FXKeyCode.R
+        KeyCode.S -> FXKeyCode.S
+        KeyCode.T -> FXKeyCode.T
+        KeyCode.U -> FXKeyCode.U
+        KeyCode.V -> FXKeyCode.V
+        KeyCode.W -> FXKeyCode.W
+        KeyCode.X -> FXKeyCode.X
+        KeyCode.Y -> FXKeyCode.Y
+        KeyCode.Z -> FXKeyCode.Z
+        KeyCode.COMMA -> FXKeyCode.COMMA
+        KeyCode.PERIOD -> FXKeyCode.PERIOD
+        KeyCode.MINUS -> FXKeyCode.MINUS
+        KeyCode.LESS -> FXKeyCode.LESS
+        KeyCode.NUMBER_SIGN -> FXKeyCode.NUMBER_SIGN
+        KeyCode.PLUS -> FXKeyCode.PLUS
+        KeyCode.NUM_LOCK -> FXKeyCode.NUM_LOCK
+        KeyCode.NUMPAD0 -> FXKeyCode.NUMPAD0
+        KeyCode.NUMPAD1 -> FXKeyCode.NUMPAD1
+        KeyCode.NUMPAD2 -> FXKeyCode.NUMPAD2
+        KeyCode.NUMPAD3 -> FXKeyCode.NUMPAD3
+        KeyCode.NUMPAD4 -> FXKeyCode.NUMPAD4
+        KeyCode.NUMPAD5 -> FXKeyCode.NUMPAD5
+        KeyCode.NUMPAD6 -> FXKeyCode.NUMPAD6
+        KeyCode.NUMPAD7 -> FXKeyCode.NUMPAD7
+        KeyCode.NUMPAD8 -> FXKeyCode.NUMPAD8
+        KeyCode.NUMPAD9 -> FXKeyCode.NUMPAD9
+        KeyCode.DIVIDE -> FXKeyCode.DIVIDE
+        KeyCode.MULTIPLY -> FXKeyCode.MULTIPLY
+        KeyCode.SUBTRACT -> FXKeyCode.SUBTRACT
+        KeyCode.ADD -> FXKeyCode.ADD
+        KeyCode.DECIMAL -> FXKeyCode.DECIMAL
+        KeyCode.F1 -> FXKeyCode.F1
+        KeyCode.F2 -> FXKeyCode.F2
+        KeyCode.F3 -> FXKeyCode.F3
+        KeyCode.F4 -> FXKeyCode.F4
+        KeyCode.F5 -> FXKeyCode.F5
+        KeyCode.F6 -> FXKeyCode.F6
+        KeyCode.F7 -> FXKeyCode.F7
+        KeyCode.F8 -> FXKeyCode.F8
+        KeyCode.F9 -> FXKeyCode.F9
+        KeyCode.F10 -> FXKeyCode.F10
+        KeyCode.F11 -> FXKeyCode.F11
+        KeyCode.F12 -> FXKeyCode.F12
+        else -> error("Not a valid KeyCode: $this")
+      }
+
+  /** Converts the [KeyCombination] constant to [javafx.scene.input.KeyCodeCombination]. */
+  internal fun KeyEvent.toFXKeyCodeCombination(): KeyCodeCombination =
+      KeyCodeCombination(
+          this.keyCode.toFXKeyCode(),
+          if (shiftDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
+          KeyCombination.ModifierValue.UP,
+          if (altDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
+          KeyCombination.ModifierValue.UP,
+          if (controlDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
+      )
+
   // endregion
 
   /** Converts the [DialogType] to [Alert.AlertType]. */
