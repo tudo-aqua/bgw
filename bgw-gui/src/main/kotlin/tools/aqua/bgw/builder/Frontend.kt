@@ -38,6 +38,7 @@ import javafx.util.Duration
 import kotlin.math.min
 import tools.aqua.bgw.builder.FXConverters.toButtonType
 import tools.aqua.bgw.builder.FXConverters.toFXImage
+import tools.aqua.bgw.builder.FXConverters.toFXKeyCodeCombination
 import tools.aqua.bgw.builder.SceneBuilder.buildGame
 import tools.aqua.bgw.builder.SceneBuilder.buildMenu
 import tools.aqua.bgw.core.*
@@ -45,6 +46,7 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode.*
+import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -98,7 +100,11 @@ internal class Frontend : Application() {
     /** Property for the window icon. */
     internal val iconProperty: Property<ImageVisual?> = Property(null)
 
-    internal val fullscreenExitCombinationProperty: Property<Any?> = Property(null)
+    /** Property for the fullscreen exit combination. */
+    internal val fullscreenExitCombinationProperty: Property<KeyEvent?> = Property(null)
+
+    /** Property for the fullscreen exit combination hint. */
+    internal val fullscreenExitCombinationHintProperty: Property<String?> = Property(null)
 
     /** Property whether application is currently maximized. */
     internal val isMaximizedProperty = BooleanProperty(false)
@@ -341,8 +347,11 @@ internal class Frontend : Application() {
         }
         fullscreenExitCombinationProperty.setGUIListenerAndInvoke(
             fullscreenExitCombinationProperty.value) { _, nV ->
-          // fullScreenExitKeyCombination = nV.toFXKeyCombination()
+          fullScreenExitKeyCombination =
+              nV?.toFXKeyCodeCombination() ?: javafx.scene.input.KeyCombination.NO_MATCH
         }
+        fullscreenExitCombinationHintProperty.setGUIListenerAndInvoke(
+            fullscreenExitCombinationHintProperty.value) { _, nV -> fullScreenExitHint = nV }
 
         // Override isMaximized and isFullscreen if initial value was passed
         when (initialWindowMode) {
