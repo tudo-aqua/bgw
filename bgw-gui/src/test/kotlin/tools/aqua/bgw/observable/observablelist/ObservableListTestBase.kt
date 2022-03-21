@@ -39,9 +39,6 @@ open class ObservableListTestBase {
   /** [TestListener] catching update invocation for [list]. */
   private val listener: TestListener<List<Int>> = TestListener()
 
-  /** [TestListener] catching update invocation for [emptyList]. */
-  private val emptyListener: TestListener<List<Int>> = TestListener()
-
   /** Fills the list with the unordered elements and registers listener before each test. */
   @BeforeEach
   fun setUp() {
