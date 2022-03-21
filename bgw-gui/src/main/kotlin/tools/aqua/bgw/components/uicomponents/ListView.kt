@@ -251,6 +251,7 @@ open class ListView<T>(
    * Selects the first element in this [ListView]. Clears current selection.
    *
    * @throws IllegalStateException If selection mode is [SelectionMode.NONE].
+   * @throws IllegalArgumentException If [ListView] is empty.
    */
   fun selectFirst() {
     select(0)
@@ -260,6 +261,7 @@ open class ListView<T>(
    * Selects the last element in this [ListView]. Clears current selection.
    *
    * @throws IllegalStateException If selection mode is [SelectionMode.NONE].
+   * @throws IllegalArgumentException If [ListView] is empty.
    */
   fun selectLast() {
     select(items.size - 1)
@@ -272,6 +274,7 @@ open class ListView<T>(
    * selection does not change.
    *
    * @throws IllegalStateException If selection mode is not [SelectionMode.SINGLE].
+   * @throws IllegalArgumentException If [ListView] is empty.
    */
   fun selectNext() {
     check(selectionMode == SelectionMode.SINGLE) {
@@ -288,6 +291,7 @@ open class ListView<T>(
    * Selects last element if none is currently selected.
    *
    * @throws IllegalStateException If selection mode is not [SelectionMode.SINGLE].
+   * @throws IllegalArgumentException If [ListView] is empty.
    */
   fun selectPrevious() {
     check(selectionMode == SelectionMode.SINGLE) {
@@ -302,6 +306,7 @@ open class ListView<T>(
    * Selects all items in this [ListView].
    *
    * @throws IllegalStateException If selection mode is not set to [SelectionMode.MULTIPLE].
+   * @throws IllegalArgumentException If [ListView] is empty.
    *
    * @see clearSelection
    */
@@ -309,6 +314,8 @@ open class ListView<T>(
     check(selectionMode == SelectionMode.MULTIPLE) {
       "Cannot select all items in selection mode '$selectionMode'."
     }
+
+    require(items.isNotEmpty()) { "Cannot select all items because items list is empty." }
 
     onSelectAllEvent?.invoke()
   }
@@ -319,7 +326,9 @@ open class ListView<T>(
    * @see selectAll
    */
   fun clearSelection() {
-    if (selectedItems.size > 0) onSelectNoneEvent?.invoke()
+    checkSelectionEnabled()
+
+    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke()
   }
 
   /** Checks selection mode not to be [SelectionMode.NONE]. */
