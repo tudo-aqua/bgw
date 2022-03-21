@@ -58,7 +58,14 @@ open class ObservableListTestBase {
   /** Returns 'true' iff the listener got invoked. */
   protected fun checkNotified(count: Int = 1): Boolean = listener.invokedCount == count
 
+  /**
+   * Checks [list]'s contents to pairwise equal the [reference].
+   *
+   * @param list List to be checked.
+   * @param reference Expected contents.
+   */
   protected fun <T> checkListDeepEquals(list: ObservableList<T>, reference: List<T>) {
+    assertEquals(reference.size, list.size)
     for (i in reference.indices) assertEquals(reference[i], list[i])
   }
 
