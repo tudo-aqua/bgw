@@ -24,6 +24,7 @@ import tools.aqua.bgw.core.DEFAULT_TABLE_VIEW_WIDTH
 import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -55,12 +56,18 @@ import tools.aqua.bgw.visual.Visual
  *
  * @constructor Creates a [TableView].
  *
- * @param T [TableView] content type.
+ * @param T Generic [TableView] content.
  * @param posX Horizontal coordinate for this [TableView]. Default: 0.
  * @param posY Vertical coordinate for this [TableView]. Default: 0.
  * @param width Width for this [TableView]. Default: [DEFAULT_TABLE_VIEW_WIDTH].
  * @param height Height for this [TableView]. Default: [DEFAULT_TABLE_VIEW_HEIGHT].
+ * @param items Initial list of items for this [TableView]. Default: empty list.
  * @param font The [Font] for this [TableView]. Default: default [Font] constructor.
+ * @param visual Background [Visual]. Default: [ColorVisual.WHITE].
+ * @param selectionMode Selection mode to be used for this [TableView]. Default:
+ * [SelectionMode.SINGLE].
+ * @param selectionBackground Background for selected items in this [TableView]. Default:
+ * [ColorVisual.BLUE].
  *
  * @see TableColumn
  */
@@ -69,21 +76,22 @@ open class TableView<T>(
     posY: Number = 0,
     width: Number = DEFAULT_TABLE_VIEW_WIDTH,
     height: Number = DEFAULT_TABLE_VIEW_HEIGHT,
-    font: Font = Font()
+    items: List<T> = emptyList(),
+    font: Font = Font(),
+    visual: Visual = ColorVisual.WHITE,
+    selectionMode: SelectionMode = SelectionMode.SINGLE,
+    selectionBackground: ColorVisual = ColorVisual.BLUE,
 ) :
-    UIComponent(
+    StructuredDataView<T>(
         posX = posX,
         posY = posY,
         width = width,
         height = height,
+        items = items,
         font = font,
-        visual = Visual.EMPTY) {
-  /**
-   * An [ObservableList] that contains the data objects for this [TableView]. The first object in
-   * this [ObservableList] will be the topmost row in the rendered [TableView].
-   */
-  val items: ObservableList<T> = ObservableArrayList()
-
+        visual = visual,
+        selectionMode = selectionMode,
+        selectionBackground = selectionBackground) {
   /**
    * An [ObservableList] that contains [TableColumn]s which specify how the data is represented in
    * that column. The first [TableColumn] in this [ObservableList] will be the leftmost column in
