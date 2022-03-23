@@ -52,16 +52,15 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
 
   /** Player two's hand. */
   var otherPlayerHand: LinearLayout<CardView> =
-      LinearLayout(
-          height = 220,
-          width = 800,
-          posX = 560,
-          posY = 50,
-          spacing = -50,
-          alignment = Alignment.CENTER,
-          visual = ColorVisual(255, 255, 255, 50)) /*.apply {
-		rotation = 180.0 //TODO: Fix MovementAnimation.toComponentView Bug and re-enable rotation
-	}*/
+      LinearLayout<CardView>(
+              height = 220,
+              width = 800,
+              posX = 560,
+              posY = 50,
+              spacing = -50,
+              alignment = Alignment.CENTER,
+              visual = ColorVisual(255, 255, 255, 50))
+          .apply { rotation = 180.0 }
   // endregion
 
   // region Stacks
