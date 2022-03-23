@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.listview
+package tools.aqua.bgw.uicomponents.structureddataview
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import tools.aqua.bgw.components.uicomponents.ListView
-import tools.aqua.bgw.components.uicomponents.SelectionMode
+import tools.aqua.bgw.components.uicomponents.StructuredDataView
 import tools.aqua.bgw.observable.ValueObserver
 
 /** Test base for [ListView]. */
-open class ListViewTestBase(selectionMode: SelectionMode) {
+open class StructuredDataViewTestBase(instance: StructuredDataView<String>) {
   /** The items in the [ListView]. */
   protected val items: List<String> =
       listOf(
@@ -36,12 +36,12 @@ open class ListViewTestBase(selectionMode: SelectionMode) {
       )
 
   /** The [ListView]. */
-  protected val listView: ListView<String> = ListView(items = items, selectionMode = selectionMode)
+  protected val dataView: StructuredDataView<String> = instance
 
-  /** [TestListener] catching update invocation of selectedIndices list for [listView]. */
+  /** [TestListener] catching update invocation of selectedIndices list for [dataView]. */
   private val indicesListener: TestListener<List<Int>> = TestListener()
 
-  /** [TestListener] catching update invocation of selectedItems list for [listView]. */
+  /** [TestListener] catching update invocation of selectedItems list for [dataView]. */
   private val itemsListener: TestListener<List<Int>> = TestListener()
 
   protected var invokedIndex = -1
@@ -49,18 +49,22 @@ open class ListViewTestBase(selectionMode: SelectionMode) {
   private var invokedAll = 0
   private var invokedClear = 0
 
+  init {
+    dataView.items.addAll(items)
+  }
+
   /** Sets up test listener. */
   @BeforeEach
   fun setUp() {
-    listView.selectedIndices.addListener(indicesListener)
-    listView.selectedIndices.addListener(itemsListener)
-    listView.onSelectionEvent =
+    dataView.selectedIndices.addListener(indicesListener)
+    dataView.selectedIndices.addListener(itemsListener)
+    dataView.onSelectionEvent =
         {
           invokedSingle++
           invokedIndex = it
         }
-    listView.onSelectAllEvent = { invokedAll++ }
-    listView.onSelectNoneEvent = { invokedClear++ }
+    dataView.onSelectAllEvent = { invokedAll++ }
+    dataView.onSelectNoneEvent = { invokedClear++ }
   }
 
   /** Returns 'true' iff the listener got invoked. */

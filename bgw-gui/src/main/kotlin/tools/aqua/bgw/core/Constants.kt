@@ -185,10 +185,10 @@ const val DEFAULT_PROGRESSBAR_HEIGHT: Int = 20
 const val DEFAULT_PROGRESSBAR_WIDTH: Int = 250
 
 /** Default [ListView] width. */
-const val DEFAULT_LISTVIEW_HEIGHT: Int = 400
+const val DEFAULT_LIST_VIEW_HEIGHT: Int = 400
 
 /** Default [ListView] width. */
-const val DEFAULT_LISTVIEW_WIDTH: Int = 200
+const val DEFAULT_LIST_VIEW_WIDTH: Int = 200
 
 /** Default [TableView] width. */
 const val DEFAULT_TABLE_VIEW_WIDTH: Double = 400.0
