@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.listview
+package tools.aqua.bgw.uicomponents.structureddataview.tableview
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 
-class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
+class TableViewTestSelectionModeNone : TableViewTestBase(SelectionMode.NONE) {
 
   /** Test select by index on valid parameter. */
   @Test
   @DisplayName("Test select by index on valid parameter")
   fun testSelectByIndex() {
-    assertThrows<IllegalStateException> { listView.select(0) }
+    assertThrows<IllegalStateException> { dataView.select(0) }
     checkNotNotified()
   }
 
@@ -36,7 +36,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test select by item on valid parameter")
   fun testSelectByItem() {
-    assertThrows<IllegalStateException> { listView.select(items[0]) }
+    assertThrows<IllegalStateException> { dataView.select(items[0]) }
     checkNotNotified()
   }
 
@@ -44,7 +44,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test select first")
   fun testSelectFirst() {
-    assertThrows<IllegalStateException> { listView.selectFirst() }
+    assertThrows<IllegalStateException> { dataView.selectFirst() }
     checkNotNotified()
   }
 
@@ -52,7 +52,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test select first")
   fun testSelectLast() {
-    assertThrows<IllegalStateException> { listView.selectLast() }
+    assertThrows<IllegalStateException> { dataView.selectLast() }
     checkNotNotified()
   }
 
@@ -60,7 +60,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test select next")
   fun testSelectNext() {
-    assertThrows<IllegalStateException> { listView.selectNext() }
+    assertThrows<IllegalStateException> { dataView.selectNext() }
     checkNotNotified()
   }
 
@@ -68,7 +68,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test select previous")
   fun testSelectPrevious() {
-    assertThrows<IllegalStateException> { listView.selectPrevious() }
+    assertThrows<IllegalStateException> { dataView.selectPrevious() }
     checkNotNotified()
   }
 
@@ -76,7 +76,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test select all")
   fun testSelectAll() {
-    assertThrows<IllegalStateException> { listView.selectAll() }
+    assertThrows<IllegalStateException> { dataView.selectAll() }
     checkNotNotified()
   }
 
@@ -84,7 +84,7 @@ class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
   @Test
   @DisplayName("Test clear selection")
   fun testClearSelection() {
-    assertThrows<IllegalStateException> { listView.clearSelection() }
+    assertThrows<IllegalStateException> { dataView.clearSelection() }
     checkNotNotified()
   }
 }

@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.listview
+package tools.aqua.bgw.uicomponents.structureddataview.tableview
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 
-class ListViewChangeSelectionModeTest : ListViewTestBase(SelectionMode.SINGLE) {
+class TableViewChangeSelectionModeTest : TableViewTestBase(SelectionMode.SINGLE) {
 
   /** Test change to [SelectionMode.NONE]. */
   @Test
   @DisplayName("Test change to SelectionMode.NONE")
   fun testChangeToNone() {
-    listView.selectionMode = SelectionMode.NONE
+    dataView.selectionMode = SelectionMode.NONE
     checkNotNotified()
     checkInvocation(0, 0, 0)
   }
@@ -37,7 +37,7 @@ class ListViewChangeSelectionModeTest : ListViewTestBase(SelectionMode.SINGLE) {
   @Test
   @DisplayName("Test change to SelectionMode.MULTIPLE")
   fun testChangeToMultiple() {
-    listView.selectionMode = SelectionMode.MULTIPLE
+    dataView.selectionMode = SelectionMode.MULTIPLE
     checkNotNotified()
     checkInvocation(0, 0, 0)
   }
@@ -46,27 +46,27 @@ class ListViewChangeSelectionModeTest : ListViewTestBase(SelectionMode.SINGLE) {
   @Test
   @DisplayName("Test change to SelectionMode.NONE after selecting")
   fun testChangeToNoneAfterSelecting() {
-    listView.selectFirst()
+    dataView.selectFirst()
     checkNotified()
     checkInvocation(1, 0, 0)
 
-    listView.selectionMode = SelectionMode.NONE
+    dataView.selectionMode = SelectionMode.NONE
     checkNotified(2)
     checkInvocation(1, 0, 0)
 
-    assertEquals(0, listView.selectedIndices.size)
-    assertEquals(0, listView.selectedItems.size)
+    assertEquals(0, dataView.selectedIndices.size)
+    assertEquals(0, dataView.selectedItems.size)
   }
 
   /** Test change to [SelectionMode.MULTIPLE] after selecting. */
   @Test
   @DisplayName("Test change to SelectionMode.MULTIPLE after selecting")
   fun testChangeToMultipleAfterSelecting() {
-    listView.selectFirst()
+    dataView.selectFirst()
     checkNotified()
     checkInvocation(1, 0, 0)
 
-    listView.selectionMode = SelectionMode.MULTIPLE
+    dataView.selectionMode = SelectionMode.MULTIPLE
     checkNotified(1)
     checkInvocation(1, 0, 0)
   }
@@ -75,19 +75,19 @@ class ListViewChangeSelectionModeTest : ListViewTestBase(SelectionMode.SINGLE) {
   @Test
   @DisplayName("Test change SelectionMode.MULTIPLE to SelectionMode.SINGLE")
   fun testChangeMultipleToSingle() {
-    listView.selectionMode = SelectionMode.MULTIPLE
+    dataView.selectionMode = SelectionMode.MULTIPLE
     checkNotNotified()
     checkInvocation(0, 0, 0)
 
-    listView.selectAll()
+    dataView.selectAll()
     checkNotified()
     checkInvocation(0, 1, 0)
 
-    listView.selectionMode = SelectionMode.SINGLE
+    dataView.selectionMode = SelectionMode.SINGLE
     checkNotified(2)
     checkInvocation(0, 1, 0)
 
-    assertEquals(0, listView.selectedIndices.size)
-    assertEquals(0, listView.selectedItems.size)
+    assertEquals(0, dataView.selectedIndices.size)
+    assertEquals(0, dataView.selectedItems.size)
   }
 }
