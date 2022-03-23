@@ -23,7 +23,9 @@ import javafx.geometry.Insets
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView as FXListView
 import javafx.scene.control.MultipleSelectionModel
+import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn as FXTableColumn
+import javafx.scene.control.TableRow
 import javafx.scene.control.TableView as FXTableView
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
@@ -64,6 +66,7 @@ object StructuredDataViewBuilder {
         background = Background.EMPTY
       }
 
+  // TODO: extract
   /** Builds [ListView] cell factory. */
   private fun <T> buildListViewCellFactory(
       node: ListView<T>
@@ -113,6 +116,7 @@ object StructuredDataViewBuilder {
 
         isEditable = false
         background = Background.EMPTY
+        rowFactory = buildTableViewRowFactory()
       }
 
   /** Builds [TableView] columns. */
@@ -122,8 +126,57 @@ object StructuredDataViewBuilder {
         isResizable = false
         style = tableView.font.toFXFontCSS()
 
-        setCellValueFactory { data -> ReadOnlyStringWrapper(column.formatFunction(data.value)) }
+        cellFactory = buildTableViewCellFactory(tableView, column)
+        cellValueFactory =
+            Callback { data ->
+              ReadOnlyStringWrapper(
+                  column.formatFunction?.invoke(data.value) ?: data.value.toString())
+            }
       }
+
+  /** Builds [ListView] row factory. */
+  private fun <T> buildTableViewRowFactory(): Callback<FXTableView<T>, TableRow<T>> = Callback {
+    object : TableRow<T>() {
+      override fun updateItem(item: T, empty: Boolean) {
+        super.updateItem(item, empty)
+        background = Background.EMPTY // TODO: Row selection mode?
+      }
+    }
+  }
+
+  /** Builds [TableView] cell factory. */
+  private fun <T> buildTableViewCellFactory(
+      node: TableView<T>,
+      column: TableColumn<T>
+  ): Callback<FXTableColumn<T, String>, TableCell<T, String>> = Callback {
+    object : TableCell<T, String>() {
+      override fun updateItem(item: String?, empty: Boolean) {
+        super.updateItem(item, empty)
+        background = Background.EMPTY
+
+        column.fontProperty.setGUIListenerAndInvoke(column.font) { _, font ->
+          style = font.toFXFontCSS()
+          textFill = font.color.toFXColor()
+        }
+
+        column.formatFunctionProperty.setGUIListenerAndInvoke(column.formatFunction) { _, nV ->
+          text = if (empty) "" else item.toString()
+        }
+
+        if (node.selectionMode != SelectionMode.NONE &&
+            isSelected) { // TODO: Test with cell selection mode
+          node.selectionBackgroundProperty.setGUIListenerAndInvoke(node.selectionBackground) { _, nV
+            ->
+            background =
+                Background(BackgroundFill(nV.color.toFXColor(), CornerRadii.EMPTY, Insets.EMPTY))
+          }
+          node.selectionStyleProperty.setGUIListenerAndInvoke(node.selectionStyle) { _, nV ->
+            if (style.isNotBlank()) style = nV
+          }
+        }
+      }
+    }
+  }
   // endregion
 
   // region Helper
@@ -152,5 +205,6 @@ object StructuredDataViewBuilder {
     onSelectAllEvent = { selectionModel.selectAll() }
     onSelectNoneEvent = { selectionModel.clearSelection() }
   }
+
   // endregion
 }

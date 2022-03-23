@@ -54,6 +54,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * |4 |nice string 3 |9! |
  *
+ * Note that the components [Font] will be ignored. Use the font field for each [TableColumn].
+ *
  * @constructor Creates a [TableView].
  *
  * @param T Generic [TableView] content.
@@ -61,8 +63,8 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [TableView]. Default: 0.
  * @param width Width for this [TableView]. Default: [DEFAULT_TABLE_VIEW_WIDTH].
  * @param height Height for this [TableView]. Default: [DEFAULT_TABLE_VIEW_HEIGHT].
+ * @param columns Initial columns for this [TableView]. Default: empty list.
  * @param items Initial list of items for this [TableView]. Default: empty list.
- * @param font The [Font] for this [TableView]. Default: default [Font] constructor.
  * @param visual Background [Visual]. Default: [ColorVisual.WHITE].
  * @param selectionMode Selection mode to be used for this [TableView]. Default:
  * [SelectionMode.SINGLE].
@@ -76,8 +78,8 @@ open class TableView<T>(
     posY: Number = 0,
     width: Number = DEFAULT_TABLE_VIEW_WIDTH,
     height: Number = DEFAULT_TABLE_VIEW_HEIGHT,
+    columns: List<TableColumn<T>> = emptyList(),
     items: List<T> = emptyList(),
-    font: Font = Font(),
     visual: Visual = ColorVisual.WHITE,
     selectionMode: SelectionMode = SelectionMode.SINGLE,
     selectionBackground: ColorVisual = ColorVisual.BLUE,
@@ -88,7 +90,7 @@ open class TableView<T>(
         width = width,
         height = height,
         items = items,
-        font = font,
+        font = Font(),
         visual = visual,
         selectionMode = selectionMode,
         selectionBackground = selectionBackground) {
@@ -98,5 +100,5 @@ open class TableView<T>(
    * the rendered [TableView].
    * @see TableColumn
    */
-  val columns: ObservableList<TableColumn<T>> = ObservableArrayList()
+  val columns: ObservableList<TableColumn<T>> = ObservableArrayList(columns)
 }
