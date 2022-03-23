@@ -20,12 +20,9 @@ package tools.aqua.bgw.builder
 import javafx.beans.property.ReadOnlyStringWrapper
 import javafx.collections.ListChangeListener
 import javafx.geometry.Insets
-import javafx.scene.control.ListCell
+import javafx.scene.control.*
 import javafx.scene.control.ListView as FXListView
-import javafx.scene.control.MultipleSelectionModel
-import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn as FXTableColumn
-import javafx.scene.control.TableRow
 import javafx.scene.control.TableView as FXTableView
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
@@ -37,6 +34,7 @@ import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.toFXSelectionMode
 import tools.aqua.bgw.builder.FXConverters.toJavaFXOrientation
 import tools.aqua.bgw.components.uicomponents.*
+import tools.aqua.bgw.components.uicomponents.SelectionMode
 
 /** UINodeBuilder. Factory for all BGW UI components. */
 object StructuredDataViewBuilder {
@@ -66,7 +64,6 @@ object StructuredDataViewBuilder {
         background = Background.EMPTY
       }
 
-  // TODO: extract
   /** Builds [ListView] cell factory. */
   private fun <T> buildListViewCellFactory(
       node: ListView<T>
@@ -85,16 +82,7 @@ object StructuredDataViewBuilder {
           text = if (empty) "" else nV?.invoke(item) ?: item.toString()
         }
 
-        if (node.selectionMode != SelectionMode.NONE && isSelected) {
-          node.selectionBackgroundProperty.setGUIListenerAndInvoke(node.selectionBackground) { _, nV
-            ->
-            background =
-                Background(BackgroundFill(nV.color.toFXColor(), CornerRadii.EMPTY, Insets.EMPTY))
-          }
-          node.selectionStyleProperty.setGUIListenerAndInvoke(node.selectionStyle) { _, nV ->
-            if (style.isNotBlank()) style = nV
-          }
-        }
+        setSelectionCallback(node)
       }
     }
   }
@@ -105,7 +93,7 @@ object StructuredDataViewBuilder {
   private fun <T> buildTableView(tableView: TableView<T>): Region =
       FXTableView<T>().apply {
         tableView.columns.setGUIListenerAndInvoke(tableView.columns.toList()) { _, nV ->
-          columns.setAll(nV.map { buildColumn(it) })
+          columns.setAll(nV.map { buildTableViewColumn(it) })
         }
 
         tableView.items.setGUIListenerAndInvoke(tableView.items.toList()) { _, nV ->
@@ -120,7 +108,7 @@ object StructuredDataViewBuilder {
       }
 
   /** Builds [TableView] columns. */
-  private fun <T> buildColumn(column: TableColumn<T>) =
+  private fun <T> buildTableViewColumn(column: TableColumn<T>) =
       FXTableColumn<T, String>().apply {
         isResizable = false
 
@@ -150,16 +138,7 @@ object StructuredDataViewBuilder {
         super.updateItem(item, empty)
         background = Background.EMPTY
 
-        if (node.selectionMode != SelectionMode.NONE && isSelected) {
-          node.selectionBackgroundProperty.setGUIListenerAndInvoke(node.selectionBackground) { _, nV
-            ->
-            background =
-                Background(BackgroundFill(nV.color.toFXColor(), CornerRadii.EMPTY, Insets.EMPTY))
-          }
-          node.selectionStyleProperty.setGUIListenerAndInvoke(node.selectionStyle) { _, nV ->
-            if (style.isNotBlank()) style = nV
-          }
-        }
+        setSelectionCallback(node)
       }
     }
   }
@@ -185,6 +164,7 @@ object StructuredDataViewBuilder {
   // endregion
 
   // region Helper
+  /** Adds selection handlers to [StructuredDataView]. */
   private fun <T> StructuredDataView<T>.setSelectionHandlers(
       selectionModel: MultipleSelectionModel<T>
   ) {
@@ -211,5 +191,17 @@ object StructuredDataViewBuilder {
     onSelectNoneEvent = { selectionModel.clearSelection() }
   }
 
+  /** Adds selection callback to [ListCell] / [TableRow]. */
+  private fun <T> IndexedCell<T>.setSelectionCallback(node: StructuredDataView<T>) {
+    if (node.selectionMode != SelectionMode.NONE && isSelected) {
+      node.selectionBackgroundProperty.setGUIListenerAndInvoke(node.selectionBackground) { _, nV ->
+        background =
+            Background(BackgroundFill(nV.color.toFXColor(), CornerRadii.EMPTY, Insets.EMPTY))
+      }
+      node.selectionStyleProperty.setGUIListenerAndInvoke(node.selectionStyle) { _, nV ->
+        style = nV
+      }
+    }
+  }
   // endregion
 }
