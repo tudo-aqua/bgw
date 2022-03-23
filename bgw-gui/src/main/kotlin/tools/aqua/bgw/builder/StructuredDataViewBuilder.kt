@@ -105,7 +105,7 @@ object StructuredDataViewBuilder {
   private fun <T> buildTableView(tableView: TableView<T>): Region =
       FXTableView<T>().apply {
         tableView.columns.setGUIListenerAndInvoke(tableView.columns.toList()) { _, nV ->
-          columns.setAll(nV.map { buildColumn(tableView, it) })
+          columns.setAll(nV.map { buildColumn(it) })
         }
 
         tableView.items.setGUIListenerAndInvoke(tableView.items.toList()) { _, nV ->
@@ -116,55 +116,41 @@ object StructuredDataViewBuilder {
 
         isEditable = false
         background = Background.EMPTY
-        rowFactory = buildTableViewRowFactory()
+        rowFactory = buildTableViewRowFactory(tableView)
       }
 
   /** Builds [TableView] columns. */
-  private fun <T> buildColumn(tableView: TableView<T>, column: TableColumn<T>) =
-      FXTableColumn<T, String>(column.title).apply {
-        minWidth = column.width.toDouble()
+  private fun <T> buildColumn(column: TableColumn<T>) =
+      FXTableColumn<T, String>().apply {
         isResizable = false
-        style = tableView.font.toFXFontCSS()
 
-        cellFactory = buildTableViewCellFactory(tableView, column)
-        cellValueFactory =
-            Callback { data ->
-              ReadOnlyStringWrapper(
-                  column.formatFunction?.invoke(data.value) ?: data.value.toString())
-            }
+        column.titleProperty.setGUIListenerAndInvoke(column.title) { _, nV -> text = nV }
+
+        column.widthProperty.setGUIListenerAndInvoke(column.width) { _, nV ->
+          minWidth = nV
+          maxWidth = nV
+          tableView?.refresh()
+        }
+
+        cellFactory = buildTableViewCellFactory(column)
+
+        column.formatFunctionProperty.setGUIListenerAndInvoke(column.formatFunction) { _, nV ->
+          cellValueFactory =
+              Callback { ReadOnlyStringWrapper(nV?.invoke(it.value) ?: it.value.toString()) }
+          tableView?.refresh()
+        }
       }
 
   /** Builds [ListView] row factory. */
-  private fun <T> buildTableViewRowFactory(): Callback<FXTableView<T>, TableRow<T>> = Callback {
+  private fun <T> buildTableViewRowFactory(
+      node: TableView<T>
+  ): Callback<FXTableView<T>, TableRow<T>> = Callback {
     object : TableRow<T>() {
       override fun updateItem(item: T, empty: Boolean) {
         super.updateItem(item, empty)
-        background = Background.EMPTY // TODO: Row selection mode?
-      }
-    }
-  }
-
-  /** Builds [TableView] cell factory. */
-  private fun <T> buildTableViewCellFactory(
-      node: TableView<T>,
-      column: TableColumn<T>
-  ): Callback<FXTableColumn<T, String>, TableCell<T, String>> = Callback {
-    object : TableCell<T, String>() {
-      override fun updateItem(item: String?, empty: Boolean) {
-        super.updateItem(item, empty)
         background = Background.EMPTY
 
-        column.fontProperty.setGUIListenerAndInvoke(column.font) { _, font ->
-          style = font.toFXFontCSS()
-          textFill = font.color.toFXColor()
-        }
-
-        column.formatFunctionProperty.setGUIListenerAndInvoke(column.formatFunction) { _, nV ->
-          text = if (empty) "" else item.toString()
-        }
-
-        if (node.selectionMode != SelectionMode.NONE &&
-            isSelected) { // TODO: Test with cell selection mode
+        if (node.selectionMode != SelectionMode.NONE && isSelected) {
           node.selectionBackgroundProperty.setGUIListenerAndInvoke(node.selectionBackground) { _, nV
             ->
             background =
@@ -173,6 +159,25 @@ object StructuredDataViewBuilder {
           node.selectionStyleProperty.setGUIListenerAndInvoke(node.selectionStyle) { _, nV ->
             if (style.isNotBlank()) style = nV
           }
+        }
+      }
+    }
+  }
+
+  /** Builds [TableView] cell factory. */
+  private fun <T> buildTableViewCellFactory(
+      column: TableColumn<T>
+  ): Callback<FXTableColumn<T, String>, TableCell<T, String>> = Callback {
+    object : TableCell<T, String>() {
+      override fun updateItem(item: String?, empty: Boolean) {
+        super.updateItem(item, empty)
+        background = Background.EMPTY
+        text = if (empty) "" else item
+
+        column.fontProperty.setGUIListenerAndInvoke(column.font) { _, font ->
+          style = font.toFXFontCSS()
+          textFill = font.color.toFXColor()
+          this.tableView?.refresh()
         }
       }
     }

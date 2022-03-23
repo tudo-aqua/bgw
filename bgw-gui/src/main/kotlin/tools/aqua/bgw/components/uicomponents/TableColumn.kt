@@ -19,7 +19,9 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font
 
 /**
@@ -38,11 +40,56 @@ import tools.aqua.bgw.util.Font
  * @see TableView
  */
 open class TableColumn<T>(
-    val title: String,
-    val width: Number,
+    title: String,
+    width: Number,
     font: Font = Font(),
     formatFunction: (T) -> String
 ) {
+
+  /**
+   * [Property] for the title of this [TableColumn].
+   *
+   * @see title
+   */
+  val titleProperty: StringProperty = StringProperty(title)
+
+  /**
+   * Title of this [TableColumn].
+   *
+   * @see titleProperty
+   */
+  var title: String
+    get() = titleProperty.value
+    set(value) {
+      titleProperty.value = value
+    }
+
+  /**
+   * [Property] for the width of this [TableColumn]. Must not be negative.
+   *
+   * @throws IllegalArgumentException If a negative value was set.
+   *
+   * @see width
+   */
+  val widthProperty: LimitedDoubleProperty =
+      LimitedDoubleProperty(
+          lowerBoundInclusive = 0,
+          upperBoundInclusive = Double.POSITIVE_INFINITY,
+          initialValue = width,
+      )
+
+  /**
+   * The width of this [TableColumn]. Must not be negative.
+   *
+   * @throws IllegalArgumentException If a negative value was set.
+   *
+   * @see widthProperty
+   */
+  var width: Double
+    get() = widthProperty.value
+    set(value) {
+      widthProperty.value = value
+    }
 
   /**
    * [Property] for the [Font] of this [TableColumn].
