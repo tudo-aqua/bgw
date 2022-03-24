@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          gitlab:
+            provider: gitlab
+            client-name: GitLab
+            clientId: 0d4d953e09759d68a680f933a04deb72856adc346ca03bc5e7873fb3f04b928f
+            clientSecret: ffb982c4e4138ad8d64933b83fd29327e4b43cd7246040f756ef9bfde626192c
+            authorization-grant-type: authorization_code
+            redirectUri:  "http://{baseHost}{basePort}{basePath}/login/oauth2/code/{registrationId}"
+            scope: openid,email,profile
+        provider:
+          gitlab:
+            authorization-uri: https://sopra-gitlab.cs.tu-dortmund.de/oauth/authorize
+            token-uri: https://sopra-gitlab.cs.tu-dortmund.de/oauth/token
+            user-info-uri: https://sopra-gitlab.cs.tu-dortmund.de/oauth/userinfo
+            user-name-attribute: sub
+            jwk-set-uri: https://sopra-gitlab.cs.tu-dortmund.de/oauth/discovery/keys
