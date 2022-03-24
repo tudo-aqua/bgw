@@ -69,6 +69,9 @@ constructor(
   private companion object {
     /** The container-internal working directory. */
     const val JEKYLL_WORK_DIR = "/srv/jekyll"
+
+    /** The container-internal username */
+    const val JEKYLL_USERNAME = "jekyll"
   }
 
   /** The docker client object to use for communications. */
@@ -178,6 +181,7 @@ constructor(
     val tar = temporaryDir.resolve("source-files.tar")
 
     logger.debug("Copying Jekyll source files from ${source.get()} into $sourceDir")
+
     fileOps.sync {
       from(source)
       into(sourceDir)
@@ -208,6 +212,11 @@ constructor(
 
     logger.debug("Pushing source tar $tar to Jekyll container ${container.id}")
     tar.inputStream().use { dockerClient.putArchive(container.id, JEKYLL_WORK_DIR, it) }
+
+    logger.debug(
+        "Changing owner of $JEKYLL_WORK_DIR to $JEKYLL_USERNAME in Jekyll container ${container.id}")
+    dockerClient.exec(
+        container.id, listOf("chown", "-R", "$JEKYLL_USERNAME:$JEKYLL_USERNAME", JEKYLL_WORK_DIR))
   }
 
   /**
@@ -218,7 +227,19 @@ constructor(
     logger.debug("Running Jekyll in ${container.id}")
     dockerClient.exec(
         container.id,
-        listOf("jekyll", "build") + if (logger.isInfoEnabled) listOf("--verbose") else emptyList(),
+        listOf("jekyll", "build") + if (logger.isInfoEnabled) listOf("--verbose") else emptyList())
+    logger.debug("Jekyll execution finished")
+  }
+
+  /**
+   * Executes command inside the docker container and forwards the command output to the logger
+   * @param containerId id of the container
+   * @param command the command with arguments to execute
+   */
+  private fun DockerClientImpl.exec(containerId: String, command: List<String>) {
+    exec(
+        containerId,
+        command,
         {
           when (it.streamType) {
             STDOUT -> logger.info(it.payloadAsString)
@@ -227,7 +248,6 @@ constructor(
           }
         },
         Duration.of(10, MINUTES))
-    logger.debug("Jekyll execution finished")
   }
 
   /**
