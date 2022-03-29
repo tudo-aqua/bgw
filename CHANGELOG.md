@@ -16,27 +16,27 @@ All notable changes to this project will be documented in this file.
 ## [0.6] - To be released
 
 ### Added
-- Fullscreen mode and Fullscreen-Exit-Combination
-- Taskbar Icon
-- Text for RadioButtons and changed default width
-- Selection model for ListView and TableView
-- Custom fonts may now be loaded
-- Additional functions for GridPane to set all column widths or row heights
+- Fullscreen mode and Fullscreen-Exit-Combination.
+- Taskbar Icon.
+- Text for ``RadioButtons`` and changed default width.
+- Selection model for ``ListView`` and ``TableView``.
+- Custom fonts may now be loaded.
+- Additional functions for ``GridPane`` to set all column widths or row heights.
 
 ### Changed
-- Renamed module bgw-core to bgw-ui
-- Background of ListView and TableViw is now transparent
-- Dragged elements keep their stacked rotation instead of snapping to components rotation
-- Updated OpenFX to Version 18
+- Renamed module bgw-core to bgw-ui.
+- Background of ``ListView`` and ``TableView`` is now transparent.
+- Dragged elements keep their stacked rotation instead of snapping to components rotation.
+- Updated OpenFX to Version 18.
 
 ### Fixed
-- MovementAnimation.toComponentView now considers rotation and scale of containers
-- Drag & Drop now works from rotated GridPanes
-- Background of MenuScene no longer changes when switching between menus
-- Scene background can now be changed
-- Removed blur animation between menu scenes
-- Position of nested GridPanes no longer resets on update
-- FontFamily with whitespace in name no longer has to be escaped
+- ``MovementAnimation.toComponentView`` now considers rotation and scale of containers.
+- Drag & Drop now works from rotated ``GridPanes``.
+- Background of ``MenuScene`` no longer changes when switching between menus.
+- ``Scene`` background can now be changed.
+- Removed blur animation between menu scenes.
+- Position of nested ``GridPanes`` no longer resets on update.
+- ``FontFamily`` with whitespace in name no longer has to be escaped.
 
 ## [0.5] - 31. Oct. 2021
 
@@ -48,14 +48,14 @@ All notable changes to this project will be documented in this file.
 - Tetris example.
 
 ### Changed
- - Moved examples to dedicated sub-module
+ - Moved examples to dedicated submodule
  - Disable deselection of last ``RadioButton`` in ``ToggleGroup``.
  - Empty grid columns and rows no longer get rendered size 0.0 in case of fixed dimensions. 
 
 ### Fixed
- - Drag and drop target for custom inter-cell-alignments
+ - Drag and drop target for custom inter-cell-alignments.
  - Offset for grids nested in grid cells.
- - ``MovementAnimation.toComponentView`` missing ``layoutFromCenter`` offset for ``Grid``
+ - ``MovementAnimation.toComponentView`` missing ``layoutFromCenter`` offset for ``Grid``.
  - ``MovementAnimation.toComponentView`` now working with ``scale``.
  - wrong parent in rollback search for containers after drag and drop.
  - ``BoardGameScene`` getting shown blurred if ``showGameScene`` gets called after ``hideMenuScene``.
@@ -95,7 +95,7 @@ All notable changes to this project will be documented in this file.
 - Components in grid not aligned correctly and size calculation not accounting for scale and rotation.
 - Font color in TableView.
 - Complete Drag and Drop reworking to account for scale, rotation, and nesting.
-- ColorVisuals with colors near black caused CSS parse error
+- ColorVisuals with colors near black caused CSS parse error.
 
 
 ## [0.2] - 10. Aug. 2021
