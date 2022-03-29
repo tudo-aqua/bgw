@@ -3,14 +3,14 @@
 # Platforms
 
 kotlin = "1.6.10"
-spring = "2.6.3"
+spring = "2.6.5"
 vaadin-framework = "14.8.4"
 # see https://github.com/vaadin/vaadin-gradle-plugin#getting-started for version map
 vaadin-plugin = "0.14.8.1"
 
 # Other
 
-jackson = "2.13.1"
+jackson = "2.13.2"
 jekyllDocker = "4.2.0"
 junit = "5.8.2"
 ktor = "2.0.0-beta-1"
@@ -27,7 +27,7 @@ commons-compress = { group = "org.apache.commons", name = "commons-compress", ve
 
 dockerClient = { group = "de.gesellix", name = "docker-client", version = "2022-02-01T12-00-00" }
 
-hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", version = "2.14.0" }
+hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", version = "2.14.1" }
 
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
@@ -39,7 +39,7 @@ javaWebSocket = { group = "org.java-websocket", name = "Java-WebSocket", version
 
 jfoenix = { group = "com.jfoenix", name = "jfoenix", version = "9.0.10" }
 
-jsonSchemaValidator = { group = "com.networknt", name = "json-schema-validator", version = "1.0.66" }
+jsonSchemaValidator = { group = "com.networknt", name = "json-schema-validator", version = "1.0.68" }
 
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
@@ -81,7 +81,7 @@ gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-p
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "5.1.4" }
 gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.5.0" }
 gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
-gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "6.2.1" }
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "6.3.0" }
 gradle-spring-boot = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "spring" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "2.1.0" }
 gradle-vaadin = { group = "com.vaadin", name = "vaadin-gradle-plugin", version.ref = "vaadin-plugin" }

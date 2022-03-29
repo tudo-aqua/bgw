@@ -15,8 +15,28 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6] - To be released
 
+### Added
+- Fullscreen mode and Fullscreen-Exit-Combination
+- Taskbar Icon
+- Text for RadioButtons and changed default width
+- Selection model for ListView and TableView
+- Custom fonts may now be loaded
+- Additional functions for GridPane to set all column widths or row heights
+
 ### Changed
 - Renamed module bgw-core to bgw-ui
+- Background of ListView and TableViw is now transparent
+- Dragged elements keep their stacked rotation instead of snapping to components rotation
+- Updated OpenFX to Version 18
+
+### Fixed
+- MovementAnimation.toComponentView now considers rotation and scale of containers
+- Drag & Drop now works from rotated GridPanes
+- Background of MenuScene no longer changes when switching between menus
+- Scene background can now be changed
+- Removed blur animation between menu scenes
+- Position of nested GridPanes no longer resets on update
+- FontFamily with whitespace in name no longer has to be escaped
 
 ## [0.5] - 31. Oct. 2021
 
