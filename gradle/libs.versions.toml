@@ -14,7 +14,7 @@ jackson = "2.13.2"
 jekyllDocker = "4.2.0"
 junit = "5.8.2"
 ktor = "2.0.0-beta-1"
-openjfx = "18"
+openjfx = "17.0.2"
 guava = "31.1-jre"
 
 [libraries]
