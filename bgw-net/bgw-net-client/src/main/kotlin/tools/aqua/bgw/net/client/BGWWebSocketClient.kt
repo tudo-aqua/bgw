@@ -41,7 +41,7 @@ import tools.aqua.bgw.net.common.response.*
  * @param secret The server secret.
  * @property callback Callback to the [BoardGameClient] for message marshalling.
  */
-class BGWWebSocketClient(
+internal class BGWWebSocketClient(
     uri: URI,
     playerName: String,
     secret: String,
@@ -53,7 +53,7 @@ class BGWWebSocketClient(
 
   init {
     addHeader("PlayerName", playerName)
-    addHeader("SoPraSecret", secret)
+    addHeader("SoPraSecret", secret) // TODO: Remove "SoPra" here
   }
 
   // region Send

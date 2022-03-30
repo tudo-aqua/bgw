@@ -35,7 +35,7 @@ class Game(val gameID: String, val sessionID: String, initializer: Player) {
 
   /**
    * This is set to [System.currentTimeMillis] whenever the last [Player] leaves this [Game]. It is
-   * set to null whenever a [Player] joins this [Game].
+   * set to 'null' whenever a [Player] joins this [Game].
    */
   var orphanCandidateSince: Long? = null
     private set
