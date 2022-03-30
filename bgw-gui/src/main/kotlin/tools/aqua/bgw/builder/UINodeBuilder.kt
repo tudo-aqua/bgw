@@ -229,7 +229,7 @@ object UINodeBuilder {
   /** Sets [ComboBox] cell factory . */
   private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
     cellFactory =
-        javafx.util.Callback {
+        Callback {
           object : ListCell<T>() {
             override fun updateItem(item: T, empty: Boolean) {
               super.updateItem(item, empty)
