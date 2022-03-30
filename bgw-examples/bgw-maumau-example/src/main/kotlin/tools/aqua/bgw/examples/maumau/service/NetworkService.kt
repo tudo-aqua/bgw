@@ -26,7 +26,7 @@ import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
   /** Network client. Nullable for offline games. */
-  private var client: NetworkClientService? = null
+  private var client: MauMauBoardGameClient? = null
 
   // region Connection
   /**
@@ -65,7 +65,7 @@ class NetworkService(private val logicController: LogicController) {
     val split = address.split(":")
 
     client =
-        NetworkClientService(
+        MauMauBoardGameClient(
                 playerName = name,
                 host = split[0],
                 port = split[1].toInt(),
@@ -83,6 +83,7 @@ class NetworkService(private val logicController: LogicController) {
     client?.sendGameActionMessage(Serialization.serializeInitMessage(game))
   }
 
+  /** Send game stack shuffled message to connected opponent. */
   fun sendStackShuffled(game: MauMauGame) {
     client?.sendGameActionMessage(Serialization.serializeStacksShuffledMessage(game))
   }

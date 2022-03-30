@@ -22,7 +22,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.uicomponents.SelectionMode
+import tools.aqua.bgw.components.uicomponents.TableView
 
+/** Tests for [TableView] with [SelectionMode.SINGLE]. */
 class TableViewTestSelectionModeSingle : TableViewTestBase(SelectionMode.SINGLE) {
 
   /** Test select by index on valid parameter. */

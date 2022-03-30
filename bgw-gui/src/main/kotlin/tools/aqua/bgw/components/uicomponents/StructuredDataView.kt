@@ -25,6 +25,22 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
+/**
+ * A [StructuredDataView] displaying its items with given format function.
+ *
+ * @constructor Creates a [StructuredDataView].
+ *
+ * @param T Generic [StructuredDataView] content.
+ * @param posX Horizontal coordinate for this [StructuredDataView].
+ * @param posY Vertical coordinate for this [StructuredDataView].
+ * @param width Width for this [StructuredDataView].
+ * @param height Height for this [StructuredDataView].
+ * @param items Initial list of items for this [StructuredDataView].
+ * @param font [Font] to be used for this [StructuredDataView].
+ * @param visual Background [Visual].
+ * @param selectionMode Selection mode to be used for this [StructuredDataView].
+ * @param selectionBackground Background for selected items in this [StructuredDataView].
+ */
 sealed class StructuredDataView<T>(
     posX: Number,
     posY: Number,

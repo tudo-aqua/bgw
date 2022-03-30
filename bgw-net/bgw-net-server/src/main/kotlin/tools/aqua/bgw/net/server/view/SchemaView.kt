@@ -33,6 +33,11 @@ import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
 import tools.aqua.bgw.net.server.service.validation.ValidationService
 
+/**
+ * Layout for the schema view.
+ *
+ * @property validationService Auto-Wired [ValidationService].
+ */
 @Route(value = "schema", layout = MainLayout::class)
 @PageTitle("BGW-Net | JSON Schemas")
 @CssImport(value = "./styles/message.css", themeFor = "vaadin-message")

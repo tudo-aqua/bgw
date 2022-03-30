@@ -38,6 +38,8 @@ import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 /**
  * Implementation of [ValidationService]. It uses the networknt/json-schema-validator and Jackson to
  * validate.
+ *
+ * @property schemasByGameRepository Auto-Wired repository for schemas.
  */
 @Service
 class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) :

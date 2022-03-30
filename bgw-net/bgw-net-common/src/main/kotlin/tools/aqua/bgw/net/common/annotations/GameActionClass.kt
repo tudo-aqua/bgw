@@ -17,6 +17,14 @@
 
 package tools.aqua.bgw.net.common.annotations
 
+/**
+ * Annotation for Game action classes.
+ *
+ * Use this annotation on any message data class to be sent by a BoardGameClient. All annotated
+ * classes will be indexed upon runtime and mapped to [GameActionReceiver]s.
+ *
+ * @see GameActionReceiver
+ */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class GameActionClass

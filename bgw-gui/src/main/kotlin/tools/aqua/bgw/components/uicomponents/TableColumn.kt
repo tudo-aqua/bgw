@@ -30,12 +30,12 @@ import tools.aqua.bgw.util.Font
  * @constructor Creates a [TableColumn].
  *
  * @param T [TableView] content type.
- * @property title The title for this [TableColumn]. It gets displayed in the header row of the
+ * @param title The title for this [TableColumn]. It gets displayed in the header row of the
  * [TableView].
- * @property width The [width] for this [TableColumn].
+ * @param width The [width] for this [TableColumn].
  * @param font [Font] to be used for this [TableColumn]. Default: default [Font] constructor.
- * @property formatFunction The format function for this [TableColumn]. It gets applied to each item
- * in the [TableView] to get a [String] for its cell.
+ * @param formatFunction The format function for this [TableColumn]. It gets applied to each item in
+ * the [TableView] to get a [String] for its cell.
  *
  * @see TableView
  */

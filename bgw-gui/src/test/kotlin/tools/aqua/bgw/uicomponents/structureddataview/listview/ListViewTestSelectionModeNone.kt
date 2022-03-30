@@ -20,8 +20,10 @@ package tools.aqua.bgw.uicomponents.structureddataview.listview
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import tools.aqua.bgw.components.uicomponents.ListView
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 
+/** Tests for [ListView] with [SelectionMode.NONE]. */
 class ListViewTestSelectionModeNone : ListViewTestBase(SelectionMode.NONE) {
 
   /** Test select by index on valid parameter. */

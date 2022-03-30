@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("UnusedPrivateMember")
+
 package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.core.BoardGameApplication
@@ -43,7 +45,7 @@ import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
  * @param port Destination port.
  * @property logicController [LogicController] instance for refreshes.
  */
-class NetworkClientService(
+class MauMauBoardGameClient(
     playerName: String,
     host: String,
     port: Int,

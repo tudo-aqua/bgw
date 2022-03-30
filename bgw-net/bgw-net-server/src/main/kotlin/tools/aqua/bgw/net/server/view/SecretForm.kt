@@ -25,22 +25,23 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
+/** Layout for the secret view. */
 @Route(value = "secret", layout = MainLayout::class)
-@PageTitle("BGW-Net | SoPra Secret")
-class SoPraSecretForm : FormLayout() {
-  private val secretLabel: Label = Label("Old SoPra Secret").apply { addClassName("secret-form") }
-  private val secretField: TextField =
-      TextField("New SoPra Secret").apply { addClassName("secret-form") }
+@PageTitle("BGW-Net | Secret")
+class SecretForm : FormLayout() {
+  private val formName = "secret-form"
+  private val oldSecret: Label = Label("Old Secret").apply { addClassName(formName) }
+  private val newSecret: TextField = TextField("New Secret").apply { addClassName(formName) }
 
   private val save: Button =
       Button("Save").apply {
         addThemeVariants(ButtonVariant.MATERIAL_OUTLINED)
-        addClassName("secret-form")
+        addClassName(formName)
       }
 
   init {
-    addClassName("secret-form")
+    addClassName(formName)
     width = "400px"
-    add(secretLabel, secretField, save)
+    add(oldSecret, newSecret, save)
   }
 }

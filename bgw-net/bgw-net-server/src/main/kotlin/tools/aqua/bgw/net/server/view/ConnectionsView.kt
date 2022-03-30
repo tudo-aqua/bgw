@@ -28,6 +28,11 @@ import tools.aqua.bgw.net.server.entity.Game
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.service.FrontendService
 
+/**
+ * Layout for the connections view.
+ *
+ * @property frontendService Auto-Wired [FrontendService].
+ */
 @Route(value = "", layout = MainLayout::class)
 @PageTitle("BGW-Net | Active Connections")
 class ConnectionsView(@Autowired private val frontendService: FrontendService) : VerticalLayout() {

@@ -33,8 +33,16 @@ import tools.aqua.bgw.net.server.entity.repositories.GameRepository
 @Service
 class GameService(private val gameRepository: GameRepository) {
 
+  /** Logger instance. */
   private val logger = LoggerFactory.getLogger(javaClass)
 
+  /**
+   * Creates a new [Game].
+   *
+   * @param gameID ID of the associated [Game].
+   * @param sessionID Unique session ID.
+   * @param initializer [Player] instance that hosts this session.
+   */
   @Synchronized
   fun createGame(gameID: String, sessionID: String, initializer: Player): CreateGameResponseStatus {
     val status =
@@ -48,9 +56,15 @@ class GameService(private val gameRepository: GameRepository) {
     return status
   }
 
+  /**
+   * Removes a [Player] from a [Game].
+   *
+   * @param player [Player] that leaves.
+   */
   @Synchronized
   fun leaveGame(player: Player): LeaveGameResponseStatus {
     val game = player.game
+
     return if (game == null) {
       LeaveGameResponseStatus.NO_ASSOCIATED_GAME
     } else {
@@ -61,6 +75,12 @@ class GameService(private val gameRepository: GameRepository) {
     }
   }
 
+  /**
+   * Adds a [Player] to a [Game].
+   *
+   * @param player [Player] that joins.
+   * @param sessionID Session to join to.
+   */
   @Synchronized
   fun joinGame(player: Player, sessionID: String): JoinGameResponseStatus =
       if (player.game != null) {
@@ -103,7 +123,19 @@ class GameService(private val gameRepository: GameRepository) {
     }
   }
 
+  /**
+   * Returns [Game] instance associated with [sessionID].
+   *
+   * @param sessionID Session ID to search.
+   *
+   * @return [Game] instance associated with [sessionID], 'null' if no game was found.
+   */
   fun getBySessionID(sessionID: String): Game? = gameRepository.getBySessionID(sessionID)
 
+  /**
+   * Returns all active [Game] instances.
+   *
+   * @return All active [Game] instances.
+   */
   fun getAll(): List<Game> = gameRepository.getAll()
 }

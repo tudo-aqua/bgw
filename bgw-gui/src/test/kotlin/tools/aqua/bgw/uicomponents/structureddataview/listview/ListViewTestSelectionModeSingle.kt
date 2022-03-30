@@ -21,8 +21,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import tools.aqua.bgw.components.uicomponents.ListView
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 
+/** Tests for [ListView] with [SelectionMode.SINGLE]. */
 class ListViewTestSelectionModeSingle : ListViewTestBase(SelectionMode.SINGLE) {
 
   /** Test select by index on valid parameter. */

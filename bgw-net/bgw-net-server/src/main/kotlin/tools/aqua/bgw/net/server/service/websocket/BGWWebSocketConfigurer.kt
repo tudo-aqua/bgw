@@ -25,6 +25,12 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 
+/**
+ * [WebSocketConfigurer] for BWG-Net applications.
+ *
+ * @property wsHandler Auto-Wired [BGWWebsocketHandler].
+ * @property keyValueRepository Auto-Wired [KeyValueRepository].
+ */
 @Configuration
 @EnableWebSocket
 class BGWWebSocketConfigurer(

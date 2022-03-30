@@ -34,9 +34,11 @@ class FrontendService(
     private val playerRepository: PlayerRepository,
     private val gameRepository: GameRepository
 ) {
+  /** List of active [Player]s. */
   val activePlayers: List<Player>
     get() = playerRepository.getAll()
 
+  /** List of active [Game]s. */
   val activeGames: List<Game>
     get() = gameRepository.getAll()
 }

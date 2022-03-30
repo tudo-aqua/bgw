@@ -58,6 +58,7 @@ open class ObservableListTestBase {
   /**
    * Checks [list]'s contents to pairwise equal the [reference].
    *
+   * @param T Type of [list].
    * @param list List to be checked.
    * @param reference Expected contents.
    */

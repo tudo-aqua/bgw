@@ -20,8 +20,10 @@ package tools.aqua.bgw.uicomponents.structureddataview.listview
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import tools.aqua.bgw.components.uicomponents.ListView
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 
+/** Test changing [SelectionMode] in [ListView]. */
 class ListViewChangeSelectionModeTest : ListViewTestBase(SelectionMode.SINGLE) {
 
   /** Test change to [SelectionMode.NONE]. */

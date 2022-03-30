@@ -20,7 +20,24 @@ package tools.aqua.bgw.net.common.annotations
 import java.lang.reflect.Method
 import tools.aqua.bgw.net.common.GameAction
 
+/** Processor for all functions annotated with [GameActionReceiver]. */
 object GameActionReceiverProcessor {
+
+  /**
+   * Finds all functions annotated with [GameActionReceiver] in [target] [Class].
+   *
+   * Prints Error message if method signature does not match expected. Functions get ignored in this
+   * case.
+   *
+   * @param target Target class to be searched.
+   * @param classes All registered [GameAction]s.
+   *
+   * @return Map from [GameActionClass]es to dedicated receiver functions.
+   *
+   * @see GameActionClass
+   * @see GameActionReceiver
+   * @see GameActionReceiverProcessor
+   */
   fun getAnnotatedReceivers(
       target: Class<*>,
       classes: Set<Class<out GameAction>>

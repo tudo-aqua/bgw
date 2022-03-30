@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "GlobalCoroutineUsage", "EXPERIMENTAL_IS_NOT_ENABLED")
 
 package tools.aqua.bgw.net.client
 
@@ -69,7 +69,7 @@ protected constructor(
   /** Mapper for incoming message handlers. */
   private var gameActionReceivers: Map<Class<out GameAction>, Method>? = null
 
-  /** Coroutines job for initializing annotation processing */
+  /** Coroutines job for initializing annotation processing. */
   private val initializationJob: Job
 
   init {

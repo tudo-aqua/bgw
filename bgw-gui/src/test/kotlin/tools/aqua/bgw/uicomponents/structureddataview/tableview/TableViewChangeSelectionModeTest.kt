@@ -21,7 +21,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.components.uicomponents.SelectionMode
+import tools.aqua.bgw.components.uicomponents.TableView
 
+/** Test changing [SelectionMode] in [TableView]. */
 class TableViewChangeSelectionModeTest : TableViewTestBase(SelectionMode.SINGLE) {
 
   /** Test change to [SelectionMode.NONE]. */

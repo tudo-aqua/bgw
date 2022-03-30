@@ -20,6 +20,7 @@ package tools.aqua.bgw.net.common.annotations
 import com.google.common.reflect.ClassPath
 import tools.aqua.bgw.net.common.GameAction
 
+/** Processor for all classes annotated with [GameActionClass]. */
 object GameActionClassProcessor {
 
   /**
@@ -43,6 +44,17 @@ object GameActionClassProcessor {
           "org.slf4j",
           "org.checkerframework")
 
+  /**
+   * Finds all classes annotated with [GameActionClass] and/or extending [GameAction].
+   *
+   * Prints Error message if only one condition is met. Classes get ignored in this case.
+   *
+   * @return Set of all Classes annotated with [GameActionClass] and extending [GameAction].
+   *
+   * @see GameActionClass
+   * @see GameActionReceiver
+   * @see GameActionClassProcessor
+   */
   @Suppress("UNCHECKED_CAST")
   fun getAnnotatedClasses(): Set<Class<out GameAction>> =
       ClassPath.from(ClassLoader.getSystemClassLoader())
@@ -68,10 +80,16 @@ object GameActionClassProcessor {
           .toSet() as
           Set<Class<out GameAction>>
 
+  /** Filters [ClassPath] against blacklist [forbiddenPackagePrefix]. */
   private fun ClassPath.ClassInfo.isCandidate(): Boolean =
       packageName.startsWith("tools.aqua.bgw.examples") ||
           forbiddenPackagePrefix.none { packageName.startsWith(it) }
 
+  /**
+   * Loads [Class] from [ClassPath].
+   *
+   * @return Loaded [Class] or 'null' if class is not instantiable.
+   */
   private fun ClassPath.ClassInfo.loadOrNull(): Class<*>? =
       try {
         load()

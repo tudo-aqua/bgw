@@ -17,6 +17,14 @@
 
 package tools.aqua.bgw.net.common.annotations
 
+/**
+ * Annotation for Game action receiver functions.
+ *
+ * Use this annotation on any receiver function with [GameActionClass] as parameter. All annotated
+ * functions will be indexed upon runtime and mapped to [GameActionClass]es.
+ *
+ * @see GameActionClass
+ */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class GameActionReceiver

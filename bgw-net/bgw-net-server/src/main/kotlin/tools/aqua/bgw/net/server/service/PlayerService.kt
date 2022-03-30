@@ -22,7 +22,11 @@ import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.repositories.PlayerRepository
 
-/** This service handles creation and deletion of players from [PlayerRepository]. */
+/**
+ * This service handles creation and deletion of players from [PlayerRepository].
+ *
+ * @property playerRepository Auto-Wired repository for players.
+ */
 @Service
 class PlayerService(val playerRepository: PlayerRepository) {
   /**

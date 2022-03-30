@@ -35,6 +35,7 @@ import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
 
+/** Layout for the main view. */
 @CssImport("./styles/styles.css")
 @Theme(Lumo::class, variant = Lumo.LIGHT)
 class MainLayout : AppLayout() {
@@ -73,7 +74,7 @@ class MainLayout : AppLayout() {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val secretLink =
-        RouterLink("SoPra Secret", SoPraSecretForm::class.java).apply {
+        RouterLink("SoPra Secret", SecretForm::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val schemaLink =

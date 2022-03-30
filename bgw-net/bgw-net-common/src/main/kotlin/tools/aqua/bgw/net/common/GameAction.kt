@@ -18,5 +18,14 @@
 package tools.aqua.bgw.net.common
 
 import tools.aqua.bgw.net.common.annotations.GameActionClass
+import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 
+/**
+ * Baseclass for all Game action classes.
+ *
+ * Extend this class in order to create data classes that can be sent by a BoardGameClient. All
+ * implementations additionally need the [GameActionClass] annotation to work properly.
+ *
+ * @see GameActionReceiver
+ */
 @GameActionClass abstract class GameAction

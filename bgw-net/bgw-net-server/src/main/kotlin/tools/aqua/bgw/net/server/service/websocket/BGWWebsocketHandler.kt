@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
+import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
@@ -30,6 +31,13 @@ import tools.aqua.bgw.net.server.service.MessageService
 import tools.aqua.bgw.net.server.service.MessageService.Companion.broadcastMessage
 import tools.aqua.bgw.net.server.service.PlayerService
 
+/**
+ * [WebSocketHandler] for BGW-Net applications.
+ *
+ * @property playerService Auto-Wired [PlayerService].
+ * @property messageService Auto-Wired [MessageService].
+ * @property gameService Auto-Wired [GameService].
+ */
 @Component
 class BGWWebsocketHandler(
     private val playerService: PlayerService,
