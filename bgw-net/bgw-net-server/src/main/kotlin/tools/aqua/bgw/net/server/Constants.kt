@@ -58,6 +58,3 @@ val WebSocketSession.player: Player
     val player = attributes["player"] ?: error("missing attribute") // TODO
     if (player is Player) return player else error("wrong type") // TODO
   }
-
-/** The String representation of the logout redirection URL */
-const val LOGOUT_SUCCESS_URL = "/"
