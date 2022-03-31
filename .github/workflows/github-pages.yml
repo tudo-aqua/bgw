@@ -28,7 +28,7 @@ jobs:
           arguments: :bgw-docs:jekyllBuild
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4
+        uses: JamesIves/github-pages-deploy-action@4.2.5
         with:
           branch: gh-pages
           folder: bgw-docs/build/jekyll
