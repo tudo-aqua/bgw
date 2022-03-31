@@ -60,9 +60,9 @@ openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openj
 
 postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql" }
 
-testcontainers-postgreSQL = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
 testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
-testcontainers-jdbc = { group = "org.testcontainers", name = "jdbc", version.ref = "testcontainers" }
+h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.210" }
+
 
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
 spring-boot-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
