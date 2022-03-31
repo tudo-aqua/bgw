@@ -23,8 +23,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.util.matcher.RequestMatcher
-
-private const val LOGOUT_SUCCESS_URL = "/"
+import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
 
 /**
  * Configures spring security, doing the following:
@@ -35,7 +34,7 @@ private const val LOGOUT_SUCCESS_URL = "/"
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
-  /** Require login to access internal pages and configure login form. */
+  /** Restrict access to the application, allowing only logged-in users */
   override fun configure(http: HttpSecurity) {
     http.httpBasic().disable()
     // Not using Spring CSRF here to be able to use plain HTML for the login page

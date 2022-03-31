@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest
  * request parameter is present and if its value is consistent with any of the request types know.
  *
  * @param request the request under examination.
- * @return true iff [request] is an internal framework request.
+ * @return true if [request] is an internal framework request.
  */
 fun isFrameworkInternalRequest(request: HttpServletRequest): Boolean {
   val parameterValue = request.getParameter(REQUEST_TYPE_PARAMETER)
