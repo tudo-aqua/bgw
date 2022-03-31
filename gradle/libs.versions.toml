@@ -16,6 +16,7 @@ junit = "5.8.2"
 ktor = "2.0.0-beta-1"
 openjfx = "17.0.2"
 guava = "31.1-jre"
+testcontainers = "1.16.3"
 
 [libraries]
 
@@ -60,11 +61,16 @@ openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openj
 
 postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql" }
 
+testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.210" }
+
+
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
 spring-boot-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 spring-boot-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
 spring-boot-vaadin = { group = "com.vaadin", name = "vaadin-spring-boot-starter" }
 spring-boot-websocket = { group = "org.springframework.boot", name = "spring-boot-starter-websocket" }
+spring-boot-oauth2-client = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
 
 vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin-framework" }
 

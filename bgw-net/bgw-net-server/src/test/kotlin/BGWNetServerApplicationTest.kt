@@ -15,26 +15,16 @@
  * limitations under the License.
  */
 
-@file:Suppress("SpreadOperator")
-
 package tools.aqua.bgw.net.server
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Configuration
-import org.springframework.scheduling.annotation.EnableScheduling
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.runner.RunWith
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit4.SpringRunner
 
-/** Spring boot application main class. */
-@SpringBootApplication class Application
-
-/** Spring boot application config class. */
-@Configuration @EnableScheduling class AppConfig
-
-/**
- * Spring boot entry point.
- *
- * @param args Program arguments.
- */
-fun main(args: Array<String>) {
-  runApplication<Application>(*args)
+@RunWith(SpringRunner::class)
+@SpringBootTest(classes = [Application::class])
+class BGWNetServerApplicationTest {
+  @Test @DisplayName("Test application initialization") fun contextLoads() {}
 }

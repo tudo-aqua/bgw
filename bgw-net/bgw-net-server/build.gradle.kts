@@ -37,4 +37,9 @@ dependencies {
   runtimeOnly(libs.postgreSQL.jdbc)
 
   implementation(libs.spring.boot.websocket)
+  implementation(libs.spring.boot.oauth2.client)
+
+  // Integration testing
+  testImplementation(libs.h2database.h2)
+  testImplementation(libs.testcontainers.junit.jupiter)
 }

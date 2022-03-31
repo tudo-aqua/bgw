@@ -17,12 +17,10 @@
 
 package tools.aqua.bgw.net.server.service.websocket
 
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
-import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 
 /**
@@ -37,14 +35,6 @@ class BGWWebSocketConfigurer(
     private val wsHandler: BGWWebsocketHandler,
     private val keyValueRepository: KeyValueRepository
 ) : WebSocketConfigurer {
-
-  /** Not really needed anymore. An idle timeout could be configured here. */
-  @Bean
-  fun createWebSocketContainer(): ServletServerContainerFactoryBean =
-      ServletServerContainerFactoryBean().apply {
-        // setMaxSessionIdleTimeout(IDLE_TIMEOUT)
-      }
-
   override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
     registry
         .addHandler(wsHandler, "/chat")
