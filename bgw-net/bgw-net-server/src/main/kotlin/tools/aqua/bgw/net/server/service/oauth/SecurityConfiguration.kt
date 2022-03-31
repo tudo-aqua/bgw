@@ -29,6 +29,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher
 import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
 
 /**
+ * SecurityConfiguration.
+ *
  * Configures spring security, doing the following:
  * - Bypass security checks for static resources,
  * - Restrict access to the application, allowing only logged-in users,
@@ -37,7 +39,7 @@ import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration : WebSecurityConfigurerAdapter() {
-  /** Restrict access to the application, allowing only logged-in users */
+  /** Restrict access to the application, allowing only logged-in users. */
   override fun configure(http: HttpSecurity) {
     http.httpBasic().disable()
     // Not using Spring CSRF here to be able to use plain HTML for the login page
