@@ -18,24 +18,29 @@
 plugins { id("tools.aqua.bgw.spring-vaadin-conventions") }
 
 mavenMetadata {
-  name.set("BoardGameWork Server")
-  description.set("A framework for board game applications.")
+    name.set("BoardGameWork Server")
+    description.set("A framework for board game applications.")
 }
 
 dependencies {
-  implementation(project(":bgw-net:bgw-net-common"))
+    implementation(project(":bgw-net:bgw-net-common"))
 
-  implementation(libs.kotlinx.serialization.json)
-  implementation(libs.spring.boot.devtools)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.spring.boot.devtools)
 
-  // json kotlin schema
-  implementation(libs.jackson.kotlin)
-  implementation(libs.jsonSchemaValidator)
+    // json kotlin schema
+    implementation(libs.jackson.kotlin)
+    implementation(libs.jsonSchemaValidator)
 
-  implementation(libs.spring.boot.jpa)
-  implementation(libs.hibernateTypes)
-  runtimeOnly(libs.postgreSQL.jdbc)
+    implementation(libs.spring.boot.jpa)
+    implementation(libs.hibernateTypes)
+    runtimeOnly(libs.postgreSQL.jdbc)
 
-  implementation(libs.spring.boot.websocket)
-  implementation(libs.spring.boot.oauth2.client)
+    implementation(libs.spring.boot.websocket)
+    implementation(libs.spring.boot.oauth2.client)
+
+    // Integration testing
+    implementation(libs.testcontainers.jdbc)
+    testImplementation(libs.testcontainers.postgreSQL)
+    testImplementation(libs.testcontainers.junit.jupiter)
 }

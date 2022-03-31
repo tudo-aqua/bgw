@@ -16,6 +16,7 @@ junit = "5.8.2"
 ktor = "2.0.0-beta-1"
 openjfx = "12.0.2"
 guava = "31.1-jre"
+testcontainers = "1.16.3"
 
 [libraries]
 
@@ -58,6 +59,10 @@ openjfx-swing = { group = "org.openjfx", name = "javafx-swing", version.ref = "o
 openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openjfx" }
 
 postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql" }
+
+testcontainers-postgreSQL = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+testcontainers-jdbc = { group = "org.testcontainers", name = "jdbc", version.ref = "testcontainers" }
 
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
 spring-boot-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
