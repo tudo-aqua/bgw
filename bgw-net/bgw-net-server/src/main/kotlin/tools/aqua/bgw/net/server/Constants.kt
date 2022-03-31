@@ -35,6 +35,9 @@ const val ORPHANED_GAME_CHECK_RATE: Long = 20_000L
  */
 const val TIME_UNTIL_ORPHANED: Long = 60_000L
 
+/** OAuth Logout Success URL. */
+internal const val LOGOUT_SUCCESS_URL = "/"
+
 /** The String representation of the example game id. */
 const val EXAMPLE_GAME_ID: String = "example"
 

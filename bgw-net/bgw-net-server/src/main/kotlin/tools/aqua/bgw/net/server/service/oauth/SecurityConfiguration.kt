@@ -17,24 +17,26 @@
 
 package tools.aqua.bgw.net.server.service.oauth
 
+import com.vaadin.flow.server.HandlerHelper
+import com.vaadin.flow.shared.ApplicationConstants
+import javax.servlet.http.HttpServletRequest
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.util.matcher.RequestMatcher
-
-private const val LOGOUT_SUCCESS_URL = "/"
+import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
 
 /**
  * Configures spring security, doing the following:
  * - Bypass security checks for static resources,
- * - Restrict access to the application, allowing only logged in users,
+ * - Restrict access to the application, allowing only logged-in users,
  * - Set up the login form
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   /** Require login to access internal pages and configure login form. */
   override fun configure(http: HttpSecurity) {
     http.httpBasic().disable()
@@ -56,7 +58,7 @@ class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
         .antMatchers(
             "/VAADIN/**", // Vaadin Flow static resources
             "/favicon.ico", // the standard favicon URI
-            "/robots.txt", // the robots exclusion standard
+            "/robots.txt", // the robots.txt exclusion standard
             "/manifest.webmanifest",
             "/sw.js",
             "/offline-page.html", // web application manifest
@@ -68,5 +70,19 @@ class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
             "/frontend-es5/**",
             "/frontend-es6/**", // (production mode) static resources
         )
+  }
+
+  /**
+   * Tests if the request is an internal framework request. The test consists of checking if the
+   * request parameter is present and if its value is consistent with any of the request types know.
+   *
+   * @param request the request under examination.
+   * @return true iff [request] is an internal framework request.
+   */
+  private fun isFrameworkInternalRequest(request: HttpServletRequest): Boolean {
+    val parameterValue =
+        request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER) ?: return false
+
+    return HandlerHelper.RequestType.values().any { it.identifier == parameterValue }
   }
 }

@@ -27,6 +27,9 @@ import org.springframework.scheduling.annotation.EnableScheduling
 /** Spring boot application main class. */
 @SpringBootApplication class Application
 
+/** Spring boot application config class. */
+@Configuration @EnableScheduling class AppConfig
+
 /**
  * Spring boot entry point.
  *
@@ -35,6 +38,3 @@ import org.springframework.scheduling.annotation.EnableScheduling
 fun main(args: Array<String>) {
   runApplication<Application>(*args)
 }
-
-/** Spring boot application config class. */
-@Configuration @EnableScheduling class AppConfig
