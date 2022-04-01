@@ -53,7 +53,7 @@ gitVersioning.apply {
   }
 }
 
-val printVersion by tasks.registering { logger.error(version.toString()) }
+val printVersion by tasks.registering { doFirst { logger.error(version.toString()) } }
 
 spotless {
   format("kotlinBuildSrc", KotlinExtension::class.java) {
