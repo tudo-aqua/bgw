@@ -32,8 +32,6 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
 }
 
-group = "tools.aqua"
-
 version = "0.0.0-SNAPSHOT"
 
 val mavenMetadata = extensions.create<GlobalMavenMetadataExtension>("mavenMetadata")

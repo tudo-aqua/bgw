@@ -21,6 +21,8 @@ import tools.aqua.GlobalMavenMetadataExtension.GithubProject
 
 plugins { id("tools.aqua.bgw.root-conventions") }
 
+group = "tools.aqua"
+
 mavenMetadata {
   developers.addAll(
       Developer("Simon Dierl", "simon.dierl@tu-dortmund.de"),
