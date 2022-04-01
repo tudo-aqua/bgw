@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
 - Additional functions for ``GridPane`` to set all column widths or row heights.
 
 ### Changed
-- Renamed module bgw-core into bgw-ui.
+- Renamed module bgw-core into bgw-gui.
 - Background of ``ListView`` and ``TableView`` is now transparent.
 - Dragged elements keep their stacked rotation instead of snapping to components rotation.
 - Updated OpenFX to Version 17.
