@@ -27,7 +27,7 @@ Examples are available for [MauMau](https://github.com/tudo-aqua/bgw/tree/main/b
 
 BoardGameWork is built on top of [JavaFX 17](https://openjfx.io/openjfx-docs/) and therefore requires at least JDK 11. Since JavaFX was decoupled from the JavaJDK as of JDK 11, BoardGameWork comes with JavaFX dependencies including their native libraries for various platforms like Windows, Linux and Mac.
 
-Tho we recommend installing a JDK Build that already includes JavaFX to ensure your platform is supported. [Azul Zulu Builds of OpenJDK](https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk) support a wide range of platforms and architectures including [Mac M1](https://www.azul.com/downloads/?version=java-11-lts&os=macos&architecture=arm-64-bit&package=jdk-fx#download-openjdk).
+We recommend installing a JDK build that already includes JavaFX to ensure your platform is supported. [Azul Zulu Builds of OpenJDK](https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk) support a wide range of platforms and architectures including [Mac M1](https://www.azul.com/downloads/?version=java-11-lts&os=macos&architecture=arm-64-bit&package=jdk-fx#download-openjdk).
 
 ### Setup
 
@@ -35,15 +35,15 @@ Start by adding the latest version of BGW as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:bgw-core:0.5")
+implementation("tools.aqua:bgw-gui:0.6")
 ```
 
 #### Maven
 ```xml
 <dependency>
   <groupId>tools.aqua</groupId>
-  <artifactId>bgw-core</artifactId>
-  <version>0.5</version>
+  <artifactId>bgw-gui</artifactId>
+  <version>0.6</version>
 </dependency>
 ``` 
 
