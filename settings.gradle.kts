@@ -19,7 +19,6 @@ rootProject.name = "bgw"
 
 include(
     "bgw-docs",
-    "bgw-examples:bgw-docs-examples",
     "bgw-examples:bgw-maumau-example",
     "bgw-examples:bgw-sudoku-example",
     "bgw-examples:bgw-tetris-example",
