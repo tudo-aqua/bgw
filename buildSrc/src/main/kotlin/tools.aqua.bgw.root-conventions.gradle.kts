@@ -18,6 +18,7 @@
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
 import java.util.regex.Pattern
+import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
 
 plugins {
@@ -34,6 +35,8 @@ plugins {
 group = "tools.aqua"
 
 version = "0.0.0-SNAPSHOT"
+
+val mavenMetadata = extensions.create<GlobalMavenMetadataExtension>("mavenMetadata")
 
 gitVersioning.apply {
   describeTagPattern = Pattern.compile("v(?<version>.*)")

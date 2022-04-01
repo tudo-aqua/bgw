@@ -19,14 +19,16 @@ package tools.aqua
 
 import javax.inject.Inject
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.publish.maven.MavenPom
 import org.gradle.api.tasks.Input
+import org.gradle.kotlin.dsl.listProperty
 import org.gradle.kotlin.dsl.property
 
 /**
  * This extension stores project-specific Maven metadata (name, description) in a type-safe way. The
- * can then be retrieved to fill the POM configuration without forcing build files to contain
+ * values can then be retrieved to fill the POM configuration without forcing build files to contain
  * publishing logic.
  *
  * @param objects a Gradle object factory.
@@ -43,4 +45,57 @@ open class MavenMetadataExtension @Inject constructor(objects: ObjectFactory) {
    * @see MavenPom.getDescription
    */
   @Input val description: Property<String> = objects.property()
+}
+
+/**
+ * This extension stores global Maven metadata (developers, GitHub, license) in a type-safe way. The
+ * values can then be retrieved to fill the POM configuration without forcing build files to contain
+ * publishing logic.
+ *
+ * @param objects a Gradle object factory.
+ */
+open class GlobalMavenMetadataExtension @Inject constructor(objects: ObjectFactory) {
+  /**
+   * A developer's identity.
+   * @param name the developer's name.
+   * @param email the developer's preferred email address.
+   */
+  data class Developer(val name: String, val email: String)
+
+  /**
+   * A GitHub project's coordinates.
+   * @param organization the organisation / user the project resides in.
+   * @param project the project name.
+   * @param mainBranch the main branch (usually "main" or similar).
+   */
+  data class GithubProject(
+      val organization: String,
+      val project: String,
+      val mainBranch: String = "main"
+  )
+
+  /**
+   * A OSS license.
+   * @param name the licenses full name.
+   * @param url a URL with more information about the license.
+   */
+  data class License(val name: String, val url: String)
+
+  /**
+   * The developers for the POM. Uses the root project's developers, if unset.
+   * @see MavenPom.developers
+   */
+  @Input val developers: ListProperty<Developer> = objects.listProperty()
+
+  /**
+   * The developers for the POM. Uses the root project's developers, if unset.
+   * @see MavenPom.developers
+   */
+  @Input val githubProject: Property<GithubProject> = objects.property()
+
+  /**
+   * The developers for the POM. Uses the root project's developers, if unset.
+   * @see MavenPom.developers
+   */
+  @Input val licenses: ListProperty<License> = objects.listProperty()
 }
