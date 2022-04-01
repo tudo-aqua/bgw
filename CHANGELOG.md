@@ -1,3 +1,4 @@
+[0.6]: https://github.com/tudo-aqua/bgw/releases/tag/v0.6
 [0.5]: https://github.com/tudo-aqua/bgw/releases/tag/v0.5
 [0.4]: https://github.com/tudo-aqua/bgw/releases/tag/v0.4
 [0.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.3
@@ -13,7 +14,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.6] - To be released
+## [0.6] - 01.04.2022
 
 ### Added
 - Fullscreen mode and Fullscreen-Exit-Combination.
@@ -24,17 +25,17 @@ All notable changes to this project will be documented in this file.
 - Additional functions for ``GridPane`` to set all column widths or row heights.
 
 ### Changed
-- Renamed module bgw-core to bgw-ui.
+- Renamed module bgw-core into bgw-ui.
 - Background of ``ListView`` and ``TableView`` is now transparent.
 - Dragged elements keep their stacked rotation instead of snapping to components rotation.
-- Updated OpenFX to Version 18.
+- Updated OpenFX to Version 17.
 
 ### Fixed
 - ``MovementAnimation.toComponentView`` now considers rotation and scale of containers.
 - Drag & Drop now works from rotated ``GridPanes``.
 - Background of ``MenuScene`` no longer changes when switching between menus.
 - ``Scene`` background can now be changed.
-- Removed blur animation between menu scenes.
+- Removed blur animation between menu scene changes.
 - Position of nested ``GridPanes`` no longer resets on update.
 - ``FontFamily`` with whitespace in name no longer has to be escaped.
 
