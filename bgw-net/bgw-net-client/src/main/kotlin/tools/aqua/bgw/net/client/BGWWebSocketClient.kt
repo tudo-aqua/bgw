@@ -26,8 +26,8 @@ import org.java_websocket.handshake.ServerHandshake
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.Message
 import tools.aqua.bgw.net.common.message.GameActionMessage
-import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
-import tools.aqua.bgw.net.common.notification.UserJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
 import tools.aqua.bgw.net.common.request.Request
 import tools.aqua.bgw.net.common.response.*
 
@@ -137,8 +137,8 @@ internal class BGWWebSocketClient(
       is CreateGameResponse -> callback.onCreateGameResponse(message)
       is JoinGameResponse -> callback.onJoinGameResponse(message)
       is LeaveGameResponse -> callback.onLeaveGameResponse(message)
-      is UserJoinedNotification -> callback.onUserJoined(message)
-      is UserDisconnectedNotification -> callback.onUserLeft(message)
+      is PlayerJoinedNotification -> callback.onPlayerJoined(message)
+      is PlayerLeftNotification -> callback.onPlayerLeft(message)
     }
   }
   // endregion

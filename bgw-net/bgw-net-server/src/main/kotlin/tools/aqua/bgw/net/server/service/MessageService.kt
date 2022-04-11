@@ -27,8 +27,8 @@ import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.Message
 import tools.aqua.bgw.net.common.message.*
 import tools.aqua.bgw.net.common.notification.Notification
-import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
-import tools.aqua.bgw.net.common.notification.UserJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
@@ -129,7 +129,7 @@ class MessageService(
     session.sendMessage(JoinGameResponse(joinGameResponseStatus))
 
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
-      val notification = UserJoinedNotification(msg.greeting, player.name)
+      val notification = PlayerJoinedNotification(msg.greeting, player.name)
 
       logger.info("Starting broadcast join message")
       gameService.getBySessionID(msg.sessionID)?.broadcastMessage(player, notification)
@@ -150,7 +150,7 @@ class MessageService(
     session.sendMessage(LeaveGameResponse(leaveGameResponseStatus))
 
     if (leaveGameResponseStatus == LeaveGameResponseStatus.SUCCESS) {
-      val notification = UserDisconnectedNotification(msg.goodbyeMessage, player.name)
+      val notification = PlayerLeftNotification(msg.goodbyeMessage, player.name)
       val message = mapper.writeValueAsString(notification)
       game?.let {
         it.players.map(Player::session).forEach { session ->

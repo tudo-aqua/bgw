@@ -24,7 +24,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
-import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
+import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
 import tools.aqua.bgw.net.server.player
 import tools.aqua.bgw.net.server.service.GameService
 import tools.aqua.bgw.net.server.service.MessageService
@@ -70,7 +70,7 @@ class BGWWebsocketHandler(
 
     gameService.leaveGame(player)
 
-    player.game?.broadcastMessage(player, UserDisconnectedNotification("disconnected", player.name))
+    player.game?.broadcastMessage(player, PlayerLeftNotification("disconnected", player.name))
 
     playerService.deletePlayer(session)
     logger.info("User with session id ${session.id} disconnected")

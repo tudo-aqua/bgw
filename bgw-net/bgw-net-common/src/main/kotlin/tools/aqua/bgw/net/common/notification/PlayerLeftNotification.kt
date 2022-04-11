@@ -23,5 +23,5 @@ package tools.aqua.bgw.net.common.notification
  * @param message Goodbye message of the [sender].
  * @param sender Sender identification.
  */
-class UserDisconnectedNotification(message: String, sender: String) :
+class PlayerLeftNotification(message: String, sender: String) :
     Notification(message = message, sender = sender)
