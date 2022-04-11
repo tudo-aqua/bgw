@@ -21,16 +21,20 @@ package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import java.lang.reflect.Method
+import java.net.InetAddress
 import java.net.URI
 import kotlin.reflect.jvm.javaMethod
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionClassProcessor.getAnnotatedClasses
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
 import tools.aqua.bgw.net.common.message.GameActionMessage
-import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
-import tools.aqua.bgw.net.common.notification.UserJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
@@ -72,6 +76,18 @@ protected constructor(
   /** Coroutines job for initializing annotation processing. */
   private val initializationJob: Job
 
+  /** Returns the current state of connection. */
+  val isOpen: Boolean
+    get() = wsClient.isOpen
+
+  constructor(
+      playerName: String,
+      host: InetAddress,
+      port: Int,
+      endpoint: String = "chat",
+      secret: String
+  ) : this(playerName, host.hostAddress, port, endpoint, secret)
+
   init {
     wsClient =
         BGWWebSocketClient(
@@ -92,16 +108,21 @@ protected constructor(
   }
 
   // region Connect / Disconnect
-  /** Connects to the remote server, blocking. */
-  // TODO: isConnected flag
-  fun connect() {
-    wsClient.connectBlocking()
+  /**
+   * Connects to the remote server, blocking.
+   *
+   * @return Returns whether connection could be established.
+   */
+  fun connect(): Boolean {
+    return try {
+      wsClient.connectBlocking()
+    } catch (_: InterruptedException) {
+      false
+    }
   }
 
   /** Disconnects from the remote server. */
-  fun disconnect() {
-    wsClient.closeBlocking()
-  }
+  fun disconnect(): Unit = wsClient.closeBlocking()
 
   /**
    * Called when an error occurred. By default, this method throws the incoming exception. Override
@@ -178,18 +199,18 @@ protected constructor(
   open fun onLeaveGameResponse(response: LeaveGameResponse) {}
 
   /**
-   * Called when a user joined the session and the server sent a [UserJoinedNotification].
+   * Called when a player joined the session and the server sent a [PlayerJoinedNotification].
    *
-   * @param notification The [UserJoinedNotification] received from the server.
+   * @param notification The [PlayerJoinedNotification] received from the server.
    */
-  open fun onUserJoined(notification: UserJoinedNotification) {}
+  open fun onPlayerJoined(notification: PlayerJoinedNotification) {}
 
   /**
-   * Called when a user left the session and the server sent a [UserDisconnectedNotification].
+   * Called when a player left the session and the server sent a [PlayerLeftNotification].
    *
-   * @param notification The [UserDisconnectedNotification] received from the server.
+   * @param notification The [PlayerLeftNotification] received from the server.
    */
-  open fun onUserLeft(notification: UserDisconnectedNotification) {}
+  open fun onPlayerLeft(notification: PlayerLeftNotification) {}
   // endregion
 
   // region Game messages
@@ -265,4 +286,30 @@ protected constructor(
     }
   }
   // endregion
+
+  companion object {
+    /**
+     * Tries parsing [ip] into a hostname.
+     *
+     * @return The Address if InetAddress.getByName returns a valid connection. 'null' otherwise.
+     */
+    fun parseAndValidateIP(ip: String): String? =
+        try {
+          InetAddress.getByName(ip).hostAddress
+        } catch (_: Exception) {
+          null
+        }
+
+    /**
+     * Tries parsing [port] into an IP port.
+     *
+     * @return Returns the parsed integer or 'null' if the passed String is not an integer
+     * representation or not in range 1 to 65534.
+     */
+    fun parseAndValidatePort(port: String): Int? {
+      val portInt = port.toIntOrNull() ?: return null
+
+      return if (portInt in 1..65_534) portInt else null
+    }
+  }
 }

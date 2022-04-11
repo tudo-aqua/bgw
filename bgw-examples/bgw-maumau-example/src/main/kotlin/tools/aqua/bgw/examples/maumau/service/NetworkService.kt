@@ -17,11 +17,11 @@
 
 package tools.aqua.bgw.examples.maumau.service
 
-import java.net.InetAddress
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
+import tools.aqua.bgw.net.client.BoardGameClient
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
@@ -37,6 +37,12 @@ class NetworkService(private val logicController: LogicController) {
    * @param sessionID Session ID to host.
    */
   fun tryHostGame(address: String, name: String, sessionID: String) {
+    if (sessionID.isEmpty()) {
+      logicController.view.showConnectWarningDialog(
+          title = "SessionID is empty", message = "Please fill in the sessionID field.")
+      return
+    }
+
     if (!tryConnect(address, name)) return
 
     client?.createGame(GAME_ID, sessionID)
@@ -50,6 +56,12 @@ class NetworkService(private val logicController: LogicController) {
    * @param sessionID Session ID to join to.
    */
   fun tryJoinGame(address: String, name: String, sessionID: String) {
+    if (sessionID.isEmpty()) {
+      logicController.view.showConnectWarningDialog(
+          title = "SessionID is empty", message = "Please fill in the sessionID field.")
+      return
+    }
+
     if (!tryConnect(address, name)) return
 
     client?.joinGame(sessionID, "greeting")
@@ -62,18 +74,56 @@ class NetworkService(private val logicController: LogicController) {
    * @param name Player name.
    */
   private fun tryConnect(address: String, name: String): Boolean {
+    if (address.isEmpty()) {
+      logicController.view.showConnectWarningDialog(
+          title = "Address is empty", message = "Please fill in the address field.")
+      return false
+    }
+
     val split = address.split(":")
+    if (split.size != 2) {
+      logicController.view.showConnectWarningDialog(
+          title = "Address invalid",
+          message = "Address is invalid. Must be in format 127.0.0.1:8080")
+      return false
+    }
 
-    client =
+    val parsedHost = BoardGameClient.parseAndValidateIP(split[0])
+    if (parsedHost == null) {
+      logicController.view.showConnectWarningDialog(
+          title = "Hostname invalid",
+          message = "Hostname is invalid. Must be IP address or valid hostname.")
+      return false
+    }
+
+    val parsedPort = BoardGameClient.parseAndValidatePort(split[1])
+    if (parsedPort == null) {
+      logicController.view.showConnectWarningDialog(
+          title = "Port invalid",
+          message = "Port is invalid. Must be an integer between 1 and 65534.")
+      return false
+    }
+
+    if (name.isEmpty()) {
+      logicController.view.showConnectWarningDialog(
+          title = "Name is empty", message = "Please fill in the name field.")
+      return false
+    }
+
+    val newClient =
         MauMauBoardGameClient(
-                playerName = name,
-                host = split[0],
-                port = split[1].toInt(),
-                logicController = logicController,
-            )
-            .apply { connect() }
+            playerName = name,
+            host = parsedHost,
+            port = parsedPort,
+            logicController = logicController,
+        )
 
-    return true // TODO: Check status after bgw-net error handling upgrade
+    return if (newClient.connect()) {
+      this.client = newClient
+      true
+    } else {
+      false
+    }
   }
   // endregion
 
@@ -120,57 +170,5 @@ class NetworkService(private val logicController: LogicController) {
   fun sendEndGame() {
     client?.sendGameActionMessage(MauMauEndGameAction("Looser!"))
   }
-  // endregion
-
-  // region Helper
-  /**
-   * Checks [address], [name] and [gameID] for not being empty, [address] to be parsable to an ip
-   * and port and [gameID] for being a positive integer.
-   */
-  fun validateInputs(address: String, name: String, gameID: String): Boolean {
-    if (address.isEmpty()) {
-      logicController.view.showConnectWarningDialog(
-          title = "Address is empty", message = "Please fill in the address field.")
-    }
-
-    val split = address.split(":")
-    if (split.size != 2 || !validateIP(split[0]) || !validatePort(split[1])) {
-      logicController.view.showConnectWarningDialog(
-          title = "Address invalid",
-          message = "Address is invalid. Must be in format 127.0.0.1:8080")
-    }
-
-    if (name.isEmpty()) {
-      logicController.view.showConnectWarningDialog(
-          title = "Name is empty", message = "Please fill in the name field.")
-      return false
-    }
-
-    if (gameID.isEmpty()) {
-      logicController.view.showConnectWarningDialog(
-          title = "gameID is empty", message = "Please fill in the gameID field.")
-      return false
-    }
-
-    return true
-  }
-
-  /**
-   * Tries parsing [ip] into a hostname.
-   *
-   * @return 'true' if InetAddress.getByName returns a valid connection.
-   */
-  private fun validateIP(ip: String): Boolean {
-    val converted: InetAddress?
-    try {
-      converted = InetAddress.getByName(ip)
-    } catch (_: Exception) {
-      return false
-    }
-    return converted != null
-  }
-
-  /** Tries parsing [port] into an ip port. */
-  private fun validatePort(port: String): Boolean = (port.toIntOrNull() ?: false) in 1..65_534
   // endregion
 }

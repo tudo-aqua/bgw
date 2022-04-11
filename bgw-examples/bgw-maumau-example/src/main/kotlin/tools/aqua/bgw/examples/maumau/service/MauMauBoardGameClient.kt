@@ -30,8 +30,8 @@ import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAct
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
-import tools.aqua.bgw.net.common.notification.UserDisconnectedNotification
-import tools.aqua.bgw.net.common.notification.UserJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
+import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
 import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.CreateGameResponseStatus
 import tools.aqua.bgw.net.common.response.JoinGameResponse
@@ -90,14 +90,14 @@ class MauMauBoardGameClient(
     }
   }
 
-  override fun onUserJoined(notification: UserJoinedNotification) {
+  override fun onPlayerJoined(notification: PlayerJoinedNotification) {
     BoardGameApplication.runOnGUIThread {
       logicController.game.players[1] = MauMauPlayer(notification.sender)
       logicController.view.onUserJoined(notification.sender)
     }
   }
 
-  override fun onUserLeft(notification: UserDisconnectedNotification) {
+  override fun onPlayerLeft(notification: PlayerLeftNotification) {
     BoardGameApplication.runOnGUIThread { logicController.view.onUserLeft(notification.sender) }
   }
   // endregion
