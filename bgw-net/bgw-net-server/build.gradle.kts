@@ -37,4 +37,5 @@ dependencies {
   runtimeOnly(libs.postgreSQL.jdbc)
 
   implementation(libs.spring.boot.websocket)
+  implementation(libs.spring.boot.oauth2.client)
 }
