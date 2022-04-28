@@ -26,6 +26,7 @@ import com.vaadin.flow.component.notification.NotificationVariant
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.select.Select
+import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
@@ -36,6 +37,7 @@ import java.io.IOException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import sun.jvm.hotspot.oops.CellTypeState.value
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.service.FrontendService
@@ -51,105 +53,107 @@ class UploadSchemaView(
     @Autowired private val notificationService: NotificationService,
     private val schemasByGameRepository: SchemasByGameRepository
 ) : VerticalLayout() {
-  private val logger: Logger = LoggerFactory.getLogger(javaClass)
-  private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+    private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
 
-  private val upload: Upload =
-      Upload(buffer).apply {
+    private val upload: Upload = Upload(buffer).apply {
         addSucceededListener {
-          var results: List<String> = listOf()
-          val mapper = ObjectMapper()
-          var schemaNode: JsonNode = mapper.createObjectNode()
-          try {
-            schemaNode = mapper.readTree(buffer.getInputStream(it.fileName))
-            results = validationService.validateMetaSchema(schemaNode)
-          } catch (_: IOException) {
-            notificationService.notify(
-                "Couldn't parse JSON Schema! Please upload a .json File",
-                NotificationVariant.LUMO_ERROR)
-          }
-          if (results.isEmpty()) {
-            notificationService.notify(
-                "${it.fileName}: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
-            val json = schemaNode.toString()
-            if (!schemasByGameRepository.existsById(json)) {
-              schemasByGameRepository.save(SchemasByGame(gameIdSelect.value, json))
-              gameGrid.setItems(
-                  frontendService.allGameIds.map { gameId ->
-                    Game(gameId, schemasByGameRepository.findAllByGameID(gameId))
-                  })
-              notificationService.notify(
-                  "${it.fileName}: Saved JSON Schema for game ${gameIdSelect.value}",
-                  NotificationVariant.LUMO_SUCCESS)
-            } else {
-              notificationService.notify(
-                  "${it.fileName}: JSON Schema already exists for game ${
-                            schemasByGameRepository.findById(json).get().gameID
-                        }",
-                  NotificationVariant.LUMO_ERROR)
+            var results: List<String> = listOf()
+            val mapper = ObjectMapper()
+            var schemaNode: JsonNode = mapper.createObjectNode()
+            try {
+                schemaNode = mapper.readTree(buffer.getInputStream(it.fileName))
+                results = validationService.validateMetaSchema(schemaNode)
+            } catch (_: IOException) {
+                notificationService.notify(
+                    "Couldn't parse JSON Schema! Please upload a .json File", NotificationVariant.LUMO_ERROR
+                )
             }
-          } else
-              notificationService.notify(
-                  "${it.fileName}: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
+            if (results.isEmpty()) {
+                notificationService.notify(
+                    "${it.fileName}: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS
+                )
+                val json = schemaNode.toString()
+                if (!schemasByGameRepository.existsById(json)) {
+                    schemasByGameRepository.save(SchemasByGame(gameIdSelect.value, json))
+                    gameGrid.setItems(frontendService.allGameIds.map { gameId ->
+                        Game(gameId, schemasByGameRepository.findAllByGameID(gameId))
+                    })
+                    notificationService.notify(
+                        "${it.fileName}: Saved JSON Schema for game ${gameIdSelect.value}",
+                        NotificationVariant.LUMO_SUCCESS
+                    )
+                } else {
+                    notificationService.notify(
+                        "${it.fileName}: JSON Schema already exists for game ${
+                            schemasByGameRepository.findById(json).get().gameID
+                        }", NotificationVariant.LUMO_ERROR
+                    )
+                }
+            } else notificationService.notify(
+                "${it.fileName}: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR
+            )
         }
-      }
+    }
 
-  private val gameIds: MutableList<String> =
-      mutableListOf<String>().apply { addAll(frontendService.allGameIds) }
+    private val gameIds: MutableList<String> = mutableListOf<String>().apply { addAll(frontendService.allGameIds) }
 
-  private val gameIdField =
-      ValidTextField("Game ID").apply {
+    private val gameIdField = ValidTextField("Game ID").apply {
         addValidator({ value -> !gameIds.contains(value) }, "Game ID not unique")
-      }
+    }
 
-  private val gameIdButton =
-      Button("Add").apply {
+    private val gameIdButton = Button("Add").apply {
         addClickListener {
-          if (!gameIds.contains(gameIdField.value)) {
-            gameIds.add(gameIdField.value)
-            gameIdSelect.setItems(gameIds)
-            gameIdField.reset()
-          }
+            if (!gameIds.contains(gameIdField.value)) {
+                gameIds.add(gameIdField.value)
+                gameIdSelect.setItems(gameIds)
+                gameIdField.reset()
+            }
         }
-      }
+    }
 
-  private var gameIdSelect: Select<String> =
-      Select<String>().apply {
+    private var gameIdSelect: Select<String> = Select<String>().apply {
         this.setItems(gameIds)
         this.label = "Game ID"
         addValueChangeListener { upload.element.setPropertyJson("files", Json.createArray()) }
-      }
+    }
 
-  private val gameGrid =
-      Grid<Game>().apply {
+    private val gameGrid = Grid<Game>().apply {
         addColumn(Game::gameId).setHeader("Game ID")
-        val schemaRenderer =
-            ComponentRenderer<Grid<SchemasByGame>, Game> { game ->
-              Grid<SchemasByGame>().apply {
-                addColumn(SchemasByGame::schema).setHeader("Schema")
+        val schemaRenderer = ComponentRenderer<Grid<SchemasByGame>, Game> { game ->
+            Grid<SchemasByGame>().apply {
+                addColumn(ComponentRenderer { item ->
+                    TextArea().apply {
+                        val mapper = ObjectMapper()
+                        val node = mapper.readTree(item.schema)
+                        value = node.toPrettyString()
+                        isReadOnly = true
+                        setWidthFull()
+                    }
+                }).setHeader("Schemas")
                 setItems(game.schemas)
-              }
             }
+        }
         setItemDetailsRenderer(schemaRenderer)
-        setItems(
-            frontendService.allGameIds.map {
-              Game(it, schemasByGameRepository.findAllByGameID(it))
-            })
+        setItems(frontendService.allGameIds.map {
+            Game(it, schemasByGameRepository.findAllByGameID(it))
+        })
         minWidth = "400px"
-      }
+    }
 
-  init {
-    add(
-        VerticalLayout(
-            gameGrid,
-            HorizontalLayout(
-                FormLayout(gameIdField, gameIdButton).apply { maxWidth = "400px" },
-                VerticalLayout(
-                    gameIdSelect,
-                    upload,
-                )),
-        ))
-  }
+    init {
+        add(
+            VerticalLayout(
+                gameGrid,
+                HorizontalLayout(
+                    FormLayout(gameIdField, gameIdButton).apply { maxWidth = "400px" }, VerticalLayout(
+                        gameIdSelect,
+                        upload,
+                    )
+                ),
+            )
+        )
+    }
 }
 
 class Game(val gameId: String, val schemas: List<SchemasByGame>)
