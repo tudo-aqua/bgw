@@ -24,7 +24,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.service.FrontendService
 
@@ -46,11 +46,11 @@ class ConnectionsView(@Autowired private val frontendService: FrontendService) :
       }
 
   private val gameGrid =
-      Grid<Game>().apply {
-        addColumn(Game::gameID).setHeader("Game ID")
-        addColumn(Game::sessionID).setHeader("Session ID")
+      Grid<GameInstance>().apply {
+        addColumn(GameInstance::gameID).setHeader("Game ID")
+        addColumn(GameInstance::sessionID).setHeader("Session ID")
         val playerRenderer =
-            ComponentRenderer<Grid<Player>, Game> { game ->
+            ComponentRenderer<Grid<Player>, GameInstance> { game ->
               Grid<Player>().apply {
                 addColumn(Player::name).setHeader("Name")
                 addColumn { it.session.remoteAddress?.address?.hostAddress ?: "n/a" }

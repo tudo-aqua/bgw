@@ -38,7 +38,7 @@ class FrontendService(
   val activePlayers: List<Player>
     get() = playerRepository.getAll()
 
-  /** List of active [Game]s. */
-  val activeGames: List<Game>
+    /** List of active [GameInstance]s. */
+  val activeGames: List<GameInstance>
     get() = gameRepository.getAll()
 }
