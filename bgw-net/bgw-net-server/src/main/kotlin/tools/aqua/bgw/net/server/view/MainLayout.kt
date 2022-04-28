@@ -78,10 +78,14 @@ class MainLayout : AppLayout() {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val schemaLink =
-        RouterLink("JSON Schema", SchemaView::class.java).apply {
+        RouterLink("Validate Schema", SchemaView::class.java).apply {
+          highlightCondition = HighlightConditions.sameLocation()
+        }
+    val uploadLink =
+        RouterLink("Upload Schema", UploadSchemaView::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
 
-    addToDrawer(VerticalLayout(connectionsLink, secretLink, schemaLink))
+    addToDrawer(VerticalLayout(connectionsLink, secretLink, schemaLink, uploadLink))
   }
 }
