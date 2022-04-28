@@ -20,4 +20,6 @@ package tools.aqua.bgw.net.server.entity.tables
 import org.springframework.data.repository.CrudRepository
 
 /** Interface for game schema repository. */
-interface SchemasByGameRepository : CrudRepository<SchemasByGame, String>
+interface SchemasByGameRepository : CrudRepository<SchemasByGame, String> {
+  fun findAllByGameID(gameId: String): List<SchemasByGame>
+}
