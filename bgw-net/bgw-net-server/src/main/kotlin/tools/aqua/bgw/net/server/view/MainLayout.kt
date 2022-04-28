@@ -69,7 +69,7 @@ class MainLayout : AppLayout() {
 
   private fun createDrawer() {
     val connectionsLink =
-        RouterLink("Connections and Games", ConnectionsView::class.java).apply {
+        RouterLink("Connections and Sessions", ConnectionsView::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val secretLink =
@@ -81,7 +81,7 @@ class MainLayout : AppLayout() {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val uploadLink =
-        RouterLink("Upload Schema", UploadSchemaView::class.java).apply {
+        RouterLink("Games and Schemas", UploadSchemaView::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
 
