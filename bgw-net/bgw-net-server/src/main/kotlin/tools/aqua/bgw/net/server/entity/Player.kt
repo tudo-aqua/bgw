@@ -23,10 +23,10 @@ import org.springframework.web.socket.WebSocketSession
  * Class representing a connected player.
  *
  * @property name The player's name.
- * @property game Associated [Game].
+ * @property game Associated [GameInstance].
  * @property session Associated [WebSocketSession].
  */
-class Player(val name: String, var game: Game?, val session: WebSocketSession) {
+class Player(val name: String, var game: GameInstance?, val session: WebSocketSession) {
 
   /** Compares session as it must be unique. */
   override fun equals(other: Any?): Boolean =

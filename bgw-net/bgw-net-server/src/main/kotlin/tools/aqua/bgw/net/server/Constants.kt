@@ -18,7 +18,7 @@
 package tools.aqua.bgw.net.server
 
 import org.springframework.web.socket.WebSocketSession
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.service.GameService
 
@@ -31,7 +31,7 @@ const val ORPHANED_GAME_CHECK_RATE: Long = 20_000L
 /**
  * The duration a game has to be without any players until it is considered orphaned.
  * @see [GameService.removeOrphanedGames]
- * @see [Game]
+ * @see [GameInstance]
  */
 const val TIME_UNTIL_ORPHANED: Long = 60_000L
 

@@ -25,11 +25,11 @@ import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
 import tools.aqua.bgw.net.common.response.LeaveGameResponseStatus
 import tools.aqua.bgw.net.server.ORPHANED_GAME_CHECK_RATE
 import tools.aqua.bgw.net.server.TIME_UNTIL_ORPHANED
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.repositories.GameRepository
 
-/** This service handles all interactions associated with [Game]. */
+/** This service handles all interactions associated with [GameInstance]. */
 @Service
 class GameService(private val gameRepository: GameRepository) {
 
@@ -39,7 +39,7 @@ class GameService(private val gameRepository: GameRepository) {
   fun createGame(gameID: String, sessionID: String, initializer: Player): CreateGameResponseStatus {
     val status =
         if (initializer.game == null) {
-          val game = Game(gameID, sessionID, initializer)
+          val game = GameInstance(gameID, sessionID, initializer)
           if (gameRepository.add(game)) {
             initializer.game = game
             CreateGameResponseStatus.SUCCESS
@@ -82,7 +82,7 @@ class GameService(private val gameRepository: GameRepository) {
   /**
    * Looks for orphaned Games and removes them.
    *
-   * A Game is considered orphaned when [Game.orphanCandidateSince]
+   * A Game is considered orphaned when [GameInstance.orphanCandidateSince]
    * - [System.currentTimeMillis] > [TIME_UNTIL_ORPHANED]
    *
    * This function is scheduled to run on a fixed rate every [ORPHANED_GAME_CHECK_RATE]
@@ -103,7 +103,7 @@ class GameService(private val gameRepository: GameRepository) {
     }
   }
 
-  fun getBySessionID(sessionID: String): Game? = gameRepository.getBySessionID(sessionID)
+  fun getBySessionID(sessionID: String): GameInstance? = gameRepository.getBySessionID(sessionID)
 
-  fun getAll(): List<Game> = gameRepository.getAll()
+  fun getAll(): List<GameInstance> = gameRepository.getAll()
 }
