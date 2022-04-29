@@ -22,6 +22,11 @@ mavenMetadata {
   description.set("A framework for board game applications.")
 }
 
+repositories {
+  mavenCentral()
+  maven("https://maven.vaadin.com/vaadin-addons")
+}
+
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
 
@@ -38,6 +43,7 @@ dependencies {
 
   implementation(libs.spring.boot.websocket)
   implementation(libs.spring.boot.oauth2.client)
+  implementation(libs.ilay)
 
   // Integration testing
   testImplementation(libs.h2database.h2)

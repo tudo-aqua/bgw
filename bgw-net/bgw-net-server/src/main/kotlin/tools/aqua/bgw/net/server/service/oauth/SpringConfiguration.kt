@@ -34,7 +34,8 @@ private const val LOGOUT_SUCCESS_URL = "/"
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration(var accountRepository: AccountRepository) :
+    WebSecurityConfigurerAdapter() {
   /** Require login to access internal pages and configure login form. */
   override fun configure(http: HttpSecurity) {
     http.httpBasic().disable()
@@ -46,7 +47,7 @@ class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
           .anyRequest()
           .authenticated()
     }
-    http.oauth2Login()
+    http.oauth2Login { it.successHandler(CustomSuccessHandler(accountRepository)) }
     http.logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
   }
 

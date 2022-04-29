@@ -20,28 +20,47 @@ package tools.aqua.bgw.net.server.view
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.formlayout.FormLayout
-import com.vaadin.flow.component.html.Label
-import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.component.textfield.PasswordField
+import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import tools.aqua.bgw.net.server.service.oauth.SecuredByRole
 
 /** Layout for the secret view. */
+@SecuredByRole("admin")
 @Route(value = "secret", layout = MainLayout::class)
-@PageTitle("BGW-Net | Secret")
-class SecretForm : FormLayout() {
-  private val formName = "secret-form"
-  private val oldSecret: Label = Label("Old Secret").apply { addClassName(formName) }
-  private val newSecret: TextField = TextField("New Secret").apply { addClassName(formName) }
-
-  private val save: Button =
-      Button("Save").apply {
-        addThemeVariants(ButtonVariant.MATERIAL_OUTLINED)
-        addClassName(formName)
+@PageTitle("BGW-Net | SoPra Secret")
+class SoPraSecretForm : FormLayout() {
+  private var oldSecret: PasswordField =
+      PasswordField("", "Current Secret").apply { isRequired = true }
+  private var newSecret: PasswordField = PasswordField("", "Secret")
+  private var confirmNewSecret: PasswordField = PasswordField("", "Confirm Secret")
+  private val confirmButton: Button =
+      Button("Change Secret").apply {
+        addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+        addClickListener {}
       }
 
+  private val binder: Binder<String> = Binder()
+  private var oldSecretValue: String = ""
+
+  fun updateButton() {}
+
+  fun configureForm() {
+    oldSecret.addValueChangeListener { !it.hasValue.isEmpty.also { confirmButton.isEnabled = it } }
+  }
+
+  fun initBinder() {
+    binder
+        .forField(oldSecret)
+        .asRequired()
+        .bind({ this.oldSecretValue }, { _, v -> this.oldSecretValue = v })
+  }
+
   init {
-    addClassName(formName)
+    initBinder()
+    addClassName("secret-form")
     width = "400px"
-    add(oldSecret, newSecret, save)
+    add(oldSecret, newSecret, confirmNewSecret, confirmButton)
   }
 }

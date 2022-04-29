@@ -39,7 +39,7 @@ import tools.aqua.bgw.net.server.service.validation.ValidationService
  * @property validationService Auto-Wired [ValidationService].
  */
 @Route(value = "schema", layout = MainLayout::class)
-@PageTitle("BGW-Net | JSON Schemas")
+@PageTitle("BGW-Net | Validate Schema")
 @CssImport(value = "./styles/message.css", themeFor = "vaadin-message")
 class SchemaView(
     @Autowired private val validationService: ValidationService,
