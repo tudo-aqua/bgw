@@ -66,6 +66,8 @@ spring-boot-vaadin = { group = "com.vaadin", name = "vaadin-spring-boot-starter"
 spring-boot-websocket = { group = "org.springframework.boot", name = "spring-boot-starter-websocket" }
 spring-boot-oauth2-client = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
 
+ilay = { group = "org.ilay", name = "ilay", version = "3.0-Final" }
+
 vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin-framework" }
 
 # Gradle Plugins

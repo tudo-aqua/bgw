@@ -34,10 +34,13 @@ import com.vaadin.flow.router.HighlightConditions
 import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User
+import tools.aqua.bgw.net.server.service.oauth.AccountRepository
 
 @CssImport("./styles/styles.css")
 @Theme(Lumo::class, variant = Lumo.LIGHT)
-class MainLayout : AppLayout() {
+class MainLayout(private val accountRepository: AccountRepository) : AppLayout() {
   init {
     createHeader()
     createDrawer()
@@ -85,6 +88,12 @@ class MainLayout : AppLayout() {
           highlightCondition = HighlightConditions.sameLocation()
         }
 
-    addToDrawer(VerticalLayout(connectionsLink, secretLink, schemaLink, uploadLink))
+    val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
+    val account = accountRepository.findBySub(principal.name).get()
+
+    val links: MutableList<RouterLink> = mutableListOf(connectionsLink, schemaLink)
+    if (account.isAdmin()) links.addAll(listOf(secretLink, uploadLink))
+
+    addToDrawer(VerticalLayout(*links.toTypedArray()))
   }
 }
