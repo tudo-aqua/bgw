@@ -20,46 +20,41 @@ package tools.aqua.bgw.net.server.view
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.formlayout.FormLayout
+import com.vaadin.flow.component.notification.NotificationVariant
 import com.vaadin.flow.component.textfield.PasswordField
-import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
+import tools.aqua.bgw.net.server.service.NotificationService
 import tools.aqua.bgw.net.server.service.oauth.SecuredByRole
 
 @SecuredByRole("admin")
 @Route(value = "secret", layout = MainLayout::class)
 @PageTitle("BGW-Net | SoPra Secret")
-class SoPraSecretForm : FormLayout() {
-  private var oldSecret: PasswordField =
-      PasswordField("", "Current Secret").apply { isRequired = true }
-  private var newSecret: PasswordField = PasswordField("", "Secret")
-  private var confirmNewSecret: PasswordField = PasswordField("", "Confirm Secret")
+class SoPraSecretForm(
+    private val keyValueRepository: KeyValueRepository,
+    @Autowired private val notificationService: NotificationService
+) : FormLayout() {
+  private val logger: Logger = LoggerFactory.getLogger(javaClass)
+  private var newSecret: PasswordField = PasswordField("", "Secret").apply { isRequired = true }
   private val confirmButton: Button =
       Button("Change Secret").apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)
-        addClickListener {}
+        addClickListener {
+          val entry = keyValueRepository.findById("SoPra Secret").get()
+          keyValueRepository.save(entry.apply { value = newSecret.value })
+          notificationService.notify(
+              "SoPra Secret was updated successfully!", NotificationVariant.LUMO_SUCCESS)
+          newSecret.clear()
+        }
       }
 
-  private val binder: Binder<String> = Binder()
-  private var oldSecretValue: String = ""
-
-  fun updateButton() {}
-
-  fun configureForm() {
-    oldSecret.addValueChangeListener { !it.hasValue.isEmpty.also { confirmButton.isEnabled = it } }
-  }
-
-  fun initBinder() {
-    binder
-        .forField(oldSecret)
-        .asRequired()
-        .bind({ this.oldSecretValue }, { _, v -> this.oldSecretValue = v })
-  }
-
   init {
-    initBinder()
     addClassName("secret-form")
     width = "400px"
-    add(oldSecret, newSecret, confirmNewSecret, confirmButton)
+    add(newSecret, confirmButton)
   }
 }
