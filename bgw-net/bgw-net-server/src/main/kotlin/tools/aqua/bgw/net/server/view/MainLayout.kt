@@ -24,6 +24,7 @@ import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.html.Span
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -45,7 +46,14 @@ class MainLayout(private val accountRepository: AccountRepository) : AppLayout()
   init {
     createHeader()
     createDrawer()
+    createUserStatus()
     createToggleButton()
+  }
+
+  private fun createUserStatus() {
+    val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
+    val account = accountRepository.findBySub(principal.name).get()
+    addToNavbar(Span(account.accountName).apply { width = "150px" })
   }
 
   private fun createToggleButton() {
