@@ -29,6 +29,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.SERVER_ENDPOINT
 import tools.aqua.bgw.net.common.annotations.GameActionClassProcessor.getAnnotatedClasses
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
@@ -50,7 +51,6 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  * @param playerName The player name.
  * @param host The server ip or hostname.
  * @param port The server port.
- * @param endpoint The server endpoint.
  * @param secret The server secret.
  */
 @OptIn(DelicateCoroutinesApi::class)
@@ -60,7 +60,6 @@ protected constructor(
     playerName: String,
     host: String,
     port: Int,
-    endpoint: String = "chat",
     secret: String
 ) {
 
@@ -84,14 +83,13 @@ protected constructor(
       playerName: String,
       host: InetAddress,
       port: Int,
-      endpoint: String = "chat",
       secret: String
-  ) : this(playerName, host.hostAddress, port, endpoint, secret)
+  ) : this(playerName, host.hostAddress, port, secret)
 
   init {
     wsClient =
         BGWWebSocketClient(
-            uri = URI.create("ws://$host:$port/$endpoint"),
+            uri = URI.create("ws://$host:$port/$SERVER_ENDPOINT"),
             playerName = playerName,
             secret = secret,
             callback = this)

@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
+import tools.aqua.bgw.net.common.SERVER_ENDPOINT
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 
 /**
@@ -37,7 +38,7 @@ class BGWWebSocketConfigurer(
 ) : WebSocketConfigurer {
   override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
     registry
-        .addHandler(wsHandler, "/chat")
+        .addHandler(wsHandler, "/$SERVER_ENDPOINT")
         .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
   }
 }
