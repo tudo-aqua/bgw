@@ -16,10 +16,11 @@
  */
 
 import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
+import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
-import tools.aqua.apache2
-import tools.aqua.developers
+import tools.aqua.developer
 import tools.aqua.github
+import tools.aqua.license
 
 plugins {
   id("tools.aqua.bgw.base-conventions")
@@ -39,15 +40,15 @@ publishing {
         name.set(mavenMetadata.name)
         description.set(mavenMetadata.description)
 
-        github("tudo-aqua", "bgw")
-        licenses { apache2() }
+        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
 
-        developers(
-            "Stefan Naujokat" to "stefan.naujokat@tu-dortmund.de",
-            "Till Schallau" to "till.schallau@tu-dortmund.de",
-            "Dominik Mäckel" to "dominik.maeckel@tu-dortmund.de",
-            "Fabian Klümpers" to "fabian.kluempers@tu-dortmund.de",
-        )
+        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+
+        globalMetadata.githubProject.get().let {
+          github(it.organization, it.project, it.mainBranch)
+        }
+
+        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
       }
     }
   }

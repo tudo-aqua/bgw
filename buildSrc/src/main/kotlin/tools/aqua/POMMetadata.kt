@@ -20,6 +20,7 @@ package tools.aqua
 import org.gradle.api.publish.maven.MavenPom
 import org.gradle.api.publish.maven.MavenPomDeveloperSpec
 import org.gradle.api.publish.maven.MavenPomLicenseSpec
+import tools.aqua.GlobalMavenMetadataExtension.License
 
 /**
  * Add metadata for a GitHub project. This includes URL and SCM connection data.
@@ -37,14 +38,6 @@ fun MavenPom.github(organization: String, project: String, mainBranch: String = 
 }
 
 /**
- * Add developers using a succinct notation.
- * @param developerPairs the developers' names and email addresses.
- */
-fun MavenPom.developers(vararg developerPairs: Pair<String, String>) {
-  developers { developerPairs.forEach { (name, email) -> developer(name, email) } }
-}
-
-/**
  * Add a developer using a succinct notation.
  * @param developerName the developer's name.
  * @param mailAddress the email address.
@@ -54,8 +47,15 @@ fun MavenPomDeveloperSpec.developer(developerName: String, mailAddress: String) 
   email.set(mailAddress)
 }
 
-/** Add the Apache 2 license specification. */
-fun MavenPomLicenseSpec.apache2() = license {
-  name.set("Apache License, Version 2.0")
-  url.set("https://opensource.org/licenses/Apache-2.0")
+/**
+ * Add a license using a succinct notation.
+ * @param licenseName the license's name.
+ * @param licenseUrl a URL for the license.
+ */
+fun MavenPomLicenseSpec.license(licenseName: String, licenseUrl: String) = license {
+  name.set(licenseName)
+  url.set(licenseUrl)
 }
+
+/** The Apache 2 license. */
+val APACHE_2 = License("Apache License, Version 2.0", "https://opensource.org/licenses/Apache-2.0")
