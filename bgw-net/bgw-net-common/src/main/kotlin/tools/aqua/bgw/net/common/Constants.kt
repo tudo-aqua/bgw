@@ -15,13 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.notification
+package tools.aqua.bgw.net.common
 
-/**
- * Notification indicating disconnection of a player.
- *
- * @param message Greeting message of the [sender].
- * @param sender Sender identification.
- */
-class UserJoinedNotification(message: String, sender: String) :
-    Notification(message = message, sender = sender)
+/** The server endpoint route. */
+const val SERVER_ENDPOINT: String = "chat"

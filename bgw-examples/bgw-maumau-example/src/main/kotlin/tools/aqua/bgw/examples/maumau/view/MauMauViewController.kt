@@ -188,10 +188,8 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
           val name = mauMauHostGameMenuScene.nameText.text.trim()
           val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 
-          if (logicController.networkService.validateInputs(address, name, sessionID)) {
-            logicController.networkService.tryHostGame(address, name, sessionID)
-            logicController.game.players[0] = MauMauPlayer(name)
-          }
+          logicController.networkService.tryHostGame(address, name, sessionID)
+          logicController.game.players[0] = MauMauPlayer(name)
         }
 
     mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
@@ -201,12 +199,10 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
   private fun registerJoinMenuEvents() {
     mauMauJoinGameMenuScene.joinGameButton.onMouseClicked =
         {
-          val address = mauMauJoinGameMenuScene.addressText.text.trim()
-          val name = mauMauJoinGameMenuScene.nameText.text.trim()
-          val gameID = mauMauJoinGameMenuScene.sessionIDText.text.trim()
-
-          if (logicController.networkService.validateInputs(address, name, gameID))
-              logicController.networkService.tryJoinGame(address, name, gameID)
+          logicController.networkService.tryJoinGame(
+              mauMauJoinGameMenuScene.addressText.text.trim(),
+              mauMauJoinGameMenuScene.nameText.text.trim(),
+              mauMauJoinGameMenuScene.sessionIDText.text.trim())
         }
 
     mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
