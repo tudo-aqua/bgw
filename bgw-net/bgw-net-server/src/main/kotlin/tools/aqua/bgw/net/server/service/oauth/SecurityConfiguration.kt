@@ -26,6 +26,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.util.matcher.RequestMatcher
+import tools.aqua.bgw.net.common.SERVER_ENDPOINT
 import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
 
 /**
@@ -58,6 +59,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   override fun configure(web: WebSecurity) {
     web.ignoring()
         .antMatchers(
+            "/$SERVER_ENDPOINT", // The server endpoint route
             "/VAADIN/**", // Vaadin Flow static resources
             "/favicon.ico", // the standard favicon URI
             "/robots.txt", // the robots.txt exclusion standard
