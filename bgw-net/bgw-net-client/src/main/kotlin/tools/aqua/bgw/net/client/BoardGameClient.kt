@@ -56,12 +56,7 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
 @OptIn(DelicateCoroutinesApi::class)
 @Suppress("LeakingThis")
 open class BoardGameClient
-protected constructor(
-    playerName: String,
-    host: String,
-    port: Int,
-    secret: String
-) {
+protected constructor(playerName: String, host: String, port: Int, secret: String) {
 
   /** WebSocketClient handling network communication. */
   private val wsClient: BGWWebSocketClient
