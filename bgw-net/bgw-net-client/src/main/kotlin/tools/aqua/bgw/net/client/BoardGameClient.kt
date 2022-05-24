@@ -21,7 +21,6 @@ package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import java.lang.reflect.Method
-import java.net.InetAddress
 import java.net.URI
 import kotlin.reflect.jvm.javaMethod
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -49,12 +48,17 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  *
  * @param playerName The player name.
  * @param host The server ip or hostname.
- * @param port The server port.
  * @param secret The server secret.
  */
 @OptIn(DelicateCoroutinesApi::class)
 @Suppress("LeakingThis")
-open class BoardGameClient protected constructor(playerName: String, host: String, secret: String) {
+open class BoardGameClient
+protected constructor(
+    playerName: String,
+    host: String,
+    secret: String,
+    networkLoggingBehavior: NetworkLogging = NetworkLogging.NO_LOGGING
+) {
 
   /** WebSocketClient handling network communication. */
   private val wsClient: BGWWebSocketClient
@@ -68,18 +72,25 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
   /** Coroutines job for initializing annotation processing. */
   private val initializationJob: Job
 
+  /** NetworkLogger instance for traffic logging. */
+  private val logger: NetworkLogger = NetworkLogger(networkLoggingBehavior)
+
   /** Returns the current state of connection. */
   val isOpen: Boolean
     get() = wsClient.isOpen
 
   init {
-    println("Opening connection to: ws://$host")
+    logger.info("Initializing BoardGameClient on host $host.")
+
     wsClient =
         BGWWebSocketClient(
             uri = URI.create("ws://$host"),
             playerName = playerName,
             secret = secret,
-            callback = this)
+            callback = this,
+            logger = logger)
+
+    logger.debug("Initializing annotated receiver functions.")
 
     initializationJob =
         GlobalScope.launch {
@@ -89,6 +100,12 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
 
           gameActionClasses = annotatedClasses
           gameActionReceivers = annotatedFunctions
+
+          logger.debug("Found the following GameActionClasses:")
+          annotatedClasses.forEach { logger.debug(it.name) }
+
+          logger.debug("Found the following GameActionReceivers:")
+          annotatedFunctions.forEach { logger.debug(it.value.name) }
         }
   }
 
@@ -100,14 +117,31 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    */
   fun connect(): Boolean {
     return try {
-      wsClient.connectBlocking()
-    } catch (_: InterruptedException) {
+      logger.info("Connecting to ${wsClient.uri}.")
+
+      val result = wsClient.connectBlocking()
+
+      logger.debug("Connection call succeeded without interruption and returned $result.")
+
+      result
+    } catch (e: InterruptedException) {
+      logger.error("Attempt to connect to ${wsClient.uri} failed with an InterruptedException.", e)
       false
     }
   }
 
   /** Disconnects from the remote server. */
-  fun disconnect(): Unit = wsClient.closeBlocking()
+  fun disconnect() {
+    try {
+      logger.info("Disconnecting.")
+
+      wsClient.closeBlocking()
+
+      logger.debug("Disconnection call succeeded without interruption.")
+    } catch (e: InterruptedException) {
+      logger.error("Attempt to disconnect failed with an InterruptedException.", e)
+    }
+  }
 
   /**
    * Called when an error occurred. By default, this method throws the incoming exception. Override
@@ -140,6 +174,7 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    * @param sessionID Unique id for the new session to be created on the server.
    */
   fun createGame(gameID: String, sessionID: String) {
+    logger.info("Requesting creation of new game with ID $gameID and sessionID $sessionID.")
     wsClient.sendRequest(CreateGameMessage(gameID, sessionID))
   }
 
@@ -150,6 +185,8 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    * @param greetingMessage Greeting message to be broadcast to all other players in this session.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
+    logger.info(
+        "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
     wsClient.sendRequest(JoinGameMessage(sessionID, greetingMessage))
   }
 
@@ -159,6 +196,7 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    * @param goodbyeMessage Goodbye message to be broadcast to all other players in this session.
    */
   fun leaveGame(goodbyeMessage: String) {
+    logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
 
@@ -205,6 +243,7 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    * @param payload The [GameActionMessage] payload.
    */
   fun sendGameActionMessage(payload: GameAction) {
+    logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
   }
 
@@ -231,9 +270,9 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    * @param sender The opponents identification.
    */
   open fun onGameActionReceived(message: GameAction, sender: String) {
-    System.err.println(
-        "An incoming GameAction has been handled by the fallback function. " +
-            "Override onGameActionReceived or create dedicated handler for message type ${message.javaClass.canonicalName}.")
+    logger.err(
+        "An incoming GameAction has been handled by the fallback function. Override onGameActionReceived or create" +
+            " dedicated handler for message type ${message.javaClass.canonicalName}.")
   }
 
   /**
@@ -243,7 +282,10 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
    */
   internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
     GlobalScope.launch {
-      if (!initializationJob.isCompleted) initializationJob.join()
+      if (!initializationJob.isCompleted) {
+        logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
+        initializationJob.join()
+      }
 
       val targetClasses = checkNotNull(gameActionClasses)
       val targetReceivers = checkNotNull(gameActionReceivers)
@@ -262,39 +304,15 @@ open class BoardGameClient protected constructor(playerName: String, host: Strin
           method.invoke(this@BoardGameClient, payload, message.sender)
 
           return@launch
-        } catch (_: JsonMappingException) {}
+        } catch (e: JsonMappingException) {
+          logger.error("An uncaught JsonMappingException occurred.", e)
+        }
       }
 
-      System.err.println(
+      logger.err(
           "Received GameActionMessage $message but no target class was Found. " +
               "Create class annotated @GameActionClass extending GameAction in your classpath.")
     }
   }
   // endregion
-
-  companion object {
-    /**
-     * Tries parsing [ip] into a hostname.
-     *
-     * @return The Address if InetAddress.getByName returns a valid connection. 'null' otherwise.
-     */
-    fun parseAndValidateIP(ip: String): String? =
-        try {
-          InetAddress.getByName(ip).hostAddress
-        } catch (_: Exception) {
-          null
-        }
-
-    /**
-     * Tries parsing [port] into an IP port.
-     *
-     * @return Returns the parsed integer or 'null' if the passed String is not an integer
-     * representation or not in range 1 to 65534.
-     */
-    fun parseAndValidatePort(port: String): Int? {
-      val portInt = port.toIntOrNull() ?: return null
-
-      return if (portInt in 1..65_534) portInt else null
-    }
-  }
 }

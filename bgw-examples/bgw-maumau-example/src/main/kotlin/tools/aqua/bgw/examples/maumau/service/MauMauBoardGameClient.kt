@@ -45,12 +45,7 @@ class MauMauBoardGameClient(
     playerName: String,
     host: String,
     val logicController: LogicController,
-) :
-    BoardGameClient(
-        playerName = playerName,
-        secret = NETWORK_SECRET,
-        host = host,
-    ) {
+) : BoardGameClient(playerName = playerName, secret = NETWORK_SECRET, host = host) {
 
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
