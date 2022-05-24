@@ -49,6 +49,8 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  * @param playerName The player name.
  * @param host The server ip or hostname.
  * @param secret The server secret.
+ * @param networkLoggingBehavior The desired network logging verbosity. Default:
+ * [NetworkLogging.NO_LOGGING].
  */
 @OptIn(DelicateCoroutinesApi::class)
 @Suppress("LeakingThis")
@@ -115,20 +117,20 @@ protected constructor(
    *
    * @return Returns whether connection could be established.
    */
-  fun connect(): Boolean {
-    return try {
-      logger.info("Connecting to ${wsClient.uri}.")
+  fun connect(): Boolean =
+      try {
+        logger.info("Connecting to ${wsClient.uri}.")
 
-      val result = wsClient.connectBlocking()
+        val result = wsClient.connectBlocking()
 
-      logger.debug("Connection call succeeded without interruption and returned $result.")
+        logger.debug("Connection call succeeded without interruption and returned $result.")
 
-      result
-    } catch (e: InterruptedException) {
-      logger.error("Attempt to connect to ${wsClient.uri} failed with an InterruptedException.", e)
-      false
-    }
-  }
+        result
+      } catch (e: InterruptedException) {
+        logger.error(
+            "Attempt to connect to ${wsClient.uri} failed with an InterruptedException.", e)
+        false
+      }
 
   /** Disconnects from the remote server. */
   fun disconnect() {
