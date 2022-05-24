@@ -43,7 +43,7 @@ internal class NetworkLogger(private val networkLoggingBehavior: NetworkLogging)
   }
 
   /**
-   * Prints an error to the console if verbosity is not [NetworkLogging.NO_LOGGING]
+   * Prints an error to the console if verbosity is not [NetworkLogging.NO_LOGGING].
    *
    * @param msg Message to be printed.
    * @param throwable Error that was thrown.
