@@ -21,7 +21,6 @@ import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
-import tools.aqua.bgw.net.client.BoardGameClient
 
 /** Service for handling network communication. */
 class NetworkService(private val logicController: LogicController) {
@@ -74,33 +73,9 @@ class NetworkService(private val logicController: LogicController) {
    * @param name Player name.
    */
   private fun tryConnect(address: String, name: String): Boolean {
-    if (address.isEmpty()) {
+    /*if (address.isEmpty()) {
       logicController.view.showConnectWarningDialog(
           title = "Address is empty", message = "Please fill in the address field.")
-      return false
-    }
-
-    val split = address.split(":")
-    if (split.size != 2) {
-      logicController.view.showConnectWarningDialog(
-          title = "Address invalid",
-          message = "Address is invalid. Must be in format 127.0.0.1:8080")
-      return false
-    }
-
-    val parsedHost = BoardGameClient.parseAndValidateIP(split[0])
-    if (parsedHost == null) {
-      logicController.view.showConnectWarningDialog(
-          title = "Hostname invalid",
-          message = "Hostname is invalid. Must be IP address or valid hostname.")
-      return false
-    }
-
-    val parsedPort = BoardGameClient.parseAndValidatePort(split[1])
-    if (parsedPort == null) {
-      logicController.view.showConnectWarningDialog(
-          title = "Port invalid",
-          message = "Port is invalid. Must be an integer between 1 and 65534.")
       return false
     }
 
@@ -108,13 +83,12 @@ class NetworkService(private val logicController: LogicController) {
       logicController.view.showConnectWarningDialog(
           title = "Name is empty", message = "Please fill in the name field.")
       return false
-    }
+    }*/
 
     val newClient =
         MauMauBoardGameClient(
             playerName = name,
-            host = parsedHost,
-            port = parsedPort,
+            host = address,
             logicController = logicController,
         )
 

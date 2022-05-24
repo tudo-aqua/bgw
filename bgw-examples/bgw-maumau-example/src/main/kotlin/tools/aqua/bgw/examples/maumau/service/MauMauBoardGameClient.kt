@@ -32,30 +32,24 @@ import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
-import tools.aqua.bgw.net.common.response.CreateGameResponse
-import tools.aqua.bgw.net.common.response.CreateGameResponseStatus
-import tools.aqua.bgw.net.common.response.JoinGameResponse
-import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
+import tools.aqua.bgw.net.common.response.*
 
 /**
  * [BoardGameClient] implementation for network communication.
  *
  * @param playerName Your player name.
- * @param host Host address or name
- * @param port Destination port.
+ * @param host Host address.
  * @property logicController [LogicController] instance for refreshes.
  */
 class MauMauBoardGameClient(
     playerName: String,
     host: String,
-    port: Int,
     val logicController: LogicController,
 ) :
     BoardGameClient(
         playerName = playerName,
         secret = NETWORK_SECRET,
         host = host,
-        port = port,
     ) {
 
   /** [Refreshable] instance. */
