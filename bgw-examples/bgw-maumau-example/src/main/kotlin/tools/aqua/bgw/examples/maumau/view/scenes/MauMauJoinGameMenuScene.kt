@@ -48,7 +48,7 @@ class MauMauJoinGameMenuScene :
       TextField(
           height = MENU_ITEM_HEIGHT,
           width = MENU_ITEM_WIDTH,
-          text = "127.0.0.1:8080",
+          text = "sopra.cs.tu-dortmund.de:80/bgw-net/chat",
           prompt = "Server address: 127.0.0.1:8080")
 
   /** [TextField] for the player's name. */

@@ -29,7 +29,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tools.aqua.bgw.net.common.GameAction
-import tools.aqua.bgw.net.common.SERVER_ENDPOINT
 import tools.aqua.bgw.net.common.annotations.GameActionClassProcessor.getAnnotatedClasses
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnnotatedReceivers
@@ -55,8 +54,7 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  */
 @OptIn(DelicateCoroutinesApi::class)
 @Suppress("LeakingThis")
-open class BoardGameClient
-protected constructor(playerName: String, host: String, port: Int, secret: String) {
+open class BoardGameClient protected constructor(playerName: String, host: String, secret: String) {
 
   /** WebSocketClient handling network communication. */
   private val wsClient: BGWWebSocketClient
@@ -74,17 +72,11 @@ protected constructor(playerName: String, host: String, port: Int, secret: Strin
   val isOpen: Boolean
     get() = wsClient.isOpen
 
-  constructor(
-      playerName: String,
-      host: InetAddress,
-      port: Int,
-      secret: String
-  ) : this(playerName, host.hostAddress, port, secret)
-
   init {
+    println("Opening connection to: ws://$host")
     wsClient =
         BGWWebSocketClient(
-            uri = URI.create("ws://$host:$port/$SERVER_ENDPOINT"),
+            uri = URI.create("ws://$host"),
             playerName = playerName,
             secret = secret,
             callback = this)
