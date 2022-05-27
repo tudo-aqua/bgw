@@ -44,7 +44,7 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
- * override it's open functions. By default, these do nothing if not overridden.
+ * override its open functions. By default, these do nothing if not overridden.
  *
  * @param playerName The player name.
  * @param host The server ip or hostname.
@@ -116,9 +116,13 @@ protected constructor(
    * Connects to the remote server, blocking.
    *
    * @return Returns whether connection could be established.
+   *
+   * @throws IllegalStateException If client is already connected to a host.
    */
   fun connect(): Boolean =
       try {
+        check(!isOpen) { "This BoardGameClient is already connected to a host." }
+
         logger.info("Connecting to ${wsClient.uri}.")
 
         val result = wsClient.connectBlocking()
@@ -132,9 +136,15 @@ protected constructor(
         false
       }
 
-  /** Disconnects from the remote server. */
+  /**
+   * Disconnects from the remote server.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
+   */
   fun disconnect() {
     try {
+      check(!isOpen) { "This BoardGameClient is not connected to a host." }
+
       logger.info("Disconnecting.")
 
       wsClient.closeBlocking()
@@ -174,8 +184,12 @@ protected constructor(
    *
    * @param gameID ID of the current game to be used.
    * @param sessionID Unique id for the new session to be created on the server.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, sessionID: String) {
+    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+
     logger.info("Requesting creation of new game with ID $gameID and sessionID $sessionID.")
     wsClient.sendRequest(CreateGameMessage(gameID, sessionID))
   }
@@ -185,8 +199,12 @@ protected constructor(
    *
    * @param sessionID Unique id for the existing session to join to.#
    * @param greetingMessage Greeting message to be broadcast to all other players in this session.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
+    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+
     logger.info(
         "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
     wsClient.sendRequest(JoinGameMessage(sessionID, greetingMessage))
@@ -196,8 +214,12 @@ protected constructor(
    * Leaves the current game session by sending a [LeaveGameMessage].
    *
    * @param goodbyeMessage Goodbye message to be broadcast to all other players in this session.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
    */
   fun leaveGame(goodbyeMessage: String) {
+    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+
     logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
@@ -243,8 +265,12 @@ protected constructor(
    * Sends a [GameActionMessage] to all connected players.
    *
    * @param payload The [GameActionMessage] payload.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
    */
   fun sendGameActionMessage(payload: GameAction) {
+    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+
     logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
   }
