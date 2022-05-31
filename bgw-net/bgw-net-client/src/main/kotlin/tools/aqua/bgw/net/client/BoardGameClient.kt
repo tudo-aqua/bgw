@@ -143,7 +143,7 @@ protected constructor(
    */
   fun disconnect() {
     try {
-      check(!isOpen) { "This BoardGameClient is not connected to a host." }
+      checkConnected()
 
       logger.info("Disconnecting.")
 
@@ -188,7 +188,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, sessionID: String) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected()
 
     logger.info("Requesting creation of new game with ID $gameID and sessionID $sessionID.")
     wsClient.sendRequest(CreateGameMessage(gameID, sessionID))
@@ -203,7 +203,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected()
 
     logger.info(
         "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
@@ -218,7 +218,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun leaveGame(goodbyeMessage: String) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected()
 
     logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
@@ -269,7 +269,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun sendGameActionMessage(payload: GameAction) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected()
 
     logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
@@ -302,6 +302,14 @@ protected constructor(
         "An incoming GameAction has been handled by the fallback function. Override onGameActionReceived or create" +
             " dedicated handler for message type ${message.javaClass.canonicalName}.")
   }
+
+  /**
+   * Checks connection to be in the open state.
+   *
+   * @throws IllegalStateException If connection is not open.
+   */
+  private fun checkConnected() =
+      check(!isOpen) { "This BoardGameClient is not connected to a host." }
 
   /**
    * Invokes dedicated annotated receiver function for [message] parameter or fallback if not found.
