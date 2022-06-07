@@ -30,8 +30,8 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
  */
 @GameActionClass
 data class MauMauInitGameAction(
-    val hostCards: List<String>,
-    val yourCards: List<String>,
-    val drawStack: List<String>,
-    val gameStack: String,
+    val hostCards: List<MauMauGameCard>,
+    val yourCards: List<MauMauGameCard>,
+    val drawStack: List<MauMauGameCard>,
+    val gameStack: MauMauGameCard,
 ) : GameAction()
