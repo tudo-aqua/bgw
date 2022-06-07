@@ -1,0 +1,17 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 0%
+        threshold: 100%
+        base: auto
+        flags:
+          - unit
+        paths:
+          - "src"
+        if_ci_failed: error #success, failure, error, ignore
+        informational: false
+        only_pulls: false
+    patch:
+      default:
+        target: 0%
