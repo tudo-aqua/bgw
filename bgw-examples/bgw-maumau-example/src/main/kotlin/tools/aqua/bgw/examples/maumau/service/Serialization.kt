@@ -17,32 +17,31 @@
 
 package tools.aqua.bgw.examples.maumau.service
 
-import tools.aqua.bgw.examples.maumau.entity.CardSuit
-import tools.aqua.bgw.examples.maumau.entity.CardValue
-import tools.aqua.bgw.examples.maumau.entity.MauMauCard
-import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.entity.*
+import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameCard
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 
-/** Serialization helper for network communication. */
+/**
+ * Serialization helper for network communication. Implements an adapter between model instances and
+ * exchange format.
+ */
 object Serialization {
   /** Serializes [MauMauCard] for exchange format. */
-  fun MauMauCard.serialize(): String = "${cardValue}_${cardSuit}"
+  fun MauMauCard.serialize(): MauMauGameCard =
+      MauMauGameCard(serializeCardSuit(cardSuit), serializeCardValue(cardValue))
 
   /** Deserializes exchange format to [MauMauCard]. */
-  fun deserializeMauMauCard(payload: String): MauMauCard {
-    val split = payload.split("_")
-    return MauMauCard(
-        cardSuit = CardSuit.valueOf(split[1]), cardValue = CardValue.valueOf(split[0]))
-  }
+  fun MauMauGameCard.deserialize(): MauMauCard =
+      MauMauCard(cardSuit = deserializeCardSuit(suit), cardValue = deserializeCardValue(value))
 
   /** Serializes game into game initialization exchange format. */
   fun serializeInitMessage(game: MauMauGame): MauMauInitGameAction =
       MauMauInitGameAction(
-          drawStack = game.drawStack.cards.map { it.serialize() },
-          gameStack = game.gameStack.cards.first().serialize(),
           hostCards = game.players[0].hand.cards.map { it.serialize() },
-          yourCards = game.players[1].hand.cards.map { it.serialize() })
+          yourCards = game.players[1].hand.cards.map { it.serialize() },
+          drawStack = game.drawStack.cards.map { it.serialize() },
+          gameStack = game.gameStack.cards.first().serialize())
 
   /** Serializes stack cards into exchange format. */
   fun serializeStacksShuffledMessage(game: MauMauGame): MauMauShuffleStackGameAction =
@@ -50,4 +49,67 @@ object Serialization {
           drawStack = game.drawStack.cards.map { it.serialize() },
           gameStack = game.gameStack.cards.first().serialize(),
       )
+
+  fun serializeGameAction(action: GameActionType): String =
+      when (action) {
+        GameActionType.PLAY -> "PLAY_CARD"
+        GameActionType.DRAW -> "DRAW_CARD"
+        GameActionType.REQUEST_DRAW_TWO -> "OPPONENT_DRAW_TWO_CARDS"
+        GameActionType.REQUEST_SUIT -> "REQUEST_SUIT_SELECTION"
+        GameActionType.END_TURN -> "END_TURN"
+      }
+
+  fun deserializeGameAction(action: String): GameActionType =
+      when (action) {
+        "PLAY_CARD" -> GameActionType.PLAY
+        "DRAW_CARD" -> GameActionType.DRAW
+        "OPPONENT_DRAW_TWO_CARDS" -> GameActionType.REQUEST_DRAW_TWO
+        "REQUEST_SUIT_SELECTION" -> GameActionType.REQUEST_SUIT
+        "END_TURN" -> GameActionType.END_TURN
+        else -> throw RuntimeException("Invalid json enum value: $action")
+      }
+
+  private fun serializeCardSuit(suit: CardSuit): String =
+      when (suit) {
+        CardSuit.CLUBS -> "C"
+        CardSuit.SPADES -> "S"
+        CardSuit.HEARTS -> "H"
+        CardSuit.DIAMONDS -> "D"
+      }
+
+  private fun serializeCardValue(value: CardValue): String =
+      when (value) {
+        CardValue.ACE -> "A"
+        CardValue.TWO, CardValue.THREE, CardValue.FOUR, CardValue.FIVE, CardValue.SIX ->
+            throw RuntimeException("This card value does not exist in MauMau.")
+        CardValue.SEVEN -> "7"
+        CardValue.EIGHT -> "8"
+        CardValue.NINE -> "9"
+        CardValue.TEN -> "10"
+        CardValue.JACK -> "J"
+        CardValue.QUEEN -> "Q"
+        CardValue.KING -> "K"
+      }
+
+  private fun deserializeCardSuit(suit: String): CardSuit =
+      when (suit) {
+        "C" -> CardSuit.CLUBS
+        "S" -> CardSuit.SPADES
+        "H" -> CardSuit.HEARTS
+        "D" -> CardSuit.DIAMONDS
+        else -> throw RuntimeException("Invalid json enum value: $suit")
+      }
+
+  private fun deserializeCardValue(value: String): CardValue =
+      when (value) {
+        "7" -> CardValue.SEVEN
+        "8" -> CardValue.EIGHT
+        "9" -> CardValue.NINE
+        "10" -> CardValue.TEN
+        "J" -> CardValue.JACK
+        "Q" -> CardValue.QUEEN
+        "K" -> CardValue.KING
+        "A" -> CardValue.ACE
+        else -> throw RuntimeException("Invalid json enum value: $value")
+      }
 }

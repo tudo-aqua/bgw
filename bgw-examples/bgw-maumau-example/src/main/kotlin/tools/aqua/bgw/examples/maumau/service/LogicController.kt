@@ -22,6 +22,7 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
+import tools.aqua.bgw.examples.maumau.service.Serialization.deserialize
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
@@ -109,10 +110,10 @@ class LogicController(val view: Refreshable) {
     initGame(
         player1 = "Host",
         player2 = "Opponent",
-        drawStack = message.drawStack.map { Serialization.deserializeMauMauCard(it) },
-        gameStack = Serialization.deserializeMauMauCard(message.gameStack),
-        hostCards = message.hostCards.map { Serialization.deserializeMauMauCard(it) },
-        opponentCards = message.yourCards.map { Serialization.deserializeMauMauCard(it) })
+        drawStack = message.drawStack.map { it.deserialize() },
+        gameStack = message.gameStack.deserialize(),
+        hostCards = message.hostCards.map { it.deserialize() },
+        opponentCards = message.yourCards.map { it.deserialize() })
   }
 
   /**
@@ -122,10 +123,10 @@ class LogicController(val view: Refreshable) {
    */
   fun shuffleStack(message: MauMauShuffleStackGameAction) {
     game.drawStack.cards.clear()
-    game.drawStack.cards.addAll(message.drawStack.map { Serialization.deserializeMauMauCard(it) })
+    game.drawStack.cards.addAll(message.drawStack.map { it.deserialize() })
 
     game.gameStack.cards.clear()
-    game.gameStack.cards.add(Serialization.deserializeMauMauCard(message.gameStack))
+    game.gameStack.cards.add(message.gameStack.deserialize())
   }
   // endregion
 
