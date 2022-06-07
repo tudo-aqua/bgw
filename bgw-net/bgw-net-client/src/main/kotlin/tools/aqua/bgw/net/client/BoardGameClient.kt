@@ -121,7 +121,7 @@ protected constructor(
    */
   fun connect(): Boolean =
       try {
-        check(!isOpen) { "This BoardGameClient is already connected to a host." }
+        checkConnected(false)
 
         logger.info("Connecting to ${wsClient.uri}.")
 
@@ -143,7 +143,7 @@ protected constructor(
    */
   fun disconnect() {
     try {
-      check(!isOpen) { "This BoardGameClient is not connected to a host." }
+      checkConnected(true)
 
       logger.info("Disconnecting.")
 
@@ -154,28 +154,6 @@ protected constructor(
       logger.error("Attempt to disconnect failed with an InterruptedException.", e)
     }
   }
-
-  /**
-   * Called when an error occurred. By default, this method throws the incoming exception. Override
-   * to implement error handling.
-   *
-   * @throws Throwable Throws [throwable].
-   */
-  open fun onError(throwable: Throwable) {
-    throw throwable
-  }
-
-  /** Called after an opening handshake has been performed and the [BoardGameClient] send data. */
-  open fun onOpen() {}
-
-  /**
-   * Called after the websocket connection has been closed.
-   *
-   * @param code The codes can be looked up here: [org.java_websocket.framing.CloseFrame].
-   * @param reason Additional information string.
-   * @param remote Returns whether the closing of the connection was initiated by the remote host.
-   */
-  open fun onClose(code: Int, reason: String, remote: Boolean) {}
   // endregion
 
   // region Create / Join / Leave game
@@ -188,7 +166,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, sessionID: String) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected(true)
 
     logger.info("Requesting creation of new game with ID $gameID and sessionID $sessionID.")
     wsClient.sendRequest(CreateGameMessage(gameID, sessionID))
@@ -203,7 +181,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected(true)
 
     logger.info(
         "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
@@ -218,11 +196,65 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun leaveGame(goodbyeMessage: String) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
+    checkConnected(true)
 
     logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
+  // endregion
+
+  // region Game messages
+  /**
+   * Sends a [GameActionMessage] to all connected players.
+   *
+   * @param payload The [GameActionMessage] payload.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
+   */
+  fun sendGameActionMessage(payload: GameAction) {
+    checkConnected(true)
+
+    logger.info("Sending GameActionMessage ${payload.javaClass.name}")
+    wsClient.sendGameActionMessage(payload)
+  }
+  // endregion
+
+  // region Interface functions
+  /** Called after an opening handshake has been performed and the [BoardGameClient] send data. */
+  open fun onOpen() {}
+
+  /**
+   * Called after the websocket connection has been closed.
+   *
+   * @param code The codes can be looked up here: [org.java_websocket.framing.CloseFrame].
+   * @param reason Additional information string.
+   * @param remote Returns whether the closing of the connection was initiated by the remote host.
+   */
+  open fun onClose(code: Int, reason: String, remote: Boolean) {}
+
+  /**
+   * Called when an error occurred. By default, this method throws the incoming exception. Override
+   * to implement error handling.
+   *
+   * @throws Throwable Throws [throwable].
+   */
+  open fun onError(throwable: Throwable) {
+    throw throwable
+  }
+
+  /**
+   * Called when a player joined the session and the server sent a [PlayerJoinedNotification].
+   *
+   * @param notification The [PlayerJoinedNotification] received from the server.
+   */
+  open fun onPlayerJoined(notification: PlayerJoinedNotification) {}
+
+  /**
+   * Called when a player left the session and the server sent a [PlayerLeftNotification].
+   *
+   * @param notification The [PlayerLeftNotification] received from the server.
+   */
+  open fun onPlayerLeft(notification: PlayerLeftNotification) {}
 
   /**
    * Called when server sent a [CreateGameResponse] after a [CreateGameMessage] was sent.
@@ -244,36 +276,6 @@ protected constructor(
    * @param response The [LeaveGameResponse] received from the server.
    */
   open fun onLeaveGameResponse(response: LeaveGameResponse) {}
-
-  /**
-   * Called when a player joined the session and the server sent a [PlayerJoinedNotification].
-   *
-   * @param notification The [PlayerJoinedNotification] received from the server.
-   */
-  open fun onPlayerJoined(notification: PlayerJoinedNotification) {}
-
-  /**
-   * Called when a player left the session and the server sent a [PlayerLeftNotification].
-   *
-   * @param notification The [PlayerLeftNotification] received from the server.
-   */
-  open fun onPlayerLeft(notification: PlayerLeftNotification) {}
-  // endregion
-
-  // region Game messages
-  /**
-   * Sends a [GameActionMessage] to all connected players.
-   *
-   * @param payload The [GameActionMessage] payload.
-   *
-   * @throws IllegalStateException If client is not connected to a host.
-   */
-  fun sendGameActionMessage(payload: GameAction) {
-    check(!isOpen) { "This BoardGameClient is not connected to a host." }
-
-    logger.info("Sending GameActionMessage ${payload.javaClass.name}")
-    wsClient.sendGameActionMessage(payload)
-  }
 
   /**
    * Called when server sent a [GameActionResponse] after a [GameActionMessage] was sent.
@@ -302,7 +304,9 @@ protected constructor(
         "An incoming GameAction has been handled by the fallback function. Override onGameActionReceived or create" +
             " dedicated handler for message type ${message.javaClass.canonicalName}.")
   }
+  // endregion
 
+  // region Helper
   /**
    * Invokes dedicated annotated receiver function for [message] parameter or fallback if not found.
    *
@@ -332,14 +336,25 @@ protected constructor(
           method.invoke(this@BoardGameClient, payload, message.sender)
 
           return@launch
-        } catch (e: JsonMappingException) {
-          logger.error("An uncaught JsonMappingException occurred.", e)
-        }
+        } catch (_: JsonMappingException) {}
       }
 
       logger.err(
           "Received GameActionMessage $message but no target class was Found. " +
               "Create class annotated @GameActionClass extending GameAction in your classpath.")
+    }
+  }
+
+  /**
+   * Checks for connected state.
+   *
+   * @param expectedState The expected connection state.
+   *
+   * @throws IllegalStateException If BoardGameClient is not connected.
+   */
+  private fun checkConnected(expectedState: Boolean) {
+    check(expectedState) {
+      "This BoardGameClient is ${if (expectedState) "not" else "already"} connected to a host."
     }
   }
   // endregion

@@ -89,8 +89,7 @@ class MessageService(
             }
         else GameActionResponseStatus.NO_ASSOCIATED_GAME
 
-    player.session.sendMessage(
-        GameActionResponse(GameActionResponseStatus.SUCCESS, errors.orElseGet { emptyList() }))
+    player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyList() }))
 
     if (status == GameActionResponseStatus.SUCCESS) {
       game?.broadcastMessage(
