@@ -29,6 +29,7 @@ import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
+import tools.aqua.bgw.net.client.NetworkLogging
 import tools.aqua.bgw.net.common.annotations.GameActionReceiver
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
@@ -45,7 +46,12 @@ class MauMauBoardGameClient(
     playerName: String,
     host: String,
     val logicController: LogicController,
-) : BoardGameClient(playerName = playerName, secret = NETWORK_SECRET, host = host) {
+) :
+    BoardGameClient(
+        playerName = playerName,
+        secret = NETWORK_SECRET,
+        host = host,
+        networkLoggingBehavior = NetworkLogging.INFO) {
 
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view
@@ -95,7 +101,6 @@ class MauMauBoardGameClient(
   /** GameActionReceiver for [MauMauInitGameAction]. */
   @GameActionReceiver
   private fun onInitReceived(message: MauMauInitGameAction, sender: String) {
-    println("Received InitGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       logicController.initGame(message)
       view.onInitializeGameReceived()
@@ -105,7 +110,6 @@ class MauMauBoardGameClient(
   /** GameActionReceiver for [MauMauInitGameAction]. */
   @GameActionReceiver
   private fun onShuffleDrawStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
-    println("Received MauMauShuffleStackGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       logicController.shuffleStack(message)
       view.onShuffleStackReceived()
@@ -115,7 +119,6 @@ class MauMauBoardGameClient(
   /** GameActionReceiver for [MauMauGameAction]. */
   @GameActionReceiver
   private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
-    println("Received GameAction $message from $sender")
     BoardGameApplication.runOnGUIThread {
       when (GameActionType.valueOf(message.action)) {
         // Enemy has played a card
@@ -155,7 +158,6 @@ class MauMauBoardGameClient(
   /** GameActionReceiver for [MauMauEndGameAction]. */
   @GameActionReceiver
   private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
-    println("Received EndGameAction $message from $sender")
     BoardGameApplication.runOnGUIThread { view.refreshEndGame(sender) }
   }
   // endregion
