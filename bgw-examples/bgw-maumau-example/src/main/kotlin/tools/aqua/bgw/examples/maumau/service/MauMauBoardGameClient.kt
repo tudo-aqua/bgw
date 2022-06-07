@@ -23,6 +23,8 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.entity.GameActionType
 import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
+import tools.aqua.bgw.examples.maumau.service.Serialization.deserialize
+import tools.aqua.bgw.examples.maumau.service.Serialization.deserializeGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
@@ -120,13 +122,12 @@ class MauMauBoardGameClient(
   @GameActionReceiver
   private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
     BoardGameApplication.runOnGUIThread {
-      when (GameActionType.valueOf(message.action)) {
+      when (deserializeGameAction(message.action)) {
         // Enemy has played a card
         GameActionType.PLAY -> {
+          checkNotNull(message.card)
           logicController.playCard(
-              card = Serialization.deserializeMauMauCard(message.card),
-              animated = true,
-              isCurrentPlayer = false)
+              card = message.card.deserialize(), animated = true, isCurrentPlayer = false)
         }
 
         // Enemy has drawn a card
@@ -142,9 +143,9 @@ class MauMauBoardGameClient(
 
         // Enemy has played a jack and request suit
         GameActionType.REQUEST_SUIT -> {
+          checkNotNull(message.card)
           logicController.selectSuit(
-              suit = Serialization.deserializeMauMauCard(message.card).cardSuit,
-              isCurrentPlayer = false)
+              suit = message.card.deserialize().cardSuit, isCurrentPlayer = false)
         }
 
         // Enemy has ended his turn

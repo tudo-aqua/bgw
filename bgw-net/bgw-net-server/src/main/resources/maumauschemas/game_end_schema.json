@@ -5,9 +5,7 @@
     "winner"
   ],
   "properties": {
-    "winner": {
-      "type": "string"
-    }
+    "winner": { "type": "string" }
   },
   "additionalProperties": false
 }

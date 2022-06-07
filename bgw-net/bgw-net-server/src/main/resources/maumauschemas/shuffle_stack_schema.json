@@ -8,13 +8,30 @@
   "properties": {
     "drawStack": {
       "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "items": { "$ref": "#/$defs/card" }
     },
-    "gameStack": {
-      "type": "string"
-    }
+    "gameStack": { "$ref": "#/$defs/card" }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+
+  "$defs": {
+    "card": {
+      "type": "object",
+      "required": [
+        "suit",
+        "value"
+      ],
+      "properties": {
+        "suit": {
+          "type": "string",
+          "enum": ["C", "D", "H", "S"]
+        },
+        "value": {
+          "type": "string",
+          "enum": ["7", "8", "9", "10", "J", "Q", "K", "A"]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
 }

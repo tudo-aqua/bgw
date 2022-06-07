@@ -56,8 +56,8 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
 @Suppress("LeakingThis")
 open class BoardGameClient
 protected constructor(
-    playerName: String,
-    host: String,
+    val playerName: String,
+    val host: String,
     secret: String,
     networkLoggingBehavior: NetworkLogging = NetworkLogging.NO_LOGGING
 ) {
@@ -353,7 +353,7 @@ protected constructor(
    * @throws IllegalStateException If BoardGameClient is not connected.
    */
   private fun checkConnected(expectedState: Boolean) {
-    check(expectedState) {
+    check(isOpen == expectedState) {
       "This BoardGameClient is ${if (expectedState) "not" else "already"} connected to a host."
     }
   }

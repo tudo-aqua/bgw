@@ -19,6 +19,8 @@ package tools.aqua.bgw.examples.maumau.service
 
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
+import tools.aqua.bgw.examples.maumau.service.Serialization.serialize
+import tools.aqua.bgw.examples.maumau.service.Serialization.serializeGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
 import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
 
@@ -114,35 +116,40 @@ class NetworkService(private val logicController: LogicController) {
 
   /** Send [GameActionType.DRAW] action to connected opponent. */
   fun sendCardDrawn() {
-    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.DRAW))
+    client?.sendGameActionMessage(
+        MauMauGameAction(action = serializeGameAction(GameActionType.DRAW)))
   }
 
   /** Send [GameActionType.REQUEST_DRAW_TWO] action to connected opponent. */
   fun sendDrawTwoRequest() {
-    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.REQUEST_DRAW_TWO))
+    client?.sendGameActionMessage(
+        MauMauGameAction(action = serializeGameAction(GameActionType.REQUEST_DRAW_TWO)))
   }
 
   /** Send [GameActionType.PLAY] action to connected opponent. */
   fun sendCardPlayed(card: MauMauCard) {
-    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.PLAY, card = card))
+    client?.sendGameActionMessage(
+        MauMauGameAction(
+            action = serializeGameAction(GameActionType.PLAY), card = card.serialize()))
   }
 
   /** Send [GameActionType.REQUEST_SUIT] action to connected opponent. */
   fun sendSuitSelected(suit: CardSuit) {
     client?.sendGameActionMessage(
         MauMauGameAction(
-            gameAction = GameActionType.REQUEST_SUIT,
-            card = MauMauCard(cardValue = CardValue.ACE, cardSuit = suit)))
+            action = serializeGameAction(GameActionType.REQUEST_SUIT),
+            card = MauMauCard(cardValue = CardValue.ACE, cardSuit = suit).serialize()))
   }
 
   /** Sends [GameActionType.END_TURN] to connected opponent. */
   fun sendEndTurn() {
-    client?.sendGameActionMessage(MauMauGameAction(gameAction = GameActionType.END_TURN))
+    client?.sendGameActionMessage(
+        MauMauGameAction(action = serializeGameAction(GameActionType.END_TURN)))
   }
 
   /** Sends End game message to connected opponent. */
   fun sendEndGame() {
-    client?.sendGameActionMessage(MauMauEndGameAction("Looser!"))
+    client?.sendGameActionMessage(MauMauEndGameAction(client?.playerName ?: "Your Opponent"))
   }
   // endregion
 }

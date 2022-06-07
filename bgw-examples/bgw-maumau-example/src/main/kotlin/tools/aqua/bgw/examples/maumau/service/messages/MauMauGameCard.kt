@@ -17,14 +17,10 @@
 
 package tools.aqua.bgw.examples.maumau.service.messages
 
-import tools.aqua.bgw.net.common.GameAction
-import tools.aqua.bgw.net.common.annotations.GameActionClass
-
 /**
- * GameActionMessage data class for serialization.
+ * MauMauGameCard data class for serialization.
  *
- * @property action Associated game action.
- * @property card Played card.
+ * @property suit The card suit.
+ * @property value The card value.
  */
-@GameActionClass
-data class MauMauGameAction(val action: String, val card: MauMauGameCard? = null) : GameAction()
+data class MauMauGameCard(val suit: String, val value: String)

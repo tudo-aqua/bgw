@@ -28,6 +28,6 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
  */
 @GameActionClass
 data class MauMauShuffleStackGameAction(
-    val drawStack: List<String>,
-    val gameStack: String,
+    val drawStack: List<MauMauGameCard>,
+    val gameStack: MauMauGameCard,
 ) : GameAction()

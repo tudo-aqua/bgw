@@ -6,12 +6,38 @@
     "card"
   ],
   "properties": {
-    "action": {
-      "type": "string"
-    },
-    "card": {
-      "type": "string"
-    }
+    "action": { "$ref": "#/$defs/action" },
+    "card": { "$ref": "#/$defs/card" }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+
+  "$defs": {
+    "card": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": [
+            "suit",
+            "value"
+          ],
+          "properties": {
+            "suit": {
+              "type": "string",
+              "enum": ["C", "D", "H", "S"]
+            },
+            "value": {
+              "type": "string",
+              "enum": ["7", "8", "9", "10", "J", "Q", "K", "A"]
+            }
+          },
+          "additionalProperties": false}
+      ]
+    },
+
+    "action": {
+      "type": "string",
+      "enum": ["PLAY_CARD", "DRAW_CARD", "OPPONENT_DRAW_TWO_CARDS", "REQUEST_SUIT_SELECTION", "END_TURN"]
+    }
+  }
 }
