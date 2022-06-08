@@ -20,12 +20,17 @@ package tools.aqua.bgw.net.server.service.oauth
 import java.io.Serializable
 import javax.persistence.*
 
+/** Represents a user account login in with an oauth provider. **/
 @Entity
 class Account(
     @GeneratedValue @Id var id: Long? = null,
+    /** Stands for subject and is an unique identifier from the oath protocol. **/
     var sub: String = "",
+    /** A clear name used for displaying the user. **/
     var accountName: String = "",
+    /** Roles the user has. for example admin user etc. **/
     var role: String = "",
 ) : Serializable {
-  fun isAdmin() = role.contains("admin")
+  /** Checks whether this user is an admin. Meaning if he has that role associated to him. **/
+    fun isAdmin() = role.contains("admin")
 }

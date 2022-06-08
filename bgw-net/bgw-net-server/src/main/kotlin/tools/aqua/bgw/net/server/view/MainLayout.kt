@@ -37,6 +37,7 @@ import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
+import tools.aqua.bgw.net.server.service.oauth.Account
 import tools.aqua.bgw.net.server.service.oauth.AccountRepository
 
 /** Layout for the main view. */
@@ -85,7 +86,7 @@ class MainLayout(private val accountRepository: AccountRepository) : AppLayout()
           highlightCondition = HighlightConditions.sameLocation()
         }
     val secretLink =
-        RouterLink("SoPra Secret", SecretForm::class.java).apply {
+        RouterLink("SoPra Secret", SoPraSecretForm::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val schemaLink =
@@ -99,7 +100,6 @@ class MainLayout(private val accountRepository: AccountRepository) : AppLayout()
 
     val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
     val account = accountRepository.findBySub(principal.name).get()
-
     val links: MutableList<RouterLink> = mutableListOf(connectionsLink, schemaLink)
     if (account.isAdmin()) links.addAll(listOf(secretLink, uploadLink))
 
