@@ -115,11 +115,11 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
   @PostConstruct
   fun initExample() {
     setOf(
-        EXAMPLE_SCHEMA_JSON_URL_STRING,
-        "/maumauschemas/game_action_schema.json",
-        "/maumauschemas/game_end_schema.json",
-        "/maumauschemas/game_init_schema.json",
-        "/maumauschemas/shuffle_stack_schema.json")
+            EXAMPLE_SCHEMA_JSON_URL_STRING,
+            "/maumauschemas/game_action_schema.json",
+            "/maumauschemas/game_end_schema.json",
+            "/maumauschemas/game_init_schema.json",
+            "/maumauschemas/shuffle_stack_schema.json")
         .mapNotNull { t ->
           javaClass.getResource(t)?.readText()
               ?: null.also { logger.warn("Failed to load schema from resources: $t") }

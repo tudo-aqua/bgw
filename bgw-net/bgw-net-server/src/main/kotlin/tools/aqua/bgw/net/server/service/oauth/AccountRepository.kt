@@ -20,8 +20,10 @@ package tools.aqua.bgw.net.server.service.oauth
 import java.util.*
 import org.springframework.data.jpa.repository.JpaRepository
 
-/** Holds information about user accounts. Each user represents an oauth login. **/
+/** Holds information about user accounts. Each user represents an oauth login. */
 interface AccountRepository : JpaRepository<Account, Long> {
-  /** Finds a user account by their unique oauth subject identifier. May return an [Optional.EMPTY] **/
+  /**
+   * Finds a user account by their unique oauth subject identifier. May return an [Optional.EMPTY]
+   */
   fun findBySub(sub: String?): Optional<Account>
 }

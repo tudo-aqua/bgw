@@ -65,7 +65,7 @@ class UploadSchemaView(
   private val logger: Logger = LoggerFactory.getLogger(javaClass)
   private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
 
-    private val gameIdLabel = "Game ID"
+  private val gameIdLabel = "Game ID"
 
   private val upload: Upload =
       Upload(buffer).apply {
@@ -175,10 +175,10 @@ class UploadSchemaView(
   }
 }
 
-/** Represents a [Game] like MauMau for example and its according schemas. **/
+/** Represents a [Game] like MauMau for example and its according schemas. */
 class Game(
-    /** unique identifier of this game. **/
+    /** unique identifier of this game. */
     val gameId: String,
-    /** list of schemas of this game. **/
+    /** list of schemas of this game. */
     val schemas: List<SchemasByGame>
-    )
+)
