@@ -25,11 +25,11 @@ import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
 import tools.aqua.bgw.net.common.response.LeaveGameResponseStatus
 import tools.aqua.bgw.net.server.ORPHANED_GAME_CHECK_RATE
 import tools.aqua.bgw.net.server.TIME_UNTIL_ORPHANED
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.repositories.GameRepository
 
-/** This service handles all interactions associated with [Game]. */
+/** This service handles all interactions associated with [GameInstance]. */
 @Service
 class GameService(private val gameRepository: GameRepository) {
 
@@ -37,9 +37,9 @@ class GameService(private val gameRepository: GameRepository) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   /**
-   * Creates a new [Game].
+   * Creates a new [GameInstance].
    *
-   * @param gameID ID of the associated [Game].
+   * @param gameID ID of the associated [GameInstance].
    * @param sessionID Unique session ID.
    * @param initializer [Player] instance that hosts this session.
    */
@@ -47,7 +47,7 @@ class GameService(private val gameRepository: GameRepository) {
   fun createGame(gameID: String, sessionID: String, initializer: Player): CreateGameResponseStatus {
     val status =
         if (initializer.game == null) {
-          val game = Game(gameID, sessionID, initializer)
+          val game = GameInstance(gameID, sessionID, initializer)
           if (gameRepository.add(game)) {
             initializer.game = game
             CreateGameResponseStatus.SUCCESS
@@ -57,7 +57,7 @@ class GameService(private val gameRepository: GameRepository) {
   }
 
   /**
-   * Removes a [Player] from a [Game].
+   * Removes a [Player] from a [GameInstance].
    *
    * @param player [Player] that leaves.
    */
@@ -76,7 +76,7 @@ class GameService(private val gameRepository: GameRepository) {
   }
 
   /**
-   * Adds a [Player] to a [Game].
+   * Adds a [Player] to a [GameInstance].
    *
    * @param player [Player] that joins.
    * @param sessionID Session to join to.
@@ -102,7 +102,7 @@ class GameService(private val gameRepository: GameRepository) {
   /**
    * Looks for orphaned Games and removes them.
    *
-   * A Game is considered orphaned when [Game.orphanCandidateSince]
+   * A Game is considered orphaned when [GameInstance.orphanCandidateSince]
    * - [System.currentTimeMillis] > [TIME_UNTIL_ORPHANED]
    *
    * This function is scheduled to run on a fixed rate every [ORPHANED_GAME_CHECK_RATE]
@@ -122,20 +122,18 @@ class GameService(private val gameRepository: GameRepository) {
       }
     }
   }
-
   /**
-   * Returns [Game] instance associated with [sessionID].
+   * Returns [GameInstance] instance associated with [sessionID].
    *
    * @param sessionID Session ID to search.
    *
-   * @return [Game] instance associated with [sessionID], 'null' if no game was found.
+   * @return [GameInstance] instance associated with [sessionID], 'null' if no game was found.
    */
-  fun getBySessionID(sessionID: String): Game? = gameRepository.getBySessionID(sessionID)
-
+  fun getBySessionID(sessionID: String): GameInstance? = gameRepository.getBySessionID(sessionID)
   /**
-   * Returns all active [Game] instances.
+   * Returns all active [GameInstance] instances.
    *
-   * @return All active [Game] instances.
+   * @return All active [GameInstance] instances.
    */
-  fun getAll(): List<Game> = gameRepository.getAll()
+  fun getAll(): List<GameInstance> = gameRepository.getAll()
 }

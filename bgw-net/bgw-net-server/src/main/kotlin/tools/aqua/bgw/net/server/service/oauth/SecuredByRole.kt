@@ -15,12 +15,15 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.server.entity.tables
+package tools.aqua.bgw.net.server.service.oauth
 
-import org.springframework.data.repository.CrudRepository
+import kotlin.annotation.AnnotationRetention.RUNTIME
+import org.ilay.NavigationAnnotation
 
-/** Interface for game schema repository. */
-interface SchemasByGameRepository : CrudRepository<SchemasByGame, String> {
-  /** Returns a list of all schemas associated with this gameID. **/
-  fun findAllByGameID(gameId: String): List<SchemasByGame>
-}
+/** Checks whether a given user account satisfies the provided role. **/
+@NavigationAnnotation(RoleBasedEvaluator::class)
+@Retention(RUNTIME)
+annotation class SecuredByRole(
+    /** Space separated string of roles the user has to statisfy. **/
+    vararg val value: String
+    )

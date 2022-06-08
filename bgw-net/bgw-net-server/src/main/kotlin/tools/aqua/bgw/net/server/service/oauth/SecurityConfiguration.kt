@@ -39,7 +39,10 @@ import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration(
+    /** Repository holding information about the oauth login accounts. **/
+    var accountRepository: AccountRepository
+) : WebSecurityConfigurerAdapter() {
   /** Restrict access to the application, allowing only logged-in users. */
   override fun configure(http: HttpSecurity) {
     http.httpBasic().disable()
@@ -51,7 +54,9 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
           .anyRequest()
           .authenticated()
     }
-    http.oauth2Login()
+    http.oauth2Login{
+        it.successHandler(CustomSuccessHandler(accountRepository))
+    }
     http.logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
   }
 
