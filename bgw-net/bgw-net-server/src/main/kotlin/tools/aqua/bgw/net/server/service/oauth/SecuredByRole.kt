@@ -20,10 +20,10 @@ package tools.aqua.bgw.net.server.service.oauth
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import org.ilay.NavigationAnnotation
 
-/** Checks whether a given user account satisfies the provided role. **/
+/** Checks whether a given user account satisfies the provided role. */
 @NavigationAnnotation(RoleBasedEvaluator::class)
 @Retention(RUNTIME)
 annotation class SecuredByRole(
-    /** Space separated string of roles the user has to statisfy. **/
+    /** Space separated string of roles the user has to statisfy. */
     vararg val value: String
-    )
+)

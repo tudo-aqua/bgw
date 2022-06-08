@@ -41,9 +41,9 @@ import tools.aqua.bgw.net.server.service.oauth.AccountRepository
 /** Layout for the main view. */
 @CssImport("./styles/styles.css")
 class MainLayout(
-  /** Repository holding information about the oauth login accounts. **/
-  private val accountRepository: AccountRepository
-  ) : AppLayout() {
+    /** Repository holding information about the oauth login accounts. */
+    private val accountRepository: AccountRepository
+) : AppLayout() {
   init {
     createHeader()
     createDrawer()

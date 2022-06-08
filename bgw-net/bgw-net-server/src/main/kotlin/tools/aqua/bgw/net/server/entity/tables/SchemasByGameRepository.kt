@@ -21,6 +21,6 @@ import org.springframework.data.repository.CrudRepository
 
 /** Interface for game schema repository. */
 interface SchemasByGameRepository : CrudRepository<SchemasByGame, String> {
-  /** Returns a list of all schemas associated with this gameID. **/
+  /** Returns a list of all schemas associated with this gameID. */
   fun findAllByGameID(gameId: String): List<SchemasByGame>
 }
