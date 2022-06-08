@@ -20,10 +20,12 @@
 package tools.aqua.bgw.net.server.service
 
 import org.springframework.stereotype.Service
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.repositories.GameRepository
 import tools.aqua.bgw.net.server.entity.repositories.PlayerRepository
+import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
+import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 
 /**
  * This service exposes all active games and players to the frontend. //TODO maybe make Games and
@@ -32,13 +34,22 @@ import tools.aqua.bgw.net.server.entity.repositories.PlayerRepository
 @Service
 class FrontendService(
     private val playerRepository: PlayerRepository,
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val schemasByGameRepository: SchemasByGameRepository
 ) {
   /** List of active [Player]s. */
   val activePlayers: List<Player>
     get() = playerRepository.getAll()
 
-  /** List of active [Game]s. */
-  val activeGames: List<Game>
+    /** List of active [GameInstance]s. */
+  val activeGames: List<GameInstance>
     get() = gameRepository.getAll()
+
+    /** List of all schemas grouped by their gameID. **/
+  val allSchemas: List<SchemasByGame>
+    get() = schemasByGameRepository.findAll().toList()
+
+    /** List of all gameIDs of games that have been registered. **/
+  val allGameIds: List<String>
+    get() = allSchemas.map { it.gameID }.distinct()
 }

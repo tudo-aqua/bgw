@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.messages.MessageList
 import com.vaadin.flow.component.messages.MessageListItem
-import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.notification.NotificationVariant
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.upload.Upload
@@ -31,17 +30,22 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
+import tools.aqua.bgw.net.server.service.NotificationService
 import tools.aqua.bgw.net.server.service.validation.ValidationService
 
 /**
  * Layout for the schema view.
  *
  * @property validationService Auto-Wired [ValidationService].
+ * @property notificationService Auto-Wired [NotificationService].
  */
 @Route(value = "schema", layout = MainLayout::class)
-@PageTitle("BGW-Net | JSON Schemas")
+@PageTitle("BGW-Net | Validate Schema")
 @CssImport(value = "./styles/message.css", themeFor = "vaadin-message")
-class SchemaView(@Autowired private val validationService: ValidationService) : VerticalLayout() {
+class SchemaView(
+    @Autowired private val validationService: ValidationService,
+    @Autowired private val notificationService: NotificationService
+) : VerticalLayout() {
   private val buffer: MemoryBuffer = MemoryBuffer()
   private val upload: Upload = Upload(buffer)
   private val msgList = MessageList()
@@ -49,12 +53,6 @@ class SchemaView(@Autowired private val validationService: ValidationService) : 
   init {
     configureUpload()
     add(VerticalLayout(upload, msgList))
-  }
-
-  private fun notify(msg: String, variant: NotificationVariant = NotificationVariant.LUMO_PRIMARY) {
-    val notification = Notification(msg, 5000, Notification.Position.TOP_CENTER)
-    notification.addThemeVariants(variant)
-    notification.open()
   }
 
   private fun configureUpload() {
@@ -69,7 +67,7 @@ class SchemaView(@Autowired private val validationService: ValidationService) : 
         val schemaNode: JsonNode = mapper.readTree(inputStream)
         results = validationService.validateMetaSchema(schemaNode)
       } catch (_: StreamReadException) {
-        notify(
+        notificationService.notify(
             "Couldn't parse JSON Schema! Please upload a .json File",
             NotificationVariant.LUMO_ERROR)
       }
@@ -77,8 +75,11 @@ class SchemaView(@Autowired private val validationService: ValidationService) : 
       msgList.setItems(results.map { result -> MessageListItem(result) })
 
       if (results.isEmpty())
-          notify("$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
-      else notify("$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
+          notificationService.notify(
+              "$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
+      else
+          notificationService.notify(
+              "$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
     }
   }
 }

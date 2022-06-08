@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.server.entity.tables
+package tools.aqua.bgw.net.server.service.oauth
 
-import org.springframework.data.repository.CrudRepository
+import java.util.*
+import org.springframework.data.jpa.repository.JpaRepository
 
-/** Interface for game schema repository. */
-interface SchemasByGameRepository : CrudRepository<SchemasByGame, String> {
-  /** Returns a list of all schemas associated with this gameID. **/
-  fun findAllByGameID(gameId: String): List<SchemasByGame>
+/** Holds information about user accounts. Each user represents an oauth login. **/
+interface AccountRepository : JpaRepository<Account, Long> {
+  /** Finds a user account by their unique oauth subject identifier. May return an [Optional.EMPTY] **/
+  fun findBySub(sub: String?): Optional<Account>
 }

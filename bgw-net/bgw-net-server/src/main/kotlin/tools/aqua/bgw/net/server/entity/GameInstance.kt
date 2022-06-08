@@ -24,7 +24,7 @@ package tools.aqua.bgw.net.server.entity
  * @property sessionID Unique ID identifying this session.
  * @param initializer Instance of the host player.
  */
-class Game(val gameID: String, val sessionID: String, initializer: Player) {
+class GameInstance(val gameID: String, val sessionID: String, initializer: Player) {
 
   /** All players currently in this game instance. */
   private val mutablePlayers: MutableList<Player> = mutableListOf(initializer)
@@ -34,8 +34,8 @@ class Game(val gameID: String, val sessionID: String, initializer: Player) {
     get() = mutablePlayers.toList()
 
   /**
-   * This is set to [System.currentTimeMillis] whenever the last [Player] leaves this [Game]. It is
-   * set to 'null' whenever a [Player] joins this [Game].
+   * This is set to [System.currentTimeMillis] whenever the last [Player] leaves this [GameInstance]
+   * . It is set to 'null' whenever a [Player] joins this [GameInstance].
    */
   var orphanCandidateSince: Long? = null
     private set
@@ -71,7 +71,7 @@ class Game(val gameID: String, val sessionID: String, initializer: Player) {
 
   /** Checks for equal sessionID as it must be unique. */
   override fun equals(other: Any?): Boolean =
-      if (other is Game) sessionID == other.sessionID else false
+      if (other is GameInstance) sessionID == other.sessionID else false
 
   /** Hashes sessionID as it must be unique. */
   override fun hashCode(): Int = sessionID.hashCode()

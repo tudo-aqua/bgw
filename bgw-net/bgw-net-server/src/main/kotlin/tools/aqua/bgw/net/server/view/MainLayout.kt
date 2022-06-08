@@ -24,6 +24,7 @@ import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.html.Span
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -34,15 +35,28 @@ import com.vaadin.flow.router.HighlightConditions
 import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User
+import tools.aqua.bgw.net.server.service.oauth.AccountRepository
 
 /** Layout for the main view. */
 @CssImport("./styles/styles.css")
 @Theme(Lumo::class, variant = Lumo.LIGHT)
-class MainLayout : AppLayout() {
+class MainLayout(
+  /** Repository holding information about the oauth login accounts. **/
+  private val accountRepository: AccountRepository
+  ) : AppLayout() {
   init {
     createHeader()
     createDrawer()
+    createUserStatus()
     createToggleButton()
+  }
+
+  private fun createUserStatus() {
+    val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
+    val account = accountRepository.findBySub(principal.name).get()
+    addToNavbar(Span(account.accountName).apply { width = "150px" })
   }
 
   private fun createToggleButton() {
@@ -70,18 +84,27 @@ class MainLayout : AppLayout() {
 
   private fun createDrawer() {
     val connectionsLink =
-        RouterLink("Connections and Games", ConnectionsView::class.java).apply {
+        RouterLink("Connections and Sessions", ConnectionsView::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val secretLink =
-        RouterLink("SoPra Secret", SecretForm::class.java).apply {
+        RouterLink("SoPra Secret", SoPraSecretForm::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val schemaLink =
-        RouterLink("JSON Schema", SchemaView::class.java).apply {
+        RouterLink("Validate Schema", SchemaView::class.java).apply {
+          highlightCondition = HighlightConditions.sameLocation()
+        }
+    val uploadLink =
+        RouterLink("Games and Schemas", UploadSchemaView::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
 
-    addToDrawer(VerticalLayout(connectionsLink, secretLink, schemaLink))
+    val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
+    val account = accountRepository.findBySub(principal.name).get()
+    val links: MutableList<RouterLink> = mutableListOf(connectionsLink, schemaLink)
+    if (account.isAdmin()) links.addAll(listOf(secretLink, uploadLink))
+
+    addToDrawer(VerticalLayout(*links.toTypedArray()))
   }
 }

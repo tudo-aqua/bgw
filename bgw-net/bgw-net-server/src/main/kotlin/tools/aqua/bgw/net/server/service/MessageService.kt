@@ -33,7 +33,7 @@ import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
 import tools.aqua.bgw.net.common.response.*
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 import tools.aqua.bgw.net.server.player
@@ -165,7 +165,7 @@ class MessageService(
     /** Object mapper for Json (de)serialization. */
     private val mapper = ObjectMapper().registerModule(kotlinModule())
 
-    internal fun Game.broadcastMessage(sender: Player, msg: Message) {
+    internal fun GameInstance.broadcastMessage(sender: Player, msg: Message) {
       for (session in (players - sender).map(Player::session)) {
         logger.info("Broadcast $msg to $session")
         session.sendMessage(msg)

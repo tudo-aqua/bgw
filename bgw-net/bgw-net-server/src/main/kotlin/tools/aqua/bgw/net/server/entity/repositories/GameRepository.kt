@@ -18,17 +18,18 @@
 package tools.aqua.bgw.net.server.entity.repositories
 
 import org.springframework.stereotype.Repository
-import tools.aqua.bgw.net.server.entity.Game
+import tools.aqua.bgw.net.server.entity.GameInstance
 
 /** Holds all currently active Games. */
 @Repository
-class GameRepository : ObjectRepository<Game>() {
+class GameRepository : ObjectRepository<GameInstance>() {
   /**
-   * Returns [Game] instance associated with [sessionID].
+   * Returns [GameInstance] instance associated with [sessionID].
    *
    * @param sessionID Session ID to search.
    *
-   * @return [Game] instance associated with [sessionID], 'null' if no game was found.
+   * @return [GameInstance] instance associated with [sessionID], 'null' if no game was found.
    */
-  fun getBySessionID(sessionID: String): Game? = objectSet.find { it.sessionID == sessionID }
+  fun getBySessionID(sessionID: String): GameInstance? =
+      objectSet.find { it.sessionID == sessionID }
 }
