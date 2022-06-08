@@ -21,10 +21,10 @@ import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.notification.NotificationVariant
 import org.springframework.stereotype.Service
 
-/** The [NotificationService] is responsible for notifying the user in the UI about messages. */
+/** The [NotificationService] is responsible for notifying the user in the UI about messages. **/
 @Service
 class NotificationService {
-  /** Opens a notification snackbar displaying a certain message. */
+  /** Opens a notification snackbar displaying a certain message. **/
   fun notify(msg: String, variant: NotificationVariant = NotificationVariant.LUMO_PRIMARY) {
     val notification = Notification(msg, 5000, Notification.Position.TOP_CENTER)
     notification.addThemeVariants(variant)

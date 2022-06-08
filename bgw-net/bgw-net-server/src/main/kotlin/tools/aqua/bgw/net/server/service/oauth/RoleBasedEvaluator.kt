@@ -23,9 +23,9 @@ import org.ilay.AccessEvaluator
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 
-/** Checks whether a given user account has enough permission based on their role. */
+/** Checks whether a given user account has enough permission based on their role. **/
 open class RoleBasedEvaluator(
-    /** Repository holding information about the oauth login accounts. */
+    /** Repository holding information about the oauth login accounts. **/
     var accountRepository: AccountRepository,
 ) : AccessEvaluator<SecuredByRole> {
   override fun evaluate(

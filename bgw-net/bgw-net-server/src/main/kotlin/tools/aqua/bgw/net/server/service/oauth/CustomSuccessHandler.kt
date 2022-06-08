@@ -25,57 +25,58 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 
-/** Handles the post authentication process such as storing the users account. */
+/** Handles the post authentication process such as storing the users account. **/
 @Component
 class CustomSuccessHandler(
-    /** Repository holding information about the oauth login accounts. */
+    /** Repository holding information about the oauth login accounts. **/
     var accountRepository: AccountRepository,
 ) : AuthenticationSuccessHandler {
-  private val logger = LoggerFactory.getLogger(javaClass)
+    private val logger = LoggerFactory.getLogger(javaClass)
 
-  override fun onAuthenticationSuccess(
-      request: HttpServletRequest?,
-      response: HttpServletResponse?,
-      authentication: Authentication?
-  ) {
-    if (authentication != null && authentication.principal is OidcUser) {
-      val user = authentication.principal as OidcUser
-      val account = accountRepository.findBySub(user.name)
-      if (account.isEmpty) {
-        user.getAttribute<String>("name")?.let {
-          createAccount(it, user.name, user.getAttribute<ArrayList<String>>("groups"))
+    override fun onAuthenticationSuccess(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        authentication: Authentication?
+    ) {
+        if (authentication != null && authentication.principal is OidcUser) {
+            val user = authentication.principal as OidcUser
+            val account = accountRepository.findBySub(user.name)
+            if (account.isEmpty) {
+                user.getAttribute<String>("name")?.let {
+                    createAccount(it, user.name, user.getAttribute<ArrayList<String>>("groups"))
+                }
+            } else {
+                user.getAttribute<String>("name")?.let {
+                    updateAccount(
+                        account.get(), it, user.name, user.getAttribute<ArrayList<String>>("groups")
+                    )
+                }
+            }
         }
-      } else {
-        user.getAttribute<String>("name")?.let {
-          updateAccount(
-              account.get(), it, user.name, user.getAttribute<ArrayList<String>>("groups"))
+        response?.sendRedirect("/")
+    }
+
+    /** Update the information about the user account if it might have change since the last login. **/
+    fun updateAccount(account: Account, name: String, sub: String, groups: ArrayList<String>?) {
+        accountRepository.save(
+            account.apply {
+                this.accountName = name
+                this.role = getRoleFromGroups(groups)
+            })
+    }
+
+    /** Based on the groups the user is in he is assigned to a role. **/
+    fun getRoleFromGroups(groups: ArrayList<String>?): String {
+        if (groups != null && groups.isNotEmpty()) {
+            if (groups.contains("tutorengruppe")) {
+                return "admin"
+            }
         }
-      }
+        return "user"
     }
-    response?.sendRedirect("/")
-  }
 
-  /** Update the information about the user account if it might have change since the last login. */
-  fun updateAccount(account: Account, name: String, sub: String, groups: ArrayList<String>?) {
-    accountRepository.save(
-        account.apply {
-          this.accountName = name
-          this.role = getRoleFromGroups(groups)
-        })
-  }
-
-  /** Based on the groups the user is in he is assigned to a role. */
-  fun getRoleFromGroups(groups: ArrayList<String>?): String {
-    if (groups != null && groups.isNotEmpty()) {
-      if (groups.contains("tutorengruppe")) {
-        return "admin"
-      }
+    /** persistently store information account the user as an user account object. **/
+    fun createAccount(name: String, sub: String, groups: ArrayList<String>?) {
+        accountRepository.save(Account(sub = sub, accountName = name, role = getRoleFromGroups(groups)))
     }
-    return "user"
-  }
-
-  /** persistently store information account the user as an user account object. */
-  fun createAccount(name: String, sub: String, groups: ArrayList<String>?) {
-    accountRepository.save(Account(sub = sub, accountName = name, role = getRoleFromGroups(groups)))
-  }
 }
