@@ -45,6 +45,14 @@ import tools.aqua.bgw.net.server.service.oauth.SecuredByRole
 import tools.aqua.bgw.net.server.service.validation.ValidationService
 import tools.aqua.bgw.net.server.view.components.ValidTextField
 
+/**
+ * Layout for the upload view.
+ *
+ * @property validationService Auto-Wired [ValidationService].
+ * @property frontendService Auto-Wired [FrontendService].
+ * @property notificationService Auto-Wired [NotificationService].
+ * @property schemasByGameRepository injected [SchemasByGameRepository].
+ */
 @SecuredByRole("admin")
 @Route(value = "upload", layout = MainLayout::class)
 @PageTitle("BGW-Net | Games and Schemas")
@@ -56,6 +64,8 @@ class UploadSchemaView(
 ) : VerticalLayout() {
   private val logger: Logger = LoggerFactory.getLogger(javaClass)
   private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
+
+    private val gameIdLabel = "Game ID"
 
   private val upload: Upload =
       Upload(buffer).apply {
@@ -101,8 +111,8 @@ class UploadSchemaView(
       mutableListOf<String>().apply { addAll(frontendService.allGameIds) }
 
   private val gameIdField =
-      ValidTextField("Game ID").apply {
-        addValidator({ value -> !gameIds.contains(value) }, "Game ID not unique")
+      ValidTextField(gameIdLabel).apply {
+        addValidator({ value -> !gameIds.contains(value) }, "Game already exists")
       }
 
   private val gameIdButton =
@@ -119,13 +129,13 @@ class UploadSchemaView(
   private var gameIdSelect: Select<String> =
       Select<String>().apply {
         this.setItems(gameIds)
-        this.label = "Game ID"
+        this.label = gameIdLabel
         addValueChangeListener { upload.element.setPropertyJson("files", Json.createArray()) }
       }
 
   private val gameGrid =
       Grid<Game>().apply {
-        addColumn(Game::gameId).setHeader("Game ID")
+        addColumn(Game::gameId).setHeader(gameIdLabel)
         val schemaRenderer =
             ComponentRenderer<Grid<SchemasByGame>, Game> { game ->
               Grid<SchemasByGame>().apply {
@@ -165,4 +175,10 @@ class UploadSchemaView(
   }
 }
 
-class Game(val gameId: String, val schemas: List<SchemasByGame>)
+/** Represents a [Game] like MauMau for example and its according schemas. **/
+class Game(
+    /** unique identifier of this game. **/
+    val gameId: String,
+    /** list of schemas of this game. **/
+    val schemas: List<SchemasByGame>
+    )

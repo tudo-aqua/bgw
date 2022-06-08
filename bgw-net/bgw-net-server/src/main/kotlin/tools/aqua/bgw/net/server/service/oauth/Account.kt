@@ -23,6 +23,7 @@ import javax.persistence.*
 /** Represents a user account login in with an oauth provider. **/
 @Entity
 class Account(
+    /** unique identifier for each user. **/
     @GeneratedValue @Id var id: Long? = null,
     /** Stands for subject and is an unique identifier from the oath protocol. **/
     var sub: String = "",

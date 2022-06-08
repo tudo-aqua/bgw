@@ -23,9 +23,10 @@ import com.vaadin.flow.data.binder.Binder.BindingBuilder
 import com.vaadin.flow.data.binder.Validator
 import com.vaadin.flow.function.SerializablePredicate
 
+/** A [TextField] that also validates the content. **/
 class ValidTextField(label: String) : TextField(label) {
   internal inner class Content {
-    var content: String? = null
+    var value: String? = null
   }
 
   private val content: Content = Content()
@@ -36,14 +37,17 @@ class ValidTextField(label: String) : TextField(label) {
     binder.bean = content
   }
 
+  /** Clears the input fields content. **/
   fun reset() {
     this.binder.fields.forEach { field -> field.clear() }
   }
 
+  /** Adds a validator for the user input. **/
   fun addValidator(predicate: SerializablePredicate<String?>?, errorMessage: String?) {
     addValidator(Validator.from(predicate, errorMessage))
   }
 
+  /** Adds a validator for the user input. **/
   fun addValidator(validator: Validator<String?>) {
     validators.add(validator)
     build()
@@ -54,8 +58,8 @@ class ValidTextField(label: String) : TextField(label) {
     for (v in validators) {
       builder.withValidator(v)
     }
-    builder.bind({ obj: Content -> obj.content }) { obj: Content, content: String? ->
-      obj.content = content
+    builder.bind({ obj: Content -> obj.value }) { obj: Content, content: String? ->
+      obj.value = content
     }
   }
 }

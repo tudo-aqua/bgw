@@ -23,7 +23,9 @@ import org.ilay.AccessEvaluator
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 
+/** Checks whether a given user account has enough permission based on their role. **/
 open class RoleBasedEvaluator(
+    /** Repository holding information about the oauth login accounts. **/
     var accountRepository: AccountRepository,
 ) : AccessEvaluator<SecuredByRole> {
   override fun evaluate(
@@ -45,6 +47,7 @@ open class RoleBasedEvaluator(
  *
  * @param securedClass the secured View class.
  * @param annotation the [SecuredByRole] annotation enforcing RBAC.
+ * @param account the account of the user trying to access the view class.
  * @return true if access is granted.
  */
 fun isAccessGranted(securedClass: Class<*>?, annotation: SecuredByRole, account: Account): Boolean {

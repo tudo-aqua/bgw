@@ -45,9 +45,11 @@ class FrontendService(
   val activeGames: List<GameInstance>
     get() = gameRepository.getAll()
 
+    /** List of all schemas grouped by their gameID. **/
   val allSchemas: List<SchemasByGame>
     get() = schemasByGameRepository.findAll().toList()
 
+    /** List of all gameIDs of games that have been registered. **/
   val allGameIds: List<String>
     get() = allSchemas.map { it.gameID }.distinct()
 }

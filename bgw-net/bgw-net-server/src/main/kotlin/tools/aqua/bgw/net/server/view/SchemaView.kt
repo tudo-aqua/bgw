@@ -37,6 +37,7 @@ import tools.aqua.bgw.net.server.service.validation.ValidationService
  * Layout for the schema view.
  *
  * @property validationService Auto-Wired [ValidationService].
+ * @property notificationService Auto-Wired [NotificationService].
  */
 @Route(value = "schema", layout = MainLayout::class)
 @PageTitle("BGW-Net | Validate Schema")
