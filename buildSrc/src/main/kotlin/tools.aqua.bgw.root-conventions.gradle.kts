@@ -18,6 +18,7 @@
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
 import java.util.regex.Pattern
+import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
 
 plugins {
@@ -31,9 +32,9 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
 }
 
-group = "tools.aqua"
-
 version = "0.0.0-SNAPSHOT"
+
+val mavenMetadata = extensions.create<GlobalMavenMetadataExtension>("mavenMetadata")
 
 gitVersioning.apply {
   describeTagPattern = Pattern.compile("v(?<version>.*)")
@@ -50,7 +51,7 @@ gitVersioning.apply {
   }
 }
 
-val printVersion by tasks.registering { logger.error(version.toString()) }
+val printVersion by tasks.registering { doFirst { logger.error(version.toString()) } }
 
 spotless {
   format("kotlinBuildSrc", KotlinExtension::class.java) {
