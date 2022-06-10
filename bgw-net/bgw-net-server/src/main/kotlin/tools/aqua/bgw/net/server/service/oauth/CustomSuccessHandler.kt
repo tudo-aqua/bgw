@@ -52,7 +52,7 @@ class CustomSuccessHandler(
         }
       }
     }
-    response?.sendRedirect("/")
+    response?.sendRedirect(request?.contextPath + "/")
   }
 
   /** Update the information about the user account if it might have change since the last login. */

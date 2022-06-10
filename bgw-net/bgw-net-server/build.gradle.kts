@@ -50,7 +50,7 @@ dependencies {
   testImplementation(libs.testcontainers.junit.jupiter)
 }
 
-vaadin { productionMode = false }
+vaadin { productionMode = true }
 
 tasks.bootBuildImage {
   imageName = System.getenv("DOCKER_IMAGE_NAME")
