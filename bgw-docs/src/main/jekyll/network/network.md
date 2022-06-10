@@ -1,5 +1,6 @@
 ---
-title: Network nav_order: 7 has_children: true
+title: Network
+nav_order: 7
 ---
 
 [BoardGameClientKDoc]: ../../bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-board-game-client/index.html
