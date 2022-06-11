@@ -17,18 +17,18 @@
 
 @file:Suppress("UnusedPrivateMember")
 
-package tools.aqua.bgw.examples.maumau.service
+package tools.aqua.bgw.examples.maumau.service.network
 
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.examples.maumau.entity.GameActionType
 import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
-import tools.aqua.bgw.examples.maumau.main.NETWORK_SECRET
-import tools.aqua.bgw.examples.maumau.service.Serialization.deserialize
-import tools.aqua.bgw.examples.maumau.service.Serialization.deserializeGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
+import tools.aqua.bgw.examples.maumau.service.LogicController
+import tools.aqua.bgw.examples.maumau.service.network.NetworkSerialization.deserialize
+import tools.aqua.bgw.examples.maumau.service.network.NetworkSerialization.deserializeGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauEndGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.client.NetworkLogging
@@ -42,18 +42,20 @@ import tools.aqua.bgw.net.common.response.*
  *
  * @param playerName Your player name.
  * @param host Host address.
+ * @param secret Network secret.
  * @property logicController [LogicController] instance for refreshes.
  */
 class MauMauBoardGameClient(
     playerName: String,
     host: String,
+    secret: String,
     val logicController: LogicController,
 ) :
     BoardGameClient(
         playerName = playerName,
-        secret = NETWORK_SECRET,
+        secret = secret,
         host = host,
-        networkLoggingBehavior = NetworkLogging.INFO) {
+        networkLoggingBehavior = NetworkLogging.VERBOSE) {
 
   /** [Refreshable] instance. */
   val view: Refreshable = logicController.view

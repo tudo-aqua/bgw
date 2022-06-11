@@ -22,9 +22,10 @@ import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
 import tools.aqua.bgw.examples.maumau.entity.MauMauGame
-import tools.aqua.bgw.examples.maumau.service.Serialization.deserialize
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
+import tools.aqua.bgw.examples.maumau.service.network.NetworkSerialization.deserialize
+import tools.aqua.bgw.examples.maumau.service.network.NetworkService
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauShuffleStackGameAction
 import tools.aqua.bgw.examples.maumau.view.Refreshable
 
 /**

@@ -15,16 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service
+package tools.aqua.bgw.examples.maumau.service.network
 
 import tools.aqua.bgw.examples.maumau.entity.*
 import tools.aqua.bgw.examples.maumau.main.GAME_ID
-import tools.aqua.bgw.examples.maumau.service.Serialization.serialize
-import tools.aqua.bgw.examples.maumau.service.Serialization.serializeGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauEndGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameAction
+import tools.aqua.bgw.examples.maumau.service.LogicController
+import tools.aqua.bgw.examples.maumau.service.network.NetworkSerialization.serialize
+import tools.aqua.bgw.examples.maumau.service.network.NetworkSerialization.serializeGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauEndGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauGameAction
 
-/** Service for handling network communication. */
+/**
+ * Service for handling network communication. Offline games may be implemented by setting [client]
+ * to 'null'.
+ */
 class NetworkService(private val logicController: LogicController) {
   /** Network client. Nullable for offline games. */
   private var client: MauMauBoardGameClient? = null
@@ -34,17 +38,18 @@ class NetworkService(private val logicController: LogicController) {
    * Connects to server and starts a new game session.
    *
    * @param address Server address and port.
+   * @param secret Server secret.
    * @param name Player name.
    * @param sessionID Session ID to host.
    */
-  fun tryHostGame(address: String, name: String, sessionID: String) {
+  fun hostGame(address: String, secret: String, name: String, sessionID: String) {
     if (sessionID.isEmpty()) {
       logicController.view.showConnectWarningDialog(
           title = "SessionID is empty", message = "Please fill in the sessionID field.")
       return
     }
 
-    if (!tryConnect(address, name)) return
+    if (!connect(address, secret, name)) return
 
     client?.createGame(GAME_ID, sessionID)
   }
@@ -53,17 +58,18 @@ class NetworkService(private val logicController: LogicController) {
    * Connects to server and joins a game session.
    *
    * @param address Server address and port.
+   * @param secret Server secret.
    * @param name Player name.
    * @param sessionID Session ID to join to.
    */
-  fun tryJoinGame(address: String, name: String, sessionID: String) {
+  fun joinGame(address: String, secret: String, name: String, sessionID: String) {
     if (sessionID.isEmpty()) {
       logicController.view.showConnectWarningDialog(
           title = "SessionID is empty", message = "Please fill in the sessionID field.")
       return
     }
 
-    if (!tryConnect(address, name)) return
+    if (!connect(address, secret, name)) return
 
     client?.joinGame(sessionID, "greeting")
   }
@@ -72,12 +78,19 @@ class NetworkService(private val logicController: LogicController) {
    * Connects to server.
    *
    * @param address Server address and port in format "127.0.0.1:8080"
+   * @param secret Network secret.
    * @param name Player name.
    */
-  private fun tryConnect(address: String, name: String): Boolean {
-    /*if (address.isEmpty()) {
+  private fun connect(address: String, secret: String, name: String): Boolean {
+    if (address.isEmpty()) {
       logicController.view.showConnectWarningDialog(
           title = "Address is empty", message = "Please fill in the address field.")
+      return false
+    }
+
+    if (secret.isEmpty()) {
+      logicController.view.showConnectWarningDialog(
+          title = "Secret is empty", message = "Please fill in the secret field.")
       return false
     }
 
@@ -85,12 +98,13 @@ class NetworkService(private val logicController: LogicController) {
       logicController.view.showConnectWarningDialog(
           title = "Name is empty", message = "Please fill in the name field.")
       return false
-    }*/
+    }
 
     val newClient =
         MauMauBoardGameClient(
             playerName = name,
             host = address,
+            secret = secret,
             logicController = logicController,
         )
 
@@ -106,12 +120,12 @@ class NetworkService(private val logicController: LogicController) {
   // region Send actions
   /** Send initialize game message to connected opponent. */
   fun sendInit(game: MauMauGame) {
-    client?.sendGameActionMessage(Serialization.serializeInitMessage(game))
+    client?.sendGameActionMessage(NetworkSerialization.serializeInitMessage(game))
   }
 
   /** Send game stack shuffled message to connected opponent. */
   fun sendStackShuffled(game: MauMauGame) {
-    client?.sendGameActionMessage(Serialization.serializeStacksShuffledMessage(game))
+    client?.sendGameActionMessage(NetworkSerialization.serializeStacksShuffledMessage(game))
   }
 
   /** Send [GameActionType.DRAW] action to connected opponent. */

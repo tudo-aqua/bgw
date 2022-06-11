@@ -47,8 +47,5 @@ const val MENU_ITEM_WIDTH: Int = 200
 /** Game id for bgw-net. */
 const val GAME_ID: String = "MauMau"
 
-/** Secret for bgw-net. */
-const val NETWORK_SECRET: String = "geheim"
-
 /** Button font. */
 val MENU_BUTTON_FONT: Font = Font(color = Color.WHITE, fontStyle = Font.FontStyle.ITALIC)

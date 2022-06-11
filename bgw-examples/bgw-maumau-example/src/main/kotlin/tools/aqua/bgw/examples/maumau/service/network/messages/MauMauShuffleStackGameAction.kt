@@ -15,16 +15,19 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service.messages
+package tools.aqua.bgw.examples.maumau.service.network.messages
 
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionClass
 
 /**
- * GameActionMessage data class for serialization.
+ * InitGameMessage data class for serialization.
  *
- * @property action Associated game action.
- * @property card Played card.
+ * @property drawStack [List] of draw stack cards.
+ * @property gameStack The game stack card.
  */
 @GameActionClass
-data class MauMauGameAction(val action: String, val card: MauMauGameCard? = null) : GameAction()
+data class MauMauShuffleStackGameAction(
+    val drawStack: List<MauMauGameCard>,
+    val gameStack: MauMauGameCard,
+) : GameAction()

@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service
+package tools.aqua.bgw.examples.maumau.service.network
 
 import tools.aqua.bgw.examples.maumau.entity.*
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauGameCard
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauInitGameAction
-import tools.aqua.bgw.examples.maumau.service.messages.MauMauShuffleStackGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauGameCard
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauInitGameAction
+import tools.aqua.bgw.examples.maumau.service.network.messages.MauMauShuffleStackGameAction
 
 /**
  * Serialization helper for network communication. Implements an adapter between model instances and
  * exchange format.
  */
-object Serialization {
+object NetworkSerialization {
   /** Serializes [MauMauCard] for exchange format. */
   fun MauMauCard.serialize(): MauMauGameCard =
       MauMauGameCard(serializeCardSuit(cardSuit), serializeCardValue(cardValue))
@@ -50,6 +50,7 @@ object Serialization {
           gameStack = game.gameStack.cards.first().serialize(),
       )
 
+  /** Serializes [GameActionType] into exchange format. */
   fun serializeGameAction(action: GameActionType): String =
       when (action) {
         GameActionType.PLAY -> "PLAY_CARD"
@@ -59,6 +60,7 @@ object Serialization {
         GameActionType.END_TURN -> "END_TURN"
       }
 
+  /** Deserializes [GameActionType] from exchange format. */
   fun deserializeGameAction(action: String): GameActionType =
       when (action) {
         "PLAY_CARD" -> GameActionType.PLAY
@@ -66,9 +68,11 @@ object Serialization {
         "OPPONENT_DRAW_TWO_CARDS" -> GameActionType.REQUEST_DRAW_TWO
         "REQUEST_SUIT_SELECTION" -> GameActionType.REQUEST_SUIT
         "END_TURN" -> GameActionType.END_TURN
-        else -> throw RuntimeException("Invalid json enum value: $action")
+        else -> throw NoSuchElementException("Invalid json enum value: $action")
       }
 
+  // region Helper
+  /** Serializes [CardSuit] into exchange format. */
   private fun serializeCardSuit(suit: CardSuit): String =
       when (suit) {
         CardSuit.CLUBS -> "C"
@@ -77,11 +81,22 @@ object Serialization {
         CardSuit.DIAMONDS -> "D"
       }
 
+  /** Deserializes [CardSuit] from exchange format. */
+  private fun deserializeCardSuit(suit: String): CardSuit =
+    when (suit) {
+      "C" -> CardSuit.CLUBS
+      "S" -> CardSuit.SPADES
+      "H" -> CardSuit.HEARTS
+      "D" -> CardSuit.DIAMONDS
+      else -> throw NoSuchElementException("Invalid json enum value: $suit")
+    }
+
+  /** Serializes [CardValue] into exchange format. */
   private fun serializeCardValue(value: CardValue): String =
       when (value) {
         CardValue.ACE -> "A"
         CardValue.TWO, CardValue.THREE, CardValue.FOUR, CardValue.FIVE, CardValue.SIX ->
-            throw RuntimeException("This card value does not exist in MauMau.")
+            throw NoSuchElementException("This card value does not exist in MauMau.")
         CardValue.SEVEN -> "7"
         CardValue.EIGHT -> "8"
         CardValue.NINE -> "9"
@@ -91,15 +106,7 @@ object Serialization {
         CardValue.KING -> "K"
       }
 
-  private fun deserializeCardSuit(suit: String): CardSuit =
-      when (suit) {
-        "C" -> CardSuit.CLUBS
-        "S" -> CardSuit.SPADES
-        "H" -> CardSuit.HEARTS
-        "D" -> CardSuit.DIAMONDS
-        else -> throw RuntimeException("Invalid json enum value: $suit")
-      }
-
+  /** Deserializes [CardValue] from exchange format. */
   private fun deserializeCardValue(value: String): CardValue =
       when (value) {
         "7" -> CardValue.SEVEN
@@ -110,6 +117,7 @@ object Serialization {
         "Q" -> CardValue.QUEEN
         "K" -> CardValue.KING
         "A" -> CardValue.ACE
-        else -> throw RuntimeException("Invalid json enum value: $value")
+        else -> throw NoSuchElementException ("Invalid json enum value: $value")
       }
+  // endregion
 }

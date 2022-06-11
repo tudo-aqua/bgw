@@ -46,18 +46,21 @@ class MauMauHostGameMenuScene :
   /** [TextField] for the hostname or address and port. */
   val addressText: TextField =
       TextField(
-          height = MENU_ITEM_HEIGHT,
+          height = 40,
           width = MENU_ITEM_WIDTH,
           text = "sopra.cs.tu-dortmund.de:80/bgw-net/chat",
-          prompt = "Server address: 127.0.0.1:8080")
+          prompt = "Server address")
+
+  /** [TextField] for the network secret. */
+  val secretText: TextField =
+      TextField(height = 40, width = MENU_ITEM_WIDTH, text = "geheim", prompt = "Secret")
 
   /** [TextField] for the player's name. */
-  val nameText: TextField =
-      TextField(height = MENU_ITEM_HEIGHT, width = MENU_ITEM_WIDTH, prompt = "Your Name")
+  val nameText: TextField = TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "Your Name")
 
   /** [TextField] for the session id. */
   val sessionIDText: TextField =
-      TextField(height = MENU_ITEM_HEIGHT, width = MENU_ITEM_WIDTH, prompt = "sessionID")
+      TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "sessionID")
 
   /** Host game [Button]. */
   val hostGameButton: Button = MenuButton("Host Game")
@@ -67,13 +70,14 @@ class MauMauHostGameMenuScene :
 
   init {
     addComponents(
-        GridPane<UIComponent>(columns = 1, rows = 6, spacing = 15, layoutFromCenter = false).apply {
+        GridPane<UIComponent>(columns = 1, rows = 7, spacing = 15, layoutFromCenter = false).apply {
           this[0, 0] = menuLabel
           this[0, 1] = addressText
-          this[0, 2] = nameText
-          this[0, 3] = sessionIDText
-          this[0, 4] = hostGameButton
-          this[0, 5] = backButton
+          this[0, 2] = secretText
+          this[0, 3] = nameText
+          this[0, 4] = sessionIDText
+          this[0, 5] = hostGameButton
+          this[0, 6] = backButton
 
           setColumnWidth(0, this@MauMauHostGameMenuScene.width)
           setCenterMode(Alignment.CENTER)
