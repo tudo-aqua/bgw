@@ -25,7 +25,7 @@ import javax.persistence.*
 class Account(
     /** unique identifier for each user. */
     @GeneratedValue @Id var id: Long? = null,
-    /** Stands for subject and is an unique identifier from the oath protocol. */
+    /** Stands for subject and is a unique identifier from the oath protocol. */
     var sub: String = "",
     /** A clear name used for displaying the user. */
     var accountName: String = "",
@@ -33,5 +33,9 @@ class Account(
     var role: String = "",
 ) : Serializable {
   /** Checks whether this user is an admin. Meaning if he has that role associated to him. */
-  fun isAdmin() = role.contains("admin")
+  fun isAdmin(): Boolean = role.contains("admin")
+
+  companion object {
+    private const val serialVersionUID: Long = 1L
+  }
 }

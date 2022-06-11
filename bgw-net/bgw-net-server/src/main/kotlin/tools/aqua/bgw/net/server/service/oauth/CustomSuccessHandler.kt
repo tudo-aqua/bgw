@@ -19,7 +19,6 @@ package tools.aqua.bgw.net.server.service.oauth
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
@@ -31,8 +30,6 @@ class CustomSuccessHandler(
     /** Repository holding information about the oauth login accounts. */
     var accountRepository: AccountRepository,
 ) : AuthenticationSuccessHandler {
-  private val logger = LoggerFactory.getLogger(javaClass)
-
   override fun onAuthenticationSuccess(
       request: HttpServletRequest?,
       response: HttpServletResponse?,
@@ -60,19 +57,14 @@ class CustomSuccessHandler(
     accountRepository.save(
         account.apply {
           this.accountName = name
+          this.sub = sub
           this.role = getRoleFromGroups(groups)
         })
   }
 
   /** Based on the groups the user is in he is assigned to a role. */
-  fun getRoleFromGroups(groups: ArrayList<String>?): String {
-    if (groups != null && groups.isNotEmpty()) {
-      if (groups.contains("tutorengruppe")) {
-        return "admin"
-      }
-    }
-    return "user"
-  }
+  fun getRoleFromGroups(groups: ArrayList<String>?): String =
+      if (groups != null && groups.contains("tutorengruppe")) "admin" else "user"
 
   /** persistently store information account the user as an user account object. */
   fun createAccount(name: String, sub: String, groups: ArrayList<String>?) {

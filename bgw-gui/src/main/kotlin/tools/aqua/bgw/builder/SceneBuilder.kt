@@ -60,6 +60,7 @@ object SceneBuilder {
         }
 
     // register lock pane
+    @Suppress("DuplicatedCode", "DuplicatedCode")
     val lockPane =
         Pane().apply {
           prefHeightProperty().bind(pane.heightProperty())
@@ -72,6 +73,7 @@ object SceneBuilder {
         }
 
     // register lock pane for menu
+    @Suppress("DuplicatedCode")
     val internalLockPane =
         Pane().apply {
           prefHeightProperty().bind(pane.heightProperty())

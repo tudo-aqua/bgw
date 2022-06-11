@@ -38,9 +38,6 @@ const val TIME_UNTIL_ORPHANED: Long = 60_000L
 /** OAuth Logout Success URL. */
 internal const val LOGOUT_SUCCESS_URL = "/"
 
-/** The String representation of the example game id. */
-const val EXAMPLE_GAME_ID: String = "example"
-
 /** The String representation of the MauMau game id. */
 const val MAUMAU_GAME_ID: String = "MauMau"
 

@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "GlobalCoroutineUsage", "EXPERIMENTAL_IS_NOT_ENABLED")
+@file:Suppress(
+    "unused", "MemberVisibilityCanBePrivate", "GlobalCoroutineUsage", "EXPERIMENTAL_IS_NOT_ENABLED")
 
 package tools.aqua.bgw.net.client
 

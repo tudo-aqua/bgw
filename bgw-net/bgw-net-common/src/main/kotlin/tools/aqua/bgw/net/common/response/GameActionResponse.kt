@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.net.common.response
 
 /**

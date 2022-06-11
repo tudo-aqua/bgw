@@ -34,8 +34,6 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import elemental.json.Json
 import java.io.IOException
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
@@ -62,7 +60,6 @@ class UploadSchemaView(
     @Autowired private val notificationService: NotificationService,
     private val schemasByGameRepository: SchemasByGameRepository
 ) : VerticalLayout() {
-  private val logger: Logger = LoggerFactory.getLogger(javaClass)
   private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
 
   private val gameIdLabel = "Game ID"
@@ -174,11 +171,3 @@ class UploadSchemaView(
         ))
   }
 }
-
-/** Represents a [Game] like MauMau for example and its according schemas. */
-class Game(
-    /** unique identifier of this game. */
-    val gameId: String,
-    /** list of schemas of this game. */
-    val schemas: List<SchemasByGame>
-)

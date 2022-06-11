@@ -24,8 +24,6 @@ import com.vaadin.flow.component.notification.NotificationVariant
 import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 import tools.aqua.bgw.net.server.service.NotificationService
@@ -39,7 +37,6 @@ class SoPraSecretForm(
     private val keyValueRepository: KeyValueRepository,
     @Autowired private val notificationService: NotificationService
 ) : FormLayout() {
-  private val logger: Logger = LoggerFactory.getLogger(javaClass)
   private var newSecret: PasswordField = PasswordField("", "Secret").apply { isRequired = true }
   private val confirmButton: Button =
       Button("Change Secret").apply {

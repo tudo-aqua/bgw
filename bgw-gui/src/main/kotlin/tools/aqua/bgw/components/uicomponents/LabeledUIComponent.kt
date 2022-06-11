@@ -15,7 +15,11 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress(
+    "unused",
+    "MemberVisibilityCanBePrivate",
+    "MemberVisibilityCanBePrivate",
+    "MemberVisibilityCanBePrivate")
 
 package tools.aqua.bgw.components.uicomponents
 
@@ -39,7 +43,7 @@ import tools.aqua.bgw.visual.Visual
  * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width.
  * @param visual Background [Visual].
  */
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "MemberVisibilityCanBePrivate")
 sealed class LabeledUIComponent(
     posX: Number,
     posY: Number,

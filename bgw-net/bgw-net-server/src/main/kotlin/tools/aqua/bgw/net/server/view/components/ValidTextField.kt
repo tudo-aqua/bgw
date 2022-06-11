@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package tools.aqua.bgw.net.server.view.components
 
 import com.vaadin.flow.component.textfield.TextField
@@ -25,7 +27,7 @@ import com.vaadin.flow.function.SerializablePredicate
 
 /** A [TextField] that also validates the content. */
 class ValidTextField(label: String) : TextField(label) {
-  internal inner class Content {
+  internal class Content {
     var value: String? = null
   }
 

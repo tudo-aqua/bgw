@@ -83,13 +83,13 @@ object NetworkSerialization {
 
   /** Deserializes [CardSuit] from exchange format. */
   private fun deserializeCardSuit(suit: String): CardSuit =
-    when (suit) {
-      "C" -> CardSuit.CLUBS
-      "S" -> CardSuit.SPADES
-      "H" -> CardSuit.HEARTS
-      "D" -> CardSuit.DIAMONDS
-      else -> throw NoSuchElementException("Invalid json enum value: $suit")
-    }
+      when (suit) {
+        "C" -> CardSuit.CLUBS
+        "S" -> CardSuit.SPADES
+        "H" -> CardSuit.HEARTS
+        "D" -> CardSuit.DIAMONDS
+        else -> throw NoSuchElementException("Invalid json enum value: $suit")
+      }
 
   /** Serializes [CardValue] into exchange format. */
   private fun serializeCardValue(value: CardValue): String =
@@ -117,7 +117,7 @@ object NetworkSerialization {
         "Q" -> CardValue.QUEEN
         "K" -> CardValue.KING
         "A" -> CardValue.ACE
-        else -> throw NoSuchElementException ("Invalid json enum value: $value")
+        else -> throw NoSuchElementException("Invalid json enum value: $value")
       }
   // endregion
 }

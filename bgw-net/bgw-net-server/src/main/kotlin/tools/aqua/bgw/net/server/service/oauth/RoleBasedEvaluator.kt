@@ -23,11 +23,13 @@ import org.ilay.AccessEvaluator
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 
-/** Checks whether a given user account has enough permission based on their role. */
-open class RoleBasedEvaluator(
-    /** Repository holding information about the oauth login accounts. */
-    var accountRepository: AccountRepository,
-) : AccessEvaluator<SecuredByRole> {
+/**
+ * Checks whether a given user account has enough permission based on their role.
+ *
+ * @property accountRepository Repository holding information about the oauth login accounts.
+ */
+open class RoleBasedEvaluator(private var accountRepository: AccountRepository) :
+    AccessEvaluator<SecuredByRole> {
   override fun evaluate(
       location: Location,
       navigationTarget: Class<*>,
@@ -35,22 +37,11 @@ open class RoleBasedEvaluator(
   ): Access {
     val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
     val account = accountRepository.findBySub(principal.name)
-    if (account.isEmpty) return Access.restricted("/")
-    return if (isAccessGranted(navigationTarget, annotation, account.get())) Access.granted()
-    else Access.restricted("/")
-  }
-}
 
-/**
- * Checks if access is granted for the current user for the given secured view, defined by the view
- * class.
- *
- * @param securedClass the secured View class.
- * @param annotation the [SecuredByRole] annotation enforcing RBAC.
- * @param account the account of the user trying to access the view class.
- * @return true if access is granted.
- */
-fun isAccessGranted(securedClass: Class<*>?, annotation: SecuredByRole, account: Account): Boolean {
-  val allowedRoles = annotation.value
-  return account.role in allowedRoles
+    return when {
+      account.isEmpty -> Access.restricted("/")
+      account.get().role in annotation.value -> Access.granted()
+      else -> Access.restricted("/")
+    }
+  }
 }

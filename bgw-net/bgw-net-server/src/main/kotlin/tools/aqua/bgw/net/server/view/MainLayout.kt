@@ -103,6 +103,6 @@ class MainLayout(
     val links: MutableList<RouterLink> = mutableListOf(connectionsLink, schemaLink)
     if (account.isAdmin()) links.addAll(listOf(secretLink, uploadLink))
 
-    addToDrawer(VerticalLayout(*links.toTypedArray()))
+    @Suppress("SpreadOperator") addToDrawer(VerticalLayout(*links.toTypedArray()))
   }
 }

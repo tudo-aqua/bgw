@@ -15,21 +15,14 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "unused")
+package tools.aqua.bgw.net.server.view
 
-package tools.aqua.bgw.net.client
+import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 
-/** Defines how verbose the network traffic should be logged to the console. */
-enum class NetworkLogging {
-  /** Network traffic will not be logged to the console. */
-  NO_LOGGING,
-
-  /** Only log errors to the console. */
-  ERRORS,
-
-  /** Simple logging informing about sent and received messages as one-line info. */
-  INFO,
-
-  /** Verbose debug output for complete network logging. */
-  VERBOSE
-}
+/**
+ * Represents a [Game] like MauMau for example and its according schemas.
+ *
+ * @property gameId Unique identifier of this game.
+ * @property schemas [List] of schemas for this game.
+ */
+data class Game(val gameId: String, val schemas: List<SchemasByGame>)
