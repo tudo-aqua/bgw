@@ -15,14 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service.messages
-
-import tools.aqua.bgw.net.common.GameAction
-import tools.aqua.bgw.net.common.annotations.GameActionClass
+package tools.aqua.bgw.examples.maumau.service.network.messages
 
 /**
- * GameOverMessage data class for serialization.
+ * MauMauGameCard data class for serialization.
  *
- * @property winner The winner name.
+ * @property suit The card suit.
+ * @property value The card value.
  */
-@GameActionClass data class MauMauEndGameAction(val winner: String) : GameAction()
+data class MauMauGameCard(val suit: String, val value: String)

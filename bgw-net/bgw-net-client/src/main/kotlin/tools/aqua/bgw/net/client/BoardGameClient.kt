@@ -46,8 +46,8 @@ import tools.aqua.bgw.net.common.response.LeaveGameResponse
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
  * override its open functions. By default, these do nothing if not overridden.
  *
- * @param playerName The player name.
- * @param host The server ip or hostname.
+ * @property playerName The player name.
+ * @property host The server ip or hostname.
  * @param secret The server secret.
  * @param networkLoggingBehavior The desired network logging verbosity. Default:
  * [NetworkLogging.NO_LOGGING].
