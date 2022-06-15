@@ -38,7 +38,6 @@ object DialogBuilder {
         if (dialog.buttons.isNotEmpty()) {
           buttonTypes.clear()
           buttonTypes.addAll(dialog.buttons.map { it.toFXButtonType() })
-          buttonTypes.clear()
         } else if (dialog.dialogType == DialogType.CONFIRMATION) {
           buttonTypes.clear()
           buttonTypes.addAll(ButtonType.YES, ButtonType.NO)
