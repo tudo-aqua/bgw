@@ -33,7 +33,7 @@ fun main() {
   AnimationExample()
 }
 
-class AnimationExample : BoardGameApplication("Visuals example") {
+class AnimationExample : BoardGameApplication("Animation example") {
   private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.GRAY)
 
   private val imageFront: ImageVisual =

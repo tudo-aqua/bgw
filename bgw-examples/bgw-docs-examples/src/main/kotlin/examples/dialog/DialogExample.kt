@@ -20,6 +20,7 @@ package examples.dialog
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.visual.ColorVisual
@@ -53,8 +54,8 @@ class DialogExample : BoardGameApplication("Dialog example") {
                   Dialog(
                       dialogType = DialogType.WARNING,
                       title = "Warning",
-                      header = "Empty player name",
-                      message = "Player name must not be empty!"))
+                      header = "Warning Dialog",
+                      message = "A warning Dialog"))
             }
       }
   private val buttonError: Button =
@@ -97,7 +98,7 @@ class DialogExample : BoardGameApplication("Dialog example") {
             }
       }
   private val buttonException: Button =
-      Button(posX = 900, posY = 600, text = "EXCEPTION").apply {
+      Button(posX = 800, posY = 600, text = "EXCEPTION").apply {
         visual = ColorVisual.WHITE
         onMouseClicked =
             {
@@ -110,6 +111,24 @@ class DialogExample : BoardGameApplication("Dialog example") {
             }
       }
 
+  private val buttonCustom: Button =
+    Button(posX = 1000, posY = 600, text = "CUSTOM").apply {
+      visual = ColorVisual.WHITE
+      onMouseClicked =
+        {
+          showDialog(
+            Dialog(
+              dialogType = DialogType.NONE,
+              title = "Custom Dialog",
+              header = "Dialog",
+              message = "A custom Dialog.",
+              ButtonType.NEXT,
+              ButtonType.PREVIOUS,
+              ButtonType.CANCEL
+            ))
+        }
+    }
+
   init {
     gameScene.addComponents(
         buttonInformation,
@@ -117,7 +136,8 @@ class DialogExample : BoardGameApplication("Dialog example") {
         buttonError,
         buttonConfirmation,
         buttonNone,
-        buttonException)
+        buttonException,
+        buttonCustom)
     showGameScene(gameScene)
     show()
   }
