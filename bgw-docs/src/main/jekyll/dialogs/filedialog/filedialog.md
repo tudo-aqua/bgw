@@ -44,6 +44,11 @@ class provides different [FileDialogModes][FileDialogModeKDoc]:
 Depending on the selection the [Dialog][DialogKDoc] will request the appropriate type (file vs. directory) and enable 
 multi-selection.
 
+An example with all dialog types can be found here:
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/dialog/FileDialogExample.kt){:
+.btn }
+
 ## Showing a FileDialog
 To show a dialog use [#showFileDialog][showFileDialogKDoc]
 in [BoardGameApplication][BoardGameApplicationKDoc].

@@ -175,6 +175,11 @@ visualize a hand of cards:
 A satchel hides its /components and reveals them, when they are removed. This container can be used to visualize an
 entity, where the user should not know what might get drawn next, or what is in the container.
 
+## Container overview
+
+[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/components/container/ContainerExample.kt){:
+.btn }
+
 ## Complete source code for the example
 
 [View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/components/container/AreaExample.kt){:
