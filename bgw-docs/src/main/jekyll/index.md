@@ -5,7 +5,7 @@ permalink: /
 ---
 
 <!-- KDoc -->
-[BoardGameApplicationKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html %}
+[BoardGameApplicationKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html
 [BoardGameSceneKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-scene/index.html
 [MenuSceneKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-menu-scene/index.html
 [GameComponentKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html

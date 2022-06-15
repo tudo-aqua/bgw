@@ -1,13 +1,17 @@
 # BoardGameWork
 
-[![Build](https://github.com/tudo-aqua/bgw-core/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/bgw-core/actions/workflows/analyze-build-deploy.yml)
-[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml)
+[![Build](https://github.com/tudo-aqua/bgw-core/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/bgw-core/actions)
+[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://tudo-aqua.github.io/bgw/detekt)
 [![GitHub-Pages](https://github.com/tudo-aqua/bgw-core/actions/workflows/github-pages.yml/badge.svg)](https://tudo-aqua.github.io/bgw/)
 
-[![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-gui)
-[![KDocs](https://img.shields.io/badge/KDoc-Overview-yellowgreen)](https://tudo-aqua.github.io/bgw/kotlin-docs/)
-[![Detekt-Pages](https://img.shields.io/badge/Detekt-Report-yellowgreen)](https://tudo-aqua.github.io/bgw/detekt)
+[![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-gui&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-gui)
+[![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-net-common&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-net-common)
+[![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-net-client&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-net-client)
+[![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-net-server&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-net-server)
 
+[![KDocs BGW-Gui](https://img.shields.io/static/v1?label=kDoc%20bgw-gui&message=overview&color=blue)](https://tudo-aqua.github.io/bgw/bgw-gui-kdoc/index.html)
+[![KDocs BGW-Gui](https://img.shields.io/static/v1?label=kDoc%20bgw-net-common&message=overview&color=blue)](https://tudo-aqua.github.io/bgw/bgw-net-common-kdoc/index.html)
+[![KDocs BGW-Gui](https://img.shields.io/static/v1?label=kDoc%20bgw-net-client&message=overview&color=blue)](https://tudo-aqua.github.io/bgw/bgw-net-client-kdoc/index.html)
 ------------
 
 BoardGameWork is a framework for creating 2D board game applications.

@@ -112,22 +112,21 @@ class DialogExample : BoardGameApplication("Dialog example") {
       }
 
   private val buttonCustom: Button =
-    Button(posX = 1000, posY = 600, text = "CUSTOM").apply {
-      visual = ColorVisual.WHITE
-      onMouseClicked =
-        {
-          showDialog(
-            Dialog(
-              dialogType = DialogType.NONE,
-              title = "Custom Dialog",
-              header = "Dialog",
-              message = "A custom Dialog.",
-              ButtonType.NEXT,
-              ButtonType.PREVIOUS,
-              ButtonType.CANCEL
-            ))
-        }
-    }
+      Button(posX = 1000, posY = 600, text = "CUSTOM").apply {
+        visual = ColorVisual.WHITE
+        onMouseClicked =
+            {
+              showDialog(
+                  Dialog(
+                      dialogType = DialogType.NONE,
+                      title = "Custom Dialog",
+                      header = "Dialog",
+                      message = "A custom Dialog.",
+                      ButtonType.NEXT,
+                      ButtonType.PREVIOUS,
+                      ButtonType.CANCEL))
+            }
+      }
 
   init {
     gameScene.addComponents(

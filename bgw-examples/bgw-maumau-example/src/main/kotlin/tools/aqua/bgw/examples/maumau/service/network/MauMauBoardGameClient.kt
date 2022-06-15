@@ -53,8 +53,8 @@ class MauMauBoardGameClient(
 ) :
     BoardGameClient(
         playerName = playerName,
-        secret = secret,
         host = host,
+        secret = secret,
         networkLoggingBehavior = NetworkLogging.VERBOSE) {
 
   /** [Refreshable] instance. */

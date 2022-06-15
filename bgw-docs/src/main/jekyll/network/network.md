@@ -4,7 +4,7 @@ nav_order: 7
 ---
 
 [BoardGameClientKDoc]: ../../bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-board-game-client/index.html
-
+[NetworkLoggingKDoc]: ../../bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-network-logging/index.html
 <!-- Start Page -->
 
 # Network communication
@@ -38,14 +38,13 @@ implementation("tools.aqua:bgw-net-client:latest")
 ### Gradle Groovy DSL
 
 ````groovy
-implementation 'tools.aqua:bgw-net-common:0.6'
-implementation 'tools.aqua:bgw-net-client:0.6'
+implementation 'tools.aqua:bgw-net-common:latest'
+implementation 'tools.aqua:bgw-net-client:latest'
 ````
 
 ### Maven
 
 ````xml
-
 <dependency>
 	<groupId>tools.aqua</groupId>
 	<artifactId>bgw-net-common</artifactId>
@@ -54,7 +53,6 @@ implementation 'tools.aqua:bgw-net-client:0.6'
 ````
 
 ````xml
-
 <dependency>
 	<groupId>tools.aqua</groupId>
 	<artifactId>bgw-net-client</artifactId>
@@ -68,16 +66,22 @@ On the client side, the central communication interface is the [BoardGameClient]
 communication class inheriting from this class.
 
 ````kotlin
-class MyBoardGameClient() : BoardGameClient(
-	playerName = "Alice",
-	secret = "password",
-	host = "127.0.0.1",
-	port = 8080,
-)
+class MauMauBoardGameClient(
+	playerName: String,
+	host: String,
+	secret: String,
+) : BoardGameClient(
+	playerName = playerName,
+	host = host,
+	secret = secret,
+	networkLoggingBehavior = NetworkLogging.VERBOSE)
 ````
 
 Upon creation the server address, port and secret has to be passed and cannot be changed later on. Additionally,
-[BoardGameClient][BoardGameClientKDoc] takes the player's name.
+[BoardGameClient][BoardGameClientKDoc] takes the player's name for identification purposes. 
+[BoardGameClient][BoardGameClientKDoc] implements dedicated network logging to the standard console which can be turned
+on and controlled via the ``netwokLoggingBehaviour`` parameter. The following options are available (see 
+[NetworkLogging][NetworkLoggingKDoc]):
 
 ## Establishing a connection
 

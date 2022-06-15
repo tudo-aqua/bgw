@@ -73,10 +73,10 @@ class FileDialogExample : BoardGameApplication("FileDialog example") {
         onMouseClicked =
             {
               showFileDialog(
-                  FileDialog(
-                      mode = FileDialogMode.CHOOSE_DIRECTORY,
-                      title = "Choose directory",
-                  ))
+                      FileDialog(
+                          mode = FileDialogMode.CHOOSE_DIRECTORY,
+                          title = "Choose directory",
+                      ))
                   .ifPresent { l ->
                     println("Chosen Directory:")
                     l.forEach { t -> println(t) }
