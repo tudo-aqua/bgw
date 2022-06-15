@@ -81,30 +81,46 @@ Upon creation the server address, port and secret has to be passed and cannot be
 [BoardGameClient][BoardGameClientKDoc] takes the player's name for identification purposes. 
 [BoardGameClient][BoardGameClientKDoc] implements dedicated network logging to the standard console which can be turned
 on and controlled via the ``netwokLoggingBehaviour`` parameter. The following options are available (see 
-[NetworkLogging][NetworkLoggingKDoc]):
+[NetworkLogging][NetworkLoggingKDoc]): 
+ * VERBOSE: Verbose logging printing each step to the console including serialized Json.
+ * INFO: Log incoming and outgoing messages in human-readable format to keep track of network traffic.
+ * ERRORS: Only log errors during communication.
+ * NO_LOGGING: Completely deactivate logging.
+
+*The default value is NO_LOGGING.*
 
 ## Establishing a connection
 
 Once set up you may call ``connect`` on the [BoardGameClient][BoardGameClientKDoc] in order to start a connection. This
 method will block the current thread until a connection was established or the request timed out. You may want to think
-about multithreading in this situation. The function will return ``true`` iff the connection was established.
+about multithreading in this situation. The function will return ``true`` iff the connection was established 
+successfully.
 
 A connection may be closed safely by calling ``disconnnect``.
 
+The connection state may be checked via ``isOpen`` property.
+
 ## Hosting and Joining game sessions.
 
-A game session may be started by calling ``createGame``. Each session gets identified by a unique ``sessionID`` that may
-be passed to the function or get generated automatically. Calling ``createGame`` automatically adds this client to this
-game. Additionally, the gameID must match the game id on the server.
+A game session may be started by calling ``createGame``. Each session gets identified by a unique ``sessionID`` that
+has to be passed to the function. Calling ``createGame`` automatically adds this client to the newly created game on the
+server side. Additionally, the gameId must match the registered gameId on the server in order to identify the
+correct schema set for this game.
 
 ````kotlin
-myClient.createGame(gameID = "MauMau", sessionID = "Alice vs. Bob")
+val client = MauMauBoardGameClient(playerName = "Alice", host = "localhost",  secret = "SECRET"	)
+
+if(client.connect())
+  client.createGame(gameID = "MauMau", sessionID = "Alice vs. Bob")
 ````
 
 To join an existing session, you may call ``joinGame`` passing the sessionID to join to.
 
 ````kotlin
-myClient.joinGame(sessionID = "Alice vs. Bob")
+val client = MauMauBoardGameClient(playerName = "Bob", host = "localhost",  secret = "SECRET"	)
+
+if(client.connect())
+  client.joinGame(sessionID = "Alice vs. Bob")
 ````
 
 After creating or joining to a game, the server will respond with dedicated Responses which will invoke
@@ -161,10 +177,10 @@ call ``BoardGameApplication.runOnGUIThread{ ... }`` to resync to the GUI thread 
 
 Once registered in a game session you may now send messages to your opponents. The function ``sendGameActionMessage``
 takes a ``GameAction`` instance and sends it to all connected opponents. For each type of game action that you want to
-communicate you have to declare a seperate (data) class inheriting from ``GameAction``. For our MauMau example let's
+communicate you have to declare a separate (data) class inheriting from ``GameAction``. For our MauMau example let's
 assume that there are three types of game actions:
 * _MauMauInitGameAction_ - First initialization containing the card stacks and hand cards.
-* _MauMauPlayCardAction_ - You played a card and it's the next players turn.
+* _MauMauPlayCardAction_ - You played a card, and it's the next players turn.
 * _MauMauEndGameAction_ - You played your last card and won the game.
 
 As mentioned all game action classes have to inherit from ``GameAction``. In addition to that they have to be annotated 
