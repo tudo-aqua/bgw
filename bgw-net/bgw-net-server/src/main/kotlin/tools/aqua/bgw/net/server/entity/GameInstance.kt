@@ -25,7 +25,12 @@ package tools.aqua.bgw.net.server.entity
  * @property greetingMessage Greeting message to be broadcast to all players joining this session.
  * @param initializer Instance of the host player.
  */
-class GameInstance(val gameID: String, val sessionID: String, val greetingMessage: String, initializer: Player) {
+class GameInstance(
+    val gameID: String,
+    val sessionID: String,
+    val greetingMessage: String,
+    initializer: Player
+) {
 
   /** All players currently in this game instance. */
   private val mutablePlayers: MutableList<Player> = mutableListOf(initializer)

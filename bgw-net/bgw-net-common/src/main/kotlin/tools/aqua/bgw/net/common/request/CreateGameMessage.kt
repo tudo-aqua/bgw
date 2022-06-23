@@ -24,4 +24,8 @@ package tools.aqua.bgw.net.common.request
  * @property sessionID Unique id for the new session to be created on the server.
  * @property greetingMessage Greeting message to be broadcast to all players joining this session.
  */
-data class CreateGameMessage(val gameID: String, val sessionID: String, val greetingMessage: String) : Request()
+data class CreateGameMessage(
+    val gameID: String,
+    val sessionID: String,
+    val greetingMessage: String
+) : Request()

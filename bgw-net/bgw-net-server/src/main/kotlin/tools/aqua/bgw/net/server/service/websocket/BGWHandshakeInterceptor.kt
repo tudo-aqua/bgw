@@ -19,6 +19,7 @@ package tools.aqua.bgw.net.server.service.websocket
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.web.socket.WebSocketHandler
@@ -26,9 +27,8 @@ import org.springframework.web.socket.server.HandshakeInterceptor
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 
 /**
- * Checks if the soprasecret HTTP header is matching the current SoPra secret. Checks if the
- * playername HTTP header is set and if its set, assigns it as the playerName attribute to the
- * session.
+ * Checks if the network secret HTTP header is matching the current network secret. Checks if the
+ * player name HTTP header is set and assigns it as the playerName attribute to the session.
  *
  * Only allows establishment of web socket session if both checks succeed.
  */
@@ -44,21 +44,33 @@ class BGWHandshakeInterceptor(private val keyValueRepository: KeyValueRepository
   ): Boolean {
     val secret: String =
         try {
-              keyValueRepository.findById("SoPra Secret").get()
+              keyValueRepository.findById("Network secret").get()
             } catch (e: NoSuchElementException) {
-              logger.error("SoPra Secret does not exist in database")
+              logger.error(
+                  "Network secret does not exist in database. Found ${
+                keyValueRepository.findAll().joinToString(separator = ", ") { it.key }
+              }.")
+              response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR)
               return false
             }
             .value
-    var isSuccess = (request.headers.getFirst("soprasecret") == secret)
-    with(request.headers.getFirst("playername")) {
-      if (this == null) {
-        isSuccess = false
-      } else {
-        attributes["playerName"] = this
-      }
+
+    val headerSecret = request.headers.getFirst("NetworkSecret")
+    val headerName = request.headers.getFirst("PlayerName")
+
+    if (headerSecret == null || headerName == null) {
+      response.setStatusCode(HttpStatus.BAD_REQUEST)
+      return false
     }
-    return isSuccess
+
+    if (headerSecret != secret) {
+      response.setStatusCode(HttpStatus.UNAUTHORIZED)
+      return false
+    }
+
+    attributes["playerName"] = headerName
+
+    return true
   }
 
   /** Does nothing. */
