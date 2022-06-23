@@ -105,22 +105,23 @@ The connection state may be checked via ``isOpen`` property.
 A game session may be started by calling ``createGame``. Each session gets identified by a unique ``sessionID`` that
 has to be passed to the function. Calling ``createGame`` automatically adds this client to the newly created game on the
 server side. Additionally, the gameId must match the registered gameId on the server in order to identify the
-correct schema set for this game.
+correct set of message schemas for this game. ``greetingMessage`` will be sent to all players upon joining this session.
 
 ````kotlin
-val client = MauMauBoardGameClient(playerName = "Alice", host = "localhost",  secret = "SECRET"	)
+val client = MauMauBoardGameClient(playerName = "Alice", host = "localhost",  secret = "SECRET")
 
 if(client.connect())
-  client.createGame(gameID = "MauMau", sessionID = "Alice vs. Bob")
+  client.createGame(gameID = "MauMau", sessionID = "Alice vs. Bob", greetingMessage = "Welcome to MauMau!")
 ````
 
-To join an existing session, you may call ``joinGame`` passing the sessionID to join to.
+To join an existing session, you may call ``joinGame`` passing the sessionID to join to. The ``greetingMessage`` will be 
+broadcast to all players in this session.
 
 ````kotlin
-val client = MauMauBoardGameClient(playerName = "Bob", host = "localhost",  secret = "SECRET"	)
+val client = MauMauBoardGameClient(playerName = "Bob", host = "localhost",  secret = "SECRET")
 
 if(client.connect())
-  client.joinGame(sessionID = "Alice vs. Bob")
+  client.joinGame(sessionID = "Alice vs. Bob", greetingMessage = "Hi, I am Bob!")
 ````
 
 After creating or joining to a game, the server will respond with dedicated Responses which will invoke
@@ -128,43 +129,44 @@ After creating or joining to a game, the server will respond with dedicated Resp
 
 ````kotlin
 override fun onCreateGameResponse(response: CreateGameResponse) {
-	when (response.status) {
-		CreateGameResponseStatus.SUCCESS ->
-			prinln("Successfully created game.")
+  when (response.status) {
+    CreateGameResponseStatus.SUCCESS ->
+        prinln("Successfully created game.")
 
-		CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
-			error("Leave current game first.")
+    CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
+        error("Leave current game first.")
 
-		CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS ->
-			error("Session id already exists.")
+    CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS ->
+        error("Session id already exists.")
 
-		CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST ->
-			error("GameID does not exist.")
+    CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST ->
+        error("GameID does not exist.")
 
-		CreateGameResponseStatus.SERVER_ERROR ->
-			error(response)
-	}
+    CreateGameResponseStatus.SERVER_ERROR ->
+        error(response)
+  }
 }
 ````
 
 ````kotlin
 override fun onJoinGameResponse(response: JoinGameResponse) {
-	when (response.status) {
-		JoinGameResponseStatus.SUCCESS ->
-			prinln("Successfully joined game.")
+  when (response.status) {
+    JoinGameResponseStatus.SUCCESS -> {
+        prinln("Successfully joined game.")
+        println("The host's greeting is \"${response.message}\".")
+    }
+    JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
+        error("You are already in a game.")
 
-		JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
-			error("You are already in a game.")
+    JoinGameResponseStatus.INVALID_SESSION_ID ->
+        error("SessionID invalid.")
 
-		JoinGameResponseStatus.INVALID_SESSION_ID ->
-			error("SessionID invalid.")
+    JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN ->
+        error("Player name already exists.")
 
-		JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN ->
-			error("Player name already exists.")
-
-		JoinGameResponseStatus.SERVER_ERROR ->
-			error(response)
-	}
+    JoinGameResponseStatus.SERVER_ERROR ->
+        error(response)
+  }
 }
 ````
 All connected players will get notified when a player joins or leaves the session via ``onPlayerJoined`` and 
@@ -175,49 +177,65 @@ call ``BoardGameApplication.runOnGUIThread{ ... }`` to resync to the GUI thread 
 
 ## Sending messages
 
-Once registered in a game session you may now send messages to your opponents. The function ``sendGameActionMessage``
-takes a ``GameAction`` instance and sends it to all connected opponents. For each type of game action that you want to
+Once registered in a game session you may now send messages to your opponents. The server does not implement any form of
+keeping track whose turn it is at the moment. 
+
+The function ``sendGameActionMessage`` takes a ``GameAction`` instance and sends it to all connected opponents. For each type of game action that you want to
 communicate you have to declare a separate (data) class inheriting from ``GameAction``. For our MauMau example let's
-assume that there are three types of game actions:
+assume that there are four types of game actions:
 * _MauMauInitGameAction_ - First initialization containing the card stacks and hand cards.
-* _MauMauPlayCardAction_ - You played a card, and it's the next players turn.
 * _MauMauEndGameAction_ - You played your last card and won the game.
+* _MauMauShuffleStackGameAction_ - The draw stack was empty and had to be shuffled.
+* _MauMauGameAction_ - You have played or taken a card from the stack.
 
 As mentioned all game action classes have to inherit from ``GameAction``. In addition to that they have to be annotated 
-with ``@GameActionClass``. For our three sample classes this looks like this:
+with ``@GameActionClass``. For our four sample classes this looks like this:
 
 ````kotlin
 @GameActionClass
 data class MauMauInitGameAction(
-    val hostCards: List<String>,
-    val yourCards: List<String>,
-    val drawStack: List<String>,
-    val gameStack: String,
+    val hostCards: List<MauMauGameCard>,
+    val yourCards: List<MauMauGameCard>,
+    val drawStack: List<MauMauGameCard>,
+    val gameStack: MauMauGameCard,
 ) : GameAction()
 ````
 ````kotlin
 @GameActionClass
-data class MauMauPlayCardAction(
-    val card: String,
+data class MauMauEndGameAction(
+    val winner: String,
 ) : GameAction()
 ````
 ````kotlin
 @GameActionClass
-data class MauMauEndGameAction() : GameAction()
+data class MauMauShuffleStackGameAction(
+    val drawStack: List<MauMauGameCard>,
+    val gameStack: MauMauGameCard,
+) : GameAction()
+````
+````kotlin
+@GameActionClass
+data class MauMauGameAction(
+    val action: String, //Restricted by Enum values
+    val card: MauMauGameCard? = null
+) : GameAction()
 ````
 
-After sending a game action, the server will respond in ``onGameactionResponse``.
+
+After sending a game action, the server will respond in ``onGameActionResponse``.
 
 ## Receiving messages
 
 Received messages get propagated through ``onGameActionReceived`` by default. Consider this method as a fallback 
-solution as it gets a parameter of type ``GameAction``. It's therefore necessary to cast the object down by 
-instanceof-switching. Instead, bgw-net allows you to declare dedicated functions for each object type that may get
+solution as it gets a parameter of type ``GameAction``. It would therefore be necessary to cast the object down by 
+instanceof-switching. 
+
+Instead, bgw-net allows you to declare dedicated functions for each object type that may get
 received. These functions have to be declared inside your ``BoardGameClient`` implementation or further down the 
 inheritance hierarchy. The function must declare two formal parameters
 
 * A ``GameAction`` instance
-* A String for the sending player's identification
+* A ``String`` for the sending player's identification
 
 Additionally, each receiver function must be annotated with ``@GameActionReceiver``. For our example these functions may
 look as follows:
@@ -225,24 +243,29 @@ look as follows:
 ````kotlin
 @GameActionReceiver
 private fun onInitGameReceived(message: MauMauInitGameAction, sender: String) {
-	//Init game
-}
-
-@GameActionReceiver
-private fun onPlayCardReceived(message: MauMauPlayCardAction, sender: String) {
-	//Process played card 
+    //Init game received
 }
 
 @GameActionReceiver
 private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
-	//End game
+    //End game received
+}
+
+@GameActionReceiver
+private fun onShuffleStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
+    //Stack shuffled received
+}
+
+@GameActionReceiver
+private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
+    //Game Action received
 }
 ````
 
 The name of the function and parameters are free to choose as well as the visibility modifier. Although when two 
 functions with the same parameter types get detected, only the first will be used, and you will get a warning printed to
 console. **Note** that the order of scanning and therefor the distinction which of these redundant declarations will be
-used is not stable and may vary between execution cycles. It is therefore highly recommended, to declare exactly one 
+used is not stable and may vary between execution cycles due to compiler optimizations. It is therefore highly recommended, to declare exactly one 
 receiver function for each ``GameAction`` instance.
 
 **Please note** that all connected players have to declare the exact same classes  in order to ensure correct 
