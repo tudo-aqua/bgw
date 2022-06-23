@@ -128,7 +128,8 @@ protected constructor(
 
         val result = wsClient.connectBlocking()
 
-        logger.debug("Connection call succeeded without interruption and returned $result.")
+        logger.debug(
+          "Connection call succeeded without interruption ${if(result) "and" else "but"} returned $result.")
 
         result
       } catch (e: InterruptedException) {
@@ -163,14 +164,16 @@ protected constructor(
    *
    * @param gameID ID of the current game to be used.
    * @param sessionID Unique id for the new session to be created on the server.
+   * @param greetingMessage Greeting message to be broadcast to all players joining this session.
    *
    * @throws IllegalStateException If client is not connected to a host.
    */
-  fun createGame(gameID: String, sessionID: String) {
-    checkConnected(true)
+  fun createGame(gameID: String, sessionID: String, greetingMessage: String) {
+    checkConnected(expectedState = true)
 
-    logger.info("Requesting creation of new game with ID $gameID and sessionID $sessionID.")
-    wsClient.sendRequest(CreateGameMessage(gameID, sessionID))
+    logger.info(
+      "Requesting creation of new game with ID $gameID and sessionID $sessionID and greeting message $greetingMessage.")
+    wsClient.sendRequest(CreateGameMessage(gameID, sessionID, greetingMessage))
   }
 
   /**
@@ -182,7 +185,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
-    checkConnected(true)
+    checkConnected(expectedState = true)
 
     logger.info(
         "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
@@ -197,7 +200,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun leaveGame(goodbyeMessage: String) {
-    checkConnected(true)
+    checkConnected(expectedState = true)
 
     logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
@@ -213,7 +216,7 @@ protected constructor(
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun sendGameActionMessage(payload: GameAction) {
-    checkConnected(true)
+    checkConnected(expectedState = true)
 
     logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
@@ -221,7 +224,7 @@ protected constructor(
   // endregion
 
   // region Interface functions
-  /** Called after an opening handshake has been performed and the [BoardGameClient] send data. */
+  /** Called after an opening handshake has been performed. */
   open fun onOpen() {}
 
   /**

@@ -21,5 +21,6 @@ package tools.aqua.bgw.net.common.response
  * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
  *
  * @property status Status code.
+ * @property message The Welcome message from the host.
  */
-class JoinGameResponse(val status: JoinGameResponseStatus) : Response()
+class JoinGameResponse(val status: JoinGameResponseStatus, val message: String) : Response()
