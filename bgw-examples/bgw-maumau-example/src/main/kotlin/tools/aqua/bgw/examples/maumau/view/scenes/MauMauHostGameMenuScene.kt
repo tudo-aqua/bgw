@@ -48,7 +48,7 @@ class MauMauHostGameMenuScene :
       TextField(
           height = 40,
           width = MENU_ITEM_WIDTH,
-          text = "sopra.cs.tu-dortmund.de:80/bgw-net/chat",
+          text = "sopra.cs.tu-dortmund.de:80/bgw-net/connect",
           prompt = "Server address")
 
   /** [TextField] for the network secret. */
