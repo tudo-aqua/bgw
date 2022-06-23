@@ -110,7 +110,7 @@ class MessageService(
     val createGameResponseStatus =
         if (schemasByGameRepository.findAll().none { it.gameID == msg.gameID })
             CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
-        else gameService.createGame(msg.gameID, msg.sessionID, player)
+        else gameService.createGame(msg.gameID, msg.sessionID, msg.greetingMessage, player)
 
     session.sendMessage(CreateGameResponse(createGameResponseStatus))
   }
@@ -123,9 +123,10 @@ class MessageService(
    */
   private fun handleJoinGameMessage(session: WebSocketSession, msg: JoinGameMessage) {
     val player = session.player
+    val game = gameService.getBySessionID(msg.sessionID)
     val joinGameResponseStatus = gameService.joinGame(player, msg.sessionID)
 
-    session.sendMessage(JoinGameResponse(joinGameResponseStatus))
+    session.sendMessage(JoinGameResponse(joinGameResponseStatus, game?.greetingMessage?:""))
 
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
       val notification = PlayerJoinedNotification(msg.greeting, player.name)
