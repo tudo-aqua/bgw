@@ -32,8 +32,8 @@ import tools.aqua.bgw.net.server.service.oauth.SecuredByRole
 /** Layout for the secret view. */
 @SecuredByRole("admin")
 @Route(value = "secret", layout = MainLayout::class)
-@PageTitle("BGW-Net | SoPra Secret")
-class SoPraSecretForm(
+@PageTitle("BGW-Net | Network Secret")
+class NetworkSecretForm(
     private val keyValueRepository: KeyValueRepository,
     @Autowired private val notificationService: NotificationService
 ) : FormLayout() {
@@ -42,10 +42,10 @@ class SoPraSecretForm(
       Button("Change Secret").apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)
         addClickListener {
-          val entry = keyValueRepository.findById("SoPra Secret").get()
+          val entry = keyValueRepository.findById("Network Secret").get()
           keyValueRepository.save(entry.apply { value = newSecret.value })
           notificationService.notify(
-              "SoPra Secret was updated successfully!", NotificationVariant.LUMO_SUCCESS)
+              "Network Secret was updated successfully!", NotificationVariant.LUMO_SUCCESS)
           newSecret.clear()
         }
       }

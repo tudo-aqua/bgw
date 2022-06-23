@@ -129,7 +129,7 @@ protected constructor(
         val result = wsClient.connectBlocking()
 
         logger.debug(
-          "Connection call succeeded without interruption ${if(result) "and" else "but"} returned $result.")
+            "Connection call succeeded without interruption ${if(result) "and" else "but"} returned $result.")
 
         result
       } catch (e: InterruptedException) {
@@ -172,7 +172,8 @@ protected constructor(
     checkConnected(expectedState = true)
 
     logger.info(
-      "Requesting creation of new game with ID $gameID and sessionID $sessionID and greeting message $greetingMessage.")
+        "Requesting creation of new game with ID $gameID" +
+            " and sessionID $sessionID and greeting message \"$greetingMessage\".")
     wsClient.sendRequest(CreateGameMessage(gameID, sessionID, greetingMessage))
   }
 

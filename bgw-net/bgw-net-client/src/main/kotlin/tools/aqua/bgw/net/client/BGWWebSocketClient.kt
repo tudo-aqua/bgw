@@ -55,7 +55,7 @@ internal class BGWWebSocketClient(
 
   init {
     addHeader("PlayerName", playerName)
-    addHeader("SoPraSecret", secret) // TODO: Remove "SoPra" here
+    addHeader("NetworkSecret", secret)
   }
 
   // region Send

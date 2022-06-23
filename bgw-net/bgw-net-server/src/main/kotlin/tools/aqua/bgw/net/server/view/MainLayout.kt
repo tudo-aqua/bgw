@@ -86,7 +86,7 @@ class MainLayout(
           highlightCondition = HighlightConditions.sameLocation()
         }
     val secretLink =
-        RouterLink("SoPra Secret", SoPraSecretForm::class.java).apply {
+        RouterLink("Network Secret", NetworkSecretForm::class.java).apply {
           highlightCondition = HighlightConditions.sameLocation()
         }
     val schemaLink =

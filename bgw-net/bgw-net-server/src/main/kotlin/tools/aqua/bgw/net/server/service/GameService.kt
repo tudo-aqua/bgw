@@ -35,115 +35,115 @@ import tools.aqua.bgw.net.server.entity.repositories.GameRepository
 @Service
 class GameService(private val gameRepository: GameRepository) {
 
-	/** Logger instance. */
-	private val logger = LoggerFactory.getLogger(javaClass)
+  /** Logger instance. */
+  private val logger = LoggerFactory.getLogger(javaClass)
 
-	/**
-	 * Creates a new [GameInstance].
-	 *
-	 * @param gameID ID of the associated [GameInstance].
-	 * @param sessionID Unique session ID.
+  /**
+   * Creates a new [GameInstance].
+   *
+   * @param gameID ID of the associated [GameInstance].
+   * @param sessionID Unique session ID.
    * @param greetingMessage Greeting message to be broadcast to all players joining this session.
-	 * @param initializer [Player] instance that hosts this session.
-	 */
-	@Synchronized
-	fun createGame(
-    gameID: String,
-    sessionID: String,
-    greetingMessage: String,
-    initializer: Player,
+   * @param initializer [Player] instance that hosts this session.
+   */
+  @Synchronized
+  fun createGame(
+      gameID: String,
+      sessionID: String,
+      greetingMessage: String,
+      initializer: Player,
   ): CreateGameResponseStatus {
-		val status =
-			if (initializer.game == null) {
-				val game = GameInstance(gameID, sessionID, greetingMessage, initializer)
-				if (gameRepository.add(game)) {
-					initializer.game = game
-					CreateGameResponseStatus.SUCCESS
-				} else CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS
-			} else CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
-		return status
-	}
+    val status =
+        if (initializer.game == null) {
+          val game = GameInstance(gameID, sessionID, greetingMessage, initializer)
+          if (gameRepository.add(game)) {
+            initializer.game = game
+            CreateGameResponseStatus.SUCCESS
+          } else CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS
+        } else CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
+    return status
+  }
 
-	/**
-	 * Removes a [Player] from a [GameInstance].
-	 *
-	 * @param player [Player] that leaves.
-	 */
-	@Synchronized
-	fun leaveGame(player: Player): LeaveGameResponseStatus {
-		val game = player.game
+  /**
+   * Removes a [Player] from a [GameInstance].
+   *
+   * @param player [Player] that leaves.
+   */
+  @Synchronized
+  fun leaveGame(player: Player): LeaveGameResponseStatus {
+    val game = player.game
 
-		return if (game == null) {
-			LeaveGameResponseStatus.NO_ASSOCIATED_GAME
-		} else {
-			if (game.remove(player)) {
-				player.game = null
-				LeaveGameResponseStatus.SUCCESS
-			} else LeaveGameResponseStatus.SERVER_ERROR
-		}
-	}
+    return if (game == null) {
+      LeaveGameResponseStatus.NO_ASSOCIATED_GAME
+    } else {
+      if (game.remove(player)) {
+        player.game = null
+        LeaveGameResponseStatus.SUCCESS
+      } else LeaveGameResponseStatus.SERVER_ERROR
+    }
+  }
 
-	/**
-	 * Adds a [Player] to a [GameInstance].
-	 *
-	 * @param player [Player] that joins.
-	 * @param sessionID Session to join to.
-	 */
-	@Synchronized
-	fun joinGame(player: Player, sessionID: String): JoinGameResponseStatus =
-		if (player.game != null) {
-			JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
-		} else {
-			val game = gameRepository.getBySessionID(sessionID)
-			when {
-				game == null -> JoinGameResponseStatus.INVALID_SESSION_ID
-				game.players.any { it.name == player.name } ->
-					JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN
-				else -> {
-					game.add(player)
-					player.game = game
-					JoinGameResponseStatus.SUCCESS
-				}
-			}
-		}
+  /**
+   * Adds a [Player] to a [GameInstance].
+   *
+   * @param player [Player] that joins.
+   * @param sessionID Session to join to.
+   */
+  @Synchronized
+  fun joinGame(player: Player, sessionID: String): JoinGameResponseStatus =
+      if (player.game != null) {
+        JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
+      } else {
+        val game = gameRepository.getBySessionID(sessionID)
+        when {
+          game == null -> JoinGameResponseStatus.INVALID_SESSION_ID
+          game.players.any { it.name == player.name } ->
+              JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN
+          else -> {
+            game.add(player)
+            player.game = game
+            JoinGameResponseStatus.SUCCESS
+          }
+        }
+      }
 
-	/**
-	 * Looks for orphaned Games and removes them.
-	 *
-	 * A Game is considered orphaned when [GameInstance.orphanCandidateSince]
-	 * - [System.currentTimeMillis] > [TIME_UNTIL_ORPHANED]
-	 *
-	 * This function is scheduled to run on a fixed rate every [ORPHANED_GAME_CHECK_RATE]
-	 * milliseconds.
-	 */
-	@Synchronized
-	@Scheduled(fixedRate = ORPHANED_GAME_CHECK_RATE)
-	fun removeOrphanedGames() {
-		var numRemoved = 0
-		gameRepository.getAll().forEach { game ->
-			game.orphanCandidateSince?.let {
-				if (it + TIME_UNTIL_ORPHANED < System.currentTimeMillis()) {
-					gameRepository.remove(game)
-					numRemoved++
-					logger.info("Removed game with id ${game.sessionID} because it was orphaned.")
-				}
-			}
-		}
-	}
+  /**
+   * Looks for orphaned Games and removes them.
+   *
+   * A Game is considered orphaned when [GameInstance.orphanCandidateSince]
+   * - [System.currentTimeMillis] > [TIME_UNTIL_ORPHANED]
+   *
+   * This function is scheduled to run on a fixed rate every [ORPHANED_GAME_CHECK_RATE]
+   * milliseconds.
+   */
+  @Synchronized
+  @Scheduled(fixedRate = ORPHANED_GAME_CHECK_RATE)
+  fun removeOrphanedGames() {
+    var numRemoved = 0
+    gameRepository.getAll().forEach { game ->
+      game.orphanCandidateSince?.let {
+        if (it + TIME_UNTIL_ORPHANED < System.currentTimeMillis()) {
+          gameRepository.remove(game)
+          numRemoved++
+          logger.info("Removed game with id ${game.sessionID} because it was orphaned.")
+        }
+      }
+    }
+  }
 
-	/**
-	 * Returns [GameInstance] instance associated with [sessionID].
-	 *
-	 * @param sessionID Session ID to search.
-	 *
-	 * @return [GameInstance] instance associated with [sessionID], 'null' if no game was found.
-	 */
-	fun getBySessionID(sessionID: String): GameInstance? = gameRepository.getBySessionID(sessionID)
+  /**
+   * Returns [GameInstance] instance associated with [sessionID].
+   *
+   * @param sessionID Session ID to search.
+   *
+   * @return [GameInstance] instance associated with [sessionID], 'null' if no game was found.
+   */
+  fun getBySessionID(sessionID: String): GameInstance? = gameRepository.getBySessionID(sessionID)
 
-	/**
-	 * Returns all active [GameInstance] instances.
-	 *
-	 * @return All active [GameInstance] instances.
-	 */
-	fun getAll(): List<GameInstance> = gameRepository.getAll()
+  /**
+   * Returns all active [GameInstance] instances.
+   *
+   * @return All active [GameInstance] instances.
+   */
+  fun getAll(): List<GameInstance> = gameRepository.getAll()
 }
