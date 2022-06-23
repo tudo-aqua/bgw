@@ -13,6 +13,8 @@ console-reports:
     - 'FileBasedFindingsReport'
 
 comments:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Mostly enabled. Rationale: maintenance issues
   AbsentOrWrongFileLicense:
     # Rationale: handled by Spotless
@@ -37,6 +39,8 @@ comments:
     active: true
 
 complexity:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Mostly disabled. Rationale: better suited for code review
   ComplexCondition:
     active: false
@@ -68,6 +72,8 @@ complexity:
     active: false
 
 coroutines:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Mostly enabled. Rationale: indicative of errors
   GlobalCoroutineUsage:
     active: true
@@ -82,6 +88,8 @@ coroutines:
     active: true
 
 empty-blocks:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Completely enabled. Rationale: indicative of errors
   EmptyCatchBlock:
     active: true
@@ -116,6 +124,8 @@ empty-blocks:
     active: true
 
 exceptions:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Mostly enabled. Rationale: indicative of errors
   active: true
   ExceptionRaisedInUnexpectedLocation:
@@ -149,10 +159,14 @@ exceptions:
     active: true
 
 formatting:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Disabled. Rationale: handled by Spotless
   active: false
 
 naming:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Mostly enabled. Rationale: principle of the least surprise
   active: true
   BooleanPropertyNaming:
@@ -206,6 +220,8 @@ naming:
     active: true
 
 performance:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Completely enabled. Rationale: indicative of errors
   active: true
   ArrayPrimitive:
@@ -218,6 +234,8 @@ performance:
     active: true
 
 potential-bugs:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Completely enabled. Rationale: indicative of errors
   active: true
   AvoidReferentialEquality:
@@ -293,6 +311,8 @@ potential-bugs:
     active: true
 
 style:
+  excludes: ['**/bgw-docs-examples/**']
+
   # Partially enabled to complement Spotless. Rationale: helps consistency
   active: true
   # Future Detekt feature
