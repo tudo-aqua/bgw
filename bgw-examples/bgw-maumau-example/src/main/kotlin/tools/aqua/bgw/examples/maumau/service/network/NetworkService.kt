@@ -51,7 +51,7 @@ class NetworkService(private val logicController: LogicController) {
 
     if (!connect(address, secret, name)) return
 
-    client?.createGame(GAME_ID, sessionID)
+    client?.createGame(GAME_ID, sessionID, "Welcome!")
   }
 
   /**
