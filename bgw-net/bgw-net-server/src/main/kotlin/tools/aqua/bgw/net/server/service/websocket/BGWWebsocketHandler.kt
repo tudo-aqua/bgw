@@ -24,8 +24,11 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
+import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
+import tools.aqua.bgw.net.server.player
 import tools.aqua.bgw.net.server.service.GameService
 import tools.aqua.bgw.net.server.service.MessageService
+import tools.aqua.bgw.net.server.service.MessageService.Companion.broadcastMessage
 import tools.aqua.bgw.net.server.service.PlayerService
 
 /**
@@ -63,7 +66,7 @@ class BGWWebsocketHandler(
    * player.
    */
   override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-    /*val player = session.player
+    val player = session.player
 
     gameService.leaveGame(player)
 
@@ -71,7 +74,7 @@ class BGWWebsocketHandler(
 
     playerService.deletePlayer(session)
     logger.info("User with session id ${session.id} disconnected")
-    logger.info("Connected players:" + playerService.getAll())*/
+    logger.info("Connected players:" + playerService.getAll())
   }
 
   /** Delegates the handling of the message payload to [messageService]. */
