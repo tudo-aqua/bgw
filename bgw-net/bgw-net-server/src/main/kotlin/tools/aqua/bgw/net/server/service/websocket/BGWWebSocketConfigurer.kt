@@ -17,12 +17,15 @@
 
 package tools.aqua.bgw.net.server.service.websocket
 
+import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.event.EventListener
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import tools.aqua.bgw.net.common.SERVER_ENDPOINT
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
+import tools.aqua.bgw.net.server.entity.tables.KeyValueStoreEntry
 
 /**
  * [WebSocketConfigurer] for BWG-Net applications.
@@ -40,5 +43,16 @@ class BGWWebSocketConfigurer(
     registry
         .addHandler(wsHandler, "/$SERVER_ENDPOINT")
         .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
+  }
+  @EventListener(ApplicationReadyEvent::class)
+  fun initializeNetworkSecret() {
+    val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+    val length = 10
+    val randomString =
+        (1..length)
+            .map { kotlin.random.Random.nextInt(0, charPool.size) }
+            .map(charPool::get)
+            .joinToString("")
+    keyValueRepository.save(KeyValueStoreEntry("Network secret", randomString))
   }
 }
