@@ -82,7 +82,7 @@ class UploadSchemaView(
             notificationService.notify(
                 "${it.fileName}: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
             val json = schemaNode.toString()
-            if (!schemasByGameRepository.existsById(json)) {
+            if (!schemasByGameRepository.existsBySchemaAndGameID(json, gameIdSelect.value)) {
               schemasByGameRepository.save(SchemasByGame(gameIdSelect.value, json))
               gameGrid.setItems(
                   frontendService.allGameIds.map { gameId ->
@@ -93,9 +93,7 @@ class UploadSchemaView(
                   NotificationVariant.LUMO_SUCCESS)
             } else {
               notificationService.notify(
-                  "${it.fileName}: JSON Schema already exists for game ${
-                                schemasByGameRepository.findById(json).get().gameID
-                            }",
+                  "${it.fileName}: JSON Schema already exists for game ${gameIdSelect.value}",
                   NotificationVariant.LUMO_ERROR)
             }
           } else

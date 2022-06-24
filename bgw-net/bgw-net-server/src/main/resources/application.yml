@@ -6,8 +6,8 @@ spring:
           gitlab:
             provider: gitlab
             client-name: GitLab
-            clientId: "ddbe6701240c6b42bd2a7e24ffe3a14db5cef9cd257fd968c837f67a06fbc824"
-            clientSecret: "1826a1c77ec1ebd2551d1c75941ec3ffac106b6953b904daf633e4b0caec491b"
+            clientId: "e89822ce031860e8283b8ec906d1960a1aa8e13353027bec8ba379784cb104c0"
+            clientSecret: "58b351ec5f88c48ef12b521ca5d7023df2f662f3a1c97bcbba1fb615f703f0de"
             authorization-grant-type: authorization_code
             redirectUri:  "http://{baseHost}{basePort}{basePath}/login/oauth2/code/{registrationId}"
             scope: openid,email,profile
