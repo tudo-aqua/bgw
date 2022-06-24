@@ -25,7 +25,8 @@ import org.hibernate.annotations.TypeDef
 /**
  * Table structure for game entries.
  *
- * @property gameID The game ID. ID field.
+ * @property id The ID field.
+ * @property gameID The game ID.
  * @property schema The schema for game action messages.
  */
 @Entity(name = "Game")
@@ -33,8 +34,11 @@ import org.hibernate.annotations.TypeDef
 class SchemasByGame(
     @Column(nullable = false, updatable = false) var gameID: String,
     //
-    @Id
     @Type(type = "json")
     @Column(nullable = false, updatable = false, columnDefinition = "jsonb")
     var schema: String,
-)
+) {
+    @Id
+    @GeneratedValue
+    var id: Long? = null
+}
