@@ -95,9 +95,18 @@ object SceneBuilder {
           prefHeight = scene.height
           prefWidth = scene.width
 
-          addEventFilter(KeyEvent.KEY_TYPED) { scene.onKeyTyped?.invoke(it.toKeyEvent()) }
-          addEventFilter(KeyEvent.KEY_PRESSED) { scene.onKeyPressed?.invoke(it.toKeyEvent()) }
-          addEventFilter(KeyEvent.KEY_RELEASED) { scene.onKeyReleased?.invoke(it.toKeyEvent()) }
+          addEventFilter(KeyEvent.KEY_TYPED) {
+            if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
+                scene.onKeyTyped?.invoke(it.toKeyEvent())
+          }
+          addEventFilter(KeyEvent.KEY_PRESSED) {
+            if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
+                scene.onKeyPressed?.invoke(it.toKeyEvent())
+          }
+          addEventFilter(KeyEvent.KEY_RELEASED) {
+            if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
+                scene.onKeyReleased?.invoke(it.toKeyEvent())
+          }
         }
 
     scene.rootComponents.setGUIListenerAndInvoke(emptyList()) { oV, _ -> pane.rebuild(scene, oV) }
