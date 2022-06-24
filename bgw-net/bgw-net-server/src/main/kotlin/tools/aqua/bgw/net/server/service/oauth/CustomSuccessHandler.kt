@@ -30,44 +30,52 @@ class CustomSuccessHandler(
     /** Repository holding information about the oauth login accounts. */
     var accountRepository: AccountRepository,
 ) : AuthenticationSuccessHandler {
-  override fun onAuthenticationSuccess(
-      request: HttpServletRequest?,
-      response: HttpServletResponse?,
-      authentication: Authentication?
-  ) {
-    if (authentication != null && authentication.principal is OidcUser) {
-      val user = authentication.principal as OidcUser
-      val account = accountRepository.findBySub(user.name)
-      if (account.isEmpty) {
-        user.getAttribute<String>("name")?.let {
-          createAccount(it, user.name, user.getAttribute<ArrayList<String>>("groups"))
+    override fun onAuthenticationSuccess(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        authentication: Authentication?
+    ) {
+        if (authentication != null && authentication.principal is OidcUser) {
+            val user = authentication.principal as OidcUser
+            val account = accountRepository.findBySub(user.name)
+            if (account.isEmpty) {
+                user.getAttribute<String>("name")?.let {
+                    createAccount(it, user.name, user.getAttribute<ArrayList<String>>("groups"))
+                }
+            } else {
+                user.getAttribute<String>("name")?.let {
+                    updateAccount(
+                        account.get(), it, user.name, user.getAttribute<ArrayList<String>>("groups")
+                    )
+                }
+            }
         }
-      } else {
-        user.getAttribute<String>("name")?.let {
-          updateAccount(
-              account.get(), it, user.name, user.getAttribute<ArrayList<String>>("groups"))
-        }
-      }
+        response?.sendRedirect(request?.contextPath + "/")
     }
-    response?.sendRedirect(request?.contextPath + "/")
-  }
 
-  /** Update the information about the user account if it might have change since the last login. */
-  fun updateAccount(account: Account, name: String, sub: String, groups: ArrayList<String>?) {
-    accountRepository.save(
-        account.apply {
-          this.accountName = name
-          this.sub = sub
-          this.role = getRoleFromGroups(groups)
-        })
-  }
+    /** Update the information about the user account if it might have change since the last login. */
+    fun updateAccount(account: Account, name: String, sub: String, groups: ArrayList<String>?) {
+        accountRepository.save(
+            account.apply {
+                this.accountName = name
+                this.sub = sub
+                this.role = getRoleFromGroups(groups)
+            })
+    }
 
-  /** Based on the groups the user is in he is assigned to a role. */
-  fun getRoleFromGroups(groups: ArrayList<String>?): String =
-      if (groups != null && groups.contains("tutorengruppe")) "admin" else "user"
+    /** Based on the groups the user is in he is assigned to a role. */
+    fun getRoleFromGroups(groups: ArrayList<String>?): String {
+        return if (groups != null && groups.contains("bgw-net-admins")) {
+            "admin"
+        } else if (groups != null && groups.contains("tutorengruppe")) {
+            "tutor"
+        } else {
+            "user"
+        }
+    }
 
-  /** persistently store information account the user as an user account object. */
-  fun createAccount(name: String, sub: String, groups: ArrayList<String>?) {
-    accountRepository.save(Account(sub = sub, accountName = name, role = getRoleFromGroups(groups)))
-  }
+    /** persistently store information account the user as an user account object. */
+    fun createAccount(name: String, sub: String, groups: ArrayList<String>?) {
+        accountRepository.save(Account(sub = sub, accountName = name, role = getRoleFromGroups(groups)))
+    }
 }

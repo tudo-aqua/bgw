@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
 import tools.aqua.bgw.net.server.service.FrontendService
+import tools.aqua.bgw.net.server.service.oauth.SecuredByRole
 
 /**
  * Layout for the connections view.
@@ -35,6 +36,7 @@ import tools.aqua.bgw.net.server.service.FrontendService
  */
 @Route(value = "", layout = MainLayout::class)
 @PageTitle("BGW-Net | Active Connections")
+@SecuredByRole("admin", "tutor")
 class ConnectionsView(@Autowired private val frontendService: FrontendService) : VerticalLayout() {
   private val playerGrid =
       Grid<Player>().apply {
