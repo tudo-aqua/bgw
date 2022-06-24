@@ -38,7 +38,5 @@ class SchemasByGame(
     @Column(nullable = false, updatable = false, columnDefinition = "jsonb")
     var schema: String,
 ) {
-    @Id
-    @GeneratedValue
-    var id: Long? = null
+  @Id @GeneratedValue var id: Long? = null
 }
