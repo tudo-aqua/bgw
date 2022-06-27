@@ -25,7 +25,6 @@ import org.hibernate.annotations.TypeDef
 /**
  * Table structure for game entries.
  *
- * @property id The ID field.
  * @property gameID The game ID.
  * @property schema The schema for game action messages.
  */
@@ -38,5 +37,6 @@ class SchemasByGame(
     @Column(nullable = false, updatable = false, columnDefinition = "jsonb")
     var schema: String,
 ) {
+  /** The ID field. */
   @Id @GeneratedValue var id: Long? = null
 }

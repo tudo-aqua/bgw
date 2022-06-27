@@ -44,6 +44,8 @@ class BGWWebSocketConfigurer(
         .addHandler(wsHandler, "/$SERVER_ENDPOINT")
         .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
   }
+
+  /** Generates and initializes random network secret. */
   @EventListener(ApplicationReadyEvent::class)
   fun initializeNetworkSecret() {
     val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')

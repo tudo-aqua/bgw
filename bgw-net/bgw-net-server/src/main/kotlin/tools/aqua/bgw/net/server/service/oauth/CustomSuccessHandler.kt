@@ -63,17 +63,16 @@ class CustomSuccessHandler(
   }
 
   /** Based on the groups the user is in he is assigned to a role. */
-  fun getRoleFromGroups(groups: ArrayList<String>?): String {
-    return if (groups != null && groups.contains("bgw-net-admins")) {
-      "admin"
-    } else if (groups != null && groups.contains("tutorengruppe")) {
-      "tutor"
-    } else {
-      "user"
-    }
-  }
+  fun getRoleFromGroups(groups: ArrayList<String>?): String =
+      if (groups != null && groups.contains("bgw-net-admins")) {
+        "admin"
+      } else if (groups != null && groups.contains("tutorengruppe")) {
+        "tutor"
+      } else {
+        "user"
+      }
 
-  /** persistently store information account the user as an user account object. */
+  /** Persistently store information account the user as a user account object. */
   fun createAccount(name: String, sub: String, groups: ArrayList<String>?) {
     accountRepository.save(Account(sub = sub, accountName = name, role = getRoleFromGroups(groups)))
   }
