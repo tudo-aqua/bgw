@@ -107,9 +107,10 @@ class MessageService(
    */
   private fun handleCreateGameMessage(session: WebSocketSession, msg: CreateGameMessage) {
     val player = session.player
-    val createGameResponseStatus =
+
+    val createGameResponseStatus: Pair<CreateGameResponseStatus, String?> =
         if (schemasByGameRepository.findAll().none { it.gameID == msg.gameID })
-            CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST
+            CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST to null
         else gameService.createGame(msg.gameID, msg.sessionID, msg.greetingMessage, player)
 
     session.sendMessage(CreateGameResponse(createGameResponseStatus))

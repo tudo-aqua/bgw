@@ -171,10 +171,32 @@ protected constructor(
   fun createGame(gameID: String, sessionID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
+    require(sessionID.isNotBlank()) { "Session ID was blank, did not create game." }
+
     logger.info(
-        "Requesting creation of new game with ID $gameID" +
-            " and sessionID $sessionID and greeting message \"$greetingMessage\".")
-    wsClient.sendRequest(CreateGameMessage(gameID, sessionID, greetingMessage))
+        "Requesting creation of new game with ID \"$gameID\", " +
+            "sessionID \"$sessionID\" and greeting message \"$greetingMessage\".")
+
+    wsClient.sendRequest(CreateGameMessage(gameID, sessionID.trim(), greetingMessage))
+  }
+
+  /**
+   * Creates a new game session on the server by sending a [CreateGameMessage]. The session ID will
+   * be set automatically and returned through the [onCreateGameResponse].
+   *
+   * @param gameID ID of the current game to be used.
+   * @param greetingMessage Greeting message to be broadcast to all players joining this session.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
+   */
+  fun createGame(gameID: String, greetingMessage: String) {
+    checkConnected(expectedState = true)
+
+    logger.info(
+        "Requesting creation of new game with ID \"$gameID\", " +
+            "auto sessionID and greeting message \"$greetingMessage\".")
+
+    wsClient.sendRequest(CreateGameMessage(gameID, null, greetingMessage))
   }
 
   /**

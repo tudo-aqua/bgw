@@ -21,5 +21,11 @@ package tools.aqua.bgw.net.common.response
  * Response upon [tools.aqua.bgw.net.common.request.CreateGameMessage].
  *
  * @property status Status code.
+ * @property sessionID Session ID for this game. ``null`` if creation was not successful.
  */
-class CreateGameResponse(val status: CreateGameResponseStatus) : Response()
+class CreateGameResponse(val status: CreateGameResponseStatus, val sessionID: String?) :
+    Response() {
+  constructor(
+      status: Pair<CreateGameResponseStatus, String?>
+  ) : this(status = status.first, sessionID = status.second)
+}
