@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.builder
 
-import javafx.event.EventHandler
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropBuilder.registerDragEvents
@@ -32,6 +31,7 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.UIComponent
+import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
@@ -79,28 +79,35 @@ object NodeBuilder {
       registerDragEvents(stackPane, scene)
     }
 
-    stackPane.onMouseDragEntered =
-        EventHandler {
-          val dragTarget = scene.draggedComponent ?: return@EventHandler
-          scene.dragTargetsBelowMouse.add(this)
-          onDragGestureEntered?.invoke(DragEvent(dragTarget))
-        }
+    stackPane.setOnMouseDragEntered {
+      val dragTarget = scene.draggedComponent ?: return@setOnMouseDragEntered
+      scene.dragTargetsBelowMouse.add(this)
+      onDragGestureEntered?.invoke(DragEvent(dragTarget))
+    }
 
-    stackPane.onMouseDragExited =
-        EventHandler {
-          val dragTarget = scene.draggedComponent ?: return@EventHandler
-          scene.dragTargetsBelowMouse.remove(this)
-          onDragGestureExited?.invoke(DragEvent(dragTarget))
-        }
+    stackPane.setOnMouseDragExited {
+      val dragTarget = scene.draggedComponent ?: return@setOnMouseDragExited
+      scene.dragTargetsBelowMouse.remove(this)
+      onDragGestureExited?.invoke(DragEvent(dragTarget))
+    }
 
     node.setOnMouseClicked { onMouseClicked?.invoke(it.toMouseEvent()) }
     node.setOnMousePressed { onMousePressed?.invoke(it.toMouseEvent()) }
     node.setOnMouseEntered { onMouseEntered?.invoke(it.toMouseEvent()) }
     node.setOnMouseExited { onMouseExited?.invoke(it.toMouseEvent()) }
 
-    node.setOnKeyPressed { onKeyPressed?.invoke(it.toKeyEvent()) }
-    node.setOnKeyReleased { onKeyReleased?.invoke(it.toKeyEvent()) }
-    node.setOnKeyTyped { onKeyTyped?.invoke(it.toKeyEvent()) }
+    node.setOnKeyPressed {
+      if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
+          onKeyPressed?.invoke(it.toKeyEvent())
+    }
+    node.setOnKeyReleased {
+      if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
+          onKeyReleased?.invoke(it.toKeyEvent())
+    }
+    node.setOnKeyTyped {
+      if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
+          onKeyTyped?.invoke(it.toKeyEvent())
+    }
   }
 
   /** Registers observers. */
