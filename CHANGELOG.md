@@ -1,3 +1,4 @@
+[1.0]: https://github.com/tudo-aqua/bgw/releases/tag/v1.0
 [0.6]: https://github.com/tudo-aqua/bgw/releases/tag/v0.6
 [0.5]: https://github.com/tudo-aqua/bgw/releases/tag/v0.5
 [0.4]: https://github.com/tudo-aqua/bgw/releases/tag/v0.4
@@ -13,6 +14,14 @@
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [1.0] - To be released
+
+### Added
+ - BGW-Net
+
+### Changed
+ - Keyboard input events for elements on BoardGameScene are now blocked while MenuScene is shown.
 
 ## [0.6] - 01.04.2022
 
