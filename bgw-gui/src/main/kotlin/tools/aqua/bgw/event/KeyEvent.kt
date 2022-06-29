@@ -24,7 +24,8 @@ package tools.aqua.bgw.event
  *
  * @constructor Creates a [KeyEvent].
  *
- * @property keyCode Corresponding key code enum value.
+ * @property keyCode Corresponding key code enum value. [keyCode] is [KeyCode.UNDEFINED] in any
+ * ``onKeyTyped``. Only used for ``onKeyPressed`` and ``onKeyReleased``.
  * @property character Corresponding character string.
  * @property controlDown Whether control key was pressed.
  * @property shiftDown Whether shift key was pressed.

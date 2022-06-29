@@ -7,9 +7,13 @@ nav_order: 3
 
 <!-- KDoc -->
 [BoardGameApplicationKDoc]: ../..//bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/index.html
+[BoardGameSceneKDoc]: bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-scene/index.html
 [ComponentViewKDoc]: ../..//bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-component-view/index.html
 [DynamicComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components/-dynamic-component-view/index.html
 [UIComponentViewKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.uicomponents/-u-i-component/index.html
+[MouseEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-mouse-event/index.html
+[MouseButtonTypeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-mouse-button-type/index.html
+[KeyEventKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.event/-key-event/index.html
 
 <!-- GH-Pages Doc -->
 [DnDExample]: ../../concepts/drag-and-drop/DragAndDropExample.md
@@ -51,12 +55,30 @@ to create a running example.
 ````kotlin
 class UserInputExample : BoardGameApplication("User input example") {
     val button: Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply {
-		visual = ColorVisual.GREEN
-	} 
-    val token: TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
-    val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+    visual = ColorVisual.GREEN 
+  } 
+    
+  val token: TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED) 
+  val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 }
 ````
+
+## MouseEvents
+
+There are five types of [MouseEvents][MouseEventKDoc]. The event contains the [MouseButtonType][MouseButtonTypeKDoc] that was in action.
+
+ - **onMousePressed**: The user pressed a button while the mouse was above this component.
+ - **onMouseReleased**: The user released a button while the mouse was above this component.
+ - **onMouseClicked**: The user clicked above this component, i.e. pressed and released.
+ - **onMouseEntered**: The mouse entered this component. Active button is UNSPECIFIED in this case.
+ - **onMouseExited**: The mouse left this component. Active button is UNSPECIFIED in this case.
+
+## Key events
+
+- **onKeyPressed**: The user pressed a key while this component had focus.
+- **onKeyReleased**: The user released a key while this component had focus.
+- **onKeyTyped**: The user typed a key, i.e. pressed and released or pressed and held, while this component had focus.
+``keyCode`` will be Undefined in this case and the character field has to be used instead.
 
 ## Function reference vs. function literal
 
@@ -68,11 +90,11 @@ be assigned on different /components, or if the reference gets removed and re-ad
 
 ````kotlin
 private fun handleMouseClicked(mouseEvent: MouseEvent) {
-	button.text = "someone clicked on me!"
+  button.text = "someone clicked on me!"
 }
 
 init {
-	button.onMouseClicked = this::handleMouseClicked
+  button.onMouseClicked = this::handleMouseClicked
 }
 ````
 
@@ -81,8 +103,8 @@ the ``onMousePressed`` on the ``button``. This is useful if the functionality is
 component.
 
 ````kotlin
-button.onMousePressed = { mouseEvent ->
-	button.text = "pressed ${mouseEvent.button}"
+button.onMousePressed = { mouseEvent -> 
+  button.text = "pressed ${mouseEvent.button}"
 }
 ````
 
@@ -96,7 +118,18 @@ There are three types of /components, that can handle user input differently.
     function references to deal with that.
     
 - [UIComponentViews][UIComponentViewKDoc] are ComponentViews that may have additional ways of dealing with user input, for example text input. Please refer to the UIComponentView [doc][UIComponentViewKDoc] or [guide][UIComponentViewDoc] to find additional information.
-  
+
+## Global key listeners
+
+Global key listeners may become helpful to show menus or move playing pieces by the arrow or WASD keys. Scene-scoped listeners may be implemented on the [BoardGameScene][BoardGameSceneKDoc]. 
+
+````kotlin
+gameScene.onKeyPressed = { event ->
+  if (event.keyCode == KeyCode.ESCAPE)
+    exit()
+}
+````
+
 ## Full example on all available methods of dealing with user input
 
 This example uses all available fields that can be set to handle user input on [ComponentViews][ComponentViewKDoc] and [DynamicComponentViews][DynamicComponentViewKDoc]. 
@@ -105,75 +138,59 @@ This example uses all available fields that can be set to handle user input on [
 .btn }
 
 ````kotlin
-fun main() {
-	UserInputExample()
+fun main() { 
+  UserInputExample()
 }
 
 class UserInputExample: BoardGameApplication("User input example") {
 
-	val button : Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply {
-		visual = ColorVisual.GREEN
-	}
+  val button : Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply {
+    visual = ColorVisual.GREEN
+  }
 
-	val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
+  val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
 
-	val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+  val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
-	private fun handleMouseClicked(mouseEvent: MouseEvent) {
-		button.text = "someone clicked on me!"
-	}
+  init {
+    // handling user input on ComponentView
+    button.onMouseClicked = this::handleMouseClicked
 
-	init {
-		//handling user input on ComponentView
+    button.onMousePressed = { mouseEvent -> button.text = "pressed ${mouseEvent.button}" }
+    button.onMouseReleased = { mouseEvent -> button.text = "released ${mouseEvent.button}" }
+    button.onMouseEntered = { button.visual = ColorVisual.MAGENTA }
+    button.onMouseExited = { button.visual = ColorVisual.GREEN }
+    button.onKeyPressed = { keyEvent -> button.text = "pressed key: ${keyEvent.keyCode}" }
+    button.onKeyReleased = { keyEvent -> button.text = "released key: ${keyEvent.keyCode}" }
+    button.onKeyTyped = { keyEvent -> button.text = "typed key: ${keyEvent.character}" }
+    button.dropAcceptor = { true }
+    button.onDragDropped = {
+      it.draggedComponent.reposition(500, 30)
+      it.draggedComponent.rotation = 0.0
+      gameScene.addComponents(token) 
+    }
+    button.onDragGestureEntered = { dragEvent -> button.visual = dragEvent.draggedComponent.visual }
+    button.onDragGestureExited = { button.visual = ColorVisual.GREEN }
 
-		button.onMouseClicked = this::handleMouseClicked
+    // Additional function references available only to DynamicComponentViews
+    token.isDraggable = true
 
-		button.onMousePressed = { mouseEvent ->
-			button.text = "pressed ${mouseEvent.button}"
-		}
-		button.onMouseReleased = { mouseEvent ->
-			button.text = "released ${mouseEvent.button}"
-		}
-		button.onMouseEntered = {
-			button.visual = ColorVisual.MAGENTA
-		}
-		button.onMouseExited = {
-			button.visual = ColorVisual.GREEN
-		}
-		button.onKeyPressed = { keyEvent ->
-			button.text = "pressed key: ${keyEvent.keyCode}"
-		}
-		button.onKeyReleased = { keyEvent ->
-			button.text = "released key: ${keyEvent.keyCode}"
-		}
-		button.onKeyTyped = { keyEvent ->
-			button.text = "typed key: ${keyEvent.character}"
-		}
-		button.dropAcceptor = { true }
-		button.onDragDropped = {
-			it.draggedComponent.reposition(500,30)
-			it.draggedComponent.rotation = 0.0
-			gameScene.addComponents(token)
-		}
-		button.onDragGestureEntered = { dragEvent ->
-			button.visual = dragEvent.draggedComponent.visual
-		}
-		button.onDragGestureExited = {
-			button.visual = ColorVisual.GREEN
-		}
+    token.onDragGestureMoved = { token.rotate(5) }
+    token.onDragGestureStarted = { token.scale(1.2) }
+    token.onDragGestureEnded = { _, success -> if (success) token.resize(50, 50) }
 
-		//Additional function references available only to DynamicComponentViews
+    // Global input listener
+    gameScene.onKeyPressed = { event ->
+      if (event.keyCode == KeyCode.ESCAPE)
+        exit()
+    }
 
-		token.isDraggable = true
+    showGameScene(gameScene.apply { addComponents(button, token) })
+    show()
+  }
 
-		token.onDragGestureMoved = { token.rotate(5) }
-		token.onDragGestureStarted = { token.scale(1.2) }
-		token.onDragGestureEnded = { dropEvent, success ->
-			if (success) token.resize(50,50)
-		}
-
-		showGameScene(gameScene.apply { addComponents(button, token) })
-		show()
-	}
+  private fun handleMouseClicked(@Suppress("UNUSED_PARAMETER") mouseEvent: MouseEvent) {
+    button.text = "someone clicked on me!"
+  }
 }
 ````

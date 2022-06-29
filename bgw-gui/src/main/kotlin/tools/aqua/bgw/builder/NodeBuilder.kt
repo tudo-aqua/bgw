@@ -93,6 +93,7 @@ object NodeBuilder {
 
     node.setOnMouseClicked { onMouseClicked?.invoke(it.toMouseEvent()) }
     node.setOnMousePressed { onMousePressed?.invoke(it.toMouseEvent()) }
+    node.setOnMouseReleased { onMouseReleased?.invoke(it.toMouseEvent()) }
     node.setOnMouseEntered { onMouseEntered?.invoke(it.toMouseEvent()) }
     node.setOnMouseExited { onMouseExited?.invoke(it.toMouseEvent()) }
 

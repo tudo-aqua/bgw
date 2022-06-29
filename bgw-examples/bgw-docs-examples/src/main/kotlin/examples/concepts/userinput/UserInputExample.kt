@@ -21,6 +21,7 @@ import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.visual.ColorVisual
 
@@ -59,19 +60,20 @@ class UserInputExample : BoardGameApplication("User input example") {
     button.onDragGestureExited = { button.visual = ColorVisual.GREEN }
 
     // Additional function references available only to DynamicComponentViews
-
     token.isDraggable = true
 
     token.onDragGestureMoved = { token.rotate(5) }
     token.onDragGestureStarted = { token.scale(1.2) }
     token.onDragGestureEnded = { _, success -> if (success) token.resize(50, 50) }
 
+    // Global input listener
+    gameScene.onKeyPressed = { event -> if (event.keyCode == KeyCode.ESCAPE) exit() }
+
     showGameScene(gameScene.apply { addComponents(button, token) })
     show()
   }
 
-  @Suppress("UNUSED_PARAMETER")
-  private fun handleMouseClicked(mouseEvent: MouseEvent) {
+  private fun handleMouseClicked(@Suppress("UNUSED_PARAMETER") mouseEvent: MouseEvent) {
     button.text = "someone clicked on me!"
   }
 }
