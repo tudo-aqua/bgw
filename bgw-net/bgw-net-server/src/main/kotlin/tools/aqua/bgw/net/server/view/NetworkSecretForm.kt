@@ -37,16 +37,16 @@ class NetworkSecretForm(
     private val keyValueRepository: KeyValueRepository,
     @Autowired private val notificationService: NotificationService
 ) : FormLayout() {
-  private var newSecret: PasswordField = PasswordField("", "Secret").apply { isRequired = true }
+  private var newSecret: PasswordField = PasswordField("", "Secret")
   private val confirmButton: Button =
       Button("Change Secret").apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)
         addClickListener {
-          val entry = keyValueRepository.findById("Network Secret").get()
+          val entry = keyValueRepository.findById("Network secret").get()
           keyValueRepository.save(entry.apply { value = newSecret.value })
           notificationService.notify(
               "Network Secret was updated successfully!", NotificationVariant.LUMO_SUCCESS)
-          newSecret.clear()
+          newSecret.value = ""
         }
       }
 
