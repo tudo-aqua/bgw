@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.net.server.service
 
+import kotlin.random.Random
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -42,26 +43,29 @@ class GameService(private val gameRepository: GameRepository) {
    * Creates a new [GameInstance].
    *
    * @param gameID ID of the associated [GameInstance].
-   * @param sessionID Unique session ID.
+   * @param sessionID Unique session ID. ``null`` for auto allocation.
    * @param greetingMessage Greeting message to be broadcast to all players joining this session.
    * @param initializer [Player] instance that hosts this session.
    */
   @Synchronized
   fun createGame(
       gameID: String,
-      sessionID: String,
+      sessionID: String?,
       greetingMessage: String,
       initializer: Player,
-  ): CreateGameResponseStatus {
+  ): Pair<CreateGameResponseStatus, String?> {
+    val sid = sessionID ?: nextSessionID()
+
     val status =
         if (initializer.game == null) {
-          val game = GameInstance(gameID, sessionID, greetingMessage, initializer)
+          val game = GameInstance(gameID, sid, greetingMessage, initializer)
           if (gameRepository.add(game)) {
             initializer.game = game
             CreateGameResponseStatus.SUCCESS
           } else CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS
         } else CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME
-    return status
+
+    return status to if (status == CreateGameResponseStatus.SUCCESS) sid else null
   }
 
   /**
@@ -146,4 +150,17 @@ class GameService(private val gameRepository: GameRepository) {
    * @return All active [GameInstance] instances.
    */
   fun getAll(): List<GameInstance> = gameRepository.getAll()
+
+  /** Generates a new random session ID. */
+  private fun nextSessionID(): String {
+    val reservedIDs = gameRepository.getAll().map { it.sessionID }
+    var offset = Random.nextInt(100, 500)
+    var sessionID = "Session$offset"
+
+    while (reservedIDs.contains(sessionID)) {
+      sessionID = "Session${offset++}"
+    }
+
+    return sessionID
+  }
 }
