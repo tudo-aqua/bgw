@@ -409,6 +409,14 @@ internal class Frontend : Application() {
     }
 
     /**
+     * Shows a dialog without blocking further thread execution.
+     *
+     * @param dialog the [Dialog] to show
+     */
+    internal fun showDialogNonBlocking(dialog: Dialog): Unit =
+      DialogBuilder.build(dialog).show()
+
+    /**
      * Shows a dialog and blocks further thread execution.
      *
      * @param dialog the [Dialog] to show

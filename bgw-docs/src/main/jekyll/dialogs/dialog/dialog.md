@@ -11,6 +11,7 @@ nav_order: 1
 [ButtonTypeKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.dialog/-button-type/index.html
 
 [showDialogKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/show-dialog.html
+[showDialogNonBlockingKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.core/-board-game-application/show-dialog-non-blocking.html
 
 <!-- Links -->
 [OptionalDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html
@@ -80,13 +81,13 @@ An example with all dialog types can be found here:
 [View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/dialog/DialogExample.kt){:
 .btn }
 ## Showing a dialog
-To show a dialog the method [#showDialog][showDialogKDoc] 
-in [BoardGameApplication][BoardGameApplicationKDoc] 
-has to be used.
-The operation blocks user input until the dialog is closed. The function returns an 
-[Optional][OptionalDoc] containing the chosen 
-[ButtonType][ButtonTypeKDoc]. 
+To show a dialog the method [#showDialog][showDialogKDoc] in [BoardGameApplication][BoardGameApplicationKDoc] has to be
+used. The operation blocks user input until the dialog is closed. The function returns an [Optional][OptionalDoc] 
+containing the chosen [ButtonType][ButtonTypeKDoc]. 
 The Optional is empty if the dialog is closed by the *X* or in any other way aside selecting any button.
+
+Alternatively a dialog may be shown by [#showDialogNonBlocking][showDialogNonBlockingKDoc] which shows the Dialog 
+without blocking further thread execution. This functions returns ``Unit``.
 
 ````kotlin
 val dialog: Dialog = Dialog(

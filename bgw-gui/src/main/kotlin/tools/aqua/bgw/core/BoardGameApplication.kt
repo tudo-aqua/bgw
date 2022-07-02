@@ -218,9 +218,16 @@ open class BoardGameApplication(
   }
 
   /**
+   * Shows a dialog without blocking further thread execution.
+   *
+   * @param dialog The [Dialog] to show.
+   */
+  fun showDialogNonBlocking(dialog: Dialog): Unit = Frontend.showDialogNonBlocking(dialog)
+
+  /**
    * Shows a dialog and blocks further thread execution.
    *
-   * @param dialog The [Dialog] to show
+   * @param dialog The [Dialog] to show.
    *
    * @return Chosen button or [Optional.empty] if canceled.
    */

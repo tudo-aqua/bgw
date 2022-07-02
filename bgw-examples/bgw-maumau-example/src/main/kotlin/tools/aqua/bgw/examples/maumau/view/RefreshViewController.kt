@@ -350,7 +350,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
   }
 
   override fun onCreateGameSuccess(sessionID: String?) {
-    viewController.showDialog(
+    viewController.showDialogNonBlocking(
         Dialog(DialogType.INFORMATION, "Session ID", "Session ID", "Session ID is $sessionID"))
     viewController.showMenuScene(
         viewController.mauMauWaitForOpponentMenuScene.also { it.startAnimation() })
