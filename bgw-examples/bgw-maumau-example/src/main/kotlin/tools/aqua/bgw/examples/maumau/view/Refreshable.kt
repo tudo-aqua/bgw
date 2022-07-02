@@ -84,8 +84,11 @@ interface Refreshable {
   fun showConnectWarningDialog(title: String, message: String)
 
   // region Network join handshake
-  /** Show dialog waiting for opponents. */
-  fun onCreateGameSuccess()
+  /**
+   * Show dialog waiting for opponents.
+   * @param sessionID Session ID for this game. ``null`` if creation was not successful.
+   */
+  fun onCreateGameSuccess(sessionID: String?)
 
   /** Show dialog waiting for host. */
   fun onJoinGameSuccess()

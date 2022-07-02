@@ -43,15 +43,10 @@ class NetworkService(private val logicController: LogicController) {
    * @param sessionID Session ID to host.
    */
   fun hostGame(address: String, secret: String, name: String, sessionID: String) {
-    if (sessionID.isEmpty()) {
-      logicController.view.showConnectWarningDialog(
-          title = "SessionID is empty", message = "Please fill in the sessionID field.")
-      return
-    }
-
     if (!connect(address, secret, name)) return
 
-    client?.createGame(GAME_ID, sessionID, "Welcome!")
+    if (sessionID.isEmpty()) client?.createGame(GAME_ID, "Welcome!")
+    else client?.createGame(GAME_ID, sessionID, "Welcome!")
   }
 
   /**

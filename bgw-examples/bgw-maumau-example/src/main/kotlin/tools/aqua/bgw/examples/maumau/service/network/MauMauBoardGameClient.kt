@@ -64,7 +64,7 @@ class MauMauBoardGameClient(
   override fun onCreateGameResponse(response: CreateGameResponse) {
     BoardGameApplication.runOnGUIThread {
       when (response.status) {
-        CreateGameResponseStatus.SUCCESS -> view.onCreateGameSuccess()
+        CreateGameResponseStatus.SUCCESS -> view.onCreateGameSuccess(response.sessionID)
         CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
             view.onCreateGameError("You are already in a game.")
         CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS ->

@@ -52,15 +52,14 @@ class MauMauHostGameMenuScene :
           prompt = "Server address")
 
   /** [TextField] for the network secret. */
-  val secretText: TextField =
-      TextField(height = 40, width = MENU_ITEM_WIDTH, text = "geheim", prompt = "Secret")
+  val secretText: TextField = TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "Secret")
 
   /** [TextField] for the player's name. */
   val nameText: TextField = TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "Your Name")
 
   /** [TextField] for the session id. */
   val sessionIDText: TextField =
-      TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "sessionID")
+      TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "sessionID (optional)")
 
   /** Host game [Button]. */
   val hostGameButton: Button = MenuButton("Host Game")
