@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
  - BGW-Net
+ - Non-blocking Dialog option
 
 ### Changed
  - Keyboard input events for elements on BoardGameScene are now blocked while MenuScene is shown.
