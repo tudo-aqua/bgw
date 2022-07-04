@@ -62,6 +62,22 @@ class UploadSchemaView(
 ) : VerticalLayout() {
   private val buffer: MultiFileMemoryBuffer = MultiFileMemoryBuffer()
 
+  private var selectedSchemas: Set<SchemasByGame> = HashSet()
+
+  private val deleteButton: Button =
+      Button("Delete").apply {
+        addClickListener {
+          for (selected in selectedSchemas) {
+            schemasByGameRepository.delete(selected)
+            gameGrid.setItems(
+                frontendService.allGameIds.map { gameId ->
+                  Game(gameId, schemasByGameRepository.findAllByGameID(gameId))
+                })
+            notificationService.notify("Schema was deleted!", NotificationVariant.LUMO_SUCCESS)
+          }
+        }
+      }
+
   private val gameIdLabel = "Game ID"
 
   private val upload: Upload =
@@ -146,6 +162,7 @@ class UploadSchemaView(
                         })
                     .setHeader("Schemas")
                 setItems(game.schemas)
+                addSelectionListener { selectedSchemas = it.allSelectedItems }
               }
             }
         setItemDetailsRenderer(schemaRenderer)
@@ -165,7 +182,8 @@ class UploadSchemaView(
                 VerticalLayout(
                     gameIdSelect,
                     upload,
-                )),
+                ),
+                deleteButton.apply { width = "150px" }),
         ))
   }
 }

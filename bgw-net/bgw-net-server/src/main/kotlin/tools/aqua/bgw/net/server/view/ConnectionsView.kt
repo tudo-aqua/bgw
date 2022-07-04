@@ -41,10 +41,11 @@ class ConnectionsView(@Autowired private val frontendService: FrontendService) :
   private val playerGrid =
       Grid<Player>().apply {
         addColumn(Player::name).setHeader("Name")
-        addColumn { it.session.remoteAddress?.address?.hostAddress ?: "n/a" }
-            .setHeader("IP Address")
+        addColumn { it.session.remoteAddress?.port ?: "n/a" }.setHeader("Socket Port")
+        addColumn { "${it.game?.gameID}:${it.game?.sessionID}" ?: "n/a" }
+            .setHeader("Connected Game")
         setItems(frontendService.activePlayers)
-        minWidth = "400px"
+        minWidth = "500px"
       }
 
   private val gameGrid =
