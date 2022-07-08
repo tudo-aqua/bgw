@@ -169,6 +169,7 @@
     "oneOf": { "$ref": "#/definitions/schemaArray" },
     "not": { "$ref": "#" }
   },
+  "required": ["title"],
   "default": true,
   "additionalProperties": false
 }
