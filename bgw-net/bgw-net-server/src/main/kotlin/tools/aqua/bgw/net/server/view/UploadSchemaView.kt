@@ -160,7 +160,6 @@ class UploadSchemaView(
                             setWidthFull()
                           }
                         })
-                    .setHeader("Schemas")
                 setItems(game.schemas)
                 addSelectionListener { selectedSchemas = it.allSelectedItems }
               }
