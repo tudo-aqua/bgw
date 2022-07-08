@@ -54,7 +54,6 @@ object DialogBuilder {
                 maxWidth = Double.MAX_VALUE
                 maxHeight = Double.MAX_VALUE
               }
-          buttonTypes.add(ButtonType.OK)
         }
       }
 }

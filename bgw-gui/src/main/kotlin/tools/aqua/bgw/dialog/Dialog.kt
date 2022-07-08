@@ -80,5 +80,5 @@ internal constructor(
       header: String,
       message: String,
       exception: Throwable
-  ) : this(DialogType.EXCEPTION, title, header, message, exception, listOf(ButtonType.OK))
+  ) : this(DialogType.EXCEPTION, title, header, message, exception, emptyList())
 }
