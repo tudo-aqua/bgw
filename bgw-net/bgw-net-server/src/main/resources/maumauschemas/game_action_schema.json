@@ -7,12 +7,12 @@
     "card"
   ],
   "properties": {
-    "action": { "$ref": "#/$defs/action" },
-    "card": { "$ref": "#/$defs/card" }
+    "action": { "$ref": "#/definitions/action" },
+    "card": { "$ref": "#/definitions/card" }
   },
   "additionalProperties": false,
 
-  "$defs": {
+  "definitions": {
     "card": {
       "oneOf": [
         { "type": "null" },

@@ -9,13 +9,13 @@
   "properties": {
     "drawStack": {
       "type": "array",
-      "items": { "$ref": "#/$defs/card" }
+      "items": { "$ref": "#/definitions/card" }
     },
-    "gameStack": { "$ref": "#/$defs/card" }
+    "gameStack": { "$ref": "#/definitions/card" }
   },
   "additionalProperties": false,
 
-  "$defs": {
+  "definitions": {
     "card": {
       "type": "object",
       "required": [
