@@ -151,15 +151,15 @@ class UploadSchemaView(
             ComponentRenderer<Grid<SchemasByGame>, Game> { game ->
               Grid<SchemasByGame>().apply {
                 addColumn(
-                        ComponentRenderer { item ->
-                          TextArea().apply {
-                            val mapper = ObjectMapper()
-                            val node = mapper.readTree(item.schema)
-                            value = node.toPrettyString()
-                            isReadOnly = true
-                            setWidthFull()
-                          }
-                        })
+                    ComponentRenderer { item ->
+                      TextArea().apply {
+                        val mapper = ObjectMapper()
+                        val node = mapper.readTree(item.schema)
+                        value = node.toPrettyString()
+                        isReadOnly = true
+                        setWidthFull()
+                      }
+                    })
                 setItems(game.schemas)
                 addSelectionListener { selectedSchemas = it.allSelectedItems }
               }
