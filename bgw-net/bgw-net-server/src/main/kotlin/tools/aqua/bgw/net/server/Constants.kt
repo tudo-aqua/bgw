@@ -49,6 +49,9 @@ const val EXAMPLE_SCHEMA_JSON_URL_STRING: String = "/example_schema.json"
 /** The String representation of the URL of the meta_schema.json relative to projects resources. */
 const val META_SCHEMA_JSON_URL_STRING: String = "/meta_schema.json"
 
+/** The String representation of the URL of the meta_schema.json relative to projects resources. */
+const val BGW_META_SCHEMA_JSON_URL_STRING: String = "/bgw_meta_schema.json"
+
 /** Player instance. */
 val WebSocketSession.player: Player
   get() {

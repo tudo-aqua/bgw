@@ -29,6 +29,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.message.GameActionMessage
+import tools.aqua.bgw.net.server.BGW_META_SCHEMA_JSON_URL_STRING
 import tools.aqua.bgw.net.server.EXAMPLE_SCHEMA_JSON_URL_STRING
 import tools.aqua.bgw.net.server.MAUMAU_GAME_ID
 import tools.aqua.bgw.net.server.META_SCHEMA_JSON_URL_STRING
@@ -46,11 +47,11 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
     ValidationService {
 
   /** The meta schema to validate schemas against. */
-  override val metaSchema: JsonSchema =
-      JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
-          .getSchema(
-              javaClass.getResourceAsStream(META_SCHEMA_JSON_URL_STRING)
-                  ?: throw FileNotFoundException())
+  override val metaSchemas: List<JsonSchema> =
+      listOf(META_SCHEMA_JSON_URL_STRING, BGW_META_SCHEMA_JSON_URL_STRING).map {
+        JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+            .getSchema(javaClass.getResourceAsStream(it) ?: throw FileNotFoundException())
+      }
 
   /** Object mapper for Json (de)serialization. */
   private val mapper = ObjectMapper()
