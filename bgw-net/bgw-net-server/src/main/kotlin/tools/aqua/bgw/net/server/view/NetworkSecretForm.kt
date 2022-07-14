@@ -20,8 +20,9 @@ package tools.aqua.bgw.net.server.view
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.formlayout.FormLayout
+import com.vaadin.flow.component.html.Span
 import com.vaadin.flow.component.notification.NotificationVariant
-import com.vaadin.flow.component.textfield.PasswordField
+import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,7 +38,9 @@ class NetworkSecretForm(
     private val keyValueRepository: KeyValueRepository,
     @Autowired private val notificationService: NotificationService
 ) : FormLayout() {
-  private var newSecret: PasswordField = PasswordField("", "Secret")
+  private var secret: Span =
+      Span("Aktuelles Secret: ${keyValueRepository.findById("Network secret").get().value}")
+  private var newSecret: TextField = TextField("", "Secret")
   private val confirmButton: Button =
       Button("Change Secret").apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)
@@ -47,12 +50,14 @@ class NetworkSecretForm(
           notificationService.notify(
               "Network Secret was updated successfully!", NotificationVariant.LUMO_SUCCESS)
           newSecret.value = ""
+          secret.text =
+              "Aktuelles Secret: ${keyValueRepository.findById("Network secret").get().value}"
         }
       }
 
   init {
     addClassName("secret-form")
     width = "400px"
-    add(newSecret, confirmButton)
+    add(secret, newSecret, confirmButton)
   }
 }
