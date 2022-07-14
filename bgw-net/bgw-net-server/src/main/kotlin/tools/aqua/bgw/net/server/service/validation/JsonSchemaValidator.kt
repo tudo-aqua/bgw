@@ -116,7 +116,7 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
   @PostConstruct
   fun initExample() {
     setOf(
-            EXAMPLE_SCHEMA_JSON_URL_STRING,
+            // EXAMPLE_SCHEMA_JSON_URL_STRING,
             "/maumauschemas/game_action_schema.json",
             "/maumauschemas/game_end_schema.json",
             "/maumauschemas/game_init_schema.json",
@@ -125,6 +125,7 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
           javaClass.getResource(t)?.readText()
               ?: null.also { logger.warn("Failed to load schema from resources: $t") }
         }
+        .filter { !schemasByGameRepository.existsBySchemaAndGameID(it, MAUMAU_GAME_ID) }
         .forEach {
           logger.info("Registering schema $it")
           schemasByGameRepository.save(SchemasByGame(MAUMAU_GAME_ID, it))
