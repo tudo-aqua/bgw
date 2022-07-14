@@ -43,7 +43,7 @@ class LogicController(private val view: Refreshable) {
   private var isTimerRunning: Boolean = false
 
   init {
-    Timer().scheduleAtFixedRate(delay = 0, period = 100) {
+    Timer(true).scheduleAtFixedRate(delay = 0, period = 100) {
       if (isTimerRunning) {
         val millis = System.currentTimeMillis() - startTime
 
