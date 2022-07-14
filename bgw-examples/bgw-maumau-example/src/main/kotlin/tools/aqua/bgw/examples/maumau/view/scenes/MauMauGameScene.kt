@@ -183,7 +183,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
           visual = ImageVisual(BUTTON_BG_FILE))
 
   private var dots = 1
-  private val timer = Timer()
+  private val timer = Timer(true)
 
   init {
     buttonClubs.isVisible = false

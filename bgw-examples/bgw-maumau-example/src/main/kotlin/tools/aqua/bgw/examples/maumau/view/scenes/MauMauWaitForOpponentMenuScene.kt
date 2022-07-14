@@ -52,7 +52,7 @@ class MauMauWaitForOpponentMenuScene :
       }
 
   private var dots = 1
-  private val timer = Timer()
+  private val timer = Timer(true)
 
   init {
     addComponents(menuLabel, startGameButton)
