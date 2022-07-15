@@ -23,6 +23,7 @@ import tools.aqua.bgw.builder.DragDropBuilder.registerDragEvents
 import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.toMouseEvent
+import tools.aqua.bgw.builder.FXConverters.toScrollEvent
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
@@ -96,6 +97,7 @@ object NodeBuilder {
     node.setOnMouseReleased { onMouseReleased?.invoke(it.toMouseEvent()) }
     node.setOnMouseEntered { onMouseEntered?.invoke(it.toMouseEvent()) }
     node.setOnMouseExited { onMouseExited?.invoke(it.toMouseEvent()) }
+    node.setOnScroll { onScroll?.invoke(it.toScrollEvent()) }
 
     node.setOnKeyPressed {
       if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
