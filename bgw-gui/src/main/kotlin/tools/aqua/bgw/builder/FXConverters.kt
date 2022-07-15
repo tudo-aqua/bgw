@@ -35,16 +35,14 @@ import javafx.scene.input.KeyCombination
 import javafx.scene.input.KeyEvent as FXKeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent as FXMouseEvent
+import javafx.scene.input.ScrollEvent as FXScrollEvent
 import javafx.scene.paint.Color
 import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.DialogType
-import tools.aqua.bgw.event.KeyCode
-import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.event.MouseButtonType
-import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.event.*
 import tools.aqua.bgw.util.Font
 
 /** Helper class for conversion functions between BGW and JavaFX and backwards. */
@@ -108,6 +106,14 @@ object FXConverters {
             MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
             else -> MouseButtonType.UNSPECIFIED
           })
+
+  /** Converts the [FXScrollEvent] to [ScrollEvent]. */
+  internal fun FXScrollEvent.toScrollEvent(): ScrollEvent =
+      ScrollEvent(
+          direction = ScrollDirection.of(deltaY),
+          isControlDown = isControlDown,
+          isShiftDown = isShiftDown,
+          isAltDown = isAltDown)
 
   /** Converts the [javafx.scene.input.KeyEvent] to [KeyEvent]. */
   internal fun FXKeyEvent.toKeyEvent(): KeyEvent =
