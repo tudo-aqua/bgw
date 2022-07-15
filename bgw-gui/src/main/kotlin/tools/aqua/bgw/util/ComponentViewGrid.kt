@@ -345,7 +345,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
     rows += top + bottom
     columns += left + right
     rowHeights =
-        DoubleArray(left) { ROW_HEIGHT_AUTO } + rowHeights + DoubleArray(right) { ROW_HEIGHT_AUTO }
+        DoubleArray(top) { ROW_HEIGHT_AUTO } + rowHeights + DoubleArray(bottom) { ROW_HEIGHT_AUTO }
     columnWidths =
         DoubleArray(left) { COLUMN_WIDTH_AUTO } +
             columnWidths +
