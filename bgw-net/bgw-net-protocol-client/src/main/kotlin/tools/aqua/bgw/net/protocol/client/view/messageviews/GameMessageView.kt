@@ -81,7 +81,7 @@ class GameMessageView(
 			posX = marginLeft,
 			posY = height,
 			width = width - marginLeft - marginRight,
-			height = messageLineHeight,
+			height = messageLineHeight + 10,
 			text = messageType,
 			font = Font(
 				size = 16,
@@ -90,7 +90,7 @@ class GameMessageView(
 			),
 			alignment = Alignment.TOP_CENTER
 		))
-		height += messageLineHeight
+		height += messageLineHeight + 10
 
 		//Add text lines
 		for (i in text.indices) {
@@ -100,7 +100,7 @@ class GameMessageView(
 				width = width - marginLeft - marginRight,
 				height = messageLineHeight,
 				text = text[i],
-				font = Font(size = 12),
+				font = textFont,
 				alignment = Alignment.TOP_LEFT))
 			height += messageLineHeight
 		}
@@ -112,5 +112,9 @@ class GameMessageView(
 			Label(posX = 0, posY = 0, width = width, height = height).apply {
 				backgroundStyle = "$colorStyle$cornerStyle"
 			}, 0)
+	}
+
+	companion object {
+		internal val textFont: Font = Font(size = 12)
 	}
 }
