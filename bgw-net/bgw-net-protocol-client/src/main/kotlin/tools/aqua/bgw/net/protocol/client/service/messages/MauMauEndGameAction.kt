@@ -15,25 +15,16 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.protocol.client.view.messageviews
+package tools.aqua.bgw.net.protocol.client.service.messages
 
-import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.net.common.GameAction
+import tools.aqua.bgw.net.common.annotations.GameActionClass
 
-class GameHostedMessageView(sessionID: String) : MessageView() {
-
-	private val messageHeight: Double = 50.0
-  private val colorStyle = "-fx-background-color: #ffee00;"
-
-	init {
-		height = messageHeight
-		addAll(
-			Label(
-				posX = 0,
-				posY = height - messageHeight,
-				width = width,
-				height = messageHeight,
-				text = "- Successfully hosted game with sessionID \"$sessionID\" -").apply {
-				backgroundStyle = "$colorStyle$cornerStyle"
-			})
-	}
+/**
+ * GameOverMessage data class for serialization.
+ *
+ * @property winner The winner name.
+ */
+@GameActionClass data class MauMauEndGameAction(val winner: String) : GameAction() {
+	override fun printToString(): String = "$winner has won the game!"
 }
