@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Dialog</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>bgw-gui</span>
+            </a>
+    </div>
+    <div>
+0.7-2-fb9debc-SNAPSHOT    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="bgw-gui::tools.aqua.bgw.dialog/Dialog///PointingToDeclaration//1459265941">
+  <div class="breadcrumbs"><a href="../../../index.html">bgw-gui</a><span class="delimiter">/</span><a href="../index.html">tools.aqua.bgw.dialog</a><span class="delimiter">/</span><a href="index.html">Dialog</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Dialog</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Dialog</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Shows a dialog containing the given <a href="message.html">message</a> and <a href="buttons.html">buttons</a>.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section-body">
+      <h2 class="tabbedcontent">Constructors</h2>
+      <div class="table" data-togglable="Constructors"><a data-name="-1317417908%2FConstructors%2F1459265941" anchor-label="Dialog" id="-1317417908%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-dialog.html"><span><span>Dialog</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1317417908%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-dialog.html"><span class="token function">Dialog</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;dialogType<span class="token operator">: </span><a href="../-dialog-type/index.html">DialogType</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;title<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;header<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">vararg </span>buttons<span class="token operator">: </span><a href="../-button-type/index.html">ButtonType</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a Dialog.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1650727384%2FConstructors%2F1459265941" anchor-label="Dialog" id="1650727384%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-dialog.html"><span><span>Dialog</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1650727384%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-dialog.html"><span class="token function">Dialog</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;title<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;header<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;exception<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates an exception Dialog.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="-1205628073%2FProperties%2F1459265941" anchor-label="buttons" id="-1205628073%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="buttons.html">buttons</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1205628073%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1205628073%2FProperties%2F1459265941" anchor-label="buttons" id="-1205628073%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="buttons.html">buttons</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-button-type/index.html">ButtonType</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1205628073%2FProperties%2F1459265941" anchor-label="buttons" id="-1205628073%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Buttons to be shown. Standard set of buttons according to <a href="dialog-type.html">dialogType</a> will be used if you don't pass any <a href="../-button-type/index.html">ButtonType</a>s.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1008537728%2FProperties%2F1459265941" anchor-label="dialogType" id="-1008537728%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="dialog-type.html">dialogType</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1008537728%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1008537728%2FProperties%2F1459265941" anchor-label="dialogType" id="-1008537728%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="dialog-type.html">dialogType</a><span class="token operator">: </span><a href="../-dialog-type/index.html">DialogType</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1008537728%2FProperties%2F1459265941" anchor-label="dialogType" id="-1008537728%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">The <a href="../-dialog-type/index.html">DialogType</a> of the alert. Affects the displayed icon.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1994281865%2FProperties%2F1459265941" anchor-label="exception" id="1994281865%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="exception.html">exception</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1994281865%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="1994281865%2FProperties%2F1459265941" anchor-label="exception" id="1994281865%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="exception.html">exception</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1994281865%2FProperties%2F1459265941" anchor-label="exception" id="1994281865%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a> to be shown in expandable content.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="706081397%2FProperties%2F1459265941" anchor-label="header" id="706081397%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="header.html">header</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="706081397%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="706081397%2FProperties%2F1459265941" anchor-label="header" id="706081397%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="header.html">header</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="706081397%2FProperties%2F1459265941" anchor-label="header" id="706081397%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Headline to be shown in the dialogs content.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1126487441%2FProperties%2F1459265941" anchor-label="message" id="1126487441%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="message.html">message</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1126487441%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="1126487441%2FProperties%2F1459265941" anchor-label="message" id="1126487441%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="message.html">message</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1126487441%2FProperties%2F1459265941" anchor-label="message" id="1126487441%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Message to be shown.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1885732064%2FProperties%2F1459265941" anchor-label="title" id="-1885732064%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="title.html">title</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1885732064%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1885732064%2FProperties%2F1459265941" anchor-label="title" id="-1885732064%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="title.html">title</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1885732064%2FProperties%2F1459265941" anchor-label="title" id="-1885732064%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Title to be shown.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

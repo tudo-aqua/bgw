@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>BoardGameClient</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>bgw-net-client</span>
+            </a>
+    </div>
+    <div>
+0.7-2-fb9debc-SNAPSHOT    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="bgw-net-client::tools.aqua.bgw.net.client/BoardGameClient///PointingToDeclaration//1907453845">
+  <div class="breadcrumbs"><a href="../../../index.html">bgw-net-client</a><span class="delimiter">/</span><a href="../index.html">tools.aqua.bgw.net.client</a><span class="delimiter">/</span><a href="index.html">BoardGameClient</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Board</span><wbr></wbr><span>Game</span><wbr></wbr><span><span>Client</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">BoardGameClient</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><a href="index.html">BoardGameClient</a> for network communication in BGW applications. Inherit from this class and override its open functions. By default, these do nothing if not overridden.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Parameters">Parameters</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Parameters</h2>
+      <div data-togglable="Parameters">
+        <div class="platform-hinted WithExtraAttributes" data-platform-hinted="data-platform-hinted" data-togglable="Parameters"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>secret</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">The server secret.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>network</span><wbr></wbr><span>Logging</span><wbr></wbr><span><span>Behavior</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">The desired network logging verbosity. Default: <a href="../-network-logging/-n-o_-l-o-g-g-i-n-g/index.html">NetworkLogging.NO_LOGGING</a>.</p></div></div></div></div></div></div></div></div></div>
+      </div>
+      <h2 class="">Functions</h2>
+      <div class="table" data-togglable="Functions"><a data-name="473087799%2FFunctions%2F1907453845" anchor-label="connect" id="473087799%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="connect.html"><span><span>connect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="473087799%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="connect.html"><span class="token function">connect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Connects to the remote server, blocking.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="350154901%2FFunctions%2F1907453845" anchor-label="createGame" id="350154901%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="create-game.html"><span>create</span><wbr></wbr><span><span>Game</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="350154901%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="create-game.html"><span class="token function">createGame</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">gameID<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">greetingMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a new game session on the server by sending a <span data-unresolved-link="tools.aqua.bgw.net.common.request/CreateGameMessage///PointingToDeclaration/">CreateGameMessage</span>. The session ID will be set automatically and returned through the <a href="on-create-game-response.html">onCreateGameResponse</a>.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="create-game.html"><span class="token function">createGame</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;gameID<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;sessionID<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;greetingMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a new game session on the server by sending a <span data-unresolved-link="tools.aqua.bgw.net.common.request/CreateGameMessage///PointingToDeclaration/">CreateGameMessage</span>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1229395709%2FFunctions%2F1907453845" anchor-label="disconnect" id="1229395709%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="disconnect.html"><span><span>disconnect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1229395709%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="disconnect.html"><span class="token function">disconnect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Disconnects from the remote server.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1759766932%2FFunctions%2F1907453845" anchor-label="joinGame" id="-1759766932%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="join-game.html"><span>join</span><wbr></wbr><span><span>Game</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1759766932%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="join-game.html"><span class="token function">joinGame</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sessionID<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">greetingMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Joins an existing game session on the server by sending a <span data-unresolved-link="tools.aqua.bgw.net.common.request/JoinGameMessage///PointingToDeclaration/">JoinGameMessage</span>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="787988300%2FFunctions%2F1907453845" anchor-label="leaveGame" id="787988300%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="leave-game.html"><span>leave</span><wbr></wbr><span><span>Game</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="787988300%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="leave-game.html"><span class="token function">leaveGame</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">goodbyeMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Leaves the current game session by sending a <span data-unresolved-link="tools.aqua.bgw.net.common.request/LeaveGameMessage///PointingToDeclaration/">LeaveGameMessage</span>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="112239225%2FFunctions%2F1907453845" anchor-label="onClose" id="112239225%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-close.html"><span>on</span><wbr></wbr><span><span>Close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="112239225%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-close.html"><span class="token function">onClose</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;code<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;reason<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;remote<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called after the websocket connection has been closed.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-896432686%2FFunctions%2F1907453845" anchor-label="onCreateGameResponse" id="-896432686%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-create-game-response.html"><span>on</span><wbr></wbr><span>Create</span><wbr></wbr><span>Game</span><wbr></wbr><span><span>Response</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-896432686%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-create-game-response.html"><span class="token function">onCreateGameResponse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">response<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common.response/CreateGameResponse///PointingToDeclaration/">CreateGameResponse</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when server sent a <span data-unresolved-link="tools.aqua.bgw.net.common.response/CreateGameResponse///PointingToDeclaration/">CreateGameResponse</span> after a <span data-unresolved-link="tools.aqua.bgw.net.common.request/CreateGameMessage///PointingToDeclaration/">CreateGameMessage</span> was sent.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="468219333%2FFunctions%2F1907453845" anchor-label="onError" id="468219333%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-error.html"><span>on</span><wbr></wbr><span><span>Error</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="468219333%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-error.html"><span class="token function">onError</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">throwable<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when an error occurred. By default, this method throws the incoming exception. Override to implement error handling.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1790039753%2FFunctions%2F1907453845" anchor-label="onGameActionReceived" id="-1790039753%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-game-action-received.html"><span>on</span><wbr></wbr><span>Game</span><wbr></wbr><span>Action</span><wbr></wbr><span><span>Received</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1790039753%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-game-action-received.html"><span class="token function">onGameActionReceived</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common/GameAction///PointingToDeclaration/">GameAction</span><span class="token punctuation">, </span></span><span class="parameter ">sender<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when an opponent sent a <span data-unresolved-link="tools.aqua.bgw.net.common.message/GameActionMessage///PointingToDeclaration/">GameActionMessage</span>. This method is supposed to act as a fallback solution if not for all Subclasses of <span data-unresolved-link="tools.aqua.bgw.net.common/GameAction///PointingToDeclaration/">GameAction</span> a dedicated handler was registered using <span data-unresolved-link="tools.aqua.bgw.net.common.annotations/GameActionReceiver///PointingToDeclaration/">GameActionReceiver</span> annotation.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1057363730%2FFunctions%2F1907453845" anchor-label="onGameActionResponse" id="1057363730%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-game-action-response.html"><span>on</span><wbr></wbr><span>Game</span><wbr></wbr><span>Action</span><wbr></wbr><span><span>Response</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1057363730%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-game-action-response.html"><span class="token function">onGameActionResponse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">response<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common.response/GameActionResponse///PointingToDeclaration/">GameActionResponse</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when server sent a <span data-unresolved-link="tools.aqua.bgw.net.common.response/GameActionResponse///PointingToDeclaration/">GameActionResponse</span> after a <span data-unresolved-link="tools.aqua.bgw.net.common.message/GameActionMessage///PointingToDeclaration/">GameActionMessage</span> was sent.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1079225810%2FFunctions%2F1907453845" anchor-label="onJoinGameResponse" id="1079225810%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-join-game-response.html"><span>on</span><wbr></wbr><span>Join</span><wbr></wbr><span>Game</span><wbr></wbr><span><span>Response</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1079225810%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-join-game-response.html"><span class="token function">onJoinGameResponse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">response<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common.response/JoinGameResponse///PointingToDeclaration/">JoinGameResponse</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when server sent a <span data-unresolved-link="tools.aqua.bgw.net.common.response/JoinGameResponse///PointingToDeclaration/">JoinGameResponse</span> after a <span data-unresolved-link="tools.aqua.bgw.net.common.request/JoinGameMessage///PointingToDeclaration/">JoinGameMessage</span> was sent.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1397665758%2FFunctions%2F1907453845" anchor-label="onLeaveGameResponse" id="-1397665758%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-leave-game-response.html"><span>on</span><wbr></wbr><span>Leave</span><wbr></wbr><span>Game</span><wbr></wbr><span><span>Response</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1397665758%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-leave-game-response.html"><span class="token function">onLeaveGameResponse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">response<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common.response/LeaveGameResponse///PointingToDeclaration/">LeaveGameResponse</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when server sent a <span data-unresolved-link="tools.aqua.bgw.net.common.response/LeaveGameResponse///PointingToDeclaration/">LeaveGameResponse</span> after a <span data-unresolved-link="tools.aqua.bgw.net.common.request/LeaveGameMessage///PointingToDeclaration/">LeaveGameMessage</span> was sent.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1072953712%2FFunctions%2F1907453845" anchor-label="onOpen" id="1072953712%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-open.html"><span>on</span><wbr></wbr><span><span>Open</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1072953712%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-open.html"><span class="token function">onOpen</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called after an opening handshake has been performed.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-728768399%2FFunctions%2F1907453845" anchor-label="onPlayerJoined" id="-728768399%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-player-joined.html"><span>on</span><wbr></wbr><span>Player</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-728768399%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-player-joined.html"><span class="token function">onPlayerJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">notification<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common.notification/PlayerJoinedNotification///PointingToDeclaration/">PlayerJoinedNotification</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when a player joined the session and the server sent a <span data-unresolved-link="tools.aqua.bgw.net.common.notification/PlayerJoinedNotification///PointingToDeclaration/">PlayerJoinedNotification</span>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="292899633%2FFunctions%2F1907453845" anchor-label="onPlayerLeft" id="292899633%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="on-player-left.html"><span>on</span><wbr></wbr><span>Player</span><wbr></wbr><span><span>Left</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="292899633%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="on-player-left.html"><span class="token function">onPlayerLeft</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">notification<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common.notification/PlayerLeftNotification///PointingToDeclaration/">PlayerLeftNotification</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Called when a player left the session and the server sent a <span data-unresolved-link="tools.aqua.bgw.net.common.notification/PlayerLeftNotification///PointingToDeclaration/">PlayerLeftNotification</span>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-857441653%2FFunctions%2F1907453845" anchor-label="sendGameActionMessage" id="-857441653%2FFunctions%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="send-game-action-message.html"><span>send</span><wbr></wbr><span>Game</span><wbr></wbr><span>Action</span><wbr></wbr><span><span>Message</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-857441653%2FFunctions%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="send-game-action-message.html"><span class="token function">sendGameActionMessage</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">payload<span class="token operator">: </span><span data-unresolved-link="tools.aqua.bgw.net.common/GameAction///PointingToDeclaration/">GameAction</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sends a <span data-unresolved-link="tools.aqua.bgw.net.common.message/GameActionMessage///PointingToDeclaration/">GameActionMessage</span> to all connected players.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="-1458080655%2FProperties%2F1907453845" anchor-label="host" id="-1458080655%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="host.html">host</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1458080655%2FProperties%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><a data-name="-1458080655%2FProperties%2F1907453845" anchor-label="host" id="-1458080655%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="host.html">host</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1458080655%2FProperties%2F1907453845" anchor-label="host" id="-1458080655%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a><p class="paragraph">The server ip or hostname.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-975265275%2FProperties%2F1907453845" anchor-label="isOpen" id="-975265275%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="is-open.html">isOpen</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-975265275%2FProperties%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><a data-name="-975265275%2FProperties%2F1907453845" anchor-label="isOpen" id="-975265275%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="is-open.html">isOpen</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-975265275%2FProperties%2F1907453845" anchor-label="isOpen" id="-975265275%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a><p class="paragraph">Returns the current state of connection.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="328375437%2FProperties%2F1907453845" anchor-label="playerName" id="328375437%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-net:bgw-net-client:dokkaHtml/main" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="player-name.html">playerName</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="328375437%2FProperties%2F1907453845"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-net:bgw-net-client:dokkaHtml/main"><a data-name="328375437%2FProperties%2F1907453845" anchor-label="playerName" id="328375437%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="player-name.html">playerName</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="328375437%2FProperties%2F1907453845" anchor-label="playerName" id="328375437%2FProperties%2F1907453845" data-filterable-set=":bgw-net:bgw-net-client:dokkaHtml/main"></a><p class="paragraph">The player name.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

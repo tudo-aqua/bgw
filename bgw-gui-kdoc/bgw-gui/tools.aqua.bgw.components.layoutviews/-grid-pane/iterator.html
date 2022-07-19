@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>iterator</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>bgw-gui</span>
+            </a>
+    </div>
+    <div>
+0.7-2-fb9debc-SNAPSHOT    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="bgw-gui::tools.aqua.bgw.components.layoutviews/GridPane/iterator/#/PointingToDeclaration//1459265941">
+  <div class="breadcrumbs"><a href="../../../index.html">bgw-gui</a><span class="delimiter">/</span><a href="../index.html">tools.aqua.bgw.components.layoutviews</a><span class="delimiter">/</span><a href="index.html">GridPane</a><span class="delimiter">/</span><a href="iterator.html">iterator</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>iterator</span></span></h1>
+  </div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">operator override </span><span class="token keyword">fun </span><a href="iterator.html"><span class="token function">iterator</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterator/index.html">Iterator</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.util/-grid-iterator-element/index.html">GridIteratorElement</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Returns an <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterator/index.html">Iterator</a> over the grid components.</p><p class="paragraph">Iteration is columns-first which means that the iterator starts at cell 0,0 and then proceeds iterating through the first row from left to right. When reaching the end of a row it proceeds to the next one resetting the column pointer to 0.</p><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterator/has-next.html">Iterator.hasNext</a> Returns <code class="lang-kotlin">true</code> if at least one cell is left to iterate.</p><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterator/next.html">Iterator.next</a> Returns a data object <a href="../../tools.aqua.bgw.util/-grid-iterator-element/index.html">GridIteratorElement</a> that contains the current row and column as well as the component itself. Refer to the <a href="../../tools.aqua.bgw.util/-grid-iterator-element/index.html">GridIteratorElement</a> documentation for further information.</p><h4 class="">Return</h4><p class="paragraph">Iterator over the grid components.</p></div></div>
+</div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
