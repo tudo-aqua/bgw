@@ -76,7 +76,7 @@ class NetworkService(private val view: ProtocolClientView) {
 		message.javaClass.simpleName
 
 	fun parseMessage(message: GameAction): List<String> {
-		return message.javaClass.declaredFields.map { it.toString() }
+		return message.printToString().split("\n")
 	}
 	// endregion
 }

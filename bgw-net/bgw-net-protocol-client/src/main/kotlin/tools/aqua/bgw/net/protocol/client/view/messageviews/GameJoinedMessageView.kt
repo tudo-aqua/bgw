@@ -19,7 +19,7 @@ package tools.aqua.bgw.net.protocol.client.view.messageviews
 
 import tools.aqua.bgw.components.uicomponents.Label
 
-class GameJoinedMessageView(gameID: String) : MessageView() {
+class GameJoinedMessageView(sessionID: String) : MessageView() {
 
 	private val messageHeight: Double = 50.0
 	private val colorStyle = "-fx-background-color: #ffee00;"
@@ -32,7 +32,7 @@ class GameJoinedMessageView(gameID: String) : MessageView() {
 				posY = height - messageHeight,
 				width = width,
 				height = messageHeight,
-				text = "- Successfully joined game with gameID \"$gameID\" -").apply {
+				text = "- Successfully joined game with sessionID \"$sessionID\" -").apply {
 				backgroundStyle = "$colorStyle$cornerStyle"
 			})
 	}
