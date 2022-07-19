@@ -2,11 +2,14 @@ package tools.aqua.bgw.net.protocol.client.service
 
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.protocol.client.view.ProtocolClientView
+import tools.aqua.bgw.net.protocol.client.view.messageviews.GameMessageView
 import java.awt.Color
+import java.awt.Font
+import java.awt.font.FontRenderContext
+import java.awt.geom.AffineTransform
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.LinkedList
-import java.util.Queue
+
 
 class NetworkService(private val view: ProtocolClientView) {
 
@@ -76,7 +79,26 @@ class NetworkService(private val view: ProtocolClientView) {
 		message.javaClass.simpleName
 
 	fun parseMessage(message: GameAction): List<String> {
-		return message.printToString().split("\n")
+		val lines = message.printToString().split("\n")
+		val result = mutableListOf<String>()
+
+		val font = Font(GameMessageView.textFont.family, Font.PLAIN, GameMessageView.textFont.size.toInt())
+		val frc = FontRenderContext(AffineTransform(), true, true)
+
+		for (line in lines) {
+			var tmpLine = ""
+			for(c in line.toCharArray()) {
+				if (font.getStringBounds(tmpLine + c, frc).width <= 400) {
+					tmpLine += c
+				} else {
+					result.add(tmpLine)
+					tmpLine = "     $c"
+				}
+			}
+			result.add(tmpLine)
+		}
+
+		return result
 	}
 	// endregion
 }
