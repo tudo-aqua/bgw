@@ -60,7 +60,7 @@ import tools.aqua.bgw.visual.Visual
 open class BoardGameApplication(
     windowTitle: String = DEFAULT_WINDOW_TITLE,
     aspectRatio: AspectRatio = AspectRatio(),
-    windowMode: WindowMode? = null
+    windowMode: WindowMode? = null,
 ) {
 
   /** Window title displayed in the title bar. */
@@ -208,7 +208,7 @@ open class BoardGameApplication(
       windowTitle: String = DEFAULT_WINDOW_TITLE,
       width: Number = DEFAULT_WINDOW_WIDTH,
       height: Number = DEFAULT_WINDOW_HEIGHT,
-      windowMode: WindowMode? = null
+      windowMode: WindowMode? = null,
   ) : this(
       windowTitle = windowTitle,
       aspectRatio = AspectRatio.of(width = width, height = height),
@@ -327,12 +327,29 @@ open class BoardGameApplication(
     /** Static holder for instantiation of BoardGameApplication. */
     private var isInstantiated: Boolean = false
 
+    /** Lock for runOnGUIThread execution without Toolkit initialization. */
+    private val lock: Any = Any()
+
     /**
      * Executes given [task] on the UI thread. Use this method to update properties of
-     * [ComponentView]s from asynchronous environments like [Animation.onFinished] events.
+     * [ComponentView]s from asynchronous environments like [Animation.onFinished] events. If no
+     * Application has yet been started, the [task] is executed on the calling Thread. This function
+     * is Thread safe.
      */
     fun runOnGUIThread(task: Runnable) {
-      Platform.runLater(task)
+      val toolkitInitialized: Boolean =
+          try {
+            Platform.runLater {}
+            true
+          } catch (e: IllegalStateException) {
+            false
+          }
+
+      if (toolkitInitialized) {
+        Platform.runLater(task)
+      } else {
+        synchronized(lock) { task.run() }
+      }
     }
 
     /**
