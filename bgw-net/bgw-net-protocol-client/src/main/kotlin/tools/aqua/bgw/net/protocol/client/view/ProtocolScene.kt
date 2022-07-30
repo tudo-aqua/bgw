@@ -19,25 +19,29 @@ package tools.aqua.bgw.net.protocol.client.view
 
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.net.protocol.client.view.messageviews.ConnectedMessageView
 import tools.aqua.bgw.net.protocol.client.view.messageviews.MessageView
+import tools.aqua.bgw.net.protocol.client.view.messageviews.SpacerMessageView
 import tools.aqua.bgw.visual.ColorVisual
+import kotlin.math.min
+import kotlin.math.max
 
 class ProtocolScene : BoardGameScene(height = 800, width = 500, background = ColorVisual.WHITE) {
 
+  private var currentZMin = 0.0
   private val messagePane =
       GridPane<MessageView>(
               posX = 25, posY = 0, columns = 1, rows = 1, layoutFromCenter = false, spacing = 10)
-          .apply { onScroll = { posY += it.direction * 50 } }
+          .apply { onScroll = { posY = min(max(posY + it.direction * 50, currentZMin), -40.0)}}
 
   init {
     addComponents(messagePane)
-    messagePane[0, 0] = ConnectedMessageView()
+    messagePane[0, 0] = SpacerMessageView()
   }
 
   fun addMessage(msg: MessageView) {
     messagePane.grow(bottom = 1)
     messagePane[0, messagePane.rows - 1] = msg
     messagePane.posY -= msg.height + 10
+    currentZMin -= msg.height + 10
   }
 }
