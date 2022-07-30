@@ -19,21 +19,15 @@ package tools.aqua.bgw.net.protocol.client.view.messageviews
 
 import tools.aqua.bgw.components.uicomponents.Label
 
-class ConnectedMessageView : MessageView() {
-
-	private val messageHeight: Double = 50.0
-  private val colorStyle = "-fx-background-color: #00eaff;"
-
+class SpacerMessageView : MessageView() {
 	init {
-		height = messageHeight
+		height = 780.0
 		addAll(
 			Label(
 				posX = 0,
-				posY = height - messageHeight,
+				posY = 0,
 				width = width,
-				height = messageHeight,
-				text = "- Connected to server -").apply {
-				backgroundStyle = "$colorStyle$cornerStyle"
-			})
+				height = height)
+		)
 	}
 }
