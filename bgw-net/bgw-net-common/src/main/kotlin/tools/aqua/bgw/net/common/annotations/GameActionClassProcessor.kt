@@ -83,7 +83,7 @@ object GameActionClassProcessor {
   /** Filters [ClassPath] against blacklist [forbiddenPackagePrefix]. */
   private fun ClassPath.ClassInfo.isCandidate(): Boolean =
       packageName.startsWith("tools.aqua.bgw.examples") ||
-      packageName.startsWith("tools.aqua.bgw.net.protocol.client") ||
+          packageName.startsWith("tools.aqua.bgw.net.protocol.client") ||
           forbiddenPackagePrefix.none { packageName.startsWith(it) }
 
   /**

@@ -17,89 +17,88 @@
 
 package tools.aqua.bgw.net.protocol.client.view
 
+import java.awt.Color
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.net.protocol.client.service.NetworkService
 import tools.aqua.bgw.net.protocol.client.view.messageviews.*
 import tools.aqua.bgw.visual.ColorVisual
-import java.awt.Color
 
 class ProtocolClientView :
-	BoardGameApplication(width = 500, height = 815, windowTitle = "BGW Protocol Client") {
+    BoardGameApplication(width = 500, height = 815, windowTitle = "BGW Protocol Client") {
 
-	private val connectionScene: ConnectionScene = ConnectionScene()
-	private val protocolScene: ProtocolScene = ProtocolScene()
-	private val networkService: NetworkService = NetworkService(this)
+  private val connectionScene: ConnectionScene = ConnectionScene()
+  private val protocolScene: ProtocolScene = ProtocolScene()
+  private val networkService: NetworkService = NetworkService(this)
 
-	init {
-		background = ColorVisual.WHITE
+  init {
+    background = ColorVisual.WHITE
 
-		connectionScene.buttonHost.onMouseClicked = {
-			networkService.hostGame(
-				address = connectionScene.addressText.text,
-				secret = connectionScene.secretText.text,
-				gameID = connectionScene.gameIDText.text,
-				sessionID = connectionScene.sessionIDText.text,
-			)
-		}
-		connectionScene.buttonJoin.onMouseClicked = {
-			networkService.joinGame(
-				address = connectionScene.addressText.text,
-				secret = connectionScene.secretText.text,
-				sessionID = connectionScene.sessionIDText.text,
-			)
-		}
+    connectionScene.buttonHost.onMouseClicked =
+        {
+          networkService.hostGame(
+              address = connectionScene.addressText.text,
+              secret = connectionScene.secretText.text,
+              gameID = connectionScene.gameIDText.text,
+              sessionID = connectionScene.sessionIDText.text,
+          )
+        }
+    connectionScene.buttonJoin.onMouseClicked =
+        {
+          networkService.joinGame(
+              address = connectionScene.addressText.text,
+              secret = connectionScene.secretText.text,
+              sessionID = connectionScene.sessionIDText.text,
+          )
+        }
 
-		showGameScene(connectionScene)
-		show()
-	}
+    showGameScene(connectionScene)
+    show()
+  }
 
-	fun onConnectionEstablished() {
-		runOnGUIThread {
-			showGameScene(protocolScene)
-			protocolScene.addMessage(ConnectedMessageView())
-		}
-	}
+  fun onConnectionEstablished() {
+    runOnGUIThread {
+      showGameScene(protocolScene)
+      protocolScene.addMessage(ConnectedMessageView())
+    }
+  }
 
-	fun onGameCreated(sessionID: String) {
-		runOnGUIThread {
-			protocolScene.addMessage(GameHostedMessageView(sessionID))
-			protocolScene.addMessage(BeginMessageView())
-		}
-	}
+  fun onGameCreated(sessionID: String) {
+    runOnGUIThread {
+      protocolScene.addMessage(GameHostedMessageView(sessionID))
+      protocolScene.addMessage(BeginMessageView())
+    }
+  }
 
-	fun onGameJoined(sessionID: String) {
-		runOnGUIThread {
-			protocolScene.addMessage(GameJoinedMessageView(sessionID))
-			protocolScene.addMessage(BeginMessageView())
-		}
-	}
+  fun onGameJoined(sessionID: String) {
+    runOnGUIThread {
+      protocolScene.addMessage(GameJoinedMessageView(sessionID))
+      protocolScene.addMessage(BeginMessageView())
+    }
+  }
 
-	fun onPlayerJoined(player: String) {
-		runOnGUIThread {
-			protocolScene.addMessage(PlayerJoinedMessageView(player))
-		}
-	}
+  fun onPlayerJoined(player: String) {
+    runOnGUIThread { protocolScene.addMessage(PlayerJoinedMessageView(player)) }
+  }
 
-	fun onPlayerLeft(player: String) {
-		runOnGUIThread {
-			protocolScene.addMessage(PlayerLeftMessageView(player))
-		}
-	}
+  fun onPlayerLeft(player: String) {
+    runOnGUIThread { protocolScene.addMessage(PlayerLeftMessageView(player)) }
+  }
 
-	fun onGameActionReceived(
-		timestamp: String,
-		player: String,
-		playerNameColor: Color,
-		messageType: String,
-		message: List<String>
-	) {
-		runOnGUIThread {
-			protocolScene.addMessage(GameMessageView(
-        timestamp = timestamp,
-				player = player,
-				playerNameColor = playerNameColor,
-				messageType = messageType,
-				text = message))
-		}
-	}
+  fun onGameActionReceived(
+      timestamp: String,
+      player: String,
+      playerNameColor: Color,
+      messageType: String,
+      message: List<String>
+  ) {
+    runOnGUIThread {
+      protocolScene.addMessage(
+          GameMessageView(
+              timestamp = timestamp,
+              player = player,
+              playerNameColor = playerNameColor,
+              messageType = messageType,
+              text = message))
+    }
+  }
 }

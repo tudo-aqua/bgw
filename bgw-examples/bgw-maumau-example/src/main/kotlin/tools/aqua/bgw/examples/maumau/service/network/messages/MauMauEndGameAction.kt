@@ -25,6 +25,7 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
  *
  * @property winner The winner name.
  */
-@GameActionClass data class MauMauEndGameAction(val winner: String) : GameAction() {
-	override fun printToString(): String = "$winner has won the game!"
+@GameActionClass
+data class MauMauEndGameAction(val winner: String) : GameAction() {
+  override fun printToString(): String = "$winner has won the game!"
 }

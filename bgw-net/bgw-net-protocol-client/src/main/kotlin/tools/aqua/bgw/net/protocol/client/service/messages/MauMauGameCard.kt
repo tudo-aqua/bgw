@@ -24,23 +24,25 @@ package tools.aqua.bgw.net.protocol.client.service.messages
  * @property value The card value.
  */
 data class MauMauGameCard(val suit: String, val value: String) {
-	override fun toString(): String {
-		val cardSuit = when (suit) {
-			"D" -> "Diamonds"
-			"H" -> "Hearts"
-			"S" -> "Spades"
-			"C" -> "Clubs"
-			else -> suit
-		}
+  override fun toString(): String {
+    val cardSuit =
+        when (suit) {
+          "D" -> "Diamonds"
+          "H" -> "Hearts"
+          "S" -> "Spades"
+          "C" -> "Clubs"
+          else -> suit
+        }
 
-		val cardValue = when (value) {
-			"A" -> "Ace"
-			"J" -> "Jack"
-			"Q" -> "Queen"
-			"K" -> "King"
-			else -> value
-		}
+    val cardValue =
+        when (value) {
+          "A" -> "Ace"
+          "J" -> "Jack"
+          "Q" -> "Queen"
+          "K" -> "King"
+          else -> value
+        }
 
-		return "$cardValue of $cardSuit"
-	}
+    return "$cardValue of $cardSuit"
+  }
 }

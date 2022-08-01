@@ -26,63 +26,50 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
 
   /** [TextField] for the hostname or address and port. */
   val addressText: TextField =
-    TextField(
-      posX = 50,
-      posY = 50,
-      height = 40,
-      width = width - 100,
-      text = "sopra.cs.tu-dortmund.de:80/bgw-net/connect",
-      prompt = "Server address")
+      TextField(
+          posX = 50,
+          posY = 50,
+          height = 40,
+          width = width - 100,
+          text = "sopra.cs.tu-dortmund.de:80/bgw-net/connect",
+          prompt = "Server address")
 
   /** [TextField] for the network secret. */
-  val secretText: TextField = TextField(
-    posX = 50,
-    posY = 100,
-    height = 40,
-    width = width - 100,
-    text = "",
-    prompt = "Secret"
-  )
+  val secretText: TextField =
+      TextField(
+          posX = 50, posY = 100, height = 40, width = width - 100, text = "", prompt = "Secret")
 
   /** [TextField] for the network secret. */
-  val gameIDText: TextField = TextField(
-    posX = 50,
-    posY = 150,
-    height = 40,
-    width = width - 100,
-    text = "",
-    prompt = "Game ID (hosting only)"
-  )
+  val gameIDText: TextField =
+      TextField(
+          posX = 50,
+          posY = 150,
+          height = 40,
+          width = width - 100,
+          text = "",
+          prompt = "Game ID (hosting only)")
 
   /** [TextField] for the session id. */
   val sessionIDText: TextField =
-    TextField(
-      posX = 50,
-      posY = 200,
-      height = 40,
-      width = width - 100,
-      prompt = "sessionID"
-    )
+      TextField(posX = 50, posY = 200, height = 40, width = width - 100, prompt = "sessionID")
 
   val buttonHost: Button =
-    Button(
-      posX = 50,
-      posY = 250,
-      height = 40,
-      width = width / 2 - 60,
-      text = "Host",
-      visual = ColorVisual.LIGHT_GRAY
-    )
+      Button(
+          posX = 50,
+          posY = 250,
+          height = 40,
+          width = width / 2 - 60,
+          text = "Host",
+          visual = ColorVisual.LIGHT_GRAY)
 
   val buttonJoin: Button =
-    Button(
-      posX = width / 2 + 10,
-      posY = 250,
-      height = 40,
-      width = width / 2 - 60,
-      text = "Join",
-      visual = ColorVisual.LIGHT_GRAY
-    )
+      Button(
+          posX = width / 2 + 10,
+          posY = 250,
+          height = 40,
+          width = width / 2 - 60,
+          text = "Join",
+          visual = ColorVisual.LIGHT_GRAY)
 
   init {
     addComponents(addressText, secretText, gameIDText, sessionIDText, buttonHost, buttonJoin)

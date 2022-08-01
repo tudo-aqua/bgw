@@ -127,7 +127,8 @@ class MessageService(
     val game = gameService.getBySessionID(msg.sessionID)
     val joinGameResponseStatus = gameService.joinGame(player, msg.sessionID)
 
-    session.sendMessage(JoinGameResponse(joinGameResponseStatus, game?.sessionID, game?.greetingMessage ?: ""))
+    session.sendMessage(
+        JoinGameResponse(joinGameResponseStatus, game?.sessionID, game?.greetingMessage ?: ""))
 
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
       val notification = PlayerJoinedNotification(msg.greeting, player.name)

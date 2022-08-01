@@ -28,18 +28,17 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
  */
 @GameActionClass
 data class MauMauGameAction(val action: String, val card: MauMauGameCard? = null) : GameAction() {
-	override fun printToString(): String {
-		val text = when(action) {
-			"PLAY_CARD" -> "Played the $card."
-			"DRAW_CARD" -> "Drawn the $card from the stack."
-			"OPPONENT_DRAW_TWO_CARDS" -> "The opponent must take two cards."
-			"REQUEST_SUIT_SELECTION" -> "Requesting suit ${card?.suit}."
-			"END_TURN" -> "End of turn."
-			else -> ""
-		}
+  override fun printToString(): String {
+    val text =
+        when (action) {
+          "PLAY_CARD" -> "Played the $card."
+          "DRAW_CARD" -> "Drawn the $card from the stack."
+          "OPPONENT_DRAW_TWO_CARDS" -> "The opponent must take two cards."
+          "REQUEST_SUIT_SELECTION" -> "Requesting suit ${card?.suit}."
+          "END_TURN" -> "End of turn."
+          else -> ""
+        }
 
-		return "Type: $action\n" +
-				"Card: $card\n" +
-				text
-	}
+    return "Type: $action\n" + "Card: $card\n" + text
+  }
 }

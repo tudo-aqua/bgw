@@ -24,4 +24,8 @@ package tools.aqua.bgw.net.common.response
  * @property sessionID Session ID for this game. ``null`` if joining was not successful.
  * @property message The Welcome message from the host.
  */
-class JoinGameResponse(val status: JoinGameResponseStatus, val sessionID: String?, val message: String) : Response()
+class JoinGameResponse(
+    val status: JoinGameResponseStatus,
+    val sessionID: String?,
+    val message: String
+) : Response()

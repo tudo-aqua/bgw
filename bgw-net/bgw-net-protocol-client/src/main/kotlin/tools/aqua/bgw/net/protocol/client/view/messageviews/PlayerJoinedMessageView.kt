@@ -21,19 +21,18 @@ import tools.aqua.bgw.components.uicomponents.Label
 
 class PlayerJoinedMessageView(player: String) : MessageView() {
 
-	private val messageHeight: Double = 50.0
+  private val messageHeight: Double = 50.0
   private val colorStyle = "-fx-background-color: #307C30;"
 
-	init {
-		height = messageHeight
-		addAll(
-			Label(
-				posX = 0,
-				posY = height - messageHeight,
-				width = width,
-				height = messageHeight,
-				text = "- Player \"$player\" has joined the room -").apply {
-				backgroundStyle = "$colorStyle$cornerStyle"
-			})
-	}
+  init {
+    height = messageHeight
+    addAll(
+        Label(
+                posX = 0,
+                posY = height - messageHeight,
+                width = width,
+                height = messageHeight,
+                text = "- Player \"$player\" has joined the room -")
+            .apply { backgroundStyle = "$colorStyle$cornerStyle" })
+  }
 }

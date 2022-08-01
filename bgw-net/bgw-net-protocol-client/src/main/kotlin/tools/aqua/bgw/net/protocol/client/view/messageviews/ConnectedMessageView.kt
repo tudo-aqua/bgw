@@ -21,19 +21,18 @@ import tools.aqua.bgw.components.uicomponents.Label
 
 class ConnectedMessageView : MessageView() {
 
-	private val messageHeight: Double = 50.0
+  private val messageHeight: Double = 50.0
   private val colorStyle = "-fx-background-color: #00eaff;"
 
-	init {
-		height = messageHeight
-		addAll(
-			Label(
-				posX = 0,
-				posY = height - messageHeight,
-				width = width,
-				height = messageHeight,
-				text = "- Connected to server -").apply {
-				backgroundStyle = "$colorStyle$cornerStyle"
-			})
-	}
+  init {
+    height = messageHeight
+    addAll(
+        Label(
+                posX = 0,
+                posY = height - messageHeight,
+                width = width,
+                height = messageHeight,
+                text = "- Connected to server -")
+            .apply { backgroundStyle = "$colorStyle$cornerStyle" })
+  }
 }
