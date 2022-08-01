@@ -1,7 +1,7 @@
 # BoardGameWork
 
 [![Build](https://github.com/tudo-aqua/bgw-core/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/bgw-core/actions)
-[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://tudo-aqua.github.io/bgw/detekt)
+[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://github.com/tudo-aqua/bgw/security/code-scanning)
 [![GitHub-Pages](https://github.com/tudo-aqua/bgw-core/actions/workflows/github-pages.yml/badge.svg)](https://tudo-aqua.github.io/bgw/)
 
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-gui&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-gui)
@@ -16,7 +16,7 @@
 
 BoardGameWork is a framework for creating 2D board game applications.
 
-Read on [how to get started](https://tudo-aqua.github.io/bgw/), or take a look at the complete [API documentation](https://tudo-aqua.github.io/bgw/kotlin-docs/).
+Read on [how to get started](https://tudo-aqua.github.io/bgw/), or take a look at the complete API documentation for [bgw-gui](https://tudo-aqua.github.io/bgw/bgw-gui-kdoc/index.html), [bgw-net-common](https://tudo-aqua.github.io/bgw/bgw-net-common-kdoc/index.html), or [bgw-net-client](https://tudo-aqua.github.io/bgw/bgw-net-client-kdoc/index.html).
 
 Examples are available for [MauMau](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-maumau-example), [Sudoku](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-sudoku-example) and [Tetris](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-tetris-example).
 
