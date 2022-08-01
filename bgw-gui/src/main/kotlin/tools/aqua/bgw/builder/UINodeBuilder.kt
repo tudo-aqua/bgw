@@ -30,6 +30,9 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.ProgressBar as FXProgressBar
 import javafx.scene.control.TextArea as FXTextArea
 import javafx.scene.control.TextField as FXTextField
+import javafx.scene.control.TextInputControl as FXTextInputControl
+import javafx.scene.input.KeyCode as FXKeyCode
+import javafx.scene.input.KeyEvent as FXKeyEvent
 import javafx.scene.layout.Region
 import javafx.util.Callback
 import tools.aqua.bgw.builder.FXConverters.toFXColor
@@ -78,6 +81,7 @@ object UINodeBuilder {
       FXTextArea(textArea.textProperty.value).apply {
         textProperty().bindTextProperty(textArea)
         promptTextProperty().bindPromptProperty(textArea)
+        disableUndo()
       }
 
   /** Builds [TextField]. */
@@ -85,6 +89,7 @@ object UINodeBuilder {
       FXTextField(textField.textProperty.value).apply {
         textProperty().bindTextProperty(textField)
         promptTextProperty().bindPromptProperty(textField)
+        disableUndo()
       }
 
   /** Builds [ComboBox]. */
@@ -101,7 +106,8 @@ object UINodeBuilder {
         }
         comboBox.selectedItemProperty.setInternalListenerAndInvoke(comboBox.selectedItem) {
             _,
-            newValue ->
+            newValue,
+          ->
           if (newValue != null) {
             selectionModel.select(newValue)
           }
@@ -229,6 +235,11 @@ object UINodeBuilder {
   // endregion
 
   // region Helper
+  /** Disables the default undo operation on [FXTextInputControl]s on ctrl + z,. */
+  private fun FXTextInputControl.disableUndo() {
+    addEventFilter(FXKeyEvent.ANY) { if (it.code == FXKeyCode.Z && it.isShortcutDown) it.consume() }
+  }
+
   /** Sets [ComboBox] cell factory . */
   private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
     cellFactory = Callback { buildListCell(comboBox) }
