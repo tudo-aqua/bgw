@@ -294,11 +294,4 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
     return mutableListOf(node) + findPathToChild(parent)
   }
-
-  /** Removes [child] from the root. */
-  internal fun removeChild(child: ComponentView) {
-    try {
-      @Suppress("UNCHECKED_CAST") this.removeComponents(child as T)
-    } catch (_: ClassCastException) {}
-  }
 }
