@@ -109,6 +109,6 @@ class GameMessageView(
   }
 
   companion object {
-    internal val textFont: Font = Font(size = 12)
+    internal val textFont: Font = Font(size = 12, color = Color.WHITE)
   }
 }

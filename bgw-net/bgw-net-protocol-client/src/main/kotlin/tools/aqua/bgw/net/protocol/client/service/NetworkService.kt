@@ -30,9 +30,14 @@ import tools.aqua.bgw.net.protocol.client.view.messageviews.GameMessageView
 class NetworkService(private val view: ProtocolClientView) {
 
   private var client: ProtocolBoardGameClient? = null
-  private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+  private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SS")
   private val playerColors: MutableList<Color> =
-      mutableListOf(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW)
+      mutableListOf(
+          Color(100, 0, 0),
+          Color(0, 0, 100),
+          Color(0, 100, 0),
+          Color(130, 130, 0),
+      )
   private val colorMap: MutableMap<String, Color> = mutableMapOf()
 
   // region Connection

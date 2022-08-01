@@ -17,7 +17,9 @@
 
 package tools.aqua.bgw.net.protocol.client.view.messageviews
 
+import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.util.Font
 
 class ConnectedMessageView : MessageView() {
 
@@ -32,7 +34,8 @@ class ConnectedMessageView : MessageView() {
                 posY = height - messageHeight,
                 width = width,
                 height = messageHeight,
-                text = "- Connected to server -")
+                text = "- Connected to server -",
+                font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.SEMI_BOLD))
             .apply { backgroundStyle = "$colorStyle$cornerStyle" })
   }
 }
