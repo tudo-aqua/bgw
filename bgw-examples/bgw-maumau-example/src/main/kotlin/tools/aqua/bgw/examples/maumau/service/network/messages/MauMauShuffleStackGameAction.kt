@@ -30,4 +30,7 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
 data class MauMauShuffleStackGameAction(
     val drawStack: List<MauMauGameCard>,
     val gameStack: MauMauGameCard,
-) : GameAction()
+) : GameAction() {
+  override fun printToString(): String =
+      "Draw stack: ${drawStack.joinToString(", ")}\n" + "Game stack: $gameStack"
+}

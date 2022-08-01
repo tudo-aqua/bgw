@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+plugins { id("tools.aqua.bgw.executable-conventions") }
 
-/**
- * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
- *
- * @property status Status code.
- * @property sessionID Session ID for this game. ``null`` if joining was not successful.
- * @property message The Welcome message from the host.
- */
-class JoinGameResponse(
-    val status: JoinGameResponseStatus,
-    val sessionID: String?,
-    val message: String
-) : Response()
+mavenMetadata {
+  name.set("BoardGameWork Network Protocol Client")
+  description.set("A framework for board game applications.")
+}
+
+dependencies {
+  implementation(project(":bgw-gui"))
+  implementation(project(":bgw-net:bgw-net-common"))
+  implementation(project(":bgw-net:bgw-net-client"))
+}
+
+application { mainClass.set("tools.aqua.bgw.examples.tetris.main.MainKt") }

@@ -15,17 +15,11 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.protocol.client.view.messageviews
 
-/**
- * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
- *
- * @property status Status code.
- * @property sessionID Session ID for this game. ``null`` if joining was not successful.
- * @property message The Welcome message from the host.
- */
-class JoinGameResponse(
-    val status: JoinGameResponseStatus,
-    val sessionID: String?,
-    val message: String
-) : Response()
+import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.components.uicomponents.Label
+
+sealed class MessageView : Pane<Label>(posX = 0, posY = 0, height = 0, width = 450) {
+  protected val cornerStyle: String = "-fx-background-radius: 10px;"
+}

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service.network.messages
+package tools.aqua.bgw.net.protocol.client.service.messages
 
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionClass

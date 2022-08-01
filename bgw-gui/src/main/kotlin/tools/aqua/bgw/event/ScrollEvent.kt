@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The BoardGameWork Authors
+ * Copyright 2021-2022 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +15,23 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+@file:Suppress("unused")
+
+package tools.aqua.bgw.event
 
 /**
- * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
+ * Event that gets raised for mouse wheel inputs.
  *
- * @property status Status code.
- * @property sessionID Session ID for this game. ``null`` if joining was not successful.
- * @property message The Welcome message from the host.
+ * @constructor Creates a [ScrollEvent].
+ *
+ * @property direction The scroll direction.
+ * @property controlDown Whether control key was pressed.
+ * @property shiftDown Whether shift key was pressed.
+ * @property altDown Whether alt key was pressed.
  */
-class JoinGameResponse(
-    val status: JoinGameResponseStatus,
-    val sessionID: String?,
-    val message: String
-) : Response()
+class ScrollEvent(
+    val direction: ScrollDirection,
+    val isControlDown: Boolean,
+    val isShiftDown: Boolean,
+    val isAltDown: Boolean
+) : InputEvent()

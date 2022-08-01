@@ -15,30 +15,29 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.examples.maumau.service.network.messages
+package tools.aqua.bgw.net.protocol.client.service.messages
 
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.annotations.GameActionClass
 
 /**
- * GameActionMessage data class for serialization.
+ * InitGameMessage data class for serialization.
  *
- * @property action Associated game action.
- * @property card Played card.
+ * @property hostCards [List] of host player's cards.
+ * @property yourCards [List] of your cards.
+ * @property drawStack [List] of draw stack cards.
+ * @property gameStack The game stack card.
  */
 @GameActionClass
-data class MauMauGameAction(val action: String, val card: MauMauGameCard? = null) : GameAction() {
-  override fun printToString(): String {
-    val text =
-        when (action) {
-          "PLAY_CARD" -> "Played the $card."
-          "DRAW_CARD" -> "Drawn the $card from the stack."
-          "OPPONENT_DRAW_TWO_CARDS" -> "The opponent must take two cards."
-          "REQUEST_SUIT_SELECTION" -> "Requesting suit ${card?.suit}."
-          "END_TURN" -> "End of turn."
-          else -> ""
-        }
-
-    return "Type: $action\n" + "Card: $card\n" + text
-  }
+data class MauMauInitGameAction(
+    val hostCards: List<MauMauGameCard>,
+    val yourCards: List<MauMauGameCard>,
+    val drawStack: List<MauMauGameCard>,
+    val gameStack: MauMauGameCard,
+) : GameAction() {
+  override fun printToString(): String =
+      "Host cards: ${hostCards.joinToString(", ")}\n" +
+          "Your cards: ${yourCards.joinToString(", ")}\n" +
+          "Draw stack: ${drawStack.joinToString(", ")}\n" +
+          "Game stack: $gameStack"
 }

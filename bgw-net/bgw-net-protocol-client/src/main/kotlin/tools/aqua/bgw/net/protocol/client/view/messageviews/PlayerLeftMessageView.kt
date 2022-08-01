@@ -15,17 +15,24 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.protocol.client.view.messageviews
 
-/**
- * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
- *
- * @property status Status code.
- * @property sessionID Session ID for this game. ``null`` if joining was not successful.
- * @property message The Welcome message from the host.
- */
-class JoinGameResponse(
-    val status: JoinGameResponseStatus,
-    val sessionID: String?,
-    val message: String
-) : Response()
+import tools.aqua.bgw.components.uicomponents.Label
+
+class PlayerLeftMessageView(player: String) : MessageView() {
+
+  private val messageHeight: Double = 50.0
+  private val colorStyle = "-fx-background-color: #B15B2E;"
+
+  init {
+    height = messageHeight
+    addAll(
+        Label(
+                posX = 0,
+                posY = height - messageHeight,
+                width = width,
+                height = messageHeight,
+                text = "- Player \"$player\" has left the room -")
+            .apply { backgroundStyle = "$colorStyle$cornerStyle" })
+  }
+}

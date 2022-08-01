@@ -15,17 +15,25 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.event
 
-/**
- * Response upon [tools.aqua.bgw.net.common.request.JoinGameMessage].
- *
- * @property status Status code.
- * @property sessionID Session ID for this game. ``null`` if joining was not successful.
- * @property message The Welcome message from the host.
- */
-class JoinGameResponse(
-    val status: JoinGameResponseStatus,
-    val sessionID: String?,
-    val message: String
-) : Response()
+/** Enum indicating direction of a [ScrollEvent]. */
+enum class ScrollDirection {
+  /** Upwards. */
+  UP,
+
+  /** Downwards. */
+  DOWN;
+
+  /**
+   * Multiplies [scalar] by 1 ([UP]) or -1 ([DOWN])
+   *
+   * @param scalar Scalar to be multiplied.
+   */
+  operator fun times(scalar: Number): Double = scalar.toDouble() * (if (this == UP) 1 else -1)
+
+  companion object {
+    /** Returns [ScrollDirection] based on scrolled delta value. */
+    internal fun of(delta: Double): ScrollDirection = if (delta < 0) DOWN else UP
+  }
+}

@@ -15,20 +15,24 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common
+package tools.aqua.bgw.net.protocol.client.view.messageviews
 
-import tools.aqua.bgw.net.common.annotations.GameActionClass
-import tools.aqua.bgw.net.common.annotations.GameActionReceiver
+import tools.aqua.bgw.components.uicomponents.Label
 
-/**
- * Baseclass for all Game action classes.
- *
- * Extend this class in order to create data classes that can be sent by a BoardGameClient. All
- * implementations additionally need the [GameActionClass] annotation to work properly.
- *
- * @see GameActionReceiver
- */
-@GameActionClass
-abstract class GameAction {
-  abstract fun printToString(): String
+class GameHostedMessageView(sessionID: String) : MessageView() {
+
+  private val messageHeight: Double = 50.0
+  private val colorStyle = "-fx-background-color: #ffee00;"
+
+  init {
+    height = messageHeight
+    addAll(
+        Label(
+                posX = 0,
+                posY = height - messageHeight,
+                width = width,
+                height = messageHeight,
+                text = "- Successfully hosted game with sessionID \"$sessionID\" -")
+            .apply { backgroundStyle = "$colorStyle$cornerStyle" })
+  }
 }
