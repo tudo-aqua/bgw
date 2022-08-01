@@ -21,6 +21,7 @@ package tools.aqua.bgw.visual
 
 import java.awt.Color
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 
 /**
  * A solid color visual. Displays a rectangle filled with the given [color].
@@ -40,6 +41,24 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    * @see color
    */
   val colorProperty: Property<Color> = Property(color)
+
+  /**
+   * [Property] for the css style that gets applied to this [ColorVisual].
+   *
+   * @see style
+   */
+  val styleProperty: StringProperty = StringProperty("")
+
+  /**
+   * Css style that gets applied to this [ColorVisual].
+   *
+   * @see styleProperty
+   */
+  var style: String
+    get() = styleProperty.value
+    set(value) {
+      styleProperty.value = value
+    }
 
   /**
    * The displayed [Color] of this [Visual].
@@ -73,6 +92,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
   override fun copy(): ColorVisual =
       ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {
         transparency = this@ColorVisual.transparency
+        style = this@ColorVisual.style
       }
 
   companion object {
