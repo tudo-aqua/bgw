@@ -218,3 +218,4 @@ $RECYCLE.BIN/
 
 webpack.generated.js
 generated-flow-imports.js
+/.run/
