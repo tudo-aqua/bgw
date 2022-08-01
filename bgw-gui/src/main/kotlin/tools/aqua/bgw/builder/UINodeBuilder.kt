@@ -113,6 +113,8 @@ object UINodeBuilder {
           buttonCell.textFill = comboBox.font.color.toFXColor()
           setCellFactory(comboBox)
         }
+
+        comboBox.formatFunctionProperty.guiListener = { _, _ -> setCellFactory(comboBox) }
       }
 
   /** Builds [CheckBox]. */
@@ -131,7 +133,8 @@ object UINodeBuilder {
       FXColorPicker().apply {
         colorPicker.selectedColorProperty.setGUIListenerAndInvoke(colorPicker.selectedColor) {
             _,
-            newValue ->
+            newValue,
+          ->
           value = newValue.toFXColor()
         }
         valueProperty().addListener { _, _, nV ->
@@ -228,19 +231,21 @@ object UINodeBuilder {
   // region Helper
   /** Sets [ComboBox] cell factory . */
   private fun <T> JFXComboBox<T>.setCellFactory(comboBox: ComboBox<T>) {
-    cellFactory =
-        Callback {
-          object : ListCell<T>() {
-            override fun updateItem(item: T, empty: Boolean) {
-              super.updateItem(item, empty)
-              this.style = comboBox.font.toFXFontCSS()
-              this.textFill = comboBox.font.color.toFXColor()
-              if (!empty) {
-                this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
-              }
-            }
+    cellFactory = Callback { buildListCell(comboBox) }
+    buttonCell = buildListCell(comboBox)
+  }
+
+  /** Creates [ComboBox] cell factory . */
+  private fun <T> buildListCell(comboBox: ComboBox<T>): ListCell<T> =
+      object : ListCell<T>() {
+        override fun updateItem(item: T, empty: Boolean) {
+          super.updateItem(item, empty)
+          this.style = comboBox.font.toFXFontCSS()
+          this.textFill = comboBox.font.color.toFXColor()
+          if (!empty) {
+            this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
           }
         }
-  }
+      }
   // endregion
 }
