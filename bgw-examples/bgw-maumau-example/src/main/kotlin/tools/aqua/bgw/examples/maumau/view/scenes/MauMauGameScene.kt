@@ -61,6 +61,24 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
               alignment = Alignment.CENTER,
               visual = ColorVisual(255, 255, 255, 50))
           .apply { rotation = 180.0 }
+
+  var currentPlayerName: Label =
+      Label(
+          height = 220,
+          width = 200,
+          posX = 350,
+          posY = 750,
+          alignment = Alignment.CENTER_RIGHT,
+          font = Font(size = 16, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD))
+
+  var otherPlayerName: Label =
+      Label(
+          height = 220,
+          width = 200,
+          posX = 350,
+          posY = 50,
+          alignment = Alignment.CENTER_RIGHT,
+          font = Font(size = 16, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD))
   // endregion
 
   // region Stacks
@@ -196,6 +214,8 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
         gameStack,
         currentPlayerHand,
         otherPlayerHand,
+        currentPlayerName,
+        otherPlayerName,
         drawStackInfo,
         gameStackInfo,
         waitForOpponentLabel,

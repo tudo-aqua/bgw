@@ -78,7 +78,10 @@ class MauMauBoardGameClient(
   override fun onJoinGameResponse(response: JoinGameResponse) {
     BoardGameApplication.runOnGUIThread {
       when (response.status) {
-        JoinGameResponseStatus.SUCCESS -> view.onJoinGameSuccess()
+        JoinGameResponseStatus.SUCCESS -> {
+          logicController.game.players[1].name = response.opponents.firstOrNull() ?: "Host"
+          view.onJoinGameSuccess()
+        }
         JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
             view.onCreateGameError("You are already in a game.")
         JoinGameResponseStatus.INVALID_SESSION_ID -> view.onCreateGameError("Session id invalid.")

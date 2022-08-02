@@ -22,7 +22,6 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
-import tools.aqua.bgw.examples.maumau.entity.MauMauPlayer
 import tools.aqua.bgw.examples.maumau.service.LogicController
 import tools.aqua.bgw.examples.maumau.view.scenes.*
 import tools.aqua.bgw.util.BidirectionalMap
@@ -193,7 +192,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
           val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 
           logicController.networkService.hostGame(address, secret, name, sessionID)
-          logicController.game.players[0] = MauMauPlayer(name)
+          logicController.game.players[0].name = name
         }
 
     mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
@@ -209,6 +208,7 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
           val sessionID = mauMauJoinGameMenuScene.sessionIDText.text.trim()
 
           logicController.networkService.joinGame(address, secret, name, sessionID)
+          logicController.game.players[0].name = name
         }
 
     mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }

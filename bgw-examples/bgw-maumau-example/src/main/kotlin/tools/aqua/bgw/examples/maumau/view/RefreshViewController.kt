@@ -322,6 +322,9 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
           viewController.cardMap.forward(game.players[1].hand.cards[i]).apply { showBack() })
     }
 
+    viewController.mauMauGameScene.currentPlayerName.text = game.players[0].name
+    viewController.mauMauGameScene.otherPlayerName.text = game.players[1].name
+
     // Add EventHandler for cards on Hand
     viewController.mauMauGameScene.currentPlayerHand.components.forEach {
       it.addInteraction()

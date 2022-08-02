@@ -22,7 +22,7 @@ package tools.aqua.bgw.examples.maumau.entity
  *
  * @property name Player name.
  */
-data class MauMauPlayer(val name: String) {
+data class MauMauPlayer(var name: String) {
 
   /** Instance of the player`s hand cards. */
   val hand: MauMauHand = MauMauHand()

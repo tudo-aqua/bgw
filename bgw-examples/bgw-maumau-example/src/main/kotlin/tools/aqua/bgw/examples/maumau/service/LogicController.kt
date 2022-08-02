@@ -109,8 +109,8 @@ class LogicController(val view: Refreshable) {
    */
   fun initGame(message: MauMauInitGameAction) {
     initGame(
-        player1 = "Host",
-        player2 = "Opponent",
+        player1 = game.players[0].name,
+        player2 = game.players[1].name,
         drawStack = message.drawStack.map { it.deserialize() },
         gameStack = message.gameStack.deserialize(),
         hostCards = message.hostCards.map { it.deserialize() },
