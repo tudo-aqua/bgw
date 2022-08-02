@@ -160,5 +160,10 @@ class NetworkService(private val logicController: LogicController) {
   fun sendEndGame() {
     client?.sendGameActionMessage(MauMauEndGameAction(client?.playerName ?: "Your Opponent"))
   }
+
+  /** Disconnects from the server and closes web socket client. */
+  fun close() {
+    if (client?.isOpen == true) client?.disconnect()
+  }
   // endregion
 }

@@ -66,6 +66,9 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
     registerJoinMenuEvents()
     showGameScene(mauMauGameScene)
     showMenuScene(mauMauMenuScene)
+
+    onWindowClosed = { logicController.networkService.close() }
+
     show()
   }
 
