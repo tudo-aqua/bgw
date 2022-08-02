@@ -69,7 +69,6 @@ class ProtocolBoardGameClient(
   }
 
   override fun onGameActionReceived(message: GameAction, sender: String) {
-
     view.onGameActionReceived(
         timestamp = service.getTimestamp(),
         player = sender,

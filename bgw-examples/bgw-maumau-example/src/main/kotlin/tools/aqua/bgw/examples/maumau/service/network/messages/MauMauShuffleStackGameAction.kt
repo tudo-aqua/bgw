@@ -31,6 +31,6 @@ data class MauMauShuffleStackGameAction(
     val drawStack: List<MauMauGameCard>,
     val gameStack: MauMauGameCard,
 ) : GameAction() {
-  override fun printToString(): String =
+  override fun toString(): String =
       "Draw stack: ${drawStack.joinToString(", ")}\n" + "Game stack: $gameStack"
 }

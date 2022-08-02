@@ -28,7 +28,4 @@ import tools.aqua.bgw.net.common.annotations.GameActionReceiver
  *
  * @see GameActionReceiver
  */
-@GameActionClass
-abstract class GameAction {
-  abstract fun printToString(): String
-}
+@GameActionClass abstract class GameAction
