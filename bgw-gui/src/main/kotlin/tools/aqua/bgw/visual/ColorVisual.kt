@@ -73,6 +73,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
   override fun copy(): ColorVisual =
       ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {
         transparency = this@ColorVisual.transparency
+        style = this@ColorVisual.style
       }
 
   companion object {

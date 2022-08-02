@@ -20,6 +20,8 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
+import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.StringProperty
 
 /**
  * Baseclass for single layer visuals.
@@ -47,5 +49,31 @@ sealed class SingleLayerVisual : Visual() {
     get() = transparencyProperty.value
     set(value) {
       transparencyProperty.value = value
+    }
+
+  /**
+   * [Property] for the css style that gets applied to this [Visual].
+   *
+   * This gets applied last, so it may override any changes made via other fields and functions of
+   * this [Visual]. Critical failures, bugs or other undefined behaviour could occur when using this
+   * feature.
+   *
+   * @see style
+   */
+  val styleProperty: StringProperty = StringProperty("")
+
+  /**
+   * Css style that gets applied to this [Visual].
+   *
+   * This gets applied last, so it may override any changes made via other fields and functions of
+   * this [Visual]. Critical failures, bugs or other undefined behaviour could occur when using this
+   * feature.
+   *
+   * @see styleProperty
+   */
+  var style: String
+    get() = styleProperty.value
+    set(value) {
+      styleProperty.value = value
     }
 }

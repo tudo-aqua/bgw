@@ -140,5 +140,6 @@ open class TextVisual(
         alignment = this@TextVisual.alignment
         offsetX = this@TextVisual.offsetX
         offsetY = this@TextVisual.offsetY
+        style = this@TextVisual.style
       }
 }

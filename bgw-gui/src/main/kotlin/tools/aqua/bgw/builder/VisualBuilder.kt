@@ -69,12 +69,16 @@ object VisualBuilder {
   private fun buildColorVisual(visual: ColorVisual) =
       Pane().apply {
         visual.colorProperty.setGUIListenerAndInvoke(visual.color) { _, nV ->
-          style = "-fx-background-color: #${"%02x".format(nV.rgb).substring(2)};"
+          style = "-fx-background-color: #${"%02x".format(nV.rgb).substring(2)};${visual.style}"
           opacity = nV.alpha / MAX_HEX * visual.transparency
         }
 
         visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
           opacity = visual.color.alpha / MAX_HEX * nV
+        }
+
+        visual.styleProperty.setGUIListenerAndInvoke(visual.style) { _, nV ->
+          style = "-fx-background-color: #${"%02x".format(visual.color.rgb).substring(2)};${nV}"
         }
       }
 
@@ -91,6 +95,8 @@ object VisualBuilder {
           opacity = nV
         }
 
+        visual.styleProperty.setGUIListenerAndInvoke(visual.style) { _, nV -> style = nV }
+
         imageView.fitWidthProperty().bind(prefWidthProperty())
         imageView.fitHeightProperty().bind(prefHeightProperty())
         children.add(imageView)
@@ -103,21 +109,21 @@ object VisualBuilder {
             Label().apply {
               minWidth = 0.0
               minHeight = 0.0
-              visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, newValue ->
-                text = newValue
+              visual.textProperty.setGUIListenerAndInvoke(visual.text) { _, nV -> text = nV }
+              visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
+                opacity = nV
               }
-              visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, newValue
-                ->
-                opacity = newValue
+              visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, nV ->
+                style = nV.toFXFontCSS() + visual.style
+                textFill = nV.color.toFXColor()
               }
-              visual.fontProperty.setGUIListenerAndInvoke(visual.font) { _, newValue ->
-                style = newValue.toFXFontCSS()
-                textFill = newValue.color.toFXColor()
+              visual.styleProperty.setGUIListenerAndInvoke(visual.style) { _, nV ->
+                style = visual.font.toFXFontCSS() + nV
               }
               wrapTextProperty().set(true)
             }
-        visual.alignmentProperty.setGUIListenerAndInvoke(visual.alignment) { _, newValue ->
-          this.alignment = newValue.toFXPos()
+        visual.alignmentProperty.setGUIListenerAndInvoke(visual.alignment) { _, nV ->
+          this.alignment = nV.toFXPos()
         }
         visual.offsetXProperty.setGUIListenerAndInvoke(visual.offsetX) { _, _ ->
           this.newPadding(visual.offsetX, visual.offsetY)

@@ -125,7 +125,10 @@ open class ImageVisual(
 
   /** Copies this [ImageVisual] to a new object. */
   override fun copy(): ImageVisual =
-      ImageVisual(image).apply { transparency = this@ImageVisual.transparency }
+      ImageVisual(image).apply {
+        transparency = this@ImageVisual.transparency
+        style = this@ImageVisual.style
+      }
 
   companion object {
     /** Loads an image from a file. */
