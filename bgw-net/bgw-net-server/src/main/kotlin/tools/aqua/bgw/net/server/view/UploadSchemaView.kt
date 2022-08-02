@@ -73,6 +73,7 @@ class UploadSchemaView(
                 frontendService.allGameIds.map { gameId ->
                   Game(gameId, schemasByGameRepository.findAllByGameID(gameId))
                 })
+            validationService.flushSchemaCache()
             notificationService.notify("Schema was deleted!", NotificationVariant.LUMO_SUCCESS)
           }
         }

@@ -55,6 +55,8 @@ class BGWWebSocketConfigurer(
             .map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
-    keyValueRepository.save(KeyValueStoreEntry("Network secret", randomString))
+    if (!keyValueRepository.existsById("Network secret")) {
+      keyValueRepository.save(KeyValueStoreEntry("Network secret", randomString))
+    }
   }
 }
