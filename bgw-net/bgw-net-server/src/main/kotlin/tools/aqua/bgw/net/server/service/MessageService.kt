@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.common.Message
-import tools.aqua.bgw.net.common.message.*
+import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.Notification
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
@@ -125,10 +125,15 @@ class MessageService(
   private fun handleJoinGameMessage(session: WebSocketSession, msg: JoinGameMessage) {
     val player = session.player
     val game = gameService.getBySessionID(msg.sessionID)
+    val opponents = game?.players?.map { it.name } ?: emptyList()
     val joinGameResponseStatus = gameService.joinGame(player, msg.sessionID)
 
     session.sendMessage(
-        JoinGameResponse(joinGameResponseStatus, game?.sessionID, game?.greetingMessage ?: ""))
+        JoinGameResponse(
+            status = joinGameResponseStatus,
+            sessionID = game?.sessionID,
+            opponents = opponents,
+            message = game?.greetingMessage ?: ""))
 
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
       val notification = PlayerJoinedNotification(msg.greeting, player.name)
