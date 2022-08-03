@@ -19,6 +19,7 @@ package tools.aqua.bgw.net.protocol.client.view.messageviews
 
 import tools.aqua.bgw.components.uicomponents.Label
 
+/** [MessageView] as spacer. */
 class SpacerMessageView : MessageView() {
   init {
     height = 780.0

@@ -17,9 +17,9 @@
 
 package tools.aqua.bgw.net.protocol.client.main
 
-import tools.aqua.bgw.net.protocol.client.view.ProtocolClientView
+import tools.aqua.bgw.net.protocol.client.view.ProtocolClientApplication
 
 /** Entry point. */
 fun main() {
-  ProtocolClientView()
+  ProtocolClientApplication()
 }

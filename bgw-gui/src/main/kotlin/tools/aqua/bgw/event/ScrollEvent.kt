@@ -25,9 +25,9 @@ package tools.aqua.bgw.event
  * @constructor Creates a [ScrollEvent].
  *
  * @property direction The scroll direction.
- * @property controlDown Whether control key was pressed.
- * @property shiftDown Whether shift key was pressed.
- * @property altDown Whether alt key was pressed.
+ * @property isControlDown Whether control key was pressed.
+ * @property isShiftDown Whether shift key was pressed.
+ * @property isAltDown Whether alt key was pressed.
  */
 class ScrollEvent(
     val direction: ScrollDirection,

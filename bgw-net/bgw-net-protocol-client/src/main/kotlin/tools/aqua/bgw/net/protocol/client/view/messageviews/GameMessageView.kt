@@ -22,6 +22,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.util.Font
 
+/** [MessageView] displaying a GameMessage. */
 class GameMessageView(
     timestamp: String,
     player: String,
@@ -109,6 +110,6 @@ class GameMessageView(
   }
 
   companion object {
-    internal val textFont: Font = Font(size = 12)
+    internal val textFont: Font = Font(size = 12, color = Color.WHITE)
   }
 }
