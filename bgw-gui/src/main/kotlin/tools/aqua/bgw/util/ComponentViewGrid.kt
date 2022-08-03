@@ -65,8 +65,18 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    *
    * @param columnIndex Column index of cell.
    * @param rowIndex Row index of cell.
+   *
+   * @return Grid cell content.
+   *
+   * @throws IllegalArgumentException if [columnIndex] is out of grid range.
    */
-  operator fun get(columnIndex: Int, rowIndex: Int): T? = grid[columnIndex][rowIndex] as? T
+  operator fun get(columnIndex: Int, rowIndex: Int): T? {
+    require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
+      "Indices exceed grid bounds."
+    }
+
+    return grid[columnIndex][rowIndex] as? T
+  }
 
   /**
    * Sets grid cell content.
@@ -92,9 +102,18 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    *
    * @param columnIndex Column index of cell.
    * @param rowIndex Row index of cell.
+   *
+   * @return Grid cell centering mode.
+   *
+   * @throws IllegalArgumentException if [columnIndex] is out of grid range.
    */
-  fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment =
-      centeringModes[columnIndex][rowIndex]
+  fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment {
+    require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
+      "Indices exceed grid bounds."
+    }
+
+    return centeringModes[columnIndex][rowIndex]
+  }
 
   /**
    * Sets grid cell centering mode.
@@ -156,8 +175,16 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * Returns whole row as [List].
    *
    * @param rowIndex Row index.
+   *
+   * @return Row as [List].
+   *
+   * @throws IllegalArgumentException If [rowIndex] is out of grid range.
    */
-  fun getRow(rowIndex: Int): List<T?> = List(columns) { grid[it][rowIndex] as? T }
+  fun getRow(rowIndex: Int): List<T?> {
+    require(rowIndex in 0 until rows) { "Row index exceed grid bounds." }
+
+    return List(columns) { grid[it][rowIndex] as? T }
+  }
 
   /**
    * Returns [List] of all rows as another [List].
@@ -170,8 +197,16 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * Returns whole column as [List].
    *
    * @param columnIndex Column index.
+   *
+   * @return Column as [List].
+   *
+   * @throws IllegalArgumentException If [columnIndex] is out of grid range.
    */
-  fun getColumn(columnIndex: Int): List<T?> = grid[columnIndex].toList() as List<T?>
+  fun getColumn(columnIndex: Int): List<T?> {
+    require(columnIndex in 0 until columns) { "Row index exceed grid bounds." }
+
+    return grid[columnIndex].toList() as List<T?>
+  }
 
   /**
    * Returns [List] of all columns as another [List].
@@ -186,6 +221,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * Returns preferred column width ([COLUMN_WIDTH_AUTO] for auto).
    *
    * @param columnIndex Column index.
+   *
+   * @return Preferred column width for [columnIndex].
    *
    * @throws IllegalArgumentException If [columnIndex] is out of grid range.
    */
@@ -250,6 +287,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * Returns preferred row height ([ROW_HEIGHT_AUTO] for auto).
    *
    * @param rowIndex Row index.
+   *
+   * @return Preferred row height for [rowIndex].
    *
    * @throws IllegalArgumentException If [rowIndex] is out of grid range.
    */
@@ -318,6 +357,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @param right Amount of columns to add to the right.
    * @param top Amount of rows to add on the top.
    * @param bottom Amount of rows to add on the bottom.
+   *
+   * @return `true` iff the dimension of the grid has changed.
    *
    * @throws IllegalArgumentException If any parameter is negative.
    */
