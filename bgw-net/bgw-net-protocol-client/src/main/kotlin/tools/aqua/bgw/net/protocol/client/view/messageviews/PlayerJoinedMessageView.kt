@@ -21,6 +21,7 @@ import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.util.Font
 
+/** [MessageView] displaying "Player XXX has joined the room". */
 class PlayerJoinedMessageView(player: String) : MessageView() {
 
   private val messageHeight: Double = 50.0

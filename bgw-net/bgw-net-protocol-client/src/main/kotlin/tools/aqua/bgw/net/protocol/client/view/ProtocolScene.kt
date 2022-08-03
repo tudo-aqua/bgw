@@ -25,6 +25,7 @@ import tools.aqua.bgw.net.protocol.client.view.messageviews.MessageView
 import tools.aqua.bgw.net.protocol.client.view.messageviews.SpacerMessageView
 import tools.aqua.bgw.visual.ColorVisual
 
+/** The protocol screen. */
 class ProtocolScene : BoardGameScene(height = 800, width = 500, background = ColorVisual.WHITE) {
 
   private var currentZMin = 0.0
@@ -38,6 +39,7 @@ class ProtocolScene : BoardGameScene(height = 800, width = 500, background = Col
     messagePane[0, 0] = SpacerMessageView()
   }
 
+  /** Adds a [MessageView]. */
   fun addMessage(msg: MessageView) {
     messagePane.grow(bottom = 1)
     messagePane[0, messagePane.rows - 1] = msg

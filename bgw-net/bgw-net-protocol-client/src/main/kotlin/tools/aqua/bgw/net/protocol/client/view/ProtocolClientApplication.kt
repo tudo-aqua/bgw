@@ -23,7 +23,8 @@ import tools.aqua.bgw.net.protocol.client.service.NetworkService
 import tools.aqua.bgw.net.protocol.client.view.messageviews.*
 import tools.aqua.bgw.visual.ColorVisual
 
-class ProtocolClientView :
+/** The [BoardGameApplication] class. */
+class ProtocolClientApplication :
     BoardGameApplication(width = 500, height = 815, windowTitle = "BGW Protocol Client") {
 
   private val connectionScene: ConnectionScene = ConnectionScene()
@@ -55,6 +56,7 @@ class ProtocolClientView :
     show()
   }
 
+  /** Adds a [ConnectedMessageView]. */
   fun onConnectionEstablished() {
     runOnGUIThread {
       showGameScene(protocolScene)
@@ -62,6 +64,7 @@ class ProtocolClientView :
     }
   }
 
+  /** Adds a [GameHostedMessageView]. */
   fun onGameCreated(sessionID: String) {
     runOnGUIThread {
       protocolScene.addMessage(GameHostedMessageView(sessionID))
@@ -69,6 +72,7 @@ class ProtocolClientView :
     }
   }
 
+  /** Adds a [GameJoinedMessageView]. */
   fun onGameJoined(sessionID: String) {
     runOnGUIThread {
       protocolScene.addMessage(GameJoinedMessageView(sessionID))
@@ -76,14 +80,17 @@ class ProtocolClientView :
     }
   }
 
+  /** Adds a [PlayerJoinedMessageView]. */
   fun onPlayerJoined(player: String) {
     runOnGUIThread { protocolScene.addMessage(PlayerJoinedMessageView(player)) }
   }
 
+  /** Adds a [PlayerLeftMessageView]. */
   fun onPlayerLeft(player: String) {
     runOnGUIThread { protocolScene.addMessage(PlayerLeftMessageView(player)) }
   }
 
+  /** Adds a [GameMessageView]. */
   fun onGameActionReceived(
       timestamp: String,
       player: String,

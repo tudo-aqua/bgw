@@ -20,6 +20,7 @@ package tools.aqua.bgw.net.protocol.client.view.messageviews
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Label
 
+/** [MessageView] baseclass. */
 sealed class MessageView : Pane<Label>(posX = 0, posY = 0, height = 0, width = 450) {
   protected val cornerStyle: String = "-fx-background-radius: 10px;"
 }

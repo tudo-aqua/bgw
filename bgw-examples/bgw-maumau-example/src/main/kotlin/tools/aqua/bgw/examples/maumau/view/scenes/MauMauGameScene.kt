@@ -62,6 +62,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
               visual = ColorVisual(255, 255, 255, 50))
           .apply { rotation = 180.0 }
 
+  /** Player one's name. */
   var currentPlayerName: Label =
       Label(
           height = 220,
@@ -71,6 +72,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
           alignment = Alignment.CENTER_RIGHT,
           font = Font(size = 16, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD))
 
+  /** Player two's name. */
   var otherPlayerName: Label =
       Label(
           height = 220,

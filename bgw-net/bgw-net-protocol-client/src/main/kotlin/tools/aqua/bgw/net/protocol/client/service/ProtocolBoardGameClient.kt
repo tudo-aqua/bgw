@@ -26,18 +26,20 @@ import tools.aqua.bgw.net.common.response.CreateGameResponse
 import tools.aqua.bgw.net.common.response.CreateGameResponseStatus
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
-import tools.aqua.bgw.net.protocol.client.view.ProtocolClientView
+import tools.aqua.bgw.net.protocol.client.view.ProtocolClientApplication
 
 /**
  * [BoardGameClient] implementation for network communication.
  *
  * @param host Host address.
  * @param secret Network secret.
+ * @property view The [ProtocolClientApplication].
+ * @property service The [NetworkService].
  */
 class ProtocolBoardGameClient(
     host: String,
     secret: String,
-    val view: ProtocolClientView,
+    val view: ProtocolClientApplication,
     val service: NetworkService
 ) :
     BoardGameClient(

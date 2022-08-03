@@ -26,7 +26,7 @@ enum class ScrollDirection {
   DOWN;
 
   /**
-   * Multiplies [scalar] by 1 ([UP]) or -1 ([DOWN])
+   * Multiplies [scalar] by 1 ([UP]) or -1 ([DOWN]).
    *
    * @param scalar Scalar to be multiplied.
    */

@@ -21,6 +21,7 @@ import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.util.Font
 
+/** [MessageView] displaying "Successfully hosted game with sessionID XXX". */
 class GameHostedMessageView(sessionID: String) : MessageView() {
 
   private val messageHeight: Double = 50.0

@@ -21,6 +21,7 @@ import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.util.Font
 
+/** [MessageView] displaying "Player XXX has left the room". */
 class PlayerLeftMessageView(player: String) : MessageView() {
 
   private val messageHeight: Double = 50.0
