@@ -28,6 +28,9 @@ import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.AnimationFinishedEvent
 
@@ -160,26 +163,42 @@ object AnimationBuilder {
   /** Builds [FlipAnimation]. */
   private fun buildFlipAnimation(
       scene: Scene<out ComponentView>,
-      anim: FlipAnimation<*>
+      anim: FlipAnimation<out GameComponentView>
   ): Transition {
-    val node = mapNode(scene, anim.componentView)
-    val fromVisual = VisualBuilder.buildVisual(anim.fromVisual)
-    val toVisual = VisualBuilder.buildVisual(anim.toVisual).apply { scaleX = 0.0 }
+    val componentView = anim.componentView
+    val node = mapNode(scene, componentView)
 
     val animation1 =
-        ScaleTransition(Duration.millis(anim.duration / 2.0), fromVisual).apply {
+        ScaleTransition(Duration.millis(anim.duration / 2.0), node.children[0]).apply {
           fromX = 1.0
           toX = 0.0
         }
     val animation2 =
-        ScaleTransition(Duration.millis(anim.duration / 2.0), toVisual).apply {
+        ScaleTransition(Duration.millis(anim.duration / 2.0), node.children[0]).apply {
           fromX = 0.0
           toX = 1.0
         }
 
-    node.children[0] = fromVisual
+    when (componentView) {
+      is TokenView -> componentView.visual = anim.fromVisual
+      is DiceView -> componentView.visuals[componentView.currentSide] = anim.fromVisual
+      is CardView -> {
+        componentView.backVisual =
+            if (componentView.currentSide == CardView.CardSide.BACK) anim.fromVisual
+            else anim.toVisual
+        componentView.frontVisual =
+            if (componentView.currentSide == CardView.CardSide.FRONT) anim.fromVisual
+            else anim.toVisual
+      }
+    }
+
     animation1.setOnFinished {
-      node.children[0] = toVisual
+      when (componentView) {
+        is TokenView -> componentView.visual = anim.toVisual
+        is DiceView -> componentView.visuals[componentView.currentSide] = anim.toVisual
+        is CardView -> componentView.flip()
+      }
+
       animation2.play()
     }
 

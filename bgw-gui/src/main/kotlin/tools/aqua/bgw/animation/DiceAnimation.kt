@@ -47,4 +47,4 @@ class DiceAnimation<T : DiceView>(
     val toSide: Int,
     duration: Int = DEFAULT_ANIMATION_DURATION,
     speed: Int = DEFAULT_ANIMATION_SPEED
-) : SteppedComponentAnimation<T>(componentView = dice, duration = duration, speed = speed)
+) : SteppedComponentAnimation<T>(gameComponentView = dice, duration = duration, speed = speed)

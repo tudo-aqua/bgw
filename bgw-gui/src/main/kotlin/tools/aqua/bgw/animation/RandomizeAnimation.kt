@@ -50,4 +50,6 @@ class RandomizeAnimation<T : GameComponentView>(
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_DURATION,
     speed: Int = DEFAULT_ANIMATION_SPEED
-) : SteppedComponentAnimation<T>(componentView = componentView, duration = duration, speed = speed)
+) :
+    SteppedComponentAnimation<T>(
+        gameComponentView = componentView, duration = duration, speed = speed)
