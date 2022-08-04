@@ -152,6 +152,9 @@ object SceneBuilder {
     val dragDataObject = draggedComponentProperty.value
     val draggedComponent = dragDataObject?.draggedComponent ?: return
 
+    draggedComponent.isDragged = false
+    draggedComponentProperty.value = null
+
     // Invoke onMouseReleased
     draggedComponent.onMouseReleased?.invoke(e.toMouseEvent())
 
@@ -185,9 +188,6 @@ object SceneBuilder {
       draggedComponent.parent = null
       addComponents(draggedComponent)
     }
-
-    draggedComponent.isDragged = false
-    draggedComponentProperty.value = null
   }
 
   /** Rebuilds pane on components changed. */
