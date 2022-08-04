@@ -38,18 +38,18 @@ import tools.aqua.bgw.visual.Visual
  * @constructor Creates a [RandomizeAnimation] for the given [GameComponentView].
  *
  * @param T Generic [GameComponentView].
- * @param componentView [GameComponentView] to animate.
+ * @param gameComponentView [GameComponentView] to animate.
  * @property visuals [List] of [Visual]s to shuffle through.
  * @property toVisual Resulting [Visual] after shuffle.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of steps. Default: [DEFAULT_ANIMATION_SPEED].
  */
 class RandomizeAnimation<T : GameComponentView>(
-    componentView: T,
+    gameComponentView: T,
     val visuals: List<Visual>,
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_DURATION,
     speed: Int = DEFAULT_ANIMATION_SPEED
 ) :
     SteppedComponentAnimation<T>(
-        gameComponentView = componentView, duration = duration, speed = speed)
+        gameComponentView = gameComponentView, duration = duration, speed = speed)

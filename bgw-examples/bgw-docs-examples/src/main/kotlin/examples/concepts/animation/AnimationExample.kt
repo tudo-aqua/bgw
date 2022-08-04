@@ -134,7 +134,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
         {
           gameScene.playAnimation(
               FlipAnimation(
-                  componentView = cardFlip,
+                  gameComponentView = cardFlip,
                   fromVisual = cardFlip.backVisual,
                   toVisual = cardFlip.frontVisual,
                   duration = 1000))
@@ -143,7 +143,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
         {
           gameScene.playAnimation(
               RandomizeAnimation(
-                  componentView = cardRandomize,
+                  gameComponentView = cardRandomize,
                   visuals = randomCardFaces,
                   toVisual = cardFlip.frontVisual,
                   duration = 1000,
