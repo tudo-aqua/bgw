@@ -31,9 +31,10 @@ All notable changes to this project will be documented in this file.
  - Disabled default undo operation in TextField and TextArea as it causes NPEs in JavaFX.
 
 ### Fixed
- - Fixed Grid.grow() not updating row heights array.
- - Fixed format function not getting applied to selected item in ComboBox.
+ - Grid.grow() not updating row heights array.
+ - Format function not getting applied to selected item in ComboBox.
  - Drag and Drop rollback on panes.
+ - Exception when changing GameScenes in onDragDropped
  
 ## [0.7] - 15.07.2022
 
