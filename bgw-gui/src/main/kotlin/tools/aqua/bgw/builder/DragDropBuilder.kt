@@ -168,7 +168,7 @@ object DragDropBuilder {
     return {
       @Suppress("UNCHECKED_CAST")
       (this as Pane<ComponentView>).add(
-          this as ComponentView, min(observableComponents.size, index))
+          component, min(observableComponents.size, index))
     }
   }
   // endregion
