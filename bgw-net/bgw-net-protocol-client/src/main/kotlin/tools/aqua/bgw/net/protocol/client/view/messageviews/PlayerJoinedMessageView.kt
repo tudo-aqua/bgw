@@ -17,8 +17,11 @@
 
 package tools.aqua.bgw.net.protocol.client.view.messageviews
 
+import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.util.Font
 
+/** [MessageView] displaying "Player XXX has joined the room". */
 class PlayerJoinedMessageView(player: String) : MessageView() {
 
   private val messageHeight: Double = 50.0
@@ -32,7 +35,8 @@ class PlayerJoinedMessageView(player: String) : MessageView() {
                 posY = height - messageHeight,
                 width = width,
                 height = messageHeight,
-                text = "- Player \"$player\" has joined the room -")
+                text = "- Player \"$player\" has joined the room -",
+                font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.SEMI_BOLD))
             .apply { backgroundStyle = "$colorStyle$cornerStyle" })
   }
 }

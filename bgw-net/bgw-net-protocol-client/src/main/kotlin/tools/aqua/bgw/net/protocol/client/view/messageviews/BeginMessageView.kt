@@ -17,8 +17,11 @@
 
 package tools.aqua.bgw.net.protocol.client.view.messageviews
 
+import java.awt.Color
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.util.Font
 
+/** [MessageView] displaying "Beginning of conversation". */
 class BeginMessageView : MessageView() {
 
   private val messageHeight: Double = 50.0
@@ -32,7 +35,8 @@ class BeginMessageView : MessageView() {
                 posY = height - messageHeight,
                 width = width,
                 height = messageHeight,
-                text = "- Beginning of conversation -")
+                text = "- Beginning of conversation -",
+                font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.SEMI_BOLD))
             .apply { backgroundStyle = "$colorStyle$cornerStyle" })
   }
 }

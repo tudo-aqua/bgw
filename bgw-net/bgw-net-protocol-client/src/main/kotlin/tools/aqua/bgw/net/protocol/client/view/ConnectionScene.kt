@@ -22,6 +22,7 @@ import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 
+/** The connection startup screen. */
 class ConnectionScene : BoardGameScene(height = 800, width = 500, background = ColorVisual.WHITE) {
 
   /** [TextField] for the hostname or address and port. */
@@ -53,6 +54,7 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
   val sessionIDText: TextField =
       TextField(posX = 50, posY = 200, height = 40, width = width - 100, prompt = "sessionID")
 
+  /** [Button] for hosting a game. */
   val buttonHost: Button =
       Button(
           posX = 50,
@@ -62,6 +64,7 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
           text = "Host",
           visual = ColorVisual.LIGHT_GRAY)
 
+  /** [Button] for joining a game. */
   val buttonJoin: Button =
       Button(
           posX = width / 2 + 10,

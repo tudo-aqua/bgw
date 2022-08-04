@@ -24,15 +24,21 @@ import java.awt.geom.AffineTransform
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import tools.aqua.bgw.net.common.GameAction
-import tools.aqua.bgw.net.protocol.client.view.ProtocolClientView
+import tools.aqua.bgw.net.protocol.client.view.ProtocolClientApplication
 import tools.aqua.bgw.net.protocol.client.view.messageviews.GameMessageView
 
-class NetworkService(private val view: ProtocolClientView) {
+/** Network service. */
+class NetworkService(private val view: ProtocolClientApplication) {
 
   private var client: ProtocolBoardGameClient? = null
-  private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+  private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SS")
   private val playerColors: MutableList<Color> =
-      mutableListOf(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW)
+      mutableListOf(
+          Color(100, 0, 0),
+          Color(0, 0, 100),
+          Color(0, 100, 0),
+          Color(130, 130, 0),
+      )
   private val colorMap: MutableMap<String, Color> = mutableMapOf()
 
   // region Connection
@@ -84,13 +90,17 @@ class NetworkService(private val view: ProtocolClientView) {
     }
   }
 
+  /** Formats current timestamp using [timeFormatter]. */
   fun getTimestamp(): String = LocalTime.now().format(timeFormatter)
 
+  /** Returns color for [player]. */
   fun getPlayerColor(player: String): Color =
       colorMap.getOrPut(player) { playerColors.removeFirst().also { playerColors.add(it) } }
 
+  /** Returns simple name of [GameAction] instance. */
   fun parseMessageType(message: GameAction): String = message.javaClass.simpleName
 
+  /** Returns string representation of [message]. */
   fun parseMessage(message: GameAction): List<String> {
     val lines = message.toString().split("\n")
     val result = mutableListOf<String>()
