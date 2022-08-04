@@ -117,6 +117,11 @@ open class CardView(
     currentSide = side
   }
 
+  /** Flips the [CardView] by seting the [currentSide] to the other value. */
+  fun flip() {
+    currentSide = if (currentSide == BACK) FRONT else BACK
+  }
+
   /** Enum for the card sides [FRONT] and [BACK] with their visual indices. */
   enum class CardSide {
     /** The [FRONT] side. */

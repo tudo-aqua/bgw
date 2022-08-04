@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
  - BGW-Net Protocol client.
  - onScroll event.
  - Style property for SingleLayerVisuals.
+ - flip() function in CardView.
 
 ### Changed
  - BoardGameApplication.runOnGUIThread may now be called without starting an application for headless testing.
