@@ -1,3 +1,4 @@
+[0.8]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8
 [0.7]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7
 [0.6]: https://github.com/tudo-aqua/bgw/releases/tag/v0.6
 [0.5]: https://github.com/tudo-aqua/bgw/releases/tag/v0.5
@@ -15,11 +16,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8] - To be released
+
+### Added
+ - BGW-Net Protocol client.
+ - onScroll event.
+ - Style property for SingleLayerVisuals.
+
+### Changed
+ - BoardGameApplication.runOnGUIThread may now be called without starting an application for headless testing.
+
+### Removed
+ - Disabled default undo operation in TextField and TextArea as it causes NPEs in JavaFX.
+
+### Fixed
+ - Fixed Grid.grow() not updating row heights array.
+ - Fixed format function not getting applied to selected item in ComboBox.
+ 
 ## [0.7] - 15.07.2022
 
 ### Added
- - BGW-Net
- - Non-blocking Dialog option
+ - BGW-Net.
+ - Non-blocking Dialog option.
 
 ### Changed
  - Keyboard input events for elements on BoardGameScene are now blocked while MenuScene is shown.
