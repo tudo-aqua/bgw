@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
  - Fixed Grid.grow() not updating row heights array.
  - Fixed format function not getting applied to selected item in ComboBox.
+ - Drag and Drop rollback on panes.
  
 ## [0.7] - 15.07.2022
 
