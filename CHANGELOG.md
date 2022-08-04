@@ -70,7 +70,7 @@ All notable changes to this project will be documented in this file.
 - Position of nested ``GridPanes`` no longer resets on update.
 - ``FontFamily`` with whitespace in name no longer has to be escaped.
 
-## [0.5] - 31. Oct. 2021
+## [0.5] - 31.10.2021
 
 ### Added
 - ``ParallelAnimation`` and ``SequentialAnimation``.
@@ -93,7 +93,7 @@ All notable changes to this project will be documented in this file.
  - ``BoardGameScene`` getting shown blurred if ``showGameScene`` gets called after ``hideMenuScene``.
  - ``FileDialogs`` returning list of nulls instead of ``Optional.EMPTY``.
 
-## [0.4] - 22. Sep. 2021
+## [0.4] - 22.09.2021
 
 ### Fixed
 - Empty grid columns and rows no longer get rendered size 0.0 in case of fixed dimensions.
@@ -103,7 +103,7 @@ All notable changes to this project will be documented in this file.
 - MovementAnimation#toComponentView offset when animating to GridPane.
 - BoardGameScene getting shown blurred if showGameScene gets called after hideMenuScene.
 
-## [0.3] - 09. Sep. 2021
+## [0.3] - 09.09.2021
 
 ### Added
  - Value ``Scene.components`` for getting a snapshot of the currently contained root components of a ``Scene``.
@@ -130,7 +130,7 @@ All notable changes to this project will be documented in this file.
 - ColorVisuals with colors near black caused CSS parse error.
 
 
-## [0.2] - 10. Aug. 2021
+## [0.2] - 10.08.2021
 ### Added
 - Visual as default parameter for all components.
 - Introduced alignment feature for ``UIComponents``.
@@ -155,6 +155,6 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Infix operators for ``GameComponentViews``.
 
-## [0.1] - 03. Aug. 2021
+## [0.1] - 03.08.2021
 First release of the BGW framework.
 
