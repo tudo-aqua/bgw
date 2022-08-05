@@ -23,9 +23,9 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-Please complete the following information):
+Please complete the following information:
  - OS: [e.g. Windows 10, Mac OS X, Ubuntu, etc.]
- - Java version [e.g. openJDK 11]
+ - Java version: [e.g. openJDK 11]
 
 **Additional context**
 Add any other context about the problem here.
