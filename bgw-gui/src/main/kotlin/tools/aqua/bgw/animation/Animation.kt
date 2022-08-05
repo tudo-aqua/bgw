@@ -30,6 +30,7 @@ sealed class Animation(val duration: Int) {
 
   /** [Boolean] indicating whether the [Animation] is currently running. */
   var isRunning: Boolean = false
+    internal set
 
   /** Gets invoked when [Animation] has finished. */
   var onFinished: ((AnimationFinishedEvent) -> Unit)? = null

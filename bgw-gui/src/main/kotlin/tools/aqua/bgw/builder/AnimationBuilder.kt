@@ -270,7 +270,7 @@ object AnimationBuilder {
 
   /** Removes [anim] from animations list and invokes [Animation.onFinished]. */
   private fun onFinished(scene: Scene<out ComponentView>, anim: Animation) {
-    scene.animations.remove(anim)
+    scene.animations.remove(anim.also { it.isRunning = false })
 
     Platform.runLater { anim.onFinished?.invoke(AnimationFinishedEvent()) }
   }
