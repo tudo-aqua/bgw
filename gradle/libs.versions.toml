@@ -59,7 +59,7 @@ openjfx-media = { group = "org.openjfx", name = "javafx-media", version.ref = "o
 openjfx-swing = { group = "org.openjfx", name = "javafx-swing", version.ref = "openjfx" }
 openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openjfx" }
 
-postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql" }
+postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.4.1" }
 
 testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.210" }
