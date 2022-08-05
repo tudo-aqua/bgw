@@ -33,6 +33,7 @@ import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
+import java.io.InputStream
 
 /**
  * Baseclass for all BGW Applications. Extend from this class in order to create your own game
@@ -354,7 +355,17 @@ open class BoardGameApplication(
 
     /**
      * Loads a font file and registers it in the JFX graphics system.
-     * @param font The font file off type .ttf which is to be loaded
+     * @param fontStream An input stream to the font file of type .ttf which is to be loaded
+     * @return A boolean weather the font could be loaded or not
+     */
+    fun loadFont(fontStream: InputStream): Boolean {
+      val jfxFont = JFXFont.loadFont(fontStream, DEFAULT_FONT_SIZE) ?: return false
+      return JFXFont.getFamilies().contains(jfxFont.family)
+    }
+
+    /**
+     * Loads a font file and registers it in the JFX graphics system.
+     * @param font The font file of type .ttf which is to be loaded
      * @throws NoSuchFileException if the file doesn't exist
      * @throws AccessDeniedException if the file can't be read
      * @return A boolean weather the file could be loaded or not
@@ -362,8 +373,7 @@ open class BoardGameApplication(
     fun loadFont(font: File): Boolean {
       if (!font.exists()) throw NoSuchFileException(font)
       if (!font.canRead()) throw AccessDeniedException(font)
-      val jfxFont = JFXFont.loadFont(font.inputStream(), DEFAULT_FONT_SIZE) ?: return false
-      return JFXFont.getFamilies().contains(jfxFont.family)
+      return loadFont(font.inputStream())
     }
   }
 }

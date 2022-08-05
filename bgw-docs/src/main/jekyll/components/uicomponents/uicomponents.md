@@ -357,9 +357,8 @@ In order to load a custom font use the [BoardGameApplication][BoardGameApplicati
 
 ````kotlin
 // Load Roboto-Regular.ttf from root of resource folder 
-val resource = UIComponentExample::class.java.getResource("/Roboto-Regular.ttf") ?: throw FileNotFoundException()
-val fontFile = File(resource.toURI())
-BoardGameApplication.loadFont(fontFile)
+val fontStream = SwimApplication::class.java.getResourceAsStream("/Roboto-Regular.ttf") ?: throw FileNotFoundException()
+BoardGameApplication.loadFont(fontStream)
 ````
 Now the font is registered and ready to use.
 

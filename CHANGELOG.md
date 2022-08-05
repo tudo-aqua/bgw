@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
  - onScroll event.
  - Style property for SingleLayerVisuals.
  - flip() function in CardView.
+ - loadFont(InputStream) for loading custom fonts from within .jar-files.
 
 ### Changed
  - BoardGameApplication.runOnGUIThread may now be called without starting an application for headless testing.
