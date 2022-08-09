@@ -74,10 +74,11 @@ internal class BGWWebSocketClient(
    * @param payload The [GameActionMessage] payload.
    */
   fun sendGameActionMessage(payload: GameAction) {
+    val payloadJson = mapper.writeValueAsString(payload)
+    logger.debug("Sending GameAction as JSON: $payloadJson")
     send(
         mapper.writeValueAsString(
-            GameActionMessage(
-                mapper.writeValueAsString(payload), payload.toString(), ""))) // TODO: Enter sender
+            GameActionMessage(payloadJson, payload.toString(), ""))) // TODO: Enter sender
   }
   // endregion
 
