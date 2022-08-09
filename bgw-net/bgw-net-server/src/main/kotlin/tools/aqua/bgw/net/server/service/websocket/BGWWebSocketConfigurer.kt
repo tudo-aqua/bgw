@@ -48,14 +48,14 @@ class BGWWebSocketConfigurer(
   /** Generates and initializes random network secret. */
   @EventListener(ApplicationReadyEvent::class)
   fun initializeNetworkSecret() {
-    val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-    val length = 10
-    val randomString =
-        (1..length)
-            .map { kotlin.random.Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
     if (!keyValueRepository.existsById("Network secret")) {
+      val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+      val length = 10
+      val randomString =
+          (1..length)
+              .map { kotlin.random.Random.nextInt(0, charPool.size) }
+              .map(charPool::get)
+              .joinToString("")
       keyValueRepository.save(KeyValueStoreEntry("Network secret", randomString))
     }
   }
