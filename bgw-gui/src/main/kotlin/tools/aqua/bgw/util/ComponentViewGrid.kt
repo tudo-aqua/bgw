@@ -71,9 +71,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException if [columnIndex] is out of grid range.
    */
   operator fun get(columnIndex: Int, rowIndex: Int): T? {
-    require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
-      "Indices exceed grid bounds."
-    }
+    checkRowIndex(rowIndex)
+    checkColumnIndex(columnIndex)
 
     return grid[columnIndex][rowIndex] as? T
   }
@@ -88,9 +87,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException if [columnIndex] is out of grid range.
    */
   operator fun set(columnIndex: Int, rowIndex: Int, value: T?) {
-    require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
-      "Indices exceed grid bounds."
-    }
+    checkRowIndex(rowIndex)
+    checkColumnIndex(columnIndex)
 
     grid[columnIndex][rowIndex] = value
   }
@@ -108,9 +106,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException if [columnIndex] is out of grid range.
    */
   fun getCellCenterMode(columnIndex: Int, rowIndex: Int): Alignment {
-    require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
-      "Indices exceed grid bounds."
-    }
+    checkRowIndex(rowIndex)
+    checkColumnIndex(columnIndex)
 
     return centeringModes[columnIndex][rowIndex]
   }
@@ -125,9 +122,8 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [columnIndex] or [rowIndex] is out of grid range.
    */
   fun setCellCenterMode(columnIndex: Int, rowIndex: Int, alignment: Alignment) {
-    require(columnIndex in 0 until columns && rowIndex in 0 until rows) {
-      "Indices exceed grid bounds."
-    }
+    checkRowIndex(rowIndex)
+    checkColumnIndex(columnIndex)
 
     centeringModes[columnIndex][rowIndex] = alignment
   }
@@ -141,7 +137,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [columnIndex] is out of grid range.
    */
   fun setColumnCenterMode(columnIndex: Int, alignment: Alignment) {
-    require(columnIndex in 0 until columns) { "Column index exceed grid bounds." }
+    checkColumnIndex(columnIndex)
 
     for (i in 0 until rows) centeringModes[columnIndex][i] = alignment
   }
@@ -155,7 +151,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [rowIndex] is out of grid range.
    */
   fun setRowCenterMode(rowIndex: Int, alignment: Alignment) {
-    require(rowIndex in 0 until rows) { "Row index exceed grid bounds." }
+    checkRowIndex(rowIndex)
 
     for (i in 0 until columns) centeringModes[i][rowIndex] = alignment
   }
@@ -181,7 +177,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [rowIndex] is out of grid range.
    */
   fun getRow(rowIndex: Int): List<T?> {
-    require(rowIndex in 0 until rows) { "Row index exceed grid bounds." }
+    checkRowIndex(rowIndex)
 
     return List(columns) { grid[it][rowIndex] as? T }
   }
@@ -203,7 +199,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [columnIndex] is out of grid range.
    */
   fun getColumn(columnIndex: Int): List<T?> {
-    require(columnIndex in 0 until columns) { "Row index exceed grid bounds." }
+    checkColumnIndex(columnIndex)
 
     return grid[columnIndex].toList() as List<T?>
   }
@@ -227,7 +223,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [columnIndex] is out of grid range.
    */
   fun getColumnWidth(columnIndex: Int): Double {
-    require(columnIndex in columnWidths.indices) { "ColumnIndex out of grid range." }
+    checkColumnIndex(columnIndex)
 
     return columnWidths[columnIndex]
   }
@@ -242,7 +238,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * negative.
    */
   fun setColumnWidth(columnIndex: Int, columnWidth: Double) {
-    require(columnIndex in columnWidths.indices) { "ColumnIndex out of grid range." }
+    checkColumnIndex(columnIndex)
     require(columnWidth >= 0 || columnWidth == COLUMN_WIDTH_AUTO) {
       "Parameter must be positive or COLUMN_WIDTH_AUTO."
     }
@@ -293,7 +289,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException If [rowIndex] is out of grid range.
    */
   fun getRowHeight(rowIndex: Int): Double {
-    require(rowIndex in rowHeights.indices) { "RowIndex out of grid range." }
+    checkRowIndex(rowIndex)
 
     return rowHeights[rowIndex]
   }
@@ -307,7 +303,7 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
    * @throws IllegalArgumentException if [rowIndex] is out of grid range or [rowHeight] is negative.
    */
   fun setRowHeight(rowIndex: Int, rowHeight: Double) {
-    require(rowIndex in rowHeights.indices) { "RowIndex out of grid range." }
+    checkRowIndex(rowIndex)
     require(rowHeight >= 0 || rowHeight == ROW_HEIGHT_AUTO) {
       "Parameter must be positive or ROW_HEIGHT_AUTO."
     }
@@ -697,6 +693,30 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
   // endregion
 
   // region Helper
+  /**
+   * Checks whether [rowIndex] is in range of grid indices.
+   *
+   * @param rowIndex Index to check.
+   *
+   * @throws IllegalArgumentException If [rowIndex] not in 0 .. #rows.
+   */
+  private fun checkRowIndex(rowIndex: Int) {
+    require(rowIndex in 0 until rows) { "RowIndex $rowIndex out of grid range ($rows)." }
+  }
+
+  /**
+   * Checks whether [columnIndex] is in range of grid indices.
+   *
+   * @param columnIndex Index to check.
+   *
+   * @throws IllegalArgumentException If [columnIndex] not in 0 .. #columns.
+   */
+  private fun checkColumnIndex(columnIndex: Int) {
+    require(columnIndex in 0 until columns) {
+      "ColumnIndex $columnIndex out of grid range ($columns)."
+    }
+  }
+
   /** Creates an empty grid of size 0x0. */
   private fun initEmpty() {
     grid = Array(0) { Array(0) { null } }
