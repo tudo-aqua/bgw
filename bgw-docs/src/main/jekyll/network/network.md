@@ -1,9 +1,9 @@
 ---
-title: Network connectivity
+title: Network
 nav_order: 7
 has_children: true
 ---
 
 # Network
 
-Introduction to dialogs.
+Introduction to bgw-net.

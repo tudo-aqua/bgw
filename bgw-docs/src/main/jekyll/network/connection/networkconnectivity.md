@@ -1,4 +1,5 @@
 ---
+parent: Network
 title: Network connectivity
 nav_order: 1
 ---

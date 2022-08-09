@@ -1,4 +1,5 @@
 ---
+parent: Network
 title: Json
 nav_order: 2
 ---
