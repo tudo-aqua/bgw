@@ -1,4 +1,4 @@
-[0.8]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8
+[0.7.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.1
 [0.7]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7
 [0.6]: https://github.com/tudo-aqua/bgw/releases/tag/v0.6
 [0.5]: https://github.com/tudo-aqua/bgw/releases/tag/v0.5
@@ -6,9 +6,9 @@
 [0.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.3
 [0.2]: https://github.com/tudo-aqua/bgw/releases/tag/v0.2
 [0.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.1
-<!-- ### Fixed -->
 <!-- ### Added -->
 <!-- ### Changed -->
+<!-- ### Fixed -->
 <!-- ### Removed -->
 <!-- ### Security -->
 <!-- ### Deprecated -->
@@ -16,7 +16,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8] - To be released
+## [0.7.1] - 05.08.2022
 
 ### Added
  - BGW-Net Protocol client.
@@ -29,12 +29,14 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
  - Disabled default undo operation in TextField and TextArea as it causes NPEs in JavaFX.
+ - Write access to Animation.isRunning
 
 ### Fixed
  - Grid.grow() not updating row heights array.
  - Format function not getting applied to selected item in ComboBox.
  - Drag and Drop rollback on panes.
  - Exception when changing GameScenes in onDragDropped
+ - Flip Animation resetting size of ImageVisuals.
  
 ## [0.7] - 15.07.2022
 
