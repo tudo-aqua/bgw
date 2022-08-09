@@ -200,11 +200,11 @@ enum class CardColor {
 
 data class PlayingCard(
   val cardColor: CardColor,
-	val cardValue: Int
+  val cardValue: Int
 ) 
 
 data class CardStack(
-	val cards: List<PlayingCard>
+  val cards: List<PlayingCard>
 )
 ````
 
