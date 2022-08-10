@@ -35,8 +35,7 @@ class PlayerService(val playerRepository: PlayerRepository) {
    * @param session The new player's [WebSocketSession].
    */
   fun createPlayer(session: WebSocketSession) {
-    val playerName =
-        session.attributes["playerName"] ?: error("playerName attribute missing") // TODO
+    val playerName = session.attributes["playerName"] ?: error("playerName attribute missing")
     with(Player(playerName as String, null, session)) {
       playerRepository.add(this)
       session.attributes["player"] = this
@@ -49,7 +48,7 @@ class PlayerService(val playerRepository: PlayerRepository) {
    * @param session The player's [WebSocketSession].
    */
   fun deletePlayer(session: WebSocketSession) {
-    val player = session.attributes["player"] ?: error("player attribute missing") // TODO
+    val player = session.attributes["player"] ?: error("player attribute missing")
     playerRepository.remove(player as Player)
   }
 

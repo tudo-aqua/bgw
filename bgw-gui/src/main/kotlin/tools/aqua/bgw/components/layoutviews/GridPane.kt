@@ -115,7 +115,6 @@ open class GridPane<T : ComponentView>(
           parent = this@GridPane
         }
 
-    // TODO: Remove hard reset of position
     component?.run {
       posXProperty.setSilent(0.0)
       posYProperty.setSilent(0.0)

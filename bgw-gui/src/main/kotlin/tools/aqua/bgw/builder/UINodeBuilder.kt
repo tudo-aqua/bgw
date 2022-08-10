@@ -93,7 +93,6 @@ object UINodeBuilder {
       }
 
   /** Builds [ComboBox]. */
-  // TODO: apply format function to selected item and listen on format function changes
   private fun <T> buildComboBox(comboBox: ComboBox<T>): Region =
       JFXComboBox<T>().apply {
         comboBox.observableItemsList.setGUIListenerAndInvoke(emptyList()) { _, _ ->

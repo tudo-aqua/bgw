@@ -52,7 +52,7 @@ object SceneBuilder {
 
     // register animations
     scene.animations.guiListener =
-        { _, _ -> // TODO performance
+        { _, _ ->
           scene.animations.filter { t -> !t.isRunning }.forEach { anim ->
             AnimationBuilder.build(scene, anim).play()
             anim.isRunning = true

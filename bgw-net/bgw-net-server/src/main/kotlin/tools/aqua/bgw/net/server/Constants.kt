@@ -55,6 +55,6 @@ const val BGW_META_SCHEMA_JSON_URL_STRING: String = "/bgw_meta_schema.json"
 /** Player instance. */
 val WebSocketSession.player: Player
   get() {
-    val player = attributes["player"] ?: error("missing attribute") // TODO
-    if (player is Player) return player else error("wrong type") // TODO
+    val player = attributes["player"] ?: error("missing attribute")
+    if (player is Player) return player else error("wrong type")
   }

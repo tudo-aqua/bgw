@@ -57,10 +57,7 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
     }
 
   init {
-    childrenProperty.internalListener =
-        { _, _ -> // TODO maybe performance?
-          notifyGUIListener()
-        }
+    childrenProperty.internalListener = { _, _ -> notifyGUIListener() }
   }
 
   /**

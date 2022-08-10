@@ -27,10 +27,7 @@ import tools.aqua.bgw.net.server.entity.repositories.PlayerRepository
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 
-/**
- * This service exposes all active games and players to the frontend. //TODO maybe make Games and
- * Players read only for frontend?
- */
+/** This service exposes all active games and players to the frontend. */
 @Service
 class FrontendService(
     private val playerRepository: PlayerRepository,
