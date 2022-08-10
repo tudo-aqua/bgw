@@ -16,6 +16,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.8 - To be released
+
+### Changed
+
+ - Debug mode in network client now prints JSON of sent game message.
+
 ## [0.7.1] - 05.08.2022
 
 ### Added
