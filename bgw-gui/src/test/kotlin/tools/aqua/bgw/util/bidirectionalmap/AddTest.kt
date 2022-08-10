@@ -95,11 +95,44 @@ class AddTest : BidirectionalMapTestBase() {
     assertTrue(map.contains(5, 6))
   }
 
-  /** Test adding new, old and invalid values by addAll. */
+  /** Test adding new, old and invalid (by key) values by addAll. */
   @Test
-  @DisplayName("Test adding new, old and invalid values by addAll")
-  fun testAddAllMixedWithInvalid() {
+  @DisplayName("Test adding new, old and invalid (by key) values by addAll")
+  fun testAddAllMixedWithInvalidKey() {
     assertFalse(map.addAll(Pair(5, 6), Pair(0, 5), Pair(0, 1)))
+
+    assertEquals(2, map.size)
+    assertFalse(map.contains(5, 6))
+    assertFalse(map.contains(0, 5))
+  }
+
+  /** Test adding new, old and invalid (by value) values by addAll. */
+  @Test
+  @DisplayName("Test adding new, old and invalid (by value) values by addAll")
+  fun testAddAllMixedWithInvalidValue() {
+    assertFalse(map.addAll(Pair(5, 6), Pair(7, 1), Pair(0, 1)))
+
+    assertEquals(2, map.size)
+    assertFalse(map.contains(5, 6))
+    assertFalse(map.contains(0, 5))
+  }
+
+  /** Test adding invalid (by key) values not contained before by addAll. */
+  @Test
+  @DisplayName("Test adding invalid (by key) values not contained before by addAll")
+  fun testAddAllMultipleInvalidKey() {
+    assertFalse(map.addAll(Pair(7, 8), Pair(7, 9)))
+
+    assertEquals(2, map.size)
+    assertFalse(map.contains(5, 6))
+    assertFalse(map.contains(0, 5))
+  }
+
+  /** Test adding invalid (by value) values not contained before by addAll. */
+  @Test
+  @DisplayName("Test adding invalid (by value) values not contained before by addAll")
+  fun testAddAllMultipleInvalidValue() {
+    assertFalse(map.addAll(Pair(7, 9), Pair(8, 9)))
 
     assertEquals(2, map.size)
     assertFalse(map.contains(5, 6))
