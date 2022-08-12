@@ -179,9 +179,10 @@ open class BoardGameApplication(
   var onWindowClosed: (() -> Unit)? = null
 
   init {
-    check(!isInstantiated) { "Unable to create second application." }
-
-    isInstantiated = true
+    synchronized(this) {
+      check(!isInstantiated) { "Unable to create second application." }
+      isInstantiated = true
+    }
 
     title = windowTitle
 
@@ -324,11 +325,8 @@ open class BoardGameApplication(
   }
 
   companion object {
-    /** Static holder for instantiation of BoardGameApplication. */
+    /** Static holder for instantiation of [BoardGameApplication]. */
     private var isInstantiated: Boolean = false
-
-    /** Lock for runOnGUIThread execution without Toolkit initialization. */
-    private val lock: Any = Any()
 
     /**
      * Executes given [task] on the UI thread. Use this method to update properties of
@@ -348,7 +346,7 @@ open class BoardGameApplication(
       if (toolkitInitialized) {
         Platform.runLater(task)
       } else {
-        synchronized(lock) { task.run() }
+        synchronized(this) { task.run() }
       }
     }
 
