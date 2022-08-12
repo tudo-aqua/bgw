@@ -84,9 +84,9 @@ class UploadSchemaView(
   private val upload: Upload =
       Upload(buffer).apply {
         addSucceededListener {
-          var results: List<String> = listOf()
+          val results: List<String>
           val mapper = ObjectMapper()
-          var schemaNode: JsonNode = mapper.createObjectNode()
+          val schemaNode: JsonNode
           try {
             schemaNode = mapper.readTree(buffer.getInputStream(it.fileName))
             results = validationService.validateMetaSchema(schemaNode)
@@ -94,6 +94,7 @@ class UploadSchemaView(
             notificationService.notify(
                 "Couldn't parse JSON Schema! Please upload a .json File",
                 NotificationVariant.LUMO_ERROR)
+            return@addSucceededListener
           }
           if (results.isEmpty()) {
             notificationService.notify(
