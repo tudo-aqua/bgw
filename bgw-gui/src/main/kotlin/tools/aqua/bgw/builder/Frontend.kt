@@ -62,7 +62,10 @@ internal class Frontend : Application() {
   override fun start(primaryStage: Stage) {
     Thread.setDefaultUncaughtExceptionHandler { _, e ->
       e.printStackTrace()
-      showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message.orEmpty(), e))
+
+      BoardGameApplication.runOnGUIThread {
+        showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message.orEmpty(), e))
+      }
     }
 
     startApplication(primaryStage)
