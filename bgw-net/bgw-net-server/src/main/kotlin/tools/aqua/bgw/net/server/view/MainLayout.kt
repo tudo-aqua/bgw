@@ -100,8 +100,8 @@ class MainLayout(
 
     val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
     val account = accountRepository.findBySub(principal.name).get()
-    val links: MutableList<RouterLink> = mutableListOf(connectionsLink, schemaLink)
-    if (account.isAdmin()) links.addAll(listOf(secretLink, uploadLink))
+    val links: MutableList<RouterLink> = mutableListOf(schemaLink)
+    if (account.isAdmin()) links.addAll(listOf(connectionsLink, secretLink, uploadLink))
 
     @Suppress("SpreadOperator") addToDrawer(VerticalLayout(*links.toTypedArray()))
   }
