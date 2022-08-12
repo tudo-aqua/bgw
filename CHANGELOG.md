@@ -16,11 +16,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.8 - To be released
+## 0.7.2 - To be released
+
+### Added
+ - Debug mode in network client now prints JSON of sent game message.
 
 ### Changed
+ - Hide "Connections and Sessions" from non-admin users in BGW-net frontend.
 
- - Debug mode in network client now prints JSON of sent game message.
+### Fixed
+ - Messages passing each other in clients asynchronous receiver function resolution.
+ - Exception thrown in asynchronous coroutine not displayed in default exception handler.
 
 ## [0.7.1] - 05.08.2022
 
