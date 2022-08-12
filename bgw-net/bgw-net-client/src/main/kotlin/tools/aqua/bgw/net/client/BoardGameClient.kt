@@ -16,13 +16,18 @@
  */
 
 @file:Suppress(
-    "unused", "MemberVisibilityCanBePrivate", "GlobalCoroutineUsage", "EXPERIMENTAL_IS_NOT_ENABLED")
+    "unused",
+    "MemberVisibilityCanBePrivate",
+    "GlobalCoroutineUsage",
+    "EXPERIMENTAL_IS_NOT_ENABLED",
+    "OPT_IN_IS_NOT_ENABLED")
 
 package tools.aqua.bgw.net.client
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import java.lang.reflect.Method
 import java.net.URI
+import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.reflect.jvm.javaMethod
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -74,6 +79,15 @@ protected constructor(
 
   /** Coroutines job for initializing annotation processing. */
   private val initializationJob: Job
+
+  /** Queue for incoming [GameActionMessage]s. */
+  private val msgQueue: ConcurrentLinkedQueue<GameActionMessage> = ConcurrentLinkedQueue()
+
+  /** Mapping for [GameActionMessage]s onto receiver function and deserialized payload. */
+  private val msgMapping: MutableMap<GameActionMessage, Pair<Method, GameAction>> = mutableMapOf()
+
+  /** Mutex for [msgQueue] modifications */
+  private val latch: Any = Any()
 
   /** NetworkLogger instance for traffic logging. */
   private val logger: NetworkLogger = NetworkLogger(networkLoggingBehavior)
@@ -340,6 +354,8 @@ protected constructor(
    * @param message The [GameActionMessage] received from the opponent that is to be delegated.
    */
   internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
+    msgQueue.add(message)
+
     GlobalScope.launch {
       if (!initializationJob.isCompleted) {
         logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
@@ -360,7 +376,10 @@ protected constructor(
                   ?: checkNotNull(this@BoardGameClient::onGameActionReceived.javaMethod)
 
           // Invoke receiver
-          method.invoke(this@BoardGameClient, payload, message.sender)
+          synchronized(this@BoardGameClient) {
+            msgMapping[message] = Pair(method, payload)
+            invokeMessageQueue()
+          }
 
           return@launch
         } catch (_: JsonMappingException) {}
@@ -369,6 +388,25 @@ protected constructor(
       logger.err(
           "Received GameActionMessage $message but no target class was Found. " +
               "Create class annotated @GameActionClass extending GameAction in your classpath.")
+
+      synchronized(this@BoardGameClient) {
+        msgQueue.remove(message)
+        invokeMessageQueue()
+      }
+    }
+  }
+
+  /**
+   * Invokes all receiver methods in [msgQueue] that have been finished until the first still
+   * working.
+   */
+  private fun invokeMessageQueue() {
+    while (msgQueue.isNotEmpty()) {
+      val msg = msgQueue.peek()
+      val method = msgMapping.getOrDefault(msg, null) ?: return
+
+      method.first.invoke(this@BoardGameClient, method.second, msg.sender)
+      msgQueue.poll()
     }
   }
 
