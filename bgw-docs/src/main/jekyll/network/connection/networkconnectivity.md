@@ -105,7 +105,8 @@ The connection state may be checked via ``isOpen`` property.
 
 A game session may be started by calling ``createGame``. Each session gets identified by a unique ``sessionID`` that
 has to be passed to the function. Calling ``createGame`` automatically adds this client to the newly created game on the
-server side. Additionally, the gameId must match the registered gameId on the server in order to identify the
+server side. Additionally, the gameID must match the registered gameID
+on the server in order to identify the
 correct set of message schemas for this game. ``greetingMessage`` will be sent to all players upon joining this session.
 
 ````kotlin
