@@ -54,6 +54,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
   private val map: MutableList<Pair<T, R>> = mutableListOf()
 
   init {
+    // requires to add them one-by-one to throw an IllegalArgumentException for duplicates
     require(elements.all { add(it) })
   }
 
@@ -70,13 +71,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @see addAll
    */
-  fun add(entity: T, value: R): Boolean {
-    if (contains(entity, value)) return true
-
-    if (containsForward(entity) || containsBackward(value)) return false
-
-    return map.add(Pair(entity, value))
-  }
+  fun add(entity: T, value: R): Boolean = add(Pair(entity, value))
 
   /**
    * Adds a relation A -> B if domain does not contain A and coDomain does not contain B. Returns
@@ -86,11 +81,19 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @see addAll
    */
-  fun add(element: Pair<T, R>): Boolean = add(element.first, element.second)
+  fun add(element: Pair<T, R>): Boolean {
+    if (contains(element)) return true
+
+    if (containsForward(element.first) || containsBackward(element.second)) return false
+
+    return map.add(element)
+  }
 
   /**
    * Adds all relations A -> B. If any of the given items already exist, it gets ignored. If any
-   * item contains a key or value that already exists, the map remains unchanged.
+   * item occurs twice in the list, one gets ignored. If any key or value is already in the map with
+   * a different mapping, or occurs twice with a different mapping, false is returned and the map
+   * remains unchanged.
    *
    * Example: Map: [(A->B), (C->D)]
    *
@@ -106,11 +109,16 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see add
    */
   fun addAll(vararg items: Pair<T, R>): Boolean {
-    val nonDuplicates = items.filter { !contains(it) }.toList()
+    val nonDuplicates = items.distinct().filter { !contains(it) }
 
     if (nonDuplicates.any { containsForward(it.first) || containsBackward(it.second) }) return false
+    if (nonDuplicates.any { item ->
+      nonDuplicates.filter { it != item }.any { it.first == item.first } ||
+          nonDuplicates.filter { it != item }.any { it.second == item.second }
+    })
+        return false
 
-    nonDuplicates.forEach { map.add(it) }
+    map.addAll(nonDuplicates)
 
     return true
   }
@@ -166,8 +174,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see removeForward
    * @see removeBackward
    */
-  fun remove(entity: T, value: R): Boolean =
-      map.removeIf { t -> t.first == entity && t.second == value }
+  fun remove(entity: T, value: R): Boolean = remove(Pair(entity, value))
 
   /**
    * Removes relation A -> B if it exists.
@@ -179,7 +186,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see removeForward
    * @see removeBackward
    */
-  fun remove(element: Pair<T, R>): Boolean = remove(element.first, element.second)
+  fun remove(element: Pair<T, R>): Boolean = map.remove(element)
 
   /**
    * Removes by forward lookup. Removes relation A -> * if it exists.
@@ -216,7 +223,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see containsForward
    * @see containsBackward
    */
-  fun contains(entity: T, value: R): Boolean = containsForward(entity) && containsBackward(value)
+  fun contains(entity: T, value: R): Boolean = contains(Pair(entity, value))
 
   /**
    * Returns whether relation A -> B exists in this map.
@@ -228,7 +235,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see containsForward
    * @see containsBackward
    */
-  fun contains(pair: Pair<T, R>): Boolean = contains(pair.first, pair.second)
+  fun contains(pair: Pair<T, R>): Boolean = map.contains(pair)
 
   /**
    * Returns whether a relation A -> * exists.
