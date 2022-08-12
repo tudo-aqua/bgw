@@ -25,6 +25,7 @@ import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
+import tools.aqua.bgw.net.common.response.LeaveGameResponseStatus
 import tools.aqua.bgw.net.server.player
 import tools.aqua.bgw.net.server.service.GameService
 import tools.aqua.bgw.net.server.service.MessageService
@@ -67,14 +68,19 @@ class BGWWebsocketHandler(
    */
   override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
     val player = session.player
+    val game = player.game
 
-    gameService.leaveGame(player)
-
-    player.game?.broadcastMessage(player, PlayerLeftNotification("disconnected", player.name))
-
-    playerService.deletePlayer(session)
-    logger.info("User with session id ${session.id} disconnected")
-    logger.info("Connected players:" + playerService.getAll())
+    when (gameService.leaveGame(player)) {
+      LeaveGameResponseStatus.SUCCESS -> {
+        game?.broadcastMessage(player, PlayerLeftNotification("disconnected", player.name))
+        playerService.deletePlayer(session)
+        logger.info("User with session id ${session.id} disconnected")
+        logger.info("Connected players:" + playerService.getAll())
+      }
+      LeaveGameResponseStatus.NO_ASSOCIATED_GAME ->
+          logger.debug("${player.name} has no associated game!")
+      LeaveGameResponseStatus.SERVER_ERROR -> logger.debug("No player named ${player.name} found!")
+    }
   }
 
   /** Delegates the handling of the message payload to [messageService]. */
