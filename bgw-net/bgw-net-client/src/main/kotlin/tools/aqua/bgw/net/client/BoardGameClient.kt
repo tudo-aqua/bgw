@@ -86,7 +86,7 @@ protected constructor(
   /** Mapping for [GameActionMessage]s onto receiver function and deserialized payload. */
   private val msgMapping: MutableMap<GameActionMessage, Pair<Method, GameAction>> = mutableMapOf()
 
-  /** Mutex for [msgQueue] modifications */
+  /** Mutex for [msgQueue] modifications. */
   private val latch: Any = Any()
 
   /** NetworkLogger instance for traffic logging. */
