@@ -27,14 +27,14 @@ package tools.aqua.bgw.event
  * @property keyCode Corresponding key code enum value. [keyCode] is [KeyCode.UNDEFINED] in any
  * ``onKeyTyped``. Only used for ``onKeyPressed`` and ``onKeyReleased``.
  * @property character Corresponding character string.
- * @property controlDown Whether control key was pressed.
- * @property shiftDown Whether shift key was pressed.
- * @property altDown Whether alt key was pressed.
+ * @property isControlDown Whether control key was pressed.
+ * @property isShiftDown Whether shift key was pressed.
+ * @property isAltDown Whether alt key was pressed.
  */
 class KeyEvent(
     val keyCode: KeyCode = KeyCode.UNDEFINED,
     val character: String = "",
-    val controlDown: Boolean,
-    val shiftDown: Boolean,
-    val altDown: Boolean
+    val isControlDown: Boolean,
+    val isShiftDown: Boolean,
+    val isAltDown: Boolean
 ) : InputEvent()

@@ -120,9 +120,9 @@ object FXConverters {
       KeyEvent(
           keyCode = code.toKeyCode(),
           character = character,
-          shiftDown = isShiftDown,
-          altDown = isAltDown,
-          controlDown = isControlDown)
+          isShiftDown = isShiftDown,
+          isAltDown = isAltDown,
+          isControlDown = isControlDown)
 
   /** Converts the [javafx.scene.input.KeyCode] to [KeyCode]. */
   @Suppress("LongMethod")
@@ -336,11 +336,11 @@ object FXConverters {
   internal fun KeyEvent.toFXKeyCodeCombination(): KeyCodeCombination =
       KeyCodeCombination(
           this.keyCode.toFXKeyCode(),
-          if (shiftDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
+          if (isShiftDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
           KeyCombination.ModifierValue.UP,
-          if (altDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
+          if (isAltDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
           KeyCombination.ModifierValue.UP,
-          if (controlDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
+          if (isControlDown) KeyCombination.ModifierValue.DOWN else KeyCombination.ModifierValue.UP,
       )
 
   // endregion
