@@ -159,6 +159,24 @@ class AddTest : ObservableListTestBase() {
     checkNotified()
   }
 
+  /** Test set all with same size but different elements. */
+  @Test
+  @DisplayName("Test set all with same size but different elements")
+  fun testSetAllSameSizeDifferentElements() {
+    // 13,25,17,13,-4
+    val newList = listOf(13, 25, 17, 13, -3)
+
+    assertEquals(5, list.size)
+
+    list.setAll(newList)
+
+    assertEquals(5, list.size)
+
+    checkListDeepEquals(list, newList)
+
+    checkNotified()
+  }
+
   /** Test set all current list empty. */
   @Test
   @DisplayName("Test set all current list empty")
@@ -203,6 +221,21 @@ class AddTest : ObservableListTestBase() {
     assertEquals(5, list.size)
 
     checkListDeepEquals(list, snapshot)
+
+    checkNotNotified()
+  }
+
+  /** Test set silent. */
+  @Test
+  @DisplayName("Test set silent")
+  fun testSetSilent() {
+    val resultList = listOf(-1, -2)
+
+    list.setSilent(resultList)
+
+    assertEquals(2, list.size)
+
+    checkListDeepEquals(list, resultList)
 
     checkNotNotified()
   }

@@ -137,4 +137,34 @@ class SingleListFunctionTests : ObservableListTestBase() {
 
     checkNotified()
   }
+
+  /** Test spliterator. */
+  @Test
+  @DisplayName("Test spliterator")
+  fun testSpliterator() {
+    val it = list.spliterator()
+    val result = mutableListOf<Int>()
+
+    it.forEachRemaining { result.add(it) }
+
+    checkListDeepEquals(list, result)
+
+    checkNotNotified()
+  }
+
+  /** Test iterator. */
+  @Test
+  @DisplayName("Test iterator")
+  fun testIterator() {
+    val it = list.iterator()
+    val result = mutableListOf<Int>()
+
+    while (it.hasNext()) {
+      result.add(it.next())
+    }
+
+    checkListDeepEquals(list, result)
+
+    checkNotNotified()
+  }
 }

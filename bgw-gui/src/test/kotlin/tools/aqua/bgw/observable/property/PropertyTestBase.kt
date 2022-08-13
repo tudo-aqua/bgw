@@ -18,7 +18,9 @@
 package tools.aqua.bgw.observable.property
 
 import org.junit.jupiter.api.BeforeEach
-import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import tools.aqua.bgw.observable.properties.*
 
 /** Test base for Properties. */
 open class PropertyTestBase {
@@ -58,6 +60,37 @@ open class PropertyTestBase {
     property.addListener(listener2)
     property.internalListener = internalListener
     property.guiListener = guiListener
+  }
+
+  /** Tests instantiations of all properties. */
+  @Test
+  @DisplayName("Tests instantiations of all properties")
+  fun instantiationTest() {
+    BooleanProperty()
+    BooleanProperty(true)
+    DoubleProperty()
+    DoubleProperty(1.0)
+    LimitedDoubleProperty()
+    LimitedDoubleProperty(lowerBoundInclusive = 0)
+    LimitedDoubleProperty(upperBoundInclusive = 1)
+    LimitedDoubleProperty(initialValue = 0)
+    LimitedDoubleProperty(lowerBoundInclusive = 0, initialValue = 0)
+    LimitedDoubleProperty(upperBoundInclusive = 1, initialValue = 0)
+    LimitedDoubleProperty(lowerBoundInclusive = 0, upperBoundInclusive = 1)
+    LimitedDoubleProperty(lowerBoundInclusive = 0, upperBoundInclusive = 1, initialValue = 0)
+    IntegerProperty()
+    IntegerProperty(1)
+    StringProperty()
+    StringProperty("Hello")
+
+    ReadonlyBooleanProperty()
+    ReadonlyBooleanProperty(true)
+    ReadonlyDoubleProperty()
+    ReadonlyDoubleProperty(1.0)
+    ReadonlyIntegerProperty()
+    ReadonlyIntegerProperty(1)
+    ReadonlyStringProperty()
+    ReadonlyStringProperty("Hello")
   }
 
   /** Test listener registering callback invocation. */
