@@ -1,3 +1,4 @@
+[0.7.2]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.2
 [0.7.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.1
 [0.7]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7
 [0.6]: https://github.com/tudo-aqua/bgw/releases/tag/v0.6
@@ -16,7 +17,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.7.2 - To be released
+## [0.7.2] - 15.08.2022
 
 ### Added
  - Debug mode in network client now prints JSON of sent game message.
@@ -30,7 +31,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
  - Messages passing each other in clients asynchronous receiver function resolution.
+ - PlayerLeftNotification not sent upon socket close.
  - Exception thrown in asynchronous coroutine not displayed in default exception handler.
+ - Validation of non-JSON files in bgw-net frontend showing incorrect messages.
 
 ## [0.7.1] - 05.08.2022
 
