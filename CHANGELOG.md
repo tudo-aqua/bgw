@@ -23,6 +23,10 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
  - Hide "Connections and Sessions" from non-admin users in BGW-net frontend.
+ - Unified named arguments in ``KeyEvent``.
+
+### Removed
+ - DSL package.
 
 ### Fixed
  - Messages passing each other in clients asynchronous receiver function resolution.
