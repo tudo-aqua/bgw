@@ -17,23 +17,28 @@
 
 package tools.aqua.bgw.event
 
-/** Enum indicating direction of a [ScrollEvent]. */
-enum class ScrollDirection {
-  /** Upwards. */
-  UP,
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import tools.aqua.bgw.event.KeyCode.*
 
-  /** Downwards. */
-  DOWN;
+/** Tests for [KeyCode]. */
+class ScrollDirectionTest {
 
-  /**
-   * Multiplies [scalar] by 1 ([UP]) or -1 ([DOWN]).
-   *
-   * @param scalar Scalar to be multiplied.
-   */
-  operator fun times(scalar: Number): Double = scalar.toDouble() * (if (this == UP) 1 else -1)
+  /** Tests multiply. */
+  @Test
+  @DisplayName("Test multiply")
+  fun testMultiply() {
+    assertEquals(2.0, ScrollDirection.UP * 2)
+    assertEquals(-2.0, ScrollDirection.DOWN * 2)
+  }
 
-  companion object {
-    /** Returns [ScrollDirection] based on scrolled delta value. */
-    internal fun of(delta: Number): ScrollDirection = if (delta.toDouble() < 0) DOWN else UP
+  /** Tests of. */
+  @Test
+  @DisplayName("Test of")
+  fun testOf() {
+    assertEquals(ScrollDirection.UP, ScrollDirection.of(2))
+    assertEquals(ScrollDirection.UP, ScrollDirection.of(0))
+    assertEquals(ScrollDirection.DOWN, ScrollDirection.of(-2))
   }
 }
