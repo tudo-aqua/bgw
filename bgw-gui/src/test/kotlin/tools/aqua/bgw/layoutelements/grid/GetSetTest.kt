@@ -91,6 +91,24 @@ class GetSetTest : GridPaneTestBase() {
     }
   }
 
+  /** Set column widths with single value AUTO. */
+  @Test
+  @DisplayName("Set column widths with single value AUTO")
+  fun testGetSetColumnWidthsWithSingleValueAuto() {
+    grid.setColumnWidths(COLUMN_WIDTH_AUTO)
+
+    for (i in 0..2) {
+      assertEquals(COLUMN_WIDTH_AUTO, grid.getColumnWidth(i))
+    }
+  }
+
+  /** Set column widths with single value negative. */
+  @Test
+  @DisplayName("Set column widths with single value negative")
+  fun testGetSetColumnWidthsWithSingleValueNegative() {
+    assertThrows<IllegalArgumentException> { grid.setColumnWidths(-42) }
+  }
+
   /** Set column widths with array. */
   @Test
   @DisplayName("Set column widths with array")
@@ -100,6 +118,20 @@ class GetSetTest : GridPaneTestBase() {
     for (i in 0..2) {
       assertEquals(42.0, grid.getColumnWidth(i))
     }
+  }
+
+  /** Set column widths with array negative. */
+  @Test
+  @DisplayName("Set column widths with array negative")
+  fun testGetSetColumnWidthsWithArrayNegative() {
+    assertThrows<IllegalArgumentException> { grid.setColumnWidths(DoubleArray(3) { -42.0 }) }
+  }
+
+  /** Set column widths with array wrong size. */
+  @Test
+  @DisplayName("Set column widths with array wrong size")
+  fun testGetSetColumnWidthsWithArrayWrongSize() {
+    assertThrows<IllegalArgumentException> { grid.setColumnWidths(DoubleArray(2) { 42.0 }) }
   }
 
   /** Set auto column width. */
@@ -171,6 +203,24 @@ class GetSetTest : GridPaneTestBase() {
     }
   }
 
+  /** Set row heights with single value AUTO. */
+  @Test
+  @DisplayName("Set row heights with single value AUTO")
+  fun testGetSetRowHeightsWithSingleValueAuto() {
+    grid.setRowHeights(ROW_HEIGHT_AUTO)
+
+    for (i in 0..2) {
+      assertEquals(ROW_HEIGHT_AUTO, grid.getRowHeight(i))
+    }
+  }
+
+  /** Set row heights with single value negative. */
+  @Test
+  @DisplayName("Set row heights with single value negative")
+  fun testGetSetRowHeightsWithSingleValueNegative() {
+    assertThrows<IllegalArgumentException> { grid.setRowHeights(-42) }
+  }
+
   /** Set row heights with array. */
   @Test
   @DisplayName("Set row heights with array")
@@ -180,6 +230,20 @@ class GetSetTest : GridPaneTestBase() {
     for (i in 0..2) {
       assertEquals(42.0, grid.getRowHeight(i), "index $i")
     }
+  }
+
+  /** Set row heights with array negative. */
+  @Test
+  @DisplayName("Set row heights with array negative")
+  fun testGetSetRowHeightsWithArrayNegative() {
+    assertThrows<IllegalArgumentException> { grid.setRowHeights(DoubleArray(3) { -42.0 }) }
+  }
+
+  /** Set column widths with array wrong size. */
+  @Test
+  @DisplayName("Set column widths with array wrong size")
+  fun testGetSetRowHeightsWithArrayWrongSize() {
+    assertThrows<IllegalArgumentException> { grid.setRowHeights(DoubleArray(2) { 42.0 }) }
   }
 
   /** Set auto row height. */

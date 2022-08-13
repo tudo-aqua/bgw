@@ -19,6 +19,7 @@ package tools.aqua.bgw.layoutelements.grid
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 /** Test addColumn function on Grid. */
 class AddColumnTest : GridPaneTestBase() {
@@ -27,7 +28,7 @@ class AddColumnTest : GridPaneTestBase() {
   @Test
   @DisplayName("Add column at start")
   fun testAddColumnAtStart() {
-    grid.addColumns(0, 1)
+    grid.addColumns(0)
 
     // First column must be empty
     testNull(columns = 0..0)
@@ -43,7 +44,7 @@ class AddColumnTest : GridPaneTestBase() {
   @Test
   @DisplayName("Add column at end")
   fun testAddColumnAtEnd() {
-    grid.addColumns(3, 1)
+    grid.addColumns(3)
 
     // Columns 0-2 unchanged
     testUnchanged()
@@ -71,5 +72,25 @@ class AddColumnTest : GridPaneTestBase() {
     testUnchanged(columns = 5..5, columnBias = -3)
 
     checkSize(6, 3)
+  }
+
+  /** Add column out of bounds to the left. */
+  @Test
+  @DisplayName("Add column out of bounds to the left")
+  fun testAddColumnOutOfBoundsLeft() {
+    assertThrows<IllegalArgumentException> { grid.addColumns(-1) }
+
+    // Grid size should not be updated
+    checkSize(3, 3)
+  }
+
+  /** Add column out of bounds to the left. */
+  @Test
+  @DisplayName("Add column out of bounds to the left")
+  fun testAddColumnOutOfBoundsRight() {
+    assertThrows<IllegalArgumentException> { grid.addColumns(4) }
+
+    // Grid size should not be updated
+    checkSize(3, 3)
   }
 }

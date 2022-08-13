@@ -87,6 +87,11 @@ class GrowTest : GridPaneTestBase() {
 
     checkSize()
     testUnchanged()
+
+    grid.grow()
+
+    checkSize()
+    testUnchanged()
   }
 
   /** Don't grow to the left for negative parameter. */

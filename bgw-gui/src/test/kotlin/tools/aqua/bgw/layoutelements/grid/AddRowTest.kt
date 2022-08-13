@@ -19,6 +19,7 @@ package tools.aqua.bgw.layoutelements.grid
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 /** Test addRow function on Grid. */
 class AddRowTest : GridPaneTestBase() {
@@ -27,7 +28,7 @@ class AddRowTest : GridPaneTestBase() {
   @Test
   @DisplayName("Add row at start")
   fun testAddRowAtStart() {
-    grid.addRows(0, 1)
+    grid.addRows(0)
 
     // First row must be empty
     testNull(rows = 0..0)
@@ -43,7 +44,7 @@ class AddRowTest : GridPaneTestBase() {
   @Test
   @DisplayName("Add row at end")
   fun testAddRowAtEnd() {
-    grid.addRows(3, 1)
+    grid.addRows(3)
 
     // Rows 0-2 unchanged
     testUnchanged()
@@ -71,5 +72,25 @@ class AddRowTest : GridPaneTestBase() {
     testUnchanged(rows = 5..5, rowBias = -3)
 
     checkSize(3, 6)
+  }
+
+  /** Add row out of bounds on the top. */
+  @Test
+  @DisplayName("Add row out of bounds on the top")
+  fun testAddRowOutOfBoundsTop() {
+    assertThrows<IllegalArgumentException> { grid.addRows(-1) }
+
+    // Grid size should not be updated
+    checkSize(3, 3)
+  }
+
+  /** Add row out of bounds on the bottom. */
+  @Test
+  @DisplayName("Add row out of bounds on the bottom")
+  fun testAddRowOutOfBoundsBottom() {
+    assertThrows<IllegalArgumentException> { grid.addRows(4) }
+
+    // Grid size should not be updated
+    checkSize(3, 3)
   }
 }

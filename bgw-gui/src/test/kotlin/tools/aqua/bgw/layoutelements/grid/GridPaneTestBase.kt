@@ -17,8 +17,10 @@
 
 package tools.aqua.bgw.layoutelements.grid
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.ColorPicker
@@ -118,13 +120,13 @@ open class GridPaneTestBase {
     for (i in 0 until rows) {
       grid.getRowHeight(i)
     }
-    assertThrows(IllegalArgumentException::class.java) { grid.getRowHeight(rows) }
+    assertThrows<IllegalArgumentException> { grid.getRowHeight(rows) }
 
     // Check columnWidths Array
     for (i in 0 until columns) {
       grid.getColumnWidth(i)
     }
-    assertThrows(IllegalArgumentException::class.java) { grid.getColumnWidth(columns) }
+    assertThrows<IllegalArgumentException> { grid.getColumnWidth(columns) }
 
     // Check cellCenterMode Array
     for (i in 0 until rows) {
@@ -132,13 +134,13 @@ open class GridPaneTestBase {
         grid.getCellCenterMode(rowIndex = i, columnIndex = j)
       }
     }
-    assertThrows(IllegalArgumentException::class.java) {
+    assertThrows<IllegalArgumentException> {
       grid.getCellCenterMode(rowIndex = 0, columnIndex = columns)
     }
-    assertThrows(IllegalArgumentException::class.java) {
+    assertThrows<IllegalArgumentException> {
       grid.getCellCenterMode(rowIndex = rows, columnIndex = 0)
     }
-    assertThrows(IllegalArgumentException::class.java) {
+    assertThrows<IllegalArgumentException> {
       grid.getCellCenterMode(rowIndex = rows, columnIndex = columns)
     }
   }
