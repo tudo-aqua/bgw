@@ -20,7 +20,6 @@
 package tools.aqua.bgw.observable.lists
 
 import java.util.*
-import java.util.function.Consumer
 import tools.aqua.bgw.observable.ValueObservable
 
 /**
@@ -99,9 +98,6 @@ abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   operator fun get(index: Int): T = list[index]
-
-  /** ForEach action. */
-  fun forEach(action: Consumer<in T>): Unit = list.forEach(action)
 
   /**
    * Creates a *fail-fast* [Spliterator] over the elements in this list.

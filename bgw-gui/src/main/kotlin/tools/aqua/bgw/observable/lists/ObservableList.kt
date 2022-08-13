@@ -356,13 +356,6 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
     // notifyChange() not necessary since addAll() already notified.
   }
 
-  /**
-   * Returns an [Iterator] over the elements in this [ObservableList].
-   *
-   * @return [Iterator] over the elements in this list.
-   */
-  override fun iterator(): Iterator<T> = list.iterator()
-
   /** Sets [list] silently. */
   internal fun setSilent(elements: List<T>) {
     list.clear()
