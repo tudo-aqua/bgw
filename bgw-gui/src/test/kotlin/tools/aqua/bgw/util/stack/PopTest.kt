@@ -97,6 +97,17 @@ class PopTest : StackTestBase() {
     assertEquals(0, stack.size)
   }
 
+  /** Tests popAll on filled stack with default parameter. */
+  @Test
+  @DisplayName("Test popAll for all elements with default parameter")
+  fun testPopAllForAllDefaultParam() {
+    assertEquals(5, stack.size)
+
+    assertEquals(order, stack.popAll())
+
+    assertEquals(0, stack.size)
+  }
+
   /** Tests popAll for subset on filled stack. */
   @Test
   @DisplayName("Test popAll for some elements")

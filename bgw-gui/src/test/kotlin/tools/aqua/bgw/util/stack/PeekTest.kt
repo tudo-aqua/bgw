@@ -79,6 +79,17 @@ class PeekTest : StackTestBase() {
     assertEquals(5, stack.size)
   }
 
+  /** Tests peekAll on filled stack with default parameter. */
+  @Test
+  @DisplayName("Test peekAll for all elements with default parameter")
+  fun testPeekAllForAllDefaultParam() {
+    assertEquals(5, stack.size)
+
+    assertEquals(order, stack.peekAll())
+
+    assertEquals(5, stack.size)
+  }
+
   /** Tests peekAll for subset on filled stack. */
   @Test
   @DisplayName("Test peekAll for some elements")

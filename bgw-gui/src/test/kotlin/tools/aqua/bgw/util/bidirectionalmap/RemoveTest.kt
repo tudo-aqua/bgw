@@ -23,11 +23,20 @@ import org.junit.jupiter.api.Test
 
 /** Test remove function in BidirectionalMap. */
 class RemoveTest : BidirectionalMapTestBase() {
-  /** Test remove of existing relation . */
+  /** Test remove of existing relation. */
   @Test
   @DisplayName("Test remove of existing relation")
   fun testRemoveExistingRelation() {
     assertTrue(map.remove(0, 1))
+    assertFalse(map.contains(0, 1))
+    assertEquals(1, map.size)
+  }
+
+  /** Test remove of existing relation by pair. */
+  @Test
+  @DisplayName("Test remove of existing relation by pair")
+  fun testRemoveExistingRelationByPair() {
+    assertTrue(map.remove(Pair(0, 1)))
     assertFalse(map.contains(0, 1))
     assertEquals(1, map.size)
   }
@@ -41,11 +50,29 @@ class RemoveTest : BidirectionalMapTestBase() {
     assertEquals(2, map.size)
   }
 
+  /** Test remove of relation with existing key and non-existing value by pair. */
+  @Test
+  @DisplayName("Test remove of relation with existing key and non-existing value by pair")
+  fun testRemoveRelationExistingKeyByPair() {
+    assertFalse(map.remove(Pair(0, 5)))
+    assertTrue(map.contains(0, 1))
+    assertEquals(2, map.size)
+  }
+
   /** Test remove of relation with non-existing key and existing value. */
   @Test
   @DisplayName("Test remove of relation with non-existing key and existing value")
   fun testRemoveRelationExistingValue() {
     assertFalse(map.remove(5, 1))
+    assertTrue(map.contains(0, 1))
+    assertEquals(2, map.size)
+  }
+
+  /** Test remove of relation with non-existing key and existing value by pair. */
+  @Test
+  @DisplayName("Test remove of relation with non-existing key and existing value by pair")
+  fun testRemoveRelationExistingValueByPair() {
+    assertFalse(map.remove(Pair(5, 1)))
     assertTrue(map.contains(0, 1))
     assertEquals(2, map.size)
   }

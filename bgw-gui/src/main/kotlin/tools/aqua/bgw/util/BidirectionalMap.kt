@@ -107,8 +107,14 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    */
   fun addAll(vararg items: Pair<T, R>): Boolean {
     val nonDuplicates = items.filter { !contains(it) }.toList()
+    val keys = nonDuplicates.map { it.first }.distinct()
+    val values = nonDuplicates.map { it.second }.distinct()
 
-    if (nonDuplicates.any { containsForward(it.first) || containsBackward(it.second) }) return false
+    if (keys.size != nonDuplicates.size ||
+        values.size != nonDuplicates.size ||
+        keys.any { containsForward(it) } ||
+        values.any { containsBackward(it) })
+        return false
 
     nonDuplicates.forEach { map.add(it) }
 

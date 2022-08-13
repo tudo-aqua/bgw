@@ -85,14 +85,32 @@ class AddTest : BidirectionalMapTestBase() {
     assertTrue(map.contains(7, 8))
   }
 
-  /** Test adding new and old values by addAll. */
+  /** Test adding new and old pairs by addAll. */
   @Test
-  @DisplayName("Test adding new and old values by addAll")
+  @DisplayName("Test adding new and old pairs by addAll")
   fun testAddAllMixedNewAndOld() {
     assertTrue(map.addAll(Pair(5, 6), Pair(0, 1)))
 
     assertEquals(3, map.size)
     assertTrue(map.contains(5, 6))
+  }
+
+  /** Test adding new and old values by addAll. */
+  @Test
+  @DisplayName("Test adding new and old keys by addAll")
+  fun testAddAllMixedNewAndOldKeys() {
+    assertFalse(map.addAll(Pair(5, 6), Pair(0, 8)))
+
+    assertEquals(2, map.size)
+  }
+
+  /** Test adding new and old keys by addAll. */
+  @Test
+  @DisplayName("Test adding new and old keys by addAll")
+  fun testAddAllMixedNewAndOldValues() {
+    assertFalse(map.addAll(Pair(5, 6), Pair(8, 1)))
+
+    assertEquals(2, map.size)
   }
 
   /** Test adding new, old and invalid values by addAll. */
@@ -104,6 +122,28 @@ class AddTest : BidirectionalMapTestBase() {
     assertEquals(2, map.size)
     assertFalse(map.contains(5, 6))
     assertFalse(map.contains(0, 5))
+  }
+
+  /** Test adding items with duplicate key by addAll. */
+  @Test
+  @DisplayName("Test adding items with duplicate key by addAll")
+  fun testAddAllDuplicateKeys() {
+    assertFalse(map.addAll(Pair(1, 5), Pair(1, 6)))
+
+    assertEquals(2, map.size)
+    assertFalse(map.contains(4, 5))
+    assertFalse(map.contains(4, 6))
+  }
+
+  /** Test adding items with duplicate value by addAll. */
+  @Test
+  @DisplayName("Test adding items with duplicate value by addAll")
+  fun testAddAllDuplicateValues() {
+    assertFalse(map.addAll(Pair(1, 5), Pair(3, 5)))
+
+    assertEquals(2, map.size)
+    assertFalse(map.contains(4, 5))
+    assertFalse(map.contains(5, 5))
   }
 
   /** Test adding old values by addAll. */

@@ -198,4 +198,18 @@ class CoordinatePlainTest {
     assertEquals(expectedLowX, rotated.bottomLeftBound.xCoord, DOUBLE_TOLERANCE)
     assertEquals(expectedHighY, rotated.bottomLeftBound.yCoord, DOUBLE_TOLERANCE)
   }
+
+  /** Tests toString. */
+  @Test
+  @DisplayName("Test toString")
+  fun testToString() {
+    val plain = CoordinatePlain(0, 1, 5, 6)
+
+    assertEquals(
+        "CoordinatePlain(" +
+            "topLeft=X = 0.0, Y = 1.0, topRight=X = 5.0, Y = 1.0," +
+            " bottomLeft=X = 0.0, Y = 6.0, bottomRight=X = 5.0, Y = 6.0," +
+            " width=5.0, height=5.0)",
+        plain.toString())
+  }
 }

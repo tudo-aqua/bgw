@@ -75,8 +75,10 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    *
    * @return New coordinate object containing divided [Coordinate] by [denominator].
    */
-  operator fun div(denominator: Number): Coordinate =
-      Coordinate(xCoord / denominator.toDouble(), yCoord / denominator.toDouble())
+  operator fun div(denominator: Number): Coordinate {
+    require(denominator != 0) { "Dividing by zero is not allowed." }
+    return Coordinate(xCoord / denominator.toDouble(), yCoord / denominator.toDouble())
+  }
 
   /**
    * Rotates [Coordinate] by [angle] degrees around center point.
