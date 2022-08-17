@@ -97,18 +97,17 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
               scene = viewController.mauMauGameScene,
               duration = 500)
 
-      anim.onFinished =
-          {
-            hand.remove(cardView)
-            viewController.mauMauGameScene.gameStack.add(cardView)
+      anim.onFinished = {
+        hand.remove(cardView)
+        viewController.mauMauGameScene.gameStack.add(cardView)
 
-            cardView.posX = 0.0
-            cardView.posY = 0.0
+        cardView.posX = 0.0
+        cardView.posY = 0.0
 
-            // update label
-            viewController.mauMauGameScene.gameStackInfo.textProperty.value =
-                viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
-          }
+        // update label
+        viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+            viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
+      }
 
       viewController.mauMauGameScene.lock()
       viewController.mauMauGameScene.playAnimation(anim)
@@ -159,8 +158,8 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
   override fun refreshHintDrawCard() {
     hintOverlay =
         ((viewController.mauMauGameScene.drawStack.components.last().visual as CompoundVisual)
-                .children.last() as
-                ColorVisual)
+                .children
+                .last() as ColorVisual)
             .apply {
               color = Color.YELLOW
               transparency = 0.5
@@ -174,8 +173,8 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
    */
   override fun refreshHintPlayCard(card: MauMauCard) {
     hintOverlay =
-        ((viewController.cardMap.forward(card).visual as CompoundVisual).children.last() as
-                ColorVisual)
+        ((viewController.cardMap.forward(card).visual as CompoundVisual).children.last()
+                as ColorVisual)
             .apply {
               color = Color.YELLOW
               transparency = 0.5
@@ -199,47 +198,46 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 
     val delay =
         DelayAnimation(1000).apply {
-          onFinished =
-              {
-                // swap playerHands
-                //				val tmp = viewController.mauMauGameScene.currentPlayerHand
-                //				viewController.mauMauGameScene.currentPlayerHand =
-                // viewController.mauMauGameScene.otherPlayerHand
-                //				viewController.mauMauGameScene.otherPlayerHand = tmp
-                //
-                //				//swap hand positions
-                //				val tmpPosY = viewController.mauMauGameScene.currentPlayerHand.posY
-                //				viewController.mauMauGameScene.currentPlayerHand.posY =
-                // viewController.mauMauGameScene.otherPlayerHand.posY
-                //				viewController.mauMauGameScene.otherPlayerHand.posY = tmpPosY
-                //
-                //				//add interaction and show front for all cards in currentPlayerHand
-                //				viewController.mauMauGameScene.currentPlayerHand.components.forEach { t ->
-                //					t.addInteraction()
-                //					t.showFront()
-                //					t.onMouseEntered = null
-                //					t.onMouseExited = null
-                //				}
-                //
-                //				//add interaction and show back for all cards in otherPlayerHand
-                //				viewController.mauMauGameScene.otherPlayerHand.components.forEach { t ->
-                //					t.removeInteraction()
-                //					t.showBack()
-                //					t.onMouseEntered = {
-                //						viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.backVisual,
-                // t.frontVisual))
-                //					}
-                //					t.onMouseExited = {
-                //						viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.frontVisual,
-                // t.backVisual))
-                //					}
-                //				}
-                //
-                //				viewController.mauMauGameScene.currentPlayerHand.rotation += 180.0
-                //				viewController.mauMauGameScene.otherPlayerHand.rotation += 180.0
-                refreshHands()
-                viewController.mauMauGameScene.unlock()
-              }
+          onFinished = {
+            // swap playerHands
+            //				val tmp = viewController.mauMauGameScene.currentPlayerHand
+            //				viewController.mauMauGameScene.currentPlayerHand =
+            // viewController.mauMauGameScene.otherPlayerHand
+            //				viewController.mauMauGameScene.otherPlayerHand = tmp
+            //
+            //				//swap hand positions
+            //				val tmpPosY = viewController.mauMauGameScene.currentPlayerHand.posY
+            //				viewController.mauMauGameScene.currentPlayerHand.posY =
+            // viewController.mauMauGameScene.otherPlayerHand.posY
+            //				viewController.mauMauGameScene.otherPlayerHand.posY = tmpPosY
+            //
+            //				//add interaction and show front for all cards in currentPlayerHand
+            //				viewController.mauMauGameScene.currentPlayerHand.components.forEach { t ->
+            //					t.addInteraction()
+            //					t.showFront()
+            //					t.onMouseEntered = null
+            //					t.onMouseExited = null
+            //				}
+            //
+            //				//add interaction and show back for all cards in otherPlayerHand
+            //				viewController.mauMauGameScene.otherPlayerHand.components.forEach { t ->
+            //					t.removeInteraction()
+            //					t.showBack()
+            //					t.onMouseEntered = {
+            //						viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.backVisual,
+            // t.frontVisual))
+            //					}
+            //					t.onMouseExited = {
+            //						viewController.mauMauGameScene.playAnimation(FlipAnimation(t, t.frontVisual,
+            // t.backVisual))
+            //					}
+            //				}
+            //
+            //				viewController.mauMauGameScene.currentPlayerHand.rotation += 180.0
+            //				viewController.mauMauGameScene.otherPlayerHand.rotation += 180.0
+            refreshHands()
+            viewController.mauMauGameScene.unlock()
+          }
         }
 
     viewController.mauMauGameScene.lock()
@@ -457,28 +455,26 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
     isDraggable = true
 
     var overlay: ColorVisual? = null
-    onDragGestureStarted =
-        {
-          overlay =
-              ((viewController.mauMauGameScene.gameStack.components.last().visual as CompoundVisual)
-                      .children.last() as
-                      ColorVisual)
-                  .apply {
-                    color =
-                        if (viewController.logicController.checkRules(
-                            viewController.cardMap.backward(this@addInteraction)))
-                            Color.GREEN
-                        else Color.RED
+    onDragGestureStarted = {
+      overlay =
+          ((viewController.mauMauGameScene.gameStack.components.last().visual as CompoundVisual)
+                  .children
+                  .last() as ColorVisual)
+              .apply {
+                color =
+                    if (viewController.logicController.checkRules(
+                        viewController.cardMap.backward(this@addInteraction)))
+                        Color.GREEN
+                    else Color.RED
 
-                    transparency = 0.5
-                  }
-        }
+                transparency = 0.5
+              }
+    }
     onDragGestureEnded = { _, _ -> overlay?.transparency = 0.0 }
-    onMouseClicked =
-        {
-          viewController.logicController.playCard(
-              card = viewController.cardMap.backward(this), animated = true, isCurrentPlayer = true)
-        }
+    onMouseClicked = {
+      viewController.logicController.playCard(
+          card = viewController.cardMap.backward(this), animated = true, isCurrentPlayer = true)
+    }
   }
 
   /** Removes interactivity from card. */
@@ -491,14 +487,12 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 
   /** Removes sneak peek interactivity to card. */
   private fun CardView.addSneakInteraction() {
-    onMouseEntered =
-        {
-          viewController.mauMauGameScene.playAnimation(FlipAnimation(this, backVisual, frontVisual))
-        }
-    onMouseExited =
-        {
-          viewController.mauMauGameScene.playAnimation(FlipAnimation(this, frontVisual, backVisual))
-        }
+    onMouseEntered = {
+      viewController.mauMauGameScene.playAnimation(FlipAnimation(this, backVisual, frontVisual))
+    }
+    onMouseExited = {
+      viewController.mauMauGameScene.playAnimation(FlipAnimation(this, frontVisual, backVisual))
+    }
   }
 
   /** Removes sneak peek interactivity from card. */

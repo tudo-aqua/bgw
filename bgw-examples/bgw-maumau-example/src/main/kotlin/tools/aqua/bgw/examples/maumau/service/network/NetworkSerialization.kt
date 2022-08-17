@@ -95,8 +95,11 @@ object NetworkSerialization {
   private fun serializeCardValue(value: CardValue): String =
       when (value) {
         CardValue.ACE -> "A"
-        CardValue.TWO, CardValue.THREE, CardValue.FOUR, CardValue.FIVE, CardValue.SIX ->
-            throw NoSuchElementException("This card value does not exist in MauMau.")
+        CardValue.TWO,
+        CardValue.THREE,
+        CardValue.FOUR,
+        CardValue.FIVE,
+        CardValue.SIX -> throw NoSuchElementException("This card value does not exist in MauMau.")
         CardValue.SEVEN -> "7"
         CardValue.EIGHT -> "8"
         CardValue.NINE -> "9"

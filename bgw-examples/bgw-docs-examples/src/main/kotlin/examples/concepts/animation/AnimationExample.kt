@@ -96,66 +96,57 @@ class AnimationExample : BoardGameApplication("Animation example") {
   private val die: DiceView = DiceView(posX = 1400, posY = 500, visuals = dieVisuals)
 
   init {
-    buttonDelay.onMouseClicked =
-        {
-          gameScene.lock()
-          gameScene.playAnimation(
-              DelayAnimation(duration = 2000).apply {
-                onFinished =
-                    {
-                      println("Delay finished!")
-                      gameScene.unlock()
-                      showDialog(Dialog(DialogType.NONE, "", "", ""))
-                    }
-              })
-        }
-    buttonMovement.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              MovementAnimation(componentView = cardMovement, byX = 0, byY = -50, duration = 1000))
-        }
-    buttonRotation.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              RotationAnimation(componentView = cardRotation, byAngle = 180.0, duration = 1000))
-        }
-    buttonOpacity.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              FadeAnimation(
-                  componentView = cardOpacity, fromOpacity = 1.0, toOpacity = 0.0, duration = 1000))
-        }
-    buttonStretch.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              ScaleAnimation(componentView = cardStretch, byScale = 0.5, duration = 1000))
-        }
-    buttonFlip.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              FlipAnimation(
-                  gameComponentView = cardFlip,
-                  fromVisual = cardFlip.backVisual,
-                  toVisual = cardFlip.frontVisual,
-                  duration = 1000))
-        }
-    buttonRandomize.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              RandomizeAnimation(
-                  gameComponentView = cardRandomize,
-                  visuals = randomCardFaces,
-                  toVisual = cardFlip.frontVisual,
-                  duration = 1000,
-                  speed = 50))
-        }
-    buttonDie.onMouseClicked =
-        {
-          gameScene.playAnimation(
-              DiceAnimation(dice = die, toSide = 3, duration = 1000, speed = 50).apply {
-                onFinished = { die.currentSide = 3 }
-              })
-        }
+    buttonDelay.onMouseClicked = {
+      gameScene.lock()
+      gameScene.playAnimation(
+          DelayAnimation(duration = 2000).apply {
+            onFinished = {
+              println("Delay finished!")
+              gameScene.unlock()
+              showDialog(Dialog(DialogType.NONE, "", "", ""))
+            }
+          })
+    }
+    buttonMovement.onMouseClicked = {
+      gameScene.playAnimation(
+          MovementAnimation(componentView = cardMovement, byX = 0, byY = -50, duration = 1000))
+    }
+    buttonRotation.onMouseClicked = {
+      gameScene.playAnimation(
+          RotationAnimation(componentView = cardRotation, byAngle = 180.0, duration = 1000))
+    }
+    buttonOpacity.onMouseClicked = {
+      gameScene.playAnimation(
+          FadeAnimation(
+              componentView = cardOpacity, fromOpacity = 1.0, toOpacity = 0.0, duration = 1000))
+    }
+    buttonStretch.onMouseClicked = {
+      gameScene.playAnimation(
+          ScaleAnimation(componentView = cardStretch, byScale = 0.5, duration = 1000))
+    }
+    buttonFlip.onMouseClicked = {
+      gameScene.playAnimation(
+          FlipAnimation(
+              gameComponentView = cardFlip,
+              fromVisual = cardFlip.backVisual,
+              toVisual = cardFlip.frontVisual,
+              duration = 1000))
+    }
+    buttonRandomize.onMouseClicked = {
+      gameScene.playAnimation(
+          RandomizeAnimation(
+              gameComponentView = cardRandomize,
+              visuals = randomCardFaces,
+              toVisual = cardFlip.frontVisual,
+              duration = 1000,
+              speed = 50))
+    }
+    buttonDie.onMouseClicked = {
+      gameScene.playAnimation(
+          DiceAnimation(dice = die, toSide = 3, duration = 1000, speed = 50).apply {
+            onFinished = { die.currentSide = 3 }
+          })
+    }
 
     gameScene.addComponents(
         buttonDelay,

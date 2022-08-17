@@ -34,14 +34,13 @@ class ProtocolClientApplication :
   init {
     background = ColorVisual.WHITE
 
-    connectionScene.buttonJoin.onMouseClicked =
-        {
-          networkService.joinGame(
-              address = connectionScene.addressText.text,
-              secret = connectionScene.secretText.text,
-              sessionID = connectionScene.sessionIDText.text,
-          )
-        }
+    connectionScene.buttonJoin.onMouseClicked = {
+      networkService.joinGame(
+          address = connectionScene.addressText.text,
+          secret = connectionScene.secretText.text,
+          sessionID = connectionScene.sessionIDText.text,
+      )
+    }
 
     onWindowClosed = { networkService.close() }
 

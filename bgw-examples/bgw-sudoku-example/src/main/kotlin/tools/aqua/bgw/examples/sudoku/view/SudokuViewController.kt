@@ -57,23 +57,20 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
   private fun SudokuMenuScene.registerEvents() {
     continueGameButton.onMouseClicked = { hideMenuScene() }
 
-    newGameEasyButton.onMouseClicked =
-        {
-          logicController.newGame(Difficulty.EASY)
-          hideMenuScene()
-        }
+    newGameEasyButton.onMouseClicked = {
+      logicController.newGame(Difficulty.EASY)
+      hideMenuScene()
+    }
 
-    newGameMediumButton.onMouseClicked =
-        {
-          logicController.newGame(Difficulty.MEDIUM)
-          hideMenuScene()
-        }
+    newGameMediumButton.onMouseClicked = {
+      logicController.newGame(Difficulty.MEDIUM)
+      hideMenuScene()
+    }
 
-    newGameHardButton.onMouseClicked =
-        {
-          logicController.newGame(Difficulty.HARD)
-          hideMenuScene()
-        }
+    newGameHardButton.onMouseClicked = {
+      logicController.newGame(Difficulty.HARD)
+      hideMenuScene()
+    }
 
     exitButton.onMouseClicked = { exit() }
   }
@@ -95,14 +92,13 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 
   /** Registers events for [sudokuGameScene]. */
   private fun SudokuGameScene.registerEvents() {
-    onKeyPressed =
-        {
-          when {
-            it.keyCode.isArrow() -> onCursorMoved(it.keyCode)
-            it.keyCode.isDigit() -> onDigitEntered(it.keyCode)
-            it.keyCode == KeyCode.DELETE -> onValueDeleted()
-          }
-        }
+    onKeyPressed = {
+      when {
+        it.keyCode.isArrow() -> onCursorMoved(it.keyCode)
+        it.keyCode.isDigit() -> onDigitEntered(it.keyCode)
+        it.keyCode == KeyCode.DELETE -> onValueDeleted()
+      }
+    }
 
     logicController.settings.showTimer.addListener { _, nV -> timer.isVisible = nV }
 

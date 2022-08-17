@@ -35,3 +35,7 @@ mavenMetadata {
   githubProject.set(GithubProject("tudo-aqua", "bgw"))
   licenses.addAll(APACHE_2)
 }
+
+koverMerged {
+  filters { projects { excludes += listOf(":bgw-docs", ":bgw-examples", ":bgw-net") } }
+}

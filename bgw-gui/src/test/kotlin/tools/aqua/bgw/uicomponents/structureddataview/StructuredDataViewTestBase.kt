@@ -58,11 +58,10 @@ open class StructuredDataViewTestBase(instance: StructuredDataView<String>) {
   fun setUp() {
     dataView.selectedIndices.addListener(indicesListener)
     dataView.selectedIndices.addListener(itemsListener)
-    dataView.onSelectionEvent =
-        {
-          invokedSingle++
-          invokedIndex = it
-        }
+    dataView.onSelectionEvent = {
+      invokedSingle++
+      invokedIndex = it
+    }
     dataView.onSelectAllEvent = { invokedAll++ }
     dataView.onSelectNoneEvent = { invokedClear++ }
   }

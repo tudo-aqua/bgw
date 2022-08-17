@@ -2,33 +2,31 @@
 
 # Platforms
 
-kotlin = "1.6.21"
-spring = "2.7.1"
-vaadin-framework = "23.0.6"
-# see https://github.com/vaadin/vaadin-gradle-plugin#getting-started for version map
-vaadin-plugin = "23.0.6"
+kotlin = "1.7.10"
+spring = "2.7.2"
+vaadin = "23.1.6"
 
 # Other
 
 jackson = "2.13.3"
 jekyllDocker = "4.2.0"
-junit = "5.8.2"
-ktor = "2.0.0-beta-1"
-openjfx = "17.0.2"
+junit = "5.9.0"
+ktor = "2.1.0"
+openjfx = "18.0.2"
 guava = "31.1-jre"
-testcontainers = "1.16.3"
+testcontainers = "1.17.3"
 
 [libraries]
 
 # Regular Libraries
 
-assertj = { group = "org.assertj", name = "assertj-core", version = "3.22.0" }
+assertj = { group = "org.assertj", name = "assertj-core", version = "3.23.1" }
 
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.21" }
 
-dockerClient = { group = "de.gesellix", name = "docker-client", version = "2022-02-01T12-00-00" }
+dockerClient = { group = "de.gesellix", name = "docker-client", version = "2022-07-28T22-55-00" }
 
-hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", version = "2.14.1" }
+hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", version = "2.18.0" }
 
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
@@ -36,17 +34,17 @@ jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-modul
 
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 
-javaWebSocket = { group = "org.java-websocket", name = "Java-WebSocket", version = "1.5.2" }
+javaWebSocket = { group = "org.java-websocket", name = "Java-WebSocket", version = "1.5.3" }
 
 jfoenix = { group = "com.jfoenix", name = "jfoenix", version = "9.0.10" }
 
-jsonSchemaValidator = { group = "com.networknt", name = "json-schema-validator", version = "1.0.68" }
+jsonSchemaValidator = { group = "com.networknt", name = "json-schema-validator", version = "1.0.72" }
 
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
 
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.0" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.2" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.4" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.3" }
 
 ktor-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
@@ -62,7 +60,7 @@ openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openj
 postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.4.1" }
 
 testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
-h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.210" }
+h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.214" }
 
 
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
@@ -74,7 +72,7 @@ spring-boot-oauth2-client = { group = "org.springframework.boot", name = "spring
 
 ilay = { group = "org.ilay", name = "ilay", version = "3.0-Final" }
 
-vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin-framework" }
+vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin" }
 
 # Gradle Plugins
 
@@ -84,15 +82,15 @@ gradle-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen
 gradle-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
 
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.42.0" }
-gradle-dependencyManagement = { group = "io.spring.gradle", name = "dependency-management-plugin", version = "1.0.11.RELEASE" }
-gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.19.0" }
-gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "5.1.4" }
-gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.5.0" }
+gradle-dependencyManagement = { group = "io.spring.gradle", name = "dependency-management-plugin", version = "1.0.13.RELEASE" }
+gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.21.0" }
+gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.3.0" }
+gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.6.0-Beta" }
 gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
-gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "6.3.0" }
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "6.9.1" }
 gradle-spring-boot = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "spring" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "2.1.0" }
-gradle-vaadin = { group = "com.vaadin", name = "vaadin-gradle-plugin", version.ref = "vaadin-plugin" }
+gradle-vaadin = { group = "com.vaadin", name = "vaadin-gradle-plugin", version.ref = "vaadin" }
 
 # Other
 

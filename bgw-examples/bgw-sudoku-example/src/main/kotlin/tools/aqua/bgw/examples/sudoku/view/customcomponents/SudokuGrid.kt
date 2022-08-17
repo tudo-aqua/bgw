@@ -58,12 +58,11 @@ class SudokuGrid(
     for (i in 0..8) {
       this[i % 3, i / 3] =
           SudokuBox(i, cellSize, minorSpacing).apply {
-            selectedEvent =
-                {
-                  selectedCell?.deselect()
-                  selectedCell = it.cell
-                  this@SudokuGrid.selectedEvent?.invoke(it)
-                }
+            selectedEvent = {
+              selectedCell?.deselect()
+              selectedCell = it.cell
+              this@SudokuGrid.selectedEvent?.invoke(it)
+            }
           }
     }
   }

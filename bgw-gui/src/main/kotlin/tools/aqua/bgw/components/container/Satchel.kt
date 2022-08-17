@@ -95,29 +95,25 @@ open class Satchel<T : GameComponentView>(
     isDraggableProperty.setSilent(true)
 
     // add internal listeners
-    isDraggableProperty.internalListener =
-        { _, nV ->
-          initialState.isDraggable = nV
-          isDraggableProperty.setSilent(true)
-        }
+    isDraggableProperty.internalListener = { _, nV ->
+      initialState.isDraggable = nV
+      isDraggableProperty.setSilent(true)
+    }
 
-    opacityProperty.internalListener =
-        { _, nV ->
-          initialState.opacity = nV
-          opacityProperty.setSilent(0.0)
-        }
+    opacityProperty.internalListener = { _, nV ->
+      initialState.opacity = nV
+      opacityProperty.setSilent(0.0)
+    }
 
-    widthProperty.internalListener =
-        { _, nV ->
-          initialState.width = nV
-          widthProperty.setSilent(this@Satchel.width)
-        }
+    widthProperty.internalListener = { _, nV ->
+      initialState.width = nV
+      widthProperty.setSilent(this@Satchel.width)
+    }
 
-    heightProperty.internalListener =
-        { _, nV ->
-          initialState.height = nV
-          heightProperty.setSilent(this@Satchel.height)
-        }
+    heightProperty.internalListener = { _, nV ->
+      initialState.height = nV
+      heightProperty.setSilent(this@Satchel.height)
+    }
 
     // add pos listeners
     this.posXProperty.addListenerAndInvoke(0.0) { _, _ -> posXProperty.setSilent(0.0) }

@@ -46,22 +46,19 @@ class VisualsExample : BoardGameApplication("Visuals example") {
   init {
     buttonColor.onMouseClicked = { token.visual = ColorVisual.GREEN }
     buttonImage.onMouseClicked = { token.visual = ImageVisual("Die.png") }
-    buttonText.onMouseClicked =
-        {
-          token.visual =
+    buttonText.onMouseClicked = {
+      token.visual =
+          TextVisual(
+              "Roll", Font(size = 20, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD))
+    }
+    buttonCompound.onMouseClicked = {
+      token.visual =
+          CompoundVisual(
+              ImageVisual("Die.png"),
+              ColorVisual.GREEN.apply { transparency = 0.4 },
               TextVisual(
-                  "Roll", Font(size = 20, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD))
-        }
-    buttonCompound.onMouseClicked =
-        {
-          token.visual =
-              CompoundVisual(
-                  ImageVisual("Die.png"),
-                  ColorVisual.GREEN.apply { transparency = 0.4 },
-                  TextVisual(
-                      "Roll",
-                      Font(size = 40, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD)))
-        }
+                  "Roll", Font(size = 40, color = Color.WHITE, fontWeight = Font.FontWeight.BOLD)))
+    }
 
     gameScene.addComponents(token, buttonColor, buttonImage, buttonText, buttonCompound)
     showGameScene(gameScene)

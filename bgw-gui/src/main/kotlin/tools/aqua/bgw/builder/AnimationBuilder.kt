@@ -86,14 +86,13 @@ object AnimationBuilder {
       byY = anim.toY - anim.fromY
 
       // set on finished
-      onFinished =
-          EventHandler {
-            node.layoutX = anim.toX
-            node.layoutY = anim.toY
-            node.translateX = 0.0
-            node.translateY = 0.0
-            onFinished(scene, anim)
-          }
+      onFinished = EventHandler {
+        node.layoutX = anim.toX
+        node.layoutY = anim.toY
+        node.translateX = 0.0
+        node.translateY = 0.0
+        onFinished(scene, anim)
+      }
     }
   }
 
@@ -112,13 +111,12 @@ object AnimationBuilder {
       byAngle = anim.toAngle - anim.fromAngle
 
       // set on finished
-      onFinished =
-          EventHandler {
-            node.rotate = anim.toAngle
-            node.translateX = 0.0
-            node.translateY = 0.0
-            onFinished(scene, anim)
-          }
+      onFinished = EventHandler {
+        node.rotate = anim.toAngle
+        node.translateX = 0.0
+        node.translateY = 0.0
+        onFinished(scene, anim)
+      }
     }
   }
 
@@ -228,10 +226,9 @@ object AnimationBuilder {
     repeat(anim.speed) {
       seq.children +=
           PauseTransition(Duration.millis(anim.duration / anim.speed.toDouble())).apply {
-            onFinished =
-                EventHandler {
-                  anim.componentView.currentSide = Random.nextInt(anim.componentView.visuals.size)
-                }
+            onFinished = EventHandler {
+              anim.componentView.currentSide = Random.nextInt(anim.componentView.visuals.size)
+            }
           }
     }
 

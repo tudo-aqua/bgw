@@ -41,20 +41,18 @@ object DragDropBuilder {
   ) {
     val isMouseInitiallyTransparent = stackPane.isMouseTransparent
 
-    stackPane.onDragDetected =
-        EventHandler {
-          if (isDraggable && scene.draggedComponentProperty.value == null) {
-            onDragDetected(scene as BoardGameScene, it)
-            stackPane.isMouseTransparent = true
-            stackPane.startFullDrag()
-          }
-        }
+    stackPane.onDragDetected = EventHandler {
+      if (isDraggable && scene.draggedComponentProperty.value == null) {
+        onDragDetected(scene as BoardGameScene, it)
+        stackPane.isMouseTransparent = true
+        stackPane.startFullDrag()
+      }
+    }
 
-    stackPane.onDragDropped =
-        EventHandler {
-          scene.draggedComponentProperty.value = null
-          stackPane.isMouseTransparent = isMouseInitiallyTransparent
-        }
+    stackPane.onDragDropped = EventHandler {
+      scene.draggedComponentProperty.value = null
+      stackPane.isMouseTransparent = isMouseInitiallyTransparent
+    }
   }
 
   /** Adds onDragDetected to [DynamicComponentView]. */

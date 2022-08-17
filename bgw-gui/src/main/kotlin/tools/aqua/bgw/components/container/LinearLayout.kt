@@ -170,14 +170,12 @@ open class LinearLayout<T : GameComponentView>(
 
   override fun T.onAdd() {
     // add pos listeners
-    posXProperty.internalListener =
-        { _, _ ->
-          observableComponents.internalListener?.invoke(emptyList(), emptyList())
-        }
-    posYProperty.internalListener =
-        { _, _ ->
-          observableComponents.internalListener?.invoke(emptyList(), emptyList())
-        }
+    posXProperty.internalListener = { _, _ ->
+      observableComponents.internalListener?.invoke(emptyList(), emptyList())
+    }
+    posYProperty.internalListener = { _, _ ->
+      observableComponents.internalListener?.invoke(emptyList(), emptyList())
+    }
   }
 
   override fun T.onRemove() {

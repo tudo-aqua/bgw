@@ -50,12 +50,11 @@ class UserInputExample : BoardGameApplication("User input example") {
     button.onKeyReleased = { keyEvent -> button.text = "released key: ${keyEvent.keyCode}" }
     button.onKeyTyped = { keyEvent -> button.text = "typed key: ${keyEvent.character}" }
     button.dropAcceptor = { true }
-    button.onDragDropped =
-        {
-          it.draggedComponent.reposition(500, 30)
-          it.draggedComponent.rotation = 0.0
-          gameScene.addComponents(token)
-        }
+    button.onDragDropped = {
+      it.draggedComponent.reposition(500, 30)
+      it.draggedComponent.rotation = 0.0
+      gameScene.addComponents(token)
+    }
     button.onDragGestureEntered = { dragEvent -> button.visual = dragEvent.draggedComponent.visual }
     button.onDragGestureExited = { button.visual = ColorVisual.GREEN }
 

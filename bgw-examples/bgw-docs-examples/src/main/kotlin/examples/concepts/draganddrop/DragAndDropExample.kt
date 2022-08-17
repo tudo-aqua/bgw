@@ -41,44 +41,38 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
 
   init {
     redToken.isDraggable = true
-    redToken.onDragGestureEnded =
-        { _, success ->
-          if (success) {
-            redToken.isDraggable = false
-          }
-        }
+    redToken.onDragGestureEnded = { _, success ->
+      if (success) {
+        redToken.isDraggable = false
+      }
+    }
 
     greenToken.isDraggable = true
-    greenToken.onDragGestureEnded =
-        { _, success ->
-          if (success) {
-            greenToken.isDraggable = false
-          }
-        }
+    greenToken.onDragGestureEnded = { _, success ->
+      if (success) {
+        greenToken.isDraggable = false
+      }
+    }
 
-    redArea.dropAcceptor =
-        { dragEvent ->
-          when (dragEvent.draggedComponent) {
-            is TokenView -> dragEvent.draggedComponent == redToken
-            else -> false
-          }
-        }
-    redArea.onDragDropped =
-        { dragEvent ->
-          redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-        }
+    redArea.dropAcceptor = { dragEvent ->
+      when (dragEvent.draggedComponent) {
+        is TokenView -> dragEvent.draggedComponent == redToken
+        else -> false
+      }
+    }
+    redArea.onDragDropped = { dragEvent ->
+      redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
+    }
 
-    greenArea.dropAcceptor =
-        { dragEvent ->
-          when (dragEvent.draggedComponent) {
-            is TokenView -> dragEvent.draggedComponent == greenToken
-            else -> false
-          }
-        }
-    greenArea.onDragDropped =
-        { dragEvent ->
-          greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-        }
+    greenArea.dropAcceptor = { dragEvent ->
+      when (dragEvent.draggedComponent) {
+        is TokenView -> dragEvent.draggedComponent == greenToken
+        else -> false
+      }
+    }
+    greenArea.onDragDropped = { dragEvent ->
+      greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
+    }
 
     gameScene.addComponents(redToken, greenToken, redArea, greenArea)
     showGameScene(gameScene)

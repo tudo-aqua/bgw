@@ -77,8 +77,7 @@ object GameActionClassProcessor {
 
             isGameAction && isAnnotationPresent
           }
-          .toSet() as
-          Set<Class<out GameAction>>
+          .toSet() as Set<Class<out GameAction>>
 
   /** Filters [ClassPath] against blacklist [forbiddenPackagePrefix]. */
   private fun ClassPath.ClassInfo.isCandidate(): Boolean =

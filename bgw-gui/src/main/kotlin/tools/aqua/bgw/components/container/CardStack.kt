@@ -77,13 +77,12 @@ open class CardStack<T : CardView>(
     }
 
   init {
-    alignmentProperty.internalListener =
-        { _, _ ->
-          observableComponents.forEach {
-            it.layoutX()
-            it.layoutY()
-          }
-        }
+    alignmentProperty.internalListener = { _, _ ->
+      observableComponents.forEach {
+        it.layoutX()
+        it.layoutY()
+      }
+    }
   }
 
   /**

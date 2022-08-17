@@ -31,7 +31,7 @@ plugins {
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
-extra["vaadinVersion"] = libs.versions.vaadin.framework.get()
+extra["vaadinVersion"] = libs.versions.vaadin.get()
 
 val vaadinBom = libs.vaadin.bom.get()
 
