@@ -17,7 +17,6 @@
 
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tools.aqua.defaultFormat
 
 plugins {
@@ -76,7 +75,7 @@ tasks.test {
   testLogging { events(FAILED, PASSED, SKIPPED) }
 }
 
-tasks.withType<KotlinCompile> {
+kotlin.target.compilations.all {
   kotlinOptions {
     jvmTarget = "11"
     // allWarningsAsErrors = true
