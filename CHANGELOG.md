@@ -1,3 +1,4 @@
+[0.7.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.3
 [0.7.2]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.2
 [0.7.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.1
 [0.7]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7
@@ -16,6 +17,8 @@
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.7.3] - To be released
 
 ## [0.7.2] - 14.08.2022
 
