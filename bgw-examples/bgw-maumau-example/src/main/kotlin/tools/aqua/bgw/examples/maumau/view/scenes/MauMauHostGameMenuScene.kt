@@ -19,10 +19,7 @@ package tools.aqua.bgw.examples.maumau.view.scenes
 
 import java.awt.Color
 import tools.aqua.bgw.components.layoutviews.GridPane
-import tools.aqua.bgw.components.uicomponents.Button
-import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.components.uicomponents.TextField
-import tools.aqua.bgw.components.uicomponents.UIComponent
+import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_HEIGHT
@@ -51,15 +48,16 @@ class MauMauHostGameMenuScene :
           text = "sopra.cs.tu-dortmund.de:80/bgw-net/connect",
           prompt = "Server address")
 
-  /** [TextField] for the network secret. */
-  val secretText: TextField = TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "Secret")
+  /** [PasswordField] for the network secret. */
+  val secretText: PasswordField =
+      PasswordField(height = 40, width = MENU_ITEM_WIDTH, prompt = "Secret")
 
   /** [TextField] for the player's name. */
   val nameText: TextField = TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "Your Name")
 
-  /** [TextField] for the session id. */
-  val sessionIDText: TextField =
-      TextField(height = 40, width = MENU_ITEM_WIDTH, prompt = "sessionID (optional)")
+  /** [PasswordField] for the session id. */
+  val sessionIDText: PasswordField =
+      PasswordField(height = 40, width = MENU_ITEM_WIDTH, prompt = "sessionID (optional)")
 
   /** Host game [Button]. */
   val hostGameButton: Button = MenuButton("Host Game")

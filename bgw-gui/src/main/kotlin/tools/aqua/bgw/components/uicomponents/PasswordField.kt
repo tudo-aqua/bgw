@@ -15,38 +15,36 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
-
 package tools.aqua.bgw.components.uicomponents
 
-import tools.aqua.bgw.core.DEFAULT_TEXT_AREA_HEIGHT
-import tools.aqua.bgw.core.DEFAULT_TEXT_AREA_WIDTH
+import tools.aqua.bgw.core.DEFAULT_TEXT_FIELD_HEIGHT
+import tools.aqua.bgw.core.DEFAULT_TEXT_FIELD_WIDTH
 import tools.aqua.bgw.util.Font
 
 /**
- * A [TextArea] is a multi line input field.
+ * A [PasswordField] is a single line input field that shows stars instead of typed text.
  *
  * Whenever user input occurs the [text] field gets updated.
  *
- * @constructor Creates a [TextArea].
+ * @constructor Creates a [PasswordField].
  *
- * @param posX Horizontal coordinate for this [TextArea]. Default: 0.
- * @param posY Vertical coordinate for this [TextArea]. Default: 0.
- * @param width Width for this [TextArea]. Default: [DEFAULT_TEXT_AREA_WIDTH].
- * @param height Height for this [TextArea]. Default: [DEFAULT_TEXT_AREA_HEIGHT].
- * @param text Initial text for this [TextArea]. Default: empty String.
- * @param prompt Prompt for this [TextArea]. This gets displayed as a prompt to the user whenever
- * the label is an empty string. Default: empty string.
+ * @param posX Horizontal coordinate for this [PasswordField]. Default: 0.
+ * @param posY Vertical coordinate for this [PasswordField]. Default: 0.
+ * @param width Width for this [PasswordField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
+ * @param height Height for this [PasswordField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
+ * @param text Initial text for this [PasswordField]. Default: empty String.
+ * @param prompt Prompt for this [PasswordField]. This gets displayed as a prompt to the user
+ * whenever the label is an empty string. Default: empty string.
  * @param font [Font] to be used to display [text].
  *
  * @see TextField
- * @see PasswordField
+ * @see TextArea
  */
-open class TextArea(
+open class PasswordField(
     posX: Number = 0,
     posY: Number = 0,
-    width: Number = DEFAULT_TEXT_AREA_WIDTH,
-    height: Number = DEFAULT_TEXT_AREA_HEIGHT,
+    width: Number = DEFAULT_TEXT_FIELD_WIDTH,
+    height: Number = DEFAULT_TEXT_FIELD_HEIGHT,
     text: String = "",
     prompt: String = "",
     font: Font = Font()
