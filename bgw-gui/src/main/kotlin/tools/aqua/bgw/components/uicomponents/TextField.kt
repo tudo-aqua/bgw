@@ -37,6 +37,7 @@ import tools.aqua.bgw.util.Font
  * the label is an empty string. Default: empty string.
  * @param font [Font] to be used to display [text].
  *
+ * @see PasswordField
  * @see TextArea
  */
 open class TextField(

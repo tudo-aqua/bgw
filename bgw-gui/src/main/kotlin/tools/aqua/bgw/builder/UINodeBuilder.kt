@@ -27,6 +27,7 @@ import javafx.scene.control.ColorPicker as FXColorPicker
 import javafx.scene.control.Label as FXLabel
 import javafx.scene.control.Labeled
 import javafx.scene.control.ListCell
+import javafx.scene.control.PasswordField as FXPasswordField
 import javafx.scene.control.ProgressBar as FXProgressBar
 import javafx.scene.control.TextArea as FXTextArea
 import javafx.scene.control.TextField as FXTextField
@@ -52,6 +53,7 @@ object UINodeBuilder {
         is Label -> buildLabel(uiComponent)
         is TextArea -> buildTextArea(uiComponent)
         is TextField -> buildTextField(uiComponent)
+        is PasswordField -> buildPasswordField(uiComponent)
         is ToggleButton -> buildToggleButton(uiComponent)
         is RadioButton -> buildRadioButton(uiComponent)
         is ColorPicker -> buildColorPicker(uiComponent)
@@ -89,6 +91,15 @@ object UINodeBuilder {
       FXTextField(textField.textProperty.value).apply {
         textProperty().bindTextProperty(textField)
         promptTextProperty().bindPromptProperty(textField)
+        disableUndo()
+      }
+
+  /** Builds [PasswordField]. */
+  private fun buildPasswordField(passwordField: PasswordField): Region =
+      FXPasswordField().apply {
+        text = passwordField.textProperty.value
+        textProperty().bindTextProperty(passwordField)
+        promptTextProperty().bindPromptProperty(passwordField)
         disableUndo()
       }
 
@@ -234,7 +245,7 @@ object UINodeBuilder {
   // endregion
 
   // region Helper
-  /** Disables the default undo operation on [FXTextInputControl]s on ctrl + z,. */
+  /** Disables the default undo operation on [FXTextInputControl]s on ctrl + z. */
   private fun FXTextInputControl.disableUndo() {
     addEventFilter(FXKeyEvent.ANY) { if (it.code == FXKeyCode.Z && it.isShortcutDown) it.consume() }
   }
