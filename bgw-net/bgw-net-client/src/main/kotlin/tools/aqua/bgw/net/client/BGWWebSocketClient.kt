@@ -28,6 +28,7 @@ import tools.aqua.bgw.net.common.Message
 import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
+import tools.aqua.bgw.net.common.notification.SpectatorJoinedNotification
 import tools.aqua.bgw.net.common.request.Request
 import tools.aqua.bgw.net.common.response.*
 
@@ -163,6 +164,11 @@ internal class BGWWebSocketClient(
         logger.debug("Received JoinGameResponse. Invoking handler for onJoinGameResponse.")
         callback.onJoinGameResponse(message)
       }
+      is SpectatorJoinGameResponse -> {
+        logger.debug(
+            "Received SpectatorJoinGameResponse. Invoking handler for onSpectatorJoinGameResponse.")
+        callback.onSpectatorJoinGameResponse(message)
+      }
       is LeaveGameResponse -> {
         logger.debug("Received LeaveGameResponse. Invoking handler for onLeaveGameResponse.")
         callback.onLeaveGameResponse(message)
@@ -170,6 +176,11 @@ internal class BGWWebSocketClient(
       is PlayerJoinedNotification -> {
         logger.debug("Received PlayerJoinedNotification. Invoking handler for onPlayerJoined.")
         callback.onPlayerJoined(message)
+      }
+      is SpectatorJoinedNotification -> {
+        logger.debug(
+            "Received SpectatorJoinedNotification. Invoking handler for onSpectatorJoined.")
+        callback.onSpectatorJoined(message)
       }
       is PlayerLeftNotification -> {
         logger.debug("Received PlayerLeftNotification. Invoking handler for onPlayerLeft.")
