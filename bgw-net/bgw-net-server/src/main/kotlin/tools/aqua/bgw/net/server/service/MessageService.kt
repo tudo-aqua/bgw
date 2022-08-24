@@ -29,6 +29,7 @@ import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.Notification
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
+import tools.aqua.bgw.net.common.notification.SpectatorJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
@@ -172,7 +173,7 @@ class MessageService(
             message = game?.greetingMessage ?: ""))
 
     if (spectatorJoinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
-      val notification = PlayerJoinedNotification(msg.greeting, player.name)
+      val notification = SpectatorJoinedNotification(msg.greeting, player.name)
 
       logger.info("Starting broadcast join message")
       gameService.getBySessionID(msg.sessionID)?.broadcastMessage(player, notification)
