@@ -269,13 +269,15 @@ radioButton.selectedProperty.addListener { _, newValue ->
 }
 ````
 
-## TextArea and TextField
-[TextArea][TextAreaKDoc] and [TextField][TextFieldKDoc] can be used to allow users to type texts. The main difference
-between TextArea and TextField, is that [TextArea][TextAreanKDoc] has multiple lines of input, while [TextField][TextFieldKDoc] only has one. The
+## TextArea, TextField and PasswordField
+[TextArea][TextAreaKDoc], [TextField][TextFieldKDoc] and [PasswordField][PasswordFieldKDoc] can be used to allow users 
+to type texts. The main difference between TextArea and TextField/PasswordField, is that [TextArea][TextAreanKDoc] has
+multiple lines of input, while [TextField][TextFieldKDoc] and [PasswordField][PasswordFieldKDoc] only have one. The
 text can be set and retrieved via ``text``. A prompt can be specified that informs the user, which textual input is
 requested. To react to user input, a listener on the ``textProperty`` can be added. Additionally, the
 ``onKeyPressed``, ``onKeyReleased`` and ``onKeyTyped`` handlers are a great way of executing code when textual input
-occurs.
+occurs. [PasswordField][PasswordFieldKDoc] acts like a [TextField][TextFieldKDoc] but uses stars to display the typed 
+text.
 
 In this example a TextArea, and a TextField with ``prompt``s are instantiated and listeners on their ``textProperty``s
 are added, that update the ``outputLabel`` with the current ``text``.
