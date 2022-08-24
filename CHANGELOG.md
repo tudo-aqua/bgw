@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - PasswordField.
+- Spectator join feature in bgw-net.
 
 ## [0.7.2] - 14.08.2022
 
