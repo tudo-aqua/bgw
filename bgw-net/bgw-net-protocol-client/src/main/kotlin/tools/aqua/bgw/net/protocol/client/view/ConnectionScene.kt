@@ -54,27 +54,17 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
   val sessionIDText: TextField =
       TextField(posX = 50, posY = 200, height = 40, width = width - 100, prompt = "sessionID")
 
-  /** [Button] for hosting a game. */
-  val buttonHost: Button =
+  /** [Button] for joining a game. */
+  val buttonJoin: Button =
       Button(
           posX = 50,
           posY = 250,
           height = 40,
-          width = width / 2 - 60,
-          text = "Host",
-          visual = ColorVisual.LIGHT_GRAY)
-
-  /** [Button] for joining a game. */
-  val buttonJoin: Button =
-      Button(
-          posX = width / 2 + 10,
-          posY = 250,
-          height = 40,
-          width = width / 2 - 60,
+          width = width - 100,
           text = "Join",
           visual = ColorVisual.LIGHT_GRAY)
 
   init {
-    addComponents(addressText, secretText, gameIDText, sessionIDText, buttonHost, buttonJoin)
+    addComponents(addressText, secretText, gameIDText, sessionIDText, buttonJoin)
   }
 }

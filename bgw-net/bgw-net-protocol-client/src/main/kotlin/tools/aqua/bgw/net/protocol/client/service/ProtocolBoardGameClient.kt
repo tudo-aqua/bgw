@@ -22,10 +22,8 @@ import tools.aqua.bgw.net.client.NetworkLogging
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
-import tools.aqua.bgw.net.common.response.CreateGameResponse
-import tools.aqua.bgw.net.common.response.CreateGameResponseStatus
-import tools.aqua.bgw.net.common.response.JoinGameResponse
-import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
+import tools.aqua.bgw.net.common.notification.SpectatorJoinedNotification
+import tools.aqua.bgw.net.common.response.*
 import tools.aqua.bgw.net.protocol.client.view.ProtocolClientApplication
 
 /**
@@ -57,13 +55,17 @@ class ProtocolBoardGameClient(
         view.onGameCreated(requireNotNull(response.sessionID))
   }
 
-  override fun onJoinGameResponse(response: JoinGameResponse) {
+  override fun onSpectatorJoinGameResponse(response: SpectatorJoinGameResponse) {
     if (response.status == JoinGameResponseStatus.SUCCESS)
         view.onGameJoined(requireNotNull(response.sessionID))
   }
 
   override fun onPlayerJoined(notification: PlayerJoinedNotification) {
-    view.onPlayerJoined(notification.sender)
+    view.onPlayerJoined(notification.sender, false)
+  }
+
+  override fun onSpectatorJoined(notification: SpectatorJoinedNotification) {
+    view.onPlayerJoined(notification.sender, true)
   }
 
   override fun onPlayerLeft(notification: PlayerLeftNotification) {

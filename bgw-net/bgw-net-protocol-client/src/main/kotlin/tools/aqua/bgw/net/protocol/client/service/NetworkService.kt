@@ -43,21 +43,6 @@ class NetworkService(private val view: ProtocolClientApplication) {
 
   // region Connection
   /**
-   * Connects to server and starts a new game session.
-   *
-   * @param address Server address and port.
-   * @param secret Server secret.
-   * @param gameID Game id.
-   * @param sessionID Session ID to host.
-   */
-  fun hostGame(address: String, secret: String, gameID: String, sessionID: String) {
-    if (!connect(address, secret)) return
-
-    if (sessionID.isEmpty()) client?.createGame(gameID, "Welcome!")
-    else client?.createGame(gameID, sessionID, "")
-  }
-
-  /**
    * Connects to server and joins a game session.
    *
    * @param address Server address and port.
@@ -67,7 +52,7 @@ class NetworkService(private val view: ProtocolClientApplication) {
   fun joinGame(address: String, secret: String, sessionID: String) {
     if (!connect(address, secret)) return
 
-    client?.joinGame(sessionID, "")
+    client?.spectateGame(sessionID, "")
   }
 
   /**
@@ -88,6 +73,11 @@ class NetworkService(private val view: ProtocolClientApplication) {
     } else {
       false
     }
+  }
+
+  /** Disconnects from the server and closes web socket client. */
+  fun close() {
+    if (client?.isOpen == true) client?.disconnect()
   }
 
   /** Formats current timestamp using [timeFormatter]. */
