@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 ## [0.7.3] - To be released
 
 ### Added
+- Spectator join feature in bgw-net.
 - PasswordField.
 - Spectator join feature in bgw-net.
 
