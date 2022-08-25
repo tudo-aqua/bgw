@@ -261,9 +261,12 @@ object UINodeBuilder {
       object : ListCell<T>() {
         override fun updateItem(item: T, empty: Boolean) {
           super.updateItem(item, empty)
-          this.style = comboBox.font.toFXFontCSS()
-          this.textFill = comboBox.font.color.toFXColor()
-          if (!empty) {
+
+          if (empty) {
+            this.textFill = Color(0F, 0F, 0F, 0F).toFXColor()
+          } else {
+            this.style = comboBox.font.toFXFontCSS()
+            this.textFill = comboBox.font.color.toFXColor()
             this.text = comboBox.formatFunction?.invoke(item) ?: item.toString()
           }
         }
