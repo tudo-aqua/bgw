@@ -28,4 +28,4 @@ dependencies {
   implementation(project(":bgw-net:bgw-net-client"))
 }
 
-application { mainClass.set("tools.aqua.bgw.examples.tetris.main.MainKt") }
+application { mainClass.set("tools.aqua.bgw.net.protocol.client.main.MainKt") }

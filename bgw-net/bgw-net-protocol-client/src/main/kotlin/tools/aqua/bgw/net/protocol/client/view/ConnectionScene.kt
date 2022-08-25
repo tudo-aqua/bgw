@@ -32,7 +32,7 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
           posY = 50,
           height = 40,
           width = width - 100,
-          text = "sopra.cs.tu-dortmund.de:80/bgw-net/connect",
+          text = "",
           prompt = "Server address")
 
   /** [TextField] for the network secret. */

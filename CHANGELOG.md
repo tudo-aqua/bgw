@@ -24,6 +24,9 @@ All notable changes to this project will be documented in this file.
 - Spectator join feature in bgw-net.
 - PasswordField.
 
+### Fixed
+- Wrong main class in build config of bgw-net protocol client
+
 ## [0.7.2] - 14.08.2022
 
 ### Added
