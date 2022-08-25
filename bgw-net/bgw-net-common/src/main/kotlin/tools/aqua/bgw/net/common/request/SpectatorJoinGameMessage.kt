@@ -15,22 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.common.request
 
-/** Status codes for game messages. */
-enum class GameActionResponseStatus {
-  /** The message was valid and broadcast to all the other connected players. */
-  SUCCESS,
-
-  /** This connection was not associated with a game. */
-  NO_ASSOCIATED_GAME,
-
-  /** A message was sent but connection was established in spectator only mode. */
-  SPECTATOR_ONLY,
-
-  /** The payload did not match the specified schema. Message was rejected. */
-  INVALID_JSON,
-
-  /** Something went wrong on the server. */
-  SERVER_ERROR
-}
+/**
+ * Message indicating joining an existing game session with given [sessionID] as a spectator.
+ *
+ * @property sessionID Unique id for the existing session to join to.
+ * @property greeting Greeting message to be broadcast to all other players in this session.
+ */
+data class SpectatorJoinGameMessage(val sessionID: String, val greeting: String) : Request()

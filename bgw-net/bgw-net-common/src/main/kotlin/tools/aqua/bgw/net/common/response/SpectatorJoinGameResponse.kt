@@ -17,20 +17,18 @@
 
 package tools.aqua.bgw.net.common.response
 
-/** Status codes for game messages. */
-enum class GameActionResponseStatus {
-  /** The message was valid and broadcast to all the other connected players. */
-  SUCCESS,
-
-  /** This connection was not associated with a game. */
-  NO_ASSOCIATED_GAME,
-
-  /** A message was sent but connection was established in spectator only mode. */
-  SPECTATOR_ONLY,
-
-  /** The payload did not match the specified schema. Message was rejected. */
-  INVALID_JSON,
-
-  /** Something went wrong on the server. */
-  SERVER_ERROR
-}
+/**
+ * Response upon [tools.aqua.bgw.net.common.request.SpectatorJoinGameMessage].
+ *
+ * @property status Status code.
+ * @property sessionID Session ID for this game. ``null`` if joining was not successful.
+ * @property players [List] of all non-spectator players currently in this game. Sorted ascending by
+ * connection time i.e. index 0 is the game's host.
+ * @property message The Welcome message from the host.
+ */
+class SpectatorJoinGameResponse(
+    val status: JoinGameResponseStatus,
+    val sessionID: String?,
+    val players: List<String>,
+    val message: String
+) : Response()

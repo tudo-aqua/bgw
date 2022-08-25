@@ -15,22 +15,13 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.net.common.response
+package tools.aqua.bgw.net.common.notification
 
-/** Status codes for game messages. */
-enum class GameActionResponseStatus {
-  /** The message was valid and broadcast to all the other connected players. */
-  SUCCESS,
-
-  /** This connection was not associated with a game. */
-  NO_ASSOCIATED_GAME,
-
-  /** A message was sent but connection was established in spectator only mode. */
-  SPECTATOR_ONLY,
-
-  /** The payload did not match the specified schema. Message was rejected. */
-  INVALID_JSON,
-
-  /** Something went wrong on the server. */
-  SERVER_ERROR
-}
+/**
+ * Notification indicating disconnection of a spectator.
+ *
+ * @param message Goodbye message of the [sender].
+ * @param sender Sender identification.
+ */
+class SpectatorLeftNotification(message: String, sender: String) :
+    Notification(message = message, sender = sender)

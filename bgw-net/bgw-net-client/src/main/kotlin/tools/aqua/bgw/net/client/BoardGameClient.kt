@@ -40,13 +40,12 @@ import tools.aqua.bgw.net.common.annotations.GameActionReceiverProcessor.getAnno
 import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
+import tools.aqua.bgw.net.common.notification.SpectatorJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
-import tools.aqua.bgw.net.common.response.CreateGameResponse
-import tools.aqua.bgw.net.common.response.GameActionResponse
-import tools.aqua.bgw.net.common.response.JoinGameResponse
-import tools.aqua.bgw.net.common.response.LeaveGameResponse
+import tools.aqua.bgw.net.common.request.SpectatorJoinGameMessage
+import tools.aqua.bgw.net.common.response.*
 
 /**
  * [BoardGameClient] for network communication in BGW applications. Inherit from this class and
@@ -230,6 +229,23 @@ protected constructor(
   }
 
   /**
+   * Joins an existing game session as a spectator on the server by sending a
+   * [SpectatorJoinGameMessage].
+   *
+   * @param sessionID Unique id for the existing session to join to.#
+   * @param greetingMessage Greeting message to be broadcast to all other players in this session.
+   *
+   * @throws IllegalStateException If client is not connected to a host.
+   */
+  fun spectateGame(sessionID: String, greetingMessage: String) {
+    checkConnected(expectedState = true)
+
+    logger.info(
+        "Requesting joining to sessionID $sessionID as spectator. Greeting message is: $greetingMessage.")
+    wsClient.sendRequest(SpectatorJoinGameMessage(sessionID, greetingMessage))
+  }
+
+  /**
    * Leaves the current game session by sending a [LeaveGameMessage].
    *
    * @param goodbyeMessage Goodbye message to be broadcast to all other players in this session.
@@ -291,6 +307,13 @@ protected constructor(
   open fun onPlayerJoined(notification: PlayerJoinedNotification) {}
 
   /**
+   * Called when a spectator joined the session and the server sent a [SpectatorJoinedNotification].
+   *
+   * @param notification The [SpectatorJoinedNotification] received from the server.
+   */
+  open fun onSpectatorJoined(notification: SpectatorJoinedNotification) {}
+
+  /**
    * Called when a player left the session and the server sent a [PlayerLeftNotification].
    *
    * @param notification The [PlayerLeftNotification] received from the server.
@@ -310,6 +333,14 @@ protected constructor(
    * @param response The [JoinGameResponse] received from the server.
    */
   open fun onJoinGameResponse(response: JoinGameResponse) {}
+
+  /**
+   * Called when server sent a [SpectatorJoinGameResponse] after a [SpectatorJoinGameMessage] was
+   * sent.
+   *
+   * @param response The [SpectatorJoinGameResponse] received from the server.
+   */
+  open fun onSpectatorJoinGameResponse(response: SpectatorJoinGameResponse) {}
 
   /**
    * Called when server sent a [LeaveGameResponse] after a [LeaveGameMessage] was sent.

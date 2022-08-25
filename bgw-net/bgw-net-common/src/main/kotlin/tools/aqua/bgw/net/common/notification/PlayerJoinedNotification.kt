@@ -18,7 +18,7 @@
 package tools.aqua.bgw.net.common.notification
 
 /**
- * Notification indicating disconnection of a player.
+ * Notification indicating connection of a player.
  *
  * @param message Greeting message of the [sender].
  * @param sender Sender identification.

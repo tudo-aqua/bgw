@@ -25,8 +25,14 @@ import org.springframework.web.socket.WebSocketSession
  * @property name The player's name.
  * @property game Associated [GameInstance].
  * @property session Associated [WebSocketSession].
+ * @property isSpectator Whether this player is spectator only. Default: `false`.
  */
-class Player(val name: String, var game: GameInstance?, val session: WebSocketSession) {
+class Player(
+    val name: String,
+    var game: GameInstance?,
+    val session: WebSocketSession,
+    var isSpectator: Boolean = false
+) {
 
   /** Compares session as it must be unique. */
   override fun equals(other: Any?): Boolean =

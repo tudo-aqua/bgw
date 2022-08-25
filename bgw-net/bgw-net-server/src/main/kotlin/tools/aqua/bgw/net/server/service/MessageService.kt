@@ -29,9 +29,11 @@ import tools.aqua.bgw.net.common.message.GameActionMessage
 import tools.aqua.bgw.net.common.notification.Notification
 import tools.aqua.bgw.net.common.notification.PlayerJoinedNotification
 import tools.aqua.bgw.net.common.notification.PlayerLeftNotification
+import tools.aqua.bgw.net.common.notification.SpectatorJoinedNotification
 import tools.aqua.bgw.net.common.request.CreateGameMessage
 import tools.aqua.bgw.net.common.request.JoinGameMessage
 import tools.aqua.bgw.net.common.request.LeaveGameMessage
+import tools.aqua.bgw.net.common.request.SpectatorJoinGameMessage
 import tools.aqua.bgw.net.common.response.*
 import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
@@ -62,6 +64,7 @@ class MessageService(
         is GameActionMessage -> handleGameMessage(session, message)
         is CreateGameMessage -> handleCreateGameMessage(session, message)
         is JoinGameMessage -> handleJoinGameMessage(session, message)
+        is SpectatorJoinGameMessage -> handleSpectatorJoinGameMessage(session, message)
         is LeaveGameMessage -> handleLeaveGameMessage(session, message)
         is Notification -> throw UnsupportedOperationException("Server received notification.")
         is Response -> throw UnsupportedOperationException("Server received response.")
@@ -79,15 +82,19 @@ class MessageService(
     val game = player.game
     var errors: Optional<List<String>> = Optional.empty()
     val status =
-        if (game != null)
-            try {
-              errors = validationService.validate(msg, game.gameID)
-              if (errors.isEmpty) GameActionResponseStatus.SUCCESS
-              else GameActionResponseStatus.INVALID_JSON
-            } catch (exception: JsonSchemaNotFoundException) {
-              GameActionResponseStatus.SERVER_ERROR
-            }
-        else GameActionResponseStatus.NO_ASSOCIATED_GAME
+        if (player.isSpectator) {
+          GameActionResponseStatus.SPECTATOR_ONLY
+        } else if (game != null) {
+          try {
+            errors = validationService.validate(msg, game.gameID)
+            if (errors.isEmpty) GameActionResponseStatus.SUCCESS
+            else GameActionResponseStatus.INVALID_JSON
+          } catch (exception: JsonSchemaNotFoundException) {
+            GameActionResponseStatus.SERVER_ERROR
+          }
+        } else {
+          GameActionResponseStatus.NO_ASSOCIATED_GAME
+        }
 
     player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyList() }))
 
@@ -123,9 +130,9 @@ class MessageService(
    * @param msg The [JoinGameMessage] that was received.
    */
   private fun handleJoinGameMessage(session: WebSocketSession, msg: JoinGameMessage) {
-    val player = session.player
+    val player = session.player.apply { isSpectator = false }
     val game = gameService.getBySessionID(msg.sessionID)
-    val opponents = game?.players?.map { it.name } ?: emptyList()
+    val opponents = game?.players?.filter { !it.isSpectator }?.map { it.name } ?: emptyList()
     val joinGameResponseStatus = gameService.joinGame(player, msg.sessionID)
 
     session.sendMessage(
@@ -137,6 +144,36 @@ class MessageService(
 
     if (joinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
       val notification = PlayerJoinedNotification(msg.greeting, player.name)
+
+      logger.info("Starting broadcast join message")
+      gameService.getBySessionID(msg.sessionID)?.broadcastMessage(player, notification)
+    }
+  }
+
+  /**
+   * Handles incoming [SpectatorJoinGameMessage].
+   *
+   * @param session The [WebSocketSession].
+   * @param msg The [SpectatorJoinGameMessage] that was received.
+   */
+  private fun handleSpectatorJoinGameMessage(
+      session: WebSocketSession,
+      msg: SpectatorJoinGameMessage
+  ) {
+    val player = session.player.apply { isSpectator = true }
+    val game = gameService.getBySessionID(msg.sessionID)
+    val players = game?.players?.filter { !it.isSpectator }?.map { it.name } ?: emptyList()
+    val spectatorJoinGameResponseStatus = gameService.joinGame(player, msg.sessionID)
+
+    session.sendMessage(
+        SpectatorJoinGameResponse(
+            status = spectatorJoinGameResponseStatus,
+            sessionID = game?.sessionID,
+            players = players,
+            message = game?.greetingMessage ?: ""))
+
+    if (spectatorJoinGameResponseStatus == JoinGameResponseStatus.SUCCESS) {
+      val notification = SpectatorJoinedNotification(msg.greeting, player.name)
 
       logger.info("Starting broadcast join message")
       gameService.getBySessionID(msg.sessionID)?.broadcastMessage(player, notification)

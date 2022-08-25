@@ -22,7 +22,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.util.Font
 
 /** [MessageView] displaying "Player XXX has joined the room". */
-class PlayerJoinedMessageView(player: String) : MessageView() {
+class PlayerJoinedMessageView(player: String, isSpectator: Boolean) : MessageView() {
 
   private val messageHeight: Double = 50.0
   private val colorStyle = "-fx-background-color: #307C30;"
@@ -35,7 +35,8 @@ class PlayerJoinedMessageView(player: String) : MessageView() {
                 posY = height - messageHeight,
                 width = width,
                 height = messageHeight,
-                text = "- Player \"$player\" has joined the room -",
+                text =
+                    "- ${if(isSpectator) "Spectator" else "Player"} \"$player\" has joined the room -",
                 font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.SEMI_BOLD))
             .apply { backgroundStyle = "$colorStyle$cornerStyle" })
   }

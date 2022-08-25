@@ -34,15 +34,6 @@ class ProtocolClientApplication :
   init {
     background = ColorVisual.WHITE
 
-    connectionScene.buttonHost.onMouseClicked =
-        {
-          networkService.hostGame(
-              address = connectionScene.addressText.text,
-              secret = connectionScene.secretText.text,
-              gameID = connectionScene.gameIDText.text,
-              sessionID = connectionScene.sessionIDText.text,
-          )
-        }
     connectionScene.buttonJoin.onMouseClicked =
         {
           networkService.joinGame(
@@ -51,6 +42,8 @@ class ProtocolClientApplication :
               sessionID = connectionScene.sessionIDText.text,
           )
         }
+
+    onWindowClosed = { networkService.close() }
 
     showGameScene(connectionScene)
     show()
@@ -81,8 +74,8 @@ class ProtocolClientApplication :
   }
 
   /** Adds a [PlayerJoinedMessageView]. */
-  fun onPlayerJoined(player: String) {
-    runOnGUIThread { protocolScene.addMessage(PlayerJoinedMessageView(player)) }
+  fun onPlayerJoined(player: String, isSpectator: Boolean) {
+    runOnGUIThread { protocolScene.addMessage(PlayerJoinedMessageView(player, isSpectator)) }
   }
 
   /** Adds a [PlayerLeftMessageView]. */
