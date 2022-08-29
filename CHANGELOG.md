@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Wrong main class in build config of bgw-net protocol client
+- Prompt text displayed twice in ComboBox.
 
 ## [0.7.2] - 14.08.2022
 
