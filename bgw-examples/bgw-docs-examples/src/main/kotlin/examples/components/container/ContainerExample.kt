@@ -102,79 +102,66 @@ class ContainerExample : BoardGameApplication("Container Example") {
         add(
             Button(width = 80, posX = 220, text = "TOP").apply {
               visual = ColorVisual.LIGHT_GRAY
-              onMouseClicked =
-                  {
-                    cardStack.alignment =
-                        Alignment.of(VerticalAlignment.TOP, cardStack.alignment.horizontalAlignment)
-                    linearLayout.alignment =
-                        Alignment.of(
-                            VerticalAlignment.TOP, linearLayout.alignment.horizontalAlignment)
-                  }
+              onMouseClicked = {
+                cardStack.alignment =
+                    Alignment.of(VerticalAlignment.TOP, cardStack.alignment.horizontalAlignment)
+                linearLayout.alignment =
+                    Alignment.of(VerticalAlignment.TOP, linearLayout.alignment.horizontalAlignment)
+              }
             })
         add(
             Button(width = 80, posX = 320, text = "CENTER").apply {
               visual = ColorVisual.LIGHT_GRAY
-              onMouseClicked =
-                  {
-                    cardStack.alignment =
-                        Alignment.of(
-                            VerticalAlignment.CENTER, cardStack.alignment.horizontalAlignment)
-                    linearLayout.alignment =
-                        Alignment.of(
-                            VerticalAlignment.CENTER, linearLayout.alignment.horizontalAlignment)
-                  }
+              onMouseClicked = {
+                cardStack.alignment =
+                    Alignment.of(VerticalAlignment.CENTER, cardStack.alignment.horizontalAlignment)
+                linearLayout.alignment =
+                    Alignment.of(
+                        VerticalAlignment.CENTER, linearLayout.alignment.horizontalAlignment)
+              }
             })
         add(
             Button(width = 80, posX = 420, text = "BOTTOM").apply {
               visual = ColorVisual.LIGHT_GRAY
-              onMouseClicked =
-                  {
-                    cardStack.alignment =
-                        Alignment.of(
-                            VerticalAlignment.BOTTOM, cardStack.alignment.horizontalAlignment)
-                    linearLayout.alignment =
-                        Alignment.of(
-                            VerticalAlignment.BOTTOM, linearLayout.alignment.horizontalAlignment)
-                  }
+              onMouseClicked = {
+                cardStack.alignment =
+                    Alignment.of(VerticalAlignment.BOTTOM, cardStack.alignment.horizontalAlignment)
+                linearLayout.alignment =
+                    Alignment.of(
+                        VerticalAlignment.BOTTOM, linearLayout.alignment.horizontalAlignment)
+              }
             })
         add(
             Button(width = 80, posX = 220, posY = 60, text = "LEFT").apply {
               visual = ColorVisual.LIGHT_GRAY
-              onMouseClicked =
-                  {
-                    cardStack.alignment =
-                        Alignment.of(
-                            cardStack.alignment.verticalAlignment, HorizontalAlignment.LEFT)
-                    linearLayout.alignment =
-                        Alignment.of(
-                            linearLayout.alignment.verticalAlignment, HorizontalAlignment.LEFT)
-                  }
+              onMouseClicked = {
+                cardStack.alignment =
+                    Alignment.of(cardStack.alignment.verticalAlignment, HorizontalAlignment.LEFT)
+                linearLayout.alignment =
+                    Alignment.of(linearLayout.alignment.verticalAlignment, HorizontalAlignment.LEFT)
+              }
             })
         add(
             Button(width = 80, posX = 320, posY = 60, text = "CENTER").apply {
               visual = ColorVisual.LIGHT_GRAY
-              onMouseClicked =
-                  {
-                    cardStack.alignment =
-                        Alignment.of(
-                            cardStack.alignment.verticalAlignment, HorizontalAlignment.CENTER)
-                    linearLayout.alignment =
-                        Alignment.of(
-                            linearLayout.alignment.verticalAlignment, HorizontalAlignment.CENTER)
-                  }
+              onMouseClicked = {
+                cardStack.alignment =
+                    Alignment.of(cardStack.alignment.verticalAlignment, HorizontalAlignment.CENTER)
+                linearLayout.alignment =
+                    Alignment.of(
+                        linearLayout.alignment.verticalAlignment, HorizontalAlignment.CENTER)
+              }
             })
         add(
             Button(width = 80, posX = 420, posY = 60, text = "RIGHT").apply {
               visual = ColorVisual.LIGHT_GRAY
-              onMouseClicked =
-                  {
-                    cardStack.alignment =
-                        Alignment.of(
-                            cardStack.alignment.verticalAlignment, HorizontalAlignment.RIGHT)
-                    linearLayout.alignment =
-                        Alignment.of(
-                            linearLayout.alignment.verticalAlignment, HorizontalAlignment.RIGHT)
-                  }
+              onMouseClicked = {
+                cardStack.alignment =
+                    Alignment.of(cardStack.alignment.verticalAlignment, HorizontalAlignment.RIGHT)
+                linearLayout.alignment =
+                    Alignment.of(
+                        linearLayout.alignment.verticalAlignment, HorizontalAlignment.RIGHT)
+              }
             })
         add(
             Button(width = 130, posX = 220, posY = 120, text = "VERTICAL").apply {

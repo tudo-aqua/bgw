@@ -27,6 +27,7 @@ plugins {
   id("com.diffplug.spotless")
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
+  id("org.jetbrains.kotlinx.kover")
 }
 
 detekt {

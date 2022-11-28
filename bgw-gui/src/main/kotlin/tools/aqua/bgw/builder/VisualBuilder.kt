@@ -149,10 +149,12 @@ object VisualBuilder {
         visual.setGUIListenerAndInvoke {
           children.clear()
           children.addAll(
-              visual.children.map { buildVisual(it) }.onEach {
-                it.prefWidthProperty().bind(prefWidthProperty())
-                it.prefHeightProperty().bind(prefHeightProperty())
-              })
+              visual.children
+                  .map { buildVisual(it) }
+                  .onEach {
+                    it.prefWidthProperty().bind(prefWidthProperty())
+                    it.prefHeightProperty().bind(prefHeightProperty())
+                  })
         }
       }
 

@@ -79,33 +79,28 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
     mauMauGameScene.hintButton.onMouseClicked = { logicController.showHint() }
 
     // Set onClick handler for draw stack
-    mauMauGameScene.drawStack.onMouseClicked =
-        {
-          if (!logicController.game.drawStack.isEmpty())
-              logicController.drawCard(isCurrentPlayer = true, advance = true)
-        }
+    mauMauGameScene.drawStack.onMouseClicked = {
+      if (!logicController.game.drawStack.isEmpty())
+          logicController.drawCard(isCurrentPlayer = true, advance = true)
+    }
 
     // Set drag drop acceptor and handler for game stack
     mauMauGameScene.gameStack.dropAcceptor = this::tryElementDropped
     mauMauGameScene.gameStack.onDragDropped = this::elementDropped
 
     // Set onClick handler for jack selection
-    mauMauGameScene.buttonDiamonds.onMousePressed =
-        {
-          logicController.selectSuit(CardSuit.DIAMONDS, true)
-        }
-    mauMauGameScene.buttonHearts.onMousePressed =
-        {
-          logicController.selectSuit(CardSuit.HEARTS, true)
-        }
-    mauMauGameScene.buttonSpades.onMousePressed =
-        {
-          logicController.selectSuit(CardSuit.SPADES, true)
-        }
-    mauMauGameScene.buttonClubs.onMousePressed =
-        {
-          logicController.selectSuit(CardSuit.CLUBS, true)
-        }
+    mauMauGameScene.buttonDiamonds.onMousePressed = {
+      logicController.selectSuit(CardSuit.DIAMONDS, true)
+    }
+    mauMauGameScene.buttonHearts.onMousePressed = {
+      logicController.selectSuit(CardSuit.HEARTS, true)
+    }
+    mauMauGameScene.buttonSpades.onMousePressed = {
+      logicController.selectSuit(CardSuit.SPADES, true)
+    }
+    mauMauGameScene.buttonClubs.onMousePressed = {
+      logicController.selectSuit(CardSuit.CLUBS, true)
+    }
   }
 
   /**
@@ -137,79 +132,72 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
   private fun registerMainMenuEvents() {
     mauMauMenuScene.continueGameButton.onMouseClicked = { hideMenuScene() }
 
-    mauMauMenuScene.newLocalGameButton.onMouseClicked =
-        {
-          logicController.isOnline = false
-          logicController.isHost = true
+    mauMauMenuScene.newLocalGameButton.onMouseClicked = {
+      logicController.isOnline = false
+      logicController.isHost = true
 
-          logicController.newGame()
-          hideMenuScene()
-        }
+      logicController.newGame()
+      hideMenuScene()
+    }
 
-    mauMauMenuScene.hostGameButton.onMouseClicked =
-        {
-          showMenuScene(mauMauHostGameMenuScene)
-          logicController.isOnline = true
-          logicController.isHost = true
-        }
+    mauMauMenuScene.hostGameButton.onMouseClicked = {
+      showMenuScene(mauMauHostGameMenuScene)
+      logicController.isOnline = true
+      logicController.isHost = true
+    }
 
-    mauMauMenuScene.joinGameButton.onMouseClicked =
-        {
-          showMenuScene(mauMauJoinGameMenuScene)
-          logicController.isOnline = true
-          logicController.isHost = false
-        }
+    mauMauMenuScene.joinGameButton.onMouseClicked = {
+      showMenuScene(mauMauJoinGameMenuScene)
+      logicController.isOnline = true
+      logicController.isHost = false
+    }
 
-    mauMauWaitForOpponentMenuScene.startGameButton.onMouseClicked =
-        {
-          hideMenuScene()
-          logicController.newGame(logicController.game)
-          mauMauGameScene.startAnimation()
-        }
+    mauMauWaitForOpponentMenuScene.startGameButton.onMouseClicked = {
+      hideMenuScene()
+      logicController.newGame(logicController.game)
+      mauMauGameScene.startAnimation()
+    }
 
     mauMauMenuScene.exitButton.onMouseClicked = { exit() }
   }
 
   /** Registers events in the player won menu scene. */
   private fun registerPlayerWonMenuEvents() {
-    mauMauPlayerWonMenuScene.newGameButton.onMouseClicked =
-        {
-          logicController.newGame(logicController.game)
-          hideMenuScene()
-          mauMauGameScene.unlock()
-        }
+    mauMauPlayerWonMenuScene.newGameButton.onMouseClicked = {
+      logicController.newGame(logicController.game)
+      hideMenuScene()
+      mauMauGameScene.unlock()
+    }
 
     mauMauPlayerWonMenuScene.exitButton.onMouseClicked = { exit() }
   }
 
   /** Registers events in the host game menu scene. */
   private fun registerHostMenuEvents() {
-    mauMauHostGameMenuScene.hostGameButton.onMouseClicked =
-        {
-          val address = mauMauHostGameMenuScene.addressText.text.trim()
-          val secret = mauMauHostGameMenuScene.secretText.text.trim()
-          val name = mauMauHostGameMenuScene.nameText.text.trim()
-          val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
+    mauMauHostGameMenuScene.hostGameButton.onMouseClicked = {
+      val address = mauMauHostGameMenuScene.addressText.text.trim()
+      val secret = mauMauHostGameMenuScene.secretText.text.trim()
+      val name = mauMauHostGameMenuScene.nameText.text.trim()
+      val sessionID = mauMauHostGameMenuScene.sessionIDText.text.trim()
 
-          logicController.networkService.hostGame(address, secret, name, sessionID)
-          logicController.game.players[0].name = name
-        }
+      logicController.networkService.hostGame(address, secret, name, sessionID)
+      logicController.game.players[0].name = name
+    }
 
     mauMauHostGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
   }
 
   /** Registers events in the join game menu scene. */
   private fun registerJoinMenuEvents() {
-    mauMauJoinGameMenuScene.joinGameButton.onMouseClicked =
-        {
-          val address = mauMauJoinGameMenuScene.addressText.text.trim()
-          val secret = mauMauJoinGameMenuScene.secretText.text.trim()
-          val name = mauMauJoinGameMenuScene.nameText.text.trim()
-          val sessionID = mauMauJoinGameMenuScene.sessionIDText.text.trim()
+    mauMauJoinGameMenuScene.joinGameButton.onMouseClicked = {
+      val address = mauMauJoinGameMenuScene.addressText.text.trim()
+      val secret = mauMauJoinGameMenuScene.secretText.text.trim()
+      val name = mauMauJoinGameMenuScene.nameText.text.trim()
+      val sessionID = mauMauJoinGameMenuScene.sessionIDText.text.trim()
 
-          logicController.networkService.joinGame(address, secret, name, sessionID)
-          logicController.game.players[0].name = name
-        }
+      logicController.networkService.joinGame(address, secret, name, sessionID)
+      logicController.game.players[0].name = name
+    }
 
     mauMauJoinGameMenuScene.backButton.onMouseClicked = { showMenuScene(mauMauMenuScene) }
   }

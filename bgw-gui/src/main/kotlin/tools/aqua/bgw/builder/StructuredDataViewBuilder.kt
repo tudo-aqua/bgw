@@ -123,8 +123,9 @@ object StructuredDataViewBuilder {
         cellFactory = buildTableViewCellFactory(column)
 
         column.formatFunctionProperty.setGUIListenerAndInvoke(column.formatFunction) { _, nV ->
-          cellValueFactory =
-              Callback { ReadOnlyStringWrapper(nV?.invoke(it.value) ?: it.value.toString()) }
+          cellValueFactory = Callback {
+            ReadOnlyStringWrapper(nV?.invoke(it.value) ?: it.value.toString())
+          }
           tableView?.refresh()
         }
       }

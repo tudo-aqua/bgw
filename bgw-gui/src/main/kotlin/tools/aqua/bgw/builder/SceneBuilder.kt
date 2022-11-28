@@ -51,13 +51,14 @@ object SceneBuilder {
     pane.setOnMouseReleased { scene.onMouseReleased(it) }
 
     // register animations
-    scene.animations.guiListener =
-        { _, _ ->
-          scene.animations.filter { t -> !t.isRunning }.forEach { anim ->
+    scene.animations.guiListener = { _, _ ->
+      scene.animations
+          .filter { t -> !t.isRunning }
+          .forEach { anim ->
             AnimationBuilder.build(scene, anim).play()
             anim.isRunning = true
           }
-        }
+    }
 
     // register lock pane
     @Suppress("DuplicatedCode", "DuplicatedCode")
@@ -66,11 +67,10 @@ object SceneBuilder {
           prefHeightProperty().bind(pane.heightProperty())
           prefWidthProperty().bind(pane.widthProperty())
         }
-    scene.lockedProperty.guiListener =
-        { _, nV ->
-          pane.children.remove(lockPane)
-          if (nV) pane.children.add(lockPane)
-        }
+    scene.lockedProperty.guiListener = { _, nV ->
+      pane.children.remove(lockPane)
+      if (nV) pane.children.add(lockPane)
+    }
 
     // register lock pane for menu
     @Suppress("DuplicatedCode")
@@ -79,11 +79,10 @@ object SceneBuilder {
           prefHeightProperty().bind(pane.heightProperty())
           prefWidthProperty().bind(pane.widthProperty())
         }
-    scene.internalLockedProperty.guiListener =
-        { _, nV ->
-          pane.children.remove(internalLockPane)
-          if (nV) pane.children.add(internalLockPane)
-        }
+    scene.internalLockedProperty.guiListener = { _, nV ->
+      pane.children.remove(internalLockPane)
+      if (nV) pane.children.add(internalLockPane)
+    }
 
     return pane
   }

@@ -17,7 +17,6 @@
 
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
-import java.util.regex.Pattern
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
 
@@ -37,7 +36,7 @@ version = "0.0.0-SNAPSHOT"
 val mavenMetadata = extensions.create<GlobalMavenMetadataExtension>("mavenMetadata")
 
 gitVersioning.apply {
-  describeTagPattern = Pattern.compile("v(?<version>.*)")
+  describeTagPattern = "v(?<version>.*)"
   refs {
     considerTagsOnBranches = true
     tag("v(?<version>.*)") { version = "\${ref.version}" }
@@ -63,5 +62,7 @@ spotless {
     defaultFormat(rootProject)
   }
 }
+
+koverMerged.enable()
 
 nexusPublishing { repositories { sonatype() } }

@@ -337,10 +337,9 @@ internal class Frontend : Application() {
         widthProperty.value = width
 
         widthProperty.internalListener = { _, nV -> if (!isFullScreen && !isMaximized) width = nV }
-        heightProperty.internalListener =
-            { _, nV ->
-              if (!isFullScreen && !isMaximized) height = nV
-            }
+        heightProperty.internalListener = { _, nV ->
+          if (!isFullScreen && !isMaximized) height = nV
+        }
 
         titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
         iconProperty.setGUIListenerAndInvoke(iconProperty.value) { _, nV ->
@@ -482,13 +481,12 @@ internal class Frontend : Application() {
               fromValue = if (fadeIn) 0.0 else 1.0
               toValue = if (fadeIn) 1.0 else 0.0
               interpolator = Interpolator.EASE_OUT
-              onFinished =
-                  EventHandler {
-                    if (!fadeIn) {
-                      boardGameScene?.run { internalLockedProperty.value = false }
-                      updateScene()
-                    }
-                  }
+              onFinished = EventHandler {
+                if (!fadeIn) {
+                  boardGameScene?.run { internalLockedProperty.value = false }
+                  updateScene()
+                }
+              }
             }
             .play()
       }

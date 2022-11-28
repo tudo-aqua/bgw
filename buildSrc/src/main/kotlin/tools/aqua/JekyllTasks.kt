@@ -161,8 +161,11 @@ constructor(
                 hostConfig = HostConfig(autoRemove = true))
             .apply {
               // the container is not designed to remain active, work around this
-              entrypoint = listOf("sleep", Integer.MAX_VALUE.toString())
-              env = buildEnvironment.get().entries.map { (key, value) -> "$key=$value" }
+              entrypoint = mutableListOf("sleep", Integer.MAX_VALUE.toString())
+              env =
+                  buildEnvironment.get().entries.mapTo(mutableListOf()) { (key, value) ->
+                    "$key=$value"
+                  }
               image = "${jekyllContainer.get()}:${jekyllContainerVersion.get()}"
             }
     logger.debug("Creating Jekyll container")
@@ -196,19 +199,20 @@ constructor(
     }
 
     logger.debug("Assembling source tar $tar")
-    TarArchiveOutputStream(tar.outputStream()).apply { setLongFileMode(LONGFILE_POSIX) }.use {
-        tarOut ->
-      sourceDir.walk().forEach {
-        tarOut.apply {
-          val entry = createArchiveEntry(it, it.relativeTo(sourceDir).path)
-          putArchiveEntry(entry)
-          if (it.isFile) {
-            it.inputStream().use { data -> data.copyTo(tarOut) }
+    TarArchiveOutputStream(tar.outputStream())
+        .apply { setLongFileMode(LONGFILE_POSIX) }
+        .use { tarOut ->
+          sourceDir.walk().forEach {
+            tarOut.apply {
+              val entry = createArchiveEntry(it, it.relativeTo(sourceDir).path)
+              putArchiveEntry(entry)
+              if (it.isFile) {
+                it.inputStream().use { data -> data.copyTo(tarOut) }
+              }
+              closeArchiveEntry()
+            }
           }
-          closeArchiveEntry()
         }
-      }
-    }
 
     logger.debug("Pushing source tar $tar to Jekyll container ${container.id}")
     tar.inputStream().use { dockerClient.putArchive(container.id, JEKYLL_WORK_DIR, it) }

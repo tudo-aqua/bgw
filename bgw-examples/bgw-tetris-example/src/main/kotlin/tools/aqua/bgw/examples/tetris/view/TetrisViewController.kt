@@ -44,12 +44,11 @@ class TetrisViewController : BoardGameApplication(windowTitle = "Tetris") {
 
   /** Registers events for [tetrisGameScene]. */
   private fun TetrisGameScene.registerEvents() {
-    onKeyPressed =
-        {
-          when {
-            it.keyCode.isArrow() -> logicController.navigate(it.keyCode)
-            it.keyCode == KeyCode.ENTER -> logicController.startGame()
-          }
-        }
+    onKeyPressed = {
+      when {
+        it.keyCode.isArrow() -> logicController.navigate(it.keyCode)
+        it.keyCode == KeyCode.ENTER -> logicController.startGame()
+      }
+    }
   }
 }

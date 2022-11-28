@@ -158,12 +158,6 @@ exceptions:
   TooGenericExceptionThrown:
     active: true
 
-formatting:
-  excludes: ['**/bgw-docs-examples/**']
-
-  # Disabled. Rationale: handled by Spotless
-  active: false
-
 naming:
   excludes: ['**/bgw-docs-examples/**']
 
