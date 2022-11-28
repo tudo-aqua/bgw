@@ -16,11 +16,7 @@
  */
 
 @file:Suppress(
-    "unused",
-    "MemberVisibilityCanBePrivate",
-    "GlobalCoroutineUsage",
-    "EXPERIMENTAL_IS_NOT_ENABLED",
-    "OPT_IN_IS_NOT_ENABLED")
+    "unused", "MemberVisibilityCanBePrivate", "GlobalCoroutineUsage", "EXPERIMENTAL_IS_NOT_ENABLED")
 
 package tools.aqua.bgw.net.client
 
@@ -29,8 +25,6 @@ import java.lang.reflect.Method
 import java.net.URI
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.reflect.jvm.javaMethod
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import tools.aqua.bgw.net.common.GameAction
@@ -57,7 +51,6 @@ import tools.aqua.bgw.net.common.response.*
  * @param networkLoggingBehavior The desired network logging verbosity. Default:
  * [NetworkLogging.NO_LOGGING].
  */
-@OptIn(DelicateCoroutinesApi::class)
 @Suppress("LeakingThis")
 open class BoardGameClient
 protected constructor(
@@ -109,7 +102,7 @@ protected constructor(
     logger.debug("Initializing annotated receiver functions.")
 
     initializationJob =
-        GlobalScope.launch {
+        wsClient.scope.launch {
           val annotatedClasses = getAnnotatedClasses()
           val annotatedFunctions =
               getAnnotatedReceivers(this@BoardGameClient::class.java, annotatedClasses)
@@ -387,7 +380,7 @@ protected constructor(
   internal fun invokeAnnotatedReceiver(message: GameActionMessage) {
     msgQueue.add(message)
 
-    GlobalScope.launch {
+    wsClient.scope.launch {
       if (!initializationJob.isCompleted) {
         logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
         initializationJob.join()

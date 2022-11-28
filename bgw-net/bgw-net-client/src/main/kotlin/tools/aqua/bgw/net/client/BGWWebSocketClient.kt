@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import java.net.URI
+import kotlinx.coroutines.*
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import tools.aqua.bgw.net.common.GameAction
@@ -53,6 +54,9 @@ internal class BGWWebSocketClient(
 
   /** Object mapper instance for JSON serialization. */
   internal val mapper = ObjectMapper().registerModule(kotlinModule())
+
+  /** Message coroutine scope. */
+  internal val scope = CoroutineScope(Dispatchers.Default)
 
   init {
     addHeader("PlayerName", playerName)
@@ -93,7 +97,8 @@ internal class BGWWebSocketClient(
    */
   override fun onOpen(handshakedata: ServerHandshake?) {
     logger.info("Connection is now open.")
-    callback.onOpen()
+
+    scope.launch { callback.onOpen() }
   }
 
   /**
@@ -108,7 +113,8 @@ internal class BGWWebSocketClient(
     logger.debug(
         "Status code is: $code. The connection was closed with the following reason: $reason. " +
             "The closing was initiated by the ${ if(remote) "remote" else "local"} host.")
-    callback.onClose(code = code, reason = reason ?: "n/a", remote)
+
+    scope.launch { callback.onClose(code = code, reason = reason ?: "n/a", remote) }
   }
 
   /**
@@ -120,7 +126,10 @@ internal class BGWWebSocketClient(
    */
   override fun onError(ex: Exception?) {
     logger.error("An uncaught error occurred.", ex)
-    callback.onError(throwable = ex ?: NullPointerException("Exception itself is null."))
+
+    scope.launch {
+      callback.onError(throwable = ex ?: NullPointerException("Exception itself is null."))
+    }
   }
 
   /**
@@ -135,7 +144,7 @@ internal class BGWWebSocketClient(
 
       logger.debug("Received message of type $msg")
 
-      messageMapping(msg)
+      scope.launch { messageMapping(msg) }
     } catch (ise: IllegalArgumentException) {
       onError(ise)
     } catch (jse: JsonProcessingException) {
