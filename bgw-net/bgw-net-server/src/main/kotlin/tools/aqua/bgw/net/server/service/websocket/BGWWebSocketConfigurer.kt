@@ -18,12 +18,15 @@
 package tools.aqua.bgw.net.server.service.websocket
 
 import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
 import tools.aqua.bgw.net.common.SERVER_ENDPOINT
+import tools.aqua.bgw.net.server.BUFFER_SIZE
 import tools.aqua.bgw.net.server.entity.tables.KeyValueRepository
 import tools.aqua.bgw.net.server.entity.tables.KeyValueStoreEntry
 
@@ -39,24 +42,32 @@ class BGWWebSocketConfigurer(
     private val wsHandler: BGWWebsocketHandler,
     private val keyValueRepository: KeyValueRepository
 ) : WebSocketConfigurer {
-  override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-    registry
-        .addHandler(wsHandler, "/$SERVER_ENDPOINT")
-        .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
-  }
-
-  /** Generates and initializes random network secret. */
-  @EventListener(ApplicationReadyEvent::class)
-  fun initializeNetworkSecret() {
-    if (!keyValueRepository.existsById("Network secret")) {
-      val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-      val length = 10
-      val randomString =
-          (1..length)
-              .map { kotlin.random.Random.nextInt(0, charPool.size) }
-              .map(charPool::get)
-              .joinToString("")
-      keyValueRepository.save(KeyValueStoreEntry("Network secret", randomString))
+    @Bean
+    fun createWebSocketContainer(): ServletServerContainerFactoryBean {
+        val container = ServletServerContainerFactoryBean()
+        container.setMaxTextMessageBufferSize(BUFFER_SIZE)
+        container.setMaxBinaryMessageBufferSize(BUFFER_SIZE)
+        return container
     }
-  }
+
+    override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
+        registry
+            .addHandler(wsHandler, "/$SERVER_ENDPOINT")
+            .addInterceptors(BGWHandshakeInterceptor(keyValueRepository))
+    }
+
+    /** Generates and initializes random network secret. */
+    @EventListener(ApplicationReadyEvent::class)
+    fun initializeNetworkSecret() {
+        if (!keyValueRepository.existsById("Network secret")) {
+            val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+            val length = 10
+            val randomString =
+                (1..length)
+                    .map { kotlin.random.Random.nextInt(0, charPool.size) }
+                    .map(charPool::get)
+                    .joinToString("")
+            keyValueRepository.save(KeyValueStoreEntry("Network secret", randomString))
+        }
+    }
 }

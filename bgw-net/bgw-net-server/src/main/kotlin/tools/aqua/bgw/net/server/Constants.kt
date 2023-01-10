@@ -54,7 +54,10 @@ const val BGW_META_SCHEMA_JSON_URL_STRING: String = "/bgw_meta_schema.json"
 
 /** Player instance. */
 val WebSocketSession.player: Player
-  get() {
-    val player = attributes["player"] ?: error("missing attribute")
-    if (player is Player) return player else error("wrong type")
-  }
+    get() {
+        val player = attributes["player"] ?: error("missing attribute")
+        if (player is Player) return player else error("wrong type")
+    }
+
+/** Websocket buffer size in bytes **/
+const val BUFFER_SIZE = 1024 * 1024 // 1MB
