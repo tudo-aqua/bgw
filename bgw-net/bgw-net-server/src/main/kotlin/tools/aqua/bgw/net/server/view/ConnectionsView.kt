@@ -34,7 +34,7 @@ import tools.aqua.bgw.net.server.service.oauth.SecuredByRole
  *
  * @property frontendService Auto-Wired [FrontendService].
  */
-@Route(value = "", layout = MainLayout::class)
+@Route(value = "connections", layout = MainLayout::class)
 @PageTitle("BGW-Net | Active Connections")
 @SecuredByRole("admin", "tutor")
 class ConnectionsView(@Autowired private val frontendService: FrontendService) : VerticalLayout() {
@@ -42,9 +42,9 @@ class ConnectionsView(@Autowired private val frontendService: FrontendService) :
       Grid<Player>().apply {
         addColumn(Player::name).setHeader("Name")
         addColumn { it.session.remoteAddress?.port ?: "n/a" }.setHeader("Socket Port")
-        addColumn { "${it.game?.gameID}:${it.game?.sessionID}" ?: "n/a" }
+        addColumn { "${it.game?.gameID}:${it.game?.sessionID}" }
             .setHeader("Connected Game")
-        setItems(frontendService.activePlayers)
+        setItems(frontendService.activePlayers.filter { it.game != null })
         minWidth = "500px"
       }
 
