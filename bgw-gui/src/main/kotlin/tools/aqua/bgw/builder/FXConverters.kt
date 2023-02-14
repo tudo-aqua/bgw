@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 The BoardGameWork Authors
+ * Copyright 2021-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -100,12 +100,15 @@ object FXConverters {
   /** Converts the [FXMouseEvent] to [MouseEvent]. */
   internal fun FXMouseEvent.toMouseEvent(): MouseEvent =
       MouseEvent(
-          when (button) {
-            MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
-            MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
-            MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
-            else -> MouseButtonType.UNSPECIFIED
-          })
+          button =
+              when (button) {
+                MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
+                MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
+                MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
+                else -> MouseButtonType.UNSPECIFIED
+              },
+          posX = this.screenX,
+          posY = this.screenY)
 
   /** Converts the [FXScrollEvent] to [ScrollEvent]. */
   internal fun FXScrollEvent.toScrollEvent(): ScrollEvent =

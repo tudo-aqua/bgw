@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 The BoardGameWork Authors
+ * Copyright 2021-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,4 +26,4 @@ package tools.aqua.bgw.event
  *
  * @property button Corresponding mouse button enum value.
  */
-class MouseEvent(val button: MouseButtonType) : InputEvent()
+class MouseEvent(val button: MouseButtonType, val posX: Number, val posY: Number) : InputEvent()
