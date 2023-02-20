@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 The BoardGameWork Authors
+ * Copyright 2021-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -177,6 +177,12 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @see onKeyPressed
    */
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
+
+  /** Gets invoked with no event whenever a scene is shown. */
+  var onSceneShown: (() -> Unit)? = null
+
+  /** Gets invoked with no event whenever a scene is hid. */
+  var onSceneHid: (() -> Unit)? = null
 
   /**
    * Adds all given [ComponentView]s to the root node and [rootComponents] list.

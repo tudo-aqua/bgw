@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 The BoardGameWork Authors
+ * Copyright 2021-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -179,6 +179,8 @@ internal class Frontend : Application() {
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       val oldScene = menuScene
       menuScene = scene
+      oldScene?.onSceneHid?.invoke()
+      scene.onSceneShown?.invoke()
 
       scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
         if (primaryStage != null) {
@@ -198,6 +200,7 @@ internal class Frontend : Application() {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double) {
+      menuScene?.onSceneHid?.invoke()
       fadeMenu(false, fadeTime)
     }
 
@@ -207,7 +210,10 @@ internal class Frontend : Application() {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
+
+      boardGameScene?.onSceneHid?.invoke()
       boardGameScene = scene
+      scene.onSceneShown?.invoke()
 
       scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
         if (primaryStage != null) {
