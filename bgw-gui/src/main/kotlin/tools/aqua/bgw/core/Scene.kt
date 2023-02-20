@@ -178,6 +178,12 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    */
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
+  /** Gets invoked with no event whenever a scene is shown. */
+  var onSceneShown: (() -> Unit)? = null
+
+  /** Gets invoked with no event whenever a scene is hid. */
+  var onSceneHid: (() -> Unit)? = null
+
   /**
    * Adds all given [ComponentView]s to the root node and [rootComponents] list.
    *
