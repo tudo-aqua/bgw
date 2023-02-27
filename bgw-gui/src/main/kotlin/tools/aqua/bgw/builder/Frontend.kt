@@ -474,7 +474,10 @@ internal class Frontend : Application() {
      */
     private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
       menuPane?.apply {
-        if (!fadeIn) menuPane = null
+        if (!fadeIn) {
+          menuPane = null
+          menuScene = null
+        }
 
         FadeTransition(Duration.millis(fadeTime / 2), this)
             .apply {
