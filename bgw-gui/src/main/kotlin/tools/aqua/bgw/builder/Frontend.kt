@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 The BoardGameWork Authors
+ * Copyright 2021-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -474,7 +474,10 @@ internal class Frontend : Application() {
      */
     private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
       menuPane?.apply {
-        if (!fadeIn) menuPane = null
+        if (!fadeIn) {
+          menuPane = null
+          menuScene = null
+        }
 
         FadeTransition(Duration.millis(fadeTime / 2), this)
             .apply {
