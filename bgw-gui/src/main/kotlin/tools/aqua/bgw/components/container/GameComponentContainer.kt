@@ -21,6 +21,7 @@ package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.LayeredContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.lists.ObservableLinkedList
@@ -48,7 +49,15 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
     visual: Visual
 ) :
     DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual),
-    Iterable<T> {
+    Iterable<T>,
+    LayeredContainer<T>
+{
+
+
+  override val children: ObservableList<T>
+    get() = this.observableComponents
+
+
   /**
    * An [ObservableList] to store the [GameComponentView]s that are contained in this
    * [GameComponentContainer].

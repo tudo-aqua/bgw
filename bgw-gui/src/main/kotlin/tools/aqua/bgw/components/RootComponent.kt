@@ -20,6 +20,7 @@
 package tools.aqua.bgw.components
 
 import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -31,7 +32,12 @@ import tools.aqua.bgw.visual.Visual
  * @property scene Scene of this root component.
  */
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
-    ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY) {
+    ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY),
+    LayeredContainer<T>
+{
+
+  override val children: ObservableList<T>
+    get() = this.scene.rootComponents
 
   /**
    * Removes [component] from the [scene].
@@ -47,4 +53,5 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
       throw IllegalArgumentException("$component type is incompatible with scene's type.")
     }
   }
+
 }
