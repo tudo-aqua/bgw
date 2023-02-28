@@ -360,14 +360,12 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
     list.addAll(elements)
   }
 
-  /** removes [o] from the [ObservableList] silently.
+  /**
+   * removes [o] from the [ObservableList] silently.
    *
    * @param o Element to be removed from this list, if present.
    *
    * @return `true` if this list contained the specified element.
    */
   fun removeSilent(o: T): Boolean = list.remove(o)
-
-
-
 }

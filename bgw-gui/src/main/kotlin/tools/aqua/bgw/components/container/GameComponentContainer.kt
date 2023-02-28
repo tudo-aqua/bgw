@@ -50,13 +50,10 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
 ) :
     DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual),
     Iterable<T>,
-    LayeredContainer<T>
-{
-
+    LayeredContainer<T> {
 
   override val children: ObservableList<T>
     get() = this.observableComponents
-
 
   /**
    * An [ObservableList] to store the [GameComponentView]s that are contained in this

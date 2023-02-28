@@ -735,16 +735,15 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Puts the [ComponentView] to the front inside its [parent].
    *
    * @throws IllegalStateException if the [ComponentView] does not have a parent
-   * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type [ComponentView]
+   * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
+   * [ComponentView]
    */
   fun toFront() {
-    checkNotNull(parent){"$this does not have a parent"}
-    if(parent is LayeredContainer<*>){
+    checkNotNull(parent) { "$this does not have a parent" }
+    if (parent is LayeredContainer<*>) {
       try {
-        @Suppress("UNCHECKED_CAST")
-        (parent as LayeredContainer<ComponentView>).toFront(this)
-      }
-      catch (_: ClassCastException){
+        @Suppress("UNCHECKED_CAST") (parent as LayeredContainer<ComponentView>).toFront(this)
+      } catch (_: ClassCastException) {
         throw IllegalStateException("$parent is not a compatible container type")
       }
     }
@@ -754,20 +753,17 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Puts the [ComponentView] to the back inside its [parent].
    *
    * @throws IllegalStateException if the [ComponentView] does not have a parent
-   * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type [ComponentView]
+   * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
+   * [ComponentView]
    */
   fun toBack() {
-    checkNotNull(parent){"$this does not have a parent"}
-    if(parent is LayeredContainer<*>){
+    checkNotNull(parent) { "$this does not have a parent" }
+    if (parent is LayeredContainer<*>) {
       try {
-        @Suppress("UNCHECKED_CAST")
-        (parent as LayeredContainer<ComponentView>).toBack(this)
-      }
-      catch (_: ClassCastException){
+        @Suppress("UNCHECKED_CAST") (parent as LayeredContainer<ComponentView>).toBack(this)
+      } catch (_: ClassCastException) {
         throw IllegalStateException("$parent is not a compatible container type")
       }
     }
   }
-
-
 }
