@@ -22,7 +22,7 @@ import tools.aqua.bgw.observable.lists.ObservableList
 /** An interface that describes a container which can hold [ComponentView] that can be layered. */
 interface LayeredContainer<T : ComponentView> {
 
-  /** an [ObservableList] that is contained in the [LayeredContainer] */
+  /** an [ObservableList] that is contained in the [LayeredContainer]. */
   val children: ObservableList<T>
 
   /**

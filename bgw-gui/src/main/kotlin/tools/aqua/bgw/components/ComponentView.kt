@@ -744,7 +744,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
       try {
         @Suppress("UNCHECKED_CAST") (parent as LayeredContainer<ComponentView>).toFront(this)
       } catch (_: ClassCastException) {
-        throw IllegalStateException("$parent is not a compatible container type")
+        error("$parent is not a compatible container type")
       }
     }
   }
@@ -762,7 +762,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
       try {
         @Suppress("UNCHECKED_CAST") (parent as LayeredContainer<ComponentView>).toBack(this)
       } catch (_: ClassCastException) {
-        throw IllegalStateException("$parent is not a compatible container type")
+        error("$parent is not a compatible container type")
       }
     }
   }
