@@ -270,7 +270,6 @@ open class Pane<T : ComponentView>(
   /** Returns an iterator over the elements of this object. */
   override fun iterator(): Iterator<T> = observableComponents.iterator()
 
-
   /**
    * Puts the [component] to the front inside the [LayeredContainer].
    *
@@ -296,7 +295,8 @@ open class Pane<T : ComponentView>(
   }
 
   /**
-   * Puts the [component] in the appropriate place compared to the other [observableComponents] by the [zIndex].
+   * Puts the [component] in the appropriate place compared to the other [observableComponents] by
+   * the [zIndex].
    *
    * @param component Child that is moved accordingly.
    * @param zIndex The value that is used to compare the order of [observableComponents].

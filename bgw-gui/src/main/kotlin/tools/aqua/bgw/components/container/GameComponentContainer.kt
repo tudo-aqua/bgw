@@ -314,7 +314,8 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
   }
 
   /**
-   * Puts the [component] in the appropriate place compared to the other [observableComponents] by the [zIndex].
+   * Puts the [component] in the appropriate place compared to the other [observableComponents] by
+   * the [zIndex].
    *
    * @param component Child that is moved accordingly.
    * @param zIndex The value that is used to compare the order of [observableComponents].

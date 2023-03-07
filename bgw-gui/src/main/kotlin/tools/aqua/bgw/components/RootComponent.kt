@@ -54,7 +54,8 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @param component Child that is moved to the front.
    */
   override fun toFront(component: T) {
-    if (this.scene.rootComponents.last() != component && this.scene.rootComponents.contains(component)) {
+    if (this.scene.rootComponents.last() != component &&
+        this.scene.rootComponents.contains(component)) {
       this.scene.rootComponents.removeSilent(component)
       this.scene.rootComponents.add(component)
     }
@@ -66,7 +67,8 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @param component Child that is moved to the back.
    */
   override fun toBack(component: T) {
-    if (this.scene.rootComponents.first() != component && this.scene.rootComponents.contains(component)) {
+    if (this.scene.rootComponents.first() != component &&
+        this.scene.rootComponents.contains(component)) {
       this.scene.rootComponents.removeSilent(component)
       this.scene.rootComponents.add(0, component)
     }

@@ -62,9 +62,8 @@ class LayeredContainerTest {
   @Test
   fun testSetZLayer() {
     val expectedOrder =
-      listOf<Pair<ComponentView, Int>>(
-        button4 to -5, button5 to 0, button1 to 3, button2 to 10, button3 to 100
-      )
+        listOf<Pair<ComponentView, Int>>(
+            button4 to -5, button5 to 0, button1 to 3, button2 to 10, button3 to 100)
     for ((button, zIndex) in expectedOrder) {
       layeredContainer.setZIndex(button, zIndex)
     }
