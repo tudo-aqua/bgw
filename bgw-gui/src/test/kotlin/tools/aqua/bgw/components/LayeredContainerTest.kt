@@ -26,11 +26,8 @@ import tools.aqua.bgw.core.DEFAULT_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_BUTTON_WIDTH
 
 class LayeredContainerTest {
-  private var pane: Pane<ComponentView> =
+  private var layeredContainer: Pane<ComponentView> =
       Pane(width = DEFAULT_BUTTON_WIDTH, height = DEFAULT_BUTTON_HEIGHT)
-
-  private val layeredContainer: LayeredContainer<ComponentView>
-    get() = pane
 
   private val button1 = Button()
   private val button2 = Button()
@@ -40,44 +37,38 @@ class LayeredContainerTest {
 
   @BeforeEach
   fun setUp() {
-    pane.clear()
-    pane.addAll(button1, button2, button3, button4, button5)
+    layeredContainer.clear()
+    layeredContainer.addAll(button1, button2, button3, button4, button5)
   }
 
   @Test
-  fun toFrontTest() {
+  fun testToFront() {
     val expectedOrder = listOf<ComponentView>(button1, button3, button4, button5, button2)
     layeredContainer.toFront(button2)
-    layeredContainer.children.forEachIndexed { i, child: ComponentView ->
+    layeredContainer.components.forEachIndexed { i, child: ComponentView ->
       assertEquals(expectedOrder[i], child)
     }
   }
 
   @Test
-  fun toBackTest() {
+  fun testToBack() {
     val expectedOrder = listOf<ComponentView>(button4, button1, button2, button3, button5)
     layeredContainer.toBack(button4)
-    layeredContainer.children.forEachIndexed { i, child: ComponentView ->
+    layeredContainer.components.forEachIndexed { i, child: ComponentView ->
       assertEquals(expectedOrder[i], child)
     }
   }
 
   @Test
-  fun setZLayerTest() {
+  fun testSetZLayer() {
     val expectedOrder =
-        listOf<Pair<ComponentView, Int>>(
-            button4 to -5, button5 to 0, button1 to 3, button2 to 10, button3 to 100)
-
-    println(expectedOrder)
-
+      listOf<Pair<ComponentView, Int>>(
+        button4 to -5, button5 to 0, button1 to 3, button2 to 10, button3 to 100
+      )
     for ((button, zIndex) in expectedOrder) {
       layeredContainer.setZIndex(button, zIndex)
     }
-
-    println(listOf(button1, button2, button3, button4, button5))
-    println(layeredContainer.children.toList())
-
-    layeredContainer.children.forEachIndexed { i, child: ComponentView ->
+    layeredContainer.components.forEachIndexed { i, child: ComponentView ->
       val (button, _) = expectedOrder[i]
       assertEquals(button, child)
     }
