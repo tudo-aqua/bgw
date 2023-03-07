@@ -48,4 +48,15 @@ interface LayeredContainer<T : ComponentView> {
       children.add(0, component)
     }
   }
+
+  /**
+   * Puts the [component] in the appropriate place compared to the other [children] by the [zIndex].
+   *
+   * @param component Child that is moved accordingly.
+   * @param zIndex The value that is used to compare the order of [children].
+   */
+  fun setZIndex(component: T, zIndex: Int) {
+    component.zIndex = zIndex
+    children.sort(Comparator.comparingInt { zIndex })
+  }
 }
