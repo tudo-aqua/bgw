@@ -26,6 +26,7 @@ import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.DEFAULT_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_BUTTON_WIDTH
 
+/** A test class for the [LayeredContainer] interface. */
 class LayeredContainerTest {
   /** A test [LayeredContainer]. In this cas a [Pane] */
   private var layeredContainer: Pane<ComponentView> =
@@ -42,6 +43,10 @@ class LayeredContainerTest {
   /** Test component [Button]. */
   private val button5 = Button()
 
+  /**
+   * The base setup for every [LayeredContainerTest] test. Adding five buttons to the
+   * [layeredContainer]
+   */
   @BeforeEach
   fun setUp() {
     layeredContainer.clear()
