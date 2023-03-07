@@ -54,7 +54,7 @@ class DummyEventTest {
     KeyEvent(keyCode = KeyCode.A, isControlDown = false, isShiftDown = false, isAltDown = false)
     KeyEvent(isControlDown = false, isShiftDown = false, isAltDown = false)
 
-    MouseEvent(MouseButtonType.OTHER)
+    MouseEvent(MouseButtonType.OTHER, posX = 0, posY = 0)
 
     ScrollEvent(ScrollDirection.UP, isControlDown = false, isShiftDown = false, isAltDown = false)
 
