@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.structureddataview.listview
+package tools.aqua.bgw.components.uicomponents.structureddataview.listview
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
@@ -24,8 +24,8 @@ import org.junit.jupiter.api.assertThrows
 import tools.aqua.bgw.components.uicomponents.ListView
 import tools.aqua.bgw.components.uicomponents.SelectionMode
 
-/** Tests for [ListView] with [SelectionMode.SINGLE]. */
-class ListViewTestSelectionModeSingle : ListViewTestBase(SelectionMode.SINGLE) {
+/** Tests for [ListView] with [SelectionMode.MULTIPLE]. */
+class ListViewTestSelectionModeMultiple : ListViewTestBase(SelectionMode.MULTIPLE) {
 
   /** Test select by index on valid parameter. */
   @Test
@@ -147,6 +147,7 @@ class ListViewTestSelectionModeSingle : ListViewTestBase(SelectionMode.SINGLE) {
     dataView.items.clear()
 
     assertThrows<IllegalArgumentException> { dataView.selectFirst() }
+
     checkNotNotified()
     checkInvocation(0, 0, 0)
   }
@@ -179,92 +180,28 @@ class ListViewTestSelectionModeSingle : ListViewTestBase(SelectionMode.SINGLE) {
   @Test
   @DisplayName("Test select next")
   fun testSelectNext() {
-    dataView.selectNext()
-
-    checkNotified()
-    checkInvocation(1, 0, 0)
-    assertEquals(0, invokedIndex) // None was selected, so index 0 should be selected now
-
-    // Inject selected index to selection model
-    dataView.selectedIndicesList.add(0)
-
-    // Second invocation
-    dataView.selectNext()
-
-    checkNotified(2)
-    checkInvocation(2, 0, 0)
-    assertEquals(1, invokedIndex) // Next index, i.e. 1 should be selected now
-  }
-
-  /** Test select next if last is selected. */
-  @Test
-  @DisplayName("Test select next if last is selected")
-  fun testSelectNextLastSelected() {
-    dataView.selectLast()
-    checkNotified()
-    checkInvocation(1, 0, 0)
-    assertEquals(items.size - 1, invokedIndex) // Last should be selected
-
-    // Inject selected index to selection model
-    dataView.selectedIndicesList.add(items.size - 1)
-
-    // Second invocation
-    dataView.selectNext()
-
-    checkNotified(1) // Should not notify
-    checkInvocation(1, 0, 0) // Should not invoke
+    assertThrows<IllegalStateException> { dataView.selectNext() }
+    checkNotNotified()
+    checkInvocation(0, 0, 0)
   }
 
   /** Test select previous. */
   @Test
   @DisplayName("Test select previous")
   fun testSelectPrevious() {
-    dataView.selectPrevious()
-
-    checkNotified()
-    checkInvocation(1, 0, 0)
-    assertEquals(
-        items.size - 1, invokedIndex) // None was selected, so last index should be selected now
-
-    // Inject selected index to selection model
-    dataView.selectedIndicesList.add(items.size - 1)
-
-    // Second invocation
-    dataView.selectPrevious()
-
-    checkNotified(2)
-    checkInvocation(2, 0, 0)
-    assertEquals(
-        items.size - 2,
-        invokedIndex) // Previous index, i.e. (items.size - 1) -1 should be selected now
-  }
-
-  /** Test select previous if last is selected. */
-  @Test
-  @DisplayName("Test select previous if last is selected")
-  fun testSelectPreviousFirstSelected() {
-    dataView.selectFirst()
-    checkNotified()
-    checkInvocation(1, 0, 0)
-    assertEquals(0, invokedIndex) // First should be selected
-
-    // Inject selected index to selection model
-    dataView.selectedIndicesList.add(0)
-
-    // Second invocation
-    dataView.selectPrevious()
-
-    checkNotified(1) // Should not notify
-    checkInvocation(1, 0, 0) // Should not invoke
+    assertThrows<IllegalStateException> { dataView.selectPrevious() }
+    checkNotNotified()
+    checkInvocation(0, 0, 0)
   }
 
   /** Test select all. */
   @Test
   @DisplayName("Test select all")
   fun testSelectAll() {
-    assertThrows<IllegalStateException> { dataView.selectAll() }
+    dataView.selectAll()
+
     checkNotNotified()
-    checkInvocation(0, 0, 0)
+    checkInvocation(0, 1, 0)
   }
 
   /** Test select all when items are empty. */
@@ -272,15 +209,17 @@ class ListViewTestSelectionModeSingle : ListViewTestBase(SelectionMode.SINGLE) {
   @DisplayName("Test select all when items are empty")
   fun testSelectAllEmptyList() {
     dataView.items.clear()
-    assertThrows<IllegalStateException> { dataView.selectAll() }
+
+    assertThrows<IllegalArgumentException> { dataView.selectAll() }
+
     checkNotNotified()
     checkInvocation(0, 0, 0)
   }
 
-  /** Test clear selection. */
+  /** Test clear selection one selected. */
   @Test
-  @DisplayName("Test clear selection")
-  fun testClearSelection() {
+  @DisplayName("")
+  fun testClearSelectionOneSelected() {
     dataView.select(2)
     checkNotified()
     checkInvocation(1, 0, 0)
@@ -293,6 +232,23 @@ class ListViewTestSelectionModeSingle : ListViewTestBase(SelectionMode.SINGLE) {
 
     checkNotified(2)
     checkInvocation(1, 0, 1) // Clear should have been invoked
+  }
+
+  /** Test clear selection all selected. */
+  @Test
+  @DisplayName("Test clear selection all selected")
+  fun testClearSelectionAllSelected() {
+    dataView.selectAll()
+    checkNotified()
+    checkInvocation(0, 1, 0)
+
+    // Inject selected index to selection model
+    dataView.selectedIndicesList.addAll(items.indices.toList())
+
+    dataView.clearSelection()
+
+    checkNotified(2)
+    checkInvocation(0, 1, 1) // Clear should have been invoked
   }
 
   /** Test clear selection if none was selected. */

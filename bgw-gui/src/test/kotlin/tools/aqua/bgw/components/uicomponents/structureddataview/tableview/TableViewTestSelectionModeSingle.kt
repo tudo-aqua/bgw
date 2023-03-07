@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.structureddataview.tableview
+package tools.aqua.bgw.components.uicomponents.structureddataview.tableview
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName

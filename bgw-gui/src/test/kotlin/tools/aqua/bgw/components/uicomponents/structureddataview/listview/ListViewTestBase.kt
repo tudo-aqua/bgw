@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.structureddataview.tableview
+package tools.aqua.bgw.components.uicomponents.structureddataview.listview
 
+import tools.aqua.bgw.components.uicomponents.ListView
 import tools.aqua.bgw.components.uicomponents.SelectionMode
-import tools.aqua.bgw.components.uicomponents.TableView
-import tools.aqua.bgw.uicomponents.structureddataview.StructuredDataViewTestBase
+import tools.aqua.bgw.components.uicomponents.structureddataview.StructuredDataViewTestBase
 
-/** Test base for [TableView]. */
-open class TableViewTestBase(selectionMode: SelectionMode) :
-    StructuredDataViewTestBase(TableView(selectionMode = selectionMode))
+/** Test base for [ListView]. */
+open class ListViewTestBase(selectionMode: SelectionMode) :
+    StructuredDataViewTestBase(ListView(selectionMode = selectionMode))
