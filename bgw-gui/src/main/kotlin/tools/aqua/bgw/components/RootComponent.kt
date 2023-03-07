@@ -34,10 +34,6 @@ import tools.aqua.bgw.visual.Visual
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
     ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY),
     LayeredContainer<T> {
-
-  override val children: ObservableList<T>
-    get() = this.scene.rootComponents
-
   /**
    * Removes [component] from the [scene].
    *
@@ -51,5 +47,40 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
     } catch (_: ClassCastException) {
       throw IllegalArgumentException("$component type is incompatible with scene's type.")
     }
+  }
+
+  /**
+   * Puts the [component] to the front inside the [LayeredContainer].
+   *
+   * @param component Child that is moved to the front.
+   */
+  override fun toFront(component: T) {
+    if (this.scene.rootComponents.last() != component && this.scene.rootComponents.contains(component)) {
+      this.scene.rootComponents.removeSilent(component)
+      this.scene.rootComponents.add(component)
+    }
+  }
+
+  /**
+   * Puts the [component] to the back inside the [LayeredContainer].
+   *
+   * @param component Child that is moved to the back.
+   */
+  override fun toBack(component: T) {
+    if (this.scene.rootComponents.first() != component && this.scene.rootComponents.contains(component)) {
+      this.scene.rootComponents.removeSilent(component)
+      this.scene.rootComponents.add(0, component)
+    }
+  }
+
+  /**
+   * Puts the [component] in the appropriate place compared to the other components by the [zIndex].
+   *
+   * @param component Child that is moved accordingly.
+   * @param zIndex The value that is used to compare the order of components.
+   */
+  override fun setZIndex(component: T, zIndex: Int) {
+    component.zIndex = zIndex
+    this.scene.rootComponents.sort(Comparator.comparingInt { zIndex })
   }
 }

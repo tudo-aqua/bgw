@@ -50,10 +50,6 @@ open class Pane<T : ComponentView>(
     Iterable<T> {
 
   internal val observableComponents: ObservableArrayList<T> = ObservableArrayList()
-
-  override val children: ObservableArrayList<T>
-    get() = this.observableComponents
-
   /**
    * [onAdd] gets invoked anytime after a [ComponentView] is added to this [Pane] with the added
    * [ComponentView] as its receiver.
@@ -273,4 +269,40 @@ open class Pane<T : ComponentView>(
 
   /** Returns an iterator over the elements of this object. */
   override fun iterator(): Iterator<T> = observableComponents.iterator()
+
+
+  /**
+   * Puts the [component] to the front inside the [LayeredContainer].
+   *
+   * @param component Child that is moved to the front.
+   */
+  override fun toFront(component: T) {
+    if (observableComponents.last() != component && observableComponents.contains(component)) {
+      observableComponents.removeSilent(component)
+      observableComponents.add(component)
+    }
+  }
+
+  /**
+   * Puts the [component] to the back inside the [LayeredContainer].
+   *
+   * @param component Child that is moved to the back.
+   */
+  override fun toBack(component: T) {
+    if (observableComponents.first() != component && observableComponents.contains(component)) {
+      observableComponents.removeSilent(component)
+      observableComponents.add(0, component)
+    }
+  }
+
+  /**
+   * Puts the [component] in the appropriate place compared to the other [observableComponents] by the [zIndex].
+   *
+   * @param component Child that is moved accordingly.
+   * @param zIndex The value that is used to compare the order of [observableComponents].
+   */
+  override fun setZIndex(component: T, zIndex: Int) {
+    component.zIndex = zIndex
+    observableComponents.sort(Comparator.comparingInt { it.zIndex })
+  }
 }

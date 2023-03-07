@@ -17,46 +17,28 @@
 
 package tools.aqua.bgw.components
 
-import tools.aqua.bgw.observable.lists.ObservableList
 
 /** An interface that describes a container which can hold [ComponentView] that can be layered. */
 interface LayeredContainer<T : ComponentView> {
-
-  /** an [ObservableList] that is contained in the [LayeredContainer]. */
-  val children: ObservableList<T>
-
   /**
    * Puts the [component] to the front inside the [LayeredContainer].
    *
    * @param component Child that is moved to the front.
    */
-  fun toFront(component: T) {
-    if (children.last() != component && children.contains(component)) {
-      children.removeSilent(component)
-      children.add(component)
-    }
-  }
+  fun toFront(component: T)
 
   /**
    * Puts the [component] to the back inside the [LayeredContainer].
    *
    * @param component Child that is moved to the back.
    */
-  fun toBack(component: T) {
-    if (children.first() != component && children.contains(component)) {
-      children.removeSilent(component)
-      children.add(0, component)
-    }
-  }
+  fun toBack(component: T)
 
   /**
-   * Puts the [component] in the appropriate place compared to the other [children] by the [zIndex].
+   * Puts the [component] in the appropriate place compared to the other components by the [zIndex].
    *
    * @param component Child that is moved accordingly.
-   * @param zIndex The value that is used to compare the order of [children].
+   * @param zIndex The value that is used to compare the order of components.
    */
-  fun setZIndex(component: T, zIndex: Int) {
-    component.zIndex = zIndex
-    children.sort(Comparator.comparingInt { zIndex })
-  }
+  fun setZIndex(component: T, zIndex: Int)
 }
