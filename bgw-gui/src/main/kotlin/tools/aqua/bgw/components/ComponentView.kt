@@ -54,6 +54,9 @@ import tools.aqua.bgw.visual.Visual
 abstract class ComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) {
 
+  /** Sets the order of [ComponentView] inside of [parent]. */
+  internal var zIndex: Int = 0
+
   /**
    * The parent of this [ComponentView].
    *
