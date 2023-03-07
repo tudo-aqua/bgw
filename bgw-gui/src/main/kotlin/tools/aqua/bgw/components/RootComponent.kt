@@ -20,7 +20,6 @@
 package tools.aqua.bgw.components
 
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.visual.Visual
 
 /**
