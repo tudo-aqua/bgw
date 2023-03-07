@@ -19,6 +19,7 @@ package tools.aqua.bgw.components
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
@@ -26,13 +27,19 @@ import tools.aqua.bgw.core.DEFAULT_BUTTON_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_BUTTON_WIDTH
 
 class LayeredContainerTest {
+  /** A test [LayeredContainer]. In this cas a [Pane] */
   private var layeredContainer: Pane<ComponentView> =
       Pane(width = DEFAULT_BUTTON_WIDTH, height = DEFAULT_BUTTON_HEIGHT)
 
+  /** Test component [Button]. */
   private val button1 = Button()
+  /** Test component [Button]. */
   private val button2 = Button()
+  /** Test component [Button]. */
   private val button3 = Button()
+  /** Test component [Button]. */
   private val button4 = Button()
+  /** Test component [Button]. */
   private val button5 = Button()
 
   @BeforeEach
@@ -41,7 +48,9 @@ class LayeredContainerTest {
     layeredContainer.addAll(button1, button2, button3, button4, button5)
   }
 
+  /** Test putting a component to the back of its parent. */
   @Test
+  @DisplayName("Test putting a component to the front of its parent")
   fun testToFront() {
     val expectedOrder = listOf<ComponentView>(button1, button3, button4, button5, button2)
     layeredContainer.toFront(button2)
@@ -50,7 +59,9 @@ class LayeredContainerTest {
     }
   }
 
+  /** Test putting a component to the back of its parent. */
   @Test
+  @DisplayName("Test putting a component to the back of its parent")
   fun testToBack() {
     val expectedOrder = listOf<ComponentView>(button4, button1, button2, button3, button5)
     layeredContainer.toBack(button4)
@@ -59,7 +70,9 @@ class LayeredContainerTest {
     }
   }
 
+  /** Test setting z-index of multiple components and reordering them. */
   @Test
+  @DisplayName("Test setting z-index of multiple components and reordering them")
   fun testSetZLayer() {
     val expectedOrder =
         listOf<Pair<ComponentView, Int>>(
