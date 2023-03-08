@@ -18,8 +18,10 @@
 package tools.aqua.bgw.net.server.view
 
 import com.fasterxml.jackson.core.exc.StreamReadException
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.messages.MessageList
 import com.vaadin.flow.component.messages.MessageListItem
@@ -33,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import tools.aqua.bgw.net.server.service.NotificationService
 import tools.aqua.bgw.net.server.service.validation.ValidationService
 import tools.aqua.bgw.net.server.view.components.JsonEditor
+import java.io.InputStream
 
 /**
  * Layout for the schema view.
@@ -50,41 +53,61 @@ class SchemaView(
     private val buffer: MemoryBuffer = MemoryBuffer()
     private val upload: Upload = Upload(buffer)
     private val msgList = MessageList()
-    private val editor = JsonEditor()
+    private val schemaEditor = JsonEditor()
+    private val objectEditor = JsonEditor()
+    private val mapper = JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build()
 
     init {
         configureUpload()
-        add(VerticalLayout(upload, msgList, editor))
+        add(VerticalLayout(upload, msgList, schemaEditor, objectEditor))
+        schemaEditor.addTextListener {
+            validateSchema(Json.JsonString(it))
+        }
+    }
+
+    private fun validateSchema(input: Json): List<String> {
+        var results: List<String> = listOf()
+        val schemaNode: JsonNode
+        try {
+            schemaNode = mapper.readTree(input)
+            //schemaEditor.setValueSilent(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schemaNode))
+            results = validationService.validateMetaSchema(schemaNode)
+        } catch (e: StreamReadException) {
+            when (input) {
+                //is Json.JsonString -> schemaEditor.setValueSilent(input.value)
+                is Json.JsonString -> results = listOf(e.originalMessage)
+                is Json.JsonFile -> notificationService.notify(
+                    "Couldn't parse JSON Schema! Please upload a .json File", NotificationVariant.LUMO_ERROR
+                )
+            }
+        }
+        msgList.setItems(results.map { result -> MessageListItem(result) })
+        return results
     }
 
     private fun configureUpload() {
         upload.addSucceededListener {
             val fileName = it.fileName
             val inputStream = buffer.inputStream
-
-            var results: List<String> = listOf()
-
-            try {
-                val mapper = ObjectMapper()
-                val schemaNode: JsonNode = mapper.readTree(inputStream)
-                results = validationService.validateMetaSchema(schemaNode)
-            } catch (_: StreamReadException) {
-                notificationService.notify(
-                    "Couldn't parse JSON Schema! Please upload a .json File",
-                    NotificationVariant.LUMO_ERROR
-                )
-            }
-
-            msgList.setItems(results.map { result -> MessageListItem(result) })
-
-            if (results.isEmpty())
-                notificationService.notify(
-                    "$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS
-                )
-            else
-                notificationService.notify(
-                    "$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR
-                )
+            val results = validateSchema(Json.JsonFile(inputStream))
+            if (results.isEmpty()) notificationService.notify(
+                "$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS
+            )
+            else notificationService.notify(
+                "$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR
+            )
         }
     }
+}
+
+private fun ObjectMapper.readTree(input: Json): JsonNode = when (input) {
+    is Json.JsonString -> readTree(input)
+    is Json.JsonFile -> readTree(input)
+}
+
+private fun ObjectMapper.readTree(input: Json.JsonString): JsonNode = this.readTree(input.value)
+private fun ObjectMapper.readTree(input: Json.JsonFile): JsonNode = this.readTree(input.inputStream)
+sealed class Json {
+    class JsonString(val value: String) : Json()
+    class JsonFile(val inputStream: InputStream) : Json()
 }

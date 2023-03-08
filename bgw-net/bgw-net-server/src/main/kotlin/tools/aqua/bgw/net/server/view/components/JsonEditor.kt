@@ -1,36 +1,29 @@
 package tools.aqua.bgw.net.server.view.components
 
+import com.vaadin.flow.shared.Registration
 import de.f0rce.ace.AceEditor
 import de.f0rce.ace.enums.AceMode
 import de.f0rce.ace.enums.AceTheme
 import tools.aqua.bgw.net.server.view.theme.Theme
 
 class JsonEditor : AceEditor() {
+    private val subscriptions: MutableMap<Registration, ((String) -> Unit)> = mutableMapOf()
 
     init {
         matchGlobalTheme()
         Theme.onChange { matchGlobalTheme() }
         mode = AceMode.json
-        isReadOnly = true
-        value = """
-          {
-            "schema": "http://json-schema.org/draft-07/schema",
-            "type": "object",
-            "required": [
-              "string",
-              "int"
-            ],
-            "properties": {
-              "string": {
-                "type": "string"
-              },
-              "int": {
-                "type": "integer"
-              }
-            },
-            "additionalProperties": false
-          }
-      """.trimIndent()
+    }
+
+    fun setValueSilent(value: String) {
+        subscriptions.forEach { (registration, _) -> registration.remove() }
+        element.callJsFunction("setValue", value).then {
+            val removedSubscriptions = subscriptions.toMap()
+            removedSubscriptions.forEach { (registration, callback) ->
+                subscriptions.remove(registration)
+                addTextListener(callback)
+            }
+        }
     }
 
     private fun matchGlobalTheme() {
@@ -39,6 +32,11 @@ class JsonEditor : AceEditor() {
             Theme.LIGHT_MODE -> LIGHT_THEME
             else -> DEFAULT_THEME
         }
+    }
+
+    fun addTextListener(callback: ((String) -> Unit)) {
+        val registration = addAceChangedListener { callback(it.value) }
+        subscriptions[registration] = callback
     }
 
     companion object {
