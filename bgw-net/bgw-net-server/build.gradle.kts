@@ -24,11 +24,15 @@ mavenMetadata {
 
 repositories {
   mavenCentral()
-  maven("https://maven.vaadin.com/vaadin-addons")
+  maven {
+    url = uri("https://maven.vaadin.com/vaadin-addons")
+  }
 }
 
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
+
+  implementation("de.f0rce:ace:3.4.2")
 
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.spring.boot.devtools)
@@ -50,7 +54,7 @@ dependencies {
   testImplementation(libs.testcontainers.junit.jupiter)
 }
 
-vaadin { productionMode = true }
+vaadin { productionMode = false }
 
 tasks.bootBuildImage {
   imageName = System.getenv("DOCKER_IMAGE_NAME")

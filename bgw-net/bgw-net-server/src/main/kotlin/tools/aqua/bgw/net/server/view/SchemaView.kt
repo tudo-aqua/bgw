@@ -32,6 +32,7 @@ import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Autowired
 import tools.aqua.bgw.net.server.service.NotificationService
 import tools.aqua.bgw.net.server.service.validation.ValidationService
+import tools.aqua.bgw.net.server.view.components.JsonEditor
 
 /**
  * Layout for the schema view.
@@ -46,40 +47,44 @@ class SchemaView(
     @Autowired private val validationService: ValidationService,
     @Autowired private val notificationService: NotificationService
 ) : VerticalLayout() {
-  private val buffer: MemoryBuffer = MemoryBuffer()
-  private val upload: Upload = Upload(buffer)
-  private val msgList = MessageList()
+    private val buffer: MemoryBuffer = MemoryBuffer()
+    private val upload: Upload = Upload(buffer)
+    private val msgList = MessageList()
+    private val editor = JsonEditor()
 
-  init {
-    configureUpload()
-    add(VerticalLayout(upload, msgList))
-  }
-
-  private fun configureUpload() {
-    upload.addSucceededListener {
-      val fileName = it.fileName
-      val inputStream = buffer.inputStream
-
-      var results: List<String> = listOf()
-
-      try {
-        val mapper = ObjectMapper()
-        val schemaNode: JsonNode = mapper.readTree(inputStream)
-        results = validationService.validateMetaSchema(schemaNode)
-      } catch (_: StreamReadException) {
-        notificationService.notify(
-            "Couldn't parse JSON Schema! Please upload a .json File",
-            NotificationVariant.LUMO_ERROR)
-      }
-
-      msgList.setItems(results.map { result -> MessageListItem(result) })
-
-      if (results.isEmpty())
-          notificationService.notify(
-              "$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS)
-      else
-          notificationService.notify(
-              "$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR)
+    init {
+        configureUpload()
+        add(VerticalLayout(upload, msgList, editor))
     }
-  }
+
+    private fun configureUpload() {
+        upload.addSucceededListener {
+            val fileName = it.fileName
+            val inputStream = buffer.inputStream
+
+            var results: List<String> = listOf()
+
+            try {
+                val mapper = ObjectMapper()
+                val schemaNode: JsonNode = mapper.readTree(inputStream)
+                results = validationService.validateMetaSchema(schemaNode)
+            } catch (_: StreamReadException) {
+                notificationService.notify(
+                    "Couldn't parse JSON Schema! Please upload a .json File",
+                    NotificationVariant.LUMO_ERROR
+                )
+            }
+
+            msgList.setItems(results.map { result -> MessageListItem(result) })
+
+            if (results.isEmpty())
+                notificationService.notify(
+                    "$fileName: JSON Schema is valid!", NotificationVariant.LUMO_SUCCESS
+                )
+            else
+                notificationService.notify(
+                    "$fileName: Invalid JSON Schema!", NotificationVariant.LUMO_ERROR
+                )
+        }
+    }
 }

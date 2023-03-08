@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.net.server.view
 
-import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
 import com.vaadin.flow.component.button.Button
@@ -30,13 +29,12 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.dom.ThemeList
 import com.vaadin.flow.router.HighlightConditions
 import com.vaadin.flow.router.RouterLink
-import com.vaadin.flow.theme.lumo.Lumo
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import tools.aqua.bgw.net.server.service.oauth.AccountRepository
+import tools.aqua.bgw.net.server.view.theme.Theme
 
 /** Layout for the main view. */
 @CssImport("./styles/styles.css")
@@ -44,65 +42,59 @@ class MainLayout(
     /** Repository holding information about the oauth login accounts. */
     private val accountRepository: AccountRepository
 ) : AppLayout() {
-  init {
-    createHeader()
-    createDrawer()
-    createUserStatus()
-    createToggleButton()
-  }
-
-  private fun createUserStatus() {
-    val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
-    val account = accountRepository.findBySub(principal.name).get()
-    addToNavbar(Span(account.accountName).apply { width = "150px" })
-  }
-
-  private fun createToggleButton() {
-    val toggleButton =
-        Button(Icon(VaadinIcon.ADJUST)) {
-          val themeList: ThemeList = UI.getCurrent().element.themeList
-          if (themeList.contains(Lumo.DARK)) {
-            themeList.remove(Lumo.DARK)
-          } else {
-            themeList.add(Lumo.DARK)
-          }
+    init {
+        createHeader()
+        createDrawer()
+        createUserStatus()
+        createToggleButton()
+        addAttachListener {
+            if (Theme.getCurrent().isEmpty()) Theme.setDefault()
         }
-    toggleButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
-    addToNavbar(toggleButton)
-  }
+    }
+    private fun createUserStatus() {
+        val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
+        val account = accountRepository.findBySub(principal.name).get()
+        addToNavbar(Span(account.accountName).apply { width = "150px" })
+    }
 
-  private fun createHeader() {
-    val logo = H1("BGW Net")
-    logo.addClassName("logo")
-    val header = HorizontalLayout(DrawerToggle(), logo)
-    header.width = "100%"
-    header.defaultVerticalComponentAlignment = FlexComponent.Alignment.CENTER
-    addToNavbar(header)
-  }
+    private fun createToggleButton() {
+        val toggleButton = Button(Icon(VaadinIcon.ADJUST)) { Theme.toggleTheme() }
+        toggleButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
+        addToNavbar(toggleButton)
+    }
 
-  private fun createDrawer() {
-    val connectionsLink =
-        RouterLink("Connections and Sessions", ConnectionsView::class.java).apply {
-          highlightCondition = HighlightConditions.sameLocation()
-        }
-    val secretLink =
-        RouterLink("Network Secret", NetworkSecretForm::class.java).apply {
-          highlightCondition = HighlightConditions.sameLocation()
-        }
-    val schemaLink =
-        RouterLink("Validate Schema", SchemaView::class.java).apply {
-          highlightCondition = HighlightConditions.sameLocation()
-        }
-    val uploadLink =
-        RouterLink("Games and Schemas", UploadSchemaView::class.java).apply {
-          highlightCondition = HighlightConditions.sameLocation()
-        }
+    private fun createHeader() {
+        val logo = H1("BGW Net")
+        logo.addClassName("logo")
+        val header = HorizontalLayout(DrawerToggle(), logo)
+        header.width = "100%"
+        header.defaultVerticalComponentAlignment = FlexComponent.Alignment.CENTER
+        addToNavbar(header)
+    }
 
-    val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
-    val account = accountRepository.findBySub(principal.name).get()
-    val links: MutableList<RouterLink> = mutableListOf(schemaLink)
-    if (account.isAdmin()) links.addAll(listOf(connectionsLink, secretLink, uploadLink))
+    private fun createDrawer() {
+        val connectionsLink =
+            RouterLink("Connections and Sessions", ConnectionsView::class.java).apply {
+                highlightCondition = HighlightConditions.sameLocation()
+            }
+        val secretLink =
+            RouterLink("Network Secret", NetworkSecretForm::class.java).apply {
+                highlightCondition = HighlightConditions.sameLocation()
+            }
+        val schemaLink =
+            RouterLink("Validate Schema", SchemaView::class.java).apply {
+                highlightCondition = HighlightConditions.sameLocation()
+            }
+        val uploadLink =
+            RouterLink("Games and Schemas", UploadSchemaView::class.java).apply {
+                highlightCondition = HighlightConditions.sameLocation()
+            }
 
-    @Suppress("SpreadOperator") addToDrawer(VerticalLayout(*links.toTypedArray()))
-  }
+        val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
+        val account = accountRepository.findBySub(principal.name).get()
+        val links: MutableList<RouterLink> = mutableListOf(schemaLink)
+        if (account.isAdmin()) links.addAll(listOf(connectionsLink, secretLink, uploadLink))
+
+        @Suppress("SpreadOperator") addToDrawer(VerticalLayout(*links.toTypedArray()))
+    }
 }
