@@ -26,6 +26,7 @@ import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.messages.MessageList
 import com.vaadin.flow.component.messages.MessageListItem
 import com.vaadin.flow.component.notification.NotificationVariant
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
@@ -53,13 +54,21 @@ class SchemaView(
     private val buffer: MemoryBuffer = MemoryBuffer()
     private val upload: Upload = Upload(buffer)
     private val msgList = MessageList()
-    private val schemaEditor = JsonEditor()
-    private val objectEditor = JsonEditor()
+    private val schemaEditor = JsonEditor().apply {
+        width = "50%"
+        height = "450px"
+    }
+    private val objectEditor = JsonEditor().apply {
+        width = "50%"
+        height = "450px"
+    }
     private val mapper = JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build()
 
     init {
         configureUpload()
-        add(VerticalLayout(upload, msgList, schemaEditor, objectEditor))
+        add(
+            VerticalLayout(upload, HorizontalLayout(schemaEditor, objectEditor).apply { setWidthFull() }),
+            msgList.apply { height = "500px" })
         schemaEditor.addTextListener {
             validateSchema(Json.JsonString(it))
         }
@@ -70,7 +79,11 @@ class SchemaView(
         val schemaNode: JsonNode
         try {
             schemaNode = mapper.readTree(input)
-            //schemaEditor.setValueSilent(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schemaNode))
+            if (input is Json.JsonFile) {
+                schemaEditor.setValueSilent(
+                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schemaNode)
+                )
+            }
             results = validationService.validateMetaSchema(schemaNode)
         } catch (e: StreamReadException) {
             when (input) {
