@@ -47,9 +47,6 @@ class MainLayout(
         createDrawer()
         createUserStatus()
         createToggleButton()
-        addAttachListener {
-            if (Theme.getCurrent().isEmpty()) Theme.setDefault()
-        }
     }
     private fun createUserStatus() {
         val principal = SecurityContextHolder.getContext().authentication.principal as DefaultOAuth2User
@@ -58,7 +55,7 @@ class MainLayout(
     }
 
     private fun createToggleButton() {
-        val toggleButton = Button(Icon(VaadinIcon.ADJUST)) { Theme.toggleTheme() }
+        val toggleButton = Button(Icon(VaadinIcon.ADJUST)) { Theme.toggle() }
         toggleButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
         addToNavbar(toggleButton)
     }

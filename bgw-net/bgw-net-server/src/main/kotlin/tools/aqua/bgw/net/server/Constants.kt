@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.server
 
+import com.vaadin.flow.theme.lumo.Lumo
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
@@ -61,3 +62,9 @@ val WebSocketSession.player: Player
 
 /** Websocket buffer size in bytes **/
 const val BUFFER_SIZE = 1024 * 1024 // 1MB
+
+const val DARK_THEME = Lumo.DARK
+
+const val LIGHT_THEME = Lumo.LIGHT
+
+const val DEFAULT_THEME = DARK_THEME

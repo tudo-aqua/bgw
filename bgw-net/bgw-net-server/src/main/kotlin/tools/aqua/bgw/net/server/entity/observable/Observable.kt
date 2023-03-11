@@ -1,12 +1,17 @@
 package tools.aqua.bgw.net.server.entity.observable
 
-open class Observable {
-    private val observers: MutableList<Observer> = mutableListOf()
-    fun onChange(callback: (() -> Unit)) {
+open class Observable<T>(initialValue: T) {
+    protected var value: T = initialValue
+        set(value) {
+            field = value
+            notifyChange()
+        }
+    private val observers: MutableList<Observer<T>> = mutableListOf()
+    fun onChange(callback: ((T) -> Unit)) {
         observers.add(callback)
     }
 
-    protected fun notifyChange() {
-        observers.forEach { it.update() }
+    private fun notifyChange() {
+        observers.forEach { it.update(value) }
     }
 }

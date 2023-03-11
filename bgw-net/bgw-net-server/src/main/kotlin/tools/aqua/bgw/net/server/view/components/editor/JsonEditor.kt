@@ -10,13 +10,14 @@ import com.vaadin.flow.shared.Registration
 import de.f0rce.ace.AceEditor
 import de.f0rce.ace.enums.AceMode
 import de.f0rce.ace.enums.AceTheme
+import tools.aqua.bgw.net.server.DARK_THEME
+import tools.aqua.bgw.net.server.LIGHT_THEME
 import tools.aqua.bgw.net.server.service.NotificationService
 import tools.aqua.bgw.net.server.service.validation.ValidationService
 import tools.aqua.bgw.net.server.view.theme.Theme
 
 class JsonEditor(
-    private val validationService: ValidationService,
-    private val notificationService: NotificationService
+    private val validationService: ValidationService, private val notificationService: NotificationService
 ) : AceEditor() {
     private val subscriptions: MutableMap<Registration, ((String) -> Unit)> = mutableMapOf()
     private val mapper = JsonMapper.builder().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).build()
@@ -54,23 +55,18 @@ class JsonEditor(
             }
             results = validationService.validateMetaSchema(schemaNode)
         } catch (e: StreamReadException) {
-            when (input) {
-                //is Json.JsonString -> schemaEditor.setValueSilent(input.value)
-                is JsonFile -> notificationService.notify(
-                    "Couldn't parse JSON Schema! Please upload a .json File", NotificationVariant.LUMO_ERROR
-                )
-
-                else -> {}
-            }
+            if (input is JsonFile) notificationService.notify(
+                "Couldn't parse JSON Schema! Please upload a .json File", NotificationVariant.LUMO_ERROR
+            )
         }
         return results
     }
 
     private fun matchGlobalTheme() {
         this.theme = when (Theme.getCurrent()) {
-            Theme.DARK_MODE -> DARK_THEME
-            Theme.LIGHT_MODE -> LIGHT_THEME
-            else -> DEFAULT_THEME
+            DARK_THEME -> EDITOR_DARK_THEME
+            LIGHT_THEME -> EDITOR_LIGHT_THEME
+            else -> EDITOR_DEFAULT_THEME
         }
     }
 
@@ -80,9 +76,9 @@ class JsonEditor(
     }
 
     companion object {
-        val LIGHT_THEME = AceTheme.crimson_editor
-        val DARK_THEME = AceTheme.nord_dark
-        val DEFAULT_THEME = DARK_THEME
+        val EDITOR_LIGHT_THEME = AceTheme.crimson_editor
+        val EDITOR_DARK_THEME = AceTheme.nord_dark
+        val EDITOR_DEFAULT_THEME = EDITOR_DARK_THEME
     }
 }
 
