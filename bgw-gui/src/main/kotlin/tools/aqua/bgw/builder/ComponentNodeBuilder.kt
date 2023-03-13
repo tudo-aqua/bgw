@@ -17,20 +17,27 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.scene.Node
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
+import javafx.scene.paint.*
+import javafx.scene.shape.Polygon
+import javafx.scene.shape.StrokeLineCap
+import javafx.scene.shape.StrokeLineJoin
 import tools.aqua.bgw.components.gamecomponentviews.*
+import tools.aqua.bgw.visual.ColorVisual
+import kotlin.math.cos
+import kotlin.math.sin
 
 /** [ComponentNodeBuilder]. Factory for all BGW components. */
 object ComponentNodeBuilder {
     /** Switches between GameComponents. */
-    internal fun buildGameComponent(gameComponentView: GameComponentView): Region =
-        when (gameComponentView) {
-            is CardView -> buildCardView(gameComponentView)
-            is DiceView -> buildDiceView(gameComponentView)
-            is TokenView -> buildTokenView(gameComponentView)
-            is HexagonView -> buildHexagonView(gameComponentView)
-        }
+    internal fun buildGameComponent(gameComponentView: GameComponentView): Node = when (gameComponentView) {
+        is CardView -> buildCardView(gameComponentView)
+        is DiceView -> buildDiceView(gameComponentView)
+        is TokenView -> buildTokenView(gameComponentView)
+        is HexagonView -> buildHexagonView(gameComponentView)
+    }
 
     /** Builds [CardView]. */
     @Suppress("UNUSED_PARAMETER")
@@ -46,5 +53,24 @@ object ComponentNodeBuilder {
 
     /** Builds [TokenView]. */
     @Suppress("UNUSED_PARAMETER")
-    private fun buildHexagonView(hexagonView: HexagonView): Region = Pane()
+    private fun buildHexagonView(hexagonView: HexagonView): Node {
+        val points = mutableListOf<Double>()
+        val r = hexagonView.width / 2 - 25
+        var angle = 90.0
+        for (i in 0..5) {
+            val x = r * cos(Math.toRadians(angle)) + r
+            val y = r * sin(Math.toRadians(angle)) + r
+            angle += 60.0
+            points.add(x)
+            points.add(y)
+        }
+        return Polygon(*points.toDoubleArray()).apply {
+            this.fill = Color.WHITE
+            strokeLineJoin = StrokeLineJoin.ROUND
+            strokeMiterLimit = 50.0
+            strokeLineCap = StrokeLineCap.ROUND
+            strokeWidth = 50.0
+            stroke = Color.WHITE
+        }
+    }
 }

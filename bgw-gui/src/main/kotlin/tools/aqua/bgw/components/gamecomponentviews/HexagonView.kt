@@ -5,7 +5,6 @@ import tools.aqua.bgw.visual.Visual
 class HexagonView(
     posX: Number = 0,
     posY: Number = 0,
-    width: Number = 100,
-    height: Number = 100,
+    size: Number = 0,
     visual: Visual
-) : GameComponentView(posX, posY, width, height, visual)
+) : GameComponentView(posX, posY, size, size, visual)
