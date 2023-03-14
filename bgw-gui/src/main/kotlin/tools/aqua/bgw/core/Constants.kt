@@ -70,8 +70,8 @@ const val DEFAULT_ANIMATION_SPEED: Int = 50
 // endregion
 
 // region Components
-/** Default [DEFAULT_HEXAGON_SIZE] width. */
-const val DEFAULT_HEXAGON_SIZE: Double = 200.0
+/** Default [DEFAULT_HEXAGON_SIZE] size. */
+const val DEFAULT_HEXAGON_SIZE: Double = 100.0
 
 /** Default [CardView] width. */
 const val DEFAULT_CARD_WIDTH: Double = 130.0
