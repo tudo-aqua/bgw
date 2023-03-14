@@ -36,23 +36,28 @@ object HexagonBuilder {
     }
 
     private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual): Node =
-        StackPane(*compoundVisual.children.map { buildPolygon(points, it) }.toTypedArray())
+        StackPane(*compoundVisual.children.map {
+            when (it) {
+                is TextVisual -> buildPolygon(points, it)
+                else -> buildPolygon(points, it)
+            }
+        }.toTypedArray()).apply { isPickOnBounds = false }
 
     private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Node = Polygon(*points).apply {
         val paint = buildPaint(visual)
         fill = paint
+        visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV -> opacity = nV }
         roundCorners(paint)
     }
 
     private fun buildPolygon(points: DoubleArray, visual: TextVisual): Node = StackPane(
-        buildPolygon(points, visual as SingleLayerVisual),
-        VisualBuilder.buildVisual(visual)
-    )
+        buildPolygon(points, visual as SingleLayerVisual), VisualBuilder.buildVisual(visual).apply { isPickOnBounds = false }
+    ).apply { isPickOnBounds = false }
 
     private fun Polygon.roundCorners(paint: Paint) {
         stroke = paint
         strokeWidth = BORDER_WIDTH
-        strokeType = StrokeType.OUTSIDE
+        strokeType = StrokeType.CENTERED
         strokeLineJoin = StrokeLineJoin.ROUND
         strokeLineCap = StrokeLineCap.ROUND
         strokeMiterLimit = BORDER_WIDTH
@@ -60,7 +65,7 @@ object HexagonBuilder {
 
     private fun generatePoints(size: Double): DoubleArray {
         val points = mutableListOf<Double>()
-        val r = size / 2 - BORDER_WIDTH
+        val r = size / 2 - BORDER_WIDTH / 2
         var angle = 90.0
         for (i in 0 until HEXAGON_SIDES) {
             val x = r * cos(Math.toRadians(angle)) + r
