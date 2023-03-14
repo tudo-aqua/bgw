@@ -25,26 +25,25 @@ import tools.aqua.bgw.components.gamecomponentviews.*
 
 /** [ComponentNodeBuilder]. Factory for all BGW components. */
 object ComponentNodeBuilder {
-    /** Switches between GameComponents. */
-    internal fun buildGameComponent(gameComponentView: GameComponentView): Node = when (gameComponentView) {
+  /** Switches between GameComponents. */
+  internal fun buildGameComponent(gameComponentView: GameComponentView): Node =
+      when (gameComponentView) {
         is CardView -> buildCardView(gameComponentView)
         is DiceView -> buildDiceView(gameComponentView)
         is TokenView -> buildTokenView(gameComponentView)
         is HexagonView -> buildHexagonView(gameComponentView)
-    }
+      }
 
-    /** Builds [CardView]. */
-    @Suppress("UNUSED_PARAMETER")
-    private fun buildCardView(cardView: CardView): Region = Pane()
+  /** Builds [CardView]. */
+  @Suppress("UNUSED_PARAMETER") private fun buildCardView(cardView: CardView): Region = Pane()
 
-    /** Builds [DiceView]. */
-    @Suppress("UNUSED_PARAMETER")
-    private fun buildDiceView(diceView: DiceView): Region = Pane()
+  /** Builds [DiceView]. */
+  @Suppress("UNUSED_PARAMETER") private fun buildDiceView(diceView: DiceView): Region = Pane()
 
-    /** Builds [TokenView]. */
-    @Suppress("UNUSED_PARAMETER")
-    private fun buildTokenView(tokenView: TokenView): Region = Pane()
+  /** Builds [TokenView]. */
+  @Suppress("UNUSED_PARAMETER") private fun buildTokenView(tokenView: TokenView): Region = Pane()
 
-    /** Builds [HexagonView]. */
-    private fun buildHexagonView(hexagonView: HexagonView): Node = HexagonBuilder.buildHexagonView(hexagonView)
+  /** Builds [HexagonView]. */
+  private fun buildHexagonView(hexagonView: HexagonView): Node =
+      HexagonBuilder.buildHexagonView(hexagonView)
 }
