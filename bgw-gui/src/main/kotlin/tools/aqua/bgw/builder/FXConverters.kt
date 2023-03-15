@@ -107,8 +107,9 @@ object FXConverters {
                 MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
                 else -> MouseButtonType.UNSPECIFIED
               },
-          posX = this.screenX,
-          posY = this.screenY)
+
+          posX = x ,
+          posY = y)
 
   /** Converts the [FXScrollEvent] to [ScrollEvent]. */
   internal fun FXScrollEvent.toScrollEvent(): ScrollEvent =
