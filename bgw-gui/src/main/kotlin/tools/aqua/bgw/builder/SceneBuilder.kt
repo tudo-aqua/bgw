@@ -96,14 +96,17 @@ object SceneBuilder {
           setOnKeyTyped {
             if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
                 scene.onKeyTyped?.invoke(it.toKeyEvent())
+            it.consume()
           }
           setOnKeyPressed {
             if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
                 scene.onKeyPressed?.invoke(it.toKeyEvent())
+            it.consume()
           }
           setOnKeyReleased {
             if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
                 scene.onKeyReleased?.invoke(it.toKeyEvent())
+            it.consume()
           }
         }
 
