@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The BoardGameWork Authors
+ * Copyright 2022-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +54,7 @@ class DummyEventTest {
     KeyEvent(keyCode = KeyCode.A, isControlDown = false, isShiftDown = false, isAltDown = false)
     KeyEvent(isControlDown = false, isShiftDown = false, isAltDown = false)
 
-    MouseEvent(MouseButtonType.OTHER)
+    MouseEvent(MouseButtonType.OTHER, posX = 0, posY = 0)
 
     ScrollEvent(ScrollDirection.UP, isControlDown = false, isShiftDown = false, isAltDown = false)
 
