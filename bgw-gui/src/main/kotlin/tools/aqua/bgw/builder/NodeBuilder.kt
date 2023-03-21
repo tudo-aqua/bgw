@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.scene.control.ScrollPane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropBuilder.registerDragEvents
@@ -43,7 +44,7 @@ object NodeBuilder {
   internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
     val node =
         when (componentView) {
-          is GameComponentContainer<out GameComponentView> ->
+          is GameComponentContainer<out DynamicComponentView> ->
               ContainerNodeBuilder.buildContainer(scene, componentView)
           is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
           is LayoutView<out ComponentView> ->
