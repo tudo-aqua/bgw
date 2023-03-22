@@ -26,7 +26,7 @@ import tools.aqua.bgw.components.gamecomponentviews.*
 /** [ComponentNodeBuilder]. Factory for all BGW components. */
 object ComponentNodeBuilder {
   /** Switches between GameComponents. */
-  internal fun buildGameComponent(gameComponentView: GameComponentView): Node =
+  internal fun buildGameComponent(gameComponentView: GameComponentView): Region =
       when (gameComponentView) {
         is CardView -> buildCardView(gameComponentView)
         is DiceView -> buildDiceView(gameComponentView)
@@ -44,6 +44,6 @@ object ComponentNodeBuilder {
   @Suppress("UNUSED_PARAMETER") private fun buildTokenView(tokenView: TokenView): Region = Pane()
 
   /** Builds [HexagonView]. */
-  private fun buildHexagonView(hexagonView: HexagonView): Node =
+  private fun buildHexagonView(hexagonView: HexagonView): Region =
       HexagonBuilder.buildHexagonView(hexagonView)
 }

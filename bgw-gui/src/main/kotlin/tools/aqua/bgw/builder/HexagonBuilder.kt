@@ -18,6 +18,8 @@
 package tools.aqua.bgw.builder
 
 import javafx.scene.Node
+import javafx.scene.layout.Pane
+import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.paint.ImagePattern
@@ -43,7 +45,7 @@ object HexagonBuilder {
   private const val BORDER_WIDTH = 50.0
 
   /** Builds [HexagonView]. */
-  internal fun buildHexagonView(hexagonView: HexagonView): Node {
+  internal fun buildHexagonView(hexagonView: HexagonView): Region {
     val points = generatePoints(hexagonView.size.toDouble())
     return when (val visual = hexagonView.visual) {
       is TextVisual -> buildPolygon(points, visual)
@@ -52,7 +54,7 @@ object HexagonBuilder {
     }.also { hexagonView.visual = Visual.EMPTY }
   }
 
-  private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual): Node =
+  private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual): Region =
       StackPane(
               *compoundVisual.children
                   .map {
@@ -64,8 +66,8 @@ object HexagonBuilder {
                   .toTypedArray())
           .apply { isPickOnBounds = false }
 
-  private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Node =
-      Polygon(*points).apply {
+  private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Region =
+      Pane(Polygon(*points).apply {
         val paint = buildPaint(visual)
         fill = paint
         visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
@@ -74,9 +76,9 @@ object HexagonBuilder {
         stroke = Color.BLACK
         strokeType = StrokeType.INSIDE
         // roundCorners(paint)
-      }
+      }).apply { isPickOnBounds = false }
 
-  private fun buildPolygon(points: DoubleArray, visual: TextVisual): Node =
+  private fun buildPolygon(points: DoubleArray, visual: TextVisual): Region =
       StackPane(
               buildPolygon(points, visual as SingleLayerVisual),
               VisualBuilder.buildVisual(visual).apply { isPickOnBounds = false })

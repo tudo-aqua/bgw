@@ -43,7 +43,7 @@ import tools.aqua.bgw.exception.IllegalInheritanceException
 object NodeBuilder {
   /** Switches between top level component types. */
   internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
-    val node: Node =
+    val node: Region =
         when (componentView) {
           is GameComponentContainer<out GameComponentView> ->
               ContainerNodeBuilder.buildContainer(scene, componentView)
@@ -78,7 +78,7 @@ object NodeBuilder {
   /** Registers events. */
   private fun ComponentView.registerEvents(
       stackPane: StackPane,
-      node: Node,
+      node: Region,
       scene: Scene<out ComponentView>
   ) {
     if (this is DynamicComponentView) {
@@ -122,7 +122,7 @@ object NodeBuilder {
   @Suppress("DuplicatedCode")
   private fun ComponentView.registerObservers(
       stackPane: StackPane,
-      node: Node,
+      node: Region,
       background: Region
   ) {
     posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
@@ -144,12 +144,12 @@ object NodeBuilder {
     opacityProperty.setGUIListenerAndInvoke(opacity) { _, nV -> stackPane.opacity = nV }
 
     heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
-      node.resize(node.layoutBounds.width, nV)
+      node.prefHeight = nV
       background.prefHeight = nV
       posYProperty.notifyUnchanged()
     }
     widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
-      node.resize(nV, node.layoutBounds.height)
+      node.prefWidth = nV
       background.prefWidth = nV
       posXProperty.notifyUnchanged()
     }
