@@ -752,7 +752,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   internal open fun getActualChildPosition(child: ComponentView): Coordinate? = null
 
   /**
-   * Puts the [ComponentView] to the front inside its [parent].
+   * Puts the [ComponentView] to the front inside its [parent] and Changes its [zIndex] accordingly.
    *
    * @throws IllegalStateException if the [ComponentView] does not have a parent
    * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
@@ -780,7 +780,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   }
 
   /**
-   * Puts the [ComponentView] to the back inside its [parent].
+   * Puts the [ComponentView] to the back inside its [parent] and Changes its [zIndex] accordingly.
    *
    * @throws IllegalStateException if the [ComponentView] does not have a parent
    * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
