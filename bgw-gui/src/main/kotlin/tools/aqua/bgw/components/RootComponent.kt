@@ -54,6 +54,7 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @param component Child that is moved to the front.
    */
   override fun toFront(component: T) {
+    zIndexProperty.value = this.scene.rootComponents.last().zIndex
     if (this.scene.rootComponents.last() != component &&
         this.scene.rootComponents.contains(component)) {
       this.scene.rootComponents.removeSilent(component)
@@ -67,6 +68,7 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @param component Child that is moved to the back.
    */
   override fun toBack(component: T) {
+    zIndexProperty.value = this.scene.rootComponents.first().zIndex
     if (this.scene.rootComponents.first() != component &&
         this.scene.rootComponents.contains(component)) {
       this.scene.rootComponents.removeSilent(component)
@@ -81,7 +83,7 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @param zIndex The value that is used to compare the order of components.
    */
   override fun setZIndex(component: T, zIndex: Int) {
-    component.zIndex = zIndex
-    this.scene.rootComponents.sort(Comparator.comparingInt { zIndex })
+    component.zIndexProperty.value = zIndex
+    this.scene.rootComponents.sort(Comparator.comparingInt { it.zIndex })
   }
 }

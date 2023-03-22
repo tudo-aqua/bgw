@@ -22,12 +22,10 @@ package tools.aqua.bgw.components
 import kotlin.math.floor
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.LayoutView
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
-import tools.aqua.bgw.observable.properties.BooleanProperty
-import tools.aqua.bgw.observable.properties.DoubleProperty
-import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
-import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.observable.properties.*
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
@@ -54,8 +52,27 @@ import tools.aqua.bgw.visual.Visual
 abstract class ComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) {
 
-  /** Sets the order of [ComponentView] inside of [parent]. */
-  internal var zIndex: Int = 0
+  /**
+   * Property for the order of [ComponentView] inside of [parent].#
+   *
+   * @see zIndex
+   */
+  val zIndexProperty: IntegerProperty = IntegerProperty(0)
+
+  /** for the order of [ComponentView] inside of [parent].# */
+  var zIndex: Int
+    get() = zIndexProperty.value
+    set(value) {
+      checkNotNull(parent) { "$this does not have a parent" }
+      if (parent is LayeredContainer<*>) {
+        try {
+          @Suppress("UNCHECKED_CAST")
+          (parent as LayeredContainer<ComponentView>).setZIndex(this, value)
+        } catch (_: ClassCastException) {
+          error("$parent is not a compatible container type")
+        }
+      }
+    }
 
   /**
    * The parent of this [ComponentView].
@@ -742,6 +759,16 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * [ComponentView]
    */
   fun toFront() {
+    if (parent != null) {
+      zIndexProperty.value =
+          when (parent) {
+            is GameComponentContainer<*> ->
+                (parent as GameComponentContainer<*>).components.last().zIndex
+            is Pane<*> -> (parent as Pane<*>).components.last().zIndex
+            is RootComponent<*> -> (parent as RootComponent<*>).scene.rootComponents.last().zIndex
+            else -> 0
+          }
+    }
     checkNotNull(parent) { "$this does not have a parent" }
     if (parent is LayeredContainer<*>) {
       try {
@@ -760,6 +787,14 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * [ComponentView]
    */
   fun toBack() {
+    zIndexProperty.value =
+        when (parent) {
+          is GameComponentContainer<*> ->
+              (parent as GameComponentContainer<*>).components.first().zIndex
+          is Pane<*> -> (parent as Pane<*>).components.first().zIndex
+          is RootComponent<*> -> (parent as RootComponent<*>).scene.rootComponents.first().zIndex
+          else -> 0
+        }
     checkNotNull(parent) { "$this does not have a parent" }
     if (parent is LayeredContainer<*>) {
       try {

@@ -276,6 +276,7 @@ open class Pane<T : ComponentView>(
    * @param component Child that is moved to the front.
    */
   override fun toFront(component: T) {
+    component.zIndexProperty.value = observableComponents.last().zIndex
     if (observableComponents.last() != component && observableComponents.contains(component)) {
       observableComponents.removeSilent(component)
       observableComponents.add(component)
@@ -288,6 +289,7 @@ open class Pane<T : ComponentView>(
    * @param component Child that is moved to the back.
    */
   override fun toBack(component: T) {
+    component.zIndexProperty.value = observableComponents.first().zIndex
     if (observableComponents.first() != component && observableComponents.contains(component)) {
       observableComponents.removeSilent(component)
       observableComponents.add(0, component)
