@@ -1,3 +1,4 @@
+[0.8]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8
 [0.7.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.3
 [0.7.2]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.2
 [0.7.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.1
@@ -17,6 +18,11 @@
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.8] - 22.05.2023
+
+### Fixed
+- `showMenuScene` fade animation not firing on consecutive runs.
 
 ## [0.7.3] - 31.08.2022
 
