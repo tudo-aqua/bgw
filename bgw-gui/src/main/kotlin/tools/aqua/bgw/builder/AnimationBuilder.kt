@@ -185,7 +185,7 @@ object AnimationBuilder {
             if (componentView.currentSide == CardView.CardSide.FRONT) anim.fromVisual
             else anim.toVisual
       }
-      is HexagonView -> TODO()
+      is HexagonView -> componentView.visual = anim.fromVisual
     }
 
     animation1.setOnFinished {
@@ -193,7 +193,7 @@ object AnimationBuilder {
         is TokenView -> componentView.visual = anim.toVisual
         is DiceView -> componentView.visuals[componentView.currentSide] = anim.toVisual
         is CardView -> componentView.flip()
-        is HexagonView -> TODO()
+        is HexagonView -> componentView.visual = anim.toVisual
       }
 
       animation2.play()
