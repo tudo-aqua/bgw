@@ -13,6 +13,7 @@ nav_order: 3
 [LinearLayoutDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-linear-layout/index.html
 [DiceDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-dice-view/index.html
 [DiceAnimationDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.animation/-dice-animation/index.html
+[HexagonDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-hexagon-view/index.html
 
 <!-- GH-Pages Doc -->
 [ComponentViewDoc]: ../../components/componentview/componentview.md
@@ -63,3 +64,9 @@ side e.g. the visual at index 0 is side 1.
 If the list of visuals gets altered the amount of sides changes too.
 
 For a dice roll there exists a dedicated [DiceAnimation][DiceAnimationDoc].
+
+## Hexagons
+The [HexagonView][HexagonDoc] component can also be utilized for hexagonal tokens,
+providing a versatile solution for displaying various hexagonal-shaped elements.
+
+Hexagons only have one visual.
