@@ -22,7 +22,6 @@ package tools.aqua.bgw.observable.lists
 import java.util.*
 import java.util.function.Predicate
 import java.util.function.UnaryOperator
-import kotlin.streams.toList
 
 /**
  * An observable [List] implementation.
@@ -349,11 +348,10 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * @param comparator [Comparator] to be applied. If the elements contained in this list implement
    * the comparable interface, pass null.
    */
-  fun sort(comparator: Comparator<in T>?) {
-    val sorted = list.stream().sorted(comparator).toList()
-    list.clear()
-    list.addAll(sorted)
-    // notifyChange() not necessary since addAll() already notified.
+  fun sort(comparator: Comparator<in T>) {
+    val snapshot = this.toList()
+    list.sortWith(comparator)
+    notifyChange(oldValue = snapshot, newValue = this.toList())
   }
 
   /** Sets [list] silently. */

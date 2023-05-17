@@ -40,6 +40,8 @@ nav_order: 6
 [AUTO_ROW_HEIGHT]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/-companion/-r-o-w_-h-e-i-g-h-t_-a-u-t-o.html
 [AUTO_COLUMN_WIDTH]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-grid-pane/-companion/-c-o-l-u-m-n_-w-i-d-t-h_-a-u-t-o.html
 
+[CameraPaneKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.layoutviews/-camera-pane/index.html
+
 <!-- GH-Pages Doc -->
 [ComponentViewDoc]: ../../components/componentview/componentview.md
 [ContainerDoc]: ../../components/container/container.md
@@ -141,3 +143,33 @@ This can be changed for each cell by calling [setCellCenterMode][setCellCenterMo
 To change behaviour for entire rows or columns use [setRowCenterMode][setRowCenterModeKDoc] and [setColumnCenterMode][setColumnCenterModeKDoc].
 
 To set centering behaviour for the entire grid use [setCenterMode][setCenterModeKDoc].
+
+## [CameraPane][CameraPaneKDoc]
+A pane representing a camera view that can be used to display a target layout view.
+
+### Example
+
+````kotlin
+val targetLayout = Pane<*>(width = 1000, height = 1000)
+val cameraPane = CameraPane(width = 500, height = 500 ,target = targetLayout)
+
+// Zoom in by setting the zoom factor to 2
+cameraPane.zoom = 2.0
+
+// Make the camera pane interactive
+cameraPane.interactive = true
+
+// Pan the camera to specific coordinates
+cameraPane.pan(100, 200)
+
+// Pan the camera by offset values
+cameraPane.panBy(-50, 100)
+````
+
+In the example above, a `CameraPane` is created with a pane as its target.
+The zoom factor is set to 2, making the view twice as large.
+The camera pane is set to be interactive, allowing zooming and panning with the mouse.
+The camera is then panned to specific coordinates and panned again by offset values.
+
+Note how the `CameraPane` is smaller than the pane it is displaying.
+A `CameraPane` is especially useful if you want to display larger content in a smaller area.
