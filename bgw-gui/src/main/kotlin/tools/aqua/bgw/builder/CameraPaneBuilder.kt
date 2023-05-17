@@ -42,7 +42,17 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
 
+
+/**
+ * The [CameraPaneBuilder] object provides a method for building a camera pane in a specified scene and container.
+ */
 object CameraPaneBuilder {
+  /**
+   * Builds a camera pane within the specified scene and container.
+   * @param scene The scene in which the camera pane will be built.
+   * @param container The container that will hold the camera pane.
+   * @return The built camera pane as a Region.
+   */
   internal fun buildCameraPane(
       scene: Scene<out ComponentView>,
       container: CameraPane<out LayoutView<*>>
@@ -70,8 +80,20 @@ object CameraPaneBuilder {
     }
   }
 }
-
-class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
+/**
+ * The [ZoomableScrollPane] class represents a scroll pane with zooming capabilities.
+ * It provides functionality to zoom in and out, scroll to specific points, and reset the zoom and scroll positions.
+ *
+ * @property target The pane contained within the scroll pane.
+ * @property scaleValue The current scale value of the scroll pane.
+ * @property zoomIntensity The intensity factor for zooming.
+ * @property zoomNode The node to be zoomed.
+ * @property timeline The timeline for animating the reset operation.
+ * @property lerpTime The time for linear interpolation during reset animation.
+ * @property anchorPoint The anchor point used for scrolling.
+ *
+ * */
+internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
   var scaleValue: Double = 1.0
     set(value) {
       field = max(value, 1.0)
@@ -97,6 +119,10 @@ class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
     // isFitToWidth = true //center
   }
 
+  /**
+   * Scrolls the view to the specified point if it is within the zoomed node's bounds.
+   * @param point The point to scroll to.
+   */
   fun scrollTo(point: Point2D) {
     if (zoomNode.boundsInLocal.contains(point)) {
       anchorPoint = point
@@ -107,6 +133,11 @@ class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
     }
   }
 
+  /**
+   * Scrolls the view by the specified offset if the resulting point is within the zoomed node's bounds.
+   * @param xOffset The horizontal offset.
+   * @param yOffset The vertical offset.
+   */
   fun scrollBy(xOffset: Double, yOffset: Double) {
     if (zoomNode.boundsInLocal.contains(anchorPoint.add(xOffset, yOffset))) {
       anchorPoint = anchorPoint.add(xOffset, yOffset)
@@ -114,6 +145,10 @@ class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
     }
   }
 
+  /**
+   * Resets the zoom and scroll positions to their initial values.
+   * Performs an animated transition using a timeline.
+   */
   fun reset() {
     if (timeline?.status == Animation.Status.RUNNING) return
     timeline =
