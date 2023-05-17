@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.builder
 
-import javafx.scene.Node
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
@@ -67,16 +66,18 @@ object HexagonBuilder {
           .apply { isPickOnBounds = false }
 
   private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Region =
-      Pane(Polygon(*points).apply {
-        val paint = buildPaint(visual)
-        fill = paint
-        visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
-          opacity = nV
-        }
-        stroke = Color.BLACK
-        strokeType = StrokeType.INSIDE
-        // roundCorners(paint)
-      }).apply { isPickOnBounds = false }
+      Pane(
+              Polygon(*points).apply {
+                val paint = buildPaint(visual)
+                fill = paint
+                visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
+                  opacity = nV
+                }
+                stroke = Color.BLACK
+                strokeType = StrokeType.INSIDE
+                // roundCorners(paint)
+              })
+          .apply { isPickOnBounds = false }
 
   private fun buildPolygon(points: DoubleArray, visual: TextVisual): Region =
       StackPane(

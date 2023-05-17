@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.builder
 
-import javafx.scene.Node
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import javafx.scene.paint.*
