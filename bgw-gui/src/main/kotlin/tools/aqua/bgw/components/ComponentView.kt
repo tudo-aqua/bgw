@@ -527,8 +527,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   var onKeyReleased: ((KeyEvent) -> Unit)? = null
 
   /**
-   * Gets invoked with a [KeyEvent] whenever a Character is typed while this [ComponentView] has focus.
-   * Gets invoked after [onKeyPressed].
+   * Gets invoked with a [KeyEvent] whenever a Character is typed while this [ComponentView] has
+   * focus. Gets invoked after [onKeyPressed].
    *
    * @see KeyEvent
    * @see onKeyPressed
