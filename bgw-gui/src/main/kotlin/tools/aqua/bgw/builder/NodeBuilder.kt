@@ -30,8 +30,8 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.UIComponent

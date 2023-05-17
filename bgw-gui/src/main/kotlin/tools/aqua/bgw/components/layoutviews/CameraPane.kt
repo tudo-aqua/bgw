@@ -50,7 +50,7 @@ open class CameraPane<T : LayoutView<*>>(
    */
   val zoomProperty: DoubleProperty = DoubleProperty(1)
 
-  /** Zoom factor of the camera starting from 1 */
+  /** Zoom factor of the camera starting from 1. */
   var zoom: Double
     get() = zoomProperty.value
     set(value) {

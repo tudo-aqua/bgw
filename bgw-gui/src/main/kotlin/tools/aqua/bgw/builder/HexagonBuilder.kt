@@ -34,6 +34,10 @@ import tools.aqua.bgw.builder.FXConverters.toFXImage
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.visual.*
 
+/**
+ * A utility object that generates a hexagon shape and builds a [Region] for the specified
+ * [HexagonView].
+ */
 object HexagonBuilder {
   /** Degrees in a circle. */
   private const val FULL_CIRCLE_DEGREES = 360
@@ -97,7 +101,7 @@ object HexagonBuilder {
   private fun generatePoints(size: Double): DoubleArray {
     val points = mutableListOf<Double>()
     var angle = 90.0
-    for (i in 0 until HEXAGON_SIDES) {
+    repeat(HEXAGON_SIDES) {
       val x = size * cos(Math.toRadians(angle)) + size
       val y = size * sin(Math.toRadians(angle)) + size
       angle += FULL_CIRCLE_DEGREES / HEXAGON_SIDES
@@ -107,11 +111,10 @@ object HexagonBuilder {
     return points.toDoubleArray()
   }
 
-  private fun buildPaint(visual: SingleLayerVisual): Paint {
-    return when (visual) {
-      is ColorVisual -> visual.color.toFXColor()
-      is ImageVisual -> ImagePattern(visual.image.toFXImage())
-      is TextVisual -> Color.TRANSPARENT
-    }
-  }
+  private fun buildPaint(visual: SingleLayerVisual): Paint =
+      when (visual) {
+        is ColorVisual -> visual.color.toFXColor()
+        is ImageVisual -> ImagePattern(visual.image.toFXImage())
+        is TextVisual -> Color.TRANSPARENT
+      }
 }

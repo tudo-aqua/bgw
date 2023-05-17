@@ -1,7 +1,6 @@
 # BoardGameWork
-
+<!--[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://github.com/tudo-aqua/bgw/security/code-scanning)-->
 [![Build](https://github.com/tudo-aqua/bgw-core/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/bgw-core/actions)
-[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://github.com/tudo-aqua/bgw/security/code-scanning)
 [![GitHub-Pages](https://github.com/tudo-aqua/bgw-core/actions/workflows/github-pages.yml/badge.svg)](https://tudo-aqua.github.io/bgw/)
 
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-gui&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-gui)
@@ -39,7 +38,7 @@ Start by adding the latest version of BGW as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:bgw-gui:0.7.3")
+implementation("tools.aqua:bgw-gui:0.8")
 ```
 
 #### Maven

@@ -107,8 +107,7 @@ object FXConverters {
                 MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
                 else -> MouseButtonType.UNSPECIFIED
               },
-
-          posX = x ,
+          posX = x,
           posY = y)
 
   /** Converts the [FXScrollEvent] to [ScrollEvent]. */
