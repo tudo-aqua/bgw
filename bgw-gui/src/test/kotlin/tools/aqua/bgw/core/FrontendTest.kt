@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import tools.aqua.bgw.builder.Frontend
 
-/** Tests for the Frontend Scenes */
+/** Tests for the frontend scenes. */
 class FrontendTest {
 
   /**

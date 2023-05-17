@@ -31,11 +31,9 @@ object ContainerNodeBuilder {
   internal fun buildContainer(
       scene: Scene<out ComponentView>,
       container: GameComponentContainer<out DynamicComponentView>
-  ): Region {
-    return Pane().apply {
-      container.observableComponents.setGUIListenerAndInvoke(emptyList()) { oldValue, _ ->
-        buildChildren(scene, container.observableComponents, oldValue.toSet())
-      }
+  ): Region = Pane().apply {
+    container.observableComponents.setGUIListenerAndInvoke(emptyList()) { oldValue, _ ->
+      buildChildren(scene, container.observableComponents, oldValue.toSet())
     }
   }
 }
