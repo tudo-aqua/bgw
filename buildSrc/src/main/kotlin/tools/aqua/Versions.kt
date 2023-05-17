@@ -40,3 +40,13 @@ val String.isUnstable: Boolean
 val destabilizesVersion = ComponentFilter {
   candidate.version.isUnstable && currentVersion.isStable
 }
+
+/**
+ * Split a dotted version into more generic fragments. E.g., `1.2.3` is split into `[1, 1.2,
+ * 1.2.3]`.
+ */
+val String.genericVersions: List<String>
+  get() {
+    val versionFragments = split('.')
+    return (1..versionFragments.size).map { versionFragments.take(it).joinToString(".") }
+  }

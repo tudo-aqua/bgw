@@ -22,11 +22,6 @@ mavenMetadata {
   description.set("A framework for board game applications.")
 }
 
-repositories {
-  mavenCentral()
-  maven("https://maven.vaadin.com/vaadin-addons")
-}
-
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
 
@@ -51,16 +46,3 @@ dependencies {
 }
 
 vaadin { productionMode = true }
-
-tasks.bootBuildImage {
-  imageName = System.getenv("DOCKER_IMAGE_NAME")
-  environment = mapOf("BP_JVM_VERSION" to "11.*")
-  isPublish = true
-  docker {
-    publishRegistry {
-      username = System.getenv("DOCKER_REGISTRY_USER")
-      password = System.getenv("DOCKER_REGISTRY_PASSWORD")
-      url = System.getenv("DOCKER_REGISTRY_URL")
-    }
-  }
-}
