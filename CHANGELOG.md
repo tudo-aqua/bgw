@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - `CameraPane` component.
 - `HexagonView` component.
 - `HexagonGrid` with two coordinate systems. axial and offset coordinates.
+- Additional `onSceneShown` and `onSceneHid` event handlers.
 
 ### Fixed
 - `onKeyPressed` listener not working on scenes.
