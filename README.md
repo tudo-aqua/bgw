@@ -38,7 +38,7 @@ Start by adding the latest version of BGW as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:bgw-gui:0.7.3")
+implementation("tools.aqua:bgw-gui:0.8")
 ```
 
 #### Maven
