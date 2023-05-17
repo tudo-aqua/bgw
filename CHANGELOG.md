@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - `onKeyPressed` listener not working on scenes.
+- `showMenuScene` fade animation not firing on consecutive runs.
 
 ## [0.7.3] - 31.08.2022
 
