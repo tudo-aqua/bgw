@@ -93,6 +93,12 @@ const val DEFAULT_DICE_HEIGHT: Double = 80.0
 // endregion
 
 // region Container
+/** Default [TableView] width. */
+const val DEFAULT_BOARD_WIDTH: Double = 1600.0
+
+/** Default [TableView] height. */
+const val DEFAULT_BOARD_HEIGHT: Double = 900.0
+
 /** Default [Area] width. */
 const val DEFAULT_AREA_WIDTH: Double = DEFAULT_TOKEN_WIDTH
 

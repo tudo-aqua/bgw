@@ -40,7 +40,7 @@ import tools.aqua.bgw.visual.Visual
  * @param height height for this [GameComponentContainer].
  * @param visual visual for this [GameComponentContainer].
  */
-sealed class GameComponentContainer<T : GameComponentView>(
+sealed class GameComponentContainer<T : DynamicComponentView>(
     posX: Number,
     posY: Number,
     width: Number,

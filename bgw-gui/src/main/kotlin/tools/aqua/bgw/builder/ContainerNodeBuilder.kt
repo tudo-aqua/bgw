@@ -21,8 +21,8 @@ import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
 import tools.aqua.bgw.builder.NodeBuilder.buildChildren
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
-import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.Scene
 
 /** ContainerNodeBuilder. Factory for all BGW containers. */
@@ -30,11 +30,12 @@ object ContainerNodeBuilder {
   /** Switches between Containers. */
   internal fun buildContainer(
       scene: Scene<out ComponentView>,
-      container: GameComponentContainer<out GameComponentView>
-  ): Region =
-      Pane().apply {
-        container.observableComponents.setGUIListenerAndInvoke(emptyList()) { oldValue, _ ->
-          buildChildren(scene, container.observableComponents, oldValue.toSet())
-        }
+      container: GameComponentContainer<out DynamicComponentView>
+  ): Region {
+    return Pane().apply {
+      container.observableComponents.setGUIListenerAndInvoke(emptyList()) { oldValue, _ ->
+        buildChildren(scene, container.observableComponents, oldValue.toSet())
       }
+    }
+  }
 }
