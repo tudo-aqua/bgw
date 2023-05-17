@@ -24,49 +24,88 @@ private typealias OffsetCoordinate = Pair<Int, Int>
 
 private typealias AxialCoordinate = Pair<Int, Int>
 
+/**
+ * A class representing a grid of hexagons.
+ *
+ * @param posX The x-coordinate of the hexagon grid's position on the screen. Default is 0.
+ * @param posY The y-coordinate of the hexagon grid's position on the screen. Default is 0.
+ * @param width The width of the hexagon grid. It grows dynamically by the amount hexagons in it.
+ * @param height The height of the hexagon grid. It grows dynamically by the amount hexagons in it.
+ * @param visual The visual representation of the hexagon grid. Default is an empty visual.
+ * @param coordinateSystem The coordinate system to use for the grid. Default is `CoordinateSystem.OFFSET`.
+ * @param T The type of the hexagon view. Must extend the `HexagonView` class.
+ */
 class HexagonGrid<T : HexagonView>(
     posX: Number = 0,
     posY: Number = 0,
-    /* TODO: Grow width and height according to components or set it to rows and cols times component width and height */
     width: Number = 0,
     height: Number = 0,
     visual: Visual = Visual.EMPTY,
     coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual) {
-  val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
-  operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
-  operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
-    map[columnIndex to rowIndex] = component
-    /* TODO: Remove if component was replaced */
-    observableComponents.add(component)
-  }
+        posX = posX, posY = posY, width = width, height = height, visual = visual
+    ) {
 
-  init {
-    observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
-      layout(coordinateSystem)
+    /**
+     * A mutable map that stores the hexagons in the grid.
+     */
+    internal val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
+
+    /**
+     * Gets the hexagon at the specified column index and row index.
+     *
+     * @param columnIndex The column index of the hexagon.
+     * @param rowIndex The row index of the hexagon.
+     * @return The hexagon at the specified coordinates, or null if no hexagon is found.
+     */
+    operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
+
+    /**
+     * Sets the hexagon at the specified column index and row index.
+     *
+     * @param columnIndex The column index of the hexagon.
+     * @param rowIndex The row index of the hexagon.
+     * @param component The hexagon component to set.
+     */
+    operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
+        map[columnIndex to rowIndex]?.run { observableComponents.remove(this) }
+        map[columnIndex to rowIndex] = component
+        observableComponents.add(component)
     }
-  }
 
-  private fun layout(coordinateSystem: CoordinateSystem) {
-    /* TODO: Pass this as a constructor argument */
-    val (rows, cols) = 5 to 5
-    for (y in 0 until rows) {
-      for (x in 0 until cols) {
-        map[x to y]?.run {
-          posXProperty.setSilent(width * x + if (y % 2 == 0) 0.0 else width / 2)
-          posYProperty.setSilent(height * y - y * height / 4)
+    init {
+        observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
+            layout(coordinateSystem)
         }
-      }
     }
-  }
 
-  override fun T.onRemove() {}
-  override fun T.onAdd() {}
+    /**
+     * Internal function to layout the hexagons in the grid based on the specified coordinate system.
+     *
+     * @param coordinateSystem The coordinate system to use for the layout.
+     */
+    private fun layout(coordinateSystem: CoordinateSystem) {
+        map.forEach { (x, y), hexagon ->
+            val (q, r) = when (coordinateSystem) {
+                CoordinateSystem.OFFSET -> x to y
+                CoordinateSystem.AXIAL -> x + (y - (y and 1)) / 2 to y
+            }
+            with(hexagon) {
+                posXProperty.setSilent(width * q + if (r % 2 == 0) 0.0 else width / 2)
+                posYProperty.setSilent(height * r - r * height / 4)
+            }
+        }
+    }
 
-  enum class CoordinateSystem {
-    OFFSET,
-    AXIAL
-  }
+    override fun T.onRemove() {}
+    override fun T.onAdd() {}
+
+    /**
+     * Enumeration class representing the coordinate system options for the hexagon grid.
+     */
+    enum class CoordinateSystem {
+        OFFSET,
+        AXIAL
+    }
 }
