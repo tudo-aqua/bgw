@@ -30,6 +30,7 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
@@ -45,11 +46,13 @@ object NodeBuilder {
   internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
     val node: Region =
         when (componentView) {
-          is GameComponentContainer<out GameComponentView> ->
+          is GameComponentContainer<out DynamicComponentView> ->
               ContainerNodeBuilder.buildContainer(scene, componentView)
           is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
           is LayoutView<out ComponentView> ->
               LayoutNodeBuilder.buildLayoutView(scene, componentView)
+          is CameraPane<out LayoutView<*>> ->
+              CameraPaneBuilder.buildCameraPane(scene, componentView)
           is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
           is StaticComponentView<*> ->
               throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
