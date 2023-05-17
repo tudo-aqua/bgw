@@ -1,7 +1,6 @@
-package tools.aqua.bgw.components.container
+package tools.aqua.bgw.components.layoutviews
 
-import javafx.geometry.Point2D
-import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.DEFAULT_BOARD_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_BOARD_WIDTH
 import tools.aqua.bgw.observable.properties.DoubleProperty
@@ -11,20 +10,17 @@ import tools.aqua.bgw.visual.Visual
 
 //TODO: Support ComponentView
 //TODO: ZoomTo MoveTo Methods
-open class CameraPane<T : DynamicComponentView>(
+open class CameraPane<T : LayoutView<*>>(
     posX: Number = 0,
     posY: Number = 0,
     width: Number = DEFAULT_BOARD_WIDTH,
     height: Number = DEFAULT_BOARD_HEIGHT,
     visual: Visual = Visual.EMPTY,
+    internal val target: T
 ) :
-    GameComponentContainer<T>(
+    ComponentView(
         posX = posX, posY = posY, width = width, height = height, visual = visual
     ) {
-
-    val contentWidth: Double = 5000.0
-    val contentHeight: Double = 5000.0
-
     val zoomProperty: DoubleProperty = DoubleProperty(1)
 
     var zoom: Double
@@ -41,7 +37,7 @@ open class CameraPane<T : DynamicComponentView>(
     internal var anchorPoint: Coordinate
         get() = anchorPointProperty.value
         set(value) {
-            if(value.xCoord in 0.0..contentWidth && value.yCoord in 0.0..contentHeight) {
+            if(value.xCoord in 0.0..target.width && value.yCoord in 0.0..target.height) {
                 anchorPointProperty.value = value
             }
         }
@@ -50,9 +46,7 @@ open class CameraPane<T : DynamicComponentView>(
         anchorPoint = Coordinate(x, y)
     }
 
-    /** Internal onRemove handler. */
-    override fun T.onRemove() = Unit
-
-    /** Internal onAdd handler. */
-    override fun T.onAdd() = Unit
+    override fun removeChild(component: ComponentView) {
+        target.removeChild(component)
+    }
 }

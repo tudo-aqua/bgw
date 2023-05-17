@@ -1,5 +1,6 @@
-import tools.aqua.bgw.components.container.CameraPane
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
@@ -16,7 +17,10 @@ fun main() {
 
 object Application : BoardGameApplication() {
     private val gameScene = object : BoardGameScene() {
-        private val camera = CameraPane<CardView>(
+
+        private val pane = Pane<CardView>(
+            width = 5000,
+            height = 5000,
             posX = width / 2 - DEFAULT_BOARD_WIDTH / 2,
             posY = height / 2 - DEFAULT_BOARD_HEIGHT / 2,
         ).apply {
@@ -39,6 +43,11 @@ object Application : BoardGameApplication() {
             }
         }
 
+        private val camera = CameraPane<Pane<*>>(
+            posX = width / 2 - DEFAULT_BOARD_WIDTH / 2,
+            posY = height / 2 - DEFAULT_BOARD_HEIGHT / 2,
+            target = pane
+        )
 
         private val scrollLeft = Button(
             text = "←",
