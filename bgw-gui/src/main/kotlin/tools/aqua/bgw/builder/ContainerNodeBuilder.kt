@@ -27,15 +27,15 @@ import tools.aqua.bgw.core.Scene
 
 /** ContainerNodeBuilder. Factory for all BGW containers. */
 object ContainerNodeBuilder {
-    /** Switches between Containers. */
-    internal fun buildContainer(
-        scene: Scene<out ComponentView>,
-        container: GameComponentContainer<out DynamicComponentView>
-    ): Region {
-        return Pane().apply {
-            container.observableComponents.setGUIListenerAndInvoke(emptyList()) { oldValue, _ ->
-                buildChildren(scene, container.observableComponents, oldValue.toSet())
-            }
-        }
+  /** Switches between Containers. */
+  internal fun buildContainer(
+      scene: Scene<out ComponentView>,
+      container: GameComponentContainer<out DynamicComponentView>
+  ): Region {
+    return Pane().apply {
+      container.observableComponents.setGUIListenerAndInvoke(emptyList()) { oldValue, _ ->
+        buildChildren(scene, container.observableComponents, oldValue.toSet())
+      }
     }
+  }
 }

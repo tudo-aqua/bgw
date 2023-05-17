@@ -49,7 +49,8 @@ object NodeBuilder {
           is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
           is LayoutView<out ComponentView> ->
               LayoutNodeBuilder.buildLayoutView(scene, componentView)
-          is CameraPane<out LayoutView<*>> -> CameraPaneBuilder.buildCameraPane(scene, componentView)
+          is CameraPane<out LayoutView<*>> ->
+              CameraPaneBuilder.buildCameraPane(scene, componentView)
           is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
           is StaticComponentView<*> ->
               throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
