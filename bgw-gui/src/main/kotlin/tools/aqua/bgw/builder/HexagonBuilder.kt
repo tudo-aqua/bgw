@@ -35,85 +35,86 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.visual.*
 
 /**
- * A utility object that generates a hexagon shape and builds a [Region] for the specified [HexagonView].
- * */
+ * A utility object that generates a hexagon shape and builds a [Region] for the specified
+ * [HexagonView].
+ */
 object HexagonBuilder {
-    /** Degrees in a circle. */
-    private const val FULL_CIRCLE_DEGREES = 360
+  /** Degrees in a circle. */
+  private const val FULL_CIRCLE_DEGREES = 360
 
-    /** Amount of sides in a hexagon. */
-    private const val HEXAGON_SIDES = 6
+  /** Amount of sides in a hexagon. */
+  private const val HEXAGON_SIDES = 6
 
-    private const val BORDER_WIDTH = 50.0
+  private const val BORDER_WIDTH = 50.0
 
-    /** Builds [HexagonView]. */
-    internal fun buildHexagonView(hexagonView: HexagonView): Region {
-        val points = generatePoints(hexagonView.size.toDouble())
-        return when (val visual = hexagonView.visual) {
-            is TextVisual -> buildPolygon(points, visual)
-            is SingleLayerVisual -> buildPolygon(points, visual)
-            is CompoundVisual -> buildPolygon(points, visual)
-        }.also { hexagonView.visual = Visual.EMPTY }
-    }
+  /** Builds [HexagonView]. */
+  internal fun buildHexagonView(hexagonView: HexagonView): Region {
+    val points = generatePoints(hexagonView.size.toDouble())
+    return when (val visual = hexagonView.visual) {
+      is TextVisual -> buildPolygon(points, visual)
+      is SingleLayerVisual -> buildPolygon(points, visual)
+      is CompoundVisual -> buildPolygon(points, visual)
+    }.also { hexagonView.visual = Visual.EMPTY }
+  }
 
-    private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual): Region =
-        StackPane(
-            *compoundVisual.children
-                .map {
+  private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual): Region =
+      StackPane(
+              *compoundVisual.children
+                  .map {
                     when (it) {
-                        is TextVisual -> buildPolygon(points, it)
-                        else -> buildPolygon(points, it)
+                      is TextVisual -> buildPolygon(points, it)
+                      else -> buildPolygon(points, it)
                     }
-                }
-                .toTypedArray())
-            .apply { isPickOnBounds = false }
+                  }
+                  .toTypedArray())
+          .apply { isPickOnBounds = false }
 
-    private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Region =
-        Pane(
-            Polygon(*points).apply {
+  private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Region =
+      Pane(
+              Polygon(*points).apply {
                 val paint = buildPaint(visual)
                 fill = paint
                 visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
-                    opacity = nV
+                  opacity = nV
                 }
                 stroke = Color.BLACK
                 strokeType = StrokeType.INSIDE
                 // roundCorners(paint)
-            })
-            .apply { isPickOnBounds = false }
+              })
+          .apply { isPickOnBounds = false }
 
-    private fun buildPolygon(points: DoubleArray, visual: TextVisual): Region =
-        StackPane(
-            buildPolygon(points, visual as SingleLayerVisual),
-            VisualBuilder.buildVisual(visual).apply { isPickOnBounds = false })
-            .apply { isPickOnBounds = false }
+  private fun buildPolygon(points: DoubleArray, visual: TextVisual): Region =
+      StackPane(
+              buildPolygon(points, visual as SingleLayerVisual),
+              VisualBuilder.buildVisual(visual).apply { isPickOnBounds = false })
+          .apply { isPickOnBounds = false }
 
-    private fun Polygon.roundCorners(paint: Paint) {
-        stroke = paint
-        strokeWidth = BORDER_WIDTH
-        strokeType = StrokeType.CENTERED
-        strokeLineJoin = StrokeLineJoin.ROUND
-        strokeLineCap = StrokeLineCap.ROUND
-        strokeMiterLimit = BORDER_WIDTH
+  private fun Polygon.roundCorners(paint: Paint) {
+    stroke = paint
+    strokeWidth = BORDER_WIDTH
+    strokeType = StrokeType.CENTERED
+    strokeLineJoin = StrokeLineJoin.ROUND
+    strokeLineCap = StrokeLineCap.ROUND
+    strokeMiterLimit = BORDER_WIDTH
+  }
+
+  private fun generatePoints(size: Double): DoubleArray {
+    val points = mutableListOf<Double>()
+    var angle = 90.0
+    repeat(HEXAGON_SIDES) {
+      val x = size * cos(Math.toRadians(angle)) + size
+      val y = size * sin(Math.toRadians(angle)) + size
+      angle += FULL_CIRCLE_DEGREES / HEXAGON_SIDES
+      points.add(x)
+      points.add(y)
     }
+    return points.toDoubleArray()
+  }
 
-    private fun generatePoints(size: Double): DoubleArray {
-        val points = mutableListOf<Double>()
-        var angle = 90.0
-        repeat(HEXAGON_SIDES) {
-            val x = size * cos(Math.toRadians(angle)) + size
-            val y = size * sin(Math.toRadians(angle)) + size
-            angle += FULL_CIRCLE_DEGREES / HEXAGON_SIDES
-            points.add(x)
-            points.add(y)
-        }
-        return points.toDoubleArray()
-    }
-
-    private fun buildPaint(visual: SingleLayerVisual): Paint = when (visual) {
+  private fun buildPaint(visual: SingleLayerVisual): Paint =
+      when (visual) {
         is ColorVisual -> visual.color.toFXColor()
         is ImageVisual -> ImagePattern(visual.image.toFXImage())
         is TextVisual -> Color.TRANSPARENT
-    }
-
+      }
 }

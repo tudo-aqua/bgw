@@ -42,9 +42,9 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
 
-
 /**
- * The [CameraPaneBuilder] object provides a method for building a camera pane in a specified scene and container.
+ * The [CameraPaneBuilder] object provides a method for building a camera pane in a specified scene
+ * and container.
  */
 object CameraPaneBuilder {
   /**
@@ -81,8 +81,9 @@ object CameraPaneBuilder {
   }
 }
 /**
- * The [ZoomableScrollPane] class represents a scroll pane with zooming capabilities.
- * It provides functionality to zoom in and out, scroll to specific points, and reset the zoom and scroll positions.
+ * The [ZoomableScrollPane] class represents a scroll pane with zooming capabilities. It provides
+ * functionality to zoom in and out, scroll to specific points, and reset the zoom and scroll
+ * positions.
  *
  * @property target The pane contained within the scroll pane.
  * @property scaleValue The current scale value of the scroll pane.
@@ -91,8 +92,7 @@ object CameraPaneBuilder {
  * @property timeline The timeline for animating the reset operation.
  * @property lerpTime The time for linear interpolation during reset animation.
  * @property anchorPoint The anchor point used for scrolling.
- *
- * */
+ */
 internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
   var scaleValue: Double = 1.0
     set(value) {
@@ -134,7 +134,8 @@ internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
   }
 
   /**
-   * Scrolls the view by the specified offset if the resulting point is within the zoomed node's bounds.
+   * Scrolls the view by the specified offset if the resulting point is within the zoomed node's
+   * bounds.
    * @param xOffset The horizontal offset.
    * @param yOffset The vertical offset.
    */
@@ -146,8 +147,8 @@ internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
   }
 
   /**
-   * Resets the zoom and scroll positions to their initial values.
-   * Performs an animated transition using a timeline.
+   * Resets the zoom and scroll positions to their initial values. Performs an animated transition
+   * using a timeline.
    */
   fun reset() {
     if (timeline?.status == Animation.Status.RUNNING) return
