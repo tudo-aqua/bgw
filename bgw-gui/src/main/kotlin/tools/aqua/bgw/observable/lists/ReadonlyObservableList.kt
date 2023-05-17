@@ -100,6 +100,18 @@ abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<
   operator fun get(index: Int): T = list[index]
 
   /**
+   * May return the element at the specified position in this list or null.
+   *
+   * @param index Index of the element to return.
+   *
+   * @return The element at the specified position in this list or null if the index exceeds the
+   * list's bounds.
+   */
+  fun getOrNull(index: Int): T? {
+    return if (index >= 0 && index <= list.size) get(index) else null
+  }
+
+  /**
    * Creates a *fail-fast* [Spliterator] over the elements in this list.
    *
    * @return A [Spliterator] over the elements in this list

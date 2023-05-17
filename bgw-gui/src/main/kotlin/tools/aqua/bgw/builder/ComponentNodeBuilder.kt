@@ -19,10 +19,8 @@ package tools.aqua.bgw.builder
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
-import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.gamecomponentviews.DiceView
-import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import javafx.scene.paint.*
+import tools.aqua.bgw.components.gamecomponentviews.*
 
 /** [ComponentNodeBuilder]. Factory for all BGW components. */
 object ComponentNodeBuilder {
@@ -31,7 +29,8 @@ object ComponentNodeBuilder {
       when (gameComponentView) {
         is CardView -> buildCardView(gameComponentView)
         is DiceView -> buildDiceView(gameComponentView)
-        is TokenView -> buildToken(gameComponentView)
+        is TokenView -> buildTokenView(gameComponentView)
+        is HexagonView -> buildHexagonView(gameComponentView)
       }
 
   /** Builds [CardView]. */
@@ -41,5 +40,9 @@ object ComponentNodeBuilder {
   @Suppress("UNUSED_PARAMETER") private fun buildDiceView(diceView: DiceView): Region = Pane()
 
   /** Builds [TokenView]. */
-  @Suppress("UNUSED_PARAMETER") private fun buildToken(tokenView: TokenView): Region = Pane()
+  @Suppress("UNUSED_PARAMETER") private fun buildTokenView(tokenView: TokenView): Region = Pane()
+
+  /** Builds [HexagonView]. */
+  private fun buildHexagonView(hexagonView: HexagonView): Region =
+      HexagonBuilder.buildHexagonView(hexagonView)
 }

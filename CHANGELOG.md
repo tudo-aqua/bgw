@@ -22,7 +22,14 @@ All notable changes to this project will be documented in this file.
 ## [0.8] - 22.05.2023
 
 ### Added
+- `CameraPane` component.
+- `HexagonView` component.
+- `HexagonGrid` with two coordinate systems. axial and offset coordinates.
 - Additional `onSceneShown` and `onSceneHid` event handlers.
+
+### Fixed
+- `onKeyPressed` listener not working on scenes.
+- `showMenuScene` fade animation not firing on consecutive runs.
 
 ## [0.7.3] - 31.08.2022
 
