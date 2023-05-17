@@ -100,12 +100,16 @@ object FXConverters {
   /** Converts the [FXMouseEvent] to [MouseEvent]. */
   internal fun FXMouseEvent.toMouseEvent(): MouseEvent =
       MouseEvent(
-          when (button) {
-            MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
-            MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
-            MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
-            else -> MouseButtonType.UNSPECIFIED
-          })
+          button =
+              when (button) {
+                MouseButton.PRIMARY -> MouseButtonType.LEFT_BUTTON
+                MouseButton.SECONDARY -> MouseButtonType.RIGHT_BUTTON
+                MouseButton.MIDDLE -> MouseButtonType.MOUSE_WHEEL
+                else -> MouseButtonType.UNSPECIFIED
+              },
+
+          posX = x ,
+          posY = y)
 
   /** Converts the [FXScrollEvent] to [ScrollEvent]. */
   internal fun FXScrollEvent.toScrollEvent(): ScrollEvent =

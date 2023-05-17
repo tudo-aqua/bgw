@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - `HexagonView` component.
 - `HexagonGrid` with two coordinate systems. axial and offset coordinates.
 - Additional `onSceneShown` and `onSceneHid` event handlers.
+- `MouseEvent` now also gives information about the coordinates.
 
 ### Fixed
 - `onKeyPressed` listener not working on scenes.

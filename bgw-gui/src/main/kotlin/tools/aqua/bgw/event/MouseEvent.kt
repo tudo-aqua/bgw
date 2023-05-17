@@ -26,4 +26,4 @@ package tools.aqua.bgw.event
  *
  * @property button Corresponding mouse button enum value.
  */
-class MouseEvent(val button: MouseButtonType) : InputEvent()
+class MouseEvent(val button: MouseButtonType, val posX: Number, val posY: Number) : InputEvent()
