@@ -14,6 +14,9 @@ nav_order: 4
 [CardStackKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-card-stack/index.html
 [LinearLayoutKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-linear-layout/index.html
 [SatchelKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-satchel/index.html
+[HexagonGridKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-hexagon-grid/index.html
+[HexagonKDoc]: ../../bgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.gamecomponentviews/-hexagon-view/index.html
+
 
 <!-- GH-Pages Doc -->
 [ComponentViewDoc]: ../../components/componentview/componentview.md
@@ -174,6 +177,51 @@ visualize a hand of cards:
 
 A satchel hides its /components and reveals them, when they are removed. This container can be used to visualize an
 entity, where the user should not know what might get drawn next, or what is in the container.
+
+### [HexagonGrid][HexagonGridKDoc]
+
+Represents a grid of hexagons in a coordinate system.
+Each hexagon can be accessed and manipulated using column and row indices.
+
+### Coordinate Systems
+The HexagonGrid class supports two coordinate systems: offset and axial.
+
+### Offset Coordinate System
+In the offset coordinate system, the hexagons are positioned using a grid of rectangular offsets. Each hexagon occupies a rectangular cell, and the coordinate values represent the row and column indices of the hexagons in the grid.
+
+![image](offset.png)
+
+### Axial Coordinate System
+In the axial coordinate system, the hexagons are positioned using axial coordinates. Each hexagon is defined by two axial coordinates: q (column) and r (row). The axial coordinates represent the column and row indices of the hexagons in the grid.
+
+![image](axial.png)
+
+
+### Example
+
+```kotlin
+val hexagonGrid: HexagonGrid<HexagonView> = HexagonGrid()
+
+for (row in 0..4) {
+  for (col in 0..4) {
+    val hexagon = HexagonView(visual = ColorVisual.RED)
+    hexagonGrid[col, row] = hexagon
+  }
+}
+```
+
+Here is an example on how to change the default coordinate system to axial.
+
+```kotlin
+val hexagonGrid: HexagonGrid<HexagonView> = HexagonGrid(coordinateSystem = CoordinateSystem.AXIAL)
+
+for (row in -2..2) {
+  for (col in -2..2) {
+    val hexagon = HexagonView(visual = ColorVisual.BLUE)
+    hexagonGrid[col, row] = hexagon
+  }
+}
+```
 
 ## Container overview
 

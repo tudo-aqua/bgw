@@ -179,6 +179,8 @@ internal class Frontend : Application() {
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       val oldScene = menuScene
       menuScene = scene
+      oldScene?.onSceneHid?.invoke()
+      scene.onSceneShown?.invoke()
 
       scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
         if (primaryStage != null) {
@@ -198,6 +200,7 @@ internal class Frontend : Application() {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double) {
+      menuScene?.onSceneHid?.invoke()
       fadeMenu(false, fadeTime)
     }
 
@@ -207,7 +210,10 @@ internal class Frontend : Application() {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
+
+      boardGameScene?.onSceneHid?.invoke()
       boardGameScene = scene
+      scene.onSceneShown?.invoke()
 
       scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
         if (primaryStage != null) {
@@ -276,8 +282,16 @@ internal class Frontend : Application() {
             children.clear()
             children.add(backgroundPane)
             children.addAll(activePanes)
+            this.setOnKeyTyped { activePanes.lastOrNull()?.onKeyTyped?.handle(it) }
+            this.setOnKeyReleased { activePanes.lastOrNull()?.onKeyReleased?.handle(it) }
+            this.setOnKeyPressed { activePanes.lastOrNull()?.onKeyPressed?.handle(it) }
           }
 
+      primaryStage?.scene.apply {
+        this?.setOnKeyTyped { scenePane.onKeyTyped?.handle(it) }
+        this?.setOnKeyReleased { scenePane.onKeyReleased?.handle(it) }
+        this?.setOnKeyPressed { scenePane.onKeyPressed?.handle(it) }
+      }
       primaryStage?.scene?.root = scenePane
 
       primaryStage?.forceRefresh()
@@ -474,7 +488,10 @@ internal class Frontend : Application() {
      */
     private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
       menuPane?.apply {
-        if (!fadeIn) menuPane = null
+        if (!fadeIn) {
+          menuPane = null
+          menuScene = null
+        }
 
         FadeTransition(Duration.millis(fadeTime / 2), this)
             .apply {

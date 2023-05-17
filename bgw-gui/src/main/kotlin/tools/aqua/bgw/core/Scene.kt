@@ -171,12 +171,19 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   var onKeyReleased: ((KeyEvent) -> Unit)? = null
 
   /**
-   * Gets invoked with a [KeyEvent] whenever a key is typed. Gets invoked after [onKeyPressed].
+   * Gets invoked with a [KeyEvent] whenever a Character is typed. Gets invoked after [onKeyPressed]
+   * .
    *
    * @see KeyEvent
    * @see onKeyPressed
    */
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
+
+  /** Gets invoked with no event whenever a scene is shown. */
+  var onSceneShown: (() -> Unit)? = null
+
+  /** Gets invoked with no event whenever a scene is hid. */
+  var onSceneHid: (() -> Unit)? = null
 
   /**
    * Adds all given [ComponentView]s to the root node and [rootComponents] list.

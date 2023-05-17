@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.builder
 
-import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
@@ -94,17 +93,20 @@ object SceneBuilder {
           prefHeight = scene.height
           prefWidth = scene.width
 
-          addEventFilter(KeyEvent.KEY_TYPED) {
+          setOnKeyTyped {
             if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
                 scene.onKeyTyped?.invoke(it.toKeyEvent())
+            it.consume()
           }
-          addEventFilter(KeyEvent.KEY_PRESSED) {
+          setOnKeyPressed {
             if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
                 scene.onKeyPressed?.invoke(it.toKeyEvent())
+            it.consume()
           }
-          addEventFilter(KeyEvent.KEY_RELEASED) {
+          setOnKeyReleased {
             if (scene !is BoardGameScene || !scene.internalLockedProperty.value)
                 scene.onKeyReleased?.invoke(it.toKeyEvent())
+            it.consume()
           }
         }
 

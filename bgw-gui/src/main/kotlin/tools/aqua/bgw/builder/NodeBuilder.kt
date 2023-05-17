@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.builder
 
+import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import tools.aqua.bgw.builder.DragDropBuilder.registerDragEvents
@@ -29,6 +30,8 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.UIComponent
@@ -41,13 +44,15 @@ import tools.aqua.bgw.exception.IllegalInheritanceException
 object NodeBuilder {
   /** Switches between top level component types. */
   internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
-    val node =
+    val node: Region =
         when (componentView) {
-          is GameComponentContainer<out GameComponentView> ->
+          is GameComponentContainer<out DynamicComponentView> ->
               ContainerNodeBuilder.buildContainer(scene, componentView)
           is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
           is LayoutView<out ComponentView> ->
               LayoutNodeBuilder.buildLayoutView(scene, componentView)
+          is CameraPane<out LayoutView<*>> ->
+              CameraPaneBuilder.buildCameraPane(scene, componentView)
           is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
           is StaticComponentView<*> ->
               throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
@@ -56,7 +61,10 @@ object NodeBuilder {
           else -> throw IllegalInheritanceException(componentView, ComponentView::class.java)
         }
     val background = VisualBuilder.build(componentView)
-    val stackPane = StackPane(background, node).apply { isPickOnBounds = false }
+    var stackPane = StackPane(background, node).apply { isPickOnBounds = false }
+    if (componentView is HexagonView) {
+      stackPane = StackPane(node).apply { isPickOnBounds = false }
+    }
 
     // JavaFX -> Framework
     componentView.registerEvents(stackPane, node, scene)
@@ -170,7 +178,7 @@ object NodeBuilder {
   }
 
   /** Updates nodes style property. */
-  private fun UIComponent.updateStyle(node: Region) {
+  private fun UIComponent.updateStyle(node: Node) {
     node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle
   }
 
