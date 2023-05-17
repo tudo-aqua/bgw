@@ -27,10 +27,7 @@ import kotlin.random.Random
 import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.gamecomponentviews.DiceView
-import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
-import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.gamecomponentviews.*
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.AnimationFinishedEvent
 
@@ -188,6 +185,7 @@ object AnimationBuilder {
             if (componentView.currentSide == CardView.CardSide.FRONT) anim.fromVisual
             else anim.toVisual
       }
+      is HexagonView -> componentView.visual = anim.fromVisual
     }
 
     animation1.setOnFinished {
@@ -195,6 +193,7 @@ object AnimationBuilder {
         is TokenView -> componentView.visual = anim.toVisual
         is DiceView -> componentView.visuals[componentView.currentSide] = anim.toVisual
         is CardView -> componentView.flip()
+        is HexagonView -> componentView.visual = anim.toVisual
       }
 
       animation2.play()

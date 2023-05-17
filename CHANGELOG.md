@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - `CameraPane` component.
+- `HexagonView` component.
 
 ## [0.7.3] - 31.08.2022
 
