@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 ## [0.8] - 22.05.2023
 
 ### Added
+- `setZIndex` ability for components to change there view order in parent components.
 - `CameraPane` component.
 - `HexagonView` component.
 - `HexagonGrid` with two coordinate systems. axial and offset coordinates.
