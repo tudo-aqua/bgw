@@ -290,7 +290,8 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
   override fun iterator(): Iterator<T> = observableComponents.iterator()
 
   /**
-   * Puts the [component] to the front inside the [LayeredContainer] and Changes its [zIndex] accordingly.
+   * Puts the [component] to the front inside the [LayeredContainer] and Changes its [zIndex]
+   * accordingly.
    *
    * @param component Child that is moved to the front.
    */
@@ -303,7 +304,8 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
   }
 
   /**
-   * Puts the [component] to the back inside the [LayeredContainer] and Changes its [zIndex] accordingly.
+   * Puts the [component] to the back inside the [LayeredContainer] and Changes its [zIndex]
+   * accordingly.
    *
    * @param component Child that is moved to the back.
    */

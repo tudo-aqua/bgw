@@ -49,7 +49,8 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
   }
 
   /**
-   * Puts the [component] to the front inside the [LayeredContainer] and Changes its [zIndex] accordingly.
+   * Puts the [component] to the front inside the [LayeredContainer] and Changes its [zIndex]
+   * accordingly.
    *
    * @param component Child that is moved to the front.
    */
@@ -63,7 +64,8 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
   }
 
   /**
-   * Puts the [component] to the back inside the [LayeredContainer] and Changes its [zIndex] accordingly.
+   * Puts the [component] to the back inside the [LayeredContainer] and Changes its [zIndex]
+   * accordingly.
    *
    * @param component Child that is moved to the back.
    */
