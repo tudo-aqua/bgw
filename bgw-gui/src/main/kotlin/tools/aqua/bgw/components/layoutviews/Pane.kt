@@ -304,7 +304,7 @@ open class Pane<T : ComponentView>(
    * @param zIndex The value that is used to compare the order of [observableComponents].
    */
   override fun setZIndex(component: T, zIndex: Int) {
-    component.zIndex = zIndex
+    component.zIndexProperty.value = zIndex
     observableComponents.sort(Comparator.comparingInt { it.zIndex })
   }
 }
