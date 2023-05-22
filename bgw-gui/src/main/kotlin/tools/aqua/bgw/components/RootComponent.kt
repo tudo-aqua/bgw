@@ -31,8 +31,8 @@ import tools.aqua.bgw.visual.Visual
  * @property scene Scene of this root component.
  */
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
-    ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY) {
-
+    ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY),
+    LayeredContainer<T> {
   /**
    * Removes [component] from the [scene].
    *
@@ -46,5 +46,47 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
     } catch (_: ClassCastException) {
       throw IllegalArgumentException("$component type is incompatible with scene's type.")
     }
+  }
+
+  /**
+   * Puts the [component] to the front inside the [LayeredContainer] and Changes its [zIndex]
+   * accordingly.
+   *
+   * @param component Child that is moved to the front.
+   */
+  override fun toFront(component: T) {
+    zIndexProperty.value = this.scene.rootComponents.last().zIndex
+    if (this.scene.rootComponents.last() != component &&
+        this.scene.rootComponents.contains(component)) {
+      this.scene.rootComponents.removeSilent(component)
+      this.scene.rootComponents.add(component)
+    }
+  }
+
+  /**
+   * Puts the [component] to the back inside the [LayeredContainer] and Changes its [zIndex]
+   * accordingly.
+   *
+   * @param component Child that is moved to the back.
+   */
+  override fun toBack(component: T) {
+    zIndexProperty.value = this.scene.rootComponents.first().zIndex
+    if (this.scene.rootComponents.first() != component &&
+        this.scene.rootComponents.contains(component)) {
+      this.scene.rootComponents.removeSilent(component)
+      this.scene.rootComponents.add(0, component)
+    }
+  }
+
+  /**
+   * Puts the [component] in the appropriate place compared to the other components by the [zIndex]
+   * and Changes its [zIndex] accordingly.
+   *
+   * @param component Child that is moved accordingly.
+   * @param zIndex The value that is used to compare the order of components.
+   */
+  override fun setZIndex(component: T, zIndex: Int) {
+    component.zIndexProperty.value = zIndex
+    this.scene.rootComponents.sort(Comparator.comparingInt { it.zIndex })
   }
 }

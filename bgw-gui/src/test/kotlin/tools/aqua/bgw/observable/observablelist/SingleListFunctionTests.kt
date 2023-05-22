@@ -132,7 +132,6 @@ class SingleListFunctionTests : ObservableListTestBase() {
   @DisplayName("Test sort")
   fun testSort() {
     list.sort(Comparator.comparingInt { it })
-
     for (i in list.indices) assertEquals(ordered[i], list[i])
 
     checkNotified()

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.uicomponents.structureddataview.listview
+package tools.aqua.bgw.components.uicomponents.structureddataview.listview
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
