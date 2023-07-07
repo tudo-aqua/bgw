@@ -62,7 +62,8 @@ object CameraPaneBuilder {
             (LayoutNodeBuilder.buildLayoutView(scene, container.target) as Pane).apply {
               minWidth = container.target.width
               minHeight = container.target.height
-            })
+            },
+            container)
 
     container.interactiveProperty.setGUIListenerAndInvoke(container.interactive) { _, nV ->
       node.isPannable = nV
@@ -80,6 +81,7 @@ object CameraPaneBuilder {
     }
   }
 }
+
 /**
  * The [ZoomableScrollPane] class represents a scroll pane with zooming capabilities. It provides
  * functionality to zoom in and out, scroll to specific points, and reset the zoom and scroll
@@ -93,10 +95,13 @@ object CameraPaneBuilder {
  * @property lerpTime The time for linear interpolation during reset animation.
  * @property anchorPoint The anchor point used for scrolling.
  */
-internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
+internal class ZoomableScrollPane(
+    private val target: Pane,
+    private val cameraPane: CameraPane<out LayoutView<*>>
+) : ScrollPane() {
   var scaleValue: Double = 1.0
     set(value) {
-      field = max(value, 1.0)
+      field = max(value, 0.01)
       target.scaleX = scaleValue
       target.scaleY = scaleValue
     }
@@ -119,17 +124,23 @@ internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
     // isFitToWidth = true //center
   }
 
+  private fun inTargetBounds(point: Point2D): Boolean =
+      point.x in 0.0..cameraPane.target.width && point.y in 0.0..cameraPane.target.height
+
+  private fun inFullHorizontalView(): Boolean = cameraPane.target.width == cameraPane.width
+  private fun inFullVerticalView(): Boolean = cameraPane.target.height == cameraPane.height
+
   /**
    * Scrolls the view to the specified point if it is within the zoomed node's bounds.
    * @param point The point to scroll to.
    */
   fun scrollTo(point: Point2D) {
-    if (zoomNode.boundsInLocal.contains(point)) {
+    if (inTargetBounds(point)) {
       anchorPoint = point
-      val scaledWidth = target.width * scaleValue
-      val scaledHeight = target.height * scaleValue
-      hvalue = point.x * scaleValue / (scaledWidth - width)
-      vvalue = point.y * scaleValue / (scaledHeight - height)
+      val viewWidth = cameraPane.width / scaleValue
+      val viewHeight = cameraPane.height / scaleValue
+      hvalue = point.x / (cameraPane.target.width - viewWidth)
+      vvalue = point.y / (cameraPane.target.height - viewHeight)
     }
   }
 
@@ -140,7 +151,7 @@ internal class ZoomableScrollPane(private val target: Pane) : ScrollPane() {
    * @param yOffset The vertical offset.
    */
   fun scrollBy(xOffset: Double, yOffset: Double) {
-    if (zoomNode.boundsInLocal.contains(anchorPoint.add(xOffset, yOffset))) {
+    if (inTargetBounds(anchorPoint.add(xOffset, yOffset))) {
       anchorPoint = anchorPoint.add(xOffset, yOffset)
       scrollTo(anchorPoint)
     }
