@@ -46,7 +46,7 @@ implementation("tools.aqua:bgw-gui:0.8")
 <dependency>
   <groupId>tools.aqua</groupId>
   <artifactId>bgw-gui</artifactId>
-  <version>0.7.3</version>
+  <version>0.8</version>
 </dependency>
 ``` 
 
