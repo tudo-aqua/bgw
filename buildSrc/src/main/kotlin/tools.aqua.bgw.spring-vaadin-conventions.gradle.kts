@@ -16,6 +16,7 @@
  */
 
 import org.gradle.accessors.dm.LibrariesForLibs
+import tools.aqua.genericVersions
 import tools.aqua.vaadinAddons
 
 plugins {
@@ -54,21 +55,19 @@ dependencies {
   testImplementation(libs.spring.boot.test)
 }
 
-/*
- tasks.bootBuildImage {
-   val baseName = "tudo-aqua/${project.name}"
-   val projectVersion = project.version.toString()
-   imageName = "$baseName:$projectVersion"
-   if (projectVersion.endsWith("-SNAPSHOT")) {
-     tags.add("$baseName:latest")
-   } else {
-     projectVersion.genericVersions.forEach { if (it != projectVersion) tags.add("$baseName:$it") }
-     tags.add("$baseName:release")
-   }
-   environment =
-       mapOf(
-           "BP_JVM_VERSION" to
-               "${project.kotlin.target.compilations.first().kotlinOptions.jvmTarget}.*")
-   isPublish = true
- }
- */
+tasks.bootBuildImage {
+  val baseName = "tudo-aqua/${project.name}"
+  val projectVersion = project.version.toString()
+  imageName = "$baseName:$projectVersion"
+  if (projectVersion.endsWith("-SNAPSHOT")) {
+    tag("$baseName:latest")
+  } else {
+    tags(projectVersion.genericVersions.filter { it != projectVersion }.map { "$baseName:$it" })
+    tag("$baseName:release")
+  }
+  environment =
+      mapOf(
+          "BP_JVM_VERSION" to
+              "${project.kotlin.target.compilations.first().kotlinOptions.jvmTarget}.*")
+  isPublish = true
+}
