@@ -19,6 +19,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+- Dependabot enabled
+
 ## [0.8.1] - 21.07.2023
 
 ### Fixed
