@@ -19,6 +19,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 21.07.2023
+
+### Fixed
+- Library dependency back to Java 11 (accidentally was 17 in 0.8)
+
+### Removed
+- faulty config from spring-vaadin-conventions.
+
 ## [0.8] - 18.07.2023
 
 ### Added
