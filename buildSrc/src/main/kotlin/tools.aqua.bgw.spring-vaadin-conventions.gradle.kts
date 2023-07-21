@@ -55,6 +55,7 @@ dependencies {
   testImplementation(libs.spring.boot.test)
 }
 
+/*
 tasks.bootBuildImage {
   val baseName = "tudo-aqua/${project.name}"
   val projectVersion = project.version.toString()
@@ -71,3 +72,4 @@ tasks.bootBuildImage {
               "${project.kotlin.target.compilations.first().kotlinOptions.jvmTarget}.*")
   isPublish = true
 }
+*/
