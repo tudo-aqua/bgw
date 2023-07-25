@@ -51,44 +51,43 @@ object HexagonBuilder {
   internal fun buildHexagonView(hexagonView: HexagonView): Region {
     val points = generatePoints(hexagonView.size.toDouble())
     return when (val visual = hexagonView.visual) {
-      is TextVisual -> buildPolygon(points, visual)
-      is SingleLayerVisual -> buildPolygon(points, visual)
-      is CompoundVisual -> buildPolygon(points, visual)
+      is TextVisual -> buildPolygon(points, visual, hexagonView)
+      is SingleLayerVisual -> buildPolygon(points, visual, hexagonView)
+      is CompoundVisual -> buildPolygon(points, visual, hexagonView)
     }.also { hexagonView.visual = Visual.EMPTY }
   }
 
-  private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual): Region =
+  private fun buildPolygon(points: DoubleArray, compoundVisual: CompoundVisual, hexagonView: HexagonView): Region =
       StackPane(
               *compoundVisual.children
                   .map {
                     when (it) {
-                      is TextVisual -> buildPolygon(points, it)
-                      else -> buildPolygon(points, it)
+                      is TextVisual -> buildPolygon(points, it, hexagonView)
+                      else -> buildPolygon(points, it, hexagonView)
                     }
                   }
                   .toTypedArray())
           .apply { isPickOnBounds = false }
 
-  private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual): Region =
-      Pane(
-              Polygon(*points).apply {
-                visual.addListenerAndInvoke {
-                  val paint = buildPaint(visual)
-                  fill = paint
-                }
+  private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual, hexagonView: HexagonView): Region = Pane(
+      Polygon(*points).apply {
+          hexagonView.visualProperty.setGUIListenerAndInvoke(hexagonView.visual) { _, nV ->
+              val paint = buildPaint(visual)
+              fill = paint
+          }
+          visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
+              opacity = nV
+          }
+          stroke = Color.BLACK
+          strokeType = StrokeType.INSIDE
+          // roundCorners(paint)
+      })
+      .apply { isPickOnBounds = false }
 
-                visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
-                  opacity = nV
-                }
-                stroke = Color.BLACK
-                strokeType = StrokeType.INSIDE
-                // roundCorners(paint)
-              })
-          .apply { isPickOnBounds = false }
 
-  private fun buildPolygon(points: DoubleArray, visual: TextVisual): Region =
+  private fun buildPolygon(points: DoubleArray, visual: TextVisual, hexagonView: HexagonView): Region =
       StackPane(
-              buildPolygon(points, visual as SingleLayerVisual),
+              buildPolygon(points, visual as SingleLayerVisual, hexagonView),
               VisualBuilder.buildVisual(visual).apply { isPickOnBounds = false })
           .apply { isPickOnBounds = false }
 
@@ -113,8 +112,7 @@ object HexagonBuilder {
     }
     return points.toDoubleArray()
   }
-
-  private fun buildPaint(visual: SingleLayerVisual): Paint =
+    fun buildPaint(visual: SingleLayerVisual): Paint =
       when (visual) {
         is ColorVisual -> visual.color.toFXColor()
         is ImageVisual -> ImagePattern(visual.image.toFXImage())
