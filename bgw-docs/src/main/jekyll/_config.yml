@@ -1,8 +1,15 @@
 baseurl: /bgw
-repository: tudo-aqua/bgw
-theme: just-the-docs
 
 title: BoardGameWork
+description: "Documentation for the BoardGameWork framework."
+repository: "tudo-aqua/bgw"
+theme: just-the-docs
+
+aux_links:
+  "BGW on GitHub":
+    - "//github.com/tudo-aqua/bgw"
+
+aux_links_new_tab: true
 
 permalink: pretty
 
@@ -65,7 +72,7 @@ search:
   rel_url: true
   # Enable or disable the search button that appears in the bottom right corner of every page
   # Supports true or false (default)
-  button: false
+  button: true
 
 # For copy button on code
 enable_copy_code_button: true
