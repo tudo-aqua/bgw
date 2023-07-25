@@ -82,13 +82,21 @@ object VisualBuilder {
         }
       }
 
+  private val cache: MutableMap<String, Image> = mutableMapOf()
+
   /** Builds [ImageVisual]. */
   private fun buildImageVisual(visual: ImageVisual) =
       Pane().apply {
+
+
         val imageView = ImageView()
 
         visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
-          imageView.image = nV.readImage()
+          imageView.image = cache[visual.path] ?: run{
+            val image = nV.readImage()
+            cache[visual.path] = image
+            return@run image
+          }
         }
 
         visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->

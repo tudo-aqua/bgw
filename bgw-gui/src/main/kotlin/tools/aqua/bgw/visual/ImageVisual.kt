@@ -43,6 +43,7 @@ import tools.aqua.bgw.observable.properties.Property
  * @param offsetY Top bound of sub-image. Default: 0.
  */
 open class ImageVisual(
+    val path: String = "",
     image: BufferedImage,
     width: Int = -1,
     height: Int = -1,
@@ -104,7 +105,7 @@ open class ImageVisual(
       height: Int = -1,
       offsetX: Int = 0,
       offsetY: Int = 0
-  ) : this(load(path), width, height, offsetX, offsetY)
+  ) : this(path, load(path), width, height, offsetX, offsetY)
 
   /**
    * Loads an [ImageVisual] from a file.
@@ -125,7 +126,7 @@ open class ImageVisual(
 
   /** Copies this [ImageVisual] to a new object. */
   override fun copy(): ImageVisual =
-      ImageVisual(image).apply {
+      ImageVisual(image=image).apply {
         transparency = this@ImageVisual.transparency
         style = this@ImageVisual.style
       }
