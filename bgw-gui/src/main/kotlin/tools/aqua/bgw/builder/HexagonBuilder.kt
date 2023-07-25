@@ -71,9 +71,14 @@ object HexagonBuilder {
 
   private fun buildPolygon(points: DoubleArray, visual: SingleLayerVisual, hexagonView: HexagonView): Region = Pane(
       Polygon(*points).apply {
-          hexagonView.visualProperty.setGUIListenerAndInvoke(hexagonView.visual) { _, nV ->
-              val paint = buildPaint(visual)
-              fill = paint
+          hexagonView.visualProperty.setInternalListenerAndInvoke(hexagonView.visual) { _, nV ->
+              when(nV) {
+                  is ColorVisual -> {
+                      val paint = buildPaint(nV)
+                      fill = paint
+                  }
+                  else -> {}
+              }
           }
           visual.transparencyProperty.addListenerAndInvoke(visual.transparency) { _, nV ->
               opacity = nV
