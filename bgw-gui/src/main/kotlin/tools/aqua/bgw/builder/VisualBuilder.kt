@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import java.awt.image.BufferedImage
 import javafx.geometry.Insets
+import javafx.scene.CacheHint
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
@@ -89,7 +90,10 @@ object VisualBuilder {
       Pane().apply {
 
 
-        val imageView = ImageView()
+        val imageView = ImageView().apply {
+          isCache = true
+          cacheHint = CacheHint.SPEED
+        }
 
         visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
           imageView.image = cache[visual.path] ?: run{
