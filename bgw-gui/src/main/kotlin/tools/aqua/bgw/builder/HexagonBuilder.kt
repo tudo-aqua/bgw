@@ -73,7 +73,7 @@ object HexagonBuilder {
       Polygon(*points).apply {
           hexagonView.visualProperty.setInternalListenerAndInvoke(hexagonView.visual) { _, nV ->
               when(nV) {
-                  is ColorVisual -> {
+                  is SingleLayerVisual -> {
                       val paint = buildPaint(nV)
                       fill = paint
                   }
