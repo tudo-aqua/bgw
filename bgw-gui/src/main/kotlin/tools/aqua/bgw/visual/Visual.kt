@@ -20,6 +20,7 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.Observable
+import tools.aqua.bgw.style.*
 
 /**
  * Visual baseclass.
@@ -34,4 +35,11 @@ sealed class Visual : Observable() {
     /** An empty [Visual]. */
     val EMPTY: Visual = CompoundVisual()
   }
+
+  open var backgroundRadius: BackgroundRadius? = null
+  open var borderRadius: BorderRadius? = null
+  open var borderStyle: BorderStyle? = null
+  open var borderWidth: BorderWidth? = null
+  open var borderColor: BorderColor? = null
+  open var cursor: Cursor? = null
 }
