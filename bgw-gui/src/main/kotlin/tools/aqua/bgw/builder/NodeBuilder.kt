@@ -25,6 +25,7 @@ import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.toMouseEvent
 import tools.aqua.bgw.builder.FXConverters.toScrollEvent
+import tools.aqua.bgw.builder.NodeBuilder.updateStyle
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
@@ -174,6 +175,9 @@ object NodeBuilder {
       fontProperty.guiListener = { _, _ -> updateStyle(node) }
       internalCSSProperty.guiListener = { _, _ -> updateStyle(node) }
       componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, _ -> updateStyle(node) }
+      visualProperty.addListenerAndInvoke(visual) { _, nV ->
+        node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle + (nV.backgroundRadius?.toCSS() ?: "")
+      }
     }
   }
 
