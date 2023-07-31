@@ -36,4 +36,4 @@ fun List<StyleAttribute>.toCSS(postfix: String = ";"): String =
         .joinToString(separator = "; ")
         .addPostfixIfNotEmpty(postfix)
 
-fun Visual.toCSS(postfix: String = ";"): String = listOf(backgroundRadius, borderRadius, borderStyle, borderColor, borderWidth, cursor).toCSS(postfix)
+fun Visual.toCSS(postfix: String = ";"): String = listOf(backgroundRadius, borderRadius, borderStyle, borderColor, borderWidth, cursor).filterNotNull().toCSS(postfix)

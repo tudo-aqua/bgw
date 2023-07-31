@@ -22,6 +22,7 @@ package tools.aqua.bgw.visual
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
+import tools.aqua.bgw.style.*
 
 /**
  * Baseclass for single layer visuals.
@@ -77,36 +78,36 @@ sealed class SingleLayerVisual : Visual() {
       styleProperty.value = value
     }
 
-  /*override var backgroundRadius: BackgroundRadius = BackgroundRadius.NONE
+  override var backgroundRadius: BackgroundRadius? = BackgroundRadius.NONE
   set(value) {
     field = value
     style = toCSS()
   }
 
-override var borderRadius: BorderRadius = BorderRadius.NONE
+override var borderRadius: BorderRadius? = BorderRadius.NONE
   set(value) {
     field = value
     style = toCSS()
   }
 
-override var borderStyle: BorderStyle = BorderStyle.NONE
+override var borderStyle: BorderStyle? = BorderStyle.NONE
   set(value) {
     field = value
     style = toCSS()
   }
-override var borderWidth: BorderWidth = BorderWidth.NONE
+override var borderWidth: BorderWidth? = BorderWidth.NONE
   set(value) {
     field = value
     style = toCSS()
   }
-override var borderColor: BorderColor = BorderColor.TRANSPARENT
+override var borderColor: BorderColor? = BorderColor.TRANSPARENT
   set(value) {
     field = value
     style = toCSS()
   }
-override var cursor: Cursor = Cursor.WAIT
+override var cursor: Cursor? = Cursor.WAIT
   set(value) {
     field = value
     style = toCSS()
-  }*/
+  }
 }
