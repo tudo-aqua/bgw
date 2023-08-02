@@ -25,7 +25,6 @@ import tools.aqua.bgw.builder.FXConverters.toFXFontCSS
 import tools.aqua.bgw.builder.FXConverters.toKeyEvent
 import tools.aqua.bgw.builder.FXConverters.toMouseEvent
 import tools.aqua.bgw.builder.FXConverters.toScrollEvent
-import tools.aqua.bgw.builder.NodeBuilder.updateStyle
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.StaticComponentView
@@ -43,29 +42,31 @@ import tools.aqua.bgw.exception.IllegalInheritanceException
 
 /** NodeBuilder. Factory for all BGW nodes. */
 object NodeBuilder {
-  /** Switches between top level component types. */
-  internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
-    val node: Region =
-        when (componentView) {
-          is GameComponentContainer<out DynamicComponentView> ->
-              ContainerNodeBuilder.buildContainer(scene, componentView)
-          is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
-          is LayoutView<out ComponentView> ->
-              LayoutNodeBuilder.buildLayoutView(scene, componentView)
-          is CameraPane<out LayoutView<*>> ->
-              CameraPaneBuilder.buildCameraPane(scene, componentView)
-          is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
-          is StaticComponentView<*> ->
-              throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
-          is DynamicComponentView ->
-              throw IllegalInheritanceException(componentView, DynamicComponentView::class.java)
-          else -> throw IllegalInheritanceException(componentView, ComponentView::class.java)
-        }
-    val background = VisualBuilder.build(componentView)
-    var stackPane = StackPane(background, node).apply { isPickOnBounds = false }
-    if (componentView is HexagonView) {
-      stackPane = StackPane(node).apply { isPickOnBounds = false }
-    }
+    /** Switches between top level component types. */
+    internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
+        val node: Region =
+            when (componentView) {
+                is GameComponentContainer<out DynamicComponentView> ->
+                    ContainerNodeBuilder.buildContainer(scene, componentView)
+
+                is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
+                is LayoutView<out ComponentView> ->
+                    LayoutNodeBuilder.buildLayoutView(scene, componentView)
+
+                is CameraPane<out LayoutView<*>> ->
+                    CameraPaneBuilder.buildCameraPane(scene, componentView)
+
+                is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
+                is StaticComponentView<*> ->
+                    throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
+
+                is DynamicComponentView ->
+                    throw IllegalInheritanceException(componentView, DynamicComponentView::class.java)
+
+                else -> throw IllegalInheritanceException(componentView, ComponentView::class.java)
+            }
+        val background = if (componentView is HexagonView) null else VisualBuilder.build(componentView)
+        val stackPane = stackLayers(node, background)
 
     // JavaFX -> Framework
     componentView.registerEvents(stackPane, node, scene)
@@ -79,15 +80,21 @@ object NodeBuilder {
     return stackPane
   }
 
-  /** Registers events. */
-  private fun ComponentView.registerEvents(
-      stackPane: StackPane,
-      node: Region,
-      scene: Scene<out ComponentView>
-  ) {
-    if (this is DynamicComponentView) {
-      registerDragEvents(stackPane, scene)
-    }
+    private fun stackLayers(node: Node, background: Region?) =
+        if (background != null) StackPane(background, node).apply {
+            isPickOnBounds = false
+        } else StackPane(node).apply { isPickOnBounds = false }
+
+
+    /** Registers events. */
+    private fun ComponentView.registerEvents(
+        stackPane: StackPane,
+        node: Region,
+        scene: Scene<out ComponentView>
+    ) {
+        if (this is DynamicComponentView) {
+            registerDragEvents(stackPane, scene)
+        }
 
     stackPane.setOnMouseDragEntered {
       val dragTarget = scene.draggedComponent ?: return@setOnMouseDragEntered
@@ -127,7 +134,7 @@ object NodeBuilder {
   private fun ComponentView.registerObservers(
       stackPane: StackPane,
       node: Region,
-      background: Region
+      background: Region?
   ) {
     posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
       stackPane.layoutX = nV - if (isLayoutFromCenter) actualWidth / 2 else 0.0
@@ -149,27 +156,27 @@ object NodeBuilder {
 
     heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
       node.prefHeight = nV
-      background.prefHeight = nV
+      background?.prefHeight = nV
       posYProperty.notifyUnchanged()
     }
     widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
       node.prefWidth = nV
-      background.prefWidth = nV
+      background?.prefWidth = nV
       posXProperty.notifyUnchanged()
     }
 
     isVisibleProperty.setGUIListenerAndInvoke(isVisible) { _, nV ->
       node.isVisible = nV
-      background.isVisible = nV
+      background?.isVisible = nV
     }
     isDisabledProperty.setGUIListenerAndInvoke(isDisabled) { _, nV ->
       node.isDisable = nV
-      background.isDisable = nV
+      background?.isDisable = nV
     }
 
     if (this is UIComponent) {
       backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
-        if (nV.isNotEmpty()) background.style = nV
+        if (nV.isNotEmpty()) background?.style = nV
       }
 
       fontProperty.guiListener = { _, _ -> updateStyle(node) }

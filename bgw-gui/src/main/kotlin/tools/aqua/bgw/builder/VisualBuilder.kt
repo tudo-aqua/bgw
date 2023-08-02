@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import java.awt.image.BufferedImage
 import javafx.geometry.Insets
+import javafx.scene.CacheHint
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
@@ -82,13 +83,24 @@ object VisualBuilder {
         }
       }
 
+  private val cache: MutableMap<String, Image> = mutableMapOf()
+
   /** Builds [ImageVisual]. */
   private fun buildImageVisual(visual: ImageVisual) =
       Pane().apply {
-        val imageView = ImageView()
+
+
+        val imageView = ImageView().apply {
+          isCache = true
+          cacheHint = CacheHint.SPEED
+        }
 
         visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
-          imageView.image = nV.readImage()
+          imageView.image = cache[visual.path] ?: run{
+            val image = nV.readImage()
+            cache[visual.path] = image
+            return@run image
+          }
         }
 
         visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
