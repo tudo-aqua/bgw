@@ -88,19 +88,20 @@ object VisualBuilder {
   /** Builds [ImageVisual]. */
   private fun buildImageVisual(visual: ImageVisual) =
       Pane().apply {
-
-
-        val imageView = ImageView().apply {
-          isCache = true
-          cacheHint = CacheHint.SPEED
-        }
+        val imageView =
+            ImageView().apply {
+              isCache = true
+              cacheHint = CacheHint.SPEED
+            }
 
         visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
-          imageView.image = cache[visual.path] ?: run{
-            val image = nV.readImage()
-            cache[visual.path] = image
-            return@run image
-          }
+          imageView.image =
+              cache[visual.path]
+                  ?: run {
+                    val image = nV.readImage()
+                    cache[visual.path] = image
+                    return@run image
+                  }
         }
 
         visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->

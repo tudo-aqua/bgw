@@ -79,35 +79,35 @@ sealed class SingleLayerVisual : Visual() {
     }
 
   override var backgroundRadius: BackgroundRadius? = BackgroundRadius.NONE
-  set(value) {
-    field = value
-    style = toCSS()
-  }
+    set(value) {
+      field = value
+      style = toCSS()
+    }
 
-override var borderRadius: BorderRadius? = BorderRadius.NONE
-  set(value) {
-    field = value
-    style = toCSS()
-  }
+  override var borderRadius: BorderRadius? = BorderRadius.NONE
+    set(value) {
+      field = value
+      style = toCSS()
+    }
 
-override var borderStyle: BorderStyle? = BorderStyle.NONE
-  set(value) {
-    field = value
-    style = toCSS()
-  }
-override var borderWidth: BorderWidth? = BorderWidth.NONE
-  set(value) {
-    field = value
-    style = toCSS()
-  }
-override var borderColor: BorderColor? = BorderColor.TRANSPARENT
-  set(value) {
-    field = value
-    style = toCSS()
-  }
-override var cursor: Cursor? = Cursor.WAIT
-  set(value) {
-    field = value
-    style = toCSS()
-  }
+  override var borderStyle: BorderStyle? = BorderStyle.NONE
+    set(value) {
+      field = value
+      style = toCSS()
+    }
+  override var borderWidth: BorderWidth? = BorderWidth.NONE
+    set(value) {
+      field = value
+      style = toCSS()
+    }
+  override var borderColor: BorderColor? = BorderColor.TRANSPARENT
+    set(value) {
+      field = value
+      style = toCSS()
+    }
+  override var cursor: Cursor? = Cursor.WAIT
+    set(value) {
+      field = value
+      style = toCSS()
+    }
 }
