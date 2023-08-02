@@ -81,9 +81,11 @@ object CameraPaneBuilder {
     }
 
     container.zoomProperty.setGUIListenerAndInvoke(container.zoom) { _, nV -> node.scaleValue = nV }
+    container.smoothScrollingProperty.setGUIListenerAndInvoke(container.smoothScrolling) { _, nV -> node.smooth = nV }
 
     container.anchorPointProperty.setGUIListenerAndInvoke(container.anchorPoint) { _, nV ->
-      node.scrollTo(Point2D(nV.xCoord, nV.yCoord))
+      if(node.smooth) node.smoothScrollTo(Point2D(nV.xCoord, nV.yCoord))
+      else node.scrollTo(Point2D(nV.xCoord, nV.yCoord))
     }
 
     return node.apply {
@@ -121,6 +123,7 @@ internal class ZoomableScrollPane(
   private var timeline: Timeline? = null
   private var lerpTime = 0.0
   var anchorPoint = Point2D(0.0, 0.0)
+  var smooth: Boolean = false
 
   init {
     val resource = this::class.java.getResource("/style.css") ?: throw FileNotFoundException()
@@ -152,6 +155,37 @@ internal class ZoomableScrollPane(
       val viewHeight = cameraPane.height / scaleValue
       hvalue = point.x / (cameraPane.target.width - viewWidth)
       vvalue = point.y / (cameraPane.target.height - viewHeight)
+    }
+  }
+
+  fun smoothScrollTo(point: Point2D) {
+    if (inTargetBounds(point)) {
+      val viewWidth = cameraPane.width / scaleValue
+      val viewHeight = cameraPane.height / scaleValue
+      val newHValue = point.x / (cameraPane.target.width - viewWidth)
+      val newVValue = point.y / (cameraPane.target.height - viewHeight)
+      val clampedHValue = newHValue.coerceIn(0.0, 1.0)
+      val clampedVValue = newVValue.coerceIn(0.0, 1.0)
+
+      if (timeline?.status == Animation.Status.RUNNING) return
+      timeline =
+        Timeline(
+          KeyFrame(
+            Duration.millis(10.0),
+            {
+              hvalue += (clampedHValue - hvalue) * lerpTime
+              vvalue += (clampedVValue - vvalue) * lerpTime
+              lerpTime += 0.001
+              if (abs(hvalue - clampedHValue) <= 0.01 &&
+                abs(vvalue - clampedVValue) <= 0.01) {
+                timeline?.stop()
+                hvalue = clampedHValue
+                vvalue = clampedVValue
+                lerpTime = 0.0
+              }
+            }))
+          .apply { cycleCount = Timeline.INDEFINITE }
+      timeline?.play()
     }
   }
 
