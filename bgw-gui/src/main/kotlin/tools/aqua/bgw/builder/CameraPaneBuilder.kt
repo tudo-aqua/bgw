@@ -72,6 +72,14 @@ object CameraPaneBuilder {
       node.isPannable = nV
     }
 
+    container.isHorizontalLockedProperty.setGUIListenerAndInvoke(container.isHorizontalLocked) {_, nV ->
+      node.hPanLocked = nV
+    }
+
+    container.isVerticalLockedProperty.setGUIListenerAndInvoke(container.isVerticalLocked) {_, nV ->
+      node.vPanLocked = nV
+    }
+
     container.zoomProperty.setGUIListenerAndInvoke(container.zoom) { _, nV -> node.scaleValue = nV }
 
     container.anchorPointProperty.setGUIListenerAndInvoke(container.anchorPoint) { _, nV ->
@@ -192,8 +200,8 @@ internal class ZoomableScrollPane(
   private var startX = 0.0
   private var startY = 0.0
 
-  val hPan = true
-  val vPan = false
+  var hPanLocked = false
+  var vPanLocked = false
 
   private fun outerNode(node: Node): Node {
     val outerNode = centeredNode(node)
@@ -207,8 +215,8 @@ internal class ZoomableScrollPane(
     }
     outerNode.onMouseDragged = EventHandler { event: MouseEvent ->
       // Calculate the distance dragged
-      val deltaX = if(hPan) (event.x - startX) else 0.0
-      val deltaY = if(vPan) (event.y - startY) else 0.0
+      val deltaX = if(!hPanLocked) (event.x - startX) else 0.0
+      val deltaY = if(!vPanLocked) (event.y - startY) else 0.0
 
       // Calculate the new position of the scroll pane's viewport
       val newHValue = this.hvalue - deltaX / target.width

@@ -88,6 +88,22 @@ open class CameraPane<T : LayoutView<*>>(
       }
     }
 
+  internal val isHorizontalLockedProperty: BooleanProperty = BooleanProperty()
+
+  var isHorizontalLocked : Boolean
+    get() = isHorizontalLockedProperty.value
+    set(value) {
+      isHorizontalLockedProperty.value = value
+    }
+
+  internal val isVerticalLockedProperty: BooleanProperty = BooleanProperty()
+
+  var isVerticalLocked : Boolean
+    get() = isVerticalLockedProperty.value
+    set(value) {
+      isVerticalLockedProperty.value = value
+    }
+
   /**
    * pans the view of the camera to the specified coordinates. The coordinates specified represent
    * the upper-left corner of the view.
