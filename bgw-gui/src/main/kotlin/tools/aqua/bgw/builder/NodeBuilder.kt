@@ -134,7 +134,7 @@ object NodeBuilder {
   private fun ComponentView.registerObservers(
       stackPane: StackPane,
       node: Region,
-      background: Region
+      background: Region?
   ) {
     posXProperty.setGUIListenerAndInvoke(posX) { _, nV ->
       stackPane.layoutX = nV - if (isLayoutFromCenter) actualWidth / 2 else 0.0
@@ -156,27 +156,27 @@ object NodeBuilder {
 
     heightProperty.setGUIListenerAndInvoke(height) { _, nV ->
       node.prefHeight = nV
-      background.prefHeight = nV
+      background?.prefHeight = nV
       posYProperty.notifyUnchanged()
     }
     widthProperty.setGUIListenerAndInvoke(width) { _, nV ->
       node.prefWidth = nV
-      background.prefWidth = nV
+      background?.prefWidth = nV
       posXProperty.notifyUnchanged()
     }
 
     isVisibleProperty.setGUIListenerAndInvoke(isVisible) { _, nV ->
       node.isVisible = nV
-      background.isVisible = nV
+      background?.isVisible = nV
     }
     isDisabledProperty.setGUIListenerAndInvoke(isDisabled) { _, nV ->
       node.isDisable = nV
-      background.isDisable = nV
+      background?.isDisable = nV
     }
 
     if (this is UIComponent) {
       backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
-        if (nV.isNotEmpty()) background.style = nV
+        if (nV.isNotEmpty()) background?.style = nV
       }
 
       fontProperty.guiListener = { _, _ -> updateStyle(node) }

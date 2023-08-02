@@ -57,7 +57,7 @@ object HexagonBuilder {
                 is TextVisual -> buildPolygon(points, nV)
                 is SingleLayerVisual -> buildPolygon(points, nV)
                 is CompoundVisual -> buildPolygon(points, nV)
-            }.also { hexagonView.visual = Visual.EMPTY }
+            }
             root.children.add(component)
         }
         return root
