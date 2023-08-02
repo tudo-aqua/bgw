@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.style
 
-import tools.aqua.bgw.visual.SingleLayerVisual
 import tools.aqua.bgw.visual.Visual
 
 abstract class StyleAttribute {
@@ -36,4 +35,7 @@ fun List<StyleAttribute>.toCSS(postfix: String = ";"): String =
         .joinToString(separator = "; ")
         .addPostfixIfNotEmpty(postfix)
 
-fun Visual.toCSS(postfix: String = ";"): String = listOf(backgroundRadius, borderRadius, borderStyle, borderColor, borderWidth, cursor).filterNotNull().toCSS(postfix)
+fun Visual.toCSS(postfix: String = ";"): String =
+    listOf(backgroundRadius, borderRadius, borderStyle, borderColor, borderWidth, cursor)
+        .filterNotNull()
+        .toCSS(postfix)

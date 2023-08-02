@@ -90,7 +90,7 @@ open class CameraPane<T : LayoutView<*>>(
 
   internal val smoothScrollingProperty: BooleanProperty = BooleanProperty()
 
-  internal var smoothScrolling : Boolean
+  internal var smoothScrolling: Boolean
     get() = smoothScrollingProperty.value
     set(value) {
       smoothScrollingProperty.value = value
@@ -98,7 +98,7 @@ open class CameraPane<T : LayoutView<*>>(
 
   internal val isHorizontalLockedProperty: BooleanProperty = BooleanProperty()
 
-  var isHorizontalLocked : Boolean
+  var isHorizontalLocked: Boolean
     get() = isHorizontalLockedProperty.value
     set(value) {
       isHorizontalLockedProperty.value = value
@@ -106,7 +106,7 @@ open class CameraPane<T : LayoutView<*>>(
 
   internal val isVerticalLockedProperty: BooleanProperty = BooleanProperty()
 
-  var isVerticalLocked : Boolean
+  var isVerticalLocked: Boolean
     get() = isVerticalLockedProperty.value
     set(value) {
       isVerticalLockedProperty.value = value
@@ -119,7 +119,7 @@ open class CameraPane<T : LayoutView<*>>(
    * @param y The y-coordinate to scroll to.
    * @param smooth if the transition should be interpolated
    */
-  fun pan(x: Number, y: Number, smooth : Boolean = false) {
+  fun pan(x: Number, y: Number, smooth: Boolean = false) {
     smoothScrolling = smooth
     anchorPoint = Coordinate(x, y)
   }
@@ -130,10 +130,10 @@ open class CameraPane<T : LayoutView<*>>(
    * @param yOffset The amount to pan the view vertically.
    * @param smooth if the transition should be interpolated
    */
-  fun panBy(xOffset: Number, yOffset: Number, smooth : Boolean = false) {
+  fun panBy(xOffset: Number, yOffset: Number, smooth: Boolean = false) {
     smoothScrolling = smooth
     anchorPoint =
-      Coordinate(anchorPoint.xCoord + xOffset.toDouble(), anchorPoint.yCoord + yOffset.toDouble())
+        Coordinate(anchorPoint.xCoord + xOffset.toDouble(), anchorPoint.yCoord + yOffset.toDouble())
   }
 
   override fun removeChild(component: ComponentView) {

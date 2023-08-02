@@ -42,31 +42,26 @@ import tools.aqua.bgw.exception.IllegalInheritanceException
 
 /** NodeBuilder. Factory for all BGW nodes. */
 object NodeBuilder {
-    /** Switches between top level component types. */
-    internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
-        val node: Region =
-            when (componentView) {
-                is GameComponentContainer<out DynamicComponentView> ->
-                    ContainerNodeBuilder.buildContainer(scene, componentView)
-
-                is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
-                is LayoutView<out ComponentView> ->
-                    LayoutNodeBuilder.buildLayoutView(scene, componentView)
-
-                is CameraPane<out LayoutView<*>> ->
-                    CameraPaneBuilder.buildCameraPane(scene, componentView)
-
-                is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
-                is StaticComponentView<*> ->
-                    throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
-
-                is DynamicComponentView ->
-                    throw IllegalInheritanceException(componentView, DynamicComponentView::class.java)
-
-                else -> throw IllegalInheritanceException(componentView, ComponentView::class.java)
-            }
-        val background = if (componentView is HexagonView) null else VisualBuilder.build(componentView)
-        val stackPane = stackLayers(node, background)
+  /** Switches between top level component types. */
+  internal fun build(scene: Scene<out ComponentView>, componentView: ComponentView): Region {
+    val node: Region =
+        when (componentView) {
+          is GameComponentContainer<out DynamicComponentView> ->
+              ContainerNodeBuilder.buildContainer(scene, componentView)
+          is GameComponentView -> ComponentNodeBuilder.buildGameComponent(componentView)
+          is LayoutView<out ComponentView> ->
+              LayoutNodeBuilder.buildLayoutView(scene, componentView)
+          is CameraPane<out LayoutView<*>> ->
+              CameraPaneBuilder.buildCameraPane(scene, componentView)
+          is UIComponent -> UINodeBuilder.buildUIComponent(componentView)
+          is StaticComponentView<*> ->
+              throw IllegalInheritanceException(componentView, StaticComponentView::class.java)
+          is DynamicComponentView ->
+              throw IllegalInheritanceException(componentView, DynamicComponentView::class.java)
+          else -> throw IllegalInheritanceException(componentView, ComponentView::class.java)
+        }
+    val background = if (componentView is HexagonView) null else VisualBuilder.build(componentView)
+    val stackPane = stackLayers(node, background)
 
     // JavaFX -> Framework
     componentView.registerEvents(stackPane, node, scene)
@@ -80,21 +75,19 @@ object NodeBuilder {
     return stackPane
   }
 
-    private fun stackLayers(node: Node, background: Region?) =
-        if (background != null) StackPane(background, node).apply {
-            isPickOnBounds = false
-        } else StackPane(node).apply { isPickOnBounds = false }
+  private fun stackLayers(node: Node, background: Region?) =
+      if (background != null) StackPane(background, node).apply { isPickOnBounds = false }
+      else StackPane(node).apply { isPickOnBounds = false }
 
-
-    /** Registers events. */
-    private fun ComponentView.registerEvents(
-        stackPane: StackPane,
-        node: Region,
-        scene: Scene<out ComponentView>
-    ) {
-        if (this is DynamicComponentView) {
-            registerDragEvents(stackPane, scene)
-        }
+  /** Registers events. */
+  private fun ComponentView.registerEvents(
+      stackPane: StackPane,
+      node: Region,
+      scene: Scene<out ComponentView>
+  ) {
+    if (this is DynamicComponentView) {
+      registerDragEvents(stackPane, scene)
+    }
 
     stackPane.setOnMouseDragEntered {
       val dragTarget = scene.draggedComponent ?: return@setOnMouseDragEntered
@@ -183,7 +176,11 @@ object NodeBuilder {
       internalCSSProperty.guiListener = { _, _ -> updateStyle(node) }
       componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, _ -> updateStyle(node) }
       visualProperty.addListenerAndInvoke(visual) { _, nV ->
-        node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle + (nV.backgroundRadius?.toCSS() ?: "")
+        node.style =
+            this.internalCSS +
+                this.font.toFXFontCSS() +
+                componentStyle +
+                (nV.backgroundRadius?.toCSS() ?: "")
       }
     }
   }

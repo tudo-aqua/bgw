@@ -27,7 +27,6 @@ import javafx.geometry.Pos
 import javafx.scene.Group
 import javafx.scene.Node
 import javafx.scene.control.ScrollPane
-import javafx.scene.input.DragEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Background
@@ -43,7 +42,6 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.Scene
-import tools.aqua.bgw.event.MouseButtonType
 
 /**
  * The [CameraPaneBuilder] object provides a method for building a camera pane in a specified scene
@@ -72,19 +70,24 @@ object CameraPaneBuilder {
       node.isPannable = nV
     }
 
-    container.isHorizontalLockedProperty.setGUIListenerAndInvoke(container.isHorizontalLocked) {_, nV ->
+    container.isHorizontalLockedProperty.setGUIListenerAndInvoke(container.isHorizontalLocked) {
+        _,
+        nV ->
       node.hPanLocked = nV
     }
 
-    container.isVerticalLockedProperty.setGUIListenerAndInvoke(container.isVerticalLocked) {_, nV ->
+    container.isVerticalLockedProperty.setGUIListenerAndInvoke(container.isVerticalLocked) { _, nV
+      ->
       node.vPanLocked = nV
     }
 
     container.zoomProperty.setGUIListenerAndInvoke(container.zoom) { _, nV -> node.scaleValue = nV }
-    container.smoothScrollingProperty.setGUIListenerAndInvoke(container.smoothScrolling) { _, nV -> node.smooth = nV }
+    container.smoothScrollingProperty.setGUIListenerAndInvoke(container.smoothScrolling) { _, nV ->
+      node.smooth = nV
+    }
 
     container.anchorPointProperty.setGUIListenerAndInvoke(container.anchorPoint) { _, nV ->
-      if(node.smooth) node.smoothScrollTo(Point2D(nV.xCoord, nV.yCoord))
+      if (node.smooth) node.smoothScrollTo(Point2D(nV.xCoord, nV.yCoord))
       else node.scrollTo(Point2D(nV.xCoord, nV.yCoord))
     }
 
@@ -169,22 +172,22 @@ internal class ZoomableScrollPane(
 
       if (timeline?.status == Animation.Status.RUNNING) return
       timeline =
-        Timeline(
-          KeyFrame(
-            Duration.millis(10.0),
-            {
-              hvalue += (clampedHValue - hvalue) * lerpTime
-              vvalue += (clampedVValue - vvalue) * lerpTime
-              lerpTime += 0.001
-              if (abs(hvalue - clampedHValue) <= 0.01 &&
-                abs(vvalue - clampedVValue) <= 0.01) {
-                timeline?.stop()
-                hvalue = clampedHValue
-                vvalue = clampedVValue
-                lerpTime = 0.0
-              }
-            }))
-          .apply { cycleCount = Timeline.INDEFINITE }
+          Timeline(
+                  KeyFrame(
+                      Duration.millis(10.0),
+                      {
+                        hvalue += (clampedHValue - hvalue) * lerpTime
+                        vvalue += (clampedVValue - vvalue) * lerpTime
+                        lerpTime += 0.001
+                        if (abs(hvalue - clampedHValue) <= 0.01 &&
+                            abs(vvalue - clampedVValue) <= 0.01) {
+                          timeline?.stop()
+                          hvalue = clampedHValue
+                          vvalue = clampedVValue
+                          lerpTime = 0.0
+                        }
+                      }))
+              .apply { cycleCount = Timeline.INDEFINITE }
       timeline?.play()
     }
   }
@@ -249,8 +252,8 @@ internal class ZoomableScrollPane(
     }
     outerNode.onMouseDragged = EventHandler { event: MouseEvent ->
       // Calculate the distance dragged
-      val deltaX = if(!hPanLocked) (event.x - startX) else 0.0
-      val deltaY = if(!vPanLocked) (event.y - startY) else 0.0
+      val deltaX = if (!hPanLocked) (event.x - startX) else 0.0
+      val deltaY = if (!vPanLocked) (event.y - startY) else 0.0
 
       // Calculate the new position of the scroll pane's viewport
       val newHValue = this.hvalue - deltaX / target.width
