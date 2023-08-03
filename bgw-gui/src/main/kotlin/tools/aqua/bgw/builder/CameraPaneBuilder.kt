@@ -67,7 +67,7 @@ object CameraPaneBuilder {
             container)
 
     container.interactiveProperty.setGUIListenerAndInvoke(container.interactive) { _, nV ->
-      node.isPannable = nV
+      node.interactive = nV
     }
 
     container.isHorizontalLockedProperty.setGUIListenerAndInvoke(container.isHorizontalLocked) {
@@ -257,17 +257,28 @@ internal class ZoomableScrollPane(
   var hPanLocked = false
   var vPanLocked = false
 
+  var interactive = false
+
   private fun outerNode(node: Node): Node {
     val outerNode = centeredNode(node)
     outerNode.onScroll = EventHandler { e: ScrollEvent ->
       e.consume()
-      if (isPannable) onScroll(e.textDeltaY, Point2D(e.x, e.y))
+      if (interactive) {
+        val delta =
+            when (e.textDeltaXUnits) {
+              ScrollEvent.HorizontalTextScrollUnits.NONE -> e.deltaY
+              ScrollEvent.HorizontalTextScrollUnits.CHARACTERS -> e.textDeltaY
+              null -> 0.0
+            }
+        onScroll(delta, Point2D(e.x, e.y))
+      }
+      e.deltaY
     }
     outerNode.onMousePressed = EventHandler { e ->
-      if (e.button == panMouseButton) isPannable = true
+      if (e.button == panMouseButton && interactive) isPannable = true
     }
     outerNode.onMouseReleased = EventHandler { e ->
-      if (e.button == panMouseButton) isPannable = false
+      if (e.button == panMouseButton && interactive) isPannable = false
     }
     return outerNode
   }
