@@ -27,7 +27,7 @@ import javafx.geometry.Pos
 import javafx.scene.Group
 import javafx.scene.Node
 import javafx.scene.control.ScrollPane
-import javafx.scene.input.MouseEvent
+import javafx.scene.input.MouseButton
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.Background
 import javafx.scene.layout.Pane
@@ -37,7 +37,7 @@ import javafx.scene.paint.Color
 import javafx.util.Duration
 import kotlin.math.abs
 import kotlin.math.exp
-import kotlin.math.max
+import tools.aqua.bgw.builder.FXConverters.toFXMouseButton
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
@@ -74,11 +74,17 @@ object CameraPaneBuilder {
         _,
         nV ->
       node.hPanLocked = nV
+      node.hValueLocked = node.hvalue
     }
 
     container.isVerticalLockedProperty.setGUIListenerAndInvoke(container.isVerticalLocked) { _, nV
       ->
       node.vPanLocked = nV
+      node.vValueLocked = node.vvalue
+    }
+
+    container.panMouseButtonProperty.setGUIListenerAndInvoke(container.panMouseButton) { _, nV ->
+      node.panMouseButton = nV.toFXMouseButton()
     }
 
     container.zoomProperty.setGUIListenerAndInvoke(container.zoom) { _, nV -> node.scaleValue = nV }
@@ -117,7 +123,7 @@ internal class ZoomableScrollPane(
 ) : ScrollPane() {
   var scaleValue: Double = 1.0
     set(value) {
-      field = max(value, 0.01)
+      field = value.coerceIn(0.01, 10.0)
       target.scaleX = scaleValue
       target.scaleY = scaleValue
     }
@@ -139,6 +145,12 @@ internal class ZoomableScrollPane(
     vbarPolicy = ScrollBarPolicy.NEVER
     // isFitToHeight = true //center
     // isFitToWidth = true //center
+    hvalueProperty().addListener { _, _, nV ->
+      if (hPanLocked && nV != hValueLocked) hvalue = hValueLocked
+    }
+    vvalueProperty().addListener { _, _, nV ->
+      if (vPanLocked && nV != vValueLocked) vvalue = vValueLocked
+    }
   }
 
   private fun inTargetBounds(point: Point2D): Boolean =
@@ -237,6 +249,11 @@ internal class ZoomableScrollPane(
   private var startX = 0.0
   private var startY = 0.0
 
+  var panMouseButton = MouseButton.MIDDLE
+
+  var hValueLocked = 0.0
+  var vValueLocked = 0.0
+
   var hPanLocked = false
   var vPanLocked = false
 
@@ -246,30 +263,11 @@ internal class ZoomableScrollPane(
       e.consume()
       if (isPannable) onScroll(e.textDeltaY, Point2D(e.x, e.y))
     }
-    outerNode.onMousePressed = EventHandler { event: MouseEvent ->
-      startX = event.x
-      startY = event.y
+    outerNode.onMousePressed = EventHandler { e ->
+      if (e.button == panMouseButton) isPannable = true
     }
-    outerNode.onMouseDragged = EventHandler { event: MouseEvent ->
-      // Calculate the distance dragged
-      val deltaX = if (!hPanLocked) (event.x - startX) else 0.0
-      val deltaY = if (!vPanLocked) (event.y - startY) else 0.0
-
-      // Calculate the new position of the scroll pane's viewport
-      val newHValue = this.hvalue - deltaX / target.width
-      val newVValue = this.vvalue - deltaY / target.height
-
-      // Ensure the new values are within bounds [0, 1]
-      val clampedHValue = newHValue.coerceIn(0.0, 1.0)
-      val clampedVValue = newVValue.coerceIn(0.0, 1.0)
-
-      // Update the scroll pane's viewport to achieve the panning effect
-      this.hvalue = clampedHValue
-      this.vvalue = clampedVValue
-
-      // Update the starting position for the next drag event
-      startX = event.x
-      startY = event.y
+    outerNode.onMouseReleased = EventHandler { e ->
+      if (e.button == panMouseButton) isPannable = false
     }
     return outerNode
   }

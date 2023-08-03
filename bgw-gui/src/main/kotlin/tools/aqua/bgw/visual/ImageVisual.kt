@@ -43,12 +43,12 @@ import tools.aqua.bgw.observable.properties.Property
  * @param offsetY Top bound of sub-image. Default: 0.
  */
 open class ImageVisual(
-    val path: String = "",
     image: BufferedImage,
     width: Int = -1,
     height: Int = -1,
     offsetX: Int = 0,
-    offsetY: Int = 0
+    offsetY: Int = 0,
+    val path: String = ""
 ) : SingleLayerVisual() {
 
   /**
@@ -105,7 +105,7 @@ open class ImageVisual(
       height: Int = -1,
       offsetX: Int = 0,
       offsetY: Int = 0
-  ) : this(path, load(path), width, height, offsetX, offsetY)
+  ) : this(load(path), width, height, offsetX, offsetY, path)
 
   /**
    * Loads an [ImageVisual] from a file.
