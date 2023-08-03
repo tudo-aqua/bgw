@@ -97,6 +97,15 @@ object FXConverters {
             color.alpha)
   }
 
+  internal fun MouseButtonType.toFXMouseButton(): MouseButton =
+      when (this) {
+        MouseButtonType.LEFT_BUTTON -> MouseButton.PRIMARY
+        MouseButtonType.RIGHT_BUTTON -> MouseButton.SECONDARY
+        MouseButtonType.MOUSE_WHEEL -> MouseButton.MIDDLE
+        MouseButtonType.OTHER -> MouseButton.NONE
+        MouseButtonType.UNSPECIFIED -> MouseButton.NONE
+      }
+
   /** Converts the [FXMouseEvent] to [MouseEvent]. */
   internal fun FXMouseEvent.toMouseEvent(): MouseEvent =
       MouseEvent(

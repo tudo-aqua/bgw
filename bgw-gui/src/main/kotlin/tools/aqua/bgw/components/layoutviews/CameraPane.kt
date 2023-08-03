@@ -18,6 +18,7 @@
 package tools.aqua.bgw.components.layoutviews
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -54,7 +55,7 @@ open class CameraPane<T : LayoutView<*>>(
   var zoom: Double
     get() = zoomProperty.value
     set(value) {
-      if (value >= 1) zoomProperty.value = value
+      zoomProperty.value = value
     }
 
   /**
@@ -110,6 +111,15 @@ open class CameraPane<T : LayoutView<*>>(
     get() = isVerticalLockedProperty.value
     set(value) {
       isVerticalLockedProperty.value = value
+    }
+
+  internal val panMouseButtonProperty: Property<MouseButtonType> =
+      Property(MouseButtonType.MOUSE_WHEEL)
+
+  var panMouseButton: MouseButtonType
+    get() = panMouseButtonProperty.value
+    set(value) {
+      panMouseButtonProperty.value = value
     }
 
   /**
