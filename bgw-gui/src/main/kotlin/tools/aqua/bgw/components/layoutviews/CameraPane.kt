@@ -42,8 +42,11 @@ open class CameraPane<T : LayoutView<*>>(
     width: Number,
     height: Number,
     visual: Visual = Visual.EMPTY,
-    internal val target: T
+    target: T
 ) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
+
+  internal val target : T = target.apply { parent = this }
+
   /**
    * [Property] for the [zoom] state of the [CameraPane].
    *
@@ -121,6 +124,10 @@ open class CameraPane<T : LayoutView<*>>(
     set(value) {
       panMouseButtonProperty.value = value
     }
+
+  init {
+      target.parent = this
+  }
 
   /**
    * pans the view of the camera to the specified coordinates. The coordinates specified represent
