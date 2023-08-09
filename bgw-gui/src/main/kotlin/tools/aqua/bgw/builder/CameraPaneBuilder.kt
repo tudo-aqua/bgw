@@ -261,6 +261,7 @@ internal class ZoomableScrollPane(
 
   private fun outerNode(node: Node): Node {
     val outerNode = centeredNode(node)
+    /*
     outerNode.onScroll = EventHandler { e: ScrollEvent ->
       e.consume()
       if (interactive) {
@@ -280,6 +281,7 @@ internal class ZoomableScrollPane(
     outerNode.onMouseReleased = EventHandler { e ->
       if (e.button == panMouseButton && interactive) isPannable = false
     }
+    */
     return outerNode
   }
 
