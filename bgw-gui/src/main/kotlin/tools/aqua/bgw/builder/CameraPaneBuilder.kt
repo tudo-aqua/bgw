@@ -60,7 +60,7 @@ object CameraPaneBuilder {
   ): Region {
     val node =
         ZoomableScrollPane(
-            (LayoutNodeBuilder.buildLayoutView(scene, container.target) as Pane).apply {
+            (NodeBuilder.build(scene, container.target) as Pane).apply {
               minWidth = container.target.width
               minHeight = container.target.height
             },
