@@ -195,6 +195,7 @@ internal class ZoomableScrollPane(
 
   var hPanLocked = false
   var vPanLocked = false
+  var scrollLocked = false
 
   var interactive = false
 
@@ -202,6 +203,7 @@ internal class ZoomableScrollPane(
     val outerNode = centeredNode(node)
     outerNode.onScroll = EventHandler { e: ScrollEvent ->
       e.consume()
+      if (scrollLocked) return@EventHandler
       if (interactive) {
         val delta =
             when (e.textDeltaXUnits) {

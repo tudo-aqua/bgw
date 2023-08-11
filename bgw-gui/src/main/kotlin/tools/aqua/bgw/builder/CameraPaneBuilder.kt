@@ -77,6 +77,10 @@ object CameraPaneBuilder {
       node.interactive = nV
     }
 
+    container.isZoomLockedProperty.setGUIListenerAndInvoke(container.isZoomLocked) { _, nV ->
+      node.scrollLocked = nV
+    }
+
     container.isHorizontalLockedProperty.setGUIListenerAndInvoke(container.isHorizontalLocked) {
         _,
         nV ->
