@@ -116,6 +116,14 @@ open class CameraPane<T : LayoutView<*>>(
       isVerticalLockedProperty.value = value
     }
 
+  internal val isZoomLockedProperty: BooleanProperty = BooleanProperty()
+
+  var isZoomLocked: Boolean
+    get() = isZoomLockedProperty.value
+    set(value) {
+      isZoomLockedProperty.value = value
+    }
+
   internal val panMouseButtonProperty: Property<MouseButtonType> =
       Property(MouseButtonType.MOUSE_WHEEL)
 
