@@ -17,30 +17,10 @@
 
 package tools.aqua.bgw.builder
 
-import java.io.FileNotFoundException
-import javafx.animation.Animation
-import javafx.animation.KeyFrame
-import javafx.animation.Timeline
-import javafx.event.EventHandler
 import javafx.geometry.Point2D
-import javafx.geometry.Pos
-import javafx.scene.Group
-import javafx.scene.Node
-import javafx.scene.control.ScrollPane
-import javafx.scene.input.MouseButton
-import javafx.scene.input.MouseEvent
-import javafx.scene.input.ScrollEvent
-import javafx.scene.layout.Background
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Region
-import javafx.scene.layout.VBox
-import javafx.scene.paint.Color
-import javafx.util.Duration
-import kotlin.math.abs
-import kotlin.math.exp
 import tools.aqua.bgw.builder.FXConverters.toFXMouseButton
-import tools.aqua.bgw.builder.FXConverters.toMouseEvent
-import tools.aqua.bgw.builder.SceneBuilder.onMouseDragged
 import tools.aqua.bgw.builder.SceneBuilder.onMouseReleased
 import tools.aqua.bgw.builder.components.ZoomableScrollPane
 import tools.aqua.bgw.components.ComponentView
@@ -49,7 +29,6 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
-import tools.aqua.bgw.event.DropEvent
 
 /**
  * The [CameraPaneBuilder] object provides a method for building a camera pane in a specified scene
@@ -74,7 +53,7 @@ object CameraPaneBuilder {
             },
             container)
 
-    if(scene is BoardGameScene) {
+    if (scene is BoardGameScene) {
       node.content.setOnMouseDragged {
         if (it.button == node.panMouseButton && node.interactive) node.isPannable = true
         with(scene) {

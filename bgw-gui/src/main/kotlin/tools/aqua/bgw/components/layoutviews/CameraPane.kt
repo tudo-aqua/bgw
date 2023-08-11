@@ -45,7 +45,7 @@ open class CameraPane<T : LayoutView<*>>(
     target: T
 ) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
 
-  internal val target : T = target.apply { parent = this }
+  internal val target: T = target.apply { parent = this }
 
   /**
    * [Property] for the [zoom] state of the [CameraPane].
@@ -126,7 +126,7 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
   init {
-      target.parent = this
+    target.parent = this
   }
 
   /**
