@@ -135,7 +135,7 @@ object SceneBuilder {
                       draggedDataObject.mouseStartCoord.yCoord)
 
   /** Event handler for onMouseDragged. */
-  private fun BoardGameScene.onMouseDragged(e: MouseEvent) {
+  internal fun BoardGameScene.onMouseDragged(e: MouseEvent) {
     val draggedDataObject = draggedComponentProperty.value ?: return
     val draggedComponent = draggedDataObject.draggedComponent
 
@@ -149,7 +149,7 @@ object SceneBuilder {
   }
 
   /** Event handler for onMouseReleased. */
-  private fun BoardGameScene.onMouseReleased(e: MouseEvent) {
+  internal fun BoardGameScene.onMouseReleased(e: MouseEvent) {
     val dragDataObject = draggedComponentProperty.value
     val draggedComponent = dragDataObject?.draggedComponent ?: return
 
