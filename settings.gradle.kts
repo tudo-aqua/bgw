@@ -23,7 +23,6 @@ include(
     "bgw-examples:bgw-maumau-example",
     "bgw-examples:bgw-sudoku-example",
     "bgw-examples:bgw-tetris-example",
-    "bgw-examples:bgw-performance-example",
     "bgw-gui",
     "bgw-net:bgw-net-client",
     "bgw-net:bgw-net-common",
