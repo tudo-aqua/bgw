@@ -38,6 +38,7 @@ import kotlin.math.abs
 import kotlin.math.exp
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
+import kotlin.math.round
 
 /**
  * The [ZoomableScrollPane] class represents a scroll pane with zooming capabilities. It provides
@@ -203,7 +204,15 @@ internal class ZoomableScrollPane(
     val outerNode = centeredNode(node)
     outerNode.onScroll = EventHandler { e: ScrollEvent ->
       e.consume()
-      if (scrollLocked) return@EventHandler
+      if (scrollLocked) {
+        if(e.deltaX != 0.0 && !hPanLocked) {
+          scrollTo(Point2D(round(anchorPoint.x - (e.deltaX / scaleValue)), anchorPoint.y))
+        }
+        if(e.deltaY != 0.0 && !vPanLocked) {
+            scrollTo(Point2D(anchorPoint.x, round(anchorPoint.y - (e.deltaY / scaleValue))))
+        }
+        return@EventHandler
+      }
       if (interactive) {
         val delta =
             when (e.textDeltaXUnits) {
