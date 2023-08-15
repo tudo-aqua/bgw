@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2022-2023 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,11 @@
  * limitations under the License.
  */
 
-rootProject.name = "bgw"
+package tools.aqua.bgw.examples.performance.main
 
-include(
-    "bgw-docs",
-    "bgw-examples:bgw-docs-examples",
-    "bgw-examples:bgw-maumau-example",
-    "bgw-examples:bgw-sudoku-example",
-    "bgw-examples:bgw-tetris-example",
-    "bgw-examples:bgw-performance-example",
-    "bgw-gui",
-    "bgw-net:bgw-net-client",
-    "bgw-net:bgw-net-common",
-    "bgw-net:bgw-net-server",
-    "bgw-net:bgw-net-protocol-client",
-)
+import tools.aqua.bgw.examples.performance.view.PerformanceViewController
+
+/** Entry point. */
+fun main() {
+    PerformanceViewController()
+}
