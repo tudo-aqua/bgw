@@ -48,8 +48,13 @@ object CameraPaneBuilder {
     val node =
         ZoomableScrollPane(
             (NodeBuilder.build(scene, container.target) as Pane).apply {
-              container.target.widthProperty.addListenerAndInvoke(container.target.width) { _, nV -> minWidth = nV }
-              container.target.heightProperty.addListenerAndInvoke(container.target.height) { _, nV -> minHeight = nV }
+              container.target.widthProperty.addListenerAndInvoke(container.target.width) { _, nV ->
+                minWidth = nV
+              }
+              container.target.heightProperty.addListenerAndInvoke(container.target.height) { _, nV
+                ->
+                minHeight = nV
+              }
             },
             container)
 
