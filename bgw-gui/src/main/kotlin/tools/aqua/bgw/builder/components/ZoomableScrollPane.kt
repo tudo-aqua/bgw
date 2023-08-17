@@ -61,7 +61,9 @@ internal class ZoomableScrollPane(
       field = value.coerceIn(0.01, 10.0)
       target.scaleX = scaleValue
       target.scaleY = scaleValue
+      cameraPane.zoomProperty.setSilent(scaleValue)
     }
+
   private val zoomIntensity = 0.02
   private val zoomNode: Node
   private var timeline: Timeline? = null
@@ -82,12 +84,12 @@ internal class ZoomableScrollPane(
     // isFitToWidth = true //center
     hvalueProperty().addListener { _, _, nV ->
       if (hPanLocked && nV != hValueLocked) hvalue = hValueLocked
-      val viewWidth = cameraPane.width / scaleValue
+      val viewWidth = cameraPane.width / cameraPane.zoom
       anchorPoint = Point2D(hvalue * (cameraPane.target.width - viewWidth), anchorPoint.y)
     }
     vvalueProperty().addListener { _, _, nV ->
       if (vPanLocked && nV != vValueLocked) vvalue = vValueLocked
-      val viewHeight = cameraPane.height / scaleValue
+      val viewHeight = cameraPane.height / cameraPane.zoom
       anchorPoint = Point2D(anchorPoint.x, vvalue * (cameraPane.target.height - viewHeight))
     }
   }
@@ -105,8 +107,8 @@ internal class ZoomableScrollPane(
   fun scrollTo(point: Point2D) {
     if (inTargetBounds(point)) {
       anchorPoint = point
-      val viewWidth = cameraPane.width / scaleValue
-      val viewHeight = cameraPane.height / scaleValue
+      val viewWidth = cameraPane.width / cameraPane.zoom
+      val viewHeight = cameraPane.height / cameraPane.zoom
       hvalue = point.x / (cameraPane.target.width - viewWidth)
       vvalue = point.y / (cameraPane.target.height - viewHeight)
     }
@@ -114,8 +116,8 @@ internal class ZoomableScrollPane(
 
   fun smoothScrollTo(point: Point2D) {
     if (inTargetBounds(point)) {
-      val viewWidth = cameraPane.width / scaleValue
-      val viewHeight = cameraPane.height / scaleValue
+      val viewWidth = cameraPane.width / cameraPane.zoom
+      val viewHeight = cameraPane.height / cameraPane.zoom
       val newHValue = point.x / (cameraPane.target.width - viewWidth)
       val newVValue = point.y / (cameraPane.target.height - viewHeight)
       val clampedHValue = newHValue.coerceIn(0.0, 1.0)
