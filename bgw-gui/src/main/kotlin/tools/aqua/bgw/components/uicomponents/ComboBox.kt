@@ -103,8 +103,6 @@ open class ComboBox<T>(
   var selectedItem: T?
     get() = selectedItemProperty.value
     set(value) {
-      require(items.contains(value)) { "Items list does not contain element to select: $value" }
-
       selectedItemProperty.value = value
     }
 
