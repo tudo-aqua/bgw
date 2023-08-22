@@ -1,3 +1,6 @@
+import csstype.*
+import emotion.react.Global
+import emotion.react.styles
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
 import org.w3c.dom.Element
@@ -7,6 +10,8 @@ import org.w3c.dom.get
 import react.*
 import react.dom.client.createRoot
 import react.dom.html.ReactHTML.h1
+import kotlin.math.floor
+import kotlin.random.Random
 
 fun main() {
     val container = document.createElement("div")
@@ -30,7 +35,6 @@ fun main() {
         println(event.data.toString())
         val scene = mapper.decodeFromString<Scene<ComponentView>>(event.data.toString())
         val components = scene.components.map { NodeBuilder.build(it) }
-
         root.render(components(components).create())
 
         null
@@ -38,7 +42,25 @@ fun main() {
 
 }
 
-fun components(components: List<ReactElement<*>>) = FC<Props> { components(components) }
+fun components(components: List<ReactElement<*>>) = FC<Props> {
+    Global {
+        styles {
+            "html" {
+                fontSize = (100 / 720.0).vh
+                width = 100.vw
+                height = 100.vh
+                margin = 0.px
+                overflow = Overflow.hidden
+            }
+            "body" {
+                backgroundColor = rgb(255, 255, 255)
+                color = rgb(0, 0, 0)
+                margin = 0.px
+            }
+        }
+    }
+    components(components)
+}
 
 fun ChildrenBuilder.components(components: List<ReactElement<*>>) = components.forEach { +it }
 
@@ -56,6 +78,16 @@ object ButtonBuilder {
     fun build(componentView: ComponentView): ReactElement<*> {
         return ReactButton.create {
             id = componentView.id
+            color = randomHexColor()
         }
     }
+}
+
+fun randomHexColor(): String {
+    val chars = "0123456789ABCDEF"
+    var color = "#"
+    repeat(6) {
+        color += chars[floor(Random.nextDouble() * 16).toInt()]
+    }
+    return color
 }

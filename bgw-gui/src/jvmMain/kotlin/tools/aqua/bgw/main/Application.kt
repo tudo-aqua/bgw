@@ -45,6 +45,7 @@ class Application(
         }*/
 
         primaryStage.scene = Scene(rootComponent, width, height)
+        primaryStage.scene.userAgentStylesheet = STYLESHEET_CASPIAN
         primaryStage.show()
     }
 
