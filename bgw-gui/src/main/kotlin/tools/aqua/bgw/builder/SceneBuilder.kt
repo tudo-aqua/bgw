@@ -195,9 +195,7 @@ object SceneBuilder {
   private fun Pane.rebuild(scene: Scene<out ComponentView>, cachedComponents: List<ComponentView>) {
     children.clear()
 
-    scene.backgroundCache = null
-    scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { oldValue, newValue ->
-      if (oldValue != newValue || scene.backgroundCache == null) {
+    scene.backgroundProperty.setGUIListenerAndInvoke(scene.background) { _, newValue ->
         val newBackground =
             VisualBuilder.buildVisual(newValue).apply {
               prefHeightProperty().unbind()
@@ -206,25 +204,12 @@ object SceneBuilder {
               prefWidth = scene.width
               scene.opacityProperty.setGUIListenerAndInvoke(scene.opacity) { _, nV -> opacity = nV }
             }
-
-        if (scene.backgroundCache != null) {
-          children.remove(scene.backgroundCache)
-        }
-
         children.add(0, newBackground)
-        scene.backgroundCache = newBackground
-      }
     }
-
-    (cachedComponents - scene.rootComponents).forEach { scene.componentsMap.remove(it) }
 
     children.addAll(
         scene.rootComponents.map {
-          if (cachedComponents.contains(it)) {
-            scene.componentsMap[it]
-          } else {
-            NodeBuilder.build(scene, it)
-          }
+          NodeBuilder.build(scene, it)
         })
   }
 

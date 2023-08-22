@@ -273,7 +273,7 @@ object AnimationBuilder {
 
   /** Maps [ComponentView] to FX node. */
   private fun mapNode(scene: Scene<out ComponentView>, componentView: ComponentView) =
-      checkNotNull(scene.componentsMap[componentView]) {
+      checkNotNull(componentView.renderedComponent) {
         "Creating animation for node that is not in scene."
       }
 }

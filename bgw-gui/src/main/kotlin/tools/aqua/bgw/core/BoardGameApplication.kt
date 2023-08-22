@@ -21,8 +21,6 @@ package tools.aqua.bgw.core
 
 import java.io.File
 import java.util.*
-import javafx.application.Platform
-import javafx.scene.text.Font as JFXFont
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.components.ComponentView
@@ -337,14 +335,14 @@ open class BoardGameApplication(
     fun runOnGUIThread(task: Runnable) {
       val toolkitInitialized: Boolean =
           try {
-            Platform.runLater {}
+            Frontend.runLater {}
             true
           } catch (e: IllegalStateException) {
             false
           }
 
       if (toolkitInitialized) {
-        Platform.runLater(task)
+        Frontend.runLater(task)
       } else {
         synchronized(this) { task.run() }
       }
@@ -357,11 +355,6 @@ open class BoardGameApplication(
      * @throws AccessDeniedException if the file can't be read
      * @return A boolean weather the file could be loaded or not
      */
-    fun loadFont(font: File): Boolean {
-      if (!font.exists()) throw NoSuchFileException(font)
-      if (!font.canRead()) throw AccessDeniedException(font)
-      val jfxFont = JFXFont.loadFont(font.inputStream(), DEFAULT_FONT_SIZE) ?: return false
-      return JFXFont.getFamilies().contains(jfxFont.family)
-    }
+    fun loadFont(font: File): Boolean = Frontend.loadFont(font)
   }
 }

@@ -72,8 +72,7 @@ object NodeBuilder {
     // Framework -> JavaFX
     componentView.registerObservers(stackPane, node, background)
 
-    // Register in componentsMap
-    scene.componentsMap[componentView] = stackPane
+    stackPane.id = componentView.id
 
     return stackPane
   }
@@ -195,13 +194,8 @@ object NodeBuilder {
       cached: Set<ComponentView>
   ) {
     children.clear()
-    (cached - components.toSet()).forEach { scene.componentsMap.remove(it) }
     components.forEach {
-      if (it in cached) {
-        children.add(scene.componentsMap[it])
-      } else {
-        children.add(build(scene, it))
-      }
+      children.add(build(scene, it))
     }
   }
 }

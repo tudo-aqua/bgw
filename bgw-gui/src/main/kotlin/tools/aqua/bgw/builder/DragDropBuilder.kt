@@ -91,7 +91,7 @@ object DragDropBuilder {
     val dragDataObject =
         DragDataObject(
             draggedComponent = this,
-            draggedStackPane = checkNotNull(scene.componentsMap[this]),
+            draggedStackPane = checkNotNull(this.renderedComponent),
             mouseStartCoord = mouseStartCoord,
             posStartCoord = posStartCoord,
             relativeRotation = relativeRotation,

@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components
 
+import tools.aqua.bgw.builder.IDGenerator
 import kotlin.math.floor
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.LayoutView
@@ -51,6 +52,8 @@ import tools.aqua.bgw.visual.Visual
  */
 abstract class ComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) {
+
+  internal val id = IDGenerator.generateID()
 
   /**
    * Property for the order of [ComponentView] inside of [parent].#

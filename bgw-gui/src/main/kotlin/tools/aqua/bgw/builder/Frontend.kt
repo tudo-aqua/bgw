@@ -28,10 +28,13 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.event.EventHandler
+import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.effect.GaussianBlur
 import javafx.scene.layout.Pane
+import javafx.scene.layout.StackPane
+import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.util.Duration
@@ -41,6 +44,7 @@ import tools.aqua.bgw.builder.FXConverters.toFXImage
 import tools.aqua.bgw.builder.FXConverters.toFXKeyCodeCombination
 import tools.aqua.bgw.builder.SceneBuilder.buildGame
 import tools.aqua.bgw.builder.SceneBuilder.buildMenu
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -144,10 +148,10 @@ internal class Frontend : Application() {
     private var scenePane: Pane = Pane()
 
     /** The game's root pane. */
-    private var gamePane: Pane? = null
+    internal var gamePane: Pane? = null
 
     /** The menu's root pane. */
-    private var menuPane: Pane? = null
+    internal var menuPane: Pane? = null
 
     /** Background pane. */
     private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
@@ -588,6 +592,34 @@ internal class Frontend : Application() {
         }
       }
     }
+
+    fun runLater(task: Runnable) = Platform.runLater(task)
+
+    fun loadFont(font: File) : Boolean {
+      if (!font.exists()) throw NoSuchFileException(font)
+      if (!font.canRead()) throw AccessDeniedException(font)
+      val jfxFont = Font.loadFont(font.inputStream(), DEFAULT_FONT_SIZE) ?: return false
+      return Font.getFamilies().contains(jfxFont.family)
+    }
+
     // endregion
   }
 }
+
+internal val ComponentView.renderedComponent: StackPane
+  get() {
+    fun Parent.findStackPaneById(id: String): StackPane? {
+      val stackPane = childrenUnmodifiable.find { it.id == id } as? StackPane
+      if (stackPane != null) return stackPane
+      childrenUnmodifiable.forEach {
+        if (it is Parent) {
+          val parent = it.findStackPaneById(id)
+          if (parent != null) return parent
+        }
+      }
+      return null
+    }
+    return Frontend.gamePane?.findStackPaneById(id)
+      ?: Frontend.menuPane?.findStackPaneById(id)
+      ?: throw IllegalStateException("ComponentView $this is not rendered.")
+  }
