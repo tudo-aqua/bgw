@@ -1,5 +1,7 @@
 plugins {
-  kotlin("multiplatform") version "1.8.21"
+  val kotlinVersion = "1.8.21"
+  kotlin("multiplatform") version kotlinVersion
+  kotlin("plugin.serialization") version kotlinVersion
   application
   id("org.openjfx.javafxplugin") version "0.0.14"
   `maven-publish`
@@ -33,7 +35,11 @@ kotlin {
     }
   }
   sourceSets {
-    val commonMain by getting
+    val commonMain by getting {
+      dependencies {
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+      }
+    }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
@@ -60,10 +66,6 @@ kotlin {
     }
     val jsTest by getting
   }
-}
-
-application {
-  mainClass.set("org.example.proton.ServerKt")
 }
 
 tasks.named<Copy>("jvmProcessResources") {

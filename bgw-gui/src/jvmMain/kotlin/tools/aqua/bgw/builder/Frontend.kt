@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.builder
 
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import java.awt.Color
 import java.awt.Toolkit
 import java.io.File
@@ -51,6 +53,8 @@ import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode.*
 import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.main.PORT
+import tools.aqua.bgw.main.module
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -59,32 +63,12 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
-/** Frontend JavaFX wrapper. */
-internal class Frontend : Application() {
-
-  /** Starts the application. */
-  override fun start(primaryStage: Stage) {
-    Thread.setDefaultUncaughtExceptionHandler { _, e ->
-      e.printStackTrace()
-
-      BoardGameApplication.runOnGUIThread {
-        showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message.orEmpty(), e))
-      }
-    }
-
-    startApplication(primaryStage)
-
-    application.onWindowShown?.invoke()
-  }
-
-  /** Called when the application closes. */
-  override fun stop() {
-    application.onWindowClosed?.invoke()
-  }
+internal class Frontend {
 
   /** Starts the application. */
   internal fun start() {
-    launch()
+    embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
+    tools.aqua.bgw.main.Application().show()
   }
 
   companion object {
@@ -144,32 +128,11 @@ internal class Frontend : Application() {
     /** Current [MenuScene]. */
     private var menuScene: MenuScene? = null
 
-    /** Main pane in current scene. */
-    private var scenePane: Pane = Pane()
-
     /** The game's root pane. */
     internal var gamePane: Pane? = null
 
     /** The menu's root pane. */
     internal var menuPane: Pane? = null
-
-    /** Background pane. */
-    private var backgroundPane = Pane().apply { style = "-fx-background-color: black" }
-
-    /** Current stage. */
-    private var primaryStage: Stage? = null
-
-    /** Current vertical alignment for scenes. */
-    private var verticalSceneAlignment = VerticalAlignment.CENTER
-
-    /** Current horizontal alignment for scenes. */
-    private var horizontalSceneAlignment = HorizontalAlignment.CENTER
-
-    /** Current [ScaleMode]. */
-    private var scaleMode = ScaleMode.FULL
-
-    /** A small value to add to stage with to force a refresh. */
-    private var epsilon: Double = 1.0
     // endregion
 
     // region Internal functions
@@ -181,21 +144,7 @@ internal class Frontend : Application() {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
-      val oldScene = menuScene
-      menuScene = scene
-      oldScene?.onSceneHid?.invoke()
-      scene.onSceneShown?.invoke()
-
-      scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
-        if (primaryStage != null) {
-          menuPane = buildMenu(scene)
-          boardGameScene?.run { internalLockedProperty.value = true }
-
-          updateScene()
-
-          if (oldScene == null) fadeMenu(true, fadeTime)
-        }
-      }
+      TODO("Not yet implemented")
     }
 
     /**
@@ -204,8 +153,7 @@ internal class Frontend : Application() {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double) {
-      menuScene?.onSceneHid?.invoke()
-      fadeMenu(false, fadeTime)
+      TODO("Not yet implemented")
     }
 
     /**
@@ -214,18 +162,7 @@ internal class Frontend : Application() {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
-
-      boardGameScene?.onSceneHid?.invoke()
-      boardGameScene = scene
-      scene.onSceneShown?.invoke()
-
-      scene.zoomDetailProperty.setGUIListenerAndInvoke(scene.zoomDetail) { _, _ ->
-        if (primaryStage != null) {
-          gamePane = buildGame(scene)
-
-          updateScene()
-        }
-      }
+      TODO("Not yet implemented")
     }
 
     /**
@@ -234,8 +171,7 @@ internal class Frontend : Application() {
      * @param newHorizontalAlignment new alignment to set.
      */
     internal fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
-      horizontalSceneAlignment = newHorizontalAlignment
-      sizeChanged()
+      TODO("Not yet implemented")
     }
 
     /**
@@ -244,8 +180,7 @@ internal class Frontend : Application() {
      * @param newVerticalAlignment new alignment to set.
      */
     internal fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
-      verticalSceneAlignment = newVerticalAlignment
-      sizeChanged()
+      TODO("Not yet implemented")
     }
 
     /**
@@ -254,51 +189,12 @@ internal class Frontend : Application() {
      * @param newScaleMode new scale mode to set.
      */
     internal fun setScaleMode(newScaleMode: ScaleMode) {
-      scaleMode = newScaleMode
-      sizeChanged()
+      TODO("Not yet implemented")
     }
 
     /** Manually refreshes currently displayed [Scene]s. */
     internal fun updateScene() {
-      val activePanes: MutableList<Pane> = ArrayList(2)
-
-      gamePane?.apply {
-        widthProperty().addListener { _, _, _ -> primaryStage?.forceRefresh() }
-        heightProperty().addListener { _, _, _ -> primaryStage?.forceRefresh() }
-
-        activePanes.add(this)
-      }
-
-      menuPane?.apply {
-        widthProperty().addListener { _, _, _ -> primaryStage?.forceRefresh() }
-        heightProperty().addListener { _, _, _ -> primaryStage?.forceRefresh() }
-
-        activePanes.add(this)
-      }
-
-      if (activePanes.size == 2) {
-        gamePane?.effect = GaussianBlur(DEFAULT_BLUR_RADIUS)
-        boardGameScene?.run { internalLockedProperty.value = true }
-      }
-
-      scenePane =
-          Pane().apply {
-            children.clear()
-            children.add(backgroundPane)
-            children.addAll(activePanes)
-            this.setOnKeyTyped { activePanes.lastOrNull()?.onKeyTyped?.handle(it) }
-            this.setOnKeyReleased { activePanes.lastOrNull()?.onKeyReleased?.handle(it) }
-            this.setOnKeyPressed { activePanes.lastOrNull()?.onKeyPressed?.handle(it) }
-          }
-
-      primaryStage?.scene.apply {
-        this?.setOnKeyTyped { scenePane.onKeyTyped?.handle(it) }
-        this?.setOnKeyReleased { scenePane.onKeyReleased?.handle(it) }
-        this?.setOnKeyPressed { scenePane.onKeyPressed?.handle(it) }
-      }
-      primaryStage?.scene?.root = scenePane
-
-      primaryStage?.forceRefresh()
+      TODO("Not yet implemented")
     }
 
     /**
@@ -316,124 +212,11 @@ internal class Frontend : Application() {
             })
 
     /**
-     * Returns scene associated to pane.
-     *
-     * @return [boardGameScene] for [gamePane], [menuScene] for [menuPane] and `null` for other
-     * parameters.
-     */
-    private fun Pane.mapToScene(): tools.aqua.bgw.core.Scene<*>? =
-        when (this) {
-          gamePane -> boardGameScene
-          menuPane -> menuScene
-          else -> null
-        }
-
-    /**
-     * Starts the application.
-     *
-     * @param stage application stage.
-     */
-    internal fun startApplication(stage: Stage) {
-      stage.apply {
-        // Create dummy scene for fullscreen
-        scene = Scene(Label())
-
-        // Initialize default DECORATED stage style allowing minimizing
-        initStyle(StageStyle.DECORATED)
-
-        val monitorHeight = Toolkit.getDefaultToolkit().screenSize.height
-
-        // Set dimensions according to screen resolution and aspect ratio or, fixed height and width
-        height =
-            if (heightProperty.value > 0) heightProperty.value
-            else monitorHeight * DEFAULT_WINDOW_BORDER
-        width =
-            if (widthProperty.value > 0) widthProperty.value else height * initialAspectRatio.ratio
-
-        // reflect new window size
-        heightProperty.value = height
-        widthProperty.value = width
-
-        widthProperty.internalListener = { _, nV -> if (!isFullScreen && !isMaximized) width = nV }
-        heightProperty.internalListener = { _, nV ->
-          if (!isFullScreen && !isMaximized) height = nV
-        }
-
-        titleProperty.setGUIListenerAndInvoke(titleProperty.value) { _, nV -> title = nV }
-        iconProperty.setGUIListenerAndInvoke(iconProperty.value) { _, nV ->
-          icons.clear()
-
-          if (nV != null) icons.add(nV.image.toFXImage())
-        }
-        fullscreenExitCombinationProperty.setGUIListenerAndInvoke(
-            fullscreenExitCombinationProperty.value) { _, nV ->
-          fullScreenExitKeyCombination =
-              nV?.toFXKeyCodeCombination() ?: javafx.scene.input.KeyCombination.NO_MATCH
-        }
-        fullscreenExitCombinationHintProperty.setGUIListenerAndInvoke(
-            fullscreenExitCombinationHintProperty.value) { _, nV -> fullScreenExitHint = nV }
-
-        // Override isMaximized and isFullscreen if initial value was passed
-        when (initialWindowMode) {
-          WindowMode.NORMAL -> {
-            isMaximizedProperty.value = false
-            isFullScreenProperty.value = false
-          }
-          WindowMode.MAXIMIZED -> {
-            isMaximizedProperty.value = true
-            isFullScreenProperty.value = false
-          }
-          WindowMode.FULLSCREEN -> {
-            isFullScreenProperty.value = true
-          }
-          null -> {}
-        }
-
-        isMaximizedProperty.setGUIListenerAndInvoke(isMaximizedProperty.value) { _, nV ->
-          isMaximized = nV
-        }
-        isFullScreenProperty.setGUIListenerAndInvoke(isFullScreenProperty.value) { _, nV ->
-          isFullScreen = nV
-        }
-
-        maximizedProperty().addListener { _, _, nV -> isMaximizedProperty.setSilent(nV) }
-        fullScreenProperty().addListener { _, _, nV -> isFullScreenProperty.setSilent(nV) }
-
-        heightProperty().addListener { _, _, nV ->
-          heightProperty.setSilent(nV.toDouble())
-          sizeChanged()
-        }
-        widthProperty().addListener { _, _, nV ->
-          widthProperty.setSilent(nV.toDouble())
-          sizeChanged()
-        }
-
-        show()
-      }
-
-      menuScene?.let { menuPane = buildMenu(it) }
-      boardGameScene?.let { gamePane = buildGame(it) }
-
-      backgroundProperty.setGUIListenerAndInvoke(backgroundProperty.value) { _, nV ->
-        backgroundPane.children.clear()
-        backgroundPane.children.add(
-            VisualBuilder.buildVisual(nV).apply {
-              prefWidthProperty().bind(stage.widthProperty())
-              prefHeightProperty().bind(stage.heightProperty())
-            })
-      }
-
-      this.primaryStage = stage
-
-      updateScene()
-    }
-
-    /**
      * Shows a dialog without blocking further thread execution.
      *
      * @param dialog the [Dialog] to show
      */
-    internal fun showDialogNonBlocking(dialog: Dialog): Unit = DialogBuilder.build(dialog).show()
+    internal fun showDialogNonBlocking(dialog: Dialog): Unit = TODO("Not yet implemented")
 
     /**
      * Shows a dialog and blocks further thread execution.
@@ -442,8 +225,7 @@ internal class Frontend : Application() {
      *
      * @return chosen button or [Optional.empty] if canceled.
      */
-    internal fun showDialog(dialog: Dialog): Optional<ButtonType> =
-        DialogBuilder.build(dialog).showAndWait().map { it.toButtonType() }
+    internal fun showDialog(dialog: Dialog): Optional<ButtonType> = TODO("Not yet implemented")
 
     /**
      * Shows the given [FileDialog].
@@ -452,24 +234,7 @@ internal class Frontend : Application() {
      *
      * @return chosen file(s) or [Optional.empty] if canceled.
      */
-    internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> =
-        Optional.ofNullable(
-            when (dialog.mode) {
-              OPEN_FILE ->
-                  FileChooserBuilder.buildFileChooser(dialog).showOpenDialog(primaryStage)?.let {
-                    listOf(it)
-                  }
-              OPEN_MULTIPLE_FILES ->
-                  FileChooserBuilder.buildFileChooser(dialog).showOpenMultipleDialog(primaryStage)
-              SAVE_FILE ->
-                  FileChooserBuilder.buildFileChooser(dialog).showSaveDialog(primaryStage)?.let {
-                    listOf(it)
-                  }
-              CHOOSE_DIRECTORY ->
-                  FileChooserBuilder.buildDirectoryChooser(dialog).showDialog(primaryStage)?.let {
-                    listOf(it)
-                  }
-            })
+    internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> = TODO("Not yet implemented")
 
     /** Starts the application. */
     internal fun show() {
@@ -478,130 +243,16 @@ internal class Frontend : Application() {
 
     /** Stops the application. */
     internal fun exit() {
-      Platform.exit()
-    }
-    // endregion
-
-    // region Private functions
-    /**
-     * Fades [menuPane] in or out according to parameter [fadeIn] in given amount of milliseconds
-     * [fadeTime].
-     *
-     * @param fadeIn `true` if menu should fade in, `false` if it should fade out.
-     * @param fadeTime time to fade in milliseconds.
-     */
-    private fun fadeMenu(fadeIn: Boolean, fadeTime: Double) {
-      menuPane?.apply {
-        if (!fadeIn) {
-          menuPane = null
-          menuScene = null
-        }
-
-        FadeTransition(Duration.millis(fadeTime / 2), this)
-            .apply {
-              fromValue = if (fadeIn) 0.0 else 1.0
-              toValue = if (fadeIn) 1.0 else 0.0
-              interpolator = Interpolator.EASE_OUT
-              onFinished = EventHandler {
-                if (!fadeIn) {
-                  boardGameScene?.run { internalLockedProperty.value = false }
-                  updateScene()
-                }
-              }
-            }
-            .play()
-      }
-
-      gamePane?.apply {
-        val blur = GaussianBlur(0.0).also { effect = it }
-
-        val value =
-            SimpleDoubleProperty(0.0).apply {
-              addListener { _, _, newValue -> blur.radius = newValue.toDouble() }
-            }
-
-        Timeline(
-                KeyFrame(Duration.ZERO, KeyValue(value, if (fadeIn) 0 else DEFAULT_BLUR_RADIUS)),
-                KeyFrame(
-                    Duration.millis(fadeTime),
-                    KeyValue(value, if (fadeIn) DEFAULT_BLUR_RADIUS else 0)))
-            .play()
-      }
+      TODO("Not yet implemented")
     }
 
-    /**
-     * Forces the stage to refresh by alternately adding and removing a small value from stage
-     * width.
-     */
-    private fun Stage.forceRefresh() {
-      width += epsilon
-      epsilon *= -1.0
+    fun loadFont(font: File): Boolean {
+      TODO("Not yet implemented")
     }
 
-    /** Refreshes scene scale. */
-    private fun sizeChanged() {
-      // Wait for renderer to finish resize nodes
-      Platform.runLater {
-        val activePanes: List<Pane> =
-            listOfNotNull(gamePane, menuPane).ifEmpty {
-              return@runLater
-            }
-
-        val sceneHeight = scenePane.height
-        val sceneWidth = scenePane.width
-
-        if (sceneHeight == 0.0 || sceneWidth == 0.0) return@runLater
-
-        activePanes.forEach { pane ->
-          pane.apply {
-            val contentHeight = height
-            val contentWidth = width
-
-            if (contentHeight == 0.0 || contentWidth == 0.0) return@apply
-
-            // Set new content layout
-            layoutX = (sceneWidth - contentWidth) * horizontalSceneAlignment.positionMultiplier
-            layoutY = (sceneHeight - contentHeight) * verticalSceneAlignment.positionMultiplier
-
-            // Set new content scale
-            if (scaleMode != ScaleMode.NO_SCALE) {
-              sceneScale = min(sceneWidth / contentWidth, sceneHeight / contentHeight)
-
-              if (scaleMode == ScaleMode.ONLY_SHRINK) sceneScale = min(sceneScale, 1.0)
-
-              scaleX = sceneScale
-              scaleY = sceneScale
-
-              translateX =
-                  contentWidth / 2 * horizontalSceneAlignment.pivotMultiplier * (1 - sceneScale)
-              translateY =
-                  contentHeight / 2 * verticalSceneAlignment.pivotMultiplier * (1 - sceneScale)
-            }
-
-            // Zoom detail
-            mapToScene()?.apply {
-              val scale =
-                  min((width - zoomDetail.width) / width, (height - zoomDetail.height) / height)
-
-              scaleX += scale
-              scaleY += scale
-              translateX -= zoomDetail.topLeft.xCoord
-              translateY -= zoomDetail.topLeft.yCoord
-            }
-          }
-        }
-      }
+    fun runLater(task: Runnable) {
+      TODO("Not yet implemented")
     }
-
-    fun runLater(task: Runnable) = Platform.runLater(task)
-
-    fun loadFont(font: File) : Boolean {
-      if (!font.exists()) throw NoSuchFileException(font)
-      if (!font.canRead()) throw AccessDeniedException(font)
-      val jfxFont = Font.loadFont(font.inputStream(), DEFAULT_FONT_SIZE) ?: return false
-      return Font.getFamilies().contains(jfxFont.family)
-    }
-
     // endregion
   }
 }
