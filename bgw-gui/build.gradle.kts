@@ -47,6 +47,7 @@ kotlin {
         implementation("io.ktor:ktor-server-html-builder-jvm:2.0.2")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
         implementation("me.friwi:jcefmaven:110.0.25.1")
+        implementation("com.jfoenix:jfoenix:9.0.1")
       }
     }
     val jvmTest by getting
