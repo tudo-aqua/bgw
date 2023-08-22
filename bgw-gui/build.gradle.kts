@@ -1,55 +1,92 @@
-/*
- * Copyright 2022-2023 The BoardGameWork Authors
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-plugins { id("tools.aqua.bgw.library-conventions") }
-
-mavenMetadata {
-  name.set("BoardGameWork GUI Library")
-  description.set("A framework for board game applications.")
+plugins {
+  kotlin("multiplatform") version "1.8.21"
+  application
+  id("org.openjfx.javafxplugin") version "0.0.14"
+  `maven-publish`
 }
 
-dependencies {
-  /* jfoenix - Applies styles to JavaFX controls. */
-  implementation(libs.jfoenix)
+group = "tools.aqua"
+version = "1.0-SNAPSHOT"
 
-  /*
-   * UNUSED MODULES:
-   * javafx.fxml - Defines the FXML APIs for the JavaFX UI toolkit.
-   *
-   * javafx.media - Defines APIs for playback of media and audio content, as part of the JavaFX UI toolkit, including
-   *                  MediaView and MediaPlayer.
-   * javafx.swing - Defines APIs for the JavaFX / Swing interop support included with the JavaFX UI toolkit, including
-   *                  SwingNode (for embedding Swing inside a JavaFX application) and JFXPanel (for embedding JavaFX
-   *                  inside a Swing application).
-   * javafx.web - Defines APIs for the WebView functionality contained within the JavaFX UI toolkit.
-   */
+repositories {
+  jcenter()
+  mavenCentral()
+  maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+}
 
-  listOf("win", "mac", "linux" /*, "mac-aarch64" */).forEach { os ->
-    /*
-     * javafx.base - Defines the base APIs for the JavaFX UI toolkit, including APIs for bindings, properties,
-     *   collections, and events.
-     * javafx.controls  - Defines the UI controls, charts, and skins that are available for the JavaFX UI toolkit.
-     * javafx.graphics  - Defines the core scenegraph APIs for the JavaFX UI toolkit (such as layout containers,
-     *   application lifecycle, shapes, transformations, canvas, input, painting, image handling, and effects), as well
-     *   as APIs for animation, css, concurrency, geometry, printing, and windowing.
-     */
-    libs.bundles.openjfx.small.get().forEach { dep ->
-      implementation(
-          dep.module.group, dep.module.name, dep.versionConstraint.requiredVersion, classifier = os)
+kotlin {
+  jvm {
+    jvmToolchain(17)
+    withJava()
+    testRuns["test"].executionTask.configure {
+      useJUnitPlatform()
     }
   }
+  js(IR) {
+    binaries.executable()
+    browser {
+      commonWebpackConfig {
+        cssSupport {
+          enabled.set(true)
+        }
+      }
+    }
+  }
+  sourceSets {
+    val commonMain by getting
+    val commonTest by getting {
+      dependencies {
+        implementation(kotlin("test"))
+      }
+    }
+    val jvmMain by getting {
+      dependencies {
+        implementation("io.ktor:ktor-server-core:2.0.2")
+        implementation("io.ktor:ktor-server-netty:2.0.2")
+        implementation("io.ktor:ktor-server-websockets:2.0.2")
+        implementation("io.ktor:ktor-server-html-builder-jvm:2.0.2")
+        implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
+        implementation("me.friwi:jcefmaven:110.0.25.1")
+      }
+    }
+    val jvmTest by getting
+    val jsMain by getting {
+      dependencies {
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.346")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.346")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.3-pre.346")
+      }
+    }
+    val jsTest by getting
+  }
+}
+
+application {
+  mainClass.set("org.example.proton.ServerKt")
+}
+
+tasks.named<Copy>("jvmProcessResources") {
+  val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
+  from(jsBrowserDistribution)
+}
+
+tasks.named<JavaExec>("run") {
+  dependsOn(tasks.named<Jar>("jvmJar"))
+  classpath(tasks.named<Jar>("jvmJar"))
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "tools.aqua"
+      artifactId = "bgw-gui"
+      version = "0.8.1-SNAPSHOT"
+      from(components["kotlin"])
+    }
+  }
+}
+
+javafx {
+  version = "20"
+  modules = listOf("javafx.controls", "javafx.web")
 }
