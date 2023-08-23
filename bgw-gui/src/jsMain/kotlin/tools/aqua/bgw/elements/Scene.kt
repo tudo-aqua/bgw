@@ -1,8 +1,7 @@
 package tools.aqua.bgw.elements
 
 import SceneData
-import csstype.ClassName
-import csstype.Color
+import csstype.*
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
 import react.FC
@@ -20,12 +19,19 @@ external interface SceneProps : Props {
 
 val Scene = FC<SceneProps> { props ->
     bgwScene {
-        div {
+        bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.background)
         }
-        section {
+        bgwContents {
             className = ClassName("components")
+            css {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+            }
             props.data.components.forEach {
                 +NodeBuilder.build(it)
             }

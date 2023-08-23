@@ -41,14 +41,14 @@ class HexagonGrid<T : HexagonView>(
     width: Number = 0,
     height: Number = 0,
     visual: Visual = Visual.EMPTY,
-    coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET
+    val coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual
     ) {
 
     /** A mutable map that stores the hexagons in the grid. */
-    internal val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
+    val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 
     init {
         observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->

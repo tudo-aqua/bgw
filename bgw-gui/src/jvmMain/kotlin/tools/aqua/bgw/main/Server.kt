@@ -15,6 +15,7 @@ import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import mapper
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
@@ -51,17 +52,28 @@ fun KtorApplication.configureRouting() {
 val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
 
 val scene = BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN).apply {
-    val label = Label(visual=ColorVisual.RED, width = 200, height = 200, text = "Hello, SoPra!")
+    /*val label = Label(visual=ColorVisual.RED, width = 200, height = 200, text = "Hello, SoPra!")
     val label2 = Label(posX=200, posY=200, visual=ColorVisual.BLUE, width = 200, height = 200, text = "Hello, SoPra!")
 
     val pane = Pane<ComponentView>(posX=400, posY=0, visual=ColorVisual.MAGENTA, width = 300, height = 500)
     val button = Button(posX=50, posY=50, visual=ColorVisual.ORANGE, width = 200, height = 200, text = "Click")
     val button2 = Button(posX=50, posY=250, visual=ColorVisual.ORANGE, width = 200, height = 200, text = "Click 2")
-    pane.addAll(button, button2)
+    pane.addAll(button, button2)*/
 
-    val hex = HexagonView(posX=900, posY=0, visual=ColorVisual.MAGENTA, size = 100.0)
+    val hexPane = HexagonGrid<HexagonView>(posX=400, posY=0, visual=ColorVisual.WHITE, width = 300, height = 500, coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET)
+    val hex1 = HexagonView(posX=900, posY=0, visual=ColorVisual.MAGENTA, size = 100.0)
+    val hex2 = HexagonView(posX=900, posY=200, visual=ColorVisual.RED, size = 100.0)
+    val hex3 = HexagonView(posX=900, posY=400, visual=ColorVisual.BLUE, size = 100.0)
+    val hex4 = HexagonView(posX=900, posY=600, visual=ColorVisual.CYAN, size = 100.0)
+    val hexNew = HexagonView(posX=900, posY=600, visual=ColorVisual.BLACK, size = 100.0)
 
-    addComponents(label, label2, pane, hex)
+    hexPane[-1, 0] = hex1
+    hexPane[1, 0] = hex2
+    hexPane[0, 1] = hex3
+    hexPane[1, 1] = hex4
+    hexPane[0, -2] = hexNew
+
+    addComponents(hexPane)
 }
 
 fun KtorApplication.configureSockets() {

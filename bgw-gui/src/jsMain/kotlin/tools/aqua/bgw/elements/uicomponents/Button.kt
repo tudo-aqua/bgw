@@ -12,7 +12,10 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwText
+import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 
 external interface ButtonProps : Props {
@@ -41,12 +44,12 @@ val Button = FC<ButtonProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        ReactHTML.div {
+        bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.visual)
         }
 
-        ReactHTML.h1 {
+        bgwText {
             className = ClassName("text")
             +props.data.text
         }

@@ -13,6 +13,8 @@ import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwContents
+import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 
 external interface PaneProps : Props {
@@ -31,12 +33,12 @@ val Pane = FC<PaneProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        div {
+        bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.visual)
         }
 
-        div {
+        bgwContents {
             className = ClassName("components")
             props.data.components.forEach {
                 +NodeBuilder.build(it)

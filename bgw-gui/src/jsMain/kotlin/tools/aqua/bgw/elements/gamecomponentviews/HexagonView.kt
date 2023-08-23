@@ -17,6 +17,7 @@ import react.dom.svg.ReactSVG
 import react.useEffect
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import kotlin.math.sqrt
 
@@ -40,7 +41,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
             height = 2 * props.data.size.rem
         }
 
-        div {
+        bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.visual)
         }

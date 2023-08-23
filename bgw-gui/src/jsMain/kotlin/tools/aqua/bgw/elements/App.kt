@@ -5,10 +5,9 @@ import csstype.*
 import emotion.react.Global
 import emotion.react.css
 import emotion.react.styles
-import react.FC
-import react.Props
-import react.ReactElement
-import react.create
+import org.w3c.dom.HTMLDivElement
+import react.*
+import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
 import tools.aqua.bgw.builder.SceneBuilder
@@ -63,7 +62,7 @@ val App = FC<AppProps> { props ->
                 clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
             }
 
-            ".text" {
+            ".text, .components" {
                 position = Position.absolute
             }
 
@@ -80,15 +79,30 @@ val App = FC<AppProps> { props ->
             }
         }
     }
-    section {
+    bgwMenuScene {
         id = "menuScene"
     }
-    section {
+    bgwGameScene {
         id = "boardGameScene"
 
         +SceneBuilder.build(props.data)
     }
 }
+
+inline val bgwMenuScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_menu_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+
+inline val bgwGameScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_game_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+
+inline val bgwVisuals: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_visuals".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+
+inline val bgwContents: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_contents".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+
+inline val bgwText: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_text".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
 
 inline fun polygonPath(
     value: String,

@@ -1,4 +1,5 @@
 import kotlinx.serialization.Serializable
+import tools.aqua.bgw.components.ComponentView
 
 typealias ID = String
 typealias ToggleGroup = List<ID>
@@ -163,6 +164,7 @@ class HexagonViewData : GameComponentViewData() {
 class TokenViewData : GameComponentViewData() { }
 
 // CONTAINER
+@Serializable
 abstract class GameComponentContainerData: ComponentViewData() {
     var components: List<GameComponentViewData> = emptyList()
 }
@@ -173,6 +175,8 @@ class CardStackData : GameComponentContainerData() { }
 @Serializable
 class HexagonGridData : GameComponentContainerData() {
     var coordinateSystem: String = ""
+    var map : Map<String, HexagonViewData> = emptyMap()
+    var spacing : Double = 0.0
 }
 @Serializable
 class LinearLayoutData: GameComponentContainerData() {
