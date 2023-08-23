@@ -19,7 +19,7 @@ external interface SceneProps : Props {
 }
 
 val Scene = FC<SceneProps> { props ->
-    scene {
+    bgwScene {
         div {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.background)
@@ -33,5 +33,5 @@ val Scene = FC<SceneProps> { props ->
     }
 }
 
-inline val scene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw-scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

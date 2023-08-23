@@ -14,7 +14,7 @@ external interface ImageVisualProps : Props {
 }
 
 val ImageVisual = FC<ImageVisualProps> { props ->
-    imageVisual {
+    bgwImageVisual {
         id = props.data.id
 
         css {
@@ -27,5 +27,5 @@ val ImageVisual = FC<ImageVisualProps> { props ->
     }
 }
 
-inline val imageVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "imagevisual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwImageVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw-image-visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

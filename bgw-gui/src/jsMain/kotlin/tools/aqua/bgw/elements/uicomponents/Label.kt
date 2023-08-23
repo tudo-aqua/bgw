@@ -5,8 +5,11 @@ import LabelData
 import UIComponentData
 import csstype.*
 import emotion.react.css
+import org.w3c.dom.HTMLDivElement
 import react.FC
+import react.IntrinsicType
 import react.Props
+import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.VisualBuilder
@@ -16,7 +19,7 @@ external interface LabelProps : Props {
     var data: LabelData
 }
 
-fun PropertiesBuilder.cssBuilderLabel(componentViewData: LabelData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
     cssBuilder(componentViewData)
     justifyContent = JustifyContent.center
     alignItems = AlignItems.center
@@ -24,11 +27,11 @@ fun PropertiesBuilder.cssBuilderLabel(componentViewData: LabelData) {
 }
 
 val Label = FC<LabelProps> { props ->
-    div {
+    bgwLabel {
         id = props.data.id
         className = ClassName("label")
         css {
-            cssBuilderLabel(props.data)
+            cssBuilderIntern(props.data)
         }
 
         div {
@@ -42,3 +45,6 @@ val Label = FC<LabelProps> { props ->
         }
     }
 }
+
+inline val bgwLabel: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw-label".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

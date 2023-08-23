@@ -17,7 +17,7 @@ external interface ColorVisualProps : Props {
 }
 
 val ColorVisual = FC<ColorVisualProps> { props ->
-    colorVisual {
+    bgwColorVisual {
         id = props.data.id
         css {
             backgroundColor = Color(props.data.color)
@@ -26,5 +26,5 @@ val ColorVisual = FC<ColorVisualProps> { props ->
     }
 }
 
-inline val colorVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "colorvisual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwColorVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw-color-visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
