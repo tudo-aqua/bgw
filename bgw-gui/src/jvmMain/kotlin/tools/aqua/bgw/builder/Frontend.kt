@@ -19,55 +19,19 @@
 
 package tools.aqua.bgw.builder
 
-import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.engine.*
-import io.ktor.server.html.*
-import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
-import io.ktor.server.routing.*
-import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import java.awt.Color
-import java.awt.Toolkit
-import java.io.File
-import java.util.*
-import javafx.animation.*
-import javafx.application.Application
-import javafx.application.Platform
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.event.EventHandler
-import javafx.scene.Parent
-import javafx.scene.Scene
-import javafx.scene.control.Label
-import javafx.scene.effect.GaussianBlur
-import javafx.scene.layout.Pane
-import javafx.scene.layout.StackPane
-import javafx.scene.text.Font
-import javafx.stage.Stage
-import javafx.stage.StageStyle
-import javafx.util.Duration
-import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.runBlocking
-import kotlinx.html.HTML
-import kotlinx.html.body
-import kotlinx.html.script
 import kotlinx.serialization.encodeToString
 import mapper
-import kotlin.math.min
-import tools.aqua.bgw.builder.FXConverters.toButtonType
-import tools.aqua.bgw.builder.FXConverters.toFXImage
-import tools.aqua.bgw.builder.FXConverters.toFXKeyCodeCombination
-import tools.aqua.bgw.builder.SceneBuilder.buildGame
-import tools.aqua.bgw.builder.SceneBuilder.buildMenu
-import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.dialog.FileDialogMode.*
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.main.*
+import tools.aqua.bgw.main.PORT
+import tools.aqua.bgw.main.module
+import tools.aqua.bgw.main.sendToAllClients
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -75,7 +39,8 @@ import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
-import java.util.concurrent.CopyOnWriteArrayList
+import java.io.File
+import java.util.*
 
 internal class Frontend {
 
@@ -142,12 +107,6 @@ internal class Frontend {
 
     /** Current [MenuScene]. */
     internal var menuScene: MenuScene? = null
-
-    /** The game's root pane. */
-    internal var gamePane: Pane? = null
-
-    /** The menu's root pane. */
-    internal var menuPane: Pane? = null
     // endregion
 
     // region Internal functions
@@ -215,20 +174,6 @@ internal class Frontend {
     }
 
     /**
-     * Returns pane associated to scene.
-     *
-     * @return [gamePane] for [boardGameScene], [menuPane] for [menuScene] and `null` for other
-     * parameters.
-     */
-    internal fun tools.aqua.bgw.core.Scene<*>.mapToPane(): Pane =
-        checkNotNull(
-            when (this) {
-              boardGameScene -> gamePane
-              menuScene -> menuPane
-              else -> null
-            })
-
-    /**
      * Shows a dialog without blocking further thread execution.
      *
      * @param dialog the [Dialog] to show
@@ -273,21 +218,3 @@ internal class Frontend {
     // endregion
   }
 }
-
-internal val ComponentView.renderedComponent: StackPane
-  get() {
-    fun Parent.findStackPaneById(id: String): StackPane? {
-      val stackPane = childrenUnmodifiable.find { it.id == id } as? StackPane
-      if (stackPane != null) return stackPane
-      childrenUnmodifiable.forEach {
-        if (it is Parent) {
-          val parent = it.findStackPaneById(id)
-          if (parent != null) return parent
-        }
-      }
-      return null
-    }
-    return Frontend.gamePane?.findStackPaneById(id)
-      ?: Frontend.menuPane?.findStackPaneById(id)
-      ?: throw IllegalStateException("ComponentView $this is not rendered.")
-  }

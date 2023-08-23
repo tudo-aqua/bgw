@@ -1,7 +1,6 @@
 package tools.aqua.bgw.builder
 
 import ButtonData
-import ComponentView
 import react.ReactElement
 import react.create
 import tools.aqua.bgw.elements.uicomponents.ReactButton

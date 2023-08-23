@@ -1,3 +1,9 @@
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.uicomponents.Button
+import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.visual.*
+
 object ComponentMapper {
     fun map(componentView: ComponentView) : ComponentViewData {
         return when (componentView) {
@@ -19,6 +25,7 @@ object ComponentMapper {
                 visual = VisualMapper.map(componentView.visual)
                 text = componentView.text
             }
+            else -> TODO("Not implemented")
         }
     }
 }
@@ -28,8 +35,11 @@ object VisualMapper {
         return when (visual) {
             is ColorVisual -> ColorVisualData().apply {
                 id = visual.id
-                color = "rgb(${visual.red}, ${visual.green}, ${visual.blue})"
+                color = "rgb(${visual.color.red}, ${visual.color.green}, ${visual.color.blue})"
             }
+            is CompoundVisual -> TODO("Not implemented")
+            is ImageVisual -> TODO("Not implemented")
+            is TextVisual -> TODO("Not implemented")
         }
     }
 }

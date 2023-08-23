@@ -1,12 +1,7 @@
 package tools.aqua.bgw
 
-import ColorVisual
-import ColorVisualData
-import ComponentView
-import LabelData
-import Scene
+
 import SceneData
-import VisualData
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
 import mapper
@@ -15,8 +10,6 @@ import react.*
 import react.dom.client.createRoot
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.elements.App
-import tools.aqua.bgw.elements.uicomponents.Label
-import tools.aqua.bgw.elements.uicomponents.ReactButton
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -25,11 +18,15 @@ fun main() {
     container.id = "root"
     document.body!!.appendChild(container)
     val webSocket = WebSocket("ws://localhost:8080/ws")
+    webSocket.onopen = { println("Connected to Server via WebSocket!") }
     val root = createRoot(container)
     webSocket.onmessage = { event ->
         println("Received: ${event.data}")
         val scene = mapper.decodeFromString<SceneData>(event.data.toString())
-        root.render(App.create { components = scene.components.map { NodeBuilder.build(it) } })
+        println("Decoded: $scene")
+        val sceneComponents = scene.components.map { NodeBuilder.build(it) }
+        println("Built: $sceneComponents")
+        root.render(App.create { components = sceneComponents })
     }
 }
 
