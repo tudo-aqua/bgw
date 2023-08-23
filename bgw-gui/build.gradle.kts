@@ -68,6 +68,10 @@ kotlin {
   }
 }
 
+application {
+  mainClass.set("tools.aqua.bgw.main.ServerKt")
+}
+
 tasks.named<Copy>("jvmProcessResources") {
   val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
   from(jsBrowserDistribution)

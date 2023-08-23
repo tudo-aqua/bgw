@@ -81,6 +81,7 @@ internal class Frontend {
 
   /** Starts the application. */
   internal fun start() {
+    println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     tools.aqua.bgw.main.Application().show()
   }

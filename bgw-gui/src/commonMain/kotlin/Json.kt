@@ -6,8 +6,15 @@ import kotlin.reflect.KClass
 import kotlinx.serialization.json.Json as KJson
 
 private val module = SerializersModule {
-    polymorphic(ComponentView::class) {
-        subclass(Button::class)
+    polymorphic(ComponentViewData::class) {
+        subclass(ButtonData::class)
+        subclass(LabelData::class)
+    }
+    polymorphic(VisualData::class) {
+        subclass(ColorVisualData::class)
+        subclass(ImageVisualData::class)
+        subclass(TextVisualData::class)
+        subclass(CompoundVisualData::class)
     }
 }
 

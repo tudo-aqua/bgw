@@ -2,8 +2,11 @@ package tools.aqua.bgw.main
 
 import Button
 import ColorVisual
+import ComponentMapper
 import ComponentView
+import Label
 import Scene
+import SceneMapper
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -47,6 +50,11 @@ fun KtorApplication.configureRouting() {
 
 val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
 
+val myScene = Scene<ComponentView>(1920.0, 1080.0, ColorVisual.WHITE).apply {
+    components.add(Label(0.0, 0.0, 100.0, 100.0, ColorVisual.BLUE, "Hello, SoPra!"))
+    components.add(Label(100.0, 100.0, 100.0, 100.0, ColorVisual.GREEN, "Bye, SoPra!"))
+}
+
 fun KtorApplication.configureSockets() {
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
@@ -57,7 +65,7 @@ fun KtorApplication.configureSockets() {
     routing {
         webSocket("/ws") {
             activeSessions.add(this) // Store the WebSocket session
-            val json = mapper.encodeToString(Frontend.menuScene ?: Frontend.gamePane ?: Scene<ComponentView>(0.0, 0.0, ColorVisual.BLACK))
+            val json = mapper.encodeToString(SceneMapper.map(myScene))
             println("Sending scene: $json")
             this.send(json)
             try {

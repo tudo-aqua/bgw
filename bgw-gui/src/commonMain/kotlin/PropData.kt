@@ -1,7 +1,15 @@
+import kotlinx.serialization.Serializable
+
 typealias ID = String
 typealias ToggleGroup = List<ID>
 typealias Array2D = List<List<ID>>
 
+@Serializable
+class SceneData {
+    var components: List<ComponentViewData> = emptyList()
+}
+
+@Serializable
 abstract class ComponentViewData {
     var id: ID = ""
     var posX: Double = 0.0
@@ -22,11 +30,12 @@ abstract class ComponentViewData {
 }
 
 // UI COMPONENTS
-
+@Serializable
 abstract class UIComponentData : ComponentViewData() {
     var font: FontData? = null
 }
 
+@Serializable
 abstract class LabeledUIComponentData : UIComponentData() {
     var text: String = ""
     var alignment: String = ""
@@ -43,6 +52,7 @@ class BinaryStateButtonData : LabeledUIComponentData() {
     var buttons : ToggleGroup = emptyList()
 }
 
+@Serializable
 class ButtonData : LabeledUIComponentData() { }
 
 class CheckBoxData : LabeledUIComponentData() {
@@ -57,6 +67,7 @@ class ComboBoxData : UIComponentData() {
     var selectedItem: String = ""
 }
 
+@Serializable
 class LabelData : LabeledUIComponentData() { }
 
 class RadioButtonData : LabeledUIComponentData() {
@@ -106,7 +117,6 @@ class TableViewData : StructuredDataViewData() {
 }
 
 // LAYOUT VIEWS
-
 abstract class LayoutViewData<T : ComponentViewData> : ComponentViewData() { }
 
 class PaneData<T : ComponentViewData> : LayoutViewData<T>() {
@@ -127,7 +137,6 @@ class CameraPaneData<T : LayoutViewData<*>> : LayoutViewData<T>() {
 }
 
 // GAME COMPONENT VIEWS
-
 abstract class GameComponentViewData : ComponentViewData() { }
 
 class CardViewData : GameComponentViewData() {
@@ -148,7 +157,6 @@ class HexagonViewData : GameComponentViewData() {
 class TokenViewData : GameComponentViewData() { }
 
 // CONTAINER
-
 abstract class GameComponentContainerData<T : ComponentViewData>: ComponentViewData() {
     var components: List<GameComponentViewData> = emptyList()
 }
@@ -171,19 +179,23 @@ class SatchelData<T : ComponentViewData> : GameComponentContainerData<T>() { }
 
 // VISUALS
 
+@Serializable
 abstract class VisualData {
     var id: ID = ""
 }
 
+@Serializable
 abstract class SingleLayerVisualData : VisualData() {
     var transparency: Double = 0.0
     var style: String = ""
 }
 
+@Serializable
 class ColorVisualData : SingleLayerVisualData() {
     var color: String = ""
 }
 
+@Serializable
 class ImageVisualData : SingleLayerVisualData() {
     var path: String = ""
     var width: Double = 0.0
@@ -192,6 +204,7 @@ class ImageVisualData : SingleLayerVisualData() {
     var offsetY: Double = 0.0
 }
 
+@Serializable
 class TextVisualData : SingleLayerVisualData() {
     var text: String = ""
     var font : FontData? = null
@@ -200,10 +213,12 @@ class TextVisualData : SingleLayerVisualData() {
     var offsetY: Double = 0.0
 }
 
+@Serializable
 class CompoundVisualData : VisualData() {
     var children: List<SingleLayerVisualData> = emptyList()
 }
 
+@Serializable
 abstract class FontData {
     var size : Double = 16.0
     var color : String = ""

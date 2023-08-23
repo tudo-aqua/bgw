@@ -2,11 +2,13 @@ package tools.aqua.bgw.elements
 
 import csstype.*
 import emotion.react.Global
+import emotion.react.css
 import emotion.react.styles
 import react.FC
 import react.Props
 import react.ReactElement
 import react.create
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.toFC
 
 external interface AppProps : Props {
@@ -37,14 +39,18 @@ val App = FC<AppProps> { props ->
                 top = 0.px
             }
 
-            "span.visual" {
+            "colorvisual" {
                 width = 100.pct
                 height = 100.pct
                 position = Position.absolute
                 left = 0.px
                 top = 0.px
+                display = Display.block
+            }
+            ".text" {
+                position = Position.absolute
             }
         }
     }
-    props.components.toFC().create()
+    +props.components.toFC().create()
 }

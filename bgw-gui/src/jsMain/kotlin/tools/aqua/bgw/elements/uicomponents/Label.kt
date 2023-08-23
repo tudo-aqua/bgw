@@ -20,6 +20,7 @@ fun PropertiesBuilder.cssBuilderLabel(componentViewData: LabelData) {
     cssBuilder(componentViewData)
     justifyContent = JustifyContent.center
     alignItems = AlignItems.center
+    fontSize = 30.rem
 }
 
 val Label = FC<LabelProps> { props ->
@@ -32,8 +33,7 @@ val Label = FC<LabelProps> { props ->
 
         div {
             className = ClassName("visuals")
-
-            VisualBuilder.build(props.data.visual)
+            +VisualBuilder.build(props.data.visual)
         }
 
         h1 {
