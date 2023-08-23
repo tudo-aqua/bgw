@@ -120,8 +120,10 @@ class TableViewData : StructuredDataViewData() {
 }
 
 // LAYOUT VIEWS
+@Serializable
 abstract class LayoutViewData<T : ComponentViewData> : ComponentViewData() { }
 
+@Serializable
 class PaneData<T : ComponentViewData> : LayoutViewData<T>() {
     var components: List<T> = emptyList()
 }

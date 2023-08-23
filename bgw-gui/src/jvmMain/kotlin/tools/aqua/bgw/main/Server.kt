@@ -14,6 +14,9 @@ import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import mapper
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
@@ -49,7 +52,13 @@ val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
 val scene = BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN).apply {
     val label = Label(visual=ColorVisual.RED, width = 200, height = 200, text = "Hello, SoPra!")
     val label2 = Label(posX=200, posY=200, visual=ColorVisual.BLUE, width = 200, height = 200, text = "Hello, SoPra!")
-    addComponents(label, label2)
+
+    val pane = Pane<ComponentView>(posX=400, posY=0, visual=ColorVisual.MAGENTA, width = 300, height = 500)
+    val button = Button(posX=50, posY=50, visual=ColorVisual.ORANGE, width = 200, height = 200, text = "Click")
+    val button2 = Button(posX=50, posY=250, visual=ColorVisual.ORANGE, width = 200, height = 200, text = "Click 2")
+    pane.addAll(button, button2)
+
+    addComponents(label, label2, pane)
 }
 
 fun KtorApplication.configureSockets() {
@@ -62,7 +71,14 @@ fun KtorApplication.configureSockets() {
     routing {
         webSocket("/ws") {
             activeSessions.add(this) // Store the WebSocket session
-            val json = mapper.encodeToString(SceneMapper.map(scene))
+            println("New session: $this")
+            var json : String = ""
+            try {
+                json = mapper.encodeToString(SceneMapper.map(scene))
+            } catch (e : Exception) {
+                println("Exception: $e")
+            }
+
             println("Sending scene: $json")
             this.send(json)
             try {

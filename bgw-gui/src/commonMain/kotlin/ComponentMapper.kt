@@ -1,4 +1,6 @@
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.layoutviews.LayoutView
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Scene
@@ -14,6 +16,7 @@ object ComponentMapper {
                 width = componentView.width
                 height = componentView.height
                 visual = VisualMapper.map(componentView.visual)
+                text = componentView.text
             }
 
             is Label -> LabelData().apply {
@@ -26,6 +29,36 @@ object ComponentMapper {
                 text = componentView.text
             }
             else -> TODO("Not implemented")
+        }
+    }
+}
+
+object LayoutMapper {
+    fun map(layout: LayoutView<*>) : ComponentViewData {
+        return when (layout) {
+            is Pane<*> -> PaneData<ComponentViewData>().apply {
+                id = layout.id
+                posX = layout.posX
+                posY = layout.posY
+                width = layout.width
+                height = layout.height
+                visual = VisualMapper.map(layout.visual)
+                components = layout.components.map {
+                    println("Mapping component INSIDE: $it")
+                    when(it) {
+                        is LayoutView<*> -> {
+                            println("Mapping INSIDE >> Layout: $it")
+                            LayoutMapper.map(it)
+                        }
+                        is ComponentView -> {
+                            println("Mapping INSIDE >> Component: $it")
+                            ComponentMapper.map(it)
+                        }
+                        else -> throw IllegalArgumentException("Unknown component type: ${it::class.simpleName}")
+                    }
+                }
+            }
+            else -> throw IllegalArgumentException("Unknown layout type: ${layout::class.simpleName}")
         }
     }
 }
@@ -47,7 +80,20 @@ object VisualMapper {
 object SceneMapper {
     fun map(scene: Scene<*>) : SceneData {
         return SceneData().apply {
-            components = scene.components.map { ComponentMapper.map(it) }
+            components = scene.components.map {
+                println("Mapping component: $it")
+                when(it) {
+                    is LayoutView<*> -> {
+                        println("Mapping >> Layout: $it")
+                        LayoutMapper.map(it)
+                    }
+                    is ComponentView -> {
+                        println("Mapping >> Component: $it")
+                        ComponentMapper.map(it)
+                    }
+                    else -> throw IllegalArgumentException("Unknown component type: ${it::class.simpleName}")
+                }
+            }
             width = scene.width
             height = scene.height
             background = VisualMapper.map(scene.background)

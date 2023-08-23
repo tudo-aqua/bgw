@@ -9,6 +9,7 @@ private val module = SerializersModule {
     polymorphic(ComponentViewData::class) {
         subclass(ButtonData::class)
         subclass(LabelData::class)
+        subclass(PaneData::class)
     }
     polymorphic(VisualData::class) {
         subclass(ColorVisualData::class)
