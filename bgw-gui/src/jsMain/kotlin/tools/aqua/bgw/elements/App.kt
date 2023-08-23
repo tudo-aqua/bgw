@@ -28,6 +28,22 @@ val App = FC<AppProps> { props ->
                 color = rgb(0, 0, 0)
                 margin = 0.px
             }
+
+            ".visuals" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+            }
+
+            "div[data-type='visual']" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+            }
         }
     }
     props.components.toFC().create()
