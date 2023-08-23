@@ -2,6 +2,8 @@ package tools.aqua.bgw.elements
 
 import SceneData
 import csstype.ClassName
+import csstype.Color
+import emotion.react.css
 import org.w3c.dom.HTMLDivElement
 import react.FC
 import react.IntrinsicType

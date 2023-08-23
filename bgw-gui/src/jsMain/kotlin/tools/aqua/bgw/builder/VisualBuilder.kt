@@ -12,8 +12,10 @@ import tools.aqua.bgw.elements.visual.ImageVisual as ReactImageVisual
 object VisualBuilder {
 
     fun build(visual: VisualData?): ReactElement<*> {
+        println("VisualBuilder.build(visual: $visual)")
         when(visual) {
             is ColorVisualData -> {
+                println("ColorVisualData: ${visual.id} -> ${visual.color}")
                 return ReactColorVisual.create {
                     data = visual
                 }

@@ -48,6 +48,9 @@ object SceneMapper {
     fun map(scene: Scene<*>) : SceneData {
         return SceneData().apply {
             components = scene.components.map { ComponentMapper.map(it) }
+            width = scene.width
+            height = scene.height
+            background = VisualMapper.map(scene.background)
         }
     }
 }

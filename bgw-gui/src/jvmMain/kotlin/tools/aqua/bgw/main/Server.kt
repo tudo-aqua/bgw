@@ -46,7 +46,7 @@ fun KtorApplication.configureRouting() {
 
 val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
 
-val scene = BoardGameScene(1920.0, 1080.0, ColorVisual.WHITE).apply {
+val scene = BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN).apply {
     val label = Label(visual=ColorVisual.RED, width = 200, height = 200, text = "Hello, SoPra!")
     val label2 = Label(posX=200, posY=200, visual=ColorVisual.BLUE, width = 200, height = 200, text = "Hello, SoPra!")
     addComponents(label, label2)

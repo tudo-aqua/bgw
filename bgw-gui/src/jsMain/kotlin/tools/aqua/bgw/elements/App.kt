@@ -1,5 +1,6 @@
 package tools.aqua.bgw.elements
 
+import SceneData
 import csstype.*
 import emotion.react.Global
 import emotion.react.css
@@ -10,10 +11,11 @@ import react.ReactElement
 import react.create
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
+import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.toFC
 
 external interface AppProps : Props {
-    var components: List<ReactElement<*>>
+    var data: SceneData
 }
 
 val App = FC<AppProps> { props ->
@@ -49,6 +51,14 @@ val App = FC<AppProps> { props ->
                 display = Display.block
             }
 
+            "scene" {
+                height = 100.vh
+                width = (100 * 16 / 9).vh
+                position = Position.relative
+                display = Display.flex
+                backgroundColor = rgba(0, 0, 0, 0.0)
+            }
+
             ".text" {
                 position = Position.absolute
             }
@@ -71,6 +81,7 @@ val App = FC<AppProps> { props ->
     }
     section {
         id = "boardGameScene"
-        +props.components.toFC().create()
+
+        +SceneBuilder.build(props.data)
     }
 }

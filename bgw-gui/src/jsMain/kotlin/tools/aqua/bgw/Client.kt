@@ -26,7 +26,7 @@ fun main() {
         println("Decoded: $scene")
         val sceneComponents = scene.components.map { NodeBuilder.build(it) }
         println("Built: $sceneComponents")
-        root.render(App.create { components = sceneComponents })
+        root.render(App.create { data = scene })
     }
 }
 
