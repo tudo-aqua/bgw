@@ -141,6 +141,7 @@ class CameraPaneData : LayoutViewData() {
 }
 
 // GAME COMPONENT VIEWS
+@Serializable
 abstract class GameComponentViewData : ComponentViewData() { }
 @Serializable
 class CardViewData : GameComponentViewData() {
@@ -153,6 +154,7 @@ class DiceViewData : GameComponentViewData() {
     var currentSide: Int = 0
     var visuals: List<VisualData> = emptyList()
 }
+
 @Serializable
 class HexagonViewData : GameComponentViewData() {
     var size: Double = 0.0

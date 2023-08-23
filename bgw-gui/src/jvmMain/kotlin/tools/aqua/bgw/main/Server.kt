@@ -15,6 +15,7 @@ import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import mapper
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -58,7 +59,9 @@ val scene = BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN).apply {
     val button2 = Button(posX=50, posY=250, visual=ColorVisual.ORANGE, width = 200, height = 200, text = "Click 2")
     pane.addAll(button, button2)
 
-    addComponents(label, label2, pane)
+    val hex = HexagonView(posX=900, posY=0, visual=ColorVisual.MAGENTA, size = 100.0)
+
+    addComponents(label, label2, pane, hex)
 }
 
 fun KtorApplication.configureSockets() {

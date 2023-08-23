@@ -19,10 +19,17 @@ external interface PaneProps : Props {
     var data : PaneData
 }
 
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
+    cssBuilder(componentViewData)
+}
+
 val Pane = FC<PaneProps> { props ->
     bgwPane {
         id = props.data.id
         className = ClassName("pane")
+        css {
+            cssBuilderIntern(props.data)
+        }
 
         div {
             className = ClassName("visuals")

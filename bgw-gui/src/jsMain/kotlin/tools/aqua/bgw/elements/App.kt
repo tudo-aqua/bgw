@@ -59,6 +59,10 @@ val App = FC<AppProps> { props ->
                 backgroundColor = rgba(0, 0, 0, 0.0)
             }
 
+            "bgw_hexagon_view" {
+                clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
+            }
+
             ".text" {
                 position = Position.absolute
             }
@@ -85,3 +89,8 @@ val App = FC<AppProps> { props ->
         +SceneBuilder.build(props.data)
     }
 }
+
+inline fun polygonPath(
+    value: String,
+): ClipPath =
+    "polygon($value)".unsafeCast<ClipPath>()

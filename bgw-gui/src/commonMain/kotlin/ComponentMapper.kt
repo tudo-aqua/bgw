@@ -1,5 +1,6 @@
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
@@ -28,6 +29,7 @@ object ComponentMapper {
                 visual = VisualMapper.map(componentView.visual)
                 text = componentView.text
             }
+
             is CameraPane<*> -> CameraPaneData().apply {
                 id = componentView.id
                 posX = componentView.posX
@@ -36,6 +38,14 @@ object ComponentMapper {
                 height = componentView.height
                 visual = VisualMapper.map(componentView.visual)
                 target = LayoutMapper.map(componentView.target)
+            }
+
+            is HexagonView -> HexagonViewData().apply {
+                id = componentView.id
+                posX = componentView.posX
+                posY = componentView.posY
+                visual = VisualMapper.map(componentView.visual)
+                size = componentView.size as Double
             }
             else -> TODO("Not implemented")
         }

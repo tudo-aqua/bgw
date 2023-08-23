@@ -25,8 +25,6 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     alignItems = AlignItems.center
     fontSize = 15.rem
     cursor = Cursor.pointer
-    transition = Transition.easeInOut
-    transitionDuration = 0.2.s
 
     hover {
         "> .visuals" {
