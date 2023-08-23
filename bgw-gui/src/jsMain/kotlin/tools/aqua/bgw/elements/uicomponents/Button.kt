@@ -1,4 +1,4 @@
-package tools.aqua.bgw.elements
+package tools.aqua.bgw.elements.uicomponents
 
 import csstype.Color
 import csstype.px

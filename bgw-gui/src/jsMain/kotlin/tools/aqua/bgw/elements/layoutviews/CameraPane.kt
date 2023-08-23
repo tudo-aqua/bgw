@@ -1,8 +1,9 @@
-package tools.aqua.bgw.elements
+package tools.aqua.bgw.elements.layoutviews
 
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
+import tools.aqua.bgw.elements.uicomponents.ButtonProps
 
 external interface CameraPane : Props {
     var id: String
