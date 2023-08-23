@@ -19,8 +19,15 @@
 
 package tools.aqua.bgw.builder
 
+import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
+import io.ktor.server.html.*
+import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
+import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
 import java.awt.Color
 import java.awt.Toolkit
 import java.io.File
@@ -40,6 +47,13 @@ import javafx.scene.text.Font
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.util.Duration
+import kotlinx.coroutines.channels.ClosedSendChannelException
+import kotlinx.coroutines.runBlocking
+import kotlinx.html.HTML
+import kotlinx.html.body
+import kotlinx.html.script
+import kotlinx.serialization.encodeToString
+import mapper
 import kotlin.math.min
 import tools.aqua.bgw.builder.FXConverters.toButtonType
 import tools.aqua.bgw.builder.FXConverters.toFXImage
@@ -53,8 +67,7 @@ import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode.*
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.main.PORT
-import tools.aqua.bgw.main.module
+import tools.aqua.bgw.main.*
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -62,6 +75,7 @@ import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
+import java.util.concurrent.CopyOnWriteArrayList
 
 internal class Frontend {
 
@@ -123,10 +137,10 @@ internal class Frontend {
 
     // region Private attributes
     /** Current [BoardGameScene]. */
-    private var boardGameScene: BoardGameScene? = null
+    internal var boardGameScene: BoardGameScene? = null
 
     /** Current [MenuScene]. */
-    private var menuScene: MenuScene? = null
+    internal var menuScene: MenuScene? = null
 
     /** The game's root pane. */
     internal var gamePane: Pane? = null
@@ -144,7 +158,8 @@ internal class Frontend {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
-      TODO("Not yet implemented")
+      val json = mapper.encodeToString(scene)
+      runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -162,7 +177,8 @@ internal class Frontend {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
-      TODO("Not yet implemented")
+      val json = mapper.encodeToString(scene)
+      runBlocking { sendToAllClients(json) }
     }
 
     /**

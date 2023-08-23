@@ -1,3 +1,5 @@
+package tools.aqua.bgw.components
+
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div

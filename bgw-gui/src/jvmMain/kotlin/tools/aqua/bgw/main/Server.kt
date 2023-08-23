@@ -17,6 +17,7 @@ import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import mapper
+import tools.aqua.bgw.builder.Frontend
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 import io.ktor.server.application.Application as KtorApplication
@@ -56,7 +57,7 @@ fun KtorApplication.configureSockets() {
     routing {
         webSocket("/ws") {
             activeSessions.add(this) // Store the WebSocket session
-            val json = mapper.encodeToString(scene)
+            val json = mapper.encodeToString(Frontend.menuScene ?: Frontend.gamePane ?: Scene<ComponentView>(0.0, 0.0, ColorVisual.BLACK))
             println("Sending scene: $json")
             this.send(json)
             try {
