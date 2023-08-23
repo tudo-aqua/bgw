@@ -34,4 +34,4 @@ val Scene = FC<SceneProps> { props ->
 }
 
 inline val bgwScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw-scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+    get() = "bgw_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

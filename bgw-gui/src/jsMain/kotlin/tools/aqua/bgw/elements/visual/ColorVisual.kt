@@ -27,4 +27,4 @@ val ColorVisual = FC<ColorVisualProps> { props ->
 }
 
 inline val bgwColorVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw-color-visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+    get() = "bgw_color_visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

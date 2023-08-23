@@ -28,4 +28,4 @@ val ImageVisual = FC<ImageVisualProps> { props ->
 }
 
 inline val bgwImageVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw-image-visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+    get() = "bgw_image_visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
