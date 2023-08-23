@@ -1,4 +1,4 @@
-package tools.aqua.bgw.components
+package tools.aqua.bgw.elements
 
 import csstype.*
 import emotion.react.Global

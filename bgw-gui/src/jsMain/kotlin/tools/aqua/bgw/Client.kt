@@ -9,7 +9,7 @@ import org.w3c.dom.WebSocket
 import react.*
 import react.dom.client.createRoot
 import tools.aqua.bgw.builder.NodeBuilder
-import tools.aqua.bgw.components.App
+import tools.aqua.bgw.elements.App
 import kotlin.math.floor
 import kotlin.random.Random
 

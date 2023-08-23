@@ -3,7 +3,7 @@ package tools.aqua.bgw.builder
 import ComponentView
 import react.ReactElement
 import react.create
-import tools.aqua.bgw.components.ReactButton
+import tools.aqua.bgw.elements.ReactButton
 import tools.aqua.bgw.randomHexColor
 
 object ButtonBuilder {
