@@ -2,7 +2,6 @@ import kotlinx.serialization.Serializable
 
 typealias ID = String
 typealias ToggleGroup = List<ID>
-typealias Array2D = List<List<ID>>
 
 @Serializable
 class SceneData {
@@ -49,7 +48,7 @@ abstract class TextInputUIComponentData : UIComponentData() {
     var text: String = ""
     var prompt: String = ""
 }
-
+@Serializable
 class BinaryStateButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
     var buttons : ToggleGroup = emptyList()
@@ -57,13 +56,13 @@ class BinaryStateButtonData : LabeledUIComponentData() {
 
 @Serializable
 class ButtonData : LabeledUIComponentData() { }
-
+@Serializable
 class CheckBoxData : LabeledUIComponentData() {
     var isChecked: Boolean = false
     var allowIndeterminate: Boolean = false
     var isIndeterminate: Boolean = false
 }
-
+@Serializable
 class ComboBoxData : UIComponentData() {
     var prompt: String = ""
     var items: List<String> = emptyList()
@@ -72,30 +71,30 @@ class ComboBoxData : UIComponentData() {
 
 @Serializable
 class LabelData : LabeledUIComponentData() { }
-
+@Serializable
 class RadioButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
     var buttons : ToggleGroup = emptyList()
 }
-
+@Serializable
 class ToggleButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
     var buttons : ToggleGroup = emptyList()
 }
-
+@Serializable
 class ColorPickerData : UIComponentData() {
     var selectedColor: String = "#FFFFFF"
 }
-
+@Serializable
 class PasswordFieldData : TextInputUIComponentData() { }
-
+@Serializable
 class ProgressBarData : UIComponentData() {
     var progress: Double = 0.0
     var barColor: String = ""
 }
-
+@Serializable
 class TextAreaData : TextInputUIComponentData() { }
-
+@Serializable
 class TextFieldData : TextInputUIComponentData() { }
 
 abstract class StructuredDataViewData : UIComponentData() {
@@ -103,84 +102,84 @@ abstract class StructuredDataViewData : UIComponentData() {
     var selectionMode: String = ""
     var selectionBackground: ColorVisualData? = null
 }
-
+@Serializable
 class TableColumnData {
     var title : String = ""
     var width : Double = 0.0
     var font : FontData? = null
     var items : List<String> = emptyList()
 }
-
+@Serializable
 class ListViewData : StructuredDataViewData() {
     var orientation: String = ""
 }
-
+@Serializable
 class TableViewData : StructuredDataViewData() {
     var columns: List<TableColumnData> = emptyList()
 }
 
 // LAYOUT VIEWS
 @Serializable
-abstract class LayoutViewData<T : ComponentViewData> : ComponentViewData() { }
+abstract class LayoutViewData : ComponentViewData() { }
 
 @Serializable
-class PaneData<T : ComponentViewData> : LayoutViewData<T>() {
-    var components: List<T> = emptyList()
+class PaneData : LayoutViewData() {
+    var components: List<ComponentViewData> = emptyList()
 }
-
-class GridPaneData<T : ComponentViewData> : LayoutViewData<T>() {
+@Serializable
+class GridPaneData: LayoutViewData() {
     var columns : Int = 0
     var rows : Int = 0
     var spacing : Double = 0.0
-    var grid : Array2D = emptyList()
+    var grid : List<List<ComponentViewData>> = emptyList()
 }
-
-class CameraPaneData<T : LayoutViewData<*>> : LayoutViewData<T>() {
-    var target : T? = null
+@Serializable
+class CameraPaneData : LayoutViewData() {
+    var target : LayoutViewData? = null
     var zoom : Double = 1.0
     var interactive : Boolean = false
 }
 
 // GAME COMPONENT VIEWS
 abstract class GameComponentViewData : ComponentViewData() { }
-
+@Serializable
 class CardViewData : GameComponentViewData() {
     var currentSide: String = ""
     var front: VisualData? = null
     var back: VisualData? = null
 }
-
+@Serializable
 class DiceViewData : GameComponentViewData() {
     var currentSide: Int = 0
     var visuals: List<VisualData> = emptyList()
 }
-
+@Serializable
 class HexagonViewData : GameComponentViewData() {
     var size: Double = 0.0
 }
-
+@Serializable
 class TokenViewData : GameComponentViewData() { }
 
 // CONTAINER
-abstract class GameComponentContainerData<T : ComponentViewData>: ComponentViewData() {
+abstract class GameComponentContainerData: ComponentViewData() {
     var components: List<GameComponentViewData> = emptyList()
 }
-
-class AreaData<T : ComponentViewData> : GameComponentContainerData<T>() { }
-
-class CardStackData<T : ComponentViewData> : GameComponentContainerData<T>() { }
-
-class HexagonGridData<T : ComponentViewData> : GameComponentContainerData<T>() {
+@Serializable
+class AreaData : GameComponentContainerData() { }
+@Serializable
+class CardStackData : GameComponentContainerData() { }
+@Serializable
+class HexagonGridData : GameComponentContainerData() {
     var coordinateSystem: String = ""
 }
-
-class LinearLayoutData<T : ComponentViewData> : GameComponentContainerData<T>() {
+@Serializable
+class LinearLayoutData: GameComponentContainerData() {
     var orientation: String = ""
     var alignment: String = ""
     var spacing: Double = 0.0
 }
-
-class SatchelData<T : ComponentViewData> : GameComponentContainerData<T>() { }
+@Serializable
+class SatchelData: GameComponentContainerData() { }
 
 // VISUALS
 

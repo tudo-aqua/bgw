@@ -16,7 +16,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.cssBuilder
 
 external interface PaneProps : Props {
-    var data : PaneData<ComponentViewData>
+    var data : PaneData
 }
 
 val Pane = FC<PaneProps> { props ->

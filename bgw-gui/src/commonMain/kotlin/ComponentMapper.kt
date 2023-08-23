@@ -1,4 +1,5 @@
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
@@ -18,7 +19,6 @@ object ComponentMapper {
                 visual = VisualMapper.map(componentView.visual)
                 text = componentView.text
             }
-
             is Label -> LabelData().apply {
                 id = componentView.id
                 posX = componentView.posX
@@ -28,15 +28,24 @@ object ComponentMapper {
                 visual = VisualMapper.map(componentView.visual)
                 text = componentView.text
             }
+            is CameraPane<*> -> CameraPaneData().apply {
+                id = componentView.id
+                posX = componentView.posX
+                posY = componentView.posY
+                width = componentView.width
+                height = componentView.height
+                visual = VisualMapper.map(componentView.visual)
+                target = LayoutMapper.map(componentView.target)
+            }
             else -> TODO("Not implemented")
         }
     }
 }
 
 object LayoutMapper {
-    fun map(layout: LayoutView<*>) : ComponentViewData {
+    fun map(layout: LayoutView<*>) : LayoutViewData {
         return when (layout) {
-            is Pane<*> -> PaneData<ComponentViewData>().apply {
+            is Pane<*> -> PaneData().apply {
                 id = layout.id
                 posX = layout.posX
                 posY = layout.posY
