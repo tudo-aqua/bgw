@@ -37,7 +37,7 @@ val App = FC<AppProps> { props ->
                 top = 0.px
             }
 
-            "div[data-type='visual']" {
+            "span.visual" {
                 width = 100.pct
                 height = 100.pct
                 position = Position.absolute

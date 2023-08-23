@@ -15,10 +15,7 @@ external interface ImageVisualProps : Props {
 val ImageVisual = FC<ImageVisualProps> { props ->
     span {
         id = props.data.id
-        data {
-            "type" to "visual"
-            "visual" to "image"
-        }
+        className = ClassName("visual imageVisual")
 
         css {
             backgroundImage = url(props.data.path)
