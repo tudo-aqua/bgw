@@ -6,6 +6,9 @@ typealias Array2D = List<List<ID>>
 
 @Serializable
 class SceneData {
+    var width : Double = 0.0
+    var height : Double = 0.0
+    var background : VisualData? = null
     var components: List<ComponentViewData> = emptyList()
 }
 
