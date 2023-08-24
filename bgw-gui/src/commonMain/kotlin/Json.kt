@@ -45,6 +45,14 @@ private val module = SerializersModule {
         subclass(TextVisualData::class)
         subclass(CompoundVisualData::class)
     }
+    polymorphic(EventData::class) {
+        subclass(MouseEventData::class)
+        subclass(KeyEventData::class)
+    }
+    polymorphic(InputEventData::class) {
+        subclass(MouseEventData::class)
+        subclass(KeyEventData::class)
+    }
 }
 
 val mapper = KJson { serializersModule = module }

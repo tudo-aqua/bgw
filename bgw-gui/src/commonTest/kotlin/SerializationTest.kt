@@ -1,3 +1,4 @@
+import kotlinx.serialization.decodeFromString
 import kotlin.test.Test
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView
@@ -6,6 +7,7 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 
 class SerializationTest {
@@ -20,9 +22,13 @@ class SerializationTest {
         addComponents(cameraPane)
     }
 
+    val mouseEventData = MouseEventData( id = "componentView.id",
+            posX = 100.0,
+            posY = 100.0,
+            button = MouseButtonType.LEFT_BUTTON)
     @Test
     fun testSerialization() {
-        val json = mapper.encodeToString(SceneMapper.map(scene))
+        val json = mapper.encodeToString(mouseEventData)
         println(json)
     }
 }

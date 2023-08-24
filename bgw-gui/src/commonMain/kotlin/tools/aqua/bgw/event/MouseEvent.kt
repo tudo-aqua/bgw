@@ -19,6 +19,9 @@
 
 package tools.aqua.bgw.event
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+
 /**
  * Event that gets raised for mouse inputs.
  *
@@ -28,4 +31,5 @@ package tools.aqua.bgw.event
  * @property posX The X-coordinate of the mouse event position.
  * @property posY The Y-coordinate of the mouse event position.
  */
-class MouseEvent(val button: MouseButtonType, val posX: Number, val posY: Number) : InputEvent()
+@Serializable
+class MouseEvent(val button: MouseButtonType, @Contextual val posX: Number, @Contextual val posY: Number) : InputEvent()

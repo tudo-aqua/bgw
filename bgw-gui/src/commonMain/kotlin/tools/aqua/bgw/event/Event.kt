@@ -19,9 +19,14 @@
 
 package tools.aqua.bgw.event
 
+import kotlinx.serialization.Serializable
+
 /**
  * [Event] baseclass.
  *
  * @constructor Empty constructor.
  */
-abstract class Event
+@Serializable
+abstract class Event {
+    internal val id : String? = null
+}

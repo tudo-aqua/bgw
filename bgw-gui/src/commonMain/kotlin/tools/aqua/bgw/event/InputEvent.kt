@@ -19,9 +19,12 @@
 
 package tools.aqua.bgw.event
 
+import kotlinx.serialization.Serializable
+
 /**
  * InputEvent baseclass.
  *
  * @constructor Empty constructor.
  */
+@Serializable
 abstract class InputEvent : Event()

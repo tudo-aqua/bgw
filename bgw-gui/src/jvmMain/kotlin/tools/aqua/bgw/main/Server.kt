@@ -1,5 +1,8 @@
 package tools.aqua.bgw.main
 
+import EventData
+import EventsData
+import MouseEventData
 import SceneMapper
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -12,6 +15,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.html.*
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import mapper
 import tools.aqua.bgw.components.ComponentView
@@ -19,6 +23,7 @@ import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.event.Event
 import tools.aqua.bgw.visual.ColorVisual
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
@@ -72,25 +77,23 @@ fun KtorApplication.configureSockets() {
         webSocket("/ws") {
             activeSessions.add(this) // Store the WebSocket session
             println("New session: $this")
-            var json : String = ""
-            try {
-                json = mapper.encodeToString(SceneMapper.map(scene))
-            } catch (e : Exception) {
-                println("Exception: $e")
-            }
-
+            var json = mapper.encodeToString(SceneMapper.map(scene))
             println("Sending scene: $json")
             this.send(json)
             try {
                 for (frame in incoming) {
+                    println("Incomming Message!")
                     if (frame is Frame.Text) {
                         val text = frame.readText()
+                        val event = mapper.decodeFromString<EventsData>(text)
                         println("Received: $text")
+                        println("Event: $event")
                     }
                 }
             } catch (e: ClosedSendChannelException) {
                 // Handle session closed
             } finally {
+                println("Session Closed")
                 activeSessions.remove(this) // Remove the WebSocket session
             }
         }

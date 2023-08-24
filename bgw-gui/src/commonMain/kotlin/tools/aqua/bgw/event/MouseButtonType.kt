@@ -19,7 +19,10 @@
 
 package tools.aqua.bgw.event
 
+import kotlinx.serialization.Serializable
+
 /** Enum for all available mouse buttons. */
+@Serializable
 enum class MouseButtonType {
   /** LEFT / primary mouse button. */
   LEFT_BUTTON,

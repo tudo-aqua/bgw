@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.event
 
+import kotlinx.serialization.Serializable
+
 /**
  * [Event] that gets raised for key inputs.
  *
@@ -31,6 +33,7 @@ package tools.aqua.bgw.event
  * @property isShiftDown Whether shift key was pressed.
  * @property isAltDown Whether alt key was pressed.
  */
+@Serializable
 class KeyEvent(
     val keyCode: KeyCode = KeyCode.UNDEFINED,
     val character: String = "",

@@ -13,14 +13,16 @@ import tools.aqua.bgw.elements.App
 import kotlin.math.floor
 import kotlin.random.Random
 
+var webSocket : WebSocket? = null
+
 fun main() {
     val container = document.createElement("div")
     container.id = "root"
     document.body!!.appendChild(container)
-    val webSocket = WebSocket("ws://localhost:8080/ws")
-    webSocket.onopen = { println("Connected to Server via WebSocket!") }
+    webSocket = WebSocket("ws://localhost:8080/ws")
+    webSocket?.onopen = { println("Connected to Server via WebSocket!") }
     val root = createRoot(container)
-    webSocket.onmessage = { event ->
+    webSocket?.onmessage = { event ->
         println("Received: ${event.data}")
         val scene = mapper.decodeFromString<SceneData>(event.data.toString())
         println("Decoded: $scene")
