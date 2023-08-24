@@ -60,23 +60,6 @@ val Button = FC<ButtonProps> { props ->
             className = ClassName("text")
             +props.data.text
         }
-        onClick = {
-            val mouseEventData = MouseEventData(posX = it.clientX,
-                posY = it.clientY,
-                button = MouseButtonType.LEFT_BUTTON,
-                id = this@bgwButton.id ?: "")
-
-            val keyEventData = KeyEventData(this@bgwButton.id ?: "", KeyCode.K, "", false, false, false)
-
-            val eventsData = EventsData().apply {
-                eventData = listOf(mouseEventData, keyEventData)
-            }
-
-            val eventJson : String = mapper.encodeToString(eventsData)
-
-            println("Clicked $eventJson")
-            webSocket?.send(eventJson)
-        }
     }
 }
 

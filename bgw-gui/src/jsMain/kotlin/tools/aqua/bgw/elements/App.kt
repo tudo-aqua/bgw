@@ -5,20 +5,21 @@ import csstype.*
 import emotion.react.Global
 import emotion.react.css
 import emotion.react.styles
-import react.FC
-import react.Props
-import react.ReactElement
-import react.create
+import react.*
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.toFC
+import tools.aqua.bgw.webSocket
 
 external interface AppProps : Props {
     var data: SceneData
 }
 
 val App = FC<AppProps> { props ->
+    useEffect {
+        webSocket?.send("Root component did mount")
+    }
     Global {
         styles {
             "html" {

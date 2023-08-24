@@ -24,6 +24,7 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import mapper
+import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -48,7 +49,7 @@ internal class Frontend {
   internal fun start() {
     println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
-    tools.aqua.bgw.main.Application().show()
+    FXApplication().start { println("Loaded") }
   }
 
   companion object {

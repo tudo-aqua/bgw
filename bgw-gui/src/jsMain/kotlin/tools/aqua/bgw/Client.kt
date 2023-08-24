@@ -2,12 +2,16 @@ package tools.aqua.bgw
 
 
 import SceneData
+import kotlinext.js.asJsObject
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.serialization.decodeFromString
 import mapper
 import org.w3c.dom.WebSocket
+import org.w3c.dom.events.Event
 import react.*
 import react.dom.client.createRoot
+import react.dom.render
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.elements.App
 import kotlin.math.floor
@@ -21,14 +25,17 @@ fun main() {
     document.body!!.appendChild(container)
     webSocket = WebSocket("ws://localhost:8080/ws")
     webSocket?.onopen = { println("Connected to Server via WebSocket!") }
-    val root = createRoot(container)
     webSocket?.onmessage = { event ->
         println("Received: ${event.data}")
         val scene = mapper.decodeFromString<SceneData>(event.data.toString())
         println("Decoded: $scene")
         val sceneComponents = scene.components.map { NodeBuilder.build(it) }
         println("Built: $sceneComponents")
-        root.render(App.create { data = scene })
+        render(App.create { data = scene }, container, callback = {
+            container.dispatchEvent(Event("bgwLoaded"))
+            val script = "window.cefQuery({request: 'bgwLoaded', persistent: false, onSuccess: function (response) {print(response);}, onFailure: function (error_code, error_message) {}});"
+            js(script)
+        })
     }
 }
 
