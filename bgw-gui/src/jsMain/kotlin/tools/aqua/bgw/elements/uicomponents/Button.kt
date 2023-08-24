@@ -17,7 +17,10 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwText
+import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
@@ -33,8 +36,6 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     alignItems = AlignItems.center
     fontSize = 15.rem
     cursor = Cursor.pointer
-    transition = Transition.easeInOut
-    transitionDuration = 0.2.s
 
     hover {
         "> .visuals" {
@@ -51,12 +52,12 @@ val Button = FC<ButtonProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        ReactHTML.div {
+        bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.visual)
         }
 
-        ReactHTML.h1 {
+        bgwText {
             className = ClassName("text")
             +props.data.text
         }

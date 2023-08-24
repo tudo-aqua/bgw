@@ -1,5 +1,7 @@
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
@@ -28,6 +30,7 @@ object ComponentMapper {
                 visual = VisualMapper.map(componentView.visual)
                 text = componentView.text
             }
+
             is CameraPane<*> -> CameraPaneData().apply {
                 id = componentView.id
                 posX = componentView.posX
@@ -36,6 +39,39 @@ object ComponentMapper {
                 height = componentView.height
                 visual = VisualMapper.map(componentView.visual)
                 target = LayoutMapper.map(componentView.target)
+            }
+
+            is HexagonView -> HexagonViewData().apply {
+                id = componentView.id
+                posX = componentView.posX
+                posY = componentView.posY
+                visual = VisualMapper.map(componentView.visual)
+                size = componentView.size as Double
+            }
+
+            is HexagonGrid<*> -> {
+                val tempMap = mutableMapOf<String, HexagonViewData>()
+                componentView.map.forEach { (key, value) ->
+                    tempMap["${key.first}/${key.second}"] = HexagonViewData().apply {
+                        id = value.id
+                        posX = 0.0
+                        posY = 0.0
+                        visual = VisualMapper.map(value.visual)
+                        size = value.size as Double
+                    }
+                }
+
+                HexagonGridData().apply {
+                    id = componentView.id
+                    posX = componentView.posX
+                    posY = componentView.posY
+                    visual = VisualMapper.map(componentView.visual)
+                    width = componentView.width
+                    height = componentView.height
+                    coordinateSystem = componentView.coordinateSystem.name.lowercase()
+                    map = tempMap
+                    spacing = 0.0
+                }
             }
             else -> TODO("Not implemented")
         }
@@ -80,7 +116,14 @@ object VisualMapper {
                 color = "rgb(${visual.color.red}, ${visual.color.green}, ${visual.color.blue})"
             }
             is CompoundVisual -> TODO("Not implemented")
-            is ImageVisual -> TODO("Not implemented")
+            is ImageVisual -> ImageVisualData().apply {
+                id = visual.id
+                path = visual.path
+                width = visual.width.toDouble()
+                height = visual.height.toDouble()
+                offsetX = visual.offsetX.toDouble()
+                offsetY = visual.offsetY.toDouble()
+            }
             is TextVisual -> TODO("Not implemented")
         }
     }

@@ -13,6 +13,8 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwText
+import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 
 external interface LabelProps : Props {
@@ -34,12 +36,12 @@ val Label = FC<LabelProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        div {
+        bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.visual)
         }
 
-        h1 {
+        bgwText {
             className = ClassName("text")
             +props.data.text
         }
