@@ -41,76 +41,22 @@ import tools.aqua.bgw.observable.properties.Property
  * @param offsetY Top bound of sub-image. Default: 0.
  */
 open class ImageVisual(
-    path: String = "",
-    width: Int = -1,
-    height: Int = -1,
-    offsetX: Int = 0,
-    offsetY: Int = 0
+    val path: String = "",
+    val width: Int = -1,
+    val height: Int = -1,
+    val offsetX: Int = 0,
+    val offsetY: Int = 0
 ) : SingleLayerVisual() {
 
-  /**
-   * [Property] for the displayed [image].
-   *
-   * @see image
-   */
-  val imageProperty: Property<BufferedImage>
+    // TODO - Reimplement
 
-  /**
-   * The displayed [image].
-   *
-   * @see imageProperty
-   */
-  var image: BufferedImage
-    get() = imageProperty.value
-    set(value) {
-      imageProperty.value = value
+    init {
+
     }
 
-  init {
-    require(offsetX < image.width) { "OffsetX is larger than image width." }
-    require(offsetY < image.height) { "OffsetY is larger than image height." }
-
-    require(width > 0 || width == -1) { "Width must be positive or -1." }
-    require(height > 0 || height == -1) { "Height must be positive or -1." }
-
-    val subWidth = if (width != -1) width else image.width - offsetX
-    val subHeight = if (height != -1) height else image.height - offsetY
-
-    require(subWidth > 0) { "Width exceeds image width." }
-    require(subHeight > 0) { "Height exceeds image height." }
-
-    require(offsetX + subWidth <= image.width) { "Width of SubImage exceeds image bounds." }
-    require(offsetY + subHeight <= image.height) { "Height of SubImage exceeds image bounds." }
-
-    val img = image.getSubimage(offsetX, offsetY, subWidth, subHeight)
-
-    imageProperty = Property(img)
-  }
-
-  /**
-   * Loads an [ImageVisual] from a file.
-   *
-   * @param file Image file to show.
-   * @param width Width of sub-image. Pass -1 to use full width. Default: -1.
-   * @param height Height of sub-image. Pass -1 to use full height. Default: -1.
-   * @param offsetX Left bound of sub-image. Gets ignored if width is passed as -1. Default: 0.
-   * @param offsetY Top bound of sub-image. Gets ignored if height is passed as -1. Default: 0.
-   */
-  constructor(
-      file: File,
-      width: Int = -1,
-      height: Int = -1,
-      offsetX: Int = 0,
-      offsetY: Int = 0
-  ) : this(file.absolutePath, width, height, offsetX, offsetY)
-
-  /** Copies this [ImageVisual] to a new object. */
-  override fun copy(): ImageVisual =
-      ImageVisual().apply {
-        image = this@ImageVisual.image
-        transparency = this@ImageVisual.transparency
-        style = this@ImageVisual.style
-      }
+    override fun copy(): Visual {
+        return this
+    }
 }
 
 

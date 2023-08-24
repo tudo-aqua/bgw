@@ -22,6 +22,7 @@ import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.ImageVisual
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 import io.ktor.server.application.Application as KtorApplication
@@ -65,7 +66,7 @@ val scene = BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN).apply {
     val hex2 = HexagonView(posX=900, posY=200, visual=ColorVisual.RED, size = 100.0)
     val hex3 = HexagonView(posX=900, posY=400, visual=ColorVisual.BLUE, size = 100.0)
     val hex4 = HexagonView(posX=900, posY=600, visual=ColorVisual.CYAN, size = 100.0)
-    val hexNew = HexagonView(posX=900, posY=600, visual=ColorVisual.BLACK, size = 100.0)
+    val hexNew = HexagonView(posX=900, posY=600, visual=ImageVisual("https://cdn2.thecatapi.com/images/9qh.jpg"), size = 100.0)
 
     hexPane[-1, 0] = hex1
     hexPane[1, 0] = hex2

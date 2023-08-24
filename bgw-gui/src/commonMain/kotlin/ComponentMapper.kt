@@ -116,7 +116,14 @@ object VisualMapper {
                 color = "rgb(${visual.color.red}, ${visual.color.green}, ${visual.color.blue})"
             }
             is CompoundVisual -> TODO("Not implemented")
-            is ImageVisual -> TODO("Not implemented")
+            is ImageVisual -> ImageVisualData().apply {
+                id = visual.id
+                path = visual.path
+                width = visual.width.toDouble()
+                height = visual.height.toDouble()
+                offsetX = visual.offsetX.toDouble()
+                offsetY = visual.offsetY.toDouble()
+            }
             is TextVisual -> TODO("Not implemented")
         }
     }
