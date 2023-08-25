@@ -1,6 +1,7 @@
 package tools.aqua.bgw.elements
 
 import ComponentViewData
+import LayoutViewData
 import UIComponentData
 import csstype.*
 

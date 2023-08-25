@@ -30,6 +30,7 @@ val App = FC<AppProps> { props ->
                 height = 100.vh
                 margin = 0.px
                 overflow = Overflow.hidden
+                userSelect = None.none
             }
             "body" {
                 backgroundColor = rgb(255, 255, 255)
@@ -60,10 +61,24 @@ val App = FC<AppProps> { props ->
                 position = Position.relative
                 display = Display.flex
                 backgroundColor = rgba(0, 0, 0, 0.0)
+                overflow = Overflow.hidden
             }
 
             "bgw_hexagon_view" {
                 clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
+            }
+
+            "bgw_camera_pane" {
+                overflow = Overflow.hidden
+            }
+
+            "bgw_camera_target" {
+                width = fit()
+                height = fit()
+            }
+
+            "bgw_camera_target > *" {
+                position = important(Position.relative)
             }
 
             ".text, .components" {
@@ -112,3 +127,6 @@ inline fun polygonPath(
     value: String,
 ): ClipPath =
     "polygon($value)".unsafeCast<ClipPath>()
+
+inline fun fit(): LengthType.FitContent =
+    "fit-content".unsafeCast<LengthType.FitContent>()

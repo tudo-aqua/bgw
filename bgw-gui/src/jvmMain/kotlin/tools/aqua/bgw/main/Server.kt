@@ -20,6 +20,7 @@ import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -70,10 +71,12 @@ hexPane[1, 1] = hex4
 hexPane[0, -2] = hexNew
 */
 
-val label = Label(visual = ColorVisual.RED, width = 200, height = 200, text = "Hello, SoPra!")
-val label2 = Label(posX = 200, posY = 200, visual = ColorVisual.BLUE, width = 200, height = 200, text = "Hello, SoPra!")
+val pane = Pane<ComponentView>(posX = 0, posY = 0, visual = ColorVisual.MAGENTA, width = 4000, height = 4000)
+val label = Label(posX = 1800, posY = 1800, visual = ColorVisual.RED, width = 200, height = 200, text = "")
+val label2 = Label(posX = 2000, posY = 2000, visual = ColorVisual.BLUE, width = 200, height = 200, text = "")
+val label3 = Label(posX = 1999, posY = 1999, visual = ColorVisual.GREEN, width = 2, height = 2, text = "")
 
-val pane = Pane<ComponentView>(posX = 400, posY = 0, visual = ColorVisual.MAGENTA, width = 300, height = 500)
+val pane2 = Pane<ComponentView>(posX = 0, posY = 0, visual = ColorVisual.RED, width = 4000, height = 4000)
 val button = Button(posX = 50, posY = 50, visual = ColorVisual.ORANGE, width = 200, height = 200, text = "Click").apply {
     onMouseClicked = { println("Clicked Button 1!") }
 }
@@ -81,10 +84,14 @@ val button2 = Button(posX = 50, posY = 250, visual = ColorVisual.ORANGE, width =
     onMouseClicked = { println("Clicked Button 2!") }
 }
 
+val camera = CameraPane(posX = 0, posY = 0, visual = ColorVisual.BLACK, width = 500, height = 500, target = pane)
+val camera2 = CameraPane(posX = 500, posY = 0, visual = ColorVisual.BLACK, width = 500, height = 500, target = pane2)
+
 val scene = object : BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN) {
     init {
-        pane.addAll(button, button2)
-        addComponents(label, label2, pane)
+        pane.addAll(label, label2, label3)
+        pane2.addAll(button, button2)
+        addComponents(camera, camera2)
         // addComponents(hexPane)
     }
 }

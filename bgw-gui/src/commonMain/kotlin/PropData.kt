@@ -135,7 +135,7 @@ class GridPaneData: LayoutViewData() {
     var grid : List<List<ComponentViewData>> = emptyList()
 }
 @Serializable
-class CameraPaneData : LayoutViewData() {
+class CameraPaneData : ComponentViewData() {
     var target : LayoutViewData? = null
     var zoom : Double = 1.0
     var interactive : Boolean = false
