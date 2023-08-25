@@ -26,6 +26,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import mapper
 import tools.aqua.bgw.application.FXApplication
+import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -39,6 +40,7 @@ import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
+import webViewType
 import java.io.File
 import java.util.*
 
@@ -48,8 +50,12 @@ internal class Frontend {
   internal fun start() {
     println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
-    FXApplication().start {
-        println("Frontend initialized.")
+    val application = when(webViewType) {
+      WebViewType.JCEF -> JCEFApplication()
+      WebViewType.JAVAFX -> FXApplication()
+    }
+    application.start {
+      println("Frontend initialized.")
     }
   }
 
