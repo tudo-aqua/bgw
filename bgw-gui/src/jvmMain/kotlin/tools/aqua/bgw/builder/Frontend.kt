@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.builder
 
+import SceneMapper
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
@@ -30,9 +31,7 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.main.PORT
-import tools.aqua.bgw.main.module
-import tools.aqua.bgw.main.sendToAllClients
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -49,12 +48,16 @@ internal class Frontend {
   internal fun start() {
     println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
-    FXApplication().start { println("Loaded") }
+    FXApplication().start {
+        println("Frontend initialized.")
+    }
   }
 
   companion object {
     /** Current scene scale. */
     internal var sceneScale: Double = 1.0
+
+    internal var frontendInitialized : BooleanProperty = BooleanProperty(false)
 
     /** [BoardGameApplication] instance. */
     internal lateinit var application: BoardGameApplication
@@ -119,8 +122,11 @@ internal class Frontend {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
-      val json = mapper.encodeToString(scene)
-      runBlocking { sendToAllClients(json) }
+      menuScene = scene
+      frontendInitialized.once(initialValue = frontendInitialized.value, true) { _, _ ->
+        val json = mapper.encodeToString(SceneMapper.map(scene))
+        runBlocking { sendToAllClients(json) }
+      }
     }
 
     /**
@@ -138,7 +144,8 @@ internal class Frontend {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
-      val json = mapper.encodeToString(scene)
+      boardGameScene = scene
+      val json = mapper.encodeToString(SceneMapper.map(scene))
       runBlocking { sendToAllClients(json) }
     }
 

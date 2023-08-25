@@ -32,9 +32,10 @@ fun main() {
         val sceneComponents = scene.components.map { NodeBuilder.build(it) }
         println("Built: $sceneComponents")
         render(App.create { data = scene }, container, callback = {
+            println("Rendered App to DOM!")
             container.dispatchEvent(Event("bgwLoaded"))
-            val script = "window.cefQuery({request: 'bgwLoaded', persistent: false, onSuccess: function (response) {print(response);}, onFailure: function (error_code, error_message) {}});"
-            js(script)
+            /*val script = "window.cefQuery({request: 'bgwLoaded', persistent: false, onSuccess: function (response) {print(response);}, onFailure: function (error_code, error_message) {}});"
+            js(script)*/
         })
     }
 }
