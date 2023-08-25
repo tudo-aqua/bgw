@@ -115,8 +115,6 @@ val CameraPane = FC<CameraPaneProps> { props ->
             val walkX = x - startX
             container!!.scrollLeft = scrollLeft - walkX
 
-            println("Moving to: ${container?.scrollLeft}, ${container?.scrollTop}")
-
             anchorPoint = getPositionInPane(container!!.clientWidth, container!!.clientHeight)
         } else {
             val bounds = container!!.getBoundingClientRect()
@@ -198,7 +196,6 @@ val CameraPane = FC<CameraPaneProps> { props ->
     }
 
     fun paneSmoothScrollTo(x : Double, y : Double) {
-        println("Smooth scrolling to: $x, $y")
         if(animValue > 0) return
 
         startPos = anchorPoint
@@ -210,7 +207,6 @@ val CameraPane = FC<CameraPaneProps> { props ->
     fun testScroll(e : MouseEvent) {
         val x = Random.nextDouble(0.0, 4000.0)
         val y = Random.nextDouble(0.0, 4000.0)
-        println("Scrolling to: $x, $y")
         paneSmoothScrollTo(x,y)
     }
 
@@ -221,7 +217,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
         container?.onmousemove = { e -> mouseMove(e) }
         container?.onwheel = { e -> mouseScroll(e) }
 
-        target?.onclick = { e -> testScroll(e) }
+        // target?.onclick = { e -> testScroll(e) }
     }
 
     useEffect {
