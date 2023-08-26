@@ -19,12 +19,13 @@
 
 package tools.aqua.bgw.builder
 
-import SceneMapper
+import mapper.SceneMapper
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
-import mapper
+import jsonMapper
+import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.*
@@ -32,7 +33,6 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -50,20 +50,23 @@ internal class Frontend {
   internal fun start() {
     println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
-    val application = when(webViewType) {
-      WebViewType.JCEF -> JCEFApplication()
-      WebViewType.JAVAFX -> FXApplication()
-    }
-    application.start {
-      println("Frontend initialized.")
+    applicationEngine.start {
+      println("Updating scene...")
+      SceneBuilder.build(boardGameScene!!)
+      renderedDOM.value = true
     }
   }
 
   companion object {
+    internal var applicationEngine: Application = when(webViewType) {
+      WebViewType.JCEF -> JCEFApplication()
+      WebViewType.JAVAFX -> FXApplication()
+    }
+
     /** Current scene scale. */
     internal var sceneScale: Double = 1.0
 
-    internal var frontendInitialized : BooleanProperty = BooleanProperty(false)
+    internal var renderedDOM : BooleanProperty = BooleanProperty(false)
 
     /** [BoardGameApplication] instance. */
     internal lateinit var application: BoardGameApplication
@@ -129,10 +132,8 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
-      frontendInitialized.once(initialValue = frontendInitialized.value, true) { _, _ ->
-        val json = mapper.encodeToString(SceneMapper.map(scene))
-        runBlocking { sendToAllClients(json) }
-      }
+      val json = jsonMapper.encodeToString(SceneMapper.map(scene))
+      runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -151,7 +152,9 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
-      val json = mapper.encodeToString(SceneMapper.map(scene))
+      println("Set new scene: $scene")
+      println("Component ID:  ${scene.components.first().id}")
+      val json = jsonMapper.encodeToString(SceneMapper.map(scene))
       runBlocking { sendToAllClients(json) }
     }
 

@@ -48,7 +48,9 @@ class FXApplication(
 
     override fun registerMouseEventListener(component: ComponentView) {
         val eventTarget = rootComponent.engine.document.getElementById(component.id) as EventTarget
+        println("Registered mouse event listener for component ${component.id}")
         eventTarget.addEventListener("click", {
+            println("Mouse event triggered for component ${component.id}")
             if (it is W3CMouseEvent) { component.onMouseClicked?.invoke(MouseEvent(it.getButtonType(), it.clientX, it.clientY)) }
         }, false)
     }

@@ -12,8 +12,8 @@ import kotlinx.html.HTML
 import kotlinx.html.body
 import kotlinx.html.script
 import kotlinx.serialization.encodeToString
-import mapper
-import tools.aqua.bgw.main.scene
+import jsonMapper
+import mapper.SceneMapper
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -57,16 +57,17 @@ fun Application.configureSockets() {
 }
 
 fun onClientMessage(session: WebSocketSession, text: String) {
-    TODO("Not yet implemented")
+    println("Received message from client $session: $text")
 }
 
 fun onClientError(session: WebSocketSession, e: ClosedSendChannelException) {
-    TODO("Not yet implemented")
+    println("Client $session disconnected: ${e.message}")
 }
 
 suspend fun onClientConnected(webSocketSession: WebSocketSession) {
+    println("Client connected: $webSocketSession")
     val scene = checkNotNull(Frontend.boardGameScene)
-    val json = mapper.encodeToString(SceneMapper.map(scene))
+    val json = jsonMapper.encodeToString(SceneMapper.map(scene))
     webSocketSession.send(json)
 }
 

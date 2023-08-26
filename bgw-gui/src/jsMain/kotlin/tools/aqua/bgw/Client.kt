@@ -2,18 +2,16 @@ package tools.aqua.bgw
 
 
 import SceneData
-import kotlinext.js.asJsObject
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.serialization.decodeFromString
-import mapper
+import jsonMapper
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import react.*
-import react.dom.client.createRoot
 import react.dom.render
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.elements.App
+import tools.aqua.bgw.event.JCEFEventDispatcher
 import webViewType
 import kotlin.math.floor
 import kotlin.random.Random
@@ -28,7 +26,7 @@ fun main() {
     webSocket?.onopen = { println("Connected to Server via WebSocket!") }
     webSocket?.onmessage = { event ->
         println("Received: ${event.data}")
-        val scene = mapper.decodeFromString<SceneData>(event.data.toString())
+        val scene = jsonMapper.decodeFromString<SceneData>(event.data.toString())
         println("Decoded: $scene")
         val sceneComponents = scene.components.map { NodeBuilder.build(it) }
         println("Built: $sceneComponents")

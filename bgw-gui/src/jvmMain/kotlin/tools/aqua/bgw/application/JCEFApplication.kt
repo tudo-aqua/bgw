@@ -1,5 +1,9 @@
 package tools.aqua.bgw.application
 
+import EventData
+import MouseEventData
+import jsonMapper
+import kotlinx.serialization.decodeFromString
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import org.cef.CefApp
@@ -13,20 +17,30 @@ import org.cef.handler.CefFocusHandlerAdapter
 import org.cef.handler.CefLoadHandlerAdapter
 import org.cef.handler.CefMessageRouterHandler
 import org.cef.handler.CefMessageRouterHandlerAdapter
+import tools.aqua.bgw.builder.Frontend
+import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.event.MouseButtonType
+import tools.aqua.bgw.event.MouseEvent
 import java.awt.BorderLayout
 import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JFrame
+import javax.swing.WindowConstants.EXIT_ON_CLOSE
+import kotlin.system.exitProcess
 
-class JCEFApplication : Application, JFrame() {
+class JCEFApplication : Application {
+    private var frame : MainFrame? = null
+
+    private val handlers = mutableListOf<CefMessageRouterHandler>()
+
     override fun start(callback: (Any) -> Unit) {
         EventQueue.invokeLater {
-            val frame: JFrame = MainFrame(loadCallback = callback)
-            frame.setDefaultCloseOperation(EXIT_ON_CLOSE)
-            frame.isVisible = true
+            frame = MainFrame(loadCallback = callback)
+            frame?.defaultCloseOperation = EXIT_ON_CLOSE
+            frame?.isVisible = true
         }
     }
 
@@ -35,7 +49,21 @@ class JCEFApplication : Application, JFrame() {
     }
 
     override fun registerMouseEventListener(component: ComponentView) {
-        TODO("Not yet implemented")
+        val myHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
+            override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
+                if(request == "bgwLoaded") return false
+                val json = Base64.decode(request)
+                val eventData = jsonMapper.decodeFromString<EventData>(json)
+                if(eventData is MouseEventData && eventData.id == component.id) {
+                    println("Mouse event triggered for component ${component.id}")
+                    component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
+                    return true
+                }
+                return false
+            }
+        }
+        handlers.add(myHandler)
+        frame?.msgRouter?.addHandler(myHandler, false)
     }
 
 }
@@ -47,12 +75,14 @@ class MainFrame(
 ) : JFrame() {
     private var browserFocus = true
 
+    var msgRouter : CefMessageRouter? = null
+
     init {
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
-                if (state == CefAppState.TERMINATED) System.exit(0)
+                if (state == CefAppState.TERMINATED) exitProcess(0)
             }
         })
         val cefApp = builder.build()
@@ -60,15 +90,18 @@ class MainFrame(
         val config = CefMessageRouterConfig()
         config.jsQueryFunction = "cefQuery"
         config.jsCancelFunction = "cefQueryCancel"
-        val msgRouter = CefMessageRouter.create()
+        msgRouter = CefMessageRouter.create(config)
         client.addMessageRouter(msgRouter)
         val myHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
-                if(request == "bgwLoaded") loadCallback.invoke(Unit)
-                return true
+                if(request == "bgwLoaded") {
+                    loadCallback.invoke(Unit)
+                    return true
+                }
+                return false
             }
         }
-        msgRouter.addHandler(myHandler, true)
+        msgRouter?.addHandler(myHandler, true)
         val browser = client.createBrowser(startURL, useOSR, isTransparent)
         val browserUI = browser.uiComponent
         client.addFocusHandler(object : CefFocusHandlerAdapter() {

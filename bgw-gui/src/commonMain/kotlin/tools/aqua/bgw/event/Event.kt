@@ -28,5 +28,5 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 abstract class Event {
-    internal val id : String? = null
+    internal var id : String? = null
 }

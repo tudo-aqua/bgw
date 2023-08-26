@@ -5,7 +5,9 @@ import csstype.*
 import emotion.react.Global
 import emotion.react.css
 import emotion.react.styles
+import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.events.Event
 import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
@@ -13,6 +15,7 @@ import react.dom.html.ReactHTML.section
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.toFC
 import tools.aqua.bgw.webSocket
+import webViewType
 
 external interface AppProps : Props {
     var data: SceneData
@@ -20,7 +23,7 @@ external interface AppProps : Props {
 
 val App = FC<AppProps> { props ->
     useEffect {
-        webSocket?.send("Root component did mount")
+        webSocket?.send("Hello from Client!")
     }
     Global {
         styles {
