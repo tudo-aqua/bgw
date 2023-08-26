@@ -13,7 +13,6 @@ import kotlinx.html.body
 import kotlinx.html.script
 import kotlinx.serialization.encodeToString
 import jsonMapper
-import mapper.SceneMapper
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
