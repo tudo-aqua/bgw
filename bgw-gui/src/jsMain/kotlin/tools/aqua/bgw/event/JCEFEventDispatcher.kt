@@ -9,7 +9,11 @@ object JCEFEventDispatcher : EventDispatcher {
     init { initialize() }
     override fun dispatchEvent(event: Event) {
         val json = jsonMapper.encodeToString(EventMapper.map(event))
-        window.asDynamic().bgwQuery(Base64.encode(json))
+        try {
+            window.asDynamic().bgwQuery(Base64.encode(json))
+        } catch (e: Throwable) {
+            println("Error while dispatching event: $e")
+        }
     }
 
     private fun initialize() {

@@ -316,7 +316,8 @@ object VisualMapper {
 
             is ImageVisual -> ImageVisualData().apply {
                 id = visual.id
-                path = visual.path
+                if(isRelativeFilePath(visual.path)) path = "http://localhost:8080/static/${visual.path}"
+                else path = visual.path
                 width = visual.width.toDouble()
                 height = visual.height.toDouble()
                 offsetX = visual.offsetX.toDouble()
@@ -349,6 +350,11 @@ object VisualMapper {
                 }
             }
         }
+    }
+
+    //TODO: Check properly if path is URL or local path
+    private fun isRelativeFilePath(path: String): Boolean {
+        return !path.startsWith("http://") && !path.startsWith("https://")
     }
 }
 

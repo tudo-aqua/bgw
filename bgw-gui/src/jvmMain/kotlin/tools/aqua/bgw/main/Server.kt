@@ -87,16 +87,28 @@ fun main() {
                 // addComponents(hexPane)
             }
         }
+        var counter = 1
         init {
             scene.button.onMouseClicked = {
-                    println("Scene1 Clicked Button ${scene.button.id}!")
+                    println("Scene1 Clicked Button 1 ${scene.button.id}!")
                     showGameScene(scene2)
+            }
+            scene.button2.onMouseClicked = {
+                println("Scene1 Clicked Button 2 ${scene.button.id}!")
+                scene.button.visual = ImageVisual("assets/$counter.jpg")
+                counter++
+                if (counter > 5) counter = 1
             }
 
             scene2.button2.onMouseClicked = {
-                println("Scene2 Clicked Button ${scene.button.id}!")
+                println("Scene2 Clicked Button 2 ${scene.button.id}!")
                 showGameScene(scene)
             }
+            scene2.button.onMouseClicked = {
+                println("Scene2 Clicked Button 1 ${scene.button.id}!")
+                scene2.button2.visual = getRandomImageVisual()
+            }
+
             showGameScene(scene)
         }
     }

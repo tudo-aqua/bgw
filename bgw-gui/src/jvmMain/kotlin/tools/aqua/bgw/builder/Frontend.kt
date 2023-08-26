@@ -185,7 +185,7 @@ internal class Frontend {
 
     /** Manually refreshes currently displayed [Scene]s. */
     internal fun updateScene() {
-      TODO("Not yet implemented")
+      showGameScene(boardGameScene!!)
     }
 
     /**
