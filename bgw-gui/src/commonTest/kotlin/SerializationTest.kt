@@ -1,4 +1,3 @@
-import kotlinx.serialization.decodeFromString
 import kotlin.test.Test
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView
@@ -28,7 +27,7 @@ class SerializationTest {
             button = MouseButtonType.LEFT_BUTTON)
     @Test
     fun testSerialization() {
-        val json = mapper.encodeToString(mouseEventData)
+        val json = jsonMapper.encodeToString(mouseEventData)
         println(json)
     }
 }

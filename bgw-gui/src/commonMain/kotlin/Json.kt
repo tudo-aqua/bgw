@@ -60,4 +60,4 @@ private val module = SerializersModule {
     }
 }
 
-val mapper = KJson { serializersModule = module }
+val jsonMapper = KJson { serializersModule = module }

@@ -23,16 +23,15 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
-import mapper
+import jsonMapper
+import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
+import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.main.PORT
-import tools.aqua.bgw.main.module
-import tools.aqua.bgw.main.sendToAllClients
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -40,6 +39,7 @@ import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
+import webViewType
 import java.io.File
 import java.util.*
 
@@ -49,12 +49,23 @@ internal class Frontend {
   internal fun start() {
     println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
-    FXApplication().start { println("Loaded") }
+    applicationEngine.start {
+      println("Updating scene...")
+      SceneBuilder.build(boardGameScene!!)
+      renderedDOM.value = true
+    }
   }
 
   companion object {
+    internal var applicationEngine: Application = when(webViewType) {
+      WebViewType.JCEF -> JCEFApplication()
+      WebViewType.JAVAFX -> FXApplication()
+    }
+
     /** Current scene scale. */
     internal var sceneScale: Double = 1.0
+
+    internal var renderedDOM : BooleanProperty = BooleanProperty(false)
 
     /** [BoardGameApplication] instance. */
     internal lateinit var application: BoardGameApplication
@@ -119,7 +130,8 @@ internal class Frontend {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
-      val json = mapper.encodeToString(scene)
+      menuScene = scene
+      val json = jsonMapper.encodeToString(SceneMapper.map(scene))
       runBlocking { sendToAllClients(json) }
     }
 
@@ -138,7 +150,10 @@ internal class Frontend {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
-      val json = mapper.encodeToString(scene)
+      boardGameScene = scene
+      println("Set new scene: $scene")
+      println("Component ID:  ${scene.components.first().id}")
+      val json = jsonMapper.encodeToString(SceneMapper.map(scene))
       runBlocking { sendToAllClients(json) }
     }
 

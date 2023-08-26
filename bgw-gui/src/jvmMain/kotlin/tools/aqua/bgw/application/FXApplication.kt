@@ -7,10 +7,10 @@ import javafx.scene.web.WebView
 import javafx.stage.Stage
 import netscape.javascript.JSObject
 import org.w3c.dom.events.EventTarget
+import tools.aqua.bgw.builder.PORT
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
-import tools.aqua.bgw.main.PORT
 import org.w3c.dom.events.MouseEvent as W3CMouseEvent
 
 class FXApplication(
@@ -48,7 +48,9 @@ class FXApplication(
 
     override fun registerMouseEventListener(component: ComponentView) {
         val eventTarget = rootComponent.engine.document.getElementById(component.id) as EventTarget
+        println("Registered mouse event listener for component ${component.id}")
         eventTarget.addEventListener("click", {
+            println("Mouse event triggered for component ${component.id}")
             if (it is W3CMouseEvent) { component.onMouseClicked?.invoke(MouseEvent(it.getButtonType(), it.clientX, it.clientY)) }
         }, false)
     }
