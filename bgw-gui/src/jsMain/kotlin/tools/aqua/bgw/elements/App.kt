@@ -46,13 +46,13 @@ val App = FC<AppProps> { props ->
                 top = 0.px
             }
 
-            "bgw_color_visual, bgw_image_visual" {
+            "bgw_color_visual, bgw_image_visual, bgw_text_visual" {
                 width = 100.pct
                 height = 100.pct
                 position = Position.absolute
                 left = 0.px
                 top = 0.px
-                display = Display.block
+                display = Display.flex
             }
 
             "bgw_scene" {
