@@ -11,6 +11,8 @@ import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.useEffect
+import tools.aqua.bgw.elements.filterBuilder
+import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
 
 external interface ColorVisualProps : Props {
@@ -22,6 +24,8 @@ val ColorVisual = FC<ColorVisualProps> { props ->
         id = props.data.id
         css {
             styleBuilder(props.data.style)
+            flipBuilder(props.data.flipped)
+            filterBuilder(props.data.filters)
             backgroundColor = Color(props.data.color)
             opacity = number(props.data.transparency)
         }

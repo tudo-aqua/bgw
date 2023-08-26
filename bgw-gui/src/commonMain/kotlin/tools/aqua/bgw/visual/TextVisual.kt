@@ -141,5 +141,6 @@ open class TextVisual(
         offsetX = this@TextVisual.offsetX
         offsetY = this@TextVisual.offsetY
         style = this@TextVisual.style
+        filters = this@TextVisual.filters
       }
 }

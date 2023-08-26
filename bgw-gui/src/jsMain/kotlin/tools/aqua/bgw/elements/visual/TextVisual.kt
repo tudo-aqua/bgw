@@ -12,6 +12,9 @@ import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.useEffect
+import tools.aqua.bgw.elements.filterBuilder
+import tools.aqua.bgw.elements.flipBuilder
+import tools.aqua.bgw.elements.styleBuilder
 
 external interface TextVisualProps : Props {
     var data: TextVisualData
@@ -21,6 +24,9 @@ val TextVisual = FC<TextVisualProps> { props ->
     bgwTextVisual {
         id = props.data.id
         css {
+            styleBuilder(props.data.style)
+            flipBuilder(props.data.flipped)
+            filterBuilder(props.data.filters)
             fontFamily = (props.data.font?.family ?: "Arial") as FontFamily?
             fontWeight = (props.data.font?.fontWeight ?: "normal") as FontWeight?
             fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?

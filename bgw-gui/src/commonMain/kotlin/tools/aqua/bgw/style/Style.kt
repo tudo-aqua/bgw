@@ -3,10 +3,6 @@ package tools.aqua.bgw.style
 class Style {
     private val declarations = mutableMapOf<String, StyleDeclaration>()
 
-    fun getDeclaration(key: String) : StyleDeclaration? {
-        return declarations[key]
-    }
-
     fun getDeclarations() : Map<String, String> {
         return declarations.mapValues { it.value.toCSS() }
     }

@@ -15,10 +15,8 @@ import tools.aqua.bgw.elements.visual.TextVisual as ReactTextVisual
 object VisualBuilder {
 
     fun build(visual: VisualData?): List<ReactElement<*>> {
-        println("VisualBuilder.build(visual: $visual)")
         when(visual) {
             is ColorVisualData -> {
-                println("ColorVisualData: ${visual.id} -> ${visual.color}")
                 return listOf(ReactColorVisual.create {
                     data = visual
                 })

@@ -24,6 +24,8 @@ import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.style.Filter
+import tools.aqua.bgw.style.Flip
 import tools.aqua.bgw.style.StyleDeclaration
 
 /**
@@ -55,25 +57,25 @@ sealed class SingleLayerVisual : Visual() {
     }
 
   /**
-   * [Property] for the css style that gets applied to this [Visual].
-   *
-   * This gets applied last, so it may override any changes made via other fields and functions of
-   * this [Visual]. Critical failures, bugs or other undefined behaviour could occur when using this
-   * feature.
-   *
-   * @see style
-   */
-
-  /**
    * Css style that gets applied to this [Visual].
    *
    * This gets applied last, so it may override any changes made via other fields and functions of
    * this [Visual]. Critical failures, bugs or other undefined behaviour could occur when using this
    * feature.
-   *
-   * @see styleProperty
    */
+
+  // TODO - Add properties?
   var style: Style = Style()
+    set(value) {
+      field = value
+    }
+
+  var filters: Filter = Filter()
+    set(value) {
+      field = value
+    }
+
+  var flipped : Flip = Flip.NONE
     set(value) {
       field = value
     }

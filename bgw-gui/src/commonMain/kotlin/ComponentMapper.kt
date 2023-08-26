@@ -7,6 +7,7 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.style.StyleDeclaration
 import tools.aqua.bgw.util.Font
@@ -295,6 +296,12 @@ object StyleMapper {
     }
 }
 
+object FilterMapper {
+    fun map(filters: Filter) : Map<String, String?> {
+        return filters.getDeclarations()
+    }
+}
+
 object VisualMapper {
     fun map(visual: Visual) : VisualData {
         return when (visual) {
@@ -303,6 +310,8 @@ object VisualMapper {
                 color = "rgba(${visual.color.red}, ${visual.color.green}, ${visual.color.blue}, ${visual.color.alpha})"
                 transparency = visual.transparency
                 style = StyleMapper.map(visual.style)
+                filters = FilterMapper.map(visual.filters)
+                flipped = visual.flipped.name.lowercase()
             }
 
             is ImageVisual -> ImageVisualData().apply {
@@ -313,7 +322,9 @@ object VisualMapper {
                 offsetX = visual.offsetX.toDouble()
                 offsetY = visual.offsetY.toDouble()
                 transparency = visual.transparency
-                // style
+                style = StyleMapper.map(visual.style)
+                filters = FilterMapper.map(visual.filters)
+                flipped = visual.flipped.name.lowercase()
             }
 
             is TextVisual -> TextVisualData().apply {
@@ -323,8 +334,10 @@ object VisualMapper {
                 offsetX = visual.offsetX.toDouble()
                 offsetY = visual.offsetY.toDouble()
                 transparency = visual.transparency
+                style = StyleMapper.map(visual.style)
+                filters = FilterMapper.map(visual.filters)
+                flipped = visual.flipped.name.lowercase()
                 // alignment
-                // style
             }
 
             // --- Compound Visuals ---

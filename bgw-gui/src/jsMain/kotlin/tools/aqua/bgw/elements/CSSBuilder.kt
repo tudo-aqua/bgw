@@ -36,5 +36,31 @@ fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
 fun PropertiesBuilder.styleBuilder(style : Map<String, String>) {
     borderRadius = cssBorderRadius(style["border-radius"] ?: "0rem")
 }
-inline fun cssBorderRadius(value : String): LengthProperty =
+
+fun PropertiesBuilder.filterBuilder(filters : Map<String, String?>) {
+    val filterList = mutableListOf<String>()
+    filters.values.forEach {
+        if(it != null) {
+            filterList.add(it)
+        }
+    }
+    filter = cssFilter(filterList)
+}
+
+fun PropertiesBuilder.flipBuilder(flipped : String) {
+    if(flipped == "horizontal") {
+        transform = scalex(-1)
+    } else if(flipped == "vertical") {
+        transform = scaley(-1)
+    } else if(flipped == "both") {
+        transform = scale(-1, -1)
+    }
+}
+
+fun cssBorderRadius(value : String): LengthProperty =
     value.unsafeCast<LengthProperty>()
+
+fun cssFilter(values : List<String>): FilterFunction {
+    if(values.isEmpty()) return "none".unsafeCast<FilterFunction>()
+    return values.joinToString(" ").unsafeCast<FilterFunction>()
+}

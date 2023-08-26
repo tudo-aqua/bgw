@@ -74,6 +74,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
       ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {
         transparency = this@ColorVisual.transparency
         style = this@ColorVisual.style
+        filters = this@ColorVisual.filters
       }
 
   companion object {

@@ -200,6 +200,8 @@ abstract class VisualData {
 abstract class SingleLayerVisualData : VisualData() {
     var transparency: Double = 0.0
     var style: Map<String, String> = emptyMap()
+    var filters: Map<String, String?> = emptyMap()
+    var flipped : String = ""
 }
 
 @Serializable
