@@ -22,6 +22,7 @@ val ImageVisual = FC<ImageVisualProps> { props ->
             backgroundSize = BackgroundSize.cover
             backgroundRepeat = BackgroundRepeat.noRepeat
             backgroundPosition = BackgroundPosition.center
+            opacity = number(props.data.transparency)
             // TODO...
         }
     }

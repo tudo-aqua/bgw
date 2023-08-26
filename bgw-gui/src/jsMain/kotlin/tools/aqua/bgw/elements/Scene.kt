@@ -21,7 +21,9 @@ val Scene = FC<SceneProps> { props ->
     bgwScene {
         bgwVisuals {
             className = ClassName("visuals")
-            +VisualBuilder.build(props.data.background)
+            VisualBuilder.build(props.data.background).forEach {
+                +it
+            }
         }
         bgwContents {
             className = ClassName("components")

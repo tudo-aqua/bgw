@@ -1,6 +1,7 @@
 package tools.aqua.bgw.builder
 
 import ColorVisualData
+import CompoundVisualData
 import ImageVisualData
 import VisualData
 import react.ReactElement
@@ -11,23 +12,33 @@ import tools.aqua.bgw.elements.visual.ImageVisual as ReactImageVisual
 
 object VisualBuilder {
 
-    fun build(visual: VisualData?): ReactElement<*> {
+    fun build(visual: VisualData?): List<ReactElement<*>> {
         println("VisualBuilder.build(visual: $visual)")
         when(visual) {
             is ColorVisualData -> {
                 println("ColorVisualData: ${visual.id} -> ${visual.color}")
-                return ReactColorVisual.create {
+                return listOf(ReactColorVisual.create {
                     data = visual
-                }
+                })
             }
+
             is ImageVisualData -> {
-                return ReactImageVisual.create {
+                return listOf(ReactImageVisual.create {
                     data = visual
-                }
+                })
             }
-            // TODO - Compound / Text Visual
+
+            is CompoundVisualData -> {
+                val visuals = mutableListOf<ReactElement<*>>()
+                visual.children.forEach {
+                    visuals.addAll(build(it))
+                }
+                return visuals
+            }
+
+            // TODO - Text Visual
             else -> {
-                return div.create()
+                return listOf(div.create())
             }
         }
     }

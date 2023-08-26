@@ -20,7 +20,14 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
 
 fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
+    fontBuilder(componentViewData)
+    // TODO...
+}
+
+fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
+    fontFamily = (componentViewData.font?.family ?: "Arial") as FontFamily?
+    fontWeight = (componentViewData.font?.fontWeight ?: "normal") as FontWeight?
+    fontStyle = (componentViewData.font?.fontStyle ?: "normal") as FontStyle?
     fontSize = componentViewData.font?.size?.rem
     color = Color(componentViewData.font?.color ?: "black")
-    // TODO...
 }

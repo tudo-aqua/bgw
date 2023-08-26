@@ -50,17 +50,19 @@ data class Font(
    * @see Font
    */
   enum class FontWeight {
+    THIN,
+    EXTRA_LIGHT,
     /** Light font weight. */
     LIGHT,
-
     /** Normal font weight. */
     NORMAL,
-
+    MEDIUM,
     /** Font style weight is bolder than [NORMAL] but not as bold as [BOLD]. */
     SEMI_BOLD,
-
     /** Bold font weight. */
     BOLD,
+    EXTRA_BOLD,
+    BLACK
   }
 
   /**

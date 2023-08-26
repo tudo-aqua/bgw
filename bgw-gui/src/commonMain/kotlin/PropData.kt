@@ -5,6 +5,7 @@ typealias ID = String
 typealias ToggleGroup = List<ID>
 
 @Serializable
+// FIXME - DONE
 class SceneData {
     var width : Double = 0.0
     var height : Double = 0.0
@@ -84,14 +85,14 @@ class ToggleButtonData : LabeledUIComponentData() {
 }
 @Serializable
 class ColorPickerData : UIComponentData() {
-    var selectedColor: String = "#FFFFFF"
+    var selectedColor: String = "rgba(0,0,0,0)"
 }
 @Serializable
 class PasswordFieldData : TextInputUIComponentData() { }
 @Serializable
 class ProgressBarData : UIComponentData() {
     var progress: Double = 0.0
-    var barColor: String = ""
+    var barColor: String = "rgba(0,0,0,0)"
 }
 @Serializable
 class TextAreaData : TextInputUIComponentData() { }
@@ -188,7 +189,6 @@ class LinearLayoutData: GameComponentContainerData() {
 class SatchelData: GameComponentContainerData() { }
 
 // VISUALS
-
 @Serializable
 abstract class VisualData {
     var id: ID = ""
@@ -228,11 +228,12 @@ class CompoundVisualData : VisualData() {
     var children: List<SingleLayerVisualData> = emptyList()
 }
 
+// FONT
 @Serializable
-abstract class FontData {
-    var size : Double = 16.0
+class FontData {
+    var size : Int = 16
     var color : String = ""
     var family : String = ""
-    var fontWeight : String = ""
+    var fontWeight : Int = 400
     var fontStyle : String = ""
 }

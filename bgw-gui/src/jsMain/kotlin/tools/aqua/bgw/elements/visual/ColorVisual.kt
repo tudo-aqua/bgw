@@ -1,7 +1,7 @@
 package tools.aqua.bgw.elements.visual
 
 import ColorVisualData
-import csstype.Color
+import csstype.*
 import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
@@ -21,6 +21,7 @@ val ColorVisual = FC<ColorVisualProps> { props ->
         id = props.data.id
         css {
             backgroundColor = Color(props.data.color)
+            opacity = number(props.data.transparency)
             // TODO...
         }
     }

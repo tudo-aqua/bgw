@@ -35,7 +35,9 @@ val Pane = FC<PaneProps> { props ->
 
         bgwVisuals {
             className = ClassName("visuals")
-            +VisualBuilder.build(props.data.visual)
+            VisualBuilder.build(props.data.visual).forEach {
+                +it
+            }
         }
 
         bgwContents {

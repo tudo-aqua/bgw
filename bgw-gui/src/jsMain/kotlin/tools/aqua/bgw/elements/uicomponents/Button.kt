@@ -54,7 +54,9 @@ val Button = FC<ButtonProps> { props ->
 
         bgwVisuals {
             className = ClassName("visuals")
-            +VisualBuilder.build(props.data.visual)
+            VisualBuilder.build(props.data.visual).forEach {
+                +it
+            }
         }
 
         bgwText {

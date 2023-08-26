@@ -14,12 +14,8 @@ import org.w3c.dom.HTMLUnknownElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
-import react.FC
-import react.IntrinsicType
-import react.Props
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
-import react.useEffect
 import tools.aqua.bgw.builder.LayoutNodeBuilder
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
@@ -32,6 +28,8 @@ import kotlin.math.pow
 import kotlin.math.round
 import kotlin.random.Random
 import csstype.*
+import react.*
+import react.dom.html.ReactHTML.h1
 
 external interface CameraPaneProps : Props {
     var data: CameraPaneData
@@ -63,6 +61,12 @@ val CameraPane = FC<CameraPaneProps> { props ->
     var startPos : Pair<Double, Double> = Pair(0.0, 0.0)
     var endPos : Pair<Double, Double> = Pair(0.0, 0.0)
     var animValue : Double = 0.0
+
+    // Handle functions for callback to Kotlin
+    fun handleZoomChange(zoomChange : Double) {
+        zoomLevel = zoomChange
+        // TODO - Invoke callback to Kotlin
+    }
 
     fun getPositionInPane(posX : Int, posY : Int) : Pair<Double, Double> {
         val x = (posX + container?.scrollLeft!!) / zoomLevel
@@ -131,15 +135,15 @@ val CameraPane = FC<CameraPaneProps> { props ->
         val currentZoom = 0.05
         if(e.deltaY < 0) {
             if(zoomLevel + currentZoom > maxZoom) {
-                zoomLevel = maxZoom
+                handleZoomChange(maxZoom)
             } else {
-                zoomLevel += currentZoom
+                handleZoomChange(zoomLevel + currentZoom)
             }
         } else {
             if(zoomLevel - currentZoom < minZoom) {
-                zoomLevel = minZoom
+                handleZoomChange(minZoom)
             } else {
-                zoomLevel -= currentZoom
+                handleZoomChange(zoomLevel - currentZoom)
             }
         }
         target?.setAttribute("style", "zoom: $zoomLevel;")
@@ -239,7 +243,9 @@ val CameraPane = FC<CameraPaneProps> { props ->
 
         bgwVisuals {
             className = ClassName("visuals")
-            +VisualBuilder.build(props.data.visual)
+            VisualBuilder.build(props.data.visual).forEach {
+                +it
+            }
         }
 
         if(props.data.target != null) {

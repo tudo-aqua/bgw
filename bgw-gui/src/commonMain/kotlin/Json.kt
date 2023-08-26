@@ -45,6 +45,11 @@ private val module = SerializersModule {
         subclass(TextVisualData::class)
         subclass(CompoundVisualData::class)
     }
+    polymorphic(SingleLayerVisualData::class) {
+        subclass(ColorVisualData::class)
+        subclass(ImageVisualData::class)
+        subclass(TextVisualData::class)
+    }
     polymorphic(EventData::class) {
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
