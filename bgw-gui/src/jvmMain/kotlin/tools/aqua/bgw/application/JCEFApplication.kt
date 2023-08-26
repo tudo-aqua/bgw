@@ -1,6 +1,7 @@
 package tools.aqua.bgw.application
 
 import EventData
+import LoadEventData
 import MouseEventData
 import jsonMapper
 import kotlinx.serialization.decodeFromString
@@ -51,7 +52,6 @@ class JCEFApplication : Application {
     override fun registerMouseEventListener(component: ComponentView) {
         val myHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
-                if(request == "bgwLoaded") return false
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData is MouseEventData && eventData.id == component.id) {
@@ -94,7 +94,9 @@ class MainFrame(
         client.addMessageRouter(msgRouter)
         val myHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
-                if(request == "bgwLoaded") {
+                val json = Base64.decode(request)
+                val eventData = jsonMapper.decodeFromString<EventData>(json)
+                if(eventData is LoadEventData) {
                     loadCallback.invoke(Unit)
                     return true
                 }

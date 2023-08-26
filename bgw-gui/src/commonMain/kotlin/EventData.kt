@@ -35,3 +35,5 @@ class KeyEventData(
 class EventsData {
     var eventData : List<EventData> = emptyList()
 }
+@Serializable
+internal class LoadEventData : EventData()

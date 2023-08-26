@@ -152,7 +152,6 @@ internal class Frontend {
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
       println("Set new scene: $scene")
-      println("Component ID:  ${scene.components.first().id}")
       val json = jsonMapper.encodeToString(SceneMapper.map(scene))
       runBlocking { sendToAllClients(json) }
     }

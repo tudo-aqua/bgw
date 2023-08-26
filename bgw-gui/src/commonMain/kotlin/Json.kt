@@ -53,6 +53,7 @@ private val module = SerializersModule {
     polymorphic(EventData::class) {
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
+        subclass(LoadEventData::class)
     }
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)
