@@ -11,6 +11,7 @@ import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.useEffect
+import tools.aqua.bgw.elements.styleBuilder
 
 external interface ColorVisualProps : Props {
     var data: ColorVisualData
@@ -20,9 +21,9 @@ val ColorVisual = FC<ColorVisualProps> { props ->
     bgwColorVisual {
         id = props.data.id
         css {
+            styleBuilder(props.data.style)
             backgroundColor = Color(props.data.color)
             opacity = number(props.data.transparency)
-            // TODO...
         }
     }
 }

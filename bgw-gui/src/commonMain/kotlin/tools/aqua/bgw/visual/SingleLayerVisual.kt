@@ -19,9 +19,12 @@
 
 package tools.aqua.bgw.visual
 
+import tools.aqua.bgw.style.Style
+import tools.aqua.bgw.observable.lists.ObservableArrayList
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
-import tools.aqua.bgw.observable.properties.StringProperty
+import tools.aqua.bgw.style.StyleDeclaration
 
 /**
  * Baseclass for single layer visuals.
@@ -60,7 +63,6 @@ sealed class SingleLayerVisual : Visual() {
    *
    * @see style
    */
-  val styleProperty: StringProperty = StringProperty("")
 
   /**
    * Css style that gets applied to this [Visual].
@@ -71,9 +73,8 @@ sealed class SingleLayerVisual : Visual() {
    *
    * @see styleProperty
    */
-  var style: String
-    get() = styleProperty.value
+  var style: Style = Style()
     set(value) {
-      styleProperty.value = value
+      field = value
     }
 }

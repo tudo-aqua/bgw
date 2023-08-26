@@ -7,6 +7,8 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.style.Style
+import tools.aqua.bgw.style.StyleDeclaration
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.*
 
@@ -287,6 +289,12 @@ object ContainerMapper {
     }
 }
 
+object StyleMapper {
+    fun map(style: Style) : Map<String, String> {
+        return style.getDeclarations()
+    }
+}
+
 object VisualMapper {
     fun map(visual: Visual) : VisualData {
         return when (visual) {
@@ -294,7 +302,7 @@ object VisualMapper {
                 id = visual.id
                 color = "rgba(${visual.color.red}, ${visual.color.green}, ${visual.color.blue}, ${visual.color.alpha})"
                 transparency = visual.transparency
-                // style
+                style = StyleMapper.map(visual.style)
             }
 
             is ImageVisual -> ImageVisualData().apply {

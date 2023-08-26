@@ -1,5 +1,7 @@
 import kotlinx.serialization.Serializable
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.style.Style
+import tools.aqua.bgw.style.StyleDeclaration
 
 typealias ID = String
 typealias ToggleGroup = List<ID>
@@ -197,7 +199,7 @@ abstract class VisualData {
 @Serializable
 abstract class SingleLayerVisualData : VisualData() {
     var transparency: Double = 0.0
-    var style: String = ""
+    var style: Map<String, String> = emptyMap()
 }
 
 @Serializable
