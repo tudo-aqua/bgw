@@ -34,6 +34,7 @@ import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 
 external interface CameraPaneProps : Props {
     var data: CameraPaneData

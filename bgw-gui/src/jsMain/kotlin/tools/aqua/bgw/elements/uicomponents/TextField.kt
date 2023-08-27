@@ -10,9 +10,7 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.input
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
@@ -21,6 +19,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 
 external interface TextFieldProps : Props {
     var data: TextFieldData
@@ -31,29 +30,40 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: TextFieldData) {
 }
 
 val TextField = FC<TextFieldProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is TextFieldData) {
+                println("Updating TextField ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwTextField {
-        id = props.data.id
+        id = data.id
         className = ClassName("textField")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
 
         input {
-            placeholder = props.data.prompt
-            defaultValue = props.data.text
+            placeholder = data.prompt
+            defaultValue = data.text
             css {
-                fontBuilder(props.data)
-                inputBuilder(props.data)
+                fontBuilder(data)
+                inputBuilder(data)
 
                 placeholder {
-                    fontBuilder(props.data)
+                    fontBuilder(data)
                     opacity = number(0.5)
                 }
                 textIndent = 20.rem
@@ -61,7 +71,7 @@ val TextField = FC<TextFieldProps> { props ->
             onChange = {
                 val value = it.target.value
                 //println("Text changed $value")
-                JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = props.data.id })
+                JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = data.id })
             }
         }
 

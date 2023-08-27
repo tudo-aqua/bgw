@@ -14,6 +14,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.handlers
 import tools.aqua.bgw.webSocket
 
 external interface ButtonProps : Props {
@@ -34,24 +35,35 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
 }
 
 val Button = FC<ButtonProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is ButtonData) {
+                println("Updating Button ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+
     bgwButton {
         tabIndex = 0
-        id = props.data.id
+        id = data.id
         className = ClassName("button")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
 
         bgwText {
             className = ClassName("text")
-            +props.data.text
+            +data.text
         }
 
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }

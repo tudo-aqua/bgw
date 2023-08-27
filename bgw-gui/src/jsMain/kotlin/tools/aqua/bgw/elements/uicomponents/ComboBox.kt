@@ -8,9 +8,7 @@ import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.option
 import react.dom.html.ReactHTML.select
@@ -19,6 +17,7 @@ import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 
 external interface ComboBoxProps : Props {
     var data: ComboBoxData
@@ -29,42 +28,54 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ComboBoxData) {
 }
 
 val ComboBox = FC<ComboBoxProps> { props ->
+
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is ComboBoxData) {
+                println("Updating ComboBox ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwComboBox {
-        id = props.data.id
+        id = data.id
         className = ClassName("comboBox")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
 
         select {
-            placeholder = props.data.prompt
+            placeholder = data.prompt
             css {
-                fontBuilder(props.data)
-                comboBoxBuilder(props.data)
+                fontBuilder(data)
+                comboBoxBuilder(data)
                 placeholder {
-                    fontBuilder(props.data)
+                    fontBuilder(data)
                     opacity = number(0.5)
                 }
                 position = Position.absolute
             }
-            props.data.items.forEach {
+            data.items.forEach {
                 option {
                     value = it
                     +it
-                    selected = it == props.data.selectedItem
+                    selected = it == data.selectedItem
                 }
             }
             onChange = {
                 val value = it.target.value
                 //println("Selection changed $value")
-                JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = props.data.id })
+                JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = data.id })
             }
         }
 

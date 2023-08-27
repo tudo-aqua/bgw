@@ -1,14 +1,13 @@
 package tools.aqua.bgw.elements.layoutviews
 
 import ComponentViewData
+import LayoutViewData
 import PaneData
 import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
@@ -20,6 +19,7 @@ import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 
 external interface PaneProps : Props {
     var data : PaneData
@@ -30,24 +30,35 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
 }
 
 val Pane = FC<PaneProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is PaneData) {
+                println("Updating Pane ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwPane {
         tabIndex = 0
-        id = props.data.id
+        id = data.id
         className = ClassName("pane")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
 
         bgwContents {
             className = ClassName("components")
-            props.data.components.forEach {
+            data.components.forEach {
                 +NodeBuilder.build(it)
             }
         }
