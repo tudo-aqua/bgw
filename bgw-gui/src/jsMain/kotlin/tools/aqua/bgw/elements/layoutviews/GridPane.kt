@@ -1,49 +1,42 @@
-package tools.aqua.bgw.elements.gamecomponentviews
+package tools.aqua.bgw.elements.layoutviews
 
-import ComponentViewData
-import HexagonViewData
-import PaneData
-import csstype.*
+import GridPaneData
+import csstype.ClassName
+import csstype.Display
+import csstype.PropertiesBuilder
+import csstype.fr
 import data.event.KeyEventAction
 import emotion.react.css
-import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import react.FC
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
-import react.dom.svg.ReactSVG
-import react.useEffect
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
-import kotlin.math.sqrt
 
-external interface HexagonViewProps : Props {
-    var data : HexagonViewData
+external interface GridPaneProps : Props {
+    var data : GridPaneData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
     cssBuilder(componentViewData)
-    justifyContent = JustifyContent.center
-    alignItems = AlignItems.center
 }
 
-val HexagonView = FC<HexagonViewProps> { props ->
-    bgwHexagonView {
+val ReactGridPane = FC<GridPaneProps> { props ->
+    bgwGridPane {
         tabIndex = 0
         id = props.data.id
-        className = ClassName("hexagonView")
+        className = ClassName("gridPane")
         css {
             cssBuilderIntern(props.data)
-            width = (sqrt(3.0) * props.data.size).rem
-            height = 2 * props.data.size.rem
         }
 
         bgwVisuals {
@@ -52,6 +45,24 @@ val HexagonView = FC<HexagonViewProps> { props ->
                 +it
             }
         }
+
+        bgwContents {
+            className = ClassName("components")
+            css {
+                gridTemplateColumns = csstype.repeat(props.data.columns, 1.fr)
+                gridTemplateRows = csstype.repeat(props.data.rows, 1.fr)
+                display = Display.grid
+            }
+            props.data.grid.forEach {
+                val component = it.component
+                if(component == null) {
+                    div {}
+                } else {
+                    +NodeBuilder.build(component)
+                }
+            }
+        }
+
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
@@ -59,5 +70,5 @@ val HexagonView = FC<HexagonViewProps> { props ->
     }
 }
 
-inline val bgwHexagonView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_hexagon_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwGridPane: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_grid_pane".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

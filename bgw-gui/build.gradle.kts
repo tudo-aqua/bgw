@@ -69,7 +69,7 @@ kotlin {
 }
 
 application {
-  mainClass.set("tools.aqua.bgw.main.ServerKt")
+  mainClass.set("tools.aqua.bgw.main.MainKt")
 }
 
 tasks.named<Copy>("jvmProcessResources") {

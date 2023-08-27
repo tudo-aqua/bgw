@@ -93,6 +93,9 @@ fun main() {
                     println("Scene1 Clicked Button 1 ${scene.button.id}!")
                     showGameScene(scene2)
             }
+            scene.button2.onKeyPressed = {
+                println("Typed ${it.keyCode} on ${it.id}!")
+            }
             scene.button2.onMouseClicked = {
                 println("Scene1 Clicked Button 2 ${scene.button.id}!")
                 scene.button.visual = ImageVisual("assets/$counter.jpg")

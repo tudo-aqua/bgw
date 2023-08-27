@@ -32,6 +32,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
 
 val Label = FC<LabelProps> { props ->
     bgwLabel {
+        tabIndex = 0
         id = props.data.id
         className = ClassName("label")
         css {

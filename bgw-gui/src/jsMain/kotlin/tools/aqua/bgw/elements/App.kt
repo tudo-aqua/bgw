@@ -84,6 +84,12 @@ val App = FC<AppProps> { props ->
                 position = important(Position.relative)
             }
 
+            "bgw_grid_pane > bgw_contents > *" {
+                position = important(Position.relative)
+                left = important(0.px)
+                top = important(0.px)
+            }
+
             ".text, .components" {
                 position = Position.absolute
             }

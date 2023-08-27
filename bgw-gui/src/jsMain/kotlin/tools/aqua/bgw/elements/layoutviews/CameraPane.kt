@@ -239,6 +239,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
     }
 
     bgwCameraPane {
+        tabIndex = 0
         id = props.data.id
         className = ClassName("cameraPane")
         css {

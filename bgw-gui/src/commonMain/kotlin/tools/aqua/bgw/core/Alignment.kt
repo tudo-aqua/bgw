@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.core
 
+import kotlinx.serialization.Serializable
 import tools.aqua.bgw.core.HorizontalAlignment.LEFT
 import tools.aqua.bgw.core.HorizontalAlignment.RIGHT
 import tools.aqua.bgw.core.VerticalAlignment.BOTTOM

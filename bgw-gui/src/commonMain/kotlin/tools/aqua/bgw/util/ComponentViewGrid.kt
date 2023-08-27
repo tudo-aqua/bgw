@@ -780,9 +780,9 @@ internal class ComponentViewGrid<T : ComponentView>(rows: Int, columns: Int) :
 
       val res = GridIteratorElement(currCol, currRow, grid[currCol][currRow] as? T)
 
-      currRow = ++currRow % grid[currCol].size
+      currCol = ++currCol % grid.size
 
-      if (currRow == 0) currCol++
+      if (currCol == 0) currRow++
 
       return res
     }

@@ -14,7 +14,9 @@ object LayoutViewBuilder {
     }
     private fun buildGrid(gridPane: GridPane<*>) {
         //TODO: Add property for spacing
-        gridPane.updateGui = { Frontend.updateScene() }
+        gridPane.updateGui = {
+            Frontend.updateScene()
+        }
         gridPane.mapNotNull { it.component }.forEach { component -> ComponentViewBuilder.build(component) }
     }
 

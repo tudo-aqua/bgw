@@ -3,6 +3,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.*
 import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
@@ -222,6 +223,19 @@ object LayoutMapper {
         return when (layout) {
             is Pane<*> -> (PaneData().fillData(layout) as PaneData).apply {
                 components = layout.components.map { RecursiveMapper.map(it) }
+            }
+            is GridPane<*> -> (GridPaneData().fillData(layout) as GridPaneData).apply {
+                columns = layout.columns
+                rows = layout.rows
+                grid = layout.grid.map {
+                    GridPaneElementData(
+                        it.columnIndex,
+                        it.rowIndex,
+                        if(it.component != null) RecursiveMapper.map(it.component) else null,
+                        "center" to "center"
+                    )
+                }
+                spacing = layout.spacing
             }
             else -> throw IllegalArgumentException("Unknown layout type: ${layout::class.simpleName}")
         }

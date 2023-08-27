@@ -38,6 +38,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
 
 val Button = FC<ButtonProps> { props ->
     bgwButton {
+        tabIndex = 0
         id = props.data.id
         className = ClassName("button")
         css {

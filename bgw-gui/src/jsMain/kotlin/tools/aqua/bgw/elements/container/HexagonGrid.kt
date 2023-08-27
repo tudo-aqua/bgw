@@ -40,6 +40,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
 
 val HexagonGrid = FC<HexagonGridProps> { props ->
     bgwHexagonGrid {
+        tabIndex = 0
         id = props.data.id
         className = ClassName("hexagonGrid")
         css {

@@ -1,5 +1,6 @@
 import kotlinx.serialization.Serializable
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.style.StyleDeclaration
 
@@ -136,8 +137,17 @@ class GridPaneData: LayoutViewData() {
     var columns : Int = 0
     var rows : Int = 0
     var spacing : Double = 0.0
-    var grid : List<List<ComponentViewData>> = emptyList()
+    var grid : List<GridPaneElementData> = emptyList()
 }
+
+@Serializable
+class GridPaneElementData(
+    var column : Int,
+    var row : Int,
+    var component : ComponentViewData?,
+    var alignment: Pair<String, String>
+)
+
 @Serializable
 class CameraPaneData : ComponentViewData() {
     var target : LayoutViewData? = null

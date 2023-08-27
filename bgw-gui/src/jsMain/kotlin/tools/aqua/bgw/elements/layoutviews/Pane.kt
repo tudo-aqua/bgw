@@ -31,6 +31,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
 
 val Pane = FC<PaneProps> { props ->
     bgwPane {
+        tabIndex = 0
         id = props.data.id
         className = ClassName("pane")
         css {
