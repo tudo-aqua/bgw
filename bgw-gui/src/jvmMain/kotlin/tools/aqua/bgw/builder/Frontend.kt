@@ -199,7 +199,7 @@ internal class Frontend {
     }
 
     /** Manually refreshes currently displayed [Scene]s. */
-    fun updateScene() {
+    internal fun updateScene() {
       showGameScene(boardGameScene!!)
     }
 
