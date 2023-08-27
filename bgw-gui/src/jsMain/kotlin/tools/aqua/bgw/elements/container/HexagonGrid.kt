@@ -9,14 +9,11 @@ import data.event.KeyEventAction
 import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import react.dom.svg.ReactSVG
-import react.useEffect
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -25,6 +22,7 @@ import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -39,17 +37,28 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
 }
 
 val HexagonGrid = FC<HexagonGridProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is HexagonGridData) {
+                println("Updating HexagonGrid ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwHexagonGrid {
         tabIndex = 0
-        id = props.data.id
+        id = data.id
         className = ClassName("hexagonGrid")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
@@ -62,8 +71,8 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
             var minY = 0.0
             var maxY = 0.0
 
-            props.data.map.forEach {
-                if(props.data.coordinateSystem == "offset") {
+            data.map.forEach {
+                if(data.coordinateSystem == "offset") {
                     bgwHexagonContent {
                         val size = it.value.size
                         val w = size * sqrt(3.0)
@@ -72,11 +81,11 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
                         val r = it.key.split("/")[1].toInt()
 
                         val x = if(r % 2 == 0)
-                            w * q + props.data.spacing * (q - 1)
+                            w * q + data.spacing * (q - 1)
                         else
-                            w * q + props.data.spacing * (q - 1) + w / 2
+                            w * q + data.spacing * (q - 1) + w / 2
 
-                        val y = h * 0.75 * r + props.data.spacing * (r - 1)
+                        val y = h * 0.75 * r + data.spacing * (r - 1)
 
                         if(x < minX)
                             minX = x
@@ -105,11 +114,11 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
                         q = q + (r - (r and 1)) / 2
 
                         val x = if(r % 2 == 0)
-                            w * q + props.data.spacing * (q - 1)
+                            w * q + data.spacing * (q - 1)
                         else
-                            w * q + props.data.spacing * (q - 1) + w / 2
+                            w * q + data.spacing * (q - 1) + w / 2
 
-                        val y = h * 0.75 * r + props.data.spacing * (r - 1)
+                        val y = h * 0.75 * r + data.spacing * (r - 1)
 
                         if(x < minX)
                             minX = x

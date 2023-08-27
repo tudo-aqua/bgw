@@ -4,9 +4,7 @@ import LinearLayoutData
 import csstype.*
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
@@ -14,6 +12,7 @@ import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.fit
+import tools.aqua.bgw.handlers
 
 external interface LinearLayoutProps : Props {
     var data : LinearLayoutData
@@ -24,16 +23,27 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: LinearLayoutData) {
 }
 
 val LinearLayout = FC<LinearLayoutProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is LinearLayoutData) {
+                println("Updating LinearLayout ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwLinearLayout {
-        id = props.data.id
+        id = data.id
         className = ClassName("linearLayout")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
@@ -44,38 +54,38 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
                 width = 100.pct
                 height = 100.pct
                 display = Display.flex
-                flexDirection = if(props.data.orientation == "horizontal") FlexDirection.row else FlexDirection.column
-                if(props.data.orientation == "horizontal") {
-                    justifyContent = when(props.data.alignment.first) {
+                flexDirection = if(data.orientation == "horizontal") FlexDirection.row else FlexDirection.column
+                if(data.orientation == "horizontal") {
+                    justifyContent = when(data.alignment.first) {
                         "left" -> JustifyContent.flexStart
                         "center" -> JustifyContent.center
                         "right" -> JustifyContent.flexEnd
                         else -> JustifyContent.center
                     }
-                    alignItems = when(props.data.alignment.second) {
+                    alignItems = when(data.alignment.second) {
                         "top" -> AlignItems.flexStart
                         "center" -> AlignItems.center
                         "bottom" -> AlignItems.flexEnd
                         else -> AlignItems.center
                     }
                 } else {
-                    alignItems = when(props.data.alignment.first) {
+                    alignItems = when(data.alignment.first) {
                         "left" -> AlignItems.flexStart
                         "center" -> AlignItems.center
                         "right" -> AlignItems.flexEnd
                         else -> AlignItems.center
                     }
-                    justifyContent = when(props.data.alignment.second) {
+                    justifyContent = when(data.alignment.second) {
                         "top" -> JustifyContent.flexStart
                         "center" -> JustifyContent.center
                         "bottom" -> JustifyContent.flexEnd
                         else -> JustifyContent.center
                     }
                 }
-                gap = props.data.spacing.rem
+                gap = data.spacing.rem
             }
 
-            props.data.components.forEach {
+            data.components.forEach {
                 +NodeBuilder.build(it)
             }
         }
