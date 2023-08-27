@@ -6,28 +6,37 @@ import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
-import react.useEffect
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
+import tools.aqua.bgw.handlers
 
 external interface ColorVisualProps : Props {
     var data: ColorVisualData
 }
 
 val ColorVisual = FC<ColorVisualProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is ColorVisualData) {
+                println("Updating ColorVisual ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwColorVisual {
-        id = props.data.id
+        id = data.id
         css {
-            styleBuilder(props.data.style)
-            flipBuilder(props.data.flipped)
-            filterBuilder(props.data.filters)
-            backgroundColor = Color(props.data.color)
-            opacity = number(props.data.transparency)
+            styleBuilder(data.style)
+            flipBuilder(data.flipped)
+            filterBuilder(data.filters)
+            backgroundColor = Color(data.color)
+            opacity = number(data.transparency)
         }
     }
 }

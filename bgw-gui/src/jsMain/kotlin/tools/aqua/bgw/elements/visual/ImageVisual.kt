@@ -4,31 +4,41 @@ import ImageVisualData
 import csstype.*
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
+import tools.aqua.bgw.handlers
 
 external interface ImageVisualProps : Props {
     var data: ImageVisualData
 }
 
 val ImageVisual = FC<ImageVisualProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is ImageVisualData) {
+                println("Updating ImageVisual ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwImageVisual {
-        id = props.data.id
+        id = data.id
 
         css {
-            styleBuilder(props.data.style)
-            flipBuilder(props.data.flipped)
-            filterBuilder(props.data.filters)
-            backgroundImage = url(props.data.path)
+            styleBuilder(data.style)
+            flipBuilder(data.flipped)
+            filterBuilder(data.filters)
+            backgroundImage = url(data.path)
             backgroundSize = BackgroundSize.cover
             backgroundRepeat = BackgroundRepeat.noRepeat
             backgroundPosition = BackgroundPosition.center
-            opacity = number(props.data.transparency)
+            opacity = number(data.transparency)
             // TODO...
         }
     }
