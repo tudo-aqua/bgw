@@ -43,7 +43,9 @@ object ComponentViewBuilder {
             isVisibleProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
             isDisabledProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
             isFocusableProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
-            visualProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            visualProperty.guiListener = { _, _ ->
+                Frontend.updateComponent(componentView)
+            }
         }
     }
 }

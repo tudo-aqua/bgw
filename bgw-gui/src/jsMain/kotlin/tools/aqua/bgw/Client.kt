@@ -6,6 +6,7 @@ import Data
 import ID
 import PropData
 import SceneData
+import VisualData
 import data.event.internal.LoadEventData
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
@@ -53,6 +54,11 @@ fun main() {
                 val component =  receivedData
                 val handler = handlers[component.id]
                 handler?.invoke(component)
+            }
+            is VisualData -> {
+                val visual = receivedData
+                val handler = handlers[visual.id]
+                handler?.invoke(visual)
             }
             else -> {}
         }
