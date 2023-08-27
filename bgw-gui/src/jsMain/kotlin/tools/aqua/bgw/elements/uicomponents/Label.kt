@@ -27,8 +27,6 @@ external interface LabelProps : Props {
 
 fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
     cssBuilder(componentViewData)
-    justifyContent = JustifyContent.center
-    alignItems = AlignItems.center
     fontSize = 30.rem
 }
 

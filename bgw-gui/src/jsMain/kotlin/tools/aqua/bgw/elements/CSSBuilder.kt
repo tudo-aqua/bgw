@@ -1,6 +1,7 @@
 package tools.aqua.bgw.elements
 
 import ComponentViewData
+import LabeledUIComponentData
 import LayoutViewData
 import UIComponentData
 import VisualData
@@ -22,7 +23,23 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
 fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
     fontBuilder(componentViewData)
-    // TODO...
+}
+
+fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
+    cssBuilder(componentViewData as ComponentViewData)
+    fontBuilder(componentViewData)
+    justifyContent = when(componentViewData.alignment.first) {
+        "left" -> JustifyContent.flexStart
+        "center" -> JustifyContent.center
+        "right" -> JustifyContent.flexEnd
+        else -> JustifyContent.center
+    }
+    alignItems = when(componentViewData.alignment.second) {
+        "top" -> AlignItems.flexStart
+        "center" -> AlignItems.center
+        "bottom" -> AlignItems.flexEnd
+        else -> AlignItems.center
+    }
 }
 
 fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {

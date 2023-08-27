@@ -32,7 +32,18 @@ val TextVisual = FC<TextVisualProps> { props ->
             fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?
             fontSize = props.data.font?.size?.rem
             color = Color(props.data.font?.color ?: "black")
-            // TODO: text alignment
+            justifyContent = when(props.data.alignment.first) {
+                "left" -> JustifyContent.flexStart
+                "center" -> JustifyContent.center
+                "right" -> JustifyContent.flexEnd
+                else -> JustifyContent.center
+            }
+            alignItems = when(props.data.alignment.second) {
+                "top" -> AlignItems.flexStart
+                "center" -> AlignItems.center
+                "bottom" -> AlignItems.flexEnd
+                else -> AlignItems.center
+            }
         }
         +props.data.text
     }

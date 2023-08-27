@@ -44,7 +44,7 @@ abstract class UIComponentData : ComponentViewData() {
 @Serializable
 abstract class LabeledUIComponentData : UIComponentData() {
     var text: String = ""
-    var alignment: String = ""
+    var alignment: Pair<String, String> = Pair("", "")
     var isWrapText: Boolean = false
 }
 
@@ -184,7 +184,7 @@ class HexagonGridData : GameComponentContainerData() {
 @Serializable
 class LinearLayoutData: GameComponentContainerData() {
     var orientation: String = ""
-    var alignment: String = ""
+    var alignment: Pair<String, String> = Pair("", "")
     var spacing: Double = 0.0
 }
 @Serializable
@@ -222,7 +222,7 @@ class ImageVisualData : SingleLayerVisualData() {
 class TextVisualData : SingleLayerVisualData() {
     var text: String = ""
     var font : FontData? = null
-    var alignment: String = ""
+    var alignment: Pair<String, String> = Pair("", "")
     var offsetX: Double = 0.0
     var offsetY: Double = 0.0
 }

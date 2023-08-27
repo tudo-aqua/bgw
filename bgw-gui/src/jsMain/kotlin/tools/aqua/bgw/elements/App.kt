@@ -88,6 +88,14 @@ val App = FC<AppProps> { props ->
                 position = Position.absolute
             }
 
+            "bgw_linear_layout > bgw_contents > *" {
+                position = important(Position.relative)
+                left = important(Globals.unset)
+                top = important(Globals.unset)
+                flexGrow = number(0.0)
+                flexShrink = number(0.0)
+            }
+
             "#root" {
                 width = 100.pct
                 height = 100.pct

@@ -48,7 +48,7 @@ object ComponentMapper {
                     else -> throw IllegalArgumentException("Unknown component type: ${componentView::class.simpleName}")
                 }.apply {
                     font = FontMapper.map(componentView.font)
-                    // alignment
+                    alignment = Pair(componentView.alignment.horizontalAlignment.name.lowercase(), componentView.alignment.verticalAlignment.name.lowercase())
                     text = componentView.text
                     isWrapText = componentView.isWrapText
                 }
@@ -161,7 +161,7 @@ object ComponentMapper {
 
             // TODO - StructuredDataView
             is ListView<*> -> (mapSpecific(componentView) as ListViewData).apply {
-                // orientation
+                orientation = componentView.orientation.name.lowercase()
             }
             is TableView<*> -> (mapSpecific(componentView) as TableViewData).apply {
                 // columns (as TableColumnData)
@@ -279,8 +279,8 @@ object ContainerMapper {
             is LinearLayout<*> -> (LinearLayoutData().fillData(container) as LinearLayoutData).apply {
                 components = container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
                 spacing = container.spacing
-                // orientation
-                // alignment
+                orientation = container.orientation.name.lowercase()
+                alignment = Pair(container.alignment.horizontalAlignment.name.lowercase(), container.alignment.verticalAlignment.name.lowercase())
             }
 
             is Satchel -> (SatchelData().fillData(container) as SatchelData).apply {
@@ -338,7 +338,7 @@ object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
-                // alignment
+                alignment = Pair(visual.alignment.horizontalAlignment.name.lowercase(), visual.alignment.verticalAlignment.name.lowercase())
             }
 
             // --- Compound Visuals ---
