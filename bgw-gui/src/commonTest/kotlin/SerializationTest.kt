@@ -6,6 +6,7 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
@@ -19,7 +20,11 @@ class SerializationTest {
             addAll(label, label2)
         }
         val cameraPane = CameraPane<LayoutView<*>>(visual= ColorVisual.YELLOW, width = 200, height = 200, target = pane)
-        addComponents(cameraPane)
+        val input = TextField(posX = 50, posY = 450, width = 200, height = 200, text = "Click 2").apply {
+            prompt = "Enter your name"
+            visual = ColorVisual.RED
+        }
+        addComponents(input)
     }
 
     val mouseEventData = MouseEventData(
@@ -28,7 +33,7 @@ class SerializationTest {
             button = MouseButtonType.LEFT_BUTTON)
     @Test
     fun testSerialization() {
-        val json = jsonMapper.encodeToString(mouseEventData)
+        val json = jsonMapper.encodeToString(SceneMapper.map(scene))
         println(json)
     }
 }

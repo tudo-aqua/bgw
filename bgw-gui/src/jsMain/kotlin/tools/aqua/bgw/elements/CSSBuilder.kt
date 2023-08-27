@@ -3,6 +3,7 @@ package tools.aqua.bgw.elements
 import ComponentViewData
 import LabeledUIComponentData
 import LayoutViewData
+import TextInputUIComponentData
 import UIComponentData
 import VisualData
 import csstype.*
@@ -48,6 +49,17 @@ fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
     fontStyle = (componentViewData.font?.fontStyle ?: "normal") as FontStyle?
     fontSize = componentViewData.font?.size?.rem
     color = Color(componentViewData.font?.color ?: "black")
+}
+
+fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
+    position = Position.absolute
+    width = 100.pct
+    height = 100.pct
+    padding = 0.px
+    margin = 0.px
+    border = None.none
+    appearance = None.none
+    backgroundColor = rgba(0, 0, 0, 0.0)
 }
 
 fun PropertiesBuilder.styleBuilder(style : Map<String, String>) {

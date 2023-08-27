@@ -36,6 +36,11 @@ private val module = SerializersModule {
         subclass(LinearLayoutData::class)
         subclass(SatchelData::class)
     }
+    polymorphic(TextInputUIComponentData::class) {
+        subclass(TextFieldData::class)
+        subclass(TextAreaData::class)
+        subclass(PasswordFieldData::class)
+    }
     polymorphic(GameComponentViewData::class) {
         subclass(CardViewData::class)
         subclass(DiceViewData::class)

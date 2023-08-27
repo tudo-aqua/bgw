@@ -48,6 +48,7 @@ abstract class LabeledUIComponentData : UIComponentData() {
     var isWrapText: Boolean = false
 }
 
+@Serializable
 abstract class TextInputUIComponentData : UIComponentData() {
     var text: String = ""
     var prompt: String = ""
