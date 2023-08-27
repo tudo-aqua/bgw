@@ -2,6 +2,7 @@ package tools.aqua.bgw.application
 
 import ID
 import data.event.EventData
+import data.event.KeyEventAction
 import data.event.KeyEventData
 import data.event.MouseEventData
 import data.event.internal.LoadEventData
@@ -21,6 +22,7 @@ import org.cef.handler.CefLoadHandlerAdapter
 import org.cef.handler.CefMessageRouterHandler
 import org.cef.handler.CefMessageRouterHandlerAdapter
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
 import java.awt.BorderLayout
 import java.awt.EventQueue
@@ -58,7 +60,14 @@ class JCEFApplication : Application {
                 if(eventData.id != component.id) return false
                 when(eventData) {
                     is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
-                    is KeyEventData -> TODO()
+                    is KeyEventData -> {
+                        val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)
+                        when(eventData.action) {
+                            KeyEventAction.PRESS -> component.onKeyPressed?.invoke(keyEvent)
+                            KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
+                            KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
+                        }
+                    }
                 }
                 return true
             }

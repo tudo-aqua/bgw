@@ -99,7 +99,6 @@ fun main() {
                 counter++
                 if (counter > 5) counter = 1
             }
-
             scene2.button2.onMouseClicked = {
                 println("Scene2 Clicked Button 2 ${scene.button.id}!")
                 showGameScene(scene)

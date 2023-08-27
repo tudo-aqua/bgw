@@ -1,6 +1,7 @@
 package tools.aqua.bgw.event
 
 import data.event.EventData
+import data.event.KeyEventData
 import kotlinx.browser.window
 import kotlinx.serialization.encodeToString
 import jsonMapper

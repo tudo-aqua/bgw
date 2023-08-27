@@ -106,7 +106,6 @@ val App = FC<AppProps> { props ->
     }
     bgwGameScene {
         id = "boardGameScene"
-
         +SceneBuilder.build(props.data)
     }
 }

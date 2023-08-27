@@ -28,8 +28,12 @@ import kotlin.math.pow
 import kotlin.math.round
 import kotlin.random.Random
 import csstype.*
+import data.event.KeyEventAction
 import react.*
 import react.dom.html.ReactHTML.h1
+import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.event.JCEFEventDispatcher
 
 external interface CameraPaneProps : Props {
     var data: CameraPaneData
@@ -255,6 +259,10 @@ val CameraPane = FC<CameraPaneProps> { props ->
                 +props.data.target?.let { LayoutNodeBuilder.build(it) }
             }
         }
+        onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
+        onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
+        onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
+        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
