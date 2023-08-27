@@ -35,7 +35,10 @@ object NodeBuilder {
         return when (componentViewData) {
             is LayoutViewData -> LayoutNodeBuilder.build(componentViewData)
             is LabelData -> ReactLabel.create { data = componentViewData }
-            is ButtonData -> ReactButton.create { data = componentViewData }
+            is ButtonData -> {
+                if(componentViewData.text == "Next Player") println("Next Player Button")
+                ReactButton.create { data = componentViewData }
+            }
             is TextFieldData -> ReactTextField.create { data = componentViewData }
             is ComboBoxData -> ReactComboBox.create { data = componentViewData }
             is HexagonGridData -> ReactHexagonGrid.create { data = componentViewData }

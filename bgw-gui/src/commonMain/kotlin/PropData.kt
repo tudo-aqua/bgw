@@ -207,7 +207,7 @@ class SatchelData: GameComponentContainerData() { }
 
 // VISUALS
 @Serializable
-abstract class VisualData {
+abstract class VisualData : Data() {
     var id: ID = ""
 }
 

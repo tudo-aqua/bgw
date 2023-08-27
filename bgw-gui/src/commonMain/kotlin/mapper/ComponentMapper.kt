@@ -116,7 +116,7 @@ object ComponentMapper {
     }
 
     fun map(componentView: ComponentView) : ComponentViewData {
-        println("Mapping ComponentView: $componentView")
+        //println("Mapping ComponentView: $componentView")
         return when (componentView) {
 
             // TODO - LabeledUIComponent

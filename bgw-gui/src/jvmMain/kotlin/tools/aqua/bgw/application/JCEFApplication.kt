@@ -62,7 +62,7 @@ class JCEFApplication : Application {
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData.id != component.id) return false
-                println("Received: $eventData for ${component.id}")
+                //println("Received: $eventData for ${component.id}")
                 when(eventData) {
                     is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
                     is KeyEventData -> {

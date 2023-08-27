@@ -21,6 +21,7 @@ package tools.aqua.bgw.builder
 
 import PropData
 import RecursiveMapper
+import VisualMapper
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
@@ -205,6 +206,11 @@ internal class Frontend {
 
     internal fun updateComponent(component: ComponentView) {
       val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
+      runBlocking { sendToAllClients(json) }
+    }
+
+    internal fun updateVisual(visual: Visual) {
+      val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
       runBlocking { sendToAllClients(json) }
     }
 

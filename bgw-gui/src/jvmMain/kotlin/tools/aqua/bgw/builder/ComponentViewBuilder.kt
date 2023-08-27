@@ -20,6 +20,8 @@ object ComponentViewBuilder {
         }
         registerEventListeners(componentView)
         registerObservers(componentView)
+
+        VisualBuilder.build(componentView.visual)
     }
 
     private fun registerEventListeners(componentView: ComponentView) {
