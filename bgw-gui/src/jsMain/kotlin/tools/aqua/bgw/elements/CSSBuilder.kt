@@ -1,5 +1,6 @@
 package tools.aqua.bgw.elements
 
+import ComboBoxData
 import ComponentViewData
 import LabeledUIComponentData
 import LayoutViewData
@@ -52,6 +53,17 @@ fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
 }
 
 fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
+    position = Position.absolute
+    width = 100.pct
+    height = 100.pct
+    padding = 0.px
+    margin = 0.px
+    border = None.none
+    appearance = None.none
+    backgroundColor = rgba(0, 0, 0, 0.0)
+}
+
+fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) {
     position = Position.absolute
     width = 100.pct
     height = 100.pct

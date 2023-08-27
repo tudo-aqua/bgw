@@ -3,6 +3,7 @@ package tools.aqua.bgw.builder
 import ButtonData
 import CameraPaneData
 import CardViewData
+import ComboBoxData
 import ComponentViewData
 import DiceViewData
 import GameComponentContainerData
@@ -24,6 +25,7 @@ import tools.aqua.bgw.elements.gamecomponentviews.HexagonView as ReactHexagonVie
 import tools.aqua.bgw.elements.container.HexagonGrid as ReactHexagonGrid
 import tools.aqua.bgw.elements.layoutviews.CameraPane as ReactCameraPane
 import tools.aqua.bgw.elements.gamecomponentviews.TokenView as ReactTokenView
+import tools.aqua.bgw.elements.uicomponents.ComboBox as ReactComboBox
 
 object NodeBuilder {
     fun build(componentViewData: ComponentViewData): ReactElement<*> {
@@ -32,6 +34,7 @@ object NodeBuilder {
             is LabelData -> ReactLabel.create { data = componentViewData }
             is ButtonData -> ReactButton.create { data = componentViewData }
             is TextFieldData -> ReactTextField.create { data = componentViewData }
+            is ComboBoxData -> ReactComboBox.create { data = componentViewData }
             is HexagonGridData -> ReactHexagonGrid.create { data = componentViewData }
             is CameraPaneData -> ReactCameraPane.create { data = componentViewData }
 
