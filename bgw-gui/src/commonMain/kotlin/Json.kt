@@ -27,17 +27,18 @@ private val module = SerializersModule {
         subclass(PaneData::class)
         subclass(GridPaneData::class)
         subclass(CameraPaneData::class)
-        // GAME COMPONENTS
-        subclass(CardViewData::class)
-        subclass(DiceViewData::class)
-        subclass(HexagonViewData::class)
-        subclass(TokenViewData::class)
         // CONTAINER
         subclass(AreaData::class)
         subclass(CardStackData::class)
         subclass(HexagonGridData::class)
         subclass(LinearLayoutData::class)
         subclass(SatchelData::class)
+    }
+    polymorphic(GameComponentViewData::class) {
+        subclass(CardViewData::class)
+        subclass(DiceViewData::class)
+        subclass(HexagonViewData::class)
+        subclass(TokenViewData::class)
     }
     polymorphic(VisualData::class) {
         subclass(ColorVisualData::class)
