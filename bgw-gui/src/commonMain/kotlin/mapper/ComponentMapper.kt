@@ -10,7 +10,6 @@ import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
-import tools.aqua.bgw.style.StyleDeclaration
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.*
 
@@ -225,14 +224,19 @@ object LayoutMapper {
                 components = layout.components.map { RecursiveMapper.map(it) }
             }
             is GridPane<*> -> (GridPaneData().fillData(layout) as GridPaneData).apply {
-                columns = layout.columns
-                rows = layout.rows
-                grid = layout.grid.map {
-                    GridPaneElementData(
+                val grid = layout.grid.clone().apply {
+                    removeEmptyColumns()
+                    removeEmptyRows()
+                }
+                columns = grid.columns
+                rows = grid.rows
+                this.grid = grid.map {
+                    val alignment = layout.getCellCenterMode(it.columnIndex, it.rowIndex)
+                    GridElementData(
                         it.columnIndex,
                         it.rowIndex,
                         if(it.component != null) RecursiveMapper.map(it.component) else null,
-                        "center" to "center"
+                        alignment = alignment.horizontalAlignment.name.lowercase() to alignment.verticalAlignment.name.lowercase()
                     )
                 }
                 spacing = layout.spacing

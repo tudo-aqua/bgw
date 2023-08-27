@@ -84,7 +84,7 @@ val App = FC<AppProps> { props ->
                 position = important(Position.relative)
             }
 
-            "bgw_grid_pane > bgw_contents > *" {
+            "bgw_grid_element > *" {
                 position = important(Position.relative)
                 left = important(0.px)
                 top = important(0.px)
@@ -146,3 +146,6 @@ inline fun polygonPath(
 
 inline fun fit(): LengthType.FitContent =
     "fit-content".unsafeCast<LengthType.FitContent>()
+
+inline fun minContent(): GridTemplateTracks =
+    "min-content".unsafeCast<GridTemplateTracks>()

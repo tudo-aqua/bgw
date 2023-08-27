@@ -1,8 +1,4 @@
 import kotlinx.serialization.Serializable
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.style.Style
-import tools.aqua.bgw.style.StyleDeclaration
 
 typealias ID = String
 typealias ToggleGroup = List<ID>
@@ -137,11 +133,11 @@ class GridPaneData: LayoutViewData() {
     var columns : Int = 0
     var rows : Int = 0
     var spacing : Double = 0.0
-    var grid : List<GridPaneElementData> = emptyList()
+    var grid : List<GridElementData> = emptyList()
 }
 
 @Serializable
-class GridPaneElementData(
+class GridElementData(
     var column : Int,
     var row : Int,
     var component : ComponentViewData?,

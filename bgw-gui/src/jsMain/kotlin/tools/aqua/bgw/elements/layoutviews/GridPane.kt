@@ -1,10 +1,7 @@
 package tools.aqua.bgw.elements.layoutviews
 
 import GridPaneData
-import csstype.ClassName
-import csstype.Display
-import csstype.PropertiesBuilder
-import csstype.fr
+import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
@@ -17,9 +14,7 @@ import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.bgwContents
-import tools.aqua.bgw.elements.bgwVisuals
-import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 
 external interface GridPaneProps : Props {
@@ -37,6 +32,8 @@ val ReactGridPane = FC<GridPaneProps> { props ->
         className = ClassName("gridPane")
         css {
             cssBuilderIntern(props.data)
+            width = fit()
+            height = fit()
         }
 
         bgwVisuals {
@@ -49,16 +46,19 @@ val ReactGridPane = FC<GridPaneProps> { props ->
         bgwContents {
             className = ClassName("components")
             css {
-                gridTemplateColumns = csstype.repeat(props.data.columns, 1.fr)
-                gridTemplateRows = csstype.repeat(props.data.rows, 1.fr)
+                gridTemplateColumns = repeat(props.data.columns, minContent())
+                gridTemplateRows = repeat(props.data.rows, minContent())
                 display = Display.grid
+                width = fit()
+                height = fit()
+                gap = props.data.spacing.rem
             }
             props.data.grid.forEach {
                 val component = it.component
                 if(component == null) {
                     div {}
                 } else {
-                    +NodeBuilder.build(component)
+                    +NodeBuilder.build(it)
                 }
             }
         }

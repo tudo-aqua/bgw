@@ -8,7 +8,9 @@ import tools.aqua.bgw.visual.ColorVisual
 
 
 class GridGameScene : BoardGameScene() {
-    private val gridPane = GridPane<ComponentView>(columns = 5, rows = 5, visual = toColorVisual("#403F4CFF"))
+    private val gridPane = GridPane<ComponentView>(columns = 5, rows = 5, visual = toColorVisual("#403F4CFF")).apply {
+        spacing = 10.0
+    }
 
     init {
         repeat(gridPane.columns) { x ->
@@ -17,28 +19,36 @@ class GridGameScene : BoardGameScene() {
                 gridPane[x, y] = Label(
                     width = 100,
                     height = 100,
-                    text = "${index + 1}",
+                    text = "($x, $y)",
                     visual = randomColorVisual()
                 ).apply {
                     onMouseClicked = {
-                        gridPane.removeRow(gridPane.rows - 1)
+                        gridPane.removeChild(this)
                     }
                 }
             }
         }
+
+        (gridPane[0, 0] as? Label).apply {
+            this?.text = "Hello World!"
+            this?.visual = ColorVisual.WHITE
+            this?.width = 200.0
+            this?.height = 200.0
+
+        }
         addComponents(gridPane)
     }
+}
 
-    private fun randomColorVisual(): ColorVisual {
-        return ColorVisual((0..255).random(), (0..255).random(), (0..255).random(), 1)
-    }
+private fun randomColorVisual(): ColorVisual {
+    return ColorVisual((0..255).random(), (0..255).random(), (0..255).random(), 1)
+}
 
-    private fun toColorVisual(hexColor: String): ColorVisual {
-        val color = hexColor.removePrefix("#")
-        val a = color.substring(0, 2).toInt(16)
-        val r = color.substring(2, 4).toInt(16)
-        val g = color.substring(4, 6).toInt(16)
-        val b = color.substring(6, 8).toInt(16)
-        return ColorVisual(r, g, b, a)
-    }
+private fun toColorVisual(hexColor: String): ColorVisual {
+    val color = hexColor.removePrefix("#")
+    val a = color.substring(0, 2).toInt(16)
+    val r = color.substring(2, 4).toInt(16)
+    val g = color.substring(4, 6).toInt(16)
+    val b = color.substring(6, 8).toInt(16)
+    return ColorVisual(r, g, b, a)
 }
