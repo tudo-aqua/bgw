@@ -1,3 +1,5 @@
+import data.event.*
+import data.event.internal.LoadEventData
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -54,6 +56,7 @@ private val module = SerializersModule {
     polymorphic(EventData::class) {
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
+        subclass(LoadEventData::class)
     }
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)

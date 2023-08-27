@@ -8,5 +8,5 @@ interface Application {
     fun start(callback : (Any) -> Unit)
     fun stop()
 
-    fun registerMouseEventListener(component: ComponentView)
+    fun registerEventListeners(component: ComponentView)
 }

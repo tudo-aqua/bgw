@@ -1,7 +1,11 @@
 package tools.aqua.bgw.application
 
-import EventData
-import MouseEventData
+import ID
+import data.event.EventData
+import data.event.KeyEventAction
+import data.event.KeyEventData
+import data.event.MouseEventData
+import data.event.internal.LoadEventData
 import jsonMapper
 import kotlinx.serialization.decodeFromString
 import me.friwi.jcefmaven.CefAppBuilder
@@ -17,10 +21,8 @@ import org.cef.handler.CefFocusHandlerAdapter
 import org.cef.handler.CefLoadHandlerAdapter
 import org.cef.handler.CefMessageRouterHandler
 import org.cef.handler.CefMessageRouterHandlerAdapter
-import tools.aqua.bgw.builder.Frontend
-import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.event.MouseButtonType
+import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
 import java.awt.BorderLayout
 import java.awt.EventQueue
@@ -34,7 +36,7 @@ import kotlin.system.exitProcess
 class JCEFApplication : Application {
     private var frame : MainFrame? = null
 
-    private val handlers = mutableListOf<CefMessageRouterHandler>()
+    private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
     override fun start(callback: (Any) -> Unit) {
         EventQueue.invokeLater {
@@ -48,22 +50,30 @@ class JCEFApplication : Application {
         TODO("Not yet implemented")
     }
 
-    override fun registerMouseEventListener(component: ComponentView) {
-        val myHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
+    override fun registerEventListeners(component: ComponentView) {
+        println(handlersMap.keys.size)
+        if (handlersMap.containsKey(component.id)) return
+        val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
-                if(request == "bgwLoaded") return false
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
-                if(eventData is MouseEventData && eventData.id == component.id) {
-                    println("Mouse event triggered for component ${component.id}")
-                    component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
-                    return true
+                if(eventData.id != component.id) return false
+                when(eventData) {
+                    is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
+                    is KeyEventData -> {
+                        val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)
+                        when(eventData.action) {
+                            KeyEventAction.PRESS -> component.onKeyPressed?.invoke(keyEvent)
+                            KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
+                            KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
+                        }
+                    }
                 }
-                return false
+                return true
             }
         }
-        handlers.add(myHandler)
-        frame?.msgRouter?.addHandler(myHandler, false)
+        handlersMap[component.id] = handler
+        frame?.msgRouter?.addHandler(handler, false)
     }
 
 }
@@ -94,7 +104,9 @@ class MainFrame(
         client.addMessageRouter(msgRouter)
         val myHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
-                if(request == "bgwLoaded") {
+                val json = Base64.decode(request)
+                val eventData = jsonMapper.decodeFromString<EventData>(json)
+                if(eventData is LoadEventData) {
                     loadCallback.invoke(Unit)
                     return true
                 }

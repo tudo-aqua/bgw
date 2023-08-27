@@ -47,6 +47,7 @@ class HexagonGrid<T : HexagonView>(
         posX = posX, posY = posY, width = width, height = height, visual = visual
     ) {
 
+    //TODO: Make this internal
     /** A mutable map that stores the hexagons in the grid. */
     val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 

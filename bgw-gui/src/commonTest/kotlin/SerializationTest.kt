@@ -1,3 +1,4 @@
+import data.event.MouseEventData
 import kotlin.test.Test
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView
@@ -21,7 +22,7 @@ class SerializationTest {
         addComponents(cameraPane)
     }
 
-    val mouseEventData = MouseEventData( id = "componentView.id",
+    val mouseEventData = MouseEventData(
             posX = 100.0,
             posY = 100.0,
             button = MouseButtonType.LEFT_BUTTON)

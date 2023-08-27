@@ -17,7 +17,10 @@
 
 package tools.aqua.bgw.event
 
+import kotlinx.serialization.Serializable
+
 /** Enum indicating direction of a [ScrollEvent]. */
+@Serializable
 enum class ScrollDirection {
   /** Upwards. */
   UP,

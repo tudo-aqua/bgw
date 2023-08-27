@@ -1,25 +1,24 @@
 package tools.aqua.bgw.event
 
+import data.event.EventData
+import data.event.KeyEventData
 import kotlinx.browser.window
 import kotlinx.serialization.encodeToString
 import jsonMapper
-import mapper.EventMapper
 
 object JCEFEventDispatcher : EventDispatcher {
-    init {
+    init { initialize() }
+    override fun dispatchEvent(event: EventData) {
+        val json = jsonMapper.encodeToString(event)
+        try {
+            window.asDynamic().bgwQuery(Base64.encode(json))
+        } catch (e: Throwable) {
+            println("Error while dispatching event: $e")
+        }
+    }
+
+    private fun initialize() {
         val script = "window.bgwQuery = function(request) { window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }"
         js(script)
-        println("JCEFEventDispatcher initialized")
-    }
-    override fun dispatchEvent(event: Event) {
-        val json = jsonMapper.encodeToString(EventMapper.map(event))
-        when(event) {
-            is MouseEvent -> {
-                window.asDynamic().bgwQuery(Base64.encode(json))
-            }
-            is KeyEvent -> {
-                window.asDynamic().bgwQuery("bgwKey")
-            }
-        }
     }
 }

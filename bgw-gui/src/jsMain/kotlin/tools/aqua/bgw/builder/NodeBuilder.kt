@@ -6,6 +6,7 @@ import CardViewData
 import ComponentViewData
 import DiceViewData
 import GameComponentContainerData
+import GameComponentViewData
 import HexagonGridData
 import HexagonViewData
 import LabelData
@@ -13,6 +14,8 @@ import LayoutViewData
 import TokenViewData
 import react.ReactElement
 import react.create
+import kotlinx.js.jso
+import react.*
 import tools.aqua.bgw.elements.uicomponents.Button as ReactButton
 import tools.aqua.bgw.elements.uicomponents.Label as ReactLabel
 import tools.aqua.bgw.elements.gamecomponentviews.HexagonView as ReactHexagonView
