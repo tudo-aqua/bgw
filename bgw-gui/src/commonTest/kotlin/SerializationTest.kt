@@ -1,3 +1,4 @@
+import data.event.MouseEventData
 import kotlin.test.Test
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView

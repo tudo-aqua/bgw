@@ -1,13 +1,14 @@
 package tools.aqua.bgw.builder
 
 import ID
+import data.event.MouseEventData
 import tools.aqua.bgw.event.MouseButtonType
 import  react.dom.events.MouseEvent as ReactMouseEvent
 import tools.aqua.bgw.event.MouseEvent
 
 object ReactConverters {
-    fun ReactMouseEvent<*,*>.toMouseEvent(targetID: ID?): MouseEvent {
-        return MouseEvent(
+    fun ReactMouseEvent<*,*>.toMouseEventData(targetID: ID?): MouseEventData {
+        return MouseEventData(
             when (button) {
                 0 -> MouseButtonType.LEFT_BUTTON
                 1 -> MouseButtonType.MOUSE_WHEEL

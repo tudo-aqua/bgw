@@ -1,14 +1,14 @@
 package tools.aqua.bgw.event
 
+import data.event.EventData
 import kotlinx.browser.window
 import kotlinx.serialization.encodeToString
 import jsonMapper
-import mapper.EventMapper
 
 object JCEFEventDispatcher : EventDispatcher {
     init { initialize() }
-    override fun dispatchEvent(event: Event) {
-        val json = jsonMapper.encodeToString(EventMapper.map(event))
+    override fun dispatchEvent(event: EventData) {
+        val json = jsonMapper.encodeToString(event)
         try {
             window.asDynamic().bgwQuery(Base64.encode(json))
         } catch (e: Throwable) {

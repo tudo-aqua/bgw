@@ -3,12 +3,13 @@ package tools.aqua.bgw.builder
 import ButtonData
 import CameraPaneData
 import ComponentViewData
+import GameComponentViewData
 import HexagonGridData
 import HexagonViewData
 import LabelData
 import LayoutViewData
-import react.ReactElement
-import react.create
+import kotlinx.js.jso
+import react.*
 import tools.aqua.bgw.elements.uicomponents.Button as ReactButton
 import tools.aqua.bgw.elements.uicomponents.Label as ReactLabel
 import tools.aqua.bgw.elements.gamecomponentviews.HexagonView as ReactHexagonView

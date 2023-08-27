@@ -99,7 +99,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   internal var isLayoutFromCenter: Boolean = false
 
   /** Name field only for debugging purposes. Has no effect on rendering. */
-  var name: String = this::class.simpleName + "@" + this.hashCode().toHexString()
+  val name: String = this::class.simpleName + "@" + this.hashCode().toHexString()
   private fun Int.toHexString() = "0x" + this.toString(16).padStart(8, '0')
   /**
    * [Property] for the horizontal position of this [ComponentView].

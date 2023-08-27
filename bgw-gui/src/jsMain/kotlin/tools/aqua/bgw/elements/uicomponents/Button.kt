@@ -13,7 +13,7 @@ import tools.aqua.bgw.elements.bgwText
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
-import tools.aqua.bgw.builder.ReactConverters.toMouseEvent
+import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 
 external interface ButtonProps : Props {
     var data : ButtonData
@@ -53,7 +53,7 @@ val Button = FC<ButtonProps> { props ->
             +props.data.text
         }
         onClick = {
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEvent(id))
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
         }
     }
 }
