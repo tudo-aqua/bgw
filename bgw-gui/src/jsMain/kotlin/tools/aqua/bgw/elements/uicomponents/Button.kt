@@ -26,7 +26,6 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     cssBuilder(componentViewData)
     justifyContent = JustifyContent.center
     alignItems = AlignItems.center
-    fontSize = 15.rem
     cursor = Cursor.pointer
 
     hover {

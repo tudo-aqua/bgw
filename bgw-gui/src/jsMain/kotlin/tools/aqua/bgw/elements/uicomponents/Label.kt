@@ -27,7 +27,6 @@ external interface LabelProps : Props {
 
 fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
     cssBuilder(componentViewData)
-    fontSize = 30.rem
 }
 
 val Label = FC<LabelProps> { props ->
