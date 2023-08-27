@@ -8,7 +8,7 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 
 object GameComponentContainerBuilder {
     fun build(gameComponentContainer: GameComponentContainer<out DynamicComponentView>) {
-        gameComponentContainer.observableComponents.guiListener = { _, _ -> Frontend.updateScene() }
+        gameComponentContainer.observableComponents.guiListener = { _, _ -> Frontend.updateComponent(gameComponentContainer) }
         when(gameComponentContainer) {
             is Area -> buildArea(gameComponentContainer)
             is CardStack -> buildCardStack(gameComponentContainer)
@@ -16,12 +16,13 @@ object GameComponentContainerBuilder {
             is LinearLayout -> buildLinearLayout(gameComponentContainer)
             is Satchel -> buildSatchel(gameComponentContainer)
         }
+        gameComponentContainer.components.forEach { ComponentViewBuilder.build(it) }
     }
 
     private fun buildArea(area: Area<out GameComponentView>) {}
 
     private fun buildCardStack(cardStack: CardStack<out CardView>) {
-        cardStack.alignmentProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        cardStack.alignmentProperty.guiListener = { _, _ -> Frontend.updateComponent(cardStack) }
         //TODO: Check for internal listeners
     }
 
@@ -30,9 +31,9 @@ object GameComponentContainerBuilder {
     }
 
     private fun buildLinearLayout(linearLayout: LinearLayout<out GameComponentView>) {
-        linearLayout.spacingProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        linearLayout.orientationProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        linearLayout.alignmentProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        linearLayout.spacingProperty.guiListener = { _, _ -> Frontend.updateComponent(linearLayout) }
+        linearLayout.orientationProperty.guiListener = { _, _ -> Frontend.updateComponent(linearLayout) }
+        linearLayout.alignmentProperty.guiListener = { _, _ -> Frontend.updateComponent(linearLayout) }
         //TODO: Check for internal listeners
     }
 

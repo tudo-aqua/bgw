@@ -3,9 +3,13 @@ package tools.aqua.bgw.elements.uicomponents
 import TextFieldData
 import csstype.*
 import data.event.KeyEventAction
+import data.event.internal.SelectionChangedEventData
+import data.event.internal.TextInputChangedEventData
 import emotion.react.css
+import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLSelectElement
 import react.FC
 import react.IntrinsicType
 import react.Props
@@ -53,6 +57,11 @@ val TextField = FC<TextFieldProps> { props ->
                     opacity = number(0.5)
                 }
                 textIndent = 20.rem
+            }
+            onChange = {
+                val value = it.target.value
+                //println("Text changed $value")
+                JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = props.data.id })
             }
         }
 

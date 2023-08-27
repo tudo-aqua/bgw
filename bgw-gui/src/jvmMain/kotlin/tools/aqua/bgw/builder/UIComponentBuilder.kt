@@ -5,10 +5,10 @@ import tools.aqua.bgw.components.uicomponents.*
 object UIComponentBuilder {
     @Suppress("DuplicatedCode")
     fun build(uiComponent: UIComponent) {
-        uiComponent.internalCSSProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        uiComponent.fontProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        uiComponent.backgroundStyleProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        uiComponent.componentStyleProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        uiComponent.internalCSSProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
+        uiComponent.fontProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
+        uiComponent.backgroundStyleProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
+        uiComponent.componentStyleProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
         when (uiComponent) {
             is LabeledUIComponent -> buildLabeledUIComponent(uiComponent)
             is TextInputUIComponent -> buildTextInputUIComponent(uiComponent)
@@ -20,9 +20,9 @@ object UIComponentBuilder {
     }
 
     private fun buildLabeledUIComponent(labeledUIComponent: LabeledUIComponent) {
-        labeledUIComponent.isWrapTextProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        labeledUIComponent.textProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        labeledUIComponent.alignmentProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        labeledUIComponent.isWrapTextProperty.guiListener = { _, _ -> Frontend.updateComponent(labeledUIComponent) }
+        labeledUIComponent.textProperty.guiListener = { _, _ -> Frontend.updateComponent(labeledUIComponent) }
+        labeledUIComponent.alignmentProperty.guiListener = { _, _ -> Frontend.updateComponent(labeledUIComponent) }
         when (labeledUIComponent) {
             is Button -> buildButton(labeledUIComponent)
             is CheckBox -> buildCheckBox(labeledUIComponent)
@@ -31,17 +31,19 @@ object UIComponentBuilder {
         }
     }
 
-    private fun buildTextInputUIComponent(uiComponent: TextInputUIComponent) {
-        when (uiComponent) {
-            is TextArea -> buildTextArea(uiComponent)
-            is TextField -> buildTextField(uiComponent)
-            is PasswordField -> buildPasswordField(uiComponent)
+    private fun buildTextInputUIComponent(textInputUIComponent: TextInputUIComponent) {
+        textInputUIComponent.textProperty.guiListener = { _, _ -> Frontend.updateComponent(textInputUIComponent) }
+        textInputUIComponent.promptProperty.guiListener = { _, _ -> Frontend.updateComponent(textInputUIComponent) }
+        when (textInputUIComponent) {
+            is TextArea -> buildTextArea(textInputUIComponent)
+            is TextField -> buildTextField(textInputUIComponent)
+            is PasswordField -> buildPasswordField(textInputUIComponent)
         }
     }
 
     private fun buildBinaryStateButton(binaryStateButton: BinaryStateButton) {
         //TODO: Add property for toggle group
-        binaryStateButton.selectedProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        binaryStateButton.selectedProperty.guiListener = { _, _ -> Frontend.updateComponent(binaryStateButton) }
         when (binaryStateButton) {
             is ToggleButton -> buildToggleButton(binaryStateButton)
             is RadioButton -> buildRadioButton(binaryStateButton)
@@ -51,17 +53,17 @@ object UIComponentBuilder {
     private fun buildButton(button: Button) {}
 
     private fun buildCheckBox(checkBox: CheckBox) {
-        checkBox.isCheckedProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        checkBox.isIndeterminateAllowedProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        checkBox.isIndeterminateProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        checkBox.isCheckedProperty.guiListener = { _, _ -> Frontend.updateComponent(checkBox) }
+        checkBox.isIndeterminateAllowedProperty.guiListener = { _, _ -> Frontend.updateComponent(checkBox) }
+        checkBox.isIndeterminateProperty.guiListener = { _, _ -> Frontend.updateComponent(checkBox) }
     }
 
     private fun buildLabel(label: Label) {}
 
     private fun buildComboBox(comboBox: ComboBox<*>) {
-        comboBox.observableItemsList.guiListener = { _, _ -> Frontend.updateScene() }
-        comboBox.selectedItemProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        comboBox.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        comboBox.observableItemsList.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
+        comboBox.selectedItemProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
+        comboBox.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
     }
 
     private fun buildTextArea(textArea: TextArea) {}
@@ -75,23 +77,23 @@ object UIComponentBuilder {
     private fun buildRadioButton(radioButton: RadioButton) {}
 
     private fun buildColorPicker(colorPicker: ColorPicker) {
-        colorPicker.selectedColorProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        colorPicker.selectedColorProperty.guiListener = { _, _ -> Frontend.updateComponent(colorPicker) }
     }
 
     private fun buildProgressBar(progressBar: ProgressBar) {
-        progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        progressBar.barColorProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
+        progressBar.barColorProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
     }
 
     @Suppress("DuplicatedCode")
     private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {
-        structuredDataView.items.guiListener = { _, _ -> Frontend.updateScene() }
-        structuredDataView.selectionModeProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        structuredDataView.selectionBackgroundProperty.guiListener = { _, _ -> Frontend.updateScene() }
-        structuredDataView.selectionStyleProperty.guiListener = { _, _ -> Frontend.updateScene() }
+        structuredDataView.items.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
+        structuredDataView.selectionModeProperty.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
+        structuredDataView.selectionBackgroundProperty.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
+        structuredDataView.selectionStyleProperty.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
         /* Internal Properties */
-        structuredDataView.selectedItemsList.guiListener = { _, _ -> Frontend.updateScene() }
-        structuredDataView.selectedIndicesList.guiListener = { _, _ -> Frontend.updateScene() }
+        structuredDataView.selectedItemsList.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
+        structuredDataView.selectedIndicesList.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
     }
 }
 

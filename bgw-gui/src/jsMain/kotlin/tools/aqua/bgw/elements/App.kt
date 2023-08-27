@@ -28,7 +28,7 @@ val App = FC<AppProps> { props ->
     Global {
         styles {
             "html" {
-                fontSize = (100 / 720.0).vh
+                fontSize = (100 / 1080.0).vh
                 width = 100.vw
                 height = 100.vh
                 margin = 0.px

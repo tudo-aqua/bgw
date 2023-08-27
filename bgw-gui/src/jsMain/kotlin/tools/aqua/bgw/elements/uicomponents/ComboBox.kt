@@ -3,19 +3,20 @@ package tools.aqua.bgw.elements.uicomponents
 import ComboBoxData
 import csstype.*
 import data.event.KeyEventAction
+import data.event.internal.SelectionChangedEventData
 import emotion.react.css
+import kotlinx.browser.document
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLSelectElement
 import react.FC
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.option
 import react.dom.html.ReactHTML.select
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 
@@ -44,7 +45,6 @@ val ComboBox = FC<ComboBoxProps> { props ->
 
         select {
             placeholder = props.data.prompt
-            defaultValue = if(props.data.selectedItem == null) "" else props.data.selectedItem.toString()
             css {
                 fontBuilder(props.data)
                 comboBoxBuilder(props.data)
@@ -56,9 +56,15 @@ val ComboBox = FC<ComboBoxProps> { props ->
             }
             props.data.items.forEach {
                 option {
-                    value = it.lowercase()
+                    value = it
                     +it
+                    selected = it == props.data.selectedItem
                 }
+            }
+            onChange = {
+                val value = it.target.value
+                //println("Selection changed $value")
+                JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = props.data.id })
             }
         }
 

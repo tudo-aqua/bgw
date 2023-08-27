@@ -5,10 +5,7 @@ import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import react.ChildrenBuilder
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.VisualBuilder
@@ -17,6 +14,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.webSocket
 
 external interface ButtonProps : Props {
     var data : ButtonData

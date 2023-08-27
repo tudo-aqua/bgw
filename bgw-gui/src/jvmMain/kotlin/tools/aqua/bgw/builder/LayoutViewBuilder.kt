@@ -14,14 +14,12 @@ object LayoutViewBuilder {
     }
     private fun buildGrid(gridPane: GridPane<*>) {
         //TODO: Add property for spacing
-        gridPane.updateGui = {
-            Frontend.updateScene()
-        }
+        gridPane.updateGui = { Frontend.updateComponent(gridPane) }
         gridPane.mapNotNull { it.component }.forEach { component -> ComponentViewBuilder.build(component) }
     }
 
     private fun buildPane(pane: Pane<*>) {
-        pane.observableComponents.guiListener = { _, _ -> Frontend.updateScene() }
+        pane.observableComponents.guiListener = { _, _ -> Frontend.updateComponent(pane) }
         pane.components.forEach { component -> ComponentViewBuilder.build(component) }
     }
 }

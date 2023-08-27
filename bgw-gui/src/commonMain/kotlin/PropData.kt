@@ -4,8 +4,16 @@ typealias ID = String
 typealias ToggleGroup = List<ID>
 
 @Serializable
+class PropData(
+    var data: Data? = null
+)
+
+@Serializable
+sealed class Data
+
+@Serializable
 // FIXME - DONE
-class SceneData {
+class SceneData : Data() {
     var width : Double = 0.0
     var height : Double = 0.0
     var background : VisualData? = null
@@ -13,7 +21,7 @@ class SceneData {
 }
 
 @Serializable
-abstract class ComponentViewData {
+abstract class ComponentViewData : Data() {
     var id: ID = ""
     var posX: Double = 0.0
     var posY: Double = 0.0

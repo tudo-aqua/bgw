@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.builder
 
+import PropData
+import RecursiveMapper
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
@@ -27,6 +29,12 @@ import jsonMapper
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.application.JCEFApplication
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.GameComponentContainer
+import tools.aqua.bgw.components.container.HexagonGrid
+import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -47,13 +55,14 @@ internal class Frontend {
 
   /** Starts the application. */
   internal fun start() {
-    println("Starting server...")
+    //println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
-      println("Updating scene...")
+      //println("Updating scene...")
       SceneBuilder.build(boardGameScene!!)
       renderedDOM.value = true
     }
+
   }
 
   companion object {
@@ -131,7 +140,7 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
-      val json = jsonMapper.encodeToString(SceneMapper.map(scene))
+      val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
       runBlocking { sendToAllClients(json) }
     }
 
@@ -141,7 +150,9 @@ internal class Frontend {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double) {
-      TODO("Not yet implemented")
+      if(boardGameScene == null) return
+      val json = jsonMapper.encodeToString(PropData(SceneMapper.map(boardGameScene!!)))
+      runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -151,9 +162,13 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
-      println("Set new scene: $scene")
-      val json = jsonMapper.encodeToString(SceneMapper.map(scene))
-      runBlocking { sendToAllClients(json) }
+      //println("Set new scene: $scene")
+      try {
+        val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
+        runBlocking { sendToAllClients(json) }
+      } catch (e: Exception) {
+        //println("Error: $e")
+      }
     }
 
     /**
@@ -184,8 +199,13 @@ internal class Frontend {
     }
 
     /** Manually refreshes currently displayed [Scene]s. */
-    internal fun updateScene() {
+    fun updateScene() {
       showGameScene(boardGameScene!!)
+    }
+
+    internal fun updateComponent(component: ComponentView) {
+      val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
+      runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -224,12 +244,26 @@ internal class Frontend {
     }
 
     fun loadFont(font: File): Boolean {
-      TODO("Not yet implemented")
+      return true
     }
 
     fun runLater(task: Runnable) {
       TODO("Not yet implemented")
     }
     // endregion
+  }
+}
+
+fun Scene<*>.findComponent(id: String): ComponentView? {
+  return this.components.map { it.findComponent(id) }.find { it != null }
+}
+
+fun ComponentView.findComponent(id: String): ComponentView? {
+  return when(this) {
+    is CameraPane<*> ->  this.target.findComponent(id)
+    is Pane<*> -> this.components.map { it.findComponent(id) }.find { it != null }
+    is GridPane<*> -> this.grid.map { it.component?.findComponent(id) }.find { it != null }
+    is GameComponentContainer<*> -> this.components.map { it.findComponent(id) }.find { it != null }
+    else -> if(id == this.id) this else null
   }
 }

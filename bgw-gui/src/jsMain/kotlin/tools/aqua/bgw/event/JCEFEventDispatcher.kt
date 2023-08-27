@@ -13,7 +13,7 @@ object JCEFEventDispatcher : EventDispatcher {
         try {
             window.asDynamic().bgwQuery(Base64.encode(json))
         } catch (e: Throwable) {
-            println("Error while dispatching event: $e")
+            //println("Error while dispatching event: $e")
         }
     }
 

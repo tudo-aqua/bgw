@@ -5,9 +5,8 @@ import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
+import react.dom.flushSync
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.builder.NodeBuilder
@@ -16,6 +15,7 @@ import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 
 external interface GridPaneProps : Props {
     var data : GridPaneData
@@ -26,19 +26,31 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
 }
 
 val ReactGridPane = FC<GridPaneProps> { props ->
+
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is GridPaneData) {
+                println("Updating GridPane ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+
     bgwGridPane {
         tabIndex = 0
-        id = props.data.id
+        id = data.id
         className = ClassName("gridPane")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
             width = fit()
             height = fit()
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
@@ -46,14 +58,14 @@ val ReactGridPane = FC<GridPaneProps> { props ->
         bgwContents {
             className = ClassName("components")
             css {
-                gridTemplateColumns = repeat(props.data.columns, minContent())
-                gridTemplateRows = repeat(props.data.rows, minContent())
+                gridTemplateColumns = repeat(data.columns, minContent())
+                gridTemplateRows = repeat(data.rows, minContent())
                 display = Display.grid
                 width = fit()
                 height = fit()
-                gap = props.data.spacing.rem
+                gap = data.spacing.rem
             }
-            props.data.grid.forEach {
+            data.grid.forEach {
                 val component = it.component
                 if(component == null) {
                     div {}

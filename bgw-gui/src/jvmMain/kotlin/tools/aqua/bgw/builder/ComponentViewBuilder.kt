@@ -10,6 +10,7 @@ import tools.aqua.bgw.components.uicomponents.UIComponent
 
 object ComponentViewBuilder {
     fun build(componentView: ComponentView) {
+
         when(componentView) {
             is GameComponentContainer<out DynamicComponentView> -> GameComponentContainerBuilder.build(componentView)
             is GameComponentView -> GameComponentViewBuilder.build(componentView)
@@ -28,19 +29,19 @@ object ComponentViewBuilder {
     @Suppress("DuplicatedCode")
     private fun registerObservers(componentView: ComponentView) {
         with(componentView) {
-            zIndexProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            posXProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            posYProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            scaleXProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            scaleYProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            rotationProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            opacityProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            heightProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            widthProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            isVisibleProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            isDisabledProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            isFocusableProperty.guiListener = { _, _ -> Frontend.updateScene() }
-            visualProperty.guiListener = { _, _ -> Frontend.updateScene() }
+            zIndexProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            posXProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            posYProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            scaleXProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            scaleYProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            rotationProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            opacityProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            heightProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            widthProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            isVisibleProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            isDisabledProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            isFocusableProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+            visualProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
         }
     }
 }

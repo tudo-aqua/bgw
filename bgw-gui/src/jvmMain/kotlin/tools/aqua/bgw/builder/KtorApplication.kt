@@ -1,5 +1,6 @@
 package tools.aqua.bgw.builder
 
+import PropData
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -56,17 +57,17 @@ fun Application.configureSockets() {
 }
 
 fun onClientMessage(session: WebSocketSession, text: String) {
-    println("Received message from client $session: $text")
+    //println("Received message from client $session: $text")
 }
 
 fun onClientError(session: WebSocketSession, e: ClosedSendChannelException) {
-    println("Client $session disconnected: ${e.message}")
+    //println("Client $session disconnected: ${e.message}")
 }
 
 suspend fun onClientConnected(webSocketSession: WebSocketSession) {
-    println("Client connected: $webSocketSession")
+    //println("Client connected: $webSocketSession")
     val scene = checkNotNull(Frontend.boardGameScene)
-    val json = jsonMapper.encodeToString(SceneMapper.map(scene))
+    val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
     webSocketSession.send(json)
 }
 
@@ -82,9 +83,9 @@ fun Application.configureRouting() {
 }
 
 suspend fun sendToAllClients(message: String) {
-    println("Sending message to all clients: $message")
+    //println("Sending message to all clients: $message")
     for (session in activeSessions) {
-        println("Sending message to client $session: $message")
+        //println("Sending message to client $session: $message")
         try {
             session.send(message)
         } catch (e: ClosedSendChannelException) {

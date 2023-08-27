@@ -5,6 +5,7 @@ import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
 
 
 class GridGameScene : BoardGameScene() {
@@ -20,10 +21,10 @@ class GridGameScene : BoardGameScene() {
                     width = 100,
                     height = 100,
                     text = "($x, $y)",
-                    visual = randomColorVisual()
+                    visual = CompoundVisual(ColorVisual.BLACK, randomColorVisual())
                 ).apply {
                     onMouseClicked = {
-                        gridPane.removeChild(this)
+                        visual = CompoundVisual(ColorVisual.BLACK, randomColorVisual())
                     }
                 }
             }

@@ -229,11 +229,11 @@ val CameraPane = FC<CameraPaneProps> { props ->
     }
 
     useEffect {
-        println("Before mounting camera...")
+        //println("Before mounting camera...")
         container = document.getElementById(props.data.id) as HTMLElement
         target = document.getElementById(props.data.target?.id + "Target") as HTMLElement
 
-        println("Camera mounting...")
+        //println("Camera mounting...")
         if(container != null && target != null)
             mountCamera()
     }

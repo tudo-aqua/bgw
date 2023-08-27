@@ -7,9 +7,7 @@ import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
@@ -20,6 +18,7 @@ import tools.aqua.bgw.elements.bgwText
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.handlers
 
 external interface LabelProps : Props {
     var data: LabelData
@@ -30,24 +29,35 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
 }
 
 val Label = FC<LabelProps> { props ->
+    val (data, setData) = useState(props.data)
+
+    useEffect {
+        handlers[props.data.id] = { newData ->
+            if(newData is LabelData) {
+                println("Updating Label ${props.data.id}")
+                setData(newData)
+            }
+        }
+    }
+    
     bgwLabel {
         tabIndex = 0
-        id = props.data.id
+        id = data.id
         className = ClassName("label")
         css {
-            cssBuilderIntern(props.data)
+            cssBuilderIntern(data)
         }
 
         bgwVisuals {
             className = ClassName("visuals")
-            VisualBuilder.build(props.data.visual).forEach {
+            VisualBuilder.build(data.visual).forEach {
                 +it
             }
         }
 
         bgwText {
             className = ClassName("text")
-            +props.data.text
+            +data.text
         }
 
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }

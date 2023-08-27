@@ -6,6 +6,8 @@ import data.event.KeyEventAction
 import data.event.KeyEventData
 import data.event.MouseEventData
 import data.event.internal.LoadEventData
+import data.event.internal.SelectionChangedEventData
+import data.event.internal.TextInputChangedEventData
 import jsonMapper
 import kotlinx.serialization.decodeFromString
 import me.friwi.jcefmaven.CefAppBuilder
@@ -22,6 +24,8 @@ import org.cef.handler.CefLoadHandlerAdapter
 import org.cef.handler.CefMessageRouterHandler
 import org.cef.handler.CefMessageRouterHandlerAdapter
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.uicomponents.ComboBox
+import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
 import java.awt.BorderLayout
@@ -51,13 +55,14 @@ class JCEFApplication : Application {
     }
 
     override fun registerEventListeners(component: ComponentView) {
-        println(handlersMap.keys.size)
+        //println(handlersMap.keys.size)
         if (handlersMap.containsKey(component.id)) return
         val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData.id != component.id) return false
+                println("Received: $eventData for ${component.id}")
                 when(eventData) {
                     is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
                     is KeyEventData -> {
@@ -67,6 +72,14 @@ class JCEFApplication : Application {
                             KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
                             KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
                         }
+                    }
+                    is SelectionChangedEventData -> {
+                        //println("Selection changed")
+                        if(component is ComboBox<*>) component.select(eventData.selectedItem)
+                    }
+                    is TextInputChangedEventData -> {
+                        //println("Text changed")
+                        if(component is TextField) component.textProperty.value = eventData.value
                     }
                 }
                 return true

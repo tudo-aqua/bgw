@@ -24,7 +24,7 @@ object ComponentMapper {
             visual = VisualMapper.map(componentView.visual)
             // zIndex
             // opacity
-            // isVisible
+            isVisible = componentView.isVisible
             // isDisabled
             // isFocusable
             // scaleX
@@ -181,7 +181,7 @@ object ComponentMapper {
                 visuals = componentView.visuals.map { VisualMapper.map(it) }
             }
             is HexagonView -> (mapSpecific(componentView) as HexagonViewData).apply {
-                size = componentView.size as Double
+                size = componentView.size.toDouble()
             }
             is TokenView -> (mapSpecific(componentView) as TokenViewData)
 
@@ -282,7 +282,7 @@ object ContainerMapper {
                         posX = 0.0
                         posY = 0.0
                         visual = VisualMapper.map(value.visual)
-                        size = value.size as Double
+                        size = value.size.toDouble()
                     }
                 }
 

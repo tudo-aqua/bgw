@@ -48,9 +48,9 @@ class FXApplication(
 
     override fun registerEventListeners(component: ComponentView) {
         val eventTarget = rootComponent.engine.document.getElementById(component.id) as EventTarget
-        println("Registered mouse event listener for component ${component.id}")
+        //println("Registered mouse event listener for component ${component.id}")
         eventTarget.addEventListener("click", {
-            println("Mouse event triggered for component ${component.id}")
+            //println("Mouse event triggered for component ${component.id}")
             if (it is W3CMouseEvent) { component.onMouseClicked?.invoke(MouseEvent(it.getButtonType(), it.clientX, it.clientY)) }
         }, false)
     }
@@ -59,7 +59,7 @@ class FXApplication(
         val window = webView.engine.executeScript("window") as JSObject
         window.setMember("javaApp", object {
             fun consoleLog(message: String) {
-                println("JavaScript console: $message")
+                //println("JavaScript console: $message")
             }
         }) // Expose Java object to JavaScript
         webView.engine.executeScript(
@@ -72,7 +72,7 @@ class FXApplication(
         target.addEventListener("bgwLoaded", callback, false)
 
         /*val onLoad = {
-            println("Loaded event triggered")
+            //println("Loaded event triggered")
             val btn = webView.engine.document.getElementById(button.id) as EventTarget
             btn.addEventListener("click", {
                 button.onMouseClicked?.invoke(MouseEvent(MouseButtonType.MOUSE_WHEEL, 0, 0))

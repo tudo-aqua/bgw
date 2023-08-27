@@ -34,6 +34,6 @@ class SerializationTest {
     @Test
     fun testSerialization() {
         val json = jsonMapper.encodeToString(SceneMapper.map(scene))
-        println(json)
+        //println(json)
     }
 }

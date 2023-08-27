@@ -65,7 +65,11 @@ open class ComboBox<T>(
         height = height,
         font = font,
         visual = Visual.EMPTY) {
-  /**
+    internal fun select(selectedItem: String) {
+        selectedItemProperty.value = observableItemsList.first { it.toString() == selectedItem }
+    }
+
+    /**
    * [Property] for the [items] [List] for this [ComboBox].
    *
    * @see items

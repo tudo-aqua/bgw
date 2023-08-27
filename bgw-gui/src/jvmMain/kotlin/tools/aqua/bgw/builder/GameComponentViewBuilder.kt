@@ -15,7 +15,7 @@ object GameComponentViewBuilder {
     private fun buildCardView(cardView: CardView) {}
 
     private fun buildDiceView(diceView: DiceView) {
-        diceView.visuals.guiListener = { _, _ -> Frontend.updateScene() }
+        diceView.visuals.guiListener = { _, _ -> Frontend.updateComponent(diceView) }
     }
 
     private fun buildHexagonView(hexagonView: HexagonView) {}

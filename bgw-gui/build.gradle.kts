@@ -87,7 +87,7 @@ publishing {
     create<MavenPublication>("maven") {
       groupId = "tools.aqua"
       artifactId = "bgw-gui"
-      version = "0.8.1-SNAPSHOT"
+      version = "1.0-SNAPSHOT"
       from(components["kotlin"])
     }
   }
