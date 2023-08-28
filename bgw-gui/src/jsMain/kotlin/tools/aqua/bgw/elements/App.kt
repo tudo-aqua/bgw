@@ -111,6 +111,14 @@ val App = FC<AppProps> { props ->
                 flexShrink = number(0.0)
             }
 
+            "bgw_hexagon_grid > bgw_contents > bgw_hexagon_content > *" {
+                position = important(Position.relative)
+                left = important(Globals.unset)
+                top = important(Globals.unset)
+                flexGrow = number(0.0)
+                flexShrink = number(0.0)
+            }
+
             "#root" {
                 width = 100.pct
                 height = 100.pct
