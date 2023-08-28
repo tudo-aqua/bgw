@@ -33,6 +33,7 @@ import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import kotlin.system.exitProcess
@@ -45,6 +46,8 @@ class JCEFApplication : Application {
     override fun start(callback: (Any) -> Unit) {
         EventQueue.invokeLater {
             frame = MainFrame(loadCallback = callback)
+            JCEFApplication::class.java.getResource("/icon.png").let { ImageIO.read(it) }.let { frame?.iconImage = it }
+
             frame?.defaultCloseOperation = EXIT_ON_CLOSE
             frame?.isVisible = true
         }
@@ -54,8 +57,14 @@ class JCEFApplication : Application {
         TODO("Not yet implemented")
     }
 
+    override fun clearAllEventListeners() {
+        handlersMap.forEach { (_, handler) ->
+            frame?.msgRouter?.removeHandler(handler)
+        }
+        handlersMap.clear()
+    }
+
     override fun registerEventListeners(component: ComponentView) {
-        //println(handlersMap.keys.size)
         if (handlersMap.containsKey(component.id)) return
         val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {

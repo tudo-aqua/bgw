@@ -9,4 +9,6 @@ interface Application {
     fun stop()
 
     fun registerEventListeners(component: ComponentView)
+
+    fun clearAllEventListeners() {}
 }

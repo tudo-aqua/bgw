@@ -60,6 +60,7 @@ internal class Frontend {
     //println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
+      applicationEngine.clearAllEventListeners()
       SceneBuilder.build(boardGameScene!!)
       renderedDOM.value = true
     }
@@ -214,14 +215,12 @@ internal class Frontend {
 
     internal fun updateComponent(component: ComponentView) {
       //println("Sending update for component ${component.id}")
-      ComponentViewBuilder.build(component)
       messageQueue.add("updateComponent")
       //val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       //runBlocking { sendToAllClients(json) }
     }
 
     internal fun updateVisual(visual: Visual) {
-      VisualBuilder.build(visual)
       messageQueue.add("updateVisual")
       //val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
       //runBlocking { sendToAllClients(json) }
