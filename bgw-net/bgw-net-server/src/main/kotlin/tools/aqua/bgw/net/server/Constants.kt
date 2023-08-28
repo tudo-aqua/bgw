@@ -61,7 +61,7 @@ val WebSocketSession.player: Player
     }
 
 /** Websocket buffer size in bytes **/
-const val BUFFER_SIZE = 1024 * 1024 // 1MB
+const val BUFFER_SIZE = 1024 * 1024 * 100 // 100MB
 
 const val DARK_THEME = Lumo.DARK
 
