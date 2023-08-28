@@ -34,28 +34,17 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
 }
 
 val HexagonView = FC<HexagonViewProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        handlers[props.data.id] = { newData ->
-            if(newData is HexagonViewData) {
-                //println("Updating HexagonView ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwHexagonView {
         tabIndex = 0
-        id = data.id
+        id = props.data.id
         className = ClassName("hexagonView")
         css {
-            cssBuilderIntern(data)
-            width = (sqrt(3.0) * data.size).rem
-            height = 2 * data.size.rem
+            cssBuilderIntern(props.data)
+            width = (sqrt(3.0) * props.data.size).rem
+            height = 2 * props.data.size.rem
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }

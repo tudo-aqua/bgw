@@ -21,25 +21,14 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData) {
 }
 
 val TokenView = FC<TokenViewProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        handlers[props.data.id] = { newData ->
-            if(newData is TokenViewData) {
-                //println("Updating TokenView ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwTokenView {
-        id = data.id
+        id = props.data.id
         className = ClassName("tokenView")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
     }
 }
 

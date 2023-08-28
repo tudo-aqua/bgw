@@ -30,35 +30,24 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: TextFieldData) {
 }
 
 val TextField = FC<TextFieldProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        handlers[props.data.id] = { newData ->
-            if(newData is TextFieldData) {
-                //println("Updating TextField ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwTextField {
-        id = data.id
+        id = props.data.id
         className = ClassName("textField")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         input {
-            placeholder = data.prompt
-            defaultValue = data.text
+            placeholder = props.data.prompt
+            defaultValue = props.data.text
             css {
-                fontBuilder(data)
-                inputBuilder(data)
+                fontBuilder(props.data)
+                inputBuilder(props.data)
 
                 placeholder {
-                    fontBuilder(data)
+                    fontBuilder(props.data)
                     opacity = number(0.5)
                 }
                 textIndent = 20.rem
@@ -66,7 +55,7 @@ val TextField = FC<TextFieldProps> { props ->
             onChange = {
                 val value = it.target.value
                 //println("Text changed $value")
-                JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = data.id })
+                JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = props.data.id })
             }
         }
 

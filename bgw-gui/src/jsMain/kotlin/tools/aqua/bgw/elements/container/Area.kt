@@ -26,30 +26,18 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: AreaData) {
 }
 
 val Area = FC<AreaProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if(newData is AreaData) {
-                //println("Updating Area ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwArea {
-        id = data.id
+        id = props.data.id
         className = ClassName("area")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwContents {
             className = ClassName("components")
-            data.components.forEach {
+            props.data.components.forEach {
                 +NodeBuilder.build(it)
             }
         }

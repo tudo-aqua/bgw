@@ -5,58 +5,47 @@ import TextVisualData
 import csstype.*
 import emotion.react.css
 import kotlinx.browser.document
-import kotlinx.js.Object
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import react.*
+import react.FC
+import react.IntrinsicType
+import react.Props
 import react.dom.html.HTMLAttributes
+import react.useEffect
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
-import tools.aqua.bgw.handlers
 
 external interface TextVisualProps : Props {
     var data: TextVisualData
 }
 
 val TextVisual = FC<TextVisualProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if(newData is TextVisualData) {
-                //println("Updating TextVisual ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-
     bgwTextVisual {
-        id = data.id
+        id = props.data.id
         css {
-            styleBuilder(data.style)
-            flipBuilder(data.flipped)
-            filterBuilder(data.filters)
-            fontFamily = (data.font?.family ?: "Arial") as FontFamily?
-            fontWeight = (data.font?.fontWeight ?: "normal") as FontWeight?
-            fontStyle = (data.font?.fontStyle ?: "normal") as FontStyle?
-            fontSize = data.font?.size?.rem
-            color = Color(data.font?.color ?: "black")
-            justifyContent = when(data.alignment.first) {
+            styleBuilder(props.data.style)
+            flipBuilder(props.data.flipped)
+            filterBuilder(props.data.filters)
+            fontFamily = (props.data.font?.family ?: "Arial") as FontFamily?
+            fontWeight = (props.data.font?.fontWeight ?: "normal") as FontWeight?
+            fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?
+            fontSize = props.data.font?.size?.rem
+            color = Color(props.data.font?.color ?: "black")
+            justifyContent = when(props.data.alignment.first) {
                 "left" -> JustifyContent.flexStart
                 "center" -> JustifyContent.center
                 "right" -> JustifyContent.flexEnd
                 else -> JustifyContent.center
             }
-            alignItems = when(data.alignment.second) {
+            alignItems = when(props.data.alignment.second) {
                 "top" -> AlignItems.flexStart
                 "center" -> AlignItems.center
                 "bottom" -> AlignItems.flexEnd
                 else -> AlignItems.center
             }
         }
-        +data.text
+        +props.data.text
     }
 }
 

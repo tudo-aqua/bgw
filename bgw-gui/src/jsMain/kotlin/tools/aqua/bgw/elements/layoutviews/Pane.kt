@@ -30,31 +30,19 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
 }
 
 val Pane = FC<PaneProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if(newData is PaneData) {
-                //println("Updating Pane ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwPane {
         tabIndex = 0
-        id = data.id
+        id = props.data.id
         className = ClassName("pane")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwContents {
             className = ClassName("components")
-            data.components.forEach {
+            props.data.components.forEach {
                 +NodeBuilder.build(it)
             }
         }

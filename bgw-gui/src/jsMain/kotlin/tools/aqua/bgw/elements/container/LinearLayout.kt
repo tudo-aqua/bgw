@@ -23,26 +23,14 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: LinearLayoutData) {
 }
 
 val LinearLayout = FC<LinearLayoutProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if(newData is LinearLayoutData) {
-                //println("Updating LinearLayout ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwLinearLayout {
-        id = data.id
+        id = props.data.id
         className = ClassName("linearLayout")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwContents {
             className = ClassName("components")
@@ -50,38 +38,38 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
                 width = 100.pct
                 height = 100.pct
                 display = Display.flex
-                flexDirection = if(data.orientation == "horizontal") FlexDirection.row else FlexDirection.column
-                if(data.orientation == "horizontal") {
-                    justifyContent = when(data.alignment.first) {
+                flexDirection = if(props.data.orientation == "horizontal") FlexDirection.row else FlexDirection.column
+                if(props.data.orientation == "horizontal") {
+                    justifyContent = when(props.data.alignment.first) {
                         "left" -> JustifyContent.flexStart
                         "center" -> JustifyContent.center
                         "right" -> JustifyContent.flexEnd
                         else -> JustifyContent.center
                     }
-                    alignItems = when(data.alignment.second) {
+                    alignItems = when(props.data.alignment.second) {
                         "top" -> AlignItems.flexStart
                         "center" -> AlignItems.center
                         "bottom" -> AlignItems.flexEnd
                         else -> AlignItems.center
                     }
                 } else {
-                    alignItems = when(data.alignment.first) {
+                    alignItems = when(props.data.alignment.first) {
                         "left" -> AlignItems.flexStart
                         "center" -> AlignItems.center
                         "right" -> AlignItems.flexEnd
                         else -> AlignItems.center
                     }
-                    justifyContent = when(data.alignment.second) {
+                    justifyContent = when(props.data.alignment.second) {
                         "top" -> JustifyContent.flexStart
                         "center" -> JustifyContent.center
                         "bottom" -> JustifyContent.flexEnd
                         else -> JustifyContent.center
                     }
                 }
-                gap = data.spacing.rem
+                gap = props.data.spacing.rem
             }
 
-            data.components.forEach {
+            props.data.components.forEach {
                 +NodeBuilder.build(it)
             }
         }

@@ -28,49 +28,37 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ComboBoxData) {
 }
 
 val ComboBox = FC<ComboBoxProps> { props ->
-
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        handlers[props.data.id] = { newData ->
-            if(newData is ComboBoxData) {
-                //println("Updating ComboBox ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwComboBox {
-        id = data.id
+        id = props.data.id
         className = ClassName("comboBox")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         select {
-            placeholder = data.prompt
+            placeholder = props.data.prompt
             css {
-                fontBuilder(data)
-                comboBoxBuilder(data)
+                fontBuilder(props.data)
+                comboBoxBuilder(props.data)
                 placeholder {
-                    fontBuilder(data)
+                    fontBuilder(props.data)
                     opacity = number(0.5)
                 }
                 position = Position.absolute
             }
-            data.items.forEach {
+            props.data.items.forEach {
                 option {
                     value = it
                     +it
-                    selected = it == data.selectedItem
+                    selected = it == props.data.selectedItem
                 }
             }
             onChange = {
                 val value = it.target.value
                 //println("Selection changed $value")
-                JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = data.id })
+                JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = props.data.id })
             }
         }
 

@@ -14,21 +14,9 @@ external interface CompoundVisualProps : Props {
 }
 
 val CompoundVisual = FC<CompoundVisualProps> { props ->
-    var (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if (newData is CompoundVisualData) {
-                //println("Updating CompoundVisual ${props.data.id}")
-                data = newData
-            }
-        }
-    }
-
     bgwVisuals {
         className = ClassName("visuals")
-        data.children.forEach {
+        props.data.children.forEach {
             +VisualBuilder.build(it)
         }
     }

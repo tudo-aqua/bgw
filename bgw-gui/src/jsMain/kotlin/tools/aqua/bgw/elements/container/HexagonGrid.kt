@@ -37,27 +37,15 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
 }
 
 val HexagonGrid = FC<HexagonGridProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if(newData is HexagonGridData) {
-                //println("Updating HexagonGrid ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwHexagonGrid {
         tabIndex = 0
-        id = data.id
+        id = props.data.id
         className = ClassName("hexagonGrid")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwContents {
             className = ClassName("components")
@@ -67,8 +55,8 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
             var minY = 0.0
             var maxY = 0.0
 
-            data.map.forEach {
-                if(data.coordinateSystem == "offset") {
+            props.data.map.forEach {
+                if(props.data.coordinateSystem == "offset") {
                     bgwHexagonContent {
                         val size = it.value.size
                         val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
@@ -77,11 +65,11 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
                         val r = it.key.split("/")[1].toInt()
 
                         val x = if(r % 2 == 0)
-                            w * q + data.spacing * (q - 1)
+                            w * q + props.data.spacing * (q - 1)
                         else
-                            w * q + data.spacing * (q - 1) + w / 2
+                            w * q + props.data.spacing * (q - 1) + w / 2
 
-                        val y = h * 0.75 * r + data.spacing * (r - 1)
+                        val y = h * 0.75 * r + props.data.spacing * (r - 1)
 
                         if(x < minX)
                             minX = x
@@ -110,11 +98,11 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
                         q = q + (r - (r and 1)) / 2
 
                         val x = if(r % 2 == 0)
-                            w * q + data.spacing * (q - 1)
+                            w * q + props.data.spacing * (q - 1)
                         else
-                            w * q + data.spacing * (q - 1) + w / 2
+                            w * q + props.data.spacing * (q - 1) + w / 2
 
-                        val y = h * 0.75 * r + data.spacing * (r - 1)
+                        val y = h * 0.75 * r + props.data.spacing * (r - 1)
 
                         if(x < minX)
                             minX = x

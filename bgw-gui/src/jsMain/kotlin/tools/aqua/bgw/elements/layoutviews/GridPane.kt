@@ -26,42 +26,29 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
 }
 
 val ReactGridPane = FC<GridPaneProps> { props ->
-
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        setData(props.data)
-        handlers[props.data.id] = { newData ->
-            if(newData is GridPaneData) {
-                //println("Updating GridPane ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-
     bgwGridPane {
         tabIndex = 0
-        id = data.id
+        id = props.data.id
         className = ClassName("gridPane")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
             width = fit()
             height = fit()
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwContents {
             className = ClassName("components")
             css {
-                gridTemplateColumns = repeat(data.columns, minContent())
-                gridTemplateRows = repeat(data.rows, minContent())
+                gridTemplateColumns = repeat(props.data.columns, minContent())
+                gridTemplateRows = repeat(props.data.rows, minContent())
                 display = Display.grid
                 width = fit()
                 height = fit()
-                gap = data.spacing.rem
+                gap = props.data.spacing.rem
             }
-            data.grid.forEach {
+            props.data.grid.forEach {
                 val component = it.component
                 if(component == null) {
                     div {}

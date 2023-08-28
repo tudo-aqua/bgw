@@ -29,30 +29,19 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
 }
 
 val Label = FC<LabelProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        handlers[props.data.id] = { newData ->
-            if(newData is LabelData) {
-                //println("Updating Label ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-    
     bgwLabel {
         tabIndex = 0
-        id = data.id
+        id = props.data.id
         className = ClassName("label")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwText {
             className = ClassName("text")
-            +data.text
+            +props.data.text
         }
 
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }

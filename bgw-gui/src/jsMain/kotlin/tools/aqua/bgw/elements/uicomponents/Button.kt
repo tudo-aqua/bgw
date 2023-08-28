@@ -37,30 +37,19 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
 }
 
 val Button = FC<ButtonProps> { props ->
-    val (data, setData) = useState(props.data)
-
-    useEffect {
-        handlers[props.data.id] = { newData ->
-            if(newData is ButtonData) {
-                //println("Updating Button ${props.data.id}")
-                setData(newData)
-            }
-        }
-    }
-
     bgwButton {
         tabIndex = 0
-        id = data.id
+        id = props.data.id
         className = ClassName("button")
         css {
-            cssBuilderIntern(data)
+            cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(data.visual)
+        +VisualBuilder.build(props.data.visual)
 
         bgwText {
             className = ClassName("text")
-            +data.text
+            +props.data.text
         }
 
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
