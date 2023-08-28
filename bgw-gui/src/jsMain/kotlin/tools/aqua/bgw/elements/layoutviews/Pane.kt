@@ -33,9 +33,10 @@ val Pane = FC<PaneProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is PaneData) {
-                println("Updating Pane ${props.data.id}")
+                //println("Updating Pane ${props.data.id}")
                 setData(newData)
             }
         }

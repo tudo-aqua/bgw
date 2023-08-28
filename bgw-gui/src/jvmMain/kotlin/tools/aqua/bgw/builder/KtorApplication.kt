@@ -14,6 +14,7 @@ import kotlinx.html.body
 import kotlinx.html.script
 import kotlinx.serialization.encodeToString
 import jsonMapper
+import kotlinx.coroutines.*
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -70,6 +71,7 @@ suspend fun onClientConnected(webSocketSession: WebSocketSession) {
     scene.fonts = Frontend.loadedFonts
     val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
     webSocketSession.send(json)
+    if(!uiJob.isActive) uiJob.start()
 }
 
 fun Application.configureRouting() {
@@ -86,12 +88,44 @@ fun Application.configureRouting() {
 suspend fun sendToAllClients(message: String) {
     //println("Sending message to all clients: $message")
     for (session in activeSessions) {
-        //println("Sending message to client $session: $message")
+        println("Sending message to client $session")
         try {
             session.send(message)
         } catch (e: ClosedSendChannelException) {
-            // Handle session closed
+            println("Client $session disconnected: ${e.message}")
         }
     }
+}
+
+val messageQueue = mutableListOf<String>()
+
+fun CoroutineScope.launchPeriodicAsync(
+    repeatMillis: Long,
+    action: (suspend () -> Unit)
+) = this.async {
+    if (repeatMillis > 0) {
+        while (isActive) {
+            action()
+            delay(repeatMillis)
+        }
+    } else {
+        action()
+    }
+}
+
+var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
+    if (messageQueue.isNotEmpty()) {
+        println("Sending message to all clients: ${messageQueue.first()}")
+        val isSceneLoaded = Frontend.boardGameScene != null
+        println("Is scene loaded: $isSceneLoaded")
+        val message = messageQueue.removeFirst()
+        messageQueue.clear()
+        val json = jsonMapper.encodeToString(PropData(SceneMapper.map(Frontend.boardGameScene!!)))
+        sendToAllClients(json)
+    }
+}
+
+fun queueMessage(message: String) {
+    messageQueue.add(message)
 }
 

@@ -23,7 +23,7 @@ val ImageVisual = FC<ImageVisualProps> { props ->
         setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is ImageVisualData) {
-                println("Updating ImageVisual ${props.data.id}")
+                //println("Updating ImageVisual ${props.data.id}")
                 setData(newData)
             }
         }

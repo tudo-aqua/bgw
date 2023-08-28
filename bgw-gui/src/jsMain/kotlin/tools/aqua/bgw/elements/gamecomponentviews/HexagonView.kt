@@ -39,7 +39,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
     useEffect {
         handlers[props.data.id] = { newData ->
             if(newData is HexagonViewData) {
-                println("Updating HexagonView ${props.data.id}")
+                //println("Updating HexagonView ${props.data.id}")
                 setData(newData)
             }
         }

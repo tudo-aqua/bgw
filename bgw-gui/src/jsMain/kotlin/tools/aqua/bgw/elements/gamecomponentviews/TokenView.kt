@@ -26,7 +26,7 @@ val TokenView = FC<TokenViewProps> { props ->
     useEffect {
         handlers[props.data.id] = { newData ->
             if(newData is TokenViewData) {
-                println("Updating TokenView ${props.data.id}")
+                //println("Updating TokenView ${props.data.id}")
                 setData(newData)
             }
         }

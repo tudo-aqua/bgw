@@ -42,7 +42,7 @@ val Button = FC<ButtonProps> { props ->
     useEffect {
         handlers[props.data.id] = { newData ->
             if(newData is ButtonData) {
-                println("Updating Button ${props.data.id}")
+                //println("Updating Button ${props.data.id}")
                 setData(newData)
             }
         }

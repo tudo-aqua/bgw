@@ -60,7 +60,6 @@ internal class Frontend {
     //println("Starting server...")
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
-      //println("Updating scene...")
       SceneBuilder.build(boardGameScene!!)
       renderedDOM.value = true
     }
@@ -145,8 +144,9 @@ internal class Frontend {
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
       scene.fonts = loadedFonts
-      val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
-      runBlocking { sendToAllClients(json) }
+      messageQueue.add("showMenuScene")
+      //val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
+      //runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -157,8 +157,9 @@ internal class Frontend {
     internal fun hideMenuScene(fadeTime: Double) {
       if(boardGameScene == null) return
       boardGameScene!!.fonts = loadedFonts
-      val json = jsonMapper.encodeToString(PropData(SceneMapper.map(boardGameScene!!)))
-      runBlocking { sendToAllClients(json) }
+      messageQueue.add("hideMenuScene")
+      //val json = jsonMapper.encodeToString(PropData(SceneMapper.map(boardGameScene!!)))
+      //runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -168,11 +169,12 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
+      scene.fonts = loadedFonts
+      messageQueue.add("showGameScene")
       //println("Set new scene: $scene")
       try {
-        scene.fonts = loadedFonts
-        val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
-        runBlocking { sendToAllClients(json) }
+        //val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
+        //runBlocking { sendToAllClients(json) }
       } catch (e: Exception) {
         //println("Error: $e")
       }
@@ -211,14 +213,18 @@ internal class Frontend {
     }
 
     internal fun updateComponent(component: ComponentView) {
-      println("Sending update for component ${component.id}")
-      val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
-      runBlocking { sendToAllClients(json) }
+      //println("Sending update for component ${component.id}")
+      ComponentViewBuilder.build(component)
+      messageQueue.add("updateComponent")
+      //val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
+      //runBlocking { sendToAllClients(json) }
     }
 
     internal fun updateVisual(visual: Visual) {
-      val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
-      runBlocking { sendToAllClients(json) }
+      VisualBuilder.build(visual)
+      messageQueue.add("updateVisual")
+      //val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
+      //runBlocking { sendToAllClients(json) }
     }
 
     /**

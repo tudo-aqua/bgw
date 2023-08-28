@@ -36,6 +36,11 @@ class GridGameScene : BoardGameScene() {
                 }
             }
         }
+
+        ColorVisual.GRAY.apply {
+            color = Color(0,0,0,1.0)
+        }
+
         (gridPane[0, 0] as? Label).apply {
             this?.text = "Hello World!"
             this?.visual = ColorVisual.WHITE
@@ -46,8 +51,8 @@ class GridGameScene : BoardGameScene() {
         pane.onMouseClicked = {
             pane.add(Label(visual = randomColorVisual()))
         }
-        //addComponents(gridPane)
-        addComponents(pane)
+        addComponents(gridPane)
+        //addComponents(pane)
     }
 
     private fun randomColorVisual(): ColorVisual {

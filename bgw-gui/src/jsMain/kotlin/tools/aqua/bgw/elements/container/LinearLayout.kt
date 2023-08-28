@@ -26,9 +26,10 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is LinearLayoutData) {
-                println("Updating LinearLayout ${props.data.id}")
+                //println("Updating LinearLayout ${props.data.id}")
                 setData(newData)
             }
         }

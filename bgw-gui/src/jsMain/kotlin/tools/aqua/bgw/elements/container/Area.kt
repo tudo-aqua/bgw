@@ -29,9 +29,10 @@ val Area = FC<AreaProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is AreaData) {
-                println("Updating Area ${props.data.id}")
+                //println("Updating Area ${props.data.id}")
                 setData(newData)
             }
         }

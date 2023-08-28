@@ -35,7 +35,7 @@ val TextField = FC<TextFieldProps> { props ->
     useEffect {
         handlers[props.data.id] = { newData ->
             if(newData is TextFieldData) {
-                println("Updating TextField ${props.data.id}")
+                //println("Updating TextField ${props.data.id}")
                 setData(newData)
             }
         }

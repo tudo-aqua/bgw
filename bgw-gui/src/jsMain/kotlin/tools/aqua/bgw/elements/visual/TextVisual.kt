@@ -26,7 +26,7 @@ val TextVisual = FC<TextVisualProps> { props ->
         setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is TextVisualData) {
-                println("Updating TextVisual ${props.data.id}")
+                //println("Updating TextVisual ${props.data.id}")
                 setData(newData)
             }
         }

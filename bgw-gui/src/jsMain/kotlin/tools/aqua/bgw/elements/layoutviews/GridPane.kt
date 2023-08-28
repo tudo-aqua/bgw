@@ -30,9 +30,10 @@ val ReactGridPane = FC<GridPaneProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is GridPaneData) {
-                println("Updating GridPane ${props.data.id}")
+                //println("Updating GridPane ${props.data.id}")
                 setData(newData)
             }
         }

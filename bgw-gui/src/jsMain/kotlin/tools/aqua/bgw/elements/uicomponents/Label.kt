@@ -34,7 +34,7 @@ val Label = FC<LabelProps> { props ->
     useEffect {
         handlers[props.data.id] = { newData ->
             if(newData is LabelData) {
-                println("Updating Label ${props.data.id}")
+                //println("Updating Label ${props.data.id}")
                 setData(newData)
             }
         }

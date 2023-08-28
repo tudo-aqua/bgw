@@ -336,7 +336,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @see visual
    */
-  internal val visualProperty: Property<Visual> = Property(visual.copy())
+  internal val visualProperty: Property<Visual> = Property(visual)
 
   /**
    * Current [Visual].
@@ -347,7 +347,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
     get() = visualProperty.value
     /** Sets a copy of the given [Visual] [value] to this field and refreshes GUI. */
     set(value) {
-      visualProperty.value = value.copy()
+      visualProperty.value = value
     }
 
   /**

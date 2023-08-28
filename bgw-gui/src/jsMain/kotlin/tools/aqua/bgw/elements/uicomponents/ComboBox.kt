@@ -34,7 +34,7 @@ val ComboBox = FC<ComboBoxProps> { props ->
     useEffect {
         handlers[props.data.id] = { newData ->
             if(newData is ComboBoxData) {
-                println("Updating ComboBox ${props.data.id}")
+                //println("Updating ComboBox ${props.data.id}")
                 setData(newData)
             }
         }

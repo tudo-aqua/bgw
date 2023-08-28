@@ -20,7 +20,7 @@ val CompoundVisual = FC<CompoundVisualProps> { props ->
         setData(props.data)
         handlers[props.data.id] = { newData ->
             if (newData is CompoundVisualData) {
-                println("Updating CompoundVisual ${props.data.id}")
+                //println("Updating CompoundVisual ${props.data.id}")
                 data = newData
             }
         }

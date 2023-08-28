@@ -40,9 +40,10 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is HexagonGridData) {
-                println("Updating HexagonGrid ${props.data.id}")
+                //println("Updating HexagonGrid ${props.data.id}")
                 setData(newData)
             }
         }

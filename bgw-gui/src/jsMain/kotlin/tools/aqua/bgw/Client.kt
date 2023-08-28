@@ -41,6 +41,7 @@ fun main() {
                 val scene = receivedData
                 val sceneComponents = scene.components.map { NodeBuilder.build(it) }
                 //println("Built: $sceneComponents")
+                println("Received SceneData with ${sceneComponents.size} components.")
                 render(App.create { data = scene }, container, callback = {
                     println("Rendered App to DOM!")
                     when(webViewType) {
@@ -49,9 +50,9 @@ fun main() {
                     }
                     Unit
                 })
-            }
+            }/*
             is ComponentViewData -> {
-                println("Received ComponentViewData for id ${receivedData.id} with ${receivedData.visual?.id}")
+                //println("Received ComponentViewData for id ${receivedData.id} with ${receivedData.visual?.id}")
                 val component =  receivedData
                 val handler = handlers[component.id]
                 handler?.invoke(component)
@@ -60,7 +61,7 @@ fun main() {
                 val visual = receivedData
                 val handler = handlers[visual.id]
                 handler?.invoke(visual)
-            }
+            }*/
             else -> {}
         }
     }
