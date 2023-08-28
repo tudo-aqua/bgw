@@ -28,6 +28,7 @@ import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.CoordinatePlain
+import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -65,6 +66,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /** The height of this [Scene] in virtual coordinates. */
   val height: Double = height.toDouble()
+
+  var fonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
 
   /** All [ComponentView]s on the root node. */
   internal val rootComponents: ObservableList<T> = ObservableArrayList()

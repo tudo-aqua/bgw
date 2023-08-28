@@ -67,6 +67,7 @@ fun onClientError(session: WebSocketSession, e: ClosedSendChannelException) {
 suspend fun onClientConnected(webSocketSession: WebSocketSession) {
     //println("Client connected: $webSocketSession")
     val scene = checkNotNull(Frontend.boardGameScene)
+    scene.fonts = Frontend.loadedFonts
     val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
     webSocketSession.send(json)
 }

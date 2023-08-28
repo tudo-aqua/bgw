@@ -45,6 +45,7 @@ import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
+import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -129,6 +130,8 @@ internal class Frontend {
 
     /** Current [MenuScene]. */
     internal var menuScene: MenuScene? = null
+
+    internal var loadedFonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
     // endregion
 
     // region Internal functions
@@ -141,6 +144,7 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
+      scene.fonts = loadedFonts
       val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
       runBlocking { sendToAllClients(json) }
     }
@@ -152,6 +156,7 @@ internal class Frontend {
      */
     internal fun hideMenuScene(fadeTime: Double) {
       if(boardGameScene == null) return
+      boardGameScene!!.fonts = loadedFonts
       val json = jsonMapper.encodeToString(PropData(SceneMapper.map(boardGameScene!!)))
       runBlocking { sendToAllClients(json) }
     }
@@ -165,6 +170,7 @@ internal class Frontend {
       boardGameScene = scene
       //println("Set new scene: $scene")
       try {
+        scene.fonts = loadedFonts
         val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
         runBlocking { sendToAllClients(json) }
       } catch (e: Exception) {
@@ -249,8 +255,12 @@ internal class Frontend {
       TODO("Not yet implemented")
     }
 
-    fun loadFont(font: File): Boolean {
-      return true
+    fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean {
+      if(loadedFonts.filter { it.first == path }.isEmpty()) {
+        loadedFonts.add(Triple(path, fontName, weight))
+        return true
+      }
+      return false
     }
 
     fun runLater(task: Runnable) {

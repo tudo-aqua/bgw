@@ -29,6 +29,7 @@ import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
@@ -355,6 +356,6 @@ open class BoardGameApplication(
      * @throws AccessDeniedException if the file can't be read
      * @return A boolean weather the file could be loaded or not
      */
-    fun loadFont(font: File): Boolean = Frontend.loadFont(font)
+    fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean = Frontend.loadFont(path, fontName, weight)
   }
 }

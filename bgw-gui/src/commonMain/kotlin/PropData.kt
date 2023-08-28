@@ -18,6 +18,7 @@ class SceneData : Data() {
     var height : Double = 0.0
     var background : VisualData? = null
     var components: List<ComponentViewData> = emptyList()
+    var fonts : List<Triple<String, String, Int>> = emptyList()
 }
 
 @Serializable

@@ -4,6 +4,8 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 
@@ -21,7 +23,8 @@ class GridGameScene : BoardGameScene() {
                     width = 100,
                     height = 100,
                     text = "($x, $y)",
-                    visual = CompoundVisual(ColorVisual.BLACK, randomColorVisual())
+                    visual = CompoundVisual(ColorVisual.BLACK, randomColorVisual()),
+                    font = Font(40.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD)
                 ).apply {
                     onMouseClicked = {
                         visual = CompoundVisual(ColorVisual.BLACK, randomColorVisual())

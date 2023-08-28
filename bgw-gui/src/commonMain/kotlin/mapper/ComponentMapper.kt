@@ -376,6 +376,24 @@ object VisualMapper {
     }
 }
 
+object FontFaceMapper {
+    private val fontWeightMap = mapOf(
+        Font.FontWeight.THIN to 100,
+        Font.FontWeight.EXTRA_LIGHT to 200,
+        Font.FontWeight.LIGHT to 300,
+        Font.FontWeight.NORMAL to 400,
+        Font.FontWeight.MEDIUM to 500,
+        Font.FontWeight.SEMI_BOLD to 600,
+        Font.FontWeight.BOLD to 700,
+        Font.FontWeight.EXTRA_BOLD to 800,
+        Font.FontWeight.BLACK to 900
+    )
+
+    fun map(font : Triple<String, String, Font.FontWeight>) : Triple<String, String, Int> {
+        return Triple(font.first, font.second, fontWeightMap[font.third] ?: 400)
+    }
+}
+
 object SceneMapper {
     fun map(scene: Scene<*>) : SceneData {
         // FIXME - DONE
@@ -384,6 +402,7 @@ object SceneMapper {
             width = scene.width
             height = scene.height
             background = VisualMapper.map(scene.background)
+            fonts = scene.fonts.map { FontFaceMapper.map(it) }
         }
     }
 }
