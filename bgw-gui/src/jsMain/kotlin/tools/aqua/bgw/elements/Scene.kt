@@ -19,12 +19,7 @@ external interface SceneProps : Props {
 
 val Scene = FC<SceneProps> { props ->
     bgwScene {
-        bgwVisuals {
-            className = ClassName("visuals")
-            VisualBuilder.build(props.data.background).forEach {
-                +it
-            }
-        }
+        +VisualBuilder.build(props.data.background)
         bgwContents {
             className = ClassName("components")
             css {

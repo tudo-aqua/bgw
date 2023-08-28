@@ -322,7 +322,7 @@ object FilterMapper {
 
 object VisualMapper {
     fun map(visual: Visual) : VisualData {
-        return when (visual) {
+        val visualData = when (visual) {
             is ColorVisual -> ColorVisualData().apply {
                 id = visual.id
                 color = "rgba(${visual.color.red}, ${visual.color.green}, ${visual.color.blue}, ${visual.color.alpha})"
@@ -364,8 +364,59 @@ object VisualMapper {
             is CompoundVisual -> {
                 CompoundVisualData().apply {
                     id = visual.id
-                    children = visual.children.map { map(it) } as List<SingleLayerVisualData>
+                    children = visual.children.map { mapChildren(it) }
                 }
+            }
+        }
+        return if(visualData is SingleLayerVisualData) {
+            CompoundVisualData().apply {
+                id = visualData.id
+                children = listOf(visualData)
+            }
+        } else {
+            visualData
+        }
+    }
+
+    private fun mapChildren(visual: SingleLayerVisual) : SingleLayerVisualData {
+        return when (visual) {
+            is ColorVisual -> ColorVisualData().apply {
+                id = visual.id
+                color = "rgba(${visual.color.red}, ${visual.color.green}, ${visual.color.blue}, ${visual.color.alpha})"
+                transparency = visual.transparency
+                style = StyleMapper.map(visual.style)
+                filters = FilterMapper.map(visual.filters)
+                flipped = visual.flipped.name.lowercase()
+            }
+
+            is ImageVisual -> ImageVisualData().apply {
+                id = visual.id
+                if (isRelativeFilePath(visual.path)) path = "http://localhost:8080/static/${visual.path}"
+                else path = visual.path
+                width = visual.width.toDouble()
+                height = visual.height.toDouble()
+                offsetX = visual.offsetX.toDouble()
+                offsetY = visual.offsetY.toDouble()
+                transparency = visual.transparency
+                style = StyleMapper.map(visual.style)
+                filters = FilterMapper.map(visual.filters)
+                flipped = visual.flipped.name.lowercase()
+            }
+
+            is TextVisual -> TextVisualData().apply {
+                id = visual.id
+                text = visual.text
+                font = FontMapper.map(visual.font)
+                offsetX = visual.offsetX.toDouble()
+                offsetY = visual.offsetY.toDouble()
+                transparency = visual.transparency
+                style = StyleMapper.map(visual.style)
+                filters = FilterMapper.map(visual.filters)
+                flipped = visual.flipped.name.lowercase()
+                alignment = Pair(
+                    visual.alignment.horizontalAlignment.name.lowercase(),
+                    visual.alignment.verticalAlignment.name.lowercase()
+                )
             }
         }
     }

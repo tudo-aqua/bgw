@@ -5,45 +5,46 @@ import CompoundVisualData
 import ImageVisualData
 import TextVisualData
 import VisualData
-import react.ReactElement
-import react.create
+import react.*
 import react.dom.html.ReactHTML.div
+import tools.aqua.bgw.elements.visual.CompoundVisual
+import tools.aqua.bgw.handlers
 import tools.aqua.bgw.elements.visual.ColorVisual as ReactColorVisual
 import tools.aqua.bgw.elements.visual.ImageVisual as ReactImageVisual
 import tools.aqua.bgw.elements.visual.TextVisual as ReactTextVisual
 
-object VisualBuilder {
 
-    fun build(visual: VisualData?): List<ReactElement<*>> {
+external interface VisualProps : Props {
+    var data: VisualData
+}
+object VisualBuilder {
+    fun build(visual: VisualData?): ReactElement<*> {
         when(visual) {
             is ColorVisualData -> {
-                return listOf(ReactColorVisual.create {
+                return ReactColorVisual.create {
                     data = visual
-                })
+                }
             }
 
             is ImageVisualData -> {
-                return listOf(ReactImageVisual.create {
+                return ReactImageVisual.create {
                     data = visual
-                })
+                }
             }
 
             is TextVisualData -> {
-                return listOf(ReactTextVisual.create {
+                return ReactTextVisual.create {
                     data = visual
-                })
-            }
-
-            is CompoundVisualData -> {
-                val visuals = mutableListOf<ReactElement<*>>()
-                visual.children.forEach {
-                    visuals.addAll(build(it))
                 }
-                return visuals
             }
-
+            is CompoundVisualData -> {
+                println("Building CompoundVisual ${visual.id}")
+                return CompoundVisual.create {
+                    data = visual
+                }
+            }
             else -> {
-                return listOf(div.create())
+                return div.create()
             }
         }
     }

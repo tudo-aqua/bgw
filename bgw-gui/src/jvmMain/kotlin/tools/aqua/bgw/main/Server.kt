@@ -114,6 +114,6 @@ fun main() {
             showGameScene(scene)
         }
     }
-    application.show()
+    //application.show()
 }
 

@@ -3,6 +3,7 @@ package tools.aqua.bgw.elements.visual
 import ImageVisualData
 import csstype.*
 import emotion.react.css
+import kotlinx.js.Object
 import org.w3c.dom.HTMLDivElement
 import react.*
 import react.dom.html.HTMLAttributes
@@ -19,6 +20,7 @@ val ImageVisual = FC<ImageVisualProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is ImageVisualData) {
                 println("Updating ImageVisual ${props.data.id}")

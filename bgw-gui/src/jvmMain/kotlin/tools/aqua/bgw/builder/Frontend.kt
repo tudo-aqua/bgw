@@ -211,6 +211,7 @@ internal class Frontend {
     }
 
     internal fun updateComponent(component: ComponentView) {
+      println("Sending update for component ${component.id}")
       val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       runBlocking { sendToAllClients(json) }
     }

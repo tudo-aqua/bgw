@@ -1,6 +1,7 @@
 package tools.aqua.bgw.elements.uicomponents
 
 import ButtonData
+import ColorVisualData
 import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
@@ -14,6 +15,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.elements.visual.ColorVisual
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.webSocket
 
@@ -54,12 +56,7 @@ val Button = FC<ButtonProps> { props ->
             cssBuilderIntern(data)
         }
 
-        bgwVisuals {
-            className = ClassName("visuals")
-            VisualBuilder.build(data.visual).forEach {
-                +it
-            }
-        }
+        +VisualBuilder.build(data.visual)
 
         bgwText {
             className = ClassName("text")

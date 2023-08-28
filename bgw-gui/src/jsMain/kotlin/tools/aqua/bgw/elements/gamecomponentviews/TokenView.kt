@@ -39,12 +39,7 @@ val TokenView = FC<TokenViewProps> { props ->
             cssBuilderIntern(data)
         }
 
-        bgwVisuals {
-            className = ClassName("visuals")
-            VisualBuilder.build(data.visual).forEach {
-                +it
-            }
-        }
+        +VisualBuilder.build(data.visual)
     }
 }
 

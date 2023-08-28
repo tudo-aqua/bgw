@@ -48,12 +48,7 @@ val Label = FC<LabelProps> { props ->
             cssBuilderIntern(data)
         }
 
-        bgwVisuals {
-            className = ClassName("visuals")
-            VisualBuilder.build(data.visual).forEach {
-                +it
-            }
-        }
+        +VisualBuilder.build(data.visual)
 
         bgwText {
             className = ClassName("text")

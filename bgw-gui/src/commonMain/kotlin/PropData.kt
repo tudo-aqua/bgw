@@ -208,52 +208,52 @@ class SatchelData: GameComponentContainerData() { }
 
 // VISUALS
 @Serializable
-abstract class VisualData : Data() {
+sealed class VisualData(
     var id: ID = ""
-}
+) : Data()
 
 @Serializable
-abstract class SingleLayerVisualData : VisualData() {
-    var transparency: Double = 0.0
-    var style: Map<String, String> = emptyMap()
-    var filters: Map<String, String?> = emptyMap()
+sealed class SingleLayerVisualData(
+    var transparency: Double = 0.0,
+    var style: Map<String, String> = emptyMap(),
+    var filters: Map<String, String?> = emptyMap(),
     var flipped : String = ""
-}
+) : VisualData()
 
 @Serializable
-class ColorVisualData : SingleLayerVisualData() {
+data class ColorVisualData(
     var color: String = ""
-}
+) : SingleLayerVisualData()
 
 @Serializable
-class ImageVisualData : SingleLayerVisualData() {
-    var path: String = ""
-    var width: Double = 0.0
-    var height: Double = 0.0
-    var offsetX: Double = 0.0
+data class ImageVisualData(
+    var path: String = "",
+    var width: Double = 0.0,
+    var height: Double = 0.0,
+    var offsetX: Double = 0.0,
     var offsetY: Double = 0.0
-}
+) : SingleLayerVisualData()
 
 @Serializable
-class TextVisualData : SingleLayerVisualData() {
-    var text: String = ""
-    var font : FontData? = null
-    var alignment: Pair<String, String> = Pair("", "")
-    var offsetX: Double = 0.0
+data class TextVisualData(
+    var text: String = "",
+    var font : FontData? = null,
+    var alignment: Pair<String, String> = Pair("", ""),
+    var offsetX: Double = 0.0,
     var offsetY: Double = 0.0
-}
+) : SingleLayerVisualData()
 
 @Serializable
-class CompoundVisualData : VisualData() {
+data class CompoundVisualData(
     var children: List<SingleLayerVisualData> = emptyList()
-}
+) : VisualData()
 
 // FONT
 @Serializable
-class FontData {
-    var size : Int = 16
-    var color : String = ""
-    var family : String = ""
-    var fontWeight : Int = 400
+data class FontData(
+    var size : Int = 16,
+    var color : String = "",
+    var family : String = "",
+    var fontWeight : Int = 400,
     var fontStyle : String = ""
-}
+)

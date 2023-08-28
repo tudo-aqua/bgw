@@ -5,6 +5,7 @@ import TextVisualData
 import csstype.*
 import emotion.react.css
 import kotlinx.browser.document
+import kotlinx.js.Object
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import react.*
@@ -22,6 +23,7 @@ val TextVisual = FC<TextVisualProps> { props ->
     val (data, setData) = useState(props.data)
 
     useEffect {
+        setData(props.data)
         handlers[props.data.id] = { newData ->
             if(newData is TextVisualData) {
                 println("Updating TextVisual ${props.data.id}")

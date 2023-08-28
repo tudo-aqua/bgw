@@ -55,12 +55,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
             height = 2 * data.size.rem
         }
 
-        bgwVisuals {
-            className = ClassName("visuals")
-            VisualBuilder.build(data.visual).forEach {
-                +it
-            }
-        }
+        +VisualBuilder.build(data.visual)
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }

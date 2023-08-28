@@ -42,7 +42,7 @@ fun main() {
                 val sceneComponents = scene.components.map { NodeBuilder.build(it) }
                 //println("Built: $sceneComponents")
                 render(App.create { data = scene }, container, callback = {
-                    //println("Rendered App to DOM!")
+                    println("Rendered App to DOM!")
                     when(webViewType) {
                         WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }
                         WebViewType.JAVAFX -> container.dispatchEvent(Event("bgwLoaded"))
@@ -51,6 +51,7 @@ fun main() {
                 })
             }
             is ComponentViewData -> {
+                println("Received ComponentViewData for id ${receivedData.id} with ${receivedData.visual?.id}")
                 val component =  receivedData
                 val handler = handlers[component.id]
                 handler?.invoke(component)
