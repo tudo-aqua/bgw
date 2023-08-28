@@ -1,8 +1,12 @@
 package tools.aqua.bgw.core
 
-data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Int = 1) {
+data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double = 1.0) {
+
+    constructor(red: Int, green: Int, blue: Int, alpha: Int = 255) : this(red, green, blue, alpha.toDouble() / 255.0)
+    constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, 1.0)
+
     companion object {
-        val TRANSPARENT: Color = Color(0,0,0, alpha = 0)
+        val TRANSPARENT: Color = Color(0,0,0, alpha = 0.0)
         val WHITE: Color = Color(255, 255, 255)
         val LIGHT_GRAY: Color = Color(192, 192, 192)
         val GRAY: Color = Color(128, 128, 128)

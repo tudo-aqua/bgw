@@ -45,7 +45,7 @@ val App = FC<AppProps> { props ->
                 userSelect = None.none
             }
             "body" {
-                backgroundColor = rgb(255, 255, 255)
+                backgroundColor = rgb(0, 0, 0)
                 color = rgb(0, 0, 0)
                 margin = 0.px
             }
@@ -121,6 +121,7 @@ val App = FC<AppProps> { props ->
                 justifyContent = JustifyContent.center
                 alignItems = AlignItems.center
                 backgroundColor = Color("#000000")
+                overflow = Overflow.hidden
             }
         }
     }

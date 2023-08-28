@@ -23,9 +23,9 @@ object ComponentMapper {
             height = componentView.height
             visual = VisualMapper.map(componentView.visual)
             // zIndex
-            // opacity
+            opacity = componentView.opacity
             isVisible = componentView.isVisible
-            // isDisabled
+            isDisabled = componentView.isDisabled
             // isFocusable
             // scaleX
             // scaleY

@@ -35,7 +35,7 @@ val ColorVisual = FC<ColorVisualProps> { props ->
             styleBuilder(data.style)
             flipBuilder(data.flipped)
             filterBuilder(data.filters)
-            backgroundColor = Color(data.color)
+            backgroundColor = data.color.unsafeCast<Color>()
             opacity = number(data.transparency)
         }
     }

@@ -50,7 +50,7 @@ fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
     fontWeight = componentViewData.font?.fontWeight?.let { integer(it) }
     fontStyle = (componentViewData.font?.fontStyle ?: "normal") as FontStyle?
     fontSize = componentViewData.font?.size?.rem
-    color = Color(componentViewData.font?.color ?: "black")
+    color = componentViewData.font?.color.unsafeCast<Color>()
 }
 
 fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
