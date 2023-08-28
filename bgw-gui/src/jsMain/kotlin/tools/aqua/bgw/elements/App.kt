@@ -27,13 +27,6 @@ val App = FC<AppProps> { props ->
     }
     Global {
         styles {
-            /*fontFace {
-                fontFamily = "Rubik"
-                fontStyle = FontStyle.normal
-                fontWeight = integer(500)
-                src = "url(static/Rubik.ttf)"
-            }*/
-
             props.data.fonts.forEach { font ->
                 fontFace {
                     fontFamily = font.second
@@ -41,11 +34,10 @@ val App = FC<AppProps> { props ->
                     fontWeight = integer(font.third)
                     src = "url(static/${font.first})"
                 }
-                println(font)
             }
 
             "html" {
-                fontSize = (100 / 1080.0).vh
+                fontSize = (100 / props.data.height).vh
                 width = 100.vw
                 height = 100.vh
                 margin = 0.px
