@@ -70,7 +70,7 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
                 if(data.coordinateSystem == "offset") {
                     bgwHexagonContent {
                         val size = it.value.size
-                        val w = size * sqrt(3.0)
+                        val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
                         val h = 2 * size
                         val q = it.key.split("/")[0].toInt()
                         val r = it.key.split("/")[1].toInt()
@@ -101,7 +101,7 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
                 } else {
                     bgwHexagonContent {
                         val size = it.value.size
-                        val w = size * sqrt(3.0)
+                        val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
                         val h = 2 * size
                         var q = it.key.split("/")[0].toInt()
                         var r = it.key.split("/")[1].toInt()
