@@ -2,16 +2,20 @@ package tools.aqua.bgw.elements.container
 
 import LinearLayoutData
 import csstype.*
+import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
 import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.NodeBuilder
+import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.fit
+import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 
 external interface LinearLayoutProps : Props {
@@ -73,6 +77,11 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
                 +NodeBuilder.build(it)
             }
         }
+
+        onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
+        onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
+        onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
+        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
