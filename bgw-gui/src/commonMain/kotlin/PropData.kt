@@ -14,8 +14,8 @@ sealed class Data
 @Serializable
 // FIXME - DONE
 class SceneData : Data() {
-    var width : Double = 0.0
-    var height : Double = 0.0
+    var width : Int = 0
+    var height : Int = 0
     var background : VisualData? = null
     var components: List<ComponentViewData> = emptyList()
     var fonts : List<Triple<String, String, Int>> = emptyList()
@@ -24,10 +24,10 @@ class SceneData : Data() {
 @Serializable
 abstract class ComponentViewData : Data() {
     var id: ID = ""
-    var posX: Double = 0.0
-    var posY: Double = 0.0
-    var width: Double = 0.0
-    var height: Double = 0.0
+    var posX: Int = 0
+    var posY: Int = 0
+    var width: Int = 0
+    var height: Int = 0
     var visual: VisualData? = null
     var zIndex : Int = 0
     var opacity : Double = 1.0
@@ -116,7 +116,7 @@ abstract class StructuredDataViewData : UIComponentData() {
 @Serializable
 class TableColumnData {
     var title : String = ""
-    var width : Double = 0.0
+    var width : Int = 0
     var font : FontData? = null
     var items : List<String> = emptyList()
 }
@@ -141,7 +141,7 @@ class PaneData : LayoutViewData() {
 class GridPaneData: LayoutViewData() {
     var columns : Int = 0
     var rows : Int = 0
-    var spacing : Double = 0.0
+    var spacing : Int = 0
     var grid : List<GridElementData> = emptyList()
 }
 
@@ -177,7 +177,7 @@ class DiceViewData : GameComponentViewData() {
 
 @Serializable
 class HexagonViewData : GameComponentViewData() {
-    var size: Double = 0.0
+    var size: Int = 0
 }
 @Serializable
 class TokenViewData : GameComponentViewData() { }
@@ -195,13 +195,13 @@ class CardStackData : GameComponentContainerData() { }
 class HexagonGridData : GameComponentContainerData() {
     var coordinateSystem: String = ""
     var map : Map<String, HexagonViewData> = emptyMap()
-    var spacing : Double = 0.0
+    var spacing : Int = 0
 }
 @Serializable
 class LinearLayoutData: GameComponentContainerData() {
     var orientation: String = ""
     var alignment: Pair<String, String> = Pair("", "")
-    var spacing: Double = 0.0
+    var spacing: Int = 0
 }
 @Serializable
 class SatchelData: GameComponentContainerData() { }
@@ -228,10 +228,10 @@ data class ColorVisualData(
 @Serializable
 data class ImageVisualData(
     var path: String = "",
-    var width: Double = 0.0,
-    var height: Double = 0.0,
-    var offsetX: Double = 0.0,
-    var offsetY: Double = 0.0
+    var width: Int = 0,
+    var height: Int = 0,
+    var offsetX: Int = 0,
+    var offsetY: Int = 0
 ) : SingleLayerVisualData()
 
 @Serializable
@@ -239,8 +239,8 @@ data class TextVisualData(
     var text: String = "",
     var font : FontData? = null,
     var alignment: Pair<String, String> = Pair("", ""),
-    var offsetX: Double = 0.0,
-    var offsetY: Double = 0.0
+    var offsetX: Int = 0,
+    var offsetY: Int = 0
 ) : SingleLayerVisualData()
 
 @Serializable

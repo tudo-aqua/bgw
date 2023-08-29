@@ -119,8 +119,11 @@ var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
         val isSceneLoaded = Frontend.boardGameScene != null
         println("Is scene loaded: $isSceneLoaded")
         val message = messageQueue.removeFirst()
-        val json = jsonMapper.encodeToString(PropData(SceneMapper.map(Frontend.boardGameScene!!)))
-        runBlocking { sendToAllClients(json) }
+        val result = runCatching {
+            val json = jsonMapper.encodeToString(PropData(SceneMapper.map(Frontend.boardGameScene!!)))
+            runBlocking { sendToAllClients(json) }
+        }
+        println(result.exceptionOrNull()?.message)
         messageQueue.clear()
     }
 }

@@ -17,10 +17,10 @@ object ComponentMapper {
     fun ComponentViewData.fillData(componentView: ComponentView) : ComponentViewData {
         return this.apply {
             id = componentView.id
-            posX = componentView.posX
-            posY = componentView.posY
-            width = componentView.width
-            height = componentView.height
+            posX = componentView.posX.toInt()
+            posY = componentView.posY.toInt()
+            width = componentView.width.toInt()
+            height = componentView.height.toInt()
             visual = VisualMapper.map(componentView.visual)
             // zIndex
             opacity = componentView.opacity
@@ -181,7 +181,7 @@ object ComponentMapper {
                 visuals = componentView.visuals.map { VisualMapper.map(it) }
             }
             is HexagonView -> (mapSpecific(componentView) as HexagonViewData).apply {
-                size = componentView.size.toDouble()
+                size = componentView.size.toInt()
             }
             is TokenView -> (mapSpecific(componentView) as TokenViewData)
 
@@ -239,7 +239,7 @@ object LayoutMapper {
                         alignment = alignment.horizontalAlignment.name.lowercase() to alignment.verticalAlignment.name.lowercase()
                     )
                 }
-                spacing = layout.spacing
+                spacing = layout.spacing.toInt()
             }
             else -> throw IllegalArgumentException("Unknown layout type: ${layout::class.simpleName}")
         }
@@ -279,24 +279,24 @@ object ContainerMapper {
                 container.map.forEach { (key, value) ->
                     tempMap["${key.first}/${key.second}"] = HexagonViewData().apply {
                         id = value.id
-                        posX = 0.0
-                        posY = 0.0
+                        posX = value.posX.toInt()
+                        posY = value.posY.toInt()
                         visual = VisualMapper.map(value.visual)
-                        size = value.size.toDouble()
+                        size = value.size.toInt()
                     }
                 }
 
                 (HexagonGridData().fillData(container) as HexagonGridData).apply {
                     coordinateSystem = container.coordinateSystem.name.lowercase()
                     map = tempMap
-                    spacing = 0.0
+                    spacing = 0
                     // components ?!
                 }
             }
 
             is LinearLayout<*> -> (LinearLayoutData().fillData(container) as LinearLayoutData).apply {
                 components = container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
-                spacing = container.spacing
+                spacing = container.spacing.toInt()
                 orientation = container.orientation.name.lowercase()
                 alignment = Pair(container.alignment.horizontalAlignment.name.lowercase(), container.alignment.verticalAlignment.name.lowercase())
             }
@@ -336,10 +336,10 @@ object VisualMapper {
                 id = visual.id
                 if(isRelativeFilePath(visual.path)) path = "http://localhost:8080/static/${visual.path}"
                 else path = visual.path
-                width = visual.width.toDouble()
-                height = visual.height.toDouble()
-                offsetX = visual.offsetX.toDouble()
-                offsetY = visual.offsetY.toDouble()
+                width = visual.width
+                height = visual.height
+                offsetX = visual.offsetX
+                offsetY = visual.offsetY
                 transparency = visual.transparency
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
@@ -350,8 +350,8 @@ object VisualMapper {
                 id = visual.id
                 text = visual.text
                 font = FontMapper.map(visual.font)
-                offsetX = visual.offsetX.toDouble()
-                offsetY = visual.offsetY.toDouble()
+                offsetX = visual.offsetX.toInt()
+                offsetY = visual.offsetY.toInt()
                 transparency = visual.transparency
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
@@ -393,10 +393,10 @@ object VisualMapper {
                 id = visual.id
                 if (isRelativeFilePath(visual.path)) path = "http://localhost:8080/static/${visual.path}"
                 else path = visual.path
-                width = visual.width.toDouble()
-                height = visual.height.toDouble()
-                offsetX = visual.offsetX.toDouble()
-                offsetY = visual.offsetY.toDouble()
+                width = visual.width
+                height = visual.height
+                offsetX = visual.offsetX
+                offsetY = visual.offsetY
                 transparency = visual.transparency
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
@@ -407,8 +407,8 @@ object VisualMapper {
                 id = visual.id
                 text = visual.text
                 font = FontMapper.map(visual.font)
-                offsetX = visual.offsetX.toDouble()
-                offsetY = visual.offsetY.toDouble()
+                offsetX = visual.offsetX.toInt()
+                offsetY = visual.offsetY.toInt()
                 transparency = visual.transparency
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
@@ -450,8 +450,8 @@ object SceneMapper {
         // FIXME - DONE
         return SceneData().apply {
             components = scene.components.map { RecursiveMapper.map(it) }
-            width = scene.width
-            height = scene.height
+            width = scene.width.toInt()
+            height = scene.height.toInt()
             background = VisualMapper.map(scene.background)
             fonts = scene.fonts.map { FontFaceMapper.map(it) }
         }

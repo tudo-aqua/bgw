@@ -37,7 +37,7 @@ val App = FC<AppProps> { props ->
             }
 
             "html" {
-                fontSize = (100 / props.data.height).vh
+                fontSize = (100.0 / props.data.height).vh
                 width = 100.vw
                 height = 100.vh
                 margin = 0.px
