@@ -270,7 +270,7 @@ internal class Frontend {
     }
 
     fun runLater(task: Runnable) {
-      TODO("Not yet implemented")
+      task.run()
     }
     // endregion
   }
