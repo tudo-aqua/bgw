@@ -48,32 +48,32 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CameraPaneData) {
 }
 
 val CameraPane = FC<CameraPaneProps> { props ->
-    var container : HTMLElement? = null
-    var target : HTMLElement? = null
+    var container: HTMLElement? = null
+    var target: HTMLElement? = null
 
     //TODO: Gets reset
-    var startY : Int = props.data.internalData.startX
-    var startX : Int = props.data.internalData.startY
+    var startY: Int = props.data.internalData.startX
+    var startX: Int = props.data.internalData.startY
 
-    var scrollLeft : Double = props.data.scroll.xCoord
-    var scrollTop : Double = props.data.scroll.yCoord
-    var isDown : Boolean = false
+    var scrollLeft: Double = props.data.scroll.xCoord
+    var scrollTop: Double = props.data.scroll.yCoord
+    var isDown: Boolean = false
 
-    var zoomLevel : Double = props.data.zoom
-    var zoom : Double = 0.02
-    var maxZoom : Double = 10.0
-    var minZoom : Double = 0.01
-    var interactive : Boolean = true
+    var zoomLevel: Double = props.data.zoom
+    var zoom: Double = 0.02
+    var maxZoom: Double = 10.0
+    var minZoom: Double = 0.01
+    var interactive: Boolean = true
 
     //TODO: Gets reset
-    var lastMousePosition : Pair<Double, Double> = props.data.internalData.lastMousePosition
-    var anchorPoint : Pair<Double, Double> = props.data.internalData.anchorPoint
-    var startPos : Pair<Double, Double> = props.data.internalData.startPos
-    var endPos : Pair<Double, Double> = props.data.internalData.endPos
-    var animValue : Double = props.data.internalData.animValue
+    var lastMousePosition: Pair<Double, Double> = props.data.internalData.lastMousePosition
+    var anchorPoint: Pair<Double, Double> = props.data.internalData.anchorPoint
+    var startPos: Pair<Double, Double> = props.data.internalData.startPos
+    var endPos: Pair<Double, Double> = props.data.internalData.endPos
+    var animValue: Double = props.data.internalData.animValue
 
     // Handle functions for callback to Kotlin
-    fun handleZoomChange(zoomChange : Double) {
+    fun handleZoomChange(zoomChange: Double) {
         zoomLevel = zoomChange
         JCEFEventDispatcher.dispatchEvent(ZoomChangedEventData(zoomLevel).apply { id = props.data.id })
         JCEFEventDispatcher.dispatchEvent(ScrollChangedEventData(scrollLeft, scrollTop).apply { id = props.data.id })
@@ -88,13 +88,13 @@ val CameraPane = FC<CameraPaneProps> { props ->
         ).apply { id = props.data.id })
     }
 
-    fun getPositionInPane(posX : Int, posY : Int) : Pair<Double, Double> {
+    fun getPositionInPane(posX: Int, posY: Int): Pair<Double, Double> {
         val x = (posX + container?.scrollLeft!!) / zoomLevel
         val y = (posY + container?.scrollTop!!) / zoomLevel
         return Pair(x, y)
     }
 
-    fun convertToPane(pos : Pair<Double, Double>) : Pair<Double, Double> {
+    fun convertToPane(pos: Pair<Double, Double>): Pair<Double, Double> {
         val targetW = target!!.clientWidth
         val targetH = target!!.clientHeight
 
@@ -104,8 +104,8 @@ val CameraPane = FC<CameraPaneProps> { props ->
         return Pair(posX, posY)
     }
 
-    fun mouseIsDown(e : MouseEvent) {
-        if(!interactive)
+    fun mouseIsDown(e: MouseEvent) {
+        if (!interactive)
             return
         isDown = true
         startY = e.clientY - container!!.offsetTop
@@ -123,8 +123,8 @@ val CameraPane = FC<CameraPaneProps> { props ->
         ).apply { id = props.data.id })
     }
 
-    fun mouseIsUp(e : MouseEvent) {
-        if(!interactive)
+    fun mouseIsUp(e: MouseEvent) {
+        if (!interactive)
             return
         isDown = false
         JCEFEventDispatcher.dispatchEvent(ScrollChangedEventData(scrollLeft, scrollTop).apply { id = props.data.id })
@@ -139,16 +139,16 @@ val CameraPane = FC<CameraPaneProps> { props ->
         ).apply { id = props.data.id })
     }
 
-    fun mouseLeave(e : MouseEvent) {
-        if(!interactive)
+    fun mouseLeave(e: MouseEvent) {
+        if (!interactive)
             return
         isDown = false
     }
 
-    fun mouseMove(e : MouseEvent) {
-        if(!interactive)
+    fun mouseMove(e: MouseEvent) {
+        if (!interactive)
             return
-        if(isDown) {
+        if (isDown) {
             e.preventDefault()
             val y = e.pageY - container!!.offsetTop
             val walkY = y - startY
@@ -166,20 +166,20 @@ val CameraPane = FC<CameraPaneProps> { props ->
         }
     }
 
-    fun mouseScroll(e : WheelEvent) {
-        if(!interactive)
+    fun mouseScroll(e: WheelEvent) {
+        if (!interactive)
             return
         e.preventDefault()
         val currentZoom = exp(40 * zoom) / 10 * zoomLevel // TODO: Fix zoom not getting back to 1.0
         // val currentZoom = 0.05
-        if(e.deltaY < 0) {
-            if(zoomLevel + currentZoom > maxZoom) {
+        if (e.deltaY < 0) {
+            if (zoomLevel + currentZoom > maxZoom) {
                 handleZoomChange(maxZoom)
             } else {
                 handleZoomChange(zoomLevel + currentZoom)
             }
         } else {
-            if(zoomLevel - currentZoom < minZoom) {
+            if (zoomLevel - currentZoom < minZoom) {
                 handleZoomChange(minZoom)
             } else {
                 handleZoomChange(zoomLevel - currentZoom)
@@ -196,13 +196,13 @@ val CameraPane = FC<CameraPaneProps> { props ->
         anchorPoint = getPositionInPane(container!!.clientWidth / 2, container!!.clientHeight / 2)
     }
 
-    fun paneScrollTo(x : Double, y : Double) {
+    fun paneScrollTo(x: Double, y: Double) {
         val pos = convertToPane(Pair(x, y))
         var posX = pos.first
-        if(posX > target!!.clientWidth) posX = target!!.clientWidth.toDouble()
+        if (posX > target!!.clientWidth) posX = target!!.clientWidth.toDouble()
 
         var posY = pos.second
-        if(posY > target!!.clientHeight) posY = target!!.clientHeight.toDouble()
+        if (posY > target!!.clientHeight) posY = target!!.clientHeight.toDouble()
 
         container?.scrollLeft = (posX * zoomLevel) - (container!!.clientWidth / 2)
         container?.scrollTop = (posY * zoomLevel) - (container!!.clientHeight / 2)
@@ -210,14 +210,15 @@ val CameraPane = FC<CameraPaneProps> { props ->
         anchorPoint = getPositionInPane(container!!.clientWidth / 2, container!!.clientHeight / 2)
         lastMousePosition = getPositionInPane(container!!.clientWidth / 2, container!!.clientHeight / 2)
     }
+
     // TODO: Might need fixing
-    fun paneScrollBy(x : Double, y : Double) {
+    fun paneScrollBy(x: Double, y: Double) {
         container?.scrollLeft = container?.scrollLeft?.plus(x * zoomLevel)!!
         container?.scrollTop = container?.scrollTop?.plus(y * zoomLevel)!!
     }
 
-    fun easeInOutCubic(x : Double) : Double {
-        return if(x < 0.5) 4 * x * x * x else 1 - (-2 * x + 2).pow(3) / 2
+    fun easeInOutCubic(x: Double): Double {
+        return if (x < 0.5) 4 * x * x * x else 1 - (-2 * x + 2).pow(3) / 2
     }
 
     fun animationLoop() {
@@ -226,7 +227,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
 
         paneScrollTo(startPos.first + x, startPos.second + y)
 
-        if(animValue < 1) {
+        if (animValue < 1) {
             animValue += 0.005
         } else {
             animValue = 0.0
@@ -237,8 +238,8 @@ val CameraPane = FC<CameraPaneProps> { props ->
         window.requestAnimationFrame { animationLoop() }
     }
 
-    fun paneSmoothScrollTo(x : Double, y : Double) {
-        if(animValue > 0) return
+    fun paneSmoothScrollTo(x: Double, y: Double) {
+        if (animValue > 0) return
 
         startPos = anchorPoint
         endPos = Pair(x, y)
@@ -246,10 +247,10 @@ val CameraPane = FC<CameraPaneProps> { props ->
         animationLoop()
     }
 
-    fun testScroll(e : MouseEvent) {
+    fun testScroll(e: MouseEvent) {
         val x = Random.nextDouble(0.0, 4000.0)
         val y = Random.nextDouble(0.0, 4000.0)
-        paneSmoothScrollTo(x,y)
+        paneSmoothScrollTo(x, y)
     }
 
     fun mountCamera() {
@@ -268,7 +269,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
         target = document.getElementById(props.data.target?.id + "Target") as HTMLElement
 
         //println("Camera mounting...")
-        if(container != null && target != null)
+        if (container != null && target != null)
             mountCamera()
     }
 
@@ -282,12 +283,16 @@ val CameraPane = FC<CameraPaneProps> { props ->
 
         +VisualBuilder.build(props.data.visual)
 
-        if(props.data.target != null) {
+        if (props.data.target != null) {
             bgwCameraTarget {
                 id = props.data.target?.id + "Target"
                 className = ClassName("target")
                 +props.data.target?.let { LayoutNodeBuilder.build(it) }
             }
+        }
+        onContextMenu = {
+            it.preventDefault()
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
         }
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }

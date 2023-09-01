@@ -62,6 +62,10 @@ val ComboBox = FC<ComboBoxProps> { props ->
             }
         }
 
+               onContextMenu = {
+            it.preventDefault()
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
+        }
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }

@@ -18,11 +18,10 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
 import org.cef.browser.CefMessageRouter.CefMessageRouterConfig
+import org.cef.callback.CefContextMenuParams
+import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
-import org.cef.handler.CefFocusHandlerAdapter
-import org.cef.handler.CefLoadHandlerAdapter
-import org.cef.handler.CefMessageRouterHandler
-import org.cef.handler.CefMessageRouterHandlerAdapter
+import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.ComboBox
@@ -172,6 +171,11 @@ class MainFrame(
                 if (frame.isMain) {
                     //browser.executeJavaScript("alert('Hello World!');", browser.getURL(), 0);
                 }
+            }
+        })
+        client.addContextMenuHandler(object : CefContextMenuHandlerAdapter() {
+            override fun onBeforeContextMenu(browser: CefBrowser, frame: CefFrame, params: CefContextMenuParams, model: CefMenuModel) {
+                model.clear()
             }
         })
         contentPane.add(browserUI, BorderLayout.CENTER)
