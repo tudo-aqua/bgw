@@ -136,8 +136,8 @@ val CameraPane = FC<CameraPaneProps> { props ->
         if(!interactive)
             return
         e.preventDefault()
-        //val currentZoom = exp(40 * zoom) / 10 * zoomLevel - TODO: Fix zoom not getting back to 1.0
-        val currentZoom = 0.05
+        val currentZoom = exp(40 * zoom) / 10 * zoomLevel // TODO: Fix zoom not getting back to 1.0
+        //val currentZoom = 0.05
         if(e.deltaY < 0) {
             if(zoomLevel + currentZoom > maxZoom) {
                 handleZoomChange(maxZoom)
