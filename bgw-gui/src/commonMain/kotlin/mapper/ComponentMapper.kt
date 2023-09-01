@@ -95,6 +95,8 @@ object ComponentMapper {
                 target = LayoutMapper.map(componentView.target)
                 zoom = componentView.zoom
                 interactive = componentView.interactive
+                scroll = CoordinateData(componentView.scroll.xCoord, componentView.scroll.yCoord)
+                internalData = componentView.internalData
                 // ! nightly - isVerticalLocked
                 // ! nightly - isHorizontalLocked
                 // ! nightly - isZoomLocked

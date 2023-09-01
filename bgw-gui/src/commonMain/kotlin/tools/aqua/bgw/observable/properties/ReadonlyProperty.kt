@@ -58,6 +58,10 @@ open class ReadonlyProperty<T>(initialValue: T) : ValueObservable<T>() {
     }
   }
 
+  internal open fun setInternal(value: T) {
+    boxedValue = value
+  }
+
   /** Notifies all listeners with current value. */
   fun notifyUnchanged(): Unit = notifyChange(boxedValue, boxedValue)
 }

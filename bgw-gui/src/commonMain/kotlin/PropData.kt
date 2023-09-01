@@ -1,3 +1,4 @@
+import data.event.EventData
 import kotlinx.serialization.Serializable
 
 typealias ID = String
@@ -158,7 +159,12 @@ class CameraPaneData : ComponentViewData() {
     var target : LayoutViewData? = null
     var zoom : Double = 1.0
     var interactive : Boolean = false
+    var scroll : CoordinateData = CoordinateData(0.0,0.0)
+    var internalData : InternalCameraPaneData = InternalCameraPaneData()
 }
+
+@Serializable
+class CoordinateData(val xCoord: Double = 0.0, val yCoord: Double = 0.0)
 
 // GAME COMPONENT VIEWS
 @Serializable

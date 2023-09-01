@@ -1,6 +1,7 @@
 package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Label
@@ -17,7 +18,7 @@ class GridGameScene : BoardGameScene() {
         spacing = 10.0
     }
 
-    private val pane = Pane<ComponentView>(visual = ColorVisual.CYAN, width = 200.0, height = 200.0)
+    private val cameraPane = CameraPane(width = 250, height = 250, target = gridPane, visual = randomColorVisual())
 
     init {
         repeat(gridPane.columns) { x ->
@@ -28,7 +29,7 @@ class GridGameScene : BoardGameScene() {
                     height = 100,
                     text = "($x, $y)",
                     visual = ColorVisual.GRAY,
-                    font = Font(40.0, Color(0,0,0,0.25), "Rubik", Font.FontWeight.SEMI_BOLD)
+                    font = Font(40.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD)
                 ).apply {
                     onMouseClicked = {
                         visual = randomColorVisual()
@@ -36,23 +37,7 @@ class GridGameScene : BoardGameScene() {
                 }
             }
         }
-
-        ColorVisual.GRAY.apply {
-            color = Color(0,0,0,1.0)
-        }
-
-        (gridPane[0, 0] as? Label).apply {
-            this?.text = "Hello World!"
-            this?.visual = ColorVisual.WHITE
-            this?.width = 200.0
-            this?.height = 200.0
-
-        }
-        pane.onMouseClicked = {
-            pane.add(Label(visual = randomColorVisual()))
-        }
-        addComponents(gridPane)
-        //addComponents(pane)
+        addComponents(cameraPane)
     }
 
     private fun randomColorVisual(): ColorVisual {

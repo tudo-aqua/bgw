@@ -1,7 +1,6 @@
 import data.event.*
+import data.event.internal.*
 import data.event.internal.LoadEventData
-import data.event.internal.SelectionChangedEventData
-import data.event.internal.TextInputChangedEventData
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -46,10 +45,12 @@ private val module = SerializersModule {
         subclass(ImageVisualData::class)
         subclass(TextVisualData::class)
         subclass(CompoundVisualData::class)
+        // EVENTS
     }
 
     polymorphic(LayoutViewData::class) {
         subclass(PaneData::class)
+        subclass(GridPaneData::class)
     }
     polymorphic(ComponentViewData::class) {
         // UI COMPONENTS
@@ -111,6 +112,9 @@ private val module = SerializersModule {
         subclass(LoadEventData::class)
         subclass(SelectionChangedEventData::class)
         subclass(TextInputChangedEventData::class)
+        subclass(ScrollChangedEventData::class)
+        subclass(ZoomChangedEventData::class)
+        subclass(InternalCameraPaneData::class)
     }
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)

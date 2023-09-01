@@ -1,13 +1,13 @@
 package tools.aqua.bgw.application
 
 import ID
+import InternalCameraPaneData
 import data.event.EventData
 import data.event.KeyEventAction
 import data.event.KeyEventData
 import data.event.MouseEventData
+import data.event.internal.*
 import data.event.internal.LoadEventData
-import data.event.internal.SelectionChangedEventData
-import data.event.internal.TextInputChangedEventData
 import jsonMapper
 import kotlinx.serialization.decodeFromString
 import me.friwi.jcefmaven.CefAppBuilder
@@ -24,10 +24,12 @@ import org.cef.handler.CefLoadHandlerAdapter
 import org.cef.handler.CefMessageRouterHandler
 import org.cef.handler.CefMessageRouterHandlerAdapter
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.util.Coordinate
 import java.awt.BorderLayout
 import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
@@ -89,6 +91,21 @@ class JCEFApplication : Application {
                     is TextInputChangedEventData -> {
                         //println("Text changed")
                         if(component is TextField) component.textProperty.value = eventData.value
+                    }
+                    is ScrollChangedEventData -> {
+                        if(component is CameraPane<*>) {
+                            component.anchorPointProperty.setInternal(Coordinate(eventData.scrollLeft, eventData.scrollTop))
+                        }
+                    }
+                    is ZoomChangedEventData -> {
+                        if(component is CameraPane<*>) {
+                            component.zoomProperty.setInternal(eventData.zoomLevel)
+                        }
+                    }
+                    is InternalCameraPaneData -> {
+                        if(component is CameraPane<*>) {
+                            component.internalData = eventData
+                        }
                     }
                 }
                 return true

@@ -1,6 +1,7 @@
 package tools.aqua.bgw.elements.layoutviews
 
 import CameraPaneData
+import InternalCameraPaneData
 import csstype.ClassName
 import csstype.PropertiesBuilder
 import csstype.number
@@ -29,6 +30,8 @@ import kotlin.math.round
 import kotlin.random.Random
 import csstype.*
 import data.event.KeyEventAction
+import data.event.internal.ScrollChangedEventData
+import data.event.internal.ZoomChangedEventData
 import react.*
 import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
@@ -48,29 +51,41 @@ val CameraPane = FC<CameraPaneProps> { props ->
     var container : HTMLElement? = null
     var target : HTMLElement? = null
 
-    var startY : Int = 0
-    var startX : Int = 0
+    //TODO: Gets reset
+    var startY : Int = props.data.internalData.startX
+    var startX : Int = props.data.internalData.startY
 
-    var scrollLeft : Double = 0.0
-    var scrollTop : Double = 0.0
+    var scrollLeft : Double = props.data.scroll.xCoord
+    var scrollTop : Double = props.data.scroll.yCoord
     var isDown : Boolean = false
 
-    var zoomLevel : Double = 1.0
+    var zoomLevel : Double = props.data.zoom
     var zoom : Double = 0.02
     var maxZoom : Double = 10.0
     var minZoom : Double = 0.01
     var interactive : Boolean = true
 
-    var lastMousePosition : Pair<Double, Double> = Pair(0.0, 0.0)
-    var anchorPoint : Pair<Double, Double> = Pair(0.0, 0.0)
-    var startPos : Pair<Double, Double> = Pair(0.0, 0.0)
-    var endPos : Pair<Double, Double> = Pair(0.0, 0.0)
-    var animValue : Double = 0.0
+    //TODO: Gets reset
+    var lastMousePosition : Pair<Double, Double> = props.data.internalData.lastMousePosition
+    var anchorPoint : Pair<Double, Double> = props.data.internalData.anchorPoint
+    var startPos : Pair<Double, Double> = props.data.internalData.startPos
+    var endPos : Pair<Double, Double> = props.data.internalData.endPos
+    var animValue : Double = props.data.internalData.animValue
 
     // Handle functions for callback to Kotlin
     fun handleZoomChange(zoomChange : Double) {
         zoomLevel = zoomChange
-        // TODO - Invoke callback to Kotlin
+        JCEFEventDispatcher.dispatchEvent(ZoomChangedEventData(zoomLevel).apply { id = props.data.id })
+        JCEFEventDispatcher.dispatchEvent(ScrollChangedEventData(scrollLeft, scrollTop).apply { id = props.data.id })
+        JCEFEventDispatcher.dispatchEvent(InternalCameraPaneData(
+            lastMousePosition = lastMousePosition,
+            anchorPoint = anchorPoint,
+            startPos = startPos,
+            endPos = endPos,
+            animValue = animValue,
+            startY = startY,
+            startX = startX
+        ).apply { id = props.data.id })
     }
 
     fun getPositionInPane(posX : Int, posY : Int) : Pair<Double, Double> {
@@ -97,12 +112,31 @@ val CameraPane = FC<CameraPaneProps> { props ->
         startX = e.clientX - container!!.offsetLeft
         scrollLeft = container?.scrollLeft ?: 0.0
         scrollTop = container?.scrollTop ?: 0.0
+        JCEFEventDispatcher.dispatchEvent(InternalCameraPaneData(
+            lastMousePosition = lastMousePosition,
+            anchorPoint = anchorPoint,
+            startPos = startPos,
+            endPos = endPos,
+            animValue = animValue,
+            startY = startY,
+            startX = startX
+        ).apply { id = props.data.id })
     }
 
     fun mouseIsUp(e : MouseEvent) {
         if(!interactive)
             return
         isDown = false
+        JCEFEventDispatcher.dispatchEvent(ScrollChangedEventData(scrollLeft, scrollTop).apply { id = props.data.id })
+        JCEFEventDispatcher.dispatchEvent(InternalCameraPaneData(
+            lastMousePosition = lastMousePosition,
+            anchorPoint = anchorPoint,
+            startPos = startPos,
+            endPos = endPos,
+            animValue = animValue,
+            startY = startY,
+            startX = startX
+        ).apply { id = props.data.id })
     }
 
     fun mouseLeave(e : MouseEvent) {
@@ -137,7 +171,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
             return
         e.preventDefault()
         val currentZoom = exp(40 * zoom) / 10 * zoomLevel // TODO: Fix zoom not getting back to 1.0
-        //val currentZoom = 0.05
+        // val currentZoom = 0.05
         if(e.deltaY < 0) {
             if(zoomLevel + currentZoom > maxZoom) {
                 handleZoomChange(maxZoom)
@@ -159,7 +193,6 @@ val CameraPane = FC<CameraPaneProps> { props ->
         val diffY = newPos.second - lastMousePosition.second
         container?.scrollLeft = container?.scrollLeft?.minus(diffX * zoomLevel)!!
         container?.scrollTop = container?.scrollTop?.minus(diffY * zoomLevel)!!
-
         anchorPoint = getPositionInPane(container!!.clientWidth / 2, container!!.clientHeight / 2)
     }
 

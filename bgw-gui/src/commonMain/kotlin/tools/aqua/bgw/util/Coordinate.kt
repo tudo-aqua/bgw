@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.util
 
+import kotlinx.serialization.Serializable
 import tools.aqua.bgw.util.Trig.cosD
 import tools.aqua.bgw.util.Trig.sinD
 
