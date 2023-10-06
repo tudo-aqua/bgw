@@ -18,7 +18,7 @@ class GridGameScene : BoardGameScene() {
         spacing = 10.0
     }
 
-    private val cameraPane = CameraPane(width = 250, height = 250, target = gridPane, visual = randomColorVisual())
+    private val cameraPane = CameraPane(width = 1920, height = 1080, target = gridPane, visual = randomColorVisual())
 
     init {
         repeat(gridPane.columns) { x ->

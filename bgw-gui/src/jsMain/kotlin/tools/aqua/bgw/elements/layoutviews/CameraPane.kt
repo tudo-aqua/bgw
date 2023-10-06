@@ -36,6 +36,7 @@ import react.*
 import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.elements.fit
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 
@@ -281,13 +282,29 @@ val CameraPane = FC<CameraPaneProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(props.data.visual)
+        bgwCameraContent {
+            css {
+                width = fit()
+                height = fit()
+                minWidth = 100.pct
+                minHeight = 100.pct
+                // padding = 100.vh
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                alignItems = AlignItems.center
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+            }
 
-        if (props.data.target != null) {
-            bgwCameraTarget {
-                id = props.data.target?.id + "Target"
-                className = ClassName("target")
-                +props.data.target?.let { LayoutNodeBuilder.build(it) }
+            +VisualBuilder.build(props.data.visual)
+
+            if (props.data.target != null) {
+                bgwCameraTarget {
+                    id = props.data.target?.id + "Target"
+                    className = ClassName("target")
+                    +props.data.target?.let { LayoutNodeBuilder.build(it) }
+                }
             }
         }
         onContextMenu = {
@@ -306,3 +323,6 @@ inline val bgwCameraPane: IntrinsicType<HTMLAttributes<HTMLDivElement>>
 
 inline val bgwCameraTarget: IntrinsicType<HTMLAttributes<HTMLDivElement>>
     get() = "bgw_camera_target".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+
+inline val bgwCameraContent: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_camera_content".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
