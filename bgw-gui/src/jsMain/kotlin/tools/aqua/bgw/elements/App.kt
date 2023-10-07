@@ -1,5 +1,7 @@
 package tools.aqua.bgw.elements
 
+import ColorVisualData
+import CompoundVisualData
 import SceneData
 import csstype.*
 import emotion.react.Global
@@ -13,6 +15,9 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
 import tools.aqua.bgw.builder.SceneBuilder
+import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
+import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
+import tools.aqua.bgw.style.BlurFilter
 import tools.aqua.bgw.toFC
 import tools.aqua.bgw.webSocket
 import webViewType
@@ -66,16 +71,28 @@ val App = FC<AppProps> { props ->
                 top = 0.px
                 display = Display.flex
             }
-
-            "bgw_scene" {
+            "bgw_scenes" {
                 height = 100.vh
                 width = (100 * 16 / 9).vh
                 position = Position.relative
+                backgroundColor = rgba(0, 0, 0, 0.0)
+                overflow = Overflow.hidden
+            }
+            "bgw_scene" {
+                height = 100.pct
+                width = 100.pct
+                inset = 0.px
+                position = Position.absolute
                 display = Display.flex
                 backgroundColor = rgba(0, 0, 0, 0.0)
                 overflow = Overflow.hidden
             }
-
+            "bgw_menu_scene > bgw_scene > bgw_visuals" {
+                opacity = number(DEFAULT_MENU_SCENE_OPACITY)
+            }
+            "bgw_menu_scene > bgw_scene" {
+                backdropFilter = blur(DEFAULT_BLUR_RADIUS.rem)
+            }
             "bgw_hexagon_view" {
                 clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
             }
@@ -133,15 +150,25 @@ val App = FC<AppProps> { props ->
             }
         }
     }
-    bgwMenuScene {
-        id = "menuScene"
-    }
-    bgwGameScene {
-        id = "boardGameScene"
-        +SceneBuilder.build(props.data)
+    bgwScenes {
+        bgwGameScene {
+            id = "boardGameScene"
+            +SceneBuilder.build(props.data)
+        }
+        bgwMenuScene {
+            id = "menuScene"
+            +Scene.create { data = SceneData().apply {
+                background = CompoundVisualData().apply {
+                    children = listOf(ColorVisualData().apply {
+                        color = "#FF0000"
+                    })
+                }
+            } }
+        }
     }
 }
-
+inline val bgwScenes: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_scenes".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
 inline val bgwMenuScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
     get() = "bgw_menu_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
 
