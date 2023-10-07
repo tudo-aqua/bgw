@@ -1,5 +1,6 @@
 package tools.aqua.bgw.elements
 
+import AppData
 import ColorVisualData
 import CompoundVisualData
 import SceneData
@@ -23,7 +24,7 @@ import tools.aqua.bgw.webSocket
 import webViewType
 
 external interface AppProps : Props {
-    var data: SceneData
+    var data: AppData
 }
 
 val App = FC<AppProps> { props ->
@@ -151,19 +152,19 @@ val App = FC<AppProps> { props ->
         }
     }
     bgwScenes {
-        bgwGameScene {
-            id = "boardGameScene"
-            +SceneBuilder.build(props.data)
+        val gameScene = props.data.gameScene
+        if (gameScene != null) {
+            bgwGameScene {
+                id = "boardGameScene"
+                +SceneBuilder.build(gameScene)
+            }
         }
-        bgwMenuScene {
-            id = "menuScene"
-            +Scene.create { data = SceneData().apply {
-                background = CompoundVisualData().apply {
-                    children = listOf(ColorVisualData().apply {
-                        color = "#FF0000"
-                    })
-                }
-            } }
+        val menuScene = props.data.menuScene
+        if (menuScene != null) {
+            bgwMenuScene {
+                id = "menuScene"
+                +SceneBuilder.build(menuScene)
+            }
         }
     }
 }

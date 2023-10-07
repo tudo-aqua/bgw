@@ -1,6 +1,7 @@
 package tools.aqua.bgw
 
 
+import AppData
 import ComponentViewData
 import Data
 import ID
@@ -37,7 +38,18 @@ fun main() {
         //println("Received: ${event.data}")
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
         when(receivedData) {
-            is SceneData -> {
+            is AppData -> {
+                val app = receivedData
+                render(App.create { data = app }, container, callback = {
+                    println("Rendered App to DOM!")
+                    when(webViewType) {
+                        WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }
+                        WebViewType.JAVAFX -> container.dispatchEvent(Event("bgwLoaded"))
+                    }
+                    Unit
+                })
+            }
+            /*is SceneData -> {
                 val scene = receivedData
                 val sceneComponents = scene.components.map { NodeBuilder.build(it) }
                 //println("Built: $sceneComponents")
@@ -50,7 +62,7 @@ fun main() {
                     }
                     Unit
                 })
-            }/*
+            }
             is ComponentViewData -> {
                 //println("Received ComponentViewData for id ${receivedData.id} with ${receivedData.visual?.id}")
                 val component =  receivedData

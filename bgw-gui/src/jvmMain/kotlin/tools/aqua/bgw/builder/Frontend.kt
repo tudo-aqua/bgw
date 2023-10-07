@@ -61,7 +61,8 @@ internal class Frontend {
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
       applicationEngine.clearAllEventListeners()
-      SceneBuilder.build(boardGameScene!!)
+      boardGameScene?.let { SceneBuilder.build(it) }
+      menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
     }
 
@@ -144,10 +145,7 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
-      scene.fonts = loadedFonts
       messageQueue.add("showMenuScene")
-      //val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
-      //runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -156,11 +154,8 @@ internal class Frontend {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double) {
-      if(boardGameScene == null) return
-      boardGameScene!!.fonts = loadedFonts
+      menuScene = null
       messageQueue.add("hideMenuScene")
-      //val json = jsonMapper.encodeToString(PropData(SceneMapper.map(boardGameScene!!)))
-      //runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -170,15 +165,7 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
-      scene.fonts = loadedFonts
       messageQueue.add("showGameScene")
-      //println("Set new scene: $scene")
-      try {
-        //val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
-        //runBlocking { sendToAllClients(json) }
-      } catch (e: Exception) {
-        //println("Error: $e")
-      }
     }
 
     /**

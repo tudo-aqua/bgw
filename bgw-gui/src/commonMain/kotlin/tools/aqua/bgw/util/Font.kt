@@ -62,7 +62,24 @@ data class Font(
     /** Bold font weight. */
     BOLD,
     EXTRA_BOLD,
-    BLACK
+    BLACK;
+
+    /**
+     * Returns the corresponding CSS font weight value for this [FontWeight].
+     *
+     * @return Corresponding CSS font weight value.
+     */
+    internal fun toInt(): Int = when (this) {
+      THIN -> 100
+      EXTRA_LIGHT -> 200
+      LIGHT -> 300
+      NORMAL -> 400
+      MEDIUM -> 500
+      SEMI_BOLD -> 600
+      BOLD -> 700
+      EXTRA_BOLD -> 800
+      BLACK -> 900
+    }
   }
 
   /**

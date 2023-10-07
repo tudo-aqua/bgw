@@ -8,6 +8,8 @@ import kotlinx.serialization.json.Json as KJson
 
 private val module = SerializersModule {
     polymorphic(Data::class) {
+        // APPLICATION
+        subclass(AppData::class)
         // SCENE
         subclass(SceneData::class)
         // UI COMPONENTS
@@ -47,7 +49,6 @@ private val module = SerializersModule {
         subclass(CompoundVisualData::class)
         // EVENTS
     }
-
     polymorphic(LayoutViewData::class) {
         subclass(PaneData::class)
         subclass(GridPaneData::class)

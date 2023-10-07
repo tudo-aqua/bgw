@@ -1,6 +1,7 @@
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.MenuScene
 
 object SceneBuilder {
     fun build(boardGameScene: BoardGameScene) {
@@ -8,5 +9,10 @@ object SceneBuilder {
         boardGameScene.internalLockedProperty.guiListener = { _, _ -> Frontend.updateScene() }
         boardGameScene.rootComponents.guiListener = { _, _ -> Frontend.updateScene() }
         boardGameScene.components.forEach { ComponentViewBuilder.build(it) }
+    }
+
+    fun build(menuScene: MenuScene) {
+        menuScene.rootComponents.guiListener = { _, _ -> Frontend.updateScene() }
+        menuScene.components.forEach { ComponentViewBuilder.build(it) }
     }
 }

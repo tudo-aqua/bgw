@@ -1,5 +1,7 @@
 import data.event.EventData
 import kotlinx.serialization.Serializable
+import tools.aqua.bgw.core.AspectRatio
+import tools.aqua.bgw.core.WindowMode
 
 typealias ID = String
 typealias ToggleGroup = List<ID>
@@ -11,6 +13,14 @@ class PropData(
 
 @Serializable
 sealed class Data
+@Serializable
+class AppData : Data() {
+    var menuScene: SceneData? = null
+    var gameScene: SceneData? = null
+    var fonts : List<Triple<String, String, Int>> = emptyList()
+    var width : Int = 0
+    var height : Int = 0
+}
 
 @Serializable
 // FIXME - DONE
@@ -19,7 +29,6 @@ class SceneData : Data() {
     var height : Int = 0
     var background : VisualData? = null
     var components: List<ComponentViewData> = emptyList()
-    var fonts : List<Triple<String, String, Int>> = emptyList()
 }
 
 @Serializable

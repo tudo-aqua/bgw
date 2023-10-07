@@ -33,7 +33,7 @@ class SerializationTest {
             button = MouseButtonType.LEFT_BUTTON)
     @Test
     fun testSerialization() {
-        val json = jsonMapper.encodeToString(SceneMapper.map(scene))
+        val json = jsonMapper.encodeToString(SceneMapper.map(gameScene =  scene))
         //println(json)
     }
 }

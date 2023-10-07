@@ -10,5 +10,7 @@ class Application : BoardGameApplication() {
     init {
         loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
         showGameScene(ui)
+        //showGameScene(scene)
+        //showMenuScene(menuScene)
     }
 }

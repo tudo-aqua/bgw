@@ -67,9 +67,15 @@ fun onClientError(session: WebSocketSession, e: ClosedSendChannelException) {
 
 suspend fun onClientConnected(webSocketSession: WebSocketSession) {
     //println("Client connected: $webSocketSession")
-    val scene = checkNotNull(Frontend.boardGameScene)
-    scene.fonts = Frontend.loadedFonts
-    val json = jsonMapper.encodeToString(PropData(SceneMapper.map(scene)))
+    Frontend.application
+    val json = jsonMapper.encodeToString(PropData(SceneMapper.map(
+        menuScene=Frontend.menuScene,
+        gameScene=Frontend.boardGameScene
+    ).apply {
+        fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
+            Triple(path, fontName, weight.toInt())
+        }
+    }))
     webSocketSession.send(json)
     if(!uiJob.isActive) uiJob.start()
 }
@@ -115,12 +121,15 @@ fun CoroutineScope.launchPeriodicAsync(
 
 var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
     if (messageQueue.isNotEmpty()) {
-        println("Sending message to all clients: ${messageQueue.first()}")
         val isSceneLoaded = Frontend.boardGameScene != null
-        println("Is scene loaded: $isSceneLoaded")
         val message = messageQueue.removeFirst()
         val result = runCatching {
-            val json = jsonMapper.encodeToString(PropData(SceneMapper.map(Frontend.boardGameScene!!)))
+            val appData = SceneMapper.map(menuScene=Frontend.menuScene, gameScene=Frontend.boardGameScene).apply {
+                fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
+                    Triple(path, fontName, weight.toInt())
+                }
+            }
+            val json = jsonMapper.encodeToString(PropData(appData))
             runBlocking { sendToAllClients(json) }
         }
         println(result.exceptionOrNull()?.message)

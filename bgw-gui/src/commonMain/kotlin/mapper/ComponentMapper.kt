@@ -7,11 +7,12 @@ import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.core.Scene
+import tools.aqua.bgw.core.*
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.*
+import kotlin.math.max
 
 object ComponentMapper {
     fun ComponentViewData.fillData(componentView: ComponentView) : ComponentViewData {
@@ -457,14 +458,22 @@ object FontFaceMapper {
 }
 
 object SceneMapper {
-    fun map(scene: Scene<*>) : SceneData {
+    private fun mapScene(scene: Scene<*>) : SceneData {
         // FIXME - DONE
         return SceneData().apply {
             components = scene.components.map { RecursiveMapper.map(it) }
             width = scene.width.toInt()
             height = scene.height.toInt()
             background = VisualMapper.map(scene.background)
-            fonts = scene.fonts.map { FontFaceMapper.map(it) }
+        }
+    }
+
+    fun map(menuScene: MenuScene? = null, gameScene: BoardGameScene? = null) : AppData {
+        return AppData().apply {
+            this.width = max(menuScene?.width?.toInt() ?: DEFAULT_SCENE_WIDTH.toInt(), gameScene?.width?.toInt() ?: DEFAULT_SCENE_WIDTH.toInt())
+            this.height = max(menuScene?.height?.toInt() ?: DEFAULT_SCENE_HEIGHT.toInt(), gameScene?.height?.toInt() ?: DEFAULT_SCENE_HEIGHT.toInt())
+            this.menuScene = if(menuScene != null) mapScene(menuScene) else null
+            this.gameScene = if(gameScene != null) mapScene(gameScene) else null
         }
     }
 }
