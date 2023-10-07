@@ -61,10 +61,10 @@ val CameraPane = FC<CameraPaneProps> { props ->
     var isDown: Boolean = false
 
     var zoomLevel: Double = props.data.zoom
-    var zoom: Double = 0.02
     var maxZoom: Double = 10.0
     var minZoom: Double = 0.01
     var interactive: Boolean = true
+    val zoomLevels = listOf(0.01,0.012309185338821003,0.01720750265929715,0.024055056416761967,0.03362752577585457,0.047009263674717305,0.06571613046910042,0.09186720799786698,0.12842484554521405,0.1795302296951816,0.25097249085697504,0.35084448604504254,0.49045954386434326,0.6856330190030036,1.0,1.339888912168399,1.8730843174962588,2.6184595070441774,3.660449305984716,5.1170885345518275,7.153382790366966,10.0)
 
     //TODO: Gets reset
     var lastMousePosition: Pair<Double, Double> = props.data.internalData.lastMousePosition
@@ -168,22 +168,23 @@ val CameraPane = FC<CameraPaneProps> { props ->
     }
 
     fun mouseScroll(e: WheelEvent) {
-        if (!interactive)
+        if (!interactive || isDown)
             return
         e.preventDefault()
-        val currentZoom = exp(40 * zoom) / 10 * zoomLevel // TODO: Fix zoom not getting back to 1.0
-        // val currentZoom = 0.05
+
         if (e.deltaY < 0) {
-            if (zoomLevel + currentZoom > maxZoom) {
-                handleZoomChange(maxZoom)
+            val index = zoomLevels.indexOfFirst { it > zoomLevel }
+            if (index != -1) {
+                handleZoomChange(zoomLevels[index])
             } else {
-                handleZoomChange(zoomLevel + currentZoom)
+                handleZoomChange(maxZoom)
             }
         } else {
-            if (zoomLevel - currentZoom < minZoom) {
-                handleZoomChange(minZoom)
+            val index = zoomLevels.indexOfLast { it < zoomLevel }
+            if (index != -1) {
+                handleZoomChange(zoomLevels[index])
             } else {
-                handleZoomChange(zoomLevel - currentZoom)
+                handleZoomChange(minZoom)
             }
         }
         target?.setAttribute("style", "zoom: $zoomLevel;")
