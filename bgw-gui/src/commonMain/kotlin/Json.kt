@@ -1,3 +1,4 @@
+import data.animation.*
 import data.event.*
 import data.event.internal.*
 import data.event.internal.LoadEventData
@@ -120,6 +121,26 @@ private val module = SerializersModule {
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
+    }
+    // ANIMATIONS
+    polymorphic(AnimationData::class) {
+        subclass(ComponentAnimationData::class)
+        subclass(SequentialAnimationData::class)
+        subclass(ParallelAnimationData::class)
+        subclass(DelayAnimationData::class)
+        subclass(DiceAnimationData::class)
+        subclass(FlipAnimationData::class)
+        subclass(MovementAnimationData::class)
+        subclass(RotationAnimationData::class)
+        subclass(ScaleAnimationData::class)
+        subclass(FadeAnimationData::class)
+        subclass(SteppedComponentAnimationData::class)
+        subclass(DiceAnimationData::class)
+        subclass(RandomizeAnimationData::class)
+    }
+    polymorphic(SteppedComponentAnimationData::class) {
+        subclass(DiceAnimationData::class)
+        subclass(RandomizeAnimationData::class)
     }
 }
 
