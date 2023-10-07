@@ -4,4 +4,4 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SelectionChangedEventData(var selectedItem: String) : EventData()
+class SelectionChangedEventData(var selectedItem: Int) : EventData()

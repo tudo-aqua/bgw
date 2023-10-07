@@ -48,21 +48,26 @@ val ComboBox = FC<ComboBoxProps> { props ->
                 }
                 position = Position.absolute
             }
+            option {
+                value = (-1).toString()
+                +props.data.prompt
+                selected = props.data.selectedItem == null
+            }
             props.data.items.forEach {
                 option {
-                    value = it
-                    +it
-                    selected = it == props.data.selectedItem
+                    value = it.first.toString()
+                    +it.second
+                    selected = props.data.selectedItem?.first == it.first
                 }
             }
             onChange = {
-                val value = it.target.value
-                //println("Selection changed $value")
+                val value = it.target.value.toInt()
+                println("Selection changed $value")
                 JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = props.data.id })
             }
         }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
             JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
         }

@@ -77,8 +77,8 @@ class CheckBoxData : LabeledUIComponentData() {
 @Serializable
 class ComboBoxData : UIComponentData() {
     var prompt: String = ""
-    var items: List<String> = emptyList()
-    var selectedItem: String = ""
+    var items: List<Pair<Int, String>> = emptyList()
+    var selectedItem: Pair<Int, String>? = null
 }
 
 @Serializable

@@ -65,8 +65,14 @@ open class ComboBox<T>(
         height = height,
         font = font,
         visual = Visual.EMPTY) {
-    internal fun select(selectedItem: String) {
-        selectedItemProperty.value = observableItemsList.first { it.toString() == selectedItem }
+
+    internal fun select(selectedItem: Int) {
+        if(selectedItem < 0 || selectedItem >= observableItemsList.size) selectedItemProperty.value = null
+        else selectedItemProperty.value = observableItemsList[selectedItem]
+    }
+
+    internal fun getSelectedIndex(): Int {
+        return observableItemsList.indexOf(selectedItem)
     }
 
     /**

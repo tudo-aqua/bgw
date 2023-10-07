@@ -148,11 +148,7 @@ object ComponentMapper {
             is TextArea -> (mapSpecific(componentView) as TextAreaData)
 
             // TODO - UIComponent
-            is ComboBox<*> -> (mapSpecific(componentView) as ComboBoxData).apply {
-                prompt = componentView.prompt
-                items = componentView.items.map { it.toString() }
-                selectedItem = componentView.selectedItem.toString()
-            }
+            is ComboBox<*> -> mapComboBox(componentView)
             is ColorPicker -> (mapSpecific(componentView) as ColorPickerData).apply {
                 selectedColor = "rgba(${componentView.selectedColor.red}, ${componentView.selectedColor.green}, ${componentView.selectedColor.blue}, ${componentView.selectedColor.alpha})"
             }
@@ -188,6 +184,19 @@ object ComponentMapper {
             is TokenView -> (mapSpecific(componentView) as TokenViewData)
 
             else -> TODO("Not implemented")
+        }
+    }
+
+    fun <T> mapComboBox(comboBox: ComboBox<T>) : ComboBoxData {
+        return (mapSpecific(comboBox) as ComboBoxData).apply {
+            val selItem = comboBox.selectedItem
+            prompt = comboBox.prompt
+            items = comboBox.items.mapIndexed { index, it ->
+                Pair(index, comboBox.formatFunction?.invoke(it) ?: it.toString())
+            }
+            selectedItem =
+                if(selItem == null) null
+                else Pair(comboBox.getSelectedIndex(), comboBox.formatFunction?.invoke(selItem) ?: comboBox.selectedItem.toString())
         }
     }
 }
