@@ -1,6 +1,7 @@
 package tools.aqua.bgw
 
 
+import AnimationData
 import AppData
 import ComponentViewData
 import Data
@@ -26,6 +27,7 @@ import kotlin.random.Random
 
 var webSocket : WebSocket? = null
 var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
+var animator : Animator = Animator()
 
 fun main() {
     val container = document.createElement("div")
@@ -35,7 +37,8 @@ fun main() {
     webSocket?.onopen = { //println("Connected to Server via WebSocket!")
     }
     webSocket?.onmessage = { event ->
-        //println("Received: ${event.data}")
+        println("Received: ${event.data}")
+        println("Details: ${event}")
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
         when(receivedData) {
             is AppData -> {
@@ -49,7 +52,10 @@ fun main() {
                     Unit
                 })
             }
-            /*is SceneData -> {
+            is AnimationData -> {
+                animator.startAnimation(receivedData)
+            }
+            /* is SceneData -> {
                 val scene = receivedData
                 val sceneComponents = scene.components.map { NodeBuilder.build(it) }
                 //println("Built: $sceneComponents")
@@ -73,7 +79,7 @@ fun main() {
                 val visual = receivedData
                 val handler = handlers[visual.id]
                 handler?.invoke(visual)
-            }*/
+            } */
             else -> {}
         }
     }

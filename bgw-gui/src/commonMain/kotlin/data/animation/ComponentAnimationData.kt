@@ -1,6 +1,7 @@
 
 package data.animation
 
+import AnimationData
 import ComponentViewData
 import kotlinx.serialization.Serializable
 

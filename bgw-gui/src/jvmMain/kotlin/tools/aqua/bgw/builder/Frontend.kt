@@ -19,14 +19,20 @@
 
 package tools.aqua.bgw.builder
 
+import AnimationData
 import PropData
 import RecursiveMapper
 import VisualMapper
+import data.animation.FadeAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.util.reflect.*
+import javafx.collections.ListChangeListener
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import jsonMapper
+import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.application.JCEFApplication
@@ -41,6 +47,7 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -145,7 +152,26 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
+      scene.animations.addListener(ValueObserver { oldValue, newValue ->
+        println("Menu animations changed from ${oldValue.size} to ${newValue.size}")
+        sendAnimation(newValue.last())
+      })
       messageQueue.add("showMenuScene")
+    }
+
+    internal fun sendAnimation(animation: Animation) {
+      if(animation.instanceOf(FadeAnimation::class)) {
+        val fadeAnimation = animation as FadeAnimation<*>
+        val fadeAnimationData = FadeAnimationData().apply {
+          componentView = RecursiveMapper.map(fadeAnimation.componentView)
+          duration = fadeAnimation.duration
+          isRunning = fadeAnimation.isRunning
+          toOpacity = fadeAnimation.toOpacity
+          fromOpacity = fadeAnimation.fromOpacity
+        }
+        val json = jsonMapper.encodeToString(PropData(fadeAnimationData))
+        runBlocking { sendToAllClients(json) }
+      }
     }
 
     /**
@@ -165,6 +191,10 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
+      scene.animations.addListener(ValueObserver { oldValue, newValue ->
+        println("Game animations changed from ${oldValue.size} to ${newValue.size}")
+        sendAnimation(newValue.last())
+      })
       messageQueue.add("showGameScene")
     }
 

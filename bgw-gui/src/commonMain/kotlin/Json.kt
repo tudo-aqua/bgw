@@ -49,6 +49,8 @@ private val module = SerializersModule {
         subclass(TextVisualData::class)
         subclass(CompoundVisualData::class)
         // EVENTS
+        // ANIMATIONS
+        subclass(FadeAnimationData::class)
     }
     polymorphic(LayoutViewData::class) {
         subclass(PaneData::class)
@@ -124,6 +126,9 @@ private val module = SerializersModule {
     }
     // ANIMATIONS
     polymorphic(AnimationData::class) {
+        subclass(FadeAnimationData::class)
+    }
+    /*polymorphic(AnimationData::class) {
         subclass(ComponentAnimationData::class)
         subclass(SequentialAnimationData::class)
         subclass(ParallelAnimationData::class)
@@ -141,7 +146,7 @@ private val module = SerializersModule {
     polymorphic(SteppedComponentAnimationData::class) {
         subclass(DiceAnimationData::class)
         subclass(RandomizeAnimationData::class)
-    }
+    }*/
 }
 
 val jsonMapper = KJson {

@@ -23,12 +23,18 @@ class AppData : Data() {
 }
 
 @Serializable
-// FIXME - DONE
 class SceneData : Data() {
     var width : Int = 0
     var height : Int = 0
     var background : VisualData? = null
     var components: List<ComponentViewData> = emptyList()
+}
+
+@Serializable
+abstract class AnimationData : Data() {
+    var duration: Int = 0
+    var isRunning: Boolean = false
+    var onFinished: ((EventData) -> Unit)? = null
 }
 
 @Serializable

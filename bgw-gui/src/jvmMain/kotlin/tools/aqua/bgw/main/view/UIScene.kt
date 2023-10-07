@@ -1,5 +1,6 @@
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
@@ -20,9 +21,33 @@ class UIScene : BoardGameScene() {
         formatFunction = { it.name }
     )
 
+    private val label = Label(
+        text = "Test",
+        posX = 40,
+        posY = 120,
+        width = 200,
+        height = 200,
+        font = Font(20.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD),
+        visual = ColorVisual.MAGENTA
+    )
+
     init {
-        addComponents(combo)
+        addComponents(combo, label)
         combo.select(2)
+        label.onMouseClicked = {
+            this.playAnimation(
+                FadeAnimation(
+                    componentView = label,
+                    fromOpacity = 1.0,
+                    toOpacity = 0.2,
+                    duration = 1000
+                ).apply {
+                    onFinished = {
+                        println("Finished")
+                    }
+                }
+            )
+        }
 
         combo.selectedItemProperty.addListener { _, newValue ->
             println(newValue?.name)
