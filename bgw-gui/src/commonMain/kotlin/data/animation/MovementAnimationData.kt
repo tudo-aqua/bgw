@@ -8,8 +8,6 @@ import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.util.Coordinate
 @Serializable
 class MovementAnimationData() : ComponentAnimationData() {
-  var fromX: Double = 0.0
-  var toX: Double = 0.0
-  var fromY: Double = 0.0
-  var toY: Double = 0.0
+  var byX : Int = 0
+  var byY : Int = 0
 }

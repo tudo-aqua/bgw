@@ -24,6 +24,7 @@ import PropData
 import RecursiveMapper
 import VisualMapper
 import data.animation.FadeAnimationData
+import data.animation.MovementAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.util.reflect.*
@@ -33,6 +34,7 @@ import kotlinx.serialization.encodeToString
 import jsonMapper
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.FadeAnimation
+import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.application.JCEFApplication
@@ -170,6 +172,16 @@ internal class Frontend {
           fromOpacity = fadeAnimation.fromOpacity
         }
         val json = jsonMapper.encodeToString(PropData(fadeAnimationData))
+        runBlocking { sendToAllClients(json) }
+      } else if(animation.instanceOf(MovementAnimation::class)) {
+        val movementAnimation = animation as MovementAnimation<*>
+        val movementAnimationData = MovementAnimationData().apply {
+          componentView = RecursiveMapper.map(movementAnimation.componentView)
+          duration = movementAnimation.duration
+          byX = (movementAnimation.toX - movementAnimation.fromX).toInt()
+          byY = (movementAnimation.toY - movementAnimation.fromY).toInt()
+        }
+        val json = jsonMapper.encodeToString(PropData(movementAnimationData))
         runBlocking { sendToAllClients(json) }
       }
     }

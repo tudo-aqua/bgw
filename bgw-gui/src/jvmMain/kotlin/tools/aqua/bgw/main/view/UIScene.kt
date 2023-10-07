@@ -1,6 +1,7 @@
 package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.animation.FadeAnimation
+import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
@@ -34,12 +35,29 @@ class UIScene : BoardGameScene() {
     init {
         addComponents(combo, label)
         combo.select(2)
+
+        /*
         label.onMouseClicked = {
             this.playAnimation(
                 FadeAnimation(
                     componentView = label,
                     fromOpacity = 1.0,
                     toOpacity = 0.2,
+                    duration = 1000
+                ).apply {
+                    onFinished = {
+                        println("Finished")
+                    }
+                }
+            )
+        } */
+
+        label.onMouseClicked = {
+            this.playAnimation(
+                MovementAnimation (
+                    componentView = label,
+                    byX = 100,
+                    byY = 200,
                     duration = 1000
                 ).apply {
                     onFinished = {

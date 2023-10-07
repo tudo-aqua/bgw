@@ -3,6 +3,7 @@ package tools.aqua.bgw
 import AnimationData
 import ID
 import data.animation.FadeAnimationData
+import data.animation.MovementAnimationData
 import kotlinx.browser.document
 import kotlinx.js.timers.setTimeout
 import org.w3c.dom.Element
@@ -15,6 +16,7 @@ class Animator {
     fun startAnimation(animation: AnimationData) {
         when(animation) {
             is FadeAnimationData -> startFadeAnimation(animation)
+            is MovementAnimationData -> startMovementAnimation(animation)
         }
     }
 
@@ -63,6 +65,55 @@ class Animator {
             setTimeout({
                 // Toggle new animation off
                 element.classList.toggle("${componentId}--fade--props", false)
+            }, duration)
+        }, 50)
+    }
+
+    private fun startMovementAnimation(animation: MovementAnimationData) {
+        // Get animation properties from data
+        val componentId = animation.componentView?.id.toString()
+        println("Starting Move Animation on ${componentId}")
+        val duration = animation.duration
+
+        // Get matching component element
+        val element = document.getElementById(componentId) ?: return
+
+        // Get old style element (if exists) and remove it
+        try {
+            val oldElement = animations[componentId]
+            if(oldElement != null)
+                document.body?.removeChild(oldElement)
+        } catch (_: Exception) { }
+        animations.remove(componentId)
+
+        // Toggle old animation off
+        element.classList.toggle("${componentId}--move--props", false)
+
+        setTimeout({
+            // Create new style element
+            val newElement = document.createElement("style")
+            newElement.id = "${componentId}--move"
+
+            // Add new style element to body
+            newElement.innerHTML = """
+                .${componentId}--move--props {
+                    transition: ${duration}ms translate ease-in-out;
+                }
+                
+                .${componentId}--move {
+                    translate: ${animation.byX}rem ${animation.byY}rem;
+                }
+            """.trimIndent()
+            document.body?.appendChild(newElement)
+
+            // Toggle new animation on and save style element
+            element.classList.toggle("${componentId}--move--props", true)
+            element.classList.toggle("${componentId}--move", true)
+            animations[componentId] = newElement
+
+            setTimeout({
+                // Toggle new animation off
+                element.classList.toggle("${componentId}--move--props", false)
             }, duration)
         }, 50)
     }
