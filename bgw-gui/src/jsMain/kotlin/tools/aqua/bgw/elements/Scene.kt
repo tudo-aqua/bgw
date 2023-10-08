@@ -19,6 +19,10 @@ external interface SceneProps : Props {
 
 val Scene = FC<SceneProps> { props ->
     bgwScene {
+        css {
+            transition = menuTransition()
+        }
+        
         +VisualBuilder.build(props.data.background)
         bgwContents {
             className = ClassName("components")

@@ -92,10 +92,16 @@ val App = FC<AppProps> { props ->
                 opacity = number(DEFAULT_MENU_SCENE_OPACITY)
             }
             "bgw_menu_scene > bgw_scene" {
-                backdropFilter = blur(DEFAULT_BLUR_RADIUS.rem)
+                opacity = number(0.0)
+                backdropFilter = blur(0.px)
             }
             "bgw_hexagon_view" {
                 clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
+            }
+
+            "bgw_menu_scene.scene--visible > bgw_scene" {
+                opacity = number(1.0)
+                backdropFilter = blur(DEFAULT_BLUR_RADIUS.rem)
             }
 
             "bgw_camera_pane" {
@@ -163,6 +169,9 @@ val App = FC<AppProps> { props ->
         if (menuScene != null) {
             bgwMenuScene {
                 id = "menuScene"
+                if(props.data.action !== Action.HIDE_MENU_SCENE && props.data.action !== Action.SHOW_MENU_SCENE) {
+                    className = ClassName("scene--visible")
+                }
                 +SceneBuilder.build(menuScene)
             }
         }
@@ -195,3 +204,6 @@ inline fun fit(): LengthType.FitContent =
 
 inline fun minContent(): GridTemplateTracks =
     "min-content".unsafeCast<GridTemplateTracks>()
+
+inline fun menuTransition(): Transition =
+    ".3s opacity, .3s backdrop-filter".unsafeCast<Transition>()

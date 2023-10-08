@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.builder
 
+import Action
 import AnimationData
 import PropData
 import RecursiveMapper
@@ -158,7 +159,7 @@ internal class Frontend {
         println("Menu animations changed from ${oldValue.size} to ${newValue.size}")
         sendAnimation(newValue.last())
       })
-      messageQueue.add("showMenuScene")
+      messageQueue.add(Action.SHOW_MENU_SCENE)
     }
 
     internal fun sendAnimation(animation: Animation) {
@@ -193,7 +194,7 @@ internal class Frontend {
      */
     internal fun hideMenuScene(fadeTime: Double) {
       menuScene = null
-      messageQueue.add("hideMenuScene")
+      messageQueue.add(Action.HIDE_MENU_SCENE)
     }
 
     /**
@@ -207,7 +208,7 @@ internal class Frontend {
         println("Game animations changed from ${oldValue.size} to ${newValue.size}")
         sendAnimation(newValue.last())
       })
-      messageQueue.add("showGameScene")
+      messageQueue.add(Action.SHOW_GAME_SCENE)
     }
 
     /**
@@ -244,13 +245,13 @@ internal class Frontend {
 
     internal fun updateComponent(component: ComponentView) {
       //println("Sending update for component ${component.id}")
-      messageQueue.add("updateComponent")
+      messageQueue.add(Action.UPDATE_COMPONENT)
       //val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       //runBlocking { sendToAllClients(json) }
     }
 
     internal fun updateVisual(visual: Visual) {
-      messageQueue.add("updateVisual")
+      messageQueue.add(Action.UPDATE_VISUAL)
       //val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
       //runBlocking { sendToAllClients(json) }
     }

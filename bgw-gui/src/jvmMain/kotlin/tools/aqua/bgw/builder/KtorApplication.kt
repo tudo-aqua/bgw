@@ -1,5 +1,6 @@
 package tools.aqua.bgw.builder
 
+import Action
 import PropData
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -103,7 +104,7 @@ suspend fun sendToAllClients(message: String) {
     }
 }
 
-val messageQueue = mutableListOf<String>()
+val messageQueue = mutableListOf<Action>()
 
 fun CoroutineScope.launchPeriodicAsync(
     repeatMillis: Long,
@@ -129,6 +130,7 @@ var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
                     Triple(path, fontName, weight.toInt())
                 }
             }
+            appData.action = message
             val json = jsonMapper.encodeToString(PropData(appData))
             runBlocking { sendToAllClients(json) }
         }
@@ -137,7 +139,7 @@ var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
     }
 }
 
-fun queueMessage(message: String) {
+fun queueMessage(message: Action) {
     messageQueue.add(message)
 }
 

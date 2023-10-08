@@ -7,6 +7,17 @@ typealias ID = String
 typealias ToggleGroup = List<ID>
 
 @Serializable
+enum class Action {
+    DEFAULT,
+    SHOW_MENU_SCENE,
+    SHOW_GAME_SCENE,
+    HIDE_MENU_SCENE,
+    HIDE_GAME_SCENE,
+    UPDATE_COMPONENT,
+    UPDATE_VISUAL,
+}
+
+@Serializable
 class PropData(
     var data: Data? = null
 )
@@ -20,6 +31,7 @@ class AppData : Data() {
     var fonts : List<Triple<String, String, Int>> = emptyList()
     var width : Int = 0
     var height : Int = 0
+    var action : Action = Action.DEFAULT
 }
 
 @Serializable

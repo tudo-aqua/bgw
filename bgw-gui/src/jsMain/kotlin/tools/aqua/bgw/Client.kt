@@ -13,8 +13,11 @@ import data.event.internal.LoadEventData
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
 import jsonMapper
+import kotlinx.js.timers.setTimeout
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
+import org.w3c.dom.get
 import react.*
 import react.dom.findDOMNode
 import react.dom.render
@@ -29,8 +32,9 @@ var webSocket : WebSocket? = null
 var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 var animator : Animator = Animator()
 
+val container = document.createElement("div")
+
 fun main() {
-    val container = document.createElement("div")
     container.id = "root"
     document.body!!.appendChild(container)
     webSocket = WebSocket("ws://localhost:8080/ws")
@@ -38,19 +42,27 @@ fun main() {
     }
     webSocket?.onmessage = { event ->
         println("Received: ${event.data}")
-        println("Details: ${event}")
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
         when(receivedData) {
             is AppData -> {
                 val app = receivedData
-                render(App.create { data = app }, container, callback = {
-                    println("Rendered App to DOM!")
-                    when(webViewType) {
-                        WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }
-                        WebViewType.JAVAFX -> container.dispatchEvent(Event("bgwLoaded"))
-                    }
-                    Unit
-                })
+
+                if(app.action == Action.HIDE_MENU_SCENE) {
+                    console.log("[SCENE] Hiding Menu Scene")
+                    val element = document.querySelector("#menuScene") as HTMLElement
+                    element.classList.toggle("scene--visible", false)
+                    setTimeout({
+                        renderApp(app)
+                    }, 300)
+                } else if(app.action == Action.SHOW_MENU_SCENE) {
+                    renderApp(app)
+                    val element = document.querySelector("#menuScene") as HTMLElement
+                    setTimeout({
+                        element.classList.toggle("scene--visible", true)
+                    }, 50)
+                } else {
+                    renderApp(app)
+                }
             }
             is AnimationData -> {
                 animator.startAnimation(receivedData)
@@ -84,6 +96,17 @@ fun main() {
         }
     }
 
+}
+
+fun renderApp(appData : AppData) {
+    render(App.create { data = appData }, container, callback = {
+        println("Rendered App to DOM!")
+        when(webViewType) {
+            WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }
+            WebViewType.JAVAFX -> container.dispatchEvent(Event("bgwLoaded"))
+        }
+        Unit
+    })
 }
 
 fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }
