@@ -49,7 +49,7 @@ class UIScene : BoardGameScene() {
         } */
 
         label.onMouseClicked = {
-            Application.showMenuScene(Application.menuScene)
+            /* Application.showMenuScene(Application.menuScene) */
             this.playAnimation(
                 MovementAnimation (
                     componentView = label,

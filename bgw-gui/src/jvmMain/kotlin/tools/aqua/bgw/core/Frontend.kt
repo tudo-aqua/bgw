@@ -30,6 +30,7 @@ import io.ktor.util.reflect.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import jsonMapper
+import mapper.AnimationMapper
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.MovementAnimation
@@ -155,28 +156,10 @@ internal class Frontend {
     }
 
     internal fun sendAnimation(animation: Animation) {
-      if(animation.instanceOf(FadeAnimation::class)) {
-        val fadeAnimation = animation as FadeAnimation<*>
-        val fadeAnimationData = FadeAnimationData().apply {
-          componentView = RecursiveMapper.map(fadeAnimation.componentView)
-          duration = fadeAnimation.duration
-          isRunning = fadeAnimation.isRunning
-          toOpacity = fadeAnimation.toOpacity
-          fromOpacity = fadeAnimation.fromOpacity
-        }
-        val json = jsonMapper.encodeToString(PropData(fadeAnimationData))
-        runBlocking { sendToAllClients(json) }
-      } else if(animation.instanceOf(MovementAnimation::class)) {
-        val movementAnimation = animation as MovementAnimation<*>
-        val movementAnimationData = MovementAnimationData().apply {
-          componentView = RecursiveMapper.map(movementAnimation.componentView)
-          duration = movementAnimation.duration
-          byX = (movementAnimation.toX - movementAnimation.fromX).toInt()
-          byY = (movementAnimation.toY - movementAnimation.fromY).toInt()
-        }
-        val json = jsonMapper.encodeToString(PropData(movementAnimationData))
-        runBlocking { sendToAllClients(json) }
-      }
+      val animationData = AnimationMapper.map(animation)
+      val json = jsonMapper.encodeToString(PropData(animationData))
+      runBlocking { sendToAllClients(json) }
+
     }
 
     /**
