@@ -219,3 +219,9 @@ $RECYCLE.BIN/
 webpack.generated.js
 generated-flow-imports.js
 /.run/
+
+# Yekyll generated assets
+_site/
+
+# Ruby Gemfile lock
+Gemfile.lock
