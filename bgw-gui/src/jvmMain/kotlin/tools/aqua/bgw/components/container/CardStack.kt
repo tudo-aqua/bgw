@@ -48,12 +48,12 @@ import tools.aqua.bgw.visual.Visual
  * @see CardView
  */
 open class CardStack<T : CardView>(
-    posX: Number = 0,
-    posY: Number = 0,
-    width: Number = DEFAULT_CARD_STACK_WIDTH,
-    height: Number = DEFAULT_CARD_STACK_HEIGHT,
-    alignment: Alignment = Alignment.CENTER,
-    visual: Visual = Visual.EMPTY
+  posX: Number = 0,
+  posY: Number = 0,
+  width: Number = DEFAULT_CARD_STACK_WIDTH,
+  height: Number = DEFAULT_CARD_STACK_HEIGHT,
+  alignment: Alignment = Alignment.CENTER,
+  visual: Visual = Visual.EMPTY
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual) {

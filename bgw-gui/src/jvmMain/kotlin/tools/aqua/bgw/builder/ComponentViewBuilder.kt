@@ -7,6 +7,7 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.uicomponents.UIComponent
+import tools.aqua.bgw.core.Frontend
 
 object ComponentViewBuilder {
     fun build(componentView: ComponentView) {

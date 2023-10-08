@@ -46,12 +46,12 @@ import tools.aqua.bgw.visual.Visual
  * @param back Visual to represent the back side of the card. Default: same [Visual] as front.
  */
 open class CardView(
-    posX: Number = 0,
-    posY: Number = 0,
-    width: Number = DEFAULT_CARD_WIDTH,
-    height: Number = DEFAULT_CARD_HEIGHT,
-    front: Visual,
-    back: Visual = front
+  posX: Number = 0,
+  posY: Number = 0,
+  width: Number = DEFAULT_CARD_WIDTH,
+  height: Number = DEFAULT_CARD_HEIGHT,
+  front: Visual,
+  back: Visual = front
 ) :
     GameComponentView(
         posX = posX, posY = posY, width = width, height = height, visual = Visual.EMPTY) {

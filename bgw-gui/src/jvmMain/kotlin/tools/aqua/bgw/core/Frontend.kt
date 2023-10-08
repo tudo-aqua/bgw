@@ -17,19 +17,16 @@
 
 @file:Suppress("TooManyFunctions", "MemberVisibilityCanBePrivate")
 
-package tools.aqua.bgw.builder
+package tools.aqua.bgw.core
 
 import Action
-import AnimationData
 import PropData
 import RecursiveMapper
-import VisualMapper
 import data.animation.FadeAnimationData
 import data.animation.MovementAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.util.reflect.*
-import javafx.collections.ListChangeListener
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import jsonMapper
@@ -39,13 +36,12 @@ import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.application.JCEFApplication
+import tools.aqua.bgw.builder.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
-import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
-import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
@@ -155,10 +151,6 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
-      scene.animations.addListener(ValueObserver { oldValue, newValue ->
-        println("Menu animations changed from ${oldValue.size} to ${newValue.size}")
-        sendAnimation(newValue.last())
-      })
       messageQueue.add(Action.SHOW_MENU_SCENE)
     }
 
@@ -204,10 +196,6 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
-      scene.animations.addListener(ValueObserver { oldValue, newValue ->
-        println("Game animations changed from ${oldValue.size} to ${newValue.size}")
-        sendAnimation(newValue.last())
-      })
       messageQueue.add(Action.SHOW_GAME_SCENE)
     }
 

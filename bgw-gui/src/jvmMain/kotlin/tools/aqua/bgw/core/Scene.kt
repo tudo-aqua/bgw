@@ -28,7 +28,6 @@ import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.CoordinatePlain
-import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -198,6 +197,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    */
   fun playAnimation(animation: Animation) {
     animations.add(animation)
+    Frontend.sendAnimation(animation)
   }
 
   //	/**

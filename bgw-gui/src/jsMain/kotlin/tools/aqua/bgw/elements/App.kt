@@ -1,27 +1,20 @@
 package tools.aqua.bgw.elements
 
+import Action
 import AppData
-import ColorVisualData
-import CompoundVisualData
-import SceneData
 import csstype.*
 import emotion.react.Global
-import emotion.react.css
 import emotion.react.styles
-import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.events.Event
-import react.*
+import react.FC
+import react.IntrinsicType
+import react.Props
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.section
+import react.useEffect
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
-import tools.aqua.bgw.style.BlurFilter
-import tools.aqua.bgw.toFC
 import tools.aqua.bgw.webSocket
-import webViewType
 
 external interface AppProps : Props {
     var data: AppData

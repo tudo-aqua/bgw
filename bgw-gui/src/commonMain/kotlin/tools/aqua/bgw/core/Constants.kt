@@ -17,18 +17,6 @@
 
 package tools.aqua.bgw.core
 
-import tools.aqua.bgw.animation.Animation
-import tools.aqua.bgw.components.container.Area
-import tools.aqua.bgw.components.container.CardStack
-import tools.aqua.bgw.components.container.LinearLayout
-import tools.aqua.bgw.components.container.Satchel
-import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.gamecomponentviews.DiceView
-import tools.aqua.bgw.components.gamecomponentviews.TokenView
-import tools.aqua.bgw.components.layoutviews.GridPane
-import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.util.Font
-
 // region Core
 /** Default window title. */
 const val DEFAULT_WINDOW_TITLE: String = "BoardGameWork Application"

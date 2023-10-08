@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.core
 
-import kotlinx.serialization.Serializable
 import tools.aqua.bgw.core.HorizontalAlignment.LEFT
 import tools.aqua.bgw.core.HorizontalAlignment.RIGHT
 import tools.aqua.bgw.core.VerticalAlignment.BOTTOM
@@ -37,8 +36,8 @@ import tools.aqua.bgw.core.VerticalAlignment.TOP
  * @see HorizontalAlignment
  */
 enum class Alignment(
-    val verticalAlignment: VerticalAlignment,
-    val horizontalAlignment: HorizontalAlignment
+  val verticalAlignment: VerticalAlignment,
+  val horizontalAlignment: HorizontalAlignment
 ) {
   /** [Alignment] in the top left corner. */
   TOP_LEFT(TOP, LEFT),

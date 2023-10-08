@@ -1,5 +1,6 @@
 package tools.aqua.bgw.builder
 
+import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.visual.*
 
 object VisualBuilder {

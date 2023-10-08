@@ -1,6 +1,7 @@
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.MenuScene
 
 object SceneBuilder {

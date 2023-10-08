@@ -5,6 +5,7 @@ import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
+import tools.aqua.bgw.core.Frontend
 
 object GameComponentContainerBuilder {
     fun build(gameComponentContainer: GameComponentContainer<out DynamicComponentView>) {

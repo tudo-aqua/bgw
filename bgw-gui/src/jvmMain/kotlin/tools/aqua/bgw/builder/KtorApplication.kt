@@ -16,6 +16,7 @@ import kotlinx.html.script
 import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
+import tools.aqua.bgw.core.Frontend
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -70,8 +71,8 @@ suspend fun onClientConnected(webSocketSession: WebSocketSession) {
     //println("Client connected: $webSocketSession")
     Frontend.application
     val json = jsonMapper.encodeToString(PropData(SceneMapper.map(
-        menuScene=Frontend.menuScene,
-        gameScene=Frontend.boardGameScene
+        menuScene= Frontend.menuScene,
+        gameScene= Frontend.boardGameScene
     ).apply {
         fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
             Triple(path, fontName, weight.toInt())
@@ -125,7 +126,7 @@ var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
         val isSceneLoaded = Frontend.boardGameScene != null
         val message = messageQueue.removeFirst()
         val result = runCatching {
-            val appData = SceneMapper.map(menuScene=Frontend.menuScene, gameScene=Frontend.boardGameScene).apply {
+            val appData = SceneMapper.map(menuScene= Frontend.menuScene, gameScene= Frontend.boardGameScene).apply {
                 fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
                     Triple(path, fontName, weight.toInt())
                 }

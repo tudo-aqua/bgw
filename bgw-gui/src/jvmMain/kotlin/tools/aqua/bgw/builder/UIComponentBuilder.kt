@@ -1,6 +1,7 @@
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.components.uicomponents.*
+import tools.aqua.bgw.core.Frontend
 
 object UIComponentBuilder {
     @Suppress("DuplicatedCode")

@@ -4,13 +4,10 @@ import ID
 import data.event.KeyEventAction
 import data.event.KeyEventData
 import data.event.MouseEventData
-import org.w3c.dom.events.Event
-import react.dom.events.KeyboardEvent
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
 import  react.dom.events.MouseEvent as ReactMouseEvent
 import  react.dom.events.KeyboardEvent as ReactKeyEvent
-import tools.aqua.bgw.event.MouseEvent
 
 object ReactConverters {
     fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {

@@ -2,8 +2,6 @@ package data.animation
 
 import ComponentViewData
 import kotlinx.serialization.Serializable
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 
 @Serializable
 class ScaleAnimationData() : ComponentAnimationData() {

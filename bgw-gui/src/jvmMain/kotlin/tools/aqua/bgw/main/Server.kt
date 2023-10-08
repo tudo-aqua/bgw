@@ -2,14 +2,12 @@ package tools.aqua.bgw.main
 
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
-import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
-import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.style.BlurFilter
 import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.style.Flip

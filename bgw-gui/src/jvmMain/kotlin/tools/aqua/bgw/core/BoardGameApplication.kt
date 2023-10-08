@@ -22,7 +22,6 @@ package tools.aqua.bgw.core
 import java.io.File
 import java.util.*
 import tools.aqua.bgw.animation.Animation
-import tools.aqua.bgw.builder.Frontend
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
@@ -57,9 +56,9 @@ import tools.aqua.bgw.visual.Visual
  */
 @Suppress("LeakingThis")
 open class BoardGameApplication(
-    windowTitle: String = DEFAULT_WINDOW_TITLE,
-    aspectRatio: AspectRatio = AspectRatio(),
-    windowMode: WindowMode? = null,
+  windowTitle: String = DEFAULT_WINDOW_TITLE,
+  aspectRatio: AspectRatio = AspectRatio(),
+  windowMode: WindowMode? = null,
 ) {
 
   /** Window title displayed in the title bar. */
@@ -205,10 +204,10 @@ open class BoardGameApplication(
    * Refer to [WindowMode] docs for further information about the effects.
    */
   constructor(
-      windowTitle: String = DEFAULT_WINDOW_TITLE,
-      width: Number = DEFAULT_WINDOW_WIDTH,
-      height: Number = DEFAULT_WINDOW_HEIGHT,
-      windowMode: WindowMode? = null,
+    windowTitle: String = DEFAULT_WINDOW_TITLE,
+    width: Number = DEFAULT_WINDOW_WIDTH,
+    height: Number = DEFAULT_WINDOW_HEIGHT,
+    windowMode: WindowMode? = null,
   ) : this(
       windowTitle = windowTitle,
       aspectRatio = AspectRatio.of(width = width, height = height),

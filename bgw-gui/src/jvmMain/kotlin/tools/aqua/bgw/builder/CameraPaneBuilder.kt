@@ -2,6 +2,7 @@ package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
+import tools.aqua.bgw.core.Frontend
 
 object CameraPaneBuilder {
     fun build(cameraPane: CameraPane<out LayoutView<*>>) {

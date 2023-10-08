@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components
 
+import IDGenerator
 import kotlin.math.floor
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.LayoutView

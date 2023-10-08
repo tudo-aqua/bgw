@@ -1,10 +1,6 @@
 package tools.aqua.bgw.main.view
 
-import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.MovementAnimation
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.layoutviews.CameraPane
-import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene

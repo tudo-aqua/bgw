@@ -43,13 +43,13 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Initial visual for this [GridPane]. Default: [Visual.EMPTY].
  */
 open class GridPane<T : ComponentView>(
-    posX: Number = 0,
-    posY: Number = 0,
-    columns: Int,
-    rows: Int,
-    spacing: Number = DEFAULT_GRID_SPACING,
-    layoutFromCenter: Boolean = true,
-    visual: Visual = Visual.EMPTY
+  posX: Number = 0,
+  posY: Number = 0,
+  columns: Int,
+  rows: Int,
+  spacing: Number = DEFAULT_GRID_SPACING,
+  layoutFromCenter: Boolean = true,
+  visual: Visual = Visual.EMPTY
 ) :
     LayoutView<T>(height = 0, width = 0, posX = posX, posY = posY, visual = visual),
     Iterable<GridIteratorElement<T>> {

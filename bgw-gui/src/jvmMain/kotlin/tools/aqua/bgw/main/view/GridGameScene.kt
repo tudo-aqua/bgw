@@ -3,14 +3,11 @@ package tools.aqua.bgw.main.view
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
-import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.CompoundVisual
-import tools.aqua.bgw.visual.ImageVisual
 
 
 class GridGameScene : BoardGameScene() {

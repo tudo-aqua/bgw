@@ -1,6 +1,7 @@
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.components.gamecomponentviews.*
+import tools.aqua.bgw.core.Frontend
 
 object GameComponentViewBuilder {
     fun build(gameComponentView: GameComponentView) {

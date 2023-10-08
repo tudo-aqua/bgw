@@ -7,8 +7,6 @@ import data.animation.MovementAnimationData
 import kotlinx.browser.document
 import kotlinx.js.timers.setTimeout
 import org.w3c.dom.Element
-import tools.aqua.bgw.animation.*
-import tools.aqua.bgw.components.ComponentView
 
 class Animator {
     private val animations = mutableMapOf<String, Element>()

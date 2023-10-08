@@ -39,11 +39,11 @@ import tools.aqua.bgw.util.Font.FontWeight
  * @see FontStyle
  */
 data class Font(
-    val size: Number = DEFAULT_FONT_SIZE,
-    val color: Color = Color.BLACK,
-    val family: String = "Arial",
-    val fontWeight: FontWeight = FontWeight.NORMAL,
-    val fontStyle: FontStyle = FontStyle.NORMAL
+  val size: Number = DEFAULT_FONT_SIZE,
+  val color: Color = Color.BLACK,
+  val family: String = "Arial",
+  val fontWeight: FontWeight = FontWeight.NORMAL,
+  val fontStyle: FontStyle = FontStyle.NORMAL
 ) {
   /**
    * Enum class for representing all available font weights for the Font class.

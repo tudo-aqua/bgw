@@ -4,6 +4,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.core.Frontend
 
 object LayoutViewBuilder {
     fun build(layoutView: LayoutView<out ComponentView>) {
