@@ -1,4 +1,4 @@
-package tools.aqua.bgw.builder
+package tools.aqua.bgw.binding
 
 import Action
 import PropData
@@ -22,7 +22,28 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 const val PORT = 8080
 
-val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
+val componentChannel: Channel = Channel("/ws").apply {
+    onClientConnected = {
+        Frontend.application
+        val json = jsonMapper.encodeToString(PropData(SceneMapper.map(
+            menuScene= Frontend.menuScene,
+            gameScene= Frontend.boardGameScene
+        ).apply {
+            fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
+                Triple(path, fontName, weight.toInt())
+            }
+        }))
+        it.send(json)
+        if(!uiJob.isActive) uiJob.start()
+    }
+}
+
+val internalChannel: Channel = Channel("/internal").apply {
+    onClientMessage = { session, text ->
+
+    }
+}
+
 fun HTML.index() {
     body {
         script(src = "/static/bgw-gui.js") {}
@@ -30,56 +51,14 @@ fun HTML.index() {
 }
 fun Application.module() {
     configureRouting()
-    configureSockets()
-}
-fun Application.configureSockets() {
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
         timeout = Duration.ofSeconds(15)
         maxFrameSize = Long.MAX_VALUE
         masking = false
     }
-    routing {
-        webSocket("/ws") {
-            activeSessions.add(this)
-            onClientConnected(this)
-            try {
-                for (frame in incoming) {
-                    if (frame is Frame.Text) {
-                        val text = frame.readText()
-                        onClientMessage(this, text)
-                    }
-                }
-            } catch (e: ClosedSendChannelException) {
-                onClientError(this, e)
-            } finally {
-                activeSessions.remove(this)
-            }
-        }
-    }
-}
-
-fun onClientMessage(session: WebSocketSession, text: String) {
-    //println("Received message from client $session: $text")
-}
-
-fun onClientError(session: WebSocketSession, e: ClosedSendChannelException) {
-    //println("Client $session disconnected: ${e.message}")
-}
-
-suspend fun onClientConnected(webSocketSession: WebSocketSession) {
-    //println("Client connected: $webSocketSession")
-    Frontend.application
-    val json = jsonMapper.encodeToString(PropData(SceneMapper.map(
-        menuScene= Frontend.menuScene,
-        gameScene= Frontend.boardGameScene
-    ).apply {
-        fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
-            Triple(path, fontName, weight.toInt())
-        }
-    }))
-    webSocketSession.send(json)
-    if(!uiJob.isActive) uiJob.start()
+    componentChannel.install(this)
+    internalChannel.install(this)
 }
 
 fun Application.configureRouting() {
@@ -89,18 +68,6 @@ fun Application.configureRouting() {
         }
         static("/static") {
             resources()
-        }
-    }
-}
-
-suspend fun sendToAllClients(message: String) {
-    //println("Sending message to all clients: $message")
-    for (session in activeSessions) {
-        println("Sending message to client $session")
-        try {
-            session.send(message)
-        } catch (e: ClosedSendChannelException) {
-            println("Client $session disconnected: ${e.message}")
         }
     }
 }
@@ -133,14 +100,10 @@ var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
             }
             appData.action = message
             val json = jsonMapper.encodeToString(PropData(appData))
-            runBlocking { sendToAllClients(json) }
+            runBlocking { componentChannel.sendToAllClients(json) }
         }
         println(result.exceptionOrNull()?.message)
         messageQueue.clear()
     }
-}
-
-fun queueMessage(message: Action) {
-    messageQueue.add(message)
 }
 

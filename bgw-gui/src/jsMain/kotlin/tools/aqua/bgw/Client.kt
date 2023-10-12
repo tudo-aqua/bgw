@@ -28,6 +28,7 @@ import webViewType
 import kotlin.math.floor
 import kotlin.random.Random
 
+var internalSocket : WebSocket? = null
 var webSocket : WebSocket? = null
 var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 var animator : Animator = Animator()
@@ -96,6 +97,8 @@ fun main() {
         }
     }
 
+    internalSocket?.onmessage = {
+    }
 }
 
 fun renderApp(appData : AppData) {

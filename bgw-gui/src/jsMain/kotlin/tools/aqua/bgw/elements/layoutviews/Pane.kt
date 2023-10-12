@@ -6,7 +6,11 @@ import PaneData
 import csstype.*
 import data.event.KeyEventAction
 import emotion.react.css
+import kotlinx.browser.document
+import kotlinx.dom.appendElement
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.Node
 import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
@@ -22,7 +26,7 @@ import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 
 external interface PaneProps : Props {
-    var data : PaneData
+    var data: PaneData
 }
 
 fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
@@ -47,14 +51,22 @@ val Pane = FC<PaneProps> { props ->
             }
         }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
         }
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
         onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
+        onDrop = {
+            it.preventDefault()
+            println("onDrop Pane")
+            val data = it.dataTransfer.getData("text")
+            val element = it.target as HTMLElement
+            element.appendChild(document.getElementById(data) as Node)
+        }
+        onDragOver = { it.preventDefault() }
     }
 }
 

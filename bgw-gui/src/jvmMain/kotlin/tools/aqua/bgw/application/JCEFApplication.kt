@@ -169,7 +169,7 @@ class MainFrame(
         client.addLoadHandler(object : CefLoadHandlerAdapter() {
             override fun onLoadEnd(browser: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
                 if (frame.isMain) {
-                    //browser.executeJavaScript("alert('Hello World!');", browser.getURL(), 0);
+                    //browser.executeJavaScript("alert('Hello World!');", browser.getURL(), 0)
                 }
             }
         })

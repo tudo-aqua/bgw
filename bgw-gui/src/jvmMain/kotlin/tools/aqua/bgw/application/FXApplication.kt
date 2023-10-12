@@ -7,7 +7,7 @@ import javafx.scene.web.WebView
 import javafx.stage.Stage
 import netscape.javascript.JSObject
 import org.w3c.dom.events.EventTarget
-import tools.aqua.bgw.builder.PORT
+import tools.aqua.bgw.binding.PORT
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
