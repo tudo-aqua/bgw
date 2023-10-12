@@ -21,22 +21,20 @@ package tools.aqua.bgw.core
 
 import Action
 import PropData
-import RecursiveMapper
-import data.animation.FadeAnimationData
-import data.animation.MovementAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.util.reflect.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import jsonMapper
 import mapper.AnimationMapper
 import tools.aqua.bgw.animation.Animation
-import tools.aqua.bgw.animation.FadeAnimation
-import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
 import tools.aqua.bgw.application.JCEFApplication
+import tools.aqua.bgw.binding.PORT
+import tools.aqua.bgw.binding.componentChannel
+import tools.aqua.bgw.binding.messageQueue
+import tools.aqua.bgw.binding.module
 import tools.aqua.bgw.builder.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.GameComponentContainer
@@ -47,7 +45,6 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -158,7 +155,8 @@ internal class Frontend {
     internal fun sendAnimation(animation: Animation) {
       val animationData = AnimationMapper.map(animation)
       val json = jsonMapper.encodeToString(PropData(animationData))
-      runBlocking { sendToAllClients(json) }
+      //TODO: Add animation channel
+      runBlocking { componentChannel.sendToAllClients(json) }
 
     }
 

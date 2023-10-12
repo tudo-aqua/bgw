@@ -15,6 +15,9 @@ enum class Action {
     HIDE_GAME_SCENE,
     UPDATE_COMPONENT,
     UPDATE_VISUAL,
+    DRAG_START,
+    DRAG_END,
+    DRAG_DROP,
 }
 
 @Serializable

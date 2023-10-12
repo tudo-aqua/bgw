@@ -1,8 +1,6 @@
 package mapper
 
 import AnimationData
-import ComponentMapper
-import VisualMapper
 import data.animation.*
 import tools.aqua.bgw.animation.*
 

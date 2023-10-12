@@ -7,11 +7,14 @@ object Application : BoardGameApplication() {
     private val grid = GridGameScene()
     private val ui = UIScene()
     val menuScene = MyMenuScene()
+    private val dragDropScene = DragDropScene()
 
     init {
         loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
         showGameScene(ui)
         // showGameScene(grid)
+        // showGameScene(dragDropScene)
+        //showGameScene(scene)
         showMenuScene(menuScene)
     }
 }
