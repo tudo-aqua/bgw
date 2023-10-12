@@ -1,6 +1,9 @@
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
+import tools.aqua.bgw.animation.RotationAnimation
+import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
@@ -48,13 +51,43 @@ class UIScene : BoardGameScene() {
             )
         } */
 
+        /*
         label.onMouseClicked = {
-            /* Application.showMenuScene(Application.menuScene) */
             this.playAnimation(
                 MovementAnimation (
                     componentView = label,
                     byX = 100,
                     byY = 200,
+                    duration = 1000
+                ).apply {
+                    onFinished = {
+                        println("Finished")
+                    }
+                }
+            )
+        } */
+
+        /*
+        label.onMouseClicked = {
+            this.playAnimation(
+                RotationAnimation (
+                    componentView = label,
+                    byAngle = 120.0,
+                    duration = 1000
+                ).apply {
+                    onFinished = {
+                        println("Finished")
+                    }
+                }
+            )
+        } */
+
+        label.onMouseClicked = {
+            this.playAnimation(
+                ScaleAnimation (
+                    componentView = label,
+                    byScaleX = 2.0,
+                    byScaleY = 0.5,
                     duration = 1000
                 ).apply {
                     onFinished = {

@@ -67,8 +67,8 @@ object AnimationMapper {
             }
 
             is ScaleAnimation<*> -> (mapSpecific(animation) as ScaleAnimationData).apply {
-                byScaleX = animation.toScaleX - animation.fromScaleX
-                byScaleY = animation.toScaleY - animation.fromScaleY
+                byScaleX = animation.toScaleX
+                byScaleY = animation.toScaleY
             }
 
             is FlipAnimation<*> -> (mapSpecific(animation) as FlipAnimationData).apply {

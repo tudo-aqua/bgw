@@ -52,6 +52,10 @@ private val module = SerializersModule {
         // ANIMATIONS
         subclass(FadeAnimationData::class)
         subclass(MovementAnimationData::class)
+        subclass(RotationAnimationData::class)
+        subclass(ScaleAnimationData::class)
+        subclass(FlipAnimationData::class)
+
     }
     polymorphic(LayoutViewData::class) {
         subclass(PaneData::class)
@@ -129,6 +133,9 @@ private val module = SerializersModule {
     polymorphic(AnimationData::class) {
         subclass(FadeAnimationData::class)
         subclass(MovementAnimationData::class)
+        subclass(RotationAnimationData::class)
+        subclass(ScaleAnimationData::class)
+        subclass(FlipAnimationData::class)
     }
     /*polymorphic(AnimationData::class) {
         subclass(ComponentAnimationData::class)

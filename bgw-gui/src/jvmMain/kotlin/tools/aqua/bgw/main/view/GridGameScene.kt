@@ -1,8 +1,11 @@
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.animation.FadeAnimation
+import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
@@ -15,26 +18,66 @@ class GridGameScene : BoardGameScene() {
         spacing = 10.0
     }
 
+    private val gridEntries = mutableListOf<ComponentView>()
+
     private val cameraPane = CameraPane(width = 1920, height = 1080, target = gridPane, visual = randomColorVisual())
+    private val button = Button(
+        width = 200,
+        height = 200,
+        text = "Hello World!",
+        font = Font(40.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD),
+        visual = ColorVisual.GRAY
+    ).apply {
+        onMouseClicked = {
+            gridEntries.forEachIndexed { index, componentView ->
+                playAnimation(
+                    FlipAnimation(
+                        componentView = componentView,
+                        fromVisual = componentView.visual,
+                        toVisual = randomColorVisual(),
+                        duration = 250 + index * 50
+                    ).apply {
+                        onFinished = {
+                            println("Finished")
+                        }
+                    }
+                )
+
+                playAnimation(
+                    FadeAnimation(
+                        componentView = componentView,
+                        fromOpacity = 0,
+                        toOpacity = 1,
+                        duration = 250 + index * 50
+                    ).apply {
+                        onFinished = {
+                            println("Finished")
+                        }
+                    }
+                )
+            }
+        }
+    }
 
     init {
         repeat(gridPane.columns) { x ->
             repeat(gridPane.rows) { y ->
                 val index = x + y * gridPane.columns
-                gridPane[x, y] = Label(
+                val entry = Label(
                     width = 100,
                     height = 100,
                     text = "($x, $y)",
                     visual = ColorVisual.GRAY,
                     font = Font(40.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD)
                 ).apply {
-                    onMouseClicked = {
-                        visual = randomColorVisual()
-                    }
+                    opacity = 0.0
                 }
+
+                gridPane[x, y] = entry
+                gridEntries.add(entry)
             }
         }
-        addComponents(cameraPane)
+        addComponents(cameraPane, button)
     }
 
     private fun randomColorVisual(): ColorVisual {

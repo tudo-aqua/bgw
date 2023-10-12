@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.animation
 
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 import tools.aqua.bgw.visual.Visual
@@ -37,9 +38,9 @@ import tools.aqua.bgw.visual.Visual
  * @property toVisual Resulting [Visual].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  */
-class FlipAnimation<T : GameComponentView>(
-    gameComponentView: T,
+class FlipAnimation<T : ComponentView>(
+    componentView: T,
     val fromVisual: Visual,
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_SPEED
-) : ComponentAnimation<T>(componentView = gameComponentView, duration = duration)
+) : ComponentAnimation<T>(componentView = componentView, duration = duration)
