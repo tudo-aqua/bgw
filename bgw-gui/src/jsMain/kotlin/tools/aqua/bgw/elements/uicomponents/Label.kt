@@ -4,6 +4,7 @@ import ComponentViewData
 import LabelData
 import UIComponentData
 import csstype.*
+import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
@@ -12,6 +13,7 @@ import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
+import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
@@ -35,7 +37,6 @@ val Label = FC<LabelProps> { props ->
         tabIndex = 0
         id = props.data.id
         className = ClassName("label")
-        draggable = true
         css {
             cssBuilderIntern(props.data)
         }
@@ -58,16 +59,6 @@ val Label = FC<LabelProps> { props ->
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
         onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
-        onDragStart = {
-            println("onDragStart Label")
-            val element = it.target as HTMLElement
-            it.dataTransfer.setData("text", element.id)
-        }
-        onDragOver = { it.preventDefault() }
-        onDragEnd = {
-            it.preventDefault()
-            internalSocket?.send("")
-        }
     }
 }
 

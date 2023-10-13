@@ -38,6 +38,7 @@ import tools.aqua.bgw.binding.messageQueue
 import tools.aqua.bgw.binding.module
 import tools.aqua.bgw.builder.*
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
@@ -295,12 +296,21 @@ fun Scene<*>.findComponent(id: String): ComponentView? {
   return this.components.map { it.findComponent(id) }.find { it != null }
 }
 
-fun ComponentView.findComponent(id: String): ComponentView? {
+fun ComponentView.getRootNode(): RootComponent<*> {
   return when(this) {
+    is RootComponent<*> -> this
+    else -> this.parent?.getRootNode() ?: throw IllegalStateException("Component has no root node.")
+  }
+}
+
+fun ComponentView.findComponent(id: String): ComponentView? {
+  if(id == this.id) return this
+  return when(this) {
+    is RootComponent<*> -> this.scene.components.map { it.findComponent(id) }.find { it != null }
     is CameraPane<*> ->  this.target.findComponent(id)
     is Pane<*> -> this.components.map { it.findComponent(id) }.find { it != null }
     is GridPane<*> -> this.grid.map { it.component?.findComponent(id) }.find { it != null }
     is GameComponentContainer<*> -> this.components.map { it.findComponent(id) }.find { it != null }
-    else -> if(id == this.id) this else null
+    else -> null
   }
 }

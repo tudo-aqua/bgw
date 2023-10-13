@@ -4,6 +4,7 @@ import ComponentViewData
 import LayoutViewData
 import PaneData
 import csstype.*
+import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
 import kotlinx.browser.document
@@ -16,6 +17,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.builder.NodeBuilder
+import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
@@ -64,10 +66,10 @@ val Pane = FC<PaneProps> { props ->
         onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
         onDrop = {
             it.preventDefault()
-            println("onDrop Pane")
             val data = it.dataTransfer.getData("text")
             val element = it.target as HTMLElement
-            element.appendChild(document.getElementById(data) as Node)
+            JCEFEventDispatcher.dispatchEvent(it.toDragEventData(id, DragEventAction.DROP))
+            //element.appendChild(document.getElementById(data) as Node)
         }
         onDragOver = { it.preventDefault() }
     }

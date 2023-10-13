@@ -23,10 +23,14 @@ import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.CheckBox
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.core.findComponent
+import tools.aqua.bgw.core.getRootNode
+import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Coordinate
@@ -110,6 +114,18 @@ class JCEFApplication : Application {
                         if(component is CameraPane<*>) {
                             component.internalData = eventData
                         }
+                    }
+                    is DragGestureStartedEventData -> {
+                        if(component is DynamicComponentView) {
+                            component.onDragGestureStarted?.invoke(DragEvent(component))
+                        }
+                    }
+                    is DragDroppedEventData -> {
+                        val root = component.getRootNode()
+                        val target = root.findComponent(eventData.target)
+                        val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
+                        if(dropped == true) target.onDragDropped?.invoke(DragEvent(component))
+                        //TODO: Call back to JS
                     }
                 }
                 return true

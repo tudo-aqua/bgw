@@ -2,11 +2,14 @@ package tools.aqua.bgw.elements.gamecomponentviews
 
 import TokenViewData
 import csstype.*
+import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 import react.*
 import react.dom.html.HTMLAttributes
+import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
@@ -24,10 +27,14 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData) {
     cssBuilder(componentViewData)
 }
 
+var dx = 0.0
+var dy = 0.0
+
 val TokenView = FC<TokenViewProps> { props ->
     bgwTokenView {
         id = props.data.id
         className = ClassName("tokenView")
+        draggable = props.data.isDraggable
         css {
             cssBuilderIntern(props.data)
         }
@@ -45,6 +52,16 @@ val TokenView = FC<TokenViewProps> { props ->
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
         onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
+        onDragStart = {
+            val rect = it.target.asDynamic().getBoundingClientRect()
+            dx = it.clientX - rect.x.unsafeCast<Double>()
+            dy = it.clientY - rect.y.unsafeCast<Double>()
+            val element = it.target as HTMLElement
+            it.dataTransfer.setData("text", element.id)
+            JCEFEventDispatcher.dispatchEvent(it.toDragEventData(id, DragEventAction.START))
+        }
+        onDragOver = { it.preventDefault() }
+        onDragEnd = { it.preventDefault() }
     }
 }
 

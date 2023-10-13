@@ -1,13 +1,15 @@
 package tools.aqua.bgw.builder
 
 import ID
-import data.event.KeyEventAction
-import data.event.KeyEventData
-import data.event.MouseEventData
+import data.event.*
+import data.event.internal.DragDroppedEventData
+import data.event.internal.DragGestureEndedEventData
+import data.event.internal.DragGestureStartedEventData
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
 import  react.dom.events.MouseEvent as ReactMouseEvent
 import  react.dom.events.KeyboardEvent as ReactKeyEvent
+import react.dom.events.DragEvent as ReactDragEvent
 
 object ReactConverters {
     fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {
@@ -40,6 +42,19 @@ object ReactConverters {
             if (it.name == this.key) return it
         }
         return KeyCode.UNDEFINED
+    }
+
+    fun ReactDragEvent<*>.toDragEventData(targetID: ID?, action: DragEventAction): EventData {
+        return when(action) {
+            DragEventAction.START -> DragGestureStartedEventData().apply { this.id = targetID }
+            DragEventAction.DROP -> {
+                val id = dataTransfer.getData("text")
+                DragDroppedEventData(targetID ?: "").apply { this.id = id }
+            }
+            DragEventAction.END -> TODO()
+            DragEventAction.ENTER -> TODO()
+            DragEventAction.EXIT -> TODO()
+        }
     }
 }
 

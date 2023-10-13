@@ -111,6 +111,8 @@ object ComponentMapper {
                     is HexagonView -> HexagonViewData().fillData(componentView) as HexagonViewData
                     is TokenView -> TokenViewData().fillData(componentView) as TokenViewData
                     else -> throw IllegalArgumentException("Unknown component type: ${componentView::class.simpleName}")
+                }.apply {
+                    isDraggable = componentView.isDraggable
                 }
             }
 
