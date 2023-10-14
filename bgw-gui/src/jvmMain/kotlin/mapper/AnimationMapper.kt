@@ -74,6 +74,14 @@ object AnimationMapper {
                 toVisual = VisualMapper.map(animation.toVisual)
             }
 
+            is SequentialAnimation -> (mapSpecific(animation) as SequentialAnimationData).apply {
+                animations = animation.animations.map { map(it) }
+            }
+
+            is ParallelAnimation -> (mapSpecific(animation) as ParallelAnimationData).apply {
+                animations = animation.animations.map { map(it) }
+            }
+
             else -> TODO("Not implemented")
         }
     }

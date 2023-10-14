@@ -1,9 +1,6 @@
 package tools.aqua.bgw.main.view
 
-import tools.aqua.bgw.animation.FlipAnimation
-import tools.aqua.bgw.animation.MovementAnimation
-import tools.aqua.bgw.animation.RotationAnimation
-import tools.aqua.bgw.animation.ScaleAnimation
+import tools.aqua.bgw.animation.*
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
@@ -82,18 +79,49 @@ class UIScene : BoardGameScene() {
             )
         } */
 
+        /* label.onMouseClicked = {
+            this.playAnimation(
+                SequentialAnimation(
+                    ScaleAnimation (
+                        componentView = label,
+                        byScaleX = 2.0,
+                        byScaleY = 0.5,
+                        duration = 1000
+                    ),
+                    MovementAnimation (
+                        componentView = label,
+                        byX = 100,
+                        byY = 200,
+                        duration = 1000
+                    )
+                )
+            )
+        } */
+
         label.onMouseClicked = {
             this.playAnimation(
-                ScaleAnimation (
+                ParallelAnimation(
+                    ScaleAnimation (
+                        componentView = label,
+                        byScaleX = 2.0,
+                        byScaleY = 0.5,
+                        duration = 2000
+                    ),
+                    MovementAnimation (
+                        componentView = label,
+                        byX = 100,
+                        byY = 200,
+                        duration = 1000
+                    )
+                )
+            )
+            this.playAnimation(
+                FlipAnimation(
                     componentView = label,
-                    byScaleX = 2.0,
-                    byScaleY = 0.5,
-                    duration = 1000
-                ).apply {
-                    onFinished = {
-                        println("Finished")
-                    }
-                }
+                    fromVisual = ColorVisual.MAGENTA,
+                    toVisual = ColorVisual.RED,
+                    duration = 2000
+                )
             )
         }
 

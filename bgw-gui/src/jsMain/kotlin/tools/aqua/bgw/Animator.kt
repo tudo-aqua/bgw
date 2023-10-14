@@ -15,14 +15,14 @@ import tools.aqua.bgw.builder.VisualBuilder
 class Animator {
     private val animations = mutableMapOf<String, Element>()
 
-    fun startAnimation(animationData: AnimationData) {
+    fun startAnimation(animationData: AnimationData, parallelAnimations : List<AnimationData> = listOf()) {
         when(animationData) {
             is ComponentAnimationData -> {
                 when(animationData) {
-                    is FadeAnimationData -> startComponentAnimation("fade", animationData)
-                    is MovementAnimationData -> startComponentAnimation("move", animationData)
-                    is RotationAnimationData -> startComponentAnimation("rotate", animationData)
-                    is ScaleAnimationData -> startComponentAnimation("scale", animationData)
+                    is FadeAnimationData -> startComponentAnimation("fade", animationData, parallelAnimations)
+                    is MovementAnimationData -> startComponentAnimation("move", animationData, parallelAnimations)
+                    is RotationAnimationData -> startComponentAnimation("rotate", animationData, parallelAnimations)
+                    is ScaleAnimationData -> startComponentAnimation("scale", animationData, parallelAnimations)
                     is FlipAnimationData -> startFlipAnimation(animationData)
                     // is ShakeAnimation<*> -> TODO()
 
@@ -33,15 +33,63 @@ class Animator {
                 }
             }
 
-            /*is DelayAnimation -> DelayAnimationData().fillData(animation)
-            is ParallelAnimation -> ParallelAnimationData().fillData(animation)
-            is SequentialAnimation -> SequentialAnimationData().fillData(animation)*/
+            /*is DelayAnimation -> DelayAnimationData().fillData(animation) */
+            is ParallelAnimationData -> startParallelAnimation(animationData)
+            is SequentialAnimationData -> startSequentialAnimation(animationData)
 
             else -> throw IllegalArgumentException("Unknown animation type")
         }
     }
 
-    private fun startComponentAnimation(type : String, animation: ComponentAnimationData) {
+    private fun clearComponentAnimations(componentId: ID, types : List<String> = mutableListOf()) {
+        if(types.isEmpty()) {
+            this.animations.keys.filter { it.startsWith(componentId) }.forEach {
+                try {
+                    document.body?.removeChild(this.animations[it]!!)
+                    this.animations.remove(it)
+                } catch (_: Exception) { }
+            }
+        } else {
+            types.forEach {
+                try {
+                    document.body?.removeChild(this.animations["$componentId--$it"]!!)
+                    this.animations.remove("$componentId--$it")
+                } catch (_: Exception) { }
+            }
+        }
+    }
+
+    private fun startSequentialAnimation(animation: SequentialAnimationData) {
+        val animations = animation.animations
+
+        val component = animations[0] as? ComponentAnimationData ?: return
+        val componentId = component.componentView?.id.toString()
+
+        clearComponentAnimations(componentId)
+
+        var currentDuration = 0
+        for (anim in animations) {
+            setTimeout({
+                startAnimation(anim)
+            }, currentDuration)
+            currentDuration += anim.duration
+        }
+    }
+
+    private fun startParallelAnimation(animation: ParallelAnimationData) {
+        val animations = animation.animations
+
+        val component = animations[0] as? ComponentAnimationData ?: return
+        val componentId = component.componentView?.id.toString()
+
+        clearComponentAnimations(componentId)
+
+        for (anim in animations) {
+            startAnimation(anim, animations)
+        }
+    }
+
+    private fun startComponentAnimation(type : String, animation: ComponentAnimationData, parallelAnimation : List<AnimationData> = listOf()) {
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
         println("Starting $type Animation on ${componentId}")
@@ -51,19 +99,10 @@ class Animator {
         val element = document.getElementById(componentId) ?: return
 
         // Get old style element (if exists) and remove it
-        try {
-            val oldElement = animations[componentId]
-            if(oldElement != null)
-                document.body?.removeChild(oldElement)
-        } catch (_: Exception) { }
-        animations.remove(componentId)
+        clearComponentAnimations(componentId, listOf(type))
 
         // Toggle old animation off
         element.classList.toggle("${componentId}--$type--props", false)
-
-        if(type == "scale") {
-            window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")
-        }
 
         setTimeout({
             // Create new style element
@@ -71,13 +110,13 @@ class Animator {
             newElement.id = "${componentId}--$type"
 
             // Add new style element to body
-            newElement.innerHTML = getAnimationCSS(type, componentId, animation)
+            newElement.innerHTML = getAnimationCSS(type, componentId, animation, parallelAnimation)
             document.body?.appendChild(newElement)
 
             // Toggle new animation on and save style element
             element.classList.toggle("${componentId}--$type--props", true)
             element.classList.toggle("${componentId}--$type", true)
-            animations[componentId] = newElement
+            animations["$componentId--$type"] = newElement
 
             setTimeout({
                 // Toggle new animation off
@@ -98,12 +137,7 @@ class Animator {
         val element = document.getElementById(componentId) ?: return
 
         // Get old style element (if exists) and remove it
-        try {
-            val oldElement = animations[componentId]
-            if(oldElement != null)
-                document.body?.removeChild(oldElement)
-        } catch (_: Exception) { }
-        animations.remove(componentId)
+        clearComponentAnimations(componentId, listOf(type))
 
         // Toggle old animation off
         element.classList.toggle("${componentId}--$type--props", false)
@@ -120,7 +154,7 @@ class Animator {
             // Toggle new animation on and save style element
             element.classList.toggle("${componentId}--$type--props", true)
             element.classList.toggle("${componentId}--$type", true)
-            animations[componentId] = newElement
+            animations["$componentId--$type"] = newElement
 
             setTimeout({
                 val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
@@ -139,12 +173,27 @@ class Animator {
         }, 50)
     }
 
+    private fun getTransitionCSS(animationList : List<AnimationData>) : String {
+        val transitions = animationList.map {
+            when(it) {
+                is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
+                is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
+                is RotationAnimationData -> "rotate ${it.duration}ms ease-in-out"
+                is ScaleAnimationData -> "scale ${it.duration}ms ease-in-out"
+                else -> ""
+            }
+        }.joinToString(", ")
 
-    private fun getAnimationCSS(type : String, componentId : String, animationData: AnimationData) : String {
+        return """
+            transition: $transitions;
+        """.trimIndent()
+    }
+
+    private fun getAnimationCSS(type : String, componentId : String, animationData: AnimationData, parallelAnimations : List<AnimationData> = listOf()) : String {
         return when(animationData) {
             is FadeAnimationData -> """
                 .${componentId}--${type}--props {
-                    transition: ${animationData.duration}ms opacity ease-in-out;
+                    ${getTransitionCSS(parallelAnimations)}
                 }
                 
                 .${componentId}--${type} {
@@ -154,7 +203,7 @@ class Animator {
 
             is MovementAnimationData -> """
                 .${componentId}--${type}--props {
-                    transition: ${animationData.duration}ms translate ease-in-out;
+                    ${getTransitionCSS(parallelAnimations)}
                 }
                 
                 .${componentId}--${type} {
@@ -164,7 +213,7 @@ class Animator {
 
             is RotationAnimationData -> """
                 .${componentId}--${type}--props {
-                    transition: ${animationData.duration}ms rotate ease-in-out;
+                    ${getTransitionCSS(parallelAnimations)}
                 }
                 
                 .${componentId}--${type} {
@@ -174,7 +223,7 @@ class Animator {
 
             is ScaleAnimationData -> """
                 .${componentId}--${type}--props {
-                    transition: ${animationData.duration}ms scale ease-in-out;
+                    ${getTransitionCSS(parallelAnimations)}
                 }
                 
                 .${componentId}--${type} {
