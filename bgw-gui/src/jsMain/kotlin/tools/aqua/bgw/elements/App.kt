@@ -200,3 +200,6 @@ inline fun minContent(): GridTemplateTracks =
 
 inline fun menuTransition(): Transition =
     ".3s opacity, .3s backdrop-filter".unsafeCast<Transition>()
+
+inline fun transition(duration : Int, property : String): Transition =
+    "${duration}ms $property".unsafeCast<Transition>()

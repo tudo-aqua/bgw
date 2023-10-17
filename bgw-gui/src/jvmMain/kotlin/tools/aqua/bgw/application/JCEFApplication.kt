@@ -24,6 +24,7 @@ import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.uicomponents.CheckBox
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.event.KeyEvent
@@ -90,6 +91,10 @@ class JCEFApplication : Application {
                     is TextInputChangedEventData -> {
                         //println("Text changed")
                         if(component is TextField) component.textProperty.value = eventData.value
+                    }
+                    is CheckBoxChangedEventData -> {
+                        println("Checkbox changed to ${eventData.value}")
+                        if(component is CheckBox) component.isCheckedProperty.value = eventData.value
                     }
                     is ScrollChangedEventData -> {
                         if(component is CameraPane<*>) {

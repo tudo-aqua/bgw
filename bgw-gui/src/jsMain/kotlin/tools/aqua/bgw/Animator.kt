@@ -33,7 +33,7 @@ class Animator {
                 }
             }
 
-            /*is DelayAnimation -> DelayAnimationData().fillData(animation) */
+            is DelayAnimationData -> startDelayAnimation(animationData)
             is ParallelAnimationData -> startParallelAnimation(animationData)
             is SequentialAnimationData -> startSequentialAnimation(animationData)
 
@@ -57,6 +57,12 @@ class Animator {
                 } catch (_: Exception) { }
             }
         }
+    }
+
+    private fun startDelayAnimation(animation: DelayAnimationData) {
+        setTimeout({
+               // TODO: Implement delay animation callback
+        }, animation.duration)
     }
 
     private fun startSequentialAnimation(animation: SequentialAnimationData) {

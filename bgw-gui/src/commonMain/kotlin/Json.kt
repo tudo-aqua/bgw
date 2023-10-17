@@ -126,6 +126,7 @@ private val module = SerializersModule {
         subclass(ScrollChangedEventData::class)
         subclass(ZoomChangedEventData::class)
         subclass(InternalCameraPaneData::class)
+        subclass(CheckBoxChangedEventData::class)
     }
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)

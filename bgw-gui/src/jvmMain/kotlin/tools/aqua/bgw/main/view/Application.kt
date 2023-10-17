@@ -5,16 +5,17 @@ import tools.aqua.bgw.util.Font
 
 object Application : BoardGameApplication() {
     private val grid = GridGameScene()
-    private val ui = UIScene()
+    private val animation = AnimationScene()
     val menuScene = MyMenuScene()
+    private val uiScene = UIScene()
     private val dragDropScene = DragDropScene()
 
     init {
         loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
-        showGameScene(ui)
+        showGameScene(animation)
         // showGameScene(grid)
         // showGameScene(dragDropScene)
         //showGameScene(scene)
-        showMenuScene(menuScene)
+        showMenuScene(uiScene)
     }
 }

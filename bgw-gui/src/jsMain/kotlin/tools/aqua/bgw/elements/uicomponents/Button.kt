@@ -52,7 +52,7 @@ val Button = FC<ButtonProps> { props ->
             +props.data.text
         }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
             JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
         }

@@ -31,6 +31,10 @@ fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
 fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
     fontBuilder(componentViewData)
+    alignmentBuilder(componentViewData)
+}
+
+fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData) {
     justifyContent = when(componentViewData.alignment.first) {
         "left" -> JustifyContent.flexStart
         "center" -> JustifyContent.center
