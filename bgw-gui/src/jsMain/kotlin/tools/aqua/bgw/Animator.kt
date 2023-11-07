@@ -19,15 +19,23 @@ import kotlin.js.Date
 class Animator {
     private val animations = mutableMapOf<String, Element>()
 
-    fun startAnimation(animationData: AnimationData, parallelAnimations : List<AnimationData> = listOf()) {
+    companion object {
+        const val DELTA_MS = 20
+    }
+
+    fun startAnimation(
+        animationData: AnimationData,
+        parallelAnimations : List<AnimationData> = listOf(),
+        callback: (ID) -> Unit
+    ) {
         when(animationData) {
             is ComponentAnimationData -> {
                 when(animationData) {
-                    is FadeAnimationData -> startComponentAnimation("fade", animationData, parallelAnimations)
-                    is MovementAnimationData -> startComponentAnimation("move", animationData, parallelAnimations)
-                    is RotationAnimationData -> startComponentAnimation("rotate", animationData, parallelAnimations)
-                    is ScaleAnimationData -> startComponentAnimation("scale", animationData, parallelAnimations)
-                    is FlipAnimationData -> startFlipAnimation(animationData)
+                    is FadeAnimationData -> startComponentAnimation("fade", animationData, parallelAnimations, callback)
+                    is MovementAnimationData -> startComponentAnimation("move", animationData, parallelAnimations, callback)
+                    is RotationAnimationData -> startComponentAnimation("rotate", animationData, parallelAnimations, callback)
+                    is ScaleAnimationData -> startComponentAnimation("scale", animationData, parallelAnimations, callback)
+                    is FlipAnimationData -> startFlipAnimation(animationData, callback)
                     // is ShakeAnimation<*> -> TODO()
 
                     is SteppedComponentAnimationData -> {
@@ -41,9 +49,9 @@ class Animator {
                 }
             }
 
-            is DelayAnimationData -> startDelayAnimation(animationData)
-            is ParallelAnimationData -> startParallelAnimation(animationData)
-            is SequentialAnimationData -> startSequentialAnimation(animationData)
+            is DelayAnimationData -> startDelayAnimation(animationData, callback)
+            is ParallelAnimationData -> startParallelAnimation(animationData, callback)
+            is SequentialAnimationData -> startSequentialAnimation(animationData, callback)
 
             else -> throw IllegalArgumentException("Unknown animation type")
         }
@@ -67,13 +75,13 @@ class Animator {
         }
     }
 
-    private fun startDelayAnimation(animation: DelayAnimationData) {
+    private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
         setTimeout({
                // TODO: Implement delay animation callback
         }, animation.duration)
     }
 
-    private fun startSequentialAnimation(animation: SequentialAnimationData) {
+    private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID) -> Unit) {
         val animations = animation.animations
 
         val component = animations[0] as? ComponentAnimationData ?: return
@@ -84,13 +92,17 @@ class Animator {
         var currentDuration = 0
         for (anim in animations) {
             setTimeout({
-                startAnimation(anim)
+                startAnimation(anim, callback=callback)
             }, currentDuration)
             currentDuration += anim.duration
+            if(anim == animations.last()) {
+                val totalDuration = currentDuration + DELTA_MS
+                setTimeout({ callback.invoke(animation.id) }, totalDuration)
+            }
         }
     }
 
-    private fun startParallelAnimation(animation: ParallelAnimationData) {
+    private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID) -> Unit) {
         val animations = animation.animations
 
         val component = animations[0] as? ComponentAnimationData ?: return
@@ -99,11 +111,15 @@ class Animator {
         clearComponentAnimations(componentId)
 
         for (anim in animations) {
-            startAnimation(anim, animations)
+            startAnimation(anim, animations, callback)
+            if(anim == animations.last()) {
+                val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
+                setTimeout({ callback.invoke(animation.id) }, maxDuration + DELTA_MS)
+            }
         }
     }
 
-    private fun startComponentAnimation(type : String, animation: ComponentAnimationData, parallelAnimation : List<AnimationData> = listOf()) {
+    private fun startComponentAnimation(type : String, animation: ComponentAnimationData, parallelAnimation : List<AnimationData> = listOf(), callback: (ID) -> Unit) {
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
         println("Starting $type Animation on ${componentId}")
@@ -135,12 +151,12 @@ class Animator {
             setTimeout({
                 // Toggle new animation off
                 element.classList.toggle("${componentId}--$type--props", false)
+                callback.invoke(animation.id)
             }, duration)
         }, 50)
     }
 
-
-    private fun startFlipAnimation(animation: FlipAnimationData) {
+    private fun startFlipAnimation(animation: FlipAnimationData, callback: (ID) -> Unit) {
         val type = "flip"
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
@@ -187,11 +203,12 @@ class Animator {
             setTimeout({
                 // Toggle new animation off
                 element.classList.toggle("${componentId}--$type--props", false)
+                callback.invoke(animation.id)
             }, duration)
         }, 50)
     }
 
-    private fun startRandomizeAnimation(animation: RandomizeAnimationData) {
+    private fun startRandomizeAnimation(animation: RandomizeAnimationData, callback: (ID) -> Unit) {
         val type = "random"
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
@@ -214,6 +231,7 @@ class Animator {
                 render(VisualBuilder.build(animation.toVisual), oldVisuals)
             }
             println("Stopping $type Animation on ${componentId}")
+            callback.invoke(animation.id)
         }, duration)
     }
 

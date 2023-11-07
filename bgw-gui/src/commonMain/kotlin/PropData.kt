@@ -48,6 +48,7 @@ class SceneData : Data() {
 
 @Serializable
 abstract class AnimationData : Data() {
+    var id: ID = ""
     var duration: Int = 0
     var isRunning: Boolean = false
     var onFinished: ((EventData) -> Unit)? = null

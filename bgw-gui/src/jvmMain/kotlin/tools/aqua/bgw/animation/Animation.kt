@@ -27,6 +27,7 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
  * @property duration Duration in milliseconds.
  */
 sealed class Animation(val duration: Int) {
+  val id = IDGenerator.generateAnimationID()
 
   /** [Boolean] indicating whether the [Animation] is currently running. */
   var isRunning: Boolean = false

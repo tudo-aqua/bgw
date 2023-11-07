@@ -10,6 +10,7 @@ import ID
 import PropData
 import SceneData
 import VisualData
+import data.event.AnimationFinishedEventData
 import data.event.internal.LoadEventData
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
@@ -68,10 +69,13 @@ fun main() {
                 }
             }
             is AnimationData -> {
-                animator.startAnimation(receivedData)
+                animator.startAnimation(receivedData) {
+                    JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
+                }
             }
             is DialogData -> {
                 dialogHandler.openDialog(receivedData.message)
+
             }
             /* is SceneData -> {
                 val scene = receivedData

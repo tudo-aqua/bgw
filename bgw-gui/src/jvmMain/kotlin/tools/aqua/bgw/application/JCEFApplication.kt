@@ -2,10 +2,7 @@ package tools.aqua.bgw.application
 
 import ID
 import InternalCameraPaneData
-import data.event.EventData
-import data.event.KeyEventAction
-import data.event.KeyEventData
-import data.event.MouseEventData
+import data.event.*
 import data.event.internal.*
 import data.event.internal.LoadEventData
 import jsonMapper
@@ -28,8 +25,10 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.CheckBox
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
+import tools.aqua.bgw.event.AnimationFinishedEvent
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
@@ -145,6 +144,7 @@ class MainFrame(
     private var browserFocus = true
 
     var msgRouter : CefMessageRouter? = null
+    var animationMsgRouter : CefMessageRouter? = null
 
     init {
         val builder = CefAppBuilder()
@@ -156,6 +156,7 @@ class MainFrame(
         })
         val cefApp = builder.build()
         val client = cefApp.createClient()
+        /* Component Update Message Router */
         val config = CefMessageRouterConfig()
         config.jsQueryFunction = "cefQuery"
         config.jsCancelFunction = "cefQueryCancel"
@@ -173,6 +174,30 @@ class MainFrame(
             }
         }
         msgRouter?.addHandler(myHandler, true)
+
+        /* Animation Message Router */
+        val animationConfig = CefMessageRouterConfig()
+        animationConfig.jsQueryFunction = "cefAnimationQuery"
+        animationConfig.jsCancelFunction = "cefAnimationQueryCancel"
+        animationMsgRouter = CefMessageRouter.create(animationConfig)
+        client.addMessageRouter(animationMsgRouter)
+        val animationHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
+            override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
+                val json = Base64.decode(request)
+                val eventData = jsonMapper.decodeFromString<EventData>(json)
+                if(eventData is AnimationFinishedEventData) {
+                    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+                    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+                    val animations = menuSceneAnimations + boardGameSceneAnimations
+                    val animation = animations.find { it.id == eventData.id }
+                    animation?.onFinished?.invoke(AnimationFinishedEvent())
+                    return true
+                }
+                return false
+            }
+        }
+        animationMsgRouter?.addHandler(animationHandler, true)
+
         val browser = client.createBrowser(startURL, useOSR, isTransparent)
         val browserUI = browser.uiComponent
         client.addFocusHandler(object : CefFocusHandlerAdapter() {

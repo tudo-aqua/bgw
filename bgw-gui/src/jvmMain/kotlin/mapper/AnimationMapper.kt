@@ -7,6 +7,7 @@ import tools.aqua.bgw.animation.*
 object AnimationMapper {
     fun AnimationData.fillData(animation: Animation) : AnimationData {
         return this.apply {
+            id = animation.id
             duration = animation.duration
         }
     }
