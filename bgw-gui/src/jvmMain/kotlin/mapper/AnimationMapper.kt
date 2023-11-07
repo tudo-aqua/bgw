@@ -88,6 +88,11 @@ object AnimationMapper {
                 speed = animation.speed
             }
 
+            is DiceAnimation<*> -> (mapSpecific(animation) as DiceAnimationData).apply {
+                toSide = animation.toSide
+                speed = animation.speed
+            }
+
             else -> TODO("Not implemented")
         }
     }

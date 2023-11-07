@@ -134,14 +134,14 @@ class AnimationScene : BoardGameScene() {
                     )
                 )
             )*/
-            /*this.playAnimation(
+            this.playAnimation(
                 FlipAnimation(
                     componentView = label,
                     fromVisual = ColorVisual.BLUE,
                     toVisual = ColorVisual.RED,
                     duration = 2000
                 )
-            )*/
+            )
         }
 
         /*label.onMouseClicked = {
@@ -162,5 +162,16 @@ class AnimationScene : BoardGameScene() {
                 )
             )
         }*/
+
+        dice.onMouseClicked = {
+            this.playAnimation(
+                DiceAnimation(
+                    dice = dice,
+                    toSide = 3,
+                    duration = 2000,
+                    speed = 20
+                )
+            )
+        }
     }
 }

@@ -1,6 +1,7 @@
 package tools.aqua.bgw
 
 import AnimationData
+import DiceViewData
 import ID
 import data.animation.*
 import kotlinx.browser.document
@@ -31,7 +32,7 @@ class Animator {
 
                     is SteppedComponentAnimationData -> {
                         when(animationData) {
-                            is DiceAnimationData -> TODO()
+                            is DiceAnimationData -> startDiceAnimation(animationData)
                             is RandomizeAnimationData -> startRandomizeAnimation(animationData)
                             else -> throw IllegalArgumentException("Unknown animation type")
                         }
@@ -205,14 +206,39 @@ class Animator {
             }
         }, duration / animation.speed)
 
-
-
         setTimeout({
             clearInterval(interval)
             val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
             if (oldVisuals != null) {
                 println("Rendering end visual for random")
                 render(VisualBuilder.build(animation.toVisual), oldVisuals)
+            }
+            println("Stopping $type Animation on ${componentId}")
+        }, duration)
+    }
+
+    private fun startDiceAnimation(animation: DiceAnimationData) {
+        val type = "dice"
+        // Get animation properties from data
+        val componentId = animation.componentView?.id.toString()
+        val dice = animation.componentView as? DiceViewData ?: return
+        println("Starting $type Animation on ${componentId}")
+        val duration = animation.duration
+
+        val interval = setInterval({
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            if (oldVisuals != null) {
+                println("Rendering new visual for dice")
+                render(VisualBuilder.build(dice.visuals.random()), oldVisuals)
+            }
+        }, duration / animation.speed)
+
+        setTimeout({
+            clearInterval(interval)
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            if (oldVisuals != null) {
+                println("Rendering end visual for dice")
+                render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
             }
             println("Stopping $type Animation on ${componentId}")
         }, duration)

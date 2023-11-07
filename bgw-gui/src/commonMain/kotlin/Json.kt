@@ -58,6 +58,7 @@ private val module = SerializersModule {
         subclass(SequentialAnimationData::class)
         subclass(ParallelAnimationData::class)
         subclass(RandomizeAnimationData::class)
+        subclass(DiceAnimationData::class)
 
     }
     polymorphic(LayoutViewData::class) {

@@ -36,6 +36,7 @@ import tools.aqua.bgw.elements.gamecomponentviews.HexagonView as ReactHexagonVie
 import tools.aqua.bgw.elements.container.HexagonGrid as ReactHexagonGrid
 import tools.aqua.bgw.elements.layoutviews.CameraPane as ReactCameraPane
 import tools.aqua.bgw.elements.gamecomponentviews.TokenView as ReactTokenView
+import tools.aqua.bgw.elements.gamecomponentviews.DiceView as ReactDiceView
 import tools.aqua.bgw.elements.uicomponents.ComboBox as ReactComboBox
 import tools.aqua.bgw.elements.uicomponents.ProgressBar as ReactProgressBar
 import tools.aqua.bgw.elements.uicomponents.CheckBox as ReactCheckBox
@@ -61,7 +62,7 @@ object NodeBuilder {
 
             is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
             //is CardViewData -> ReactCardView.create { data = componentViewData }
-            //is DiceViewData -> ReactDiceView.create { data = componentViewData }
+            is DiceViewData -> ReactDiceView.create { data = componentViewData }
             is HexagonViewData -> ReactHexagonView.create { data = componentViewData }
             is TokenViewData -> ReactTokenView.create { data = componentViewData }
 

@@ -32,6 +32,7 @@ var internalSocket : WebSocket? = null
 var webSocket : WebSocket? = null
 var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 var animator : Animator = Animator()
+var dialogHandler : DialogHandler = DialogHandler()
 
 val container = document.createElement("div")
 
@@ -67,6 +68,7 @@ fun main() {
             }
             is AnimationData -> {
                 animator.startAnimation(receivedData)
+                dialogHandler.openDialog()
             }
             /* is SceneData -> {
                 val scene = receivedData
