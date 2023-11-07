@@ -298,7 +298,10 @@ val CameraPane = FC<CameraPaneProps> { props ->
                 top = 0.px
             }
 
-            +VisualBuilder.build(props.data.visual)
+            bgwVisuals {
+                className = ClassName("visuals")
+                +VisualBuilder.build(props.data.visual)
+            }
 
             if (props.data.target != null) {
                 bgwCameraTarget {

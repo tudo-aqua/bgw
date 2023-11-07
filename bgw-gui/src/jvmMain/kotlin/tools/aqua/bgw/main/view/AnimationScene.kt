@@ -1,5 +1,9 @@
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.animation.*
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
@@ -8,7 +12,7 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
 class AnimationScene : BoardGameScene() {
-    private val label = Label(
+    /*private val label = Label(
         text = "Test",
         posX = 40,
         posY = 120,
@@ -16,10 +20,36 @@ class AnimationScene : BoardGameScene() {
         height = 200,
         font = Font(20.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD),
         visual = ColorVisual.MAGENTA
+    )*/
+
+    private val label = TokenView(
+        posX = 40,
+        posY = 40,
+        width = 200,
+        height = 200,
+        visual = ColorVisual.MAGENTA
     )
 
+    private val dice = DiceView(
+        posX = 40,
+        posY = 40,
+        width = 200,
+        height = 200,
+        visuals = listOf(
+            ColorVisual.RED,
+            ColorVisual.GREEN,
+            ColorVisual.BLUE,
+            ColorVisual.YELLOW,
+            ColorVisual.CYAN,
+            ColorVisual.ORANGE,
+            ColorVisual.PINK,
+        )
+    )
+
+
+
     init {
-        addComponents(label)
+        addComponents(label, dice)
 
         /*
         label.onMouseClicked = {
@@ -87,8 +117,8 @@ class AnimationScene : BoardGameScene() {
             )
         } */
 
-        /* label.onMouseClicked = {
-            this.playAnimation(
+        label.onMouseClicked = {
+            /*this.playAnimation(
                 ParallelAnimation(
                     ScaleAnimation (
                         componentView = label,
@@ -103,15 +133,34 @@ class AnimationScene : BoardGameScene() {
                         duration = 1000
                     )
                 )
-            )
-            this.playAnimation(
+            )*/
+            /*this.playAnimation(
                 FlipAnimation(
                     componentView = label,
-                    fromVisual = ColorVisual.MAGENTA,
+                    fromVisual = ColorVisual.BLUE,
                     toVisual = ColorVisual.RED,
                     duration = 2000
                 )
+            )*/
+        }
+
+        /*label.onMouseClicked = {
+            this.playAnimation(
+                RandomizeAnimation(
+                    componentView = label,
+                    visuals = listOf(
+                        ColorVisual.GREEN,
+                        ColorVisual.BLUE,
+                        ColorVisual.YELLOW,
+                        ColorVisual.CYAN,
+                        ColorVisual.ORANGE,
+                        ColorVisual.PINK,
+                    ),
+                    toVisual = ColorVisual.RED,
+                    duration = 2000,
+                    speed = 20
+                )
             )
-        } */
+        }*/
     }
 }

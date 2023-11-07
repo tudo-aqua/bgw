@@ -16,6 +16,6 @@ object Application : BoardGameApplication() {
         // showGameScene(grid)
         // showGameScene(dragDropScene)
         //showGameScene(scene)
-        showMenuScene(uiScene)
+        //showMenuScene(uiScene)
     }
 }

@@ -40,7 +40,7 @@ import tools.aqua.bgw.visual.Visual
  */
 class FlipAnimation<T : ComponentView>(
     componentView: T,
-    val fromVisual: Visual,
+    val fromVisual: Visual = componentView.visual,
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration)

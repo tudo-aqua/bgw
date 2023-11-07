@@ -34,7 +34,10 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(props.data.visual)
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
 
         bgwContents {
             className = ClassName("components")

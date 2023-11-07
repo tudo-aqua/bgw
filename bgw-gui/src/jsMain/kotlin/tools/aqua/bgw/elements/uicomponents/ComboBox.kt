@@ -35,7 +35,10 @@ val ComboBox = FC<ComboBoxProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(props.data.visual)
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
 
         select {
             placeholder = props.data.prompt

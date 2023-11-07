@@ -32,9 +32,12 @@ val TokenView = FC<TokenViewProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(props.data.visual)
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
             JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
         }

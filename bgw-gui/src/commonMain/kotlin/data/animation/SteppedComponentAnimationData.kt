@@ -5,5 +5,5 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 
 @Serializable
 sealed class SteppedComponentAnimationData() : ComponentAnimationData() {
-    val speed: Int = DEFAULT_ANIMATION_SPEED
+    var speed: Int = DEFAULT_ANIMATION_SPEED
 }

@@ -22,8 +22,12 @@ val Scene = FC<SceneProps> { props ->
         css {
             transition = menuTransition()
         }
-        
-        +VisualBuilder.build(props.data.background)
+
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.background)
+        }
+
         bgwContents {
             className = ClassName("components")
             css {

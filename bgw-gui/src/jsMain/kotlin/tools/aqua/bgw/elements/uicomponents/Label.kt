@@ -40,18 +40,21 @@ val Label = FC<LabelProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(props.data.visual)
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
 
         bgwText {
             className = ClassName("text")
             +props.data.text
         }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
         }
-        onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
+        onClick = { console.log("Clicked"); JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
         onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }

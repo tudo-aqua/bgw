@@ -82,6 +82,12 @@ object AnimationMapper {
                 animations = animation.animations.map { map(it) }
             }
 
+            is RandomizeAnimation<*> -> (mapSpecific(animation) as RandomizeAnimationData).apply {
+                visuals = animation.visuals.map { VisualMapper.map(it) }
+                toVisual = VisualMapper.map(animation.toVisual)
+                speed = animation.speed
+            }
+
             else -> TODO("Not implemented")
         }
     }

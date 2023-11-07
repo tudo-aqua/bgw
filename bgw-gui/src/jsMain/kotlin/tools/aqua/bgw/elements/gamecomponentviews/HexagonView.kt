@@ -44,8 +44,12 @@ val HexagonView = FC<HexagonViewProps> { props ->
             height = 2 * props.data.size.rem
         }
 
-        +VisualBuilder.build(props.data.visual)
-               onContextMenu = {
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
+
+        onContextMenu = {
             it.preventDefault()
             JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
         }

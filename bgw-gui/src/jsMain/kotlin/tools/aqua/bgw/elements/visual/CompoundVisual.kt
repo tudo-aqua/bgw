@@ -14,10 +14,7 @@ external interface CompoundVisualProps : Props {
 }
 
 val CompoundVisual = FC<CompoundVisualProps> { props ->
-    bgwVisuals {
-        className = ClassName("visuals")
-        props.data.children.forEach {
-            +VisualBuilder.build(it)
-        }
+    props.data.children.forEach {
+        +VisualBuilder.build(it)
     }
 }

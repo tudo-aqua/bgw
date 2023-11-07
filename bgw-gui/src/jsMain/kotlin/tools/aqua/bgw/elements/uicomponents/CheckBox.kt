@@ -46,7 +46,10 @@ val CheckBox = FC<CheckBoxProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        +VisualBuilder.build(props.data.visual)
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
 
         input {
             type = InputType.checkbox

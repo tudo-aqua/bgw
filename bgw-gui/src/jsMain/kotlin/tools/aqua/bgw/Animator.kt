@@ -6,11 +6,14 @@ import data.animation.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.createElement
+import kotlinx.js.timers.clearInterval
+import kotlinx.js.timers.setInterval
 import kotlinx.js.timers.setTimeout
 import org.w3c.dom.Element
 import org.w3c.dom.get
 import react.dom.render
 import tools.aqua.bgw.builder.VisualBuilder
+import kotlin.js.Date
 
 class Animator {
     private val animations = mutableMapOf<String, Element>()
@@ -27,7 +30,11 @@ class Animator {
                     // is ShakeAnimation<*> -> TODO()
 
                     is SteppedComponentAnimationData -> {
-
+                        when(animationData) {
+                            is DiceAnimationData -> TODO()
+                            is RandomizeAnimationData -> startRandomizeAnimation(animationData)
+                            else -> throw IllegalArgumentException("Unknown animation type")
+                        }
                     }
                     else -> throw IllegalArgumentException("Unknown animation type")
                 }
@@ -162,13 +169,17 @@ class Animator {
             element.classList.toggle("${componentId}--$type", true)
             animations["$componentId--$type"] = newElement
 
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            if (oldVisuals != null) {
+                println("Rendering start visual for flip")
+                render(VisualBuilder.build(animation.fromVisual), oldVisuals)
+            }
+
             setTimeout({
                 val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
-                val tempObj = document.createElement("div")
                 if (oldVisuals != null) {
-                    println("Rendering new visual for flip")
-                    render(VisualBuilder.build(animation.toVisual), tempObj)
-                    oldVisuals.replaceWith(tempObj.children[0])
+                    println("Rendering end visual for flip")
+                    render(VisualBuilder.build(animation.toVisual), oldVisuals)
                 }
             }, duration / 2)
 
@@ -177,6 +188,34 @@ class Animator {
                 element.classList.toggle("${componentId}--$type--props", false)
             }, duration)
         }, 50)
+    }
+
+    private fun startRandomizeAnimation(animation: RandomizeAnimationData) {
+        val type = "random"
+        // Get animation properties from data
+        val componentId = animation.componentView?.id.toString()
+        println("Starting $type Animation on ${componentId}")
+        val duration = animation.duration
+
+        val interval = setInterval({
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            if (oldVisuals != null) {
+                println("Rendering new visual for random")
+                render(VisualBuilder.build(animation.visuals.random()), oldVisuals)
+            }
+        }, duration / animation.speed)
+
+
+
+        setTimeout({
+            clearInterval(interval)
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            if (oldVisuals != null) {
+                println("Rendering end visual for random")
+                render(VisualBuilder.build(animation.toVisual), oldVisuals)
+            }
+            println("Stopping $type Animation on ${componentId}")
+        }, duration)
     }
 
     private fun getTransitionCSS(animationList : List<AnimationData>) : String {

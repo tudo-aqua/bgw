@@ -6,6 +6,6 @@ import VisualData
 import kotlinx.serialization.Serializable
 @Serializable
 class RandomizeAnimationData() : SteppedComponentAnimationData() {
-    val visuals: List<VisualData> = listOf()
-    val toVisual: VisualData? = null
+    var visuals: List<VisualData> = listOf()
+    var toVisual: VisualData? = null
 }
