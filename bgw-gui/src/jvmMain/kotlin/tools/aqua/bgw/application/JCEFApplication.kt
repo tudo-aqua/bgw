@@ -1,5 +1,6 @@
 package tools.aqua.bgw.application
 
+import AnimationData
 import ID
 import InternalCameraPaneData
 import data.event.*
@@ -184,7 +185,8 @@ class MainFrame(
         val animationHandler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
                 val json = Base64.decode(request)
-                val eventData = jsonMapper.decodeFromString<EventData>(json)
+                val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(json)
+                println("Received ${eventData.id} from $query_id")
                 if(eventData is AnimationFinishedEventData) {
                     val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
                     val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()

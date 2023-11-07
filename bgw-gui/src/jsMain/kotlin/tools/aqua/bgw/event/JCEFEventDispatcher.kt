@@ -12,6 +12,7 @@ object JCEFEventDispatcher : EventDispatcher {
 
     override fun dispatchEvent(event: AnimationFinishedEventData) {
         val json = jsonMapper.encodeToString(event)
+        println("Dispatching event: $json (AnimationFinishedEventData)")
         try {
             window.asDynamic().bgwAnimationQuery(Base64.encode(json))
         } catch (e: Throwable) {
@@ -21,6 +22,7 @@ object JCEFEventDispatcher : EventDispatcher {
 
     override fun dispatchEvent(event: EventData) {
         val json = jsonMapper.encodeToString(event)
+        println("Dispatching event: $json (EventData)")
         try {
             window.asDynamic().bgwQuery(Base64.encode(json))
         } catch (e: Throwable) {

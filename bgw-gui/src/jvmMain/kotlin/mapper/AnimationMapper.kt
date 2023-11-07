@@ -14,6 +14,7 @@ object AnimationMapper {
 
     fun ComponentAnimationData.fillData(componentAnimation: ComponentAnimation<*>) : ComponentAnimationData {
         return this.apply {
+            id = componentAnimation.id
             componentView = ComponentMapper.map(componentAnimation.componentView)
             duration = componentAnimation.duration
         }

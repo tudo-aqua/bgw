@@ -52,7 +52,7 @@ class AnimationScene : BoardGameScene() {
 
 
     init {
-        addComponents(label, dice)
+        addComponents(/*label,*/ dice)
 
         /*
         label.onMouseClicked = {
@@ -181,8 +181,13 @@ class AnimationScene : BoardGameScene() {
                     toSide = 3,
                     duration = 2000,
                     speed = 20
-                )
-            )*/
+                ).apply {
+                    onFinished = {
+                        dice.posY += 100
+                        println("Hello im finished")
+                    }
+                }
+            */
         }
     }
 }

@@ -60,7 +60,6 @@ private val module = SerializersModule {
         subclass(ParallelAnimationData::class)
         subclass(RandomizeAnimationData::class)
         subclass(DiceAnimationData::class)
-
     }
     polymorphic(LayoutViewData::class) {
         subclass(PaneData::class)
@@ -134,6 +133,7 @@ private val module = SerializersModule {
         subclass(DragGestureEndedEventData::class)
         subclass(DragDroppedEventData::class)
         subclass(CheckBoxChangedEventData::class)
+        subclass(AnimationFinishedEventData::class)
     }
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)
