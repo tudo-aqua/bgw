@@ -27,6 +27,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import jsonMapper
 import mapper.AnimationMapper
+import mapper.DialogMapper
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.FXApplication
@@ -62,6 +63,15 @@ internal class Frontend {
   /** Starts the application. */
   internal fun start() {
     //println("Starting server...")
+
+    Thread.setDefaultUncaughtExceptionHandler { _, e ->
+      e.printStackTrace()
+
+      BoardGameApplication.runOnGUIThread {
+        showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message.orEmpty(), e))
+      }
+    }
+
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
       applicationEngine.clearAllEventListeners()
@@ -69,7 +79,6 @@ internal class Frontend {
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
     }
-
   }
 
   companion object {
@@ -239,7 +248,14 @@ internal class Frontend {
      *
      * @return chosen button or [Optional.empty] if canceled.
      */
-    internal fun showDialog(dialog: Dialog): Optional<ButtonType> = TODO("Not yet implemented")
+    internal fun showDialog(dialog: Dialog): Optional<ButtonType> {
+      val dialogData = DialogMapper.map(dialog)
+      val json = jsonMapper.encodeToString(PropData(dialogData))
+      //TODO: Add animation channel
+      runBlocking { componentChannel.sendToAllClients(json) }
+
+      return Optional.empty()
+    }
 
     /**
      * Shows the given [FileDialog].

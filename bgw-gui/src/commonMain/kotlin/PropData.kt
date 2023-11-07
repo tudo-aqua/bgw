@@ -2,6 +2,7 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 import tools.aqua.bgw.core.AspectRatio
 import tools.aqua.bgw.core.WindowMode
+import tools.aqua.bgw.dialog.DialogType
 
 typealias ID = String
 typealias ToggleGroup = List<ID>
@@ -50,6 +51,15 @@ abstract class AnimationData : Data() {
     var duration: Int = 0
     var isRunning: Boolean = false
     var onFinished: ((EventData) -> Unit)? = null
+}
+
+@Serializable
+class DialogData : Data() {
+    var dialogType : DialogType = DialogType.INFORMATION
+    var title : String = ""
+    var header : String = ""
+    var message : String = ""
+    var exception : String = ""
 }
 
 @Serializable

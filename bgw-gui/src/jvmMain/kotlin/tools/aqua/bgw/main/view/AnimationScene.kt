@@ -8,6 +8,9 @@ import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.core.Frontend.Companion.showDialog
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
@@ -164,14 +167,22 @@ class AnimationScene : BoardGameScene() {
         }*/
 
         dice.onMouseClicked = {
-            this.playAnimation(
+            showDialog(
+                Dialog(
+                    title = "Test",
+                    header = "Test",
+                    message = "Test",
+                    dialogType = DialogType.INFORMATION
+                )
+            )
+            /*this.playAnimation(
                 DiceAnimation(
                     dice = dice,
                     toSide = 3,
                     duration = 2000,
                     speed = 20
                 )
-            )
+            )*/
         }
     }
 }

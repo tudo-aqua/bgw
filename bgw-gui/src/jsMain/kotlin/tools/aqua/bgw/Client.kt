@@ -5,6 +5,7 @@ import AnimationData
 import AppData
 import ComponentViewData
 import Data
+import DialogData
 import ID
 import PropData
 import SceneData
@@ -68,7 +69,9 @@ fun main() {
             }
             is AnimationData -> {
                 animator.startAnimation(receivedData)
-                dialogHandler.openDialog()
+            }
+            is DialogData -> {
+                dialogHandler.openDialog(receivedData.message)
             }
             /* is SceneData -> {
                 val scene = receivedData
