@@ -235,7 +235,7 @@ class Animator {
         }, duration)
     }
 
-    private fun startDiceAnimation(animation: DiceAnimationData) {
+    private fun startDiceAnimation(animation: DiceAnimationData, callback: (ID) -> Unit) {
         val type = "dice"
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
@@ -259,6 +259,7 @@ class Animator {
                 render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
             }
             println("Stopping $type Animation on ${componentId}")
+            callback.invoke(animation.id)
         }, duration)
     }
 
