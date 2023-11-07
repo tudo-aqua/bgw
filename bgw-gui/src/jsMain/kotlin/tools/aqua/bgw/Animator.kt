@@ -40,8 +40,8 @@ class Animator {
 
                     is SteppedComponentAnimationData -> {
                         when(animationData) {
-                            is DiceAnimationData -> startDiceAnimation(animationData)
-                            is RandomizeAnimationData -> startRandomizeAnimation(animationData)
+                            is RandomizeAnimationData -> startRandomizeAnimation(animationData, callback)
+                            is DiceAnimationData -> startDiceAnimation(animationData, callback)
                             else -> throw IllegalArgumentException("Unknown animation type")
                         }
                     }
