@@ -34,7 +34,6 @@ var internalSocket : WebSocket? = null
 var webSocket : WebSocket? = null
 var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 var animator : Animator = Animator()
-var dialogHandler : DialogHandler = DialogHandler()
 
 val container = document.createElement("div")
 
@@ -72,10 +71,6 @@ fun main() {
                 animator.startAnimation(receivedData) {
                     JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
                 }
-            }
-            is DialogData -> {
-                dialogHandler.openDialog(receivedData.message)
-
             }
             /* is SceneData -> {
                 val scene = receivedData

@@ -1,6 +1,7 @@
 package tools.aqua.bgw.application
 
 import AnimationData
+import DialogData
 import ID
 import InternalCameraPaneData
 import data.event.*
@@ -8,10 +9,12 @@ import data.event.internal.*
 import data.event.internal.LoadEventData
 import jsonMapper
 import kotlinx.serialization.decodeFromString
+import mapper.DialogMapper
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import org.cef.CefApp
 import org.cef.CefApp.CefAppState
+import org.cef.CefClient
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
@@ -29,16 +32,18 @@ import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.event.AnimationFinishedEvent
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Coordinate
 import java.awt.BorderLayout
+import java.awt.Component
 import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.event.*
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
@@ -74,59 +79,77 @@ class JCEFApplication : Application {
         if (handlersMap.containsKey(component.id)) return
         val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
+
+
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData.id != component.id) return false
                 //println("Received: $eventData for ${component.id}")
-                when(eventData) {
-                    is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
-                    is KeyEventData -> {
-                        val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)
-                        when(eventData.action) {
-                            KeyEventAction.PRESS -> component.onKeyPressed?.invoke(keyEvent)
-                            KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
-                            KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
+
+                try {
+                    when(eventData) {
+                        is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
+                        is KeyEventData -> {
+                            val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)
+                            when(eventData.action) {
+                                KeyEventAction.PRESS -> component.onKeyPressed?.invoke(keyEvent)
+                                KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
+                                KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
+                            }
+                        }
+                        is SelectionChangedEventData -> {
+                            //println("Selection changed")
+                            if(component is ComboBox<*>) component.select(eventData.selectedItem)
+                        }
+                        is TextInputChangedEventData -> {
+                            //println("Text changed")
+                            if(component is TextField) component.textProperty.value = eventData.value
+                        }
+                        is CheckBoxChangedEventData -> {
+                            println("Checkbox changed to ${eventData.value}")
+                            if(component is CheckBox) component.isCheckedProperty.value = eventData.value
+                        }
+                        is ScrollChangedEventData -> {
+                            if(component is CameraPane<*>) {
+                                component.anchorPointProperty.setInternal(Coordinate(eventData.scrollLeft, eventData.scrollTop))
+                            }
+                        }
+                        is ZoomChangedEventData -> {
+                            if(component is CameraPane<*>) {
+                                component.zoomProperty.setInternal(eventData.zoomLevel)
+                            }
+                        }
+                        is InternalCameraPaneData -> {
+                            if(component is CameraPane<*>) {
+                                component.internalData = eventData
+                            }
+                        }
+                        is DragGestureStartedEventData -> {
+                            if(component is DynamicComponentView) {
+                                component.onDragGestureStarted?.invoke(DragEvent(component))
+                            }
+                        }
+                        is DragDroppedEventData -> {
+                            val root = component.getRootNode()
+                            val target = root.findComponent(eventData.target)
+                            val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
+                            if(dropped == true) target.onDragDropped?.invoke(DragEvent(component))
+                            //TODO: Call back to JS
                         }
                     }
-                    is SelectionChangedEventData -> {
-                        //println("Selection changed")
-                        if(component is ComboBox<*>) component.select(eventData.selectedItem)
-                    }
-                    is TextInputChangedEventData -> {
-                        //println("Text changed")
-                        if(component is TextField) component.textProperty.value = eventData.value
-                    }
-                    is CheckBoxChangedEventData -> {
-                        println("Checkbox changed to ${eventData.value}")
-                        if(component is CheckBox) component.isCheckedProperty.value = eventData.value
-                    }
-                    is ScrollChangedEventData -> {
-                        if(component is CameraPane<*>) {
-                            component.anchorPointProperty.setInternal(Coordinate(eventData.scrollLeft, eventData.scrollTop))
-                        }
-                    }
-                    is ZoomChangedEventData -> {
-                        if(component is CameraPane<*>) {
-                            component.zoomProperty.setInternal(eventData.zoomLevel)
-                        }
-                    }
-                    is InternalCameraPaneData -> {
-                        if(component is CameraPane<*>) {
-                            component.internalData = eventData
-                        }
-                    }
-                    is DragGestureStartedEventData -> {
-                        if(component is DynamicComponentView) {
-                            component.onDragGestureStarted?.invoke(DragEvent(component))
-                        }
-                    }
-                    is DragDroppedEventData -> {
-                        val root = component.getRootNode()
-                        val target = root.findComponent(eventData.target)
-                        val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
-                        if(dropped == true) target.onDragDropped?.invoke(DragEvent(component))
-                        //TODO: Call back to JS
-                    }
+
+                } catch(e : Exception) {
+                    val mainFrame = this@JCEFApplication.frame
+                    mainFrame?.openNewDialog(
+                        DialogMapper.map(
+                            Dialog(
+                                DialogType.ERROR,
+                                "Error",
+                                "Error",
+                                "An error occurred while handling an event: ${e.message}"
+                            )
+                        )
+                    )
                 }
                 return true
             }
@@ -135,7 +158,12 @@ class JCEFApplication : Application {
         frame?.msgRouter?.addHandler(handler, false)
     }
 
+    override fun openNewDialog(dialogData: DialogData) {
+        frame?.openNewDialog(dialogData)
+    }
+
 }
+
 class MainFrame(
     startURL: String = "http://localhost:8080",
     useOSR: Boolean = false,
@@ -146,6 +174,9 @@ class MainFrame(
 
     var msgRouter : CefMessageRouter? = null
     var animationMsgRouter : CefMessageRouter? = null
+    var client : CefClient
+
+    var dialogMap : MutableMap<CefBrowser, DialogData> = mutableMapOf()
 
     init {
         val builder = CefAppBuilder()
@@ -156,7 +187,7 @@ class MainFrame(
             }
         })
         val cefApp = builder.build()
-        val client = cefApp.createClient()
+        client = cefApp.createClient()
         /* Component Update Message Router */
         val config = CefMessageRouterConfig()
         config.jsQueryFunction = "cefQuery"
@@ -215,9 +246,16 @@ class MainFrame(
             }
         })
         client.addLoadHandler(object : CefLoadHandlerAdapter() {
-            override fun onLoadEnd(browser: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
-                if (frame.isMain) {
-                    //browser.executeJavaScript("alert('Hello World!');", browser.getURL(), 0)
+            override fun onLoadEnd(browserArg: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
+                if(browserArg != browser) {
+                    val validBrowser = dialogMap.keys.find { it == browserArg }
+                    val dialogData = dialogMap[validBrowser]
+
+                    if(dialogData != null && validBrowser != null) {
+                        println("Loaded dialog with data $dialogData")
+                        setDialogContent(validBrowser, dialogData)
+                        dialogMap.remove(validBrowser)
+                    }
                 }
             }
         })
@@ -235,6 +273,52 @@ class MainFrame(
                 CefApp.getInstance().dispose()
                 dispose()
             }
+
+            override fun windowOpened(e: WindowEvent?) {
+                super.windowOpened(e)
+                println("Opened")
+            }
         })
+    }
+
+    fun setDialogContent(browser : CefBrowser, dialogData : DialogData) {
+        browser.executeJavaScript(
+            """
+                document.write(`
+                    <html>
+                        <head>        
+                            <style>
+                                body {
+                                    background-color: #f0f0f0;
+                                    font-family: sans-serif;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>${dialogData.header}</h1>
+                            <p>${dialogData.message}</p>
+                            <code>${dialogData.exception}</code>
+                            <button onClick="window.close()">Close</button>
+                        </body>
+                    </html>`);
+            """.trimIndent(),
+            browser.url,
+            0
+        )
+    }
+
+    fun openNewDialog(dialogData: DialogData) {
+        val dialogFrame = client.createBrowser("about:blank", false, false)
+        val dialogUI = dialogFrame.uiComponent
+
+        dialogMap[dialogFrame] = dialogData
+
+        val dialog = JFrame()
+        dialog.title = dialogData.message
+        dialog.iconImage = iconImage
+        dialog.contentPane.add(dialogUI, BorderLayout.CENTER)
+        dialog.pack()
+        dialog.setSize(600, 300)
+        dialog.isVisible = true
     }
 }

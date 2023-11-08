@@ -65,20 +65,14 @@ internal class Frontend {
   internal fun start() {
     //println("Starting server...")
 
-    Thread.setDefaultUncaughtExceptionHandler { _, e ->
-      e.printStackTrace()
-
-      BoardGameApplication.runOnGUIThread {
-        showDialog(Dialog("Exception", "An uncaught exception occurred.", e.message.orEmpty(), e))
-      }
-    }
-
     embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
       applicationEngine.clearAllEventListeners()
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
+
+      println("Main Thread: ${Thread.currentThread().id}")
     }
   }
 
@@ -251,9 +245,7 @@ internal class Frontend {
      */
     internal fun showDialog(dialog: Dialog): Optional<ButtonType> {
       val dialogData = DialogMapper.map(dialog)
-      val json = jsonMapper.encodeToString(PropData(dialogData))
-      //TODO: Add animation channel
-      runBlocking { componentChannel.sendToAllClients(json) }
+      applicationEngine.openNewDialog(dialogData)
 
       return Optional.empty()
     }

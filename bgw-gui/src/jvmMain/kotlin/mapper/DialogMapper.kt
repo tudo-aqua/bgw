@@ -11,7 +11,7 @@ object DialogMapper {
             title = dialog.title
             header = dialog.header
             message = dialog.message
-            exception = dialog.exception.message ?: ""
+            exception = dialog.exception.stackTraceToString()
         }
     }
 }
