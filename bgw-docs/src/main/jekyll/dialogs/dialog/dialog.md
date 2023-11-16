@@ -53,7 +53,7 @@ The following code example creates a warning dialog informing the user about an 
 
 ````kotlin
 Dialog(
-  alertType = AlertType.WARNING,
+  dialogType = DialogType.WARNING,
   title = "Warning",
   header = "Empty player name",
   message = "Player name must not be empty!"
@@ -91,7 +91,7 @@ without blocking further thread execution. This functions returns ``Unit``.
 
 ````kotlin
 val dialog: Dialog = Dialog(
-    alertType = AlertType.CONFIRMATION, 
+    dialogType = DialogType.CONFIRMATION, 
     title = "Confirmation required", 
     header = "Confirmation", 
     message = "Do you really want to proceed?"
