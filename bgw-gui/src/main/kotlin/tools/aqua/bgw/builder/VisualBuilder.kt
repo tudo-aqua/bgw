@@ -95,13 +95,7 @@ object VisualBuilder {
             }
 
         visual.imageProperty.setGUIListenerAndInvoke(visual.image) { _, nV ->
-          imageView.image =
-              cache[visual.path]
-                  ?: run {
-                    val image = nV.readImage()
-                    cache[visual.path] = image
-                    return@run image
-                  }
+          imageView.image = nV.readImage()
         }
 
         visual.transparencyProperty.setGUIListenerAndInvoke(visual.transparency) { _, nV ->
