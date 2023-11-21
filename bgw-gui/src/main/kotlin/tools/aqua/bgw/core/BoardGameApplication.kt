@@ -20,6 +20,7 @@
 package tools.aqua.bgw.core
 
 import java.io.File
+import java.io.InputStream
 import java.util.*
 import javafx.application.Platform
 import javafx.scene.text.Font as JFXFont
@@ -362,6 +363,32 @@ open class BoardGameApplication(
       if (!font.canRead()) throw AccessDeniedException(font)
       val jfxFont = JFXFont.loadFont(font.inputStream(), DEFAULT_FONT_SIZE) ?: return false
       return JFXFont.getFamilies().contains(jfxFont.family)
+    }
+
+    /**
+     * Loads a font file input stream and registers it in the JFX graphics system.
+     * @param inputStream The font inputStream which is to be loaded
+     * @throws NoSuchFileException if the file doesn't exist
+     * @throws AccessDeniedException if the file can't be read
+     * @return A boolean weather the file could be loaded or not
+     */
+    fun loadFont(inputStream: InputStream): Boolean {
+      val jfxFont = JFXFont.loadFont(inputStream, DEFAULT_FONT_SIZE) ?: return false
+      return JFXFont.getFamilies().contains(jfxFont.family)
+    }
+
+    /**
+     * Loads a font file and registers it in the JFX graphics system.
+     * @param path The font file path in the resources folder which is to be loaded
+     * @throws NoSuchFileException if the file doesn't exist
+     * @throws AccessDeniedException if the file can't be read
+     * @return A boolean weather the file could be loaded or not
+     */
+    fun loadFont(path: String): Boolean {
+      this::class.java.classLoader.getResourceAsStream(path)?.let {
+        return loadFont(it)
+      }
+          ?: throw NoSuchFileException(File(path))
     }
   }
 }
