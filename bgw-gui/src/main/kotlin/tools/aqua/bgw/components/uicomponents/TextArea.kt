@@ -19,9 +19,12 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import java.awt.Color
 import tools.aqua.bgw.core.DEFAULT_TEXT_AREA_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TEXT_AREA_WIDTH
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.Visual
 
 /**
  * A [TextArea] is a multi line input field.
@@ -38,6 +41,7 @@ import tools.aqua.bgw.util.Font
  * @param prompt Prompt for this [TextArea]. This gets displayed as a prompt to the user whenever
  * the label is an empty string. Default: empty string.
  * @param font [Font] to be used to display [text].
+ * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
  *
  * @see TextField
  * @see PasswordField
@@ -49,7 +53,8 @@ open class TextArea(
     height: Number = DEFAULT_TEXT_AREA_HEIGHT,
     text: String = "",
     prompt: String = "",
-    font: Font = Font()
+    font: Font = Font(),
+    visual: Visual = ColorVisual(Color(240, 240, 240))
 ) :
     TextInputUIComponent(
         posX = posX,
@@ -58,4 +63,5 @@ open class TextArea(
         height = height,
         text = text,
         prompt = prompt,
-        font = font)
+        font = font,
+        visual = visual)

@@ -19,9 +19,11 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import java.awt.Color
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -34,6 +36,7 @@ import tools.aqua.bgw.visual.Visual
  * @param text Text for this [TextInputUIComponent].
  * @param prompt Prompt for this [TextInputUIComponent].
  * @param font Font to be used for the [text].
+ * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
  */
 sealed class TextInputUIComponent(
     posX: Number,
@@ -43,14 +46,10 @@ sealed class TextInputUIComponent(
     text: String,
     prompt: String,
     font: Font,
+    visual: Visual = ColorVisual(Color(240, 240, 240))
 ) :
     UIComponent(
-        posX = posX,
-        posY = posY,
-        width = width,
-        height = height,
-        font = font,
-        visual = Visual.EMPTY) {
+        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
 
   /**
    * [Property] for the text of this [TextInputUIComponent].

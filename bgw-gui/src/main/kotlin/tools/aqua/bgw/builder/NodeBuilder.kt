@@ -34,6 +34,7 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.components.uicomponents.TextInputUIComponent
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Scene
@@ -170,6 +171,11 @@ object NodeBuilder {
     if (this is UIComponent) {
       backgroundStyleProperty.setGUIListenerAndInvoke(backgroundStyle) { _, nV ->
         if (nV.isNotEmpty()) background?.style = nV
+      }
+
+      if (this is TextInputUIComponent) {
+        this.internalCSS =
+            "-fx-control-inner-background: transparent; -fx-highlight-fill: dodgerblue; -fx-background-color: transparent; "
       }
 
       fontProperty.guiListener = { _, _ -> updateStyle(node) }
