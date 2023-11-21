@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import com.jfoenix.controls.*
 import java.awt.Color
+import java.io.FileNotFoundException
 import javafx.beans.property.BooleanProperty as FXBooleanProperty
 import javafx.beans.property.ObjectProperty as FXObjectProperty
 import javafx.beans.property.StringProperty as FXStringProperty
@@ -84,6 +85,8 @@ object UINodeBuilder {
         textProperty().bindTextProperty(textArea)
         promptTextProperty().bindPromptProperty(textArea)
         disableUndo()
+        val resource = this::class.java.getResource("/style.css") ?: throw FileNotFoundException()
+        stylesheets.add(resource.toExternalForm())
       }
 
   /** Builds [TextField]. */
