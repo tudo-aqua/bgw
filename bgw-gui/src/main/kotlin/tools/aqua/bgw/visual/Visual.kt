@@ -20,6 +20,7 @@
 package tools.aqua.bgw.visual
 
 import tools.aqua.bgw.observable.Observable
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.style.*
 
 /**
@@ -36,10 +37,46 @@ sealed class Visual : Observable() {
     val EMPTY: Visual = CompoundVisual()
   }
 
-  open var backgroundRadius: BackgroundRadius? = null
-  open var borderRadius: BorderRadius? = null
-  open var borderStyle: BorderStyle? = null
-  open var borderWidth: BorderWidth? = null
-  open var borderColor: BorderColor? = null
-  open var cursor: Cursor? = null
+  open var backgroundRadiusProperty: Property<BackgroundRadius?> = Property(null)
+  open var borderRadiusProperty: Property<BorderRadius?> = Property(null)
+  open var borderStyleProperty: Property<BorderStyle?> = Property(null)
+  open var borderWidthProperty: Property<BorderWidth?> = Property(null)
+  open var borderColorProperty: Property<BorderColor?> = Property(null)
+  open var cursorProperty: Property<Cursor?> = Property(null)
+
+  open var backgroundRadius: BackgroundRadius?
+    get() = backgroundRadiusProperty.value
+    set(value) {
+      backgroundRadiusProperty.value = value
+    }
+
+  open var borderRadius: BorderRadius?
+    get() = borderRadiusProperty.value
+    set(value) {
+      borderRadiusProperty.value = value
+    }
+
+  open var borderStyle: BorderStyle?
+    get() = borderStyleProperty.value
+    set(value) {
+      borderStyleProperty.value = value
+    }
+
+  open var borderWidth: BorderWidth?
+    get() = borderWidthProperty.value
+    set(value) {
+      borderWidthProperty.value = value
+    }
+
+  open var borderColor: BorderColor?
+    get() = borderColorProperty.value
+    set(value) {
+      borderColorProperty.value = value
+    }
+
+  open var cursor: Cursor?
+    get() = cursorProperty.value
+    set(value) {
+      cursorProperty.value = value
+    }
 }
