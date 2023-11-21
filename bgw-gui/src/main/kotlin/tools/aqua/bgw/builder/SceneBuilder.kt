@@ -78,15 +78,15 @@ object SceneBuilder {
 
   /** Builds a [Scene] pane. */
   private fun buildPane(scene: Scene<*>): Pane {
-      // register animations
-      scene.animations.guiListener = { _, _ ->
-          scene.animations
-                  .filter { t -> !t.isRunning }
-                  .forEach { anim ->
-                      AnimationBuilder.build(scene, anim).play()
-                      anim.isRunning = true
-                  }
-      }
+    // register animations
+    scene.animations.guiListener = { _, _ ->
+      scene.animations
+          .filter { t -> !t.isRunning }
+          .forEach { anim ->
+            AnimationBuilder.build(scene, anim).play()
+            anim.isRunning = true
+          }
+    }
     val pane =
         Pane().apply {
           prefHeight = scene.height
