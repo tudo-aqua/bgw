@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.style
 
+import java.awt.Color
 import tools.aqua.bgw.visual.Visual
 
 abstract class StyleAttribute {
@@ -39,3 +40,13 @@ fun Visual.toCSS(postfix: String = ";"): String =
     listOf(backgroundRadius, borderRadius, borderStyle, borderColor, borderWidth, cursor)
         .filterNotNull()
         .toCSS(postfix)
+
+val StyleAttribute.pixel: Int
+  get() = value.removeSuffix("px").toIntOrNull() ?: 0
+
+val StyleAttribute.color: Color
+  get() {
+    val (r, g, b) =
+        value.removePrefix("rgb(").removeSuffix(")").split(",").map { it.trim().toInt() }
+    return Color(r, g, b)
+  }

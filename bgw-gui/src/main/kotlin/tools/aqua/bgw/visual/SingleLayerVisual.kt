@@ -78,36 +78,45 @@ sealed class SingleLayerVisual : Visual() {
       styleProperty.value = value
     }
 
-  override var backgroundRadius: BackgroundRadius? = BackgroundRadius.NONE
+  override var backgroundRadiusProperty: Property<BackgroundRadius?>
+    get() = super.backgroundRadiusProperty
     set(value) {
-      field = value
+      super.backgroundRadiusProperty = value
       style = toCSS()
     }
 
-  override var borderRadius: BorderRadius? = BorderRadius.NONE
+  override var borderRadiusProperty: Property<BorderRadius?>
+    get() = super.borderRadiusProperty
     set(value) {
-      field = value
+      super.borderRadiusProperty = value
       style = toCSS()
     }
 
-  override var borderStyle: BorderStyle? = BorderStyle.NONE
+  override var borderStyleProperty: Property<BorderStyle?>
+    get() = super.borderStyleProperty
     set(value) {
-      field = value
+      super.borderStyleProperty = value
       style = toCSS()
     }
-  override var borderWidth: BorderWidth? = BorderWidth.NONE
+
+  override var borderWidthProperty: Property<BorderWidth?>
+    get() = super.borderWidthProperty
     set(value) {
-      field = value
+      super.borderWidthProperty = value
       style = toCSS()
     }
-  override var borderColor: BorderColor? = BorderColor.TRANSPARENT
+
+  override var borderColorProperty: Property<BorderColor?>
+    get() = super.borderColorProperty
     set(value) {
-      field = value
+      super.borderColorProperty = value
       style = toCSS()
     }
-  override var cursor: Cursor? = Cursor.WAIT
+
+  override var cursorProperty: Property<Cursor?>
+    get() = super.cursorProperty
     set(value) {
-      field = value
+      super.cursorProperty = value
       style = toCSS()
     }
 }
