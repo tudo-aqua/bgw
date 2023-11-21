@@ -159,10 +159,10 @@ open class LinearLayout<T : GameComponentView>(
       verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
       horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
   ) : this(
-      posX = height,
-      posY = width,
-      width = posX,
-      height = posY,
+      posX = posX,
+      posY = posY,
+      width = width,
+      height = height,
       spacing = spacing,
       visual = visual,
       orientation = orientation,
