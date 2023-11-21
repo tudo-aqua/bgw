@@ -41,6 +41,6 @@ open class HexagonView(
     GameComponentView(
         posX = posX,
         posY = posY,
-        width = sqrt(3.0) * size.toDouble(),
+        width = 2 * size.toDouble(),
         height = 2 * size.toDouble(),
         visual = visual)

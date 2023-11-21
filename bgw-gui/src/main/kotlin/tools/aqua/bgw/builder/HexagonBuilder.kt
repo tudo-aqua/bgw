@@ -109,9 +109,9 @@ object HexagonBuilder {
                 clip =
                     if (nV != null && nV.pixel > 0) {
                       val size = hexagonView.size.toDouble() - nV.pixel.toDouble()
-                      val offsetX = hexagonView.widthProperty.value / 2 - sqrt(3.0) / 2 * size
-                      val offsetY = hexagonView.heightProperty.value / 2 - size
-                      Polygon(*generatePoints(size, offsetX, offsetY)).apply { roundCorners() }
+                      Polygon(*generatePoints(size)).apply { roundCorners() }.apply {
+                          // TODO: Center inner Hexagon in outer Hexagon
+                      }
                     } else null
               }
             })
@@ -144,7 +144,7 @@ object HexagonBuilder {
     val points = mutableListOf<Double>()
     var angle = 90.0
     repeat(HEXAGON_SIDES) {
-      val x = size * cos(Math.toRadians(angle)) + size / 2 * sqrt(3.0)
+      val x = size * cos(Math.toRadians(angle)) + size
       val y = size * sin(Math.toRadians(angle)) + size
       angle += FULL_CIRCLE_DEGREES / HEXAGON_SIDES
       points.add(x + offsetX.toDouble())
