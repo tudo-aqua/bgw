@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.components.gamecomponentviews
 
-import kotlin.math.sqrt
 import tools.aqua.bgw.core.DEFAULT_HEXAGON_SIZE
 import tools.aqua.bgw.visual.Visual
 
@@ -41,6 +40,6 @@ open class HexagonView(
     GameComponentView(
         posX = posX,
         posY = posY,
-        width = sqrt(3.0) * size.toDouble(),
+        width = 2 * size.toDouble(),
         height = 2 * size.toDouble(),
         visual = visual)

@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.components.container
 
+import kotlin.math.sqrt
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.visual.Visual
 
@@ -90,7 +91,8 @@ class HexagonGrid<T : HexagonView>(
             CoordinateSystem.AXIAL -> x + (y - (y and 1)) / 2 to y
           }
       with(hexagon) {
-        posXProperty.setSilent(width * q + if (r % 2 == 0) 0.0 else width / 2)
+        val actualWidth = width / 2 * sqrt(3.0)
+        posXProperty.setSilent(actualWidth * q + if (r % 2 == 0) 0.0 else actualWidth / 2)
         posYProperty.setSilent(height * r - r * height / 4)
       }
     }
