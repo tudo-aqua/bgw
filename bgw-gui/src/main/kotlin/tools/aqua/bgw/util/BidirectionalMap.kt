@@ -62,6 +62,40 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
     /** @return The amount of pairs. */
     get() = map.size
 
+  /** Represents the domain keys of this map as a set. */
+  val keysForward: Set<T>
+    get() = map.map { it.first }.toSet()
+
+  /** Represents the co-domain keys of this map as a set. */
+  val keysBackward: Set<R>
+    get() = map.map { it.second }.toSet()
+
+  /** Represents the entries of this map as a set. */
+  val entries: Set<Pair<T, R>>
+    get() = map.toSet()
+
+  /**
+   * Get the value for a given domain key.
+   *
+   * @param it Domain key.
+   * @return Value (from the co-domain) for given domain key.
+   * @throws NoSuchElementException If no such element in the domain is found.
+   */
+  operator fun get(it: T): Any {
+    if (containsForward(it)) return forward(it) else throw NoSuchElementException()
+  }
+
+  /**
+   * Set the given co-domain value for a given domain key. Overwrites existing values in domain and
+   * co-domain.
+   *
+   * @param it Key (from the domain) to set the value for.
+   * @param value Value (from the co-domain) to set for given domain key.
+   */
+  operator fun set(it: T, value: R) {
+    put(it, value)
+  }
+
   /**
    * Adds a relation A -> B if domain does not contain A and coDomain does not contain B. Returns
    * `false` if the relation could not be added.
@@ -295,45 +329,11 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    */
   fun isNotEmpty(): Boolean = map.isNotEmpty()
 
-  /** Represents the domain keys of this map as a set. */
-  val keysForward: Set<T>
-    get() = map.map { it.first }.toSet()
-
-  /** Represents the co-domain keys of this map as a set. */
-  val keysBackward: Set<R>
-    get() = map.map { it.second }.toSet()
-
-  /** Represents the entries of this map as a set. */
-  val entries: Set<Pair<T, R>>
-    get() = map.toSet()
-
-  /**
-   * Get the value for a given domain key.
-   *
-   * @param it Domain key.
-   * @return Value (from the co-domain) for given domain key.
-   * @throws NoSuchElementException If no such element in the domain is found.
-   */
-  operator fun get(it: T): Any {
-    if (containsForward(it)) return forward(it) else throw NoSuchElementException()
-  }
-
   /**
    * Set the given co-domain value for a given domain key. Overwrites existing values in domain and
    * co-domain.
    *
-   * @param it Key (from the domain) to set the value for.
-   * @param value Value (from the co-domain) to set for given domain key.
-   */
-  operator fun set(it: T, value: R) {
-    put(it, value)
-  }
-
-  /**
-   * Set the given co-domain value for a given domain key. Overwrites existing values in domain and
-   * co-domain.
-   *
-   * @param it Key (from the domain) to set the value for.
+   * @param key Key (from the domain) to set the value for.
    * @param value Value (from the co-domain) to set for given domain key.
    * @return Pair of overwritten pairs. First element is the pair that was overwritten in the domain
    * (or null), second element is the pair that was overwritten in the co-domain (or null).

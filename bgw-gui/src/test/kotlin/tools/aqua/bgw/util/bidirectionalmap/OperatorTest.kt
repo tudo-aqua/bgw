@@ -20,6 +20,7 @@ package tools.aqua.bgw.util.bidirectionalmap
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 /** Test set and get function in BidirectionalMap. */
 class OperatorTest : BidirectionalMapTestBase() {
@@ -65,10 +66,17 @@ class OperatorTest : BidirectionalMapTestBase() {
     assertTrue(map.containsForward(4))
   }
 
-  /** Test get a key. */
+  /** Test get a valid domain key. */
   @Test
-  @DisplayName("Test get a key")
+  @DisplayName("Test get a valid domain key")
   fun testGetKey() {
     assertEquals(1, map[0])
+  }
+
+  /** Test get an invalid domain key. */
+  @Test
+  @DisplayName("Test get an invalid domain key")
+  fun testGetInvalidKey() {
+    assertThrows<NoSuchElementException> { map[5] }
   }
 }
