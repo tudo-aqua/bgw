@@ -20,56 +20,55 @@ package tools.aqua.bgw.util.bidirectionalmap
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import tools.aqua.bgw.util.BidirectionalMap
 
 /** Test set and get function in BidirectionalMap. */
 class OperatorTest : BidirectionalMapTestBase() {
-    /** Test set a new pair. */
-    @Test
-    @DisplayName("Test set new pair")
-    fun testSetNew() {
-        assertEquals(2, map.size)
-        map[4] = 5
-        assertEquals(3, map.size)
-        assertTrue(map.contains(4, 5))
-        assertTrue(map.containsBackward(5))
-        assertTrue(map.containsForward(4))
-    }
+  /** Test set a new pair. */
+  @Test
+  @DisplayName("Test set new pair")
+  fun testSetNew() {
+    assertEquals(2, map.size)
+    map[4] = 5
+    assertEquals(3, map.size)
+    assertTrue(map.contains(4, 5))
+    assertTrue(map.containsBackward(5))
+    assertTrue(map.containsForward(4))
+  }
 
-    /** Test set already existing domain key. */
-    @Test
-    @DisplayName("Test set already existing domain key")
-    fun testSetAlreadyExistingDomainKey() {
-        assertTrue(map.containsForward(0))
-        assertEquals(2, map.size)
+  /** Test set already existing domain key. */
+  @Test
+  @DisplayName("Test set already existing domain key")
+  fun testSetAlreadyExistingDomainKey() {
+    assertTrue(map.containsForward(0))
+    assertEquals(2, map.size)
 
-        map[0] = 5
+    map[0] = 5
 
-        assertEquals(2, map.size)
-        assertTrue(map.contains(0, 5))
-        assertTrue(map.containsBackward(5))
-        assertTrue(map.containsForward(0))
-    }
+    assertEquals(2, map.size)
+    assertTrue(map.contains(0, 5))
+    assertTrue(map.containsBackward(5))
+    assertTrue(map.containsForward(0))
+  }
 
-    /** Test set already existing codomain key. */
-    @Test
-    @DisplayName("Test set already existing codomain key")
-    fun testSetAlreadyExistingCodomainKey() {
-        assertTrue(map.containsBackward(1))
-        assertEquals(2, map.size)
+  /** Test set already existing codomain key. */
+  @Test
+  @DisplayName("Test set already existing codomain key")
+  fun testSetAlreadyExistingCodomainKey() {
+    assertTrue(map.containsBackward(1))
+    assertEquals(2, map.size)
 
-        map[4] = 1
+    map[4] = 1
 
-        assertEquals(2, map.size)
-        assertTrue(map.contains(4, 1))
-        assertTrue(map.containsBackward(1))
-        assertTrue(map.containsForward(4))
-    }
+    assertEquals(2, map.size)
+    assertTrue(map.contains(4, 1))
+    assertTrue(map.containsBackward(1))
+    assertTrue(map.containsForward(4))
+  }
 
-    /** Test get a key. */
-    @Test
-    @DisplayName("Test get a key")
-    fun testGetKey() {
-        assertEquals(1, map[0])
-    }
+  /** Test get a key. */
+  @Test
+  @DisplayName("Test get a key")
+  fun testGetKey() {
+    assertEquals(1, map[0])
+  }
 }
