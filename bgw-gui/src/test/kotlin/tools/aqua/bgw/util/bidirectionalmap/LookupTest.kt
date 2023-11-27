@@ -18,6 +18,7 @@
 package tools.aqua.bgw.util.bidirectionalmap
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -55,5 +56,25 @@ class LookupTest : BidirectionalMapTestBase() {
   fun testBackwardNonExisting() {
     assertThrows<NoSuchElementException> { map.backward(5) }
     assertEquals(null, map.backwardOrNull(5))
+  }
+
+  /** Test keysForward of map. */
+  @Test
+  @DisplayName("Test keysForward of map")
+  fun testKeysForward() {
+    val keys = map.keysForward
+    assertEquals(2, keys.size)
+    assertTrue(keys.contains(0))
+    assertTrue(keys.contains(2))
+  }
+
+  /** Test keysBackward of map. */
+  @Test
+  @DisplayName("Test keysBackward of map")
+  fun testKeysBackward() {
+    val keys = map.keysBackward
+    assertEquals(2, keys.size)
+    assertTrue(keys.contains(1))
+    assertTrue(keys.contains(3))
   }
 }
