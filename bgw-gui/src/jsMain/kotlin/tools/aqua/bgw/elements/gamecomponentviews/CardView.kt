@@ -1,39 +1,40 @@
 package tools.aqua.bgw.elements.gamecomponentviews
 
-import TokenViewData
-import csstype.*
+import CardViewData
+import csstype.ClassName
+import csstype.PropertiesBuilder
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import react.*
+import react.FC
+import react.IntrinsicType
+import react.Props
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.bgwText
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
-import tools.aqua.bgw.handlers
 
-external interface TokenViewProps : Props {
-    var data: TokenViewData
+external interface CardViewProps : Props {
+    var data: CardViewData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardViewData) {
     cssBuilder(componentViewData)
 }
 
-var dxToken = 0.0
-var dyToken = 0.0
+var dxCard = 0.0
+var dyCard = 0.0
 
-val TokenView = FC<TokenViewProps> { props ->
-    bgwTokenView {
+val CardView = FC<CardViewProps> { props ->
+    bgwCardView {
         id = props.data.id
-        className = ClassName("tokenView")
+        className = ClassName("cardView")
         draggable = props.data.isDraggable
         css {
             cssBuilderIntern(props.data)
@@ -41,12 +42,12 @@ val TokenView = FC<TokenViewProps> { props ->
 
         bgwVisuals {
             className = ClassName("visuals")
-            +VisualBuilder.build(props.data.visual)
+            +VisualBuilder.build(props.data.currentVisual)
         }
 
         onContextMenu = {
             it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
         }
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
@@ -54,8 +55,8 @@ val TokenView = FC<TokenViewProps> { props ->
         onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
         onDragStart = {
             val rect = it.target.asDynamic().getBoundingClientRect()
-            dxToken = it.clientX - rect.x.unsafeCast<Double>()
-            dyToken = it.clientY - rect.y.unsafeCast<Double>()
+            dxCard = it.clientX - rect.x.unsafeCast<Double>()
+            dyCard = it.clientY - rect.y.unsafeCast<Double>()
             val element = it.target as HTMLElement
             it.dataTransfer.setData("text", element.id)
             JCEFEventDispatcher.dispatchEvent(it.toDragEventData(id, DragEventAction.START))
@@ -65,5 +66,5 @@ val TokenView = FC<TokenViewProps> { props ->
     }
 }
 
-inline val bgwTokenView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_token_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwCardView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
+    get() = "bgw_card_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()

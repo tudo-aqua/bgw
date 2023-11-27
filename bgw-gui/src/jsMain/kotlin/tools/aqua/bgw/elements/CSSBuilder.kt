@@ -1,7 +1,9 @@
 package tools.aqua.bgw.elements
 
+import CardStackData
 import ComboBoxData
 import ComponentViewData
+import GameComponentViewData
 import LabeledUIComponentData
 import LayoutViewData
 import TextInputUIComponentData
@@ -35,6 +37,21 @@ fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
 }
 
 fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData) {
+    justifyContent = when(componentViewData.alignment.first) {
+        "left" -> JustifyContent.flexStart
+        "center" -> JustifyContent.center
+        "right" -> JustifyContent.flexEnd
+        else -> JustifyContent.center
+    }
+    alignItems = when(componentViewData.alignment.second) {
+        "top" -> AlignItems.flexStart
+        "center" -> AlignItems.center
+        "bottom" -> AlignItems.flexEnd
+        else -> AlignItems.center
+    }
+}
+
+fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData) {
     justifyContent = when(componentViewData.alignment.first) {
         "left" -> JustifyContent.flexStart
         "center" -> JustifyContent.center

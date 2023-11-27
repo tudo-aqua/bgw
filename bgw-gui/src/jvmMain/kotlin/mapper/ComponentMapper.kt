@@ -173,9 +173,10 @@ object ComponentMapper {
 
             // TODO - GameComponentView
             is CardView -> (mapSpecific(componentView) as CardViewData).apply {
-                currentSide = componentView.currentSide.name.lowercase()
                 front = VisualMapper.map(componentView.frontVisual)
                 back = VisualMapper.map(componentView.backVisual)
+                currentVisual = if(componentView.currentSide == CardView.CardSide.BACK)
+                    VisualMapper.map(componentView.backVisual) else VisualMapper.map(componentView.frontVisual)
             }
             is DiceView -> (mapSpecific(componentView) as DiceViewData).apply {
                 currentSide = componentView.currentSide

@@ -212,9 +212,9 @@ class CoordinateData(val xCoord: Double = 0.0, val yCoord: Double = 0.0)
 abstract class GameComponentViewData : ComponentViewData() { }
 @Serializable
 class CardViewData : GameComponentViewData() {
-    var currentSide: String = ""
     var front: VisualData? = null
     var back: VisualData? = null
+    var currentVisual : VisualData? = null
 }
 @Serializable
 class DiceViewData : GameComponentViewData() {
@@ -237,7 +237,9 @@ abstract class GameComponentContainerData: ComponentViewData() {
 @Serializable
 class AreaData : GameComponentContainerData() { }
 @Serializable
-class CardStackData : GameComponentContainerData() { }
+class CardStackData : GameComponentContainerData() {
+    var alignment: Pair<String, String> = Pair("", "")
+}
 @Serializable
 class HexagonGridData : GameComponentContainerData() {
     var coordinateSystem: String = ""

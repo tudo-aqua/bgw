@@ -40,6 +40,7 @@ import tools.aqua.bgw.elements.gamecomponentviews.DiceView as ReactDiceView
 import tools.aqua.bgw.elements.uicomponents.ComboBox as ReactComboBox
 import tools.aqua.bgw.elements.uicomponents.ProgressBar as ReactProgressBar
 import tools.aqua.bgw.elements.uicomponents.CheckBox as ReactCheckBox
+import tools.aqua.bgw.elements.gamecomponentviews.CardView as ReactCardView
 
 object NodeBuilder {
     fun build(componentViewData: ComponentViewData): ReactElement<*> {
@@ -61,7 +62,7 @@ object NodeBuilder {
             //is TextAreaData -> ReactTextArea.create { data = componentViewData }
 
             is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
-            //is CardViewData -> ReactCardView.create { data = componentViewData }
+            is CardViewData -> ReactCardView.create { data = componentViewData }
             is DiceViewData -> ReactDiceView.create { data = componentViewData }
             is HexagonViewData -> ReactHexagonView.create { data = componentViewData }
             is TokenViewData -> ReactTokenView.create { data = componentViewData }

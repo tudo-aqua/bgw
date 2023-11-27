@@ -55,6 +55,7 @@ val App = FC<AppProps> { props ->
                 position = Position.absolute
                 left = 0.px
                 top = 0.px
+                overflow = Overflow.hidden
             }
 
             "bgw_color_visual, bgw_image_visual, bgw_text_visual" {
