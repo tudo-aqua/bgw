@@ -114,10 +114,10 @@ open class CameraPane<T : LayoutView<*>>(
 
   internal val isVerticalLockedProperty: BooleanProperty = BooleanProperty()
 
-    /**
-     * Determines if the camera pane is locked vertically, which means that you can only scroll
-     * horizontally.
-     */
+  /**
+   * Determines if the camera pane is locked vertically, which means that you can only scroll
+   * horizontally.
+   */
   var isVerticalLocked: Boolean
     get() = isVerticalLockedProperty.value
     set(value) {
@@ -126,9 +126,7 @@ open class CameraPane<T : LayoutView<*>>(
 
   internal val isZoomLockedProperty: BooleanProperty = BooleanProperty()
 
-    /**
-     * Determines if the camera pane is locked for zooming, which means that you can only scroll.
-     */
+  /** Determines if the camera pane is locked for zooming, which means that you can only scroll. */
   var isZoomLocked: Boolean
     get() = isZoomLockedProperty.value
     set(value) {
@@ -138,9 +136,7 @@ open class CameraPane<T : LayoutView<*>>(
   internal val panMouseButtonProperty: Property<MouseButtonType> =
       Property(MouseButtonType.MOUSE_WHEEL)
 
-  /**
-   * The mouse button that is used to pan the camera pane.
-   */
+  /** The mouse button that is used to pan the camera pane. */
   var panMouseButton: MouseButtonType
     get() = panMouseButtonProperty.value
     set(value) {
