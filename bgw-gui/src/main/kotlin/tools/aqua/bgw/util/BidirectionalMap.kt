@@ -44,7 +44,7 @@ package tools.aqua.bgw.util
  *
  * is valid because A is only contained once in the domain and in the coDomain.
  *
- * @constructor Creates a map with the given set of elements mapping pair first -> pair.second.
+ * @constructor Creates a map with the given set of elements mapping pair.first -> pair.second.
  *
  * @param T Type of domain elements.
  * @param R Type of co-domain elements.
@@ -61,6 +61,40 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
   val size: Int
     /** @return The amount of pairs. */
     get() = map.size
+
+  /** Represents the domain keys of this map as a set. */
+  val keysForward: Set<T>
+    get() = map.map { it.first }.toSet()
+
+  /** Represents the co-domain keys of this map as a set. */
+  val keysBackward: Set<R>
+    get() = map.map { it.second }.toSet()
+
+  /** Represents the entries of this map as a set. */
+  val entries: Set<Pair<T, R>>
+    get() = map.toSet()
+
+  /**
+   * Get the value for a given domain key.
+   *
+   * @param it Domain key.
+   * @return Value (from the co-domain) for given domain key.
+   * @throws NoSuchElementException If no such element in the domain is found.
+   */
+  operator fun get(it: T): Any {
+    if (containsForward(it)) return forward(it) else throw NoSuchElementException()
+  }
+
+  /**
+   * Set the given co-domain value for a given domain key. Overwrites existing values in domain and
+   * co-domain.
+   *
+   * @param it Key (from the domain) to set the value for.
+   * @param value Value (from the co-domain) to set for given domain key.
+   */
+  operator fun set(it: T, value: R) {
+    put(it, value)
+  }
 
   /**
    * Adds a relation A -> B if domain does not contain A and coDomain does not contain B. Returns
@@ -265,6 +299,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @see getCoDomain
    */
+  @Deprecated("Use keysForward instead", ReplaceWith("keysForward"))
   fun getDomain(): Set<T> = map.map { t -> t.first }.toSet()
 
   /**
@@ -272,6 +307,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @see getDomain
    */
+  @Deprecated("Use keysBackward instead", ReplaceWith("keysBackward"))
   fun getCoDomain(): Set<R> = map.map { t -> t.second }.toSet()
 
   /** Clears the map. */
@@ -292,4 +328,42 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @return `true` if this map contains elements, false otherwise.
    */
   fun isNotEmpty(): Boolean = map.isNotEmpty()
+
+  /**
+   * Set the given co-domain value for a given domain key. Overwrites existing values in domain and
+   * co-domain.
+   *
+   * @param key Key (from the domain) to set the value for.
+   * @param value Value (from the co-domain) to set for given domain key.
+   * @return Pair of overwritten pairs. First element is the pair that was overwritten in the domain
+   * (or null), second element is the pair that was overwritten in the co-domain (or null).
+   */
+  fun put(key: T, value: R): Pair<Pair<T, R>?, Pair<T, R>?> {
+    val firstPair = map.firstOrNull { t -> t.first == key }
+    val secondPair = map.firstOrNull { t -> t.second == value }
+
+    removeForward(key)
+    removeBackward(value)
+    add(key, value)
+
+    return Pair(firstPair, secondPair)
+  }
+
+  /**
+   * Set the given entries. Overwrites existing values in domain and co-domain.
+   *
+   * @param items Entries to set.
+   */
+  fun putAll(vararg items: Pair<T, R>) {
+    items.forEach { put(it.first, it.second) }
+  }
+
+  /**
+   * Set the given entries. Overwrites existing values in domain and co-domain.
+   *
+   * @param bidirectionalMap Entries to set from another [BidirectionalMap].
+   */
+  fun putAll(bidirectionalMap: BidirectionalMap<T, R>) {
+    bidirectionalMap.entries.forEach { entry -> put(entry.first, entry.second) }
+  }
 }
