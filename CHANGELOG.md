@@ -1,3 +1,5 @@
+[0.9]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8.2
+[0.8.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8.1
 [0.8]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8
 [0.7.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.3
 [0.7.2]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.2
@@ -18,6 +20,28 @@
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.9] - 27.11.2023
+
+### Added
+- Simple CSS support for components e.g. `BorderRadius`, `BorderWidth` and `BorderColor`
+- Smooth scrolling for `CameraPane`
+- Horizontal and vertical pan lock for `CameraPane`
+- Added zoom lock for `CameraPane`
+- Added `keysForward` and `keysBackward` attributes to `BiDirectionalMap`
+- Added `put` and `putAll` functions to `BiDirectionalMap`
+- Added conventional map indexing syntax to `BiDirectionalMap`
+- Added visuals to `TextInputUIComponent`
+
+### Fixed
+- Fixed `HexagonView` not updating visual properly
+- Fixed rotation of hexagons in `HexagonGrid` 
+- Fixed `CameraPane` panning to work only with specified mouse button
+- Fixed `CameraPane` panning only allowed when interactive is set to true
+- Fixed Drag and Drop in `CameraPane`
+- Fixed `ComboBox` throwing exception when trying to deselect an item
+- Fixed `CameraPane` zoom to work properly with `panBy` and `pan function
+- Fixed constructor overload for individual alignments in `LinearLayout`
 
 ## [0.8.1] - 21.07.2023
 
