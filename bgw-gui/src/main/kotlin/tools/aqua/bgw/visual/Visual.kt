@@ -26,6 +26,19 @@ import tools.aqua.bgw.style.*
 /**
  * Visual baseclass.
  *
+ * @property backgroundRadiusProperty Property for [backgroundRadius].
+ * @property borderRadiusProperty Property for [borderRadius].
+ * @property borderStyleProperty Property for [borderStyle].
+ * @property borderWidthProperty Property for [borderWidth].
+ * @property borderColorProperty Property for [borderColor].
+ * @property cursorProperty Property for [cursor].
+ * @property backgroundRadius Background radius.
+ * @property borderRadius Border radius.
+ * @property borderStyle Border style.
+ * @property borderWidth Border width.
+ * @property borderColor Border color.
+ * @property cursor Cursor.
+ *
  * @constructor Creates a [Visual].
  */
 sealed class Visual : Observable() {
@@ -38,42 +51,77 @@ sealed class Visual : Observable() {
   }
 
   open var backgroundRadiusProperty: Property<BackgroundRadius?> = Property(null)
+
   open var borderRadiusProperty: Property<BorderRadius?> = Property(null)
+
   open var borderStyleProperty: Property<BorderStyle?> = Property(null)
+
   open var borderWidthProperty: Property<BorderWidth?> = Property(null)
+
   open var borderColorProperty: Property<BorderColor?> = Property(null)
+
   open var cursorProperty: Property<Cursor?> = Property(null)
 
+  /**
+   * Background radius.
+   *
+   * @see BackgroundRadius
+   */
   open var backgroundRadius: BackgroundRadius?
     get() = backgroundRadiusProperty.value
     set(value) {
       backgroundRadiusProperty.value = value
     }
 
+  /**
+   * Border radius.
+   *
+   * @see BorderRadius
+   */
   open var borderRadius: BorderRadius?
     get() = borderRadiusProperty.value
     set(value) {
       borderRadiusProperty.value = value
     }
 
+  /**
+   * Border style.
+   *
+   * @see BorderStyle
+   */
   open var borderStyle: BorderStyle?
     get() = borderStyleProperty.value
     set(value) {
       borderStyleProperty.value = value
     }
 
+  /**
+   * Border width.
+   *
+   * @see BorderWidth
+   */
   open var borderWidth: BorderWidth?
     get() = borderWidthProperty.value
     set(value) {
       borderWidthProperty.value = value
     }
 
+  /**
+   * Border color.
+   *
+   * @see BorderColor
+   */
   open var borderColor: BorderColor?
     get() = borderColorProperty.value
     set(value) {
       borderColorProperty.value = value
     }
 
+  /**
+   * Cursor.
+   *
+   * @see Cursor
+   */
   open var cursor: Cursor?
     get() = cursorProperty.value
     set(value) {
