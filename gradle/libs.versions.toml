@@ -3,17 +3,17 @@
 # Platforms
 
 kotlin = "1.7.10"
-spring = "2.7.2"
+spring = "2.7.14"
 vaadin = "23.1.6"
 
 # Other
 
-jackson = "2.13.3"
+jackson = "2.13.5"
 jekyllDocker = "4.2.0"
 junit = "5.9.0"
 ktor = "2.1.0"
 openjfx = "18.0.2"
-guava = "31.1-jre"
+guava = "32.0.1-jre"
 testcontainers = "1.17.3"
 
 [libraries]
@@ -57,7 +57,7 @@ openjfx-media = { group = "org.openjfx", name = "javafx-media", version.ref = "o
 openjfx-swing = { group = "org.openjfx", name = "javafx-swing", version.ref = "openjfx" }
 openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openjfx" }
 
-postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.4.1" }
+postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.4.3" }
 
 testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
 h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.214" }
