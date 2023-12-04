@@ -144,7 +144,7 @@ object HexagonBuilder {
     val points = mutableListOf<Double>()
     var angle = 90.0
     repeat(HEXAGON_SIDES) {
-      val x = size * cos(Math.toRadians(angle)) + size / 2 * sqrt(3.0)
+      val x = size * cos(Math.toRadians(angle)) + size
       val y = size * sin(Math.toRadians(angle)) + size
       angle += FULL_CIRCLE_DEGREES / HEXAGON_SIDES
       points.add(x + offsetX.toDouble())
