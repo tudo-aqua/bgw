@@ -64,6 +64,7 @@ object VisualBuilder {
         is CompoundVisual -> {
           buildCompoundVisual(visual)
         }
+        else -> throw IllegalArgumentException("Unknown visual type: ${visual::class.simpleName}")
       }
 
   /** Builds [ColorVisual]. */

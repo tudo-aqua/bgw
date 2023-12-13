@@ -58,9 +58,11 @@ object HexagonBuilder {
       root.children.clear()
       val component =
           when (nV) {
+            is ColorVisual -> buildPolygon(points, nV, hexagonView)
+            is ImageVisual -> buildPolygon(points, nV, hexagonView)
             is TextVisual -> buildPolygon(points, nV, hexagonView)
-            is SingleLayerVisual -> buildPolygon(points, nV, hexagonView)
             is CompoundVisual -> buildPolygon(points, nV, hexagonView)
+            is SingleLayerVisual -> buildPolygon(points, nV, hexagonView)
           }
       root.children.add(component)
     }
@@ -158,5 +160,6 @@ object HexagonBuilder {
         is ColorVisual -> visual.color.toFXColor()
         is ImageVisual -> ImagePattern(visual.image.toFXImage())
         is TextVisual -> Color.TRANSPARENT
+        else -> Color.TRANSPARENT
       }
 }

@@ -5,3 +5,22 @@
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
+
+.button {
+    -fx-background-insets: 5000px;
+    -fx-cursor: hand;
+}
+
+.button:focused {
+    -fx-background-insets: 5000px;
+    -fx-cursor: hand;
+}
+
+.button:disabled {
+    -fx-background-insets: 5000px;
+    -fx-cursor: default;
+}
+
+/* .button:hover{
+    -fx-background-color: derive(red, -100%);
+} */

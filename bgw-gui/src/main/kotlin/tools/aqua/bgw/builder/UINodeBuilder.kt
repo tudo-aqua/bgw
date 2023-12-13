@@ -77,6 +77,8 @@ object UINodeBuilder {
         textProperty().bindTextProperty(button)
         alignmentProperty().bindAlignmentProperty(button)
         bindWrapTextProperty(button.isWrapTextProperty)
+        val resource = this::class.java.getResource("/style.css") ?: throw FileNotFoundException()
+        stylesheets.add(resource.toExternalForm())
       }
 
   /** Builds [TextArea]. */
