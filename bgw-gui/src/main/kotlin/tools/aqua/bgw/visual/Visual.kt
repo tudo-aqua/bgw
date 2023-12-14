@@ -50,17 +50,17 @@ sealed class Visual : Observable() {
     val EMPTY: Visual = CompoundVisual()
   }
 
-  open var backgroundRadiusProperty: Property<BackgroundRadius?> = Property(null)
+  var backgroundRadiusProperty: Property<BackgroundRadius?> = Property(null)
 
-  open var borderRadiusProperty: Property<BorderRadius?> = Property(null)
+  var borderRadiusProperty: Property<BorderRadius?> = Property(null)
 
-  open var borderStyleProperty: Property<BorderStyle?> = Property(null)
+  var borderStyleProperty: Property<BorderStyle?> = Property(null)
 
-  open var borderWidthProperty: Property<BorderWidth?> = Property(null)
+  var borderWidthProperty: Property<BorderWidth?> = Property(null)
 
-  open var borderColorProperty: Property<BorderColor?> = Property(null)
+  var borderColorProperty: Property<BorderColor?> = Property(null)
 
-  open var cursorProperty: Property<Cursor?> = Property(null)
+  var cursorProperty: Property<Cursor?> = Property(null)
 
   /**
    * Background radius.

@@ -43,6 +43,7 @@ object StructuredDataViewBuilder {
       when (node) {
         is ListView<*> -> buildListView(node)
         is TableView<*> -> buildTableView(node)
+        else -> throw IllegalArgumentException("Unknown StructuredDataView type.")
       }
 
   // region ListView

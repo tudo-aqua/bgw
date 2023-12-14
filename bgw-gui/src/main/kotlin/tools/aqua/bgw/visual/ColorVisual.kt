@@ -74,6 +74,12 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
       ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {
         transparency = this@ColorVisual.transparency
         style = this@ColorVisual.style
+        backgroundRadius = this@ColorVisual.backgroundRadius
+        borderRadius = this@ColorVisual.borderRadius
+        borderStyle = this@ColorVisual.borderStyle
+        borderWidth = this@ColorVisual.borderWidth
+        borderColor = this@ColorVisual.borderColor
+        cursor = this@ColorVisual.cursor
       }
 
   companion object {

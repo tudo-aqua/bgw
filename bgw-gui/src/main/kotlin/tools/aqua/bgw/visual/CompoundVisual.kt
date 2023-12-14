@@ -58,6 +58,14 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 
   init {
     childrenProperty.internalListener = { _, _ -> notifyGUIListener() }
+    borderRadiusProperty.internalListener = { _, nV -> children.forEach { it.borderRadius = nV } }
+    borderStyleProperty.internalListener = { _, nV -> children.forEach { it.borderStyle = nV } }
+    borderWidthProperty.internalListener = { _, nV -> children.forEach { it.borderWidth = nV } }
+    borderColorProperty.internalListener = { _, nV -> children.forEach { it.borderColor = nV } }
+    backgroundRadiusProperty.internalListener = { _, nV ->
+      children.forEach { it.backgroundRadius = nV }
+    }
+    cursorProperty.internalListener = { _, nV -> children.forEach { it.cursor = nV } }
   }
 
   /**
@@ -70,5 +78,12 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 
   /** Copies this [CompoundVisual] to a new object recursively including children. */
   override fun copy(): CompoundVisual =
-      CompoundVisual(children.map { it.copy() as SingleLayerVisual }.toList())
+      CompoundVisual(children.map { it.copy() as SingleLayerVisual }.toList()).apply {
+        backgroundRadius = this@CompoundVisual.backgroundRadius
+        borderRadius = this@CompoundVisual.borderRadius
+        borderStyle = this@CompoundVisual.borderStyle
+        borderWidth = this@CompoundVisual.borderWidth
+        borderColor = this@CompoundVisual.borderColor
+        cursor = this@CompoundVisual.cursor
+      }
 }

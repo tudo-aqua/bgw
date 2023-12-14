@@ -78,45 +78,12 @@ sealed class SingleLayerVisual : Visual() {
       styleProperty.value = value
     }
 
-  override var backgroundRadiusProperty: Property<BackgroundRadius?>
-    get() = super.backgroundRadiusProperty
-    set(value) {
-      super.backgroundRadiusProperty = value
-      style = toCSS()
-    }
-
-  override var borderRadiusProperty: Property<BorderRadius?>
-    get() = super.borderRadiusProperty
-    set(value) {
-      super.borderRadiusProperty = value
-      style = toCSS()
-    }
-
-  override var borderStyleProperty: Property<BorderStyle?>
-    get() = super.borderStyleProperty
-    set(value) {
-      super.borderStyleProperty = value
-      style = toCSS()
-    }
-
-  override var borderWidthProperty: Property<BorderWidth?>
-    get() = super.borderWidthProperty
-    set(value) {
-      super.borderWidthProperty = value
-      style = toCSS()
-    }
-
-  override var borderColorProperty: Property<BorderColor?>
-    get() = super.borderColorProperty
-    set(value) {
-      super.borderColorProperty = value
-      style = toCSS()
-    }
-
-  override var cursorProperty: Property<Cursor?>
-    get() = super.cursorProperty
-    set(value) {
-      super.cursorProperty = value
-      style = toCSS()
-    }
+  init {
+    backgroundRadiusProperty.internalListener = { _, _ -> style = toCSS() }
+    borderRadiusProperty.internalListener = { _, _ -> style = toCSS() }
+    borderStyleProperty.internalListener = { _, _ -> style = toCSS() }
+    borderWidthProperty.internalListener = { _, _ -> style = toCSS() }
+    borderColorProperty.internalListener = { _, _ -> style = toCSS() }
+    cursorProperty.internalListener = { _, _ -> style = toCSS() }
+  }
 }

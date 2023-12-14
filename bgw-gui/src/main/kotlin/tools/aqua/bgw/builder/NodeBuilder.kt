@@ -40,6 +40,8 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.exception.IllegalInheritanceException
+import tools.aqua.bgw.style.toCSS
+import tools.aqua.bgw.visual.Visual
 
 /** NodeBuilder. Factory for all BGW nodes. */
 object NodeBuilder {
@@ -181,19 +183,20 @@ object NodeBuilder {
       fontProperty.guiListener = { _, _ -> updateStyle(node) }
       internalCSSProperty.guiListener = { _, _ -> updateStyle(node) }
       componentStyleProperty.setGUIListenerAndInvoke(componentStyle) { _, _ -> updateStyle(node) }
-      visualProperty.addListenerAndInvoke(visual) { _, nV ->
-        node.style =
-            this.internalCSS +
-                this.font.toFXFontCSS() +
-                componentStyle +
-                (nV.backgroundRadius?.toCSS() ?: "")
+      visualProperty.addListenerAndInvoke(visual) { _, _ -> updateStyle(node) }
+      visual.backgroundRadiusProperty.addListenerAndInvoke(visual.backgroundRadius) { _, _ ->
+        updateStyle(node)
       }
+      visual.cursorProperty.addListenerAndInvoke(visual.cursor) { _, _ -> updateStyle(node) }
     }
   }
 
+  private fun Visual.toComponentStyleCSS(): String = listOfNotNull(backgroundRadius, cursor).toCSS()
+
   /** Updates nodes style property. */
   private fun UIComponent.updateStyle(node: Node) {
-    node.style = this.internalCSS + this.font.toFXFontCSS() + componentStyle
+    node.style =
+        this.internalCSS + this.font.toFXFontCSS() + componentStyle + visual.toComponentStyleCSS()
   }
 
   /**
