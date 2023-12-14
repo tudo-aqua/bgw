@@ -129,6 +129,12 @@ open class ImageVisual(
       ImageVisual(image = image, path = path).apply {
         transparency = this@ImageVisual.transparency
         style = this@ImageVisual.style
+        backgroundRadius = this@ImageVisual.backgroundRadius
+        borderRadius = this@ImageVisual.borderRadius
+        borderStyle = this@ImageVisual.borderStyle
+        borderWidth = this@ImageVisual.borderWidth
+        borderColor = this@ImageVisual.borderColor
+        cursor = this@ImageVisual.cursor
       }
 
   companion object {

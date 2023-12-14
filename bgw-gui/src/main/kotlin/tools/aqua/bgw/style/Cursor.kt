@@ -35,5 +35,8 @@ open class Cursor internal constructor(override val value: String = "") : StyleA
     val V_RESIZE = Cursor("v-resize")
     val TEXT = Cursor("text")
     val WAIT = Cursor("wait")
+    val HAND = Cursor("hand")
+    val MOVE = Cursor("move")
+    val DEFAULT = Cursor("default")
   }
 }

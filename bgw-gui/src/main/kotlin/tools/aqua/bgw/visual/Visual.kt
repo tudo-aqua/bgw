@@ -50,17 +50,17 @@ sealed class Visual : Observable() {
     val EMPTY: Visual = CompoundVisual()
   }
 
-  open var backgroundRadiusProperty: Property<BackgroundRadius?> = Property(null)
+  var backgroundRadiusProperty: Property<BackgroundRadius?> = Property(null)
 
-  open var borderRadiusProperty: Property<BorderRadius?> = Property(null)
+  var borderRadiusProperty: Property<BorderRadius?> = Property(null)
 
-  open var borderStyleProperty: Property<BorderStyle?> = Property(null)
+  var borderStyleProperty: Property<BorderStyle?> = Property(null)
 
-  open var borderWidthProperty: Property<BorderWidth?> = Property(null)
+  var borderWidthProperty: Property<BorderWidth?> = Property(null)
 
-  open var borderColorProperty: Property<BorderColor?> = Property(null)
+  var borderColorProperty: Property<BorderColor?> = Property(null)
 
-  open var cursorProperty: Property<Cursor?> = Property(null)
+  var cursorProperty: Property<Cursor?> = Property(null)
 
   /**
    * Background radius.
@@ -70,7 +70,7 @@ sealed class Visual : Observable() {
   open var backgroundRadius: BackgroundRadius?
     get() = backgroundRadiusProperty.value
     set(value) {
-      backgroundRadiusProperty = Property(value)
+      backgroundRadiusProperty.value = value
     }
 
   /**
@@ -81,7 +81,7 @@ sealed class Visual : Observable() {
   open var borderRadius: BorderRadius?
     get() = borderRadiusProperty.value
     set(value) {
-      borderRadiusProperty = Property(value)
+      borderRadiusProperty.value = value
     }
 
   /**
@@ -92,7 +92,7 @@ sealed class Visual : Observable() {
   open var borderStyle: BorderStyle?
     get() = borderStyleProperty.value
     set(value) {
-      borderStyleProperty = Property(value)
+      borderStyleProperty.value = value
     }
 
   /**
@@ -103,7 +103,7 @@ sealed class Visual : Observable() {
   open var borderWidth: BorderWidth?
     get() = borderWidthProperty.value
     set(value) {
-      borderWidthProperty = Property(value)
+      borderWidthProperty.value = value
     }
 
   /**
@@ -114,7 +114,7 @@ sealed class Visual : Observable() {
   open var borderColor: BorderColor?
     get() = borderColorProperty.value
     set(value) {
-      borderColorProperty = Property(value)
+      borderColorProperty.value = value
     }
 
   /**
@@ -125,6 +125,6 @@ sealed class Visual : Observable() {
   open var cursor: Cursor?
     get() = cursorProperty.value
     set(value) {
-      cursorProperty = Property(value)
+      cursorProperty.value = value
     }
 }

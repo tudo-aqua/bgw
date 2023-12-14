@@ -141,5 +141,11 @@ open class TextVisual(
         offsetX = this@TextVisual.offsetX
         offsetY = this@TextVisual.offsetY
         style = this@TextVisual.style
+        backgroundRadius = this@TextVisual.backgroundRadius
+        borderRadius = this@TextVisual.borderRadius
+        borderStyle = this@TextVisual.borderStyle
+        borderWidth = this@TextVisual.borderWidth
+        borderColor = this@TextVisual.borderColor
+        cursor = this@TextVisual.cursor
       }
 }
