@@ -177,7 +177,7 @@ object NodeBuilder {
 
       if (this is TextInputUIComponent) {
         this.internalCSS =
-            "-fx-control-inner-background: transparent; -fx-highlight-fill: dodgerblue; -fx-background-color: transparent; "
+            "-fx-control-inner-background: transparent; -fx-highlight-fill: dodgerblue; -fx-background-color: transparent; -fx-prompt-text-fill: gray;"
       }
 
       fontProperty.guiListener = { _, _ -> updateStyle(node) }
