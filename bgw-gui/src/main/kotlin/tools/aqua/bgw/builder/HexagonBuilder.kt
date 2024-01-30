@@ -33,6 +33,7 @@ import kotlin.math.sqrt
 import tools.aqua.bgw.builder.FXConverters.toFXColor
 import tools.aqua.bgw.builder.FXConverters.toFXImage
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
+import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.style.color
 import tools.aqua.bgw.style.pixel
 import tools.aqua.bgw.visual.*
@@ -53,7 +54,7 @@ object HexagonBuilder {
   /** Builds [HexagonView]. */
   internal fun buildHexagonView(hexagonView: HexagonView): Region {
     val root = Pane().apply { isPickOnBounds = false }
-    val points = generatePoints(hexagonView.size.toDouble())
+    val points = generatePoints(hexagonView.size.toDouble(), orientation = hexagonView.orientation)
     hexagonView.visualProperty.setGUIListenerAndInvoke(hexagonView.visual) { _, nV ->
       root.children.clear()
       val component =
@@ -107,14 +108,27 @@ object HexagonBuilder {
                       nV.pixel.toDouble()
                     } else 0.0
               }
-              visual.borderRadiusProperty.addListenerAndInvoke(visual.borderRadius) { _, nV ->
-                clip =
-                    if (nV != null && nV.pixel > 0) {
-                      val size = hexagonView.size.toDouble() - nV.pixel.toDouble()
-                      val offsetX = hexagonView.widthProperty.value / 2 - sqrt(3.0) / 2 * size
-                      val offsetY = hexagonView.heightProperty.value / 2 - size
-                      Polygon(*generatePoints(size, offsetX, offsetY)).apply { roundCorners() }
-                    } else null
+
+              if (hexagonView.orientation == HexOrientation.POINTY_TOP) {
+                visual.borderRadiusProperty.addListenerAndInvoke(visual.borderRadius) { _, nV ->
+                  clip =
+                      if (nV != null && nV.pixel > 0) {
+                        val size = hexagonView.size.toDouble() - nV.pixel.toDouble()
+                        val offsetX = hexagonView.widthProperty.value / 2 - sqrt(3.0) / 2 * size
+                        val offsetY = hexagonView.heightProperty.value / 2 - size
+                        Polygon(*generatePoints(size, offsetX, offsetY)).apply { roundCorners() }
+                      } else null
+                }
+              } else {
+                visual.borderRadiusProperty.addListenerAndInvoke(visual.borderRadius) { _, nV ->
+                  clip =
+                      if (nV != null && nV.pixel > 0) {
+                        val size = hexagonView.size.toDouble() - nV.pixel.toDouble()
+                        val offsetX = hexagonView.widthProperty.value / 2 - size
+                        val offsetY = hexagonView.heightProperty.value / 2 - sqrt(3.0) / 2 * size
+                        Polygon(*generatePoints(size, offsetX, offsetY)).apply { roundCorners() }
+                      } else null
+                }
               }
             })
         .apply { isPickOnBounds = false }
@@ -141,10 +155,13 @@ object HexagonBuilder {
   private fun generatePoints(
       size: Double,
       offsetX: Number = 0.0,
-      offsetY: Number = 0.0
+      offsetY: Number = 0.0,
+      orientation: HexOrientation = HexOrientation.POINTY_TOP
   ): DoubleArray {
     val points = mutableListOf<Double>()
-    var angle = 90.0
+
+    var angle = if (orientation == HexOrientation.POINTY_TOP) 30.0 else 0.0
+
     repeat(HEXAGON_SIDES) {
       val x = size * cos(Math.toRadians(angle)) + size
       val y = size * sin(Math.toRadians(angle)) + size
