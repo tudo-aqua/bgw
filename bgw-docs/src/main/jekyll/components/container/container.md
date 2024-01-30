@@ -215,13 +215,24 @@ Here is an example on how to change the default coordinate system to axial.
 ```kotlin
 val hexagonGrid: HexagonGrid<HexagonView> = HexagonGrid(coordinateSystem = CoordinateSystem.AXIAL)
 
-for (row in -2..2) {
-  for (col in -2..2) {
-    val hexagon = HexagonView(visual = ColorVisual.BLUE)
-    hexagonGrid[col, row] = hexagon
+for (q in -2..2) {
+  for (r in -2..2) {
+    if (q + r >= -2 && q + r <= 2) {
+        val hexagon = HexagonView(visual = ColorVisual.BLUE)
+        hexagonGrid[col, row] = hexagon
+    }
   }
 }
 ```
+
+### Hexagon Grid Orientations
+The HexagonGrid class supports two orientations: pointy top and flat top.
+
+### Pointy Top Orientation
+**This is the default orientation for a HexGrid.** In the pointy top orientation (`HexOrientation.POINTY_TOP`), the hexagons are positioned with their tips pointing up and down.
+
+### Flat Top Orientation
+In the flat top orientation (`HexOrientation.FLAT_TOP`), the hexagons are positioned with their tips pointing left and right.
 
 ## Container overview
 

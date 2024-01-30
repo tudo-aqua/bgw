@@ -69,4 +69,6 @@ For a dice roll there exists a dedicated [DiceAnimation][DiceAnimationDoc].
 The [HexagonView][HexagonDoc] component can also be utilized for hexagonal tokens,
 providing a versatile solution for displaying various hexagonal-shaped elements.
 
+A Hexagon by default has its tips pointing up and down (`HexOrientation.POINTY_TOP`). It can however also have its tips pointing left and right (`HexOrientation.FLAT_TOP`).
+
 Hexagons only have one visual.
