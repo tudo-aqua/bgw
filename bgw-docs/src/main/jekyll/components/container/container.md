@@ -219,7 +219,7 @@ for (q in -2..2) {
   for (r in -2..2) {
     if (q + r >= -2 && q + r <= 2) {
         val hexagon = HexagonView(visual = ColorVisual.BLUE)
-        hexagonGrid[col, row] = hexagon
+        hexagonGrid[q, r] = hexagon
     }
   }
 }
