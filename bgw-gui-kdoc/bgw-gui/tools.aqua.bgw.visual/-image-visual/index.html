@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ImageVisual</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>bgw-gui</span>
+            </a>
+    </div>
+    <div>
+0.9-5-266db43-SNAPSHOT    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="bgw-gui::tools.aqua.bgw.visual/ImageVisual///PointingToDeclaration//1459265941">
+  <div class="breadcrumbs"><a href="../../../index.html">bgw-gui</a><span class="delimiter">/</span><a href="../index.html">tools.aqua.bgw.visual</a><span class="delimiter">/</span><a href="index.html">ImageVisual</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Image</span><wbr></wbr><span><span>Visual</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="index.html">ImageVisual</a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;image<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html">BufferedImage</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">&quot;&quot;</span></span></span><span class="token punctuation">)</span> : <a href="../-single-layer-visual/index.html">SingleLayerVisual</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Visual showing an <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Image.html">Image</a>.</p><p class="paragraph">The image gets stretched to the size of the component that this visual is embedded in.</p><p class="paragraph">A sub-image can be loaded by passing offsetX/offsetY for the TOP_LEFT corner and width/height for the sub-image size. If width or height is passed as -1, the remaining image from offsetX/offsetY will be loaded.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Parameters">Parameters</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Parameters</h2>
+      <div data-togglable="Parameters">
+        <div class="platform-hinted WithExtraAttributes" data-platform-hinted="data-platform-hinted" data-togglable="Parameters"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>image</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Image to show.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>width</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Width of sub-image. Pass -1 to use full width. Default: -1.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>height</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Height of sub-image. Pass -1 to use full height. Default: -1.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>offset</span><wbr></wbr><span><span>X</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Left bound of sub-image. Default: 0.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>offset</span><wbr></wbr><span><span>Y</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Top bound of sub-image. Default: 0.</p></div></div></div></div></div></div></div></div></div>
+      </div>
+      <h2 class="tabbedcontent">Constructors</h2>
+      <div class="table" data-togglable="Constructors"><a data-name="-190478918%2FConstructors%2F1459265941" anchor-label="ImageVisual" id="-190478918%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-image-visual.html"><span>Image</span><wbr></wbr><span><span>Visual</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-190478918%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-image-visual.html"><span class="token function">ImageVisual</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Loads an <a href="index.html">ImageVisual</a> from a path.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1084812558%2FConstructors%2F1459265941" anchor-label="ImageVisual" id="-1084812558%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-image-visual.html"><span>Image</span><wbr></wbr><span><span>Visual</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1084812558%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-image-visual.html"><span class="token function">ImageVisual</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;file<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html">File</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Loads an <a href="index.html">ImageVisual</a> from a file.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1058963202%2FConstructors%2F1459265941" anchor-label="ImageVisual" id="1058963202%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-image-visual.html"><span>Image</span><wbr></wbr><span><span>Visual</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1058963202%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-image-visual.html"><span class="token function">ImageVisual</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;image<span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html">BufferedImage</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>-1<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;offsetY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;path<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">&quot;&quot;</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Loads an <a href="index.html">ImageVisual</a> from a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html">BufferedImage</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Types</h2>
+      <div class="table" data-togglable="Types"><a data-name="1878417292%2FClasslikes%2F1459265941" anchor-label="Companion" id="1878417292%2FClasslikes%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1878417292%2FClasslikes%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Functions</h2>
+      <div class="table" data-togglable="Functions"><a data-name="-1995887267%2FFunctions%2F1459265941" anchor-label="addListener" id="-1995887267%2FFunctions%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../tools.aqua.bgw.observable/-observable/add-listener.html"><span>add</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1995887267%2FFunctions%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../tools.aqua.bgw.observable/-observable/add-listener.html"><span class="token function">addListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../tools.aqua.bgw.observable/-observer/index.html">Observer</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Adds a <a href="../../tools.aqua.bgw.observable/-observable/add-listener.html">listener</a> silently.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1254317730%2FFunctions%2F1459265941" anchor-label="addListenerAndInvoke" id="1254317730%2FFunctions%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../tools.aqua.bgw.observable/-observable/add-listener-and-invoke.html"><span>add</span><wbr></wbr><span>Listener</span><wbr></wbr><span>And</span><wbr></wbr><span><span>Invoke</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1254317730%2FFunctions%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../tools.aqua.bgw.observable/-observable/add-listener-and-invoke.html"><span class="token function">addListenerAndInvoke</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../tools.aqua.bgw.observable/-observer/index.html">Observer</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Adds a <a href="../../tools.aqua.bgw.observable/-observable/add-listener-and-invoke.html">listener</a> and calls <a href="../../tools.aqua.bgw.observable/-observer/update.html">Observer.update</a> on this new listener.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="633671120%2FFunctions%2F1459265941" anchor-label="clearListeners" id="633671120%2FFunctions%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../tools.aqua.bgw.observable/-observable/clear-listeners.html"><span>clear</span><wbr></wbr><span><span>Listeners</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="633671120%2FFunctions%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../tools.aqua.bgw.observable/-observable/clear-listeners.html"><span class="token function">clearListeners</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Removes all listeners.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1081504352%2FFunctions%2F1459265941" anchor-label="copy" id="1081504352%2FFunctions%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="copy.html"><span><span>copy</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1081504352%2FFunctions%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="copy.html"><span class="token function">copy</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">ImageVisual</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Copies this <a href="index.html">ImageVisual</a> to a new object.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="808928009%2FFunctions%2F1459265941" anchor-label="notifyChange" id="808928009%2FFunctions%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../tools.aqua.bgw.observable/-observable/notify-change.html"><span>notify</span><wbr></wbr><span><span>Change</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="808928009%2FFunctions%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../tools.aqua.bgw.observable/-observable/notify-change.html"><span class="token function">notifyChange</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Notifies all <span data-unresolved-link="tools.aqua.bgw.observable/Observable/listeners/#/PointingToDeclaration/">listeners</span> by calling <a href="../../tools.aqua.bgw.observable/-observer/update.html">Observer.update</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-195567996%2FFunctions%2F1459265941" anchor-label="removeListener" id="-195567996%2FFunctions%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../tools.aqua.bgw.observable/-observable/remove-listener.html"><span>remove</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-195567996%2FFunctions%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../tools.aqua.bgw.observable/-observable/remove-listener.html"><span class="token function">removeListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">listener<span class="token operator">: </span><a href="../../tools.aqua.bgw.observable/-observer/index.html">Observer</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Removes a <a href="../../tools.aqua.bgw.observable/-observable/remove-listener.html">listener</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="1735857090%2FProperties%2F1459265941" anchor-label="backgroundRadius" id="1735857090%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/background-radius.html"><span>background</span><wbr></wbr><span><span>Radius</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1735857090%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="1735857090%2FProperties%2F1459265941" anchor-label="backgroundRadius" id="1735857090%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/background-radius.html">backgroundRadius</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.style/-background-radius/index.html">BackgroundRadius</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1735857090%2FProperties%2F1459265941" anchor-label="backgroundRadius" id="1735857090%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Background radius.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-439571859%2FProperties%2F1459265941" anchor-label="backgroundRadiusProperty" id="-439571859%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/background-radius-property.html"><span>background</span><wbr></wbr><span>Radius</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-439571859%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-439571859%2FProperties%2F1459265941" anchor-label="backgroundRadiusProperty" id="-439571859%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/background-radius-property.html">backgroundRadiusProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.style/-background-radius/index.html">BackgroundRadius</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-439571859%2FProperties%2F1459265941" anchor-label="backgroundRadiusProperty" id="-439571859%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for <a href="../-visual/background-radius.html">backgroundRadius</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="619422337%2FProperties%2F1459265941" anchor-label="borderColor" id="619422337%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-color.html"><span>border</span><wbr></wbr><span><span>Color</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="619422337%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="619422337%2FProperties%2F1459265941" anchor-label="borderColor" id="619422337%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-color.html">borderColor</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.style/-border-color/index.html">BorderColor</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="619422337%2FProperties%2F1459265941" anchor-label="borderColor" id="619422337%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Border color.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-2082338260%2FProperties%2F1459265941" anchor-label="borderColorProperty" id="-2082338260%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-color-property.html"><span>border</span><wbr></wbr><span>Color</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2082338260%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-2082338260%2FProperties%2F1459265941" anchor-label="borderColorProperty" id="-2082338260%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-color-property.html">borderColorProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.style/-border-color/index.html">BorderColor</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-2082338260%2FProperties%2F1459265941" anchor-label="borderColorProperty" id="-2082338260%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for <a href="../-visual/border-color.html">borderColor</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1029435516%2FProperties%2F1459265941" anchor-label="borderRadius" id="-1029435516%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-radius.html"><span>border</span><wbr></wbr><span><span>Radius</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1029435516%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1029435516%2FProperties%2F1459265941" anchor-label="borderRadius" id="-1029435516%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-radius.html">borderRadius</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.style/-border-radius/index.html">BorderRadius</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1029435516%2FProperties%2F1459265941" anchor-label="borderRadius" id="-1029435516%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Border radius.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-911555537%2FProperties%2F1459265941" anchor-label="borderRadiusProperty" id="-911555537%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-radius-property.html"><span>border</span><wbr></wbr><span>Radius</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-911555537%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-911555537%2FProperties%2F1459265941" anchor-label="borderRadiusProperty" id="-911555537%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-radius-property.html">borderRadiusProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.style/-border-radius/index.html">BorderRadius</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-911555537%2FProperties%2F1459265941" anchor-label="borderRadiusProperty" id="-911555537%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for <a href="../-visual/border-radius.html">borderRadius</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1961281523%2FProperties%2F1459265941" anchor-label="borderStyle" id="1961281523%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-style.html"><span>border</span><wbr></wbr><span><span>Style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1961281523%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="1961281523%2FProperties%2F1459265941" anchor-label="borderStyle" id="1961281523%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-style.html">borderStyle</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.style/-border-style/index.html">BorderStyle</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1961281523%2FProperties%2F1459265941" anchor-label="borderStyle" id="1961281523%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Border style.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1822319202%2FProperties%2F1459265941" anchor-label="borderStyleProperty" id="-1822319202%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-style-property.html"><span>border</span><wbr></wbr><span>Style</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1822319202%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1822319202%2FProperties%2F1459265941" anchor-label="borderStyleProperty" id="-1822319202%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-style-property.html">borderStyleProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.style/-border-style/index.html">BorderStyle</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1822319202%2FProperties%2F1459265941" anchor-label="borderStyleProperty" id="-1822319202%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for <a href="../-visual/border-style.html">borderStyle</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1072068226%2FProperties%2F1459265941" anchor-label="borderWidth" id="-1072068226%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-width.html"><span>border</span><wbr></wbr><span><span>Width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1072068226%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1072068226%2FProperties%2F1459265941" anchor-label="borderWidth" id="-1072068226%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-width.html">borderWidth</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.style/-border-width/index.html">BorderWidth</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1072068226%2FProperties%2F1459265941" anchor-label="borderWidth" id="-1072068226%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Border width.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1519672279%2FProperties%2F1459265941" anchor-label="borderWidthProperty" id="-1519672279%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/border-width-property.html"><span>border</span><wbr></wbr><span>Width</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1519672279%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1519672279%2FProperties%2F1459265941" anchor-label="borderWidthProperty" id="-1519672279%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/border-width-property.html">borderWidthProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.style/-border-width/index.html">BorderWidth</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1519672279%2FProperties%2F1459265941" anchor-label="borderWidthProperty" id="-1519672279%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for <a href="../-visual/border-width.html">borderWidth</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-424649012%2FProperties%2F1459265941" anchor-label="cursor" id="-424649012%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/cursor.html"><span><span>cursor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-424649012%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-424649012%2FProperties%2F1459265941" anchor-label="cursor" id="-424649012%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/cursor.html">cursor</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.style/-cursor/index.html">Cursor</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-424649012%2FProperties%2F1459265941" anchor-label="cursor" id="-424649012%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Cursor.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-214480009%2FProperties%2F1459265941" anchor-label="cursorProperty" id="-214480009%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-visual/cursor-property.html"><span>cursor</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-214480009%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-214480009%2FProperties%2F1459265941" anchor-label="cursorProperty" id="-214480009%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-visual/cursor-property.html">cursorProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.style/-cursor/index.html">Cursor</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-214480009%2FProperties%2F1459265941" anchor-label="cursorProperty" id="-214480009%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for <a href="../-visual/cursor.html">cursor</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1622534838%2FProperties%2F1459265941" anchor-label="image" id="-1622534838%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="image.html"><span><span>image</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1622534838%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1622534838%2FProperties%2F1459265941" anchor-label="image" id="-1622534838%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="image.html">image</a><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html">BufferedImage</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1622534838%2FProperties%2F1459265941" anchor-label="image" id="-1622534838%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">The displayed <a href="image.html">image</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1553357835%2FProperties%2F1459265941" anchor-label="imageProperty" id="-1553357835%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="image-property.html"><span>image</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1553357835%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1553357835%2FProperties%2F1459265941" anchor-label="imageProperty" id="-1553357835%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="image-property.html">imageProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html">BufferedImage</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1553357835%2FProperties%2F1459265941" anchor-label="imageProperty" id="-1553357835%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph"><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a> for the displayed <a href="image.html">image</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-202611792%2FProperties%2F1459265941" anchor-label="path" id="-202611792%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="path.html"><span><span>path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-202611792%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-202611792%2FProperties%2F1459265941" anchor-label="path" id="-202611792%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="path.html">path</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="980722406%2FProperties%2F1459265941" anchor-label="style" id="980722406%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-single-layer-visual/style.html"><span><span>style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="980722406%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="980722406%2FProperties%2F1459265941" anchor-label="style" id="980722406%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-single-layer-visual/style.html">style</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="980722406%2FProperties%2F1459265941" anchor-label="style" id="980722406%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Css style that gets applied to this <a href="../-visual/index.html">Visual</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="2137707921%2FProperties%2F1459265941" anchor-label="styleProperty" id="2137707921%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-single-layer-visual/style-property.html"><span>style</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2137707921%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="2137707921%2FProperties%2F1459265941" anchor-label="styleProperty" id="2137707921%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-single-layer-visual/style-property.html">styleProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-string-property/index.html">StringProperty</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="2137707921%2FProperties%2F1459265941" anchor-label="styleProperty" id="2137707921%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph"><a href="../../tools.aqua.bgw.observable.properties/-property/index.html">Property</a> for the css style that gets applied to this <a href="../-visual/index.html">Visual</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1375568491%2FProperties%2F1459265941" anchor-label="transparency" id="1375568491%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-single-layer-visual/transparency.html"><span><span>transparency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1375568491%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="1375568491%2FProperties%2F1459265941" anchor-label="transparency" id="1375568491%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-single-layer-visual/transparency.html">transparency</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1375568491%2FProperties%2F1459265941" anchor-label="transparency" id="1375568491%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">The <a href="../-single-layer-visual/transparency.html">transparency</a> / alpha channel for this <a href="../-visual/index.html">Visual</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="858939414%2FProperties%2F1459265941" anchor-label="transparencyProperty" id="858939414%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-single-layer-visual/transparency-property.html"><span>transparency</span><wbr></wbr><span><span>Property</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="858939414%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="858939414%2FProperties%2F1459265941" anchor-label="transparencyProperty" id="858939414%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-single-layer-visual/transparency-property.html">transparencyProperty</a><span class="token operator">: </span><a href="../../tools.aqua.bgw.observable.properties/-limited-double-property/index.html">LimitedDoubleProperty</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="858939414%2FProperties%2F1459265941" anchor-label="transparencyProperty" id="858939414%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Property for the <a href="../-single-layer-visual/transparency.html">transparency</a> / alpha channel for this <a href="../-visual/index.html">Visual</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ScaleAnimation</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>bgw-gui</span>
+            </a>
+    </div>
+    <div>
+0.9-5-266db43-SNAPSHOT    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="bgw-gui::tools.aqua.bgw.animation/ScaleAnimation///PointingToDeclaration//1459265941">
+  <div class="breadcrumbs"><a href="../../../index.html">bgw-gui</a><span class="delimiter">/</span><a href="../index.html">tools.aqua.bgw.animation</a><span class="delimiter">/</span><a href="index.html">ScaleAnimation</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Scale</span><wbr></wbr><span><span>Animation</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ScaleAnimation</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator"> : </span><a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;componentView<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;fromScaleX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleX<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;toScaleX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleX<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;fromScaleY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleY<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;toScaleY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleY<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;duration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>DEFAULT_ANIMATION_SPEED</span></span><span class="token punctuation">)</span> : <a href="../-component-animation/index.html">ComponentAnimation</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">A scale <a href="../-animation/index.html">Animation</a>.</p><p class="paragraph">Sca,les given <a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a> to given scalar.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Parameters">Parameters</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Parameters</h2>
+      <div data-togglable="Parameters">
+        <div class="platform-hinted WithExtraAttributes" data-platform-hinted="data-platform-hinted" data-togglable="Parameters"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>T</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Generic <a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a>.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>component</span><wbr></wbr><span><span>View</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph"><a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a> to animate</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>from</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>X</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Initial X position. Default: Current <a href="../../tools.aqua.bgw.components/-component-view/pos-x.html">ComponentView.posX</a>.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>to</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>X</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Resulting X position. Default: Current <a href="../../tools.aqua.bgw.components/-component-view/pos-x.html">ComponentView.posX</a>.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>from</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>Y</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Initial Y position. Default: Current <a href="../../tools.aqua.bgw.components/-component-view/pos-y.html">ComponentView.posY</a>.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>to</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>Y</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Resulting Y position. Default: Current <a href="../../tools.aqua.bgw.components/-component-view/pos-y.html">ComponentView.posY</a>.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span><span>duration</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">Duration in milliseconds. Default: <a href="../../tools.aqua.bgw.core/-d-e-f-a-u-l-t_-a-n-i-m-a-t-i-o-n_-s-p-e-e-d.html">DEFAULT_ANIMATION_SPEED</a>.</p></div></div></div></div></div></div></div></div></div>
+      </div>
+      <h2 class="tabbedcontent">Constructors</h2>
+      <div class="table" data-togglable="Constructors"><a data-name="-268499682%2FConstructors%2F1459265941" anchor-label="ScaleAnimation" id="-268499682%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-scale-animation.html"><span>Scale</span><wbr></wbr><span><span>Animation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-268499682%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator"> : </span><a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a><span class="token operator">&gt; </span><a href="-scale-animation.html"><span class="token function">ScaleAnimation</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;componentView<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;byScaleX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span><span class="token constant">0.0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;byScaleY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span><span class="token constant">0.0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;duration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1000</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A scale animation. Scales given <a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a> to given scalar.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-705709461%2FConstructors%2F1459265941" anchor-label="ScaleAnimation" id="-705709461%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-scale-animation.html"><span>Scale</span><wbr></wbr><span><span>Animation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-705709461%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator"> : </span><a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a><span class="token operator">&gt; </span><a href="-scale-animation.html"><span class="token function">ScaleAnimation</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;componentView<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;byScale<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span><span class="token constant">0.0</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;duration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1000</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A scale animation. Scales given <a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a> to given scalar.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="2104044228%2FConstructors%2F1459265941" anchor-label="ScaleAnimation" id="2104044228%2FConstructors%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue TabbedContent">
+            <div class=""><span class="inline-flex">
+                <div><a href="-scale-animation.html"><span>Scale</span><wbr></wbr><span><span>Animation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2104044228%2FConstructors%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="index.html">T</a><span class="token operator"> : </span><a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a><span class="token operator">&gt; </span><a href="-scale-animation.html"><span class="token function">ScaleAnimation</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;componentView<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;fromScaleX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleX<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;toScaleX<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleX<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;fromScaleY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleY<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;toScaleY<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token operator"> = </span>componentView.scaleY<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;duration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>DEFAULT_ANIMATION_SPEED</span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a <a href="index.html">ScaleAnimation</a> for the given <a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a>.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="-1268986179%2FProperties%2F1459265941" anchor-label="componentView" id="-1268986179%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-component-animation/component-view.html"><span>component</span><wbr></wbr><span><span>View</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1268986179%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1268986179%2FProperties%2F1459265941" anchor-label="componentView" id="-1268986179%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-component-animation/component-view.html">componentView</a><span class="token operator">: </span><a href="index.html">T</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1268986179%2FProperties%2F1459265941" anchor-label="componentView" id="-1268986179%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph"><a href="../../tools.aqua.bgw.components/-component-view/index.html">ComponentView</a> to animate.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1556819880%2FProperties%2F1459265941" anchor-label="duration" id="-1556819880%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-animation/duration.html"><span><span>duration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1556819880%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1556819880%2FProperties%2F1459265941" anchor-label="duration" id="-1556819880%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="../-animation/duration.html">duration</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1556819880%2FProperties%2F1459265941" anchor-label="duration" id="-1556819880%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Duration in milliseconds.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1344311498%2FProperties%2F1459265941" anchor-label="fromScaleX" id="-1344311498%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="from-scale-x.html"><span>from</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>X</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1344311498%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1344311498%2FProperties%2F1459265941" anchor-label="fromScaleX" id="-1344311498%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="from-scale-x.html">fromScaleX</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1344311498%2FProperties%2F1459265941" anchor-label="fromScaleX" id="-1344311498%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Initial X scale.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1313291691%2FProperties%2F1459265941" anchor-label="fromScaleY" id="-1313291691%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="from-scale-y.html"><span>from</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>Y</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1313291691%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-1313291691%2FProperties%2F1459265941" anchor-label="fromScaleY" id="-1313291691%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="from-scale-y.html">fromScaleY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1313291691%2FProperties%2F1459265941" anchor-label="fromScaleY" id="-1313291691%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Initial Y scale.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="38061657%2FProperties%2F1459265941" anchor-label="isRunning" id="38061657%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-animation/is-running.html"><span>is</span><wbr></wbr><span><span>Running</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="38061657%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="38061657%2FProperties%2F1459265941" anchor-label="isRunning" id="38061657%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-animation/is-running.html">isRunning</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="38061657%2FProperties%2F1459265941" anchor-label="isRunning" id="38061657%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> indicating whether the <a href="../-animation/index.html">Animation</a> is currently running.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-113218213%2FProperties%2F1459265941" anchor-label="onFinished" id="-113218213%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../-animation/on-finished.html"><span>on</span><wbr></wbr><span><span>Finished</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-113218213%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-113218213%2FProperties%2F1459265941" anchor-label="onFinished" id="-113218213%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="../-animation/on-finished.html">onFinished</a><span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../../tools.aqua.bgw.event/-animation-finished-event/index.html">AnimationFinishedEvent</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-113218213%2FProperties%2F1459265941" anchor-label="onFinished" id="-113218213%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Gets invoked when <a href="../-animation/index.html">Animation</a> has finished.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-745607547%2FProperties%2F1459265941" anchor-label="toScaleX" id="-745607547%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="to-scale-x.html"><span>to</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>X</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-745607547%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-745607547%2FProperties%2F1459265941" anchor-label="toScaleX" id="-745607547%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="to-scale-x.html">toScaleX</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-745607547%2FProperties%2F1459265941" anchor-label="toScaleX" id="-745607547%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Resulting X scale.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-714587740%2FProperties%2F1459265941" anchor-label="toScaleY" id="-714587740%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a>
+        <div class="table-row" data-filterable-current=":bgw-gui:dokkaHtml/main" data-filterable-set=":bgw-gui:dokkaHtml/main">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="to-scale-y.html"><span>to</span><wbr></wbr><span>Scale</span><wbr></wbr><span><span>Y</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-714587740%2FProperties%2F1459265941"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":bgw-gui:dokkaHtml/main"><a data-name="-714587740%2FProperties%2F1459265941" anchor-label="toScaleY" id="-714587740%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="to-scale-y.html">toScaleY</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-714587740%2FProperties%2F1459265941" anchor-label="toScaleY" id="-714587740%2FProperties%2F1459265941" data-filterable-set=":bgw-gui:dokkaHtml/main"></a><p class="paragraph">Resulting Y scale.</p></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>

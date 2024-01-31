@@ -1,0 +1,940 @@
+{"0": {
+    "doc": "Animations",
+    "title": "Animations",
+    "content": ". | SequentialAnimation | ParallelAnimation | DelayAnimation | MovementAnimation | RotationAnimation | FlipAnimation | RandomizeAnimation | DiceAnimation | . In this section the different types of animations in the BGW framework are shown. Visuals are mostly used to move game elements or change their Visual. Additionally, the DelayAnimation can be used to delay code execution to enable the player to see what is happening on the table. The full example of the gif above can be found here: . View it on GitHub. Each Animation has a duration, a running attribute and an onFinished EventHandler that gets invoked after the animation has finished. Note: UI changes may not be done directly from this asynchronous onFinished environment. Use BoardGameApplication#runOnGUIThread to alter properties of ComponentViews! . ",
+    "url": "/bgw/concepts/animations/Animations/#animations",
+    
+    "relUrl": "/concepts/animations/Animations/#animations"
+  },"1": {
+    "doc": "Animations",
+    "title": "SequentialAnimation",
+    "content": "A SequentialAnimation is an Animation that consists of multiple animations, that get played in sequence. This is useful to combine multiple animations into a single one. An example on how to create and play a SequentialAnimation can be found below: . gameScene.playAnimation( SequentialAnimation( DelayAnimation(duration = 1000).apply { onFinished = { println(\"First DelayAnimation finished!\") } }, DelayAnimation(duration = 2000).apply { onFinished = { println(\"Second DelayAnimation finished!\") } }, ).apply { onFinished = { println(\"SequentialAnimation finished!\") } } ) . The resulting SequentialAnimation will play for 3000ms and print some information on which Animations have finished playing. ",
+    "url": "/bgw/concepts/animations/Animations/#sequentialanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#sequentialanimation"
+  },"2": {
+    "doc": "Animations",
+    "title": "ParallelAnimation",
+    "content": "A ParallelAnimation is an Animation that consists of multiple animations, that get played in parallel. This is useful to combine multiple animations into a single one. An example on how to create and play a ParallelAnimation can be found below: . gameScene.playAnimation( ParallelAnimation( DelayAnimation(duration = 1000).apply { onFinished = { println(\"First DelayAnimation finished!\") } }, DelayAnimation(duration = 2000).apply { onFinished = { println(\"Second DelayAnimation finished!\") } }, ).apply { onFinished = { println(\"ParallelAnimation finished!\") } } ) . The resulting ParallelAnimation will play for 2000ms and print some information on which animations have finished playing. ",
+    "url": "/bgw/concepts/animations/Animations/#parallelanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#parallelanimation"
+  },"3": {
+    "doc": "Animations",
+    "title": "DelayAnimation",
+    "content": "A DelayAnimation does nothing in the application window besides calling onFinished after the given amount of time (duration parameter). This timer runs asynchronously, so it can run while the player is playing. To add a delay between moves in which the user should not be able to interact with the scene, the method BoardGameScene#lock has to be called before playing the animation and the method BoardGameScene#unlock in onAnimationFinished. An example for this locking mechanism can be found below: . gameScene.lock() gameScene.playAnimation(DelayAnimation(duration = 2000).apply { onFinished = { //Do stuff here gameScene.unlock() } }) . ",
+    "url": "/bgw/concepts/animations/Animations/#delayanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#delayanimation"
+  },"4": {
+    "doc": "Animations",
+    "title": "MovementAnimation",
+    "content": "A MovementAnimation moves a GameComponentView. The movement can be passed as fromX/toX, fromY/toY or relative to the current position with byX/byY. NOTE: The Animation only moves the component in the current Scene and does not update its position. The Component will snap back upon next refresh if the new position is not set in onAnimationFinished, which is the suggested way of usage. gameScene.playAnimation( MovementAnimation( componentView = component, byX = 0, byY = -50, duration = 1000 ).apply { onFinished = { component.posY -= 50 } } ) . Additionally, a component can be moved to another component’s location. This is for example useful to animate moving cards onto a card stack: . gameScene.playAnimation( MovementAnimation.toComponentView( componentView = card, toComponentViewPosition = cardStack, scene = gameScene, duration = 1000 ).apply { onFinished = { card.removeFromParent() cardStack.add(card) } } ) . ",
+    "url": "/bgw/concepts/animations/Animations/#movementanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#movementanimation"
+  },"5": {
+    "doc": "Animations",
+    "title": "RotationAnimation",
+    "content": "A RotationAnimation rotates a GameComponentView. The rotation can be passed as fromAngle/toAngle or relative to the current rotation with byAngle. NOTE: The Animation only rotates the component in the current Scene and does not update its rotation. The Component will snap back upon next refresh if the new rotation is not set in onAnimationFinished, which is the suggested way of usage. gameScene.playAnimation( RotationAnimation( componentView = component, byAngle = 180, duration = 1000 ).apply { onFinished = { component.rotation = (component.rotation + 180) % 360 } } ) . ",
+    "url": "/bgw/concepts/animations/Animations/#rotationanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#rotationanimation"
+  },"6": {
+    "doc": "Animations",
+    "title": "FlipAnimation",
+    "content": "A FlipAnimation switches between two visuals in a flipping-like animation. The animation sets the fromVisual and then switches to the toVisual. NOTE: The Animation only switches the visuals visually. The Visual will revert to the currentVisual upon next refresh if the new visual is not set in onAnimationFinished, which is the suggested way of usage. gameScene.playAnimation( FlipAnimation( componentView = card, fromVisual = backSide, toVisual = frontSide, duration = 1000 ).apply { onFinished = { card.visual = frontSide } } ) . ",
+    "url": "/bgw/concepts/animations/Animations/#flipanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#flipanimation"
+  },"7": {
+    "doc": "Animations",
+    "title": "RandomizeAnimation",
+    "content": "A RandomizeAnimation randomly switches between the given visuals. The time each visual is visible can be set by passing steps, which is calculated like the following: steps: time = duration / steps. The animation sets the toVisual as the last step in order to control what the resulting visual of this animation is. NOTE: The Animation only switches the visuals visually. The Visual will revert to the currentVisual upon next refresh if the new visual is not set in onAnimationFinished, which is the suggested way of usage. gameScene.playAnimation( RandomizeAnimation( componentView = card, visual = allCardFaces, toVisual = allCardFaces[3], duration = 1000 ).apply { onFinished = { card.visual = allCardFaces[3] } } ) . ",
+    "url": "/bgw/concepts/animations/Animations/#randomizeanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#randomizeanimation"
+  },"8": {
+    "doc": "Animations",
+    "title": "DiceAnimation",
+    "content": "A DiceAnimation behaves like a RandomizeAnimation specifically for dices. As the visuals got passed as parameter on Dice creation only the resulting side as zero-based index needs to be passed. The animation sets the toSide as the last step in order to control what the resulting visual of this animation is. NOTE: The Animation only switches the visuals visually. The Visual will revert to the currentVisual upon next refresh if the new visual is not set in onAnimationFinished, which is the suggested way of usage. gameScene.playAnimation( DiceAnimation( componentView = dice, toSide = 3, duration = 1000 ).apply { onFinished = { card.currentSide = 3 } } ) . ",
+    "url": "/bgw/concepts/animations/Animations/#diceanimation",
+    
+    "relUrl": "/concepts/animations/Animations/#diceanimation"
+  },"9": {
+    "doc": "Animations",
+    "title": "Animations",
+    "content": " ",
+    "url": "/bgw/concepts/animations/Animations/",
+    
+    "relUrl": "/concepts/animations/Animations/"
+  },"10": {
+    "doc": "Components",
+    "title": "Components",
+    "content": "Introduction to /components. ",
+    "url": "/bgw/components/Components/",
+    
+    "relUrl": "/components/Components/"
+  },"11": {
+    "doc": "Drag and Drop",
+    "title": "Drag and Drop",
+    "content": ". | Prior knowledge | Component declaration | Make a component draggable | Make a component act as a target for a drag and drop gesture | Useful hints when dealing with drag and drop | Complete source code for the example | . In this section we are going to create a fully functional step-by-step example for the drag and drop feature of the BGW framework. The goal of this example is to create a scene with a red and a green token, and a red and a green area. It should only be possible to drag tokens into areas of the same color. Once the tokens have been dragged into a correct area, they should become non-draggable. The complete source code for this example can be found here. ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#drag-and-drop",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#drag-and-drop"
+  },"12": {
+    "doc": "Drag and Drop",
+    "title": "Prior knowledge",
+    "content": "Knowledge about the following /components and /concepts is necessary for this tutorial. | DynamicComponentView | BoardGameApplication | Token | Area | . ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#prior-knowledge",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#prior-knowledge"
+  },"13": {
+    "doc": "Drag and Drop",
+    "title": "Component declaration",
+    "content": "To create a running example, the described /components are wrapped in a BoardGameApplication. class DragAndDropExample : BoardGameApplication(\"Drag and drop example\") { private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY) private val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED) private val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN) private val redArea: Area&lt;TokenView&gt; = Area( height = 50, width = 50, posX = 200, posY = 20, visual = ColorVisual(255, 0, 0, 100) ) private val greenArea: Area&lt;TokenView&gt; = Area( height = 50, width = 50, posX = 200, posY = 200, visual = ColorVisual(0, 255, 0, 100) ) init { //Drag and Drop code goes here gameScene.addComponents(redToken, greenToken, redArea, greenArea) showGameScene(gameScene) show() } } . ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#component-declaration",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#component-declaration"
+  },"14": {
+    "doc": "Drag and Drop",
+    "title": "Make a component draggable",
+    "content": "To start of with this drag and drop example, a draggable component has to be declared. In this case the redToken should be draggable. This can be achieved by setting the following property: . redToken.isDraggable = true . After performing the desired drag and drop gesture on the redToken it should then be non-draggable. In order to achieve that, the onDragGestureEnded event listener has to be adapted. After checking for a successful gesture, the isDraggable is set to false. redToken.onDragGestureEnded = { _, success -&gt; if (success) { redToken.isDraggable = false } } . The greenToken gets initialized accordingly: . greenToken.isDraggable = true greenToken.onDragGestureEnded = { _, success -&gt; if (success) { greenToken.isDraggable = false } } . ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#make-a-component-draggable",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#make-a-component-draggable"
+  },"15": {
+    "doc": "Drag and Drop",
+    "title": "Make a component act as a target for a drag and drop gesture",
+    "content": "To fully enable the drag and drop gesture, another component that indicates, that the drag and gesture was a success has to be defined. To define accepting dropped /components, the dropAcceptor property needs to be set for the receiving component. The property should return whether this component is a valid drop target for the draggedComponent supplied in the DragEvent passed as an argument. In this instance the redArea should only be accepting the redToken, hence we only return true if the draggedComponent is a Token and is equal to the redToken. redArea.dropAcceptor = { dragEvent -&gt; when (dragEvent.draggedComponent) { is TokenView -&gt; dragEvent.draggedComponent == redToken else -&gt; false } } . Finally, to visually add the redToken to the redArea after it is successfully dropped, the onDragDropped of the redArea has to be adapted: . redArea.onDragDropped = { dragEvent -&gt; redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) }) } . The reposition function is applied to the draggedComponent, because Area does not have an automatic layout algorithm. The greenArea gets initialized accordingly: . greenArea.dropAcceptor = { dragEvent -&gt; when (dragEvent.draggedComponent) { is TokenView -&gt; dragEvent.draggedComponent == greenToken else -&gt; false } } greenArea.onDragDropped = { dragEvent -&gt; greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) }) } . ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#make-a-component-act-as-a-target-for-a-drag-and-drop-gesture",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#make-a-component-act-as-a-target-for-a-drag-and-drop-gesture"
+  },"16": {
+    "doc": "Drag and Drop",
+    "title": "Useful hints when dealing with drag and drop",
+    "content": ". | dropAccpetor should not modify any state and only evaluate if the drag and drop gesture is valid | The order of invocation is as follows: . | onDragGestureStarted on the dragged component | onDragGestureMoved on the dragged component, while the drag and drop gesture is in motion | dropAcceptor on all possible drop targets (components that are at the position of the mouse) | onDragDropped on all valid drop targets (dropAcceptor returned true) | onDragGestureEnded on the dragged component | . | After a failed drag and drop gesture (no dropAcceptor returned true), the dragged component snaps back to the previous container. | If the dragged component does not get added to the scene, container or layout after a valid drag and drop gesture, it is no longer contained anywhere in the scene. | Keep in mind that when dealing with situations, where multiple dropAcceptor invocations might return true, that the event onDragDropped gets invoked on multiple /components and no guarantee is given for the order of invocations. | . ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#useful-hints-when-dealing-with-drag-and-drop",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#useful-hints-when-dealing-with-drag-and-drop"
+  },"17": {
+    "doc": "Drag and Drop",
+    "title": "Complete source code for the example",
+    "content": "View it on GitHub . fun main() { DragAndDropExample() } class DragAndDropExample : BoardGameApplication(\"Drag and drop example\") { private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY) private val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED) private val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN) private val redArea: Area&lt;TokenView&gt; = Area( height = 50, width = 50, posX = 200, posY = 20, visual = ColorVisual(255, 0, 0, 100) ) private val greenArea: Area&lt;TokenView&gt; = Area( height = 50, width = 50, posX = 200, posY = 200, visual = ColorVisual(0, 255, 0, 100) ) init { redToken.isDraggable = true redToken.onDragGestureEnded = { _, success -&gt; if (success) { redToken.isDraggable = false } } greenToken.isDraggable = true greenToken.onDragGestureEnded = { _, success -&gt; if (success) { greenToken.isDraggable = false } } redArea.dropAcceptor = { dragEvent -&gt; when (dragEvent.draggedComponent) { is TokenView -&gt; dragEvent.draggedComponent == redToken else -&gt; false } } redArea.onDragDropped = { dragEvent -&gt; redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) }) } greenArea.dropAcceptor = { dragEvent -&gt; when (dragEvent.draggedComponent) { is TokenView -&gt; dragEvent.draggedComponent == greenToken else -&gt; false } } greenArea.onDragDropped = { dragEvent -&gt; greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) }) } gameScene.addComponents(redToken, greenToken, redArea, greenArea) showGameScene(gameScene) show() } } . ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/#complete-source-code-for-the-example",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/#complete-source-code-for-the-example"
+  },"18": {
+    "doc": "Drag and Drop",
+    "title": "Drag and Drop",
+    "content": " ",
+    "url": "/bgw/concepts/drag-and-drop/DragAndDropExample/",
+    
+    "relUrl": "/concepts/drag-and-drop/DragAndDropExample/"
+  },"19": {
+    "doc": "User Input",
+    "title": "User Input",
+    "content": ". | Component declaration | MouseEvents | Key events | Function reference vs. function literal | Distinction between ComponentViews, DynamicComponentViews and UIComponentViews | Global key listeners | Full example on all available methods of dealing with user input | . The BGW framework uses events to communicate user input to Components. To execute code when a specific event is fired, a function reference, or a function literal can be set in ComponentViews. If /components can be enabled for drag and drop, some additional handlers can be set. Components can be enabled for drag and drop whenever they extend DynamicComponentView. For a more detailed introduction for Drag and Drop head here. The full source code for this example can be found here: . View it on GitHub . ",
+    "url": "/bgw/concepts/user-input/UserInput/#user-input",
+    
+    "relUrl": "/concepts/user-input/UserInput/#user-input"
+  },"20": {
+    "doc": "User Input",
+    "title": "Component declaration",
+    "content": "To showcase the user input handling, the following /components are declared and wrapped inside a BoardGameApplication, to create a running example. class UserInputExample : BoardGameApplication(\"User input example\") { val button: Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply { visual = ColorVisual.GREEN } val token: TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED) val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY) } . ",
+    "url": "/bgw/concepts/user-input/UserInput/#component-declaration",
+    
+    "relUrl": "/concepts/user-input/UserInput/#component-declaration"
+  },"21": {
+    "doc": "User Input",
+    "title": "MouseEvents",
+    "content": "There are five types of MouseEvents. The event contains the MouseButtonType that was in action. | onMousePressed: The user pressed a button while the mouse was above this component. | onMouseReleased: The user released a button while the mouse was above this component. | onMouseClicked: The user clicked above this component, i.e. pressed and released. | onMouseEntered: The mouse entered this component. Active button is UNSPECIFIED in this case. | onMouseExited: The mouse left this component. Active button is UNSPECIFIED in this case. | . ",
+    "url": "/bgw/concepts/user-input/UserInput/#mouseevents",
+    
+    "relUrl": "/concepts/user-input/UserInput/#mouseevents"
+  },"22": {
+    "doc": "User Input",
+    "title": "Key events",
+    "content": ". | onKeyPressed: The user pressed a key while this component had focus. | onKeyReleased: The user released a key while this component had focus. | onKeyTyped: The user typed a key, i.e. pressed and released or pressed and held, while this component had focus. keyCode will be Undefined in this case and the character field has to be used instead. | . ",
+    "url": "/bgw/concepts/user-input/UserInput/#key-events",
+    
+    "relUrl": "/concepts/user-input/UserInput/#key-events"
+  },"23": {
+    "doc": "User Input",
+    "title": "Function reference vs. function literal",
+    "content": "There are two ways to specify code that should get executed when a specific event is fired. The first option is assigning a function with a fitting signature. In the following example the handleMouseClicked function is declared and gets assigned to onMouseClicked on the button. This is useful if the same code should be assigned on different /components, or if the reference gets removed and re-added frequently. private fun handleMouseClicked(mouseEvent: MouseEvent) { button.text = \"someone clicked on me!\" } init { button.onMouseClicked = this::handleMouseClicked } . The second option is assigning a function literal. In the following example a function literal is assigned to the onMousePressed on the button. This is useful if the functionality is set only once and only on one component. button.onMousePressed = { mouseEvent -&gt; button.text = \"pressed ${mouseEvent.button}\" } . ",
+    "url": "/bgw/concepts/user-input/UserInput/#function-reference-vs-function-literal",
+    
+    "relUrl": "/concepts/user-input/UserInput/#function-reference-vs-function-literal"
+  },"24": {
+    "doc": "User Input",
+    "title": "Distinction between ComponentViews, DynamicComponentViews and UIComponentViews",
+    "content": "There are three types of /components, that can handle user input differently. | ComponentViews have function references that can deal with mouse, key and drop events. | DynamicComponentViews are ComponentViews that can be enabled for drag and drop, so they have additional function references to deal with that. | UIComponentViews are ComponentViews that may have additional ways of dealing with user input, for example text input. Please refer to the UIComponentView doc or guide to find additional information. | . ",
+    "url": "/bgw/concepts/user-input/UserInput/#distinction-between-componentviews-dynamiccomponentviews-and-uicomponentviews",
+    
+    "relUrl": "/concepts/user-input/UserInput/#distinction-between-componentviews-dynamiccomponentviews-and-uicomponentviews"
+  },"25": {
+    "doc": "User Input",
+    "title": "Global key listeners",
+    "content": "Global key listeners may become helpful to show menus or move playing pieces by the arrow or WASD keys. Scene-scoped listeners may be implemented on the BoardGameScene. gameScene.onKeyPressed = { event -&gt; if (event.keyCode == KeyCode.ESCAPE) exit() } . ",
+    "url": "/bgw/concepts/user-input/UserInput/#global-key-listeners",
+    
+    "relUrl": "/concepts/user-input/UserInput/#global-key-listeners"
+  },"26": {
+    "doc": "User Input",
+    "title": "Full example on all available methods of dealing with user input",
+    "content": "This example uses all available fields that can be set to handle user input on ComponentViews and DynamicComponentViews. View it on GitHub . fun main() { UserInputExample() } class UserInputExample: BoardGameApplication(\"User input example\") { val button : Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply { visual = ColorVisual.GREEN } val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED) val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY) init { // handling user input on ComponentView button.onMouseClicked = this::handleMouseClicked button.onMousePressed = { mouseEvent -&gt; button.text = \"pressed ${mouseEvent.button}\" } button.onMouseReleased = { mouseEvent -&gt; button.text = \"released ${mouseEvent.button}\" } button.onMouseEntered = { button.visual = ColorVisual.MAGENTA } button.onMouseExited = { button.visual = ColorVisual.GREEN } button.onKeyPressed = { keyEvent -&gt; button.text = \"pressed key: ${keyEvent.keyCode}\" } button.onKeyReleased = { keyEvent -&gt; button.text = \"released key: ${keyEvent.keyCode}\" } button.onKeyTyped = { keyEvent -&gt; button.text = \"typed key: ${keyEvent.character}\" } button.dropAcceptor = { true } button.onDragDropped = { it.draggedComponent.reposition(500, 30) it.draggedComponent.rotation = 0.0 gameScene.addComponents(token) } button.onDragGestureEntered = { dragEvent -&gt; button.visual = dragEvent.draggedComponent.visual } button.onDragGestureExited = { button.visual = ColorVisual.GREEN } // Additional function references available only to DynamicComponentViews token.isDraggable = true token.onDragGestureMoved = { token.rotate(5) } token.onDragGestureStarted = { token.scale(1.2) } token.onDragGestureEnded = { _, success -&gt; if (success) token.resize(50, 50) } // Global input listener gameScene.onKeyPressed = { event -&gt; if (event.keyCode == KeyCode.ESCAPE) exit() } showGameScene(gameScene.apply { addComponents(button, token) }) show() } private fun handleMouseClicked(@Suppress(\"UNUSED_PARAMETER\") mouseEvent: MouseEvent) { button.text = \"someone clicked on me!\" } } . ",
+    "url": "/bgw/concepts/user-input/UserInput/#full-example-on-all-available-methods-of-dealing-with-user-input",
+    
+    "relUrl": "/concepts/user-input/UserInput/#full-example-on-all-available-methods-of-dealing-with-user-input"
+  },"27": {
+    "doc": "User Input",
+    "title": "User Input",
+    "content": " ",
+    "url": "/bgw/concepts/user-input/UserInput/",
+    
+    "relUrl": "/concepts/user-input/UserInput/"
+  },"28": {
+    "doc": "BiDirectionalMap",
+    "title": "BiDirectionalMap",
+    "content": ". | Use case | Creation | Modification | Lookup elements | . ",
+    "url": "/bgw/util/bidirectional-map/bidirectionalmap/#bidirectionalmap",
+    
+    "relUrl": "/util/bidirectional-map/bidirectionalmap/#bidirectionalmap"
+  },"29": {
+    "doc": "BiDirectionalMap",
+    "title": "Use case",
+    "content": "BiDirectionalMaps can be used to model relationships where every key has exactly one value and vice versa. It may for example be used to map domain model objects to the corresponding view /components. The map enables mapping in both directions. ",
+    "url": "/bgw/util/bidirectional-map/bidirectionalmap/#use-case",
+    
+    "relUrl": "/util/bidirectional-map/bidirectionalmap/#use-case"
+  },"30": {
+    "doc": "BiDirectionalMap",
+    "title": "Creation",
+    "content": "The map takes two generic parameters for the type of the domain and co-domain objects. The constructor takes initial elements as varargs. val map: Bidirectionalmap&lt;Int, String&gt; = Bidirectionalmap( Tuple&lt;Int, String&gt;(1, \"ONE\"), Tuple&lt;Int, String&gt;(6, \"SIX\"), Tuple&lt;Int, String&gt;(10, \"TEN\") ) . Note that an IllegalArgumentException is thrown if the parameters contain duplicate entries in the domain or co-domain. ",
+    "url": "/bgw/util/bidirectional-map/bidirectionalmap/#creation",
+    
+    "relUrl": "/util/bidirectional-map/bidirectionalmap/#creation"
+  },"31": {
+    "doc": "BiDirectionalMap",
+    "title": "Modification",
+    "content": "Adding and removing elements from the map can be accomplished by add and remove. Adding elements with an already contained key or value will result in an unchanged map and return value false. If an element is already contained can be checked with the following methods: . | contains | containsForward | containsBackward | . ",
+    "url": "/bgw/util/bidirectional-map/bidirectionalmap/#modification",
+    
+    "relUrl": "/util/bidirectional-map/bidirectionalmap/#modification"
+  },"32": {
+    "doc": "BiDirectionalMap",
+    "title": "Lookup elements",
+    "content": "Looking up elements can be accomplished by . | forward / forwardOrNull | backward / backwardOrNull | . The set of entries gets returned by . | getDomain | getCoDomain | . ",
+    "url": "/bgw/util/bidirectional-map/bidirectionalmap/#lookup-elements",
+    
+    "relUrl": "/util/bidirectional-map/bidirectionalmap/#lookup-elements"
+  },"33": {
+    "doc": "BiDirectionalMap",
+    "title": "BiDirectionalMap",
+    "content": " ",
+    "url": "/bgw/util/bidirectional-map/bidirectionalmap/",
+    
+    "relUrl": "/util/bidirectional-map/bidirectionalmap/"
+  },"34": {
+    "doc": "ComponentView",
+    "title": "Component View",
+    "content": ". | Introduction | Properties . | Event handler . | Mouse movement events | Mouse interaction events | Key events | Drag events | . | . | Functions | . ",
+    "url": "/bgw/components/componentview/componentview/#component-view",
+    
+    "relUrl": "/components/componentview/componentview/#component-view"
+  },"35": {
+    "doc": "ComponentView",
+    "title": "Introduction",
+    "content": "ComponentView is the abstract baseclass of all framework /components. It defines important fields and functions that are necessary to visualize inheriting /components. Most fields come as a pair of attribute and observable property. ",
+    "url": "/bgw/components/componentview/componentview/#introduction",
+    
+    "relUrl": "/components/componentview/componentview/#introduction"
+  },"36": {
+    "doc": "ComponentView",
+    "title": "Properties",
+    "content": "posX: Double/posXProperty: DoubleProperty: The horizontal position. posY: Double/posYProperty: DoubleProperty: The vertical position. width: Double/widthProperty: DoubleProperty: The width. height: Double/heightProperty: DoubleProperty: The height. scaleX: Double/scaleXProperty: DoubleProperty: The horizontal scale . scaleY: Double/scaleYProperty: DoubleProperty: The vertical scale . scale: Double: Scale of this component. Setter sets both scaleX and scaleY. Getter returns scale if scaleX == scaleY or throws an IllegalStateException if scaleX and scaleY differ. rotation: Double/rotationProperty: DoubleProperty: Rotation of this component in degrees. Between 0 (incl.) and 360 (excl.). visual: Visual/visualProperty: Property&lt;Visual&gt;: The current Visual. Read more about Visuals here. opacity: Double/opacityProperty: DoubleProperty: The current opacity. Must be in range 0.0 to 1.0. 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity. isVisible/isVisibleProperty: BooleanProperty: Visibility of this component. Visible /components may still be opaque due to opacity property. Note that invisible /components no longer trigger mouse click events, /components with opacity = 0.0 still do. isDisabled: Boolean/isDisabledProperty: BooleanProperty:Controls if user input events cause input functions of this component to get invoked . isFocusable: Boolean/isFocusableProperty: BooleanProperty: Controls whether this component is focusable or not. name: String: Name field only for debugging purposes. Has no effect on rendering. Use this to label /components for easier debugging and printing . parent: ComponentView?: The parent of this ComponentView. Its value is null if the component is not contained in any GameComponentContainer, LayoutView, or a Scene. If the component has been added directly to a scene, parent is equal to the scene’s RootComponent. Event handler . Event handlers et called by the framework if the associated event happened. Handlers can be assigned like attribute values. To remove a handler assign null. Read more about this topic here. Mouse movement events . onMouseEntered: ((MouseEvent) -&gt; Unit)?: Gets invoked when the mouse enters this component. onMouseExited: ((MouseEvent) -&gt; Unit)?: Gets invoked when the mouse leaves this component. Mouse interaction events . onMousePressed: ((MouseEvent) -&gt; Unit)?:Gets invoked when the mouse is pressed inside this component. onMouseReleased: ((MouseEvent) -&gt; Unit)?:Gets invoked when the mouse is released inside this component. onMouseClicked: ((MouseEvent) -&gt; Unit)?:Gets invoked when the mouse is clicked, i.e. pressed and released, inside this component. Note: The MouseEvent’s button attribute always contains the mouse button. Key events . onKeyPressed: ((KeyEvent) -&gt; Unit)?:Gets invoked when a keyboard key is pressed while this component has focus. onKeyReleased: ((KeyEvent) -&gt; Unit)?:Gets invoked when a keyboard key is released while this component has focus. onKeyTyped: ((KeyEvent) -&gt; Unit)?:Gets invoked when a keyboard key is typed, i.e. pressed and released, while this component has focus. Note: The KeyEvent always contains the key combination. Drag events . Read more about drag and drop here . onDragGestureEntered: ((DragEvent) -&gt; Unit)?: Gets invoked with a DragEvent containing the dragged component when the mouse enters this component while dragging. onDragGestureExited: ((DragEvent) -&gt; Unit)?: Gets invoked with a DragEvent containing the dragged component when the mouse leaves this component while dragging. onDragDropped: ((DragEvent) -&gt; Unit)?: Gets invoked with a DragEvent containing the dragged component after a successful drag and drop gesture. dropAcceptor: ((DragEvent) -&gt; Boolean)?: Gets invoked when a dragged component was released inside this component. Implement this function in such a way that it returns true if this component accepts the drop of the given component, passed with the DragEvent,, or false if a drop is not valid. The dragged component will snap back if all available drop targets return false. It is advised not to modify the Scene or its children in this function. The modification, for example adding the component to a container should be done in onDragDropped as this function only gets invoked if this dropAccessor returns true. ",
+    "url": "/bgw/components/componentview/componentview/#properties",
+    
+    "relUrl": "/components/componentview/componentview/#properties"
+  },"37": {
+    "doc": "ComponentView",
+    "title": "Functions",
+    "content": "reposition(posX: Number, posY: Number): Repositions this component to the specified coordinates. To move it with an animation refer to the MovementAnimation tutorial here. offset(offsetX: Number, offsetY: Number): Moves this component by relative offset. To move it with an animation refer to the MovementAnimation tutorial here. rotate(degrees: Number): Rotates this component by the given number of degrees. To rotate it with an animation refer to the RotationAnimation tutorial here. resize(width: Number, height: Number): Resizes this component to the specified dimensions. scale(scalar: Number): Scales this component by given scalar. scaleX(scalar: Number): Scales this component’s width by given scalar. scaleY(scalar: Number): Scales this component’s height by given scalar. removeFromParent(): ComponentView: Removes this component from its parent. Returns the former parent. Throws an IllegalStateException if the parent was null, i.e. this component was not contained in any scene. ",
+    "url": "/bgw/components/componentview/componentview/#functions",
+    
+    "relUrl": "/components/componentview/componentview/#functions"
+  },"38": {
+    "doc": "ComponentView",
+    "title": "ComponentView",
+    "content": " ",
+    "url": "/bgw/components/componentview/componentview/",
+    
+    "relUrl": "/components/componentview/componentview/"
+  },"39": {
+    "doc": "Concepts",
+    "title": "Concepts",
+    "content": "Introduction to /concepts. ",
+    "url": "/bgw/concepts/concepts/",
+    
+    "relUrl": "/concepts/concepts/"
+  },"40": {
+    "doc": "Container",
+    "title": "Container",
+    "content": ". | Prior knowledge | Introduction | Container features . | Add and remove | onAdd and onRemove | Listeners | . | Useful hints for dealing with containers | Types of Containers . | Area | CardStack | LinearLayout | Satchel | HexagonGrid | Coordinate Systems | Offset Coordinate System | Axial Coordinate System | Example | Hexagon Grid Orientations | Pointy Top Orientation | Flat Top Orientation | . | Container overview | Complete source code for the example | . ",
+    "url": "/bgw/components/container/container/#container",
+    
+    "relUrl": "/components/container/container/#container"
+  },"41": {
+    "doc": "Container",
+    "title": "Prior knowledge",
+    "content": "All containers inherit from ComponentView and DynamicView. It is therefore helpful to read those documentations first as the features from those superclasses don’t get repeated here. ",
+    "url": "/bgw/components/container/container/#prior-knowledge",
+    
+    "relUrl": "/components/container/container/#prior-knowledge"
+  },"42": {
+    "doc": "Container",
+    "title": "Introduction",
+    "content": "Containers can be used to group GameComponentViewKDocs. GameComponentContainer is the abstract baseclass for containers. Different implementations support different styles of layouting for the contained /components. ",
+    "url": "/bgw/components/container/container/#introduction",
+    
+    "relUrl": "/components/container/container/#introduction"
+  },"43": {
+    "doc": "Container",
+    "title": "Container features",
+    "content": "The Container features will be demonstrated using an Area, since GameComponentContainer is abstract and Area is just one of the discrete implementations. The complete source code for this example can be found here. To create a running example, the required /components are wrapped in a BoardGameApplication. class AreaExample : BoardGameApplication(\"Area example\") { val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY) val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50) val area: Area&lt;TokenView&gt; = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY) val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN) val redToken: TokenView = TokenView(visual = ColorVisual.RED) } . Add and remove . The most important feature of a container is to add to and remove /components from it. Adding a Component is as simple as calling the add() function with the component as its argument. Optionally an index may be supplied. An example on how to add with or without index: . area.add(greenToken) area.add(redToken, 0) . The greenToken is added to the area. The index parameter was omitted, so it gets added at the end of the components list. In this case at index 0. Then the redToken is added explicitly at index 0, therefore greenToken is pushed back to index 1. Removing a Component is as simple as calling the remove() function with the component to remove as its argument. area.remove(redToken) . The redToken is removed from the area, therefore the greenToken falls back down to index 0. There are some convenience functions for adding and removing multiple Components at once. Please refer to the docs for an in-depth overview. onAdd and onRemove . It is possible to specify code that gets executed with the component as its receiver, after it gets added or removed from the container. This is helpful whenever some modifications need to be made to any /components, after it is added or removed. In this example TokenViews get resized when they are added to area, and rotated by 45° when they are removed from area. To achieve this behaviour, the onAdd and onRemove fields are set. area.onAdd = { this.resize(100, 100) } area.onRemove = { this.rotation += 45 } . Listeners . Listeners for the /components list may be added to a container. They get invoked any time the /components list changes its state. In this example a Label gets updated with the number of /components currently contained in area. area.addComponentsListener { numberOfComponentsLabel.label = \"Number of /components in this area: ${area.numberOfComponents()}\" } . Listeners can be removed via the clearComponentsListners() or removeComponentsListner() functions. ",
+    "url": "/bgw/components/container/container/#container-features",
+    
+    "relUrl": "/components/container/container/#container-features"
+  },"44": {
+    "doc": "Container",
+    "title": "Useful hints for dealing with containers",
+    "content": ". | Containers provide an iterator over their /components list via the Iterable interface. | The position of /components contained in any containers with automatic layouting should never be modified, since the containers handle positioning. | When using non-automatic layouting containers, do not forget to position the contained /components. Especially if they get added after a drag and drop gesture. | Any Component can only ever be contained in one container at a time. Trying to add an already contained component to another container will result in a runtime exception. | Containers can also be draggable and can act as a drag target. | ComponentListeners can be a great way of exposing dynamic information about a container via sufficient UIComponents. | . ",
+    "url": "/bgw/components/container/container/#useful-hints-for-dealing-with-containers",
+    
+    "relUrl": "/components/container/container/#useful-hints-for-dealing-with-containers"
+  },"45": {
+    "doc": "Container",
+    "title": "Types of Containers",
+    "content": "Area . Area is the simplest form of a container. Its contained /components are positioned relative to the top-left corner of the Area. No further layouting is provided by the Area. CardStack . CardStack is a special form of container. It can only contain CardView. It should be used to visualize card stacks. It provides automatic layouting and alignment features. LinearLayout . LinearLayout spaces its /components dynamically based on its dimensions, the /components dimensions, and the user defined spacing. Additionally, an orientation and alignment may be specified. In this image a LinearLayout is used to visualize a hand of cards: . Satchel . A satchel hides its /components and reveals them, when they are removed. This container can be used to visualize an entity, where the user should not know what might get drawn next, or what is in the container. HexagonGrid . Represents a grid of hexagons in a coordinate system. Each hexagon can be accessed and manipulated using column and row indices. Coordinate Systems . The HexagonGrid class supports two coordinate systems: offset and axial. Offset Coordinate System . In the offset coordinate system, the hexagons are positioned using a grid of rectangular offsets. Each hexagon occupies a rectangular cell, and the coordinate values represent the row and column indices of the hexagons in the grid. Axial Coordinate System . In the axial coordinate system, the hexagons are positioned using axial coordinates. Each hexagon is defined by two axial coordinates: q (column) and r (row). The axial coordinates represent the column and row indices of the hexagons in the grid. Example . val hexagonGrid: HexagonGrid&lt;HexagonView&gt; = HexagonGrid() for (row in 0..4) { for (col in 0..4) { val hexagon = HexagonView(visual = ColorVisual.RED) hexagonGrid[col, row] = hexagon } } . Here is an example on how to change the default coordinate system to axial. val hexagonGrid: HexagonGrid&lt;HexagonView&gt; = HexagonGrid(coordinateSystem = CoordinateSystem.AXIAL) for (q in -2..2) { for (r in -2..2) { if (q + r &gt;= -2 &amp;&amp; q + r &lt;= 2) { val hexagon = HexagonView(visual = ColorVisual.BLUE) hexagonGrid[q, r] = hexagon } } } . Hexagon Grid Orientations . The HexagonGrid class supports two orientations: pointy top and flat top. Pointy Top Orientation . This is the default orientation for a HexGrid. In the pointy top orientation (HexOrientation.POINTY_TOP), the hexagons are positioned with their tips pointing up and down. Flat Top Orientation . In the flat top orientation (HexOrientation.FLAT_TOP), the hexagons are positioned with their tips pointing left and right. ",
+    "url": "/bgw/components/container/container/#types-of-containers",
+    
+    "relUrl": "/components/container/container/#types-of-containers"
+  },"46": {
+    "doc": "Container",
+    "title": "Container overview",
+    "content": "View it on GitHub . ",
+    "url": "/bgw/components/container/container/#container-overview",
+    
+    "relUrl": "/components/container/container/#container-overview"
+  },"47": {
+    "doc": "Container",
+    "title": "Complete source code for the example",
+    "content": "View it on GitHub . fun main() { AreaExample() } class AreaExample : BoardGameApplication(\"Area example\") { private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY) private val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50) private val area: Area&lt;TokenView&gt; = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY) private val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN) private val redToken: TokenView = TokenView(visual = ColorVisual.RED) init { area.onAdd = { this.resize(100, 100) } area.onRemove = { this.rotation += 45 } area.addComponentsListener { numberOfComponentsLabel.label = \"Number of /components in this area: ${area.numberOfComponents()}\" } area.add(greenToken) area.add(redToken, 0) area.remove(redToken) gameScene.addComponents(area, numberOfComponentsLabel) showGameScene(gameScene) show() } } . ",
+    "url": "/bgw/components/container/container/#complete-source-code-for-the-example",
+    
+    "relUrl": "/components/container/container/#complete-source-code-for-the-example"
+  },"48": {
+    "doc": "Container",
+    "title": "Container",
+    "content": " ",
+    "url": "/bgw/components/container/container/",
+    
+    "relUrl": "/components/container/container/"
+  },"49": {
+    "doc": "Coordinate",
+    "title": "Coordinates",
+    "content": ". | Coordinate | CoordinatePlain | . ",
+    "url": "/bgw/util/coordinate/coordinate/#coordinates",
+    
+    "relUrl": "/util/coordinate/coordinate/#coordinates"
+  },"50": {
+    "doc": "Coordinate",
+    "title": "Coordinate",
+    "content": "The Coordinate class is used as a Tuple wrapper for X and Y coordinates of a ComponentView. It is created with X and Y coordinates accordingly. The coordinate class implements plus and minus operator to add or subtract coordinates from each other: . val coord1: Coordinate = Coordinate(xCoord = 5, yCoord = 7) val coord2: Coordinate = Coordinate(xCoord = -1, yCoord = 5) val addedCoord: Coordinate = coord1 + coord2 //xCoord = 4, yCoord = 13 val subtractedCoord: Coordinate = coord1 - coord2 //xCoord = 6, yCoord = 2 . The equals function returns true if and only if coord1.xCoord == coord2.xCoord &amp;&amp; coord1.yCoord == coord2.yCoord. Additionally, the rotated function can be used to rotate the coordinate by a given angle around a center point. Common Operators plus, minus, times and divide are defined. ",
+    "url": "/bgw/util/coordinate/coordinate/#coordinate",
+    
+    "relUrl": "/util/coordinate/coordinate/#coordinate"
+  },"51": {
+    "doc": "Coordinate",
+    "title": "CoordinatePlain",
+    "content": "A CoordinatePlain represents a right-angled plain with four corners. These can be accessed by: . val topLeft: Coordinate val topRight: Coordinate val bottomLeft: Coordinate val bottomRight: Coordinate . Additionally, the dimensions get calculated and can be accessed: . val height: Double val width: Double . The CoordinatePlain can be created by specifying the top-left and bottom-right corner either with Coordinates or X and Y position. The function rotated function can be used to rotate the 2D plain by a given angle around a center point. ",
+    "url": "/bgw/util/coordinate/coordinate/#coordinateplain",
+    
+    "relUrl": "/util/coordinate/coordinate/#coordinateplain"
+  },"52": {
+    "doc": "Coordinate",
+    "title": "Coordinate",
+    "content": " ",
+    "url": "/bgw/util/coordinate/coordinate/",
+    
+    "relUrl": "/util/coordinate/coordinate/"
+  },"53": {
+    "doc": "Dialog",
+    "title": "Dialog",
+    "content": ". | Dialog creation . | Information Dialog | Exception dialog | . | Showing a dialog | . This section showcases the different types of Dialogs in the BGW framework. A Dialog can be used to display a popup informing the user about warnings, and errors or text. ",
+    "url": "/bgw/dialogs/dialog/dialog/#dialog",
+    
+    "relUrl": "/dialogs/dialog/dialog/#dialog"
+  },"54": {
+    "doc": "Dialog",
+    "title": "Dialog creation",
+    "content": "The Dialog class provides two public constructors for two different types of dialogs: . Information Dialog . In the information dialog’s constructor the type of the dialog can be declared by the DialogType as . | INFORMATION | WARNING | ERROR | CONFIRMATION | NONE | . which directly affects the displayed icon and default buttons. The buttons can be altered by passing ButtonTypes. Note that EXCEPTION may not be used, as it is created through the second constructor here. Additionally, the title of the popup, the header and the content parameters have to be passed. The following code example creates a warning dialog informing the user about an empty player name: . Dialog( alertType = AlertType.WARNING, title = \"Warning\", header = \"Empty player name\", message = \"Player name must not be empty!\" ) . Exception dialog . To display an exception stack trace the second constructor can be used. It takes a title, header, and message, as well as the exception to display. It contains an expandable content for the exception stack trace. Dialog( title = \"Exception Dialog\", header = \"Exception\", message = \"An exception Dialog.\", exception = IllegalArgumentException(\"IllegalArgument passed.\") ) . An example with all dialog types can be found here: . View it on GitHub . ",
+    "url": "/bgw/dialogs/dialog/dialog/#dialog-creation",
+    
+    "relUrl": "/dialogs/dialog/dialog/#dialog-creation"
+  },"55": {
+    "doc": "Dialog",
+    "title": "Showing a dialog",
+    "content": "To show a dialog the method #showDialog in BoardGameApplication has to be used. The operation blocks user input until the dialog is closed. The function returns an Optional containing the chosen ButtonType. The Optional is empty if the dialog is closed by the X or in any other way aside selecting any button. Alternatively a dialog may be shown by #showDialogNonBlocking which shows the Dialog without blocking further thread execution. This functions returns Unit. val dialog: Dialog = Dialog( alertType = AlertType.CONFIRMATION, title = \"Confirmation required\", header = \"Confirmation\", message = \"Do you really want to proceed?\" ) showDialog(dialog).ifPresentOrElse({ if (it == ButtonType.YES) { //Button 'YES' was clicked } else { //Button 'NO' was clicked } }) { //Dialog was closed } . ",
+    "url": "/bgw/dialogs/dialog/dialog/#showing-a-dialog",
+    
+    "relUrl": "/dialogs/dialog/dialog/#showing-a-dialog"
+  },"56": {
+    "doc": "Dialog",
+    "title": "Dialog",
+    "content": " ",
+    "url": "/bgw/dialogs/dialog/dialog/",
+    
+    "relUrl": "/dialogs/dialog/dialog/"
+  },"57": {
+    "doc": "Dialogs",
+    "title": "Dialogs",
+    "content": "Introduction to dialogs. ",
+    "url": "/bgw/dialogs/dialogs/",
+    
+    "relUrl": "/dialogs/dialogs/"
+  },"58": {
+    "doc": "DynamicComponentView",
+    "title": "Dynamic Component View",
+    "content": ". | Introduction . | Properties | Functions | . | . ",
+    "url": "/bgw/components/dynamiccomponent/dynamiccomponentview/#dynamic-component-view",
+    
+    "relUrl": "/components/dynamiccomponent/dynamiccomponentview/#dynamic-component-view"
+  },"59": {
+    "doc": "DynamicComponentView",
+    "title": "Introduction",
+    "content": "DynamicComponentView is the baseclass for all ComponentViews that are draggable. It introduces properties and functions referring to the drag and drop feature of the BGW. Properties . isDraggable: Boolean / isDraggableProperty: BooleanProperty: . Set this attribute / property to true to enable the drag and drop feature for this DynamicComponentView. Draggable /components can be picked up by holding the left mouse button and follow the cursor until the mouse button gets released. isDragged: Boolean isDraggedProperty: BooleanProperty: Represents whether this DynamicComponentView is currently dragged or not. Gets set to true when the drag begins and to false after mouse button was released. Functions . onDragGestureStarted: ((DragEvent) -&gt; Unit)?: Gets invoked with a DragEvent whenever a drag gesture is started on this component. onDragGestureMoved: ((DragEvent) -&gt; Unit)?: Gets invoked with a DragEvent whenever the mouse was moved during a drag gesture. onDragGestureEnded: ((DropEvent, Boolean) -&gt; Unit)?: Gets invoked with a DragEvent after the drag gesture ended. ",
+    "url": "/bgw/components/dynamiccomponent/dynamiccomponentview/#introduction",
+    
+    "relUrl": "/components/dynamiccomponent/dynamiccomponentview/#introduction"
+  },"60": {
+    "doc": "DynamicComponentView",
+    "title": "DynamicComponentView",
+    "content": " ",
+    "url": "/bgw/components/dynamiccomponent/dynamiccomponentview/",
+    
+    "relUrl": "/components/dynamiccomponent/dynamiccomponentview/"
+  },"61": {
+    "doc": "FileDialog",
+    "title": "FileDialog",
+    "content": ". | Dialog creation | Showing a FileDialog | . This section showcases the different types of file dialogs in the BGW framework. FileDialog can be used to display a popup to choose a file or directory either to load or save resources. ",
+    "url": "/bgw/dialogs/filedialog/filedialog/#filedialog",
+    
+    "relUrl": "/dialogs/filedialog/filedialog/#filedialog"
+  },"62": {
+    "doc": "FileDialog",
+    "title": "Dialog creation",
+    "content": "The FileDialog class provides different FileDialogModes: . | OPEN_FILE | OPEN_MULTIPLE_FILES | SAVE_FILE | CHOOSE_DIRECTORY | . Depending on the selection the Dialog will request the appropriate type (file vs. directory) and enable multi-selection. An example with all dialog types can be found here: . View it on GitHub . ",
+    "url": "/bgw/dialogs/filedialog/filedialog/#dialog-creation",
+    
+    "relUrl": "/dialogs/filedialog/filedialog/#dialog-creation"
+  },"63": {
+    "doc": "FileDialog",
+    "title": "Showing a FileDialog",
+    "content": "To show a dialog use #showFileDialog in BoardGameApplication. The operation blocks user input until the dialog is closed. The function returns an Optional containing the chosen list of Files. The Optional is empty if the dialog is canceled. ",
+    "url": "/bgw/dialogs/filedialog/filedialog/#showing-a-filedialog",
+    
+    "relUrl": "/dialogs/filedialog/filedialog/#showing-a-filedialog"
+  },"64": {
+    "doc": "FileDialog",
+    "title": "FileDialog",
+    "content": " ",
+    "url": "/bgw/dialogs/filedialog/filedialog/",
+    
+    "relUrl": "/dialogs/filedialog/filedialog/"
+  },"65": {
+    "doc": "GameComponents",
+    "title": "GameComponentViews",
+    "content": ". | Prior knowledge | Introduction | Generic Token | Cards | Dice | Hexagons | . ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#gamecomponentviews",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#gamecomponentviews"
+  },"66": {
+    "doc": "GameComponents",
+    "title": "Prior knowledge",
+    "content": "All GameComponentViews inherit from ComponentView and DynamicView. It is therefore helpful to read those documentations first as the features from those superclasses don’t get repeated here. ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#prior-knowledge",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#prior-knowledge"
+  },"67": {
+    "doc": "GameComponents",
+    "title": "Introduction",
+    "content": "GameComponentViews are used to model interactive game elements like cards, meeples or any other form of game tokens. GameComponentViews can be added to GameComponentContainers and be made draggable as explained in this tutorial. Helpful animations can be found here . ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#introduction",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#introduction"
+  },"68": {
+    "doc": "GameComponents",
+    "title": "Generic Token",
+    "content": "For a generic token use TokenView. It takes its position and dimensions as well as one visual as a constructor parameter. ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#generic-token",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#generic-token"
+  },"69": {
+    "doc": "GameComponents",
+    "title": "Cards",
+    "content": "For cards use CardView. It by default takes a front and back visual and offers additional functions to handle the card. As cards are a common concept, there exists a CardStack especially for CardViews. For card hands, a LinearLayout may become handy. The CardView can also be used for other two-sided tokens. ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#cards",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#cards"
+  },"70": {
+    "doc": "GameComponents",
+    "title": "Dice",
+    "content": "The DiceView class takes a list of visuals for its sides. It is not limited to a D6 and has the exact amount of sides as it has visuals, where the visual at index i is the i-1th side e.g. the visual at index 0 is side 1. If the list of visuals gets altered the amount of sides changes too. For a dice roll there exists a dedicated DiceAnimation. ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#dice",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#dice"
+  },"71": {
+    "doc": "GameComponents",
+    "title": "Hexagons",
+    "content": "The HexagonView component can also be utilized for hexagonal tokens, providing a versatile solution for displaying various hexagonal-shaped elements. A Hexagon by default has its tips pointing up and down (HexOrientation.POINTY_TOP). It can however also have its tips pointing left and right (HexOrientation.FLAT_TOP). Hexagons only have one visual. ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/#hexagons",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/#hexagons"
+  },"72": {
+    "doc": "GameComponents",
+    "title": "GameComponents",
+    "content": " ",
+    "url": "/bgw/components/gamecomponents/gamecomponents/",
+    
+    "relUrl": "/components/gamecomponents/gamecomponents/"
+  },"73": {
+    "doc": "Board Game Work",
+    "title": "Board Game Work",
+    "content": "This tutorial introduces the BoardGameWork framework. The upcoming section discusses the core features and how to set up the first game scene. The running example implements the MauMau card game. | Setup | BoardGameScene and MenuScene | Declaring a MenuScene | Declaring a BoardGameScene | Event handler | . ",
+    "url": "/bgw/#board-game-work",
+    
+    "relUrl": "/#board-game-work"
+  },"74": {
+    "doc": "Board Game Work",
+    "title": "Setup",
+    "content": "Each application starts with a BoardGameApplication instance. By default, the view controller class should inherit from BoardGameApplication. class MauMauViewController : BoardGameApplication(windowTitle = \"MauMau\") . This creates a window in which the game can take place. For the game itself a BoardGameScene and a MenuScene is declared. class MauMauViewController : BoardGameApplication(windowTitle = \"MauMau\") { val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene() val mauMauGameScene: MauMauGameScene = MauMauGameScene() } . class MauMauGameScene : BoardGameScene(background = ImageVisual(\"bg.jpg\")) . class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) . The menu scene gets a height of 500px and width of 300px while the game scene gets the default size of FullHD. The game scene gets an image as background and the menu scene solid white. To read more about visuals click here. ",
+    "url": "/bgw/#setup",
+    
+    "relUrl": "/#setup"
+  },"75": {
+    "doc": "Board Game Work",
+    "title": "BoardGameScene and MenuScene",
+    "content": "The MauMau example declares a game scene and a menu scene. In menu scenes draggable components are not usable, only LayoutViews and UIComponents: In other words /components that extend StaticComponentView. A BoardGameApplication can display one BoardGameScene and one MenuScene at the same time. While the menu scene is visible, the game scene gets blurred out. The scenes can be shown by calling showGameScene() and showMenuScene(). The window gets shown by calling show(). class MauMauViewController : BoardGameApplication(windowTitle = \"MauMau\") { val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene() val mauMauGameScene: MauMauGameScene = MauMauGameScene() init { showGameScene(mauMauGameScene) showMenuScene(mauMauMenuScene) show() } } . ",
+    "url": "/bgw/#boardgamescene-and-menuscene",
+    
+    "relUrl": "/#boardgamescene-and-menuscene"
+  },"76": {
+    "doc": "Board Game Work",
+    "title": "Declaring a MenuScene",
+    "content": "As shown above, the desired size of the scene can be passed as an argument to the super constructor. As with all coordinates these are declared in a virtual coordinate space that will be transformed while rendering. Primary constraint while choosing the scene size is the ratio of height and width as this is not changed by scaling. If the ratio does not match the windows size, black bars will appear which can be styled using visuals as well. All /components declared in this scene will relate its position and size to the declared coordinate space. In this example a Label should display “Main menu” and three Buttons display “Continue”, “New Game” and “Exit”. These /components get declared and added to the scene by calling addComponents() in the initializer block. class MauMauMenuScene : MenuScene(width = 300, height = 500, background = ColorVisual(Color.WHITE)) { val continueGameButton: Button = Button( height = 80, width = 200, posX = 50, posY = 110, text = \"Continue\", font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC), visual = ImageVisual(BUTTON_BG_FILE) ) val newGameButton: Button = Button( height = 80, width = 200, posX = 50, posY = 220, text = \"New Game\", font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC), visual = ImageVisual(BUTTON_BG_FILE) ) val exitButton: Button = Button( height = 80, width = 200, posX = 50, posY = 330, text = \"Exit\", font = Font(color = Color.WHITE, fontStyle = FontStyle.ITALIC), visual = ImageVisual(BUTTON_BG_FILE) ) private val menuLabel: Label = Label( height = 100, width = 200, posX = 50, posY = 0, text = \"Main menu\", font = Font(fontWeight = Font.FontWeight.BOLD) ) init { addComponents( menuLabel, continueGameButton, newGameButton, exitButton, ) } } . ",
+    "url": "/bgw/#declaring-a-menuscene",
+    
+    "relUrl": "/#declaring-a-menuscene"
+  },"77": {
+    "doc": "Board Game Work",
+    "title": "Declaring a BoardGameScene",
+    "content": "BoardGameScenes are the main /components of the game. BoardGameScenes behave just like menu scenes but can additionally contain GameComponentViews and GameContainerViews. For the MauMau example two CardStacks and two player hands as LinearLayouts are necessary. class MauMauGameScene : BoardGameScene(background = ImageVisual(\"bg.jpg\")) { val drawStack: CardStack&lt;CardView&gt; = CardStack( height = 200, width = 130, posX = 750, posY = 360, visual = ColorVisual(255, 255, 255, 50) ) val gameStack: CardStack&lt;CardView&gt; = CardStack( height = 200, width = 130, posX = 1040, posY = 360, visual = ColorVisual(255, 255, 255, 50) ) var currentPlayerHand: LinearLayout&lt;CardView&gt; = LinearLayout( height = 220, width = 800, posX = 560, posY = 750, spacing = -50, alignment = Alignment.CENTER, visual = ColorVisual(255, 255, 255, 50) ) var otherPlayerHand: LinearLayout&lt;CardView&gt; = LinearLayout&lt;CardView&gt;( height = 220, width = 800, posX = 560, posY = 50, spacing = -50, alignment = Alignment.CENTER, visual = ColorVisual(255, 255, 255, 50) ).apply { rotation = 180.0 } init { addComponents( drawStack, gameStack, currentPlayerHand, otherPlayerHand ) } } . ",
+    "url": "/bgw/#declaring-a-boardgamescene",
+    
+    "relUrl": "/#declaring-a-boardgamescene"
+  },"78": {
+    "doc": "Board Game Work",
+    "title": "Event handler",
+    "content": "When the application is started, both menu scene and game scene are shown. The game scene is blurred in the background. To start a new game and close the menu scene, event handlers have to be added. As these button’s actions change the scene, the handlers get set in the view controller. class MauMauViewController : BoardGameApplication(windowTitle = \"MauMau\") { val mauMauMenuScene: MauMauMenuScene = MauMauMenuScene() val mauMauGameScene: MauMauGameScene = MauMauGameScene() init { registerMenuEvents() showGameScene(mauMauGameScene) showMenuScene(mauMauMenuScene) show() } private fun registerMenuEvents() { mauMauMenuScene.continueGameButton.onMouseClicked = { hideMenuScene() } mauMauMenuScene.newGameButton.onMouseClicked = { //Start new game here hideMenuScene() } mauMauMenuScene.exitButton.onMouseClicked = { exit() } } } . Now after pressing the “New Game” button the menu scene is hidden and the game scene is active. ",
+    "url": "/bgw/#event-handler",
+    
+    "relUrl": "/#event-handler"
+  },"79": {
+    "doc": "Board Game Work",
+    "title": "Board Game Work",
+    "content": " ",
+    "url": "/bgw/",
+    
+    "relUrl": "/"
+  },"80": {
+    "doc": "Json",
+    "title": "JSON",
+    "content": ". | JSON . | External resources | JSON data types | Converting a simple DataClass into a json schema | Lists and arrays | Restricting values, Enums and Nullability | Schema nesting | . | . This section deals with the integration of json schema to validate GameActionClasses on the server side and how to generate a json schema from a given KClass. ",
+    "url": "/bgw/network/json/json/#json",
+    
+    "relUrl": "/network/json/json/#json"
+  },"81": {
+    "doc": "Json",
+    "title": "External resources",
+    "content": "A documentation for json schema can be found here. A quick-start-guide can be found here. ",
+    "url": "/bgw/network/json/json/#external-resources",
+    
+    "relUrl": "/network/json/json/#external-resources"
+  },"82": {
+    "doc": "Json",
+    "title": "JSON data types",
+    "content": "The following data types may be used in json schema: . | Type | Values allowed | Values not allowed | . | string | “foo” | 1 | . | number | 1; 1.1; 1.1e5 | ”” | . | integer | 1; 1.0 | 1.1 | . | object | Nested objects |   | . | array | [“1”, “2”]; [1, 2] | ””; 1 | . | boolean | true; false | “true”; 1 | . | null | null | ”” | . ",
+    "url": "/bgw/network/json/json/#json-data-types",
+    
+    "relUrl": "/network/json/json/#json-data-types"
+  },"83": {
+    "doc": "Json",
+    "title": "Converting a simple DataClass into a json schema",
+    "content": "Let’s consider the following data class: . @GameActionClass data class MauMauEndGameAction( val winner: String ) : GameAction() { override fun toString(): String = \"$winner has won the game!\" } . The json schema contains all attributes declared in the class. In this instance there is only one field winner of type string. The resulting json schema looks as follows. { \"$schema\": \"http://json-schema.org/draft-07/schema\", \"type\": \"object\", \"title\": \"MauMau End Game Schema\", \"required\": [ \"winner\" ], \"properties\": { \"winner\": { \"type\": \"string\" } }, \"additionalProperties\": false } . The first block defines meta information: The json meta schema draft-07, the type object and the title of this schema. The required field contains a list of all attributes of the KClass. In this case the field winner. For each field you have to define properties. This includes the data type for the field as one of those listed above. Here the property winner gets annotated with type string. Additionally \"additionalProperties\": false forbids the usage of additional attributes. ",
+    "url": "/bgw/network/json/json/#converting-a-simple-dataclass-into-a-json-schema",
+    
+    "relUrl": "/network/json/json/#converting-a-simple-dataclass-into-a-json-schema"
+  },"84": {
+    "doc": "Json",
+    "title": "Lists and arrays",
+    "content": "For lists and arrays the data type is set to array. Additionally, the data type for the elements in that array has to be specified. The attribute . data class Example( val playerNames: list&lt;String&gt; ) . gets translated to . { \"$schema\": \"http://json-schema.org/draft-07/schema\", \"type\": \"object\", \"title\": \"Example Schema\", \"required\": [ \"playerNames\" ], \"properties\": { \"playerNames\": { \"type\": \"array\", \"items\":{ \"type\": \"string\" } } }, \"additionalProperties\": false } . ",
+    "url": "/bgw/network/json/json/#lists-and-arrays",
+    
+    "relUrl": "/network/json/json/#lists-and-arrays"
+  },"85": {
+    "doc": "Json",
+    "title": "Restricting values, Enums and Nullability",
+    "content": "Values of a field can be restricted by minimum/maximum for integers or by regular expression patterns. Enums can be used by restricting the values of a string to the enum constants . enum class Direction { LEFT, RIGHT } data class Example( val direction: Direction ) . gets translated to . { \"$schema\": \"http://json-schema.org/draft-07/schema\", \"type\": \"object\", \"title\": \"Example Schema\", \"required\": [ \"direction\" ], \"properties\": { \"playerNames\": { \"type\": \"string\", \"enum\": [\"LEFT\", \"RIGHT\"] } }, \"additionalProperties\": false } . Nullability can be expressed by using oneOf. { \"$schema\": \"http://json-schema.org/draft-07/schema\", \"type\": \"object\", \"title\": \"Example Schema\", \"required\": [ \"direction\" ], \"properties\": { \"playerNames\": { \"oneOf\": [ { \"type\": \"null\" }, { \"type\": \"string\", \"enum\": [\"LEFT\", \"RIGHT\"] } ] } }, \"additionalProperties\": false } . ",
+    "url": "/bgw/network/json/json/#restricting-values-enums-and-nullability",
+    
+    "relUrl": "/network/json/json/#restricting-values-enums-and-nullability"
+  },"86": {
+    "doc": "Json",
+    "title": "Schema nesting",
+    "content": "For attributes of object types, these objects need to be defined by a schema as well. Consider the following example: . enum class CardColor { RED, BLACK } data class PlayingCard( val cardColor: CardColor, val cardValue: Int ) data class CardStack( val cards: List&lt;PlayingCard&gt; ) . The class CardStack uses the class PlayingCard. Therefor the schema for PlayingCard has to be nested into the schema for CardStack. The sub-schema for PlayingCard looks as follows: . { \"type\": \"object\", \"required\": [ \"cardColor\", \"cardValue\" ], \"properties\": { \"cardColor\": { \"type\": \"string\", \"enum\": [ \"RED\", \"BLACK\" ] }, \"cardValue\":{ \"type\": \"integer\", \"minimum\": 0, \"maximum\": 12 } }, \"additionalProperties\": false } . The schema for CardStack referencing the nested schema looks as follows: . { \"$schema\": \"http://json-schema.org/draft-07/schema\", \"type\": \"object\", \"title\": \"Playing Card\", \"required\": [ \"cards\" ], \"properties\": { \"cards\": { \"type\": \"array\", \"items\": { \"$ref\": \"#/definitions/playingCard\" } } }, \"additionalProperties\": false, \"definitions\": { \"playingCard\": { \"type\": \"object\", \"required\": [ \"cardColor\", \"cardValue\" ], \"properties\": { \"cardColor\": { \"type\": \"string\", \"enum\": [ \"RED\", \"BLACK\" ] }, \"cardValue\":{ \"type\": \"integer\", \"minimum\": 0, \"maximum\": 12 } } } } } . ",
+    "url": "/bgw/network/json/json/#schema-nesting",
+    
+    "relUrl": "/network/json/json/#schema-nesting"
+  },"87": {
+    "doc": "Json",
+    "title": "Json",
+    "content": " ",
+    "url": "/bgw/network/json/json/",
+    
+    "relUrl": "/network/json/json/"
+  },"88": {
+    "doc": "LayoutViews",
+    "title": "LayoutViews",
+    "content": ". | Prior knowledge | Introduction | Pane | GridPane . | Constructor | Adding and removing elements | Adding rows / columns | Removing rows / columns | Iterating grid /components | Setting fixed row heights and widths | Changing centering behaviour | . | CameraPane . | Example | . | . ",
+    "url": "/bgw/components/layout/layout/#layoutviews",
+    
+    "relUrl": "/components/layout/layout/#layoutviews"
+  },"89": {
+    "doc": "LayoutViews",
+    "title": "Prior knowledge",
+    "content": "All layout views inherit from ComponentView. It is therefore helpful to read this documentation first as the features from this superclass doesn’t get repeated here. ",
+    "url": "/bgw/components/layout/layout/#prior-knowledge",
+    
+    "relUrl": "/components/layout/layout/#prior-knowledge"
+  },"90": {
+    "doc": "LayoutViews",
+    "title": "Introduction",
+    "content": "LayoutViews are used to arrange /components. There are two available LayoutViews: Pane and GridPane. ",
+    "url": "/bgw/components/layout/layout/#introduction",
+    
+    "relUrl": "/components/layout/layout/#introduction"
+  },"91": {
+    "doc": "LayoutViews",
+    "title": "Pane",
+    "content": "The Pane arranges its contents in a new coordinate space in the size of the Pane. Elements added to the Pane align themselves relative to the top-left corner of the Pane. This can be used to group a set of /components to move them simultaneously by altering the Pane’s position. A Pane is therefore quite similar to an Area but can be used in MenuScenes. Note that a Pane is not a Container and therefore not draggable. Use an Area to combine /components to a drag group. ",
+    "url": "/bgw/components/layout/layout/#pane",
+    
+    "relUrl": "/components/layout/layout/#pane"
+  },"92": {
+    "doc": "LayoutViews",
+    "title": "GridPane",
+    "content": "The GridPane arranges its contents in rows and columns. All rows and columns adjust their size automatically based on the largest element in this row / column. This implies that empty rows and column get width / height of 0. Fixed sizes can be specified as well as a spacing between rows and columns. Constructor . The grid needs an initial row and column count. These can be altered as described later. By default, the grid gets anchored at its center. This means that posX and posY refer to the grids center point and the grid expands equally in all directions. This can be altered by passing layoutFromCenter = false to the constructor. Adding and removing elements . The Grid can be array-like indexed with grid[columnIndex, rowIndex] for all get and set operations. val content = grid[0,2] . will retrieve the content of cell [0,2]. Empty cells contain null. grid[0,2] = Button(text=\"Hello\") . will replace the content of cell [0,2] with a button. To remove elements use . grid[0,2] = null . Adding rows / columns . Rows and columns can be added by calling addRows and addColumns. In both cases the desired index to insert and the amount of rows / columns to add can be passed. To grow the grid in all directions use grow. Removing rows / columns . Rows and columns can be removed by calling removeRow and removeColumn. In both cases the desired index to delete has to be passed. To automatically remove all empty rows / columns use removeEmptyRows and removeEmptyColumns. Using trim removes all empty outer rows and columns. Iterating grid /components . The grid implements the Iterable interface which means that it can be iterated by using its iterator, in foreach loops, and in streams. The iterator returns GridIteratorElements that contain the component and the current columnIndex and rowIndex. Note that the iterator iterates through all cells including those that are empty. Therefore, the returned GridIteratorElement may contain null as component. Setting fixed row heights and widths . By default, all rows and columns get rendered automatically according to the largest element in this row or column. To set fixed values use setRowHeight / setRowHeights and setColumnWidth / setColumnWidths. To restore automatic behaviour pass AUTO_ROW_HEIGHT / AUTO_COLUMN_WIDTH or use setAutoRowHeight / setAutoRowHeights and setAutoColumnWidth / setAutoColumnWidths . Changing centering behaviour . By default, /components get centered in their cells if the cell’s size is larger than the component. This can be changed for each cell by calling setCellCenterMode. To change behaviour for entire rows or columns use setRowCenterMode and setColumnCenterMode. To set centering behaviour for the entire grid use setCenterMode. ",
+    "url": "/bgw/components/layout/layout/#gridpane",
+    
+    "relUrl": "/components/layout/layout/#gridpane"
+  },"93": {
+    "doc": "LayoutViews",
+    "title": "CameraPane",
+    "content": "A pane representing a camera view that can be used to display a target layout view. Example . val targetLayout = Pane&lt;*&gt;(width = 1000, height = 1000) val cameraPane = CameraPane(width = 500, height = 500 ,target = targetLayout) // Zoom in by setting the zoom factor to 2 cameraPane.zoom = 2.0 // Make the camera pane interactive cameraPane.interactive = true // Pan the camera to specific coordinates cameraPane.pan(100, 200) // Pan the camera by offset values cameraPane.panBy(-50, 100) . In the example above, a CameraPane is created with a pane as its target. The zoom factor is set to 2, making the view twice as large. The camera pane is set to be interactive, allowing zooming and panning with the mouse. The camera is then panned to specific coordinates and panned again by offset values. Note how the CameraPane is smaller than the pane it is displaying. A CameraPane is especially useful if you want to display larger content in a smaller area. ",
+    "url": "/bgw/components/layout/layout/#camerapane",
+    
+    "relUrl": "/components/layout/layout/#camerapane"
+  },"94": {
+    "doc": "LayoutViews",
+    "title": "LayoutViews",
+    "content": " ",
+    "url": "/bgw/components/layout/layout/",
+    
+    "relUrl": "/components/layout/layout/"
+  },"95": {
+    "doc": "Network",
+    "title": "Network",
+    "content": "Introduction to bgw-net. ",
+    "url": "/bgw/network/network/",
+    
+    "relUrl": "/network/network/"
+  },"96": {
+    "doc": "Network connectivity",
+    "title": "Network communication",
+    "content": ". | Network communication . | Prerequisites . | Gradle Kotlin DSL | Gradle Groovy DSL | Maven | . | Getting started | Establishing a connection | Hosting and Joining game sessions. | Sending messages | Receiving messages | . | . This section deals with the integration of network communication to establish multiplayer modes over the internet. ",
+    "url": "/bgw/network/connection/networkconnectivity/#network-communication",
+    
+    "relUrl": "/network/connection/networkconnectivity/#network-communication"
+  },"97": {
+    "doc": "Network connectivity",
+    "title": "Prerequisites",
+    "content": "In order to use network integration you first have to integrate bgw-net components into your buildscript, e.g. gradle etc. For client use both artifacts bgw-net-common and bgw-net-client are required. You can obtain the dependencies from maven central: . Gradle Kotlin DSL . implementation(\"tools.aqua:bgw-net-common:latest\") implementation(\"tools.aqua:bgw-net-client:latest\") . Gradle Groovy DSL . implementation 'tools.aqua:bgw-net-common:latest' implementation 'tools.aqua:bgw-net-client:latest' . Maven . &lt;dependency&gt; &lt;groupId&gt;tools.aqua&lt;/groupId&gt; &lt;artifactId&gt;bgw-net-common&lt;/artifactId&gt; &lt;version&gt;latest&lt;/version&gt; &lt;/dependency&gt; . &lt;dependency&gt; &lt;groupId&gt;tools.aqua&lt;/groupId&gt; &lt;artifactId&gt;bgw-net-client&lt;/artifactId&gt; &lt;version&gt;latest&lt;/version&gt; &lt;/dependency&gt; . ",
+    "url": "/bgw/network/connection/networkconnectivity/#prerequisites",
+    
+    "relUrl": "/network/connection/networkconnectivity/#prerequisites"
+  },"98": {
+    "doc": "Network connectivity",
+    "title": "Getting started",
+    "content": "On the client side, the central communication interface is the BoardGameClient. Create your own communication class inheriting from this class. class MauMauBoardGameClient( playerName: String, host: String, secret: String, ) : BoardGameClient( playerName = playerName, host = host, secret = secret, networkLoggingBehavior = NetworkLogging.VERBOSE) . Upon creation the server address, port and secret has to be passed and cannot be changed later on. Additionally, BoardGameClient takes the player’s name for identification purposes. BoardGameClient implements dedicated network logging to the standard console which can be turned on and controlled via the netwokLoggingBehaviour parameter. The following options are available (see NetworkLogging): . | VERBOSE: Verbose logging printing each step to the console including serialized Json. | INFO: Log incoming and outgoing messages in human-readable format to keep track of network traffic. | ERRORS: Only log errors during communication. | NO_LOGGING: Completely deactivate logging. | . The default value is NO_LOGGING. ",
+    "url": "/bgw/network/connection/networkconnectivity/#getting-started",
+    
+    "relUrl": "/network/connection/networkconnectivity/#getting-started"
+  },"99": {
+    "doc": "Network connectivity",
+    "title": "Establishing a connection",
+    "content": "Once set up you may call connect on the BoardGameClient in order to start a connection. This method will block the current thread until a connection was established or the request timed out. You may want to think about multithreading in this situation. The function will return true iff the connection was established successfully. A connection may be closed safely by calling disconnnect. The connection state may be checked via isOpen property. ",
+    "url": "/bgw/network/connection/networkconnectivity/#establishing-a-connection",
+    
+    "relUrl": "/network/connection/networkconnectivity/#establishing-a-connection"
+  },"100": {
+    "doc": "Network connectivity",
+    "title": "Hosting and Joining game sessions.",
+    "content": "A game session may be started by calling createGame. Each session gets identified by a unique sessionID that has to be passed to the function. Calling createGame automatically adds this client to the newly created game on the server side. Additionally, the gameID must match the registered gameID on the server in order to identify the correct set of message schemas for this game. greetingMessage will be sent to all players upon joining this session. val client = MauMauBoardGameClient(playerName = \"Alice\", host = \"localhost\", secret = \"SECRET\") if(client.connect()) client.createGame(gameID = \"MauMau\", sessionID = \"Alice vs. Bob\", greetingMessage = \"Welcome to MauMau!\") . To join an existing session, you may call joinGame passing the sessionID to join to. The greetingMessage will be broadcast to all players in this session. val client = MauMauBoardGameClient(playerName = \"Bob\", host = \"localhost\", secret = \"SECRET\") if(client.connect()) client.joinGame(sessionID = \"Alice vs. Bob\", greetingMessage = \"Hi, I am Bob!\") . After creating or joining to a game, the server will respond with dedicated Responses which will invoke onCreateGameResponse and onJoinGameResponse. Override these methods to react to the different status codes: . override fun onCreateGameResponse(response: CreateGameResponse) { when (response.status) { CreateGameResponseStatus.SUCCESS -&gt; prinln(\"Successfully created game.\") CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME -&gt; error(\"Leave current game first.\") CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS -&gt; error(\"Session id already exists.\") CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST -&gt; error(\"GameID does not exist.\") CreateGameResponseStatus.SERVER_ERROR -&gt; error(response) } } . override fun onJoinGameResponse(response: JoinGameResponse) { when (response.status) { JoinGameResponseStatus.SUCCESS -&gt; { prinln(\"Successfully joined game.\") println(\"The host's greeting is \\\"${response.message}\\\".\") } JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME -&gt; error(\"You are already in a game.\") JoinGameResponseStatus.INVALID_SESSION_ID -&gt; error(\"SessionID invalid.\") JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN -&gt; error(\"Player name already exists.\") JoinGameResponseStatus.SERVER_ERROR -&gt; error(response) } } . All connected players will get notified when a player joins or leaves the session via onPlayerJoined and onPlayerLeft. Please note that all response functions and event handlers get called asynchronously. It is therefore necessary to call BoardGameApplication.runOnGUIThread{ ... } to resync to the GUI thread when performing view changes. ",
+    "url": "/bgw/network/connection/networkconnectivity/#hosting-and-joining-game-sessions",
+    
+    "relUrl": "/network/connection/networkconnectivity/#hosting-and-joining-game-sessions"
+  },"101": {
+    "doc": "Network connectivity",
+    "title": "Sending messages",
+    "content": "Once registered in a game session you may now send messages to your opponents. The server does not implement any form of keeping track whose turn it is at the moment. The function sendGameActionMessage takes a GameAction instance and sends it to all connected opponents. For each type of game action that you want to communicate you have to declare a separate (data) class inheriting from GameAction. For our MauMau example let’s assume that there are four types of game actions: . | MauMauInitGameAction - First initialization containing the card stacks and hand cards. | MauMauEndGameAction - You played your last card and won the game. | MauMauShuffleStackGameAction - The draw stack was empty and had to be shuffled. | MauMauGameAction - You have played or taken a card from the stack. | . As mentioned all game action classes have to inherit from GameAction. In addition to that they have to be annotated with @GameActionClass. For our four sample classes this looks like this: . @GameActionClass data class MauMauInitGameAction( val hostCards: List&lt;MauMauGameCard&gt;, val yourCards: List&lt;MauMauGameCard&gt;, val drawStack: List&lt;MauMauGameCard&gt;, val gameStack: MauMauGameCard, ) : GameAction() . @GameActionClass data class MauMauEndGameAction( val winner: String, ) : GameAction() . @GameActionClass data class MauMauShuffleStackGameAction( val drawStack: List&lt;MauMauGameCard&gt;, val gameStack: MauMauGameCard, ) : GameAction() . @GameActionClass data class MauMauGameAction( val action: String, //Restricted by Enum values val card: MauMauGameCard? = null ) : GameAction() . After sending a game action, the server will respond in onGameActionResponse. ",
+    "url": "/bgw/network/connection/networkconnectivity/#sending-messages",
+    
+    "relUrl": "/network/connection/networkconnectivity/#sending-messages"
+  },"102": {
+    "doc": "Network connectivity",
+    "title": "Receiving messages",
+    "content": "Received messages get propagated through onGameActionReceived by default. Consider this method as a fallback solution as it gets a parameter of type GameAction. It would therefore be necessary to cast the object down by instanceof-switching. Instead, bgw-net allows you to declare dedicated functions for each object type that may get received. These functions have to be declared inside your BoardGameClient implementation or further down the inheritance hierarchy. The function must declare two formal parameters . | A GameAction instance | A String for the sending player’s identification | . Additionally, each receiver function must be annotated with @GameActionReceiver. For our example these functions may look as follows: . @GameActionReceiver private fun onInitGameReceived(message: MauMauInitGameAction, sender: String) { //Init game received } @GameActionReceiver private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) { //End game received } @GameActionReceiver private fun onShuffleStackReceived(message: MauMauShuffleStackGameAction, sender: String) { //Stack shuffled received } @GameActionReceiver private fun onGameActionReceived(message: MauMauGameAction, sender: String) { //Game Action received } . The name of the function and parameters are free to choose as well as the visibility modifier. Although when two functions with the same parameter types get detected, only the first will be used, and you will get a warning printed to console. Note that the order of scanning and therefor the distinction which of these redundant declarations will be used is not stable and may vary between execution cycles due to compiler optimizations. It is therefore highly recommended, to declare exactly one receiver function for each GameAction instance. Please note that all connected players have to declare the exact same classes in order to ensure correct serialization and deserialization. Implement toString() method in all GameActionClasses in order to ensure good debugging of the network traffic. ",
+    "url": "/bgw/network/connection/networkconnectivity/#receiving-messages",
+    
+    "relUrl": "/network/connection/networkconnectivity/#receiving-messages"
+  },"103": {
+    "doc": "Network connectivity",
+    "title": "Network connectivity",
+    "content": " ",
+    "url": "/bgw/network/connection/networkconnectivity/",
+    
+    "relUrl": "/network/connection/networkconnectivity/"
+  },"104": {
+    "doc": "Observable",
+    "title": "Observable",
+    "content": ". | Properties | Observable Lists | . This section showcases the different types of observables in the BGW framework. Observables are used to enable listening on changes of element properties. ",
+    "url": "/bgw/concepts/observable/observable/#observable",
+    
+    "relUrl": "/concepts/observable/observable/#observable"
+  },"105": {
+    "doc": "Observable",
+    "title": "Properties",
+    "content": "Properties represent an attribute that notifies all listeners if it gets changed. A listener can be added by Property#addListener or Property#addListenerAndInvoke which also invokes it with the given value. Note that the given value is not set to the backing field. Every time the value of this observable is set it invokes all listeners if and only if the new value is not equal the old one. If all listeners should be invoked with the current value, use Property#notifyUnchanged. For common data types there are dedicated classes: . | BooleanProperty | IntegerProperty | DoubleProperty | StringProperty | . For generic types use the baseclass [Property][PropertyKDoc]. The LimitedDoubleProperty behaves like a DoubleProperty but throws an IllegalArgumentException is a value is set that exceeds its bounds given as constructor parameter. The framework uses equivalent ReadonlyProperties for one way communication. These come in the same variety: . | ReadonlyBooleanProperty | ReadonlyIntegerProperty | ReadonlyDoubleProperty | ReadonlyStringProperty | [ReadonlyProperty][ReadonlyPropertyKDoc]. | . ",
+    "url": "/bgw/concepts/observable/observable/#properties",
+    
+    "relUrl": "/concepts/observable/observable/#properties"
+  },"106": {
+    "doc": "Observable",
+    "title": "Observable Lists",
+    "content": "The ObservableList work exactly like Properties. It provides all standard list operations and notifies listeners every time the list changes. In the BGW framework there exist two implementations of the abstract ObservableList: . | ObservableArrayList | ObservableLinkedList | . ",
+    "url": "/bgw/concepts/observable/observable/#observable-lists",
+    
+    "relUrl": "/concepts/observable/observable/#observable-lists"
+  },"107": {
+    "doc": "Observable",
+    "title": "Observable",
+    "content": " ",
+    "url": "/bgw/concepts/observable/observable/",
+    
+    "relUrl": "/concepts/observable/observable/"
+  },"108": {
+    "doc": "Stack",
+    "title": "Stack",
+    "content": ". | Usage | Creation | Modification . | Adding elements | Retrieving elements | Sorting / shuffling | . | . ",
+    "url": "/bgw/util/stack/stack/#stack",
+    
+    "relUrl": "/util/stack/stack/#stack"
+  },"109": {
+    "doc": "Stack",
+    "title": "Usage",
+    "content": "The Stack utility class is a kotlin implementation of the common stack collection. The stack may become useful for many board game applications like card stacks, money stacks, etc. ",
+    "url": "/bgw/util/stack/stack/#usage",
+    
+    "relUrl": "/util/stack/stack/#usage"
+  },"110": {
+    "doc": "Stack",
+    "title": "Creation",
+    "content": "The stack can be created with initial elements as a constructor parameter, either as collection or varargs, or as an empty stack with no constructor parameters. The elements get added from the tail to the head such that the first element in the collection will be popped first and the last element gets the highest index. val emptyStack: Stack&lt;String&gt; = Stack() val collectionStack: Stack&lt;String&gt; = Stack(listOf(\"ONE\", \"SIX\", \"TEN\")) val varargsStack: Stack&lt;String&gt; = Stack(\"ONE\", \"SIX\", \"TEN\") . ",
+    "url": "/bgw/util/stack/stack/#creation",
+    
+    "relUrl": "/util/stack/stack/#creation"
+  },"111": {
+    "doc": "Stack",
+    "title": "Modification",
+    "content": "Adding and removing elements is only available for the topmost element as the stack represents a LIFO queue. Adding elements . Elements get added by calling push for one element or pushAll for multiple elements. For multiple elements, they get pushed one by one from the first to the last element in the given collection. Retrieving elements . Elements get removed by calling pop. This removes the topmost element from the stack and returns it. popAll can be used to pop all elements or, by specifying parameter n, the given number of elements. peek returns the topmost element without removing it. peekAll works respectively. The first index of any element in the stack can be obtained by calling indexOf. This returns -1 if the element is not contained in the stack. The stack can be cleared by calling clear. Note that pop/peek throws a NoSuchElementException if the stack is empty. Use popOrNull/peekOrNull for safe access or check stack’s size or call isEmpty / isNotEmpty. Sorting / shuffling . The stack can be sorted by calling sort and shuffled by calling shuffle. ",
+    "url": "/bgw/util/stack/stack/#modification",
+    
+    "relUrl": "/util/stack/stack/#modification"
+  },"112": {
+    "doc": "Stack",
+    "title": "Stack",
+    "content": " ",
+    "url": "/bgw/util/stack/stack/",
+    
+    "relUrl": "/util/stack/stack/"
+  },"113": {
+    "doc": "UIComponents",
+    "title": "UIComponents",
+    "content": ". | Prior knowledge | Introduction | Label | Button | CheckBox | ColorPicker | ComboBox | ProgressBar | ToggleButton and RadioButton | TextArea, TextField and PasswordField | ListView | TableView | Loading custom fonts | Complete source code for the example | . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#uicomponents",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#uicomponents"
+  },"114": {
+    "doc": "UIComponents",
+    "title": "Prior knowledge",
+    "content": "All ui /components inherit from ComponentView. It is therefore helpful to read this documentation first as the features from this superclass doesn’t get repeated here. ",
+    "url": "/bgw/components/uicomponents/uicomponents/#prior-knowledge",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#prior-knowledge"
+  },"115": {
+    "doc": "UIComponents",
+    "title": "Introduction",
+    "content": "A UIComponent may be used to present information to the user or retrieve input. There are three base classes for UIComponents. | UIComponent: the baseclass for all UIComponents | LabeledUIComponents: extends UIComponent and provides additional fields to define a text e.g., a Button with a text. | TextInputUIComponents: extends UIComponent and provides a text input field for user defined text. | . NOTE: UIComponents are ComponentViews. This means all methods of handling user input discussed in the User Input Guide are also available to UIComponentViews. This is a visual example of all the available UIComponents in the framework. Parts of the source code will be used in this tutorial to demonstrate the most important features of each UIComponent. The full source code can be found here: . View it on GitHub . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#introduction",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#introduction"
+  },"116": {
+    "doc": "UIComponents",
+    "title": "Label",
+    "content": "A Label is just a simple text. In this example a new label is instantiated with the text “I am a Label.”, aligned to the center and with text wrapping enabled. Enabled text wrapping allows the text to wrap onto a new line if the width of the label is too small for the text. private val outputLabel = Label( posX = 50, posY = 50, width = 300, text = \"I am a Label.\", alignment = Alignment.CENTER, isWrapText = true ) . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#label",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#label"
+  },"117": {
+    "doc": "UIComponents",
+    "title": "Button",
+    "content": "A Button is a component that plays an animation when a mouse click is performed over the button. Additionally, a text may be defined to describe the button. In this example a new button is instantiated, and the onMouseClicked is set, so that the outputLabel displays “Someone pressed the Button!”. val button = Button(posX = 450, posY = 50, text = \"I am a Button.\", visual = ColorVisual.LIGHT_GRAY) button.onMouseClicked = { outputLabel.text = \"Someone pressed the Button!\" } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#button",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#button"
+  },"118": {
+    "doc": "UIComponents",
+    "title": "CheckBox",
+    "content": "A CheckBox is a component that can be checked or unchecked. It can be enabled to allow an indeterminate state. This can be used to express uncertainty. Whenever a CheckBox is clicked it changes its state in the following order: . if indeterminate is not allowed . | checked | isIndeterminate | . | false | false | . | true | false | . if indeterminate is allowed . | checked | isIndeterminate | . | false | false | . | false | true | . | true | false | . NOTE: it is possible to set isIndeterminate to true even when indeterminate is not allowed. It is just impossible to reach the indeterminate state via clicks on the CheckBox. In this example, listeners are added to the checkedProperty and indeterminateProperty, such that outputLabel displays the state of the CheckBox, whenever the state changes. val checkBox = CheckBox(posX = 50, posY = 150, width = 300, text = \"I am a CheckBox.\", alignment = Alignment.CENTER_LEFT) checkBox.allowIndeterminate = true checkBox.checkedProperty.addListener { _, newValue -&gt; outputLabel.text = if (newValue) \"The check box is checked!\" else \"The check box is unchecked!\" } checkBox.indeterminateProperty.addListener { _, newValue -&gt; if (newValue) outputLabel.text = \"The check box is indeterminate!\" } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#checkbox",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#checkbox"
+  },"119": {
+    "doc": "UIComponents",
+    "title": "ColorPicker",
+    "content": "A ColorPicker may be used to enable a user to specify a colour intuitively. The selected colour can be set and retrieved via the selectedColor property. To react to a new selectedColor, a listener may be added to the selectedColorProperty. In this example the text colour of another label is changed, whenever a new colour is picked. val colorPicker = ColorPicker(posX = 450, posY = 200, width = 300, initialColor = Color.BLACK) val colorPickerLabel = Label( posX = colorPicker.posX, posY = colorPicker.posY - 50, width = colorPicker.width, height = 50, alignment = Alignment.CENTER, font = Font(color = colorPicker.selectedColor), text = \"This is a ColorPicker. Use it to change the colour of this text!\" ).apply { isWrapText = true } colorPicker.selectedColorProperty.addListener { _, newValue -&gt; colorPickerLabel.font = Font(color = newValue) } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#colorpicker",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#colorpicker"
+  },"120": {
+    "doc": "UIComponents",
+    "title": "ComboBox",
+    "content": "A ComboBox is a drop-down menu, where a user may choose an option. A prompt may be specified to inform the user, what is expected of him. The ComboBox has a type parameter to define a type for the objects that correspond to the options. One string per contained object is necessary to represent it as an option to the user. There are two methods of obtaining said string. A formatFunction, that projects the contained objects to a string representation may be set. If no formatFunction is set, the toString function of the contained object is used to obtain a string. In this example a ComboBox typed to Double with the prompt “Select an option! This is the prompt.” is instantiated. Then the formatFunction is set, so the contained doubles get represented as their Int value with the suffix “Option “. val comboBox = ComboBox&lt;Double&gt;(posX = 50, posY = 350, width = 300, prompt = \"Select an option! This is the prompt.\") comboBox.formatFunction = { \"Option ${it.toInt()}\" } . To define the options simply set the items list. In the example three doubles are set. comboBox.items = mutableListOf(0.0, 1.0, 2.0) . The selectedItem can be used to retrieve or set the current selected item. To react to a change of the selected item, a listener can be added to the selectedItemProperty. In the example the outputLabel should display the newly selected option whenever it changes. comboBox.selectedItemProperty.addListener { _, newValue -&gt; outputLabel.text = \"Combo box selection is : $newValue\" } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#combobox",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#combobox"
+  },"121": {
+    "doc": "UIComponents",
+    "title": "ProgressBar",
+    "content": "A ProgressBar is a coloured bar that can indicate progress to the user. The current progress and colour can be retrieved and set via progress and barColor respectively. In this example a new ProgressBar is instantiated and the onMouseClicked is set, such that the progress of the bar is advanced by 5% on a click or reset if the progress is greater than 100%. NOTE: the progress is modelled as a Double, where any value equal or less than 0 means 0% progress and any value equal or greater than 1 means 100% progress. val progressBar = ProgressBar(posX = 450, posY = 350, width = 300, progress = 0.5, barColor = Color.GREEN) progressBar.onMouseClicked = { progressBar.progress = if (progressBar.progress &gt; 1.0) 0.0 else progressBar.progress + 0.05 } . Additionally, to react to change to the progress a listener is added to the progressProperty. In this case updating the barColor based on the current progress level. progressBar.progressProperty.addListener { _, newValue -&gt; when { newValue &gt; 0.8 -&gt; progressBar.barColor = Color.RED newValue &gt; 0.5 -&gt; progressBar.barColor = Color.YELLOW else -&gt; progressBar.barColor = Color.GREEN } } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#progressbar",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#progressbar"
+  },"122": {
+    "doc": "UIComponents",
+    "title": "ToggleButton and RadioButton",
+    "content": "A ToggleButton can either be selected or not selected. A RadioButton is just a ToggleButton with a different visual representation. It has exactly the same functionalities as a ToggleButton. To retrieve whether the ToggleButton is toggled on or off the isSelected field can be used. ToggleButtons have a feature where different ToggleButtons may be linked via a ToggleGroup. ToggleGroups enforce a rule, where only one ToggleButton in a ToggleGroup may be selected at a time. So whenever a ToggleButton in a ToggleGroup changes its selected state to true, all other ToggleButtons in the ToggleGroup automatically have their selected state set to false. NOTE: Setting a ToggleGroup on a ToggleButton is an exception. The ToggleGroup rule only gets enforced whenever a contained ToggleButton changes its state. So it is technically possible to have multiple selected ToggleButtons in a ToggleGroup by setting the ToggleGroup on multiple pre-selected ToggleButtons. In this example a new ToggleGroup, Toggle- and RadioButton are instantiated. The toggleGroup is set as the toggleGroup for both buttons. val toggleGroup = ToggleGroup() val radioButton = RadioButton(posX = 50, posY = 450, toggleGroup = toggleGroup) val toggleButton = ToggleButton(posX = 450, posY = 450, toggleGroup = toggleGroup) . To react to change of the selected state, a listener can be added to the selectedProperty. In the example the text of the Label radioLabel gets updated, whenever the selected state of radioButton changes. radioButton.selectedProperty.addListener { _, newValue -&gt; radioLabel.text = if (newValue) \"This is a selected radio button!\" else \"This is a deselected radio button!\" } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#togglebutton-and-radiobutton",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#togglebutton-and-radiobutton"
+  },"123": {
+    "doc": "UIComponents",
+    "title": "TextArea, TextField and PasswordField",
+    "content": "TextArea, TextField and [PasswordField][PasswordFieldKDoc] can be used to allow users to type texts. The main difference between TextArea and TextField/PasswordField, is that [TextArea][TextAreanKDoc] has multiple lines of input, while TextField and [PasswordField][PasswordFieldKDoc] only have one. The text can be set and retrieved via text. A prompt can be specified that informs the user, which textual input is requested. To react to user input, a listener on the textProperty can be added. Additionally, the onKeyPressed, onKeyReleased and onKeyTyped handlers are a great way of executing code when textual input occurs. [PasswordField][PasswordFieldKDoc] acts like a TextField but uses stars to display the typed text. In this example a TextArea, and a TextField with prompts are instantiated and listeners on their textPropertys are added, that update the outputLabel with the current text. val textArea = TextArea(posX = 50, posY = 600, prompt = \"Type something! This is the prompt.\") textArea.textProperty.addListener { _, newValue -&gt; outputLabel.text = newValue } val textField = TextField(posX = 450, posY = 600, width = 300, prompt = \"Type something! This is the prompt.\") textField.textProperty.addListener { _, newValue -&gt; outputLabel.text = newValue } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#textarea-textfield-and-passwordfield",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#textarea-textfield-and-passwordfield"
+  },"124": {
+    "doc": "UIComponents",
+    "title": "ListView",
+    "content": "A ListView can be used to display a list of strings. The ListView has a type parameter, so any type of objects can be contained in the ListView. By default, the toString() function is applied to the contained objects to obtain a string representation of each object. A formatFunction can be set that gets used instead of the toString() function to obtain the string representations. In this example, a ListView with initial Int items is created.. val listView = ListView(posX = 50, posY = 800, width = 300, height = 200, items = mutableListOf(42, 1337, 1, 2, 3)) . A custom formatFunction is set, so the ListView displays “Value for this cell is” concatenated with the actual value of the contained object. listView.formatFunction = { \"Value for this cell is $it\" } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#listview",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#listview"
+  },"125": {
+    "doc": "UIComponents",
+    "title": "TableView",
+    "content": "A TableView can be used to display multiple representations of the same objects in pre-defined columns. The TableView has a type parameter, so any type of objects can be contained in the TableView. In this example a TableView typed to Int is instantiated. val table = TableView&lt;Int&gt;(posX = 450, posY = 800, width = 300, height = 200) . Three custom TableColumns are added to the columns list of the TableView. A TableColumn consists of a title, a width and a formatFunction that defines how to project a contained object to a string for this column. The three columns are as follows: . | \"Value\" displays the actual value of the contained int, so the fromatFunction just wraps the value in a string. | \"Squared\" display the squared value of the contained int, so the formatFunction calculates the square of the value and wraps it in a string. | \"Even?\" displays whether the value of the contained int is even, so the formatFucntion checks if the value is divisible by two and wraps the resulting boolean in a string. | . table.columns.add(TableColumn(title = \"Value\", width = 100) { \"$it\" }) table.columns.add(TableColumn(title = \"Squared\", width = 100) { \"${it * it}\" }) table.columns.add(TableColumn(title = \"Even?\", width = 100) { \"${it % 2 == 0}\" }) . Lastly, to specify the data model for the TableView, some ints are added to the items list. table.items.addAll(listView.items) . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#tableview",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#tableview"
+  },"126": {
+    "doc": "UIComponents",
+    "title": "Loading custom fonts",
+    "content": "The UIComponent class has a parameter font, which can be passed. This means all derived component classes like e.g. Label can be constructed with a custom font. In order to load a custom font use the BoardGameApplication class. // Load Roboto-Regular.ttf from root of resource folder val resource = UIComponentExample::class.java.getResource(\"/Roboto-Regular.ttf\") ?: throw FileNotFoundException() val fontFile = File(resource.toURI()) BoardGameApplication.loadFont(fontFile) . Now the font is registered and ready to use. private val label = Label( text = \"I am a Label.\", font = Font(family = \"Roboto\") ) . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#loading-custom-fonts",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#loading-custom-fonts"
+  },"127": {
+    "doc": "UIComponents",
+    "title": "Complete source code for the example",
+    "content": "View it on GitHub . fun main() { UIComponentExample() } class UIComponentExample : BoardGameApplication(\"UIComponent Example\") { private val menuScene = MenuScene(width = 800).apply { this.opacity = 1.0 } private val outputLabel = Label( posX = 50, posY = 50, width = 300, text = \"I am a Label.\", alignment = Alignment.CENTER, isWrapText = true ) init { menuScene.addComponents(outputLabel) //Button val button = Button(posX = 450, posY = 50, text = \"I am a Button.\", visual = ColorVisual.LIGHT_GRAY) button.onMouseClicked = { outputLabel.text = \"Someone pressed the Button!\" } menuScene.addComponents(button) //CheckBox val checkBox = CheckBox(posX = 50, posY = 150, width = 300, text = \"I am a CheckBox.\", alignment = Alignment.CENTER_LEFT) checkBox.allowIndeterminate = true checkBox.checkedProperty.addListener { _, newValue -&gt; outputLabel.text = if (newValue) \"The check box is checked!\" else \"The check box is unchecked!\" } checkBox.indeterminateProperty.addListener { _, newValue -&gt; if (newValue) outputLabel.text = \"The check box is indeterminate!\" } menuScene.addComponents(checkBox) //ColorPicker val colorPicker = ColorPicker(posX = 450, posY = 200, width = 300, initialColor = Color.BLACK) val colorPickerLabel = Label( posX = colorPicker.posX, posY = colorPicker.posY - 50, width = colorPicker.width, height = 50, alignment = Alignment.CENTER, font = Font(color = colorPicker.selectedColor), text = \"This is a ColorPicker. Use it to change the colour of this text!\" ).apply { isWrapText = true } colorPicker.selectedColorProperty.addListener { _, newValue -&gt; colorPickerLabel.font = Font(color = newValue) } menuScene.addComponents(colorPicker, colorPickerLabel) //ComboBox val comboBox = ComboBox&lt;Double&gt;(posX = 50, posY = 350, width = 300, prompt = \"Select an option! This is the prompt.\") comboBox.formatFunction = { \"Option ${it.toInt()}\" } comboBox.items = mutableListOf(0.0, 1.0, 2.0) comboBox.selectedItemProperty.addListener { _, newValue -&gt; outputLabel.text = \"Combo box selection is : $newValue\" } val comboBoxLabel = Label( posX = comboBox.posX, posY = comboBox.posY - 50, width = comboBox.width, height = comboBox.height, alignment = Alignment.CENTER, text = \"This is a ComboBox\" ) menuScene.addComponents(comboBox, comboBoxLabel) //ProgressBar val progressBar = ProgressBar(posX = 450, posY = 350, width = 300, progress = 0.5, barColor = Color.GREEN) progressBar.onMouseClicked = { progressBar.progress = if (progressBar.progress &gt; 1.0) 0.0 else progressBar.progress + 0.05 } progressBar.progressProperty.addListener { _, newValue -&gt; when { newValue &gt; 0.8 -&gt; progressBar.barColor = Color.RED newValue &gt; 0.5 -&gt; progressBar.barColor = Color.YELLOW else -&gt; progressBar.barColor = Color.GREEN } } val progressBarLabel = Label( posX = progressBar.posX, posY = progressBar.posY - 50, width = progressBar.width, height = 50, alignment = Alignment.CENTER, text = \"This is a ProgressBar. Click it to progress it!\" ) menuScene.addComponents(progressBar, progressBarLabel) //RadioButton and ToggleButton val toggleGroup = ToggleGroup() val radioButton = RadioButton(posX = 50, posY = 450, toggleGroup = toggleGroup) val radioLabel = Label( posX = radioButton.posX + radioButton.width, posY = radioButton.posY, width = 300 - radioButton.width, height = radioButton.height, text = \"This is a RadioButton.\", alignment = Alignment.CENTER_LEFT ).apply { isWrapText = true } radioButton.selectedProperty.addListener { _, newValue -&gt; radioLabel.text = if (newValue) \"This is a selected radio button!\" else \"This is a deselected radio button!\" } menuScene.addComponents(radioButton, radioLabel) val toggleButton = ToggleButton(posX = 450, posY = 450, toggleGroup = toggleGroup) val toggleLabel = Label( posX = toggleButton.posX + toggleButton.width, posY = toggleButton.posY, width = 300 - toggleButton.width, height = toggleButton.height, text = \"This is a ToggleButton.\", alignment = Alignment.CENTER_LEFT ).apply { isWrapText = true } toggleButton.selectedProperty.addListener { _, newValue -&gt; toggleLabel.text = if (newValue) \"This is a selected toggle button!\" else \"This is a deselected toggle button!\" } menuScene.addComponents(toggleButton, toggleLabel) //TextArea val textArea = TextArea(posX = 50, posY = 600, prompt = \"Type something! This is the prompt.\") textArea.textProperty.addListener { _, newValue -&gt; outputLabel.text = newValue } val textAreaLabel = Label( posX = textArea.posX, posY = textArea.posY - 50, width = textArea.width, height = 50, alignment = Alignment.CENTER, text = \"This is a TextArea.\" ) menuScene.addComponents(textArea, textAreaLabel) //TextField val textField = TextField(posX = 450, posY = 600, width = 300, prompt = \"Type something! This is the prompt.\") textField.textProperty.addListener { _, newValue -&gt; outputLabel.text = newValue } val textFieldLabel = Label( posX = textField.posX, posY = textField.posY - 50, width = textField.width, height = 50, alignment = Alignment.CENTER, text = \"This is a TextField.\" ) menuScene.addComponents(textField, textFieldLabel) //ListView val listView = ListView&lt;Int&gt;(posX = 50, posY = 800, width = 300, height = 200) listView.formatFunction = { \"Value for this cell is $it\" } listView.items = mutableListOf(42, 1337, 1, 2, 3) val listViewLabel = Label( posX = listView.posX, posY = listView.posY - 50, width = listView.width, height = 50, text = \"This is a ListView.\", alignment = Alignment.CENTER ) menuScene.addComponents(listView, listViewLabel) //TableView val table = TableView&lt;Int&gt;(posX = 450, posY = 800, width = 300, height = 200) table.columns.add(TableColumn(title = \"Value\", width = 100) { \"$it\" }) table.columns.add(TableColumn(title = \"Squared\", width = 100) { \"${it * it}\" }) table.columns.add(TableColumn(title = \"Even?\", width = 100) { \"${it % 2 == 0}\" }) table.items.addAll(mutableListOf(42, 1337, 1, 2, 3)) val tableLabel = Label( posX = table.posX, posY = table.posY - 50, width = table.width, height = 50, text = \"This is a TableView.\", alignment = Alignment.CENTER ) menuScene.addComponents(table, tableLabel) showMenuScene(menuScene) show() } } . ",
+    "url": "/bgw/components/uicomponents/uicomponents/#complete-source-code-for-the-example",
+    
+    "relUrl": "/components/uicomponents/uicomponents/#complete-source-code-for-the-example"
+  },"128": {
+    "doc": "UIComponents",
+    "title": "UIComponents",
+    "content": " ",
+    "url": "/bgw/components/uicomponents/uicomponents/",
+    
+    "relUrl": "/components/uicomponents/uicomponents/"
+  },"129": {
+    "doc": "Util",
+    "title": "Util",
+    "content": "Introduction to util. ",
+    "url": "/bgw/util/util/",
+    
+    "relUrl": "/util/util/"
+  },"130": {
+    "doc": "Visual",
+    "title": "Visual",
+    "content": ". | SingleLayerVisual . | ColorVisual | TextVisual | ImageVisual | . | CompoundVisual | . In this section we are going to showcase the different types of visuals in the BGW framework. Visuals are used to style game elements in the application. Fundamentally there are two types of Visuals: . | SingleLayerVisual | CompoundVisual | . ",
+    "url": "/bgw/concepts/visual/visual/#visual",
+    
+    "relUrl": "/concepts/visual/visual/#visual"
+  },"131": {
+    "doc": "Visual",
+    "title": "SingleLayerVisual",
+    "content": "A simple visual displaying its type of visualization. ColorVisual . The ColorVisual displays a solid Color. It can either be created with RGB / RGBA values or via java.awt.Color. Additionally, it declares static fields for various standard colors. The following statements result in the same red visual: . val visual1: ColorVisual = ColorVisual(255, 0, 0) val visual2: ColorVisual = ColorVisual(java.awt.Color(255, 0, 0)) val visual3: ColorVisual = ColorVisual(java.awt.Color.RED) val visual4: ColorVisual = ColorVisual.RED . TextVisual . The TextVisual displays one line of text. It can be created with the text to display as a string and an optional Font. The following example shows the code for a TextVisual that displays “Token” in white with bold text in Arial 18px size. All parameters in the font constructor are optional, so fontStyle for example is redundant as it contains the default value: . val visual: TextVisual = TextVisual(\"Token\", Font( size = 18, color = Color.WHITE, family = \"Arial\", fontWeight = Font.FontWeight.BOLD, fontStyle = Font.FontStyle.NORMAL )) . ImageVisual . The ImageVisual displays a given image. It can either be created with a BufferedImage or by declaring the image file to load as File or path string relative to the application’s resource folder. Additionally, the size and position of a sub-image can be passed in order to select from a texture map. The following code example shows how to load an image: . val visual: ImageVisual = ImageVisual(\"card_deck.png\") . To select for example the three of diamonds from this texture map as a sub image, knowing that each card has a height of 200px and width 130px, the following code can extract the card: . val visual: ImageVisual = ImageVisual( path = \"card_deck.png\", width = 130, height = 200, offsetX = 2 * 130, offsetY = 200 ) . The full example can be found here: . View it on GitHub . ",
+    "url": "/bgw/concepts/visual/visual/#singlelayervisual",
+    
+    "relUrl": "/concepts/visual/visual/#singlelayervisual"
+  },"132": {
+    "doc": "Visual",
+    "title": "CompoundVisual",
+    "content": "CompoundVisuals can be used to stack multiple visuals. Therefore, if stacking ColorVisuals and ImageVisuals they have to be partially transparent in order to see the Visual beyond. The Visuals get added in the order they got passed from bottom to top. CompoundVisuals can for example be used to create a Text with background Color (left), label a GameToken (center), or display valid drop targets (right): . The right Visual for example has been created by the following code: . visual = CompoundVisual( ImageVisual( path = \"card_deck.png\", width = 130, height = 200, offsetX = 260, offsetY = 200 ), ColorVisual.GREEN.apply { transparency = 0.2 } ) . The full example can be found here: . View it on GitHub . ",
+    "url": "/bgw/concepts/visual/visual/#compoundvisual",
+    
+    "relUrl": "/concepts/visual/visual/#compoundvisual"
+  },"133": {
+    "doc": "Visual",
+    "title": "Visual",
+    "content": " ",
+    "url": "/bgw/concepts/visual/visual/",
+    
+    "relUrl": "/concepts/visual/visual/"
+  }
+}
