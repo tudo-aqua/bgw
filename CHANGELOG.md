@@ -21,6 +21,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 0.9.5-Pre - 30.01.2024
+
+### Added
+- Added `HexOrientation` to `HexagonGrid` and `HexagonView` to support different orientations of hexagons.
+
+## 0.9.4-Pre - 15.01.2024
+
+### Fixed
+- Fixed `TextInputUIComponent` not showing prompt text when text is empty.
+
+## 0.9.2-Pre - 15.12.2023
+
+### Added
+- Added missing `Cursor` CSS styles.
+
+### Changed
+- Refactored `Visual` styling properties observer.
+- Propagate compound visual styles to children.
+
+### Fixed
+- Fixed CSS style properties not being set correctly.
+
 ## [0.9] - 27.11.2023
 
 ### Added

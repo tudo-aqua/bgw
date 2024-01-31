@@ -18,6 +18,7 @@
 package tools.aqua.bgw.components.gamecomponentviews
 
 import tools.aqua.bgw.core.DEFAULT_HEXAGON_SIZE
+import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -30,12 +31,14 @@ import tools.aqua.bgw.visual.Visual
  * @param size Represents the radius of the outer circle of the [HexagonView] all six points lie on.
  * Default: [DEFAULT_HEXAGON_SIZE].
  * @param visual Visual for this [HexagonView].
+ * @param orientation Orientation of the [HexagonView]. Default: [HexOrientation.POINTY_TOP].
  */
 open class HexagonView(
     posX: Number = 0,
     posY: Number = 0,
     val size: Number = DEFAULT_HEXAGON_SIZE,
-    visual: Visual
+    visual: Visual,
+    var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentView(
         posX = posX,
