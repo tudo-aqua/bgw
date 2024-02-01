@@ -38,7 +38,7 @@ object SceneBuilder {
     val pane = buildPane(scene)
 
     // register lock pane
-    @Suppress("DuplicatedCode", "DuplicatedCode")
+    @Suppress("DuplicatedCode")
     val lockPane =
         Pane().apply {
           prefHeightProperty().bind(pane.heightProperty())
