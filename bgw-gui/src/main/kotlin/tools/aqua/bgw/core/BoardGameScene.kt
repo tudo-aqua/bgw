@@ -38,36 +38,9 @@ open class BoardGameScene(
     height: Number = DEFAULT_SCENE_HEIGHT,
     background: Visual = ColorVisual.WHITE
 ) : Scene<ComponentView>(width = width, height = height, background = background) {
-
-  /**
-   * Property that indicates if this [BoardGameScene] is locked from user input.
-   *
-   * @see lock
-   * @see unlock
-   */
-  val lockedProperty: BooleanProperty = BooleanProperty(false)
-
   /**
    * Property that indicates if this [BoardGameScene] is locked from user input because of menu
    * scene.
    */
   internal val internalLockedProperty: BooleanProperty = BooleanProperty(false)
-
-  /**
-   * Locks [Scene] from any user input.
-   *
-   * @see unlock
-   */
-  fun lock() {
-    lockedProperty.value = true
-  }
-
-  /**
-   * Unlocks [Scene] for user input.
-   *
-   * @see lock
-   */
-  fun unlock() {
-    lockedProperty.value = false
-  }
 }

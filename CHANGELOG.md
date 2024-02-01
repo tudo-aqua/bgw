@@ -21,10 +21,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.9.5-Pre - 30.01.2024
+## 0.9.5-Pre - 01.02.2024
 
 ### Added
 - Added `HexOrientation` to `HexagonGrid` and `HexagonView` to support different orientations of hexagons.
+
+### Changed
+- Changed `lock()` and `unlock()` to also work on a `MenuScene`.
+
+### Fixed
+- Fixed `locked` state of a scene not being set correctly when using `lock()` was used in `init`.
 
 ## 0.9.4-Pre - 15.01.2024
 

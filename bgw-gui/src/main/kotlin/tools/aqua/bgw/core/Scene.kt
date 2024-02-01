@@ -29,6 +29,7 @@ import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
+import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.CoordinatePlain
@@ -46,6 +47,32 @@ import tools.aqua.bgw.visual.Visual
  * @see MenuScene
  */
 sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
+
+  /**
+   * Property that indicates if this [Scene] is locked from user input.
+   *
+   * @see lock
+   * @see unlock
+   */
+  val lockedProperty: BooleanProperty = BooleanProperty(false)
+
+  /**
+   * Locks [Scene] from any user input.
+   *
+   * @see unlock
+   */
+  fun lock() {
+    lockedProperty.value = true
+  }
+
+  /**
+   * Unlocks [Scene] for user input.
+   *
+   * @see lock
+   */
+  fun unlock() {
+    lockedProperty.value = false
+  }
 
   /**
    * [MutableList] containing all [ComponentView]s currently below mouse position while performing a

@@ -34,7 +34,26 @@ import tools.aqua.bgw.util.Coordinate
 /** SceneBuilder. Factory for BGW scenes. */
 object SceneBuilder {
   /** Builds [MenuScene]. */
-  internal fun buildMenu(scene: MenuScene): Pane = buildPane(scene)
+  internal fun buildMenu(scene: MenuScene): Pane {
+    val pane = buildPane(scene)
+
+    // register lock pane
+    @Suppress("DuplicatedCode", "DuplicatedCode")
+    val lockPane =
+        Pane().apply {
+          prefHeightProperty().bind(pane.heightProperty())
+          prefWidthProperty().bind(pane.widthProperty())
+        }
+
+    if (scene.lockedProperty.value) pane.children.add(lockPane)
+
+    scene.lockedProperty.guiListener = { _, nV ->
+      pane.children.remove(lockPane)
+      if (nV) pane.children.add(lockPane)
+    }
+
+    return pane
+  }
 
   /** Builds [BoardGameScene]. */
   internal fun buildGame(scene: BoardGameScene): Pane {
@@ -61,6 +80,8 @@ object SceneBuilder {
       if (nV) pane.children.add(lockPane)
     }
 
+    if (scene.lockedProperty.value) pane.children.add(lockPane)
+
     // register lock pane for menu
     @Suppress("DuplicatedCode")
     val internalLockPane =
@@ -72,6 +93,8 @@ object SceneBuilder {
       pane.children.remove(internalLockPane)
       if (nV) pane.children.add(internalLockPane)
     }
+
+    if (scene.internalLockedProperty.value) pane.children.add(internalLockPane)
 
     return pane
   }
