@@ -21,7 +21,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.9.5-Pre - 01.02.2024
+## 0.9-5-Pre - 01.02.2024
 
 ### Added
 - Added `HexOrientation` to `HexagonGrid` and `HexagonView` to support different orientations of hexagons.
@@ -32,12 +32,12 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed `locked` state of a scene not being set correctly when using `lock()` was used in `init`.
 
-## 0.9.4-Pre - 15.01.2024
+## 0.9-4-Pre - 15.01.2024
 
 ### Fixed
 - Fixed `TextInputUIComponent` not showing prompt text when text is empty.
 
-## 0.9.2-Pre - 15.12.2023
+## 0.9-2-Pre - 15.12.2023
 
 ### Added
 - Added missing `Cursor` CSS styles.
