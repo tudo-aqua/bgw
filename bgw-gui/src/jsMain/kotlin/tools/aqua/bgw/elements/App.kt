@@ -35,14 +35,102 @@ val App = FC<AppProps> { props ->
                 }
             }
 
-            "html" {
-                fontSize = (100.0 / props.data.height).vh
-                width = 100.vw
-                height = 100.vh
-                margin = 0.px
-                overflow = Overflow.hidden
-                userSelect = None.none
+            // BLUE
+            "@media (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
+                "html" {
+                    fontSize = (100.0 / props.data.height).vh
+                    width = 100.vw
+                    height = 100.vh
+                    margin = 0.px
+                    overflow = Overflow.hidden
+                    userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                    height = 100.vh
+                    width = (100.0 / props.data.height * props.data.width).vh
+                    position = Position.relative
+                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    overflow = Overflow.hidden
+                }
+
+                "#root" {
+                    backgroundColor = important(rgb(0, 0, 255))
+                }
             }
+
+            // RED
+            "@media (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
+                "html" {
+                    fontSize = (100.0 / props.data.width).vw
+                    width = 100.vw
+                    height = 100.vh
+                    margin = 0.px
+                    overflow = Overflow.hidden
+                    userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                    width = 100.vw
+                    height = (100.0 / props.data.width * props.data.height).vw
+                    position = Position.relative
+                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    overflow = Overflow.hidden
+                }
+
+                "#root" {
+                    backgroundColor = important(rgb(255, 0, 0))
+                }
+            }
+
+            // GREEN
+            "@media (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
+                "html" {
+                    fontSize = (100.0 / props.data.height).vh
+                    width = 100.vw
+                    height = 100.vh
+                    margin = 0.px
+                    overflow = Overflow.hidden
+                    userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                    height = 100.vh
+                    width = (100.0 / props.data.height * props.data.width).vh
+                    position = Position.relative
+                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    overflow = Overflow.hidden
+                }
+
+                "#root" {
+                    backgroundColor = important(rgb(0, 255, 0))
+                }
+            }
+
+            // YELLOW
+            "@media (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
+                "html" {
+                    fontSize = (100.0 / props.data.width).vw
+                    width = 100.vw
+                    height = 100.vh
+                    margin = 0.px
+                    overflow = Overflow.hidden
+                    userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                    width = 100.vw
+                    height = (100.0 / props.data.width * props.data.height).vw
+                    position = Position.relative
+                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    overflow = Overflow.hidden
+                }
+
+                "#root" {
+                    backgroundColor = important(rgb(255, 255, 0))
+                }
+            }
+
             "body" {
                 backgroundColor = rgb(0, 0, 0)
                 color = rgb(0, 0, 0)
@@ -66,13 +154,7 @@ val App = FC<AppProps> { props ->
                 top = 0.px
                 display = Display.flex
             }
-            "bgw_scenes" {
-                height = 100.vh
-                width = (100 * 16 / 9).vh
-                position = Position.relative
-                backgroundColor = rgba(0, 0, 0, 0.0)
-                overflow = Overflow.hidden
-            }
+
             "bgw_scene" {
                 height = 100.pct
                 width = 100.pct
