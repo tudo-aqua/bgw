@@ -92,7 +92,7 @@ class Animator {
         var currentDuration = 0
         for (anim in animations) {
             setTimeout({
-                startAnimation(anim, callback=callback)
+                startAnimation(anim, animations, callback=callback)
             }, currentDuration)
             currentDuration += anim.duration
             if(anim == animations.last()) {
