@@ -22,13 +22,15 @@ import TextAreaData
 import TextFieldData
 import ToggleButtonData
 import TokenViewData
-import csstype.*
+import web.cssom.*
 import emotion.react.css
 import react.ReactElement
 import react.create
 import org.w3c.dom.HTMLDivElement
 import react.*
 import react.dom.html.HTMLAttributes
+import web.cssom.integer
+import web.dom.Element
 import tools.aqua.bgw.elements.uicomponents.Button as ReactButton
 import tools.aqua.bgw.elements.uicomponents.Label as ReactLabel
 import tools.aqua.bgw.elements.uicomponents.TextField as ReactTextField
@@ -101,5 +103,5 @@ object NodeBuilder {
 external interface GridPaneElementProps : Props {
     var data: GridElementData
 }
-inline val bgwGridElement: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_grid_element".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_grid_element".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -31,8 +31,7 @@ object JCEFEventDispatcher : EventDispatcher {
     }
 
     private fun initialize() {
-        val script = "window.bgwQuery = function(request) { window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }"
-        js(script)
+        js("window.bgwQuery = function(request) { window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
         js("window.bgwAnimationQuery = function(request) { window.cefAnimationQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
     }
 }

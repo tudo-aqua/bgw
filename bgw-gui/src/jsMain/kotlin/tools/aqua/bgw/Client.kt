@@ -15,17 +15,17 @@ import data.event.internal.LoadEventData
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
 import jsonMapper
-import kotlinx.js.timers.setTimeout
+import web.timers.setTimeout
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import org.w3c.dom.get
 import react.*
-import react.dom.findDOMNode
 import react.dom.render
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import web.dom.Element
 import webViewType
 import kotlin.math.floor
 import kotlin.random.Random
@@ -106,7 +106,7 @@ fun main() {
 }
 
 fun renderApp(appData : AppData) {
-    render(App.create { data = appData }, container, callback = {
+    render(App.create { data = appData }, container as Element, callback = {
         println("Rendered App to DOM!")
         when(webViewType) {
             WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }

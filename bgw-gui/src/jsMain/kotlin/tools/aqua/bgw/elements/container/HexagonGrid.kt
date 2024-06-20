@@ -4,7 +4,8 @@ import ComponentViewData
 import HexagonGridData
 import HexagonViewData
 import PaneData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import kotlinx.browser.document
@@ -23,6 +24,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -144,12 +146,11 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwHexagonGrid: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_hexagon_grid".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwHexagonGrid: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_hexagon_grid".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwHexagonContent: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_hexagon_content".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwHexagonContent: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_hexagon_content".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

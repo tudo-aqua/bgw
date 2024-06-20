@@ -1,7 +1,8 @@
 package tools.aqua.bgw.elements.uicomponents
 
 import ComboBoxData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import data.event.internal.SelectionChangedEventData
 import emotion.react.css
@@ -18,6 +19,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 
 external interface ComboBoxProps : Props {
     var data: ComboBoxData
@@ -77,9 +79,8 @@ val ComboBox = FC<ComboBoxProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwComboBox: IntrinsicType<HTMLAttributes<HTMLInputElement>>
-    get() = "bgw_combo_box".unsafeCast<IntrinsicType<HTMLAttributes<HTMLInputElement>>>()
+inline val bgwComboBox: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_combo_box".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

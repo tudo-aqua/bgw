@@ -1,7 +1,8 @@
 package tools.aqua.bgw.elements.uicomponents
 
 import TextFieldData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import data.event.internal.SelectionChangedEventData
 import data.event.internal.TextInputChangedEventData
@@ -20,6 +21,7 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 
 external interface TextFieldProps : Props {
     var data: TextFieldData
@@ -69,9 +71,8 @@ val TextField = FC<TextFieldProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwTextField: IntrinsicType<HTMLAttributes<HTMLInputElement>>
-    get() = "bgw_text_field".unsafeCast<IntrinsicType<HTMLAttributes<HTMLInputElement>>>()
+inline val bgwTextField: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_text_field".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

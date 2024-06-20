@@ -2,7 +2,8 @@ package tools.aqua.bgw.elements.gamecomponentviews
 
 import DiceViewData
 import TokenViewData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
@@ -16,6 +17,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 
 external interface DiceViewProps : Props {
     var data: DiceViewData
@@ -45,9 +47,8 @@ val DiceView = FC<DiceViewProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwDiceView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_dice_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwDiceView: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_dice_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

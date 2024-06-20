@@ -1,7 +1,7 @@
 package tools.aqua.bgw.elements.visual
 
 import ImageVisualData
-import csstype.*
+import web.cssom.*
 import emotion.react.Global
 import emotion.react.css
 import kotlinx.browser.document
@@ -16,6 +16,7 @@ import react.useEffect
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
+import web.dom.Element
 
 external interface ImageVisualProps : Props {
     var data: ImageVisualData
@@ -64,7 +65,7 @@ val ImageVisual = FC<ImageVisualProps> { props ->
 
                 backgroundSize = BackgroundSize.cover
                 backgroundRepeat = BackgroundRepeat.noRepeat
-                backgroundPosition = BackgroundPosition.center
+                backgroundPosition = Background.center as BackgroundPosition
 
                 left = props.data.offsetX.rem
                 top = props.data.offsetY.rem
@@ -76,8 +77,8 @@ val ImageVisual = FC<ImageVisualProps> { props ->
     }
 }
 
-inline val bgwImageVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_image_visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwImageVisual: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_image_visual".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwImageVisualOffset: IntrinsicType<HTMLAttributes<HTMLImageElement>>
-    get() = "bgw_image_visual_offset".unsafeCast<IntrinsicType<HTMLAttributes<HTMLImageElement>>>()
+inline val bgwImageVisualOffset: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_image_visual_offset".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

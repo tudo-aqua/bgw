@@ -8,6 +8,7 @@ import data.event.*
 import data.event.internal.*
 import data.event.internal.LoadEventData
 import jsonMapper
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import mapper.DialogMapper
 import me.friwi.jcefmaven.CefAppBuilder
@@ -75,6 +76,7 @@ class JCEFApplication : Application {
         handlersMap.clear()
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun registerEventListeners(component: ComponentView) {
         if (handlersMap.containsKey(component.id)) return
         val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
@@ -164,6 +166,7 @@ class JCEFApplication : Application {
 
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 class MainFrame(
     startURL: String = "http://localhost:8080",
     useOSR: Boolean = false,

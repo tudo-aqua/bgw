@@ -3,7 +3,8 @@ package tools.aqua.bgw.elements.gamecomponentviews
 import ComponentViewData
 import HexagonViewData
 import PaneData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import kotlinx.browser.document
@@ -21,6 +22,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 import kotlin.math.sqrt
 
 external interface HexagonViewProps : Props {
@@ -56,9 +58,8 @@ val HexagonView = FC<HexagonViewProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwHexagonView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_hexagon_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwHexagonView: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_hexagon_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

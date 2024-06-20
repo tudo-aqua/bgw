@@ -2,7 +2,8 @@ package tools.aqua.bgw.elements.uicomponents
 
 import CheckBoxData
 import TextFieldData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import data.event.internal.CheckBoxChangedEventData
 import data.event.internal.SelectionChangedEventData
@@ -14,7 +15,6 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
 import react.*
 import react.dom.html.HTMLAttributes
-import react.dom.html.InputType
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
@@ -25,6 +25,8 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
+import web.html.InputType
 
 external interface CheckBoxProps : Props {
     var data: CheckBoxData
@@ -89,9 +91,8 @@ val CheckBox = FC<CheckBoxProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwCheckBox: IntrinsicType<HTMLAttributes<HTMLInputElement>>
-    get() = "bgw_checkbox".unsafeCast<IntrinsicType<HTMLAttributes<HTMLInputElement>>>()
+inline val bgwCheckBox: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_checkbox".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

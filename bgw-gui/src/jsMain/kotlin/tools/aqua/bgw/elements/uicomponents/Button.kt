@@ -2,7 +2,8 @@ package tools.aqua.bgw.elements.uicomponents
 
 import ButtonData
 import ColorVisualData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
@@ -18,6 +19,7 @@ import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.elements.visual.ColorVisual
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.webSocket
+import web.dom.Element
 
 external interface ButtonProps : Props {
     var data : ButtonData
@@ -62,9 +64,8 @@ val Button = FC<ButtonProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwButton: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_button".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwButton: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_button".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

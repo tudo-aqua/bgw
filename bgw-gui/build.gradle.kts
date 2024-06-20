@@ -1,5 +1,5 @@
 plugins {
-  val kotlinVersion = "1.8.21"
+  val kotlinVersion = "2.0.0"
   kotlin("multiplatform") version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
   application
@@ -17,8 +17,8 @@ repositories {
 }
 
 kotlin {
+  jvmToolchain(17)
   jvm {
-    jvmToolchain(17)
     withJava()
     testRuns["test"].executionTask.configure {
       useJUnitPlatform()
@@ -37,7 +37,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
       }
     }
     val commonTest by getting {
@@ -47,21 +47,21 @@ kotlin {
     }
     val jvmMain by getting {
       dependencies {
-        implementation("io.ktor:ktor-server-core:2.0.2")
-        implementation("io.ktor:ktor-server-netty:2.0.2")
-        implementation("io.ktor:ktor-server-websockets:2.0.2")
-        implementation("io.ktor:ktor-server-html-builder-jvm:2.0.2")
+        implementation("io.ktor:ktor-server-core:2.3.11")
+        implementation("io.ktor:ktor-server-netty:2.3.11")
+        implementation("io.ktor:ktor-server-websockets:2.3.11")
+        implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
-        implementation("me.friwi:jcefmaven:110.0.25.1")
+        implementation("me.friwi:jcefmaven:122.1.10")
         implementation("com.jfoenix:jfoenix:9.0.1")
       }
     }
     val jvmTest by getting
     val jsMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.346")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.346")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.3-pre.346")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1-pre.758")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1-pre.758")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.11.4-pre.758")
       }
     }
     val jsTest by getting

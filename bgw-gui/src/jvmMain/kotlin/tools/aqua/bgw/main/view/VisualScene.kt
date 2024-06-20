@@ -19,10 +19,6 @@ class VisualScene : BoardGameScene() {
         height = CARD_HEIGHT,
         front = ImageVisual(
             path = "card_deck.png",
-            width = CARD_WIDTH,
-            height = CARD_HEIGHT,
-            offsetX = CARD_WIDTH * 3,
-            offsetY = CARD_HEIGHT * 2,
         ),
         back = ColorVisual.RED
     ).apply {
@@ -45,7 +41,7 @@ class VisualScene : BoardGameScene() {
     }
 
     init {
-        addComponents(cardStack)
+        addComponents(cardStack, card)
 
         for (i in 0..5) {
             cardStack.add(CardView(

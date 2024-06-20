@@ -2,7 +2,8 @@ package tools.aqua.bgw.elements.container
 
 import CardStackData
 import LinearLayoutData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
@@ -17,6 +18,7 @@ import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import web.dom.Element
 
 external interface CardStackProps : Props {
     var data : CardStackData
@@ -60,9 +62,8 @@ val CardStack = FC<CardStackProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwCardStack: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_card_stack".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwCardStack: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_card_stack".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

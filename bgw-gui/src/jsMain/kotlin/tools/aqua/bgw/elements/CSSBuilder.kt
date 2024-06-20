@@ -9,7 +9,8 @@ import LayoutViewData
 import TextInputUIComponentData
 import UIComponentData
 import VisualData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import org.w3c.dom.css.CSSRule
 
 fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
@@ -82,7 +83,7 @@ fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) 
     margin = 0.px
     border = None.none
     appearance = None.none
-    backgroundColor = rgba(0, 0, 0, 0.0)
+    backgroundColor = rgb(0, 0, 0, 0.0)
 }
 
 fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) {
@@ -93,7 +94,7 @@ fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) {
     margin = 0.px
     border = None.none
     appearance = None.none
-    backgroundColor = rgba(0, 0, 0, 0.0)
+    backgroundColor = rgb(0, 0, 0, 0.0)
 }
 
 fun PropertiesBuilder.styleBuilder(style : Map<String, String>) {

@@ -1,8 +1,7 @@
 package tools.aqua.bgw.elements.visual
 
 import CompoundVisualData
-import csstype.ClassName
-import kotlinx.js.Object
+import web.cssom.ClassName
 import react.*
 import react.dom.flushSync
 import tools.aqua.bgw.builder.VisualBuilder

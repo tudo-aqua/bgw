@@ -15,7 +15,7 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
 class AnimationScene : BoardGameScene() {
-    /*private val label = Label(
+    private val label = Label(
         text = "Test",
         posX = 40,
         posY = 120,
@@ -23,15 +23,15 @@ class AnimationScene : BoardGameScene() {
         height = 200,
         font = Font(20.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD),
         visual = ColorVisual.MAGENTA
-    )*/
+    )
 
-    private val label = TokenView(
+    /*private val label = TokenView(
         posX = 40,
         posY = 40,
         width = 200,
         height = 200,
         visual = ColorVisual.MAGENTA
-    )
+    )*/
 
     private val dice = DiceView(
         posX = 40,
@@ -52,7 +52,7 @@ class AnimationScene : BoardGameScene() {
 
 
     init {
-        addComponents(/*label,*/ dice)
+        addComponents(label)
 
         /*
         label.onMouseClicked = {
@@ -101,7 +101,7 @@ class AnimationScene : BoardGameScene() {
             )
         } */
 
-        /* label.onMouseClicked = {
+        label.onMouseClicked = {
             this.playAnimation(
                 SequentialAnimation(
                     ScaleAnimation (
@@ -118,9 +118,9 @@ class AnimationScene : BoardGameScene() {
                     )
                 )
             )
-        } */
+        }
 
-        label.onMouseClicked = {
+        /*label.onMouseClicked = {
             /*this.playAnimation(
                 ParallelAnimation(
                     ScaleAnimation (
@@ -145,7 +145,7 @@ class AnimationScene : BoardGameScene() {
                     duration = 2000
                 )
             )
-        }
+        }*/
 
         /*label.onMouseClicked = {
             this.playAnimation(

@@ -14,7 +14,7 @@ import react.dom.events.DragEvent as ReactDragEvent
 object ReactConverters {
     fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {
         return MouseEventData(
-            when (button) {
+            when (button as Int) {
                 0 -> MouseButtonType.LEFT_BUTTON
                 1 -> MouseButtonType.MOUSE_WHEEL
                 2 -> MouseButtonType.RIGHT_BUTTON

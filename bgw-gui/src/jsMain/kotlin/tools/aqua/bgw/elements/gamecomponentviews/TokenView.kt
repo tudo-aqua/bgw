@@ -1,7 +1,8 @@
 package tools.aqua.bgw.elements.gamecomponentviews
 
 import TokenViewData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
@@ -18,6 +19,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 
 external interface TokenViewProps : Props {
     var data: TokenViewData
@@ -51,7 +53,6 @@ val TokenView = FC<TokenViewProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
         onDragStart = {
             val rect = it.target.asDynamic().getBoundingClientRect()
             dxToken = it.clientX - rect.x.unsafeCast<Double>()
@@ -65,5 +66,5 @@ val TokenView = FC<TokenViewProps> { props ->
     }
 }
 
-inline val bgwTokenView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_token_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwTokenView: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_token_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

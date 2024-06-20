@@ -3,7 +3,8 @@ package tools.aqua.bgw.elements.layoutviews
 import ComponentViewData
 import LayoutViewData
 import PaneData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
@@ -26,6 +27,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 
 external interface PaneProps : Props {
     var data: PaneData
@@ -63,7 +65,6 @@ val Pane = FC<PaneProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
         onDrop = {
             it.preventDefault()
             val data = it.dataTransfer.getData("text")
@@ -75,5 +76,5 @@ val Pane = FC<PaneProps> { props ->
     }
 }
 
-inline val bgwPane: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_pane".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwPane: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_pane".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

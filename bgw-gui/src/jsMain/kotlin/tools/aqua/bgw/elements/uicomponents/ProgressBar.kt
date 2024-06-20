@@ -4,7 +4,8 @@ import ComponentViewData
 import LabelData
 import ProgressBarData
 import UIComponentData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
@@ -20,6 +21,7 @@ import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.internalSocket
+import web.dom.Element
 
 external interface ProgressBarProps : Props {
     var data: ProgressBarData
@@ -61,7 +63,6 @@ val ProgressBar = FC<ProgressBarProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
         onDragStart = {
             println("onDragStart Progress")
             val element = it.target as HTMLElement
@@ -75,8 +76,8 @@ val ProgressBar = FC<ProgressBarProps> { props ->
     }
 }
 
-inline val bgwProgress: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_progress".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwProgress: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_progress".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwProgressBar: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_progress_bar".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwProgressBar: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_progress_bar".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

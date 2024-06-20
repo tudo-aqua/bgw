@@ -132,6 +132,7 @@ modules.xml
 hs_err_pid*
 
 ### Kotlin ###
+.kotlin/
 # Compiled class file
 
 # Log file

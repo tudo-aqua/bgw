@@ -7,17 +7,18 @@ import data.animation.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.createElement
-import kotlinx.js.timers.clearInterval
-import kotlinx.js.timers.setInterval
-import kotlinx.js.timers.setTimeout
-import org.w3c.dom.Element
+import org.w3c.dom.Node
+import web.timers.setInterval
+import web.timers.setTimeout
+import web.timers.clearInterval
+import web.dom.Element
 import org.w3c.dom.get
 import react.dom.render
 import tools.aqua.bgw.builder.VisualBuilder
 import kotlin.js.Date
 
 class Animator {
-    private val animations = mutableMapOf<String, Element>()
+    private val animations = mutableMapOf<String, Node>()
 
     companion object {
         const val DELTA_MS = 20
@@ -186,14 +187,14 @@ class Animator {
             element.classList.toggle("${componentId}--$type", true)
             animations["$componentId--$type"] = newElement
 
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
                 println("Rendering start visual for flip")
                 render(VisualBuilder.build(animation.fromVisual), oldVisuals)
             }
 
             setTimeout({
-                val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+                val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
                 if (oldVisuals != null) {
                     println("Rendering end visual for flip")
                     render(VisualBuilder.build(animation.toVisual), oldVisuals)
@@ -216,7 +217,7 @@ class Animator {
         val duration = animation.duration
 
         val interval = setInterval({
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
                 println("Rendering new visual for random")
                 render(VisualBuilder.build(animation.visuals.random()), oldVisuals)
@@ -225,7 +226,7 @@ class Animator {
 
         setTimeout({
             clearInterval(interval)
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
                 println("Rendering end visual for random")
                 render(VisualBuilder.build(animation.toVisual), oldVisuals)
@@ -244,7 +245,7 @@ class Animator {
         val duration = animation.duration
 
         val interval = setInterval({
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
                 println("Rendering new visual for dice")
                 render(VisualBuilder.build(dice.visuals.random()), oldVisuals)
@@ -253,7 +254,7 @@ class Animator {
 
         setTimeout({
             clearInterval(interval)
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals")
+            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
                 println("Rendering end visual for dice")
                 render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)

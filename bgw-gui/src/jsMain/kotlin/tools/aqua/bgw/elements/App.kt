@@ -2,7 +2,7 @@ package tools.aqua.bgw.elements
 
 import Action
 import AppData
-import csstype.*
+import web.cssom.*
 import emotion.react.Global
 import emotion.react.styles
 import org.w3c.dom.HTMLDivElement
@@ -15,6 +15,7 @@ import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.webSocket
+import web.dom.Element
 
 external interface AppProps : Props {
     var data: AppData
@@ -50,7 +51,7 @@ val App = FC<AppProps> { props ->
                     height = 100.vh
                     width = (100.0 / props.data.height * props.data.width).vh
                     position = Position.relative
-                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
 
@@ -74,7 +75,7 @@ val App = FC<AppProps> { props ->
                     width = 100.vw
                     height = (100.0 / props.data.width * props.data.height).vw
                     position = Position.relative
-                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
 
@@ -98,7 +99,7 @@ val App = FC<AppProps> { props ->
                     height = 100.vh
                     width = (100.0 / props.data.height * props.data.width).vh
                     position = Position.relative
-                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
 
@@ -122,7 +123,7 @@ val App = FC<AppProps> { props ->
                     width = 100.vw
                     height = (100.0 / props.data.width * props.data.height).vw
                     position = Position.relative
-                    backgroundColor = rgba(0, 0, 0, 0.0)
+                    backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
 
@@ -161,7 +162,7 @@ val App = FC<AppProps> { props ->
                 inset = 0.px
                 position = Position.absolute
                 display = Display.flex
-                backgroundColor = rgba(0, 0, 0, 0.0)
+                backgroundColor = rgb(0, 0, 0, 0.0)
                 overflow = Overflow.hidden
             }
             "bgw_menu_scene > bgw_scene > bgw_visuals" {
@@ -253,22 +254,22 @@ val App = FC<AppProps> { props ->
         }
     }
 }
-inline val bgwScenes: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_scenes".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
-inline val bgwMenuScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_menu_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwScenes: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_scenes".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_menu_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwGameScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_game_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwGameScene: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_game_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwVisuals: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_visuals".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwVisuals: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_visuals".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwContents: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_contents".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwContents: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_contents".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwText: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_text".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwText: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_text".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
 inline fun polygonPath(
     value: String,

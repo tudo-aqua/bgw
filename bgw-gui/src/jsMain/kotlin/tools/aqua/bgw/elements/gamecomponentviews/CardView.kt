@@ -1,8 +1,8 @@
 package tools.aqua.bgw.elements.gamecomponentviews
 
 import CardViewData
-import csstype.ClassName
 import csstype.PropertiesBuilder
+import web.cssom.ClassName
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
@@ -19,6 +19,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import web.dom.Element
 
 external interface CardViewProps : Props {
     var data: CardViewData
@@ -52,7 +53,6 @@ val CardView = FC<CardViewProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
         onDragStart = {
             val rect = it.target.asDynamic().getBoundingClientRect()
             dxCard = it.clientX - rect.x.unsafeCast<Double>()
@@ -66,5 +66,5 @@ val CardView = FC<CardViewProps> { props ->
     }
 }
 
-inline val bgwCardView: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_card_view".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwCardView: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_card_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

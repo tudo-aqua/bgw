@@ -14,10 +14,10 @@ object Application : BoardGameApplication() {
     init {
         loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
         //showGameScene(animation)
-        // showGameScene(grid)
-        // showGameScene(dragDropScene)
-        //showGameScene(scene)
-        //showMenuScene(uiScene)
+        //showGameScene(grid)
+        //showGameScene(dragDropScene)
         showGameScene(visualScene)
+        //showMenuScene(uiScene)
+        //showGameScene(visualScene)
     }
 }

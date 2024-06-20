@@ -88,7 +88,7 @@ fun CoroutineScope.launchPeriodicAsync(
     }
 }
 
-var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(100) {
+var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(50) {
     if (messageQueue.isNotEmpty()) {
         val isSceneLoaded = Frontend.boardGameScene != null
         val message = messageQueue.removeFirst()

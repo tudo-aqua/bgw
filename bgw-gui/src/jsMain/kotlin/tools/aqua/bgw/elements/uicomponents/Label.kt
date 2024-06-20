@@ -3,7 +3,8 @@ package tools.aqua.bgw.elements.uicomponents
 import ComponentViewData
 import LabelData
 import UIComponentData
-import csstype.*
+import csstype.PropertiesBuilder
+import web.cssom.*
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
@@ -23,6 +24,7 @@ import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.internalSocket
+import web.dom.Element
 
 external interface LabelProps : Props {
     var data: LabelData
@@ -58,9 +60,8 @@ val Label = FC<LabelProps> { props ->
         onClick = { console.log("Clicked"); JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwLabel: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_label".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwLabel: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_label".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

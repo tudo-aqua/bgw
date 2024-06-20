@@ -2,7 +2,7 @@ package tools.aqua.bgw.elements.visual
 
 import ColorVisualData
 import TextVisualData
-import csstype.*
+import web.cssom.*
 import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
@@ -15,6 +15,7 @@ import react.useEffect
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
+import web.dom.Element
 
 external interface TextVisualProps : Props {
     var data: TextVisualData
@@ -49,5 +50,5 @@ val TextVisual = FC<TextVisualProps> { props ->
     }
 }
 
-inline val bgwTextVisual: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_text_visual".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwTextVisual: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_text_visual".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

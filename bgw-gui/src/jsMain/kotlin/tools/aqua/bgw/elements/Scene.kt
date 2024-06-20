@@ -1,7 +1,7 @@
 package tools.aqua.bgw.elements
 
 import SceneData
-import csstype.*
+import web.cssom.*
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
 import react.FC
@@ -12,6 +12,7 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.section
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import web.dom.Element
 
 external interface SceneProps : Props {
     var data: SceneData
@@ -44,5 +45,5 @@ val Scene = FC<SceneProps> { props ->
     }
 }
 
-inline val bgwScene: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_scene".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwScene: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

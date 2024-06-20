@@ -2,13 +2,13 @@ package tools.aqua.bgw.elements.layoutviews
 
 import CameraPaneData
 import InternalCameraPaneData
-import csstype.ClassName
 import csstype.PropertiesBuilder
-import csstype.number
+import web.cssom.ClassName
+import web.cssom.number
 import emotion.react.css
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.js.timers.setInterval
+import web.timers.setInterval
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLUnknownElement
@@ -28,7 +28,7 @@ import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.round
 import kotlin.random.Random
-import csstype.*
+import web.cssom.*
 import data.event.KeyEventAction
 import data.event.internal.ScrollChangedEventData
 import data.event.internal.ZoomChangedEventData
@@ -39,6 +39,7 @@ import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.elements.fit
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import web.dom.Element
 
 external interface CameraPaneProps : Props {
     var data: CameraPaneData
@@ -318,15 +319,14 @@ val CameraPane = FC<CameraPaneProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onKeyPress = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.TYPE)) }
     }
 }
 
-inline val bgwCameraPane: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_camera_pane".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwCameraPane: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_camera_pane".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwCameraTarget: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_camera_target".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwCameraTarget: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_camera_target".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwCameraContent: IntrinsicType<HTMLAttributes<HTMLDivElement>>
-    get() = "bgw_camera_content".unsafeCast<IntrinsicType<HTMLAttributes<HTMLDivElement>>>()
+inline val bgwCameraContent: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_camera_content".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
