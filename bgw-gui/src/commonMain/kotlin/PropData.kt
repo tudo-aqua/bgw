@@ -7,6 +7,8 @@ import tools.aqua.bgw.dialog.DialogType
 typealias ID = String
 typealias ToggleGroup = List<ID>
 
+// PropData
+
 @Serializable
 enum class Action {
     DEFAULT,
