@@ -1,6 +1,6 @@
 plugins {
   val kotlinVersion = "2.0.0"
-  kotlin("multiplatform") version kotlinVersion
+  kotlin("multiplatform") //version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
   application
   id("org.openjfx.javafxplugin") version "0.0.14"

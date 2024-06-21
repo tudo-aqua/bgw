@@ -1,0 +1,17 @@
+baseurl: /bgw
+repository: tudo-aqua/bgw
+remote_theme: pmarsceill/just-the-docs
+
+title: BoardGameWork
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  startings: all
+
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default"

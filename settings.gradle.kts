@@ -18,5 +18,14 @@
 rootProject.name = "bgw"
 
 include(
+    "bgw-docs",
+    "bgw-examples:bgw-docs-examples",
+    "bgw-examples:bgw-maumau-example",
+    "bgw-examples:bgw-sudoku-example",
+    "bgw-examples:bgw-tetris-example",
     "bgw-gui",
+    "bgw-net:bgw-net-client",
+    "bgw-net:bgw-net-common",
+    "bgw-net:bgw-net-server",
+    "bgw-net:bgw-net-protocol-client",
 )
