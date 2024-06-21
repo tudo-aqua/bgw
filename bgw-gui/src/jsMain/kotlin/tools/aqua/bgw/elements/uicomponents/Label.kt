@@ -21,6 +21,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwText
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.cssTextBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.internalSocket
@@ -32,6 +33,10 @@ external interface LabelProps : Props {
 
 fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
     cssBuilder(componentViewData)
+}
+
+fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: LabelData) {
+    cssTextBuilder(componentViewData)
 }
 
 val Label = FC<LabelProps> { props ->
@@ -50,6 +55,9 @@ val Label = FC<LabelProps> { props ->
 
         bgwText {
             className = ClassName("text")
+            css {
+                cssTextBuilderIntern(props.data)
+            }
             +props.data.text
         }
 

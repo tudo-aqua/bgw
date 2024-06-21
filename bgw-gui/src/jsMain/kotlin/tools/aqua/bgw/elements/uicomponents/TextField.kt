@@ -64,7 +64,7 @@ val TextField = FC<TextFieldProps> { props ->
             }
         }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
             JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
         }

@@ -37,6 +37,15 @@ fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
     alignmentBuilder(componentViewData)
 }
 
+fun PropertiesBuilder.cssTextBuilder(componentViewData: LabeledUIComponentData) {
+    textOverflow = if(componentViewData.isWrapText) TextOverflow.clip else TextOverflow.ellipsis
+    whiteSpace = if(componentViewData.isWrapText) WhiteSpace.normal else WhiteSpace.nowrap
+    maxWidth = 100.pct
+    maxHeight = 100.pct
+    overflow = Overflow.hidden
+    position = Position.absolute
+}
+
 fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData) {
     justifyContent = when(componentViewData.alignment.first) {
         "left" -> JustifyContent.flexStart

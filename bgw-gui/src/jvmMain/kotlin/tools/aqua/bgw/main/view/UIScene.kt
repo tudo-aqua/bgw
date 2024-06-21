@@ -43,8 +43,19 @@ class UIScene : MenuScene() {
         visual = ColorVisual.RED
     )
 
+    private val label = Label(
+        posX = 80,
+        posY = 220,
+        width = 400,
+        height = 50,
+        text = "Dieser Text sollte über zwei Zeilen gehen und nicht viel weiter",
+        alignment = Alignment.BOTTOM_LEFT,
+        isWrapText = false,
+        visual = ColorVisual.YELLOW
+    )
+
     init {
-        addComponents(combo, progress, checkbox)
+        addComponents(combo, progress, checkbox, label)
 
 
         combo.select(2)

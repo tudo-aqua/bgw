@@ -16,6 +16,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.elements.cssTextBuilder
 import tools.aqua.bgw.elements.visual.ColorVisual
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.webSocket
@@ -38,6 +39,10 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     }
 }
 
+fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: ButtonData) {
+    cssTextBuilder(componentViewData)
+}
+
 val Button = FC<ButtonProps> { props ->
     bgwButton {
         tabIndex = 0
@@ -54,6 +59,9 @@ val Button = FC<ButtonProps> { props ->
 
         bgwText {
             className = ClassName("text")
+            css {
+                cssTextBuilderIntern(props.data)
+            }
             +props.data.text
         }
 

@@ -17,7 +17,7 @@ repositories {
 }
 
 kotlin {
-  jvmToolchain(17)
+  jvmToolchain(11)
   jvm {
     withJava()
     testRuns["test"].executionTask.configure {
@@ -94,6 +94,6 @@ publishing {
 }
 
 javafx {
-  version = "20"
+  version = "18.0.2"
   modules = listOf("javafx.controls", "javafx.web")
 }
