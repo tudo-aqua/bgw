@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The BoardGameWork Authors
+ * Copyright 2021-2024 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.style
+package tools.aqua.bgw.util.bidirectionalmap
 
-open class BorderStyle internal constructor(override val value: String = "") : StyleAttribute() {
-  override val key: String = "-fx-border-style"
+import org.junit.jupiter.api.BeforeEach
+import tools.aqua.bgw.util.BidirectionalMap
 
-  companion object {
-    val NONE = BorderStyle("none")
-    val DOTTED = BorderStyle("dotted")
-    val DASHED = BorderStyle("dashed")
-    val SOLID = BorderStyle("solid")
-  }
+/** Test base for in BidirectionalMap. */
+open class BidirectionalMapTestBase {
+
+    /** BidirectionalMap initially filled with pairs (0,1) and (2,3). */
+    protected lateinit var map: BidirectionalMap<Int, Int>
+
+    /** Fills BidirectionalMap with pairs (0,1) and (2,3) before tests. */
+    @BeforeEach
+    fun setUp() {
+        map = BidirectionalMap(Pair(0, 1), Pair(2, 3))
+    }
 }
