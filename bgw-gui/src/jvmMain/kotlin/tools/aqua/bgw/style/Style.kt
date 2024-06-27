@@ -68,3 +68,33 @@ class BorderRadius : StyleDeclaration {
         val FULL = BorderRadius("50%")
     }
 }
+
+class BackgroundRadius : StyleDeclaration {
+    override fun toCSS(): String {
+        TODO("Not yet implemented")
+    }
+}
+
+class BorderWidth : StyleDeclaration {
+    override fun toCSS(): String {
+        TODO("Not yet implemented")
+    }
+}
+
+class BorderColor : StyleDeclaration {
+    override fun toCSS(): String {
+        TODO("Not yet implemented")
+    }
+}
+
+class Cursor : StyleDeclaration {
+    override fun toCSS(): String {
+        TODO("Not yet implemented")
+    }
+}
+
+class BorderStyle : StyleDeclaration {
+    override fun toCSS(): String {
+        TODO("Not yet implemented")
+    }
+}
