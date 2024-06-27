@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.net.protocol.client.view.messageviews
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.util.Font
 

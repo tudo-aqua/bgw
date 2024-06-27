@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font

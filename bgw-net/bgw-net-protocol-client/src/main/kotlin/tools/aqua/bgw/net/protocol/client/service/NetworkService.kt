@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.net.protocol.client.service
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import java.awt.Font
 import java.awt.font.FontRenderContext
 import java.awt.geom.AffineTransform

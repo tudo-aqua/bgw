@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.examples.sudoku.view.scenes
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment

@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 import tools.aqua.bgw.components.uicomponents.Button

@@ -17,7 +17,7 @@
 
 package examples.components.uicomponents
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication

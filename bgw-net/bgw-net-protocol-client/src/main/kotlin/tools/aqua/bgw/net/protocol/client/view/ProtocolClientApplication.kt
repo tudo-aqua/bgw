@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.net.protocol.client.view
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.net.protocol.client.service.NetworkService
 import tools.aqua.bgw.net.protocol.client.view.messageviews.*

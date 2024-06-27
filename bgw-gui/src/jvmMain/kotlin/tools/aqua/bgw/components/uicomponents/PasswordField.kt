@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.DEFAULT_TEXT_FIELD_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_TEXT_FIELD_WIDTH
 import tools.aqua.bgw.util.Font

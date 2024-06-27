@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.examples.maumau.view
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import tools.aqua.bgw.animation.DelayAnimation

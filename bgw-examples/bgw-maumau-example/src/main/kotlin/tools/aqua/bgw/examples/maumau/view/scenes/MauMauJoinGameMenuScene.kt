@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Alignment
