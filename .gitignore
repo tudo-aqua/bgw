@@ -132,6 +132,7 @@ modules.xml
 hs_err_pid*
 
 ### Kotlin ###
+.kotlin/
 # Compiled class file
 
 # Log file
@@ -219,6 +220,7 @@ $RECYCLE.BIN/
 webpack.generated.js
 generated-flow-imports.js
 /.run/
+/bgw-gui/jcef-bundle/
 
 # Yekyll generated assets
 _site/
