@@ -19,9 +19,13 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.io.BufferedImage
-import tools.aqua.bgw.io.File
-import tools.aqua.bgw.observable.properties.Property
+import java.awt.image.BufferedImage
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.util.*
+import javax.imageio.ImageIO
+import kotlin.math.min
+
 
 /**
  * Visual showing an [Image].
@@ -47,6 +51,22 @@ open class ImageVisual(
     val offsetX: Int = 0,
     val offsetY: Int = 0
 ) : SingleLayerVisual() {
+    constructor(
+        image: BufferedImage,
+        width: Int = -1,
+        height: Int = -1,
+        offsetX: Int = 0,
+        offsetY: Int = 0,
+    ) : this(toDataURI(image), width, height, offsetX, offsetY)
+
+    companion object {
+        fun toDataURI(image: BufferedImage) : String {
+            val baos = ByteArrayOutputStream()
+            ImageIO.write(image, "png", baos)
+            val base64 = Base64.getEncoder().encodeToString(baos.toByteArray())
+            return "data:image/png;base64,$base64"
+        }
+    }
 
     // TODO - Reimplement
 

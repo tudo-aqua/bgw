@@ -438,7 +438,7 @@ object VisualMapper {
 
     //TODO: Check properly if path is URL or local path
     private fun isRelativeFilePath(path: String): Boolean {
-        return !path.startsWith("http://") && !path.startsWith("https://")
+        return !path.startsWith("http://") && !path.startsWith("https://") && !path.startsWith("data:image/png;base64,")
     }
 }
 
