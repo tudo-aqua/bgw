@@ -40,11 +40,9 @@ val container = document.createElement("div")
 fun main() {
     container.id = "root"
     document.body!!.appendChild(container)
-    webSocket = WebSocket("ws://localhost:8080/ws")
-    webSocket?.onopen = { //println("Connected to Server via WebSocket!")
-    }
+    webSocket = WebSocket("ws://${document.location?.host}/ws")
+    webSocket?.onopen = { }
     webSocket?.onmessage = { event ->
-        println("Received: ${event.data}")
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
         when(receivedData) {
             is AppData -> {
@@ -107,12 +105,7 @@ fun main() {
 
 fun renderApp(appData : AppData) {
     render(App.create { data = appData }, container as Element, callback = {
-        println("Rendered App to DOM!")
-        when(webViewType) {
-            WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }
-            WebViewType.JAVAFX -> container.dispatchEvent(Event("bgwLoaded"))
-        }
-        Unit
+        JCEFEventDispatcher.dispatchEvent(LoadEventData())
     })
 }
 

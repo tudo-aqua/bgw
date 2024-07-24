@@ -1,6 +1,6 @@
 
 enum class WebViewType {
-    JCEF, JAVAFX
+    JCEF
 }
 
 val webViewType = WebViewType.JCEF

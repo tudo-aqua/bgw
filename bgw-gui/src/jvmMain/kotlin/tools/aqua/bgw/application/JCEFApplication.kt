@@ -45,10 +45,16 @@ import java.awt.Component
 import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
 import java.awt.event.*
+import java.lang.management.ManagementFactory
+import java.net.ServerSocket
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import kotlin.system.exitProcess
+
+object Constants {
+    val PORT = ServerSocket(0).use { it.localPort }
+}
 
 class JCEFApplication : Application {
     private var frame : MainFrame? = null
@@ -108,7 +114,6 @@ class JCEFApplication : Application {
                             if(component is TextField) component.textProperty.value = eventData.value
                         }
                         is CheckBoxChangedEventData -> {
-                            println("Checkbox changed to ${eventData.value}")
                             if(component is CheckBox) component.isCheckedProperty.value = eventData.value
                         }
                         is ScrollChangedEventData -> {
@@ -168,7 +173,7 @@ class JCEFApplication : Application {
 
 @OptIn(ExperimentalSerializationApi::class)
 class MainFrame(
-    startURL: String = "http://localhost:8080",
+    startURL: String = "http://localhost",
     useOSR: Boolean = false,
     isTransparent: Boolean = false,
     loadCallback: (Any) -> Unit
@@ -186,9 +191,14 @@ class MainFrame(
         builder.cefSettings.windowless_rendering_enabled = useOSR
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
-                if (state == CefAppState.TERMINATED) exitProcess(0)
+                // println("CEF State: $state")
+                if (state == CefAppState.TERMINATED) {
+                    // println("CEF Terminated")
+                    exitProcess(0)
+                }
             }
         })
+
         val cefApp = builder.build()
         client = cefApp.createClient()
         /* Component Update Message Router */
@@ -220,7 +230,6 @@ class MainFrame(
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(json)
-                println("Received ${eventData.id} from $query_id")
                 if(eventData is AnimationFinishedEventData) {
                     val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
                     val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
@@ -234,7 +243,7 @@ class MainFrame(
         }
         animationMsgRouter?.addHandler(animationHandler, true)
 
-        val browser = client.createBrowser(startURL, useOSR, isTransparent)
+        val browser = client.createBrowser("$startURL:${Constants.PORT}", useOSR, isTransparent)
         val browserUI = browser.uiComponent
         client.addFocusHandler(object : CefFocusHandlerAdapter() {
             override fun onGotFocus(browser: CefBrowser) {
@@ -255,7 +264,6 @@ class MainFrame(
                     val dialogData = dialogMap[validBrowser]
 
                     if(dialogData != null && validBrowser != null) {
-                        println("Loaded dialog with data $dialogData")
                         setDialogContent(validBrowser, dialogData)
                         dialogMap.remove(validBrowser)
                     }
@@ -273,13 +281,15 @@ class MainFrame(
         isVisible = true
         addWindowListener(object : WindowAdapter() {
             override fun windowClosing(e: WindowEvent) {
+                // println("Application shutting down...")
+                // println(CefApp.getState())
                 CefApp.getInstance().dispose()
+                // println(CefApp.getState())
                 dispose()
             }
 
             override fun windowOpened(e: WindowEvent?) {
                 super.windowOpened(e)
-                println("Opened")
             }
         })
     }

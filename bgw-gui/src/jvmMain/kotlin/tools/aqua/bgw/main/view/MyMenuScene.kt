@@ -15,7 +15,6 @@ class MyMenuScene : MenuScene() {
         posY = this.height / 2 - 100
     ).apply {
         onMouseClicked = {
-            println("Clicked ME!")
             Application.hideMenuScene()
         }
     }

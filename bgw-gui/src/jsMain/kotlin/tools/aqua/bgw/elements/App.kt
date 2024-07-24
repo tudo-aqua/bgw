@@ -54,10 +54,6 @@ val App = FC<AppProps> { props ->
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
-
-                "#root" {
-                    backgroundColor = important(rgb(0, 0, 255))
-                }
             }
 
             // RED
@@ -77,10 +73,6 @@ val App = FC<AppProps> { props ->
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
-                }
-
-                "#root" {
-                    backgroundColor = important(rgb(255, 0, 0))
                 }
             }
 
@@ -102,10 +94,6 @@ val App = FC<AppProps> { props ->
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
-
-                "#root" {
-                    backgroundColor = important(rgb(0, 255, 0))
-                }
             }
 
             // YELLOW
@@ -125,10 +113,6 @@ val App = FC<AppProps> { props ->
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
-                }
-
-                "#root" {
-                    backgroundColor = important(rgb(255, 255, 0))
                 }
             }
 

@@ -38,7 +38,6 @@ object VisualBuilder {
                 }
             }
             is CompoundVisualData -> {
-                //println("Building CompoundVisual ${visual.id}")
                 return CompoundVisual.create {
                     data = visual
                 }

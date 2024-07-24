@@ -64,7 +64,6 @@ val ProgressBar = FC<ProgressBarProps> { props ->
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
         onDragStart = {
-            println("onDragStart Progress")
             val element = it.target as HTMLElement
             it.dataTransfer.setData("text", element.id)
         }

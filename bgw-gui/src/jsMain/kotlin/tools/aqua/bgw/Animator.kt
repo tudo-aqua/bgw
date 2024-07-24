@@ -123,7 +123,6 @@ class Animator {
     private fun startComponentAnimation(type : String, animation: ComponentAnimationData, parallelAnimation : List<AnimationData> = listOf(), callback: (ID) -> Unit) {
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
-        println("Starting $type Animation on ${componentId}")
         val duration = animation.duration
 
         // Get matching component element
@@ -161,7 +160,6 @@ class Animator {
         val type = "flip"
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
-        println("Starting $type Animation on ${componentId}")
         val duration = animation.duration
 
         // Get matching component element
@@ -189,14 +187,12 @@ class Animator {
 
             val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
-                println("Rendering start visual for flip")
                 render(VisualBuilder.build(animation.fromVisual), oldVisuals)
             }
 
             setTimeout({
                 val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
                 if (oldVisuals != null) {
-                    println("Rendering end visual for flip")
                     render(VisualBuilder.build(animation.toVisual), oldVisuals)
                 }
             }, duration / 2)
@@ -213,13 +209,11 @@ class Animator {
         val type = "random"
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
-        println("Starting $type Animation on ${componentId}")
         val duration = animation.duration
 
         val interval = setInterval({
             val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
-                println("Rendering new visual for random")
                 render(VisualBuilder.build(animation.visuals.random()), oldVisuals)
             }
         }, duration / animation.speed)
@@ -228,10 +222,8 @@ class Animator {
             clearInterval(interval)
             val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
-                println("Rendering end visual for random")
                 render(VisualBuilder.build(animation.toVisual), oldVisuals)
             }
-            println("Stopping $type Animation on ${componentId}")
             callback.invoke(animation.id)
         }, duration)
     }
@@ -241,13 +233,11 @@ class Animator {
         // Get animation properties from data
         val componentId = animation.componentView?.id.toString()
         val dice = animation.componentView as? DiceViewData ?: return
-        println("Starting $type Animation on ${componentId}")
         val duration = animation.duration
 
         val interval = setInterval({
             val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
-                println("Rendering new visual for dice")
                 render(VisualBuilder.build(dice.visuals.random()), oldVisuals)
             }
         }, duration / animation.speed)
@@ -256,10 +246,8 @@ class Animator {
             clearInterval(interval)
             val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
             if (oldVisuals != null) {
-                println("Rendering end visual for dice")
                 render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
             }
-            println("Stopping $type Animation on ${componentId}")
             callback.invoke(animation.id)
         }, duration)
     }

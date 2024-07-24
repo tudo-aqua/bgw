@@ -38,7 +38,6 @@ class GridGameScene : BoardGameScene() {
                         duration = 250 + index * 50
                     ).apply {
                         onFinished = {
-                            println("Finished")
                         }
                     }
                 )
@@ -51,7 +50,6 @@ class GridGameScene : BoardGameScene() {
                         duration = 250 + index * 50
                     ).apply {
                         onFinished = {
-                            println("Finished")
                         }
                     }
                 )

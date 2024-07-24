@@ -1,9 +1,16 @@
+import okhttp3.internal.notifyAll
+import org.jetbrains.kotlin.cli.common.ExitCode
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy
+import org.jetbrains.kotlin.gradle.tasks.throwExceptionIfCompilationFailed
+import java.lang.management.ManagementFactory
+import java.io.File
+
 plugins {
   val kotlinVersion = "2.0.0"
   kotlin("multiplatform") //version kotlinVersion
   kotlin("plugin.serialization") version kotlinVersion
   application
-  id("org.openjfx.javafxplugin") version "0.0.14"
+  //id("org.openjfx.javafxplugin") version "0.0.14"
   `maven-publish`
 }
 
@@ -53,7 +60,7 @@ kotlin {
         implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
         implementation("me.friwi:jcefmaven:122.1.10")
-        implementation("com.jfoenix:jfoenix:9.0.1")
+        //implementation("com.jfoenix:jfoenix:9.0.1")
       }
     }
     val jvmTest by getting
@@ -78,8 +85,16 @@ tasks.named<Copy>("jvmProcessResources") {
 }
 
 tasks.named<JavaExec>("run") {
+  doFirst {
+
+  }
+
   dependsOn(tasks.named<Jar>("jvmJar"))
   classpath(tasks.named<Jar>("jvmJar"))
+
+  doLast {
+
+  }
 }
 
 publishing {
@@ -93,7 +108,26 @@ publishing {
   }
 }
 
-javafx {
-  version = "18.0.2"
-  modules = listOf("javafx.controls", "javafx.web")
+gradle.buildFinished {
+//  println("Message: ${this.failure?.message}")
+//  println("Exception: ${this.failure?.cause}")
+//  val stacktrace = this.failure?.stackTraceToString()
+//  val wasCancelled = stacktrace?.indexOf("Build cancelled") != -1
+//  println("Build cancelled: ${wasCancelled}")
+
+  if (wasCancelled) {
+//    ProcessHandle.allProcesses().forEach {
+//      if (it.info().command().orElse("").contains("jcef_helper.exe")) {
+//        println("Chrome Process: ${it.pid()}")
+//        it.destroy()
+//      }
+//    }
+    ExitCode.OK
+  }
+  ExitCode.OK
 }
+
+//javafx {
+//  version = "18.0.2"
+//  modules = listOf("javafx.controls", "javafx.web")
+//}

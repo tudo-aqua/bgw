@@ -19,7 +19,6 @@ class Channel(val path: String = "/ws") {
     suspend fun sendToAllClients(message: String) {
         //println("Sending message to all clients: $message")
         for (session in activeSessions) {
-            println("Sending message to client $session")
             try {
                 session.send(message)
             } catch (e: ClosedSendChannelException) {

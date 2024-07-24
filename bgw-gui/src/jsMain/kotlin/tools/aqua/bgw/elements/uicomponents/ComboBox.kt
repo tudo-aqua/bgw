@@ -67,7 +67,6 @@ val ComboBox = FC<ComboBoxProps> { props ->
             }
             onChange = {
                 val value = it.target.value.toInt()
-                println("Selection changed $value")
                 JCEFEventDispatcher.dispatchEvent(SelectionChangedEventData(value).apply { id = props.data.id })
             }
         }

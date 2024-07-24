@@ -30,9 +30,8 @@ import mapper.AnimationMapper
 import mapper.DialogMapper
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.application.Application
-import tools.aqua.bgw.application.FXApplication
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
-import tools.aqua.bgw.binding.PORT
 import tools.aqua.bgw.binding.componentChannel
 import tools.aqua.bgw.binding.messageQueue
 import tools.aqua.bgw.binding.module
@@ -65,22 +64,19 @@ internal class Frontend {
   internal fun start() {
     //println("Starting server...")
 
-    embeddedServer(Netty, port = PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
+    embeddedServer(Netty, port = Constants.PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
       applicationEngine.clearAllEventListeners()
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
 
-      println("Main Thread: ${Thread.currentThread().id}")
+      // println("Main Thread: ${Thread.currentThread().id}")
     }
   }
 
   companion object {
-    internal var applicationEngine: Application = when(webViewType) {
-      WebViewType.JCEF -> JCEFApplication()
-      WebViewType.JAVAFX -> FXApplication()
-    }
+    internal var applicationEngine: Application = JCEFApplication()
 
     /** Current scene scale. */
     internal var sceneScale: Double = 1.0

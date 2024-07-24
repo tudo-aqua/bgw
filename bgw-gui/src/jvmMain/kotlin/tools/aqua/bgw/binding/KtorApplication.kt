@@ -17,10 +17,9 @@ import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
 import tools.aqua.bgw.core.Frontend
+import java.net.ServerSocket
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
-
-const val PORT = 8080
 
 val componentChannel: Channel = Channel("/ws").apply {
     onClientConnected = {
@@ -102,7 +101,6 @@ var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(50) {
             val json = jsonMapper.encodeToString(PropData(appData))
             runBlocking { componentChannel.sendToAllClients(json) }
         }
-        println(result.exceptionOrNull()?.message)
         messageQueue.clear()
     }
 }

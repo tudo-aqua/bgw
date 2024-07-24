@@ -59,7 +59,6 @@ val TextField = FC<TextFieldProps> { props ->
             }
             onChange = {
                 val value = it.target.value
-                //println("Text changed $value")
                 JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = props.data.id })
             }
         }
