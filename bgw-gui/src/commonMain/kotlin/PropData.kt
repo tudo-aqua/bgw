@@ -104,7 +104,7 @@ abstract class TextInputUIComponentData : UIComponentData() {
     var prompt: String = ""
 }
 @Serializable
-class BinaryStateButtonData : LabeledUIComponentData() {
+abstract class BinaryStateButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
     var buttons : ToggleGroup = emptyList()
 }
@@ -127,14 +127,10 @@ class ComboBoxData : UIComponentData() {
 @Serializable
 class LabelData : LabeledUIComponentData() { }
 @Serializable
-class RadioButtonData : LabeledUIComponentData() {
-    var isSelected: Boolean = false
-    var buttons : ToggleGroup = emptyList()
+class RadioButtonData : BinaryStateButtonData() {
 }
 @Serializable
-class ToggleButtonData : LabeledUIComponentData() {
-    var isSelected: Boolean = false
-    var buttons : ToggleGroup = emptyList()
+class ToggleButtonData : BinaryStateButtonData() {
 }
 @Serializable
 class ColorPickerData : UIComponentData() {
