@@ -15,9 +15,11 @@ import HexagonGridData
 import HexagonViewData
 import LabelData
 import LayoutViewData
+import ListViewData
 import PasswordFieldData
 import ProgressBarData
 import RadioButtonData
+import TableViewData
 import TextAreaData
 import TextFieldData
 import ToggleButtonData
@@ -61,7 +63,9 @@ object NodeBuilder {
             // is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
             // is BinaryStateButtonData -> ReactBinaryStateButton.create { data = componentViewData }
             // is ColorPickerData -> ReactColorPicker.create { data = componentViewData }
-            //is TextAreaData -> ReactTextArea.create { data = componentViewData }
+            // is TextAreaData -> ReactTextArea.create { data = componentViewData }
+            // is TableViewData -> ReactTableView.create { data = componentViewData }
+            // is ListViewData -> ReactListView.create { data = componentViewData }
 
             is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
             is CardViewData -> ReactCardView.create { data = componentViewData }

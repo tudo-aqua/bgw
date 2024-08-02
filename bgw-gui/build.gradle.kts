@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
   val kotlinVersion = "2.0.0"
   kotlin("multiplatform") version kotlinVersion

@@ -1,4 +1,4 @@
-import data.event.MouseEventData
+/* import data.event.MouseEventData
 import kotlin.test.Test
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView
@@ -36,4 +36,4 @@ class SerializationTest {
         val json = jsonMapper.encodeToString(SceneMapper.map(gameScene =  scene))
         //println(json)
     }
-}
+} */

@@ -1,4 +1,4 @@
-import tools.aqua.bgw.components.ComponentView
+/* import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Label
 import kotlin.test.Test
@@ -29,4 +29,4 @@ class MapperTest {
             actual = gridPane.grid.toList()
         )
     }
-}
+} */

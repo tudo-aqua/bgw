@@ -45,6 +45,10 @@ val TextVisual = FC<TextVisualProps> { props ->
                 "bottom" -> AlignItems.flexEnd
                 else -> AlignItems.center
             }
+
+            left = props.data.offsetX.rem
+            top = props.data.offsetY.rem
+            opacity = number(props.data.transparency)
         }
         +props.data.text
     }

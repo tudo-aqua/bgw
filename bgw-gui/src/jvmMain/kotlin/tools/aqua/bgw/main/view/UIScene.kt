@@ -10,6 +10,7 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.ImageVisual
 import kotlin.random.Random
 
 class UIScene : MenuScene() {
@@ -31,6 +32,7 @@ class UIScene : MenuScene() {
         barColor = Color.BLUE
     ).apply {
         onMouseClicked = { this.progress = Random.nextDouble(0.0,1.0) }
+        scaleY = 2.0
     }
 
     private val checkbox = CheckBox(
@@ -39,6 +41,7 @@ class UIScene : MenuScene() {
         width = 800,
         height = 50,
         text = "Testbox",
+        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
         isChecked = true,
         visual = ColorVisual.RED
     )
@@ -46,11 +49,10 @@ class UIScene : MenuScene() {
     private val label = Label(
         posX = 80,
         posY = 220,
-        width = 400,
-        height = 50,
-        text = "Dieser Text sollte über zwei Zeilen gehen und nicht viel weiter",
-        alignment = Alignment.BOTTOM_LEFT,
-        isWrapText = false,
+        height = 400,
+        width = 260,
+        text = "Testtext",
+        font= Font(20.0, Color.BLACK, "04b_19", Font.FontWeight.NORMAL),
         visual = ColorVisual.YELLOW
     )
 

@@ -88,7 +88,7 @@ abstract class ComponentViewData : Data() {
 // UI COMPONENTS
 @Serializable
 abstract class UIComponentData : ComponentViewData() {
-    var font: FontData? = null
+    var font: FontData? = FontData(16, "rgba(0,0,0,1)", "Arial", 400, "normal")
 }
 
 @Serializable

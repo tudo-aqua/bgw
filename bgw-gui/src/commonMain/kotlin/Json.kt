@@ -151,4 +151,5 @@ private val module = SerializersModule {
 
 val jsonMapper = KJson {
     serializersModule = module
+    ignoreUnknownKeys = true
 }

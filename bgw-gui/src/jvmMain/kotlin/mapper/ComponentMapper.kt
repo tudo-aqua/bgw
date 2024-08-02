@@ -28,9 +28,9 @@ object ComponentMapper {
             isVisible = componentView.isVisible
             isDisabled = componentView.isDisabled
             // isFocusable
-            // scaleX
-            // scaleY
-            // rotation
+            scaleX = componentView.scaleX
+            scaleY = componentView.scaleY
+            rotation = componentView.rotation
             // layoutFromCenter
             // isDraggable
         }

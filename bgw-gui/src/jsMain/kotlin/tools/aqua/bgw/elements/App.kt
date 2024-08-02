@@ -54,10 +54,6 @@ val App = FC<AppProps> { props ->
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
-
-                "#root" {
-                    backgroundColor = important(rgb(0, 0, 255))
-                }
             }
 
             // RED
@@ -77,10 +73,6 @@ val App = FC<AppProps> { props ->
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
-                }
-
-                "#root" {
-                    backgroundColor = important(rgb(255, 0, 0))
                 }
             }
 
@@ -102,10 +94,6 @@ val App = FC<AppProps> { props ->
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                 }
-
-                "#root" {
-                    backgroundColor = important(rgb(0, 255, 0))
-                }
             }
 
             // YELLOW
@@ -123,17 +111,13 @@ val App = FC<AppProps> { props ->
                     width = 100.vw
                     height = (100.0 / props.data.width * props.data.height).vw
                     position = Position.relative
-                    backgroundColor = rgb(0, 0, 0, 0.0)
+                    backgroundColor = rgb(0, 0, 0, 1.0)
                     overflow = Overflow.hidden
-                }
-
-                "#root" {
-                    backgroundColor = important(rgb(255, 255, 0))
                 }
             }
 
             "body" {
-                backgroundColor = rgb(0, 0, 0)
+                backgroundColor = rgb(0, 0, 0, 0.0)
                 color = rgb(0, 0, 0)
                 margin = 0.px
             }
@@ -204,7 +188,7 @@ val App = FC<AppProps> { props ->
                 position = Position.absolute
             }
 
-            "bgw_linear_layout > bgw_contents > *" {
+            "bgw_linear_layout > bgw_contents > *, bgw_card_stack > bgw_contents > *" {
                 position = important(Position.relative)
                 left = important(Globals.unset)
                 top = important(Globals.unset)
@@ -229,7 +213,7 @@ val App = FC<AppProps> { props ->
                 display = Display.flex
                 justifyContent = JustifyContent.center
                 alignItems = AlignItems.center
-                backgroundColor = Color("#000000")
+                backgroundColor = rgb(0, 0, 0, 0.0)
                 overflow = Overflow.hidden
             }
         }

@@ -36,7 +36,6 @@ val ProgressBar = FC<ProgressBarProps> { props ->
         tabIndex = 0
         id = props.data.id
         className = ClassName("progress")
-        draggable = true
         css {
             cssBuilderIntern(props.data)
         }
@@ -44,7 +43,6 @@ val ProgressBar = FC<ProgressBarProps> { props ->
         bgwProgressBar {
             id = "${props.data.id}--bar"
             className = ClassName("progress-bar")
-            draggable = true
             css {
                 width = (props.data.progress * 100).pct
                 height = 100.pct
