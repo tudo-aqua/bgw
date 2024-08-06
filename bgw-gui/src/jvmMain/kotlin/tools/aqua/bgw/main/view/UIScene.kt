@@ -17,7 +17,7 @@ class UIScene : MenuScene() {
     private val combo = ComboBox<TestObject>(
         width = 1920,
         height = 50,
-        items = listOf(TestObject("Test1"), TestObject("Test2"), TestObject("Test3")),
+        items = listOf(TestObject("Test1"), TestObject("Test2"), TestObject("Test3"), TestObject("Test4")),
         prompt = "Select an item",
         font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
         formatFunction = { it.name }
@@ -42,27 +42,33 @@ class UIScene : MenuScene() {
         height = 50,
         text = "Testbox",
         font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
-        isChecked = true,
-        visual = ColorVisual.RED
-    )
-
-    private val label = Label(
-        posX = 80,
-        posY = 220,
-        height = 400,
-        width = 260,
-        text = "Testtext",
-        font= Font(20.0, Color.BLACK, "04b_19", Font.FontWeight.NORMAL),
-        visual = ColorVisual.YELLOW
+        isChecked = false,
+        visual = ColorVisual.RED,
+        allowIndeterminate = false,
+        isIndeterminate = true
     )
 
     init {
-        addComponents(combo, progress, checkbox, label)
+        addComponents(combo, progress, checkbox)
 
 
         combo.select(2)
         combo.selectedItemProperty.addListener { _, newValue ->
             println(newValue?.name)
+
+            if(newValue?.name == "Test1") {
+                checkbox.isIndeterminate = true
+                checkbox.isChecked = false
+            } else if(newValue?.name == "Test2") {
+                checkbox.isIndeterminate = false
+                checkbox.isChecked = true
+            } else if(newValue?.name == "Test3") {
+                checkbox.isIndeterminate = true
+                checkbox.isChecked = true
+            } else {
+                checkbox.isIndeterminate = false
+                checkbox.isChecked = false
+            }
         }
     }
 

@@ -58,6 +58,12 @@ val CheckBox = FC<CheckBoxProps> { props ->
             id = props.data.id + "--checkbox"
             checked = props.data.isChecked
 
+            useEffect(listOf(props.data.isChecked, props.data.isIndeterminate, props.data.allowIndeterminate)) {
+                document.getElementById(props.data.id + "--checkbox")?.let {
+                    (it as HTMLInputElement).indeterminate = if(!props.data.isChecked && props.data.allowIndeterminate) props.data.isIndeterminate else false
+                }
+            }
+
             css {
                 width = 20.rem
                 height = 20.rem

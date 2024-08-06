@@ -255,6 +255,7 @@ object LayoutMapper {
                     )
                 }
                 spacing = layout.spacing.toInt()
+                layoutFromCenter = layout.isLayoutFromCenter
             }
             else -> throw IllegalArgumentException("Unknown layout type: ${layout::class.simpleName}")
         }

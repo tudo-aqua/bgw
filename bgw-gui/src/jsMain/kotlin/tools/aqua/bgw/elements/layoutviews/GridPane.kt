@@ -18,6 +18,8 @@ import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 import web.dom.Element
+import web.dom.document
+import web.dom.getComputedStyle
 
 external interface GridPaneProps : Props {
     var data : GridPaneData
@@ -36,6 +38,28 @@ val ReactGridPane = FC<GridPaneProps> { props ->
             cssBuilderIntern(props.data)
             width = fit()
             height = fit()
+
+            if(props.data.layoutFromCenter) {
+                useEffect(listOf(props.data)) {
+                    document.getElementById(props.data.id)?.let {
+                        val rem = getComputedStyle(document.documentElement).fontSize.replace("px", "").toDouble()
+                        val element = it
+                        val width = element.offsetWidth / rem
+                        val height = element.offsetHeight / rem
+                        val x = (props.data.posX - width / 2)
+                        val y = (props.data.posY - height / 2)
+                        element.style.left = "${x}rem"
+                        element.style.top = "${y}rem"
+                    }
+                }
+            } else {
+                useEffect(listOf(props.data)) {
+                    document.getElementById(props.data.id)?.let {
+                        it.style.left = "${props.data.posX}rem"
+                        it.style.top = "${props.data.posY}rem"
+                    }
+                }
+            }
         }
 
         bgwVisuals {
@@ -71,6 +95,5 @@ val ReactGridPane = FC<GridPaneProps> { props ->
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
     }
 }
-
 inline val bgwGridPane: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_grid_pane".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

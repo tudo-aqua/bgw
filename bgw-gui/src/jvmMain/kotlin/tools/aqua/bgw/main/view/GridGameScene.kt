@@ -14,14 +14,16 @@ import tools.aqua.bgw.visual.ColorVisual
 
 
 class GridGameScene : BoardGameScene() {
-    private val gridPane = GridPane<ComponentView>(columns = 5, rows = 5, visual = toColorVisual("#403F4CFF")).apply {
+    private val gridPane = GridPane<ComponentView>(columns = 5, rows = 5, visual = toColorVisual("#403F4CFF"), layoutFromCenter = false).apply {
         spacing = 10.0
     }
 
     private val gridEntries = mutableListOf<ComponentView>()
 
-    private val cameraPane = CameraPane(width = 1920, height = 1080, target = gridPane, visual = randomColorVisual())
+    // private val cameraPane = CameraPane(width = 1920, height = 1080, target = gridPane, visual = randomColorVisual())
     private val button = Button(
+        posX = 800,
+        posY = 800,
         width = 200,
         height = 200,
         text = "Hello World!",
@@ -69,15 +71,13 @@ class GridGameScene : BoardGameScene() {
                     text = "($x, $y)",
                     visual = ColorVisual.GRAY,
                     font = Font(40.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD)
-                ).apply {
-                    opacity = 0.0
-                }
+                )
 
                 gridPane[x, y] = entry
                 gridEntries.add(entry)
             }
         }
-        addComponents(cameraPane, button)
+        addComponents(gridPane, button)
     }
 
     private fun randomColorVisual(): ColorVisual {
