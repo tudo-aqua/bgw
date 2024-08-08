@@ -1,76 +1,142 @@
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
+import tools.aqua.bgw.components.container.Satchel
 import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.components.uicomponents.Orientation
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.Visual
 
 class VisualScene : BoardGameScene() {
-    val CARD_WIDTH = 130
-    val CARD_HEIGHT = 200
-
     val card = CardView(
-        posX = 100,
-        posY = 100,
-        width = CARD_WIDTH,
-        height = CARD_HEIGHT,
-        front = ImageVisual(
-            path = "card_deck.png",
-        ),
-        back = ColorVisual.RED
-    ).apply {
-        onMouseClicked = {
-            this.flip()
-        }
-    }
+        width = 150,
+        height = 150,
+        posX = 50,
+        posY = 0,
+        front = CompoundVisual(
+            ColorVisual.YELLOW,
+            ImageVisual(
+                "locked.png",
+                offsetX = 40
+            )
+        )
+    )
 
-    val cardStack = CardStack<CardView>(
-        posX = 500,
-        posY = 100,
-        width = CARD_WIDTH,
-        height = CARD_HEIGHT,
-        visual = ColorVisual.LIGHT_GRAY,
-        alignment = Alignment.TOP_LEFT
-    ).apply {
-        onMouseClicked = {
-            this.pop()
-        }
-    }
+    val card2 = CardView(
+        width = 150,
+        height = 150,
+        posX = 50,
+        posY = 0,
+        front = CompoundVisual(
+            ColorVisual.RED,
+            ImageVisual(
+                "locked.png",
+                offsetX = 40
+            )
+        )
+    )
 
-    // This LinearLayout is used to display the player's hand
-    private val playerHand = LinearLayout<CardView>(
+    /* val list = ListView<GameComponentView>(
+        width = 700,
+        height = 250,
+        posX = 0,
+        posY = 250,
+        visual = ColorVisual.GREEN,
+        formatFunction = { it::class.simpleName.toString() }
+    ).apply {
+        items.add(card)
+        items.add(card2)
+    } */
+
+
+    val group1 = ToggleGroup()
+
+    val toggle1 = ToggleButton(
+        posX = 0,
+        posY = 0,
+        width = 100,
+        height = 50,
+        text = "Toggle 1",
+        visual = ColorVisual.RED,
+        toggleGroup = group1
+    )
+
+    val toggle2 = ToggleButton(
+        posX = 0,
+        posY = 50,
+        width = 100,
+        height = 50,
+        text = "Toggle 2",
+        visual = ColorVisual.GREEN,
+        toggleGroup = group1,
+        alignment = Alignment.BOTTOM_RIGHT
+    )
+
+    val toggle3 = ToggleButton(
         posX = 0,
         posY = 100,
-        width = 1920,
-        height = 200,
-        alignment = Alignment.TOP_LEFT,
-        spacing = 50
-    ).apply {
-        onMouseClicked = {
-            orientation = if (orientation == Orientation.HORIZONTAL) {
-                Orientation.VERTICAL
-            } else {
-                Orientation.HORIZONTAL
-            }
-            spacing *= -1
-        }
-    }
+        width = 100,
+        height = 50,
+        text = "Toggle 3",
+        visual = ColorVisual.BLUE,
+        alignment = Alignment.BOTTOM_RIGHT
+    )
+
+
+    val group2 = ToggleGroup()
+
+    val radio1 = RadioButton(
+        posX = 300,
+        posY = 0,
+        width = 100,
+        height = 50,
+        text = "Radio 1",
+        visual = ColorVisual.RED,
+        toggleGroup = group2
+    )
+
+    val radio2 = RadioButton(
+        posX = 300,
+        posY = 50,
+        width = 100,
+        height = 50,
+        text = "Radio 2",
+        visual = ColorVisual.GREEN,
+        toggleGroup = group2,
+        alignment = Alignment.BOTTOM_RIGHT
+    )
+
+    val radio3 = RadioButton(
+        posX = 300,
+        posY = 100,
+        width = 100,
+        height = 50,
+        text = "Radio 3",
+        visual = ColorVisual.BLUE,
+        alignment = Alignment.BOTTOM_RIGHT
+    )
+
+
+    val checkbox = CheckBox(
+        posX = 600,
+        posY = 0,
+        width = 100,
+        height = 50,
+        text = "Check 1",
+        visual = ColorVisual.RED
+    )
 
     init {
-        addComponents(playerHand)
-
-        for (i in 0 until 5) {
-            playerHand.add(CardView(
-                width = 200,
-                height = 200,
-                front = ColorVisual(Color(i * 20, i * 20, i * 20)),
-            ))
-        }
+        addComponents(radio1, radio2, radio3, toggle1, toggle2, toggle3, checkbox)
     }
 }

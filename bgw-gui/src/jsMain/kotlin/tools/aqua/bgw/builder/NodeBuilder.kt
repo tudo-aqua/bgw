@@ -46,6 +46,8 @@ import tools.aqua.bgw.elements.gamecomponentviews.DiceView as ReactDiceView
 import tools.aqua.bgw.elements.uicomponents.ComboBox as ReactComboBox
 import tools.aqua.bgw.elements.uicomponents.ProgressBar as ReactProgressBar
 import tools.aqua.bgw.elements.uicomponents.CheckBox as ReactCheckBox
+import tools.aqua.bgw.elements.uicomponents.RadioButton as ReactRadioButton
+import tools.aqua.bgw.elements.uicomponents.ToggleButton as ReactToggleButton
 import tools.aqua.bgw.elements.gamecomponentviews.CardView as ReactCardView
 import tools.aqua.bgw.elements.uicomponents.ColorPicker as ReactColorPicker
 
@@ -61,9 +63,9 @@ object NodeBuilder {
             is CameraPaneData -> ReactCameraPane.create { data = componentViewData }
             is ProgressBarData -> ReactProgressBar.create { data = componentViewData }
             is CheckBoxData -> ReactCheckBox.create { data = componentViewData }
-            // is RadioButtonData -> ReactRadioButton.create { data = componentViewData }
+            is RadioButtonData -> ReactRadioButton.create { data = componentViewData }
             is PasswordFieldData -> ReactPasswordField.create { data = componentViewData }
-            // is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
+            is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
             // is BinaryStateButtonData -> ReactBinaryStateButton.create { data = componentViewData }
             is ColorPickerData -> ReactColorPicker.create { data = componentViewData }
             is TextAreaData -> ReactTextArea.create { data = componentViewData }

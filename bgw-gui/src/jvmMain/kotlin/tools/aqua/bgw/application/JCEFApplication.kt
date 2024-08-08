@@ -27,10 +27,7 @@ import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
-import tools.aqua.bgw.components.uicomponents.CheckBox
-import tools.aqua.bgw.components.uicomponents.ColorPicker
-import tools.aqua.bgw.components.uicomponents.ComboBox
-import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
@@ -116,6 +113,9 @@ class JCEFApplication : Application {
                         is CheckBoxChangedEventData -> {
                             println("Checkbox changed to ${eventData.value}")
                             if(component is CheckBox) component.isCheckedProperty.value = eventData.value
+                        }
+                        is RadioChangedEventData -> {
+                            if(component is BinaryStateButton) component.isSelected = eventData.value
                         }
                         is ScrollChangedEventData -> {
                             if(component is CameraPane<*>) {

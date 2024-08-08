@@ -5,7 +5,6 @@ import tools.aqua.bgw.core.WindowMode
 import tools.aqua.bgw.dialog.DialogType
 
 typealias ID = String
-typealias ToggleGroup = List<ID>
 
 // PropData
 
@@ -106,7 +105,7 @@ abstract class TextInputUIComponentData : UIComponentData() {
 @Serializable
 class BinaryStateButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
-    var buttons : ToggleGroup = emptyList()
+    var group : String = ""
 }
 
 @Serializable
@@ -129,12 +128,12 @@ class LabelData : LabeledUIComponentData() { }
 @Serializable
 class RadioButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
-    var buttons : ToggleGroup = emptyList()
+    var group : String = ""
 }
 @Serializable
 class ToggleButtonData : LabeledUIComponentData() {
     var isSelected: Boolean = false
-    var buttons : ToggleGroup = emptyList()
+    var group : String = ""
 }
 @Serializable
 class ColorPickerData : UIComponentData() {

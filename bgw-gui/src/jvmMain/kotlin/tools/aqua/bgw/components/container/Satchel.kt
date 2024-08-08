@@ -89,9 +89,9 @@ open class Satchel<T : GameComponentView>(
             height = this.height)
 
     // initialize satchel component
-    opacityProperty.setSilent(0.0)
-    widthProperty.setSilent(this@Satchel.width)
-    heightProperty.setSilent(this@Satchel.height)
+    // opacityProperty.setSilent(0.0)
+    // widthProperty.setSilent(this@Satchel.width)
+    // heightProperty.setSilent(this@Satchel.height)
     isDraggableProperty.setSilent(true)
 
     // add internal listeners

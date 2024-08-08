@@ -208,7 +208,54 @@ val App = FC<AppProps> { props ->
                 display = None.none
             }
 
-            ".colorPicker > input" {
+            "input[type='color']::-webkit-color-swatch" {
+                borderRadius = 3.rem
+                border = None.none
+            }
+
+            "bgw_togglebutton" {
+                position = Position.relative
+                display = Display.inlineFlex
+                width = 30.rem
+                height = 18.rem
+            }
+
+            "bgw_togglebutton > input[type='checkbox']" {
+                opacity = number(0.0)
+                position = Position.relative
+                width = 36.rem
+                minWidth = 36.rem
+                height = 100.pct
+            }
+
+            ".toggle" {
+                position = Position.absolute
+                left = 4.rem
+                width = 30.rem
+                height = 18.rem
+                backgroundColor = rgb(145,145,145)
+                transition = transition(300, "background-color")
+                borderRadius = 3.rem
+            }
+
+            ".toggle::before" {
+                content = Content("")
+                position = Position.absolute
+                width = 12.rem
+                height = 12.rem
+                left = 3.rem
+                top = 3.rem
+                backgroundColor = rgb(255, 255, 255)
+                transition = transition(300, "transform")
+                borderRadius = 3.rem
+            }
+
+            "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
+                backgroundColor = rgb(0,117,255)
+            }
+
+            "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
+                transform = translatex(12.rem)
             }
 
             "#root" {
@@ -278,3 +325,6 @@ inline fun menuTransition(): Transition =
 
 inline fun transition(duration : Int, property : String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()
+
+inline fun transitionAll(duration : Int): Transition =
+    "${duration}ms".unsafeCast<Transition>()

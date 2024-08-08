@@ -4,17 +4,20 @@ import ComponentViewData
 import HexagonViewData
 import PaneData
 import csstype.PropertiesBuilder
+import data.event.DragEventAction
 import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import react.dom.svg.ReactSVG
 import tools.aqua.bgw.builder.NodeBuilder
+import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
@@ -40,6 +43,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
         tabIndex = 0
         id = props.data.id
         className = ClassName("hexagonView")
+        draggable = props.data.isDraggable
         css {
             cssBuilderIntern(props.data)
             width = (sqrt(3.0) * props.data.size).rem
@@ -58,6 +62,16 @@ val HexagonView = FC<HexagonViewProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
+        onDragStart = {
+            val rect = it.target.asDynamic().getBoundingClientRect()
+            dxCard = it.clientX - rect.x.unsafeCast<Double>()
+            dyCard = it.clientY - rect.y.unsafeCast<Double>()
+            val element = it.target as HTMLElement
+            it.dataTransfer.setData("text", element.id)
+            JCEFEventDispatcher.dispatchEvent(it.toDragEventData(id, DragEventAction.START))
+        }
+        onDragOver = { it.preventDefault() }
+        onDragEnd = { it.preventDefault() }
     }
 }
 

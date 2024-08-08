@@ -40,7 +40,6 @@ object ComponentMapper {
         return when(componentView) {
             is LabeledUIComponent -> {
                 when(componentView) {
-                    is BinaryStateButton -> BinaryStateButtonData().fillData(componentView) as BinaryStateButtonData
                     is Button -> ButtonData().fillData(componentView) as ButtonData
                     is CheckBox -> CheckBoxData().fillData(componentView) as CheckBoxData
                     is Label -> LabelData().fillData(componentView) as LabelData
@@ -121,14 +120,9 @@ object ComponentMapper {
     }
 
     fun map(componentView: ComponentView) : ComponentViewData {
-        //println("Mapping ComponentView: $componentView")
         return when (componentView) {
 
             // TODO - LabeledUIComponent
-            is BinaryStateButton -> (mapSpecific(componentView) as BinaryStateButtonData).apply {
-                isSelected = componentView.isSelected
-                // buttons
-            }
             is Button -> (mapSpecific(componentView) as ButtonData)
             is CheckBox -> (mapSpecific(componentView) as CheckBoxData).apply {
                 isChecked = componentView.isChecked
@@ -138,11 +132,11 @@ object ComponentMapper {
             is Label -> (mapSpecific(componentView) as LabelData)
             is RadioButton -> (mapSpecific(componentView) as RadioButtonData).apply {
                 isSelected = componentView.isSelected
-                // buttons
+                group = componentView.toggleGroup.id
             }
             is ToggleButton -> (mapSpecific(componentView) as ToggleButtonData).apply {
                 isSelected = componentView.isSelected
-                // buttons
+                group = componentView.toggleGroup.id
             }
 
             // TODO - TextInputUIComponent

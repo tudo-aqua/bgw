@@ -2,6 +2,7 @@ package tools.aqua.bgw.elements.container
 
 import CardStackData
 import LinearLayoutData
+import SatchelData
 import csstype.PropertiesBuilder
 import web.cssom.*
 import data.event.KeyEventAction
@@ -20,18 +21,18 @@ import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 
-external interface CardStackProps : Props {
-    var data : CardStackData
+external interface SatchelProps : Props {
+    var data : SatchelData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: SatchelData) {
     cssBuilder(componentViewData)
 }
 
-val CardStack = FC<CardStackProps> { props ->
-    bgwCardStack {
+val Satchel = FC<SatchelProps> { props ->
+    bgwSatchel {
         id = props.data.id
-        className = ClassName("cardStack")
+        className = ClassName("satchel")
         css {
             cssBuilderIntern(props.data)
         }
@@ -47,7 +48,9 @@ val CardStack = FC<CardStackProps> { props ->
                 width = 100.pct
                 height = 100.pct
                 display = Display.flex
-                alignmentBuilder(props.data)
+                justifyContent = JustifyContent.center
+                alignItems = AlignItems.center
+                opacity = number(0.0)
             }
 
             props.data.components.forEach {
@@ -57,7 +60,7 @@ val CardStack = FC<CardStackProps> { props ->
 
         onContextMenu = {
             it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
+            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
         }
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
@@ -65,5 +68,5 @@ val CardStack = FC<CardStackProps> { props ->
     }
 }
 
-inline val bgwCardStack: IntrinsicType<HTMLAttributes<Element>>
-    get() = "bgw_card_stack".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+inline val bgwSatchel: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_satchel".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

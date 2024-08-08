@@ -124,6 +124,7 @@ private val module = SerializersModule {
         subclass(KeyEventData::class)
         subclass(LoadEventData::class)
         subclass(SelectionChangedEventData::class)
+        subclass(RadioChangedEventData::class)
         subclass(TextInputChangedEventData::class)
         subclass(ColorInputChangedEventData::class)
         subclass(ScrollChangedEventData::class)

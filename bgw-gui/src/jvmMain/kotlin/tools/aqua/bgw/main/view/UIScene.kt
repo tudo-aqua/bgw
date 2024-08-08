@@ -81,6 +81,10 @@ class UIScene : MenuScene() {
     init {
         addComponents(combo, progress, textfield, passwordfield, textarea, color)
 
+        color.selectedColorProperty.addListener { _, newValue ->
+            progress.barColor = newValue
+        }
+
 
         combo.select(2)
     }
