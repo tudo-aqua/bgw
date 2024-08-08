@@ -153,7 +153,7 @@ object ComponentMapper {
             // TODO - UIComponent
             is ComboBox<*> -> mapComboBox(componentView)
             is ColorPicker -> (mapSpecific(componentView) as ColorPickerData).apply {
-                selectedColor = "rgba(${componentView.selectedColor.red}, ${componentView.selectedColor.green}, ${componentView.selectedColor.blue}, ${componentView.selectedColor.alpha})"
+                selectedColor = componentView.selectedColor.toHex()
             }
             is ProgressBar -> (mapSpecific(componentView) as ProgressBarData).apply {
                 progress = componentView.progress

@@ -1,10 +1,13 @@
 package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.components.container.CardStack
+import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 
@@ -40,33 +43,33 @@ class VisualScene : BoardGameScene() {
         }
     }
 
-    init {
-        addComponents(cardStack, card)
+    // This LinearLayout is used to display the player's hand
+    private val playerHand = LinearLayout<CardView>(
+        posX = 0,
+        posY = 100,
+        width = 1920,
+        height = 200,
+        alignment = Alignment.TOP_LEFT,
+        spacing = 50
+    ).apply {
+        onMouseClicked = {
+            orientation = if (orientation == Orientation.HORIZONTAL) {
+                Orientation.VERTICAL
+            } else {
+                Orientation.HORIZONTAL
+            }
+            spacing *= -1
+        }
+    }
 
-        for (i in 0..5) {
-            cardStack.add(CardView(
-                posX = 0,
-                posY = 0,
-                width = CARD_WIDTH - i * 10,
-                height = CARD_WIDTH - i * 10,
-                front = when(i) {
-                    0 -> ColorVisual.RED
-                    1 -> ColorVisual.ORANGE
-                    2 -> ColorVisual.YELLOW
-                    3 -> ColorVisual.GREEN
-                    4 -> ColorVisual.BLUE
-                    5 -> ColorVisual.MAGENTA
-                    else -> ColorVisual.BLACK
-                },
-                back = when(i) {
-                    0 -> ColorVisual.RED
-                    1 -> ColorVisual.ORANGE
-                    2 -> ColorVisual.YELLOW
-                    3 -> ColorVisual.GREEN
-                    4 -> ColorVisual.BLUE
-                    5 -> ColorVisual.MAGENTA
-                    else -> ColorVisual.BLACK
-                }
+    init {
+        addComponents(playerHand)
+
+        for (i in 0 until 5) {
+            playerHand.add(CardView(
+                width = 200,
+                height = 200,
+                front = ColorVisual(Color(i * 20, i * 20, i * 20)),
             ))
         }
     }

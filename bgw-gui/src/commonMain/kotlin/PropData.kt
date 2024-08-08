@@ -138,14 +138,14 @@ class ToggleButtonData : LabeledUIComponentData() {
 }
 @Serializable
 class ColorPickerData : UIComponentData() {
-    var selectedColor: String = "rgba(0,0,0,0)"
+    var selectedColor: String = "#000000"
 }
 @Serializable
 class PasswordFieldData : TextInputUIComponentData() { }
 @Serializable
 class ProgressBarData : UIComponentData() {
     var progress: Double = 0.0
-    var barColor: String = "rgba(0,0,0,0)"
+    var barColor: String = "#000000"
 }
 @Serializable
 class TextAreaData : TextInputUIComponentData() { }

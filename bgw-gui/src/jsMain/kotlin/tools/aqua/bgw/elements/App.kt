@@ -204,6 +204,13 @@ val App = FC<AppProps> { props ->
                 flexShrink = number(0.0)
             }
 
+            "textarea::-webkit-scrollbar" {
+                display = None.none
+            }
+
+            ".colorPicker > input" {
+            }
+
             "#root" {
                 width = 100.pct
                 height = 100.pct

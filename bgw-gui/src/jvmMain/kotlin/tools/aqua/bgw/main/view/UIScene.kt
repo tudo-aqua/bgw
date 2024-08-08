@@ -1,9 +1,6 @@
 package tools.aqua.bgw.main.view
 
-import tools.aqua.bgw.components.uicomponents.CheckBox
-import tools.aqua.bgw.components.uicomponents.ComboBox
-import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.components.uicomponents.ProgressBar
+import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
@@ -14,7 +11,7 @@ import tools.aqua.bgw.visual.ImageVisual
 import kotlin.random.Random
 
 class UIScene : MenuScene() {
-    private val combo = ComboBox<TestObject>(
+    val combo = ComboBox<TestObject>(
         width = 1920,
         height = 50,
         items = listOf(TestObject("Test1"), TestObject("Test2"), TestObject("Test3"), TestObject("Test4")),
@@ -35,41 +32,57 @@ class UIScene : MenuScene() {
         scaleY = 2.0
     }
 
-    private val checkbox = CheckBox(
+    private val textfield = TextField(
         posX = 80,
-        posY = 150,
+        posY = 180,
         width = 800,
         height = 50,
         text = "Testbox",
         font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
-        isChecked = false,
-        visual = ColorVisual.RED,
-        allowIndeterminate = false,
-        isIndeterminate = true
-    )
+        prompt = "Enter text here",
+    ).apply {
+        visual = ColorVisual(Color.LIGHT_GRAY)
+    }
+
+    private val passwordfield = PasswordField(
+        posX = 80,
+        posY = 250,
+        width = 800,
+        height = 50,
+        text = "Passwortbox",
+        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        prompt = "Enter password here",
+    ).apply {
+        visual = ColorVisual(Color.LIGHT_GRAY)
+    }
+
+    private val textarea = TextArea(
+        posX = 80,
+        posY = 320,
+        width = 800,
+        height = 600,
+        text = "Test\nArea",
+        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        prompt = "Enter text here",
+    ).apply {
+        visual = ColorVisual(Color.LIGHT_GRAY)
+    }
+
+    private val color = ColorPicker(
+        posX = 500,
+        posY = 50,
+        width = 100,
+        height = 50,
+        initialColor = Color(255, 0, 0),
+    ).apply {
+        visual = ColorVisual(Color.LIGHT_GRAY)
+    }
 
     init {
-        addComponents(combo, progress, checkbox)
+        addComponents(combo, progress, textfield, passwordfield, textarea, color)
 
 
         combo.select(2)
-        combo.selectedItemProperty.addListener { _, newValue ->
-            println(newValue?.name)
-
-            if(newValue?.name == "Test1") {
-                checkbox.isIndeterminate = true
-                checkbox.isChecked = false
-            } else if(newValue?.name == "Test2") {
-                checkbox.isIndeterminate = false
-                checkbox.isChecked = true
-            } else if(newValue?.name == "Test3") {
-                checkbox.isIndeterminate = true
-                checkbox.isChecked = true
-            } else {
-                checkbox.isIndeterminate = false
-                checkbox.isChecked = false
-            }
-        }
     }
 
     inner class TestObject(val name : String) {}

@@ -5,6 +5,16 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double 
     constructor(red: Int, green: Int, blue: Int, alpha: Int = 255) : this(red, green, blue, alpha.toDouble() / 255.0)
     constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, 1.0)
 
+    constructor(hex: String) : this(
+        hex.substring(1, 3).toInt(16),
+        hex.substring(3, 5).toInt(16),
+        hex.substring(5, 7).toInt(16)
+    )
+
+    fun toHex(): String {
+        return "#${red.toString(16).padStart(2, '0')}${green.toString(16).padStart(2, '0')}${blue.toString(16).padStart(2, '0')}"
+    }
+
     companion object {
         val TRANSPARENT: Color = Color(0,0,0, alpha = 0.0)
         val WHITE: Color = Color(255, 255, 255)
