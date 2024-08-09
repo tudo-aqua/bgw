@@ -87,7 +87,7 @@ abstract class ComponentViewData : Data() {
 // UI COMPONENTS
 @Serializable
 abstract class UIComponentData : ComponentViewData() {
-    var font: FontData? = FontData(16, "rgba(0,0,0,1)", "Arial", 400, "normal")
+    var font: FontData = FontData(16, "rgba(0,0,0,1)", "Arial", 400, "normal")
 }
 
 @Serializable
@@ -151,16 +151,18 @@ class TextAreaData : TextInputUIComponentData() { }
 @Serializable
 class TextFieldData : TextInputUIComponentData() { }
 
+@Serializable
 abstract class StructuredDataViewData : UIComponentData() {
     var items: List<String> = emptyList()
     var selectionMode: String = ""
-    var selectionBackground: ColorVisualData? = null
+    var selectionBackground: String = "#FF0000"
+    var selectedItems: List<Int> = emptyList()
 }
 @Serializable
 class TableColumnData {
     var title : String = ""
     var width : Int = 0
-    var font : FontData? = null
+    var font : FontData = FontData(16, "rgba(0,0,0,1)", "Arial", 400, "normal")
     var items : List<String> = emptyList()
 }
 @Serializable
@@ -287,7 +289,7 @@ data class ImageVisualData(
 @Serializable
 data class TextVisualData(
     var text: String = "",
-    var font : FontData? = null,
+    var font : FontData = FontData(16, "rgba(0,0,0,1)", "Arial", 400, "normal"),
     var alignment: Pair<String, String> = Pair("", ""),
     var offsetX: Int = 0,
     var offsetY: Int = 0

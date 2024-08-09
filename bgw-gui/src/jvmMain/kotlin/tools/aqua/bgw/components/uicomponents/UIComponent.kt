@@ -37,7 +37,7 @@ import tools.aqua.bgw.visual.Visual
  * @param font Font for this [UIComponent]. Usage depends on subclass.
  * @param visual Background [Visual].
  */
-sealed class UIComponent(
+abstract class UIComponent(
     posX: Number,
     posY: Number,
     width: Number,

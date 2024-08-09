@@ -77,6 +77,7 @@ class Animator {
     }
 
     private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
+        console.log("Starting delay animation")
         setTimeout({
             callback.invoke(animation.id)
         }, animation.duration)

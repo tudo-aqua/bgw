@@ -60,6 +60,7 @@ private val module = SerializersModule {
         subclass(ParallelAnimationData::class)
         subclass(RandomizeAnimationData::class)
         subclass(DiceAnimationData::class)
+        subclass(DelayAnimationData::class)
     }
     polymorphic(LayoutViewData::class) {
         subclass(PaneData::class)
@@ -136,6 +137,7 @@ private val module = SerializersModule {
         subclass(DragDroppedEventData::class)
         subclass(CheckBoxChangedEventData::class)
         subclass(AnimationFinishedEventData::class)
+        subclass(StructuredDataSelectEventData::class)
     }
     polymorphic(InputEventData::class) {
         subclass(MouseEventData::class)
@@ -148,10 +150,11 @@ private val module = SerializersModule {
         subclass(RotationAnimationData::class)
         subclass(ScaleAnimationData::class)
         subclass(FlipAnimationData::class)
+        subclass(DelayAnimationData::class)
     }
 }
 
 val jsonMapper = KJson {
-    serializersModule = module
     ignoreUnknownKeys = true
+    serializersModule = module
 }

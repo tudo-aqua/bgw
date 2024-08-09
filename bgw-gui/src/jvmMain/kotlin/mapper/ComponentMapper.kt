@@ -38,6 +38,34 @@ object ComponentMapper {
 
     private fun mapSpecific(componentView: ComponentView) : ComponentViewData {
         return when(componentView) {
+            is ListView<*> -> (ListViewData().fillData(componentView) as ListViewData).apply {
+                items = componentView.items.map { item ->
+                    componentView.formatItem(item)
+                }
+                selectionMode = componentView.selectionMode.name.lowercase()
+                selectionBackground = componentView.selectionBackground.color.toHex()
+                selectedItems = componentView.selectedIndicesList.toList()
+                font = FontMapper.map(componentView.font)
+            }
+
+            is TableView<*> -> (TableViewData().fillData(componentView) as TableViewData).apply {
+                items = componentView.items.map { it.toString() }
+                columns = componentView.columns.map {
+                    TableColumnData().apply {
+                        title = it.title
+                        width = it.width.toInt()
+                        font = FontMapper.map(it.font)
+                        items = componentView.items.map { item ->
+                            it.formatItem(item)
+                        }
+                    }
+                }
+                selectionMode = componentView.selectionMode.name.lowercase()
+                selectionBackground = componentView.selectionBackground.color.toHex()
+                selectedItems = componentView.selectedIndicesList.toList()
+                font = FontMapper.map(componentView.font)
+            }
+
             is LabeledUIComponent -> {
                 when(componentView) {
                     is Button -> ButtonData().fillData(componentView) as ButtonData
@@ -74,19 +102,6 @@ object ComponentMapper {
                     is ProgressBar -> ProgressBarData().fillData(componentView) as ProgressBarData
                     else -> throw IllegalArgumentException("Unknown component type: ${componentView::class.simpleName}")
                 }.apply {
-                    font = FontMapper.map(componentView.font)
-                }
-            }
-
-            is StructuredDataView<*> -> {
-                when(componentView) {
-                    is ListView<*> -> ListViewData().fillData(componentView) as ListViewData
-                    is TableView<*> -> TableViewData().fillData(componentView) as TableViewData
-                    else -> throw IllegalArgumentException("Unknown component type: ${componentView::class.simpleName}")
-                }.apply {
-                    items = componentView.items.map { it.toString() }
-                    selectionMode = componentView.selectionMode.name.lowercase()
-                    selectionBackground = VisualMapper.map(componentView.selectionBackground) as ColorVisualData
                     font = FontMapper.map(componentView.font)
                 }
             }
@@ -211,17 +226,13 @@ object FontMapper {
         Font.FontWeight.EXTRA_BOLD to 800,
         Font.FontWeight.BLACK to 900
     )
-    fun map(font: Font?) : FontData? {
-        return if (font != null) {
-            FontData().apply {
-                size = font.size.toInt()
-                color = "rgba(${font.color.red}, ${font.color.green}, ${font.color.blue}, ${font.color.alpha})"
-                family = font.family
-                fontWeight = fontWeightMap[font.fontWeight] ?: 400
-                fontStyle = font.fontStyle.name.lowercase()
-            }
-        } else {
-            null
+    fun map(font: Font) : FontData {
+        return FontData().apply {
+            size = font.size.toInt()
+            color = "rgba(${font.color.red}, ${font.color.green}, ${font.color.blue}, ${font.color.alpha})"
+            family = font.family
+            fontWeight = fontWeightMap[font.fontWeight] ?: 400
+            fontStyle = font.fontStyle.name.lowercase()
         }
     }
 }

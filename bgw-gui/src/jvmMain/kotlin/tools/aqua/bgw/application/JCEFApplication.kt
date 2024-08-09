@@ -102,6 +102,9 @@ class JCEFApplication : Application {
                             //println("Selection changed")
                             if(component is ComboBox<*>) component.select(eventData.selectedItem)
                         }
+                        is StructuredDataSelectEventData -> {
+                            if(component is StructuredDataView<*>) component.select(eventData.index)
+                        }
                         is TextInputChangedEventData -> {
                             //println("Text changed")
                             if(component is TextField) component.textProperty.value = eventData.value

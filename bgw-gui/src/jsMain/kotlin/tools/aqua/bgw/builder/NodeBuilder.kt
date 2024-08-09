@@ -50,9 +50,12 @@ import tools.aqua.bgw.elements.uicomponents.RadioButton as ReactRadioButton
 import tools.aqua.bgw.elements.uicomponents.ToggleButton as ReactToggleButton
 import tools.aqua.bgw.elements.gamecomponentviews.CardView as ReactCardView
 import tools.aqua.bgw.elements.uicomponents.ColorPicker as ReactColorPicker
+import tools.aqua.bgw.elements.uicomponents.ListView as ReactListView
+import tools.aqua.bgw.elements.uicomponents.TableView as ReactTableView
 
 object NodeBuilder {
     fun build(componentViewData: ComponentViewData): ReactElement<*> {
+        println(componentViewData)
         return when (componentViewData) {
             is LayoutViewData -> LayoutNodeBuilder.build(componentViewData)
             is LabelData -> ReactLabel.create { data = componentViewData }
@@ -66,11 +69,10 @@ object NodeBuilder {
             is RadioButtonData -> ReactRadioButton.create { data = componentViewData }
             is PasswordFieldData -> ReactPasswordField.create { data = componentViewData }
             is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
-            // is BinaryStateButtonData -> ReactBinaryStateButton.create { data = componentViewData }
             is ColorPickerData -> ReactColorPicker.create { data = componentViewData }
             is TextAreaData -> ReactTextArea.create { data = componentViewData }
-            // is TableViewData -> ReactTableView.create { data = componentViewData }
-            // is ListViewData -> ReactListView.create { data = componentViewData }
+            is TableViewData -> ReactTableView.create { data = componentViewData }
+            is ListViewData -> ReactListView.create { data = componentViewData }
 
             is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
             is CardViewData -> ReactCardView.create { data = componentViewData }

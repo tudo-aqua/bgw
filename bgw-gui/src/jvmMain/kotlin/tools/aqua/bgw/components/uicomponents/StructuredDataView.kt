@@ -162,13 +162,34 @@ sealed class StructuredDataView<T>(
     get() = selectedIndicesList
 
   /** Internal event handler for selection. */
-  internal var onSelectionEvent: ((Int) -> Unit)? = null
+  internal var onSelectionEvent: ((Int) -> Unit)? = {
+    if(this.items.isNotEmpty()) {
+      if(selectedIndicesList.contains(it)) {
+        selectedItemsList.remove(this.items[it])
+        selectedIndicesList.remove(it)
+      } else {
+        selectedItemsList.add(this.items[it])
+        selectedIndicesList.add(it)
+      }
+    }
+  }
 
   /** Internal event handler for selection. */
-  internal var onSelectAllEvent: (() -> Unit)? = null
+  internal var onSelectAllEvent: (() -> Unit)? = {
+    selectedItemsList.clear()
+    selectedIndicesList.clear()
+
+    this.items.indices.forEach {
+      selectedItemsList.add(this.items[it])
+      selectedIndicesList.add(it)
+    }
+  }
 
   /** Internal event handler for selection. */
-  internal var onSelectNoneEvent: (() -> Unit)? = null
+  internal var onSelectNoneEvent: (() -> Unit)? = {
+    selectedItemsList.clear()
+    selectedIndicesList.clear()
+  }
 
   /**
    * Selects the element at the specified index in this [UIComponent]. Clears current selection.
@@ -180,7 +201,12 @@ sealed class StructuredDataView<T>(
     checkSelectionEnabled()
     require(index in items.indices) { "Index is out of bounds." }
 
-    if (selectedIndices.size == 1 && selectedIndices[0] == index) return
+    if(selectedIndices.size > 0 && selectionMode == SelectionMode.SINGLE) {
+      clearSelection()
+    }
+
+    // if (selectedIndices.size == 1 && selectedIndices[0] == index) return
+    println("Selecting index $index")
 
     onSelectionEvent?.invoke(index)
   }
