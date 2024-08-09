@@ -11,6 +11,12 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double 
         hex.substring(5, 7).toInt(16)
     )
 
+    constructor(hex : Int) : this(
+        (hex shr 16) and 0xFF,
+        (hex shr 8) and 0xFF,
+        hex and 0xFF
+    )
+
     fun toHex(): String {
         return "#${red.toString(16).padStart(2, '0')}${green.toString(16).padStart(2, '0')}${blue.toString(16).padStart(2, '0')}"
     }

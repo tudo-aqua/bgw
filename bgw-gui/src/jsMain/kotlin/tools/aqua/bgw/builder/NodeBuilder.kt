@@ -55,7 +55,6 @@ import tools.aqua.bgw.elements.uicomponents.TableView as ReactTableView
 
 object NodeBuilder {
     fun build(componentViewData: ComponentViewData): ReactElement<*> {
-        println(componentViewData)
         return when (componentViewData) {
             is LayoutViewData -> LayoutNodeBuilder.build(componentViewData)
             is LabelData -> ReactLabel.create { data = componentViewData }

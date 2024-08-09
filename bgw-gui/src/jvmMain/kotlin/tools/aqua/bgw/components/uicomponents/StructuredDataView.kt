@@ -205,9 +205,6 @@ sealed class StructuredDataView<T>(
       clearSelection()
     }
 
-    // if (selectedIndices.size == 1 && selectedIndices[0] == index) return
-    println("Selecting index $index")
-
     onSelectionEvent?.invoke(index)
   }
 

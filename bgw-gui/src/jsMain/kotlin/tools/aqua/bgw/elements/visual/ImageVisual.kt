@@ -56,7 +56,6 @@ val ImageVisual = FC<ImageVisualProps> { props ->
 
                 useEffect {
                     val img = document.createElement("img") as HTMLImageElement
-                    console.log(img)
                     img.src = props.data.path
 
                     img.addEventListener("load", {

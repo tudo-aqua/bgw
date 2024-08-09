@@ -61,6 +61,7 @@ class JCEFApplication : Application {
     private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
     override fun start(callback: (Any) -> Unit) {
+        println("Starting JCEF Application on port ${Constants.PORT}")
         EventQueue.invokeLater {
             frame = MainFrame(loadCallback = callback)
             JCEFApplication::class.java.getResource("/icon.png").let { ImageIO.read(it) }.let { frame?.iconImage = it }

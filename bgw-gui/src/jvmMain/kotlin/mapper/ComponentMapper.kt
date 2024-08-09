@@ -1,4 +1,5 @@
 import ComponentMapper.fillData
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.*
@@ -355,7 +356,7 @@ object VisualMapper {
 
             is ImageVisual -> ImageVisualData().apply {
                 id = visual.id
-                if(isRelativeFilePath(visual.path)) path = "http://localhost:8080/static/${visual.path}"
+                if(isRelativeFilePath(visual.path)) path = "http://localhost:${Constants.PORT}/static/${visual.path}"
                 else path = visual.path
                 width = visual.width
                 height = visual.height
@@ -412,7 +413,7 @@ object VisualMapper {
 
             is ImageVisual -> ImageVisualData().apply {
                 id = visual.id
-                if (isRelativeFilePath(visual.path)) path = "http://localhost:8080/static/${visual.path}"
+                if (isRelativeFilePath(visual.path)) path = "http://localhost:${Constants.PORT}/static/${visual.path}"
                 else path = visual.path
                 width = visual.width
                 height = visual.height
