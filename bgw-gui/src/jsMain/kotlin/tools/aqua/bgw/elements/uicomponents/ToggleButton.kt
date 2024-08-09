@@ -1,11 +1,14 @@
 package tools.aqua.bgw.elements.uicomponents
 
 import CheckBoxData
+import RadioButtonData
 import TextFieldData
+import ToggleButtonData
 import csstype.PropertiesBuilder
 import web.cssom.*
 import data.event.KeyEventAction
 import data.event.internal.CheckBoxChangedEventData
+import data.event.internal.RadioChangedEventData
 import data.event.internal.SelectionChangedEventData
 import data.event.internal.TextInputChangedEventData
 import emotion.react.css
@@ -18,6 +21,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
+import react.dom.html.ReactHTML.span
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
@@ -28,11 +32,11 @@ import tools.aqua.bgw.handlers
 import web.dom.Element
 import web.html.InputType
 
-external interface CheckBoxProps : Props {
-    var data: CheckBoxData
+external interface ToggleButtonProps : Props {
+    var data: ToggleButtonData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonData) {
     cssBuilder(componentViewData)
     display = Display.flex
     alignItems = AlignItems.center
@@ -40,8 +44,8 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
     gap = 10.rem
 }
 
-val CheckBox = FC<CheckBoxProps> { props ->
-    bgwCheckBox {
+val ToggleButton = FC<ToggleButtonProps> { props ->
+    bgwToggleButton {
         id = props.data.id
         className = ClassName("textField")
         css {
@@ -55,14 +59,9 @@ val CheckBox = FC<CheckBoxProps> { props ->
 
         input {
             type = InputType.checkbox
-            id = props.data.id + "--checkbox"
-            checked = props.data.isChecked
-
-            useEffect(listOf(props.data.isChecked, props.data.isIndeterminate, props.data.allowIndeterminate)) {
-                document.getElementById(props.data.id + "--checkbox")?.let {
-                    (it as HTMLInputElement).indeterminate = if(!props.data.isChecked && props.data.allowIndeterminate) props.data.isIndeterminate else false
-                }
-            }
+            id = props.data.id + "--toggle"
+            checked = props.data.isSelected
+            name = props.data.group
 
             css {
                 width = 20.rem
@@ -71,13 +70,17 @@ val CheckBox = FC<CheckBoxProps> { props ->
                 zIndex = integer(1)
             }
             onChange = {
-                JCEFEventDispatcher.dispatchEvent(CheckBoxChangedEventData(!props.data.isChecked).apply { id = props.data.id })
+                JCEFEventDispatcher.dispatchEvent(RadioChangedEventData(!props.data.isSelected).apply { id = props.data.id })
             }
+        }
+
+        span {
+            className = ClassName("toggle")
         }
 
         label {
             className = ClassName("text")
-            htmlFor = props.data.id + "--checkbox"
+            htmlFor = props.data.id + "--toggle"
             +props.data.text
 
             css {
@@ -100,5 +103,5 @@ val CheckBox = FC<CheckBoxProps> { props ->
     }
 }
 
-inline val bgwCheckBox: IntrinsicType<HTMLAttributes<Element>>
-    get() = "bgw_checkbox".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+inline val bgwToggleButton: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_togglebutton".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

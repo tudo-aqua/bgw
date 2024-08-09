@@ -31,7 +31,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData) {
 val CardStack = FC<CardStackProps> { props ->
     bgwCardStack {
         id = props.data.id
-        className = ClassName("linearLayout")
+        className = ClassName("cardStack")
         css {
             cssBuilderIntern(props.data)
         }

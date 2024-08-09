@@ -111,13 +111,13 @@ val App = FC<AppProps> { props ->
                     width = 100.vw
                     height = (100.0 / props.data.width * props.data.height).vw
                     position = Position.relative
-                    backgroundColor = rgb(0, 0, 0, 0.0)
+                    backgroundColor = rgb(0, 0, 0, 1.0)
                     overflow = Overflow.hidden
                 }
             }
 
             "body" {
-                backgroundColor = rgb(0, 0, 0)
+                backgroundColor = rgb(0, 0, 0, 0.0)
                 color = rgb(0, 0, 0)
                 margin = 0.px
             }
@@ -188,7 +188,7 @@ val App = FC<AppProps> { props ->
                 position = Position.absolute
             }
 
-            "bgw_linear_layout > bgw_contents > *" {
+            "bgw_linear_layout > bgw_contents > *, bgw_card_stack > bgw_contents > *" {
                 position = important(Position.relative)
                 left = important(Globals.unset)
                 top = important(Globals.unset)
@@ -204,6 +204,60 @@ val App = FC<AppProps> { props ->
                 flexShrink = number(0.0)
             }
 
+            "textarea::-webkit-scrollbar" {
+                display = None.none
+            }
+
+            "input[type='color']::-webkit-color-swatch" {
+                borderRadius = 3.rem
+                border = None.none
+            }
+
+            "bgw_togglebutton" {
+                position = Position.relative
+                display = Display.inlineFlex
+                width = 30.rem
+                height = 18.rem
+            }
+
+            "bgw_togglebutton > input[type='checkbox']" {
+                opacity = number(0.0)
+                position = Position.relative
+                width = 36.rem
+                minWidth = 36.rem
+                height = 100.pct
+            }
+
+            ".toggle" {
+                position = Position.absolute
+                left = 4.rem
+                width = 30.rem
+                height = 18.rem
+                backgroundColor = rgb(145,145,145)
+                transition = transition(300, "background-color")
+                borderRadius = 3.rem
+            }
+
+            ".toggle::before" {
+                content = Content("")
+                position = Position.absolute
+                width = 12.rem
+                height = 12.rem
+                left = 3.rem
+                top = 3.rem
+                backgroundColor = rgb(255, 255, 255)
+                transition = transition(300, "transform")
+                borderRadius = 3.rem
+            }
+
+            "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
+                backgroundColor = rgb(0,117,255)
+            }
+
+            "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
+                transform = translatex(12.rem)
+            }
+
             "#root" {
                 width = 100.pct
                 height = 100.pct
@@ -213,7 +267,7 @@ val App = FC<AppProps> { props ->
                 display = Display.flex
                 justifyContent = JustifyContent.center
                 alignItems = AlignItems.center
-                backgroundColor = Color("#000000")
+                backgroundColor = rgb(0, 0, 0, 0.0)
                 overflow = Overflow.hidden
             }
         }
@@ -271,3 +325,6 @@ inline fun menuTransition(): Transition =
 
 inline fun transition(duration : Int, property : String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()
+
+inline fun transitionAll(duration : Int): Transition =
+    "${duration}ms".unsafeCast<Transition>()

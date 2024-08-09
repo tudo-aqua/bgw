@@ -9,6 +9,8 @@ import react.*
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.elements.visual.CompoundVisual
 import tools.aqua.bgw.handlers
+import web.cssom.Height
+import web.cssom.MinWidth
 import tools.aqua.bgw.elements.visual.ColorVisual as ReactColorVisual
 import tools.aqua.bgw.elements.visual.ImageVisual as ReactImageVisual
 import tools.aqua.bgw.elements.visual.TextVisual as ReactTextVisual
@@ -17,6 +19,7 @@ import tools.aqua.bgw.elements.visual.TextVisual as ReactTextVisual
 external interface VisualProps : Props {
     var data: VisualData
 }
+
 object VisualBuilder {
     fun build(visual: VisualData?): ReactElement<*> {
         when(visual) {

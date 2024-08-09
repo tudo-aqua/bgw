@@ -27,9 +27,8 @@ import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
-import tools.aqua.bgw.components.uicomponents.CheckBox
-import tools.aqua.bgw.components.uicomponents.ComboBox
-import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.components.uicomponents.*
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
@@ -109,12 +108,22 @@ class JCEFApplication : Application {
                             //println("Selection changed")
                             if(component is ComboBox<*>) component.select(eventData.selectedItem)
                         }
+                        is StructuredDataSelectEventData -> {
+                            if(component is StructuredDataView<*>) component.select(eventData.index)
+                        }
                         is TextInputChangedEventData -> {
                             //println("Text changed")
                             if(component is TextField) component.textProperty.value = eventData.value
                         }
+                        is ColorInputChangedEventData -> {
+                            //println("Text changed")
+                            if(component is ColorPicker) component.selectedColor = Color(eventData.value)
+                        }
                         is CheckBoxChangedEventData -> {
                             if(component is CheckBox) component.isCheckedProperty.value = eventData.value
+                        }
+                        is RadioChangedEventData -> {
+                            if(component is BinaryStateButton) component.isSelected = eventData.value
                         }
                         is ScrollChangedEventData -> {
                             if(component is CameraPane<*>) {

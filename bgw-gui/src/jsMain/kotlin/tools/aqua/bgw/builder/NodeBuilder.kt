@@ -15,9 +15,11 @@ import HexagonGridData
 import HexagonViewData
 import LabelData
 import LayoutViewData
+import ListViewData
 import PasswordFieldData
 import ProgressBarData
 import RadioButtonData
+import TableViewData
 import TextAreaData
 import TextFieldData
 import ToggleButtonData
@@ -34,6 +36,8 @@ import web.dom.Element
 import tools.aqua.bgw.elements.uicomponents.Button as ReactButton
 import tools.aqua.bgw.elements.uicomponents.Label as ReactLabel
 import tools.aqua.bgw.elements.uicomponents.TextField as ReactTextField
+import tools.aqua.bgw.elements.uicomponents.TextArea as ReactTextArea
+import tools.aqua.bgw.elements.uicomponents.PasswordField as ReactPasswordField
 import tools.aqua.bgw.elements.gamecomponentviews.HexagonView as ReactHexagonView
 import tools.aqua.bgw.elements.container.HexagonGrid as ReactHexagonGrid
 import tools.aqua.bgw.elements.layoutviews.CameraPane as ReactCameraPane
@@ -42,10 +46,16 @@ import tools.aqua.bgw.elements.gamecomponentviews.DiceView as ReactDiceView
 import tools.aqua.bgw.elements.uicomponents.ComboBox as ReactComboBox
 import tools.aqua.bgw.elements.uicomponents.ProgressBar as ReactProgressBar
 import tools.aqua.bgw.elements.uicomponents.CheckBox as ReactCheckBox
+import tools.aqua.bgw.elements.uicomponents.RadioButton as ReactRadioButton
+import tools.aqua.bgw.elements.uicomponents.ToggleButton as ReactToggleButton
 import tools.aqua.bgw.elements.gamecomponentviews.CardView as ReactCardView
+import tools.aqua.bgw.elements.uicomponents.ColorPicker as ReactColorPicker
+import tools.aqua.bgw.elements.uicomponents.ListView as ReactListView
+import tools.aqua.bgw.elements.uicomponents.TableView as ReactTableView
 
 object NodeBuilder {
     fun build(componentViewData: ComponentViewData): ReactElement<*> {
+        println(componentViewData)
         return when (componentViewData) {
             is LayoutViewData -> LayoutNodeBuilder.build(componentViewData)
             is LabelData -> ReactLabel.create { data = componentViewData }
@@ -56,12 +66,13 @@ object NodeBuilder {
             is CameraPaneData -> ReactCameraPane.create { data = componentViewData }
             is ProgressBarData -> ReactProgressBar.create { data = componentViewData }
             is CheckBoxData -> ReactCheckBox.create { data = componentViewData }
-            // is RadioButtonData -> ReactRadioButton.create { data = componentViewData }
-            // is PasswordFieldData -> ReactPasswordField.create { data = componentViewData }
-            // is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
-            // is BinaryStateButtonData -> ReactBinaryStateButton.create { data = componentViewData }
-            // is ColorPickerData -> ReactColorPicker.create { data = componentViewData }
-            //is TextAreaData -> ReactTextArea.create { data = componentViewData }
+            is RadioButtonData -> ReactRadioButton.create { data = componentViewData }
+            is PasswordFieldData -> ReactPasswordField.create { data = componentViewData }
+            is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
+            is ColorPickerData -> ReactColorPicker.create { data = componentViewData }
+            is TextAreaData -> ReactTextArea.create { data = componentViewData }
+            is TableViewData -> ReactTableView.create { data = componentViewData }
+            is ListViewData -> ReactListView.create { data = componentViewData }
 
             is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
             is CardViewData -> ReactCardView.create { data = componentViewData }

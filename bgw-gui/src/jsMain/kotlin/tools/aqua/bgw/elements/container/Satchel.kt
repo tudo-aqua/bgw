@@ -1,46 +1,38 @@
-package tools.aqua.bgw.elements.uicomponents
+package tools.aqua.bgw.elements.container
 
-import ComponentViewData
-import LabelData
-import UIComponentData
+import CardStackData
+import LinearLayoutData
+import SatchelData
 import csstype.PropertiesBuilder
 import web.cssom.*
-import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
 import react.*
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.h1
-import tools.aqua.bgw.builder.ReactConverters.toDragEventData
+import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.*
+import tools.aqua.bgw.elements.alignmentBuilder
+import tools.aqua.bgw.elements.bgwContents
+import tools.aqua.bgw.elements.bgwVisuals
+import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
-import tools.aqua.bgw.handlers
-import tools.aqua.bgw.internalSocket
 import web.dom.Element
 
-external interface LabelProps : Props {
-    var data: LabelData
+external interface SatchelProps : Props {
+    var data : SatchelData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: SatchelData) {
     cssBuilder(componentViewData)
 }
 
-fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: LabelData) {
-    cssTextBuilder(componentViewData)
-}
-
-val Label = FC<LabelProps> { props ->
-    bgwLabel {
-        tabIndex = 0
+val Satchel = FC<SatchelProps> { props ->
+    bgwSatchel {
         id = props.data.id
-        className = ClassName("label")
+        className = ClassName("satchel")
         css {
             cssBuilderIntern(props.data)
         }
@@ -50,12 +42,20 @@ val Label = FC<LabelProps> { props ->
             +VisualBuilder.build(props.data.visual)
         }
 
-        bgwText {
-            className = ClassName("text")
+        bgwContents {
+            className = ClassName("components")
             css {
-                cssTextBuilderIntern(props.data)
+                width = 100.pct
+                height = 100.pct
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                alignItems = AlignItems.center
+                opacity = number(0.0)
             }
-            +props.data.text
+
+            props.data.components.forEach {
+                +NodeBuilder.build(it)
+            }
         }
 
         onContextMenu = {
@@ -68,5 +68,5 @@ val Label = FC<LabelProps> { props ->
     }
 }
 
-inline val bgwLabel: IntrinsicType<HTMLAttributes<Element>>
-    get() = "bgw_label".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+inline val bgwSatchel: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_satchel".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

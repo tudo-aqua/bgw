@@ -5,7 +5,11 @@ import csstype.PropertiesBuilder
 import web.cssom.*
 import data.event.KeyEventAction
 import emotion.react.css
+import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.get
 import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.NodeBuilder
@@ -43,6 +47,7 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
 
         bgwContents {
             className = ClassName("components")
+            id = props.data.id + "--components"
             css {
                 width = 100.pct
                 height = 100.pct
@@ -75,15 +80,30 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
                         else -> JustifyContent.center
                     }
                 }
-                gap = props.data.spacing.rem
+                // gap = props.data.spacing.rem
             }
 
             props.data.components.forEach {
                 +NodeBuilder.build(it)
             }
+
+            useEffect(listOf(props.data)) {
+                document.getElementById(props.data.id + "--components")?.let {
+                    for(i in 1 until it.childElementCount) {
+                        val child = it.children[i] as HTMLElement
+                        if(props.data.orientation == "vertical") {
+                            child.style.marginTop = "${props.data.spacing}rem"
+                            child.style.marginLeft = "0"
+                        } else {
+                            child.style.marginLeft = "${props.data.spacing}rem"
+                            child.style.marginTop = "0"
+                        }
+                    }
+                }
+            }
         }
 
-               onContextMenu = {
+        onContextMenu = {
             it.preventDefault()
             JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
         }

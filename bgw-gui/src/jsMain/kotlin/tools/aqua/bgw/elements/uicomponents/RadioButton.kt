@@ -1,11 +1,13 @@
 package tools.aqua.bgw.elements.uicomponents
 
 import CheckBoxData
+import RadioButtonData
 import TextFieldData
 import csstype.PropertiesBuilder
 import web.cssom.*
 import data.event.KeyEventAction
 import data.event.internal.CheckBoxChangedEventData
+import data.event.internal.RadioChangedEventData
 import data.event.internal.SelectionChangedEventData
 import data.event.internal.TextInputChangedEventData
 import emotion.react.css
@@ -28,11 +30,11 @@ import tools.aqua.bgw.handlers
 import web.dom.Element
 import web.html.InputType
 
-external interface CheckBoxProps : Props {
-    var data: CheckBoxData
+external interface RadioButtonProps : Props {
+    var data: RadioButtonData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
+fun PropertiesBuilder.cssBuilderIntern(componentViewData: RadioButtonData) {
     cssBuilder(componentViewData)
     display = Display.flex
     alignItems = AlignItems.center
@@ -40,8 +42,8 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
     gap = 10.rem
 }
 
-val CheckBox = FC<CheckBoxProps> { props ->
-    bgwCheckBox {
+val RadioButton = FC<RadioButtonProps> { props ->
+    bgwRadioButton {
         id = props.data.id
         className = ClassName("textField")
         css {
@@ -54,15 +56,10 @@ val CheckBox = FC<CheckBoxProps> { props ->
         }
 
         input {
-            type = InputType.checkbox
-            id = props.data.id + "--checkbox"
-            checked = props.data.isChecked
-
-            useEffect(listOf(props.data.isChecked, props.data.isIndeterminate, props.data.allowIndeterminate)) {
-                document.getElementById(props.data.id + "--checkbox")?.let {
-                    (it as HTMLInputElement).indeterminate = if(!props.data.isChecked && props.data.allowIndeterminate) props.data.isIndeterminate else false
-                }
-            }
+            type = InputType.radio
+            id = props.data.id + "--radio"
+            checked = props.data.isSelected
+            name = props.data.group
 
             css {
                 width = 20.rem
@@ -71,13 +68,13 @@ val CheckBox = FC<CheckBoxProps> { props ->
                 zIndex = integer(1)
             }
             onChange = {
-                JCEFEventDispatcher.dispatchEvent(CheckBoxChangedEventData(!props.data.isChecked).apply { id = props.data.id })
+                JCEFEventDispatcher.dispatchEvent(RadioChangedEventData(!props.data.isSelected).apply { id = props.data.id })
             }
         }
 
         label {
             className = ClassName("text")
-            htmlFor = props.data.id + "--checkbox"
+            htmlFor = props.data.id + "--radio"
             +props.data.text
 
             css {
@@ -100,5 +97,5 @@ val CheckBox = FC<CheckBoxProps> { props ->
     }
 }
 
-inline val bgwCheckBox: IntrinsicType<HTMLAttributes<Element>>
-    get() = "bgw_checkbox".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+inline val bgwRadioButton: IntrinsicType<HTMLAttributes<Element>>
+    get() = "bgw_radiobutton".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

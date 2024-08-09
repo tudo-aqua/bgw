@@ -95,6 +95,10 @@ object AnimationMapper {
                 speed = animation.speed
             }
 
+            is DelayAnimation -> (mapSpecific(animation) as DelayAnimationData).apply {
+                duration = animation.duration
+            }
+
             else -> TODO("Not implemented")
         }
     }

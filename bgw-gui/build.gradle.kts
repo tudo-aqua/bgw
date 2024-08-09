@@ -5,6 +5,8 @@ import org.jetbrains.kotlin.gradle.tasks.throwExceptionIfCompilationFailed
 import java.lang.management.ManagementFactory
 import java.io.File
 
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
   val kotlinVersion = "2.0.0"
   kotlin("multiplatform") //version kotlinVersion

@@ -132,4 +132,10 @@ open class TableColumn<T>(
     set(value) {
       formatFunctionProperty.value = value
     }
+
+
+    fun formatItem(item: Any?): String {
+        val function = formatFunction ?: { it: Any? -> it.toString() }
+        return function(item as T)
+    }
 }

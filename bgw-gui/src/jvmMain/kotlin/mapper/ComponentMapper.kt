@@ -28,9 +28,9 @@ object ComponentMapper {
             isVisible = componentView.isVisible
             isDisabled = componentView.isDisabled
             // isFocusable
-            // scaleX
-            // scaleY
-            // rotation
+            scaleX = componentView.scaleX
+            scaleY = componentView.scaleY
+            rotation = componentView.rotation
             // layoutFromCenter
             // isDraggable
         }
@@ -38,9 +38,36 @@ object ComponentMapper {
 
     private fun mapSpecific(componentView: ComponentView) : ComponentViewData {
         return when(componentView) {
+            is ListView<*> -> (ListViewData().fillData(componentView) as ListViewData).apply {
+                items = componentView.items.map { item ->
+                    componentView.formatItem(item)
+                }
+                selectionMode = componentView.selectionMode.name.lowercase()
+                selectionBackground = componentView.selectionBackground.color.toHex()
+                selectedItems = componentView.selectedIndicesList.toList()
+                font = FontMapper.map(componentView.font)
+            }
+
+            is TableView<*> -> (TableViewData().fillData(componentView) as TableViewData).apply {
+                items = componentView.items.map { it.toString() }
+                columns = componentView.columns.map {
+                    TableColumnData().apply {
+                        title = it.title
+                        width = it.width.toInt()
+                        font = FontMapper.map(it.font)
+                        items = componentView.items.map { item ->
+                            it.formatItem(item)
+                        }
+                    }
+                }
+                selectionMode = componentView.selectionMode.name.lowercase()
+                selectionBackground = componentView.selectionBackground.color.toHex()
+                selectedItems = componentView.selectedIndicesList.toList()
+                font = FontMapper.map(componentView.font)
+            }
+
             is LabeledUIComponent -> {
                 when(componentView) {
-                    is BinaryStateButton -> BinaryStateButtonData().fillData(componentView) as BinaryStateButtonData
                     is Button -> ButtonData().fillData(componentView) as ButtonData
                     is CheckBox -> CheckBoxData().fillData(componentView) as CheckBoxData
                     is Label -> LabelData().fillData(componentView) as LabelData
@@ -79,19 +106,6 @@ object ComponentMapper {
                 }
             }
 
-            is StructuredDataView<*> -> {
-                when(componentView) {
-                    is ListView<*> -> ListViewData().fillData(componentView) as ListViewData
-                    is TableView<*> -> TableViewData().fillData(componentView) as TableViewData
-                    else -> throw IllegalArgumentException("Unknown component type: ${componentView::class.simpleName}")
-                }.apply {
-                    items = componentView.items.map { it.toString() }
-                    selectionMode = componentView.selectionMode.name.lowercase()
-                    selectionBackground = VisualMapper.map(componentView.selectionBackground) as ColorVisualData
-                    font = FontMapper.map(componentView.font)
-                }
-            }
-
             is CameraPane<*> -> (CameraPaneData().fillData(componentView) as CameraPaneData).apply {
                 target = LayoutMapper.map(componentView.target)
                 zoom = componentView.zoom
@@ -121,14 +135,9 @@ object ComponentMapper {
     }
 
     fun map(componentView: ComponentView) : ComponentViewData {
-        //println("Mapping ComponentView: $componentView")
         return when (componentView) {
 
             // TODO - LabeledUIComponent
-            is BinaryStateButton -> (mapSpecific(componentView) as BinaryStateButtonData).apply {
-                isSelected = componentView.isSelected
-                // buttons
-            }
             is Button -> (mapSpecific(componentView) as ButtonData)
             is CheckBox -> (mapSpecific(componentView) as CheckBoxData).apply {
                 isChecked = componentView.isChecked
@@ -138,11 +147,11 @@ object ComponentMapper {
             is Label -> (mapSpecific(componentView) as LabelData)
             is RadioButton -> (mapSpecific(componentView) as RadioButtonData).apply {
                 isSelected = componentView.isSelected
-                // buttons
+                group = componentView.toggleGroup.id
             }
             is ToggleButton -> (mapSpecific(componentView) as ToggleButtonData).apply {
                 isSelected = componentView.isSelected
-                // buttons
+                group = componentView.toggleGroup.id
             }
 
             // TODO - TextInputUIComponent
@@ -153,7 +162,7 @@ object ComponentMapper {
             // TODO - UIComponent
             is ComboBox<*> -> mapComboBox(componentView)
             is ColorPicker -> (mapSpecific(componentView) as ColorPickerData).apply {
-                selectedColor = "rgba(${componentView.selectedColor.red}, ${componentView.selectedColor.green}, ${componentView.selectedColor.blue}, ${componentView.selectedColor.alpha})"
+                selectedColor = componentView.selectedColor.toHex()
             }
             is ProgressBar -> (mapSpecific(componentView) as ProgressBarData).apply {
                 progress = componentView.progress
@@ -217,17 +226,13 @@ object FontMapper {
         Font.FontWeight.EXTRA_BOLD to 800,
         Font.FontWeight.BLACK to 900
     )
-    fun map(font: Font?) : FontData? {
-        return if (font != null) {
-            FontData().apply {
-                size = font.size.toInt()
-                color = "rgba(${font.color.red}, ${font.color.green}, ${font.color.blue}, ${font.color.alpha})"
-                family = font.family
-                fontWeight = fontWeightMap[font.fontWeight] ?: 400
-                fontStyle = font.fontStyle.name.lowercase()
-            }
-        } else {
-            null
+    fun map(font: Font) : FontData {
+        return FontData().apply {
+            size = font.size.toInt()
+            color = "rgba(${font.color.red}, ${font.color.green}, ${font.color.blue}, ${font.color.alpha})"
+            family = font.family
+            fontWeight = fontWeightMap[font.fontWeight] ?: 400
+            fontStyle = font.fontStyle.name.lowercase()
         }
     }
 }
@@ -255,6 +260,7 @@ object LayoutMapper {
                     )
                 }
                 spacing = layout.spacing.toInt()
+                layoutFromCenter = layout.isLayoutFromCenter
             }
             else -> throw IllegalArgumentException("Unknown layout type: ${layout::class.simpleName}")
         }

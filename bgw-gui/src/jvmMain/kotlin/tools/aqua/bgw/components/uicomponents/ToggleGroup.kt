@@ -35,6 +35,8 @@ package tools.aqua.bgw.components.uicomponents
  * @see RadioButton
  */
 open class ToggleGroup {
+  val id = IDGenerator.generateToggleGroupID()
+
   internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
 
   internal fun addButton(button: BinaryStateButton) {

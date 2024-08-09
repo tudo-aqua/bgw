@@ -23,6 +23,8 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
     opacity = number(componentViewData.opacity)
     display = if(componentViewData.isVisible) Display.flex else None.none
     pointerEvents = if(!componentViewData.isDisabled) PointerEvents.all else None.none
+    rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
+    scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
     // TODO...
 }
 
@@ -44,6 +46,7 @@ fun PropertiesBuilder.cssTextBuilder(componentViewData: LabeledUIComponentData) 
     maxHeight = 100.pct
     overflow = Overflow.hidden
     position = Position.absolute
+    fontBuilder(componentViewData)
 }
 
 fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData) {
@@ -77,11 +80,11 @@ fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData) {
 }
 
 fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
-    fontFamily = (componentViewData.font?.family ?: "Arial") as FontFamily?
-    fontWeight = componentViewData.font?.fontWeight?.let { integer(it) }
-    fontStyle = (componentViewData.font?.fontStyle ?: "normal") as FontStyle?
-    fontSize = componentViewData.font?.size?.rem
-    color = componentViewData.font?.color.unsafeCast<Color>()
+    fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
+    fontWeight = integer(componentViewData.font!!.fontWeight)
+    fontSize = componentViewData.font!!.size.rem
+    fontFamily = cssFont(componentViewData.font!!.family)
+    color = componentViewData.font!!.color.unsafeCast<Color>()
 }
 
 fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
@@ -132,6 +135,8 @@ fun PropertiesBuilder.flipBuilder(flipped : String) {
 
 fun cssBorderRadius(value : String): LengthProperty =
     value.unsafeCast<LengthProperty>()
+
+fun cssFont(value : String): FontFamily = "'$value'".unsafeCast<FontFamily>()
 
 fun cssFilter(values : List<String>): FilterFunction {
     if(values.isEmpty()) return "none".unsafeCast<FilterFunction>()
