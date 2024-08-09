@@ -52,7 +52,8 @@ import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import kotlin.system.exitProcess
 
 object Constants {
-    val PORT = ServerSocket(0).use { it.localPort }
+    // val PORT = ServerSocket(0).use { it.localPort }
+    val PORT = 5173
 }
 
 class JCEFApplication : Application {
