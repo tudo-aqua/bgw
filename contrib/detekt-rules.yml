@@ -1,0 +1,481 @@
+build:
+  maxIssues: -1 # report only; do not fail for any # of violations
+
+config:
+  validation: true
+
+console-reports:
+  exclude:
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    - 'FindingsReport'
+    - 'FileBasedFindingsReport'
+
+comments:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Mostly enabled. Rationale: maintenance issues
+  AbsentOrWrongFileLicense:
+    # Rationale: handled by Spotless
+    active: false
+  CommentOverPrivateFunction:
+    # Rationale: useful for complex internal APIs
+    active: false
+  CommentOverPrivateProperty:
+    # Rationale: useful for complex internal APIs
+    active: false
+  DeprecatedBlockTag:
+    active: true
+  EndOfSentenceFormat:
+    active: true
+  OutdatedDocumentation:
+    active: true
+  UndocumentedPublicClass:
+    active: true
+  UndocumentedPublicFunction:
+    active: true
+  UndocumentedPublicProperty:
+    active: true
+
+complexity:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Mostly disabled. Rationale: better suited for code review
+  ComplexCondition:
+    active: false
+  ComplexInterface:
+    active: false
+  ComplexMethod:
+    active: false
+  LabeledExpression:
+    active: false
+  LargeClass:
+    active: false
+  LongMethod:
+    active: false
+  LongParameterList:
+    active: false
+  MethodOverloading:
+    active: false
+  NamedArguments:
+    active: false
+  NestedBlockDepth:
+    active: false
+  ReplaceSafeCallChainWithRun:
+    # Rationale: easily avoidable, bad style
+    active: true
+  StringLiteralDuplication:
+    # Rationale: maintenance issue
+    active: true
+  TooManyFunctions:
+    active: false
+
+coroutines:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Mostly enabled. Rationale: indicative of errors
+  GlobalCoroutineUsage:
+    active: true
+  InjectDispatcher:
+    # Rationale: project does nor use DI
+    active: false
+  RedundantSuspendModifier:
+    active: true
+  SleepInsteadOfDelay:
+    active: true
+  SuspendFunWithFlowReturnType:
+    active: true
+
+empty-blocks:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Completely enabled. Rationale: indicative of errors
+  EmptyCatchBlock:
+    active: true
+  EmptyClassBlock:
+    active: true
+  EmptyDefaultConstructor:
+    active: true
+  EmptyDoWhileBlock:
+    active: true
+  EmptyElseBlock:
+    active: true
+  EmptyFinallyBlock:
+    active: true
+  EmptyForBlock:
+    active: true
+  EmptyFunctionBlock:
+    active: true
+    ignoreOverridden: true
+  EmptyIfBlock:
+    active: true
+  EmptyInitBlock:
+    active: true
+  EmptyKtFile:
+    active: true
+  EmptySecondaryConstructor:
+    active: true
+  EmptyTryBlock:
+    active: true
+  EmptyWhenBlock:
+    active: true
+  EmptyWhileBlock:
+    active: true
+
+exceptions:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Mostly enabled. Rationale: indicative of errors
+  active: true
+  ExceptionRaisedInUnexpectedLocation:
+    active: true
+  InstanceOfCheckForException:
+    active: true
+  NotImplementedDeclaration:
+    active: true
+  ObjectExtendsThrowable:
+    active: true
+  PrintStackTrace:
+    active: true
+  RethrowCaughtException:
+    active: true
+  ReturnFromFinally:
+    active: true
+  SwallowedException:
+    # Rationale: also catches normal error handling
+    active: false
+  ThrowingExceptionFromFinally:
+    active: true
+  ThrowingExceptionInMain:
+    active: true
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: true
+  ThrowingNewInstanceOfSameException:
+    active: true
+  TooGenericExceptionCaught:
+    active: true
+  TooGenericExceptionThrown:
+    active: true
+
+naming:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Mostly enabled. Rationale: principle of the least surprise
+  active: true
+  BooleanPropertyNaming:
+    active: true
+  ClassNaming:
+    active: true
+  ConstructorParameterNaming:
+    active: true
+  EnumNaming:
+    active: true
+  ForbiddenClassName:
+    active: true
+    forbiddenName:
+      - 'Util'  # Non-indicative of content
+  FunctionMaxLength:
+    # Rationale: better suited for code review
+    active: false
+  FunctionMinLength:
+    # Rationale: better suited for code review
+    active: false
+  FunctionNaming:
+    active: true
+  FunctionParameterNaming:
+    active: true
+  InvalidPackageDeclaration:
+    active: true
+  LambdaParameterNaming:
+    active: true
+  MatchingDeclarationName:
+    active: true
+    mustBeFirst: false  # handle e.g. constants before class
+  MemberNameEqualsClassName:
+    active: true
+  NoNameShadowing:
+    active: true
+  NonBooleanPropertyPrefixedWithIs:
+    active: false
+  ObjectPropertyNaming:
+    active: true
+  PackageNaming:
+    active: true
+  TopLevelPropertyNaming:
+    active: true
+  VariableMaxLength:
+    # Rationale: better suited for code review
+    active: false
+  VariableMinLength:
+    # Rationale: better suited for code review
+    active: false
+  VariableNaming:
+    active: true
+
+performance:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Completely enabled. Rationale: indicative of errors
+  active: true
+  ArrayPrimitive:
+    active: true
+  ForEachOnRange:
+    active: true
+  SpreadOperator:
+    active: true
+  UnnecessaryTemporaryInstantiation:
+    active: true
+
+potential-bugs:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Completely enabled. Rationale: indicative of errors
+  active: true
+  AvoidReferentialEquality:
+    active: true
+  CastToNullableType:
+    active: true
+  Deprecation:
+    active: true
+  DontDowncastCollectionTypes:
+    active: true
+  DoubleMutabilityForCollection:
+    active: true
+  DuplicateCaseInWhenExpression:
+    active: true
+  EqualsAlwaysReturnsTrueOrFalse:
+    active: true
+  EqualsWithHashCodeExist:
+    active: true
+  ExitOutsideMain:
+    active: true
+  ExplicitGarbageCollectionCall:
+    active: true
+  HasPlatformType:
+    active: true
+  IgnoredReturnValue:
+    active: true
+  ImplicitDefaultLocale:
+    active: true
+  ImplicitUnitReturnType:
+    active: true
+  InvalidRange:
+    active: true
+  IteratorHasNextCallsNextMethod:
+    active: true
+  IteratorNotThrowingNoSuchElementException:
+    # Rationale: has legitimate reasons
+    active: false
+  LateinitUsage:
+    # Rationale: has legitimate use cases
+    active: false
+  MapGetWithNotNullAssertionOperator:
+    active: true
+  MissingPackageDeclaration:
+    active: true
+  MissingWhenCase:
+    active: true
+  # Future Detekt feature
+  #NullCheckOnMutableProperty:
+  #  active: true
+  NullableToStringCall:
+    active: false
+  RedundantElseInWhen:
+    active: true
+  UnconditionalJumpStatementInLoop:
+    active: true
+  UnnecessaryNotNullOperator:
+    active: true
+  UnnecessarySafeCall:
+    active: true
+  UnreachableCatchBlock:
+    active: true
+  UnreachableCode:
+    active: true
+  UnsafeCallOnNullableType:
+    active: true
+  UnsafeCast:
+    active: true
+  UnusedUnaryOperator:
+    active: true
+  UselessPostfixExpression:
+    active: true
+  WrongEqualsTypeParameter:
+    active: true
+
+style:
+  excludes: ['**/bgw-docs-examples/**']
+
+  # Partially enabled to complement Spotless. Rationale: helps consistency
+  active: true
+  # Future Detekt feature
+  #CanBeNonNullable:
+  #  active: true
+  ClassOrdering:
+    active: true
+  CollapsibleIfStatements:
+    active: true
+  DataClassContainsFunctions:
+    # Rationale: legitimate OOP
+    active: false
+  DataClassShouldBeImmutable:
+    # Rationale: has legitimate use cases
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    # Rationale: better suited for code review
+    active: false
+  EqualsNullCall:
+    active: true
+  EqualsOnSignatureLine:
+    # Rationale: handled by spotless
+    active: false
+  ExplicitCollectionElementAccessMethod:
+    active: true
+  ExplicitItLambdaParameter:
+    active: true
+  ExpressionBodySyntax:
+    active: true
+    includeLineWrapping: true
+  ForbiddenComment:
+    # Rationale: situational
+    active: false
+  ForbiddenImport:
+    active: false
+  ForbiddenMethodCall:
+    active: false
+  ForbiddenPublicDataClass:
+    # Rationale: only becomes an issue when API is changed
+    active: false
+  ForbiddenVoid:
+    active: true
+  FunctionOnlyReturningConstant:
+    active: true
+  LibraryCodeMustSpecifyReturnType:
+    active: true
+  LibraryEntitiesShouldNotBePublic:
+    # Rationale: forbids OOP APIs
+    active: false
+  LoopWithTooManyJumpStatements:
+    # Rationale: better suited for code review
+    active: false
+  MagicNumber:
+    # Rationale: better suited for code review
+    active: false
+  MandatoryBracesIfStatements:
+    # Rationale: handled by spotless + code review
+    active: false
+  MandatoryBracesLoops:
+    # Rationale: handled by spotless + code review
+    active: false
+  MaxLineLength:
+    # Rationale: handled by spotless
+    active: false
+  MayBeConst:
+    active: true
+  ModifierOrder:
+    active: true
+  MultilineLambdaItParameter:
+    # Rationale: better suited for code review
+    active: false
+  NestedClassesVisibility:
+    active: true
+  NewLineAtEndOfFile:
+    # Rationale: handled by spotless
+    active: false
+  NoTabs:
+    # Rationale: handled by spotless
+    active: false
+  ObjectLiteralToLambda:
+    active: true
+  OptionalAbstractKeyword:
+    active: true
+  OptionalUnit:
+    active: false
+  OptionalWhenBraces:
+    active: false
+  PreferToOverPairSyntax:
+    active: false
+  ProtectedMemberInFinalClass:
+    active: true
+  RedundantExplicitType:
+    active: true
+  RedundantHigherOrderMapUsage:
+    active: true
+  RedundantVisibilityModifierRule:
+    active: true
+  ReturnCount:
+    # Rationale: better suited for code review
+    active: false
+  SafeCast:
+    active: true
+  SerialVersionUIDInSerializableClass:
+    active: true
+  SpacingBetweenPackageAndImports:
+    # Rationale: handled by spotless
+    active: false
+  ThrowsCount:
+    # Rationale: better suited for code review
+    active: false
+  TrailingWhitespace:
+    # Rationale: handled by spotless
+    active: false
+  UnderscoresInNumericLiterals:
+    # Rationale: improves legibility
+    active: true
+  UnnecessaryAbstractClass:
+    active: true
+  UnnecessaryAnnotationUseSiteTarget:
+    active: true
+  UnnecessaryApply:
+    active: true
+  UnnecessaryFilter:
+    active: true
+  UnnecessaryInheritance:
+    active: true
+  UnnecessaryLet:
+    active: true
+  UnnecessaryParentheses:
+    active: false
+  UntilInsteadOfRangeTo:
+    active: true
+  UnusedImports:
+    active: true
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateMember:
+    active: true
+  UseAnyOrNoneInsteadOfFind:
+    active: true
+  UseArrayLiteralsInAnnotations:
+    active: true
+  UseCheckNotNull:
+    active: true
+  UseCheckOrError:
+    active: true
+  UseDataClass:
+    active: true
+    allowVars: true
+  UseEmptyCounterpart:
+    active: true
+  UseIfEmptyOrIfBlank:
+    active: true
+  UseIfInsteadOfWhen:
+    active: false
+  UseIsNullOrEmpty:
+    active: true
+  UseOrEmpty:
+    active: true
+  UseRequire:
+    active: true
+  UseRequireNotNull:
+    active: true
+  UselessCallOnNotNull:
+    active: true
+  UtilityClassWithPublicConstructor:
+    active: true
+  VarCouldBeVal:
+    active: true
+  WildcardImport:
+    # Rationale: handled by spotless
+    active: false

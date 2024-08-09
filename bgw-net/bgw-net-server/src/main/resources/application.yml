@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          gitlab:
+            provider: gitlab
+            client-name: GitLab
+            clientId: "e89822ce031860e8283b8ec906d1960a1aa8e13353027bec8ba379784cb104c0"
+            clientSecret: "58b351ec5f88c48ef12b521ca5d7023df2f662f3a1c97bcbba1fb615f703f0de"
+            authorization-grant-type: authorization_code
+            redirectUri:  "http://{baseHost}{basePort}{basePath}/login/oauth2/code/{registrationId}"
+            scope: openid,email,profile
+        provider:
+          gitlab:
+            authorization-uri: "https://gitlab.com/oauth/authorize"
+            token-uri: "https://gitlab.com/oauth/token"
+            user-info-uri: "https://gitlab.com/oauth/userinfo"
+            user-name-attribute: sub
+            jwk-set-uri: "https://gitlab.com/oauth/discovery/keys"

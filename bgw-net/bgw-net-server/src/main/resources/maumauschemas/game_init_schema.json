@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "title": "MauMau Init Game Schema",
+  "required": [
+    "hostCards",
+    "yourCards",
+    "drawStack",
+    "gameStack"
+  ],
+  "properties": {
+    "hostCards": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/card" }
+    },
+    "yourCards": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/card" }
+    },
+    "drawStack": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/card" }
+    },
+    "gameStack": { "$ref": "#/definitions/card" }
+  },
+  "additionalProperties": false,
+
+  "definitions": {
+    "card": {
+      "type": "object",
+      "required": [
+        "suit",
+        "value"
+      ],
+      "properties": {
+        "suit": {
+          "type": "string",
+          "enum": ["C", "D", "H", "S"]
+        },
+        "value": {
+          "type": "string",
+          "enum": ["7", "8", "9", "10", "J", "Q", "K", "A"]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

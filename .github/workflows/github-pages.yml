@@ -1,0 +1,37 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  github-pages-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Required for version number generation
+
+      - name: Validate Gradle artifacts
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Generate Page
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :bgw-docs:jekyllBuild
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages
+          folder: bgw-docs/build/jekyll
+          single-commit: true
