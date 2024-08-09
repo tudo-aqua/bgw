@@ -36,6 +36,10 @@ val App = FC<AppProps> { props ->
                 }
             }
 
+            "*" {
+                transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
+            }
+
             // BLUE
             "@media (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
                 "html" {
@@ -188,8 +192,16 @@ val App = FC<AppProps> { props ->
                 position = Position.absolute
             }
 
-            "bgw_linear_layout > bgw_contents > *, bgw_card_stack > bgw_contents > *" {
+            "bgw_linear_layout > bgw_contents > *" {
                 position = important(Position.relative)
+                left = important(Globals.unset)
+                top = important(Globals.unset)
+                flexGrow = number(0.0)
+                flexShrink = number(0.0)
+            }
+
+            "bgw_card_stack > bgw_contents > *" {
+                position = important(Position.absolute)
                 left = important(Globals.unset)
                 top = important(Globals.unset)
                 flexGrow = number(0.0)

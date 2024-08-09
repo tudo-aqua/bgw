@@ -82,6 +82,7 @@ abstract class ComponentViewData : Data() {
     var rotation : Double = 0.0
     var layoutFromCenter : Boolean = false
     var isDraggable : Boolean = false
+    var isDragged : Boolean = false
 }
 
 // UI COMPONENTS

@@ -128,6 +128,7 @@ object ComponentMapper {
                     else -> throw IllegalArgumentException("Unknown component type: ${componentView::class.simpleName}")
                 }.apply {
                     isDraggable = componentView.isDraggable
+                    isDragged = componentView.isDragged
                 }
             }
 
