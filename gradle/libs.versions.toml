@@ -2,7 +2,7 @@
 
 # Platforms
 
-kotlin = "1.7.10"
+kotlin = "1.9.10"
 spring = "2.7.14"
 vaadin = "23.1.6"
 
@@ -77,7 +77,7 @@ vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin"
 # Gradle Plugins
 
 gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "kotlin" }
-gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.0.0" }
+gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
 gradle-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
 

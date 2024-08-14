@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-plugins { `kotlin-dsl`.version("3.1.0") }
+plugins { `kotlin-dsl` }
 
 repositories {
   gradlePluginPortal()
@@ -43,6 +43,11 @@ dependencies {
   implementation(libs.gradle.spring.boot)
   implementation(libs.gradle.taskTree)
   implementation(libs.gradle.vaadin)
+
+  implementation(
+      "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.0.0")
+  implementation(
+      "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.0.0")
 
   // black magic from https://github.com/gradle/gradle/issues/15383
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
