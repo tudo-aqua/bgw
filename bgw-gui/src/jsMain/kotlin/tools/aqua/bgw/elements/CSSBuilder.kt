@@ -25,7 +25,6 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
     pointerEvents = if(!componentViewData.isDisabled) PointerEvents.all else None.none
     rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
     scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
-    // TODO...
 }
 
 fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
@@ -55,6 +54,12 @@ fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData
         "center" -> JustifyContent.center
         "right" -> JustifyContent.flexEnd
         else -> JustifyContent.center
+    }
+    textAlign = when(componentViewData.alignment.first) {
+        "left" -> TextAlign.left
+        "center" -> TextAlign.center
+        "right" -> TextAlign.right
+        else -> TextAlign.center
     }
     alignItems = when(componentViewData.alignment.second) {
         "top" -> AlignItems.flexStart

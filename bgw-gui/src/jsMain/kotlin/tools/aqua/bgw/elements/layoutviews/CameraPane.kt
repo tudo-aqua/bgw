@@ -282,6 +282,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
         className = ClassName("cameraPane")
         css {
             cssBuilderIntern(props.data)
+            cursor = Cursor.move
         }
 
         bgwCameraContent {
@@ -297,6 +298,7 @@ val CameraPane = FC<CameraPaneProps> { props ->
                 position = Position.absolute
                 left = 0.px
                 top = 0.px
+                overflow = Overflow.hidden
             }
 
             bgwVisuals {

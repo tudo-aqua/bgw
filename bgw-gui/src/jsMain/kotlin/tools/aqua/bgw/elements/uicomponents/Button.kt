@@ -28,8 +28,6 @@ external interface ButtonProps : Props {
 
 fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     cssBuilder(componentViewData)
-    justifyContent = JustifyContent.center
-    alignItems = AlignItems.center
     cursor = Cursor.pointer
 
     hover {

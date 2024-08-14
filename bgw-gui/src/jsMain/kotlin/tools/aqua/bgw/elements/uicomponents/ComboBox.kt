@@ -51,6 +51,8 @@ val ComboBox = FC<ComboBoxProps> { props ->
                     fontBuilder(props.data)
                     opacity = number(0.5)
                 }
+                outline = None.none
+                border = None.none
                 position = Position.absolute
             }
             option {
