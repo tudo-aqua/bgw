@@ -17,12 +17,12 @@
 
 package tools.aqua.bgw.net.protocol.client.service
 
-import tools.aqua.bgw.core.Color
 import java.awt.Font
 import java.awt.font.FontRenderContext
 import java.awt.geom.AffineTransform
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.protocol.client.view.ProtocolClientApplication
 import tools.aqua.bgw.net.protocol.client.view.messageviews.GameMessageView

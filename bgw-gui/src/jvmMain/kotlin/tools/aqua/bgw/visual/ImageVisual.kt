@@ -74,8 +74,8 @@ open class ImageVisual(
 
     }
 
-    override fun copy(): Visual {
-        return this
+    override fun copy(): ImageVisual {
+        return ImageVisual(path, width, height, offsetX, offsetY)
     }
 }
 

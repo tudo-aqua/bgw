@@ -69,6 +69,8 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    */
   constructor(r: Int, g: Int, b: Int, a: Double = 1.0) : this(Color(r, g, b, a))
 
+  constructor(r: Int, g: Int, b: Int, a : Int = 255) : this(Color(r, g, b, a.toDouble() / 255))
+
   /** Copies this [ColorVisual] to a new object. */
   override fun copy(): ColorVisual =
       ColorVisual(Color(color.red, color.green, color.blue, color.alpha)).apply {

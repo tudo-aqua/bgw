@@ -390,6 +390,10 @@ object VisualMapper {
                     children = visual.children.map { mapChildren(it) }
                 }
             }
+
+            else -> {
+                throw IllegalArgumentException("Unknown visual type: ${visual::class.simpleName}")
+            }
         }
         return if(visualData is SingleLayerVisualData) {
             CompoundVisualData().apply {

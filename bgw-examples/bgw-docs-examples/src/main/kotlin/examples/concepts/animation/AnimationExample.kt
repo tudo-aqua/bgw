@@ -127,7 +127,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
     buttonFlip.onMouseClicked = {
       gameScene.playAnimation(
           FlipAnimation(
-              gameComponentView = cardFlip,
+              componentView = cardFlip,
               fromVisual = cardFlip.backVisual,
               toVisual = cardFlip.frontVisual,
               duration = 1000))
@@ -135,7 +135,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
     buttonRandomize.onMouseClicked = {
       gameScene.playAnimation(
           RandomizeAnimation(
-              gameComponentView = cardRandomize,
+              componentView = cardRandomize,
               visuals = randomCardFaces,
               toVisual = cardFlip.frontVisual,
               duration = 1000,

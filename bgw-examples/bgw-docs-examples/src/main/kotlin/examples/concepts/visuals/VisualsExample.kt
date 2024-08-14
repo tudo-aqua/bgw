@@ -17,11 +17,11 @@
 
 package examples.concepts.visuals
 
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.*
 

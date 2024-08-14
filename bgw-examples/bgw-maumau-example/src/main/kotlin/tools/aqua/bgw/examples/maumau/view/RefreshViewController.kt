@@ -17,13 +17,13 @@
 
 package tools.aqua.bgw.examples.maumau.view
 
-import tools.aqua.bgw.core.Color
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
@@ -270,11 +270,10 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 
       val cardView =
           CardView(
-                  height = 200,
-                  width = 130,
-                  front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
-                  back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT))
-              .apply { name = card.toString() }
+              height = 200,
+              width = 130,
+              front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
+              back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT))
 
       viewController.cardMap.add(card, cardView)
     }

@@ -17,9 +17,9 @@
 
 package tools.aqua.bgw.examples.sudoku.view.scenes
 
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.sudoku.view.customcomponents.MenuButton
 import tools.aqua.bgw.examples.sudoku.view.customcomponents.MenuToggleButton

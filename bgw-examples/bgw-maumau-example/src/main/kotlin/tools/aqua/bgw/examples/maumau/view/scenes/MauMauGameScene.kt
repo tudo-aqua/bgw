@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import tools.aqua.bgw.core.Color
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 import tools.aqua.bgw.components.container.CardStack
@@ -28,6 +27,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.main.*

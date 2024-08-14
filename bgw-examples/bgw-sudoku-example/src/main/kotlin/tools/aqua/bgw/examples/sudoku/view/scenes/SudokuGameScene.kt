@@ -17,11 +17,11 @@
 
 package tools.aqua.bgw.examples.sudoku.view.scenes
 
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.examples.sudoku.view.customcomponents.SudokuGrid
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual

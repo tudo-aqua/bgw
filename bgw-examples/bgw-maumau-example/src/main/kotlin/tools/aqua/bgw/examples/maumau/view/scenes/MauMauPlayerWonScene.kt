@@ -17,9 +17,9 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.maumau.main.BUTTON_BG_FILE
 import tools.aqua.bgw.util.Font

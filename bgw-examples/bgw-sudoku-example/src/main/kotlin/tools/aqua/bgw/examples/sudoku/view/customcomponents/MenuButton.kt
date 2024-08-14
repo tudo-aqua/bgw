@@ -17,12 +17,12 @@
 
 package tools.aqua.bgw.examples.sudoku.view.customcomponents
 
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.ToggleButton
 import tools.aqua.bgw.components.uicomponents.UIComponent
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 

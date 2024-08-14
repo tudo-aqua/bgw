@@ -17,12 +17,12 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import tools.aqua.bgw.core.Color
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_HEIGHT
 import tools.aqua.bgw.examples.maumau.main.MENU_ITEM_WIDTH
