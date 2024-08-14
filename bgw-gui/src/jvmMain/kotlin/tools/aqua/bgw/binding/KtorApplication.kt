@@ -10,12 +10,10 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedSendChannelException
-import kotlinx.html.HTML
-import kotlinx.html.body
-import kotlinx.html.script
 import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
+import kotlinx.html.*
 import tools.aqua.bgw.core.Frontend
 import java.net.ServerSocket
 import java.time.Duration
@@ -48,6 +46,7 @@ fun HTML.index() {
         script(src = "/static/bgw-gui.js") {}
     }
 }
+
 fun Application.module() {
     configureRouting()
     install(WebSockets) {

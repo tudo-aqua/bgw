@@ -55,6 +55,12 @@ fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData
         "right" -> JustifyContent.flexEnd
         else -> JustifyContent.center
     }
+    textAlign = when(componentViewData.alignment.first) {
+        "left" -> TextAlign.left
+        "center" -> TextAlign.center
+        "right" -> TextAlign.right
+        else -> TextAlign.center
+    }
     alignItems = when(componentViewData.alignment.second) {
         "top" -> AlignItems.flexStart
         "center" -> AlignItems.center

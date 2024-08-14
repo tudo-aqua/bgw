@@ -39,6 +39,12 @@ val TextVisual = FC<TextVisualProps> { props ->
                 "right" -> JustifyContent.flexEnd
                 else -> JustifyContent.center
             }
+            textAlign = when(props.data.alignment.first) {
+                "left" -> TextAlign.left
+                "center" -> TextAlign.center
+                "right" -> TextAlign.right
+                else -> TextAlign.center
+            }
             alignItems = when(props.data.alignment.second) {
                 "top" -> AlignItems.flexStart
                 "center" -> AlignItems.center
