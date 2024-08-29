@@ -75,7 +75,7 @@ val ReactGridPane = FC<GridPaneProps> { props ->
                 display = Display.grid
                 width = fit()
                 height = fit()
-                gap = props.data.spacing.rem
+                gap = props.data.spacing.em
             }
             props.data.grid.forEach {
                 val component = it.component

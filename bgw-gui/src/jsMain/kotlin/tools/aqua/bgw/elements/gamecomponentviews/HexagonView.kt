@@ -46,8 +46,8 @@ val HexagonView = FC<HexagonViewProps> { props ->
         draggable = props.data.isDraggable
         css {
             cssBuilderIntern(props.data)
-            width = (sqrt(3.0) * props.data.size).rem
-            height = 2 * props.data.size.rem
+            width = (sqrt(3.0) * props.data.size).em
+            height = 2 * props.data.size.em
         }
 
         bgwVisuals {

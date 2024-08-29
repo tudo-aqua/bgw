@@ -26,7 +26,6 @@ class DragDropScene : BoardGameScene() {
 
     init {
         source.add(token)
-        println(target.id)
         addComponents(source, target)
     }
 }

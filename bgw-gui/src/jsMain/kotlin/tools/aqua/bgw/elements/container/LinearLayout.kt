@@ -80,7 +80,7 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
                         else -> JustifyContent.center
                     }
                 }
-                // gap = props.data.spacing.rem
+                // gap = props.data.spacing.em
             }
 
             props.data.components.forEach {

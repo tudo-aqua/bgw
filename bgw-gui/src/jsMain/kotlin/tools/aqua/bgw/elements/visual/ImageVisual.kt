@@ -82,8 +82,8 @@ val ImageVisual = FC<ImageVisualProps> { props ->
                 backgroundRepeat = BackgroundRepeat.noRepeat
                 backgroundPosition = Background.center as BackgroundPosition
 
-                left = props.data.offsetX.rem
-                top = props.data.offsetY.rem
+                left = props.data.offsetX.em
+                top = props.data.offsetY.em
 
                 opacity = number(props.data.transparency)
                 // TODO...

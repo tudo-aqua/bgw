@@ -20,6 +20,7 @@ import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   kotlin("multiplatform")
@@ -32,6 +33,52 @@ plugins {
 group = "tools.aqua"
 
 version = "1.0-SNAPSHOT"
+
+val useSockets: String? = project.findProperty("useSockets")?.toString()
+val propertyFile = "Config.kt"
+
+fun buildPropertyFile() {
+  rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
+    println("Generate properties into $absolutePath")
+    parentFile.mkdirs()
+    writeText(generateProperties())
+  }
+}
+
+fun generateProperties(prefix: String = "") = """
+    package tools.aqua.bgw
+
+    object Config {
+        val USE_SOCKETS = ${useSockets ?: "true"}
+    }
+""".trimIndent()
+
+tasks.withType<KotlinCompile> {
+  buildPropertyFile()
+}
+
+/* tasks.register("generateConfig") {
+  val outputDir = file("$buildDir/generated/source/kotlin/jsMain")
+  val outputFile = file("$outputDir/Config.kt")
+
+  inputs.property("useSockets", useSockets)
+  outputs.file(outputFile)
+
+  doLast {
+    outputDir.mkdirs()
+    outputFile.writeText("""
+            package tools.aqua.bgw
+
+            object Config {
+                const val USE_SOCKETS = $useSockets
+            }
+        """.trimIndent())
+  }
+}
+
+tasks.named("build") {
+  dependsOn("generateConfig")
+} */
 
 repositories {
   jcenter()

@@ -62,7 +62,7 @@ val ListView = FC<ListViewProps> { props ->
                     display = Display.flex
                     flexDirection = FlexDirection.column
                     alignItems = AlignItems.start
-                    minWidth = 100.pct - 10.rem
+                    minWidth = 100.pct - 10.em
 
                     if(props.data.orientation == "horizontal") {
                         flexDirection = FlexDirection.row
@@ -74,13 +74,13 @@ val ListView = FC<ListViewProps> { props ->
                     bgwText {
                         className = ClassName("text")
                         css {
-                            padding = 5.rem
-                            paddingTop = 3.rem
-                            paddingBottom = 3.rem
+                            padding = 5.em
+                            paddingTop = 3.em
+                            paddingBottom = 3.em
                             width = 100.pct
                             fontStyle = props.data.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
                             fontWeight = integer(props.data.font!!.fontWeight)
-                            fontSize = props.data.font!!.size.rem
+                            fontSize = props.data.font!!.size.em
                             fontFamily = cssFont(props.data.font!!.family)
                             color = props.data.font!!.color.unsafeCast<Color>()
                             minWidth = fit()

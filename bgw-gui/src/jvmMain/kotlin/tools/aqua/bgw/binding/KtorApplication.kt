@@ -14,7 +14,12 @@ import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.html.*
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.StaticComponentView
+import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Frontend
+import tools.aqua.bgw.core.MenuScene
+import tools.aqua.bgw.core.Scene
 import java.net.ServerSocket
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
@@ -43,6 +48,12 @@ val internalChannel: Channel = Channel("/internal").apply {
 
 fun HTML.index() {
     body {
+        div {
+            id = "bgw-root-container"
+            div {
+                id = "bgw-root"
+            }
+        }
         script(src = "/static/bgw-gui.js") {}
     }
 }

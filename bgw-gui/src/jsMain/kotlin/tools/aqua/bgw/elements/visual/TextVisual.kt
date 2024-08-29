@@ -31,7 +31,7 @@ val TextVisual = FC<TextVisualProps> { props ->
             fontFamily = (props.data.font?.family ?: "Arial") as FontFamily?
             fontWeight = (props.data.font?.fontWeight ?: "normal") as FontWeight?
             fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?
-            fontSize = props.data.font?.size?.rem
+            fontSize = props.data.font?.size?.em
             color = Color(props.data.font?.color ?: "black")
             justifyContent = when(props.data.alignment.first) {
                 "left" -> JustifyContent.flexStart
@@ -52,8 +52,8 @@ val TextVisual = FC<TextVisualProps> { props ->
                 else -> AlignItems.center
             }
 
-            left = props.data.offsetX.rem
-            top = props.data.offsetY.rem
+            left = props.data.offsetX.em
+            top = props.data.offsetY.em
             opacity = number(props.data.transparency)
         }
         +props.data.text

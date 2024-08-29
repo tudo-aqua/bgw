@@ -1,7 +1,5 @@
 import data.event.EventData
 import kotlinx.serialization.Serializable
-import tools.aqua.bgw.core.AspectRatio
-import tools.aqua.bgw.core.WindowMode
 import tools.aqua.bgw.dialog.DialogType
 
 typealias ID = String

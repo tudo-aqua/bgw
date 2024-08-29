@@ -227,3 +227,4 @@ _site/
 
 # Ruby Gemfile lock
 Gemfile.lock
+bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/Config.kt

@@ -15,10 +15,10 @@ import org.w3c.dom.css.CSSRule
 
 fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
     position = Position.absolute
-    left = componentViewData.posX.rem
-    top = componentViewData.posY.rem
-    width = componentViewData.width.rem
-    height = componentViewData.height.rem
+    left = componentViewData.posX.em
+    top = componentViewData.posY.em
+    width = componentViewData.width.em
+    height = componentViewData.height.em
     zIndex = integer(componentViewData.zIndex)
     opacity = number(componentViewData.opacity)
     display = if(componentViewData.isVisible && !componentViewData.isDragged) Display.flex else None.none
@@ -34,7 +34,6 @@ fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
 
 fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
-    fontBuilder(componentViewData)
     alignmentBuilder(componentViewData)
 }
 
@@ -87,7 +86,7 @@ fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData) {
 fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
     fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
     fontWeight = integer(componentViewData.font!!.fontWeight)
-    fontSize = componentViewData.font!!.size.rem
+    fontSize = componentViewData.font!!.size.em
     fontFamily = cssFont(componentViewData.font!!.family)
     color = componentViewData.font!!.color.unsafeCast<Color>()
 }

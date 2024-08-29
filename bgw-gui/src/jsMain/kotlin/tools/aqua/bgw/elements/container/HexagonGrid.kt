@@ -87,8 +87,8 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
 
                         css {
                             position = Position.absolute
-                            left = x.rem
-                            top = y.rem
+                            left = x.em
+                            top = y.em
                         }
                         +NodeBuilder.build(it.value)
                     }
@@ -120,18 +120,18 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
 
                         css {
                             position = Position.absolute
-                            left = x.rem
-                            top = y.rem
+                            left = x.em
+                            top = y.em
                         }
                         +NodeBuilder.build(it.value)
                     }
                 }
                 css {
                     position = Position.absolute
-                    width = (maxX + abs(minX)).rem
-                    height = (maxY + abs(minY)).rem
-                    left = (-minX).rem
-                    top = (-minY).rem
+                    width = (maxX + abs(minX)).em
+                    height = (maxY + abs(minY)).em
+                    left = (-minX).em
+                    top = (-minY).em
                 }
             }
         }

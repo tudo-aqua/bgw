@@ -37,7 +37,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
     display = Display.flex
     alignItems = AlignItems.center
     justifyItems = JustifyItems.flexStart
-    gap = 10.rem
+    gap = 10.em
 }
 
 val CheckBox = FC<CheckBoxProps> { props ->
@@ -65,9 +65,9 @@ val CheckBox = FC<CheckBoxProps> { props ->
             }
 
             css {
-                width = 20.rem
-                height = 20.rem
-                maxWidth = 20.rem
+                width = 20.em
+                height = 20.em
+                maxWidth = 20.em
                 zIndex = integer(1)
             }
             onChange = {

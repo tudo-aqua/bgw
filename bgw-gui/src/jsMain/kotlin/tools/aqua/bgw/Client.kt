@@ -15,6 +15,8 @@ import data.event.internal.LoadEventData
 import kotlinx.browser.document
 import kotlinx.serialization.decodeFromString
 import jsonMapper
+import kotlinx.browser.window
+import org.w3c.dom.CustomEvent
 import web.timers.setTimeout
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.WebSocket
@@ -26,7 +28,9 @@ import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
+import web.serviceworker.Client
 import webViewType
+import kotlin.js.Json
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -35,71 +39,62 @@ var webSocket : WebSocket? = null
 var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 var animator : Animator = Animator()
 
-val container = document.createElement("div")
+lateinit var container : HTMLElement
 
 fun main() {
-    container.id = "root"
-    document.body!!.appendChild(container)
-    webSocket = WebSocket("ws://${document.location?.host}/ws")
-    webSocket?.onopen = { }
-    webSocket?.onmessage = { event ->
-        val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
-        when(receivedData) {
-            is AppData -> {
-                val app = receivedData
-
-                if(app.action == Action.HIDE_MENU_SCENE) {
-                    console.log("[SCENE] Hiding Menu Scene")
-                    val element = document.querySelector("#menuScene") as HTMLElement
-                    element.classList.toggle("scene--visible", false)
-                    setTimeout({
-                        renderApp(app)
-                    }, 300)
-                } else if(app.action == Action.SHOW_MENU_SCENE) {
-                    renderApp(app)
-                    val element = document.querySelector("#menuScene") as HTMLElement
-                    setTimeout({
-                        element.classList.toggle("scene--visible", true)
-                    }, 50)
-                } else {
-                    renderApp(app)
-                }
+    if (Config.USE_SOCKETS) {
+        webSocket = WebSocket("ws://${document.location?.host}/ws")
+        webSocket?.onopen = { }
+        webSocket?.onmessage = { event ->
+            val cont = document.getElementById("bgw-root")
+            if (cont != null) {
+                container = cont as HTMLElement
+                val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
+                handleReceivedData(receivedData!!)
             }
-            is AnimationData -> {
-                animator.startAnimation(receivedData) {
-                    JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
-                }
-            }
-            /* is SceneData -> {
-                val scene = receivedData
-                val sceneComponents = scene.components.map { NodeBuilder.build(it) }
-                //println("Built: $sceneComponents")
-                println("Received SceneData with ${sceneComponents.size} components.")
-                render(App.create { data = scene }, container, callback = {
-                    println("Rendered App to DOM!")
-                    when(webViewType) {
-                        WebViewType.JCEF -> { JCEFEventDispatcher.dispatchEvent(LoadEventData()) }
-                        WebViewType.JAVAFX -> container.dispatchEvent(Event("bgwLoaded"))
-                    }
-                    Unit
-                })
-            }
-            is ComponentViewData -> {
-                //println("Received ComponentViewData for id ${receivedData.id} with ${receivedData.visual?.id}")
-                val component =  receivedData
-                val handler = handlers[component.id]
-                handler?.invoke(component)
-            }
-            is VisualData -> {
-                val visual = receivedData
-                val handler = handlers[visual.id]
-                handler?.invoke(visual)
-            } */
-            else -> {}
         }
+    } else {
+        document.addEventListener("BGW_MSG", {
+            val cont = document.getElementById("bgw-root")
+            if (cont != null) {
+                container = cont as HTMLElement
+                val data = (it as CustomEvent).detail
+                val receivedData = jsonMapper.decodeFromString<PropData>(data.toString()).data
+                handleReceivedData(receivedData!!)
+            }
+        })
     }
+}
 
-    internalSocket?.onmessage = {
+fun handleReceivedData(receivedData: Data) {
+    when (receivedData) {
+        is AppData -> {
+            val app = receivedData
+
+            if (app.action == Action.HIDE_MENU_SCENE) {
+                console.log("[SCENE] Hiding Menu Scene")
+                val element = document.querySelector("#menuScene") as HTMLElement
+                element.classList.toggle("scene--visible", false)
+                setTimeout({
+                    renderApp(app)
+                }, 300)
+            } else if (app.action == Action.SHOW_MENU_SCENE) {
+                renderApp(app)
+                val element = document.querySelector("#menuScene") as HTMLElement
+                setTimeout({
+                    element.classList.toggle("scene--visible", true)
+                }, 50)
+            } else {
+                renderApp(app)
+            }
+        }
+
+        is AnimationData -> {
+            animator.startAnimation(receivedData) {
+                JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
+            }
+        }
+        else -> {}
     }
 }
 

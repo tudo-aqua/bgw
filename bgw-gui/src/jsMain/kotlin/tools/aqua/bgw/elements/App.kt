@@ -39,92 +39,111 @@ val App = FC<AppProps> { props ->
                 }
             }
 
-            "*" {
+            "#bgw-root-container" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                alignItems = AlignItems.center
+                backgroundColor = rgb(0, 0, 0, 0.0)
+                overflow = Overflow.hidden
+                containerName = bgwContainer()
+                containerType = ContainerType.size
+            }
+
+            "#bgw-root *" {
                 transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
             }
 
             // BLUE
-            "@media (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-                "html" {
-                    fontSize = (100.0 / props.data.height).vh
-                    width = 100.vw
-                    height = 100.vh
+            "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
+                "#bgw-root" {
+                    fontSize = (100.0 / props.data.height).cqh
+                    width = 100.cqw
+                    height = 100.cqh
                     margin = 0.px
                     overflow = Overflow.hidden
                     userSelect = None.none
                 }
 
                 "bgw_scenes" {
-                    height = 100.vh
-                    width = (100.0 / props.data.height * props.data.width).vh
+                    height = 100.cqh
+                    width = (100.0 / props.data.height * props.data.width).cqh
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
+                    display = Display.block
                 }
             }
 
             // RED
-            "@media (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-                "html" {
-                    fontSize = (100.0 / props.data.width).vw
-                    width = 100.vw
-                    height = 100.vh
+            "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
+                "#bgw-root" {
+                    fontSize = (100.0 / props.data.width).cqw
+                    width = 100.cqw
+                    height = 100.cqh
                     margin = 0.px
                     overflow = Overflow.hidden
                     userSelect = None.none
                 }
 
                 "bgw_scenes" {
-                    width = 100.vw
-                    height = (100.0 / props.data.width * props.data.height).vw
+                    width = 100.cqw
+                    height = (100.0 / props.data.width * props.data.height).cqw
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
+                    display = Display.block
                 }
             }
 
             // GREEN
-            "@media (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-                "html" {
-                    fontSize = (100.0 / props.data.height).vh
-                    width = 100.vw
-                    height = 100.vh
+            "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
+                "#bgw-root" {
+                    fontSize = (100.0 / props.data.height).cqh
+                    width = 100.cqw
+                    height = 100.cqh
                     margin = 0.px
                     overflow = Overflow.hidden
                     userSelect = None.none
                 }
 
                 "bgw_scenes" {
-                    height = 100.vh
-                    width = (100.0 / props.data.height * props.data.width).vh
+                    height = 100.cqh
+                    width = (100.0 / props.data.height * props.data.width).cqh
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
+                    display = Display.block
                 }
             }
 
             // YELLOW
-            "@media (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-                "html" {
-                    fontSize = (100.0 / props.data.width).vw
-                    width = 100.vw
-                    height = 100.vh
+            "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
+                "#bgw-root" {
+                    fontSize = (100.0 / props.data.width).cqw
+                    width = 100.cqw
+                    height = 100.cqh
                     margin = 0.px
                     overflow = Overflow.hidden
                     userSelect = None.none
                 }
 
                 "bgw_scenes" {
-                    width = 100.vw
-                    height = (100.0 / props.data.width * props.data.height).vw
+                    width = 100.cqw
+                    height = (100.0 / props.data.width * props.data.height).cqw
                     position = Position.relative
                     backgroundColor = rgb(0, 0, 0, 1.0)
                     overflow = Overflow.hidden
+                    display = Display.block
                 }
             }
 
-            "body" {
-                backgroundColor = rgb(0, 0, 0, 0.0)
+            "#bgw-root" {
+                backgroundColor = rgb(0, 0, 0, 1.0)
                 color = rgb(0, 0, 0)
                 margin = 0.px
             }
@@ -169,7 +188,7 @@ val App = FC<AppProps> { props ->
 
             "bgw_menu_scene.scene--visible > bgw_scene" {
                 opacity = number(1.0)
-                backdropFilter = blur(DEFAULT_BLUR_RADIUS.rem)
+                backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
             }
 
             "bgw_camera_pane" {
@@ -224,45 +243,45 @@ val App = FC<AppProps> { props ->
             }
 
             "input[type='color']::-webkit-color-swatch" {
-                borderRadius = 3.rem
+                borderRadius = 3.em
                 border = None.none
             }
 
             "bgw_togglebutton" {
                 position = Position.relative
                 display = Display.inlineFlex
-                width = 30.rem
-                height = 18.rem
+                width = 30.em
+                height = 18.em
             }
 
             "bgw_togglebutton > input[type='checkbox']" {
                 opacity = number(0.0)
                 position = Position.relative
-                width = 36.rem
-                minWidth = 36.rem
+                width = 36.em
+                minWidth = 36.em
                 height = 100.pct
             }
 
             ".toggle" {
                 position = Position.absolute
-                left = 4.rem
-                width = 30.rem
-                height = 18.rem
+                left = 4.em
+                width = 30.em
+                height = 18.em
                 backgroundColor = rgb(145,145,145)
                 transition = transition(300, "background-color")
-                borderRadius = 3.rem
+                borderRadius = 3.em
             }
 
             ".toggle::before" {
                 content = Content("")
                 position = Position.absolute
-                width = 12.rem
-                height = 12.rem
-                left = 3.rem
-                top = 3.rem
+                width = 12.em
+                height = 12.em
+                left = 3.em
+                top = 3.em
                 backgroundColor = rgb(255, 255, 255)
                 transition = transition(300, "transform")
-                borderRadius = 3.rem
+                borderRadius = 3.em
             }
 
             "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
@@ -270,10 +289,10 @@ val App = FC<AppProps> { props ->
             }
 
             "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
-                transform = translatex(12.rem)
+                transform = translatex(12.em)
             }
 
-            "#root" {
+            "#bgw-root" {
                 width = 100.pct
                 height = 100.pct
                 position = Position.absolute
@@ -282,7 +301,7 @@ val App = FC<AppProps> { props ->
                 display = Display.flex
                 justifyContent = JustifyContent.center
                 alignItems = AlignItems.center
-                backgroundColor = rgb(0, 0, 0, 0.0)
+                backgroundColor = rgb(0, 0, 0, 1.0)
                 overflow = Overflow.hidden
             }
         }
@@ -369,6 +388,9 @@ inline fun fit(): LengthType.FitContent =
 
 inline fun minContent(): GridTemplateTracks =
     "min-content".unsafeCast<GridTemplateTracks>()
+
+inline fun bgwContainer(): ContainerName =
+    "bgwContainer".unsafeCast<ContainerName>()
 
 inline fun menuTransition(): Transition =
     ".3s opacity, .3s backdrop-filter".unsafeCast<Transition>()
