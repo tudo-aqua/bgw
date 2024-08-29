@@ -58,7 +58,6 @@ val PasswordField = FC<PasswordFieldProps> { props ->
                     fontBuilder(props.data)
                     opacity = number(0.5)
                 }
-                textIndent = 20.em
             }
             onChange = {
                 val value = it.target.value

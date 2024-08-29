@@ -52,7 +52,6 @@ val ColorPicker = FC<ColorPickerProps> { props ->
             defaultValue = props.data.selectedColor
             value = props.data.selectedColor
             css {
-                fontBuilder(props.data)
                 position = Position.absolute
                 top = 0.px
                 left = 0.px

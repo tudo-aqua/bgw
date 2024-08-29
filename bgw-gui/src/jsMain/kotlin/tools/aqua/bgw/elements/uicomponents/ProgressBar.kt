@@ -40,6 +40,11 @@ val ProgressBar = FC<ProgressBarProps> { props ->
             cssBuilderIntern(props.data)
         }
 
+        bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+        }
+
         bgwProgressBar {
             id = "${props.data.id}--bar"
             className = ClassName("progress-bar")

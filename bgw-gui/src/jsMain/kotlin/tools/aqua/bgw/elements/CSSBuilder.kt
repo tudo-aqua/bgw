@@ -29,7 +29,6 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
 
 fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
-    fontBuilder(componentViewData)
 }
 
 fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {

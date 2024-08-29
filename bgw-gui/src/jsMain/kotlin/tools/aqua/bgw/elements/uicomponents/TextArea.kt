@@ -56,10 +56,6 @@ val TextArea = FC<TextAreaProps> { props ->
                 inputBuilder(props.data)
                 resize = None.none
                 boxSizing = BoxSizing.borderBox
-                paddingLeft = 20.em
-                paddingTop = 10.em
-                paddingRight = 20.em
-                paddingBottom = 10.em
 
                 placeholder {
                     fontBuilder(props.data)
