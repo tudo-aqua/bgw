@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.examples.sudoku.view.customcomponents
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
 
 /** Black [Font] for fixed digits. */

@@ -13,7 +13,7 @@ console-reports:
     - 'FileBasedFindingsReport'
 
 comments:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Mostly enabled. Rationale: maintenance issues
   AbsentOrWrongFileLicense:
@@ -39,7 +39,7 @@ comments:
     active: true
 
 complexity:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Mostly disabled. Rationale: better suited for code review
   ComplexCondition:
@@ -72,7 +72,7 @@ complexity:
     active: false
 
 coroutines:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Mostly enabled. Rationale: indicative of errors
   GlobalCoroutineUsage:
@@ -88,7 +88,7 @@ coroutines:
     active: true
 
 empty-blocks:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Completely enabled. Rationale: indicative of errors
   EmptyCatchBlock:
@@ -124,7 +124,7 @@ empty-blocks:
     active: true
 
 exceptions:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Mostly enabled. Rationale: indicative of errors
   active: true
@@ -159,7 +159,7 @@ exceptions:
     active: true
 
 naming:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Mostly enabled. Rationale: principle of the least surprise
   active: true
@@ -214,7 +214,7 @@ naming:
     active: true
 
 performance:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Completely enabled. Rationale: indicative of errors
   active: true
@@ -228,7 +228,7 @@ performance:
     active: true
 
 potential-bugs:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Completely enabled. Rationale: indicative of errors
   active: true
@@ -305,7 +305,7 @@ potential-bugs:
     active: true
 
 style:
-  excludes: ['**/bgw-docs-examples/**']
+  excludes: ['**/bgw-docs-examples/**', '**/bgw-net-server/**']
 
   # Partially enabled to complement Spotless. Rationale: helps consistency
   active: true

@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.examples.maumau.main
 
-import java.awt.Color
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
 
 /** MauMauCard height. */
