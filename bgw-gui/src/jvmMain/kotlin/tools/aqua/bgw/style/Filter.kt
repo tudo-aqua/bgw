@@ -34,7 +34,7 @@ class BlurFilter(radius: Double) : FilterDeclaration {
 
     init {
         value = if (radius > 0.0)
-            "${radius}rem"
+            "${radius}em"
         else
             null
     }

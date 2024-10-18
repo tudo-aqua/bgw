@@ -92,10 +92,10 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
                     for(i in 1 until it.childElementCount) {
                         val child = it.children[i] as HTMLElement
                         if(props.data.orientation == "vertical") {
-                            child.style.marginTop = "${props.data.spacing}rem"
+                            child.style.marginTop = "${props.data.spacing}em"
                             child.style.marginLeft = "0"
                         } else {
-                            child.style.marginLeft = "${props.data.spacing}rem"
+                            child.style.marginLeft = "${props.data.spacing}em"
                             child.style.marginTop = "0"
                         }
                     }

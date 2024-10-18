@@ -20,23 +20,23 @@ interface StyleDeclaration {
 }
 
 class BorderRadius : StyleDeclaration {
-    var topLeft: String = "0rem"
-    var topRight: String = "0rem"
-    var bottomRight: String = "0rem"
-    var bottomLeft: String = "0rem"
+    var topLeft: String = "0em"
+    var topRight: String = "0em"
+    var bottomRight: String = "0em"
+    var bottomLeft: String = "0em"
 
     constructor(radius: Int) {
-        topLeft = "${radius}rem"
-        topRight = "${radius}rem"
-        bottomRight = "${radius}rem"
-        bottomLeft = "${radius}rem"
+        topLeft = "${radius}em"
+        topRight = "${radius}em"
+        bottomRight = "${radius}em"
+        bottomLeft = "${radius}em"
     }
 
     constructor(topLeft: Int, topRight: Int, bottomRight: Int, bottomLeft: Int) {
-        this.topLeft = "${topLeft}rem"
-        this.topRight = "${topRight}rem"
-        this.bottomRight = "${bottomRight}rem"
-        this.bottomLeft = "${bottomLeft}rem"
+        this.topLeft = "${topLeft}em"
+        this.topRight = "${topRight}em"
+        this.bottomRight = "${bottomRight}em"
+        this.bottomLeft = "${bottomLeft}em"
     }
 
     constructor(radius: String) : this(radius, radius, radius, radius)

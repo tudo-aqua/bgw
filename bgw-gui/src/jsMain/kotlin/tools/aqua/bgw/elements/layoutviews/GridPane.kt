@@ -48,15 +48,15 @@ val ReactGridPane = FC<GridPaneProps> { props ->
                         val height = element.offsetHeight / rem
                         val x = (props.data.posX - width / 2)
                         val y = (props.data.posY - height / 2)
-                        element.style.left = "${x}rem"
-                        element.style.top = "${y}rem"
+                        element.style.left = "${x}em"
+                        element.style.top = "${y}em"
                     }
                 }
             } else {
                 useEffect(listOf(props.data)) {
                     document.getElementById(props.data.id)?.let {
-                        it.style.left = "${props.data.posX}rem"
-                        it.style.top = "${props.data.posY}rem"
+                        it.style.left = "${props.data.posX}em"
+                        it.style.top = "${props.data.posY}em"
                     }
                 }
             }

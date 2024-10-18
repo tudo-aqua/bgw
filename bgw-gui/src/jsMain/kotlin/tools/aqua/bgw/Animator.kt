@@ -287,7 +287,7 @@ class Animator {
                 }
                 
                 .${componentId}--${type} {
-                    translate: ${animationData.byX}rem ${animationData.byY}rem;
+                    translate: ${animationData.byX}em ${animationData.byY}em;
                 }
             """.trimIndent()
 
