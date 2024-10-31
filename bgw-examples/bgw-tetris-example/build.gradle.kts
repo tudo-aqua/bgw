@@ -18,10 +18,12 @@
 plugins { id("tools.aqua.bgw.executable-conventions") }
 
 mavenMetadata {
-  name.set("BoardGameWork Tetris Example")
-  description.set("The BGW Tetris example.")
+    name.set("BoardGameWork Tetris Example")
+    description.set("The BGW Tetris example.")
 }
 
-dependencies { implementation(project(":bgw-gui")) }
+dependencies {
+    implementation(project(":bgw-gui", configuration = "jvmRuntimeElements"))
+}
 
 application { mainClass.set("tools.aqua.bgw.examples.tetris.main.MainKt") }

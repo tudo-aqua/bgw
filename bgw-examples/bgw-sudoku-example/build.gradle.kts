@@ -22,6 +22,6 @@ mavenMetadata {
   description.set("The BGW Sudoku example.")
 }
 
-dependencies { implementation(project(":bgw-gui")) }
+dependencies { implementation(project(":bgw-gui", configuration = "jvmRuntimeElements")) }
 
 application { mainClass.set("tools.aqua.bgw.examples.sudoku.main.MainKt") }

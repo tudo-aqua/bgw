@@ -23,7 +23,7 @@ mavenMetadata {
 }
 
 dependencies {
-  implementation(project(":bgw-gui"))
+  implementation(project(":bgw-gui", configuration = "jvmRuntimeElements"))
   implementation(project(":bgw-net:bgw-net-common"))
   implementation(project(":bgw-net:bgw-net-client"))
 }

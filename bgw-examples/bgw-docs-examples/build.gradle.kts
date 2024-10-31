@@ -18,12 +18,12 @@
 plugins { id("tools.aqua.bgw.executable-conventions") }
 
 mavenMetadata {
-  name.set("BoardGameWork Docs Examples")
-  description.set("The BGW documentation examples.")
+    name.set("BoardGameWork Docs Examples")
+    description.set("The BGW documentation examples.")
 }
 
 dependencies {
-  implementation(project(":bgw-gui"))
-  implementation(project(":bgw-net:bgw-net-client"))
-  implementation(project(":bgw-net:bgw-net-common"))
+    implementation(project(":bgw-gui", configuration = "jvmRuntimeElements"))
+    implementation(project(":bgw-net:bgw-net-client"))
+    implementation(project(":bgw-net:bgw-net-common"))
 }
