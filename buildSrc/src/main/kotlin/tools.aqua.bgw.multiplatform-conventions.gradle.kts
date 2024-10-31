@@ -41,7 +41,8 @@ fun buildPropertyFile() {
   }
 }
 
-fun generateProperties(prefix: String = "") = """
+fun generateProperties(prefix: String = "") =
+    """
     package tools.aqua.bgw
 
     object Config {
@@ -49,9 +50,7 @@ fun generateProperties(prefix: String = "") = """
     }
 """.trimIndent()
 
-tasks.withType<KotlinCompile> {
-  buildPropertyFile()
-}
+tasks.withType<KotlinCompile> { buildPropertyFile() }
 
 repositories {
   jcenter()
