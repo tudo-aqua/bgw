@@ -229,4 +229,4 @@ _site/
 Gemfile.lock
 
 bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/Config.kt
-# /kotlin-js-store/
+/kotlin-js-store/
