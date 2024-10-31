@@ -30,10 +30,6 @@ plugins {
   id("io.gitlab.arturbosch.detekt")
 }
 
-group = "tools.aqua"
-
-version = "1.0-SNAPSHOT"
-
 val useSockets: String? = project.findProperty("useSockets")?.toString()
 val propertyFile = "Config.kt"
 
@@ -56,29 +52,6 @@ fun generateProperties(prefix: String = "") = """
 tasks.withType<KotlinCompile> {
   buildPropertyFile()
 }
-
-/* tasks.register("generateConfig") {
-  val outputDir = file("$buildDir/generated/source/kotlin/jsMain")
-  val outputFile = file("$outputDir/Config.kt")
-
-  inputs.property("useSockets", useSockets)
-  outputs.file(outputFile)
-
-  doLast {
-    outputDir.mkdirs()
-    outputFile.writeText("""
-            package tools.aqua.bgw
-
-            object Config {
-                const val USE_SOCKETS = $useSockets
-            }
-        """.trimIndent())
-  }
-}
-
-tasks.named("build") {
-  dependsOn("generateConfig")
-} */
 
 repositories {
   jcenter()
@@ -140,7 +113,6 @@ publishing {
     create<MavenPublication>("maven") {
       groupId = "tools.aqua"
       artifactId = "bgw-gui"
-      version = "1.0-SNAPSHOT"
       from(components["kotlin"])
     }
   }
