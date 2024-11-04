@@ -39,7 +39,7 @@ val App = FC<AppProps> { props ->
                 }
             }
 
-            "#bgw-root-container" {
+            ".bgw-root-container" {
                 width = 100.pct
                 height = 100.pct
                 position = Position.absolute
@@ -54,13 +54,13 @@ val App = FC<AppProps> { props ->
                 containerType = ContainerType.size
             }
 
-            "#bgw-root *" {
+            ".bgw-root *" {
                 transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
             }
 
             // BLUE
             "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-                "#bgw-root" {
+                ".bgw-root" {
                     fontSize = (100.0 / props.data.height).cqh
                     width = 100.cqw
                     height = 100.cqh
@@ -81,7 +81,7 @@ val App = FC<AppProps> { props ->
 
             // RED
             "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-                "#bgw-root" {
+                ".bgw-root" {
                     fontSize = (100.0 / props.data.width).cqw
                     width = 100.cqw
                     height = 100.cqh
@@ -102,7 +102,7 @@ val App = FC<AppProps> { props ->
 
             // GREEN
             "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-                "#bgw-root" {
+                ".bgw-root" {
                     fontSize = (100.0 / props.data.height).cqh
                     width = 100.cqw
                     height = 100.cqh
@@ -123,7 +123,7 @@ val App = FC<AppProps> { props ->
 
             // YELLOW
             "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-                "#bgw-root" {
+                ".bgw-root" {
                     fontSize = (100.0 / props.data.width).cqw
                     width = 100.cqw
                     height = 100.cqh
@@ -142,7 +142,7 @@ val App = FC<AppProps> { props ->
                 }
             }
 
-            "#bgw-root" {
+            ".bgw-root" {
                 backgroundColor = rgb(0, 0, 0, 1.0)
                 color = rgb(0, 0, 0)
                 margin = 0.px
@@ -292,7 +292,7 @@ val App = FC<AppProps> { props ->
                 transform = translatex(12.em)
             }
 
-            "#bgw-root" {
+            ".bgw-root" {
                 width = 100.pct
                 height = 100.pct
                 position = Position.absolute

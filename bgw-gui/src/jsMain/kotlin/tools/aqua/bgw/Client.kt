@@ -7,6 +7,7 @@ import ComponentViewData
 import Data
 import DialogData
 import ID
+import JsonData
 import PropData
 import SceneData
 import VisualData
@@ -55,11 +56,15 @@ fun main() {
         }
     } else {
         document.addEventListener("BGW_MSG", {
-            val cont = document.getElementById("bgw-root")
+            val event = it as CustomEvent
+            val data = event.detail
+            val jsonData = jsonMapper.decodeFromString<JsonData>(data.toString())
+            val receivedData = jsonData.props.data
+            val containerId = jsonData.container
+
+            val cont = document.getElementById(containerId)
             if (cont != null) {
                 container = cont as HTMLElement
-                val data = (it as CustomEvent).detail
-                val receivedData = jsonMapper.decodeFromString<PropData>(data.toString()).data
                 handleReceivedData(receivedData!!)
             }
         })

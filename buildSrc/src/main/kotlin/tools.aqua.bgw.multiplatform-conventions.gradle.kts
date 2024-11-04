@@ -20,6 +20,7 @@ import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
+import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -28,6 +29,7 @@ plugins {
   application
   `maven-publish`
   id("io.gitlab.arturbosch.detekt")
+  id("org.jetbrains.dokka")
 }
 
 val useSockets: String? = project.findProperty("useSockets")?.toString()

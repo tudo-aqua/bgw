@@ -49,8 +49,9 @@ val internalChannel: Channel = Channel("/internal").apply {
 fun HTML.index() {
     body {
         div {
-            id = "bgw-root-container"
+            classes = setOf("bgw-root-container")
             div {
+                classes = setOf("bgw-root")
                 id = "bgw-root"
             }
         }

@@ -21,6 +21,12 @@ enum class Action {
 }
 
 @Serializable
+class JsonData(
+    var container : String = "bgw-root",
+    var props : PropData
+)
+
+@Serializable
 class PropData(
     var data: Data? = null
 )
