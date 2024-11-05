@@ -48,13 +48,10 @@ val TextField = FC<TextFieldProps> { props ->
             placeholder = props.data.prompt
             defaultValue = props.data.text
             css {
-                fontBuilder(props.data)
                 inputBuilder(props.data)
-
-                placeholder {
-                    fontBuilder(props.data)
-                    opacity = number(0.5)
-                }
+                fontBuilder(props.data)
+                outline = None.none
+                border = None.none
             }
             onChange = {
                 val value = it.target.value

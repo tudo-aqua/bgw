@@ -53,11 +53,8 @@ val PasswordField = FC<PasswordFieldProps> { props ->
             css {
                 fontBuilder(props.data)
                 inputBuilder(props.data)
-
-                placeholder {
-                    fontBuilder(props.data)
-                    opacity = number(0.5)
-                }
+                outline = None.none
+                border = None.none
             }
             onChange = {
                 val value = it.target.value

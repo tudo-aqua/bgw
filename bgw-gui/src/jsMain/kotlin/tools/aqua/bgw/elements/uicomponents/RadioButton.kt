@@ -66,6 +66,8 @@ val RadioButton = FC<RadioButtonProps> { props ->
                 height = 20.em
                 maxWidth = 20.em
                 zIndex = integer(1)
+                outline = None.none
+                border = None.none
             }
             onChange = {
                 JCEFEventDispatcher.dispatchEvent(RadioChangedEventData(!props.data.isSelected).apply { id = props.data.id })

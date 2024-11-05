@@ -14,6 +14,7 @@ import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.html.*
+import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.StaticComponentView
 import tools.aqua.bgw.core.BoardGameScene
@@ -99,6 +100,10 @@ fun CoroutineScope.launchPeriodicAsync(
 }
 
 var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(50) {
+    if((Frontend.applicationEngine as JCEFApplication).getTitle() !== Frontend.application.title) {
+        (Frontend.applicationEngine as JCEFApplication).setTitle(Frontend.application.title)
+    }
+
     if (messageQueue.isNotEmpty()) {
         val isSceneLoaded = Frontend.boardGameScene != null
         val message = messageQueue.removeFirst()

@@ -7,6 +7,8 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
@@ -31,6 +33,7 @@ class GridGameScene : BoardGameScene() {
         visual = ColorVisual.GRAY
     ).apply {
         onMouseClicked = {
+            Application.title = "Random " + (0..100).random()
             gridEntries.forEachIndexed { index, componentView ->
                 playAnimation(
                     FlipAnimation(
@@ -40,6 +43,7 @@ class GridGameScene : BoardGameScene() {
                         duration = 250 + index * 50
                     ).apply {
                         onFinished = {
+                            Application.title = "Flipped " + (0..100).random()
                         }
                     }
                 )
@@ -59,6 +63,17 @@ class GridGameScene : BoardGameScene() {
         }
     }
 
+    private val input = TextField(
+        posX = 800,
+        posY = 600,
+        width = 200,
+        height = 50,
+        text = "Hello World!",
+        prompt = "Enter text here",
+        font = Font(40.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        visual = ColorVisual.LIGHT_GRAY
+    )
+
     init {
         repeat(gridPane.columns) { x ->
             repeat(gridPane.rows) { y ->
@@ -75,7 +90,7 @@ class GridGameScene : BoardGameScene() {
                 gridEntries.add(entry)
             }
         }
-        addComponents(gridPane, button)
+        addComponents(gridPane, button, input)
     }
 
     private fun randomColorVisual(): ColorVisual {

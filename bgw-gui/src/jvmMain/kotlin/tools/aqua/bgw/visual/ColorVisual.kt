@@ -30,7 +30,6 @@ import tools.aqua.bgw.observable.properties.Property
  * @param color Color to use as filling.
  */
 open class ColorVisual(color: Color) : SingleLayerVisual() {
-
   /**
    * [Property] for the displayed [Color] of this [Visual].
    *
@@ -58,6 +57,20 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
   /**
    * Creates a solid [ColorVisual] filled with given RGBA values.
    *
+   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 0.5 (50%) and
+   * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency. All values must be in
+   * range 0.0 until 1.0 which corresponds to 00..FF in hexadecimal.
+   *
+   * @param r Red channel.
+   * @param g Green channel.
+   * @param b Blue channel.
+   * @param a Alpha channel. Default: 1.0.
+   */
+  constructor(r: Int, g: Int, b: Int, a: Double = 1.0) : this(Color(r, g, b, a))
+
+  /**
+   * Creates a solid [ColorVisual] filled with given RGBA values.
+   *
    * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency. All values must be in
    * range 0 until 255 which corresponds to 00..FF in hexadecimal.
@@ -67,9 +80,16 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    * @param b Blue channel.
    * @param a Alpha channel. Default: 255.
    */
-  constructor(r: Int, g: Int, b: Int, a: Double = 1.0) : this(Color(r, g, b, a))
-
   constructor(r: Int, g: Int, b: Int, a : Int = 255) : this(Color(r, g, b, a.toDouble() / 255))
+
+  /**
+   * A solid color visual. Displays a rectangle filled with the given [color].
+   *
+   * @constructor Creates a solid [ColorVisual] filled with given [java.awt.Color].
+   *
+   * @param color Color to use as filling.
+   */
+  constructor(color: java.awt.Color) : this(Color(color.red, color.green, color.blue, color.alpha))
 
   /** Copies this [ColorVisual] to a new object. */
   override fun copy(): ColorVisual =

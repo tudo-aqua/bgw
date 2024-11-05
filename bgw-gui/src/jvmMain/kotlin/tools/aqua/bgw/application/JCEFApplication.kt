@@ -66,6 +66,7 @@ class JCEFApplication : Application {
         EventQueue.invokeLater {
             frame = MainFrame(loadCallback = callback)
             JCEFApplication::class.java.getResource("/icon.png").let { ImageIO.read(it) }.let { frame?.iconImage = it }
+            frame?.title = "BoardGameWork Application"
 
             frame?.defaultCloseOperation = EXIT_ON_CLOSE
             frame?.isVisible = true
@@ -73,7 +74,8 @@ class JCEFApplication : Application {
     }
 
     override fun stop() {
-        TODO("Not yet implemented")
+        frame?.dispose()
+        CefApp.getInstance().dispose()
     }
 
     override fun clearAllEventListeners() {
@@ -83,7 +85,14 @@ class JCEFApplication : Application {
         handlersMap.clear()
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
+    fun getTitle(): String {
+        return frame?.title ?: ""
+    }
+
+    fun setTitle(title: String) {
+        frame?.title = title
+    }
+
     override fun registerEventListeners(component: ComponentView) {
         if (handlersMap.containsKey(component.id)) return
         val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {

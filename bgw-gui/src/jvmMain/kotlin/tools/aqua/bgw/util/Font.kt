@@ -31,7 +31,7 @@ import tools.aqua.bgw.util.Font.FontWeight
  * @constructor Creates a [Font].
  *
  * @property size Size of this Font in `px`. Maybe a floating-point value. Default: 14.
- * @property color Color of this font. Default: [java.awt.Color.BLACK].
+ * @property color Color of this font. Default: [Color.BLACK].
  * @property family Font family as a String for this Font. Default: "Arial".
  * @property fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
  * @property fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
@@ -45,6 +45,9 @@ data class Font(
   val fontWeight: FontWeight = FontWeight.NORMAL,
   val fontStyle: FontStyle = FontStyle.NORMAL
 ) {
+  constructor(color: java.awt.Color) : this(
+    color = Color(color.red, color.green, color.blue, color.alpha / 255.0)
+  )
   /**
    * Enum class for representing all available font weights for the Font class.
    * @see Font

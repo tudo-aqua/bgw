@@ -56,6 +56,8 @@ val App = FC<AppProps> { props ->
 
             ".bgw-root *" {
                 transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
+                border = None.none
+                outline = None.none
             }
 
             // BLUE

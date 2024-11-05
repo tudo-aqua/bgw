@@ -1,16 +1,60 @@
 package tools.aqua.bgw.core
 
-data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double = 1.0) {
+/**
+ * Represents a color with red, green, blue and alpha values.
+ *
+ * @constructor Creates a [Color] with given red, green, blue and alpha values.
+ *
+ * @param red Red value. Must be in range 0 until 255.
+ * @param green Green value. Must be in range 0 until 255.
+ * @param blue Blue value. Must be in range 0 until 255.
+ * @param alpha Alpha value. Must be in range 0.0 until 1.0.
+ */
+data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double) {
 
-    constructor(red: Int, green: Int, blue: Int, alpha: Int = 255) : this(red, green, blue, alpha.toDouble() / 255.0)
+    /**
+     * Creates a [Color] with given red, green and blue values.
+     *
+     * @constructor Creates a [Color] with given red, green and blue values.
+     *
+     * @param red Red value. Must be in range 0 until 255.
+     * @param green Green value. Must be in range 0 until 255.
+     * @param blue Blue value. Must be in range 0 until 255.
+     */
     constructor(red: Int, green: Int, blue: Int) : this(red, green, blue, 1.0)
 
+    /**
+     * Creates a [Color] with given red, green, blue and alpha values.
+     *
+     * @constructor Creates a [Color] with given red, green, blue and alpha values.
+     *
+     * @param red Red value. Must be in range 0 until 255.
+     * @param green Green value. Must be in range 0 until 255.
+     * @param blue Blue value. Must be in range 0 until 255.
+     * @param alpha Alpha value. Must be in range 0 until 255.
+     */
+    constructor(red: Int, green: Int, blue: Int, alpha: Int) : this(red, green, blue, alpha.toDouble() / 255.0)
+
+    /**
+     * Creates a [Color] with given red, green and blue values.
+     *
+     * @constructor Creates a [Color] with given red, green and blue values.
+     *
+     * @param hex Hexadecimal string representation of the color.
+     */
     constructor(hex: String) : this(
         hex.substring(1, 3).toInt(16),
         hex.substring(3, 5).toInt(16),
         hex.substring(5, 7).toInt(16)
     )
 
+    /**
+     * Creates a [Color] with given red, green and blue values.
+     *
+     * @constructor Creates a [Color] with given red, green and blue values.
+     *
+     * @param hex Hexadecimal numerical representation of the color.
+     */
     constructor(hex : Int) : this(
         (hex shr 16) and 0xFF,
         (hex shr 8) and 0xFF,
