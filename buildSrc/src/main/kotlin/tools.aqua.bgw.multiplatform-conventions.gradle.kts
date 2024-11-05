@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 
+import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
+import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
+import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
-import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -53,6 +55,31 @@ fun generateProperties(prefix: String = "") =
 """.trimIndent()
 
 tasks.withType<KotlinCompile> { buildPropertyFile() }
+
+val kdocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("kdoc")
+      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+    }
+
+val kdoc: Configuration by
+    configurations.creating {
+      isCanBeConsumed = true
+      isCanBeResolved = false
+    }
+
+artifacts { add(kdoc.name, kdocJar) }
+
+val javadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    }
+
+java {
+  withSourcesJar()
+  withJavadocJar()
+}
 
 repositories {
   jcenter()
