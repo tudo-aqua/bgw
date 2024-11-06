@@ -24,6 +24,11 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.utils.toSetOrEmpty
+import java.lang.ProcessHandle
+import java.lang.management.ManagementFactory
+import java.lang.management.OperatingSystemMXBean
+import java.util.stream.Collectors
 
 plugins {
   kotlin("multiplatform")
@@ -124,17 +129,85 @@ kotlin {
   }
 }
 
-application { mainClass.set("tools.aqua.bgw.main.MainKt") }
+application {
+  mainClass.set("tools.aqua.bgw.main.MainKt")
+  applicationDefaultJvmArgs = listOf("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED", "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED")
+
+  if (System.getProperty("os.name").contains("Mac")) {
+    applicationDefaultJvmArgs = listOf("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED", "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED", "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED", "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+  }
+}
 
 tasks.named<Copy>("jvmProcessResources") {
   val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
   from(jsBrowserDistribution)
 }
 
+var initialHelperPIDs = setOf<Long>()
+
+// Cleanup task that depends on tracking `jcef_helper.exe` processes
+val cleanupJcefHelper by tasks.registering {
+  group = "application"
+  description = "Cleans up orphaned jcef_helper processes after the run task"
+
+  doLast {
+    // After 'run' completes, find new `jcef_helper.exe` processes and terminate them
+    println("Initial jcef_helper PIDs: $initialHelperPIDs")
+    val currentHelperPIDs = getCurrentJcefHelperPIDs()
+    println("Current jcef_helper PIDs: $currentHelperPIDs")
+    val newHelperPIDs = currentHelperPIDs - initialHelperPIDs
+    println("New jcef_helper PIDs: $newHelperPIDs")
+
+    // Kill only new helper processes started during the run
+    killJcefHelperProcesses(newHelperPIDs)
+  }
+}
+
 tasks.named<JavaExec>("run") {
+  doFirst {
+    initialHelperPIDs = getCurrentJcefHelperPIDs()
+    println("Initial jcef_helper PIDs: $initialHelperPIDs")
+  }
+
   dependsOn(tasks.named<Jar>("jvmJar"))
   classpath(tasks.named<Jar>("jvmJar"))
 }
+
+gradle.buildFinished {
+  println("Build finished, cleaning up jcef_helper processes")
+  tasks.named("cleanupJcefHelper").get().actions.forEach { it.execute(tasks.named("cleanupJcefHelper").get()) }
+}
+
+// Helper function to get current jcef_helper process IDs
+fun getCurrentJcefHelperPIDs(): Set<Long> {
+  return ProcessHandle.allProcesses()
+    .filter { it.info().command().orElse("").contains("jcef_helper") }
+    .map { it.pid() }
+    .collect(Collectors.toSet())
+}
+
+// Function to get the parent process ID of a given process
+fun getParentProcessId(pid: Long): Long? {
+  val osBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
+  val processHandle = ProcessHandle.of(pid)
+  return processHandle.orElse(null)?.parent()?.orElse(null)?.pid()
+}
+
+// Function to kill JCEF helper processes
+fun killJcefHelperProcesses(pids: Set<Long>) {
+  val currentProcessId = ProcessHandle.current().pid()
+  pids.forEach { pid ->
+      val parentPid = getParentProcessId(pid)
+      println("Parent process ID of $pid is $parentPid")
+      if (parentPid == currentProcessId) {
+          println("Killing process $pid which is a child of the current process $currentProcessId")
+          Runtime.getRuntime().exec("kill -9 $pid")
+      } else {
+          println("Skipping process $pid as it is not a child of the current process $currentProcessId")
+      }
+  }
+}
+
 
 publishing {
   publications {

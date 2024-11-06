@@ -1,17 +1,17 @@
 package tools.aqua.bgw.application
 
-import AnimationData
+import Base64
 import DialogData
 import ID
 import InternalCameraPaneData
 import data.event.*
 import data.event.internal.*
-import data.event.internal.LoadEventData
 import jsonMapper
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
 import mapper.DialogMapper
 import me.friwi.jcefmaven.CefAppBuilder
+import me.friwi.jcefmaven.CefBuildInfo
+import me.friwi.jcefmaven.EnumPlatform
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import org.cef.CefApp
 import org.cef.CefApp.CefAppState
@@ -40,16 +40,16 @@ import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Coordinate
 import java.awt.BorderLayout
-import java.awt.Component
 import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
-import java.awt.event.*
-import java.lang.management.ManagementFactory
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.net.ServerSocket
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import kotlin.system.exitProcess
+
 
 object Constants {
     val PORT = ServerSocket(0).use { it.localPort }
@@ -207,6 +207,11 @@ class MainFrame(
     var dialogMap : MutableMap<CefBrowser, DialogData> = mutableMapOf()
 
     init {
+        Runtime.getRuntime().addShutdownHook(Thread {
+            println("Application forcefully shutting down...")
+            CefApp.getInstance().dispose()
+        })
+        
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
@@ -220,6 +225,15 @@ class MainFrame(
         })
 
         val cefApp = builder.build()
+
+
+        val platform = EnumPlatform.getCurrentPlatform()
+        println(platform)
+        val buildInfo = CefBuildInfo.fromClasspath()
+        println(buildInfo.jcefUrl + " " + buildInfo.releaseUrl)
+        val cefVersion = cefApp.version
+        println(cefVersion)
+
         client = cefApp.createClient()
         /* Component Update Message Router */
         val config = CefMessageRouterConfig()
@@ -301,11 +315,15 @@ class MainFrame(
         isVisible = true
         addWindowListener(object : WindowAdapter() {
             override fun windowClosing(e: WindowEvent) {
-                // println("Application shutting down...")
-                // println(CefApp.getState())
-                CefApp.getInstance().dispose()
-                // println(CefApp.getState())
-                dispose()
+                println("Application shutting down...")
+                try {
+                    CefApp.getInstance().dispose()
+                } catch (ex: Exception) {
+                    println("Error during CEF cleanup: ${ex.message}")
+                } finally {
+                    dispose()
+                }
+
             }
 
             override fun windowOpened(e: WindowEvent?) {
