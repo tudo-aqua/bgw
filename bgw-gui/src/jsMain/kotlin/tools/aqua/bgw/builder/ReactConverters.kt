@@ -5,6 +5,7 @@ import data.event.*
 import data.event.internal.DragDroppedEventData
 import data.event.internal.DragGestureEndedEventData
 import data.event.internal.DragGestureStartedEventData
+import tools.aqua.bgw.DragEndEvent
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
 import  react.dom.events.MouseEvent as ReactMouseEvent
@@ -55,6 +56,13 @@ object ReactConverters {
             DragEventAction.ENTER -> TODO()
             DragEventAction.EXIT -> TODO()
         }
+    }
+
+    fun DragEndEvent.toDragEventData(): EventData {
+        val droppedOn = over?.id
+        val elementDragged = active?.id
+
+        return DragDroppedEventData(droppedOn ?: "").apply { this.id = elementDragged }
     }
 }
 

@@ -1,6 +1,6 @@
 package tools.aqua.bgw.binding
 
-import Action
+import ActionProp
 import PropData
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -9,21 +9,13 @@ import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.html.*
 import tools.aqua.bgw.application.JCEFApplication
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.StaticComponentView
-import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Frontend
-import tools.aqua.bgw.core.MenuScene
-import tools.aqua.bgw.core.Scene
-import java.net.ServerSocket
 import java.time.Duration
-import java.util.concurrent.CopyOnWriteArrayList
 
 val componentChannel: Channel = Channel("/ws").apply {
     onClientConnected = {
@@ -51,6 +43,10 @@ fun HTML.index() {
     body {
         div {
             classes = setOf("bgw-root-container")
+            div {
+                classes = setOf("bgw-portal")
+                id = "bgw-portal"
+            }
             div {
                 classes = setOf("bgw-root")
                 id = "bgw-root"
@@ -83,7 +79,7 @@ fun Application.configureRouting() {
     }
 }
 
-val messageQueue = mutableListOf<Action>()
+val messageQueue = mutableListOf<ActionProp>()
 
 fun CoroutineScope.launchPeriodicAsync(
     repeatMillis: Long,

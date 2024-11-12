@@ -10,6 +10,7 @@ import react.*
 import react.dom.flushSync
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
+import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -17,6 +18,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.dom.document
 import web.dom.getComputedStyle
@@ -30,10 +32,22 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
 }
 
 val ReactGridPane = FC<GridPaneProps> { props ->
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+    })
+
+    val elementRef = useRef<Element>(null)
+
     bgwGridPane {
         tabIndex = 0
         id = props.data.id
         className = ClassName("gridPane")
+
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
+        }
+
         css {
             cssBuilderIntern(props.data)
             width = fit()

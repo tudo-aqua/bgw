@@ -1,24 +1,24 @@
 package tools.aqua.bgw.elements
 
-import Action
+import ActionProp
 import AppData
 import web.cssom.*
 import emotion.react.Global
-import emotion.react.css
 import emotion.react.styles
 import react.FC
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.img
 import react.useEffect
+import tools.aqua.bgw.DndContext
+import tools.aqua.bgw.DragEndEvent
+import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
+import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.webSocket
 import web.dom.Element
-import web.dom.document
 
 external interface AppProps : Props {
     var data: AppData
@@ -344,22 +344,36 @@ val App = FC<AppProps> { props ->
         } */
     } */
 
-    bgwScenes {
-        val gameScene = props.data.gameScene
-        if (gameScene != null) {
-            bgwGameScene {
-                id = "boardGameScene"
-                +SceneBuilder.build(gameScene)
+    DndContext {
+        onDragStart = { event ->
+            console.log("Drag started")
+        }
+
+        onDragEnd = { event ->
+            console.log(event.over)
+            if(event.over != null) {
+                console.log("Dropped on ${event.over!!.id}")
+                JCEFEventDispatcher.dispatchEvent(event.toDragEventData())
             }
         }
-        val menuScene = props.data.menuScene
-        if (menuScene != null) {
-            bgwMenuScene {
-                id = "menuScene"
-                if(props.data.action !== Action.HIDE_MENU_SCENE && props.data.action !== Action.SHOW_MENU_SCENE) {
-                    className = ClassName("scene--visible")
+
+        bgwScenes {
+            val gameScene = props.data.gameScene
+            if (gameScene != null) {
+                bgwGameScene {
+                    id = "boardGameScene"
+                    +SceneBuilder.build(gameScene)
                 }
-                +SceneBuilder.build(menuScene)
+            }
+            val menuScene = props.data.menuScene
+            if (menuScene != null) {
+                bgwMenuScene {
+                    id = "menuScene"
+                    if (props.data.action !== ActionProp.HIDE_MENU_SCENE && props.data.action !== ActionProp.SHOW_MENU_SCENE) {
+                        className = ClassName("scene--visible")
+                    }
+                    +SceneBuilder.build(menuScene)
+                }
             }
         }
     }

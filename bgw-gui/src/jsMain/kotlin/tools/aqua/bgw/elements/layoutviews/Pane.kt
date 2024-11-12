@@ -17,6 +17,7 @@ import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
+import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
@@ -25,8 +26,11 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.gamecomponentviews.bgwTokenView
+import tools.aqua.bgw.elements.gamecomponentviews.cssBuilderIntern
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
 external interface PaneProps : Props {
@@ -38,12 +42,23 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
 }
 
 val Pane = FC<PaneProps> { props ->
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+    })
+
+    val elementRef = useRef<Element>(null)
+
     bgwPane {
         tabIndex = 0
         id = props.data.id
         className = ClassName("pane")
         css {
             cssBuilderIntern(props.data)
+        }
+
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {
@@ -65,13 +80,6 @@ val Pane = FC<PaneProps> { props ->
         onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
         onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
         onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onDrop = {
-            it.preventDefault()
-            val data = it.dataTransfer.getData("text")
-            val element = it.target as HTMLElement
-            JCEFEventDispatcher.dispatchEvent(it.toDragEventData(id, DragEventAction.DROP))
-            //element.appendChild(document.getElementById(data) as Node)
-        }
         onDragOver = { it.preventDefault() }
     }
 }

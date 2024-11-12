@@ -14,6 +14,7 @@ import react.dom.html.ButtonHTMLAttributes
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
+import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -23,6 +24,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
 external interface AreaProps : Props {
@@ -34,11 +36,22 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: AreaData) {
 }
 
 val Area = FC<AreaProps> { props ->
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+    })
+
+    val elementRef = useRef<Element>(null)
+
     bgwArea {
         id = props.data.id
         className = ClassName("area")
         css {
             cssBuilderIntern(props.data)
+        }
+
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {

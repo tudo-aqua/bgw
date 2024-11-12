@@ -9,14 +9,22 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 
 class DragDropScene : BoardGameScene() {
-    private val source = Pane<ComponentView>(width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY)
+    private val source = Pane<ComponentView>(width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY).apply {
+        zIndex = 1
+    }
+
     private val target = Pane<ComponentView>(posX = 500, posY = 500, width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY).apply {
         dropAcceptor = {
             it.draggedComponent is TokenView
         }
         onDragDropped = {
+            source.remove(it.draggedComponent)
+            add(it.draggedComponent)
+            (it.draggedComponent as TokenView).isDraggable = false
         }
     }
+
+    private val randomPane = Pane<ComponentView>(posX = 500, posY = 0, width = 500, height = 500, visual = ColorVisual.BLUE)
 
     private val token = TokenView(posX = 20, visual = ColorVisual.RED, width=100, height=100).apply {
         isDraggable = true
@@ -26,6 +34,6 @@ class DragDropScene : BoardGameScene() {
 
     init {
         source.add(token)
-        addComponents(source, target)
+        addComponents(source, target, randomPane)
     }
 }

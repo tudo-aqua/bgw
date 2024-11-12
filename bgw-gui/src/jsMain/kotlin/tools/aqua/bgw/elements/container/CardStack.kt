@@ -9,6 +9,7 @@ import emotion.react.css
 import org.w3c.dom.HTMLDivElement
 import react.*
 import react.dom.html.HTMLAttributes
+import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -18,6 +19,7 @@ import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
 external interface CardStackProps : Props {
@@ -29,11 +31,22 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData) {
 }
 
 val CardStack = FC<CardStackProps> { props ->
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+    })
+
+    val elementRef = useRef<Element>(null)
+
     bgwCardStack {
         id = props.data.id
         className = ClassName("cardStack")
         css {
             cssBuilderIntern(props.data)
+        }
+
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {

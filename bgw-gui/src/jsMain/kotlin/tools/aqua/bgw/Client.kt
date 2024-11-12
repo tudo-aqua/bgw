@@ -1,46 +1,35 @@
 package tools.aqua.bgw
 
 
+import ActionProp
 import AnimationData
 import AppData
-import ComponentViewData
 import Data
-import DialogData
 import ID
 import JsonData
 import PropData
-import SceneData
-import VisualData
 import data.event.AnimationFinishedEventData
 import data.event.internal.LoadEventData
-import kotlinx.browser.document
-import kotlinx.serialization.decodeFromString
 import jsonMapper
-import kotlinx.browser.window
+import kotlinx.browser.document
 import org.w3c.dom.CustomEvent
-import web.timers.setTimeout
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.WebSocket
-import org.w3c.dom.events.Event
-import org.w3c.dom.get
 import react.*
 import react.dom.render
-import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
-import web.serviceworker.Client
-import webViewType
-import kotlin.js.Json
+import web.timers.setTimeout
 import kotlin.math.floor
 import kotlin.random.Random
 
-var internalSocket : WebSocket? = null
-var webSocket : WebSocket? = null
-var handlers : MutableMap<ID, (Data) -> Unit> = mutableMapOf()
-var animator : Animator = Animator()
+var internalSocket: WebSocket? = null
+var webSocket: WebSocket? = null
+var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
+var animator: Animator = Animator()
 
-lateinit var container : HTMLElement
+lateinit var container: HTMLElement
 
 fun main() {
     if (Config.USE_SOCKETS) {
@@ -76,14 +65,14 @@ fun handleReceivedData(receivedData: Data) {
         is AppData -> {
             val app = receivedData
 
-            if (app.action == Action.HIDE_MENU_SCENE) {
+            if (app.action == ActionProp.HIDE_MENU_SCENE) {
                 console.log("[SCENE] Hiding Menu Scene")
                 val element = document.querySelector("#menuScene") as HTMLElement
                 element.classList.toggle("scene--visible", false)
                 setTimeout({
                     renderApp(app)
                 }, 300)
-            } else if (app.action == Action.SHOW_MENU_SCENE) {
+            } else if (app.action == ActionProp.SHOW_MENU_SCENE) {
                 renderApp(app)
                 val element = document.querySelector("#menuScene") as HTMLElement
                 setTimeout({
@@ -99,11 +88,12 @@ fun handleReceivedData(receivedData: Data) {
                 JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
             }
         }
+
         else -> {}
     }
 }
 
-fun renderApp(appData : AppData) {
+fun renderApp(appData: AppData) {
     render(App.create { data = appData }, container as Element, callback = {
         JCEFEventDispatcher.dispatchEvent(LoadEventData())
     })

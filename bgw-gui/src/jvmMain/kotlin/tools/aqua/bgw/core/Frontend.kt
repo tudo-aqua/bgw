@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.core
 
-import Action
+import ActionProp
 import PropData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -54,7 +54,6 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
-import webViewType
 import java.io.File
 import java.util.*
 
@@ -149,7 +148,7 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
-      messageQueue.add(Action.SHOW_MENU_SCENE)
+      messageQueue.add(ActionProp.SHOW_MENU_SCENE)
     }
 
     internal fun sendAnimation(animation: Animation) {
@@ -167,7 +166,7 @@ internal class Frontend {
      */
     internal fun hideMenuScene(fadeTime: Double) {
       menuScene = null
-      messageQueue.add(Action.HIDE_MENU_SCENE)
+      messageQueue.add(ActionProp.HIDE_MENU_SCENE)
     }
 
     /**
@@ -177,7 +176,7 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
-      messageQueue.add(Action.SHOW_GAME_SCENE)
+      messageQueue.add(ActionProp.SHOW_GAME_SCENE)
     }
 
     /**
@@ -214,13 +213,13 @@ internal class Frontend {
 
     internal fun updateComponent(component: ComponentView) {
       //println("Sending update for component ${component.id}")
-      messageQueue.add(Action.UPDATE_COMPONENT)
+      messageQueue.add(ActionProp.UPDATE_COMPONENT)
       //val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       //runBlocking { sendToAllClients(json) }
     }
 
     internal fun updateVisual(visual: Visual) {
-      messageQueue.add(Action.UPDATE_VISUAL)
+      messageQueue.add(ActionProp.UPDATE_VISUAL)
       //val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
       //runBlocking { sendToAllClients(json) }
     }

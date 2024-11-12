@@ -12,6 +12,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
 import react.*
 import react.dom.html.HTMLAttributes
+import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -22,6 +23,7 @@ import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.fit
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
+import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
 external interface LinearLayoutProps : Props {
@@ -33,11 +35,22 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: LinearLayoutData) {
 }
 
 val LinearLayout = FC<LinearLayoutProps> { props ->
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+    })
+
+    val elementRef = useRef<Element>(null)
+
     bgwLinearLayout {
         id = props.data.id
         className = ClassName("linearLayout")
         css {
             cssBuilderIntern(props.data)
+        }
+
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {

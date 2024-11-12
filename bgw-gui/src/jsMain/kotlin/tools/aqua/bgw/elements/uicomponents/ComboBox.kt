@@ -43,7 +43,6 @@ val ComboBox = FC<ComboBoxProps> { props ->
         }
 
         select {
-            placeholder = props.data.prompt
             css {
                 fontBuilder(props.data)
                 comboBoxBuilder(props.data)

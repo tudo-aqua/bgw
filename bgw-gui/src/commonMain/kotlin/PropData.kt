@@ -7,7 +7,7 @@ typealias ID = String
 // PropData
 
 @Serializable
-enum class Action {
+enum class ActionProp {
     DEFAULT,
     SHOW_MENU_SCENE,
     SHOW_GAME_SCENE,
@@ -40,7 +40,7 @@ class AppData : Data() {
     var fonts : List<Triple<String, String, Int>> = emptyList()
     var width : Int = 0
     var height : Int = 0
-    var action : Action = Action.DEFAULT
+    var action : ActionProp = ActionProp.DEFAULT
 }
 
 @Serializable

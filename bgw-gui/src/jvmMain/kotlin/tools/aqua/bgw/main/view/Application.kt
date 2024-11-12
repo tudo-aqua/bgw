@@ -5,6 +5,7 @@ import tools.aqua.bgw.util.Font
 
 object Application : BoardGameApplication() {
     private val grid = GridGameScene()
+    private val hexGrid = HexGridGameScene()
     private val animation = AnimationScene()
     val menuScene = MyMenuScene()
     private val uiScene = UIScene()
@@ -13,8 +14,9 @@ object Application : BoardGameApplication() {
 
     init {
         loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
+        showGameScene(hexGrid)
         // showGameScene(animation)
-        showGameScene(grid)
+        // showGameScene(grid)
         // showGameScene(dragDropScene)
         // showMenuScene(uiScene)
         // showGameScene(visualScene)

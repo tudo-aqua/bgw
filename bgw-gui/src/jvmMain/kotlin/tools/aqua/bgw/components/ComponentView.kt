@@ -66,7 +66,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   var zIndex: Int
     get() = zIndexProperty.value
     set(value) {
-      checkNotNull(parent) { "$this does not have a parent" }
       if (parent is LayeredContainer<*>) {
         try {
           @Suppress("UNCHECKED_CAST")
@@ -74,6 +73,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
         } catch (_: ClassCastException) {
           error("$parent is not a compatible container type")
         }
+      } else {
+        zIndexProperty.value = value
       }
     }
 

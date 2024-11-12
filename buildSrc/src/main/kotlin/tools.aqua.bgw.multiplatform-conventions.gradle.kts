@@ -18,17 +18,16 @@
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
+import java.lang.ProcessHandle
+import java.lang.management.ManagementFactory
+import java.lang.management.OperatingSystemMXBean
+import java.util.stream.Collectors
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.utils.toSetOrEmpty
-import java.lang.ProcessHandle
-import java.lang.management.ManagementFactory
-import java.lang.management.OperatingSystemMXBean
-import java.util.stream.Collectors
 
 plugins {
   kotlin("multiplatform")
@@ -100,7 +99,12 @@ kotlin {
   }
   js(IR) {
     binaries.executable()
-    browser { commonWebpackConfig { cssSupport { enabled.set(true) } } }
+    browser {
+      commonWebpackConfig {
+        cssSupport { enabled.set(true) }
+        mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
+      }
+    }
   }
   sourceSets {
     val commonMain by getting {
@@ -120,9 +124,11 @@ kotlin {
     val jvmTest by getting
     val jsMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1-pre.758")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1-pre.758")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.11.4-pre.758")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1-pre.828")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1-pre.828")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1-pre.828")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3-pre.828")
+        implementation(npm("@dnd-kit/core", "6.1.0"))
       }
     }
     val jsTest by getting
@@ -131,10 +137,24 @@ kotlin {
 
 application {
   mainClass.set("tools.aqua.bgw.main.MainKt")
-  applicationDefaultJvmArgs = listOf("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED", "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED")
+  applicationDefaultJvmArgs =
+      listOf(
+          "--add-opens",
+          "java.desktop/sun.awt=ALL-UNNAMED",
+          "--add-opens",
+          "java.desktop/java.awt.peer=ALL-UNNAMED")
 
   if (System.getProperty("os.name").contains("Mac")) {
-    applicationDefaultJvmArgs = listOf("--add-opens", "java.desktop/sun.awt=ALL-UNNAMED", "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED", "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED", "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+    applicationDefaultJvmArgs =
+        listOf(
+            "--add-opens",
+            "java.desktop/sun.awt=ALL-UNNAMED",
+            "--add-opens",
+            "java.desktop/java.awt.peer=ALL-UNNAMED",
+            "--add-opens",
+            "java.desktop/sun.lwawt=ALL-UNNAMED",
+            "--add-opens",
+            "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
   }
 }
 
@@ -146,22 +166,23 @@ tasks.named<Copy>("jvmProcessResources") {
 var initialHelperPIDs = setOf<Long>()
 
 // Cleanup task that depends on tracking `jcef_helper.exe` processes
-val cleanupJcefHelper by tasks.registering {
-  group = "application"
-  description = "Cleans up orphaned jcef_helper processes after the run task"
+val cleanupJcefHelper by
+    tasks.registering {
+      group = "application"
+      description = "Cleans up orphaned jcef_helper processes after the run task"
 
-  doLast {
-    // After 'run' completes, find new `jcef_helper.exe` processes and terminate them
-    println("Initial jcef_helper PIDs: $initialHelperPIDs")
-    val currentHelperPIDs = getCurrentJcefHelperPIDs()
-    println("Current jcef_helper PIDs: $currentHelperPIDs")
-    val newHelperPIDs = currentHelperPIDs - initialHelperPIDs
-    println("New jcef_helper PIDs: $newHelperPIDs")
+      doLast {
+        // After 'run' completes, find new `jcef_helper.exe` processes and terminate them
+        println("Initial jcef_helper PIDs: $initialHelperPIDs")
+        val currentHelperPIDs = getCurrentJcefHelperPIDs()
+        println("Current jcef_helper PIDs: $currentHelperPIDs")
+        val newHelperPIDs = currentHelperPIDs - initialHelperPIDs
+        println("New jcef_helper PIDs: $newHelperPIDs")
 
-    // Kill only new helper processes started during the run
-    killJcefHelperProcesses(newHelperPIDs)
-  }
-}
+        // Kill only new helper processes started during the run
+        killJcefHelperProcesses(newHelperPIDs)
+      }
+    }
 
 tasks.named<JavaExec>("run") {
   doFirst {
@@ -175,15 +196,17 @@ tasks.named<JavaExec>("run") {
 
 gradle.buildFinished {
   println("Build finished, cleaning up jcef_helper processes")
-  tasks.named("cleanupJcefHelper").get().actions.forEach { it.execute(tasks.named("cleanupJcefHelper").get()) }
+  tasks.named("cleanupJcefHelper").get().actions.forEach {
+    it.execute(tasks.named("cleanupJcefHelper").get())
+  }
 }
 
 // Helper function to get current jcef_helper process IDs
 fun getCurrentJcefHelperPIDs(): Set<Long> {
   return ProcessHandle.allProcesses()
-    .filter { it.info().command().orElse("").contains("jcef_helper") }
-    .map { it.pid() }
-    .collect(Collectors.toSet())
+      .filter { it.info().command().orElse("").contains("jcef_helper") }
+      .map { it.pid() }
+      .collect(Collectors.toSet())
 }
 
 // Function to get the parent process ID of a given process
@@ -197,17 +220,16 @@ fun getParentProcessId(pid: Long): Long? {
 fun killJcefHelperProcesses(pids: Set<Long>) {
   val currentProcessId = ProcessHandle.current().pid()
   pids.forEach { pid ->
-      val parentPid = getParentProcessId(pid)
-      println("Parent process ID of $pid is $parentPid")
-      if (parentPid == currentProcessId) {
-          println("Killing process $pid which is a child of the current process $currentProcessId")
-          Runtime.getRuntime().exec("kill -9 $pid")
-      } else {
-          println("Skipping process $pid as it is not a child of the current process $currentProcessId")
-      }
+    val parentPid = getParentProcessId(pid)
+    println("Parent process ID of $pid is $parentPid")
+    if (parentPid == currentProcessId) {
+      println("Killing process $pid which is a child of the current process $currentProcessId")
+      Runtime.getRuntime().exec("kill -9 $pid")
+    } else {
+      println("Skipping process $pid as it is not a child of the current process $currentProcessId")
+    }
   }
 }
-
 
 publishing {
   publications {
