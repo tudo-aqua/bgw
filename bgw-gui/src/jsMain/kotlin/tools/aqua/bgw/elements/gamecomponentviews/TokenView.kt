@@ -5,7 +5,6 @@ import csstype.PropertiesBuilder
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
-import js.reflect.unsafeCast
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.DragEvent
@@ -76,7 +75,7 @@ val TokenView = FC<TokenViewProps> { props ->
                     override var scaleX: Double = 1.0
                     override var scaleY: Double = 1.0
                 })
-            }, 100)
+            }, 200)
         }
     }
 

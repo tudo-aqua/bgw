@@ -70,7 +70,7 @@ val CardView = FC<CardViewProps> { props ->
                     override var scaleX: Double = 1.0
                     override var scaleY: Double = 1.0
                 })
-            }, 100)
+            }, 200)
         }
     }
 

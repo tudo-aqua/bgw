@@ -179,6 +179,10 @@ val cleanupJcefHelper by
         val newHelperPIDs = currentHelperPIDs - initialHelperPIDs
         println("New jcef_helper PIDs: $newHelperPIDs")
 
+        println(newHelperPIDs.map {
+          getParentProcessId(it)
+        })
+
         // Kill only new helper processes started during the run
         killJcefHelperProcesses(newHelperPIDs)
       }
@@ -192,6 +196,14 @@ tasks.named<JavaExec>("run") {
 
   dependsOn(tasks.named<Jar>("jvmJar"))
   classpath(tasks.named<Jar>("jvmJar"))
+
+  doLast {
+    val currentHelperPIDs = getCurrentJcefHelperPIDs()
+    println("After jcef_helper PIDs: $currentHelperPIDs")
+    println(currentHelperPIDs.map {
+      getParentProcessId(it)
+    })
+  }
 }
 
 gradle.buildFinished {

@@ -16,6 +16,7 @@ import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import org.cef.CefApp
 import org.cef.CefApp.CefAppState
 import org.cef.CefClient
+import org.cef.CefSettings
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
@@ -214,6 +215,7 @@ class MainFrame(
         
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
+        builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
                 // println("CEF State: $state")

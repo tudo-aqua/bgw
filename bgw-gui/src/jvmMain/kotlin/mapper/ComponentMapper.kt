@@ -300,12 +300,13 @@ object ContainerMapper {
             is HexagonGrid<*> -> {
                 val tempMap = mutableMapOf<String, HexagonViewData>()
                 container.map.forEach { (key, value) ->
-                    tempMap["${key.first}/${key.second}"] = HexagonViewData().apply {
+                    tempMap["${key.first}/${key.second}"] = (HexagonViewData().fillData(value) as HexagonViewData).apply {
                         id = value.id
                         posX = value.posX.toInt()
                         posY = value.posY.toInt()
                         visual = VisualMapper.map(value.visual)
                         size = value.size.toInt()
+                        // isDraggable = value.isDraggable          // TODO - Element has no root node dragging out
                     }
                 }
 
