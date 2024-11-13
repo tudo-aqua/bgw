@@ -7,6 +7,10 @@ import InternalCameraPaneData
 import data.event.*
 import data.event.internal.*
 import jsonMapper
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import mapper.DialogMapper
 import me.friwi.jcefmaven.CefAppBuilder
@@ -45,10 +49,15 @@ import java.awt.EventQueue
 import java.awt.KeyboardFocusManager
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.File
+import java.lang.management.ManagementFactory
 import java.net.ServerSocket
+import java.util.stream.Collectors
+import java.util.stream.Stream
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
+import kotlin.concurrent.timer
 import kotlin.system.exitProcess
 
 
@@ -192,7 +201,7 @@ class JCEFApplication : Application {
 
 }
 
-@OptIn(ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class, DelicateCoroutinesApi::class)
 class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
@@ -227,7 +236,8 @@ class MainFrame(
         })
 
         val cefApp = builder.build()
-
+        val pids = mutableSetOf<Long>()
+        var pidsUnchanged = 0
 
         val platform = EnumPlatform.getCurrentPlatform()
         println(platform)
@@ -330,8 +340,45 @@ class MainFrame(
 
             override fun windowOpened(e: WindowEvent?) {
                 super.windowOpened(e)
+
+                println("Application is running with PID: ${ManagementFactory.getRuntimeMXBean().name}")
+                timer(period = 1000) {
+                    val pidsBefore = pids.size
+                    pids += filterJCEFHelperProcesses(getChildProcessIds())
+                    if(pids.size == pidsBefore) {
+                        pidsUnchanged++
+                    } else {
+                        pidsUnchanged = 0
+                    }
+
+                    if(pidsUnchanged >= 2) {
+                        println("JCEF Helper PIDs: $pids")
+                        File("build/application.pid").writeText(pids.joinToString(",").trim())
+                        this.cancel()
+                    }
+                }
             }
         })
+    }
+
+    internal fun getChildProcessIds(process: ProcessHandle = ProcessHandle.current()): Set<Long> {
+        val childrenList = mutableListOf<ProcessHandle>()
+        val children = process.children().let {
+            it.forEach { childrenList.add(it) }
+            childrenList
+        }
+        return (children.flatMap { getChildProcessIds(it) } + children.map { it.pid() }).toSet()
+    }
+
+    internal fun getChildrenJCEFHelperProcesses(): Set<Long> {
+        return ProcessHandle.allProcesses()
+            .filter { it.info().command().orElse("").contains("jcef_helper") }
+            .map { it.pid() }
+            .collect(Collectors.toSet())
+    }
+
+    internal fun filterJCEFHelperProcesses(pids: Set<Long>): Set<Long> {
+        return pids.filter { it in getChildrenJCEFHelperProcesses() }.toSet()
     }
 
     fun setDialogContent(browser : CefBrowser, dialogData : DialogData) {
