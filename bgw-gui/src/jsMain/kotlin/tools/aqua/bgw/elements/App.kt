@@ -306,6 +306,16 @@ val App = FC<AppProps> { props ->
                 backgroundColor = rgb(0, 0, 0, 1.0)
                 overflow = Overflow.hidden
             }
+
+            ".bgw-root *[aria-roledescription='draggable'][aria-pressed='true']" {
+                // position = important(Position.fixed)
+                opacity = important(number(1.0))
+                zIndex = important(integer(1000000))
+            }
+
+            ".bgw-root *:has(*[aria-roledescription='draggable'][aria-pressed='true'])" {
+                zIndex = important(integer(1000000))
+            }
         }
     }
 

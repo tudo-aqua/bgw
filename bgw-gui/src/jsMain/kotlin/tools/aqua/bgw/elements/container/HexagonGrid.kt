@@ -16,6 +16,7 @@ import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import react.dom.svg.ReactSVG
 import tools.aqua.bgw.DroppableOptions
+import tools.aqua.bgw.DroppableResult
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -41,9 +42,13 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
 }
 
 val HexagonGrid = FC<HexagonGridProps> { props ->
-    val droppable = useDroppable(object : DroppableOptions {
-        override var id: String = props.data.id
-    })
+    var droppable : DroppableResult? = null
+
+    if(props.data.isDroppable) {
+        droppable = useDroppable(object : DroppableOptions {
+            override var id: String = props.data.id
+        })
+    }
 
     val elementRef = useRef<Element>(null)
 
@@ -55,9 +60,11 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        ref = elementRef
-        useEffect {
-            elementRef.current?.let { droppable.setNodeRef(it) }
+        if(props.data.isDroppable) {
+            ref = elementRef
+            useEffect {
+                elementRef.current?.let { droppable!!.setNodeRef(it) }
+            }
         }
 
         bgwVisuals {

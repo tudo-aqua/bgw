@@ -9,6 +9,7 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
@@ -244,6 +245,9 @@ object LayoutMapper {
         return when (layout) {
             is Pane<*> -> (PaneData().fillData(layout) as PaneData).apply {
                 components = layout.components.map { RecursiveMapper.map(it) }
+                if(layout.dropAcceptor != null) {
+                    isDroppable = true
+                }
             }
             is GridPane<*> -> (GridPaneData().fillData(layout) as GridPaneData).apply {
                 val grid = layout.grid.clone().apply {
@@ -263,6 +267,9 @@ object LayoutMapper {
                 }
                 spacing = layout.spacing.toInt()
                 layoutFromCenter = layout.isLayoutFromCenter
+                if(layout.dropAcceptor != null) {
+                    isDroppable = true
+                }
             }
             else -> throw IllegalArgumentException("Unknown layout type: ${layout::class.simpleName}")
         }
@@ -291,10 +298,16 @@ object ContainerMapper {
         return when (container) {
             is Area<*> -> (AreaData().fillData(container) as AreaData).apply {
                 components = container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+                if(container.dropAcceptor != null) {
+                    isDroppable = true
+                }
             }
 
             is CardStack<*> -> (CardStackData().fillData(container) as CardStackData).apply {
                 components = container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+                if(container.dropAcceptor != null) {
+                    isDroppable = true
+                }
             }
 
             is HexagonGrid<*> -> {
@@ -315,6 +328,10 @@ object ContainerMapper {
                     map = tempMap
                     spacing = 0
                     // components ?!
+
+                    if(container.dropAcceptor != null) {
+                        isDroppable = true
+                    }
                 }
             }
 
@@ -323,10 +340,18 @@ object ContainerMapper {
                 spacing = container.spacing.toInt()
                 orientation = container.orientation.name.lowercase()
                 alignment = Pair(container.alignment.horizontalAlignment.name.lowercase(), container.alignment.verticalAlignment.name.lowercase())
+
+                if(container.dropAcceptor != null) {
+                    isDroppable = true
+                }
             }
 
             is Satchel -> (SatchelData().fillData(container) as SatchelData).apply {
                 components = container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+
+                if(container.dropAcceptor != null) {
+                    isDroppable = true
+                }
             }
         }
     }

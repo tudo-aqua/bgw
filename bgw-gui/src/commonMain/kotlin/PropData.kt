@@ -87,6 +87,7 @@ abstract class ComponentViewData : Data() {
     var layoutFromCenter : Boolean = false
     var isDraggable : Boolean = false
     var isDragged : Boolean = false
+    var isDroppable : Boolean = false
 }
 
 // UI COMPONENTS
