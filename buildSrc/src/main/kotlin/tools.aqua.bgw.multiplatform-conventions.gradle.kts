@@ -27,6 +27,8 @@ import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -40,6 +42,7 @@ plugins {
 
 val useSockets: String? = project.findProperty("useSockets")?.toString()
 val propertyFile = "Config.kt"
+val wrappersVersion = "-pre.831"
 
 fun buildPropertyFile() {
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
@@ -124,10 +127,10 @@ kotlin {
     val jvmTest by getting
     val jsMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1-pre.828")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1-pre.828")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1-pre.828")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3-pre.828")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1${wrappersVersion}")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1${wrappersVersion}")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1${wrappersVersion}")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3${wrappersVersion}")
         implementation(npm("@dnd-kit/core", "6.1.0"))
       }
     }
@@ -195,4 +198,12 @@ publishing {
       from(components["kotlin"])
     }
   }
+}
+
+// Ignore yarn.lock mismatches
+rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin::class.java) {
+    rootProject.the<YarnRootExtension>().yarnLockMismatchReport =
+        YarnLockMismatchReport.NONE
+    rootProject.the<YarnRootExtension>().reportNewYarnLock = false
+    rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
 }
