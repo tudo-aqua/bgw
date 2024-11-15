@@ -58,10 +58,11 @@ val TokenView = FC<TokenViewProps> { props ->
 
     val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        transform = translate(lastTransform.x.px, lastTransform.y.px)
+        transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
+        cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
     }
 
-    useEffect(listOf(draggable.transform)) {
+    /* useEffect(listOf(draggable.transform)) {
         var resetTimeout: Timeout? = null
 
         if (draggable.transform != null) {
@@ -77,7 +78,7 @@ val TokenView = FC<TokenViewProps> { props ->
                 })
             }, 200)
         }
-    }
+    } */
 
     val elementRef = useRef<Element>(null)
 

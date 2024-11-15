@@ -24,6 +24,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.useDraggable
+import web.cssom.Cursor
 import web.cssom.px
 import web.cssom.translate
 import web.dom.Element
@@ -53,10 +54,11 @@ val CardView = FC<CardViewProps> { props ->
 
     val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        transform = translate(lastTransform.x.px, lastTransform.y.px)
+        transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
+        cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
     }
 
-    useEffect(listOf(draggable.transform)) {
+    /* useEffect(listOf(draggable.transform)) {
         var resetTimeout: Timeout? = null
 
         if (draggable.transform != null) {
@@ -72,7 +74,7 @@ val CardView = FC<CardViewProps> { props ->
                 })
             }, 200)
         }
-    }
+    } */
 
     val elementRef = useRef<Element>(null)
 

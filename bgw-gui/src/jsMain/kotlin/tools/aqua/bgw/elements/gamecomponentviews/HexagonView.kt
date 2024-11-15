@@ -61,7 +61,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
         override var scaleY: Double = 1.0
     })
 
-    useEffect(listOf(draggable.transform)) {
+    /* useEffect(listOf(draggable.transform)) {
         var resetTimeout: Timeout? = null
 
         if (draggable.transform != null) {
@@ -77,7 +77,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
                 })
             }, 200)
         }
-    }
+    } */
 
     val elementRef = useRef<Element>(null)
 
@@ -95,7 +95,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
             cssBuilderIntern(props.data)
             width = (sqrt(3.0) * props.data.size).em
             height = 2 * props.data.size.em
-            transform = translate(lastTransform.x.px, lastTransform.y.px)
+            transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
             cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
         }
 

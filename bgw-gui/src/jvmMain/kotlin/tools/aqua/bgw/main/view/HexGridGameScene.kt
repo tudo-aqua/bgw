@@ -54,7 +54,7 @@ class HexGridGameScene : BoardGameScene() {
     }
 
     init {
-        addComponents(satchel, hexGrid)
+        addComponents(hexGrid, satchel)
         repeat(20) {
             val hexagon = HexagonView(posX = 800, posY = 800, visual = ColorVisual(Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))), size = 50).apply {
                 isDraggable = true
