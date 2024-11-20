@@ -39,10 +39,7 @@ import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
-import tools.aqua.bgw.event.AnimationFinishedEvent
-import tools.aqua.bgw.event.DragEvent
-import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.event.*
 import tools.aqua.bgw.util.Coordinate
 import java.awt.BorderLayout
 import java.awt.EventQueue
@@ -112,10 +109,12 @@ class JCEFApplication : Application {
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData.id != component.id) return false
-                //println("Received: $eventData for ${component.id}")
+                // println("Received: $eventData for ${component.id}")
 
                 try {
                     when(eventData) {
+                        is MouseEnteredEventData -> { component.onMouseEntered?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY)) }
+                        is MouseExitedEventData -> { component.onMouseExited?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY)) }
                         is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
                         is KeyEventData -> {
                             val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)

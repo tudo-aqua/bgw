@@ -35,6 +35,8 @@ object ComponentMapper {
             rotation = componentView.rotation
             // layoutFromCenter
             // isDraggable
+            hasMouseEnteredEvent = componentView.onMouseEntered != null
+            hasMouseExitedEvent = componentView.onMouseExited != null
         }
     }
 

@@ -88,6 +88,9 @@ abstract class ComponentViewData : Data() {
     var isDraggable : Boolean = false
     var isDragged : Boolean = false
     var isDroppable : Boolean = false
+
+    var hasMouseEnteredEvent : Boolean = false
+    var hasMouseExitedEvent : Boolean = false
 }
 
 // UI COMPONENTS

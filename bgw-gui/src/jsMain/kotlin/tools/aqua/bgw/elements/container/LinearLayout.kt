@@ -12,17 +12,21 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
 import react.*
 import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.DroppableResult
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.fit
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
@@ -105,17 +109,32 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
 
             props.data.components.forEach {
                 +NodeBuilder.build(it)
+                /* div {
+                    css {
+                        position = Position.relative
+                        flex = Flex(number(1.0), number(1.0), Auto.auto)
+                        maxWidth = it.width.em
+                        width = it.width.em
+                        // margin = (props.data.spacing / 2).em
+                        marginTop = it.posY.em
+                        display = Display.flex
+                        alignItems = AlignItems.center
+                        justifyContent = JustifyContent.center
+                    }
+
+                    +NodeBuilder.build(it)
+                } */
             }
 
-            useEffect(listOf(props.data)) {
+            useLayoutEffect(listOf(props.data)) {
                 document.getElementById(props.data.id + "--components")?.let {
-                    for(i in 1 until it.childElementCount) {
+                    for(i in 0 until it.childElementCount) {
                         val child = it.children[i] as HTMLElement
                         if(props.data.orientation == "vertical") {
-                            child.style.marginTop = "${props.data.spacing}em"
+                            child.style.marginBottom = "${props.data.spacing}em"
                             child.style.marginLeft = "0"
                         } else {
-                            child.style.marginLeft = "${props.data.spacing}em"
+                            child.style.marginRight = "${props.data.spacing}em"
                             child.style.marginTop = "0"
                         }
                     }
@@ -123,13 +142,7 @@ val LinearLayout = FC<LinearLayoutProps> { props ->
             }
         }
 
-        onContextMenu = {
-            it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
-        }
-        onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
-        onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
-        onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
+        applyCommonEventHandlers(props.data)
     }
 }
 

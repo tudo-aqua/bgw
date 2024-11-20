@@ -232,7 +232,7 @@ val App = FC<AppProps> { props ->
                 position = Position.absolute
             }
 
-            "bgw_linear_layout > bgw_contents > *" {
+            "bgw_linear_layout > bgw_contents > div > *" {
                 position = important(Position.relative)
                 left = important(Globals.unset)
                 top = important(Globals.unset)

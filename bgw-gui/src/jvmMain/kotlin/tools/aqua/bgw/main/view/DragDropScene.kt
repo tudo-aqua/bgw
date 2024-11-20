@@ -26,9 +26,17 @@ class DragDropScene : BoardGameScene() {
 
     private val randomPane = Pane<ComponentView>(posX = 500, posY = 0, width = 500, height = 500, visual = ColorVisual.BLUE)
 
-    private val token = TokenView(posX = 20, visual = ColorVisual.RED, width=100, height=100).apply {
+    private val token = TokenView(posX = 20, posY = 100, visual = ColorVisual.RED, width=100, height=100).apply {
         isDraggable = true
         onDragGestureStarted = {
+        }
+
+        onMouseEntered = {
+            posY += 20
+        }
+
+        onMouseExited = {
+            posY -= 20
         }
     }
 

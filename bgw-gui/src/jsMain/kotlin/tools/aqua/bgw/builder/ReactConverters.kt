@@ -13,6 +13,14 @@ import  react.dom.events.KeyboardEvent as ReactKeyEvent
 import react.dom.events.DragEvent as ReactDragEvent
 
 object ReactConverters {
+    fun ReactMouseEvent<*, *>.toMouseEnteredData(targetID: ID?): MouseEnteredEventData {
+        return MouseEnteredEventData(clientX, clientY).apply { this.id = targetID }
+    }
+
+    fun ReactMouseEvent<*, *>.toMouseExitedData(targetID: ID?): MouseExitedEventData {
+        return MouseExitedEventData(clientX, clientY).apply { this.id = targetID }
+    }
+
     fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {
         return MouseEventData(
             when (button as Int) {

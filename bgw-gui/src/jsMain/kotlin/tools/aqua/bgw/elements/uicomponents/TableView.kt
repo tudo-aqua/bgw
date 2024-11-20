@@ -18,10 +18,13 @@ import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.handlers
 import web.dom.Element
 
@@ -113,13 +116,7 @@ val TableView = FC<TableViewProps> { props ->
                 }
             }
 
-            onContextMenu = {
-                it.preventDefault()
-                JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
-            }
-            onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
-            onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
-            onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
+            applyCommonEventHandlers(props.data)
         }
     }
 }

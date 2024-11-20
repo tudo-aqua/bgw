@@ -15,10 +15,13 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h1
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.internalSocket
 import web.dom.Element
@@ -59,22 +62,7 @@ val ProgressBar = FC<ProgressBarProps> { props ->
             }
         }
 
-        onContextMenu = {
-            it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) 
-        }
-        onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
-        onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
-        onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
-        onDragStart = {
-            val element = it.target as HTMLElement
-            it.dataTransfer.setData("text", element.id)
-        }
-        onDragOver = { it.preventDefault() }
-        onDragEnd = {
-            it.preventDefault()
-            internalSocket?.send("")
-        }
+        applyCommonEventHandlers(props.data)
     }
 }
 

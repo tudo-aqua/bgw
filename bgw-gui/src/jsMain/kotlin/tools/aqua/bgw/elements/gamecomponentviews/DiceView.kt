@@ -16,12 +16,15 @@ import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DraggableResultTransform
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwText
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDraggable
 import web.dom.Element
@@ -91,17 +94,7 @@ val DiceView = FC<DiceViewProps> { props ->
             }
         }
 
-        onContextMenu = {
-            it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
-        }
-        onContextMenu = {
-            it.preventDefault()
-            JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id))
-        }
-        onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(id)) }
-        onKeyDown = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.PRESS)) }
-        onKeyUp = { JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(id, KeyEventAction.RELEASE)) }
+        applyCommonEventHandlers(props.data)
 
         ariaDescribedBy = draggable.attributes.ariaDescribedBy
         ariaDisabled = draggable.attributes.ariaDisabled

@@ -121,6 +121,8 @@ private val module = SerializersModule {
         subclass(TextVisualData::class)
     }
     polymorphic(EventData::class) {
+        subclass(MouseEnteredEventData::class)
+        subclass(MouseExitedEventData::class)
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
         subclass(LoadEventData::class)
@@ -140,8 +142,14 @@ private val module = SerializersModule {
         subclass(StructuredDataSelectEventData::class)
     }
     polymorphic(InputEventData::class) {
+        subclass(MouseEnteredEventData::class)
+        subclass(MouseExitedEventData::class)
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
+    }
+    polymorphic(MouseEventData::class) {
+        subclass(MouseEnteredEventData::class)
+        subclass(MouseExitedEventData::class)
     }
     // ANIMATIONS
     polymorphic(AnimationData::class) {
