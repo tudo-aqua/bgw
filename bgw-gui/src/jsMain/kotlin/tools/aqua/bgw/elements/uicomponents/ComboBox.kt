@@ -49,6 +49,7 @@ val ComboBox = FC<ComboBoxProps> { props ->
                 outline = None.none
                 border = None.none
                 position = Position.absolute
+                textIndent = 1.em
             }
             option {
                 value = (-1).toString()

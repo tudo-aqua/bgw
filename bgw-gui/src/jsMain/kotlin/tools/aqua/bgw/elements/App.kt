@@ -79,6 +79,10 @@ val App = FC<AppProps> { props ->
                     overflow = Overflow.hidden
                     display = Display.block
                 }
+
+                "input[type='color']" {
+                    fontSize = (100.0 / props.data.height).cqh
+                }
             }
 
             // RED
@@ -99,6 +103,10 @@ val App = FC<AppProps> { props ->
                     backgroundColor = rgb(0, 0, 0, 0.0)
                     overflow = Overflow.hidden
                     display = Display.block
+                }
+
+                "input[type='color']" {
+                    fontSize = (100.0 / props.data.width).cqw
                 }
             }
 
@@ -121,6 +129,10 @@ val App = FC<AppProps> { props ->
                     overflow = Overflow.hidden
                     display = Display.block
                 }
+
+                "input[type='color']" {
+                    fontSize = (100.0 / props.data.height).cqh
+                }
             }
 
             // YELLOW
@@ -141,6 +153,10 @@ val App = FC<AppProps> { props ->
                     backgroundColor = rgb(0, 0, 0, 1.0)
                     overflow = Overflow.hidden
                     display = Display.block
+                }
+
+                "input[type='color']" {
+                    fontSize = (100.0 / props.data.width).cqw
                 }
             }
 

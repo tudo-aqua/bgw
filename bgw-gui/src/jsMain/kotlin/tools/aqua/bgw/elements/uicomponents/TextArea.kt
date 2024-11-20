@@ -58,6 +58,10 @@ val TextArea = FC<TextAreaProps> { props ->
                 boxSizing = BoxSizing.borderBox
                 outline = None.none
                 border = None.none
+
+                placeholder {
+                    placeholderFontBuilder(props.data)
+                }
             }
             onChange = {
                 val value = it.target.value

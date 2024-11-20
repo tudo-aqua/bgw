@@ -90,6 +90,11 @@ fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
     color = componentViewData.font!!.color.unsafeCast<Color>()
 }
 
+fun PropertiesBuilder.placeholderFontBuilder(componentViewData: UIComponentData) {
+    color = componentViewData.font!!.color.unsafeCast<Color>()
+    opacity = number(0.65)
+}
+
 fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
     position = Position.absolute
     width = 100.pct

@@ -38,10 +38,10 @@ class UIScene : MenuScene() {
         width = 800,
         height = 50,
         text = "Testbox",
-        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        font = Font(20.0, Color.WHITE, "Rubik", Font.FontWeight.SEMI_BOLD),
         prompt = "Enter text here",
     ).apply {
-        visual = ColorVisual(Color.LIGHT_GRAY)
+        visual = ColorVisual(Color.RED)
     }
 
     private val passwordfield = PasswordField(
@@ -62,10 +62,10 @@ class UIScene : MenuScene() {
         width = 800,
         height = 600,
         text = "Test\nArea",
-        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        font = Font(20.0, Color.GREEN, "Rubik", Font.FontWeight.SEMI_BOLD),
         prompt = "Enter text here",
     ).apply {
-        visual = ColorVisual(Color.LIGHT_GRAY)
+        visual = ColorVisual(Color.BLUE)
     }
 
     private val color = ColorPicker(

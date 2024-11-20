@@ -52,6 +52,11 @@ val TextField = FC<TextFieldProps> { props ->
                 fontBuilder(props.data)
                 outline = None.none
                 border = None.none
+                textIndent = 1.em
+
+                placeholder {
+                    placeholderFontBuilder(props.data)
+                }
             }
             onChange = {
                 val value = it.target.value
