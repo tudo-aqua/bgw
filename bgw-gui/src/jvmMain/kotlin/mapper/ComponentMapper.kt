@@ -33,6 +33,10 @@ object ComponentMapper {
             scaleX = componentView.scaleX
             scaleY = componentView.scaleY
             rotation = componentView.rotation
+
+            if(componentView.dropAcceptor != null) {
+                isDroppable = true
+            }
             // layoutFromCenter
             // isDraggable
             hasMouseEnteredEvent = componentView.onMouseEntered != null

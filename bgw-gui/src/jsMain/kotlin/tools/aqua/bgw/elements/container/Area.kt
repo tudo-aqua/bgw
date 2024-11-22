@@ -48,7 +48,7 @@ val Area = FC<AreaProps> { props ->
         })
     }
 
-    val elementRef = useRef<Element>(null)
+    val dropRef = useRef<Element>(null)
 
     bgwArea {
         id = props.data.id
@@ -58,9 +58,9 @@ val Area = FC<AreaProps> { props ->
         }
 
         if(props.data.isDroppable) {
-            ref = elementRef
+            ref = dropRef
             useEffect {
-                elementRef.current?.let { droppable!!.setNodeRef(it) }
+                dropRef.current?.let { droppable!!.setNodeRef(it) }
             }
         }
 
