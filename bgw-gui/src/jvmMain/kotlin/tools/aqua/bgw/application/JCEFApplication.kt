@@ -80,9 +80,14 @@ class JCEFApplication : Application {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun stop() {
-        frame?.dispose()
-        CefApp.getInstance().dispose()
+        println("Stopping JCEF Application")
+
+        GlobalScope.launch {
+            frame?.dispose()
+            exitProcess(0)
+        }
     }
 
     override fun clearAllEventListeners() {
@@ -234,6 +239,7 @@ class MainFrame(
 
     var msgRouter : CefMessageRouter? = null
     var animationMsgRouter : CefMessageRouter? = null
+    var globalEventMsgRouter : CefMessageRouter? = null
     var client : CefClient
 
     var dialogMap : MutableMap<CefBrowser, DialogData> = mutableMapOf()
@@ -287,6 +293,44 @@ class MainFrame(
             }
         }
         msgRouter?.addHandler(myHandler, true)
+
+
+        val globalEventConfig = CefMessageRouterConfig()
+        globalEventConfig.jsQueryFunction = "cefSceneQuery"
+        globalEventConfig.jsCancelFunction = "cefSceneQueryCancel"
+        globalEventMsgRouter = CefMessageRouter.create(globalEventConfig)
+        client.addMessageRouter(globalEventMsgRouter)
+        val globalHandler = object : CefMessageRouterHandlerAdapter() {
+            override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
+                val json = Base64.decode(request)
+                val eventData = jsonMapper.decodeFromString<KeyEventData>(json)
+
+                try {
+                    val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)
+                    val menuScene = Frontend.menuScene
+                    val boardGameScene = Frontend.boardGameScene
+
+                    when(eventData.action) {
+                        KeyEventAction.PRESS -> {
+                            menuScene?.onKeyPressed?.invoke(keyEvent)
+                            boardGameScene?.onKeyPressed?.invoke(keyEvent)
+                        }
+                        KeyEventAction.RELEASE -> {
+                            menuScene?.onKeyReleased?.invoke(keyEvent)
+                            boardGameScene?.onKeyReleased?.invoke(keyEvent)
+                        }
+                        KeyEventAction.TYPE -> {
+                            menuScene?.onKeyTyped?.invoke(keyEvent)
+                            boardGameScene?.onKeyTyped?.invoke(keyEvent)
+                        }
+                    }
+                    return true
+                } catch(e : Exception) { }
+
+                return false
+            }
+        }
+        globalEventMsgRouter?.addHandler(globalHandler, true)
 
         /* Animation Message Router */
         val animationConfig = CefMessageRouterConfig()

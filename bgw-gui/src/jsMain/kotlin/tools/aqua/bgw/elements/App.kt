@@ -420,12 +420,12 @@ val App = FC<AppProps> { props ->
         }
 
         fun globalKeyDown(e: KeyboardEvent<*>) {
-            JCEFEventDispatcher.dispatchEvent(e.toKeyEventData("global", KeyEventAction.PRESS))
-            JCEFEventDispatcher.dispatchEvent(e.toKeyEventData("global", KeyEventAction.TYPE))
+            JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.PRESS))
+            JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.TYPE))
         }
 
         fun globalKeyUp(e: KeyboardEvent<*>) {
-            JCEFEventDispatcher.dispatchEvent(e.toKeyEventData("global", KeyEventAction.RELEASE))
+            JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.RELEASE))
         }
 
         useEffectWithCleanup {

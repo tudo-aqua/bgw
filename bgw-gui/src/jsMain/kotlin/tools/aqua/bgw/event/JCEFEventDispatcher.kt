@@ -10,6 +10,15 @@ import jsonMapper
 object JCEFEventDispatcher : EventDispatcher {
     init { initialize() }
 
+    fun dispatchGlobalEvent(event: KeyEventData) {
+        val json = jsonMapper.encodeToString(event)
+        try {
+            window.asDynamic().bgwSceneQuery(Base64.encode(json))
+        } catch (e: Throwable) {
+            println("Error while dispatching event: $e")
+        }
+    }
+
     override fun dispatchEvent(event: AnimationFinishedEventData) {
         val json = jsonMapper.encodeToString(event)
         try {
@@ -31,5 +40,6 @@ object JCEFEventDispatcher : EventDispatcher {
     private fun initialize() {
         js("window.bgwQuery = function(request) { window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
         js("window.bgwAnimationQuery = function(request) { window.cefAnimationQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
+        js("window.bgwSceneQuery = function(request) { window.cefSceneQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
     }
 }

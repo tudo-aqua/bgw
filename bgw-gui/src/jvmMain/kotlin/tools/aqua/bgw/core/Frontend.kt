@@ -261,7 +261,7 @@ internal class Frontend {
 
     /** Stops the application. */
     internal fun exit() {
-      TODO("Not yet implemented")
+        applicationEngine.stop()
     }
 
     fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean {
