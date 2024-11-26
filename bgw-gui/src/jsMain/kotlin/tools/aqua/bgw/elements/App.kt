@@ -2,24 +2,28 @@ package tools.aqua.bgw.elements
 
 import ActionProp
 import AppData
+import data.event.KeyEventAction
 import data.event.internal.DragGestureExitedEventData
 import web.cssom.*
 import emotion.react.Global
 import emotion.react.styles
+import kotlinx.browser.document
+import kotlinx.browser.window
 import react.*
+import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
-import tools.aqua.bgw.DndContext
-import tools.aqua.bgw.DragEndEvent
+import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragMoveEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
+import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
-import tools.aqua.bgw.webSocket
 import web.dom.Element
 
 external interface AppProps : Props {
@@ -374,7 +378,17 @@ val App = FC<AppProps> { props ->
 
     val (lastDraggedOver, setLastDraggedOver) = useState<String?>(null)
 
+    val pointerSensor = useSensor(PointerSensor, jsObject<PointerSensorOptions> {
+        activationConstraint = jsObject {
+            distance = 10
+        }
+    })
+
+    val allSensors = useSensors(pointerSensor)
+
     DndContext {
+        sensors = allSensors
+
         onDragStart = { event ->
             JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
         }
@@ -402,6 +416,35 @@ val App = FC<AppProps> { props ->
                     JCEFEventDispatcher.dispatchEvent(DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
                 }
                 setLastDraggedOver(event.over?.id)
+            }
+        }
+
+        fun globalKeyDown(e: KeyboardEvent<*>) {
+            JCEFEventDispatcher.dispatchEvent(e.toKeyEventData("global", KeyEventAction.PRESS))
+            JCEFEventDispatcher.dispatchEvent(e.toKeyEventData("global", KeyEventAction.TYPE))
+        }
+
+        fun globalKeyUp(e: KeyboardEvent<*>) {
+            JCEFEventDispatcher.dispatchEvent(e.toKeyEventData("global", KeyEventAction.RELEASE))
+        }
+
+        useEffectWithCleanup {
+            document.addEventListener("keydown", {
+                globalKeyDown(it.unsafeCast<KeyboardEvent<*>>())
+            })
+
+            document.addEventListener("keyup", {
+                globalKeyUp(it.unsafeCast<KeyboardEvent<*>>())
+            })
+
+            onCleanup {
+                document.removeEventListener("keydown", {
+                    globalKeyDown(it.unsafeCast<KeyboardEvent<*>>())
+                })
+
+                document.removeEventListener("keyup", {
+                    globalKeyUp(it.unsafeCast<KeyboardEvent<*>>())
+                })
             }
         }
 
@@ -464,3 +507,9 @@ inline fun transition(duration : Int, property : String): Transition =
 
 inline fun transitionAll(duration : Int): Transition =
     "${duration}ms".unsafeCast<Transition>()
+
+inline fun <T> jsObject(builder: T.() -> Unit): T {
+    val obj = js("{}")
+    builder(obj.unsafeCast<T>())
+    return obj.unsafeCast<T>()
+}

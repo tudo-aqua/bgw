@@ -35,6 +35,34 @@ object ReactConverters {
         ).apply { this.id = targetID }
     }
 
+    fun ReactMouseEvent<*, *>.toMousePressedEventData(targetID: ID?): MousePressedEventData {
+        return MousePressedEventData(
+            when (button as Int) {
+                0 -> MouseButtonType.LEFT_BUTTON
+                1 -> MouseButtonType.MOUSE_WHEEL
+                2 -> MouseButtonType.RIGHT_BUTTON
+                3, 4 -> MouseButtonType.OTHER
+                else -> MouseButtonType.UNSPECIFIED
+            },
+            clientX,
+            clientY
+        ).apply { this.id = targetID }
+    }
+
+    fun ReactMouseEvent<*, *>.toMouseReleasedEventData(targetID: ID?): MouseReleasedEventData {
+        return MouseReleasedEventData(
+            when (button as Int) {
+                0 -> MouseButtonType.LEFT_BUTTON
+                1 -> MouseButtonType.MOUSE_WHEEL
+                2 -> MouseButtonType.RIGHT_BUTTON
+                3, 4 -> MouseButtonType.OTHER
+                else -> MouseButtonType.UNSPECIFIED
+            },
+            clientX,
+            clientY
+        ).apply { this.id = targetID }
+    }
+
     fun ReactKeyEvent<*>.toKeyEventData(targetID: ID?, action: KeyEventAction): KeyEventData {
         return KeyEventData(
             toKeyCode(),
@@ -47,8 +75,8 @@ object ReactConverters {
     }
 
     private fun ReactKeyEvent<*>.toKeyCode(): KeyCode {
-        KeyCode.values().forEach {
-            if (it.name == this.key) return it
+        KeyCode.entries.forEach {
+            if (it.getKeyCodes().contains(this.key)) return it
         }
         return KeyCode.UNDEFINED
     }

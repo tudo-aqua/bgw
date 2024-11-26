@@ -26,35 +26,35 @@ package tools.aqua.bgw.event
  * @property keyTypeMask Mask for the key's type.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-enum class KeyCode(val string: String, private val keyTypeMask: Int) {
+enum class KeyCode(val string: String, private val keyTypeMask: Int, private val keyCodes : List<String> = listOf(string, string.lowercase(), string.uppercase())) {
 
   // region Function keys
   /** Constant for the **Shift** key. */
   SHIFT("Shift", KeyType.MODIFIER),
 
   /** Constant for the **Ctrl** key. */
-  CONTROL("Ctrl", KeyType.MODIFIER),
+  CONTROL("Ctrl", KeyType.MODIFIER, listOf("Control")),
 
   /** Constant for the **Alt** key. */
   ALT("Alt", KeyType.MODIFIER),
 
   /** Constant for the **AltGr** key. */
-  ALT_GRAPH("AltGr", KeyType.MODIFIER),
+  ALT_GRAPH("AltGr", KeyType.MODIFIER, listOf("AltGraph")),
 
   /** Constant for the **Caps Lock** key. */
-  CAPS("Caps", KeyType.OTHER),
+  CAPS("Caps", KeyType.OTHER, listOf("CapsLock")),
 
   /**
    * Constant for the Microsoft Windows **Win** key. It is used for both the left and right version
    * of the key.
    */
-  WINDOWS("Win", KeyType.MODIFIER),
+  WINDOWS("Win", KeyType.MODIFIER, listOf("Meta", "Win")),
 
   /** Constant for the Microsoft Windows Context Menu key. */
-  CONTEXT_MENU("Context Menu", KeyType.OTHER),
+  CONTEXT_MENU("Context Menu", KeyType.OTHER, listOf("ContextMenu")),
 
   /** Constant for the **Space** key. */
-  SPACE("Space", KeyType.WHITESPACE),
+  SPACE("Space", KeyType.WHITESPACE, listOf(" ")),
 
   /** Constant for the **Backspace** key. */
   BACK_SPACE("Backspace", KeyType.OTHER),
@@ -221,6 +221,18 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 
   /** Constant for the **Z** key. */
   Z("Z", KeyType.LETTER),
+
+  /** Constant for the **Ä** key. */
+  Ä("Ä", KeyType.LETTER),
+
+  /** Constant for the **Ö** key. */
+  Ö("Ö", KeyType.LETTER),
+
+  /** Constant for the **Ü** key. */
+  Ü("Ü", KeyType.LETTER),
+
+  /** Constant for the **ß** key. */
+  ß("ß", KeyType.LETTER),
   // endregion
 
   // region Characters
@@ -322,7 +334,7 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
 
   // region F-Keys
   /** Constant for the **Esc** key. */
-  ESCAPE("Esc", KeyType.OTHER),
+  ESCAPE("Esc", KeyType.OTHER, listOf("Escape")),
 
   /** Constant for the F1 function key. */
   F1("F1", KeyType.FUNCTION),
@@ -361,10 +373,10 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
   F12("F12", KeyType.FUNCTION),
 
   /** Constant for the **Print Screen** key. */
-  PRINT_SCREEN("Print", KeyType.OTHER),
+  PRINT_SCREEN("Print", KeyType.OTHER, listOf("PrintScreen")),
 
   /** Constant for the **Scroll Lock** key. */
-  SCROLL_LOCK("Scroll Lock", KeyType.OTHER),
+  SCROLL_LOCK("Scroll Lock", KeyType.OTHER, listOf("ScrollLock")),
 
   /** Constant for the **Pause** key. */
   PAUSE("Pause", KeyType.OTHER),
@@ -375,31 +387,31 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
   INSERT("Insert", KeyType.OTHER),
 
   /** Constant for the **Delete** key. */
-  DELETE("Del", KeyType.OTHER),
+  DELETE("Del", KeyType.OTHER, listOf("Delete")),
 
   /** Constant for the **Home** / **Pos1** key. */
-  HOME_POS1("Pos1", KeyType.OTHER),
+  HOME_POS1("Pos1", KeyType.OTHER, listOf("Home")),
 
   /** Constant for the **End** key. */
   END("End", KeyType.OTHER),
 
   /** Constant for the **Page Up** key. */
-  PAGE_UP("Page Up", KeyType.NAVIGATION),
+  PAGE_UP("Page Up", KeyType.NAVIGATION, listOf("PageUp")),
 
   /** Constant for the **Page Down** key. */
-  PAGE_DOWN("Page Down", KeyType.NAVIGATION),
+  PAGE_DOWN("Page Down", KeyType.NAVIGATION, listOf("PageDown")),
 
   /** Constant for the non-numpad **left** arrow key. */
-  LEFT("Left", KeyType.NAVIGATION or KeyType.ARROW),
+  LEFT("Left", KeyType.NAVIGATION or KeyType.ARROW, listOf("ArrowLeft")),
 
   /** Constant for the non-numpad **up** arrow key. */
-  UP("Up", KeyType.NAVIGATION or KeyType.ARROW),
+  UP("Up", KeyType.NAVIGATION or KeyType.ARROW, listOf("ArrowUp")),
 
   /** Constant for the non-numpad **right** arrow key. */
-  RIGHT("Right", KeyType.NAVIGATION or KeyType.ARROW),
+  RIGHT("Right", KeyType.NAVIGATION or KeyType.ARROW, listOf("ArrowRight")),
 
   /** Constant for the non-numpad **down** arrow key. */
-  DOWN("Down", KeyType.NAVIGATION or KeyType.ARROW),
+  DOWN("Down", KeyType.NAVIGATION or KeyType.ARROW, listOf("ArrowDown")),
   // endregion
 
   /**
@@ -475,6 +487,13 @@ enum class KeyCode(val string: String, private val keyTypeMask: Int) {
    * @return `true` if key was a function key F1, F2, etc., `false` otherwise.
    */
   fun isFunction(): Boolean = keyTypeMask and KeyType.FUNCTION != 0
+
+  /**
+   * Returns the actual key codes for this key.
+   *
+   * @return Actual key codes for this key.
+   */
+  fun getKeyCodes() : List<String> = keyCodes
   // endregion
 
   /** Integer mask for KeyCode type. */

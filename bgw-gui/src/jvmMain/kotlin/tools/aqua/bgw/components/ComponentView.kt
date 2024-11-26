@@ -559,6 +559,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @see isDisabledProperty
    * @see isFocusableProperty
    */
+  @Deprecated("The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
   /**

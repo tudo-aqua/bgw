@@ -83,7 +83,7 @@ val HexagonView = FC<HexagonViewProps> { props ->
             cssBuilderIntern(props.data)
             width = (sqrt(3.0) * props.data.size).em
             height = 2 * props.data.size.em
-            transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
+            translate = "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<Translate>()
             cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
         }
 

@@ -27,6 +27,8 @@ external interface DndContextProps : PropsWithChildren {
     var onDragStart: (DragStartEvent) -> Unit
     var onDragMove: (DragMultiEvent) -> Unit
     var onDragOver: (DragMultiEvent) -> Unit
+
+    var sensors: Array<dynamic>
 }
 
 @JsName("useDraggable")
@@ -96,3 +98,21 @@ external interface DroppableResult {
     val isOver: Boolean
     val setNodeRef: (dynamic) -> Unit
 }
+
+
+
+
+external interface SensorOptions {
+    var activationConstraint: dynamic
+}
+
+external interface PointerSensorOptions : SensorOptions
+
+@JsName("PointerSensor")
+external val PointerSensor: dynamic
+
+@JsName("useSensor")
+external fun useSensor(sensor: dynamic, options: PointerSensorOptions): dynamic
+
+@JsName("useSensors")
+external fun useSensors(vararg sensors: dynamic): Array<dynamic>

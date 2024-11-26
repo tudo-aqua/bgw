@@ -154,6 +154,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @see KeyEvent
    * @see onKeyPressed
    */
+  @Deprecated("The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
   /** Gets invoked with no event whenever a scene is shown. */

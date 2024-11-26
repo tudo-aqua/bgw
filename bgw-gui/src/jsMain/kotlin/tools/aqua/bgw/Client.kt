@@ -16,6 +16,8 @@ import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.WebSocket
 import react.*
+import react.dom.client.Root
+import react.dom.client.createRoot
 import react.dom.render
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -30,6 +32,7 @@ var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 var animator: Animator = Animator()
 
 lateinit var container: HTMLElement
+lateinit var root: Root
 
 fun main() {
     if (Config.USE_SOCKETS) {
@@ -70,16 +73,28 @@ fun handleReceivedData(receivedData: Data) {
                 val element = document.querySelector("#menuScene") as HTMLElement
                 element.classList.toggle("scene--visible", false)
                 setTimeout({
-                    renderApp(app)
+                    if(!Config.USE_SOCKETS) {
+                        renderApp(app)
+                    } else {
+                        renderAppFast(app)
+                    }
                 }, 300)
             } else if (app.action == ActionProp.SHOW_MENU_SCENE) {
-                renderApp(app)
+                if(!Config.USE_SOCKETS) {
+                    renderApp(app)
+                } else {
+                    renderAppFast(app)
+                }
                 val element = document.querySelector("#menuScene") as HTMLElement
                 setTimeout({
                     element.classList.toggle("scene--visible", true)
                 }, 50)
             } else {
-                renderApp(app)
+                if(!Config.USE_SOCKETS) {
+                    renderApp(app)
+                } else {
+                    renderAppFast(app)
+                }
             }
         }
 
@@ -93,10 +108,24 @@ fun handleReceivedData(receivedData: Data) {
     }
 }
 
+/**
+ * Renders the app with React 17 syntax to provide fallback for BGW Playground web app.
+ */
 fun renderApp(appData: AppData) {
     render(App.create { data = appData }, container as Element, callback = {
         JCEFEventDispatcher.dispatchEvent(LoadEventData())
     })
+}
+
+/**
+ * Renders the app with React 18 syntax.
+ */
+fun renderAppFast(appData: AppData) {
+    if(!::root.isInitialized) {
+        root = createRoot(container as Element)
+    }
+    root.render(App.create { data = appData })
+    JCEFEventDispatcher.dispatchEvent(LoadEventData())
 }
 
 fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }

@@ -123,6 +123,8 @@ private val module = SerializersModule {
     polymorphic(EventData::class) {
         subclass(MouseEnteredEventData::class)
         subclass(MouseExitedEventData::class)
+        subclass(MousePressedEventData::class)
+        subclass(MouseReleasedEventData::class)
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
         subclass(LoadEventData::class)
@@ -146,12 +148,16 @@ private val module = SerializersModule {
     polymorphic(InputEventData::class) {
         subclass(MouseEnteredEventData::class)
         subclass(MouseExitedEventData::class)
+        subclass(MousePressedEventData::class)
+        subclass(MouseReleasedEventData::class)
         subclass(MouseEventData::class)
         subclass(KeyEventData::class)
     }
     polymorphic(MouseEventData::class) {
         subclass(MouseEnteredEventData::class)
         subclass(MouseExitedEventData::class)
+        subclass(MousePressedEventData::class)
+        subclass(MouseReleasedEventData::class)
     }
     // ANIMATIONS
     polymorphic(AnimationData::class) {

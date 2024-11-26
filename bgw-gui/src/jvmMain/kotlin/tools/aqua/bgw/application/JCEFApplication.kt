@@ -104,17 +104,17 @@ class JCEFApplication : Application {
         if (handlersMap.containsKey(component.id)) return
         val handler: CefMessageRouterHandler = object : CefMessageRouterHandlerAdapter() {
             override fun onQuery(browser: CefBrowser, frame: CefFrame, query_id: Long, request: String, persistent: Boolean, callback: CefQueryCallback): Boolean {
-
-
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData.id != component.id) return false
-                // println("Received: $eventData for ${component.id}")
+                println("Received: $eventData for ${eventData.id}")
 
                 try {
                     when(eventData) {
                         is MouseEnteredEventData -> { component.onMouseEntered?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY)) }
                         is MouseExitedEventData -> { component.onMouseExited?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY)) }
+                        is MousePressedEventData -> { component.onMousePressed?.invoke(MouseEvent(eventData.button, eventData.posX, eventData.posY)) }
+                        is MouseReleasedEventData -> { component.onMouseReleased?.invoke(MouseEvent(eventData.button, eventData.posX, eventData.posY)) }
                         is MouseEventData -> component.onMouseClicked?.invoke(MouseEvent(eventData.button, eventData.posX,eventData.posY))
                         is KeyEventData -> {
                             val keyEvent = KeyEvent(eventData.keyCode, eventData.character, eventData.isControlDown, eventData.isShiftDown, eventData.isAltDown)

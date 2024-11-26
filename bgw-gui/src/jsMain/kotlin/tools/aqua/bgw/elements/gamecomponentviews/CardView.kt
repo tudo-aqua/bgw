@@ -2,7 +2,6 @@ package tools.aqua.bgw.elements.gamecomponentviews
 
 import CardViewData
 import csstype.PropertiesBuilder
-import web.cssom.ClassName
 import data.event.DragEventAction
 import data.event.KeyEventAction
 import emotion.react.css
@@ -25,9 +24,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
-import web.cssom.Cursor
-import web.cssom.px
-import web.cssom.translate
+import web.cssom.*
 import web.dom.Element
 import web.timers.Timeout
 import web.timers.clearTimeout
@@ -57,7 +54,7 @@ val CardView = FC<CardViewProps> { props ->
 
     val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
+        translate = "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<Translate>()
         cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
     }
 

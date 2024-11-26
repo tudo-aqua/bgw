@@ -45,6 +45,7 @@ class AppData : Data() {
 
 @Serializable
 class SceneData : Data() {
+    var id: ID = ""
     var width : Int = 0
     var height : Int = 0
     var background : VisualData? = null

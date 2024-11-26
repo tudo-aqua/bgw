@@ -2,6 +2,7 @@ package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.uicomponents.Button
+import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.event.KeyCode
@@ -37,45 +38,55 @@ object Application : BoardGameApplication("User input example") {
         visual = ColorVisual.GREEN
     }
 
-    val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
+    val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.BLACK)
+
+    val label : Label = Label().apply {
+        text = "Hello, World!"
+        posX = 30.0
+        posY = 200.0
+    }
 
     val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
 
     init {
         // handling user input on ComponentView
-        button.onMouseClicked = this::handleMouseClicked
+        button.onMouseClicked  = { event -> button.text = "clicked ${event.button}" }  // Done
 
-        button.onMousePressed = { mouseEvent -> button.text = "pressed ${mouseEvent.button}" }
-        button.onMouseReleased = { mouseEvent -> button.text = "released ${mouseEvent.button}" }
-        button.onMouseEntered = { button.visual = ColorVisual.MAGENTA }
-        button.onMouseExited = { button.visual = ColorVisual.GREEN }
-        button.onKeyPressed = { keyEvent -> button.text = "pressed key: ${keyEvent.keyCode}" }
-        button.onKeyReleased = { keyEvent -> button.text = "released key: ${keyEvent.keyCode}" }
-        button.onKeyTyped = { keyEvent -> button.text = "typed key: ${keyEvent.character}" }
-        button.dropAcceptor = { true }
+        button.onMousePressed = { mouseEvent -> button.text = "pressed ${mouseEvent.button}" }   // Done
+        button.onMouseReleased = { mouseEvent -> button.text = "released ${mouseEvent.button}" }    // Done
+        button.onMouseEntered = { button.visual = ColorVisual.MAGENTA }  // Done
+        button.onMouseExited = { button.visual = ColorVisual.GREEN }  // Done
+
+        button.onKeyPressed = { keyEvent -> button.text = "pressed key: ${keyEvent.keyCode}" }  // Done
+        button.onKeyReleased = { keyEvent -> button.text = "released key: ${keyEvent.keyCode}" }  // Done
+        button.onKeyTyped = { keyEvent -> button.text = "typed key: ${keyEvent.character}" }  // Done
+
+        button.dropAcceptor = { true }  // Done
         button.onDragDropped = {
             it.draggedComponent.reposition(500, 30)
             it.draggedComponent.rotation = 0.0
-        }
-        button.onDragGestureEntered = { dragEvent -> button.visual = dragEvent.draggedComponent.visual }
-        button.onDragGestureExited = { button.visual = ColorVisual.GREEN }
+        }  // Done
+        button.onDragGestureEntered = { dragEvent -> button.visual = dragEvent.draggedComponent.visual }  // Done
+        button.onDragGestureExited = { button.visual = ColorVisual.GREEN }  // Done
 
         // Additional function references available only to DynamicComponentViews
         token.isDraggable = true
 
-        token.rotation = 45.0
+        token.onDragGestureMoved = { token.rotate(5) }  // Done
+        token.onDragGestureStarted = { token.visual = ColorVisual.YELLOW }  // Done
+        token.onDragGestureEnded = { _, success -> if (success) token.resize(50, 50) }  // Done
 
-        // token.onDragGestureMoved = { token.rotate(5) }
-        token.onDragGestureStarted = { token.visual = ColorVisual.BLUE }
-        token.onDragGestureEnded = { _, success -> if (success) token.resize(50, 50) }
+        token.onMouseClicked = { event -> token.visual = ColorVisual.GREEN }  // Done
+        token.onMousePressed = { event -> token.visual = ColorVisual.RED }  // Done
+        token.onMouseReleased = { event -> token.visual = ColorVisual.BLUE }  // Done
 
         // Global input listener
         gameScene.onKeyPressed = { event ->
             if (event.keyCode == KeyCode.ESCAPE)
                 exit()
-        }
+        } // TODO
 
-        showGameScene(gameScene.apply { addComponents(button, token) })
+        showGameScene(gameScene.apply { addComponents(button, token, label) })
         show()
     }
 
