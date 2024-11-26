@@ -24,7 +24,9 @@ external val DndContext: ComponentClass<DndContextProps>
 
 external interface DndContextProps : PropsWithChildren {
     var onDragEnd: (DragEndEvent) -> Unit
-    var onDragStart: (Event) -> Unit
+    var onDragStart: (DragStartEvent) -> Unit
+    var onDragMove: (DragMultiEvent) -> Unit
+    var onDragOver: (DragMultiEvent) -> Unit
 }
 
 @JsName("useDraggable")
@@ -56,14 +58,28 @@ external interface DraggableResultTransform {
     val scaleY: Double
 }
 
-external interface DragEndEvent {
-    val activatorEvent: Event
-    val delta : DraggableResultTransform
-    val over: DragEndEventOver?
-    val active: DragEndEventActive?
+external interface DraggableTransform {
+    val x: Double
+    val y: Double
 }
 
-external interface DragEndEventActive {
+external interface DragStartEvent {
+    val active: DragEventActive?
+}
+
+external interface DragMultiEvent {
+    val delta : DraggableTransform
+    val over: DragEndEventOver?
+    val active: DragEventActive?
+}
+
+external interface DragEndEvent {
+    val delta : DraggableTransform
+    val over: DragEndEventOver?
+    val active: DragEventActive?
+}
+
+external interface DragEventActive {
     var id: String
 }
 

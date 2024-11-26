@@ -2,17 +2,19 @@ package tools.aqua.bgw.elements
 
 import ActionProp
 import AppData
+import data.event.internal.DragGestureExitedEventData
 import web.cssom.*
 import emotion.react.Global
 import emotion.react.styles
-import react.FC
-import react.IntrinsicType
-import react.Props
+import react.*
 import react.dom.html.HTMLAttributes
-import react.useEffect
 import tools.aqua.bgw.DndContext
 import tools.aqua.bgw.DragEndEvent
+import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
+import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
+import tools.aqua.bgw.builder.ReactConverters.toDragMoveEventData
+import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
@@ -370,16 +372,36 @@ val App = FC<AppProps> { props ->
         } */
     } */
 
+    val (lastDraggedOver, setLastDraggedOver) = useState<String?>(null)
+
     DndContext {
         onDragStart = { event ->
-            console.log("Drag started")
+            JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
         }
 
         onDragEnd = { event ->
             console.log(event.over)
             if(event.over != null) {
-                console.log("Dropped on ${event.over!!.id}")
                 JCEFEventDispatcher.dispatchEvent(event.toDragEventData())
+            }
+            JCEFEventDispatcher.dispatchEvent(event.toDragEndedEventData())
+            if(lastDraggedOver != null) {
+                JCEFEventDispatcher.dispatchEvent(DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
+            }
+            setLastDraggedOver(null)
+        }
+
+        onDragMove = { event ->
+            JCEFEventDispatcher.dispatchEvent(event.toDragMoveEventData())
+        }
+
+        onDragOver = { event ->
+            JCEFEventDispatcher.dispatchEvent(event.toDragEnteredEventData())
+            if(lastDraggedOver != event.over?.id) {
+                if(lastDraggedOver != null) {
+                    JCEFEventDispatcher.dispatchEvent(DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
+                }
+                setLastDraggedOver(event.over?.id)
             }
         }
 

@@ -65,24 +65,6 @@ val TokenView = FC<TokenViewProps> { props ->
         cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
     }
 
-    /* useEffect(listOf(draggable.transform)) {
-        var resetTimeout: Timeout? = null
-
-        if (draggable.transform != null) {
-            resetTimeout?.let { clearTimeout(it) }
-            draggable.transform?.let { setLastTransform(it) }
-        } else {
-            resetTimeout = setTimeout({
-                setLastTransform(object : DraggableResultTransform {
-                    override var x: Double = 0.0
-                    override var y: Double = 0.0
-                    override var scaleX: Double = 1.0
-                    override var scaleY: Double = 1.0
-                })
-            }, 200)
-        }
-    } */
-
     val elementRef = useRef<Element>(null)
 
     bgwTokenView {

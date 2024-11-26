@@ -136,6 +136,8 @@ private val module = SerializersModule {
         subclass(DragGestureStartedEventData::class)
         subclass(DragGestureMovedEventData::class)
         subclass(DragGestureEndedEventData::class)
+        subclass(DragGestureEnteredEventData::class)
+        subclass(DragGestureExitedEventData::class)
         subclass(DragDroppedEventData::class)
         subclass(CheckBoxChangedEventData::class)
         subclass(AnimationFinishedEventData::class)

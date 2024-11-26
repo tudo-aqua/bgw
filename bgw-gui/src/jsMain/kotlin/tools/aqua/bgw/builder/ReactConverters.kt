@@ -2,10 +2,10 @@ package tools.aqua.bgw.builder
 
 import ID
 import data.event.*
-import data.event.internal.DragDroppedEventData
-import data.event.internal.DragGestureEndedEventData
-import data.event.internal.DragGestureStartedEventData
+import data.event.internal.*
 import tools.aqua.bgw.DragEndEvent
+import tools.aqua.bgw.DragMultiEvent
+import tools.aqua.bgw.DragStartEvent
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
 import  react.dom.events.MouseEvent as ReactMouseEvent
@@ -71,6 +71,30 @@ object ReactConverters {
         val elementDragged = active?.id
 
         return DragDroppedEventData(droppedOn ?: "").apply { this.id = elementDragged }
+    }
+
+    fun DragEndEvent.toDragEndedEventData(): EventData {
+        val droppedOn = over
+        val elementDragged = active?.id
+        return DragGestureEndedEventData(droppedOn != null).apply { this.id = elementDragged }
+    }
+
+    fun DragStartEvent.toDragStartedEventData(): EventData {
+        val element = active?.id
+        return DragGestureStartedEventData().apply { this.id = element }
+    }
+
+    fun DragMultiEvent.toDragMoveEventData(): EventData {
+        return DragGestureMovedEventData().apply { this.id = active?.id }
+    }
+
+    fun DragMultiEvent.toDragEnteredEventData(): EventData {
+        val element = over?.id
+        if(element != null) {
+            return DragGestureEnteredEventData(element).apply { this.id = active?.id }
+        }
+
+        return DragGestureEnteredEventData("").apply { this.id = active?.id }
     }
 }
 

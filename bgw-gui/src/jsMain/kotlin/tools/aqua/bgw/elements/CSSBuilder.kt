@@ -25,6 +25,7 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
     pointerEvents = if(!componentViewData.isDisabled) PointerEvents.all else None.none
     rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
     scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
+    transformOrigin = "center".unsafeCast<TransformOrigin>()
 }
 
 fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {

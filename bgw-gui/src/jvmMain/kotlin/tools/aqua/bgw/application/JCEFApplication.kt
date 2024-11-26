@@ -165,6 +165,29 @@ class JCEFApplication : Application {
                                 component.onDragGestureStarted?.invoke(DragEvent(component))
                             }
                         }
+                        is DragGestureMovedEventData -> {
+                            if(component is DynamicComponentView) {
+                                component.onDragGestureMoved?.invoke(DragEvent(component))
+                            }
+                        }
+                        is DragGestureEnteredEventData -> {
+                            if(component is DynamicComponentView && eventData.target.isNotBlank()) {
+                                val root = component.getRootNode()
+                                val target = root.findComponent(eventData.target)
+                                if(target?.dropAcceptor != null) {
+                                    target.onDragGestureEntered?.invoke(DragEvent(component))
+                                }
+                            }
+                        }
+                        is DragGestureExitedEventData -> {
+                            if(component is DynamicComponentView && eventData.target.isNotBlank()) {
+                                val root = component.getRootNode()
+                                val target = root.findComponent(eventData.target)
+                                if(target?.dropAcceptor != null) {
+                                    target.onDragGestureExited?.invoke(DragEvent(component))
+                                }
+                            }
+                        }
                         is DragDroppedEventData -> {
                             val root = component.getRootNode()
                             val target = root.findComponent(eventData.target)
@@ -223,7 +246,7 @@ class MainFrame(
         
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
-        builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+        // builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
                 // println("CEF State: $state")
