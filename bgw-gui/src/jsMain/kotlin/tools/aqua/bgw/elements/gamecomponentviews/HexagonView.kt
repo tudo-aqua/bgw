@@ -20,8 +20,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import react.dom.svg.ReactSVG
-import tools.aqua.bgw.DraggableOptions
-import tools.aqua.bgw.DraggableResultTransform
+import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
@@ -33,8 +32,6 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
-import tools.aqua.bgw.handlers
-import tools.aqua.bgw.useDraggable
 import web.dom.Element
 import web.timers.Timeout
 import web.timers.clearTimeout
@@ -56,31 +53,13 @@ val HexagonView = FC<HexagonViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
     })
+    var droppable : DroppableResult? = null
 
-    val (lastTransform, setLastTransform) = useState<DraggableResultTransform>(object : DraggableResultTransform {
-        override var x: Double = 0.0
-        override var y: Double = 0.0
-        override var scaleX: Double = 1.0
-        override var scaleY: Double = 1.0
-    })
-
-    /* useEffect(listOf(draggable.transform)) {
-        var resetTimeout: Timeout? = null
-
-        if (draggable.transform != null) {
-            resetTimeout?.let { clearTimeout(it) }
-            draggable.transform?.let { setLastTransform(it) }
-        } else {
-            resetTimeout = setTimeout({
-                setLastTransform(object : DraggableResultTransform {
-                    override var x: Double = 0.0
-                    override var y: Double = 0.0
-                    override var scaleX: Double = 1.0
-                    override var scaleY: Double = 1.0
-                })
-            }, 200)
-        }
-    } */
+    if(props.data.isDroppable) {
+        droppable = useDroppable(object : DroppableOptions {
+            override var id: String = props.data.id
+        })
+    }
 
     val elementRef = useRef<Element>(null)
 
@@ -92,6 +71,12 @@ val HexagonView = FC<HexagonViewProps> { props ->
         ref = elementRef
         useEffect {
             elementRef.current?.let { draggable.setNodeRef(it) }
+        }
+
+        if(props.data.isDroppable) {
+            useEffect {
+                elementRef.current?.let { droppable!!.setNodeRef(it) }
+            }
         }
 
         css {

@@ -51,13 +51,14 @@ val TokenView = FC<TokenViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
     })
+    var droppable : DroppableResult? = null
 
-    val (lastTransform, setLastTransform) = useState<DraggableResultTransform>(object : DraggableResultTransform {
-        override var x: Double = 0.0
-        override var y: Double = 0.0
-        override var scaleX: Double = 1.0
-        override var scaleY: Double = 1.0
-    })
+    if(props.data.isDroppable) {
+        droppable = useDroppable(object : DroppableOptions {
+            override var id: String = props.data.id
+        })
+    }
+
 
     val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
@@ -74,6 +75,12 @@ val TokenView = FC<TokenViewProps> { props ->
         ref = elementRef
         useEffect {
             elementRef.current?.let { draggable.setNodeRef(it) }
+        }
+
+        if(props.data.isDroppable) {
+            useEffect {
+                elementRef.current?.let { droppable!!.setNodeRef(it) }
+            }
         }
         css(style)
 

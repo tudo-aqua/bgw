@@ -18,6 +18,8 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
+import tools.aqua.bgw.DroppableOptions
+import tools.aqua.bgw.DroppableResult
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -28,6 +30,7 @@ import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.handlers
+import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
@@ -44,11 +47,29 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
 }
 
 val CheckBox = FC<CheckBoxProps> { props ->
+    var droppable : DroppableResult? = null
+
+    if(props.data.isDroppable) {
+        droppable = useDroppable(object : DroppableOptions {
+            override var id: String = props.data.id
+        })
+    }
+
+    val elementRef = useRef<Element>(null)
+
     bgwCheckBox {
         id = props.data.id
         className = ClassName("textField")
         css {
             cssBuilderIntern(props.data)
+        }
+
+        ref = elementRef
+
+        if(props.data.isDroppable) {
+            useEffect {
+                elementRef.current?.let { droppable!!.setNodeRef(it) }
+            }
         }
 
         bgwVisuals {

@@ -13,8 +13,7 @@ import react.dom.aria.ariaDisabled
 import react.dom.aria.ariaPressed
 import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
-import tools.aqua.bgw.DraggableOptions
-import tools.aqua.bgw.DraggableResultTransform
+import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -25,8 +24,6 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
-import tools.aqua.bgw.handlers
-import tools.aqua.bgw.useDraggable
 import web.dom.Element
 import web.timers.Timeout
 import web.timers.clearTimeout
@@ -45,36 +42,19 @@ val DiceView = FC<DiceViewProps> { props ->
         override var id: String = props.data.id
     })
 
-    val (lastTransform, setLastTransform) = useState<DraggableResultTransform>(object : DraggableResultTransform {
-        override var x: Double = 0.0
-        override var y: Double = 0.0
-        override var scaleX: Double = 1.0
-        override var scaleY: Double = 1.0
-    })
+    var droppable : DroppableResult? = null
+
+    if(props.data.isDroppable) {
+        droppable = useDroppable(object : DroppableOptions {
+            override var id: String = props.data.id
+        })
+    }
 
     val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
         cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
     }
-
-    /* useEffect(listOf(draggable.transform)) {
-        var resetTimeout: Timeout? = null
-
-        if (draggable.transform != null) {
-            resetTimeout?.let { clearTimeout(it) }
-            draggable.transform?.let { setLastTransform(it) }
-        } else {
-            resetTimeout = setTimeout({
-                setLastTransform(object : DraggableResultTransform {
-                    override var x: Double = 0.0
-                    override var y: Double = 0.0
-                    override var scaleX: Double = 1.0
-                    override var scaleY: Double = 1.0
-                })
-            }, 200)
-        }
-    } */
 
     val elementRef = useRef<Element>(null)
 
@@ -85,6 +65,12 @@ val DiceView = FC<DiceViewProps> { props ->
         ref = elementRef
         useEffect {
             elementRef.current?.let { draggable.setNodeRef(it) }
+        }
+
+        if(props.data.isDroppable) {
+            useEffect {
+                elementRef.current?.let { droppable!!.setNodeRef(it) }
+            }
         }
         css(style)
 

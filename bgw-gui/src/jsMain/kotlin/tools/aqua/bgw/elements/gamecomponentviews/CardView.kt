@@ -55,13 +55,6 @@ val CardView = FC<CardViewProps> { props ->
         })
     }
 
-    val (lastTransform, setLastTransform) = useState<DraggableResultTransform>(object : DraggableResultTransform {
-        override var x: Double = 0.0
-        override var y: Double = 0.0
-        override var scaleX: Double = 1.0
-        override var scaleY: Double = 1.0
-    })
-
     val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         transform = translate(draggable.transform?.x?.px ?: 0.px, draggable.transform?.y?.px ?: 0.px)
