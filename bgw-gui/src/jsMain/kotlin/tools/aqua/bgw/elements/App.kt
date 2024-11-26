@@ -206,8 +206,13 @@ val App = FC<AppProps> { props ->
                 opacity = number(0.0)
                 backdropFilter = blur(0.px)
             }
-            "bgw_hexagon_view" {
+
+            "bgw_hexagon_view[aria-details='hex-pointy_top']" {
                 clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
+            }
+
+            "bgw_hexagon_view[aria-details='hex-flat_top']" {
+                clipPath = polygonPath("25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%")
             }
 
             "bgw_menu_scene.scene--visible > bgw_scene" {
@@ -291,7 +296,7 @@ val App = FC<AppProps> { props ->
                 left = 4.em
                 width = 30.em
                 height = 18.em
-                backgroundColor = rgb(145,145,145)
+                backgroundColor = rgb(145, 145, 145)
                 transition = transition(300, "background-color")
                 borderRadius = 3.em
             }
@@ -309,7 +314,7 @@ val App = FC<AppProps> { props ->
             }
 
             "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
-                backgroundColor = rgb(0,117,255)
+                backgroundColor = rgb(0, 117, 255)
             }
 
             "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
@@ -394,7 +399,6 @@ val App = FC<AppProps> { props ->
         }
 
         onDragEnd = { event ->
-            console.log(event.over)
             if(event.over != null) {
                 JCEFEventDispatcher.dispatchEvent(event.toDragEventData())
             }
@@ -469,6 +473,7 @@ val App = FC<AppProps> { props ->
         }
     }
 }
+
 inline val bgwScenes: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_scenes".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>

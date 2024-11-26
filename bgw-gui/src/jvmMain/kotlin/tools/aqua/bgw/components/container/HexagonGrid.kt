@@ -18,7 +18,9 @@
 package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
+import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.Visual
+import kotlin.math.sqrt
 
 private typealias OffsetCoordinate = Pair<Int, Int>
 
@@ -34,6 +36,8 @@ private typealias AxialCoordinate = Pair<Int, Int>
  * @param visual The visual representation of the hexagon grid. Default is an empty visual.
  * @param coordinateSystem The coordinate system to use for the grid. Default is
  * `CoordinateSystem.OFFSET`.
+ * @param orientation The orientation of the hexagons in the grid. Default is
+ *  `HexOrientation.POINTY_TOP`.
  */
 class HexagonGrid<T : HexagonView>(
     posX: Number = 0,
@@ -41,7 +45,8 @@ class HexagonGrid<T : HexagonView>(
     width: Number = 0,
     height: Number = 0,
     visual: Visual = Visual.EMPTY,
-    val coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET
+    val coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET,
+    var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual
@@ -75,6 +80,7 @@ class HexagonGrid<T : HexagonView>(
      */
     operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
         map[columnIndex to rowIndex]?.run { observableComponents.remove(this) }
+        component.orientation = orientation
         map[columnIndex to rowIndex] = component
         observableComponents.add(component)
     }
@@ -89,12 +95,26 @@ class HexagonGrid<T : HexagonView>(
             val (x, y) = coords
             val (q, r) =
                 when (coordinateSystem) {
-                    CoordinateSystem.OFFSET -> x to y
-                    CoordinateSystem.AXIAL -> x + (y - (y and 1)) / 2 to y
+                    CoordinateSystem.OFFSET -> {
+                        if (orientation == HexOrientation.POINTY_TOP) x to y else y to x
+                    }
+                    CoordinateSystem.AXIAL -> {
+                        if (orientation == HexOrientation.POINTY_TOP) x + (y - (y and 1)) / 2 to y
+                        else y + (x - (x and 1)) / 2 to x
+                    }
                 }
             with(hexagon) {
-                posXProperty.setSilent(width * q + if (r % 2 == 0) 0.0 else width / 2)
-                posYProperty.setSilent(height * r - r * height / 4)
+                if (orientation == HexOrientation.POINTY_TOP) {
+                    hexagon.orientation = HexOrientation.POINTY_TOP
+                    val actualWidth = width / 2 * sqrt(3.0)
+                    posXProperty.setSilent(actualWidth * q + if (r % 2 == 0) 0.0 else actualWidth / 2)
+                    posYProperty.setSilent(height * r - r * height / 4)
+                } else {
+                    hexagon.orientation = HexOrientation.FLAT_TOP
+                    val actualHeight = height / 2 * sqrt(3.0)
+                    posYProperty.setSilent(actualHeight * q + if (r % 2 == 0) 0.0 else actualHeight / 2)
+                    posXProperty.setSilent(width * r - r * width / 4)
+                }
             }
         }
     }

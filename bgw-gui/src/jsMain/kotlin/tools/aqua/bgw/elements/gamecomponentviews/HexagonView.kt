@@ -12,10 +12,7 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import react.*
-import react.dom.aria.ariaDescribedBy
-import react.dom.aria.ariaDisabled
-import react.dom.aria.ariaPressed
-import react.dom.aria.ariaRoleDescription
+import react.dom.aria.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
@@ -52,14 +49,13 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
 val HexagonView = FC<HexagonViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
+        override var disabled = !props.data.isDraggable
     })
-    var droppable : DroppableResult? = null
 
-    if(props.data.isDroppable) {
-        droppable = useDroppable(object : DroppableOptions {
-            override var id: String = props.data.id
-        })
-    }
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+        override var disabled = !props.data.isDroppable
+    })
 
     val elementRef = useRef<Element>(null)
 
@@ -68,21 +64,23 @@ val HexagonView = FC<HexagonViewProps> { props ->
         id = props.data.id
         className = ClassName("hexagonView")
 
+        ariaDetails = "hex-${props.data.orientation}"
+
         ref = elementRef
         useEffect {
             elementRef.current?.let { draggable.setNodeRef(it) }
-        }
-
-        if(props.data.isDroppable) {
-            useEffect {
-                elementRef.current?.let { droppable!!.setNodeRef(it) }
-            }
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         css {
             cssBuilderIntern(props.data)
-            width = (sqrt(3.0) * props.data.size).em
-            height = 2 * props.data.size.em
+            if(props.data.orientation == "pointy_top") {
+                width = (sqrt(3.0) * props.data.size).em
+                height = 2 * props.data.size.em
+            } else {
+                width = 2 * props.data.size.em
+                height = (sqrt(3.0) * props.data.size).em
+            }
             translate = "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<Translate>()
             cursor = if(props.data.isDraggable) Cursor.pointer else Cursor.default
         }

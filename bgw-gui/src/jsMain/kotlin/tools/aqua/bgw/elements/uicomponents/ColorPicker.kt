@@ -41,13 +41,10 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ColorPickerData) {
 }
 
 val ColorPicker = FC<ColorPickerProps> { props ->
-    var droppable : DroppableResult? = null
-
-    if(props.data.isDroppable) {
-        droppable = useDroppable(object : DroppableOptions {
-            override var id: String = props.data.id
-        })
-    }
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+        override var disabled = !props.data.isDroppable
+    })
 
     val elementRef = useRef<Element>(null)
 
@@ -59,11 +56,8 @@ val ColorPicker = FC<ColorPickerProps> { props ->
         }
 
         ref = elementRef
-
-        if(props.data.isDroppable) {
-            useEffect {
-                elementRef.current?.let { droppable!!.setNodeRef(it) }
-            }
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {

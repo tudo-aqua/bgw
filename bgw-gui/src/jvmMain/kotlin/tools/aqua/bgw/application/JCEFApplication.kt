@@ -112,7 +112,7 @@ class JCEFApplication : Application {
                 val json = Base64.decode(request)
                 val eventData = jsonMapper.decodeFromString<EventData>(json)
                 if(eventData.id != component.id) return false
-                println("Received: $eventData for ${eventData.id}")
+                // println("Received: $eventData for ${eventData.id}")
 
                 try {
                     when(eventData) {
@@ -176,7 +176,7 @@ class JCEFApplication : Application {
                             }
                         }
                         is DragGestureEnteredEventData -> {
-                            if(component is DynamicComponentView && eventData.target.isNotBlank()) {
+                            if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
                                 val root = component.getRootNode()
                                 val target = root.findComponent(eventData.target)
                                 if(target?.dropAcceptor != null) {
@@ -185,7 +185,7 @@ class JCEFApplication : Application {
                             }
                         }
                         is DragGestureExitedEventData -> {
-                            if(component is DynamicComponentView && eventData.target.isNotBlank()) {
+                            if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
                                 val root = component.getRootNode()
                                 val target = root.findComponent(eventData.target)
                                 if(target?.dropAcceptor != null) {
@@ -207,10 +207,10 @@ class JCEFApplication : Application {
                     mainFrame?.openNewDialog(
                         DialogMapper.map(
                             Dialog(
-                                DialogType.ERROR,
                                 "Error",
                                 "Error",
-                                "An error occurred while handling an event: ${e.message}"
+                                "An error occurred while handling an event: ${e.message}",
+                                exception = e
                             )
                         )
                     )
@@ -252,7 +252,7 @@ class MainFrame(
         
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
-        // builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+        builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
                 // println("CEF State: $state")
@@ -407,7 +407,6 @@ class MainFrame(
             override fun windowOpened(e: WindowEvent?) {
                 super.windowOpened(e)
 
-                println("Application is running with PID: ${ManagementFactory.getRuntimeMXBean().name}")
                 timer(period = 1000) {
                     val pidsBefore = pids.size
                     pids += filterJCEFHelperProcesses(getChildProcessIds())
@@ -418,7 +417,7 @@ class MainFrame(
                     }
 
                     if(pidsUnchanged >= 2) {
-                        println("JCEF Helper PIDs: $pids")
+                        // println("JCEF Helper PIDs: $pids")
                         File("build/application.pid").writeText(pids.joinToString(",").trim())
                         this.cancel()
                     }

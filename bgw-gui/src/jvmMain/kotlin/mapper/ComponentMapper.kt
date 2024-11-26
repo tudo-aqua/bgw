@@ -202,6 +202,7 @@ object ComponentMapper {
             }
             is HexagonView -> (mapSpecific(componentView) as HexagonViewData).apply {
                 size = componentView.size.toInt()
+                orientation = componentView.orientation.name.lowercase()
             }
             is TokenView -> (mapSpecific(componentView) as TokenViewData)
 
@@ -325,6 +326,7 @@ object ContainerMapper {
                         posY = value.posY.toInt()
                         visual = VisualMapper.map(value.visual)
                         size = value.size.toInt()
+                        orientation = container.orientation.name.lowercase()
                         // isDraggable = value.isDraggable          // TODO - Element has no root node dragging out
                     }
                 }
@@ -333,6 +335,7 @@ object ContainerMapper {
                     coordinateSystem = container.coordinateSystem.name.lowercase()
                     map = tempMap
                     spacing = 0
+                    orientation = container.orientation.name.lowercase()
                     // components ?!
 
                     if(container.dropAcceptor != null) {

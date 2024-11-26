@@ -45,13 +45,10 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
 }
 
 val HexagonGrid = FC<HexagonGridProps> { props ->
-    var droppable : DroppableResult? = null
-
-    if(props.data.isDroppable) {
-        droppable = useDroppable(object : DroppableOptions {
-            override var id: String = props.data.id
-        })
-    }
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+        override var disabled = !props.data.isDroppable
+    })
 
     val elementRef = useRef<Element>(null)
 
@@ -63,11 +60,9 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        if(props.data.isDroppable) {
-            ref = elementRef
-            useEffect {
-                elementRef.current?.let { droppable!!.setNodeRef(it) }
-            }
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {
@@ -84,69 +79,137 @@ val HexagonGrid = FC<HexagonGridProps> { props ->
             var maxY = 0.0
 
             props.data.map.forEach {
-                if(props.data.coordinateSystem == "offset") {
-                    bgwHexagonContent {
-                        val size = it.value.size
-                        val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
-                        val h = 2 * size
-                        val q = it.key.split("/")[0].toInt()
-                        val r = it.key.split("/")[1].toInt()
+                if(props.data.orientation == "pointy_top") {
+                    if (props.data.coordinateSystem == "offset") {
+                        bgwHexagonContent {
+                            val size = it.value.size
+                            val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                            val h = 2 * size
+                            val q = it.key.split("/")[0].toInt()
+                            val r = it.key.split("/")[1].toInt()
 
-                        val x = if(r % 2 == 0)
-                            w * q + props.data.spacing * (q - 1)
-                        else
-                            w * q + props.data.spacing * (q - 1) + w / 2
+                            val x = if (r % 2 == 0)
+                                w * q + props.data.spacing * (q - 1)
+                            else
+                                w * q + props.data.spacing * (q - 1) + w / 2
 
-                        val y = h * 0.75 * r + props.data.spacing * (r - 1)
+                            val y = h * 0.75 * r + props.data.spacing * (r - 1)
 
-                        if(x < minX)
-                            minX = x
-                        if(x + w > maxX)
-                            maxX = x + w
-                        if(y < minY)
-                            minY = y
-                        if(y + h > maxY)
-                            maxY = y + h
+                            if (x < minX)
+                                minX = x
+                            if (x + w > maxX)
+                                maxX = x + w
+                            if (y < minY)
+                                minY = y
+                            if (y + h > maxY)
+                                maxY = y + h
 
-                        css {
-                            position = Position.absolute
-                            left = x.em
-                            top = y.em
+                            css {
+                                position = Position.absolute
+                                left = x.em
+                                top = y.em
+                            }
+                            +NodeBuilder.build(it.value)
                         }
-                        +NodeBuilder.build(it.value)
+                    } else {
+                        bgwHexagonContent {
+                            val size = it.value.size
+                            val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                            val h = 2 * size
+                            var q = it.key.split("/")[0].toInt()
+                            var r = it.key.split("/")[1].toInt()
+
+                            q = q + (r - (r and 1)) / 2
+
+                            val x = if (r % 2 == 0)
+                                w * q + props.data.spacing * (q - 1)
+                            else
+                                w * q + props.data.spacing * (q - 1) + w / 2
+
+                            val y = h * 0.75 * r + props.data.spacing * (r - 1)
+
+                            if (x < minX)
+                                minX = x
+                            if (x + w > maxX)
+                                maxX = x + w
+                            if (y < minY)
+                                minY = y
+                            if (y + h > maxY)
+                                maxY = y + h
+
+                            css {
+                                position = Position.absolute
+                                left = x.em
+                                top = y.em
+                            }
+                            +NodeBuilder.build(it.value)
+                        }
                     }
                 } else {
-                    bgwHexagonContent {
-                        val size = it.value.size
-                        val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
-                        val h = 2 * size
-                        var q = it.key.split("/")[0].toInt()
-                        var r = it.key.split("/")[1].toInt()
+                    if (props.data.coordinateSystem == "offset") {
+                        bgwHexagonContent {
+                            val size = it.value.size
+                            val w = 2 * size
+                            val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                            val q = it.key.split("/")[0].toInt()
+                            val r = it.key.split("/")[1].toInt()
 
-                        q = q + (r - (r and 1)) / 2
+                            val x = w * 0.75 * q + props.data.spacing * (q - 1)
 
-                        val x = if(r % 2 == 0)
-                            w * q + props.data.spacing * (q - 1)
-                        else
-                            w * q + props.data.spacing * (q - 1) + w / 2
+                            val y = if (q % 2 == 0)
+                                h * r + props.data.spacing * (r - 1)
+                            else
+                                h * r + props.data.spacing * (r - 1) + h / 2
 
-                        val y = h * 0.75 * r + props.data.spacing * (r - 1)
+                            if (x < minX)
+                                minX = x.toDouble()
+                            if (x + w > maxX)
+                                maxX = (x + w).toDouble()
+                            if (y < minY)
+                                minY = y
+                            if (y + h > maxY)
+                                maxY = y + h
 
-                        if(x < minX)
-                            minX = x
-                        if(x + w > maxX)
-                            maxX = x + w
-                        if(y < minY)
-                            minY = y
-                        if(y + h > maxY)
-                            maxY = y + h
-
-                        css {
-                            position = Position.absolute
-                            left = x.em
-                            top = y.em
+                            css {
+                                position = Position.absolute
+                                left = x.em
+                                top = y.em
+                            }
+                            +NodeBuilder.build(it.value)
                         }
-                        +NodeBuilder.build(it.value)
+                    } else {
+                        bgwHexagonContent {
+                            val size = it.value.size
+                            val w = 2 * size
+                            val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                            var q = it.key.split("/")[0].toInt()
+                            var r = it.key.split("/")[1].toInt()
+
+                            r = r + (q - (q and 1)) / 2
+
+                            val x = w * 0.75 * q + props.data.spacing * (q - 1)
+
+                            val y = if (q % 2 == 0)
+                                h * r + props.data.spacing * (r - 1)
+                            else
+                                h * r + props.data.spacing * (r - 1) + h / 2
+
+                            if (x < minX)
+                                minX = x
+                            if (x + w > maxX)
+                                maxX = x + w
+                            if (y < minY)
+                                minY = y
+                            if (y + h > maxY)
+                                maxY = y + h
+
+                            css {
+                                position = Position.absolute
+                                left = x.em
+                                top = y.em
+                            }
+                            +NodeBuilder.build(it.value)
+                        }
                     }
                 }
                 css {

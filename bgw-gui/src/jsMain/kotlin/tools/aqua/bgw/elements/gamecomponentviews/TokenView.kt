@@ -50,14 +50,13 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData) {
 val TokenView = FC<TokenViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
+        override var disabled = !props.data.isDraggable
     })
-    var droppable : DroppableResult? = null
 
-    if(props.data.isDroppable) {
-        droppable = useDroppable(object : DroppableOptions {
-            override var id: String = props.data.id
-        })
-    }
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+        override var disabled = !props.data.isDroppable
+    })
 
 
     val style: PropertiesBuilder.() -> Unit = {
@@ -75,13 +74,9 @@ val TokenView = FC<TokenViewProps> { props ->
         ref = elementRef
         useEffect {
             elementRef.current?.let { draggable.setNodeRef(it) }
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
-        if(props.data.isDroppable) {
-            useEffect {
-                elementRef.current?.let { droppable!!.setNodeRef(it) }
-            }
-        }
         css(style)
 
         bgwVisuals {

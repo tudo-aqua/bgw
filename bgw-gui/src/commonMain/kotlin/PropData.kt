@@ -238,6 +238,7 @@ class DiceViewData : GameComponentViewData() {
 @Serializable
 class HexagonViewData : GameComponentViewData() {
     var size: Int = 0
+    var orientation: String = ""
 }
 @Serializable
 class TokenViewData : GameComponentViewData() { }
@@ -258,6 +259,7 @@ class HexagonGridData : GameComponentContainerData() {
     var coordinateSystem: String = ""
     var map : Map<String, HexagonViewData> = emptyMap()
     var spacing : Int = 0
+    var orientation: String = ""
 }
 @Serializable
 class LinearLayoutData: GameComponentContainerData() {

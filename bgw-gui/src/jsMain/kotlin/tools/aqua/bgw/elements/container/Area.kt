@@ -40,15 +40,12 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: AreaData) {
 }
 
 val Area = FC<AreaProps> { props ->
-    var droppable : DroppableResult? = null
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+        override var disabled = !props.data.isDroppable
+    })
 
-    if(props.data.isDroppable) {
-        droppable = useDroppable(object : DroppableOptions {
-            override var id: String = props.data.id
-        })
-    }
-
-    val dropRef = useRef<Element>(null)
+    val elementRef = useRef<Element>(null)
 
     bgwArea {
         id = props.data.id
@@ -57,11 +54,9 @@ val Area = FC<AreaProps> { props ->
             cssBuilderIntern(props.data)
         }
 
-        if(props.data.isDroppable) {
-            ref = dropRef
-            useEffect {
-                dropRef.current?.let { droppable!!.setNodeRef(it) }
-            }
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         bgwVisuals {

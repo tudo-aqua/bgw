@@ -39,6 +39,7 @@ external fun useDroppable(options: DroppableOptions): DroppableResult
 
 external interface DraggableOptions {
     var id: String
+    var disabled: Boolean
 }
 
 external interface DraggableResult {
@@ -92,6 +93,7 @@ external interface DragEndEventOver {
 
 external interface DroppableOptions {
     var id: String
+    var disabled: Boolean
 }
 
 external interface DroppableResult {

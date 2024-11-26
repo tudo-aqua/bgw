@@ -36,13 +36,10 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
 }
 
 val ReactGridPane = FC<GridPaneProps> { props ->
-    var droppable : DroppableResult? = null
-
-    if(props.data.isDroppable) {
-        droppable = useDroppable(object : DroppableOptions {
-            override var id: String = props.data.id
-        })
-    }
+    val droppable = useDroppable(object : DroppableOptions {
+        override var id: String = props.data.id
+        override var disabled = !props.data.isDroppable
+    })
 
     val elementRef = useRef<Element>(null)
 
@@ -51,11 +48,9 @@ val ReactGridPane = FC<GridPaneProps> { props ->
         id = props.data.id
         className = ClassName("gridPane")
 
-        if(props.data.isDroppable) {
-            ref = elementRef
-            useEffect {
-                elementRef.current?.let { droppable!!.setNodeRef(it) }
-            }
+        ref = elementRef
+        useEffect {
+            elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
         css {

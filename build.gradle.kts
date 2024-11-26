@@ -25,7 +25,7 @@ group = "tools.aqua"
 
 mavenMetadata {
   developers.addAll(
-      Developer("Dominik Mäckel", "dominik.maeckel@tu-dortmund.de"),
+      Developer("Dominik Schmid", "dominik.schmid@tu-dortmund.de"),
       Developer("Simon Dierl", "simon.dierl@tu-dortmund.de"),
       Developer("Stefan Naujokat", "stefan.naujokat@tu-dortmund.de"),
       Developer("Till Schallau", "till.schallau@tu-dortmund.de"),

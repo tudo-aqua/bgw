@@ -26,7 +26,6 @@ object ComponentViewBuilder {
     }
 
     private fun registerEventListeners(componentView: ComponentView) {
-        println("Registering event listeners for $componentView")
         Frontend.applicationEngine.registerEventListeners(componentView)
     }
 
