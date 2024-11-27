@@ -26,6 +26,7 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
 import org.cef.browser.CefMessageRouter.CefMessageRouterConfig
+import org.cef.callback.CefCommandLine
 import org.cef.callback.CefContextMenuParams
 import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
@@ -262,20 +263,16 @@ class MainFrame(
                     exitProcess(0)
                 }
             }
-
-            override fun onBeforeTerminate(): Boolean {
-                println("Actually called")
-                return true
-            }
         })
 
         builder.setProgressHandler { enumProgress, fl ->
-            if(enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING)
-                println("[BGW] Downloading CEF...")
+            if(enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
+                if (fl >= 0) print("[BGW] Downloading BGW Runtime... $fl%\r")
+            }
             else if(enumProgress == EnumProgress.LOCATING || enumProgress == EnumProgress.INSTALL)
-                println("[BGW] Initializing CEF...")
-            else
-                println("[BGW] Starting CEF...")
+                println("[BGW] Initializing BGW Runtime...")
+            else if(enumProgress == EnumProgress.INITIALIZING)
+                println("[BGW] Starting BGW Runtime...")
         }
 
         val cefApp = builder.build()
