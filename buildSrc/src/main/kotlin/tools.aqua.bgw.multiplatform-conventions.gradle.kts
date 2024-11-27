@@ -121,7 +121,7 @@ kotlin {
         implementation("io.ktor:ktor-server-websockets:2.3.11")
         implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
-        implementation("me.friwi:jcefmaven:122.1.10")
+        implementation("me.friwi:jcefmaven:127.3.1")
       }
     }
     val jvmTest by getting
@@ -134,7 +134,7 @@ kotlin {
         implementation(npm("@dnd-kit/core", "6.1.0"))
       }
     }
-    val jsTest by getting
+    //val jsTest by getting
   }
 }
 

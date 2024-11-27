@@ -16,6 +16,7 @@ import mapper.DialogMapper
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.CefBuildInfo
 import me.friwi.jcefmaven.EnumPlatform
+import me.friwi.jcefmaven.EnumProgress
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import org.cef.CefApp
 import org.cef.CefApp.CefAppState
@@ -261,7 +262,21 @@ class MainFrame(
                     exitProcess(0)
                 }
             }
+
+            override fun onBeforeTerminate(): Boolean {
+                println("Actually called")
+                return true
+            }
         })
+
+        builder.setProgressHandler { enumProgress, fl ->
+            if(enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING)
+                println("[BGW] Downloading CEF...")
+            else if(enumProgress == EnumProgress.LOCATING || enumProgress == EnumProgress.INSTALL)
+                println("[BGW] Initializing CEF...")
+            else
+                println("[BGW] Starting CEF...")
+        }
 
         val cefApp = builder.build()
         val pids = mutableSetOf<Long>()
