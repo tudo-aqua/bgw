@@ -31,15 +31,15 @@ import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
-external interface AreaProps : Props {
+internal external interface AreaProps : Props {
     var data : AreaData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: AreaData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: AreaData) {
     cssBuilder(componentViewData)
 }
 
-val Area = FC<AreaProps> { props ->
+internal val Area = FC<AreaProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

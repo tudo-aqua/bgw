@@ -53,7 +53,7 @@ import tools.aqua.bgw.elements.uicomponents.ColorPicker as ReactColorPicker
 import tools.aqua.bgw.elements.uicomponents.ListView as ReactListView
 import tools.aqua.bgw.elements.uicomponents.TableView as ReactTableView
 
-object NodeBuilder {
+internal object NodeBuilder {
     fun build(componentViewData: ComponentViewData): ReactElement<*> {
         return when (componentViewData) {
             is LayoutViewData -> LayoutNodeBuilder.build(componentViewData)
@@ -110,7 +110,7 @@ object NodeBuilder {
     }
 }
 
-external interface GridPaneElementProps : Props {
+internal external interface GridPaneElementProps : Props {
     var data: GridElementData
 }
 inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>

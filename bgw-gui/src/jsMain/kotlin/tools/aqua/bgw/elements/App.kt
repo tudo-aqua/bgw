@@ -26,11 +26,11 @@ import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 
-external interface AppProps : Props {
+internal external interface AppProps : Props {
     var data: AppData
 }
 
-val App = FC<AppProps> { props ->
+internal val App = FC<AppProps> { props ->
     useEffect {
         webSocket?.send("Hello from Client!")
     }

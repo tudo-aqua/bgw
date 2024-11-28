@@ -10,7 +10,7 @@ import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
-object Application : BoardGameApplication() {
+internal object Application : BoardGameApplication() {
     private val grid = GridGameScene()
     private val hexGrid = HexGridGameScene()
     private val animation = AnimationScene()
@@ -23,8 +23,8 @@ object Application : BoardGameApplication() {
     init {
         loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
         // showGameScene(cardLayoutScene)
-        showGameScene(hexGrid)
-        // showGameScene(animation)
+        // showGameScene(hexGrid)
+        showGameScene(animation)
         // showGameScene(grid)
         // showGameScene(dragDropScene)
         // showMenuScene(uiScene)

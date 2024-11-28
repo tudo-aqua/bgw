@@ -13,7 +13,7 @@ import csstype.PropertiesBuilder
 import web.cssom.*
 import org.w3c.dom.css.CSSRule
 
-fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
+internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
     position = Position.absolute
     left = componentViewData.posX.em
     top = componentViewData.posY.em
@@ -28,16 +28,16 @@ fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
     transformOrigin = "center".unsafeCast<TransformOrigin>()
 }
 
-fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
+internal fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
 }
 
-fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
+internal fun PropertiesBuilder.cssBuilder(componentViewData: LabeledUIComponentData) {
     cssBuilder(componentViewData as ComponentViewData)
     alignmentBuilder(componentViewData)
 }
 
-fun PropertiesBuilder.cssTextBuilder(componentViewData: LabeledUIComponentData) {
+internal fun PropertiesBuilder.cssTextBuilder(componentViewData: LabeledUIComponentData) {
     textOverflow = if(componentViewData.isWrapText) TextOverflow.clip else TextOverflow.ellipsis
     whiteSpace = if(componentViewData.isWrapText) WhiteSpace.normal else WhiteSpace.nowrap
     maxWidth = 100.pct
@@ -47,7 +47,7 @@ fun PropertiesBuilder.cssTextBuilder(componentViewData: LabeledUIComponentData) 
     fontBuilder(componentViewData)
 }
 
-fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData) {
+internal fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData) {
     justifyContent = when(componentViewData.alignment.first) {
         "left" -> JustifyContent.flexStart
         "center" -> JustifyContent.center
@@ -68,7 +68,7 @@ fun PropertiesBuilder.alignmentBuilder(componentViewData: LabeledUIComponentData
     }
 }
 
-fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData) {
+internal fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData) {
     justifyContent = when(componentViewData.alignment.first) {
         "left" -> JustifyContent.flexStart
         "center" -> JustifyContent.center
@@ -83,7 +83,7 @@ fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData) {
     }
 }
 
-fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
+internal fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
     fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
     fontWeight = integer(componentViewData.font!!.fontWeight)
     fontSize = componentViewData.font!!.size.em
@@ -91,12 +91,12 @@ fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
     color = componentViewData.font!!.color.unsafeCast<Color>()
 }
 
-fun PropertiesBuilder.placeholderFontBuilder(componentViewData: UIComponentData) {
+internal fun PropertiesBuilder.placeholderFontBuilder(componentViewData: UIComponentData) {
     color = componentViewData.font!!.color.unsafeCast<Color>()
     opacity = number(0.65)
 }
 
-fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
+internal fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) {
     position = Position.absolute
     width = 100.pct
     height = 100.pct
@@ -107,7 +107,7 @@ fun PropertiesBuilder.inputBuilder(componentViewData: TextInputUIComponentData) 
     backgroundColor = rgb(0, 0, 0, 0.0)
 }
 
-fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) {
+internal fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) {
     position = Position.absolute
     width = 100.pct
     height = 100.pct
@@ -118,11 +118,11 @@ fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) {
     backgroundColor = rgb(0, 0, 0, 0.0)
 }
 
-fun PropertiesBuilder.styleBuilder(style : Map<String, String>) {
+internal fun PropertiesBuilder.styleBuilder(style : Map<String, String>) {
     borderRadius = cssBorderRadius(style["border-radius"] ?: "0rem")
 }
 
-fun PropertiesBuilder.filterBuilder(filters : Map<String, String?>) {
+internal fun PropertiesBuilder.filterBuilder(filters : Map<String, String?>) {
     val filterList = mutableListOf<String>()
     filters.values.forEach {
         if(it != null) {
@@ -132,7 +132,7 @@ fun PropertiesBuilder.filterBuilder(filters : Map<String, String?>) {
     filter = cssFilter(filterList)
 }
 
-fun PropertiesBuilder.flipBuilder(flipped : String) {
+internal fun PropertiesBuilder.flipBuilder(flipped : String) {
     if(flipped == "horizontal") {
         transform = scalex(-1)
     } else if(flipped == "vertical") {
@@ -142,12 +142,12 @@ fun PropertiesBuilder.flipBuilder(flipped : String) {
     }
 }
 
-fun cssBorderRadius(value : String): LengthProperty =
+internal fun cssBorderRadius(value : String): LengthProperty =
     value.unsafeCast<LengthProperty>()
 
-fun cssFont(value : String): FontFamily = "'$value'".unsafeCast<FontFamily>()
+internal fun cssFont(value : String): FontFamily = "'$value'".unsafeCast<FontFamily>()
 
-fun cssFilter(values : List<String>): FilterFunction {
+internal fun cssFilter(values : List<String>): FilterFunction {
     if(values.isEmpty()) return "none".unsafeCast<FilterFunction>()
     return values.joinToString(" ").unsafeCast<FilterFunction>()
 }

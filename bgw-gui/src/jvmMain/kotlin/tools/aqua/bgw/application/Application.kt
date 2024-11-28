@@ -4,7 +4,7 @@ import DialogData
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.DialogType
 
-interface Application {
+internal interface Application {
     fun start(callback : (Any) -> Unit)
     fun stop()
 

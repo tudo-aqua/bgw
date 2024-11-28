@@ -4,7 +4,7 @@ import AnimationData
 import data.animation.*
 import tools.aqua.bgw.animation.*
 
-object AnimationMapper {
+internal object AnimationMapper {
     fun AnimationData.fillData(animation: Animation) : AnimationData {
         return this.apply {
             id = animation.id

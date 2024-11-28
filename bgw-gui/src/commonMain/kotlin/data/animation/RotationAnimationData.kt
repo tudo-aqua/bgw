@@ -5,6 +5,6 @@ import ComponentViewData
 import kotlinx.serialization.Serializable
 
 @Serializable
-class RotationAnimationData() : ComponentAnimationData() {
+internal class RotationAnimationData() : ComponentAnimationData() {
   var byAngle = 0.0
 }

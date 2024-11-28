@@ -17,7 +17,7 @@ import react.dom.render
 import tools.aqua.bgw.builder.VisualBuilder
 import kotlin.js.Date
 
-class Animator {
+internal class Animator {
     private val animations = mutableMapOf<String, Node>()
 
     companion object {

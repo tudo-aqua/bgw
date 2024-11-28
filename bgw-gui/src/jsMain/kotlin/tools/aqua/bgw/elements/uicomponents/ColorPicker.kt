@@ -32,15 +32,15 @@ import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
-external interface ColorPickerProps : Props {
+internal external interface ColorPickerProps : Props {
     var data: ColorPickerData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: ColorPickerData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ColorPickerData) {
     cssBuilder(componentViewData)
 }
 
-val ColorPicker = FC<ColorPickerProps> { props ->
+internal val ColorPicker = FC<ColorPickerProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

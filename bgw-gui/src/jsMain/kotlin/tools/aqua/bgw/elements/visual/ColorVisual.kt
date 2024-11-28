@@ -16,11 +16,11 @@ import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
 import web.dom.Element
 
-external interface ColorVisualProps : Props {
+internal external interface ColorVisualProps : Props {
     var data: ColorVisualData
 }
 
-val ColorVisual = FC<ColorVisualProps> { props ->
+internal val ColorVisual = FC<ColorVisualProps> { props ->
     bgwColorVisual {
         id = props.data.id
         css {

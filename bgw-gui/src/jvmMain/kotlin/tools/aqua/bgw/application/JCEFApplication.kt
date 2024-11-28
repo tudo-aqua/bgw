@@ -65,7 +65,7 @@ object Constants {
     // val PORT = 5173
 }
 
-class JCEFApplication : Application {
+internal class JCEFApplication : Application {
     private var frame : MainFrame? = null
 
     private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
@@ -231,7 +231,7 @@ class JCEFApplication : Application {
 }
 
 @OptIn(ExperimentalSerializationApi::class, DelicateCoroutinesApi::class)
-class MainFrame(
+internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
     isTransparent: Boolean = false,

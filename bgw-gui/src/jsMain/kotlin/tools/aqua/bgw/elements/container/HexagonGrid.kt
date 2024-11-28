@@ -34,17 +34,17 @@ import web.dom.Element
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-external interface HexagonGridProps : Props {
+internal external interface HexagonGridProps : Props {
     var data : HexagonGridData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
     cssBuilder(componentViewData)
     justifyContent = JustifyContent.flexStart
     alignItems = AlignItems.flexStart
 }
 
-val HexagonGrid = FC<HexagonGridProps> { props ->
+internal val HexagonGrid = FC<HexagonGridProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

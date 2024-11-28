@@ -30,15 +30,15 @@ import web.timers.Timeout
 import web.timers.clearTimeout
 import web.timers.setTimeout
 
-external interface CardViewProps : Props {
+internal external interface CardViewProps : Props {
     var data: CardViewData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardViewData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardViewData) {
     cssBuilder(componentViewData)
 }
 
-val CardView = FC<CardViewProps> { props ->
+internal val CardView = FC<CardViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDraggable

@@ -25,15 +25,15 @@ import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.dom.Element
 
-external interface ProgressBarProps : Props {
+internal external interface ProgressBarProps : Props {
     var data: ProgressBarData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: ProgressBarData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ProgressBarData) {
     cssBuilder(componentViewData)
 }
 
-val ProgressBar = FC<ProgressBarProps> { props ->
+internal val ProgressBar = FC<ProgressBarProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

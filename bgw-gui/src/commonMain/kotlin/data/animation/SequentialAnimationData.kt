@@ -4,6 +4,6 @@ import AnimationData
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SequentialAnimationData() : AnimationData() {
+internal class SequentialAnimationData() : AnimationData() {
     var animations: List<AnimationData> = listOf()
 }

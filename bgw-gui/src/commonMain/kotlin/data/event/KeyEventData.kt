@@ -6,7 +6,7 @@ import tools.aqua.bgw.event.KeyCode
 
 @Serializable
 @SerialName("KeyEventData")
-class KeyEventData(
+internal class KeyEventData(
     var keyCode: KeyCode,
     var character: String,
     var isControlDown: Boolean,

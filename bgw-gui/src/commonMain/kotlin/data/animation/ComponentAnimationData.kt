@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-abstract class ComponentAnimationData() : AnimationData() {
+internal abstract class ComponentAnimationData() : AnimationData() {
     var componentView: ComponentViewData? = null
 }

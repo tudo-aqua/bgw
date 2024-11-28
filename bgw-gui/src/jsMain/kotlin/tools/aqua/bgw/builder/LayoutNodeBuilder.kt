@@ -9,7 +9,7 @@ import react.create
 import tools.aqua.bgw.elements.layoutviews.ReactGridPane
 import tools.aqua.bgw.elements.layoutviews.Pane as ReactPane
 
-object LayoutNodeBuilder {
+internal object LayoutNodeBuilder {
     fun build(layoutViewData: LayoutViewData): ReactElement<*> {
         return when (layoutViewData) {
             is PaneData -> ReactPane.create { data = layoutViewData }

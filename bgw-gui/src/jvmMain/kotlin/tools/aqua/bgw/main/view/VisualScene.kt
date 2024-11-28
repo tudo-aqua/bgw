@@ -19,7 +19,7 @@ import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
 
-class VisualScene : BoardGameScene() {
+internal class VisualScene : BoardGameScene() {
     val card = CardView(
         width = 150,
         height = 150,

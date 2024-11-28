@@ -15,7 +15,7 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
 
-class GridGameScene : BoardGameScene() {
+internal class GridGameScene : BoardGameScene() {
     private val gridPane = GridPane<ComponentView>(columns = 5, rows = 5, visual = toColorVisual("#403F4CFF"), layoutFromCenter = false).apply {
         spacing = 10.0
     }

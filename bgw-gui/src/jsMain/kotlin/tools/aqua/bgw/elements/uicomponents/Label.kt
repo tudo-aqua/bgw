@@ -26,19 +26,19 @@ import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.dom.Element
 
-external interface LabelProps : Props {
+internal external interface LabelProps : Props {
     var data: LabelData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: LabelData) {
     cssBuilder(componentViewData)
 }
 
-fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: LabelData) {
+internal fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: LabelData) {
     cssTextBuilder(componentViewData)
 }
 
-val Label = FC<LabelProps> { props ->
+internal val Label = FC<LabelProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

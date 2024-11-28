@@ -38,11 +38,11 @@ import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
-external interface ToggleButtonProps : Props {
+internal external interface ToggleButtonProps : Props {
     var data: ToggleButtonData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonData) {
     cssBuilder(componentViewData)
     display = Display.flex
     alignItems = AlignItems.center
@@ -50,7 +50,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonData) {
     gap = 10.em
 }
 
-val ToggleButton = FC<ToggleButtonProps> { props ->
+internal val ToggleButton = FC<ToggleButtonProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

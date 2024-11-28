@@ -4,7 +4,7 @@ import DialogData
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.dialog.Dialog
 
-object DialogMapper {
+internal object DialogMapper {
     fun map(dialog: Dialog) : DialogData {
         return DialogData().apply {
             dialogType = dialog.dialogType

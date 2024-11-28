@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-class DragGestureEndedEventData(
+internal class DragGestureEndedEventData(
     var dropped: Boolean
 ): EventData() {
 }

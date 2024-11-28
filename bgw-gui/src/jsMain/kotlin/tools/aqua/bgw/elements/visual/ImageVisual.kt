@@ -21,13 +21,13 @@ import web.cssom.atrule.width
 import web.dom.Element
 import web.html.HTMLStyleElement
 
-external interface ImageVisualProps : Props {
+internal external interface ImageVisualProps : Props {
     var data: ImageVisualData
     var parentWidth : Double
     var parentHeight : Double
 }
 
-val ImageVisual = FC<ImageVisualProps> { props ->
+internal val ImageVisual = FC<ImageVisualProps> { props ->
     if(props.data.width != -1 && props.data.height != -1) {
         bgwImageVisual {
             css {

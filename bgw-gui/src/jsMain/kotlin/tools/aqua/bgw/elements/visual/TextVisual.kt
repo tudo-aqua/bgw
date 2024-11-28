@@ -17,11 +17,11 @@ import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
 import web.dom.Element
 
-external interface TextVisualProps : Props {
+internal external interface TextVisualProps : Props {
     var data: TextVisualData
 }
 
-val TextVisual = FC<TextVisualProps> { props ->
+internal val TextVisual = FC<TextVisualProps> { props ->
     bgwTextVisual {
         id = props.data.id
         css {

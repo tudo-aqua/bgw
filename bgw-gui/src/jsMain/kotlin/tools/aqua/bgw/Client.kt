@@ -1,6 +1,5 @@
 package tools.aqua.bgw
 
-
 import ActionProp
 import AnimationData
 import AppData
@@ -28,8 +27,8 @@ import kotlin.random.Random
 
 var internalSocket: WebSocket? = null
 var webSocket: WebSocket? = null
-var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
-var animator: Animator = Animator()
+internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
+internal var animator: Animator = Animator()
 
 lateinit var container: HTMLElement
 lateinit var root: Root
@@ -63,7 +62,7 @@ fun main() {
     }
 }
 
-fun handleReceivedData(receivedData: Data) {
+internal fun handleReceivedData(receivedData: Data) {
     when (receivedData) {
         is AppData -> {
             val app = receivedData
@@ -111,7 +110,7 @@ fun handleReceivedData(receivedData: Data) {
 /**
  * Renders the app with React 17 syntax to provide fallback for BGW Playground web app.
  */
-fun renderApp(appData: AppData) {
+internal fun renderApp(appData: AppData) {
     render(App.create { data = appData }, container as Element, callback = {
         JCEFEventDispatcher.dispatchEvent(LoadEventData())
     })
@@ -120,7 +119,7 @@ fun renderApp(appData: AppData) {
 /**
  * Renders the app with React 18 syntax.
  */
-fun renderAppFast(appData: AppData) {
+internal fun renderAppFast(appData: AppData) {
     if(!::root.isInitialized) {
         root = createRoot(container as Element)
     }

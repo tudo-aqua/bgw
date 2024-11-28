@@ -6,7 +6,7 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 
 @Serializable
-class DragDroppedEventData(
+internal class DragDroppedEventData(
     var target: ID
 ) : EventData() {
 }

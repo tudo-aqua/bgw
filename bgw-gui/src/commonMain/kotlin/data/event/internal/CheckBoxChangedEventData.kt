@@ -4,4 +4,4 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 
 @Serializable
-class CheckBoxChangedEventData (var value: Boolean) : EventData()
+internal class CheckBoxChangedEventData (var value: Boolean) : EventData()

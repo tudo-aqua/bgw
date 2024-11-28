@@ -27,15 +27,15 @@ import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
-external interface ComboBoxProps : Props {
+internal external interface ComboBoxProps : Props {
     var data: ComboBoxData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: ComboBoxData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ComboBoxData) {
     cssBuilder(componentViewData)
 }
 
-val ComboBox = FC<ComboBoxProps> { props ->
+internal val ComboBox = FC<ComboBoxProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

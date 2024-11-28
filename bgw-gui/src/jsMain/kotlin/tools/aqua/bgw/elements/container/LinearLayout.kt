@@ -31,15 +31,15 @@ import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
-external interface LinearLayoutProps : Props {
+internal external interface LinearLayoutProps : Props {
     var data : LinearLayoutData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: LinearLayoutData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: LinearLayoutData) {
     cssBuilder(componentViewData)
 }
 
-val LinearLayout = FC<LinearLayoutProps> { props ->
+internal val LinearLayout = FC<LinearLayoutProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

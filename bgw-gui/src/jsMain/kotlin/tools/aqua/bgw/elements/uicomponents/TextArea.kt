@@ -33,15 +33,15 @@ import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
-external interface TextAreaProps : Props {
+internal external interface TextAreaProps : Props {
     var data: TextAreaData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: TextAreaData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TextAreaData) {
     cssBuilder(componentViewData)
 }
 
-val TextArea = FC<TextAreaProps> { props ->
+internal val TextArea = FC<TextAreaProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

@@ -14,11 +14,11 @@ import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import web.dom.Element
 
-external interface SceneProps : Props {
+internal external interface SceneProps : Props {
     var data: SceneData
 }
 
-val Scene = FC<SceneProps> { props ->
+internal val Scene = FC<SceneProps> { props ->
     bgwScene {
         css {
             transition = menuTransition()

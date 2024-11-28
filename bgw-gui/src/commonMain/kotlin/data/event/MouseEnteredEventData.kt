@@ -6,7 +6,7 @@ import tools.aqua.bgw.event.MouseButtonType
 
 @Serializable
 @SerialName("MouseEnteredEventData")
-class MouseEnteredEventData(
+internal class MouseEnteredEventData(
     private val pX: Double,
     private val pY: Double
 ) : MouseEventData(MouseButtonType.UNSPECIFIED, pX, pY)

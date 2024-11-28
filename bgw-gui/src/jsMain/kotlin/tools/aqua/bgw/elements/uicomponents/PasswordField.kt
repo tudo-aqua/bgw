@@ -31,15 +31,15 @@ import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
-external interface PasswordFieldProps : Props {
+internal external interface PasswordFieldProps : Props {
     var data: PasswordFieldData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: PasswordFieldData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: PasswordFieldData) {
     cssBuilder(componentViewData)
 }
 
-val PasswordField = FC<PasswordFieldProps> { props ->
+internal val PasswordField = FC<PasswordFieldProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

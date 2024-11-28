@@ -12,7 +12,7 @@ import  react.dom.events.MouseEvent as ReactMouseEvent
 import  react.dom.events.KeyboardEvent as ReactKeyEvent
 import react.dom.events.DragEvent as ReactDragEvent
 
-object ReactConverters {
+internal object ReactConverters {
     fun ReactMouseEvent<*, *>.toMouseEnteredData(targetID: ID?): MouseEnteredEventData {
         return MouseEnteredEventData(clientX, clientY).apply { this.id = targetID }
     }

@@ -5,6 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-abstract class EventData {
+internal abstract class EventData {
     open var id: ID? = null
 }

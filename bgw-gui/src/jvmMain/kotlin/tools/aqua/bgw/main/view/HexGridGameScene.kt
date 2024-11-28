@@ -13,7 +13,7 @@ import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.*
 import kotlin.random.Random
 
-class HexGridGameScene : BoardGameScene() {
+internal class HexGridGameScene : BoardGameScene() {
     private val hexGrid = HexagonGrid<HexagonView>(
         width = 500,
         height = 500,
@@ -72,6 +72,7 @@ class HexGridGameScene : BoardGameScene() {
 
                         onDragDropped = {
                             hexGrid[q,r] = it.draggedComponent as HexagonView
+                            satchel.remove(it.draggedComponent)
                         }
 
                         onDragGestureEntered = {

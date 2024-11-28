@@ -26,15 +26,15 @@ import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
-external interface CardStackProps : Props {
+internal external interface CardStackProps : Props {
     var data : CardStackData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData) {
     cssBuilder(componentViewData)
 }
 
-val CardStack = FC<CardStackProps> { props ->
+internal val CardStack = FC<CardStackProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-class DragGestureMovedEventData(): EventData() {
+internal class DragGestureMovedEventData(): EventData() {
 }

@@ -7,7 +7,7 @@ import kotlinx.browser.window
 import kotlinx.serialization.encodeToString
 import jsonMapper
 
-object JCEFEventDispatcher : EventDispatcher {
+internal object JCEFEventDispatcher : EventDispatcher {
     init { initialize() }
 
     fun dispatchGlobalEvent(event: KeyEventData) {

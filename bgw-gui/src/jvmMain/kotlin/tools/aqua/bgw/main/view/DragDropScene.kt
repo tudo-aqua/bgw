@@ -8,7 +8,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 
-class DragDropScene : BoardGameScene() {
+internal class DragDropScene : BoardGameScene() {
     private val source = Pane<ComponentView>(width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY).apply {
         zIndex = 1
     }

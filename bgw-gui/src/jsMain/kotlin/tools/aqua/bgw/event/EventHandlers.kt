@@ -12,7 +12,7 @@ import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.builder.ReactConverters.toMousePressedEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseReleasedEventData
 
-fun HTMLAttributes<Element>.applyCommonEventHandlers(props : ComponentViewData) {
+internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props : ComponentViewData) {
     onContextMenu = {
         it.preventDefault()
         JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))

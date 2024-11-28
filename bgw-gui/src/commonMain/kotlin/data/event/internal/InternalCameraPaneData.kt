@@ -2,7 +2,7 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class InternalCameraPaneData(
+internal data class InternalCameraPaneData(
     var lastMousePosition: Pair<Double, Double> = Pair(0.0, 0.0),
     var anchorPoint: Pair<Double, Double> = Pair(0.0, 0.0),
     var startPos: Pair<Double, Double> = Pair(0.0, 0.0),

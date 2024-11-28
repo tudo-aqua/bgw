@@ -36,11 +36,11 @@ import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
-external interface RadioButtonProps : Props {
+internal external interface RadioButtonProps : Props {
     var data: RadioButtonData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: RadioButtonData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: RadioButtonData) {
     cssBuilder(componentViewData)
     display = Display.flex
     alignItems = AlignItems.center
@@ -48,7 +48,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: RadioButtonData) {
     gap = 10.em
 }
 
-val RadioButton = FC<RadioButtonProps> { props ->
+internal val RadioButton = FC<RadioButtonProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

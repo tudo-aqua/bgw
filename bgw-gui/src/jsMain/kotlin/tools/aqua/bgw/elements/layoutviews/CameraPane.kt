@@ -41,15 +41,15 @@ import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.handlers
 import web.dom.Element
 
-external interface CameraPaneProps : Props {
+internal external interface CameraPaneProps : Props {
     var data: CameraPaneData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CameraPaneData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CameraPaneData) {
     cssBuilder(componentViewData)
 }
 
-val CameraPane = FC<CameraPaneProps> { props ->
+internal val CameraPane = FC<CameraPaneProps> { props ->
     var container: HTMLElement? = null
     var target: HTMLElement? = null
 

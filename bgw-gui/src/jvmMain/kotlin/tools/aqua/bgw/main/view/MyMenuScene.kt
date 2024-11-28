@@ -6,7 +6,7 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
-class MyMenuScene : MenuScene() {
+internal class MyMenuScene : MenuScene() {
     private val label = Button(
         text = "Hello World!",
         width = 200,

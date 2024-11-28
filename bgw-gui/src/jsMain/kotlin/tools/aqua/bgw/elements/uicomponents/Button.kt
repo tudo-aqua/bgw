@@ -24,11 +24,11 @@ import tools.aqua.bgw.elements.visual.ColorVisual
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.dom.Element
 
-external interface ButtonProps : Props {
+internal external interface ButtonProps : Props {
     var data : ButtonData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     cssBuilder(componentViewData)
     cursor = Cursor.pointer
 
@@ -39,11 +39,11 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: ButtonData) {
     }
 }
 
-fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: ButtonData) {
+internal fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: ButtonData) {
     cssTextBuilder(componentViewData)
 }
 
-val Button = FC<ButtonProps> { props ->
+internal val Button = FC<ButtonProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

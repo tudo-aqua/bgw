@@ -27,15 +27,15 @@ import web.dom.Element
 import web.dom.document
 import web.dom.getComputedStyle
 
-external interface GridPaneProps : Props {
+internal external interface GridPaneProps : Props {
     var data : GridPaneData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
     cssBuilder(componentViewData)
 }
 
-val ReactGridPane = FC<GridPaneProps> { props ->
+internal val ReactGridPane = FC<GridPaneProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

@@ -27,15 +27,15 @@ import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
-external interface SatchelProps : Props {
+internal external interface SatchelProps : Props {
     var data : SatchelData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: SatchelData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: SatchelData) {
     cssBuilder(componentViewData)
 }
 
-val Satchel = FC<SatchelProps> { props ->
+internal val Satchel = FC<SatchelProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

@@ -14,7 +14,7 @@ import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
-class AnimationScene : BoardGameScene() {
+internal class AnimationScene : BoardGameScene() {
     private val label = Label(
         text = "Test",
         posX = 40,
@@ -101,7 +101,7 @@ class AnimationScene : BoardGameScene() {
             )
         } */
 
-        label.onMouseClicked = {
+        /* label.onMouseClicked = {
             this.playAnimation(
                 SequentialAnimation(
                     ScaleAnimation (
@@ -118,10 +118,10 @@ class AnimationScene : BoardGameScene() {
                     )
                 )
             )
-        }
+        } */
 
-        /*label.onMouseClicked = {
-            /*this.playAnimation(
+        label.onMouseClicked = {
+            this.playAnimation(
                 ParallelAnimation(
                     ScaleAnimation (
                         componentView = label,
@@ -136,7 +136,7 @@ class AnimationScene : BoardGameScene() {
                         duration = 1000
                     )
                 )
-            )*/
+            )
             this.playAnimation(
                 FlipAnimation(
                     componentView = label,
@@ -145,7 +145,7 @@ class AnimationScene : BoardGameScene() {
                     duration = 2000
                 )
             )
-        }*/
+        }
 
         /*label.onMouseClicked = {
             this.playAnimation(

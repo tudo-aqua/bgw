@@ -3,4 +3,4 @@ package data.event
 import kotlinx.serialization.Serializable
 
 @Serializable
-abstract class InputEventData : EventData()
+internal abstract class InputEventData : EventData()

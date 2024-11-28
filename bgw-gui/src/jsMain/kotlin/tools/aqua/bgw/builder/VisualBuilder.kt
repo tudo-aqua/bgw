@@ -16,11 +16,11 @@ import tools.aqua.bgw.elements.visual.ImageVisual as ReactImageVisual
 import tools.aqua.bgw.elements.visual.TextVisual as ReactTextVisual
 
 
-external interface VisualProps : Props {
+internal external interface VisualProps : Props {
     var data: VisualData
 }
 
-object VisualBuilder {
+internal object VisualBuilder {
     fun build(visual: VisualData?): ReactElement<*> {
         when(visual) {
             is ColorVisualData -> {

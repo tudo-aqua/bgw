@@ -79,7 +79,7 @@ fun Application.configureRouting() {
     }
 }
 
-val messageQueue = mutableListOf<ActionProp>()
+internal val messageQueue = mutableListOf<ActionProp>()
 
 fun CoroutineScope.launchPeriodicAsync(
     repeatMillis: Long,
@@ -95,7 +95,7 @@ fun CoroutineScope.launchPeriodicAsync(
     }
 }
 
-var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(50) {
+var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {
     if((Frontend.applicationEngine as JCEFApplication).getTitle() !== Frontend.application.title) {
         (Frontend.applicationEngine as JCEFApplication).setTitle(Frontend.application.title)
     }

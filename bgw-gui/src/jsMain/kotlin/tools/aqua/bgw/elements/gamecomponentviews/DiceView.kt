@@ -29,15 +29,15 @@ import web.timers.Timeout
 import web.timers.clearTimeout
 import web.timers.setTimeout
 
-external interface DiceViewProps : Props {
+internal external interface DiceViewProps : Props {
     var data: DiceViewData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: DiceViewData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: DiceViewData) {
     cssBuilder(componentViewData)
 }
 
-val DiceView = FC<DiceViewProps> { props ->
+internal val DiceView = FC<DiceViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDraggable

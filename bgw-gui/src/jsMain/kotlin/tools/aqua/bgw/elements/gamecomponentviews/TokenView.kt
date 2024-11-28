@@ -39,15 +39,15 @@ import web.timers.Timeout
 import web.timers.clearTimeout
 import web.timers.setTimeout
 
-external interface TokenViewProps : Props {
+internal external interface TokenViewProps : Props {
     var data: TokenViewData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData) {
     cssBuilder(componentViewData)
 }
 
-val TokenView = FC<TokenViewProps> { props ->
+internal val TokenView = FC<TokenViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDraggable

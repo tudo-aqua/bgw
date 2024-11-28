@@ -36,17 +36,17 @@ import web.timers.setTimeout
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-external interface HexagonViewProps : Props {
+internal external interface HexagonViewProps : Props {
     var data : HexagonViewData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
     cssBuilder(componentViewData)
     justifyContent = JustifyContent.center
     alignItems = AlignItems.center
 }
 
-val HexagonView = FC<HexagonViewProps> { props ->
+internal val HexagonView = FC<HexagonViewProps> { props ->
     val draggable = useDraggable(object : DraggableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDraggable

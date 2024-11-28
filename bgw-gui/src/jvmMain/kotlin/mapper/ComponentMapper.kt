@@ -16,7 +16,7 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.*
 import kotlin.math.max
 
-object ComponentMapper {
+internal object ComponentMapper {
     fun ComponentViewData.fillData(componentView: ComponentView) : ComponentViewData {
         return this.apply {
             id = componentView.id
@@ -224,7 +224,7 @@ object ComponentMapper {
     }
 }
 
-object FontMapper {
+internal object FontMapper {
     private val fontWeightMap = mapOf(
         Font.FontWeight.THIN to 100,
         Font.FontWeight.EXTRA_LIGHT to 200,
@@ -247,7 +247,7 @@ object FontMapper {
     }
 }
 
-object LayoutMapper {
+internal object LayoutMapper {
     fun map(layout: LayoutView<*>) : LayoutViewData {
         return when (layout) {
             is Pane<*> -> (PaneData().fillData(layout) as PaneData).apply {
@@ -283,7 +283,7 @@ object LayoutMapper {
     }
 }
 
-object RecursiveMapper {
+internal object RecursiveMapper {
     fun map(component : ComponentView) : ComponentViewData {
         return when (component) {
             is LayoutView<*> -> {
@@ -300,7 +300,7 @@ object RecursiveMapper {
     }
 }
 
-object ContainerMapper {
+internal object ContainerMapper {
     fun map(container: GameComponentContainer<*>) : GameComponentContainerData {
         return when (container) {
             is Area<*> -> (AreaData().fillData(container) as AreaData).apply {
@@ -366,19 +366,19 @@ object ContainerMapper {
     }
 }
 
-object StyleMapper {
+internal object StyleMapper {
     fun map(style: Style) : Map<String, String> {
         return style.getDeclarations()
     }
 }
 
-object FilterMapper {
+internal object FilterMapper {
     fun map(filters: Filter) : Map<String, String?> {
         return filters.getDeclarations()
     }
 }
 
-object VisualMapper {
+internal object VisualMapper {
     fun map(visual: Visual) : VisualData {
         val visualData = when (visual) {
             is ColorVisual -> ColorVisualData().apply {
@@ -507,7 +507,7 @@ object FontFaceMapper {
     }
 }
 
-object SceneMapper {
+internal object SceneMapper {
     private fun mapScene(scene: Scene<*>) : SceneData {
         // FIXME - DONE
         return SceneData().apply {

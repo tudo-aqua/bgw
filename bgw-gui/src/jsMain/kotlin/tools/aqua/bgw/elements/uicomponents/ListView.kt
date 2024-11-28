@@ -30,15 +30,15 @@ import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 
-external interface ListViewProps : Props {
+internal external interface ListViewProps : Props {
     var data : ListViewData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: ListViewData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ListViewData) {
     cssBuilder(componentViewData)
 }
 
-val ListView = FC<ListViewProps> { props ->
+internal val ListView = FC<ListViewProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

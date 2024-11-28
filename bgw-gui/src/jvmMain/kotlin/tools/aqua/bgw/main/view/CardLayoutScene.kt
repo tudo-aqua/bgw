@@ -11,7 +11,7 @@ import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 import kotlin.random.Random
 
-class CardLayoutScene : BoardGameScene() {
+internal class CardLayoutScene : BoardGameScene() {
 
     val button = Button(
         width = 200,

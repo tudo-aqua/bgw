@@ -34,11 +34,11 @@ import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
 
-external interface CheckBoxProps : Props {
+internal external interface CheckBoxProps : Props {
     var data: CheckBoxData
 }
 
-fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
+internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
     cssBuilder(componentViewData)
     display = Display.flex
     alignItems = AlignItems.center
@@ -46,7 +46,7 @@ fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
     gap = 10.em
 }
 
-val CheckBox = FC<CheckBoxProps> { props ->
+internal val CheckBox = FC<CheckBoxProps> { props ->
     val droppable = useDroppable(object : DroppableOptions {
         override var id: String = props.data.id
         override var disabled = !props.data.isDroppable

@@ -4,4 +4,4 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ColorInputChangedEventData(var value: String) : EventData()
+internal class ColorInputChangedEventData(var value: String) : EventData()

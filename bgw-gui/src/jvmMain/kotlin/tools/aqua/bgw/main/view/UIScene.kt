@@ -10,7 +10,7 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import kotlin.random.Random
 
-class UIScene : MenuScene() {
+internal class UIScene : MenuScene() {
     val combo = ComboBox<TestObject>(
         width = 1920,
         height = 50,
