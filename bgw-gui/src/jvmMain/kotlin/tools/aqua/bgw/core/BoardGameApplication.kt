@@ -351,14 +351,17 @@ open class BoardGameApplication(
     /**
      * Loads a font file and registers it in the GUI.
      * @param path The font file path relative to resources and with file extension which is to be loaded
-     * @param fontName The name of the font which is to be used in the GUI
-     * @param weight The weight of the font which is to be used in the GUI
+     * @param fontName The font name used to reference the font
+     * @param weight The font weight used to reference the font
      * @return A boolean weather the file could be loaded or not
      */
     fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean = Frontend.loadFont(path, fontName, weight)
 
     /**
      * Loads a font file and registers it in the GUI.
+     * The default font weight is [Font.FontWeight.NORMAL].
+     * The font name is derived from the file name without the file extension.
+     *
      * @param path The font file path relative to resources and with file extension which is to be loaded
      * @return A boolean weather the file could be loaded or not
      */
