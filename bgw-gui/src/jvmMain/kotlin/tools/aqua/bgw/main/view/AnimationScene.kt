@@ -11,8 +11,12 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.Frontend.Companion.showDialog
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
+import tools.aqua.bgw.style.*
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.SingleLayerVisual
 
 internal class AnimationScene : BoardGameScene() {
     private val label = Label(
@@ -22,7 +26,10 @@ internal class AnimationScene : BoardGameScene() {
         width = 200,
         height = 200,
         font = Font(20.0, Color(0, 0, 0, 0.25), "Rubik", Font.FontWeight.SEMI_BOLD),
-        visual = ColorVisual.MAGENTA
+        visual =
+            ImageVisual("https://static.vecteezy.com/system/resources/thumbnails/006/489/382/small/rainbow-waves-background-in-neon-color-free-vector.jpg").apply {
+                style.borderRadius = BorderRadius(4.0)
+            }
     )
 
     /*private val label = TokenView(
@@ -121,7 +128,9 @@ internal class AnimationScene : BoardGameScene() {
         } */
 
         label.onMouseClicked = {
-            this.playAnimation(
+            (label.visual as ImageVisual).filters.blur = BlurFilter(4.0)
+            (label.visual as ImageVisual).filters.saturation = SaturationFilter.GREYSCALE
+            /* this.playAnimation(
                 ParallelAnimation(
                     ScaleAnimation (
                         componentView = label,
@@ -144,7 +153,7 @@ internal class AnimationScene : BoardGameScene() {
                     toVisual = ColorVisual.RED,
                     duration = 2000
                 )
-            )
+            ) */
         }
 
         /*label.onMouseClicked = {

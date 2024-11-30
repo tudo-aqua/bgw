@@ -21,7 +21,7 @@ internal object Application : BoardGameApplication() {
     private val cardLayoutScene = CardLayoutScene()
 
     init {
-        loadFont("Rubik.ttf", "Rubik", Font.FontWeight.SEMI_BOLD)
+        loadFont("Rubik.ttf", "Rubik", Font.FontWeight.EXTRA_BOLD)
         // showGameScene(cardLayoutScene)
         // showGameScene(hexGrid)
         showGameScene(animation)

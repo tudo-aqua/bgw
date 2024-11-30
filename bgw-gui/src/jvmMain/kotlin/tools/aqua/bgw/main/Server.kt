@@ -28,12 +28,12 @@ fun main() {
         val scene = object : BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN) {
             val label = Label(posX = 0, posY = 0, visual = CompoundVisual(
                 ImageVisual("https://cdn2.thecatapi.com/images/9qh.jpg").apply {
-                    flipped = Flip.HORIZONTAL
+                    //flipped = Flip.HORIZONTAL
                 },
                 ColorVisual(Color.CYAN).apply {
                     style.borderRadius = BorderRadius.FULL
                     filters.blur = BlurFilter(4.0)
-                    filters.saturation = SaturationFilter.BLACK_WHITE
+                    filters.saturation = SaturationFilter.GREYSCALE
                 },
                 //ColorVisual(Color.GREEN).apply { style.borderRadius = BorderRadius(10,0,5,0) },
                 TextVisual("Hello World", font = Font(
@@ -96,6 +96,6 @@ fun main() {
             showGameScene(scene)
         }
     }
-    //application.show()
+    // application.show()
 }
 

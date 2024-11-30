@@ -120,6 +120,7 @@ internal fun PropertiesBuilder.comboBoxBuilder(componentViewData: ComboBoxData) 
 
 internal fun PropertiesBuilder.styleBuilder(style : Map<String, String>) {
     borderRadius = cssBorderRadius(style["border-radius"] ?: "0rem")
+    cursor = style["cursor"]?.unsafeCast<Cursor>() ?: "auto".unsafeCast<Cursor>()
 }
 
 internal fun PropertiesBuilder.filterBuilder(filters : Map<String, String?>) {

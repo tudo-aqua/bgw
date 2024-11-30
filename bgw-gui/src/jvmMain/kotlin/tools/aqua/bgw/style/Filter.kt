@@ -1,6 +1,8 @@
 package tools.aqua.bgw.style
 
-class Filter {
+import tools.aqua.bgw.observable.Observable
+
+class Filter : Observable() {
     private val declarations = mutableMapOf<String, FilterDeclaration>()
 
     fun getDeclarations() : Map<String, String?> {
@@ -9,19 +11,34 @@ class Filter {
         }
     }
 
+    fun applyDeclarations(filter: Filter) {
+        declarations.clear()
+        declarations.putAll(filter.declarations)
+    }
+
     var blur : BlurFilter = BlurFilter.NONE
         set(value) {
             field = value
             declarations["blur"] = value
+            notifyGUIListener()
         }
         get() = declarations["blur"] as BlurFilter
 
-    var saturation : SaturationFilter = SaturationFilter.DEFAULT
+    var saturation : SaturationFilter = SaturationFilter.NONE
         set(value) {
             field = value
             declarations["saturation"] = value
+            notifyGUIListener()
         }
         get() = declarations["saturation"] as SaturationFilter
+
+    var sepia : SepiaFilter = SepiaFilter.NONE
+        set(value) {
+            field = value
+            declarations["sepia"] = value
+            notifyGUIListener()
+        }
+        get() = declarations["sepia"] as SepiaFilter
 }
 
 interface FilterDeclaration {
@@ -66,8 +83,28 @@ class SaturationFilter(saturation: Double) : FilterDeclaration {
     }
 
     companion object {
-        val DEFAULT = SaturationFilter(1.0)
-        val BLACK_WHITE = SaturationFilter(0.0)
+        val NONE = SaturationFilter(1.0)
+        val GREYSCALE = SaturationFilter(0.0)
+    }
+}
+
+class SepiaFilter(sepia : Double) : FilterDeclaration {
+    override var value: String? = ""
+
+    init {
+        value = if (sepia != 0.0)
+            "$sepia"
+        else
+            null
+    }
+
+    override fun toFilter(): String? {
+        return if(value != null) "sepia($value)" else null
+    }
+
+    companion object {
+        val NONE = SepiaFilter(0.0)
+        val SEPIA = SepiaFilter(1.0)
     }
 }
 

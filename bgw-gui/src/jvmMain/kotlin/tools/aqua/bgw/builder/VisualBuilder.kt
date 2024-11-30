@@ -5,7 +5,7 @@ import tools.aqua.bgw.visual.*
 
 object VisualBuilder {
     fun build(visual: Visual) {
-        when(visual) {
+        when (visual) {
             is CompoundVisual -> buildCompoundVisual(visual)
             is ColorVisual -> buildColorVisual(visual)
             is ImageVisual -> buildImageVisual(visual)
@@ -20,11 +20,21 @@ object VisualBuilder {
 
     private fun buildColorVisual(visual: ColorVisual) {
         visual.transparencyProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-        visual.colorProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+        visual.colorProperty.guiListener = { _, _ ->
+            Frontend.updateVisual(visual)
+        }
+        visual.styleProperty.guiListener = {
+            Frontend.updateVisual(visual)
+        }
+        visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
+        visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
     }
 
     private fun buildImageVisual(visual: ImageVisual) {
         visual.transparencyProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+        visual.styleProperty.guiListener = { Frontend.updateVisual(visual) }
+        visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
+        visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
     }
 
     private fun buildTextVisual(visual: TextVisual) {
@@ -33,6 +43,9 @@ object VisualBuilder {
         visual.alignmentProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
         visual.offsetXProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
         visual.offsetYProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+        visual.styleProperty.guiListener = { Frontend.updateVisual(visual) }
+        visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
+        visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
     }
 
 }

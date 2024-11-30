@@ -19,14 +19,11 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.style.Style
-import tools.aqua.bgw.observable.lists.ObservableArrayList
-import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Flip
-import tools.aqua.bgw.style.StyleDeclaration
+import tools.aqua.bgw.style.Style
 
 /**
  * Baseclass for single layer visuals.
@@ -34,49 +31,78 @@ import tools.aqua.bgw.style.StyleDeclaration
  * @constructor Creates a [SingleLayerVisual].
  */
 sealed class SingleLayerVisual : Visual() {
-  /**
-   * Property for the [transparency] / alpha channel for this [Visual].
-   *
-   * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
-   *
-   * @see transparency
-   */
-  val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
+    /**
+     * Property for the [transparency] / alpha channel for this [Visual].
+     *
+     * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
+     *
+     * @see transparency
+     */
+    val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
 
-  /**
-   * The [transparency] / alpha channel for this [Visual].
-   *
-   * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
-   *
-   * @see transparencyProperty
-   */
-  var transparency: Double
-    get() = transparencyProperty.value
-    set(value) {
-      transparencyProperty.value = value
-    }
+    /**
+     * The [transparency] / alpha channel for this [Visual].
+     *
+     * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
+     *
+     * @see transparencyProperty
+     */
+    var transparency: Double
+        get() = transparencyProperty.value
+        set(value) {
+            transparencyProperty.value = value
+        }
 
-  /**
-   * Css style that gets applied to this [Visual].
-   *
-   * This gets applied last, so it may override any changes made via other fields and functions of
-   * this [Visual]. Critical failures, bugs or other undefined behaviour could occur when using this
-   * feature.
-   */
+    /**
+     * Property for the [style] applied to this [Visual].
+     *
+     * @see style
+     */
+    val styleProperty: Style = Style()
 
-  // TODO - Add properties?
-  var style: Style = Style()
-    set(value) {
-      field = value
-    }
+    /**
+     * Additional styling that gets applied to this [Visual].
+     *
+     * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+     *
+     * @see styleProperty
+     */
+    val style: Style
+        get() = styleProperty
 
-  var filters: Filter = Filter()
-    set(value) {
-      field = value
-    }
+    /**
+     * Property for the [filters] applied to this [Visual].
+     *
+     * @see filters
+     */
+    val filtersProperty: Filter = Filter()
 
-  var flipped : Flip = Flip.NONE
-    set(value) {
-      field = value
-    }
+    /**
+     * Additional filters that get applied to this [Visual].
+     *
+     * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+     *
+     * @see filtersProperty
+     */
+    val filters: Filter
+        get() = filtersProperty
+
+    /**
+     * Property for the [flipped] state of this [Visual].
+     *
+     * @see flipped
+     */
+    val flippedProperty: Property<Flip> = Property(Flip.NONE)
+
+    /**
+     * The [flipped] state of this [Visual].
+     *
+     * @see flippedProperty
+     * @see Flip
+     */
+    var flipped: Flip
+        get() = flippedProperty.value
+        set(value) {
+            flippedProperty.value = value
+        }
 }

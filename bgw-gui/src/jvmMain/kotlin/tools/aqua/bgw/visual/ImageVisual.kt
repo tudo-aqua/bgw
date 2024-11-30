@@ -75,7 +75,12 @@ open class ImageVisual(
     }
 
     override fun copy(): ImageVisual {
-        return ImageVisual(path, width, height, offsetX, offsetY)
+        return ImageVisual(path, width, height, offsetX, offsetY).apply {
+            transparency = this@ImageVisual.transparency
+            style.applyDeclarations(this@ImageVisual.style)
+            filters.applyDeclarations(this@ImageVisual.filters)
+            flipped = this@ImageVisual.flipped
+        }
     }
 }
 

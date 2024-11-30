@@ -140,7 +140,8 @@ open class TextVisual(
         alignment = this@TextVisual.alignment
         offsetX = this@TextVisual.offsetX
         offsetY = this@TextVisual.offsetY
-        style = this@TextVisual.style
-        filters = this@TextVisual.filters
+        style.applyDeclarations(this@TextVisual.style)
+        filters.applyDeclarations(this@TextVisual.filters)
+        flipped = this@TextVisual.flipped
       }
 }
