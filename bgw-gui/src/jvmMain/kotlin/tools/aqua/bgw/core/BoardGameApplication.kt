@@ -349,12 +349,19 @@ open class BoardGameApplication(
     }
 
     /**
-     * Loads a font file and registers it in the JFX graphics system.
-     * @param font The font file off type .ttf which is to be loaded
-     * @throws NoSuchFileException if the file doesn't exist
-     * @throws AccessDeniedException if the file can't be read
+     * Loads a font file and registers it in the GUI.
+     * @param path The font file path relative to resources and with file extension which is to be loaded
+     * @param fontName The name of the font which is to be used in the GUI
+     * @param weight The weight of the font which is to be used in the GUI
      * @return A boolean weather the file could be loaded or not
      */
     fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean = Frontend.loadFont(path, fontName, weight)
+
+    /**
+     * Loads a font file and registers it in the GUI.
+     * @param path The font file path relative to resources and with file extension which is to be loaded
+     * @return A boolean weather the file could be loaded or not
+     */
+    fun loadFont(path : String): Boolean = Frontend.loadFont(path, path.substringAfterLast('/').substringBeforeLast('.'), Font.FontWeight.NORMAL)
   }
 }

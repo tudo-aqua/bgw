@@ -21,13 +21,15 @@ internal object Application : BoardGameApplication() {
     private val cardLayoutScene = CardLayoutScene()
 
     init {
-        loadFont("Rubik.ttf", "Rubik", Font.FontWeight.EXTRA_BOLD)
+        loadFont("Rubik.ttf")
+        loadFont("Staatliches-Regular.ttf", "Staatliches", Font.FontWeight.NORMAL)
+        loadFont("JetBrainsMono-ExtraBold.ttf", "JetBrainsMono", Font.FontWeight.EXTRA_BOLD)
         // showGameScene(cardLayoutScene)
         // showGameScene(hexGrid)
-        showGameScene(animation)
+        // showGameScene(animation)
         // showGameScene(grid)
         // showGameScene(dragDropScene)
-        // showMenuScene(uiScene)
+        showMenuScene(uiScene)
         // showGameScene(visualScene)
     }
 }

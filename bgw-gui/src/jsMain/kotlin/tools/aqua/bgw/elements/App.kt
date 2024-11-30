@@ -34,9 +34,10 @@ internal val App = FC<AppProps> { props ->
     useEffect {
         webSocket?.send("Hello from Client!")
     }
-    Global {
-        styles {
-            props.data.fonts.forEach { font ->
+
+    props.data.fonts.forEach { font ->
+        Global {
+            styles {
                 fontFace {
                     fontFamily = font.second
                     fontStyle = FontStyle.normal
@@ -44,7 +45,11 @@ internal val App = FC<AppProps> { props ->
                     src = "url(static/${font.first})"
                 }
             }
+        }
+    }
 
+    Global {
+        styles {
             ".bgw-root-container" {
                 width = 100.pct
                 height = 100.pct

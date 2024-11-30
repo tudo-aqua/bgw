@@ -16,7 +16,7 @@ internal class UIScene : MenuScene() {
         height = 50,
         items = listOf(TestObject("Test1"), TestObject("Test2"), TestObject("Test3"), TestObject("Test4")),
         prompt = "Select an item",
-        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        font = Font(20.0, Color.BLACK, "Staatliches", Font.FontWeight.NORMAL),
         formatFunction = { it.name }
     )
 
@@ -50,7 +50,7 @@ internal class UIScene : MenuScene() {
         width = 800,
         height = 50,
         text = "Passwortbox",
-        font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
+        font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
         prompt = "Enter password here",
     ).apply {
         visual = ColorVisual(Color.LIGHT_GRAY)
@@ -62,7 +62,7 @@ internal class UIScene : MenuScene() {
         width = 800,
         height = 600,
         text = "Test\nArea",
-        font = Font(20.0, Color.GREEN, "Rubik", Font.FontWeight.SEMI_BOLD),
+        font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
         prompt = "Enter text here",
     ).apply {
         visual = ColorVisual(Color.BLUE)
@@ -87,6 +87,8 @@ internal class UIScene : MenuScene() {
 
 
         combo.select(2)
+
+        println("UIScene initialized")
     }
 
     inner class TestObject(val name : String) {}

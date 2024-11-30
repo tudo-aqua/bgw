@@ -10,6 +10,7 @@ import TextInputUIComponentData
 import UIComponentData
 import VisualData
 import csstype.PropertiesBuilder
+import csstype.RuleBuilder
 import web.cssom.*
 import org.w3c.dom.css.CSSRule
 
