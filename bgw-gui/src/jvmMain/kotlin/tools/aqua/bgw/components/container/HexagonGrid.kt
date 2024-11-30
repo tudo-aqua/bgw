@@ -91,6 +91,12 @@ class HexagonGrid<T : HexagonView>(
      * @param coordinateSystem The coordinate system to use for the layout.
      */
     private fun layout(coordinateSystem: CoordinateSystem) {
+        var minX = Double.MAX_VALUE
+        var minY = Double.MAX_VALUE
+
+        var maxX = Double.MIN_VALUE
+        var maxY = Double.MIN_VALUE
+
         map.forEach { (coords, hexagon) ->
             val (x, y) = coords
             val (q, r) =
@@ -106,17 +112,32 @@ class HexagonGrid<T : HexagonView>(
             with(hexagon) {
                 if (orientation == HexOrientation.POINTY_TOP) {
                     hexagon.orientation = HexOrientation.POINTY_TOP
-                    val actualWidth = width / 2 * sqrt(3.0)
-                    posXProperty.setSilent(actualWidth * q + if (r % 2 == 0) 0.0 else actualWidth / 2)
+                    val hexWidth = width / 2 * sqrt(3.0)
+                    posXProperty.setSilent(hexWidth * q + if (r % 2 == 0) 0.0 else hexWidth / 2)
                     posYProperty.setSilent(height * r - r * height / 4)
+
+                    if (posXProperty.value < minX) minX = posXProperty.value
+                    if (posYProperty.value < minY) minY = posYProperty.value
+
+                    if (posXProperty.value + hexWidth > maxX) maxX = posXProperty.value + hexWidth
+                    if (posYProperty.value + height > maxY) maxY = posYProperty.value + height
                 } else {
                     hexagon.orientation = HexOrientation.FLAT_TOP
-                    val actualHeight = height / 2 * sqrt(3.0)
-                    posYProperty.setSilent(actualHeight * q + if (r % 2 == 0) 0.0 else actualHeight / 2)
+                    val hexHeight = height / 2 * sqrt(3.0)
+                    posYProperty.setSilent(hexHeight * q + if (r % 2 == 0) 0.0 else hexHeight / 2)
                     posXProperty.setSilent(width * r - r * width / 4)
+
+                    if (posXProperty.value < minX) minX = posXProperty.value
+                    if (posYProperty.value < minY) minY = posYProperty.value
+
+                    if (posXProperty.value + width > maxX) maxX = posXProperty.value + width
+                    if (posYProperty.value + hexHeight > maxY) maxY = posYProperty.value + hexHeight
                 }
             }
         }
+
+        widthProperty.setSilent(maxX - minX)
+        heightProperty.setSilent(maxY - minY)
     }
 
     override fun T.onRemove() {}

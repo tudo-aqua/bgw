@@ -5,6 +5,8 @@ import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.container.Satchel
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.HexOrientation
@@ -19,10 +21,32 @@ internal class HexGridGameScene : BoardGameScene() {
         height = 500,
         posX = 0,
         posY = 0,
-        coordinateSystem = HexagonGrid.CoordinateSystem.AXIAL,
+        coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET,
         visual = Visual.EMPTY,
-        orientation = HexOrientation.FLAT_TOP
-    )
+        orientation = HexOrientation.POINTY_TOP
+    ).apply {
+        onMouseClicked = {
+            placeOnHexGrid(HexagonView(visual = ColorVisual(Color(0, 0, 255)), size = 40))
+        }
+    }
+
+    private val targetPane = Pane<HexagonGrid<HexagonView>>(
+        width = 900,
+        height = 900,
+        posX = 0,
+        posY = 0,
+        visual = ColorVisual.RED
+    ).apply {
+        add(hexGrid)
+    }
+
+    private val cameraPane = CameraPane(
+        width = 1920,
+        height = 1080,
+        target = targetPane,
+    ).apply {
+        interactive = true
+    }
 
     private val satchel = Satchel<HexagonView>(
         posX = 800,
@@ -43,10 +67,9 @@ internal class HexGridGameScene : BoardGameScene() {
     private val hexFlat = HexagonView(posX = 900, posY = 200, visual = ColorVisual(Color(0, 255, 0)), size = 50, orientation = HexOrientation.FLAT_TOP)
 
     fun placeOnHexGrid(hexagon: HexagonView) {
-        satchel.remove(hexagon)
-        hexGrid[Random.nextInt(-5, 5), Random.nextInt(-5, 5)] = hexagon.apply {
-            isDraggable = true
-        }
+        hexGrid[10,0] = HexagonView(visual = ColorVisual(Color(255, 0, 0)), size = 50, orientation = HexOrientation.POINTY_TOP)
+        targetPane.width = hexGrid.width
+        targetPane.height = hexGrid.height
     }
 
     fun placeInSatchel(hexagon: HexagonView) {
@@ -82,12 +105,23 @@ internal class HexGridGameScene : BoardGameScene() {
                         onDragGestureExited = {
                             visual = ColorVisual.LIGHT_GRAY
                         }
+
+                        onMouseEntered = {
+                            visual = ColorVisual.GRAY
+                        }
+
+                        onMouseExited = {
+                            visual = ColorVisual.LIGHT_GRAY
+                        }
                     }
                     hexGrid[q,r] = hexagon
                     hexMap[Pair(q,r)] = hexagon
                 }
             }
         }
+
+        targetPane.width = hexGrid.width
+        targetPane.height = hexGrid.height
     }
 
     fun refreshHexGrid() {
@@ -97,7 +131,7 @@ internal class HexGridGameScene : BoardGameScene() {
     init {
         buildHexGrid()
 
-        addComponents(hexGrid, satchel)
+        addComponents(cameraPane, satchel)
         repeat(20) {
             val hexagon = HexagonView(posX = 800, posY = 800, visual = ImageVisual("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwc4YbxNBYXWRkgqzh9tbaSQh2Uy-f4e1Nl0teHHWFisub3gxv4rxn1eFjgVUUMASaNSg&usqp=CAU"), size = 40, orientation = HexOrientation.FLAT_TOP).apply {
                 isDraggable = true
