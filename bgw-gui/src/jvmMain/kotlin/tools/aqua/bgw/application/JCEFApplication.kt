@@ -178,21 +178,27 @@ internal class JCEFApplication : Application {
                             }
                         }
                         is DragGestureEnteredEventData -> {
-                            if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
-                                val root = component.getRootNode()
-                                val target = root.findComponent(eventData.target)
-                                if(target?.dropAcceptor != null) {
-                                    target.onDragGestureEntered?.invoke(DragEvent(component))
+                            try {
+                                if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
+                                    val root = component.getRootNode()
+                                    val target = root.findComponent(eventData.target)
+                                    if(target?.dropAcceptor != null) {
+                                        target.onDragGestureEntered?.invoke(DragEvent(component))
+                                    }
                                 }
+                            } catch(e : Exception) {
                             }
                         }
                         is DragGestureExitedEventData -> {
-                            if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
-                                val root = component.getRootNode()
-                                val target = root.findComponent(eventData.target)
-                                if(target?.dropAcceptor != null) {
-                                    target.onDragGestureExited?.invoke(DragEvent(component))
+                            try {
+                                if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
+                                    val root = component.getRootNode()
+                                    val target = root.findComponent(eventData.target)
+                                    if(target?.dropAcceptor != null) {
+                                        target.onDragGestureExited?.invoke(DragEvent(component))
+                                    }
                                 }
+                            } catch(e : Exception) {
                             }
                         }
                         is DragDroppedEventData -> {

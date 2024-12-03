@@ -27,8 +27,49 @@ external interface DndContextProps : PropsWithChildren {
     var onDragStart: (DragStartEvent) -> Unit
     var onDragMove: (DragMultiEvent) -> Unit
     var onDragOver: (DragMultiEvent) -> Unit
+    var measuring: MeasuringConfiguration
 
     var sensors: Array<dynamic>
+}
+
+external interface Measuring {
+    var measure: (element: HTMLElement) -> LayoutRect
+}
+
+external interface DraggableMeasuring : Measuring
+
+external interface DragOverlayMeasuring : Measuring
+
+external interface DroppableMeasuring : Measuring {
+    var strategy: MeasuringStrategy
+    var frequency: dynamic /* MeasuringFrequency | Number */
+}
+
+external interface MeasuringStrategy {
+    companion object {
+        val Always: MeasuringStrategy
+        val BeforeDragging: MeasuringStrategy
+        val WhileDragging: MeasuringStrategy
+    }
+}
+
+external interface MeasuringFrequency {
+    companion object {
+        val Optimized: MeasuringFrequency
+    }
+}
+
+external interface MeasuringConfiguration {
+    var draggable: DraggableMeasuring?
+    var droppable: DroppableMeasuring?
+    var dragOverlay: DragOverlayMeasuring?
+}
+
+@JsName("getClientRect")
+external fun getClientRect(node: HTMLElement, options : GetClientRectOptions): LayoutRect
+
+external interface GetClientRectOptions {
+    var ignoreTransform: Boolean
 }
 
 @JsName("useDraggable")
@@ -88,6 +129,7 @@ external interface DragEventActive {
 
 external interface DragEndEventOver {
     var disabled : Boolean
+    var rect : LayoutRect
     var id: String
 }
 
@@ -97,10 +139,19 @@ external interface DroppableOptions {
 }
 
 external interface DroppableResult {
+    val rect : LayoutRect
     val isOver: Boolean
     val setNodeRef: (dynamic) -> Unit
 }
 
+external interface LayoutRect {
+    var height: Double
+    var width: Double
+    var top : Double
+    var left : Double
+    var right : Double
+    var bottom : Double
+}
 
 
 

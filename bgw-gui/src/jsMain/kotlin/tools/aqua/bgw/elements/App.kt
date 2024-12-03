@@ -9,6 +9,7 @@ import emotion.react.Global
 import emotion.react.styles
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.DOMRect
 import react.*
 import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
@@ -66,7 +67,7 @@ internal val App = FC<AppProps> { props ->
             }
 
             ".bgw-root *" {
-                transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
+                // transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
                 border = None.none
                 outline = None.none
             }
@@ -396,8 +397,23 @@ internal val App = FC<AppProps> { props ->
 
     val allSensors = useSensors(pointerSensor)
 
+    val measuringConfig = jsObject<MeasuringConfiguration> {
+        draggable = jsObject<DraggableMeasuring> {
+            measure = { node -> getClientRect(node, jsObject { ignoreTransform = false }) }
+        }
+        droppable = jsObject<DroppableMeasuring> {
+            measure = { node -> getClientRect(node, jsObject { ignoreTransform = true }) }
+            strategy = MeasuringStrategy.BeforeDragging
+            frequency = MeasuringFrequency.Optimized
+        }
+        dragOverlay = jsObject<DragOverlayMeasuring> {
+            measure = { node -> getClientRect(node, jsObject { ignoreTransform = false }) }
+        }
+    }
+
     DndContext {
         sensors = allSensors
+        // measuring = measuringConfig
 
         onDragStart = { event ->
             JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
