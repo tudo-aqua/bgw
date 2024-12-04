@@ -259,6 +259,7 @@ internal class MainFrame(
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
         builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+        builder.setInstallDir(File("build/runtime"))
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
                 // println("CEF State: $state")
