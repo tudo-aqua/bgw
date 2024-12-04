@@ -59,3 +59,11 @@ signing {
   useGpgCmd()
   sign(publishing.publications["maven"])
 }
+
+tasks.named("publish") {
+  doFirst {
+    println("=============================================================================")
+    println("Published bgw: ${rootProject.version}")
+    println("=============================================================================")
+  }
+}

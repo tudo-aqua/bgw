@@ -172,20 +172,25 @@ tasks.named<JavaExec>("run") {
   classpath(tasks.named<Jar>("jvmJar"))
 }
 
-// TODO - Somehow invoke this function from implementations of dependency
 gradle.buildFinished {
     try {
         val applicationPIDs = file("build/application.pid").readText().split(",").map { it.toLong() }.toSet()
-        println("Created JCEF_Helper PIDs: $applicationPIDs")
         killJcefHelperProcesses(applicationPIDs)
     } catch (e: Exception) {}
+}
+
+tasks.named("publish") {
+    doFirst {
+        println("=============================================================================")
+        println("Published bgw-gui: ${rootProject.version}")
+        println("=============================================================================")
+    }
 }
 
 // Function to kill JCEF helper processes
 fun killJcefHelperProcesses(pids: Set<Long>) {
   pids.forEach { pid ->
       ProcessHandle.of(pid).ifPresent {
-          println("Killing process $pid")
           it.destroy()
       }
   }
