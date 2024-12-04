@@ -171,6 +171,7 @@ internal class JCEFApplication : Application {
                         is DragGestureStartedEventData -> {
                             if(component is DynamicComponentView) {
                                 component.onDragGestureStarted?.invoke(DragEvent(component))
+                                component.isDragged = true
                             }
                         }
                         is DragGestureMovedEventData -> {
@@ -200,7 +201,10 @@ internal class JCEFApplication : Application {
                             val root = component.getRootNode()
                             val target = root.findComponent(eventData.target)
                             val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
-                            if(dropped == true) target.onDragDropped?.invoke(DragEvent(component))
+                            if(dropped == true) {
+                                target.onDragDropped?.invoke(DragEvent(component))
+                                (component as DynamicComponentView).isDragged = false
+                            }
                         }
                     }
 

@@ -78,6 +78,13 @@ external fun useDraggable(options: DraggableOptions): DraggableResult
 @JsName("useDroppable")
 external fun useDroppable(options: DroppableOptions): DroppableResult
 
+@JsName("DragOverlay")
+external val DragOverlay: ComponentClass<DragOverlayProps>
+
+external interface DragOverlayProps : PropsWithChildren, PropsWithClassName, PropsWithStyle {
+    var dropAnimation: Boolean
+}
+
 external interface DraggableOptions {
     var id: String
     var disabled: Boolean

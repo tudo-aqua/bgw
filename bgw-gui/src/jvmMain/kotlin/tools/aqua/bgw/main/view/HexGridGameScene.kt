@@ -49,8 +49,8 @@ internal class HexGridGameScene : BoardGameScene() {
     private val singleHex = HexagonView(
         posX = 1100,
         posY = 0,
-        visual = ImageVisual("https://static.vecteezy.com/system/resources/previews/010/256/326/non_2x/premium-flat-icon-of-game-bag-vector.jpg"),
-        size = 100
+        visual = ColorVisual.BLUE,
+        size = 50
     ).apply {
         isDraggable = true
     }
@@ -63,7 +63,7 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual.RED
     ).apply {
         add(hexGrid)
-        add(satchel)
+        add(singleHex)
     }
 
     private val cameraPane = CameraPane(
@@ -141,7 +141,6 @@ internal class HexGridGameScene : BoardGameScene() {
             val hexagon = HexagonView(posX = 800, posY = 800, visual = ImageVisual("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwc4YbxNBYXWRkgqzh9tbaSQh2Uy-f4e1Nl0teHHWFisub3gxv4rxn1eFjgVUUMASaNSg&usqp=CAU"), size = 40, orientation = HexOrientation.FLAT_TOP).apply {
                 isDraggable = true
                 onKeyPressed = {
-                    println(it.keyCode)
                     if(it.keyCode == KeyCode.Q) {
                         rotation -= 60.0
                     } else if(it.keyCode == KeyCode.E) {

@@ -11,8 +11,10 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.DOMRect
 import react.*
+import react.dom.createPortal
 import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
@@ -388,6 +390,7 @@ internal val App = FC<AppProps> { props ->
     } */
 
     val (lastDraggedOver, setLastDraggedOver) = useState<String?>(null)
+    val draggedElementRef = useRef<org.w3c.dom.Element>(null)
 
     val pointerSensor = useSensor(PointerSensor, jsObject<PointerSensorOptions> {
         activationConstraint = jsObject {
@@ -416,6 +419,8 @@ internal val App = FC<AppProps> { props ->
         // measuring = measuringConfig
 
         onDragStart = { event ->
+            val element = event.active?.id?.let { document.getElementById(it) }
+            draggedElementRef.current = element
             JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
         }
 
@@ -492,6 +497,19 @@ internal val App = FC<AppProps> { props ->
                 }
             }
         }
+
+        DragOverlay {
+            className = ClassName("bgw_drag_overlay")
+        }
+
+        /* DragOverlay {
+            if (draggedElementRef.current != null) {
+                createPortal(
+                    draggedElementRef.current!!.unsafeCast<ReactNode>(),
+                    document.body.unsafeCast<Element>()
+                )
+            }
+        } */
     }
 }
 
