@@ -93,6 +93,10 @@ open class CameraPane<T : LayoutView<*>>(
             }
         }
 
+    init {
+        target.parent = this
+    }
+
     /**
      * pans the view of the camera to the specified coordinates. The coordinates specified represent
      * the upper-left corner of the view.

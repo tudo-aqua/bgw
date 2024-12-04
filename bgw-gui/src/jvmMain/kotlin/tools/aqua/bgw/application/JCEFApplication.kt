@@ -33,6 +33,7 @@ import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Color
@@ -178,27 +179,21 @@ internal class JCEFApplication : Application {
                             }
                         }
                         is DragGestureEnteredEventData -> {
-                            try {
-                                if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
-                                    val root = component.getRootNode()
-                                    val target = root.findComponent(eventData.target)
-                                    if(target?.dropAcceptor != null) {
-                                        target.onDragGestureEntered?.invoke(DragEvent(component))
-                                    }
+                            if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
+                                val root = component.getRootNode()
+                                val target = root.findComponent(eventData.target)
+                                if(target?.dropAcceptor != null) {
+                                    target.onDragGestureEntered?.invoke(DragEvent(component))
                                 }
-                            } catch(e : Exception) {
                             }
                         }
                         is DragGestureExitedEventData -> {
-                            try {
-                                if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
-                                    val root = component.getRootNode()
-                                    val target = root.findComponent(eventData.target)
-                                    if(target?.dropAcceptor != null) {
-                                        target.onDragGestureExited?.invoke(DragEvent(component))
-                                    }
+                            if(component is DynamicComponentView && eventData.target.isNotBlank() && component.parent != null) {
+                                val root = component.getRootNode()
+                                val target = root.findComponent(eventData.target)
+                                if(target?.dropAcceptor != null) {
+                                    target.onDragGestureExited?.invoke(DragEvent(component))
                                 }
-                            } catch(e : Exception) {
                             }
                         }
                         is DragDroppedEventData -> {
@@ -206,7 +201,6 @@ internal class JCEFApplication : Application {
                             val target = root.findComponent(eventData.target)
                             val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
                             if(dropped == true) target.onDragDropped?.invoke(DragEvent(component))
-                            //TODO: Call back to JS
                         }
                     }
 

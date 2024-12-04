@@ -118,14 +118,6 @@ internal class HexGridGameScene : BoardGameScene() {
                         onDragGestureExited = {
                             visual = ColorVisual.LIGHT_GRAY
                         }
-
-                        onMouseEntered = {
-                            visual = ColorVisual.GRAY
-                        }
-
-                        onMouseExited = {
-                            visual = ColorVisual.LIGHT_GRAY
-                        }
                     }
                     hexGrid[q,r] = hexagon
                     hexMap[Pair(q,r)] = hexagon
@@ -149,6 +141,7 @@ internal class HexGridGameScene : BoardGameScene() {
             val hexagon = HexagonView(posX = 800, posY = 800, visual = ImageVisual("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwc4YbxNBYXWRkgqzh9tbaSQh2Uy-f4e1Nl0teHHWFisub3gxv4rxn1eFjgVUUMASaNSg&usqp=CAU"), size = 40, orientation = HexOrientation.FLAT_TOP).apply {
                 isDraggable = true
                 onKeyPressed = {
+                    println(it.keyCode)
                     if(it.keyCode == KeyCode.Q) {
                         rotation -= 60.0
                     } else if(it.keyCode == KeyCode.E) {
