@@ -22,7 +22,7 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
     height = componentViewData.height.em
     zIndex = integer(componentViewData.zIndex)
     opacity = number(componentViewData.opacity)
-    display = if(componentViewData.isVisible && !componentViewData.isDragged) Display.flex else None.none
+    display = if(componentViewData.isVisible) Display.flex else None.none
     pointerEvents = if(!componentViewData.isDisabled) PointerEvents.all else None.none
     rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
     scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
