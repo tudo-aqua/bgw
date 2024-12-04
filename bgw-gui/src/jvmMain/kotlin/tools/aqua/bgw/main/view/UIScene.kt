@@ -16,7 +16,7 @@ internal class UIScene : MenuScene() {
         height = 50,
         items = listOf(TestObject("Test1"), TestObject("Test2"), TestObject("Test3"), TestObject("Test4")),
         prompt = "Select an item",
-        font = Font(20.0, Color.BLACK, "Staatliches", Font.FontWeight.NORMAL),
+        font = Font(20.0, java.awt.Color(0x551100), "Staatliches", Font.FontWeight.NORMAL),
         formatFunction = { it.name }
     )
 

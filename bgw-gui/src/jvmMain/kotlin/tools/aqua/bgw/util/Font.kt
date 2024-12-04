@@ -45,9 +45,20 @@ data class Font(
   val fontWeight: FontWeight = FontWeight.NORMAL,
   val fontStyle: FontStyle = FontStyle.NORMAL
 ) {
-  constructor(color: java.awt.Color) : this(
-    color = Color(color.red, color.green, color.blue, color.alpha / 255.0)
+  constructor(
+    size: Number = DEFAULT_FONT_SIZE,
+    awtColor: java.awt.Color,
+    family: String = "Arial",
+    fontWeight: FontWeight = FontWeight.NORMAL,
+    fontStyle: FontStyle = FontStyle.NORMAL
+  ) : this(
+    size,
+    Color(awtColor.red, awtColor.green, awtColor.blue, awtColor.alpha),
+    family,
+    fontWeight,
+    fontStyle
   )
+
   /**
    * Enum class for representing all available font weights for the Font class.
    * @see Font
