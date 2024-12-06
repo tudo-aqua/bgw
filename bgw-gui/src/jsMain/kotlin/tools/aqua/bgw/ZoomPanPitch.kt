@@ -6,9 +6,9 @@ package tools.aqua.bgw
 import react.*
 
 @JsName("TransformWrapper")
-external val TransformWrapper: ComponentClass<TransformWrapperProps>
+internal external val TransformWrapper: ComponentClass<TransformWrapperProps>
 
-external interface TransformWrapperProps : PropsWithStyle, PropsWithChildren, PropsWithClassName {
+internal external interface TransformWrapperProps : PropsWithStyle, PropsWithChildren, PropsWithClassName {
     var centerZoomedOut : Boolean
     var disablePadding : Boolean
     var smooth : Boolean
@@ -21,14 +21,14 @@ external interface TransformWrapperProps : PropsWithStyle, PropsWithChildren, Pr
     var initialScale : Double
 }
 
-external interface WheelProps {
+internal external interface WheelProps {
     var step : Double
 }
 
 @JsName("TransformComponent")
-external val TransformComponent: ComponentClass<TransformComponentProps>
+internal external val TransformComponent: ComponentClass<TransformComponentProps>
 
-external interface TransformComponentProps : PropsWithStyle, PropsWithChildren, PropsWithClassName {
+internal external interface TransformComponentProps : PropsWithStyle, PropsWithChildren, PropsWithClassName {
     var wrapperStyle : CSSProperties
     var contentStyle : CSSProperties
 }

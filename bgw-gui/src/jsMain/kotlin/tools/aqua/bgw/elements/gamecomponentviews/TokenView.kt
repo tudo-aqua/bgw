@@ -99,5 +99,5 @@ internal val TokenView = FC<TokenViewProps> { props ->
     }
 }
 
-inline val bgwTokenView: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwTokenView: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_token_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

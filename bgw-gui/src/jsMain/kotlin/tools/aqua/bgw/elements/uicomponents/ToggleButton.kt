@@ -115,5 +115,5 @@ internal val ToggleButton = FC<ToggleButtonProps> { props ->
     }
 }
 
-inline val bgwToggleButton: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwToggleButton: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_togglebutton".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

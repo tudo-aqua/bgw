@@ -111,5 +111,5 @@ internal val RadioButton = FC<RadioButtonProps> { props ->
     }
 }
 
-inline val bgwRadioButton: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwRadioButton: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_radiobutton".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -1,4 +1,4 @@
-object IDGenerator {
+internal object IDGenerator {
     private var idCounter = 0
     private var toggleGroupCounter = 0
     private var visualIdCounter = 0

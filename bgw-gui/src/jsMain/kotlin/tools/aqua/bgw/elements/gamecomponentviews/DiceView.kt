@@ -83,5 +83,5 @@ internal val DiceView = FC<DiceViewProps> { props ->
     }
 }
 
-inline val bgwDiceView: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwDiceView: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_dice_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

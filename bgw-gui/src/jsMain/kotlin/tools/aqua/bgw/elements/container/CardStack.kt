@@ -77,5 +77,5 @@ internal val CardStack = FC<CardStackProps> { props ->
     }
 }
 
-inline val bgwCardStack: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwCardStack: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_card_stack".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -81,5 +81,5 @@ internal val Satchel = FC<SatchelProps> { props ->
     }
 }
 
-inline val bgwSatchel: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwSatchel: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_satchel".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

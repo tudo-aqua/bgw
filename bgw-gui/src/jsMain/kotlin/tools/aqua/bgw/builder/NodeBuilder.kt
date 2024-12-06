@@ -113,5 +113,5 @@ internal object NodeBuilder {
 internal external interface GridPaneElementProps : Props {
     var data: GridElementData
 }
-inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_grid_element".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

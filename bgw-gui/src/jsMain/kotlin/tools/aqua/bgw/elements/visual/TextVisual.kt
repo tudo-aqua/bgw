@@ -60,5 +60,5 @@ internal val TextVisual = FC<TextVisualProps> { props ->
     }
 }
 
-inline val bgwTextVisual: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwTextVisual: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_text_visual".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

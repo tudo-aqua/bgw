@@ -98,5 +98,5 @@ internal val ColorPicker = FC<ColorPickerProps> { props ->
     }
 }
 
-inline val bgwColorPicker: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwColorPicker: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_color_picker".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

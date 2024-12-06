@@ -25,15 +25,15 @@ import web.timers.setTimeout
 import kotlin.math.floor
 import kotlin.random.Random
 
-var internalSocket: WebSocket? = null
-var webSocket: WebSocket? = null
+internal var internalSocket: WebSocket? = null
+internal var webSocket: WebSocket? = null
 internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 internal var animator: Animator = Animator()
 
-lateinit var container: HTMLElement
-lateinit var root: Root
+internal lateinit var container: HTMLElement
+internal lateinit var root: Root
 
-fun main() {
+internal fun main() {
     if (Config.USE_SOCKETS) {
         webSocket = WebSocket("ws://${document.location?.host}/ws")
         webSocket?.onopen = { }
@@ -127,10 +127,10 @@ internal fun renderAppFast(appData: AppData) {
     JCEFEventDispatcher.dispatchEvent(LoadEventData())
 }
 
-fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }
-fun ChildrenBuilder.appendChildren(components: List<ReactElement<*>>) = components.forEach { +it }
+internal fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }
+internal fun ChildrenBuilder.appendChildren(components: List<ReactElement<*>>) = components.forEach { +it }
 
-fun randomHexColor(): String {
+internal fun randomHexColor(): String {
     val chars = "0123456789ABCDEF"
     var color = "#"
     repeat(6) {

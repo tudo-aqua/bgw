@@ -86,5 +86,5 @@ internal val TextField = FC<TextFieldProps> { props ->
     }
 }
 
-inline val bgwTextField: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwTextField: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_text_field".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

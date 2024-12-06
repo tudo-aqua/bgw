@@ -489,7 +489,7 @@ internal object VisualMapper {
     }
 }
 
-object FontFaceMapper {
+internal object FontFaceMapper {
     private val fontWeightMap = mapOf(
         Font.FontWeight.THIN to 100,
         Font.FontWeight.EXTRA_LIGHT to 200,

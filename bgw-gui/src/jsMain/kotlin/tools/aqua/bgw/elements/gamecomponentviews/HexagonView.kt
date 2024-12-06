@@ -105,5 +105,5 @@ internal val HexagonView = FC<HexagonViewProps> { props ->
     }
 }
 
-inline val bgwHexagonView: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwHexagonView: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_hexagon_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

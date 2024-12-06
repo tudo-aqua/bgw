@@ -56,7 +56,7 @@ fun generateProperties(prefix: String = "") =
     """
     package tools.aqua.bgw
 
-    object Config {
+    internal object Config {
         val USE_SOCKETS = ${useSockets ?: "true"}
     }
 """.trimIndent()

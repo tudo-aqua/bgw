@@ -89,5 +89,5 @@ internal val CardView = FC<CardViewProps> { props ->
     }
 }
 
-inline val bgwCardView: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwCardView: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_card_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

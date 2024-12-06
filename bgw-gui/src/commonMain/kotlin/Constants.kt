@@ -1,6 +1,6 @@
 
-enum class WebViewType {
+internal enum class WebViewType {
     JCEF
 }
 
-val webViewType = WebViewType.JCEF
+internal val webViewType = WebViewType.JCEF

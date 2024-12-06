@@ -136,8 +136,8 @@ internal val TableView = FC<TableViewProps> { props ->
     }
 }
 
-inline val bgwTableView: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwTableView: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_list_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwTableColumn: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwTableColumn: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_table_column".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

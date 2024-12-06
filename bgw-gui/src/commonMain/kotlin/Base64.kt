@@ -1,5 +1,5 @@
 
-object Base64 {
+internal object Base64 {
     private fun encode(bytes: ByteArray): String {
         return bytes.joinToString("") { it.toUByte().toString(16).padStart(2, '0') }
     }

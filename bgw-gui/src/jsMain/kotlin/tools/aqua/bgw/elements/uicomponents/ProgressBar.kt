@@ -77,8 +77,8 @@ internal val ProgressBar = FC<ProgressBarProps> { props ->
     }
 }
 
-inline val bgwProgress: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwProgress: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_progress".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwProgressBar: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwProgressBar: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_progress_bar".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

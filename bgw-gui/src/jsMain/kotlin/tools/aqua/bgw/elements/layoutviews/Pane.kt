@@ -82,5 +82,5 @@ internal val Pane = FC<PaneProps> { props ->
     }
 }
 
-inline val bgwPane: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwPane: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_pane".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

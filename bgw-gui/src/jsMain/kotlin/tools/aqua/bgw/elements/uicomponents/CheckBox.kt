@@ -113,5 +113,5 @@ internal val CheckBox = FC<CheckBoxProps> { props ->
     }
 }
 
-inline val bgwCheckBox: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwCheckBox: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_checkbox".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -91,5 +91,5 @@ internal val PasswordField = FC<PasswordFieldProps> { props ->
     }
 }
 
-inline val bgwPasswordField: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwPasswordField: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_password_field".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

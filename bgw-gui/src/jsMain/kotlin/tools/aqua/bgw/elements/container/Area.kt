@@ -75,5 +75,5 @@ internal val Area = FC<AreaProps> { props ->
     }
 }
 
-inline val bgwArea: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwArea: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_area".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

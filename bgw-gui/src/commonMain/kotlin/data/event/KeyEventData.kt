@@ -16,6 +16,6 @@ internal class KeyEventData(
 ) : InputEventData()
 
 @Serializable
-enum class KeyEventAction {
+internal enum class KeyEventAction {
     PRESS, RELEASE, TYPE
 }

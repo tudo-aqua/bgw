@@ -91,5 +91,5 @@ internal val ComboBox = FC<ComboBoxProps> { props ->
     }
 }
 
-inline val bgwComboBox: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwComboBox: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_combo_box".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

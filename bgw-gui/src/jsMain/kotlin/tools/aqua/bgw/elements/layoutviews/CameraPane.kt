@@ -67,5 +67,5 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
     }
 }
 
-inline val bgwCameraTarget: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwCameraTarget: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_camera_target".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

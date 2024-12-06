@@ -513,46 +513,47 @@ internal val App = FC<AppProps> { props ->
     }
 }
 
-inline val bgwScenes: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwScenes: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_scenes".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
-inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_menu_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwGameScene: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwGameScene: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_game_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwVisuals: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwVisuals: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_visuals".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwContents: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwContents: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_contents".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwText: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwText: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_text".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
-inline fun polygonPath(
+
+internal fun polygonPath(
     value: String,
 ): ClipPath =
     "polygon($value)".unsafeCast<ClipPath>()
 
-inline fun fit(): LengthType.FitContent =
+internal fun fit(): LengthType.FitContent =
     "fit-content".unsafeCast<LengthType.FitContent>()
 
-inline fun minContent(): GridTemplateTracks =
+internal fun minContent(): GridTemplateTracks =
     "min-content".unsafeCast<GridTemplateTracks>()
 
-inline fun bgwContainer(): ContainerName =
+internal fun bgwContainer(): ContainerName =
     "bgwContainer".unsafeCast<ContainerName>()
 
-inline fun menuTransition(): Transition =
+internal fun menuTransition(): Transition =
     ".3s opacity, .3s backdrop-filter".unsafeCast<Transition>()
 
-inline fun transition(duration : Int, property : String): Transition =
+internal fun transition(duration : Int, property : String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()
 
-inline fun transitionAll(duration : Int): Transition =
+internal fun transitionAll(duration : Int): Transition =
     "${duration}ms".unsafeCast<Transition>()
 
-inline fun <T> jsObject(builder: T.() -> Unit): T {
+internal inline fun <T> jsObject(builder: T.() -> Unit): T {
     val obj = js("{}")
     builder(obj.unsafeCast<T>())
     return obj.unsafeCast<T>()

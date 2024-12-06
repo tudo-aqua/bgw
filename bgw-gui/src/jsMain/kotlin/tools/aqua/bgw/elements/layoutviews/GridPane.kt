@@ -109,5 +109,5 @@ internal val ReactGridPane = FC<GridPaneProps> { props ->
         applyCommonEventHandlers(props.data)
     }
 }
-inline val bgwGridPane: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwGridPane: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_grid_pane".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

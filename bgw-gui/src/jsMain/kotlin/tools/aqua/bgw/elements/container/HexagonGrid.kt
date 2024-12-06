@@ -226,8 +226,8 @@ internal val HexagonGrid = FC<HexagonGridProps> { props ->
     }
 }
 
-inline val bgwHexagonGrid: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwHexagonGrid: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_hexagon_grid".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwHexagonContent: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwHexagonContent: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_hexagon_content".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

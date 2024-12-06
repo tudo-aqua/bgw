@@ -20,9 +20,9 @@ import web.html.HTMLButtonElement
 import web.html.HTMLElement
 
 @JsName("DndContext")
-external val DndContext: ComponentClass<DndContextProps>
+internal external val DndContext: ComponentClass<DndContextProps>
 
-external interface DndContextProps : PropsWithChildren {
+internal external interface DndContextProps : PropsWithChildren {
     var onDragEnd: (DragEndEvent) -> Unit
     var onDragStart: (DragStartEvent) -> Unit
     var onDragMove: (DragMultiEvent) -> Unit
@@ -32,20 +32,20 @@ external interface DndContextProps : PropsWithChildren {
     var sensors: Array<dynamic>
 }
 
-external interface Measuring {
+internal external interface Measuring {
     var measure: (element: HTMLElement) -> LayoutRect
 }
 
-external interface DraggableMeasuring : Measuring
+internal external interface DraggableMeasuring : Measuring
 
-external interface DragOverlayMeasuring : Measuring
+internal external interface DragOverlayMeasuring : Measuring
 
-external interface DroppableMeasuring : Measuring {
+internal external interface DroppableMeasuring : Measuring {
     var strategy: MeasuringStrategy
     var frequency: dynamic /* MeasuringFrequency | Number */
 }
 
-external interface MeasuringStrategy {
+internal external interface MeasuringStrategy {
     companion object {
         val Always: MeasuringStrategy
         val BeforeDragging: MeasuringStrategy
@@ -53,105 +53,105 @@ external interface MeasuringStrategy {
     }
 }
 
-external interface MeasuringFrequency {
+internal external interface MeasuringFrequency {
     companion object {
         val Optimized: MeasuringFrequency
     }
 }
 
-external interface MeasuringConfiguration {
+internal external interface MeasuringConfiguration {
     var draggable: DraggableMeasuring?
     var droppable: DroppableMeasuring?
     var dragOverlay: DragOverlayMeasuring?
 }
 
 @JsName("getClientRect")
-external fun getClientRect(node: HTMLElement, options : GetClientRectOptions): LayoutRect
+internal external fun getClientRect(node: HTMLElement, options : GetClientRectOptions): LayoutRect
 
-external interface GetClientRectOptions {
+internal external interface GetClientRectOptions {
     var ignoreTransform: Boolean
 }
 
 @JsName("useDraggable")
-external fun useDraggable(options: DraggableOptions): DraggableResult
+internal external fun useDraggable(options: DraggableOptions): DraggableResult
 
 @JsName("useDroppable")
-external fun useDroppable(options: DroppableOptions): DroppableResult
+internal external fun useDroppable(options: DroppableOptions): DroppableResult
 
 @JsName("DragOverlay")
-external val DragOverlay: ComponentClass<DragOverlayProps>
+internal external val DragOverlay: ComponentClass<DragOverlayProps>
 
-external interface DragOverlayProps : PropsWithChildren, PropsWithClassName, PropsWithStyle {
+internal external interface DragOverlayProps : PropsWithChildren, PropsWithClassName, PropsWithStyle {
     var dropAnimation: Boolean
 }
 
-external interface DraggableOptions {
+internal external interface DraggableOptions {
     var id: String
     var disabled: Boolean
 }
 
-external interface DraggableResult {
+internal external interface DraggableResult {
     val attributes : AriaAttributes
     val listeners: DnDListeners
     val setNodeRef: (Element) -> Unit
     val transform: DraggableResultTransform?
 }
 
-external interface DnDListeners {
+internal external interface DnDListeners {
     val onKeyDown: (KeyboardEvent<*>, id: String) -> Unit
     val onPointerDown: (react.dom.events.PointerEvent<*>, id: String) -> Unit
 }
 
-external interface DraggableResultTransform {
+internal external interface DraggableResultTransform {
     val x: Double
     val y: Double
     val scaleX: Double
     val scaleY: Double
 }
 
-external interface DraggableTransform {
+internal external interface DraggableTransform {
     val x: Double
     val y: Double
 }
 
-external interface DragStartEvent {
+internal external interface DragStartEvent {
     val active: DragEventActive?
 }
 
-external interface DragMultiEvent {
+internal external interface DragMultiEvent {
     val delta : DraggableTransform
     val over: DragEndEventOver?
     val active: DragEventActive?
 }
 
-external interface DragEndEvent {
+internal external interface DragEndEvent {
     val delta : DraggableTransform
     val over: DragEndEventOver?
     val active: DragEventActive?
 }
 
-external interface DragEventActive {
+internal external interface DragEventActive {
     var id: String
 }
 
-external interface DragEndEventOver {
+internal external interface DragEndEventOver {
     var disabled : Boolean
     var rect : LayoutRect
     var id: String
 }
 
-external interface DroppableOptions {
+internal external interface DroppableOptions {
     var id: String
     var disabled: Boolean
 }
 
-external interface DroppableResult {
+internal external interface DroppableResult {
     val rect : LayoutRect
     val isOver: Boolean
     val setNodeRef: (dynamic) -> Unit
 }
 
-external interface LayoutRect {
+internal external interface LayoutRect {
     var height: Double
     var width: Double
     var top : Double
@@ -162,17 +162,17 @@ external interface LayoutRect {
 
 
 
-external interface SensorOptions {
+internal external interface SensorOptions {
     var activationConstraint: dynamic
 }
 
-external interface PointerSensorOptions : SensorOptions
+internal external interface PointerSensorOptions : SensorOptions
 
 @JsName("PointerSensor")
-external val PointerSensor: dynamic
+internal external val PointerSensor: dynamic
 
 @JsName("useSensor")
-external fun useSensor(sensor: dynamic, options: PointerSensorOptions): dynamic
+internal external fun useSensor(sensor: dynamic, options: PointerSensorOptions): dynamic
 
 @JsName("useSensors")
-external fun useSensors(vararg sensors: dynamic): Array<dynamic>
+internal external fun useSensors(vararg sensors: dynamic): Array<dynamic>

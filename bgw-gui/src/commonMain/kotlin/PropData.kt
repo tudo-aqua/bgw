@@ -2,7 +2,7 @@ import data.event.EventData
 import kotlinx.serialization.Serializable
 import tools.aqua.bgw.dialog.DialogType
 
-typealias ID = String
+internal typealias ID = String
 
 // PropData
 

@@ -119,8 +119,8 @@ internal val ListView = FC<ListViewProps> { props ->
     }
 }
 
-inline val bgwListView: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwListView: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_list_view".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwScroll : IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwScroll : IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_scroll".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -92,5 +92,5 @@ internal val TextArea = FC<TextAreaProps> { props ->
     }
 }
 
-inline val bgwTextArea: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwTextArea: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_text_area".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -170,7 +170,7 @@ private val module = SerializersModule {
     }
 }
 
-val jsonMapper = KJson {
+internal val jsonMapper = KJson {
     ignoreUnknownKeys = true
     serializersModule = module
 }

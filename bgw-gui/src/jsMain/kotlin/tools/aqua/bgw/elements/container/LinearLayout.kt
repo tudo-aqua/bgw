@@ -141,5 +141,5 @@ internal val LinearLayout = FC<LinearLayoutProps> { props ->
     }
 }
 
-inline val bgwLinearLayout: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwLinearLayout: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_linear_layout".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -61,7 +61,7 @@ import kotlin.concurrent.timer
 import kotlin.system.exitProcess
 
 
-object Constants {
+internal object Constants {
     val PORT = ServerSocket(0).use { it.localPort }
     // val PORT = 5173
 }

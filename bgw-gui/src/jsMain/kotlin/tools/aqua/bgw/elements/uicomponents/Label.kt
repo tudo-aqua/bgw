@@ -76,5 +76,5 @@ internal val Label = FC<LabelProps> { props ->
     }
 }
 
-inline val bgwLabel: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwLabel: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_label".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

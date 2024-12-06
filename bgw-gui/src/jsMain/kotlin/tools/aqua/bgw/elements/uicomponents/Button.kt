@@ -81,5 +81,5 @@ internal val Button = FC<ButtonProps> { props ->
     }
 }
 
-inline val bgwButton: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwButton: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_button".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

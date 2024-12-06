@@ -92,8 +92,8 @@ internal val ImageVisual = FC<ImageVisualProps> { props ->
     }
 }
 
-inline val bgwImageVisual: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwImageVisual: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_image_visual".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-inline val bgwImageVisualOffset: IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwImageVisualOffset: IntrinsicType<HTMLAttributes<Element>>
     get() = "bgw_image_visual_offset".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
