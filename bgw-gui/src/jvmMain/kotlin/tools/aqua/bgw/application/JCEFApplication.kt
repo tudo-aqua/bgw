@@ -255,7 +255,7 @@ internal class MainFrame(
 
         val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
         val defaultDirs = ProjectDirectories.from("bgw-gui","tools.aqua", BGWAppName)
-        val installDir = Paths.get(defaultDirs.dataLocalDir).toFile()
+        val installDir = Paths.get(defaultDirs.cacheDir).toFile()
         builder.setInstallDir(installDir)
 
         // builder.setInstallDir(File("build/runtime"))
