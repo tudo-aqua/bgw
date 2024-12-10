@@ -6,6 +6,7 @@ import ID
 import InternalCameraPaneData
 import data.event.*
 import data.event.internal.*
+import dev.dirs.ProjectDirectories
 import jsonMapper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -253,22 +254,8 @@ internal class MainFrame(
         builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
 
         val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
-        val userHome = System.getProperty("user.home")
-        val osName = System.getProperty("os.name").lowercase()
-        val installDir = when {
-            osName.contains("win") -> Paths.get(userHome, "AppData", "Local", "Programs", BGWAppName).toFile()
-            osName.contains("mac") -> Paths.get(userHome, "Library", "Application Support", BGWAppName).toFile()
-            osName.contains("nix") || osName.contains("nux") || osName.contains("aix") -> {
-                val xdgDataHome = System.getenv("XDG_DATA_HOME")
-                val linuxInstallDir = if (xdgDataHome.isNullOrEmpty()) {
-                    Paths.get(userHome, ".local", "share", BGWAppName).toFile()
-                } else {
-                    Paths.get(xdgDataHome, BGWAppName).toFile()
-                }
-                linuxInstallDir
-            }
-            else -> throw UnsupportedOperationException("Unsupported operating system: $osName")
-        }
+        val defaultDirs = ProjectDirectories.from("bgw-gui","tools.aqua", BGWAppName)
+        val installDir = Paths.get(defaultDirs.dataLocalDir).toFile()
         builder.setInstallDir(installDir)
 
         // builder.setInstallDir(File("build/runtime"))
