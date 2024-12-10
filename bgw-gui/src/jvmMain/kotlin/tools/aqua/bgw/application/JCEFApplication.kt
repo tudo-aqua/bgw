@@ -257,8 +257,16 @@ internal class MainFrame(
         val osName = System.getProperty("os.name").lowercase()
         val installDir = when {
             osName.contains("win") -> Paths.get(userHome, "AppData", "Local", "Programs", BGWAppName).toFile()
-            osName.contains("mac") -> Paths.get(userHome, "Applications", BGWAppName).toFile()
-            osName.contains("nix") || osName.contains("nux") || osName.contains("aix") -> Paths.get(userHome, ".local", "share", BGWAppName).toFile()
+            osName.contains("mac") -> Paths.get(userHome, "Library", "Application Support", BGWAppName).toFile()
+            osName.contains("nix") || osName.contains("nux") || osName.contains("aix") -> {
+                val xdgDataHome = System.getenv("XDG_DATA_HOME")
+                val linuxInstallDir = if (xdgDataHome.isNullOrEmpty()) {
+                    Paths.get(userHome, ".local", "share", BGWAppName).toFile()
+                } else {
+                    Paths.get(xdgDataHome, BGWAppName).toFile()
+                }
+                linuxInstallDir
+            }
             else -> throw UnsupportedOperationException("Unsupported operating system: $osName")
         }
         builder.setInstallDir(installDir)
