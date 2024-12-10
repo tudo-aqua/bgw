@@ -9,15 +9,10 @@ import data.event.internal.*
 import jsonMapper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import mapper.DialogMapper
-import me.friwi.jcefmaven.CefAppBuilder
-import me.friwi.jcefmaven.CefBuildInfo
-import me.friwi.jcefmaven.EnumPlatform
-import me.friwi.jcefmaven.EnumProgress
-import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
+import me.friwi.jcefmaven.*
 import org.cef.CefApp
 import org.cef.CefApp.CefAppState
 import org.cef.CefClient
@@ -26,14 +21,12 @@ import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
 import org.cef.browser.CefMessageRouter.CefMessageRouterConfig
-import org.cef.callback.CefCommandLine
 import org.cef.callback.CefContextMenuParams
 import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
-import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Color
@@ -41,7 +34,6 @@ import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
 import tools.aqua.bgw.dialog.Dialog
-import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.util.Coordinate
 import java.awt.BorderLayout
@@ -50,10 +42,10 @@ import java.awt.KeyboardFocusManager
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
-import java.lang.management.ManagementFactory
 import java.net.ServerSocket
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.stream.Collectors
-import java.util.stream.Stream
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants.EXIT_ON_CLOSE
@@ -259,7 +251,27 @@ internal class MainFrame(
         val builder = CefAppBuilder()
         builder.cefSettings.windowless_rendering_enabled = useOSR
         builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
-        builder.setInstallDir(File("build/runtime"))
+
+        val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
+        val userHome = System.getProperty("user.home")
+        val osName = System.getProperty("os.name").lowercase()
+        val installDir = when {
+            osName.contains("win") -> Paths.get(userHome, "AppData", "Local", "Programs", BGWAppName).toFile()
+            osName.contains("mac") -> Paths.get(userHome, "Applications", BGWAppName).toFile()
+            osName.contains("nix") || osName.contains("nux") || osName.contains("aix") -> Paths.get(userHome, ".local", "share", BGWAppName).toFile()
+            else -> throw UnsupportedOperationException("Unsupported operating system: $osName")
+        }
+        builder.setInstallDir(installDir)
+
+        // builder.setInstallDir(File("build/runtime"))
+
+
+
+        val tmpDir = Files.createTempDirectory("bgw-")
+        tmpDir.toFile().deleteOnExit()
+        builder.cefSettings.root_cache_path = tmpDir.toString()
+
+
         builder.setAppHandler(object : MavenCefAppHandlerAdapter() {
             override fun stateHasChanged(state: CefAppState) {
                 // println("CEF State: $state")

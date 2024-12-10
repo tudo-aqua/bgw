@@ -50,14 +50,21 @@ fun buildPropertyFile() {
     parentFile.mkdirs()
     writeText(generateProperties())
   }
+
+    rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
+        println("Generate properties into $absolutePath")
+        parentFile.mkdirs()
+        writeText(generateProperties("application"))
+    }
 }
 
-fun generateProperties(prefix: String = "") =
+fun generateProperties(suffix: String = "") =
     """
-    package tools.aqua.bgw
+    package tools.aqua.bgw${if (suffix.isNotEmpty()) ".$suffix" else ""}
 
     internal object Config {
         val USE_SOCKETS = ${useSockets ?: "true"}
+        val BGW_VERSION = "${rootProject.version}"
     }
 """.trimIndent()
 
