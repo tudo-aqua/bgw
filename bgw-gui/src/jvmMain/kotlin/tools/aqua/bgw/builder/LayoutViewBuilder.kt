@@ -6,7 +6,7 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Frontend
 
-object LayoutViewBuilder {
+internal object LayoutViewBuilder {
     fun build(layoutView: LayoutView<out ComponentView>) {
         when(layoutView) {
             is GridPane<*> -> buildGrid(layoutView)

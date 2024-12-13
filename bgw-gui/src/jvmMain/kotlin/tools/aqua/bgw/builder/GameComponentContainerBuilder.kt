@@ -7,7 +7,7 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.Frontend
 
-object GameComponentContainerBuilder {
+internal object GameComponentContainerBuilder {
     fun build(gameComponentContainer: GameComponentContainer<out DynamicComponentView>) {
         gameComponentContainer.observableComponents.guiListener = { _, _ -> Frontend.updateComponent(gameComponentContainer) }
         when(gameComponentContainer) {

@@ -3,7 +3,7 @@ package tools.aqua.bgw.builder
 import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.visual.*
 
-object VisualBuilder {
+internal object VisualBuilder {
     fun build(visual: Visual) {
         when (visual) {
             is CompoundVisual -> buildCompoundVisual(visual)

@@ -17,7 +17,7 @@ import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.Frontend
 import java.time.Duration
 
-val componentChannel: Channel = Channel("/ws").apply {
+internal val componentChannel: Channel = Channel("/ws").apply {
     onClientConnected = {
         Frontend.application
         val json = jsonMapper.encodeToString(PropData(SceneMapper.map(
@@ -33,13 +33,13 @@ val componentChannel: Channel = Channel("/ws").apply {
     }
 }
 
-val internalChannel: Channel = Channel("/internal").apply {
+internal val internalChannel: Channel = Channel("/internal").apply {
     onClientMessage = { session, text ->
 
     }
 }
 
-fun HTML.index() {
+internal fun HTML.index() {
     body {
         div {
             classes = setOf("bgw-root-container")
@@ -56,7 +56,7 @@ fun HTML.index() {
     }
 }
 
-fun Application.module() {
+internal fun Application.module() {
     configureRouting()
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
@@ -68,7 +68,7 @@ fun Application.module() {
     internalChannel.install(this)
 }
 
-fun Application.configureRouting() {
+internal fun Application.configureRouting() {
     routing {
         get("/") {
             call.respondHtml(HttpStatusCode.OK, HTML::index)
@@ -81,7 +81,7 @@ fun Application.configureRouting() {
 
 internal val messageQueue = mutableListOf<ActionProp>()
 
-fun CoroutineScope.launchPeriodicAsync(
+internal fun CoroutineScope.launchPeriodicAsync(
     repeatMillis: Long,
     action: (suspend () -> Unit)
 ) = this.async {
@@ -95,7 +95,7 @@ fun CoroutineScope.launchPeriodicAsync(
     }
 }
 
-var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {
+internal var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {
     if((Frontend.applicationEngine as JCEFApplication).getTitle() !== Frontend.application.title) {
         (Frontend.applicationEngine as JCEFApplication).setTitle(Frontend.application.title)
     }

@@ -9,7 +9,7 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.Frontend
 
-object ComponentViewBuilder {
+internal object ComponentViewBuilder {
     fun build(componentView: ComponentView) {
 
         when(componentView) {

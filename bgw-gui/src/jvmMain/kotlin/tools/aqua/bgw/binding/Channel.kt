@@ -10,7 +10,7 @@ import tools.aqua.bgw.core.Frontend
 import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
-class Channel(val path: String = "/ws") {
+internal class Channel(val path: String = "/ws") {
     val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
     var onClientConnected: suspend (WebSocketSession) -> Unit = { }
     var onClientMessage: (session: WebSocketSession, text: String) -> Unit = { _, _ -> }

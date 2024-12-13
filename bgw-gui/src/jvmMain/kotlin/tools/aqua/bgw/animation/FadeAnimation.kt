@@ -42,6 +42,8 @@ class FadeAnimation<T : ComponentView>(
     duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
+    constructor(componentView: T, goalOpacity: Number) : this(componentView = componentView, toOpacity = goalOpacity)
+
   /** Initial X position. */
   val fromOpacity: Double = fromOpacity.toDouble()
 

@@ -36,13 +36,15 @@ import kotlin.math.min
  * the sub-image size. If width or height is passed as -1, the remaining image from offsetX/offsetY
  * will be loaded.
  *
- * @constructor Loads an [ImageVisual] from a [BufferedImage].
+ * @constructor Loads an [ImageVisual] from a path in resources.
  *
  * @param image Image to show.
  * @param width Width of sub-image. Pass -1 to use full width. Default: -1.
  * @param height Height of sub-image. Pass -1 to use full height. Default: -1.
  * @param offsetX Left bound of sub-image. Default: 0.
  * @param offsetY Top bound of sub-image. Default: 0.
+ *
+ * @since 1.0
  */
 open class ImageVisual(
     val path: String = "",
@@ -51,6 +53,10 @@ open class ImageVisual(
     val offsetX: Int = 0,
     val offsetY: Int = 0
 ) : SingleLayerVisual() {
+
+    /**
+     * Load image from [BufferedImage].
+     */
     constructor(
         image: BufferedImage,
         width: Int = -1,
@@ -59,7 +65,7 @@ open class ImageVisual(
         offsetY: Int = 0,
     ) : this(toDataURI(image), width, height, offsetX, offsetY)
 
-    companion object {
+    private companion object {
         fun toDataURI(image: BufferedImage) : String {
             val baos = ByteArrayOutputStream()
             ImageIO.write(image, "png", baos)

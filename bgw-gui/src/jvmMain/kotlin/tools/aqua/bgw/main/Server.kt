@@ -19,11 +19,11 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import kotlin.random.Random
 
-fun getRandomImageVisual(): ImageVisual {
+internal fun getRandomImageVisual(): ImageVisual {
     return ImageVisual("https://picsum.photos/200?id=${Random.nextInt()}")
 }
 
-fun main() {
+internal fun main() {
     val application = object : BoardGameApplication() {
         val scene = object : BoardGameScene(1920.0, 1080.0, ColorVisual.GREEN) {
             val label = Label(posX = 0, posY = 0, visual = CompoundVisual(

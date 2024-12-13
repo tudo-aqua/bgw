@@ -36,11 +36,15 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double)
     constructor(red: Int, green: Int, blue: Int, alpha: Int) : this(red, green, blue, alpha.toDouble() / 255.0)
 
     /**
-     * Creates a [Color] with given red, green and blue values.
+     * Creates a [Color] with given hex string value.
      *
-     * @constructor Creates a [Color] with given red, green and blue values.
+     * @constructor Creates a [Color] with given hex string value.
      *
      * @param hex Hexadecimal string representation of the color.
+     *
+     * @since 1.0
+     *
+     * @exception IllegalArgumentException If the given hex string is not in the correct format.
      */
     constructor(hex: String) : this(
         hex.substring(1, 3).toInt(16),
@@ -49,9 +53,7 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double)
     )
 
     /**
-     * Creates a [Color] with given red, green and blue values.
-     *
-     * @constructor Creates a [Color] with given red, green and blue values.
+     * Creates a [Color] with given hex value.
      *
      * @param hex Hexadecimal numerical representation of the color.
      */

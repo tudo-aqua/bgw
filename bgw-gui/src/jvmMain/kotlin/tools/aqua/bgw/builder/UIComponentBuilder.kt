@@ -3,7 +3,7 @@ package tools.aqua.bgw.builder
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Frontend
 
-object UIComponentBuilder {
+internal object UIComponentBuilder {
     @Suppress("DuplicatedCode")
     fun build(uiComponent: UIComponent) {
         uiComponent.internalCSSProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
