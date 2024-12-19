@@ -55,32 +55,24 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
     }
 
   /**
-   * Creates a solid [ColorVisual] filled with given RGBA values.
-   *
-   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 0.5 (50%) and
-   * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency. All values must be in
-   * range 0.0 until 1.0 which corresponds to 00..FF in hexadecimal.
-   *
-   * @param r Red channel.
-   * @param g Green channel.
-   * @param b Blue channel.
-   * @param a Alpha channel. Default: 1.0.
-   */
-  constructor(r: Int, g: Int, b: Int, a: Double = 1.0) : this(Color(r, g, b, a))
-
-  /**
-   * Creates a solid [ColorVisual] filled with given RGBA values.
-   *
-   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%) and
-   * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency. All values must be in
-   * range 0 until 255 which corresponds to 00..FF in hexadecimal.
-   *
-   * @param r Red channel.
-   * @param g Green channel.
-   * @param b Blue channel.
-   * @param a Alpha channel. Default: 255.
-   */
-  constructor(r: Int, g: Int, b: Int, a : Int = 255) : this(Color(r, g, b, a.toDouble() / 255))
+  * Creates a solid [ColorVisual] filled with given RGBA values.
+  *
+  * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 0.5 (50%) and
+  * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
+  *
+  * @param r Red channel between 0 and 255.
+  * @param g Green channel between 0 and 255.
+  * @param b Blue channel between 0 and 255.
+  * @param alpha Alpha channel (0 - 255 for Int, 0.0 - 1.0 for Double).
+  * Value is 1.0 by default and if parameter is out of a valid range.
+  */
+  constructor(r: Int, g: Int, b: Int, alpha: Number = 1.0) : this(Color(r, g, b,
+    when (alpha) {
+      is Int -> if (alpha in 0..255) alpha / 255.0 else 1.0
+      is Double -> if (alpha in 0.0..1.0) alpha.toDouble() else 1.0
+      else -> 1.0
+    }
+  ))
 
   /**
    * A solid color visual. Displays a rectangle filled with the given [color].
