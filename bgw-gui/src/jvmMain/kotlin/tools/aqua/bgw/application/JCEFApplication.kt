@@ -3,7 +3,7 @@ package tools.aqua.bgw.application
 import Base64
 import DialogData
 import ID
-import InternalCameraPaneData
+import InternalCameraPanData
 import data.event.*
 import data.event.internal.*
 import dev.dirs.ProjectDirectories
@@ -146,19 +146,11 @@ internal class JCEFApplication : Application {
                         is RadioChangedEventData -> {
                             if(component is BinaryStateButton) component.isSelected = eventData.value
                         }
-                        is ScrollChangedEventData -> {
-                            if(component is CameraPane<*>) {
-                                component.anchorPointProperty.setInternal(Coordinate(eventData.scrollLeft, eventData.scrollTop))
-                            }
-                        }
-                        is ZoomChangedEventData -> {
+                        is TransformChangedEventData -> {
                             if(component is CameraPane<*>) {
                                 component.zoomProperty.setInternal(eventData.zoomLevel)
-                            }
-                        }
-                        is InternalCameraPaneData -> {
-                            if(component is CameraPane<*>) {
-                                component.internalData = eventData
+                                component.panDataProperty.setInternal(InternalCameraPanData())
+                                component.anchorPointProperty.setInternal(Coordinate(eventData.anchor.first, eventData.anchor.second))
                             }
                         }
                         is DragGestureStartedEventData -> {

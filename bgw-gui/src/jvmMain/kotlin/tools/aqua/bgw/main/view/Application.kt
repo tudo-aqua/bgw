@@ -23,11 +23,11 @@ internal object Application : BoardGameApplication() {
     init {
         loadFont("Rubik.ttf")
         // showGameScene(cardLayoutScene)
-        // showGameScene(hexGrid)
+        showGameScene(hexGrid)
         // showGameScene(animation)
         // showGameScene(grid)
         // showGameScene(dragDropScene)
-        showMenuScene(uiScene)
+        // showMenuScene(uiScene)
         // showGameScene(visualScene)
     }
 }

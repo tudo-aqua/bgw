@@ -17,10 +17,9 @@
 
 package tools.aqua.bgw.components.layoutviews
 
-import Data
-import InternalCameraPaneData
-import kotlinx.serialization.Serializable
+import InternalCameraPanData
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -53,13 +52,13 @@ open class CameraPane<T : LayoutView<*>>(
      */
     val zoomProperty: DoubleProperty = DoubleProperty(1)
 
-    internal var internalData: InternalCameraPaneData = InternalCameraPaneData()
+    internal var internalData: InternalCameraPanData = InternalCameraPanData()
 
     /** Zoom factor of the camera starting from 1. */
     var zoom: Double
         get() = zoomProperty.value
         set(value) {
-            zoomProperty.value = value
+            zoom(value)
         }
 
     /**
@@ -79,7 +78,8 @@ open class CameraPane<T : LayoutView<*>>(
             interactiveProperty.value = value
         }
 
-    /** Upper-left corner of the current scrolling window. It is initialized at (0,0) */
+    /** Upper-left corner of the current scrolling window. */
+    @Deprecated("May result in wrong values.", level = DeprecationLevel.WARNING)
     val scroll: Coordinate
         get() = anchorPoint
 
@@ -93,28 +93,116 @@ open class CameraPane<T : LayoutView<*>>(
             }
         }
 
+    internal val panDataProperty: Property<InternalCameraPanData> = Property(InternalCameraPanData())
+
+    internal var panData: InternalCameraPanData
+        get() = panDataProperty.value
+        set(value) {
+            panDataProperty.value = value
+        }
+
+    internal val panMouseButtonProperty: Property<MouseButtonType> =
+        Property(MouseButtonType.LEFT_BUTTON)
+
+    /** The mouse button that is used to pan the camera pane. */
+    var panMouseButton: MouseButtonType
+        get() = panMouseButtonProperty.value
+        set(value) {
+            panMouseButtonProperty.value = value
+        }
+
     init {
         target.parent = this
     }
 
     /**
-     * pans the view of the camera to the specified coordinates. The coordinates specified represent
-     * the upper-left corner of the view.
+     * pans the view of the camera to focus the specified coordinates and zoom level. The coordinates specified represent
+     * the center of the view.
      * @param x The x-coordinate to scroll to.
      * @param y The y-coordinate to scroll to.
+     * @param zoom The zoom level to zoom to.
+     * @param smooth Whether the pan should be smooth or instant.
      */
-    fun pan(x: Number, y: Number) {
-        anchorPoint = Coordinate(x, y)
+    fun pan(x: Number, y: Number, zoom: Double, smooth: Boolean = true) {
+        panData = InternalCameraPanData(
+            panSmooth = smooth,
+            panBy = false,
+            panTo = Pair(-x.toDouble(), -y.toDouble()),
+            zoom = zoom
+        )
+        zoomProperty.setInternal(zoom)
+    }
+
+    /**
+     * pans the view of the camera to focus the specified coordinates. The coordinates specified represent
+     * the center of the view.
+     * @param x The x-coordinate to scroll to.
+     * @param y The y-coordinate to scroll to.
+     * @param smooth Whether the pan should be smooth or instant.
+     */
+    fun pan(x: Number, y: Number, smooth: Boolean = true) {
+        if(panData.zoomOnly) {
+            pan(x, y, zoom = panData.zoom!!, smooth = smooth)
+        } else {
+            panData = InternalCameraPanData(
+                panSmooth = smooth,
+                panBy = false,
+                panTo = Pair(-x.toDouble(), -y.toDouble())
+            )
+        }
+    }
+
+    /**
+     * pans the view of the camera by the given offsets and zooms to the specified zoom level.
+     * @param xOffset The amount to pan the view horizontally.
+     * @param yOffset The amount to pan the view vertically.
+     * @param zoom The zoom level to zoom to.
+     * @param smooth Whether the pan should be smooth or instant.
+     */
+    fun panBy(xOffset: Number, yOffset: Number, zoom: Double, smooth: Boolean = true) {
+        panData = InternalCameraPanData(
+            panSmooth = smooth,
+            panBy = true,
+            panTo = Pair(-xOffset.toDouble(), -yOffset.toDouble()),
+            zoom = zoom
+        )
+        zoomProperty.setInternal(zoom)
     }
 
     /**
      * pans the view of the camera by the given offsets.
      * @param xOffset The amount to pan the view horizontally.
      * @param yOffset The amount to pan the view vertically.
+     * @param smooth Whether the pan should be smooth or instant.
      */
-    fun panBy(xOffset: Number, yOffset: Number) {
-        anchorPoint =
-            Coordinate(anchorPoint.xCoord + xOffset.toDouble(), anchorPoint.yCoord + yOffset.toDouble())
+    fun panBy(xOffset: Number, yOffset: Number, smooth: Boolean = true) {
+        if (panData.zoomOnly) {
+            panBy(xOffset, yOffset, zoom = panData.zoom!!, smooth = smooth)
+        } else {
+            panData = InternalCameraPanData(
+                panSmooth = smooth,
+                panBy = true,
+                panTo = Pair(-xOffset.toDouble(), -yOffset.toDouble())
+            )
+        }
+    }
+
+    /**
+     * Zooms the view of the camera to the specified zoom level.
+     *
+     * @param zoom The zoom level to zoom to.
+     */
+    private fun zoom(zoom: Double) {
+        if(panData.panTo != null) {
+            pan(panData.panTo!!.first, panData.panTo!!.second, zoom, panData.panSmooth)
+        } else if(panData.panBy) {
+            panBy(panData.panTo!!.first, panData.panTo!!.second, zoom, panData.panSmooth)
+        } else {
+            panData = InternalCameraPanData(
+                zoom = zoom,
+                zoomOnly = true
+            )
+        }
     }
 
     override fun removeChild(component: ComponentView) {

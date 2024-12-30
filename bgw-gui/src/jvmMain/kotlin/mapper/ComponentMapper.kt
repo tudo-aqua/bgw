@@ -9,7 +9,6 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
-import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
@@ -116,10 +115,10 @@ internal object ComponentMapper {
 
             is CameraPane<*> -> (CameraPaneData().fillData(componentView) as CameraPaneData).apply {
                 target = LayoutMapper.map(componentView.target)
-                zoom = componentView.zoom
                 interactive = componentView.interactive
-                scroll = CoordinateData(componentView.scroll.xCoord, componentView.scroll.yCoord)
-                internalData = componentView.internalData
+                internalPanData = componentView.panData
+                panButton = componentView.panMouseButton.name.lowercase()
+
                 // ! nightly - isVerticalLocked
                 // ! nightly - isHorizontalLocked
                 // ! nightly - isZoomLocked

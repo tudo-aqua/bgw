@@ -9,6 +9,8 @@ internal object CameraPaneBuilder {
         cameraPane.zoomProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
         cameraPane.interactiveProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
         cameraPane.anchorPointProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
+        cameraPane.panDataProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
+        cameraPane.panMouseButtonProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
         ComponentViewBuilder.build(cameraPane.target)
     }
 }

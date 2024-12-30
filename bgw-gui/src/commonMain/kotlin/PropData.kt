@@ -214,10 +214,9 @@ internal class GridElementData(
 @Serializable
 internal class CameraPaneData : ComponentViewData() {
     var target : LayoutViewData? = null
-    var zoom : Double = 1.0
     var interactive : Boolean = false
-    var scroll : CoordinateData = CoordinateData(0.0,0.0)
-    var internalData : InternalCameraPaneData = InternalCameraPaneData()
+    var panButton : String = "left_button"
+    var internalPanData : InternalCameraPanData = InternalCameraPanData()
 }
 
 @Serializable
