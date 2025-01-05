@@ -1,4 +1,5 @@
 import data.event.EventData
+import data.event.InternalCameraPanData
 import kotlinx.serialization.Serializable
 import tools.aqua.bgw.dialog.DialogType
 

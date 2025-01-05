@@ -1,18 +1,18 @@
-package mapper
+package tools.aqua.bgw.mapper
 
 import AnimationData
 import data.animation.*
 import tools.aqua.bgw.animation.*
 
 internal object AnimationMapper {
-    fun AnimationData.fillData(animation: Animation) : AnimationData {
+    private fun AnimationData.fillData(animation: Animation) : AnimationData {
         return this.apply {
             id = animation.id
             duration = animation.duration
         }
     }
 
-    fun ComponentAnimationData.fillData(componentAnimation: ComponentAnimation<*>) : ComponentAnimationData {
+    private fun ComponentAnimationData.fillData(componentAnimation: ComponentAnimation<*>) : ComponentAnimationData {
         return this.apply {
             id = componentAnimation.id
             componentView = ComponentMapper.map(componentAnimation.componentView)
@@ -29,16 +29,13 @@ internal object AnimationMapper {
                     is RotationAnimation<*> -> RotationAnimationData().fillData(animation)
                     is ScaleAnimation<*> -> ScaleAnimationData().fillData(animation)
                     is FlipAnimation<*> -> FlipAnimationData().fillData(animation)
-                    // is ShakeAnimation<*> -> TODO()
 
                     is SteppedComponentAnimation<*> -> {
                         when(animation) {
                             is DiceAnimation<*> -> DiceAnimationData().fillData(animation) as SteppedComponentAnimationData
                             is RandomizeAnimation<*> -> RandomizeAnimationData().fillData(animation) as SteppedComponentAnimationData
-                            else -> throw IllegalArgumentException("Unknown animation type: ${animation::class.simpleName}")
                         }
                     }
-                    else -> throw IllegalArgumentException("Unknown animation type: ${animation::class.simpleName}")
                 }
             }
 
@@ -99,7 +96,7 @@ internal object AnimationMapper {
                 duration = animation.duration
             }
 
-            else -> TODO("Not implemented")
+            else -> throw IllegalArgumentException("Unknown animation type: ${animation::class.simpleName}")
         }
     }
 }

@@ -8,7 +8,7 @@ import ID
 import JsonData
 import PropData
 import data.event.AnimationFinishedEventData
-import data.event.internal.LoadEventData
+import data.event.LoadEventData
 import jsonMapper
 import kotlinx.browser.document
 import org.w3c.dom.CustomEvent

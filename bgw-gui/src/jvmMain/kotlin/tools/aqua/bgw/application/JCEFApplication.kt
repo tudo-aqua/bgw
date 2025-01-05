@@ -3,16 +3,14 @@ package tools.aqua.bgw.application
 import Base64
 import DialogData
 import ID
-import InternalCameraPanData
 import data.event.*
-import data.event.internal.*
 import dev.dirs.ProjectDirectories
 import jsonMapper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import mapper.DialogMapper
+import tools.aqua.bgw.mapper.DialogMapper
 import me.friwi.jcefmaven.*
 import org.cef.CefApp
 import org.cef.CefApp.CefAppState
@@ -30,7 +28,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.core.*
 import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
@@ -69,7 +67,7 @@ internal class JCEFApplication : Application {
         EventQueue.invokeLater {
             frame = MainFrame(loadCallback = callback)
             JCEFApplication::class.java.getResource("/icon.png").let { ImageIO.read(it) }.let { frame?.iconImage = it }
-            frame?.title = "BoardGameWork Application"
+            frame?.title = DEFAULT_WINDOW_TITLE
 
             frame?.defaultCloseOperation = EXIT_ON_CLOSE
             frame?.isVisible = true

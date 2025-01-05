@@ -22,9 +22,9 @@ package tools.aqua.bgw.core
 /**
  * Used to define the scaling behaviour of a [Scene].
  *
- * @see BoardGameScene
- * @see BoardGameApplication
+ * @since 0.1
  */
+@Deprecated("ScaleMode is no longer used as of BGW 1.0.")
 enum class ScaleMode {
   /** Fully automatic scaling to window size. */
   FULL,

@@ -1,12 +1,9 @@
-package data.event.internal
+package data.event
 
-import ComponentViewData
 import ID
-import data.event.EventData
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal class DragDroppedEventData(
     var target: ID
-) : EventData() {
-}
+) : EventData()

@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.components.layoutviews
 
-import InternalCameraPanData
+import data.event.InternalCameraPanData
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.observable.properties.BooleanProperty

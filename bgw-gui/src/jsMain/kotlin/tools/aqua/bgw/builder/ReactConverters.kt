@@ -2,7 +2,6 @@ package tools.aqua.bgw.builder
 
 import ID
 import data.event.*
-import data.event.internal.*
 import tools.aqua.bgw.DragEndEvent
 import tools.aqua.bgw.DragMultiEvent
 import tools.aqua.bgw.DragStartEvent
@@ -76,7 +75,7 @@ internal object ReactConverters {
 
     private fun ReactKeyEvent<*>.toKeyCode(): KeyCode {
         KeyCode.entries.forEach {
-            if (it.getKeyCodes().contains(this.key)) return it
+            if (it.keyCodes.contains(this.key)) return it
         }
         return KeyCode.UNDEFINED
     }

@@ -1,4 +1,3 @@
-
 package data.animation
 
 import AnimationData
@@ -7,6 +6,6 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-internal abstract class ComponentAnimationData() : AnimationData() {
+internal abstract class ComponentAnimationData : AnimationData() {
     var componentView: ComponentViewData? = null
 }

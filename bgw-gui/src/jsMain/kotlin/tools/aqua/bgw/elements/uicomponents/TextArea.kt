@@ -1,37 +1,20 @@
 package tools.aqua.bgw.elements.uicomponents
 
-import PasswordFieldData
 import TextAreaData
-import TextFieldData
 import csstype.PropertiesBuilder
 import web.cssom.*
-import data.event.KeyEventAction
-import data.event.internal.SelectionChangedEventData
-import data.event.internal.TextInputChangedEventData
+import data.event.TextInputChangedEventData
 import emotion.react.css
-import kotlinx.browser.document
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLSelectElement
 import react.*
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.textarea
 import tools.aqua.bgw.DroppableOptions
-import tools.aqua.bgw.DroppableResult
-import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
-import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
-import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
-import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
-import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
-import web.html.InputType
 
 internal external interface TextAreaProps : Props {
     var data: TextAreaData

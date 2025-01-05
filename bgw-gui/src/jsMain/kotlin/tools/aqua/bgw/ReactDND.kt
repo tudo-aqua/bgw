@@ -6,8 +6,8 @@ package tools.aqua.bgw
 import ID
 import data.event.DragEventAction
 import data.event.EventData
-import data.event.internal.DragDroppedEventData
-import data.event.internal.DragGestureStartedEventData
+import data.event.DragDroppedEventData
+import data.event.DragGestureStartedEventData
 import org.w3c.dom.pointerevents.PointerEvent
 import react.*
 import react.dom.aria.AriaAttributes

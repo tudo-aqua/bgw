@@ -21,21 +21,26 @@ package tools.aqua.bgw.event
 
 import kotlinx.serialization.Serializable
 
-/** Enum for all available mouse buttons. */
+/**
+ * Enum for all available mouse button clicks.
+ *
+ * @since 0.1
+ */
 @Serializable
 enum class MouseButtonType {
-  /** LEFT / primary mouse button. */
-  LEFT_BUTTON,
+    /** LEFT / primary mouse button click. */
+    LEFT_BUTTON,
 
-  /** RIGHT / secondary mouse button. */
-  RIGHT_BUTTON,
+    /** RIGHT / secondary mouse button click. */
+    RIGHT_BUTTON,
 
-  /** MOUSE WHEEL button. */
-  MOUSE_WHEEL,
+    /** MOUSE WHEEL button click. */
+    MOUSE_WHEEL,
 
-  /** All other buttons. */
-  OTHER,
+    /** All other mouse button clicks. */
+    OTHER,
 
-  /** Unspecified. */
-  UNSPECIFIED
+    /** Unspecified. */
+    @Deprecated("MouseButtonType.UNSPECIFIED should not be used.")
+    UNSPECIFIED
 }

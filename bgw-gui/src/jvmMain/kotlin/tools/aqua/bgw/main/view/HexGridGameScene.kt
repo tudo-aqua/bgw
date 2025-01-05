@@ -10,9 +10,7 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.core.Color
-import tools.aqua.bgw.core.HexOrientation
+import tools.aqua.bgw.core.*
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.style.BorderRadius
@@ -146,8 +144,7 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual(Color(0, 63, 0))
     ).apply {
         onMouseClicked = {
-            cameraPane.panMouseButton = MouseButtonType.MOUSE_WHEEL
-            cameraPane.visual = ColorVisual.YELLOW
+            Application.isFullScreen = !Application.isFullScreen
         }
     }
 

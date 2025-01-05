@@ -30,61 +30,65 @@ import tools.aqua.bgw.core.VerticalAlignment.TOP
  * @property verticalAlignment Vertical alignment component.
  * @property horizontalAlignment Horizontal alignment component.
  *
- * @see BoardGameScene
- * @see BoardGameApplication
  * @see VerticalAlignment
  * @see HorizontalAlignment
+ *
+ * @since 0.1
  */
 enum class Alignment(
-  val verticalAlignment: VerticalAlignment,
-  val horizontalAlignment: HorizontalAlignment
+    val verticalAlignment: VerticalAlignment,
+    val horizontalAlignment: HorizontalAlignment
 ) {
-  /** [Alignment] in the top left corner. */
-  TOP_LEFT(TOP, LEFT),
+    /** [Alignment] in the top left corner. */
+    TOP_LEFT(TOP, LEFT),
 
-  /** [Alignment] in the top right corner. */
-  TOP_RIGHT(TOP, RIGHT),
+    /** [Alignment] in the top right corner. */
+    TOP_RIGHT(TOP, RIGHT),
 
-  /** [Alignment] on the top centered horizontally. */
-  TOP_CENTER(TOP, HorizontalAlignment.CENTER),
+    /** [Alignment] on the top centered horizontally. */
+    TOP_CENTER(TOP, HorizontalAlignment.CENTER),
 
-  /** [Alignment] in the bottom left corner. */
-  BOTTOM_LEFT(BOTTOM, LEFT),
+    /** [Alignment] in the bottom left corner. */
+    BOTTOM_LEFT(BOTTOM, LEFT),
 
-  /** [Alignment] in the bottom right corner. */
-  BOTTOM_RIGHT(BOTTOM, RIGHT),
+    /** [Alignment] in the bottom right corner. */
+    BOTTOM_RIGHT(BOTTOM, RIGHT),
 
-  /** [Alignment] on the bottom centered horizontally. */
-  BOTTOM_CENTER(BOTTOM, HorizontalAlignment.CENTER),
+    /** [Alignment] on the bottom centered horizontally. */
+    BOTTOM_CENTER(BOTTOM, HorizontalAlignment.CENTER),
 
-  /** [Alignment] on the left centered vertically. */
-  CENTER_LEFT(VerticalAlignment.CENTER, LEFT),
+    /** [Alignment] on the left centered vertically. */
+    CENTER_LEFT(VerticalAlignment.CENTER, LEFT),
 
-  /** [Alignment] on the right centered vertically. */
-  CENTER_RIGHT(VerticalAlignment.CENTER, RIGHT),
+    /** [Alignment] on the right centered vertically. */
+    CENTER_RIGHT(VerticalAlignment.CENTER, RIGHT),
 
-  /** [Alignment] centered horizontally and vertically. */
-  CENTER(VerticalAlignment.CENTER, HorizontalAlignment.CENTER);
+    /** [Alignment] centered horizontally and vertically. */
+    CENTER(VerticalAlignment.CENTER, HorizontalAlignment.CENTER);
 
-  companion object {
-    /**
-     * Creates [Alignment] instance out of [VerticalAlignment] and [HorizontalAlignment].
-     *
-     * @param v Vertical component.
-     * @param h Horizontal component.
-     */
-    fun of(v: VerticalAlignment, h: HorizontalAlignment): Alignment =
-        when {
-          v == TOP && h == LEFT -> TOP_LEFT
-          v == TOP && h == RIGHT -> TOP_RIGHT
-          v == TOP && h == HorizontalAlignment.CENTER -> TOP_CENTER
-          v == BOTTOM && h == LEFT -> BOTTOM_LEFT
-          v == BOTTOM && h == RIGHT -> BOTTOM_RIGHT
-          v == BOTTOM && h == HorizontalAlignment.CENTER -> BOTTOM_CENTER
-          v == VerticalAlignment.CENTER && h == LEFT -> CENTER_LEFT
-          v == VerticalAlignment.CENTER && h == RIGHT -> CENTER_RIGHT
-          v == VerticalAlignment.CENTER && h == HorizontalAlignment.CENTER -> CENTER
-          else -> throw UnsupportedOperationException()
+    companion object {
+        /**
+         * Creates a unified [Alignment] instance out of [VerticalAlignment] and [HorizontalAlignment].
+         *
+         * @param v Vertical component of [Alignment].
+         * @param h Horizontal component [Alignment].
+         *
+         * @see VerticalAlignment
+         * @see HorizontalAlignment
+         *
+         * @since 0.1
+         */
+        fun of(v: VerticalAlignment, h: HorizontalAlignment): Alignment = when {
+            v == TOP && h == LEFT -> TOP_LEFT
+            v == TOP && h == RIGHT -> TOP_RIGHT
+            v == TOP && h == HorizontalAlignment.CENTER -> TOP_CENTER
+            v == BOTTOM && h == LEFT -> BOTTOM_LEFT
+            v == BOTTOM && h == RIGHT -> BOTTOM_RIGHT
+            v == BOTTOM && h == HorizontalAlignment.CENTER -> BOTTOM_CENTER
+            v == VerticalAlignment.CENTER && h == LEFT -> CENTER_LEFT
+            v == VerticalAlignment.CENTER && h == RIGHT -> CENTER_RIGHT
+            v == VerticalAlignment.CENTER && h == HorizontalAlignment.CENTER -> CENTER
+            else -> throw UnsupportedOperationException()
         }
-  }
+    }
 }

@@ -1,4 +1,4 @@
-package mapper
+package tools.aqua.bgw.mapper
 
 import DialogData
 import tools.aqua.bgw.animation.Animation

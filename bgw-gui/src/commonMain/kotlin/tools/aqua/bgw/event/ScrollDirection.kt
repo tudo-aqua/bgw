@@ -19,19 +19,25 @@ package tools.aqua.bgw.event
 
 import kotlinx.serialization.Serializable
 
-/** Enum indicating direction of a [ScrollEvent]. */
+/**
+ * Enum indicating direction of a [ScrollEvent].
+ *
+ * @since 0.7.1
+ */
 @Serializable
 enum class ScrollDirection {
-  /** Upwards. */
+  /** Upwards scroll. */
   UP,
 
-  /** Downwards. */
+  /** Downwards scroll. */
   DOWN;
 
   /**
    * Multiplies [scalar] by 1 ([UP]) or -1 ([DOWN]).
    *
    * @param scalar Scalar to be multiplied.
+   *
+   * @since 0.7.1
    */
   operator fun times(scalar: Number): Double = scalar.toDouble() * (if (this == UP) 1 else -1)
 

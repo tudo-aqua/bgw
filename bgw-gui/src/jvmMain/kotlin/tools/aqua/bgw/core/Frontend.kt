@@ -26,8 +26,8 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import jsonMapper
-import mapper.AnimationMapper
-import mapper.DialogMapper
+import tools.aqua.bgw.mapper.AnimationMapper
+import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.Constants
@@ -60,17 +60,13 @@ import java.util.*
 internal class Frontend {
 
   /** Starts the application. */
-  internal fun start() {
-    //println("Starting server...")
-
+  fun start() {
     embeddedServer(Netty, port = Constants.PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
     applicationEngine.start {
       applicationEngine.clearAllEventListeners()
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
-
-      // println("Main Thread: ${Thread.currentThread().id}")
     }
   }
 
@@ -154,9 +150,7 @@ internal class Frontend {
     internal fun sendAnimation(animation: Animation) {
       val animationData = AnimationMapper.map(animation)
       val json = jsonMapper.encodeToString(PropData(animationData))
-      //TODO: Add animation channel
       runBlocking { componentChannel.sendToAllClients(json) }
-
     }
 
     /**
@@ -279,18 +273,18 @@ internal class Frontend {
   }
 }
 
-fun Scene<*>.findComponent(id: String): ComponentView? {
+internal fun Scene<*>.findComponent(id: String): ComponentView? {
   return this.components.map { it.findComponent(id) }.find { it != null }
 }
 
-fun ComponentView.getRootNode(): RootComponent<*> {
+internal fun ComponentView.getRootNode(): RootComponent<*> {
   return when(this) {
     is RootComponent<*> -> this
     else -> this.parent?.getRootNode() ?: throw IllegalStateException("Component has no root node.")
   }
 }
 
-fun ComponentView.findComponent(id: String): ComponentView? {
+internal fun ComponentView.findComponent(id: String): ComponentView? {
   if(id == this.id) return this
   return when(this) {
     is RootComponent<*> -> this.scene.components.map { it.findComponent(id) }.find { it != null }

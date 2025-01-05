@@ -4,7 +4,7 @@ import ComboBoxData
 import csstype.PropertiesBuilder
 import web.cssom.*
 import data.event.KeyEventAction
-import data.event.internal.SelectionChangedEventData
+import data.event.SelectionChangedEventData
 import emotion.react.css
 import kotlinx.browser.document
 import org.w3c.dom.HTMLInputElement

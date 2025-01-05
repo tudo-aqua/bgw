@@ -25,19 +25,20 @@ package tools.aqua.bgw.core
  * @property positionMultiplier Internal position multiplier.
  * @property pivotMultiplier Internal pivot multiplier.
  *
- * @see BoardGameScene
- * @see BoardGameApplication
+ * @see Alignment
+ *
+ * @since 0.1
  */
 enum class VerticalAlignment(
     internal val positionMultiplier: Double,
-    internal val pivotMultiplier: Double
+    private val pivotMultiplier: Double
 ) {
-  /** [Alignment] on the top. */
-  TOP(0.0, -1.0),
+    /** [Alignment] on the top. */
+    TOP(0.0, -1.0),
 
-  /** [Alignment] centered vertically. */
-  CENTER(0.5, 0.0),
+    /** [Alignment] centered vertically. */
+    CENTER(0.5, 0.0),
 
-  /** [Alignment] on the bottom. */
-  BOTTOM(1.0, 1.0)
+    /** [Alignment] on the bottom. */
+    BOTTOM(1.0, 1.0)
 }

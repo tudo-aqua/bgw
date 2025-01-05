@@ -2,7 +2,7 @@ package tools.aqua.bgw.elements.layoutviews
 
 import CameraPaneData
 import csstype.PropertiesBuilder
-import data.event.internal.TransformChangedEventData
+import data.event.TransformChangedEventData
 import emotion.react.css
 import js.objects.jso
 import react.*
@@ -62,7 +62,8 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
             val actualXOffset = convertToPx(currentX)
             val actualYOffset = convertToPx(currentY)
 
-            JCEFEventDispatcher.dispatchEvent(TransformChangedEventData(
+            JCEFEventDispatcher.dispatchEvent(
+                TransformChangedEventData(
                 zoomLevel = ctx.instance.transformState.scale,
                 anchor = Pair(actualXOffset, actualYOffset)
             ).apply { id = props.data.id })
@@ -88,7 +89,8 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
             val actualXOffset = convertToPx(currentX)
             val actualYOffset = convertToPx(currentY)
 
-            JCEFEventDispatcher.dispatchEvent(TransformChangedEventData(
+            JCEFEventDispatcher.dispatchEvent(
+                TransformChangedEventData(
                 zoomLevel = ctx.instance.transformState.scale,
                 anchor = Pair(actualXOffset, actualYOffset)
             ).apply { id = props.data.id })
@@ -154,7 +156,8 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
             val actualXOffset = convertToPx(currentX)
             val actualYOffset = convertToPx(currentY)
 
-            JCEFEventDispatcher.dispatchEvent(TransformChangedEventData(
+            JCEFEventDispatcher.dispatchEvent(
+                TransformChangedEventData(
                 zoomLevel = ctx.instance.transformState.scale,
                 anchor = Pair(actualXOffset, actualYOffset)
             ).apply { id = props.data.id })
@@ -197,7 +200,8 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
                 }
             }
 
-            JCEFEventDispatcher.dispatchEvent(TransformChangedEventData(
+            JCEFEventDispatcher.dispatchEvent(
+                TransformChangedEventData(
                 zoomLevel = ctx.instance.transformState.scale,
                 anchor = Pair(convertToPx(ctx.instance.transformState.positionX), convertToPx(ctx.instance.transformState.positionY))
             ).apply { id = props.data.id })
