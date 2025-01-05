@@ -27,5 +27,9 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
  * @constructor Creates a [DelayAnimation] with given [duration].
  *
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
+ *
+ * @see Animation
+ *
+ * @since 0.1
  */
 class DelayAnimation(duration: Int = DEFAULT_ANIMATION_DURATION) : Animation(duration = duration)

@@ -17,8 +17,6 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double)
     /**
      * Creates a [Color] with given red, green and blue values.
      *
-     * @constructor Creates a [Color] with given red, green and blue values.
-     *
      * @param red Red value. Must be in range 0 until 255.
      * @param green Green value. Must be in range 0 until 255.
      * @param blue Blue value. Must be in range 0 until 255.
@@ -28,8 +26,6 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double)
     /**
      * Creates a [Color] with given red, green, blue and alpha values.
      *
-     * @constructor Creates a [Color] with given red, green, blue and alpha values.
-     *
      * @param red Red value. Must be in range 0 until 255.
      * @param green Green value. Must be in range 0 until 255.
      * @param blue Blue value. Must be in range 0 until 255.
@@ -38,9 +34,7 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double)
     constructor(red: Int, green: Int, blue: Int, alpha: Int) : this(red, green, blue, alpha.toDouble() / 255.0)
 
     /**
-     * Creates a [Color] with given hex string value.
-     *
-     * @constructor Creates a [Color] with given hex string value.
+     * Creates a [Color] with given string hex value.
      *
      * @param hex Hexadecimal string representation of the color.
      */
@@ -49,9 +43,7 @@ data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double)
     )
 
     /**
-     * Creates a [Color] with given hex value.
-     *
-     * @constructor Creates a [Color] with given hex number value.
+     * Creates a [Color] with given numeric hex value.
      *
      * @param hex Hexadecimal numerical representation of the color.
      */

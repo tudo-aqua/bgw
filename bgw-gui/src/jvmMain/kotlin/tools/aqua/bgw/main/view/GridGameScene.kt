@@ -35,30 +35,30 @@ internal class GridGameScene : BoardGameScene() {
         onMouseClicked = {
             Application.title = "Random " + (0..100).random()
             gridEntries.forEachIndexed { index, componentView ->
-                playAnimation(
-                    FlipAnimation(
-                        componentView = componentView,
-                        fromVisual = componentView.visual,
-                        toVisual = randomColorVisual(),
-                        duration = 250 + index * 50
-                    ).apply {
-                        onFinished = {
-                            Application.title = "Flipped " + (0..100).random()
-                        }
-                    }
-                )
-
-                playAnimation(
-                    FadeAnimation(
-                        componentView = componentView,
-                        fromOpacity = 0,
-                        toOpacity = 1,
-                        duration = 250 + index * 50
-                    ).apply {
-                        onFinished = {
-                        }
-                    }
-                )
+//                playAnimation(
+//                    FlipAnimation(
+//                        componentView = componentView,
+//                        fromVisual = componentView.visual,
+//                        toVisual = randomColorVisual(),
+//                        duration = 250 + index * 50
+//                    ).apply {
+//                        onFinished = {
+//                            Application.title = "Flipped " + (0..100).random()
+//                        }
+//                    }
+//                )
+//
+//                playAnimation(
+//                    FadeAnimation(
+//                        componentView = componentView,
+//                        fromOpacity = 0,
+//                        toOpacity = 1,
+//                        duration = 250 + index * 50
+//                    ).apply {
+//                        onFinished = {
+//                        }
+//                    }
+//                )
             }
         }
     }

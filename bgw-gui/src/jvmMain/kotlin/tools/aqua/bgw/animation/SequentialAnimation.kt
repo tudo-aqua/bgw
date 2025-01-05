@@ -23,19 +23,29 @@ package tools.aqua.bgw.animation
  * An [Animation] consisting of multiple [Animation]s that is played in sequence, when this
  * [SequentialAnimation] is played.
  *
- * @constructor creates a new [SequentialAnimation].
+ * @constructor Creates a new [SequentialAnimation].
  *
  * @property animations The [Animation]s that this [SequentialAnimation] should contain. Lowest
  * index is played first, the highest index is played last.
+ *
+ * @see Animation
+ * @see ParallelAnimation
+ *
+ * @since 0.5
  */
 data class SequentialAnimation(val animations: List<Animation>) :
     Animation(animations.sumOf(Animation::duration)) {
 
-  /**
-   * creates a new [SequentialAnimation] Additional constructor that enables the use of varargs for
-   * the animations.
-   *
-   * @param animation The [Animation]s that this [ParallelAnimation] should contain.
-   */
-  constructor(vararg animation: Animation) : this(animation.toList())
+    /**
+     * Creates a new [SequentialAnimation] Additional constructor that enables the use of varargs for
+     * the animations.
+     *
+     * @param animation The [Animation]s that this [ParallelAnimation] should contain.
+     *
+     * @see Animation
+     * @see ParallelAnimation
+     *
+     * @since 0.5
+     */
+    constructor(vararg animation: Animation) : this(animation.toList())
 }

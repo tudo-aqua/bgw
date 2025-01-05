@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 
 /**
@@ -28,10 +27,14 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
  * @param T Generic [GameComponentView].
  * @param gameComponentView [GameComponentView] to animate.
  * @param duration Duration in milliseconds.
- * @property speed Speed in steps.
+ * @property speed Count of changes to be performed in [duration].
+ *
+ * @see ComponentAnimation
+ * @see Animation
+ * @see GameComponentView
+ *
+ * @since 0.2
  */
-sealed class SteppedComponentAnimation<T : ComponentView>(
-    componentView: T,
-    duration: Int,
-    val speed: Int
-) : ComponentAnimation<T>(componentView = componentView, duration = duration)
+sealed class SteppedComponentAnimation<T : GameComponentView>(
+    gameComponentView: T, duration: Int, val speed: Int
+) : ComponentAnimation<T>(componentView = gameComponentView, duration = duration)

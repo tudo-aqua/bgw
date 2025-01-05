@@ -19,7 +19,7 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.SingleLayerVisual
 
 internal class AnimationScene : BoardGameScene() {
-    private val label = Label(
+    /* private val label = Label(
         text = "Test",
         posX = 40,
         posY = 120,
@@ -30,15 +30,15 @@ internal class AnimationScene : BoardGameScene() {
             ImageVisual("https://static.vecteezy.com/system/resources/thumbnails/006/489/382/small/rainbow-waves-background-in-neon-color-free-vector.jpg").apply {
                 style.borderRadius = BorderRadius(4.0)
             }
-    )
+    )*/
 
-    /*private val label = TokenView(
+    private val label = TokenView(
         posX = 40,
         posY = 40,
         width = 200,
         height = 200,
         visual = ColorVisual.MAGENTA
-    )*/
+    )
 
     private val dice = DiceView(
         posX = 40,
@@ -127,7 +127,7 @@ internal class AnimationScene : BoardGameScene() {
             )
         } */
 
-        label.onMouseClicked = {
+        /* label.onMouseClicked = {
             (label.visual as ImageVisual).filters.blur = BlurFilter(4.0)
             (label.visual as ImageVisual).filters.saturation = SaturationFilter.GREYSCALE
             /* this.playAnimation(
@@ -154,12 +154,12 @@ internal class AnimationScene : BoardGameScene() {
                     duration = 2000
                 )
             ) */
-        }
+        } */
 
-        /*label.onMouseClicked = {
+        label.onMouseClicked = {
             this.playAnimation(
                 RandomizeAnimation(
-                    componentView = label,
+                    gameComponentView = label,
                     visuals = listOf(
                         ColorVisual.GREEN,
                         ColorVisual.BLUE,
@@ -170,21 +170,21 @@ internal class AnimationScene : BoardGameScene() {
                     ),
                     toVisual = ColorVisual.RED,
                     duration = 2000,
-                    speed = 20
+                    speed = 2
                 )
             )
-        }*/
+        }
 
         dice.onMouseClicked = {
-            showDialog(
+            /* showDialog(
                 Dialog(
                     title = "Test",
                     header = "Test",
                     message = "Test",
                     dialogType = DialogType.INFORMATION
                 )
-            )
-            /*this.playAnimation(
+            ) */
+            this.playAnimation(
                 DiceAnimation(
                     dice = dice,
                     toSide = 3,
@@ -196,7 +196,7 @@ internal class AnimationScene : BoardGameScene() {
                         println("Hello im finished")
                     }
                 }
-            */
+            )
         }
     }
 }

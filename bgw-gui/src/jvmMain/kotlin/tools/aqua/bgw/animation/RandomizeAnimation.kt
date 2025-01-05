@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.animation
 
-import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
@@ -43,14 +42,22 @@ import tools.aqua.bgw.visual.Visual
  * @property visuals [List] of [Visual]s to shuffle through.
  * @property toVisual Resulting [Visual] after shuffle.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
- * @param speed Count of steps. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param speed Count of changes to be performed in [duration]. Default: [DEFAULT_ANIMATION_SPEED].
+ *
+ * @see SteppedComponentAnimation
+ * @see Animation
+ * @see GameComponentView
+ * @see Visual
+ *
+ * @since 0.1
  */
-class RandomizeAnimation<T : ComponentView>(
-    componentView: T,
+class RandomizeAnimation<T : GameComponentView>(
+    gameComponentView: T,
     val visuals: List<Visual>,
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_DURATION,
     speed: Int = DEFAULT_ANIMATION_SPEED
 ) :
     SteppedComponentAnimation<T>(
-        componentView = componentView, duration = duration, speed = speed)
+        gameComponentView = gameComponentView, duration = duration, speed = speed
+    )

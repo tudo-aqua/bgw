@@ -19,20 +19,23 @@
 
 package tools.aqua.bgw.animation
 
+import IDGenerator
 import tools.aqua.bgw.event.AnimationFinishedEvent
 
 /**
  * [Animation] baseclass.
  *
  * @property duration Duration in milliseconds.
+ *
+ * @since 0.1
  */
 abstract class Animation(val duration: Int) {
-  val id = IDGenerator.generateAnimationID()
+    internal val id = IDGenerator.generateAnimationID()
 
-  /** [Boolean] indicating whether the [Animation] is currently running. */
-  var isRunning: Boolean = false
-    internal set
+    /** [Boolean] indicating whether the [Animation] is currently running. */
+    var isRunning: Boolean = false
+        internal set
 
-  /** Gets invoked when [Animation] has finished. */
-  var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
+    /** Gets invoked when [Animation] has finished. */
+    var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
 }

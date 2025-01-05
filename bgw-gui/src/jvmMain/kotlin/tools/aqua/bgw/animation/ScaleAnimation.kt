@@ -25,7 +25,7 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 /**
  * A scale [Animation].
  *
- * Sca,les given [ComponentView] to given scalar.
+ * Scales given [ComponentView] to given scalar.
  *
  * @constructor Creates a [ScaleAnimation] for the given [ComponentView].
  *
@@ -36,6 +36,12 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @param fromScaleY Initial Y position. Default: Current [ComponentView.posY].
  * @param toScaleY Resulting Y position. Default: Current [ComponentView.posY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ *
+ * @see ComponentAnimation
+ * @see Animation
+ * @see ComponentView
+ *
+ * @since 0.3
  */
 class ScaleAnimation<T : ComponentView>(
     componentView: T,
@@ -46,51 +52,65 @@ class ScaleAnimation<T : ComponentView>(
     duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
-  /** Initial X scale. */
-  val fromScaleX: Double = fromScaleX.toDouble()
+    /** Initial X scale. */
+    val fromScaleX: Double = fromScaleX.toDouble()
 
-  /** Resulting X scale. */
-  val toScaleX: Double = toScaleX.toDouble()
+    /** Resulting X scale. */
+    val toScaleX: Double = toScaleX.toDouble()
 
-  /** Initial Y scale. */
-  val fromScaleY: Double = fromScaleY.toDouble()
+    /** Initial Y scale. */
+    val fromScaleY: Double = fromScaleY.toDouble()
 
-  /** Resulting Y scale. */
-  val toScaleY: Double = toScaleY.toDouble()
+    /** Resulting Y scale. */
+    val toScaleY: Double = toScaleY.toDouble()
 
-  /**
-   * A scale animation. Scales given [ComponentView] to given scalar.
-   *
-   * @param componentView [ComponentView] to animate
-   * @param byScaleX Relative X scale.
-   * @param byScaleY Relative Y scale.
-   * @param duration [Animation] duration in milliseconds. Default: 1 second
-   */
-  constructor(
-      componentView: T,
-      byScaleX: Number = 0.0,
-      byScaleY: Number = 0.0,
-      duration: Int = 1000
-  ) : this(
-      componentView = componentView,
-      toScaleX = componentView.scaleX * byScaleX.toDouble(),
-      toScaleY = componentView.scaleY * byScaleY.toDouble(),
-      duration = duration)
+    /**
+     * A scale animation. Scales given [ComponentView] by given x and y scalar.
+     *
+     * @param componentView [ComponentView] to animate
+     * @param byScaleX Relative X scale.
+     * @param byScaleY Relative Y scale.
+     * @param duration [Animation] duration in milliseconds. Default: 1 second
+     *
+     * @see ComponentAnimation
+     * @see Animation
+     * @see ComponentView
+     *
+     * @since 0.3
+     */
+    constructor(
+        componentView: T,
+        byScaleX: Number = 0.0,
+        byScaleY: Number = 0.0,
+        duration: Int = 1000
+    ) : this(
+        componentView = componentView,
+        toScaleX = componentView.scaleX * byScaleX.toDouble(),
+        toScaleY = componentView.scaleY * byScaleY.toDouble(),
+        duration = duration
+    )
 
-  /**
-   * A scale animation. Scales given [ComponentView] to given scalar.
-   *
-   * @param componentView [ComponentView] to animate
-   * @param byScale Relative scale.
-   * @param duration [Animation] duration in milliseconds. Default: 1 second
-   */
-  constructor(
-      componentView: T,
-      byScale: Number = 0.0,
-      duration: Int = 1000
-  ) : this(
-      componentView = componentView,
-      toScaleX = componentView.scaleX * byScale.toDouble(),
-      toScaleY = componentView.scaleY * byScale.toDouble(),
-      duration = duration)
+    /**
+     * A scale animation. Scales given [ComponentView] by given scalar.
+     *
+     * @param componentView [ComponentView] to animate
+     * @param byScale Relative scale.
+     * @param duration [Animation] duration in milliseconds. Default: 1 second
+     *
+     * @see ComponentAnimation
+     * @see Animation
+     * @see ComponentView
+     *
+     * @since 0.3
+     */
+    constructor(
+        componentView: T,
+        byScale: Number = 0.0,
+        duration: Int = 1000
+    ) : this(
+        componentView = componentView,
+        toScaleX = componentView.scaleX * byScale.toDouble(),
+        toScaleY = componentView.scaleY * byScale.toDouble(),
+        duration = duration
+    )
 }
