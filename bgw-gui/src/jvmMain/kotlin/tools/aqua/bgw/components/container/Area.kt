@@ -44,6 +44,11 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [Area]. Default: [DEFAULT_AREA_WIDTH].
  * @param height Height for this [Area]. Default: [DEFAULT_AREA_HEIGHT].
  * @param visual Visual for this [Area]. Default: [Visual.EMPTY].
+ *
+ * @see GameComponentView
+ * @see Visual
+ *
+ * @since 0.1
  */
 open class Area<T : GameComponentView>(
     posX: Number = 0,

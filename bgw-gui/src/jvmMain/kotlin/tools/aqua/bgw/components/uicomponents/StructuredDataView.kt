@@ -118,6 +118,7 @@ sealed class StructuredDataView<T>(
    * the elements in this [UIComponent]. Critical failures, bugs or other undefined behaviour could
    * occur when using this feature.
    */
+  @Deprecated("The property is no longer used as of BGW 1.0.")
   val selectionStyleProperty: Property<String> = Property("")
 
   /**
@@ -127,6 +128,7 @@ sealed class StructuredDataView<T>(
    * the elements in this [UIComponent]. Critical failures, bugs or other undefined behaviour could
    * occur when using this feature.
    */
+  @Deprecated("CSS Styling is no longer supported as of BGW 1.0.")
   var selectionStyle: String
     get() = selectionStyleProperty.value
     set(value) {

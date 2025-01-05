@@ -2,6 +2,7 @@ package tools.aqua.bgw.binding
 
 import ActionProp
 import PropData
+import SceneMapper
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -9,10 +10,10 @@ import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.serialization.encodeToString
 import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.html.*
+import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.Frontend
 import java.time.Duration
@@ -20,16 +21,18 @@ import java.time.Duration
 internal val componentChannel: Channel = Channel("/ws").apply {
     onClientConnected = {
         Frontend.application
-        val json = jsonMapper.encodeToString(PropData(SceneMapper.map(
-            menuScene= Frontend.menuScene,
-            gameScene= Frontend.boardGameScene
-        ).apply {
-            fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
-                Triple(path, fontName, weight.toInt())
-            }
-        }))
+        val json = jsonMapper.encodeToString(
+            PropData(SceneMapper.map(
+                menuScene = Frontend.menuScene,
+                gameScene = Frontend.boardGameScene
+            ).apply {
+                fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
+                    Triple(path, fontName, weight.toInt())
+                }
+            })
+        )
         it.send(json)
-        if(!uiJob.isActive) uiJob.start()
+        if (!uiJob.isActive) uiJob.start()
     }
 }
 
@@ -96,7 +99,7 @@ internal fun CoroutineScope.launchPeriodicAsync(
 }
 
 internal var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {
-    if((Frontend.applicationEngine as JCEFApplication).getTitle() !== Frontend.application.title) {
+    if ((Frontend.applicationEngine as JCEFApplication).getTitle() !== Frontend.application.title) {
         (Frontend.applicationEngine as JCEFApplication).setTitle(Frontend.application.title)
     }
 
@@ -104,7 +107,7 @@ internal var uiJob = CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {
         val isSceneLoaded = Frontend.boardGameScene != null
         val message = messageQueue.removeFirst()
         val result = runCatching {
-            val appData = SceneMapper.map(menuScene= Frontend.menuScene, gameScene= Frontend.boardGameScene).apply {
+            val appData = SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
                 fonts = Frontend.loadedFonts.map { (path, fontName, weight) ->
                     Triple(path, fontName, weight.toInt())
                 }

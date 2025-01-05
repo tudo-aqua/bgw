@@ -20,6 +20,7 @@
 package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.Visual
@@ -46,6 +47,10 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Visual for this [CardStack]. Default: [Visual.EMPTY].
  *
  * @see CardView
+ * @see Visual
+ * @see Alignment
+ *
+ * @since 0.1
  */
 open class CardStack<T : CardView>(
   posX: Number = 0,

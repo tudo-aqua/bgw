@@ -25,10 +25,10 @@ internal object Application : BoardGameApplication(aspectRatio = AspectRatio.of(
         loadFont("Rubik.ttf")
         // showGameScene(cardLayoutScene)
         // showGameScene(hexGrid)
-        showGameScene(animation)
+        // showGameScene(animation)
         // showGameScene(grid)
         // showGameScene(dragDropScene)
         // showMenuScene(uiScene)
-        // showGameScene(visualScene)
+        showGameScene(visualScene)
     }
 }

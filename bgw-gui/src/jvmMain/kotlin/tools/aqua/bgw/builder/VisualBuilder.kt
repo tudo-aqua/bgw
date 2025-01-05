@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.core.Frontend
@@ -18,23 +20,26 @@ internal object VisualBuilder {
         visual.children.forEach { build(it) }
     }
 
-    private fun buildColorVisual(visual: ColorVisual) {
-        visual.transparencyProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-        visual.colorProperty.guiListener = { _, _ ->
-            Frontend.updateVisual(visual)
-        }
-        visual.styleProperty.guiListener = {
-            Frontend.updateVisual(visual)
-        }
-        visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
-        visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-    }
-
-    private fun buildImageVisual(visual: ImageVisual) {
+    private fun buildSingleLayerVisual(visual: SingleLayerVisual) {
         visual.transparencyProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
         visual.styleProperty.guiListener = { Frontend.updateVisual(visual) }
         visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
         visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+        when (visual) {
+            is ColorVisual -> buildColorVisual(visual)
+            is ImageVisual -> buildImageVisual(visual)
+            is TextVisual -> buildTextVisual(visual)
+        }
+    }
+
+    private fun buildColorVisual(visual: ColorVisual) {
+        visual.colorProperty.guiListener = { _, _ ->
+            Frontend.updateVisual(visual)
+        }
+    }
+
+    private fun buildImageVisual(visual: ImageVisual) {
+        visual.pathProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
     }
 
     private fun buildTextVisual(visual: TextVisual) {
@@ -43,9 +48,6 @@ internal object VisualBuilder {
         visual.alignmentProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
         visual.offsetXProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
         visual.offsetYProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-        visual.styleProperty.guiListener = { Frontend.updateVisual(visual) }
-        visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
-        visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
     }
 
 }

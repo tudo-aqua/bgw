@@ -39,8 +39,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param T Generic [GameComponentView].
  * @param gameComponentView [GameComponentView] to animate.
- * @property visuals [List] of [Visual]s to shuffle through.
- * @property toVisual Resulting [Visual] after shuffle.
+ * @param visuals [List] of [Visual]s to shuffle through.
+ * @param toVisual Resulting [Visual] after shuffle.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of changes to be performed in [duration]. Default: [DEFAULT_ANIMATION_SPEED].
  *
@@ -53,7 +53,9 @@ import tools.aqua.bgw.visual.Visual
  */
 class RandomizeAnimation<T : GameComponentView>(
     gameComponentView: T,
+    /** [List] of [Visual]s to shuffle through. */
     val visuals: List<Visual>,
+    /** Resulting [Visual] after shuffle. */
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_DURATION,
     speed: Int = DEFAULT_ANIMATION_SPEED

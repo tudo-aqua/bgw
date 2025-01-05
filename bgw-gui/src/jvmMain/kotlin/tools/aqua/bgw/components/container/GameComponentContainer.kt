@@ -41,6 +41,11 @@ import kotlin.jvm.Synchronized
  * @param width width for this [GameComponentContainer].
  * @param height height for this [GameComponentContainer].
  * @param visual visual for this [GameComponentContainer].
+ *
+ * @see GameComponentView
+ * @see DynamicComponentView
+ *
+ * @since 0.1
  */
 sealed class GameComponentContainer<T : DynamicComponentView>(
     posX: Number,

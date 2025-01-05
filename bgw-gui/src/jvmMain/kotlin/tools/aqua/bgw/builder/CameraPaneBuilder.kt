@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.components.layoutviews.CameraPane

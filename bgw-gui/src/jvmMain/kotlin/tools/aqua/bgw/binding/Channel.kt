@@ -5,9 +5,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedSendChannelException
-import kotlinx.serialization.encodeToString
-import tools.aqua.bgw.core.Frontend
-import java.time.Duration
 import java.util.concurrent.CopyOnWriteArrayList
 
 internal class Channel(val path: String = "/ws") {

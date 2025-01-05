@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.components.gamecomponentviews.*
@@ -5,7 +7,7 @@ import tools.aqua.bgw.core.Frontend
 
 internal object GameComponentViewBuilder {
     fun build(gameComponentView: GameComponentView) {
-        when(gameComponentView) {
+        when (gameComponentView) {
             is CardView -> buildCardView(gameComponentView)
             is DiceView -> buildDiceView(gameComponentView)
             is HexagonView -> buildHexagonView(gameComponentView)

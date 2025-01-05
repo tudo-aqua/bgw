@@ -38,7 +38,7 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * @param T Generic [DiceView].
  * @param dice [DiceView] to animate.
- * @property toSide Resulting side after roll.
+ * @param toSide Resulting side after roll.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of changes to be performed in [duration]. Default: [DEFAULT_ANIMATION_SPEED].
  *
@@ -51,6 +51,7 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  */
 class DiceAnimation<T : DiceView>(
     dice: T,
+    /** Resulting side after roll. */
     val toSide: Int,
     duration: Int = DEFAULT_ANIMATION_DURATION,
     speed: Int = DEFAULT_ANIMATION_SPEED

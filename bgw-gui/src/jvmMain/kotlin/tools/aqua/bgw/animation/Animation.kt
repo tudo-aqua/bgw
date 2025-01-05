@@ -25,11 +25,14 @@ import tools.aqua.bgw.event.AnimationFinishedEvent
 /**
  * [Animation] baseclass.
  *
- * @property duration Duration in milliseconds.
+ * @param duration Duration in milliseconds.
  *
  * @since 0.1
  */
-abstract class Animation(val duration: Int) {
+abstract class Animation(
+    /** Duration in milliseconds. */
+    val duration: Int
+) {
     internal val id = IDGenerator.generateAnimationID()
 
     /** [Boolean] indicating whether the [Animation] is currently running. */

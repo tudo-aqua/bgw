@@ -38,7 +38,7 @@ internal class HexGridGameScene : BoardGameScene() {
         posY = 0,
         width = 100,
         height = 100,
-        visual = ImageVisual("https://static.vecteezy.com/system/resources/previews/010/256/326/non_2x/premium-flat-icon-of-game-bag-vector.jpg")
+        // visual = ImageVisual("https://static.vecteezy.com/system/resources/previews/010/256/326/non_2x/premium-flat-icon-of-game-bag-vector.jpg")
     ).apply {
         dropAcceptor = {
             it.draggedComponent is HexagonView

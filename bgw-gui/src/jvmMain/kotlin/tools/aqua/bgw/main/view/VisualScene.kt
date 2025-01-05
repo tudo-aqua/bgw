@@ -25,14 +25,16 @@ internal class VisualScene : BoardGameScene() {
         height = 150,
         posX = 50,
         posY = 0,
-        front = CompoundVisual(
-            ColorVisual.YELLOW,
-            ImageVisual(
-                "locked.png",
-                offsetX = 40
-            )
-        )
-    )
+        front = ImageVisual(
+            "assets/1.jpg",
+        ),
+        back = ColorVisual.BLUE
+    ).apply {
+        currentSide = CardView.CardSide.FRONT
+        onMouseClicked = {
+            frontVisual = ImageVisual("assets/2.jpg")
+        }
+    }
 
     val card2 = CardView(
         width = 150,
@@ -42,7 +44,7 @@ internal class VisualScene : BoardGameScene() {
         front = CompoundVisual(
             ColorVisual.RED,
             ImageVisual(
-                "locked.png",
+                "icon.png",
                 offsetX = 40
             )
         )
@@ -56,7 +58,7 @@ internal class VisualScene : BoardGameScene() {
         visual = CompoundVisual(
             ColorVisual.GREEN,
             ImageVisual(
-                "locked.png",
+                "icon.png",
                 offsetX = 40
             )
         )
@@ -73,7 +75,6 @@ internal class VisualScene : BoardGameScene() {
         selectionBackground = ColorVisual.RED,
         font = Font(20.0, Color.BLACK, "Rubik", Font.FontWeight.SEMI_BOLD),
     ).apply {
-        items.add(card)
         items.add(card2)
         items.add(token1)
     }
@@ -112,7 +113,6 @@ internal class VisualScene : BoardGameScene() {
         selectionBackground = ColorVisual.RED,
         columns = mutableListOf(column1, column2)
     ).apply {
-        items.add(card)
         items.add(card2)
         items.add(token1)
     }
@@ -128,7 +128,7 @@ internal class VisualScene : BoardGameScene() {
     )
 
     init {
-        addComponents(list, label, table)
+        addComponents(list, label, table, card)
         list.select(1)
 
         list.selectedItems.addListener { _, newValue ->

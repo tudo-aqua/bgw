@@ -42,16 +42,6 @@ import tools.aqua.bgw.visual.Visual
  * [GameComponentView] gets created and stored. Then the [GameComponentView] is made draggable,
  * invisible and its size gets fit to the [Satchel] size.
  *
- * The initial state consist of the following properties:
- *
- * -[isDraggable]
- *
- * -[isVisible]
- *
- * -[width]
- *
- * -[height]
- *
  * Any changes made to those properties while a [GameComponentView] is contained in the [Satchel]
  * get ignored, but they override the initial state.
  *
@@ -67,6 +57,11 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [Satchel]. Default: [DEFAULT_SATCHEL_WIDTH].
  * @param height height for this [Satchel]. Default: [DEFAULT_SATCHEL_HEIGHT].
  * @param visual visual for this [Satchel]. Default: [Visual.EMPTY].
+ *
+ * @see GameComponentView
+ * @see Visual
+ *
+ * @since 0.1
  */
 open class Satchel<T : GameComponentView>(
     posX: Number = 0,

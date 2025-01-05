@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.components.container
 
+import tools.aqua.bgw.components.container.HexagonGrid.CoordinateSystem
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.Visual
@@ -34,10 +35,10 @@ private typealias AxialCoordinate = Pair<Int, Int>
  * @param width The width of the hexagon grid. It grows dynamically by the amount hexagons in it.
  * @param height The height of the hexagon grid. It grows dynamically by the amount hexagons in it.
  * @param visual The visual representation of the hexagon grid. Default is an empty visual.
- * @param coordinateSystem The coordinate system to use for the grid. Default is
- * `CoordinateSystem.OFFSET`.
- * @param orientation The orientation of the hexagons in the grid. Default is
- *  `HexOrientation.POINTY_TOP`.
+ * @param coordinateSystem The coordinate system to use for the grid. Default is [CoordinateSystem.OFFSET].
+ * @param orientation The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
+ *
+ * @since 0.8
  */
 class HexagonGrid<T : HexagonView>(
     posX: Number = 0,
@@ -45,15 +46,21 @@ class HexagonGrid<T : HexagonView>(
     width: Number = 0,
     height: Number = 0,
     visual: Visual = Visual.EMPTY,
+
+    /** The coordinate system to use for the grid. Default is [CoordinateSystem.OFFSET]. */
     val coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET,
+
+    /** The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
+     * @since 1.0
+     */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual
     ) {
 
-    //TODO: Make this internal
     /** A mutable map that stores the hexagons in the grid. */
+    @Deprecated("Getting components using the map is no longer supported as of BGW 1.0.", ReplaceWith("this.components"))
     val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 
     init {
@@ -86,7 +93,7 @@ class HexagonGrid<T : HexagonView>(
     }
 
     /**
-     * Internal function to layout the hexagons in the grid based on the specified coordinate system.
+     * Internal function to lay out the hexagons in the grid based on the specified coordinate system.
      *
      * @param coordinateSystem The coordinate system to use for the layout.
      */
@@ -104,6 +111,7 @@ class HexagonGrid<T : HexagonView>(
                     CoordinateSystem.OFFSET -> {
                         if (orientation == HexOrientation.POINTY_TOP) x to y else y to x
                     }
+
                     CoordinateSystem.AXIAL -> {
                         if (orientation == HexOrientation.POINTY_TOP) x + (y - (y and 1)) / 2 to y
                         else y + (x - (x and 1)) / 2 to x

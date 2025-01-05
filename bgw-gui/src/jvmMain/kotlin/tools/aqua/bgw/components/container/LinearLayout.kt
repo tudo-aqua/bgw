@@ -54,6 +54,13 @@ import tools.aqua.bgw.visual.Visual
  * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
  * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default:
  * [Alignment.TOP_LEFT].
+ *
+ * @see GameComponentView
+ * @see Orientation
+ * @see Alignment
+ * @see Visual
+ *
+ * @since 0.1
  */
 open class LinearLayout<T : GameComponentView>(
     posX: Number = 0,
@@ -147,6 +154,13 @@ open class LinearLayout<T : GameComponentView>(
    * Default: [VerticalAlignment.TOP].
    * @param horizontalAlignment specifies how the contained components should be aligned
    * horizontally. Default: [HorizontalAlignment.LEFT].
+   *
+   * @see VerticalAlignment
+   * @see HorizontalAlignment
+   * @see Orientation
+   * @see Visual
+   *
+   * @since 0.1
    */
   constructor(
       posX: Number = 0,

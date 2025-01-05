@@ -25,14 +25,17 @@ package tools.aqua.bgw.animation
  *
  * @constructor Creates a new [ParallelAnimation].
  *
- * @property animations The [Animation]s that this [ParallelAnimation] should contain.
+ * @param animations The [Animation]s that this [ParallelAnimation] should contain.
  *
  * @see Animation
  * @see SequentialAnimation
  *
  * @since 0.5
  */
-data class ParallelAnimation(val animations: List<Animation>) :
+data class ParallelAnimation(
+    /** The [Animation]s that this [ParallelAnimation] should contain. */
+    val animations: List<Animation>
+) :
     Animation(animations.maxOf(Animation::duration)) {
 
     /**

@@ -94,6 +94,7 @@ abstract class UIComponent(
    *
    * @see backgroundStyle
    */
+  @Deprecated("The property is no longer used as of BGW 1.0.", ReplaceWith("this.visual.style"))
   val backgroundStyleProperty: StringProperty = StringProperty("")
 
   /**
@@ -105,6 +106,7 @@ abstract class UIComponent(
    *
    * @see backgroundStyleProperty
    */
+  @Deprecated("CSS Styling is no longer supported as of BGW 1.0.", ReplaceWith("this.visual.style"))
   var backgroundStyle: String
     get() = backgroundStyleProperty.value
     set(value) {
@@ -120,6 +122,7 @@ abstract class UIComponent(
    *
    * @see componentStyle
    */
+  @Deprecated("The property is no longer used as of BGW 1.0.", ReplaceWith("this.visual.style"))
   val componentStyleProperty: StringProperty = StringProperty("")
 
   /**
@@ -131,6 +134,7 @@ abstract class UIComponent(
    *
    * @see componentStyleProperty
    */
+  @Deprecated("CSS Styling is no longer supported as of BGW 1.0.", ReplaceWith("this.visual.style"))
   var componentStyle: String
     get() = componentStyleProperty.value
     set(value) {

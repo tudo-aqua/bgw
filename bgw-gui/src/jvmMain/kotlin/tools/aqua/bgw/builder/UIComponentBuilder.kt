@@ -1,15 +1,13 @@
+@file:Suppress("DuplicatedCode")
+
 package tools.aqua.bgw.builder
 
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Frontend
 
 internal object UIComponentBuilder {
-    @Suppress("DuplicatedCode")
     fun build(uiComponent: UIComponent) {
-        uiComponent.internalCSSProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
         uiComponent.fontProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
-        uiComponent.backgroundStyleProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
-        uiComponent.componentStyleProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
         when (uiComponent) {
             is LabeledUIComponent -> buildLabeledUIComponent(uiComponent)
             is TextInputUIComponent -> buildTextInputUIComponent(uiComponent)
@@ -86,13 +84,11 @@ internal object UIComponentBuilder {
         progressBar.barColorProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
     }
 
-    @Suppress("DuplicatedCode")
     private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {
         structuredDataView.items.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
         structuredDataView.selectionModeProperty.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
-        structuredDataView.selectionBackgroundProperty.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
-        structuredDataView.selectionStyleProperty.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
-        /* Internal Properties */
+        structuredDataView.selectionBackgroundProperty.guiListener =
+            { _, _ -> Frontend.updateComponent(structuredDataView) }
         structuredDataView.selectedItemsList.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
         structuredDataView.selectedIndicesList.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
     }
