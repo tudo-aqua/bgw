@@ -99,6 +99,10 @@ internal class HexGridGameScene : BoardGameScene() {
         limitBounds = true
     ).apply {
         interactive = true
+
+        onZoom = {
+            println("Zoomed to $it")
+        }
     }
 
     val centerDot = Label(

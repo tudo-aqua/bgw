@@ -48,7 +48,7 @@ open class TextVisual(
    *
    * @see text
    */
-  val textProperty: StringProperty = StringProperty(text)
+  internal val textProperty: StringProperty = StringProperty(text)
 
   /**
    * The displayed [text].
@@ -66,7 +66,7 @@ open class TextVisual(
    *
    * @see font
    */
-  val fontProperty: Property<Font> = Property(font)
+  internal val fontProperty: Property<Font> = Property(font)
 
   /**
    * The displayed [text] [Font].
@@ -84,7 +84,7 @@ open class TextVisual(
    *
    * @see alignment
    */
-  val alignmentProperty: Property<Alignment> = Property(alignment)
+  internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
   /**
    * The [text] [Alignment].
@@ -102,7 +102,7 @@ open class TextVisual(
    *
    * @see offsetX
    */
-  val offsetXProperty: DoubleProperty = DoubleProperty(offsetX)
+  internal val offsetXProperty: DoubleProperty = DoubleProperty(offsetX)
 
   /**
    * The x-axis [text] offset.
@@ -120,7 +120,7 @@ open class TextVisual(
    *
    * @see offsetY
    */
-  val offsetYProperty: DoubleProperty = DoubleProperty(offsetY)
+  internal val offsetYProperty: DoubleProperty = DoubleProperty(offsetY)
 
   /**
    * The y-axis [text] offset.

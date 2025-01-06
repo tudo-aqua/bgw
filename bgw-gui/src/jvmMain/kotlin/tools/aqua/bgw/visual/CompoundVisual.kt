@@ -41,7 +41,7 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
    *
    * @see children
    */
-  val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children)
+  internal val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children)
 
   /**
    * The [children] of this stack. The first [SingleLayerVisual] gets displayed at the bottom of the

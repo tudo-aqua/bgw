@@ -39,19 +39,19 @@ import kotlin.math.min
  *
  * @constructor Loads an [ImageVisual] from a path in resources.
  *
- * @param path Location of image file relative to '/resources'.
+ * @param path Location of image file relative to /resources. Default: "".
  * @property width Width of sub-image. Pass -1 to use full width. Default: -1.
  * @property height Height of sub-image. Pass -1 to use full height. Default: -1.
  * @property offsetX Left bound of sub-image. Default: 0.
  * @property offsetY Top bound of sub-image. Default: 0.
  *
  * @throws IllegalArgumentException If [path] is not a valid path or empty.
- * @throws IllegalArgumentException If [path] was not found in resources.
+ * @exception IllegalArgumentException If [path] was not found in resources.
  *
  * @since 1.0
  */
 open class ImageVisual(
-    path: String = "",
+    path : String,
     val width: Int = -1,
     val height: Int = -1,
     val offsetX: Int = 0,
@@ -72,7 +72,7 @@ open class ImageVisual(
         }
     }
 
-    val pathProperty = StringProperty(path)
+    internal val pathProperty = StringProperty(path)
 
     var path: String
         get() = pathProperty.value

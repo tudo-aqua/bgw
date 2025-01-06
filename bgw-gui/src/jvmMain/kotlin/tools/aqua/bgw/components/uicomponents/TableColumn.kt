@@ -51,7 +51,7 @@ open class TableColumn<T>(
    *
    * @see title
    */
-  val titleProperty: StringProperty = StringProperty(title)
+  internal val titleProperty: StringProperty = StringProperty(title)
 
   /**
    * Title of this [TableColumn].
@@ -71,7 +71,7 @@ open class TableColumn<T>(
    *
    * @see width
    */
-  val widthProperty: LimitedDoubleProperty =
+  internal val widthProperty: LimitedDoubleProperty =
       LimitedDoubleProperty(
           lowerBoundInclusive = 0,
           upperBoundInclusive = Double.POSITIVE_INFINITY,
@@ -96,7 +96,7 @@ open class TableColumn<T>(
    *
    * @see Font
    */
-  val fontProperty: Property<Font> = Property(font)
+  internal val fontProperty: Property<Font> = Property(font)
 
   /**
    * [Font] of this [TableColumn].
@@ -118,7 +118,7 @@ open class TableColumn<T>(
    *
    * @see formatFunction
    */
-  val formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
+  internal val formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
 
   /**
    * The [formatFunction] that gets used to obtain a [String] representation for each item.

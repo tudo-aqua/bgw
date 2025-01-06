@@ -197,7 +197,21 @@ internal class JCEFApplication : Application {
                         }
 
                         is CheckBoxChangedEventData -> {
-                            if (component is CheckBox) component.isCheckedProperty.value = eventData.value
+                            if (component is CheckBox) {
+                                if(component.isIndeterminateAllowedProperty.value) {
+                                    if(eventData.value == true && !component.isCheckedProperty.value && !component.isIndeterminateProperty.value) {
+                                        component.isIndeterminate = true
+                                    } else if(eventData.value == true && component.isIndeterminateProperty.value && !component.isCheckedProperty.value) {
+                                        component.isIndeterminate = false
+                                        component.isChecked = true
+                                    } else if(eventData.value == false && !component.isIndeterminateProperty.value && component.isCheckedProperty.value) {
+                                        component.isIndeterminate = false
+                                        component.isChecked = false
+                                    }
+                                } else {
+                                    component.isChecked = eventData.value
+                                }
+                            }
                         }
 
                         is RadioChangedEventData -> {
@@ -206,6 +220,9 @@ internal class JCEFApplication : Application {
 
                         is TransformChangedEventData -> {
                             if (component is CameraPane<*>) {
+                                if(component.zoomProperty.value != eventData.zoomLevel) {
+                                    component.onZoom?.invoke(eventData.zoomLevel)
+                                }
                                 component.zoomProperty.setInternal(eventData.zoomLevel)
                                 component.panDataProperty.setInternal(InternalCameraPanData())
                                 component.anchorPointProperty.setInternal(

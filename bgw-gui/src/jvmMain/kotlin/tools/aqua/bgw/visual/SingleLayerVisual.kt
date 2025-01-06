@@ -38,7 +38,7 @@ sealed class SingleLayerVisual : Visual() {
      *
      * @see transparency
      */
-    val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
+    internal val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
 
     /**
      * The [transparency] / alpha channel for this [Visual].

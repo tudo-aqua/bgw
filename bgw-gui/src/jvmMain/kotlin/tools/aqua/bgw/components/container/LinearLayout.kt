@@ -73,198 +73,204 @@ open class LinearLayout<T : GameComponentView>(
     alignment: Alignment = Alignment.TOP_LEFT,
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual) {
+        posX = posX, posY = posY, width = width, height = height, visual = visual
+    ) {
 
-  /**
-   * [Property] for the spacing of [GameComponentView]s in this [LinearLayout].
-   *
-   * @see spacing
-   */
-  val spacingProperty: DoubleProperty = DoubleProperty(spacing.toDouble())
+    /**
+     * [Property] for the spacing of [GameComponentView]s in this [LinearLayout].
+     *
+     * @see spacing
+     */
+    internal val spacingProperty: DoubleProperty = DoubleProperty(spacing.toDouble())
 
-  /**
-   * Spacing for this [LinearLayout].
-   *
-   * @see spacingProperty
-   */
-  var spacing: Double
-    get() = spacingProperty.value
-    set(value) {
-      spacingProperty.value = value
-    }
-
-  /**
-   * [Property] for the [Orientation] of [GameComponentView]s in this [LinearLayout].
-   *
-   * @see Orientation
-   * @see orientation
-   */
-  val orientationProperty: Property<Orientation> = Property(orientation)
-
-  /**
-   * [Orientation] of [GameComponentView]s in this [LinearLayout].
-   *
-   * @see Orientation
-   * @see orientationProperty
-   */
-  var orientation: Orientation
-    get() = orientationProperty.value
-    set(value) {
-      orientationProperty.value = value
-    }
-
-  /**
-   * [Property] for the [Alignment] of [GameComponentView]s in this [LinearLayout].
-   *
-   * @see Alignment
-   * @see alignment
-   */
-  val alignmentProperty: Property<Alignment> = Property(alignment)
-
-  /**
-   * [Alignment] for this [LinearLayout].
-   *
-   * @see Alignment
-   * @see alignmentProperty
-   */
-  var alignment: Alignment
-    get() = alignmentProperty.value
-    set(value) {
-      alignmentProperty.value = value
-    }
-
-  init {
-    observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ -> layout() }
-    spacingProperty.internalListener = { _, _ -> layout() }
-    orientationProperty.internalListener = { _, _ -> layout() }
-    alignmentProperty.internalListener = { _, _ -> layout() }
-  }
-
-  /**
-   * Secondary constructor taking separate alignment components.
-   *
-   * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
-   * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
-   * @param width width for this [LinearLayout]. Default: 0.
-   * @param height height for this [LinearLayout]. Default: 0.
-   * @param spacing spacing between contained [GameComponentView]s. Default: 0.
-   * @param visual [Visual] to be used for this [LinearLayout].
-   * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
-   * @param verticalAlignment specifies how the contained components should be aligned vertically.
-   * Default: [VerticalAlignment.TOP].
-   * @param horizontalAlignment specifies how the contained components should be aligned
-   * horizontally. Default: [HorizontalAlignment.LEFT].
-   *
-   * @see VerticalAlignment
-   * @see HorizontalAlignment
-   * @see Orientation
-   * @see Visual
-   *
-   * @since 0.1
-   */
-  constructor(
-      posX: Number = 0,
-      posY: Number = 0,
-      width: Number = 0,
-      height: Number = 0,
-      spacing: Number = 0,
-      visual: Visual = Visual.EMPTY,
-      orientation: Orientation = Orientation.HORIZONTAL,
-      verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
-      horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
-  ) : this(
-      posX = posX,
-      posY = posY,
-      width = width,
-      height = height,
-      spacing = spacing,
-      visual = visual,
-      orientation = orientation,
-      alignment = Alignment.of(verticalAlignment, horizontalAlignment))
-
-  override fun T.onAdd() {
-    // add pos listeners
-    posXProperty.internalListener = { _, _ ->
-      observableComponents.internalListener?.invoke(emptyList(), emptyList())
-    }
-    posYProperty.internalListener = { _, _ ->
-      observableComponents.internalListener?.invoke(emptyList(), emptyList())
-    }
-  }
-
-  override fun T.onRemove() {
-    // remove pos listeners
-    posXProperty.internalListener = null
-    posYProperty.internalListener = null
-  }
-
-  private fun layout() {
-    when (orientation) {
-      Orientation.HORIZONTAL -> layoutHorizontal()
-      Orientation.VERTICAL -> layoutVertical()
-    }
-  }
-
-  @Suppress("DuplicatedCode")
-  private fun layoutHorizontal() {
-    val totalContentWidth: Double = observableComponents.sumOf { it.width }
-    val totalContentWidthWithSpacing = totalContentWidth + (observableComponents.size - 1) * spacing
-    val newSpacing: Double =
-        if (totalContentWidthWithSpacing > width) {
-          -minOf(
-              (totalContentWidth - width) / (observableComponents.size - 1),
-              totalContentWidth / observableComponents.size) // ignore user defined spacing
-        } else {
-          spacing // use user defined spacing
+    /**
+     * Spacing for this [LinearLayout].
+     *
+     * @see spacingProperty
+     */
+    var spacing: Double
+        get() = spacingProperty.value
+        set(value) {
+            spacingProperty.value = value
         }
-    val newTotalContentWidth = totalContentWidth + (observableComponents.size - 1) * newSpacing
-    val initial =
-        when (alignment.horizontalAlignment) {
-          HorizontalAlignment.LEFT -> 0.0
-          HorizontalAlignment.CENTER -> (width - newTotalContentWidth) / 2
-          HorizontalAlignment.RIGHT -> width - newTotalContentWidth
-        }
-    observableComponents.fold(initial) { acc: Double, component: T ->
-      component.posYProperty.setSilent(
-          when (alignment.verticalAlignment) {
-            VerticalAlignment.TOP -> 0.0
-            VerticalAlignment.CENTER -> (height - component.height) / 2
-            VerticalAlignment.BOTTOM -> height - component.height
-          })
-      component.posXProperty.setSilent(acc)
-      acc + component.width + newSpacing
-    }
-  }
 
-  @Suppress("DuplicatedCode")
-  private fun layoutVertical() {
-    val totalContentHeight: Double = observableComponents.sumOf { it.height }
-    val totalContentHeightWithSpacing =
-        totalContentHeight + (observableComponents.size - 1) * spacing
-    val newSpacing: Double =
-        if (totalContentHeightWithSpacing > height) {
-          -minOf(
-              (totalContentHeight - height) / (observableComponents.size - 1),
-              totalContentHeight / observableComponents.size) // ignore user defined spacing
-        } else {
-          spacing // use user defined spacing
+    /**
+     * [Property] for the [Orientation] of [GameComponentView]s in this [LinearLayout].
+     *
+     * @see Orientation
+     * @see orientation
+     */
+    internal val orientationProperty: Property<Orientation> = Property(orientation)
+
+    /**
+     * [Orientation] of [GameComponentView]s in this [LinearLayout].
+     *
+     * @see Orientation
+     * @see orientationProperty
+     */
+    var orientation: Orientation
+        get() = orientationProperty.value
+        set(value) {
+            orientationProperty.value = value
         }
-    val newTotalContentHeight = totalContentHeight + (observableComponents.size - 1) * newSpacing
-    val initial =
-        when (alignment.verticalAlignment) {
-          VerticalAlignment.TOP -> 0.0
-          VerticalAlignment.CENTER -> (height - newTotalContentHeight) / 2
-          VerticalAlignment.BOTTOM -> height - newTotalContentHeight
+
+    /**
+     * [Property] for the [Alignment] of [GameComponentView]s in this [LinearLayout].
+     *
+     * @see Alignment
+     * @see alignment
+     */
+    internal val alignmentProperty: Property<Alignment> = Property(alignment)
+
+    /**
+     * [Alignment] for this [LinearLayout].
+     *
+     * @see Alignment
+     * @see alignmentProperty
+     */
+    var alignment: Alignment
+        get() = alignmentProperty.value
+        set(value) {
+            alignmentProperty.value = value
         }
-    observableComponents.fold(initial) { acc: Double, component: T ->
-      component.posYProperty.setSilent(acc)
-      component.posXProperty.setSilent(
-          when (alignment.horizontalAlignment) {
-            HorizontalAlignment.LEFT -> 0.0
-            HorizontalAlignment.CENTER -> (width - component.width) / 2
-            HorizontalAlignment.RIGHT -> width - component.width
-          })
-      acc + component.height + newSpacing
+
+    init {
+        observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ -> layout() }
+        spacingProperty.internalListener = { _, _ -> layout() }
+        orientationProperty.internalListener = { _, _ -> layout() }
+        alignmentProperty.internalListener = { _, _ -> layout() }
     }
-  }
+
+    /**
+     * Secondary constructor taking separate alignment components.
+     *
+     * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
+     * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
+     * @param width width for this [LinearLayout]. Default: 0.
+     * @param height height for this [LinearLayout]. Default: 0.
+     * @param spacing spacing between contained [GameComponentView]s. Default: 0.
+     * @param visual [Visual] to be used for this [LinearLayout].
+     * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
+     * @param verticalAlignment specifies how the contained components should be aligned vertically.
+     * Default: [VerticalAlignment.TOP].
+     * @param horizontalAlignment specifies how the contained components should be aligned
+     * horizontally. Default: [HorizontalAlignment.LEFT].
+     *
+     * @see VerticalAlignment
+     * @see HorizontalAlignment
+     * @see Orientation
+     * @see Visual
+     *
+     * @since 0.1
+     */
+    constructor(
+        posX: Number = 0,
+        posY: Number = 0,
+        width: Number = 0,
+        height: Number = 0,
+        spacing: Number = 0,
+        visual: Visual = Visual.EMPTY,
+        orientation: Orientation = Orientation.HORIZONTAL,
+        verticalAlignment: VerticalAlignment = VerticalAlignment.TOP,
+        horizontalAlignment: HorizontalAlignment = HorizontalAlignment.LEFT
+    ) : this(
+        posX = posX,
+        posY = posY,
+        width = width,
+        height = height,
+        spacing = spacing,
+        visual = visual,
+        orientation = orientation,
+        alignment = Alignment.of(verticalAlignment, horizontalAlignment)
+    )
+
+    override fun T.onAdd() {
+        // add pos listeners
+        posXProperty.internalListener = { _, _ ->
+            observableComponents.internalListener?.invoke(emptyList(), emptyList())
+        }
+        posYProperty.internalListener = { _, _ ->
+            observableComponents.internalListener?.invoke(emptyList(), emptyList())
+        }
+    }
+
+    override fun T.onRemove() {
+        // remove pos listeners
+        posXProperty.internalListener = null
+        posYProperty.internalListener = null
+    }
+
+    private fun layout() {
+        when (orientation) {
+            Orientation.HORIZONTAL -> layoutHorizontal()
+            Orientation.VERTICAL -> layoutVertical()
+        }
+    }
+
+    @Suppress("DuplicatedCode")
+    private fun layoutHorizontal() {
+        val totalContentWidth: Double = observableComponents.sumOf { it.width }
+        val totalContentWidthWithSpacing = totalContentWidth + (observableComponents.size - 1) * spacing
+        val newSpacing: Double =
+            if (totalContentWidthWithSpacing > width) {
+                -minOf(
+                    (totalContentWidth - width) / (observableComponents.size - 1),
+                    totalContentWidth / observableComponents.size
+                ) // ignore user defined spacing
+            } else {
+                spacing // use user defined spacing
+            }
+        val newTotalContentWidth = totalContentWidth + (observableComponents.size - 1) * newSpacing
+        val initial =
+            when (alignment.horizontalAlignment) {
+                HorizontalAlignment.LEFT -> 0.0
+                HorizontalAlignment.CENTER -> (width - newTotalContentWidth) / 2
+                HorizontalAlignment.RIGHT -> width - newTotalContentWidth
+            }
+        observableComponents.fold(initial) { acc: Double, component: T ->
+            component.posYProperty.setSilent(
+                when (alignment.verticalAlignment) {
+                    VerticalAlignment.TOP -> 0.0
+                    VerticalAlignment.CENTER -> (height - component.height) / 2
+                    VerticalAlignment.BOTTOM -> height - component.height
+                }
+            )
+            component.posXProperty.setSilent(acc)
+            acc + component.width + newSpacing
+        }
+    }
+
+    @Suppress("DuplicatedCode")
+    private fun layoutVertical() {
+        val totalContentHeight: Double = observableComponents.sumOf { it.height }
+        val totalContentHeightWithSpacing =
+            totalContentHeight + (observableComponents.size - 1) * spacing
+        val newSpacing: Double =
+            if (totalContentHeightWithSpacing > height) {
+                -minOf(
+                    (totalContentHeight - height) / (observableComponents.size - 1),
+                    totalContentHeight / observableComponents.size
+                ) // ignore user defined spacing
+            } else {
+                spacing // use user defined spacing
+            }
+        val newTotalContentHeight = totalContentHeight + (observableComponents.size - 1) * newSpacing
+        val initial =
+            when (alignment.verticalAlignment) {
+                VerticalAlignment.TOP -> 0.0
+                VerticalAlignment.CENTER -> (height - newTotalContentHeight) / 2
+                VerticalAlignment.BOTTOM -> height - newTotalContentHeight
+            }
+        observableComponents.fold(initial) { acc: Double, component: T ->
+            component.posYProperty.setSilent(acc)
+            component.posXProperty.setSilent(
+                when (alignment.horizontalAlignment) {
+                    HorizontalAlignment.LEFT -> 0.0
+                    HorizontalAlignment.CENTER -> (width - component.width) / 2
+                    HorizontalAlignment.RIGHT -> width - component.width
+                }
+            )
+            acc + component.height + newSpacing
+        }
+    }
 }

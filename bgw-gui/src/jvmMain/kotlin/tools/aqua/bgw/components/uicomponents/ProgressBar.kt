@@ -65,7 +65,7 @@ open class ProgressBar(
    *
    * @see progress
    */
-  val progressProperty: DoubleProperty = DoubleProperty(progress)
+  internal val progressProperty: DoubleProperty = DoubleProperty(progress)
 
   /**
    * Progress state of this [ProgressBar].
@@ -89,7 +89,7 @@ open class ProgressBar(
    *
    * @see barColor
    */
-  val barColorProperty: Property<Color> = Property(barColor)
+  internal val barColorProperty: Property<Color> = Property(barColor)
 
   /**
    * Bar [Color] of this [ProgressBar].

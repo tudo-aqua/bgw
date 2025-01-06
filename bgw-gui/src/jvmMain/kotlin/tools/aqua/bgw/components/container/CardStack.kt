@@ -20,7 +20,6 @@
 package tools.aqua.bgw.components.container
 
 import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.Visual
@@ -53,115 +52,118 @@ import tools.aqua.bgw.visual.Visual
  * @since 0.1
  */
 open class CardStack<T : CardView>(
-  posX: Number = 0,
-  posY: Number = 0,
-  width: Number = DEFAULT_CARD_STACK_WIDTH,
-  height: Number = DEFAULT_CARD_STACK_HEIGHT,
-  alignment: Alignment = Alignment.CENTER,
-  visual: Visual = Visual.EMPTY
+    posX: Number = 0,
+    posY: Number = 0,
+    width: Number = DEFAULT_CARD_STACK_WIDTH,
+    height: Number = DEFAULT_CARD_STACK_HEIGHT,
+    alignment: Alignment = Alignment.CENTER,
+    visual: Visual = Visual.EMPTY
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual) {
+        posX = posX, posY = posY, width = width, height = height, visual = visual
+    ) {
 
-  /**
-   * [Property] for the [Alignment] of [CardView]s in this [CardStack].
-   *
-   * @see alignment
-   */
-  val alignmentProperty: Property<Alignment> = Property(alignment)
+    /**
+     * [Property] for the [Alignment] of [CardView]s in this [CardStack].
+     *
+     * @see alignment
+     */
+    internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
-  /**
-   * [Alignment] of [CardView]s in this [CardStack].
-   *
-   * @see alignmentProperty
-   */
-  var alignment: Alignment
-    get() = alignmentProperty.value
-    set(value) {
-      alignmentProperty.value = value
+    /**
+     * [Alignment] of [CardView]s in this [CardStack].
+     *
+     * @see alignmentProperty
+     */
+    var alignment: Alignment
+        get() = alignmentProperty.value
+        set(value) {
+            alignmentProperty.value = value
+        }
+
+    init {
+        alignmentProperty.internalListener = { _, _ ->
+            observableComponents.forEach {
+                it.layoutX()
+                it.layoutY()
+            }
+        }
     }
 
-  init {
-    alignmentProperty.internalListener = { _, _ ->
-      observableComponents.forEach {
-        it.layoutX()
-        it.layoutY()
-      }
-    }
-  }
+    /**
+     * Pops the topmost [CardView] from this [CardStack] and returns it, or null, if the stack is
+     * empty. Removes it from the [CardStack].
+     */
+    fun popOrNull(): T? =
+        observableComponents.removeLastOrNull()?.apply {
+            removePosListeners()
+            parent = null
+        }
 
-  /**
-   * Pops the topmost [CardView] from this [CardStack] and returns it, or null, if the stack is
-   * empty. Removes it from the [CardStack].
-   */
-  fun popOrNull(): T? =
-      observableComponents.removeLastOrNull()?.apply {
+    /**
+     * Pops the topmost [CardView] from this [CardStack] and returns it. Removes it from the
+     * [CardStack].
+     *
+     * @throws NoSuchElementException if stack was empty.
+     */
+    fun pop(): T = popOrNull() ?: throw NoSuchElementException()
+
+    /**
+     * Returns the topmost [CardView], or null, if the stack is empty. Does not modify the [CardStack]
+     * .
+     */
+    fun peekOrNull(): T? = observableComponents.lastOrNull()
+
+    /**
+     * Returns the topmost [CardView]. Does not modify the [CardStack].
+     *
+     * @throws NoSuchElementException if stack was empty.
+     */
+    fun peek(): T = peekOrNull() ?: throw NoSuchElementException()
+
+    /** Adds a [CardView] on top of this [CardStack]. */
+    fun push(cardView: T) {
+        observableComponents.add(cardView)
+        cardView.parent = this
+        cardView.addPosListeners()
+    }
+
+    override fun T.onAdd() {
+        addPosListeners()
+    }
+
+    override fun T.onRemove() {
         removePosListeners()
-        parent = null
-      }
+    }
 
-  /**
-   * Pops the topmost [CardView] from this [CardStack] and returns it. Removes it from the
-   * [CardStack].
-   *
-   * @throws NoSuchElementException if stack was empty.
-   */
-  fun pop(): T = popOrNull() ?: throw NoSuchElementException()
+    private fun T.addPosListeners() {
+        posXProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutX() }
+        posYProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutY() }
+    }
 
-  /**
-   * Returns the topmost [CardView], or null, if the stack is empty. Does not modify the [CardStack]
-   * .
-   */
-  fun peekOrNull(): T? = observableComponents.lastOrNull()
+    private fun T.removePosListeners() {
+        posXProperty.internalListener = null
+        posYProperty.internalListener = null
+    }
 
-  /**
-   * Returns the topmost [CardView]. Does not modify the [CardStack].
-   *
-   * @throws NoSuchElementException if stack was empty.
-   */
-  fun peek(): T = peekOrNull() ?: throw NoSuchElementException()
+    private fun T.layoutX() {
 
-  /** Adds a [CardView] on top of this [CardStack]. */
-  fun push(cardView: T) {
-    observableComponents.add(cardView)
-    cardView.parent = this
-    cardView.addPosListeners()
-  }
+        posXProperty.setSilent(
+            when (alignment.horizontalAlignment) {
+                HorizontalAlignment.LEFT -> 0.0
+                HorizontalAlignment.CENTER -> (this@CardStack.width - this.width) / 2
+                HorizontalAlignment.RIGHT -> this@CardStack.width - this.width
+            }
+        )
+    }
 
-  override fun T.onAdd() {
-    addPosListeners()
-  }
-
-  override fun T.onRemove() {
-    removePosListeners()
-  }
-
-  private fun T.addPosListeners() {
-    posXProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutX() }
-    posYProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutY() }
-  }
-
-  private fun T.removePosListeners() {
-    posXProperty.internalListener = null
-    posYProperty.internalListener = null
-  }
-
-  private fun T.layoutX() {
-
-    posXProperty.setSilent(
-        when (alignment.horizontalAlignment) {
-          HorizontalAlignment.LEFT -> 0.0
-          HorizontalAlignment.CENTER -> (this@CardStack.width - this.width) / 2
-          HorizontalAlignment.RIGHT -> this@CardStack.width - this.width
-        })
-  }
-
-  private fun T.layoutY() {
-    posYProperty.setSilent(
-        when (alignment.verticalAlignment) {
-          VerticalAlignment.TOP -> 0.0
-          VerticalAlignment.CENTER -> (this@CardStack.height - this.height) / 2
-          VerticalAlignment.BOTTOM -> this@CardStack.height - this.height
-        })
-  }
+    private fun T.layoutY() {
+        posYProperty.setSilent(
+            when (alignment.verticalAlignment) {
+                VerticalAlignment.TOP -> 0.0
+                VerticalAlignment.CENTER -> (this@CardStack.height - this.height) / 2
+                VerticalAlignment.BOTTOM -> this@CardStack.height - this.height
+            }
+        )
+    }
 }

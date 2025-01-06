@@ -38,7 +38,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    *
    * @see color
    */
-  val colorProperty: Property<Color> = Property(color)
+  internal val colorProperty: Property<Color> = Property(color)
 
   /**
    * The displayed [Color] of this [Visual].

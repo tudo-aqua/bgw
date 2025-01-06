@@ -44,7 +44,7 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Background [Visual].
  */
 @Suppress("LongParameterList", "MemberVisibilityCanBePrivate")
-sealed class LabeledUIComponent(
+abstract class LabeledUIComponent(
     posX: Number,
     posY: Number,
     width: Number,
@@ -63,7 +63,7 @@ sealed class LabeledUIComponent(
    *
    * @see isWrapText
    */
-  val isWrapTextProperty: BooleanProperty = BooleanProperty(isWrapText)
+  internal val isWrapTextProperty: BooleanProperty = BooleanProperty(isWrapText)
 
   /**
    * Defines if text should be wrapped, if it exceeds the [Label]'s [width].
@@ -81,7 +81,7 @@ sealed class LabeledUIComponent(
    *
    * @see text
    */
-  val textProperty: StringProperty = StringProperty(text)
+  internal val textProperty: StringProperty = StringProperty(text)
 
   /**
    * Label of this [LabeledUIComponent].
@@ -99,7 +99,7 @@ sealed class LabeledUIComponent(
    *
    * @see alignment
    */
-  val alignmentProperty: Property<Alignment> = Property(alignment)
+  internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
   /**
    * [Alignment] of this [LabeledUIComponent].

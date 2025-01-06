@@ -64,7 +64,7 @@ sealed class StructuredDataView<T>(
    * An [ObservableList] that contains the data objects. The first object in this [ObservableList]
    * will be the topmost row in the rendered [UIComponent].
    */
-  val items: ObservableList<T> = ObservableArrayList(items)
+  internal val items: ObservableList<T> = ObservableArrayList(items)
 
   /**
    * [Property] for the [selectionMode] of this [UIComponent].
@@ -76,7 +76,7 @@ sealed class StructuredDataView<T>(
    * Selected items and indices may be observed by registering observers on [selectedItems] and
    * [selectedIndices].
    */
-  val selectionModeProperty: Property<SelectionMode> = Property(selectionMode)
+  internal val selectionModeProperty: Property<SelectionMode> = Property(selectionMode)
 
   /**
    * Selection mode to be used for this [UIComponent].
@@ -98,7 +98,7 @@ sealed class StructuredDataView<T>(
    * [Property] for the background color for selected items in this [UIComponent]. Item selection is
    * enabled via [selectionMode].
    */
-  val selectionBackgroundProperty: Property<ColorVisual> = Property(selectionBackground)
+  internal val selectionBackgroundProperty: Property<ColorVisual> = Property(selectionBackground)
 
   /**
    * Background color for selected items in this [UIComponent]. Item selection is enabled via
@@ -119,7 +119,7 @@ sealed class StructuredDataView<T>(
    * occur when using this feature.
    */
   @Deprecated("The property is no longer used as of BGW 1.0.")
-  val selectionStyleProperty: Property<String> = Property("")
+  internal val selectionStyleProperty: Property<String> = Property("")
 
   /**
    * Style of selected items in this [UIComponent]. Item selection is enabled via [selectionMode].

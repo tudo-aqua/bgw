@@ -60,7 +60,10 @@ class HexagonGrid<T : HexagonView>(
     ) {
 
     /** A mutable map that stores the hexagons in the grid. */
-    @Deprecated("Getting components using the map is no longer supported as of BGW 1.0.", ReplaceWith("this.components"))
+    @Deprecated(
+        "Getting components using the map is no longer supported as of BGW 1.0.",
+        ReplaceWith("this.components")
+    )
     val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 
     init {

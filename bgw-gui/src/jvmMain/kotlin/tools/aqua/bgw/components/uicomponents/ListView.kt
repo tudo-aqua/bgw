@@ -77,7 +77,7 @@ open class ListView<T>(
    *
    * @see orientation
    */
-  val orientationProperty: Property<Orientation> = Property(orientation)
+  internal val orientationProperty: Property<Orientation> = Property(orientation)
 
   /**
    * [Orientation] of this [ListView] displayed.
@@ -98,7 +98,7 @@ open class ListView<T>(
    *
    * @see formatFunction
    */
-  val formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
+  internal val formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
 
   /**
    * The [formatFunction] that gets used to obtain a [String] representation for each item.

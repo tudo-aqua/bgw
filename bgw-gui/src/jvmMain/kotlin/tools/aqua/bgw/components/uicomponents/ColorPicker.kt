@@ -56,7 +56,7 @@ open class ColorPicker(
    *
    * @see selectedColor
    */
-  val selectedColorProperty: Property<Color> = Property(initialColor)
+  internal val selectedColorProperty: Property<Color> = Property(initialColor)
 
   /**
    * The currently selected [Color].

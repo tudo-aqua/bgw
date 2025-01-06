@@ -56,7 +56,7 @@ sealed class TextInputUIComponent(
    *
    * @see text
    */
-  val textProperty: StringProperty = StringProperty(text)
+  internal val textProperty: StringProperty = StringProperty(text)
 
   /**
    * Text of this [TextInputUIComponent].
@@ -74,7 +74,7 @@ sealed class TextInputUIComponent(
    *
    * @see prompt
    */
-  val promptProperty: StringProperty = StringProperty(prompt)
+  internal val promptProperty: StringProperty = StringProperty(prompt)
 
   /**
    * Prompt of this [TextInputUIComponent].

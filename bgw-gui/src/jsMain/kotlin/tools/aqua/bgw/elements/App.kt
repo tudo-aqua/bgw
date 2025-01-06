@@ -92,6 +92,10 @@ internal val App = FC<AppProps> { props ->
                 "input[type='color']" {
                     fontSize = (100.0 / props.data.height).cqh
                 }
+
+                "bgw_togglebutton > input[type='checkbox']" {
+                    fontSize = (100.0 / props.data.height).cqh
+                }
             }
 
             // RED
@@ -115,6 +119,10 @@ internal val App = FC<AppProps> { props ->
                 }
 
                 "input[type='color']" {
+                    fontSize = (100.0 / props.data.width).cqw
+                }
+
+                "bgw_togglebutton > input[type='checkbox']" {
                     fontSize = (100.0 / props.data.width).cqw
                 }
             }
@@ -142,6 +150,10 @@ internal val App = FC<AppProps> { props ->
                 "input[type='color']" {
                     fontSize = (100.0 / props.data.height).cqh
                 }
+
+                "bgw_togglebutton > input[type='checkbox']" {
+                    fontSize = (100.0 / props.data.height).cqh
+                }
             }
 
             // YELLOW
@@ -165,6 +177,10 @@ internal val App = FC<AppProps> { props ->
                 }
 
                 "input[type='color']" {
+                    fontSize = (100.0 / props.data.width).cqw
+                }
+
+                "bgw_togglebutton > input[type='checkbox']" {
                     fontSize = (100.0 / props.data.width).cqw
                 }
             }

@@ -100,5 +100,5 @@ open class TableView<T>(
    * the rendered [TableView].
    * @see TableColumn
    */
-  val columns: ObservableList<TableColumn<T>> = ObservableArrayList(columns)
+  internal val columns: ObservableList<TableColumn<T>> = ObservableArrayList(columns)
 }

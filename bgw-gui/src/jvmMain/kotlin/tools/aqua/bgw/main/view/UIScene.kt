@@ -18,7 +18,67 @@ internal class UIScene : MenuScene() {
         prompt = "Select an item",
         font = Font(20.0, java.awt.Color(0x551100), "Staatliches", Font.FontWeight.NORMAL),
         formatFunction = { it.name }
-    )
+    ).apply {
+    }
+
+    private val toggleGroup = ToggleGroup().apply {
+        onSelected = { button ->
+            println("Selected: ${button.text}")
+        }
+        onDeselected = { button ->
+            println("Deselected: ${button.text}")
+        }
+    }
+
+    private val toggle = ToggleButton(
+        posX = 1000,
+        posY = 500,
+        width = 300,
+        height = 100,
+        text = "Toggle",
+        font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
+        visual = ColorVisual(Color.GREEN),
+        toggleGroup = toggleGroup,
+        alignment = Alignment.CENTER,
+    ).apply {
+        onSelected = { println("Selected 1") }
+        onDeselected = { println("Deselected 1") }
+    }
+
+    private val toggle2 = ToggleButton(
+        posX = 1000,
+        posY = 600,
+        width = 100,
+        height = 100,
+        text = "Indeterminate",
+        font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
+        visual = ColorVisual(Color.ORANGE),
+        toggleGroup = toggleGroup
+    ).apply {
+        onSelected = {
+            println("Setting to indeterminate")
+            checkBox.isIndeterminate = true
+        }
+        onDeselected = {
+            println("Setting to not indeterminate")
+            checkBox.isIndeterminate = false
+        }
+    }
+
+    private val checkBox = CheckBox(
+        posX = 1000,
+        posY = 700,
+        width = 100,
+        height = 100,
+        text = "Check",
+        font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
+        visual = ColorVisual(Color.RED),
+        allowIndeterminate = true
+    ).apply {
+        onChanged = { checked, indeterminate ->
+            println("Checked: $checked, Indeterminate: $indeterminate")
+        }
+    }
 
     private val progress = ProgressBar(
         posX = 80,
@@ -79,7 +139,7 @@ internal class UIScene : MenuScene() {
     }
 
     init {
-        addComponents(combo, progress, textfield, passwordfield, textarea, color)
+        addComponents(combo, progress, textfield, passwordfield, textarea, color, toggle, toggle2, checkBox)
 
         color.selectedColorProperty.addListener { _, newValue ->
             progress.barColor = newValue

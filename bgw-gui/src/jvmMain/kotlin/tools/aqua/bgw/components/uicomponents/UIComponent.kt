@@ -71,7 +71,7 @@ abstract class UIComponent(
    *
    * @see Font
    */
-  val fontProperty: Property<Font> = Property(font)
+  internal val fontProperty: Property<Font> = Property(font)
 
   /**
    * [Font] of this [UIComponent]. Usage depends on subclass.
@@ -95,7 +95,7 @@ abstract class UIComponent(
    * @see backgroundStyle
    */
   @Deprecated("The property is no longer used as of BGW 1.0.", ReplaceWith("this.visual.style"))
-  val backgroundStyleProperty: StringProperty = StringProperty("")
+  internal val backgroundStyleProperty: StringProperty = StringProperty("")
 
   /**
    * Css style that gets applied to this [UIComponent]'s background.
@@ -123,7 +123,7 @@ abstract class UIComponent(
    * @see componentStyle
    */
   @Deprecated("The property is no longer used as of BGW 1.0.", ReplaceWith("this.visual.style"))
-  val componentStyleProperty: StringProperty = StringProperty("")
+  internal val componentStyleProperty: StringProperty = StringProperty("")
 
   /**
    * Css style that gets applied to this [UIComponent].

@@ -74,7 +74,7 @@ open class CheckBox(
    *
    * @see isChecked
    */
-  val isCheckedProperty: BooleanProperty = BooleanProperty(isChecked)
+  internal val isCheckedProperty: BooleanProperty = BooleanProperty(isChecked)
 
   /**
    * The checked state.
@@ -92,7 +92,7 @@ open class CheckBox(
    *
    * @see isIndeterminateAllowed
    */
-  val isIndeterminateAllowedProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
+  internal val isIndeterminateAllowedProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
 
   /**
    * [Boolean] whether this component allows an indeterminate state.
@@ -110,7 +110,7 @@ open class CheckBox(
    *
    * @see isIndeterminate
    */
-  val isIndeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
+  internal val isIndeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 
   /**
    * [Boolean] whether this component in the indeterminate state.
@@ -122,4 +122,24 @@ open class CheckBox(
     set(value) {
       isIndeterminateProperty.value = value
     }
+
+    init {
+        isCheckedProperty.internalListener = { _, new ->
+            onChanged?.invoke(new, isIndeterminateProperty.value)
+        }
+
+        isIndeterminateProperty.internalListener = { _, new ->
+            onChanged?.invoke(isCheckedProperty.value, new)
+        }
+    }
+
+
+
+    /**
+     * Gets invoked whenever this [CheckBox] gets checked, unchecked or set to indeterminate.
+     *
+     * @param checked true if checked, false otherwise
+     * @param indeterminate true if indeterminate, false otherwise
+     */
+    var onChanged: ((checked : Boolean, indeterminate : Boolean) -> Unit)? = null
 }

@@ -45,4 +45,5 @@ open class HexagonView(
         posY = posY,
         width = 2 * size.toDouble(),
         height = 2 * size.toDouble(),
-        visual = visual)
+        visual = visual
+    )

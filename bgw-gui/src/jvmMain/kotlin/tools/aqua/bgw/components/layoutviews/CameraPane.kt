@@ -44,7 +44,7 @@ open class CameraPane<T : LayoutView<*>>(
     width: Number,
     height: Number,
     visual: Visual = Visual.EMPTY,
-    limitBounds : Boolean = true,
+    limitBounds: Boolean = true,
     internal val target: T
 ) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
     /**
@@ -52,7 +52,7 @@ open class CameraPane<T : LayoutView<*>>(
      *
      * @see zoom
      */
-    val zoomProperty: DoubleProperty = DoubleProperty(1)
+    internal val zoomProperty: DoubleProperty = DoubleProperty(1)
 
     internal var internalData: InternalCameraPanData = InternalCameraPanData()
 
@@ -68,7 +68,7 @@ open class CameraPane<T : LayoutView<*>>(
      *
      * @see zoom
      */
-    val interactiveProperty: BooleanProperty = BooleanProperty(false)
+    internal val interactiveProperty: BooleanProperty = BooleanProperty(false)
 
     /**
      * Determines if the camera pane is interactive, which means that you can scroll to zoom and drag
@@ -81,7 +81,7 @@ open class CameraPane<T : LayoutView<*>>(
         }
 
     /** [Property] for the [limitBounds] state of the [CameraPane]. */
-    val limitBoundsProperty = BooleanProperty(limitBounds)
+    internal val limitBoundsProperty = BooleanProperty(limitBounds)
 
     /** Determines if the target layout view should be limited to the bounds of the camera pane. */
     var limitBounds: Boolean
@@ -128,6 +128,15 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
     /**
+     * Gets invoked whenever the camera pane is zoomed.
+     *
+     * @see zoom
+     */
+    var onZoom: ((Number) -> Unit)? = null
+
+
+
+    /**
      * Pans the view of the camera to focus the specified coordinates and zoom level. The coordinates specified represent
      * the center of the view. If [limitBounds] is set to true, the target layout view will be limited to the bounds of the camera pane.
      *
@@ -145,7 +154,6 @@ open class CameraPane<T : LayoutView<*>>(
             panTo = Pair(-x.toDouble(), -y.toDouble()),
             zoom = zoom
         )
-        zoomProperty.setInternal(zoom)
     }
 
     /**
@@ -159,7 +167,7 @@ open class CameraPane<T : LayoutView<*>>(
      * @see limitBounds
      */
     fun pan(x: Number, y: Number, smooth: Boolean = true) {
-        if(panData.zoomOnly) {
+        if (panData.zoomOnly) {
             pan(x, y, zoom = panData.zoom!!, smooth = smooth)
         } else {
             panData = InternalCameraPanData(
@@ -188,7 +196,6 @@ open class CameraPane<T : LayoutView<*>>(
             panTo = Pair(-xOffset.toDouble(), -yOffset.toDouble()),
             zoom = zoom
         )
-        zoomProperty.setInternal(zoom)
     }
 
     /**
@@ -222,9 +229,9 @@ open class CameraPane<T : LayoutView<*>>(
      * @see limitBounds
      */
     private fun zoom(zoom: Double) {
-        if(panData.panTo != null) {
+        if (panData.panTo != null) {
             pan(panData.panTo!!.first, panData.panTo!!.second, zoom, panData.panSmooth)
-        } else if(panData.panBy) {
+        } else if (panData.panBy) {
             panBy(panData.panTo!!.first, panData.panTo!!.second, zoom, panData.panSmooth)
         } else {
             panData = InternalCameraPanData(

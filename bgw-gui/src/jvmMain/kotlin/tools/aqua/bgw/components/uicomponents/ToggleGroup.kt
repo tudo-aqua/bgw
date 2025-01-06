@@ -35,19 +35,40 @@ package tools.aqua.bgw.components.uicomponents
  * @see RadioButton
  */
 open class ToggleGroup {
-  val id = IDGenerator.generateToggleGroupID()
+    internal val id = IDGenerator.generateToggleGroupID()
 
-  internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
+    internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
 
-  internal fun addButton(button: BinaryStateButton) {
-    buttons.add(button)
-  }
+    internal fun addButton(button: BinaryStateButton) {
+        buttons.add(button)
+    }
 
-  internal fun removeButton(button: BinaryStateButton) {
-    buttons.remove(button)
-  }
+    internal fun removeButton(button: BinaryStateButton) {
+        buttons.remove(button)
+    }
 
-  internal fun buttonSelectedStateChanged(button: BinaryStateButton) {
-    if (button.isSelected) buttons.forEach { if (it != button) it.isSelected = false }
-  }
+    internal fun buttonSelectedStateChanged(button: BinaryStateButton) {
+        if (button.isSelected) buttons.forEach {
+            if (it != button) {
+                it.isSelected = false
+                onDeselected?.invoke(it)
+            } else {
+                onSelected?.invoke(it)
+            }
+        }
+    }
+
+    /**
+     * Gets called when a [ToggleButton] or [RadioButton] gets selected.
+     *
+     * @see onDeselected
+     */
+    var onSelected: ((BinaryStateButton) -> Unit)? = null
+
+    /**
+     * Gets called when a [ToggleButton] or [RadioButton] gets deselected.
+     *
+     * @see onSelected
+     */
+    var onDeselected: ((BinaryStateButton) -> Unit)? = null
 }
