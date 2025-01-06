@@ -47,6 +47,36 @@ internal fun convertToPx(rem: Double): Double {
 internal val CameraPane = FC<CameraPaneProps> { props ->
     val cameraPaneRef = useRef<ReactZoomPanPinchContentRef>(null)
 
+    val targetWidth = props.data.target?.width?.toDouble() ?: 0.0
+    val targetHeight = props.data.target?.height?.toDouble() ?: 0.0
+
+    val paneWidth = props.data.width.toDouble()
+    val paneHeight = props.data.height.toDouble()
+
+    val snapPaneWidth = paneWidth / targetWidth
+    val snapPaneHeight = paneHeight / targetHeight
+
+    val targetAspect = targetWidth / targetHeight
+    val paneAspect = paneWidth / paneHeight
+
+    val isTargetWide = targetAspect >= 1.0
+    val isPaneWide = paneAspect >= 1.0
+
+    val minZoom = when {
+        isTargetWide && isPaneWide -> {
+            if (targetAspect >= paneAspect) snapPaneHeight
+            else snapPaneWidth
+        }
+        isTargetWide && !isPaneWide -> snapPaneHeight
+        !isTargetWide && isPaneWide -> snapPaneWidth
+        else -> { // !isTargetWide && !isPaneWide
+            if (targetAspect >= paneAspect) snapPaneHeight
+            else snapPaneWidth
+        }
+    }
+
+    val initialZoom = maxOf(minZoom, 1.0)
+
     useEffect {
         val panSmooth = props.data.internalPanData.panSmooth
         val panTime = if(panSmooth) 300 else 0
@@ -57,10 +87,24 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
             val currentX = ctx.instance.transformState.positionX
             val currentY = ctx.instance.transformState.positionY
 
-            ctx.setTransform(currentX, currentY, props.data.internalPanData.zoom!!, panTime)
+            var panZoom = props.data.internalPanData.zoom ?: ctx.instance.transformState.scale
+            if(panZoom < minZoom) panZoom = minZoom
 
-            val actualXOffset = convertToPx(currentX)
-            val actualYOffset = convertToPx(currentY)
+            // Calculate bounds
+            val containerWidth = props.data.width.toDouble()
+            val containerHeight = props.data.height.toDouble()
+            val targetWidthInternal = targetWidth * panZoom
+            val targetHeightInternal = targetHeight * panZoom
+
+            val minX = convertToRem(containerWidth - targetWidthInternal)
+            val minY = convertToRem(containerHeight - targetHeightInternal)
+            val maxX = 0.0
+            val maxY = 0.0
+
+            ctx.setTransform(currentX.coerceIn(minX, maxX), currentY.coerceIn(minY, maxY), panZoom, panTime)
+
+            val actualXOffset = convertToPx(currentX.coerceIn(minX, maxX))
+            val actualYOffset = convertToPx(currentY.coerceIn(minY, maxY))
 
             JCEFEventDispatcher.dispatchEvent(
                 TransformChangedEventData(
@@ -71,18 +115,44 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
             val ctx = cameraPaneRef.current!!
             val currentScale = ctx.instance.transformState.scale
 
-            val panZoom = props.data.internalPanData.zoom ?: currentScale
+            var panZoom = props.data.internalPanData.zoom ?: currentScale
+            if (panZoom < minZoom) panZoom = minZoom
 
-            if(panBy) {
+            // Calculate bounds
+            val containerWidth = props.data.width.toDouble()
+            val containerHeight = props.data.height.toDouble()
+            val targetWidthInternal = targetWidth * panZoom
+            val targetHeightInternal = targetHeight * panZoom
+
+            val minX = convertToRem(containerWidth - targetWidthInternal)
+            val minY = convertToRem(containerHeight - targetHeightInternal)
+            val maxX = 0.0
+            val maxY = 0.0
+
+            if (panBy) {
                 val panByX = (convertToRem(props.data.internalPanData.panTo!!.first) * panZoom)
                 val panByY = (convertToRem(props.data.internalPanData.panTo!!.second) * panZoom)
-                ctx.setTransform(ctx.instance.transformState.positionX + panByX, ctx.instance.transformState.positionY + panByY, panZoom, panTime)
+
+                // Calculate new positions with bounds
+                val newX = (ctx.instance.transformState.positionX + panByX).coerceIn(minX, maxX)
+                val newY = (ctx.instance.transformState.positionY + panByY).coerceIn(minY, maxY)
+
+                ctx.setTransform(newX, newY, panZoom, panTime)
             } else {
-                val panToX = (convertToRem(props.data.internalPanData.panTo!!.first) * panZoom + convertToRem(props.data.width / 2.0))
-                val panToY = (convertToRem(props.data.internalPanData.panTo!!.second) * panZoom + convertToRem(props.data.height / 2.0))
-                ctx.setTransform(panToX, panToY, panZoom, panTime)
+                var panToX = convertToRem(props.data.internalPanData.panTo!!.first) * panZoom
+                var panToY = convertToRem(props.data.internalPanData.panTo!!.second) * panZoom
+
+                panToX += convertToRem(props.data.width / 2.0)
+                panToY += convertToRem(props.data.height / 2.0)
+
+                // Clamp to bounds
+                val clampedX = panToX.coerceIn(minX, maxX)
+                val clampedY = panToY.coerceIn(minY, maxY)
+
+                ctx.setTransform(clampedX, clampedY, panZoom, panTime)
             }
 
+            // Optionally log the actual positions
             val currentX = ctx.instance.transformState.positionX
             val currentY = ctx.instance.transformState.positionY
 
@@ -109,14 +179,14 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
     }
 
     TransformWrapper {
-        centerZoomedOut = false // Could be set to true
+        centerZoomedOut = true // TODO: Set to false for alternative behavior
         disablePadding = true
         smooth = false
-        limitToBounds = false // Could be set to true
+        limitToBounds = true // TODO: Set to false for alternative behavior
         centerOnInit = true
-        minScale = 0.1
+        minScale = minZoom // TODO: Set to 0.1 for alternative behavior
         maxScale = 4.0
-        initialScale = 1.0
+        initialScale = initialZoom // TODO: Set to 1.0 for alternative behavior
         disabled = !props.data.interactive
         wheel = jso {
             step = 0.1
@@ -163,7 +233,8 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
             ).apply { id = props.data.id })
         }
 
-        onPanningStop = { ctx ->
+        // TODO: Uncomment this block for alternative behavior
+        /* onPanningStop = { ctx ->
             val currentX = ctx.instance.transformState.positionX
             val currentY = ctx.instance.transformState.positionY
 
@@ -205,7 +276,7 @@ internal val CameraPane = FC<CameraPaneProps> { props ->
                 zoomLevel = ctx.instance.transformState.scale,
                 anchor = Pair(convertToPx(ctx.instance.transformState.positionX), convertToPx(ctx.instance.transformState.positionY))
             ).apply { id = props.data.id })
-        }
+        } */
 
         ref = cameraPaneRef
 

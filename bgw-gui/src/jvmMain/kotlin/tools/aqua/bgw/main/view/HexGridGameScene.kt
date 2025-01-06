@@ -57,16 +57,6 @@ internal class HexGridGameScene : BoardGameScene() {
         isDraggable = true
     }
 
-    val centerDot = Label(
-        posX = 1200 / 2 - 2,
-        posY = 800 / 2 - 2,
-        width = 4,
-        height = 4,
-        visual = ColorVisual.RED.copy().apply {
-            style.borderRadius = BorderRadius.FULL
-        }
-    )
-
     val paneDot = Label(
         posX = -3,
         posY = -3,
@@ -91,7 +81,8 @@ internal class HexGridGameScene : BoardGameScene() {
         width = 1920,
         height = 1080,
         posX = 0,
-        posY = 0
+        posY = 0,
+        visual = ImageVisual("assets/3.jpg")
     ).apply {
         add(hexGrid)
         add(paneDot)
@@ -102,12 +93,22 @@ internal class HexGridGameScene : BoardGameScene() {
         width = 1200,
         height = 800,
         target = targetPane,
-        posX = 0,
-        posY = 0,
-        visual = ColorVisual.BLUE
+        posX = 200,
+        posY = 100,
+        visual = ColorVisual.YELLOW
     ).apply {
         interactive = true
     }
+
+    val centerDot = Label(
+        posX = cameraPane.width / 2 - 2 + cameraPane.posX,
+        posY = cameraPane.height / 2 - 2 + cameraPane.posY,
+        width = 4,
+        height = 4,
+        visual = ColorVisual.RED.copy().apply {
+            style.borderRadius = BorderRadius.FULL
+        }
+    )
 
     val panButton = Button(
         posX = 5,
@@ -118,6 +119,7 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual(Color(0, 255, 0))
     ).apply {
         onMouseClicked = {
+            // cameraPane.pan(targetPane.actualWidth - 2.0, targetPane.actualHeight - 2.0)
             cameraPane.panBy(200, 100)
         }
     }
@@ -131,7 +133,7 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual(Color(0, 125, 0))
     ).apply {
         onMouseClicked = {
-            cameraPane.pan(0, 0, smooth = false)
+            cameraPane.pan(200, 0, smooth = false)
         }
     }
 
@@ -140,11 +142,11 @@ internal class HexGridGameScene : BoardGameScene() {
         posY = 1020,
         width = 100,
         height = 50,
-        text = "Change",
-        visual = ColorVisual(Color(0, 63, 0))
+        text = "Zoom",
+        visual = ColorVisual(Color(0, 255, 0))
     ).apply {
         onMouseClicked = {
-            Application.isFullScreen = !Application.isFullScreen
+            cameraPane.zoom = Random.nextDouble(0.5, 2.0)
         }
     }
 
