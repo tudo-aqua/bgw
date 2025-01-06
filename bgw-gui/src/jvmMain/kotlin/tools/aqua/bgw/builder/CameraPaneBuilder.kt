@@ -13,6 +13,7 @@ internal object CameraPaneBuilder {
         cameraPane.anchorPointProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
         cameraPane.panDataProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
         cameraPane.panMouseButtonProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
+        cameraPane.limitBoundsProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
         ComponentViewBuilder.build(cameraPane.target)
     }
 }

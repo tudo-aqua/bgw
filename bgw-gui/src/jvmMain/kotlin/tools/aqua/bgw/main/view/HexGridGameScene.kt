@@ -95,7 +95,8 @@ internal class HexGridGameScene : BoardGameScene() {
         target = targetPane,
         posX = 200,
         posY = 100,
-        visual = ColorVisual.YELLOW
+        visual = ColorVisual.YELLOW,
+        limitBounds = true
     ).apply {
         interactive = true
     }
@@ -119,7 +120,6 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual(Color(0, 255, 0))
     ).apply {
         onMouseClicked = {
-            // cameraPane.pan(targetPane.actualWidth - 2.0, targetPane.actualHeight - 2.0)
             cameraPane.panBy(200, 100)
         }
     }
@@ -133,7 +133,7 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual(Color(0, 125, 0))
     ).apply {
         onMouseClicked = {
-            cameraPane.pan(200, 0, smooth = false)
+            cameraPane.pan(0, 0, smooth = false)
         }
     }
 
@@ -146,7 +146,7 @@ internal class HexGridGameScene : BoardGameScene() {
         visual = ColorVisual(Color(0, 255, 0))
     ).apply {
         onMouseClicked = {
-            cameraPane.zoom = Random.nextDouble(0.5, 2.0)
+            cameraPane.limitBounds = !cameraPane.limitBounds
         }
     }
 

@@ -35,6 +35,7 @@ import tools.aqua.bgw.visual.Visual
  * @param height The height of the camera pane.
  * @param visual The visual representation of the camera pane. Default is an empty visual.
  * @param target The target layout view that this camera pane will display.
+ * @param limitBounds Whether the target layout view should be limited to the bounds of the camera pane. Default is true.
  * @param T The type of the target layout view. Must extend the LayoutView class.
  */
 open class CameraPane<T : LayoutView<*>>(
@@ -43,6 +44,7 @@ open class CameraPane<T : LayoutView<*>>(
     width: Number,
     height: Number,
     visual: Visual = Visual.EMPTY,
+    limitBounds : Boolean = true,
     internal val target: T
 ) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
     /**
@@ -76,6 +78,16 @@ open class CameraPane<T : LayoutView<*>>(
         get() = interactiveProperty.value
         set(value) {
             interactiveProperty.value = value
+        }
+
+    /** [Property] for the [limitBounds] state of the [CameraPane]. */
+    val limitBoundsProperty = BooleanProperty(limitBounds)
+
+    /** Determines if the target layout view should be limited to the bounds of the camera pane. */
+    var limitBounds: Boolean
+        get() = limitBoundsProperty.value
+        set(value) {
+            limitBoundsProperty.value = value
         }
 
     /** Upper-left corner of the current scrolling window. */
@@ -116,12 +128,15 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
     /**
-     * pans the view of the camera to focus the specified coordinates and zoom level. The coordinates specified represent
-     * the center of the view.
+     * Pans the view of the camera to focus the specified coordinates and zoom level. The coordinates specified represent
+     * the center of the view. If [limitBounds] is set to true, the target layout view will be limited to the bounds of the camera pane.
+     *
      * @param x The x-coordinate to scroll to.
      * @param y The y-coordinate to scroll to.
      * @param zoom The zoom level to zoom to.
      * @param smooth Whether the pan should be smooth or instant.
+     *
+     * @see limitBounds
      */
     fun pan(x: Number, y: Number, zoom: Double, smooth: Boolean = true) {
         panData = InternalCameraPanData(
@@ -134,11 +149,14 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
     /**
-     * pans the view of the camera to focus the specified coordinates. The coordinates specified represent
-     * the center of the view.
+     * Pans the view of the camera to focus the specified coordinates. The coordinates specified represent
+     * the center of the view. If [limitBounds] is set to true, the target layout view will be limited to the bounds of the camera pane.
+     *
      * @param x The x-coordinate to scroll to.
      * @param y The y-coordinate to scroll to.
      * @param smooth Whether the pan should be smooth or instant.
+     *
+     * @see limitBounds
      */
     fun pan(x: Number, y: Number, smooth: Boolean = true) {
         if(panData.zoomOnly) {
@@ -153,11 +171,15 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
     /**
-     * pans the view of the camera by the given offsets and zooms to the specified zoom level.
+     * Pans the view of the camera by the given offsets and zooms to the specified zoom level.
+     * If [limitBounds] is set to true, the target layout view will be limited to the bounds of the camera pane.
+     *
      * @param xOffset The amount to pan the view horizontally.
      * @param yOffset The amount to pan the view vertically.
      * @param zoom The zoom level to zoom to.
      * @param smooth Whether the pan should be smooth or instant.
+     *
+     * @see limitBounds
      */
     fun panBy(xOffset: Number, yOffset: Number, zoom: Double, smooth: Boolean = true) {
         panData = InternalCameraPanData(
@@ -170,10 +192,14 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
     /**
-     * pans the view of the camera by the given offsets.
+     * Pans the view of the camera by the given offsets.
+     * If [limitBounds] is set to true, the target layout view will be limited to the bounds of the camera pane.
+     *
      * @param xOffset The amount to pan the view horizontally.
      * @param yOffset The amount to pan the view vertically.
      * @param smooth Whether the pan should be smooth or instant.
+     *
+     * @see limitBounds
      */
     fun panBy(xOffset: Number, yOffset: Number, smooth: Boolean = true) {
         if (panData.zoomOnly) {
@@ -189,8 +215,11 @@ open class CameraPane<T : LayoutView<*>>(
 
     /**
      * Zooms the view of the camera to the specified zoom level.
+     * If [limitBounds] is set to true, the target layout view will be limited to the bounds of the camera pane.
      *
      * @param zoom The zoom level to zoom to.
+     *
+     * @see limitBounds
      */
     private fun zoom(zoom: Double) {
         if(panData.panTo != null) {

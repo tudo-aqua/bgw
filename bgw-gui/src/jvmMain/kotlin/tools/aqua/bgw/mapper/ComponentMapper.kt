@@ -118,6 +118,7 @@ internal object ComponentMapper {
                 interactive = componentView.interactive
                 internalPanData = componentView.panData
                 panButton = componentView.panMouseButton.name.lowercase()
+                limitBounds = componentView.limitBounds
 
                 // ! nightly - isVerticalLocked
                 // ! nightly - isHorizontalLocked

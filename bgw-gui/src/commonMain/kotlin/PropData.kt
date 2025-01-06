@@ -217,6 +217,7 @@ internal class CameraPaneData : ComponentViewData() {
     var target : LayoutViewData? = null
     var interactive : Boolean = false
     var panButton : String = "left_button"
+    var limitBounds : Boolean = true
     var internalPanData : InternalCameraPanData = InternalCameraPanData()
 }
 
