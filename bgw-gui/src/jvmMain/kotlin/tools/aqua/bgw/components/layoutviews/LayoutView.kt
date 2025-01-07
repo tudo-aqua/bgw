@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,5 +41,4 @@ sealed class LayoutView<T : ComponentView>(
     visual: Visual
 ) :
     StaticComponentView<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual
-    )
+        posX = posX, posY = posY, width = width, height = height, visual = visual)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -165,8 +165,8 @@ sealed class StructuredDataView<T>(
 
   /** Internal event handler for selection. */
   internal var onSelectionEvent: ((Int) -> Unit)? = {
-    if(this.items.isNotEmpty()) {
-      if(selectedIndicesList.contains(it)) {
+    if (this.items.isNotEmpty()) {
+      if (selectedIndicesList.contains(it)) {
         selectedItemsList.remove(this.items[it])
         selectedIndicesList.remove(it)
       } else {
@@ -203,7 +203,7 @@ sealed class StructuredDataView<T>(
     checkSelectionEnabled()
     require(index in items.indices) { "Index is out of bounds." }
 
-    if(selectedIndices.size > 0 && selectionMode == SelectionMode.SINGLE) {
+    if (selectedIndices.size > 0 && selectionMode == SelectionMode.SINGLE) {
       clearSelection()
     }
 

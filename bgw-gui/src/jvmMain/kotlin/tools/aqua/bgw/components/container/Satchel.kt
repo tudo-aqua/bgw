@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,81 +71,79 @@ open class Satchel<T : GameComponentView>(
     visual: Visual = Visual.EMPTY,
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual
-    ),
+        posX = posX, posY = posY, width = width, height = height, visual = visual),
     Iterable<T> {
 
-    private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
+  private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
 
-    override fun T.onAdd() {
-        val initialState =
-            InitialState(
-                isDraggable = this.isDraggable,
-                opacity = this.opacity,
-                width = this.width,
-                height = this.height
-            )
+  override fun T.onAdd() {
+    val initialState =
+        InitialState(
+            isDraggable = this.isDraggable,
+            opacity = this.opacity,
+            width = this.width,
+            height = this.height)
 
-        // initialize satchel component
-        // opacityProperty.setSilent(0.0)
-        // widthProperty.setSilent(this@Satchel.width)
-        // heightProperty.setSilent(this@Satchel.height)
-        isDraggableProperty.setSilent(true)
+    // initialize satchel component
+    // opacityProperty.setSilent(0.0)
+    // widthProperty.setSilent(this@Satchel.width)
+    // heightProperty.setSilent(this@Satchel.height)
+    isDraggableProperty.setSilent(true)
 
-        // add internal listeners
-        isDraggableProperty.internalListener = { _, nV ->
-            initialState.isDraggable = nV
-            isDraggableProperty.setSilent(true)
-        }
-
-        opacityProperty.internalListener = { _, nV ->
-            initialState.opacity = nV
-            opacityProperty.setSilent(0.0)
-        }
-
-        widthProperty.internalListener = { _, nV ->
-            initialState.width = nV
-            widthProperty.setSilent(this@Satchel.width)
-        }
-
-        heightProperty.internalListener = { _, nV ->
-            initialState.height = nV
-            heightProperty.setSilent(this@Satchel.height)
-        }
-
-        // add pos listeners
-        this.posXProperty.addListenerAndInvoke(0.0) { _, _ -> posXProperty.setSilent(0.0) }
-        this.posYProperty.addListenerAndInvoke(0.0) { _, _ -> posYProperty.setSilent(0.0) }
-
-        initialStates[this] = initialState
+    // add internal listeners
+    isDraggableProperty.internalListener = { _, nV ->
+      initialState.isDraggable = nV
+      isDraggableProperty.setSilent(true)
     }
 
-    override fun T.onRemove() {
-        // remove internal listeners
-        isDraggableProperty.internalListener = null
-        opacityProperty.internalListener = null
-        widthProperty.internalListener = null
-        heightProperty.internalListener = null
-
-        val initialState = initialStates[this] ?: return
-
-        // restore initial behaviour
-        widthProperty.setSilent(initialState.width)
-        heightProperty.setSilent(initialState.height)
-        isDraggableProperty.setSilent(initialState.isDraggable)
-        opacityProperty.setSilent(initialState.opacity)
-
-        // remove pos listeners
-        posXProperty.internalListener = null
-        posYProperty.internalListener = null
-
-        initialStates.remove(this)
+    opacityProperty.internalListener = { _, nV ->
+      initialState.opacity = nV
+      opacityProperty.setSilent(0.0)
     }
 
-    private class InitialState(
-        var isDraggable: Boolean,
-        var opacity: Double,
-        var width: Double,
-        var height: Double
-    )
+    widthProperty.internalListener = { _, nV ->
+      initialState.width = nV
+      widthProperty.setSilent(this@Satchel.width)
+    }
+
+    heightProperty.internalListener = { _, nV ->
+      initialState.height = nV
+      heightProperty.setSilent(this@Satchel.height)
+    }
+
+    // add pos listeners
+    this.posXProperty.addListenerAndInvoke(0.0) { _, _ -> posXProperty.setSilent(0.0) }
+    this.posYProperty.addListenerAndInvoke(0.0) { _, _ -> posYProperty.setSilent(0.0) }
+
+    initialStates[this] = initialState
+  }
+
+  override fun T.onRemove() {
+    // remove internal listeners
+    isDraggableProperty.internalListener = null
+    opacityProperty.internalListener = null
+    widthProperty.internalListener = null
+    heightProperty.internalListener = null
+
+    val initialState = initialStates[this] ?: return
+
+    // restore initial behaviour
+    widthProperty.setSilent(initialState.width)
+    heightProperty.setSilent(initialState.height)
+    isDraggableProperty.setSilent(initialState.isDraggable)
+    opacityProperty.setSilent(initialState.opacity)
+
+    // remove pos listeners
+    posXProperty.internalListener = null
+    posYProperty.internalListener = null
+
+    initialStates.remove(this)
+  }
+
+  private class InitialState(
+      var isDraggable: Boolean,
+      var opacity: Double,
+      var width: Double,
+      var height: Double
+  )
 }

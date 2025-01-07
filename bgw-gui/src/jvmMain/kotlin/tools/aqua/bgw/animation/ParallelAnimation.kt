@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,19 +35,18 @@ package tools.aqua.bgw.animation
 data class ParallelAnimation(
     /** The [Animation]s that this [ParallelAnimation] should contain. */
     val animations: List<Animation>
-) :
-    Animation(animations.maxOf(Animation::duration)) {
+) : Animation(animations.maxOf(Animation::duration)) {
 
-    /**
-     * Creates a new [ParallelAnimation]. Additional constructor that enables the use of varargs for
-     * the animations.
-     *
-     * @param animation The [Animation]s that this [ParallelAnimation] should contain.
-     *
-     * @see Animation
-     * @see SequentialAnimation
-     *
-     * @since 0.5
-     */
-    constructor(vararg animation: Animation) : this(animation.toList())
+  /**
+   * Creates a new [ParallelAnimation]. Additional constructor that enables the use of varargs for
+   * the animations.
+   *
+   * @param animation The [Animation]s that this [ParallelAnimation] should contain.
+   *
+   * @see Animation
+   * @see SequentialAnimation
+   *
+   * @since 0.5
+   */
+  constructor(vararg animation: Animation) : this(animation.toList())
 }

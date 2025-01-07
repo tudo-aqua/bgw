@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 The BoardGameWork Authors
+ * Copyright 2023-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,11 @@
 
 package tools.aqua.bgw.components.container
 
+import kotlin.math.sqrt
 import tools.aqua.bgw.components.container.HexagonGrid.CoordinateSystem
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.Visual
-import kotlin.math.sqrt
 
 private typealias OffsetCoordinate = Pair<Int, Int>
 
@@ -35,8 +35,10 @@ private typealias AxialCoordinate = Pair<Int, Int>
  * @param width The width of the hexagon grid. It grows dynamically by the amount hexagons in it.
  * @param height The height of the hexagon grid. It grows dynamically by the amount hexagons in it.
  * @param visual The visual representation of the hexagon grid. Default is an empty visual.
- * @param coordinateSystem The coordinate system to use for the grid. Default is [CoordinateSystem.OFFSET].
- * @param orientation The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
+ * @param coordinateSystem The coordinate system to use for the grid. Default is
+ * [CoordinateSystem.OFFSET].
+ * @param orientation The orientation of the hexagons in the grid. Default is
+ * [HexOrientation.POINTY_TOP].
  *
  * @since 0.8
  */
@@ -50,113 +52,111 @@ class HexagonGrid<T : HexagonView>(
     /** The coordinate system to use for the grid. Default is [CoordinateSystem.OFFSET]. */
     val coordinateSystem: CoordinateSystem = CoordinateSystem.OFFSET,
 
-    /** The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
+    /**
+     * The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
      * @since 1.0
      */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual
-    ) {
+        posX = posX, posY = posY, width = width, height = height, visual = visual) {
 
-    /** A mutable map that stores the hexagons in the grid. */
-    @Deprecated(
-        "Getting components using the map is no longer supported as of BGW 1.0.",
-        ReplaceWith("this.components")
-    )
-    val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
+  /** A mutable map that stores the hexagons in the grid. */
+  @Deprecated(
+      "Getting components using the map is no longer supported as of BGW 1.0.",
+      ReplaceWith("this.components"))
+  val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 
-    init {
-        observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
-            layout(coordinateSystem)
-        }
+  init {
+    observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
+      layout(coordinateSystem)
     }
+  }
 
-    /**
-     * Gets the hexagon at the specified column index and row index.
-     *
-     * @param columnIndex The column index of the hexagon.
-     * @param rowIndex The row index of the hexagon.
-     * @return The hexagon at the specified coordinates, or null if no hexagon is found.
-     */
-    operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
+  /**
+   * Gets the hexagon at the specified column index and row index.
+   *
+   * @param columnIndex The column index of the hexagon.
+   * @param rowIndex The row index of the hexagon.
+   * @return The hexagon at the specified coordinates, or null if no hexagon is found.
+   */
+  operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
 
-    /**
-     * Sets the hexagon at the specified column index and row index.
-     *
-     * @param columnIndex The column index of the hexagon.
-     * @param rowIndex The row index of the hexagon.
-     * @param component The hexagon component to set.
-     */
-    operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
-        map[columnIndex to rowIndex]?.run { observableComponents.remove(this) }
-        component.orientation = orientation
-        map[columnIndex to rowIndex] = component
-        observableComponents.add(component)
-    }
+  /**
+   * Sets the hexagon at the specified column index and row index.
+   *
+   * @param columnIndex The column index of the hexagon.
+   * @param rowIndex The row index of the hexagon.
+   * @param component The hexagon component to set.
+   */
+  operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
+    map[columnIndex to rowIndex]?.run { observableComponents.remove(this) }
+    component.orientation = orientation
+    map[columnIndex to rowIndex] = component
+    observableComponents.add(component)
+  }
 
-    /**
-     * Internal function to lay out the hexagons in the grid based on the specified coordinate system.
-     *
-     * @param coordinateSystem The coordinate system to use for the layout.
-     */
-    private fun layout(coordinateSystem: CoordinateSystem) {
-        var minX = Double.MAX_VALUE
-        var minY = Double.MAX_VALUE
+  /**
+   * Internal function to lay out the hexagons in the grid based on the specified coordinate system.
+   *
+   * @param coordinateSystem The coordinate system to use for the layout.
+   */
+  private fun layout(coordinateSystem: CoordinateSystem) {
+    var minX = Double.MAX_VALUE
+    var minY = Double.MAX_VALUE
 
-        var maxX = Double.MIN_VALUE
-        var maxY = Double.MIN_VALUE
+    var maxX = Double.MIN_VALUE
+    var maxY = Double.MIN_VALUE
 
-        map.forEach { (coords, hexagon) ->
-            val (x, y) = coords
-            val (q, r) =
-                when (coordinateSystem) {
-                    CoordinateSystem.OFFSET -> {
-                        if (orientation == HexOrientation.POINTY_TOP) x to y else y to x
-                    }
-
-                    CoordinateSystem.AXIAL -> {
-                        if (orientation == HexOrientation.POINTY_TOP) x + (y - (y and 1)) / 2 to y
-                        else y + (x - (x and 1)) / 2 to x
-                    }
-                }
-            with(hexagon) {
-                if (orientation == HexOrientation.POINTY_TOP) {
-                    hexagon.orientation = HexOrientation.POINTY_TOP
-                    val hexWidth = width / 2 * sqrt(3.0)
-                    posXProperty.setSilent(hexWidth * q + if (r % 2 == 0) 0.0 else hexWidth / 2)
-                    posYProperty.setSilent(height * r - r * height / 4)
-
-                    if (posXProperty.value < minX) minX = posXProperty.value
-                    if (posYProperty.value < minY) minY = posYProperty.value
-
-                    if (posXProperty.value + hexWidth > maxX) maxX = posXProperty.value + hexWidth
-                    if (posYProperty.value + height > maxY) maxY = posYProperty.value + height
-                } else {
-                    hexagon.orientation = HexOrientation.FLAT_TOP
-                    val hexHeight = height / 2 * sqrt(3.0)
-                    posYProperty.setSilent(hexHeight * q + if (r % 2 == 0) 0.0 else hexHeight / 2)
-                    posXProperty.setSilent(width * r - r * width / 4)
-
-                    if (posXProperty.value < minX) minX = posXProperty.value
-                    if (posYProperty.value < minY) minY = posYProperty.value
-
-                    if (posXProperty.value + width > maxX) maxX = posXProperty.value + width
-                    if (posYProperty.value + hexHeight > maxY) maxY = posYProperty.value + hexHeight
-                }
+    map.forEach { (coords, hexagon) ->
+      val (x, y) = coords
+      val (q, r) =
+          when (coordinateSystem) {
+            CoordinateSystem.OFFSET -> {
+              if (orientation == HexOrientation.POINTY_TOP) x to y else y to x
             }
+            CoordinateSystem.AXIAL -> {
+              if (orientation == HexOrientation.POINTY_TOP) x + (y - (y and 1)) / 2 to y
+              else y + (x - (x and 1)) / 2 to x
+            }
+          }
+      with(hexagon) {
+        if (orientation == HexOrientation.POINTY_TOP) {
+          hexagon.orientation = HexOrientation.POINTY_TOP
+          val hexWidth = width / 2 * sqrt(3.0)
+          posXProperty.setSilent(hexWidth * q + if (r % 2 == 0) 0.0 else hexWidth / 2)
+          posYProperty.setSilent(height * r - r * height / 4)
+
+          if (posXProperty.value < minX) minX = posXProperty.value
+          if (posYProperty.value < minY) minY = posYProperty.value
+
+          if (posXProperty.value + hexWidth > maxX) maxX = posXProperty.value + hexWidth
+          if (posYProperty.value + height > maxY) maxY = posYProperty.value + height
+        } else {
+          hexagon.orientation = HexOrientation.FLAT_TOP
+          val hexHeight = height / 2 * sqrt(3.0)
+          posYProperty.setSilent(hexHeight * q + if (r % 2 == 0) 0.0 else hexHeight / 2)
+          posXProperty.setSilent(width * r - r * width / 4)
+
+          if (posXProperty.value < minX) minX = posXProperty.value
+          if (posYProperty.value < minY) minY = posYProperty.value
+
+          if (posXProperty.value + width > maxX) maxX = posXProperty.value + width
+          if (posYProperty.value + hexHeight > maxY) maxY = posYProperty.value + hexHeight
         }
-
-        widthProperty.setSilent(maxX - minX)
-        heightProperty.setSilent(maxY - minY)
+      }
     }
 
-    override fun T.onRemove() {}
-    override fun T.onAdd() {}
+    widthProperty.setSilent(maxX - minX)
+    heightProperty.setSilent(maxY - minY)
+  }
 
-    /** Enumeration class representing the coordinate system options for the hexagon grid. */
-    enum class CoordinateSystem {
-        OFFSET,
-        AXIAL
-    }
+  override fun T.onRemove() {}
+  override fun T.onAdd() {}
+
+  /** Enumeration class representing the coordinate system options for the hexagon grid. */
+  enum class CoordinateSystem {
+    OFFSET,
+    AXIAL
+  }
 }

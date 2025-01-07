@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,32 +48,31 @@ class RotationAnimation<T : ComponentView>(
     duration: Int = DEFAULT_ANIMATION_DURATION
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
-    /** Initial angle. */
-    val fromAngle: Double = fromAngle.toDouble()
+  /** Initial angle. */
+  val fromAngle: Double = fromAngle.toDouble()
 
-    /** Resulting angle. */
-    val toAngle: Double = toAngle.toDouble()
+  /** Resulting angle. */
+  val toAngle: Double = toAngle.toDouble()
 
-    /**
-     * A rotation animation. Rotates given [ComponentView] by a given angle.
-     *
-     * @param componentView [ComponentView] to animate
-     * @param byAngle relative angle. Default: 0
-     * @param duration [Animation] duration in milliseconds. Default: 1 second
-     *
-     * @see ComponentAnimation
-     * @see Animation
-     * @see ComponentView
-     *
-     * @since 0.1
-     */
-    constructor(
-        componentView: T,
-        byAngle: Double = 0.0,
-        duration: Int = 1000
-    ) : this(
-        componentView = componentView,
-        toAngle = componentView.rotation + byAngle,
-        duration = duration
-    )
+  /**
+   * A rotation animation. Rotates given [ComponentView] by a given angle.
+   *
+   * @param componentView [ComponentView] to animate
+   * @param byAngle relative angle. Default: 0
+   * @param duration [Animation] duration in milliseconds. Default: 1 second
+   *
+   * @see ComponentAnimation
+   * @see Animation
+   * @see ComponentView
+   *
+   * @since 0.1
+   */
+  constructor(
+      componentView: T,
+      byAngle: Double = 0.0,
+      duration: Int = 1000
+  ) : this(
+      componentView = componentView,
+      toAngle = componentView.rotation + byAngle,
+      duration = duration)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,16 +26,17 @@ package tools.aqua.bgw.core
  */
 data class AspectRatio
 internal constructor(internal val ratio: Double = DEFAULT_WINDOW_WIDTH / DEFAULT_WINDOW_HEIGHT) {
-    companion object {
-        /**
-         * Creates an aspect ratio out of width and height. May be for example 1920 : 1080 as well as 16
-         * : 9.
-         *
-         * @param width Width of ratio. Default: [DEFAULT_WINDOW_WIDTH].
-         * @param height Height of ratio. Default: [DEFAULT_WINDOW_HEIGHT].
-         */
-        fun of(
-            width: Number = DEFAULT_WINDOW_WIDTH, height: Number = DEFAULT_WINDOW_HEIGHT
-        ): AspectRatio = AspectRatio(width.toDouble() / height.toDouble())
-    }
+  companion object {
+    /**
+     * Creates an aspect ratio out of width and height. May be for example 1920 : 1080 as well as 16
+     * : 9.
+     *
+     * @param width Width of ratio. Default: [DEFAULT_WINDOW_WIDTH].
+     * @param height Height of ratio. Default: [DEFAULT_WINDOW_HEIGHT].
+     */
+    fun of(
+        width: Number = DEFAULT_WINDOW_WIDTH,
+        height: Number = DEFAULT_WINDOW_HEIGHT
+    ): AspectRatio = AspectRatio(width.toDouble() / height.toDouble())
+  }
 }

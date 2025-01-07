@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,9 +56,9 @@ import tools.aqua.bgw.visual.Visual
  */
 @Suppress("LeakingThis")
 open class BoardGameApplication(
-  windowTitle: String = DEFAULT_WINDOW_TITLE,
-  aspectRatio: AspectRatio = AspectRatio(),
-  windowMode: WindowMode? = null,
+    windowTitle: String = DEFAULT_WINDOW_TITLE,
+    aspectRatio: AspectRatio = AspectRatio(),
+    windowMode: WindowMode? = null,
 ) {
 
   /** Window title displayed in the title bar. */
@@ -204,10 +204,10 @@ open class BoardGameApplication(
    * Refer to [WindowMode] docs for further information about the effects.
    */
   constructor(
-    windowTitle: String = DEFAULT_WINDOW_TITLE,
-    width: Number = DEFAULT_WINDOW_WIDTH,
-    height: Number = DEFAULT_WINDOW_HEIGHT,
-    windowMode: WindowMode? = null,
+      windowTitle: String = DEFAULT_WINDOW_TITLE,
+      width: Number = DEFAULT_WINDOW_WIDTH,
+      height: Number = DEFAULT_WINDOW_HEIGHT,
+      windowMode: WindowMode? = null,
   ) : this(
       windowTitle = windowTitle,
       aspectRatio = AspectRatio.of(width = width, height = height),
@@ -350,21 +350,26 @@ open class BoardGameApplication(
 
     /**
      * Loads a font file and registers it in the GUI.
-     * @param path The font file path relative to resources and with file extension which is to be loaded
+     * @param path The font file path relative to resources and with file extension which is to be
+     * loaded
      * @param fontName The font name used to reference the font
      * @param weight The font weight used to reference the font
      * @return A boolean weather the file could be loaded or not
      */
-    fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean = Frontend.loadFont(path, fontName, weight)
+    fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean =
+        Frontend.loadFont(path, fontName, weight)
 
     /**
-     * Loads a font file and registers it in the GUI.
-     * The default font weight is [Font.FontWeight.NORMAL].
-     * The font name is derived from the file name without the file extension.
+     * Loads a font file and registers it in the GUI. The default font weight is
+     * [Font.FontWeight.NORMAL]. The font name is derived from the file name without the file
+     * extension.
      *
-     * @param path The font file path relative to resources and with file extension which is to be loaded
+     * @param path The font file path relative to resources and with file extension which is to be
+     * loaded
      * @return A boolean weather the file could be loaded or not
      */
-    fun loadFont(path : String): Boolean = Frontend.loadFont(path, path.substringAfterLast('/').substringBeforeLast('.'), Font.FontWeight.NORMAL)
+    fun loadFont(path: String): Boolean =
+        Frontend.loadFont(
+            path, path.substringAfterLast('/').substringBeforeLast('.'), Font.FontWeight.NORMAL)
   }
 }

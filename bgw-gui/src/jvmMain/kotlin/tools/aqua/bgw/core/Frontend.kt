@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,11 +23,11 @@ import ActionProp
 import PropData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import java.io.File
+import java.util.*
+import jsonMapper
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
-import jsonMapper
-import tools.aqua.bgw.mapper.AnimationMapper
-import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.Constants
@@ -46,6 +46,8 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.mapper.AnimationMapper
+import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.LimitedDoubleProperty
 import tools.aqua.bgw.observable.properties.Property
@@ -54,14 +56,17 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
-import java.io.File
-import java.util.*
 
 internal class Frontend {
 
   /** Starts the application. */
   fun start() {
-    embeddedServer(Netty, port = Constants.PORT, host = "localhost", module = io.ktor.server.application.Application::module).start(wait = false)
+    embeddedServer(
+            Netty,
+            port = Constants.PORT,
+            host = "localhost",
+            module = io.ktor.server.application.Application::module)
+        .start(wait = false)
     applicationEngine.start {
       applicationEngine.clearAllEventListeners()
       boardGameScene?.let { SceneBuilder.build(it) }
@@ -76,7 +81,7 @@ internal class Frontend {
     /** Current scene scale. */
     internal var sceneScale: Double = 1.0
 
-    internal var renderedDOM : BooleanProperty = BooleanProperty(false)
+    internal var renderedDOM: BooleanProperty = BooleanProperty(false)
 
     /** [BoardGameApplication] instance. */
     internal lateinit var application: BoardGameApplication
@@ -206,16 +211,16 @@ internal class Frontend {
     }
 
     internal fun updateComponent(component: ComponentView) {
-      //println("Sending update for component ${component.id}")
+      // println("Sending update for component ${component.id}")
       messageQueue.add(ActionProp.UPDATE_COMPONENT)
-      //val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
-      //runBlocking { sendToAllClients(json) }
+      // val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
+      // runBlocking { sendToAllClients(json) }
     }
 
     internal fun updateVisual(visual: Visual) {
       messageQueue.add(ActionProp.UPDATE_VISUAL)
-      //val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
-      //runBlocking { sendToAllClients(json) }
+      // val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
+      // runBlocking { sendToAllClients(json) }
     }
 
     /**
@@ -246,7 +251,8 @@ internal class Frontend {
      *
      * @return chosen file(s) or [Optional.empty] if canceled.
      */
-    internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> = TODO("Not yet implemented")
+    internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> =
+        TODO("Not yet implemented")
 
     /** Starts the application. */
     internal fun show() {
@@ -255,11 +261,11 @@ internal class Frontend {
 
     /** Stops the application. */
     internal fun exit() {
-        applicationEngine.stop()
+      applicationEngine.stop()
     }
 
-    fun loadFont(path : String, fontName : String, weight : Font.FontWeight): Boolean {
-      if(loadedFonts.filter { it.first == path }.isEmpty()) {
+    fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean {
+      if (loadedFonts.filter { it.first == path }.isEmpty()) {
         loadedFonts.add(Triple(path, fontName, weight))
         return true
       }
@@ -278,17 +284,17 @@ internal fun Scene<*>.findComponent(id: String): ComponentView? {
 }
 
 internal fun ComponentView.getRootNode(): RootComponent<*> {
-  return when(this) {
+  return when (this) {
     is RootComponent<*> -> this
     else -> this.parent?.getRootNode() ?: throw IllegalStateException("Component has no root node.")
   }
 }
 
 internal fun ComponentView.findComponent(id: String): ComponentView? {
-  if(id == this.id) return this
-  return when(this) {
+  if (id == this.id) return this
+  return when (this) {
     is RootComponent<*> -> this.scene.components.map { it.findComponent(id) }.find { it != null }
-    is CameraPane<*> ->  this.target.findComponent(id)
+    is CameraPane<*> -> this.target.findComponent(id)
     is Pane<*> -> this.components.map { it.findComponent(id) }.find { it != null }
     is GridPane<*> -> this.grid.map { it.component?.findComponent(id) }.find { it != null }
     is GameComponentContainer<*> -> this.components.map { it.findComponent(id) }.find { it != null }

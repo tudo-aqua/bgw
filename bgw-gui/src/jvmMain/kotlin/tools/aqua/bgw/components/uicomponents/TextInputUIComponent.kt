@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,56 +49,52 @@ sealed class TextInputUIComponent(
     visual: Visual = ColorVisual(Color(240, 240, 240))
 ) :
     UIComponent(
-        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual
-    ) {
+        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
 
-    /**
-     * [Property] for the text of this [TextInputUIComponent].
-     *
-     * @see text
-     */
-    internal val textProperty: StringProperty = StringProperty(text)
+  /**
+   * [Property] for the text of this [TextInputUIComponent].
+   *
+   * @see text
+   */
+  internal val textProperty: StringProperty = StringProperty(text)
 
-    /**
-     * Text of this [TextInputUIComponent].
-     *
-     * @see textProperty
-     */
-    var text: String
-        get() = textProperty.value
-        set(value) {
-            textProperty.value = value
-        }
-
-    /**
-     * [Property] for the prompt of this [TextInputUIComponent].
-     *
-     * @see prompt
-     */
-    internal val promptProperty: StringProperty = StringProperty(prompt)
-
-    /**
-     * Prompt of this [TextInputUIComponent].
-     *
-     * @see promptProperty
-     */
-    var prompt: String
-        get() = promptProperty.value
-        set(value) {
-            promptProperty.value = value
-        }
-
-    init {
-        textProperty.internalListener = { _, newText ->
-            onTextChanged?.invoke(newText)
-        }
+  /**
+   * Text of this [TextInputUIComponent].
+   *
+   * @see textProperty
+   */
+  var text: String
+    get() = textProperty.value
+    set(value) {
+      textProperty.value = value
     }
 
+  /**
+   * [Property] for the prompt of this [TextInputUIComponent].
+   *
+   * @see prompt
+   */
+  internal val promptProperty: StringProperty = StringProperty(prompt)
 
-    /**
-     * Gets invoked whenever the [text] of this component changes.
-     *
-     * @see text
-     */
-    var onTextChanged: ((String) -> Unit)? = null
+  /**
+   * Prompt of this [TextInputUIComponent].
+   *
+   * @see promptProperty
+   */
+  var prompt: String
+    get() = promptProperty.value
+    set(value) {
+      promptProperty.value = value
+    }
+
+  init {
+    textProperty.internalListener = { _, newText -> onTextChanged?.invoke(newText) }
+  }
+
+  /**
+   * Gets invoked whenever the [text] of this component changes.
+   *
+   * @see text
+   */
+  var onTextChanged: ((String) -> Unit)? = null
 }

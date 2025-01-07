@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,13 +58,12 @@ open class Area<T : GameComponentView>(
     visual: Visual = Visual.EMPTY
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual
-    ),
+        posX = posX, posY = posY, width = width, height = height, visual = visual),
     Iterable<T> {
 
-    /** Internal onRemove handler. */
-    override fun T.onRemove() = Unit
+  /** Internal onRemove handler. */
+  override fun T.onRemove() = Unit
 
-    /** Internal onAdd handler. */
-    override fun T.onAdd() = Unit
+  /** Internal onAdd handler. */
+  override fun T.onAdd() = Unit
 }

@@ -1,233 +1,214 @@
+/*
+ * Copyright 2025 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tools.aqua.bgw.elements.container
 
-import ComponentViewData
 import HexagonGridData
-import HexagonViewData
-import PaneData
 import csstype.PropertiesBuilder
-import web.cssom.*
-import data.event.KeyEventAction
 import emotion.react.css
-import kotlinx.browser.document
-import org.w3c.dom.HTMLDivElement
+import kotlin.math.abs
+import kotlin.math.sqrt
 import react.*
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
-import react.dom.svg.ReactSVG
 import tools.aqua.bgw.DroppableOptions
-import tools.aqua.bgw.DroppableResult
 import tools.aqua.bgw.builder.NodeBuilder
-import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
-import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
-import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
-import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
-import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
-import tools.aqua.bgw.handlers
 import tools.aqua.bgw.useDroppable
+import web.cssom.*
 import web.dom.Element
-import kotlin.math.abs
-import kotlin.math.sqrt
 
 internal external interface HexagonGridProps : Props {
-    var data : HexagonGridData
+  var data: HexagonGridData
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
-    cssBuilder(componentViewData)
-    justifyContent = JustifyContent.flexStart
-    alignItems = AlignItems.flexStart
+  cssBuilder(componentViewData)
+  justifyContent = JustifyContent.flexStart
+  alignItems = AlignItems.flexStart
 }
 
-internal val HexagonGrid = FC<HexagonGridProps> { props ->
-    val droppable = useDroppable(object : DroppableOptions {
-        override var id: String = props.data.id
-        override var disabled = !props.data.isDroppable
-    })
+internal val HexagonGrid =
+    FC<HexagonGridProps> { props ->
+      val droppable =
+          useDroppable(
+              object : DroppableOptions {
+                override var id: String = props.data.id
+                override var disabled = !props.data.isDroppable
+              })
 
-    val elementRef = useRef<Element>(null)
+      val elementRef = useRef<Element>(null)
 
-    bgwHexagonGrid {
+      bgwHexagonGrid {
         tabIndex = 0
         id = props.data.id
         className = ClassName("hexagonGrid")
-        css {
-            cssBuilderIntern(props.data)
-        }
+        css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect {
-            elementRef.current?.let { droppable.setNodeRef(it) }
-        }
+        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
-            className = ClassName("visuals")
-            +VisualBuilder.build(props.data.visual)
+          className = ClassName("visuals")
+          +VisualBuilder.build(props.data.visual)
         }
 
         bgwContents {
-            className = ClassName("components")
+          className = ClassName("components")
 
-            var minX = 0.0
-            var maxX = 0.0
-            var minY = 0.0
-            var maxY = 0.0
+          var minX = 0.0
+          var maxX = 0.0
+          var minY = 0.0
+          var maxY = 0.0
 
-            props.data.map.forEach {
-                if(props.data.orientation == "pointy_top") {
-                    if (props.data.coordinateSystem == "offset") {
-                        bgwHexagonContent {
-                            val size = it.value.size
-                            val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
-                            val h = 2 * size
-                            val q = it.key.split("/")[0].toInt()
-                            val r = it.key.split("/")[1].toInt()
+          props.data.map.forEach {
+            if (props.data.orientation == "pointy_top") {
+              if (props.data.coordinateSystem == "offset") {
+                bgwHexagonContent {
+                  val size = it.value.size
+                  val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val h = 2 * size
+                  val q = it.key.split("/")[0].toInt()
+                  val r = it.key.split("/")[1].toInt()
 
-                            val x = if (r % 2 == 0)
-                                w * q + props.data.spacing * (q - 1)
-                            else
-                                w * q + props.data.spacing * (q - 1) + w / 2
+                  val x =
+                      if (r % 2 == 0) w * q + props.data.spacing * (q - 1)
+                      else w * q + props.data.spacing * (q - 1) + w / 2
 
-                            val y = h * 0.75 * r + props.data.spacing * (r - 1)
+                  val y = h * 0.75 * r + props.data.spacing * (r - 1)
 
-                            if (x < minX)
-                                minX = x
-                            if (x + w > maxX)
-                                maxX = x + w
-                            if (y < minY)
-                                minY = y
-                            if (y + h > maxY)
-                                maxY = y + h
+                  if (x < minX) minX = x
+                  if (x + w > maxX) maxX = x + w
+                  if (y < minY) minY = y
+                  if (y + h > maxY) maxY = y + h
 
-                            css {
-                                position = Position.absolute
-                                left = x.em
-                                top = y.em
-                            }
-                            +NodeBuilder.build(it.value)
-                        }
-                    } else {
-                        bgwHexagonContent {
-                            val size = it.value.size
-                            val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
-                            val h = 2 * size
-                            var q = it.key.split("/")[0].toInt()
-                            var r = it.key.split("/")[1].toInt()
-
-                            q = q + (r - (r and 1)) / 2
-
-                            val x = if (r % 2 == 0)
-                                w * q + props.data.spacing * (q - 1)
-                            else
-                                w * q + props.data.spacing * (q - 1) + w / 2
-
-                            val y = h * 0.75 * r + props.data.spacing * (r - 1)
-
-                            if (x < minX)
-                                minX = x
-                            if (x + w > maxX)
-                                maxX = x + w
-                            if (y < minY)
-                                minY = y
-                            if (y + h > maxY)
-                                maxY = y + h
-
-                            css {
-                                position = Position.absolute
-                                left = x.em
-                                top = y.em
-                            }
-                            +NodeBuilder.build(it.value)
-                        }
-                    }
-                } else {
-                    if (props.data.coordinateSystem == "offset") {
-                        bgwHexagonContent {
-                            val size = it.value.size
-                            val w = 2 * size
-                            val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
-                            val q = it.key.split("/")[0].toInt()
-                            val r = it.key.split("/")[1].toInt()
-
-                            val x = w * 0.75 * q + props.data.spacing * (q - 1)
-
-                            val y = if (q % 2 == 0)
-                                h * r + props.data.spacing * (r - 1)
-                            else
-                                h * r + props.data.spacing * (r - 1) + h / 2
-
-                            if (x < minX)
-                                minX = x.toDouble()
-                            if (x + w > maxX)
-                                maxX = (x + w).toDouble()
-                            if (y < minY)
-                                minY = y
-                            if (y + h > maxY)
-                                maxY = y + h
-
-                            css {
-                                position = Position.absolute
-                                left = x.em
-                                top = y.em
-                            }
-                            +NodeBuilder.build(it.value)
-                        }
-                    } else {
-                        bgwHexagonContent {
-                            val size = it.value.size
-                            val w = 2 * size
-                            val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
-                            var q = it.key.split("/")[0].toInt()
-                            var r = it.key.split("/")[1].toInt()
-
-                            r = r + (q - (q and 1)) / 2
-
-                            val x = w * 0.75 * q + props.data.spacing * (q - 1)
-
-                            val y = if (q % 2 == 0)
-                                h * r + props.data.spacing * (r - 1)
-                            else
-                                h * r + props.data.spacing * (r - 1) + h / 2
-
-                            if (x < minX)
-                                minX = x
-                            if (x + w > maxX)
-                                maxX = x + w
-                            if (y < minY)
-                                minY = y
-                            if (y + h > maxY)
-                                maxY = y + h
-
-                            css {
-                                position = Position.absolute
-                                left = x.em
-                                top = y.em
-                            }
-                            +NodeBuilder.build(it.value)
-                        }
-                    }
-                }
-                css {
+                  css {
                     position = Position.absolute
-                    width = (maxX + abs(minX)).em
-                    height = (maxY + abs(minY)).em
-                    left = (-minX).em
-                    top = (-minY).em
+                    left = x.em
+                    top = y.em
+                  }
+                  +NodeBuilder.build(it.value)
                 }
+              } else {
+                bgwHexagonContent {
+                  val size = it.value.size
+                  val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val h = 2 * size
+                  var q = it.key.split("/")[0].toInt()
+                  var r = it.key.split("/")[1].toInt()
+
+                  q = q + (r - (r and 1)) / 2
+
+                  val x =
+                      if (r % 2 == 0) w * q + props.data.spacing * (q - 1)
+                      else w * q + props.data.spacing * (q - 1) + w / 2
+
+                  val y = h * 0.75 * r + props.data.spacing * (r - 1)
+
+                  if (x < minX) minX = x
+                  if (x + w > maxX) maxX = x + w
+                  if (y < minY) minY = y
+                  if (y + h > maxY) maxY = y + h
+
+                  css {
+                    position = Position.absolute
+                    left = x.em
+                    top = y.em
+                  }
+                  +NodeBuilder.build(it.value)
+                }
+              }
+            } else {
+              if (props.data.coordinateSystem == "offset") {
+                bgwHexagonContent {
+                  val size = it.value.size
+                  val w = 2 * size
+                  val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val q = it.key.split("/")[0].toInt()
+                  val r = it.key.split("/")[1].toInt()
+
+                  val x = w * 0.75 * q + props.data.spacing * (q - 1)
+
+                  val y =
+                      if (q % 2 == 0) h * r + props.data.spacing * (r - 1)
+                      else h * r + props.data.spacing * (r - 1) + h / 2
+
+                  if (x < minX) minX = x.toDouble()
+                  if (x + w > maxX) maxX = (x + w).toDouble()
+                  if (y < minY) minY = y
+                  if (y + h > maxY) maxY = y + h
+
+                  css {
+                    position = Position.absolute
+                    left = x.em
+                    top = y.em
+                  }
+                  +NodeBuilder.build(it.value)
+                }
+              } else {
+                bgwHexagonContent {
+                  val size = it.value.size
+                  val w = 2 * size
+                  val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  var q = it.key.split("/")[0].toInt()
+                  var r = it.key.split("/")[1].toInt()
+
+                  r = r + (q - (q and 1)) / 2
+
+                  val x = w * 0.75 * q + props.data.spacing * (q - 1)
+
+                  val y =
+                      if (q % 2 == 0) h * r + props.data.spacing * (r - 1)
+                      else h * r + props.data.spacing * (r - 1) + h / 2
+
+                  if (x < minX) minX = x
+                  if (x + w > maxX) maxX = x + w
+                  if (y < minY) minY = y
+                  if (y + h > maxY) maxY = y + h
+
+                  css {
+                    position = Position.absolute
+                    left = x.em
+                    top = y.em
+                  }
+                  +NodeBuilder.build(it.value)
+                }
+              }
             }
+            css {
+              position = Position.absolute
+              width = (maxX + abs(minX)).em
+              height = (maxY + abs(minY)).em
+              left = (-minX).em
+              top = (-minY).em
+            }
+          }
         }
 
         applyCommonEventHandlers(props.data)
+      }
     }
-}
 
 internal inline val bgwHexagonGrid: IntrinsicType<HTMLAttributes<Element>>
-    get() = "bgw_hexagon_grid".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+  get() = "bgw_hexagon_grid".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
 internal inline val bgwHexagonContent: IntrinsicType<HTMLAttributes<Element>>
-    get() = "bgw_hexagon_content".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+  get() = "bgw_hexagon_content".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

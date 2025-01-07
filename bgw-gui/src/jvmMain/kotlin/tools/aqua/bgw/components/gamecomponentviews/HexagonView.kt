@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 The BoardGameWork Authors
+ * Copyright 2023-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,5 +45,4 @@ open class HexagonView(
         posY = posY,
         width = 2 * size.toDouble(),
         height = 2 * size.toDouble(),
-        visual = visual
-    )
+        visual = visual)

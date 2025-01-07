@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,98 +64,98 @@ open class ComboBox<T>(
         width = width,
         height = height,
         font = font,
-        visual = Visual.EMPTY
-    ) {
+        visual = Visual.EMPTY) {
 
-    internal fun select(selectedItem: Int) {
-        if (selectedItem < 0 || selectedItem >= observableItemsList.size) selectedItemProperty.value = null
-        else selectedItemProperty.value = observableItemsList[selectedItem]
+  internal fun select(selectedItem: Int) {
+    if (selectedItem < 0 || selectedItem >= observableItemsList.size)
+        selectedItemProperty.value = null
+    else selectedItemProperty.value = observableItemsList[selectedItem]
 
-        onItemSelected?.invoke(selectedItemProperty.value)
+    onItemSelected?.invoke(selectedItemProperty.value)
+  }
+
+  internal fun getSelectedIndex(): Int {
+    return observableItemsList.indexOf(selectedItem)
+  }
+
+  /**
+   * [Property] for the [items] [List] for this [ComboBox].
+   *
+   * @see items
+   */
+  internal val observableItemsList: ObservableList<T> = ObservableArrayList()
+
+  /**
+   * Items [List] for this [ComboBox].
+   *
+   * @see observableItemsList
+   */
+  var items: List<T>
+    get() = observableItemsList.toList()
+    set(value) {
+      observableItemsList.clear()
+      observableItemsList.addAll(value)
     }
 
-    internal fun getSelectedIndex(): Int {
-        return observableItemsList.indexOf(selectedItem)
+  /**
+   * [Property] for the selected item.
+   *
+   * Value may be `null` if no item is selected.
+   *
+   * @see selectedItem
+   */
+  internal val selectedItemProperty: Property<T?> = Property(null)
+
+  /**
+   * The selected item.
+   *
+   * May be `null` if no item is selected.
+   *
+   * @see selectedItemProperty
+   */
+  var selectedItem: T?
+    get() = selectedItemProperty.value
+    set(value) {
+      selectedItemProperty.value = value
     }
 
-    /**
-     * [Property] for the [items] [List] for this [ComboBox].
-     *
-     * @see items
-     */
-    internal val observableItemsList: ObservableList<T> = ObservableArrayList()
+  /**
+   * [Property] for the [formatFunction] that gets used to obtain a [String] representation for each
+   * item.
+   *
+   * If the value is `null`, the [toString] function of the item is used instead.
+   *
+   * @see formatFunction
+   */
+  internal var formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
 
-    /**
-     * Items [List] for this [ComboBox].
-     *
-     * @see observableItemsList
-     */
-    var items: List<T>
-        get() = observableItemsList.toList()
-        set(value) {
-            observableItemsList.clear()
-            observableItemsList.addAll(value)
-        }
-
-    /**
-     * [Property] for the selected item.
-     *
-     * Value may be `null` if no item is selected.
-     *
-     * @see selectedItem
-     */
-    internal val selectedItemProperty: Property<T?> = Property(null)
-
-    /**
-     * The selected item.
-     *
-     * May be `null` if no item is selected.
-     *
-     * @see selectedItemProperty
-     */
-    var selectedItem: T?
-        get() = selectedItemProperty.value
-        set(value) {
-            selectedItemProperty.value = value
-        }
-
-    /**
-     * [Property] for the [formatFunction] that gets used to obtain a [String] representation for each
-     * item.
-     *
-     * If the value is `null`, the [toString] function of the item is used instead.
-     *
-     * @see formatFunction
-     */
-    internal var formatFunctionProperty: Property<((T) -> String)?> = Property(formatFunction)
-
-    /**
-     * The [formatFunction] that gets used to obtain a [String] representation for each item.
-     *
-     * If the value is `null`, the [toString] function of the item is used instead.
-     *
-     * @see formatFunctionProperty
-     */
-    var formatFunction: ((T) -> String)?
-        get() = formatFunctionProperty.value
-        set(value) {
-            formatFunctionProperty.value = value
-        }
-
-    init {
-        observableItemsList.addAll(items)
-
-        if (selectedItem != null) {
-            require(items.contains(selectedItem)) { "Items list does not contain element to select." }
-
-            selectedItemProperty.value = selectedItem
-        }
+  /**
+   * The [formatFunction] that gets used to obtain a [String] representation for each item.
+   *
+   * If the value is `null`, the [toString] function of the item is used instead.
+   *
+   * @see formatFunctionProperty
+   */
+  var formatFunction: ((T) -> String)?
+    get() = formatFunctionProperty.value
+    set(value) {
+      formatFunctionProperty.value = value
     }
 
-    /**
-     * Gets invoked whenever an item is selected.
-     *
-     * @see selectedItem
-     */
-    var onItemSelected: ((T?) -> Unit)? = null
+  init {
+    observableItemsList.addAll(items)
+
+    if (selectedItem != null) {
+      require(items.contains(selectedItem)) { "Items list does not contain element to select." }
+
+      selectedItemProperty.value = selectedItem
+    }
+  }
+
+  /**
+   * Gets invoked whenever an item is selected.
+   *
+   * @see selectedItem
+   */
+  var onItemSelected: ((T?) -> Unit)? = null
 }

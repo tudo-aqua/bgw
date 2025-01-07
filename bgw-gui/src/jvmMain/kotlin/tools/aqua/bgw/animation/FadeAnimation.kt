@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,9 +47,9 @@ class FadeAnimation<T : ComponentView>(
     toOpacity: Number = componentView.opacity,
     duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
-    /** Initial opacity. */
-    val fromOpacity: Double = fromOpacity.toDouble()
+  /** Initial opacity. */
+  val fromOpacity: Double = fromOpacity.toDouble()
 
-    /** Resulting opacity. */
-    val toOpacity: Double = toOpacity.toDouble()
+  /** Resulting opacity. */
+  val toOpacity: Double = toOpacity.toDouble()
 }

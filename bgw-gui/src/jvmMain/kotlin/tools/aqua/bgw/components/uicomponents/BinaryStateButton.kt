@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,62 +64,61 @@ sealed class BinaryStateButton(
         font = font,
         alignment = alignment,
         isWrapText = isWrapText,
-        visual = visual
-    ) {
-    /**
-     * The ToggleGroup of this ToggleButton.
-     *
-     * @see ToggleGroup
-     */
-    var toggleGroup: ToggleGroup = toggleGroup
-        set(value) {
-            toggleGroup.removeButton(this)
-            value.addButton(this)
-            field = value
-        }
-
-    /**
-     * [Property] for the selected state of this [ToggleButton].
-     *
-     * @see isSelected
-     */
-    internal val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
-
-    /**
-     * Selected state for this [ToggleButton].
-     *
-     * @see selectedProperty
-     */
-    var isSelected: Boolean
-        get() = selectedProperty.value
-        set(value) {
-            selectedProperty.value = value
-        }
-
-    init {
-        this.toggleGroup = toggleGroup
-
-        selectedProperty.internalListener = { _, _ ->
-            toggleGroup.buttonSelectedStateChanged(this)
-            if(selectedProperty.value) {
-                onSelected?.invoke()
-            } else {
-                onDeselected?.invoke()
-            }
-        }
+        visual = visual) {
+  /**
+   * The ToggleGroup of this ToggleButton.
+   *
+   * @see ToggleGroup
+   */
+  var toggleGroup: ToggleGroup = toggleGroup
+    set(value) {
+      toggleGroup.removeButton(this)
+      value.addButton(this)
+      field = value
     }
 
-    /**
-     * Gets called when this [BinaryStateButton] is selected.
-     *
-     * @see onDeselected
-     */
-    var onSelected: (() -> Unit)? = null
+  /**
+   * [Property] for the selected state of this [ToggleButton].
+   *
+   * @see isSelected
+   */
+  internal val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
 
-    /**
-     * Gets called when this [BinaryStateButton] is deselected.
-     *
-     * @see onSelected
-     */
-    var onDeselected: (() -> Unit)? = null
+  /**
+   * Selected state for this [ToggleButton].
+   *
+   * @see selectedProperty
+   */
+  var isSelected: Boolean
+    get() = selectedProperty.value
+    set(value) {
+      selectedProperty.value = value
+    }
+
+  init {
+    this.toggleGroup = toggleGroup
+
+    selectedProperty.internalListener = { _, _ ->
+      toggleGroup.buttonSelectedStateChanged(this)
+      if (selectedProperty.value) {
+        onSelected?.invoke()
+      } else {
+        onDeselected?.invoke()
+      }
+    }
+  }
+
+  /**
+   * Gets called when this [BinaryStateButton] is selected.
+   *
+   * @see onDeselected
+   */
+  var onSelected: (() -> Unit)? = null
+
+  /**
+   * Gets called when this [BinaryStateButton] is deselected.
+   *
+   * @see onSelected
+   */
+  var onDeselected: (() -> Unit)? = null
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,78 +31,78 @@ import tools.aqua.bgw.style.Style
  * @constructor Creates a [SingleLayerVisual].
  */
 sealed class SingleLayerVisual : Visual() {
-    /**
-     * Property for the [transparency] / alpha channel for this [Visual].
-     *
-     * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
-     *
-     * @see transparency
-     */
-    internal val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
+  /**
+   * Property for the [transparency] / alpha channel for this [Visual].
+   *
+   * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
+   *
+   * @see transparency
+   */
+  internal val transparencyProperty: LimitedDoubleProperty = LimitedDoubleProperty(0, 1, 1)
 
-    /**
-     * The [transparency] / alpha channel for this [Visual].
-     *
-     * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
-     *
-     * @see transparencyProperty
-     */
-    var transparency: Double
-        get() = transparencyProperty.value
-        set(value) {
-            transparencyProperty.value = value
-        }
+  /**
+   * The [transparency] / alpha channel for this [Visual].
+   *
+   * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
+   *
+   * @see transparencyProperty
+   */
+  var transparency: Double
+    get() = transparencyProperty.value
+    set(value) {
+      transparencyProperty.value = value
+    }
 
-    /**
-     * Property for the [style] applied to this [Visual].
-     *
-     * @see style
-     */
-    val styleProperty: Style = Style()
+  /**
+   * Property for the [style] applied to this [Visual].
+   *
+   * @see style
+   */
+  val styleProperty: Style = Style()
 
-    /**
-     * Additional styling that gets applied to this [Visual].
-     *
-     * Critical failures, bugs or other undefined behaviour could occur when using this feature.
-     *
-     * @see styleProperty
-     */
-    val style: Style
-        get() = styleProperty
+  /**
+   * Additional styling that gets applied to this [Visual].
+   *
+   * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+   *
+   * @see styleProperty
+   */
+  val style: Style
+    get() = styleProperty
 
-    /**
-     * Property for the [filters] applied to this [Visual].
-     *
-     * @see filters
-     */
-    val filtersProperty: Filter = Filter()
+  /**
+   * Property for the [filters] applied to this [Visual].
+   *
+   * @see filters
+   */
+  val filtersProperty: Filter = Filter()
 
-    /**
-     * Additional filters that get applied to this [Visual].
-     *
-     * Critical failures, bugs or other undefined behaviour could occur when using this feature.
-     *
-     * @see filtersProperty
-     */
-    val filters: Filter
-        get() = filtersProperty
+  /**
+   * Additional filters that get applied to this [Visual].
+   *
+   * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+   *
+   * @see filtersProperty
+   */
+  val filters: Filter
+    get() = filtersProperty
 
-    /**
-     * Property for the [flipped] state of this [Visual].
-     *
-     * @see flipped
-     */
-    val flippedProperty: Property<Flip> = Property(Flip.NONE)
+  /**
+   * Property for the [flipped] state of this [Visual].
+   *
+   * @see flipped
+   */
+  val flippedProperty: Property<Flip> = Property(Flip.NONE)
 
-    /**
-     * The [flipped] state of this [Visual].
-     *
-     * @see flippedProperty
-     * @see Flip
-     */
-    var flipped: Flip
-        get() = flippedProperty.value
-        set(value) {
-            flippedProperty.value = value
-        }
+  /**
+   * The [flipped] state of this [Visual].
+   *
+   * @see flippedProperty
+   * @see Flip
+   */
+  var flipped: Flip
+    get() = flippedProperty.value
+    set(value) {
+      flippedProperty.value = value
+    }
 }

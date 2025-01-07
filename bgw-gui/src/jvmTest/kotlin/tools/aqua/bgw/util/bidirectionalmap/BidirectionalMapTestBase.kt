@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +23,12 @@ import tools.aqua.bgw.util.BidirectionalMap
 /** Test base for in BidirectionalMap. */
 open class BidirectionalMapTestBase {
 
-    /** BidirectionalMap initially filled with pairs (0,1) and (2,3). */
-    protected lateinit var map: BidirectionalMap<Int, Int>
+  /** BidirectionalMap initially filled with pairs (0,1) and (2,3). */
+  protected lateinit var map: BidirectionalMap<Int, Int>
 
-    /** Fills BidirectionalMap with pairs (0,1) and (2,3) before tests. */
-    @BeforeEach
-    fun setUp() {
-        map = BidirectionalMap(Pair(0, 1), Pair(2, 3))
-    }
+  /** Fills BidirectionalMap with pairs (0,1) and (2,3) before tests. */
+  @BeforeEach
+  fun setUp() {
+    map = BidirectionalMap(Pair(0, 1), Pair(2, 3))
+  }
 }

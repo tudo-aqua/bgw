@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
+import com.diffplug.gradle.spotless.KotlinExtension
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
+import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
 import java.lang.ProcessHandle
 import java.lang.management.ManagementFactory
 import java.lang.management.OperatingSystemMXBean
@@ -30,6 +32,7 @@ import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import tools.aqua.defaultFormat
 
 plugins {
   kotlin("multiplatform")
@@ -212,6 +215,13 @@ publishing {
       from(components["kotlin"])
     }
   }
+}
+
+spotless {
+    kotlin {
+        target("src/*/kotlin/**/*.kt")
+        defaultFormat(rootProject)
+    }
 }
 
 // Ignore yarn.lock mismatches

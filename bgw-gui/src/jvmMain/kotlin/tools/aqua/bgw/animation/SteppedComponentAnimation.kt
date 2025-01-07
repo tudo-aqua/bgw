@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,8 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
  * @since 0.2
  */
 sealed class SteppedComponentAnimation<T : GameComponentView>(
-    gameComponentView: T, duration: Int,
+    gameComponentView: T,
+    duration: Int,
     /** Count of changes to be performed in [duration]. */
     val speed: Int
 ) : ComponentAnimation<T>(componentView = gameComponentView, duration = duration)

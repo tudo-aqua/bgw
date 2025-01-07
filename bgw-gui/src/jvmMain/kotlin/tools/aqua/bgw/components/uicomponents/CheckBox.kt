@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -123,27 +123,23 @@ open class CheckBox(
       isIndeterminateProperty.value = value
     }
 
-    init {
-        isCheckedProperty.internalListener = { _, new ->
-            onCheckedChanged?.invoke(new)
-        }
+  init {
+    isCheckedProperty.internalListener = { _, new -> onCheckedChanged?.invoke(new) }
 
-        isIndeterminateProperty.internalListener = { _, new ->
-            onIndeterminateChanged?.invoke(new)
-        }
-    }
+    isIndeterminateProperty.internalListener = { _, new -> onIndeterminateChanged?.invoke(new) }
+  }
 
-    /**
-     * Gets invoked whenever this [CheckBox] gets checked or unchecked.
-     *
-     * @see isChecked
-     */
-    var onCheckedChanged: ((Boolean) -> Unit)? = null
+  /**
+   * Gets invoked whenever this [CheckBox] gets checked or unchecked.
+   *
+   * @see isChecked
+   */
+  var onCheckedChanged: ((Boolean) -> Unit)? = null
 
-    /**
-     * Gets invoked whenever this [CheckBox] gets set to indeterminate or not.
-     *
-     * @see isIndeterminate
-     */
-    var onIndeterminateChanged: ((Boolean) -> Unit)? = null
+  /**
+   * Gets invoked whenever this [CheckBox] gets set to indeterminate or not.
+   *
+   * @see isIndeterminate
+   */
+  var onIndeterminateChanged: ((Boolean) -> Unit)? = null
 }

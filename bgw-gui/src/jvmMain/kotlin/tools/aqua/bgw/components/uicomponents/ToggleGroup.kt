@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,40 +35,41 @@ package tools.aqua.bgw.components.uicomponents
  * @see RadioButton
  */
 open class ToggleGroup {
-    internal val id = IDGenerator.generateToggleGroupID()
+  internal val id = IDGenerator.generateToggleGroupID()
 
-    internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
+  internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
 
-    internal fun addButton(button: BinaryStateButton) {
-        buttons.add(button)
-    }
+  internal fun addButton(button: BinaryStateButton) {
+    buttons.add(button)
+  }
 
-    internal fun removeButton(button: BinaryStateButton) {
-        buttons.remove(button)
-    }
+  internal fun removeButton(button: BinaryStateButton) {
+    buttons.remove(button)
+  }
 
-    internal fun buttonSelectedStateChanged(button: BinaryStateButton) {
-        if (button.isSelected) buttons.forEach {
-            if (it != button) {
-                it.isSelected = false
-                onDeselected?.invoke(it)
-            } else {
-                onSelected?.invoke(it)
-            }
+  internal fun buttonSelectedStateChanged(button: BinaryStateButton) {
+    if (button.isSelected)
+        buttons.forEach {
+          if (it != button) {
+            it.isSelected = false
+            onDeselected?.invoke(it)
+          } else {
+            onSelected?.invoke(it)
+          }
         }
-    }
+  }
 
-    /**
-     * Gets called when a [ToggleButton] or [RadioButton] gets selected.
-     *
-     * @see onDeselected
-     */
-    var onSelected: ((BinaryStateButton) -> Unit)? = null
+  /**
+   * Gets called when a [ToggleButton] or [RadioButton] gets selected.
+   *
+   * @see onDeselected
+   */
+  var onSelected: ((BinaryStateButton) -> Unit)? = null
 
-    /**
-     * Gets called when a [ToggleButton] or [RadioButton] gets deselected.
-     *
-     * @see onSelected
-     */
-    var onDeselected: ((BinaryStateButton) -> Unit)? = null
+  /**
+   * Gets called when a [ToggleButton] or [RadioButton] gets deselected.
+   *
+   * @see onSelected
+   */
+  var onDeselected: ((BinaryStateButton) -> Unit)? = null
 }

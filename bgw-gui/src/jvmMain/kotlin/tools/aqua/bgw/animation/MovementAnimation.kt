@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,103 +54,100 @@ class MovementAnimation<T : ComponentView>(
     duration: Int = DEFAULT_ANIMATION_SPEED
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
-    /** Initial X position. */
-    val fromX: Double = fromX.toDouble()
+  /** Initial X position. */
+  val fromX: Double = fromX.toDouble()
 
-    /** Resulting X position. */
-    val toX: Double = toX.toDouble()
+  /** Resulting X position. */
+  val toX: Double = toX.toDouble()
 
-    /** Initial Y position. */
-    val fromY: Double = fromY.toDouble()
+  /** Initial Y position. */
+  val fromY: Double = fromY.toDouble()
 
-    /** Resulting Y position. */
-    val toY: Double = toY.toDouble()
+  /** Resulting Y position. */
+  val toY: Double = toY.toDouble()
 
+  /**
+   * A movement animation. Moves given [ComponentView] relative to parents anchor point.
+   *
+   * @param componentView [ComponentView] to animate
+   * @param byX Relative X movement.
+   * @param byY Relative Y movement.
+   * @param duration [Animation] duration in milliseconds. Default: 1 second
+   *
+   * @see ComponentAnimation
+   * @see Animation
+   * @see ComponentView
+   *
+   * @since 0.1
+   */
+  constructor(
+      componentView: T,
+      byX: Number = 0.0,
+      byY: Number = 0.0,
+      duration: Int = 1000
+  ) : this(
+      componentView = componentView,
+      fromX = componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX,
+      fromY = componentView.parent?.getChildPosition(componentView)?.yCoord ?: componentView.posY,
+      toX = (componentView.parent?.getChildPosition(componentView)?.xCoord
+              ?: componentView.posX) + byX.toDouble(),
+      toY = (componentView.parent?.getChildPosition(componentView)?.yCoord
+              ?: componentView.posY) + byY.toDouble(),
+      duration = duration)
+
+  companion object {
     /**
-     * A movement animation. Moves given [ComponentView] relative to parents anchor point.
+     * Creates a [MovementAnimation] to another component's position. Moves given [ComponentView]
+     * relative to parents anchor point.
      *
+     * @param T Generic [ComponentView].
      * @param componentView [ComponentView] to animate
-     * @param byX Relative X movement.
-     * @param byY Relative Y movement.
+     * @param toComponentViewPosition Defines the destination [ComponentView] to move the given
+     * component to.
+     * @param scene The [Scene].
      * @param duration [Animation] duration in milliseconds. Default: 1 second
-     *
-     * @see ComponentAnimation
-     * @see Animation
-     * @see ComponentView
-     *
-     * @since 0.1
      */
-    constructor(
+    fun <T : ComponentView> toComponentView(
         componentView: T,
-        byX: Number = 0.0,
-        byY: Number = 0.0,
+        toComponentViewPosition: T,
+        scene: Scene<*>,
         duration: Int = 1000
-    ) : this(
-        componentView = componentView,
-        fromX = componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX,
-        fromY = componentView.parent?.getChildPosition(componentView)?.yCoord ?: componentView.posY,
-        toX = (componentView.parent?.getChildPosition(componentView)?.xCoord
-            ?: componentView.posX) + byX.toDouble(),
-        toY = (componentView.parent?.getChildPosition(componentView)?.yCoord
-            ?: componentView.posY) + byY.toDouble(),
-        duration = duration
-    )
+    ): MovementAnimation<T> {
+      // Find visual tree for components and drop root node
+      val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
+      val pathToDestination = scene.findPathToChild(toComponentViewPosition).dropLast(1)
 
-    companion object {
-        /**
-         * Creates a [MovementAnimation] to another component's position. Moves given [ComponentView]
-         * relative to parents anchor point.
-         *
-         * @param T Generic [ComponentView].
-         * @param componentView [ComponentView] to animate
-         * @param toComponentViewPosition Defines the destination [ComponentView] to move the given
-         * component to.
-         * @param scene The [Scene].
-         * @param duration [Animation] duration in milliseconds. Default: 1 second
-         */
-        fun <T : ComponentView> toComponentView(
-            componentView: T,
-            toComponentViewPosition: T,
-            scene: Scene<*>,
-            duration: Int = 1000
-        ): MovementAnimation<T> {
-            // Find visual tree for components and drop root node
-            val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
-            val pathToDestination = scene.findPathToChild(toComponentViewPosition).dropLast(1)
+      // Sum relative positions and rotation
+      var componentRotation = 0.0
+      var componentAbsoluteX = 0.0
+      var componentAbsoluteY = 0.0
+      var destinationAbsoluteX = 0.0
+      var destinationAbsoluteY = 0.0
 
-            // Sum relative positions and rotation
-            var componentRotation = 0.0
-            var componentAbsoluteX = 0.0
-            var componentAbsoluteY = 0.0
-            var destinationAbsoluteX = 0.0
-            var destinationAbsoluteY = 0.0
+      pathToComponent.forEach {
+        val pos = it.parent?.getActualChildPosition(it)
+        componentAbsoluteX += pos?.xCoord ?: it.actualPosX
+        componentAbsoluteY += pos?.yCoord ?: it.actualPosY
+        componentRotation += it.rotation
+      }
 
-            pathToComponent.forEach {
-                val pos = it.parent?.getActualChildPosition(it)
-                componentAbsoluteX += pos?.xCoord ?: it.actualPosX
-                componentAbsoluteY += pos?.yCoord ?: it.actualPosY
-                componentRotation += it.rotation
-            }
+      pathToDestination.forEach {
+        val pos = it.parent?.getActualChildPosition(it)
+        destinationAbsoluteX += pos?.xCoord ?: it.actualPosX
+        destinationAbsoluteY += pos?.yCoord ?: it.actualPosY
+      }
 
-            pathToDestination.forEach {
-                val pos = it.parent?.getActualChildPosition(it)
-                destinationAbsoluteX += pos?.xCoord ?: it.actualPosX
-                destinationAbsoluteY += pos?.yCoord ?: it.actualPosY
-            }
+      val vector =
+          Coordinate(
+                  xCoord = destinationAbsoluteX - componentAbsoluteX,
+                  yCoord = destinationAbsoluteY - componentAbsoluteY)
+              .rotated(-componentRotation)
 
-            val vector =
-                Coordinate(
-                    xCoord = destinationAbsoluteX - componentAbsoluteX,
-                    yCoord = destinationAbsoluteY - componentAbsoluteY
-                )
-                    .rotated(-componentRotation)
-
-            return MovementAnimation(
-                componentView = componentView,
-                byX = vector.xCoord,
-                byY = vector.yCoord,
-                duration = duration
-            )
-        }
+      return MovementAnimation(
+          componentView = componentView,
+          byX = vector.xCoord,
+          byY = vector.yCoord,
+          duration = duration)
     }
+  }
 }

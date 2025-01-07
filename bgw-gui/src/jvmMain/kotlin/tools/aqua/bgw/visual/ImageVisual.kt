@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,14 +19,11 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.observable.properties.StringProperty
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.*
 import javax.imageio.ImageIO
-import kotlin.math.min
-
+import tools.aqua.bgw.observable.properties.StringProperty
 
 /**
  * Visual showing an [Image].
@@ -51,63 +48,57 @@ import kotlin.math.min
  * @since 1.0
  */
 open class ImageVisual(
-    path : String,
+    path: String,
     val width: Int = -1,
     val height: Int = -1,
     val offsetX: Int = 0,
     val offsetY: Int = 0
 ) : SingleLayerVisual() {
 
-    init {
-        require(!path.startsWith("http://") && !path.startsWith("https://")) {
-            "${path} is not a valid path for ImageVisual. Images must be loaded from local resources."
-        }
-
-        require(path.isNotEmpty() && path.isNotBlank()) {
-            "ImageVisual path must not be empty."
-        }
-
-        require(this::class.java.classLoader.getResourceAsStream(path) != null) {
-            "ImageVisual path '$path' was not found in resources (on Linux and MacOS, file names are case-sensitive)."
-        }
+  init {
+    require(!path.startsWith("http://") && !path.startsWith("https://")) {
+      "${path} is not a valid path for ImageVisual. Images must be loaded from local resources."
     }
 
-    internal val pathProperty = StringProperty(path)
+    require(path.isNotEmpty() && path.isNotBlank()) { "ImageVisual path must not be empty." }
 
-    var path: String
-        get() = pathProperty.value
-        set(value) {
-            pathProperty.value = value
-        }
+    require(this::class.java.classLoader.getResourceAsStream(path) != null) {
+      "ImageVisual path '$path' was not found in resources (on Linux and MacOS, file names are case-sensitive)."
+    }
+  }
 
-    /**
-     * Load image from [BufferedImage].
-     */
-    constructor(
-        image: BufferedImage,
-        width: Int = -1,
-        height: Int = -1,
-        offsetX: Int = 0,
-        offsetY: Int = 0,
-    ) : this(toDataURI(image), width, height, offsetX, offsetY)
+  internal val pathProperty = StringProperty(path)
 
-    private companion object {
-        fun toDataURI(image: BufferedImage) : String {
-            val baos = ByteArrayOutputStream()
-            ImageIO.write(image, "png", baos)
-            val base64 = Base64.getEncoder().encodeToString(baos.toByteArray())
-            return "data:image/png;base64,$base64"
-        }
+  var path: String
+    get() = pathProperty.value
+    set(value) {
+      pathProperty.value = value
     }
 
-    override fun copy(): ImageVisual {
-        return ImageVisual(path, width, height, offsetX, offsetY).apply {
-            transparency = this@ImageVisual.transparency
-            style.applyDeclarations(this@ImageVisual.style)
-            filters.applyDeclarations(this@ImageVisual.filters)
-            flipped = this@ImageVisual.flipped
-        }
+  /** Load image from [BufferedImage]. */
+  constructor(
+      image: BufferedImage,
+      width: Int = -1,
+      height: Int = -1,
+      offsetX: Int = 0,
+      offsetY: Int = 0,
+  ) : this(toDataURI(image), width, height, offsetX, offsetY)
+
+  private companion object {
+    fun toDataURI(image: BufferedImage): String {
+      val baos = ByteArrayOutputStream()
+      ImageIO.write(image, "png", baos)
+      val base64 = Base64.getEncoder().encodeToString(baos.toByteArray())
+      return "data:image/png;base64,$base64"
     }
+  }
+
+  override fun copy(): ImageVisual {
+    return ImageVisual(path, width, height, offsetX, offsetY).apply {
+      transparency = this@ImageVisual.transparency
+      style.applyDeclarations(this@ImageVisual.style)
+      filters.applyDeclarations(this@ImageVisual.filters)
+      flipped = this@ImageVisual.flipped
+    }
+  }
 }
-
-

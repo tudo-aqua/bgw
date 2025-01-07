@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,12 +33,12 @@ abstract class Animation(
     /** Duration in milliseconds. */
     val duration: Int
 ) {
-    internal val id = IDGenerator.generateAnimationID()
+  internal val id = IDGenerator.generateAnimationID()
 
-    /** [Boolean] indicating whether the [Animation] is currently running. */
-    var isRunning: Boolean = false
-        internal set
+  /** [Boolean] indicating whether the [Animation] is currently running. */
+  var isRunning: Boolean = false
+    internal set
 
-    /** Gets invoked when [Animation] has finished. */
-    var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
+  /** Gets invoked when [Animation] has finished. */
+  var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
 }

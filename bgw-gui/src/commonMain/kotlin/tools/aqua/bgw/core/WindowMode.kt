@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,32 +17,32 @@
 
 package tools.aqua.bgw.core
 
-/** Enum for different window modes.
+/**
+ * Enum for different window modes.
  *
  * @since 0.1
  */
 enum class WindowMode {
-    /**
-     * Starts Application as normal window with given dimensions. Overrides
-     * [BoardGameApplication.isMaximized] as 'false'. Overrides [BoardGameApplication.isFullScreen] as
-     * 'false'.
-     */
-    NORMAL,
+  /**
+   * Starts Application as normal window with given dimensions. Overrides
+   * [BoardGameApplication.isMaximized] as 'false'. Overrides [BoardGameApplication.isFullScreen] as
+   * 'false'.
+   */
+  NORMAL,
 
-    /**
-     * Starts Application as maximized non-fullscreen window. Overrides
-     * [BoardGameApplication.isMaximized] as 'true'. Overrides [BoardGameApplication.isFullScreen] as
-     * 'false'.
-     */
-    @Deprecated("WindowMode.MAXIMIZED is no longer used as of BGW 1.0.")
-    MAXIMIZED,
+  /**
+   * Starts Application as maximized non-fullscreen window. Overrides
+   * [BoardGameApplication.isMaximized] as 'true'. Overrides [BoardGameApplication.isFullScreen] as
+   * 'false'.
+   */
+  @Deprecated("WindowMode.MAXIMIZED is no longer used as of BGW 1.0.") MAXIMIZED,
 
-    /**
-     * Starts Application as maximized window. Overrides [BoardGameApplication.isFullScreen] as
-     * 'true'.
-     *
-     * Note: This does not override [BoardGameApplication.isMaximized] which might become relevant
-     * after leaving fullscreen mode.
-     */
-    FULLSCREEN
+  /**
+   * Starts Application as maximized window. Overrides [BoardGameApplication.isFullScreen] as
+   * 'true'.
+   *
+   * Note: This does not override [BoardGameApplication.isMaximized] which might become relevant
+   * after leaving fullscreen mode.
+   */
+  FULLSCREEN
 }

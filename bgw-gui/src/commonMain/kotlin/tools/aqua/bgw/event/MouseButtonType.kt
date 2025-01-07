@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,19 +28,18 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 enum class MouseButtonType {
-    /** LEFT / primary mouse button click. */
-    LEFT_BUTTON,
+  /** LEFT / primary mouse button click. */
+  LEFT_BUTTON,
 
-    /** RIGHT / secondary mouse button click. */
-    RIGHT_BUTTON,
+  /** RIGHT / secondary mouse button click. */
+  RIGHT_BUTTON,
 
-    /** MOUSE WHEEL button click. */
-    MOUSE_WHEEL,
+  /** MOUSE WHEEL button click. */
+  MOUSE_WHEEL,
 
-    /** All other mouse button clicks. */
-    OTHER,
+  /** All other mouse button clicks. */
+  OTHER,
 
-    /** Unspecified. */
-    @Deprecated("MouseButtonType.UNSPECIFIED should not be used.")
-    UNSPECIFIED
+  /** Unspecified. */
+  @Deprecated("MouseButtonType.UNSPECIFIED should not be used.") UNSPECIFIED
 }

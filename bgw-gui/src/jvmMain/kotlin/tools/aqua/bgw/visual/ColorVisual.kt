@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,24 +55,32 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
     }
 
   /**
-  * Creates a solid [ColorVisual] filled with given RGBA values.
-  *
-  * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 0.5 (50%) and
-  * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
-  *
-  * @param r Red channel between 0 and 255.
-  * @param g Green channel between 0 and 255.
-  * @param b Blue channel between 0 and 255.
-  * @param alpha Alpha channel (0 - 255 for Int, 0.0 - 1.0 for Double).
-  * Value is 1.0 by default and if parameter is out of a valid range.
-  */
-  constructor(r: Int, g: Int, b: Int, alpha: Number = 1.0) : this(Color(r, g, b,
-    when (alpha) {
-      is Int -> if (alpha in 0..255) alpha / 255.0 else 1.0
-      is Double -> if (alpha in 0.0..1.0) alpha.toDouble() else 1.0
-      else -> 1.0
-    }
-  ))
+   * Creates a solid [ColorVisual] filled with given RGBA values.
+   *
+   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 0.5 (50%) and
+   * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
+   *
+   * @param r Red channel between 0 and 255.
+   * @param g Green channel between 0 and 255.
+   * @param b Blue channel between 0 and 255.
+   * @param alpha Alpha channel (0 - 255 for Int, 0.0 - 1.0 for Double). Value is 1.0 by default and
+   * if parameter is out of a valid range.
+   */
+  constructor(
+      r: Int,
+      g: Int,
+      b: Int,
+      alpha: Number = 1.0
+  ) : this(
+      Color(
+          r,
+          g,
+          b,
+          when (alpha) {
+            is Int -> if (alpha in 0..255) alpha / 255.0 else 1.0
+            is Double -> if (alpha in 0.0..1.0) alpha.toDouble() else 1.0
+            else -> 1.0
+          }))
 
   /**
    * A solid color visual. Displays a rectangle filled with the given [color].

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,51 +47,49 @@ open class DiceView(
     visuals: List<Visual>
 ) :
     GameComponentView(
-        posX = posX, posY = posY, width = width, height = height, visual = Visual.EMPTY
-    ) {
+        posX = posX, posY = posY, width = width, height = height, visual = Visual.EMPTY) {
 
-    /** [Visual]s for this [DiceView]. */
-    internal val visuals: ObservableArrayList<Visual> =
-        ObservableArrayList(visuals.onEach { it.copy() })
+  /** [Visual]s for this [DiceView]. */
+  internal val visuals: ObservableArrayList<Visual> =
+      ObservableArrayList(visuals.onEach { it.copy() })
 
-    /**
-     * Current side that is displayed, 0-based.
-     *
-     * @throws IllegalArgumentException If index is greater than the amount of visuals stored in
-     * [visuals] or negative.
-     */
-    var currentSide: Int = 0
-        set(value) {
-            if (field != value) {
-                require(value in visuals.indices) { "No visual for side $value available." }
+  /**
+   * Current side that is displayed, 0-based.
+   *
+   * @throws IllegalArgumentException If index is greater than the amount of visuals stored in
+   * [visuals] or negative.
+   */
+  var currentSide: Int = 0
+    set(value) {
+      if (field != value) {
+        require(value in visuals.indices) { "No visual for side $value available." }
 
-                field = value
-                visualProperty.value = visuals[value]
-            }
-        }
-
-    override var visual: Visual
-        get() = super.visual
-        set(_) {
-            throw UnsupportedOperationException(
-                "Replacing a single Visual for a DiceView is not supported."
-            )
-        }
-
-    init {
-        visualProperty.value = if (visuals.isNotEmpty()) visuals.first() else Visual.EMPTY
+        field = value
+        visualProperty.value = visuals[value]
+      }
     }
 
-    /**
-     * Sets all visuals for this DiceView. Clears old visuals. All [visuals] get copied before being
-     * added. If [currentSide] is out of range, a [Visual.EMPTY] will be shown.
-     */
-    fun setVisuals(visuals: List<Visual>) {
-        val snapshot = visuals.toList()
-        this.visuals.setSilent(visuals.onEach { it.copy() })
-        this.visuals.notifyChange(oldValue = snapshot, newValue = visuals.toList())
-
-        visualProperty.value =
-            if (currentSide in visuals.indices) visuals[currentSide] else Visual.EMPTY
+  override var visual: Visual
+    get() = super.visual
+    set(_) {
+      throw UnsupportedOperationException(
+          "Replacing a single Visual for a DiceView is not supported.")
     }
+
+  init {
+    visualProperty.value = if (visuals.isNotEmpty()) visuals.first() else Visual.EMPTY
+  }
+
+  /**
+   * Sets all visuals for this DiceView. Clears old visuals. All [visuals] get copied before being
+   * added. If [currentSide] is out of range, a [Visual.EMPTY] will be shown.
+   */
+  fun setVisuals(visuals: List<Visual>) {
+    val snapshot = visuals.toList()
+    this.visuals.setSilent(visuals.onEach { it.copy() })
+    this.visuals.notifyChange(oldValue = snapshot, newValue = visuals.toList())
+
+    visualProperty.value =
+        if (currentSide in visuals.indices) visuals[currentSide] else Visual.EMPTY
+  }
 }

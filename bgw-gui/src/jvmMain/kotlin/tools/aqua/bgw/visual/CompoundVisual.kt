@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +41,8 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
    *
    * @see children
    */
-  internal val childrenProperty: ObservableArrayList<SingleLayerVisual> = ObservableArrayList(children)
+  internal val childrenProperty: ObservableArrayList<SingleLayerVisual> =
+      ObservableArrayList(children)
 
   /**
    * The [children] of this stack. The first [SingleLayerVisual] gets displayed at the bottom of the

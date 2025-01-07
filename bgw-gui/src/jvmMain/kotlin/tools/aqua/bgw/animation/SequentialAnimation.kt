@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,8 +25,8 @@ package tools.aqua.bgw.animation
  *
  * @constructor Creates a new [SequentialAnimation].
  *
- * @param animations The [Animation]s that this [SequentialAnimation] should contain. Lowest
- * index is played first, the highest index is played last.
+ * @param animations The [Animation]s that this [SequentialAnimation] should contain. Lowest index
+ * is played first, the highest index is played last.
  *
  * @see Animation
  * @see ParallelAnimation
@@ -35,23 +35,22 @@ package tools.aqua.bgw.animation
  */
 data class SequentialAnimation(
     /**
-     * The [Animation]s that this [SequentialAnimation] contains. Lowest
-     * index is played first, the highest index is played last.
+     * The [Animation]s that this [SequentialAnimation] contains. Lowest index is played first, the
+     * highest index is played last.
      */
     val animations: List<Animation>
-) :
-    Animation(animations.sumOf(Animation::duration)) {
+) : Animation(animations.sumOf(Animation::duration)) {
 
-    /**
-     * Creates a new [SequentialAnimation] Additional constructor that enables the use of varargs for
-     * the animations.
-     *
-     * @param animation The [Animation]s that this [ParallelAnimation] should contain.
-     *
-     * @see Animation
-     * @see ParallelAnimation
-     *
-     * @since 0.5
-     */
-    constructor(vararg animation: Animation) : this(animation.toList())
+  /**
+   * Creates a new [SequentialAnimation] Additional constructor that enables the use of varargs for
+   * the animations.
+   *
+   * @param animation The [Animation]s that this [ParallelAnimation] should contain.
+   *
+   * @see Animation
+   * @see ParallelAnimation
+   *
+   * @since 0.5
+   */
+  constructor(vararg animation: Animation) : this(animation.toList())
 }

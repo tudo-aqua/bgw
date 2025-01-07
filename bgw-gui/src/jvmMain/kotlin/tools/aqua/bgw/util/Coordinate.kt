@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.util
 
-import kotlinx.serialization.Serializable
 import tools.aqua.bgw.util.Trig.cosD
 import tools.aqua.bgw.util.Trig.sinD
 

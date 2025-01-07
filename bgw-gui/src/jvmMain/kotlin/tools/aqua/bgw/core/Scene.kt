@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -154,7 +154,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @see KeyEvent
    * @see onKeyPressed
    */
-  @Deprecated("The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
+  @Deprecated(
+      "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
   /** Gets invoked with no event whenever a scene is shown. */

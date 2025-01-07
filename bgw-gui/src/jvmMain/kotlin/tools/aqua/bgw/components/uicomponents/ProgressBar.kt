@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -102,16 +102,14 @@ open class ProgressBar(
       barColorProperty.value = value
     }
 
-    init {
-        progressProperty.internalListener = { _, newValue ->
-            onProgressed?.invoke(newValue)
-        }
-    }
+  init {
+    progressProperty.internalListener = { _, newValue -> onProgressed?.invoke(newValue) }
+  }
 
-    /**
-     * Gets invoked whenever this [ProgressBar]'s progress changes.
-     *
-     * @see progress
-     */
-    var onProgressed: ((Number) -> Unit)? = null
+  /**
+   * Gets invoked whenever this [ProgressBar]'s progress changes.
+   *
+   * @see progress
+   */
+  var onProgressed: ((Number) -> Unit)? = null
 }

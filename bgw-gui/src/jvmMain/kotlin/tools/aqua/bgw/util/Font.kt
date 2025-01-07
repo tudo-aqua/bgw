@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,25 +39,24 @@ import tools.aqua.bgw.util.Font.FontWeight
  * @see FontStyle
  */
 data class Font(
-  val size: Number = DEFAULT_FONT_SIZE,
-  val color: Color = Color.BLACK,
-  val family: String = "Arial",
-  val fontWeight: FontWeight = FontWeight.NORMAL,
-  val fontStyle: FontStyle = FontStyle.NORMAL
+    val size: Number = DEFAULT_FONT_SIZE,
+    val color: Color = Color.BLACK,
+    val family: String = "Arial",
+    val fontWeight: FontWeight = FontWeight.NORMAL,
+    val fontStyle: FontStyle = FontStyle.NORMAL
 ) {
   constructor(
-    size: Number = DEFAULT_FONT_SIZE,
-    awtColor: java.awt.Color,
-    family: String = "Arial",
-    fontWeight: FontWeight = FontWeight.NORMAL,
-    fontStyle: FontStyle = FontStyle.NORMAL
+      size: Number = DEFAULT_FONT_SIZE,
+      awtColor: java.awt.Color,
+      family: String = "Arial",
+      fontWeight: FontWeight = FontWeight.NORMAL,
+      fontStyle: FontStyle = FontStyle.NORMAL
   ) : this(
-    size,
-    Color(awtColor.red, awtColor.green, awtColor.blue, awtColor.alpha),
-    family,
-    fontWeight,
-    fontStyle
-  )
+      size,
+      Color(awtColor.red, awtColor.green, awtColor.blue, awtColor.alpha),
+      family,
+      fontWeight,
+      fontStyle)
 
   /**
    * Enum class for representing all available font weights for the Font class.
@@ -83,17 +82,18 @@ data class Font(
      *
      * @return Corresponding CSS font weight value.
      */
-    internal fun toInt(): Int = when (this) {
-      THIN -> 100
-      EXTRA_LIGHT -> 200
-      LIGHT -> 300
-      NORMAL -> 400
-      MEDIUM -> 500
-      SEMI_BOLD -> 600
-      BOLD -> 700
-      EXTRA_BOLD -> 800
-      BLACK -> 900
-    }
+    internal fun toInt(): Int =
+        when (this) {
+          THIN -> 100
+          EXTRA_LIGHT -> 200
+          LIGHT -> 300
+          NORMAL -> 400
+          MEDIUM -> 500
+          SEMI_BOLD -> 600
+          BOLD -> 700
+          EXTRA_BOLD -> 800
+          BLACK -> 900
+        }
   }
 
   /**

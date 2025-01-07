@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,12 +33,12 @@ enum class VerticalAlignment(
     internal val positionMultiplier: Double,
     private val pivotMultiplier: Double
 ) {
-    /** [Alignment] on the top. */
-    TOP(0.0, -1.0),
+  /** [Alignment] on the top. */
+  TOP(0.0, -1.0),
 
-    /** [Alignment] centered vertically. */
-    CENTER(0.5, 0.0),
+  /** [Alignment] centered vertically. */
+  CENTER(0.5, 0.0),
 
-    /** [Alignment] on the bottom. */
-    BOTTOM(1.0, 1.0)
+  /** [Alignment] on the bottom. */
+  BOTTOM(1.0, 1.0)
 }

@@ -1,3 +1,20 @@
+/*
+ * Copyright 2025 The BoardGameWork Authors
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tools.aqua.bgw
 
 import AnimationData
@@ -5,273 +22,305 @@ import DiceViewData
 import ID
 import data.animation.*
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.dom.createElement
 import org.w3c.dom.Node
-import web.timers.setInterval
-import web.timers.setTimeout
-import web.timers.clearInterval
-import web.dom.Element
 import org.w3c.dom.get
 import react.dom.render
 import tools.aqua.bgw.builder.VisualBuilder
-import kotlin.js.Date
+import web.dom.Element
+import web.timers.clearInterval
+import web.timers.setInterval
+import web.timers.setTimeout
 
 internal class Animator {
-    private val animations = mutableMapOf<String, Node>()
+  private val animations = mutableMapOf<String, Node>()
 
-    companion object {
-        const val DELTA_MS = 20
-    }
+  companion object {
+    const val DELTA_MS = 20
+  }
 
-    fun startAnimation(
-        animationData: AnimationData,
-        parallelAnimations : List<AnimationData> = listOf(),
-        callback: (ID) -> Unit
-    ) {
-        when(animationData) {
-            is ComponentAnimationData -> {
-                when(animationData) {
-                    is FadeAnimationData -> startComponentAnimation("fade", animationData, parallelAnimations, callback)
-                    is MovementAnimationData -> startComponentAnimation("move", animationData, parallelAnimations, callback)
-                    is RotationAnimationData -> startComponentAnimation("rotate", animationData, parallelAnimations, callback)
-                    is ScaleAnimationData -> startComponentAnimation("scale", animationData, parallelAnimations, callback)
-                    is FlipAnimationData -> startFlipAnimation(animationData, callback)
-                    // is ShakeAnimation<*> -> TODO()
+  fun startAnimation(
+      animationData: AnimationData,
+      parallelAnimations: List<AnimationData> = listOf(),
+      callback: (ID) -> Unit
+  ) {
+    when (animationData) {
+      is ComponentAnimationData -> {
+        when (animationData) {
+          is FadeAnimationData ->
+              startComponentAnimation("fade", animationData, parallelAnimations, callback)
+          is MovementAnimationData ->
+              startComponentAnimation("move", animationData, parallelAnimations, callback)
+          is RotationAnimationData ->
+              startComponentAnimation("rotate", animationData, parallelAnimations, callback)
+          is ScaleAnimationData ->
+              startComponentAnimation("scale", animationData, parallelAnimations, callback)
+          is FlipAnimationData -> startFlipAnimation(animationData, callback)
+          // is ShakeAnimation<*> -> TODO()
 
-                    is SteppedComponentAnimationData -> {
-                        when(animationData) {
-                            is RandomizeAnimationData -> startRandomizeAnimation(animationData, callback)
-                            is DiceAnimationData -> startDiceAnimation(animationData, callback)
-                            else -> throw IllegalArgumentException("Unknown animation type")
-                        }
-                    }
-                    else -> throw IllegalArgumentException("Unknown animation type")
-                }
+          is SteppedComponentAnimationData -> {
+            when (animationData) {
+              is RandomizeAnimationData -> startRandomizeAnimation(animationData, callback)
+              is DiceAnimationData -> startDiceAnimation(animationData, callback)
+              else -> throw IllegalArgumentException("Unknown animation type")
             }
-
-            is DelayAnimationData -> startDelayAnimation(animationData, callback)
-            is ParallelAnimationData -> startParallelAnimation(animationData, callback)
-            is SequentialAnimationData -> startSequentialAnimation(animationData, callback)
-
-            else -> throw IllegalArgumentException("Unknown animation type")
+          }
+          else -> throw IllegalArgumentException("Unknown animation type")
         }
+      }
+      is DelayAnimationData -> startDelayAnimation(animationData, callback)
+      is ParallelAnimationData -> startParallelAnimation(animationData, callback)
+      is SequentialAnimationData -> startSequentialAnimation(animationData, callback)
+      else -> throw IllegalArgumentException("Unknown animation type")
     }
+  }
 
-    private fun clearComponentAnimations(componentId: ID, types : List<String> = mutableListOf()) {
-        if(types.isEmpty()) {
-            this.animations.keys.filter { it.startsWith(componentId) }.forEach {
-                try {
-                    document.body?.removeChild(this.animations[it]!!)
-                    this.animations.remove(it)
-                } catch (_: Exception) { }
-            }
-        } else {
-            types.forEach {
-                try {
-                    document.body?.removeChild(this.animations["$componentId--$it"]!!)
-                    this.animations.remove("$componentId--$it")
-                } catch (_: Exception) { }
-            }
-        }
+  private fun clearComponentAnimations(componentId: ID, types: List<String> = mutableListOf()) {
+    if (types.isEmpty()) {
+      this.animations.keys
+          .filter { it.startsWith(componentId) }
+          .forEach {
+            try {
+              document.body?.removeChild(this.animations[it]!!)
+              this.animations.remove(it)
+            } catch (_: Exception) {}
+          }
+    } else {
+      types.forEach {
+        try {
+          document.body?.removeChild(this.animations["$componentId--$it"]!!)
+          this.animations.remove("$componentId--$it")
+        } catch (_: Exception) {}
+      }
     }
+  }
 
-    private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
-        console.log("Starting delay animation")
-        setTimeout({
-            callback.invoke(animation.id)
-        }, animation.duration)
+  private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
+    console.log("Starting delay animation")
+    setTimeout({ callback.invoke(animation.id) }, animation.duration)
+  }
+
+  private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID) -> Unit) {
+    val animations = animation.animations
+
+    val component = animations[0] as? ComponentAnimationData ?: return
+    val componentId = component.componentView?.id.toString()
+
+    clearComponentAnimations(componentId)
+
+    var currentDuration = 0
+    for (anim in animations) {
+      setTimeout({ startAnimation(anim, animations, callback = callback) }, currentDuration)
+      currentDuration += anim.duration
+      if (anim == animations.last()) {
+        val totalDuration = currentDuration + DELTA_MS
+        setTimeout({ callback.invoke(animation.id) }, totalDuration)
+      }
     }
+  }
 
-    private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID) -> Unit) {
-        val animations = animation.animations
+  private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID) -> Unit) {
+    val animations = animation.animations
 
-        val component = animations[0] as? ComponentAnimationData ?: return
-        val componentId = component.componentView?.id.toString()
+    val component = animations[0] as? ComponentAnimationData ?: return
+    val componentId = component.componentView?.id.toString()
 
-        clearComponentAnimations(componentId)
+    clearComponentAnimations(componentId)
 
-        var currentDuration = 0
-        for (anim in animations) {
-            setTimeout({
-                startAnimation(anim, animations, callback=callback)
-            }, currentDuration)
-            currentDuration += anim.duration
-            if(anim == animations.last()) {
-                val totalDuration = currentDuration + DELTA_MS
-                setTimeout({ callback.invoke(animation.id) }, totalDuration)
-            }
-        }
+    for (anim in animations) {
+      startAnimation(anim, animations, callback)
+      if (anim == animations.last()) {
+        val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
+        setTimeout({ callback.invoke(animation.id) }, maxDuration + DELTA_MS)
+      }
     }
+  }
 
-    private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID) -> Unit) {
-        val animations = animation.animations
+  private fun startComponentAnimation(
+      type: String,
+      animation: ComponentAnimationData,
+      parallelAnimation: List<AnimationData> = listOf(),
+      callback: (ID) -> Unit
+  ) {
+    // Get animation properties from data
+    val componentId = animation.componentView?.id.toString()
+    val duration = animation.duration
 
-        val component = animations[0] as? ComponentAnimationData ?: return
-        val componentId = component.componentView?.id.toString()
+    // Get matching component element
+    val element = document.getElementById(componentId) ?: return
 
-        clearComponentAnimations(componentId)
+    // Get old style element (if exists) and remove it
+    clearComponentAnimations(componentId, listOf(type))
 
-        for (anim in animations) {
-            startAnimation(anim, animations, callback)
-            if(anim == animations.last()) {
-                val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
-                setTimeout({ callback.invoke(animation.id) }, maxDuration + DELTA_MS)
-            }
-        }
-    }
+    // Toggle old animation off
+    element.classList.toggle("${componentId}--$type--props", false)
 
-    private fun startComponentAnimation(type : String, animation: ComponentAnimationData, parallelAnimation : List<AnimationData> = listOf(), callback: (ID) -> Unit) {
-        // Get animation properties from data
-        val componentId = animation.componentView?.id.toString()
-        val duration = animation.duration
+    setTimeout(
+        {
+          // Create new style element
+          val newElement = document.createElement("style")
+          newElement.id = "${componentId}--$type"
 
-        // Get matching component element
-        val element = document.getElementById(componentId) ?: return
+          // Add new style element to body
+          newElement.innerHTML = getAnimationCSS(type, componentId, animation, parallelAnimation)
+          document.body?.appendChild(newElement)
 
-        // Get old style element (if exists) and remove it
-        clearComponentAnimations(componentId, listOf(type))
+          // Toggle new animation on and save style element
+          element.classList.toggle("${componentId}--$type--props", true)
+          element.classList.toggle("${componentId}--$type", true)
+          animations["$componentId--$type"] = newElement
 
-        // Toggle old animation off
-        element.classList.toggle("${componentId}--$type--props", false)
-
-        setTimeout({
-            // Create new style element
-            val newElement = document.createElement("style")
-            newElement.id = "${componentId}--$type"
-
-            // Add new style element to body
-            newElement.innerHTML = getAnimationCSS(type, componentId, animation, parallelAnimation)
-            document.body?.appendChild(newElement)
-
-            // Toggle new animation on and save style element
-            element.classList.toggle("${componentId}--$type--props", true)
-            element.classList.toggle("${componentId}--$type", true)
-            animations["$componentId--$type"] = newElement
-
-            setTimeout({
+          setTimeout(
+              {
                 // Toggle new animation off
                 element.classList.toggle("${componentId}--$type--props", false)
                 callback.invoke(animation.id)
-            }, duration)
-        }, 50)
-    }
+              },
+              duration)
+        },
+        50)
+  }
 
-    private fun startFlipAnimation(animation: FlipAnimationData, callback: (ID) -> Unit) {
-        val type = "flip"
-        // Get animation properties from data
-        val componentId = animation.componentView?.id.toString()
-        val duration = animation.duration
+  private fun startFlipAnimation(animation: FlipAnimationData, callback: (ID) -> Unit) {
+    val type = "flip"
+    // Get animation properties from data
+    val componentId = animation.componentView?.id.toString()
+    val duration = animation.duration
 
-        // Get matching component element
-        val element = document.getElementById(componentId) ?: return
+    // Get matching component element
+    val element = document.getElementById(componentId) ?: return
 
-        // Get old style element (if exists) and remove it
-        clearComponentAnimations(componentId, listOf(type))
+    // Get old style element (if exists) and remove it
+    clearComponentAnimations(componentId, listOf(type))
 
-        // Toggle old animation off
-        element.classList.toggle("${componentId}--$type--props", false)
+    // Toggle old animation off
+    element.classList.toggle("${componentId}--$type--props", false)
 
-        setTimeout({
-            // Create new style element
-            val newElement = document.createElement("style")
-            newElement.id = "${componentId}--$type"
+    setTimeout(
+        {
+          // Create new style element
+          val newElement = document.createElement("style")
+          newElement.id = "${componentId}--$type"
 
-            // Add new style element to body
-            newElement.innerHTML = getAnimationCSS(type, componentId, animation)
-            document.body?.appendChild(newElement)
+          // Add new style element to body
+          newElement.innerHTML = getAnimationCSS(type, componentId, animation)
+          document.body?.appendChild(newElement)
 
-            // Toggle new animation on and save style element
-            element.classList.toggle("${componentId}--$type--props", true)
-            element.classList.toggle("${componentId}--$type", true)
-            animations["$componentId--$type"] = newElement
+          // Toggle new animation on and save style element
+          element.classList.toggle("${componentId}--$type--props", true)
+          element.classList.toggle("${componentId}--$type", true)
+          animations["$componentId--$type"] = newElement
 
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-            if (oldVisuals != null) {
-                render(VisualBuilder.build(animation.fromVisual), oldVisuals)
-            }
+          val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+          if (oldVisuals != null) {
+            render(VisualBuilder.build(animation.fromVisual), oldVisuals)
+          }
 
-            setTimeout({
+          setTimeout(
+              {
                 val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
                 if (oldVisuals != null) {
-                    render(VisualBuilder.build(animation.toVisual), oldVisuals)
+                  render(VisualBuilder.build(animation.toVisual), oldVisuals)
                 }
-            }, duration / 2)
+              },
+              duration / 2)
 
-            setTimeout({
+          setTimeout(
+              {
                 // Toggle new animation off
                 element.classList.toggle("${componentId}--$type--props", false)
                 callback.invoke(animation.id)
-            }, duration)
-        }, 50)
-    }
+              },
+              duration)
+        },
+        50)
+  }
 
-    private fun startRandomizeAnimation(animation: RandomizeAnimationData, callback: (ID) -> Unit) {
-        val type = "random"
-        // Get animation properties from data
-        val componentId = animation.componentView?.id.toString()
-        val duration = animation.duration
+  private fun startRandomizeAnimation(animation: RandomizeAnimationData, callback: (ID) -> Unit) {
+    val type = "random"
+    // Get animation properties from data
+    val componentId = animation.componentView?.id.toString()
+    val duration = animation.duration
 
-        val interval = setInterval({
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-            if (oldVisuals != null) {
+    val interval =
+        setInterval(
+            {
+              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+              if (oldVisuals != null) {
                 render(VisualBuilder.build(animation.visuals.random()), oldVisuals)
-            }
-        }, duration / animation.speed)
+              }
+            },
+            duration / animation.speed)
 
-        setTimeout({
-            clearInterval(interval)
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-            if (oldVisuals != null) {
-                render(VisualBuilder.build(animation.toVisual), oldVisuals)
-            }
-            callback.invoke(animation.id)
-        }, duration)
-    }
+    setTimeout(
+        {
+          clearInterval(interval)
+          val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+          if (oldVisuals != null) {
+            render(VisualBuilder.build(animation.toVisual), oldVisuals)
+          }
+          callback.invoke(animation.id)
+        },
+        duration)
+  }
 
-    private fun startDiceAnimation(animation: DiceAnimationData, callback: (ID) -> Unit) {
-        val type = "dice"
-        // Get animation properties from data
-        val componentId = animation.componentView?.id.toString()
-        val dice = animation.componentView as? DiceViewData ?: return
-        val duration = animation.duration
+  private fun startDiceAnimation(animation: DiceAnimationData, callback: (ID) -> Unit) {
+    val type = "dice"
+    // Get animation properties from data
+    val componentId = animation.componentView?.id.toString()
+    val dice = animation.componentView as? DiceViewData ?: return
+    val duration = animation.duration
 
-        val interval = setInterval({
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-            if (oldVisuals != null) {
+    val interval =
+        setInterval(
+            {
+              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+              if (oldVisuals != null) {
                 render(VisualBuilder.build(dice.visuals.random()), oldVisuals)
-            }
-        }, duration / animation.speed)
+              }
+            },
+            duration / animation.speed)
 
-        setTimeout({
-            clearInterval(interval)
-            val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-            if (oldVisuals != null) {
-                render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
-            }
-            callback.invoke(animation.id)
-        }, duration)
-    }
+    setTimeout(
+        {
+          clearInterval(interval)
+          val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+          if (oldVisuals != null) {
+            render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
+          }
+          callback.invoke(animation.id)
+        },
+        duration)
+  }
 
-    private fun getTransitionCSS(animationList : List<AnimationData>) : String {
-        val transitions = animationList.map {
-            when(it) {
+  private fun getTransitionCSS(animationList: List<AnimationData>): String {
+    val transitions =
+        animationList
+            .map {
+              when (it) {
                 is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
                 is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
                 is RotationAnimationData -> "rotate ${it.duration}ms ease-in-out"
                 is ScaleAnimationData -> "scale ${it.duration}ms ease-in-out"
                 else -> ""
+              }
             }
-        }.joinToString(", ")
+            .joinToString(", ")
 
-        return """
+    return """
             transition: $transitions;
         """.trimIndent()
-    }
+  }
 
-    private fun getAnimationCSS(type : String, componentId : String, animationData: AnimationData, parallelAnimations : List<AnimationData> = listOf()) : String {
-        return when(animationData) {
-            is FadeAnimationData -> """
+  private fun getAnimationCSS(
+      type: String,
+      componentId: String,
+      animationData: AnimationData,
+      parallelAnimations: List<AnimationData> = listOf()
+  ): String {
+    return when (animationData) {
+      is FadeAnimationData ->
+          """
                 .${componentId}--${type}--props {
                     ${getTransitionCSS(parallelAnimations)}
                 }
@@ -280,8 +329,8 @@ internal class Animator {
                     opacity: ${animationData.toOpacity};
                 }
             """.trimIndent()
-
-            is MovementAnimationData -> """
+      is MovementAnimationData ->
+          """
                 .${componentId}--${type}--props {
                     ${getTransitionCSS(parallelAnimations)}
                 }
@@ -290,8 +339,8 @@ internal class Animator {
                     translate: ${animationData.byX}em ${animationData.byY}em;
                 }
             """.trimIndent()
-
-            is RotationAnimationData -> """
+      is RotationAnimationData ->
+          """
                 .${componentId}--${type}--props {
                     ${getTransitionCSS(parallelAnimations)}
                 }
@@ -300,8 +349,8 @@ internal class Animator {
                     rotate: ${animationData.byAngle}deg;
                 }
             """.trimIndent()
-
-            is ScaleAnimationData -> """
+      is ScaleAnimationData ->
+          """
                 .${componentId}--${type}--props {
                     ${getTransitionCSS(parallelAnimations)}
                 }
@@ -310,8 +359,8 @@ internal class Animator {
                     scale: ${animationData.byScaleX} ${animationData.byScaleY};
                 }
             """.trimIndent()
-
-            is FlipAnimationData -> """                
+      is FlipAnimationData ->
+          """                
                 .${componentId}--${type}--props {
                     animation: ${componentId}--${type}--flip ${animationData.duration}ms linear;
                 }
@@ -328,8 +377,7 @@ internal class Animator {
                     }
                 }
             """.trimIndent()
-
-            else -> ""
-        }
+      else -> ""
     }
+  }
 }

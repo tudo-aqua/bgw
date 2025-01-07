@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,10 +44,9 @@ sealed class GameComponentView(
     visual: Visual
 ) :
     DynamicComponentView(
-        posX = posX, posY = posY, width = width, height = height, visual = visual
-    ) {
-    /** @throws UnsupportedOperationException [GameComponentView] does not support children. */
-    override fun removeChild(component: ComponentView) {
-        throw UnsupportedOperationException("This $this component has no children.")
-    }
+        posX = posX, posY = posY, width = width, height = height, visual = visual) {
+  /** @throws UnsupportedOperationException [GameComponentView] does not support children. */
+  override fun removeChild(component: ComponentView) {
+    throw UnsupportedOperationException("This $this component has no children.")
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,82 +54,80 @@ open class CardView(
     back: Visual = front
 ) :
     GameComponentView(
-        posX = posX, posY = posY, width = width, height = height, visual = Visual.EMPTY
-    ) {
-    /**
-     * The current [CardSide] that is displayed.
-     *
-     * @see showFront
-     * @see showBack
-     */
-    var currentSide: CardSide = FRONT
-        set(value) {
-            if (field != value) {
-                field = value
+        posX = posX, posY = posY, width = width, height = height, visual = Visual.EMPTY) {
+  /**
+   * The current [CardSide] that is displayed.
+   *
+   * @see showFront
+   * @see showBack
+   */
+  var currentSide: CardSide = FRONT
+    set(value) {
+      if (field != value) {
+        field = value
 
-                visualProperty.value = if (value == FRONT) frontVisual else backVisual
-            }
-        }
-
-    /** Front [Visual] for this [CardView]. */
-    var frontVisual: Visual = Visual.EMPTY
-        /** Sets front [Visual] for this [CardView] as a copy of given [value]. */
-        set(value) {
-            field = value.copy()
-
-            if (currentSide == FRONT) super.visual = field
-        }
-
-    /** Back [Visual] for this [CardView]. */
-    var backVisual: Visual = Visual.EMPTY
-        /** Sets back [Visual] for this [CardView] as a copy of given [value]. */
-        set(value) {
-            field = value.copy()
-
-            if (currentSide == BACK) super.visual = field
-        }
-
-    override var visual: Visual
-        get() = super.visual
-        set(_) {
-            throw UnsupportedOperationException(
-                "Setting a single Visual for a CardView is not supported. " +
-                        "Use `frontVisual` and `backVisual` setter instead."
-            )
-        }
-
-    init {
-        this.frontVisual = front
-        this.backVisual = back
-        this.currentSide = BACK
+        visualProperty.value = if (value == FRONT) frontVisual else backVisual
+      }
     }
 
-    /** Sets the [currentSide] to be displayed to [CardSide.FRONT]. */
-    fun showFront() {
-        currentSide = FRONT
+  /** Front [Visual] for this [CardView]. */
+  var frontVisual: Visual = Visual.EMPTY
+    /** Sets front [Visual] for this [CardView] as a copy of given [value]. */
+    set(value) {
+      field = value.copy()
+
+      if (currentSide == FRONT) super.visual = field
     }
 
-    /** Sets the [currentSide] to be displayed to [CardSide.BACK]. */
-    fun showBack() {
-        currentSide = BACK
+  /** Back [Visual] for this [CardView]. */
+  var backVisual: Visual = Visual.EMPTY
+    /** Sets back [Visual] for this [CardView] as a copy of given [value]. */
+    set(value) {
+      field = value.copy()
+
+      if (currentSide == BACK) super.visual = field
     }
 
-    /** Sets the [currentSide] to the parameter value. */
-    fun showCardSide(side: CardSide) {
-        currentSide = side
+  override var visual: Visual
+    get() = super.visual
+    set(_) {
+      throw UnsupportedOperationException(
+          "Setting a single Visual for a CardView is not supported. " +
+              "Use `frontVisual` and `backVisual` setter instead.")
     }
 
-    /** Flips the [CardView] by seting the [currentSide] to the other value. */
-    fun flip() {
-        currentSide = if (currentSide == BACK) FRONT else BACK
-    }
+  init {
+    this.frontVisual = front
+    this.backVisual = back
+    this.currentSide = BACK
+  }
 
-    /** Enum for the card sides [FRONT] and [BACK] with their visual indices. */
-    enum class CardSide {
-        /** The [FRONT] side. */
-        FRONT,
+  /** Sets the [currentSide] to be displayed to [CardSide.FRONT]. */
+  fun showFront() {
+    currentSide = FRONT
+  }
 
-        /** The [BACK] side. */
-        BACK
-    }
+  /** Sets the [currentSide] to be displayed to [CardSide.BACK]. */
+  fun showBack() {
+    currentSide = BACK
+  }
+
+  /** Sets the [currentSide] to the parameter value. */
+  fun showCardSide(side: CardSide) {
+    currentSide = side
+  }
+
+  /** Flips the [CardView] by seting the [currentSide] to the other value. */
+  fun flip() {
+    currentSide = if (currentSide == BACK) FRONT else BACK
+  }
+
+  /** Enum for the card sides [FRONT] and [BACK] with their visual indices. */
+  enum class CardSide {
+    /** The [FRONT] side. */
+    FRONT,
+
+    /** The [BACK] side. */
+    BACK
+  }
 }
