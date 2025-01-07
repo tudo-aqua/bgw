@@ -249,13 +249,6 @@ enum class KeyCode(
    * @since 1.0
    */
   Ü("Ü", KeyType.LETTER),
-
-  /**
-   * Constant for the ß key.
-   *
-   * @since 1.0
-   */
-  ß("ß", KeyType.LETTER),
   // endregion
 
   // region Characters
