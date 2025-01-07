@@ -41,8 +41,8 @@ internal external interface ToggleButtonProps : Props {
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonData) {
-  cssBuilder(componentViewData)
   display = Display.flex
+  cssBuilder(componentViewData)
   alignItems = AlignItems.center
   justifyItems = JustifyItems.flexStart
   gap = 10.em
@@ -62,7 +62,10 @@ internal val ToggleButton =
       bgwToggleButton {
         id = props.data.id
         className = ClassName("textField")
-        css { cssBuilderIntern(props.data) }
+        css {
+          cssBuilderIntern(props.data)
+          cursor = Cursor.pointer
+        }
 
         ref = elementRef
         useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }

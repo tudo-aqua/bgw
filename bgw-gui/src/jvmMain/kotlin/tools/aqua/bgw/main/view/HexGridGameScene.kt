@@ -141,7 +141,9 @@ internal class HexGridGameScene : BoardGameScene() {
               height = 50,
               text = "Zoom",
               visual = ColorVisual(Color(0, 255, 0)))
-          .apply { onMouseClicked = { cameraPane.limitBounds = !cameraPane.limitBounds } }
+          .apply { onMouseClicked = {
+              Application.showGameScene(Application.cardLayoutScene)
+          } }
 
   private val hexPointy =
       HexagonView(

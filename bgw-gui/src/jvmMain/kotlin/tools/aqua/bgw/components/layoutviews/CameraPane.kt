@@ -29,15 +29,21 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A pane representing a camera view that can be used to display and manipulate a target layout
  * view.
+ *
+ * @param T The type of the [target] [LayoutView]. Must extend the [LayoutView] class.
  * @param posX The x-coordinate of the camera pane's position on the screen. Default is 0.
  * @param posY The y-coordinate of the camera pane's position on the screen. Default is 0.
  * @param width The width of the camera pane.
  * @param height The height of the camera pane.
  * @param visual The visual representation of the camera pane. Default is an empty visual.
- * @param target The target layout view that this camera pane will display.
+ * @param target The target [LayoutView] that this camera pane will display.
  * @param limitBounds Whether the target layout view should be limited to the bounds of the camera
  * pane. Default is true.
- * @param T The type of the target layout view. Must extend the LayoutView class.
+ *
+ * @see GridPane
+ * @see Pane
+ *
+ * @since 0.8
  */
 open class CameraPane<T : LayoutView<*>>(
     posX: Number = 0,
@@ -50,14 +56,13 @@ open class CameraPane<T : LayoutView<*>>(
 ) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
   /**
    * [Property] for the [zoom] state of the [CameraPane].
-   *
-   * @see zoom
    */
   internal val zoomProperty: DoubleProperty = DoubleProperty(1)
 
   internal var internalData: InternalCameraPanData = InternalCameraPanData()
 
-  /** Zoom factor of the camera starting from 1. */
+  /** Zoom factor of the camera starting from 1.
+   */
   var zoom: Double
     get() = zoomProperty.value
     set(value) {
@@ -66,14 +71,14 @@ open class CameraPane<T : LayoutView<*>>(
 
   /**
    * [Property] for the [interactive] state of the [CameraPane].
-   *
-   * @see zoom
    */
   internal val interactiveProperty: BooleanProperty = BooleanProperty(false)
 
   /**
    * Determines if the camera pane is interactive, which means that you can scroll to zoom and drag
-   * to move around.
+   * to pan around.
+   *
+   * @see panMouseButton
    */
   var interactive: Boolean
     get() = interactiveProperty.value
@@ -84,7 +89,11 @@ open class CameraPane<T : LayoutView<*>>(
   /** [Property] for the [limitBounds] state of the [CameraPane]. */
   internal val limitBoundsProperty = BooleanProperty(limitBounds)
 
-  /** Determines if the target layout view should be limited to the bounds of the camera pane. */
+  /** Determines if the target layout view should be limited to the bounds of the camera pane.
+   * This will also affect the panning of the camera pane with [pan] and [panBy] as well as zooming.
+   *
+   * @since 1.0
+   */
   var limitBounds: Boolean
     get() = limitBoundsProperty.value
     set(value) {
@@ -117,7 +126,12 @@ open class CameraPane<T : LayoutView<*>>(
   internal val panMouseButtonProperty: Property<MouseButtonType> =
       Property(MouseButtonType.LEFT_BUTTON)
 
-  /** The mouse button that is used to pan the camera pane. */
+  /** The mouse button that is used to pan the camera pane.
+   *
+   * @see interactive
+   *
+   * @since 0.9
+   */
   var panMouseButton: MouseButtonType
     get() = panMouseButtonProperty.value
     set(value) {
@@ -132,6 +146,8 @@ open class CameraPane<T : LayoutView<*>>(
    * Gets invoked whenever the camera pane is zoomed.
    *
    * @see zoom
+   *
+   * @since 1.0
    */
   var onZoomed: ((Number) -> Unit)? = null
 
@@ -146,6 +162,10 @@ open class CameraPane<T : LayoutView<*>>(
    * @param smooth Whether the pan should be smooth or instant.
    *
    * @see limitBounds
+   * @see pan
+   * @see panBy
+   *
+   * @since 1.0
    */
   fun pan(x: Number, y: Number, zoom: Double, smooth: Boolean = true) {
     panData =
@@ -166,6 +186,8 @@ open class CameraPane<T : LayoutView<*>>(
    * @param smooth Whether the pan should be smooth or instant.
    *
    * @see limitBounds
+   * @see pan
+   * @see panBy
    */
   fun pan(x: Number, y: Number, smooth: Boolean = true) {
     if (panData.zoomOnly) {
@@ -188,6 +210,10 @@ open class CameraPane<T : LayoutView<*>>(
    * @param smooth Whether the pan should be smooth or instant.
    *
    * @see limitBounds
+   * @see pan
+   * @see panBy
+   *
+   * @since 1.0
    */
   fun panBy(xOffset: Number, yOffset: Number, zoom: Double, smooth: Boolean = true) {
     panData =
@@ -207,6 +233,8 @@ open class CameraPane<T : LayoutView<*>>(
    * @param smooth Whether the pan should be smooth or instant.
    *
    * @see limitBounds
+   * @see pan
+   * @see panBy
    */
   fun panBy(xOffset: Number, yOffset: Number, smooth: Boolean = true) {
     if (panData.zoomOnly) {

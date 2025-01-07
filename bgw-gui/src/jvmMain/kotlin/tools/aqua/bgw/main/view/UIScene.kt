@@ -43,8 +43,8 @@ internal class UIScene : MenuScene() {
 
   private val toggleGroup =
       ToggleGroup().apply {
-        onSelected = { button -> println("Selected: ${button.text}") }
-        onDeselected = { button -> println("Deselected: ${button.text}") }
+        //onSelected = { button -> println("Selected: ${button.text}") }
+        //onDeselected = { button -> println("Deselected: ${button.text}") }
       }
 
   private val toggle =
@@ -56,10 +56,13 @@ internal class UIScene : MenuScene() {
               text = "Toggle",
               font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
               visual = ColorVisual(Color.GREEN),
-              toggleGroup = toggleGroup,
               alignment = Alignment.CENTER,
           )
-          .apply { onMouseClicked = { textfield.text = "Toggled" } }
+          .apply {
+              onMouseClicked = {
+                  Application.hideMenuScene()
+              }
+          }
 
   private val toggle2 =
       ToggleButton(
@@ -69,16 +72,10 @@ internal class UIScene : MenuScene() {
               height = 100,
               text = "Indeterminate",
               font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
-              visual = ColorVisual(Color.ORANGE),
-              toggleGroup = toggleGroup)
+              visual = ColorVisual(Color.ORANGE))
           .apply {
-            onSelected = {
-              println("Setting to indeterminate")
-              checkBox.isIndeterminate = true
-            }
-            onDeselected = {
-              println("Setting to not indeterminate")
-              checkBox.isIndeterminate = false
+            onMouseClicked = {
+                Application.showGameScene(Application.cardLayoutScene)
             }
           }
 

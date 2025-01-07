@@ -40,8 +40,8 @@ internal external interface RadioButtonProps : Props {
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: RadioButtonData) {
-  cssBuilder(componentViewData)
   display = Display.flex
+  cssBuilder(componentViewData)
   alignItems = AlignItems.center
   justifyItems = JustifyItems.flexStart
   gap = 10.em
@@ -61,7 +61,10 @@ internal val RadioButton =
       bgwRadioButton {
         id = props.data.id
         className = ClassName("textField")
-        css { cssBuilderIntern(props.data) }
+        css {
+          cssBuilderIntern(props.data)
+          cursor = Cursor.pointer
+        }
 
         ref = elementRef
         useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }

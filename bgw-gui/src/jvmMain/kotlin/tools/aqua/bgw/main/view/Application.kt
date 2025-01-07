@@ -25,19 +25,19 @@ internal object Application : BoardGameApplication(aspectRatio = AspectRatio.of(
   private val hexGrid = HexGridGameScene()
   private val animation = AnimationScene()
   val menuScene = MyMenuScene()
-  private val uiScene = UIScene()
+  val uiScene = UIScene()
   private val dragDropScene = DragDropScene()
   private val visualScene = VisualScene()
-  private val cardLayoutScene = CardLayoutScene()
+  val cardLayoutScene = CardLayoutScene()
 
   init {
     loadFont("Rubik.ttf")
-    showGameScene(cardLayoutScene)
-    // showGameScene(hexGrid)
+    // showGameScene(cardLayoutScene)
+    showGameScene(hexGrid)
     // showGameScene(animation)
     // showGameScene(grid)
     // showGameScene(dragDropScene)
-    // showMenuScene(uiScene)
+    showMenuScene(uiScene)
     // showGameScene(visualScene)
   }
 }
