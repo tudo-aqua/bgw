@@ -74,7 +74,8 @@ open class LinearLayout<T : GameComponentView>(
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual
-    ) {
+    ),
+    Iterable<T> {
 
     /**
      * [Property] for the spacing of [GameComponentView]s in this [LinearLayout].

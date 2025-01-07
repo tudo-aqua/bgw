@@ -136,6 +136,8 @@ open class CardStack<T : CardView>(
         removePosListeners()
     }
 
+    override fun iterator(): Iterator<T> = observableComponents.reversed().iterator()
+
     private fun T.addPosListeners() {
         posXProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutX() }
         posYProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutY() }

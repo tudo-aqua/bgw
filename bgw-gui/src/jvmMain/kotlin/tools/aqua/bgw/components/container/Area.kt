@@ -58,10 +58,13 @@ open class Area<T : GameComponentView>(
     visual: Visual = Visual.EMPTY
 ) :
     GameComponentContainer<T>(
-        posX = posX, posY = posY, width = width, height = height, visual = visual) {
-  /** Internal onRemove handler. */
-  override fun T.onRemove() = Unit
+        posX = posX, posY = posY, width = width, height = height, visual = visual
+    ),
+    Iterable<T> {
 
-  /** Internal onAdd handler. */
-  override fun T.onAdd() = Unit
+    /** Internal onRemove handler. */
+    override fun T.onRemove() = Unit
+
+    /** Internal onAdd handler. */
+    override fun T.onAdd() = Unit
 }

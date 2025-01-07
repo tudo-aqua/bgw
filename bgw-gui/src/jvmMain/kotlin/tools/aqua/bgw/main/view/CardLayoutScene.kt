@@ -1,5 +1,6 @@
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.uicomponents.Button
@@ -12,6 +13,30 @@ import tools.aqua.bgw.visual.ColorVisual
 import kotlin.random.Random
 
 internal class CardLayoutScene : BoardGameScene() {
+
+    val cardStack = CardStack<CardView>(
+        width = 300,
+        height = 200,
+        posX = 900,
+        posY = 100,
+        alignment = Alignment.CENTER,
+        visual = ColorVisual.LIGHT_GRAY
+    ).apply {
+        repeat(5) { i ->
+            val card = CardView(
+                posX = 0,
+                posY = 0,
+                width = i,
+                height = 200,
+                front = ColorVisual(Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255)))
+            )
+            println(card.width)
+            this.add(card)
+        }
+
+        println(this.iterator().asSequence().map { it.width }.toList())
+        println(this.peek().width)
+    }
 
     val button = Button(
         width = 200,
@@ -68,7 +93,7 @@ internal class CardLayoutScene : BoardGameScene() {
     }
 
     init {
-        addComponents(layout, button)
+        addComponents(layout, button, cardStack)
         repeat(5) {
             val card = CardView(
                 posX = 0,

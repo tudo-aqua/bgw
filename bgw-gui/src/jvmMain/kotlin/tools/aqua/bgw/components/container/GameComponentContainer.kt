@@ -54,7 +54,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
     visual: Visual
 ) :
     DynamicComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual),
-    Iterable<T>,
     LayeredContainer<T> {
     /**
      * An [ObservableList] to store the [GameComponentView]s that are contained in this
@@ -292,7 +291,7 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
      *
      * @return Iterator over the elements of this [GameComponentContainer].
      */
-    override fun iterator(): Iterator<T> = observableComponents.iterator()
+    open fun iterator(): Iterator<T> = observableComponents.iterator()
 
     /**
      * Puts the [component] to the front inside the [LayeredContainer] and Changes its [zIndex]

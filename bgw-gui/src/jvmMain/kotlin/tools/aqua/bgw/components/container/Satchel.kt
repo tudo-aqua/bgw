@@ -72,7 +72,8 @@ open class Satchel<T : GameComponentView>(
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual
-    ) {
+    ),
+    Iterable<T> {
 
     private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
 
