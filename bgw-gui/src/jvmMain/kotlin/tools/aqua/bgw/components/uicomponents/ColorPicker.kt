@@ -60,8 +60,6 @@ open class ColorPicker(
 
   /**
    * The currently selected [Color].
-   *
-   * @see selectedColorProperty
    */
   var selectedColor: Color
     get() = selectedColorProperty.value

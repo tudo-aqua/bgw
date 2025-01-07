@@ -52,8 +52,6 @@ open class TextVisual(
 
   /**
    * The displayed [text].
-   *
-   * @see textProperty
    */
   var text: String
     get() = textProperty.value
@@ -70,8 +68,6 @@ open class TextVisual(
 
   /**
    * The displayed [text] [Font].
-   *
-   * @see fontProperty
    */
   var font: Font
     get() = fontProperty.value
@@ -88,8 +84,6 @@ open class TextVisual(
 
   /**
    * The [text] [Alignment].
-   *
-   * @see alignmentProperty
    */
   var alignment: Alignment
     get() = alignmentProperty.value
@@ -106,8 +100,6 @@ open class TextVisual(
 
   /**
    * The x-axis [text] offset.
-   *
-   * @see offsetXProperty
    */
   var offsetX: Double
     get() = offsetXProperty.value
@@ -124,8 +116,6 @@ open class TextVisual(
 
   /**
    * The y-axis [text] offset.
-   *
-   * @see offsetYProperty
    */
   var offsetY: Double
     get() = offsetYProperty.value

@@ -44,8 +44,6 @@ sealed class SingleLayerVisual : Visual() {
    * The [transparency] / alpha channel for this [Visual].
    *
    * Must be set between 0 (full transparent) and 1 (non-transparent / solid). Default: 1.
-   *
-   * @see transparencyProperty
    */
   var transparency: Double
     get() = transparencyProperty.value
@@ -58,14 +56,12 @@ sealed class SingleLayerVisual : Visual() {
    *
    * @see style
    */
-  val styleProperty: Style = Style()
+  internal val styleProperty: Style = Style()
 
   /**
    * Additional styling that gets applied to this [Visual].
    *
    * Critical failures, bugs or other undefined behaviour could occur when using this feature.
-   *
-   * @see styleProperty
    */
   val style: Style
     get() = styleProperty
@@ -75,14 +71,12 @@ sealed class SingleLayerVisual : Visual() {
    *
    * @see filters
    */
-  val filtersProperty: Filter = Filter()
+  internal val filtersProperty: Filter = Filter()
 
   /**
    * Additional filters that get applied to this [Visual].
    *
    * Critical failures, bugs or other undefined behaviour could occur when using this feature.
-   *
-   * @see filtersProperty
    */
   val filters: Filter
     get() = filtersProperty
@@ -92,12 +86,11 @@ sealed class SingleLayerVisual : Visual() {
    *
    * @see flipped
    */
-  val flippedProperty: Property<Flip> = Property(Flip.NONE)
+  internal val flippedProperty: Property<Flip> = Property(Flip.NONE)
 
   /**
    * The [flipped] state of this [Visual].
    *
-   * @see flippedProperty
    * @see Flip
    */
   var flipped: Flip

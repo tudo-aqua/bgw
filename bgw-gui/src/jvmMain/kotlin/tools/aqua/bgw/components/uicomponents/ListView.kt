@@ -81,8 +81,6 @@ open class ListView<T>(
 
   /**
    * [Orientation] of this [ListView] displayed.
-   *
-   * @see orientationProperty
    */
   var orientation: Orientation
     get() = orientationProperty.value
@@ -104,8 +102,6 @@ open class ListView<T>(
    * The [formatFunction] that gets used to obtain a [String] representation for each item.
    *
    * If the value is `null`, the [toString] function of the item is used instead.
-   *
-   * @see formatFunctionProperty
    */
   var formatFunction: ((T) -> String)?
     get() = formatFunctionProperty.value

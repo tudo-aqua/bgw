@@ -57,8 +57,6 @@ abstract class UIComponent(
 
   /**
    * Field that is used for internal styling purposes.
-   *
-   * @see internalCSSProperty
    */
   internal var internalCSS: String
     get() = internalCSSProperty.value
@@ -77,7 +75,6 @@ abstract class UIComponent(
    * [Font] of this [UIComponent]. Usage depends on subclass.
    *
    * @see Font
-   * @see fontProperty
    */
   var font: Font
     get() = fontProperty.value
@@ -103,8 +100,6 @@ abstract class UIComponent(
    * This gets applied last, so it may override any changes made via other fields and functions of
    * this [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using
    * this feature.
-   *
-   * @see backgroundStyleProperty
    */
   @Deprecated("CSS Styling is no longer supported as of BGW 1.0.", ReplaceWith("this.visual.style"))
   var backgroundStyle: String
@@ -131,8 +126,6 @@ abstract class UIComponent(
    * This gets applied last, so it may override any changes made via other fields and functions of
    * this [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using
    * this feature.
-   *
-   * @see componentStyleProperty
    */
   @Deprecated("CSS Styling is no longer supported as of BGW 1.0.", ReplaceWith("this.visual.style"))
   var componentStyle: String

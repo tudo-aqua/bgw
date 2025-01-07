@@ -41,6 +41,8 @@ import tools.aqua.bgw.visual.Visual
  * @param layoutFromCenter Whether the [GridPane] should anchor in the center (`true`) or top-Left
  * (`false`). Default: `true`.
  * @param visual Initial visual for this [GridPane]. Default: [Visual.EMPTY].
+ *
+ * @since 0.1
  */
 open class GridPane<T : ComponentView>(
     posX: Number = 0,

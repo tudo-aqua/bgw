@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.visual
 
+import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 
@@ -35,6 +36,8 @@ import tools.aqua.bgw.observable.lists.ObservableList
  */
 open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 
+  internal var updateGui: (() -> Unit)? = null
+
   /**
    * [ObservableList] for the [children] of this stack. The first [SingleLayerVisual] gets displayed
    * at the bottom of the stack.
@@ -47,8 +50,6 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
   /**
    * The [children] of this stack. The first [SingleLayerVisual] gets displayed at the bottom of the
    * stack.
-   *
-   * @see childrenProperty
    */
   var children: List<SingleLayerVisual>
     get() = childrenProperty.toList()
@@ -58,7 +59,7 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
     }
 
   init {
-    childrenProperty.internalListener = { _, _ -> notifyGUIListener() }
+    childrenProperty.internalListener = { _, _ -> Frontend.updateVisual(this) }
   }
 
   /**

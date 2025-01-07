@@ -45,8 +45,6 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    *
    * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
-   *
-   * @see colorProperty
    */
   var color: Color
     get() = colorProperty.value

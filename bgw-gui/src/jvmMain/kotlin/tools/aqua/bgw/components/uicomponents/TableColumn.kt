@@ -55,8 +55,6 @@ open class TableColumn<T>(
 
   /**
    * Title of this [TableColumn].
-   *
-   * @see titleProperty
    */
   var title: String
     get() = titleProperty.value
@@ -82,8 +80,6 @@ open class TableColumn<T>(
    * The width of this [TableColumn]. Must not be negative.
    *
    * @throws IllegalArgumentException If a negative value was set.
-   *
-   * @see widthProperty
    */
   var width: Double
     get() = widthProperty.value
@@ -102,7 +98,6 @@ open class TableColumn<T>(
    * [Font] of this [TableColumn].
    *
    * @see Font
-   * @see fontProperty
    */
   var font: Font
     get() = fontProperty.value
@@ -124,8 +119,6 @@ open class TableColumn<T>(
    * The [formatFunction] that gets used to obtain a [String] representation for each item.
    *
    * If the value is `null`, the [toString] function of the item is used instead.
-   *
-   * @see formatFunctionProperty
    */
   var formatFunction: ((T) -> String)?
     get() = formatFunctionProperty.value

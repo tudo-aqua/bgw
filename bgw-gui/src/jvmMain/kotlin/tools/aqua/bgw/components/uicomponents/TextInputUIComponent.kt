@@ -60,8 +60,6 @@ sealed class TextInputUIComponent(
 
   /**
    * Text of this [TextInputUIComponent].
-   *
-   * @see textProperty
    */
   var text: String
     get() = textProperty.value
@@ -78,8 +76,6 @@ sealed class TextInputUIComponent(
 
   /**
    * Prompt of this [TextInputUIComponent].
-   *
-   * @see promptProperty
    */
   var prompt: String
     get() = promptProperty.value

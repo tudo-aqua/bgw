@@ -87,8 +87,6 @@ open class ComboBox<T>(
 
   /**
    * Items [List] for this [ComboBox].
-   *
-   * @see observableItemsList
    */
   var items: List<T>
     get() = observableItemsList.toList()
@@ -110,8 +108,6 @@ open class ComboBox<T>(
    * The selected item.
    *
    * May be `null` if no item is selected.
-   *
-   * @see selectedItemProperty
    */
   var selectedItem: T?
     get() = selectedItemProperty.value
@@ -133,8 +129,6 @@ open class ComboBox<T>(
    * The [formatFunction] that gets used to obtain a [String] representation for each item.
    *
    * If the value is `null`, the [toString] function of the item is used instead.
-   *
-   * @see formatFunctionProperty
    */
   var formatFunction: ((T) -> String)?
     get() = formatFunctionProperty.value

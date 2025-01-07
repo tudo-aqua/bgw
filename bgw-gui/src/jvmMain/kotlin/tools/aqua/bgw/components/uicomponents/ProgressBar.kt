@@ -75,8 +75,6 @@ open class ProgressBar(
    * A value between 0 and 1 represents the percentage of progress where 0 is 0% and 1 is 100%
    * progress. Any value less than 0 gets represented as 0% progress, while any value greater than 1
    * gets represented as 100% progress.
-   *
-   * @see progressProperty
    */
   var progress: Double
     get() = progressProperty.value
@@ -93,8 +91,6 @@ open class ProgressBar(
 
   /**
    * Bar [Color] of this [ProgressBar].
-   *
-   * @see barColorProperty
    */
   var barColor: Color
     get() = barColorProperty.value

@@ -53,8 +53,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Controls whether component is draggable or not.
-   *
-   * @see isDraggableProperty
    */
   var isDraggable: Boolean
     get() = isDraggableProperty.value
@@ -71,8 +69,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Reflects whether component is currently dragged or not.
-   *
-   * @see isDraggedProperty
    */
   var isDragged: Boolean
     get() = isDraggedProperty.value

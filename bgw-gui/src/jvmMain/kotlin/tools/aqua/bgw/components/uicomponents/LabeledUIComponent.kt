@@ -67,8 +67,6 @@ abstract class LabeledUIComponent(
 
   /**
    * Defines if text should be wrapped, if it exceeds the [Label]'s [width].
-   *
-   * @see isWrapTextProperty
    */
   var isWrapText: Boolean
     get() = isWrapTextProperty.value
@@ -85,8 +83,6 @@ abstract class LabeledUIComponent(
 
   /**
    * Label of this [LabeledUIComponent].
-   *
-   * @see textProperty
    */
   var text: String
     get() = textProperty.value
@@ -103,8 +99,6 @@ abstract class LabeledUIComponent(
 
   /**
    * [Alignment] of this [LabeledUIComponent].
-   *
-   * @see alignmentProperty
    */
   var alignment: Alignment
     get() = alignmentProperty.value

@@ -78,8 +78,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /**
    * The background [Visual] of this [Scene].
-   *
-   * @see backgroundProperty
    */
   var background: Visual
     get() = backgroundProperty.value
@@ -100,8 +98,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /**
    * Opacity of the [background] of this [Scene].
-   *
-   * @see opacityProperty
    */
   var opacity: Double
     get() = opacityProperty.value
@@ -121,8 +117,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /**
    * The currently displayed zoom detail of this [Scene].
-   *
-   * @see zoomDetailProperty
    */
   internal var zoomDetail
     get() = zoomDetailProperty.value

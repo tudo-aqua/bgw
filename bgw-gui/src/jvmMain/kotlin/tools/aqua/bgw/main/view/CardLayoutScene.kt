@@ -28,6 +28,7 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
 
 internal class CardLayoutScene : BoardGameScene() {
 
@@ -40,19 +41,22 @@ internal class CardLayoutScene : BoardGameScene() {
               alignment = Alignment.CENTER,
               visual = ColorVisual.LIGHT_GRAY)
           .apply {
-            repeat(5) { i ->
               val card =
                   CardView(
                       posX = 0,
                       posY = 0,
-                      width = i,
+                      width = 100,
                       height = 200,
-                      front =
-                          ColorVisual(
-                              Color(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))))
-              println(card.width)
+                      front = CompoundVisual(
+                            ColorVisual(Color(255, 0, 0)),
+                      ))
               this.add(card)
-            }
+
+              onMouseClicked = {
+                  (card.visual as CompoundVisual).children = listOf(*((card.visual as CompoundVisual).children.toTypedArray()), ColorVisual(Color(0, 255, 0)).apply {
+                      transparency = 0.1
+                  })
+              }
 
             println(this.iterator().asSequence().map { it.width }.toList())
             println(this.peek().width)

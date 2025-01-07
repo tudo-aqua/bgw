@@ -298,6 +298,8 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * accordingly.
    *
    * @param component Child that is moved to the front.
+   *
+   * @since 0.8
    */
   override fun toFront(component: T) {
     component.zIndexProperty.value = observableComponents.last().zIndex
@@ -312,6 +314,8 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * accordingly.
    *
    * @param component Child that is moved to the back.
+   *
+   * @since 0.8
    */
   override fun toBack(component: T) {
     component.zIndexProperty.value = observableComponents.first().zIndex
@@ -327,6 +331,8 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    *
    * @param component Child that is moved accordingly.
    * @param zIndex The value that is used to compare the order of [observableComponents].
+   *
+   * @since 0.8
    */
   override fun setZIndex(component: T, zIndex: Int) {
     component.zIndexProperty.value = zIndex

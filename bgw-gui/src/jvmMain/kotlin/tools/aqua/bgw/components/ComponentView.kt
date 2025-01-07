@@ -56,13 +56,13 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   internal val id = IDGenerator.generateID()
 
   /**
-   * Property for the order of [ComponentView] inside of [parent].#
+   * Property for the order of [ComponentView] inside of [parent].
    *
    * @see zIndex
    */
   internal val zIndexProperty: IntegerProperty = IntegerProperty(0)
 
-  /** for the order of [ComponentView] inside of [parent].# */
+  /** Order of [ComponentView] inside of [parent]. */
   var zIndex: Int
     get() = zIndexProperty.value
     set(value) {
@@ -117,7 +117,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Horizontal position of this [ComponentView].
    *
    * @see actualPosX
-   * @see posXProperty
    */
   var posX: Double
     get() = posXProperty.value
@@ -129,7 +128,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Horizontal position of this [ComponentView] considering scale.
    *
    * @see posX
-   * @see posXProperty
    */
   var actualPosX: Double
     get() {
@@ -152,7 +150,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Vertical position of this [ComponentView].
    *
    * @see actualPosY
-   * @see posYProperty
    */
   var posY: Double
     get() = posYProperty.value
@@ -164,7 +161,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Vertical position of this [ComponentView] considering scale.
    *
    * @see posY
-   * @see posYProperty
    */
   var actualPosY: Double
     get() {
@@ -187,7 +183,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * The [width] for this [ComponentView].
    *
    * @see actualWidth
-   * @see widthProperty
    */
   var width: Double
     get() = widthProperty.value
@@ -199,7 +194,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * The actual [width] for this [ComponentView] considering scale.
    *
    * @see width
-   * @see widthProperty
    */
   var actualWidth: Double
     get() = width * scaleX
@@ -217,7 +211,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * The [height] for this [ComponentView].
    *
    * @see actualHeight
-   * @see heightProperty
    */
   var height: Double
     get() = heightProperty.value
@@ -229,7 +222,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * The actual [height] for this [ComponentView] considering scale.
    *
    * @see height
-   * @see heightProperty
    */
   var actualHeight: Double
     get() = height * scaleY
@@ -244,8 +236,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Horizontal scale of this [ComponentView].
-   *
-   * @see scaleXProperty
    */
   var scaleX: Double
     get() = scaleXProperty.value
@@ -262,8 +252,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Vertical scale of this [ComponentView].
-   *
-   * @see scaleYProperty
    */
   var scaleY: Double
     get() = scaleYProperty.value
@@ -326,8 +314,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Values not in [0,360) get mapped to values in [0,360) by modulo operation with 360.
    *
    * example conversions: -10 -> 350 -370 -> 350 370 -> 10 730 -> 10
-   *
-   * @see rotationProperty
    */
   var rotation: Double
     get() = rotationProperty.value
@@ -344,8 +330,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Current [Visual].
-   *
-   * @see visualProperty
    */
   open var visual: Visual
     get() = visualProperty.value
@@ -377,8 +361,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * 0.0 corresponds to 0% opacity, where 1.0 corresponds to 100% opacity.
    *
    * Note that invisible objects (opacity == 0.0) still remain interactive.
-   *
-   * @see opacityProperty
    */
   var opacity: Double
     get() = opacityProperty.value
@@ -393,9 +375,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * Invisible [ComponentView]s are disabled. An object marked as visible may still be opaque due to
    * opacity.
-   *
-   * @see isDisabledProperty
-   * @see opacityProperty
    */
   internal val isVisibleProperty: BooleanProperty = BooleanProperty(true)
 
@@ -405,9 +384,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Invisible [ComponentView]s are disabled. An object marked as visible may still be opaque due to
    * opacity.
    *
-   * @see isDisabledProperty
-   * @see opacityProperty
-   * @see isVisibleProperty
+   * @see isDisabled
+   * @see opacity
    */
   var isVisible: Boolean
     get() = isVisibleProperty.value
@@ -455,8 +433,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @see onMousePressed
    * @see onMouseReleased
    * @see onMouseClicked
-   *
-   * @see isDisabledProperty
    */
   var isDisabled: Boolean
     get() = isDisabledProperty.value
@@ -473,8 +449,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Controls whether this [ComponentView] is focusable or not.
-   *
-   * @see isFocusableProperty
    */
   var isFocusable: Boolean
     get() = isFocusableProperty.value
@@ -486,7 +460,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Gets invoked with a [MouseEvent] whenever the mouse enters this [ComponentView].
    *
    * @see Event
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onMouseEntered: ((MouseEvent) -> Unit)? = null
 
@@ -494,7 +468,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Gets invoked with a [MouseEvent] whenever the mouse leaves this [ComponentView].
    *
    * @see Event
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onMouseExited: ((MouseEvent) -> Unit)? = null
 
@@ -502,7 +476,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Gets invoked with a [MouseEvent] whenever the mouse is pressed inside this [ComponentView].
    *
    * @see MouseEvent
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onMousePressed: ((MouseEvent) -> Unit)? = null
 
@@ -510,7 +484,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Gets invoked with a [MouseEvent] whenever the mouse is released inside this [ComponentView].
    *
    * @see MouseEvent
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onMouseReleased: ((MouseEvent) -> Unit)? = null
 
@@ -521,7 +495,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @see MouseEvent
    * @see onMousePressed
    * @see onMouseReleased
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onMouseClicked: ((MouseEvent) -> Unit)? = null
 
@@ -530,7 +504,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * this [ComponentView].
    *
    * @see ScrollEvent
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onScroll: ((ScrollEvent) -> Unit)? = null
 
@@ -538,8 +512,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Gets invoked with a [KeyEvent] whenever a key is pressed while this [ComponentView] has focus.
    *
    * @see KeyEvent
-   * @see isDisabledProperty
-   * @see isFocusableProperty
+   * @see isDisabled
+   * @see isFocusable
    */
   var onKeyPressed: ((KeyEvent) -> Unit)? = null
 
@@ -547,8 +521,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Gets invoked with a [KeyEvent] whenever a key is released while this [ComponentView] has focus.
    *
    * @see KeyEvent
-   * @see isDisabledProperty
-   * @see isFocusableProperty
+   * @see isDisabled
+   * @see isFocusable
    */
   var onKeyReleased: ((KeyEvent) -> Unit)? = null
 
@@ -558,8 +532,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @see KeyEvent
    * @see onKeyPressed
-   * @see isDisabledProperty
-   * @see isFocusableProperty
+   * @see isDisabled
+   * @see isFocusable
    */
   @Deprecated(
       "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
@@ -582,7 +556,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @see onDragDropped
    * @see DropEvent
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var dropAcceptor: ((DragEvent) -> Boolean)? = null
 
@@ -608,7 +582,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @see dropAcceptor
    * @see DropEvent
-   * @see isDisabledProperty
+   * @see isDisabled
    */
   var onDragDropped: ((DragEvent) -> Unit)? = null
 

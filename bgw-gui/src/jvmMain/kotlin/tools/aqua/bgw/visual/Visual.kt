@@ -28,7 +28,7 @@ import tools.aqua.bgw.style.*
  *
  * @constructor Creates a [Visual].
  */
-abstract class Visual : Observable() {
+abstract class Visual {
   internal val id = IDGenerator.generateVisualID()
 
   /** Copies this [Visual] to a new object. */

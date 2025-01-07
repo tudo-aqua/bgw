@@ -85,8 +85,6 @@ open class LinearLayout<T : GameComponentView>(
 
   /**
    * Spacing for this [LinearLayout].
-   *
-   * @see spacingProperty
    */
   var spacing: Double
     get() = spacingProperty.value
@@ -106,7 +104,6 @@ open class LinearLayout<T : GameComponentView>(
    * [Orientation] of [GameComponentView]s in this [LinearLayout].
    *
    * @see Orientation
-   * @see orientationProperty
    */
   var orientation: Orientation
     get() = orientationProperty.value
@@ -126,7 +123,6 @@ open class LinearLayout<T : GameComponentView>(
    * [Alignment] for this [LinearLayout].
    *
    * @see Alignment
-   * @see alignmentProperty
    */
   var alignment: Alignment
     get() = alignmentProperty.value

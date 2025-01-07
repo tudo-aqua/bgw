@@ -71,8 +71,6 @@ open class CardStack<T : CardView>(
 
   /**
    * [Alignment] of [CardView]s in this [CardStack].
-   *
-   * @see alignmentProperty
    */
   var alignment: Alignment
     get() = alignmentProperty.value

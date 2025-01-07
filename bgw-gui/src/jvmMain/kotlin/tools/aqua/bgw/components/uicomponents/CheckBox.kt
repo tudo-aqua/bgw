@@ -78,8 +78,6 @@ open class CheckBox(
 
   /**
    * The checked state.
-   *
-   * @see isCheckedProperty
    */
   var isChecked: Boolean
     get() = isCheckedProperty.value
@@ -96,8 +94,6 @@ open class CheckBox(
 
   /**
    * [Boolean] whether this component allows an indeterminate state.
-   *
-   * @see isIndeterminateAllowedProperty
    */
   var isIndeterminateAllowed: Boolean
     get() = isIndeterminateAllowedProperty.value
@@ -114,8 +110,6 @@ open class CheckBox(
 
   /**
    * [Boolean] whether this component in the indeterminate state.
-   *
-   * @see isIndeterminateProperty
    */
   var isIndeterminate: Boolean
     get() = isIndeterminateProperty.value

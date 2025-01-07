@@ -41,6 +41,9 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Background [Visual].
  *
  * @see ToggleGroup
+ * @see RadioButton
+ *
+ * @since 0.5
  */
 sealed class BinaryStateButton(
     posX: Number,
@@ -86,8 +89,6 @@ sealed class BinaryStateButton(
 
   /**
    * Selected state for this [ToggleButton].
-   *
-   * @see selectedProperty
    */
   var isSelected: Boolean
     get() = selectedProperty.value
@@ -112,6 +113,8 @@ sealed class BinaryStateButton(
    * Gets called when this [BinaryStateButton] is selected.
    *
    * @see onDeselected
+   *
+   * @since 1.0
    */
   var onSelected: (() -> Unit)? = null
 
@@ -119,6 +122,8 @@ sealed class BinaryStateButton(
    * Gets called when this [BinaryStateButton] is deselected.
    *
    * @see onSelected
+   *
+   * @since 1.0
    */
   var onDeselected: (() -> Unit)? = null
 }

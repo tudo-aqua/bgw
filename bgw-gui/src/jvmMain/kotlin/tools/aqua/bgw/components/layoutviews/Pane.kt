@@ -37,6 +37,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [Pane].
  * @param height Height for this [Pane].
  * @param visual Visual for this [Pane]. Default: [Visual.EMPTY].
+ *
+ * @since 0.1
  */
 open class Pane<T : ComponentView>(
     posX: Number = 0,
@@ -54,12 +56,22 @@ open class Pane<T : ComponentView>(
   /**
    * [onAdd] gets invoked anytime after a [ComponentView] is added to this [Pane] with the added
    * [ComponentView] as its receiver.
+   *
+   * @see T
+   * @see onRemove
+   *
+   * @since 0.3
    */
   var onAdd: (T.() -> Unit)? = null
 
   /**
    * [onRemove] gets invoked anytime after a [ComponentView] is removed from this [Pane] with the
    * removed [ComponentView] as its receiver.
+   *
+   * @see T
+   * @see onAdd
+   *
+   * @since 0.3
    */
   var onRemove: (T.() -> Unit)? = null
 
@@ -174,6 +186,8 @@ open class Pane<T : ComponentView>(
    * Removes all [ComponentView]s from this [Pane].
    *
    * @return List of all removed components.
+   *
+   * @since 0.3
    */
   @Synchronized
   fun clear(): List<T> {
@@ -249,6 +263,8 @@ open class Pane<T : ComponentView>(
    * @param child Child to find.
    *
    * @return Coordinate of given child in this container relative to containers anchor point.
+   *
+   * @since 0.3
    */
   override fun getActualChildPosition(child: ComponentView): Coordinate =
       Coordinate(child.actualPosX, child.actualPosY)
@@ -275,6 +291,8 @@ open class Pane<T : ComponentView>(
    * Puts the [component] to the front inside the [LayeredContainer].
    *
    * @param component Child that is moved to the front.
+   *
+   * @since 0.8
    */
   override fun toFront(component: T) {
     component.zIndexProperty.value = observableComponents.last().zIndex
@@ -288,6 +306,8 @@ open class Pane<T : ComponentView>(
    * Puts the [component] to the back inside the [LayeredContainer].
    *
    * @param component Child that is moved to the back.
+   *
+   * @since 0.8
    */
   override fun toBack(component: T) {
     component.zIndexProperty.value = observableComponents.first().zIndex
