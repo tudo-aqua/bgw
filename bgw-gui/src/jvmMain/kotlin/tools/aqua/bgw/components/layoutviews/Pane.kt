@@ -73,7 +73,7 @@ open class Pane<T : ComponentView>(
      *
      * @param listener The [ValueObserver] to add.
      */
-    fun addComponentsListener(listener: ValueObserver<List<T>>) {
+    internal fun addComponentsListener(listener: ValueObserver<List<T>>) {
         observableComponents.addListener(listener)
     }
 
@@ -82,12 +82,12 @@ open class Pane<T : ComponentView>(
      *
      * @param listener The [ValueObserver] to remove.
      */
-    fun removeComponentsListener(listener: ValueObserver<List<T>>) {
+    internal fun removeComponentsListener(listener: ValueObserver<List<T>>) {
         observableComponents.removeListener(listener)
     }
 
     /** Removes all listeners from the [observableComponents] list. */
-    fun clearComponentsListener() {
+    internal fun clearComponentsListener() {
         observableComponents.clearListeners()
     }
 

@@ -99,6 +99,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
      * [ComponentView].
      */
     var isLayoutFromCenter: Boolean = false
+        internal set
 
     /** Name field only for debugging purposes. Has no effect on rendering. */
     val name: String = this::class.simpleName + "@" + this.hashCode().toHexString()

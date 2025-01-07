@@ -125,21 +125,25 @@ open class CheckBox(
 
     init {
         isCheckedProperty.internalListener = { _, new ->
-            onChanged?.invoke(new, isIndeterminateProperty.value)
+            onCheckedChanged?.invoke(new)
         }
 
         isIndeterminateProperty.internalListener = { _, new ->
-            onChanged?.invoke(isCheckedProperty.value, new)
+            onIndeterminateChanged?.invoke(new)
         }
     }
 
-
+    /**
+     * Gets invoked whenever this [CheckBox] gets checked or unchecked.
+     *
+     * @see isChecked
+     */
+    var onCheckedChanged: ((Boolean) -> Unit)? = null
 
     /**
-     * Gets invoked whenever this [CheckBox] gets checked, unchecked or set to indeterminate.
+     * Gets invoked whenever this [CheckBox] gets set to indeterminate or not.
      *
-     * @param checked true if checked, false otherwise
-     * @param indeterminate true if indeterminate, false otherwise
+     * @see isIndeterminate
      */
-    var onChanged: ((checked : Boolean, indeterminate : Boolean) -> Unit)? = null
+    var onIndeterminateChanged: ((Boolean) -> Unit)? = null
 }

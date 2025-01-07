@@ -65,7 +65,7 @@ internal val CheckBox = FC<CheckBoxProps> { props ->
 
             useEffect(listOf(props.data.isChecked, props.data.isIndeterminate, props.data.allowIndeterminate)) {
                 document.getElementById(props.data.id + "--checkbox")?.let {
-                    (it as HTMLInputElement).indeterminate = if(!props.data.isChecked && props.data.allowIndeterminate) props.data.isIndeterminate else false
+                    (it as HTMLInputElement).indeterminate = if(!props.data.isChecked) props.data.isIndeterminate else false
                 }
             }
 

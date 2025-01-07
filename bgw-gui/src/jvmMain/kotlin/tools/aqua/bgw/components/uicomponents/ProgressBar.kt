@@ -101,4 +101,17 @@ open class ProgressBar(
     set(value) {
       barColorProperty.value = value
     }
+
+    init {
+        progressProperty.internalListener = { _, newValue ->
+            onProgressed?.invoke(newValue)
+        }
+    }
+
+    /**
+     * Gets invoked whenever this [ProgressBar]'s progress changes.
+     *
+     * @see progress
+     */
+    var onProgressed: ((Number) -> Unit)? = null
 }

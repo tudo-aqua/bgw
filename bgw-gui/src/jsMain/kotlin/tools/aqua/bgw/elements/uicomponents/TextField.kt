@@ -52,6 +52,8 @@ internal val TextField = FC<TextFieldProps> { props ->
         input {
             placeholder = props.data.prompt
             defaultValue = props.data.text
+            value = props.data.text
+            spellCheck = false
             css {
                 inputBuilder(props.data)
                 fontBuilder(props.data)

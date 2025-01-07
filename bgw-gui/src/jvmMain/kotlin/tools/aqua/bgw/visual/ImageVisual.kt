@@ -39,7 +39,7 @@ import kotlin.math.min
  *
  * @constructor Loads an [ImageVisual] from a path in resources.
  *
- * @param path Location of image file relative to /resources. Default: "".
+ * @param path Location of image file relative to /resources.
  * @property width Width of sub-image. Pass -1 to use full width. Default: -1.
  * @property height Height of sub-image. Pass -1 to use full height. Default: -1.
  * @property offsetX Left bound of sub-image. Default: 0.

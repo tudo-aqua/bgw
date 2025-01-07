@@ -52,6 +52,8 @@ internal val TextArea = FC<TextAreaProps> { props ->
         textarea {
             placeholder = props.data.prompt
             defaultValue = props.data.text
+            value = props.data.text
+            spellCheck = false
             css {
                 fontBuilder(props.data)
                 inputBuilder(props.data)
@@ -66,7 +68,6 @@ internal val TextArea = FC<TextAreaProps> { props ->
             }
             onChange = {
                 val value = it.target.value
-                //println("Text changed $value")
                 JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = props.data.id })
             }
         }

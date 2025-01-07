@@ -49,41 +49,56 @@ sealed class TextInputUIComponent(
     visual: Visual = ColorVisual(Color(240, 240, 240))
 ) :
     UIComponent(
-        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
+        posX = posX, posY = posY, width = width, height = height, font = font, visual = visual
+    ) {
 
-  /**
-   * [Property] for the text of this [TextInputUIComponent].
-   *
-   * @see text
-   */
-  internal val textProperty: StringProperty = StringProperty(text)
+    /**
+     * [Property] for the text of this [TextInputUIComponent].
+     *
+     * @see text
+     */
+    internal val textProperty: StringProperty = StringProperty(text)
 
-  /**
-   * Text of this [TextInputUIComponent].
-   *
-   * @see textProperty
-   */
-  var text: String
-    get() = textProperty.value
-    set(value) {
-      textProperty.value = value
+    /**
+     * Text of this [TextInputUIComponent].
+     *
+     * @see textProperty
+     */
+    var text: String
+        get() = textProperty.value
+        set(value) {
+            textProperty.value = value
+        }
+
+    /**
+     * [Property] for the prompt of this [TextInputUIComponent].
+     *
+     * @see prompt
+     */
+    internal val promptProperty: StringProperty = StringProperty(prompt)
+
+    /**
+     * Prompt of this [TextInputUIComponent].
+     *
+     * @see promptProperty
+     */
+    var prompt: String
+        get() = promptProperty.value
+        set(value) {
+            promptProperty.value = value
+        }
+
+    init {
+        textProperty.internalListener = { _, newText ->
+            onTextChanged?.invoke(newText)
+        }
     }
 
-  /**
-   * [Property] for the prompt of this [TextInputUIComponent].
-   *
-   * @see prompt
-   */
-  internal val promptProperty: StringProperty = StringProperty(prompt)
 
-  /**
-   * Prompt of this [TextInputUIComponent].
-   *
-   * @see promptProperty
-   */
-  var prompt: String
-    get() = promptProperty.value
-    set(value) {
-      promptProperty.value = value
-    }
+    /**
+     * Gets invoked whenever the [text] of this component changes.
+     *
+     * @see text
+     */
+    var onTextChanged: ((String) -> Unit)? = null
 }

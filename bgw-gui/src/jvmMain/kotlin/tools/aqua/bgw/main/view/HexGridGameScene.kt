@@ -1,22 +1,17 @@
 package tools.aqua.bgw.main.view
 
-import VisualMapper
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.container.Satchel
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
-import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.*
-import tools.aqua.bgw.event.KeyCode
-import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.*
-import kotlin.random.Random
 
 internal class HexGridGameScene : BoardGameScene() {
     private val hexGrid = HexagonGrid<HexagonView>(
@@ -100,7 +95,7 @@ internal class HexGridGameScene : BoardGameScene() {
     ).apply {
         interactive = true
 
-        onZoom = {
+        onZoomed = {
             println("Zoomed to $it")
         }
     }

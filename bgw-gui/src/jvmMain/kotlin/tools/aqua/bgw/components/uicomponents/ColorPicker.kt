@@ -50,22 +50,36 @@ open class ColorPicker(
         width = width,
         height = height,
         font = Font(),
-        visual = Visual.EMPTY) {
-  /**
-   * [Property] for the currently selected [Color].
-   *
-   * @see selectedColor
-   */
-  internal val selectedColorProperty: Property<Color> = Property(initialColor)
+        visual = Visual.EMPTY
+    ) {
+    /**
+     * [Property] for the currently selected [Color].
+     *
+     * @see selectedColor
+     */
+    internal val selectedColorProperty: Property<Color> = Property(initialColor)
 
-  /**
-   * The currently selected [Color].
-   *
-   * @see selectedColorProperty
-   */
-  var selectedColor: Color
-    get() = selectedColorProperty.value
-    set(value) {
-      selectedColorProperty.value = value
+    /**
+     * The currently selected [Color].
+     *
+     * @see selectedColorProperty
+     */
+    var selectedColor: Color
+        get() = selectedColorProperty.value
+        set(value) {
+            selectedColorProperty.value = value
+        }
+
+    init {
+        selectedColorProperty.internalListener = { _, newColor ->
+            onColorSelected?.invoke(newColor)
+        }
     }
+
+    /**
+     * Gets invoked whenever the selected [Color] changes.
+     *
+     * @see selectedColor
+     */
+    var onColorSelected: ((Color) -> Unit)? = null
 }

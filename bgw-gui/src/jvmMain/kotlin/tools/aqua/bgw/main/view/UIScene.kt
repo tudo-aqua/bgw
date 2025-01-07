@@ -2,12 +2,10 @@ package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.Alignment
-import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.ImageVisual
 import kotlin.random.Random
 
 internal class UIScene : MenuScene() {
@@ -41,8 +39,9 @@ internal class UIScene : MenuScene() {
         toggleGroup = toggleGroup,
         alignment = Alignment.CENTER,
     ).apply {
-        onSelected = { println("Selected 1") }
-        onDeselected = { println("Deselected 1") }
+        onMouseClicked = {
+            textfield.text = "Toggled"
+        }
     }
 
     private val toggle2 = ToggleButton(
@@ -73,10 +72,13 @@ internal class UIScene : MenuScene() {
         text = "Check",
         font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
         visual = ColorVisual(Color.RED),
-        allowIndeterminate = true
     ).apply {
-        onChanged = { checked, indeterminate ->
-            println("Checked: $checked, Indeterminate: $indeterminate")
+        onCheckedChanged = { checked ->
+            println("Checked: $checked")
+        }
+
+        onIndeterminateChanged = { indeterminate ->
+            println("Indeterminate: $indeterminate")
         }
     }
 
@@ -90,6 +92,9 @@ internal class UIScene : MenuScene() {
     ).apply {
         onMouseClicked = { this.progress = Random.nextDouble(0.0,1.0) }
         scaleY = 2.0
+        onProgressed = { newValue ->
+            println("Progressed to $newValue")
+        }
     }
 
     private val textfield = TextField(
@@ -102,6 +107,10 @@ internal class UIScene : MenuScene() {
         prompt = "Enter text here",
     ).apply {
         visual = ColorVisual(Color.RED)
+
+        onTextChanged = { text ->
+            println(text)
+        }
     }
 
     private val passwordfield = PasswordField(
@@ -114,6 +123,10 @@ internal class UIScene : MenuScene() {
         prompt = "Enter password here",
     ).apply {
         visual = ColorVisual(Color.LIGHT_GRAY)
+
+        onTextChanged = { text ->
+            println(text)
+        }
     }
 
     private val textarea = TextArea(
@@ -126,6 +139,10 @@ internal class UIScene : MenuScene() {
         prompt = "Enter text here",
     ).apply {
         visual = ColorVisual(Color.BLUE)
+
+        onTextChanged = { text ->
+            println(text)
+        }
     }
 
     private val color = ColorPicker(
@@ -136,14 +153,14 @@ internal class UIScene : MenuScene() {
         initialColor = Color(255, 0, 0),
     ).apply {
         visual = ColorVisual(Color.LIGHT_GRAY)
+
+        onColorSelected = { color ->
+            println("Selected color: ${color.toHex()}")
+        }
     }
 
     init {
         addComponents(combo, progress, textfield, passwordfield, textarea, color, toggle, toggle2, checkBox)
-
-        color.selectedColorProperty.addListener { _, newValue ->
-            progress.barColor = newValue
-        }
 
 
         combo.select(2)

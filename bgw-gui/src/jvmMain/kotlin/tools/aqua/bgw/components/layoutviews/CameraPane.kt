@@ -132,7 +132,7 @@ open class CameraPane<T : LayoutView<*>>(
      *
      * @see zoom
      */
-    var onZoom: ((Number) -> Unit)? = null
+    var onZoomed: ((Number) -> Unit)? = null
 
 
 

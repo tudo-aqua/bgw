@@ -55,6 +55,8 @@ internal val PasswordField = FC<PasswordFieldProps> { props ->
             placeholder = props.data.prompt
             type = InputType.password
             defaultValue = props.data.text
+            value = props.data.text
+            spellCheck = false
             css {
                 fontBuilder(props.data)
                 inputBuilder(props.data)
@@ -68,7 +70,6 @@ internal val PasswordField = FC<PasswordFieldProps> { props ->
             }
             onChange = {
                 val value = it.target.value
-                //println("Text changed $value")
                 JCEFEventDispatcher.dispatchEvent(TextInputChangedEventData(value).apply { id = props.data.id })
             }
         }

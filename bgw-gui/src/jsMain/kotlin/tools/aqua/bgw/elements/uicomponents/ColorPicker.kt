@@ -16,6 +16,9 @@ import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDroppable
 import web.dom.Element
 import web.html.InputType
+import web.timers.Timeout
+import web.timers.clearTimeout
+import web.timers.setTimeout
 
 internal external interface ColorPickerProps : Props {
     var data: ColorPickerData
@@ -72,10 +75,14 @@ internal val ColorPicker = FC<ColorPickerProps> { props ->
                 backgroundColor = rgb(0, 0, 0, 0.0)
             }
 
+            var debounceTimeout: Timeout? = null
+
             onChange = {
                 val value = it.target.value
-                //println("Text changed $value")
-                JCEFEventDispatcher.dispatchEvent(ColorInputChangedEventData(value).apply { id = props.data.id })
+                debounceTimeout?.let { clearTimeout(it) }
+                debounceTimeout = setTimeout({
+                    JCEFEventDispatcher.dispatchEvent(ColorInputChangedEventData(value).apply { id = props.data.id })
+                }, 200)
             }
         }
 
