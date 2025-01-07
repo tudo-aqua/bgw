@@ -25,7 +25,7 @@ import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.visual.Visual
 
 /**
- * A [DiceView] may be used to visualize a dice.
+ * A [DiceView] may be used to visualize a die.
  *
  * Visualization:
  *
@@ -38,6 +38,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [DiceView]. Default: [DEFAULT_DICE_WIDTH].
  * @param height Height for this [DiceView]. Default: [DEFAULT_DICE_HEIGHT].
  * @param visuals List of visuals to represent the sides of the die.
+ *
+ * @since 0.1
  */
 open class DiceView(
     posX: Number = 0,

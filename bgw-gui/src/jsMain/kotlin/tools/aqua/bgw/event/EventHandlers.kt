@@ -29,10 +29,10 @@ import tools.aqua.bgw.builder.ReactConverters.toMouseReleasedEventData
 import web.dom.Element
 
 internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentViewData) {
-  onContextMenu = {
+  /*onContextMenu = {
     it.preventDefault()
     JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
-  }
+  }*/
   onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id)) }
   onMouseDown = { JCEFEventDispatcher.dispatchEvent(it.toMousePressedEventData(props.id)) }
   onMouseUp = { JCEFEventDispatcher.dispatchEvent(it.toMouseReleasedEventData(props.id)) }

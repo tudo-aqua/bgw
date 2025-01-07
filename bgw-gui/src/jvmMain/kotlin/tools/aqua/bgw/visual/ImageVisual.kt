@@ -42,8 +42,8 @@ import tools.aqua.bgw.observable.properties.StringProperty
  * @property offsetX Left bound of sub-image. Default: 0.
  * @property offsetY Top bound of sub-image. Default: 0.
  *
- * @throws IllegalArgumentException If [path] is not a valid path or empty.
- * @exception IllegalArgumentException If [path] was not found in resources.
+ * @throws IllegalArgumentException If [path] is not a valid path or empty or if [path] was not
+ * found in resources.
  *
  * @since 1.0
  */

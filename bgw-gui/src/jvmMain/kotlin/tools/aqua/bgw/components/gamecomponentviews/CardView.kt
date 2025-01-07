@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.gamecomponentviews
 
+import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide
 import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide.BACK
 import tools.aqua.bgw.components.gamecomponentviews.CardView.CardSide.FRONT
 import tools.aqua.bgw.core.DEFAULT_CARD_HEIGHT
@@ -44,6 +45,10 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
  * @param front Visual to represent the front side of the card.
  * @param back Visual to represent the back side of the card. Default: same [Visual] as front.
+ *
+ * @see CardSide
+ *
+ * @since 0.1
  */
 open class CardView(
     posX: Number = 0,
@@ -60,6 +65,7 @@ open class CardView(
    *
    * @see showFront
    * @see showBack
+   * @see flip
    */
   var currentSide: CardSide = FRONT
     set(value) {
@@ -70,7 +76,7 @@ open class CardView(
       }
     }
 
-  /** Front [Visual] for this [CardView]. */
+  /** Front [Visual] for this [CardView] to be displayed for [CardSide.FRONT]. */
   var frontVisual: Visual = Visual.EMPTY
     /** Sets front [Visual] for this [CardView] as a copy of given [value]. */
     set(value) {
@@ -79,7 +85,7 @@ open class CardView(
       if (currentSide == FRONT) super.visual = field
     }
 
-  /** Back [Visual] for this [CardView]. */
+  /** Back [Visual] for this [CardView] to be displayed for [CardSide.BACK]. */
   var backVisual: Visual = Visual.EMPTY
     /** Sets back [Visual] for this [CardView] as a copy of given [value]. */
     set(value) {
@@ -117,7 +123,11 @@ open class CardView(
     currentSide = side
   }
 
-  /** Flips the [CardView] by seting the [currentSide] to the other value. */
+  /**
+   * Flips the [CardView] by seting the [currentSide] to the other value.
+   *
+   * @since 0.7.1
+   */
   fun flip() {
     currentSide = if (currentSide == BACK) FRONT else BACK
   }

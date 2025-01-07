@@ -34,6 +34,11 @@ import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.Frontend
+import java.io.ByteArrayOutputStream
+import java.util.Base64
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
+import kotlin.text.Charsets.UTF_8
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -107,6 +112,17 @@ internal fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: (sus
         action()
       }
     }
+
+
+
+internal fun gzip(content: String): String {
+    val bos = ByteArrayOutputStream()
+    GZIPOutputStream(bos).bufferedWriter(UTF_8).use { it.write(content) }
+    return Base64.getEncoder().encodeToString(bos.toByteArray())
+}
+
+internal fun ungzip(content: ByteArray): String =
+    GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
 internal var uiJob =
     CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {

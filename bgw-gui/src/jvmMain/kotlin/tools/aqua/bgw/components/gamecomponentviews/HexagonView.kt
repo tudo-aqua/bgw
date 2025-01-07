@@ -32,12 +32,25 @@ import tools.aqua.bgw.visual.Visual
  * Default: [DEFAULT_HEXAGON_SIZE].
  * @param visual Visual for this [HexagonView].
  * @param orientation Orientation of the [HexagonView]. Default: [HexOrientation.POINTY_TOP].
+ *
+ * @see HexOrientation
+ * @see HexagonView
+ *
+ * @since 0.8
  */
 open class HexagonView(
     posX: Number = 0,
     posY: Number = 0,
     val size: Number = DEFAULT_HEXAGON_SIZE,
     visual: Visual,
+
+    /**
+     * Orientation of the [HexagonView].
+     *
+     * @see HexOrientation
+     *
+     * @since 1.0
+     */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentView(

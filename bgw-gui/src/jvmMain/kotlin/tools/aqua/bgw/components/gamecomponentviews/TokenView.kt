@@ -37,6 +37,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this TokenView. Default: [DEFAULT_TOKEN_WIDTH].
  * @param height Height for this TokenView. Default: [DEFAULT_TOKEN_HEIGHT].
  * @param visual Visual for this TokenView.
+ *
+ * @since 0.1
  */
 open class TokenView(
     posX: Number = 0,

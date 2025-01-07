@@ -217,12 +217,15 @@ publishing {
   }
 }
 
-spotless {
-    kotlin {
-        target("src/*/kotlin/**/*.kt")
-        defaultFormat(rootProject)
-    }
-}
+//spotless {
+//    kotlin {
+//        target(rootProject.fileTree("bgw-gui/src") {
+//            include("**/*.kt")
+//            exclude("**/Config.kt")
+//        })
+//        defaultFormat(rootProject)
+//    }
+//}
 
 // Ignore yarn.lock mismatches
 rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin::class.java) {

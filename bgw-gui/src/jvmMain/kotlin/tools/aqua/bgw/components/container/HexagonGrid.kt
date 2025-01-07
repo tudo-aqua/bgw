@@ -40,6 +40,10 @@ private typealias AxialCoordinate = Pair<Int, Int>
  * @param orientation The orientation of the hexagons in the grid. Default is
  * [HexOrientation.POINTY_TOP].
  *
+ * @see CoordinateSystem
+ * @see HexOrientation
+ * @see HexagonView
+ *
  * @since 0.8
  */
 class HexagonGrid<T : HexagonView>(
