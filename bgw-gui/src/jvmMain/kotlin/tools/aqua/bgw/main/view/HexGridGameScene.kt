@@ -61,7 +61,9 @@ internal class HexGridGameScene : BoardGameScene() {
           }
 
   private val singleHex =
-      HexagonView(posX = 1100, posY = 0, visual = ColorVisual.BLUE, size = 50).apply {
+      HexagonView(posX = 1100, posY = 0, visual = ColorVisual.BLUE.copy().apply {
+          style.borderRadius = BorderRadius(4)
+      }, size = 50).apply {
         isDraggable = true
       }
 

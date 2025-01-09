@@ -15,29 +15,11 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.main.view
+package tools.aqua.bgw.main.examples
 
 import tools.aqua.bgw.core.AspectRatio
 import tools.aqua.bgw.core.BoardGameApplication
 
-internal object Application : BoardGameApplication(aspectRatio = AspectRatio.of(1080, 700)) {
-  private val grid = GridGameScene()
-  private val hexGrid = HexGridGameScene()
-  private val animation = AnimationScene()
-  val menuScene = MyMenuScene()
-  val uiScene = UIScene()
-  private val dragDropScene = DragDropScene()
-  private val visualScene = VisualScene()
-  val cardLayoutScene = CardLayoutScene()
-
-  init {
-    loadFont("Rubik.ttf")
-    // showGameScene(cardLayoutScene)
-    showGameScene(hexGrid)
-    // showGameScene(animation)
-    // showGameScene(grid)
-    // showGameScene(dragDropScene)
-    // showMenuScene(uiScene)
-    // showGameScene(visualScene)
-  }
+internal object ExampleApplication : BoardGameApplication() {
+  val exampleUIScene = ExampleUIScene()
 }

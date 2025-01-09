@@ -159,7 +159,7 @@ open class CameraPane<T : LayoutView<*>>(
    * @param x The x-coordinate to scroll to.
    * @param y The y-coordinate to scroll to.
    * @param zoom The zoom level to zoom to.
-   * @param smooth Whether the pan should be smooth or instant.
+   * @param smooth Whether the pan should be smooth (or instant). Default is true.
    *
    * @see limitBounds
    * @see pan
@@ -183,7 +183,7 @@ open class CameraPane<T : LayoutView<*>>(
    *
    * @param x The x-coordinate to scroll to.
    * @param y The y-coordinate to scroll to.
-   * @param smooth Whether the pan should be smooth or instant.
+   * @param smooth Whether the pan should be smooth (or instant). Default is true.
    *
    * @see limitBounds
    * @see pan
@@ -207,7 +207,7 @@ open class CameraPane<T : LayoutView<*>>(
    * @param xOffset The amount to pan the view horizontally.
    * @param yOffset The amount to pan the view vertically.
    * @param zoom The zoom level to zoom to.
-   * @param smooth Whether the pan should be smooth or instant.
+   * @param smooth Whether the pan should be smooth (or instant). Default is true.
    *
    * @see limitBounds
    * @see pan
@@ -230,7 +230,7 @@ open class CameraPane<T : LayoutView<*>>(
    *
    * @param xOffset The amount to pan the view horizontally.
    * @param yOffset The amount to pan the view vertically.
-   * @param smooth Whether the pan should be smooth or instant.
+   * @param smooth Whether the pan should be smooth (or instant). Default is true.
    *
    * @see limitBounds
    * @see pan

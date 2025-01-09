@@ -2,5 +2,6 @@ package tools.aqua.bgw.application
 
 internal object Config {
     val USE_SOCKETS = true
-    val BGW_VERSION = "0.9-new_backend-73-4fa904c-SNAPSHOT"
+    val GENERATE_SAMPLES = true
+    val BGW_VERSION = "0.9-new_backend-81-064a1ee-SNAPSHOT"
 }

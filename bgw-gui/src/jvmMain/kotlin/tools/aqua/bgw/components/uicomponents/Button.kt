@@ -40,6 +40,9 @@ import tools.aqua.bgw.visual.Visual
  * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
  * @param visual Visual for this button. Default: [ColorVisual.WHITE]
+ *
+ * @sample tools.aqua.bgw.main.examples.ExampleUIScene.button
+ * @sample tools.aqua.bgw.main.examples.ExampleUIScene.button2
  */
 open class Button(
     posX: Number = 0,

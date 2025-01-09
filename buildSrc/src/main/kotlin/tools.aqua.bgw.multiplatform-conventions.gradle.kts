@@ -33,6 +33,10 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tools.aqua.defaultFormat
+import java.net.URLClassLoader
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.KProperty
 
 plugins {
   kotlin("multiplatform")
@@ -44,6 +48,7 @@ plugins {
 }
 
 val useSockets: String? = project.findProperty("useSockets")?.toString()
+var generateSamples = project.findProperty("generateSamples")?.toString()?.toBoolean() ?: false
 val propertyFile = "Config.kt"
 val wrappersVersion = "-pre.831"
 
@@ -59,6 +64,9 @@ fun buildPropertyFile() {
         parentFile.mkdirs()
         writeText(generateProperties("application"))
     }
+
+    println("useSockets: $useSockets")
+    println("generateSamples: $generateSamples")
 }
 
 fun generateProperties(suffix: String = "") =
@@ -67,6 +75,7 @@ fun generateProperties(suffix: String = "") =
 
     internal object Config {
         val USE_SOCKETS = ${useSockets ?: "true"}
+        val GENERATE_SAMPLES = $generateSamples
         val BGW_VERSION = "${rootProject.version}"
     }
 """.trimIndent()
@@ -233,4 +242,34 @@ rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
         YarnLockMismatchReport.NONE
     rootProject.the<YarnRootExtension>().reportNewYarnLock = false
     rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
+}
+
+tasks.register<JavaExec>("runWithSamples") {
+    group = "application"
+    description = "Runs the application with generateSamples=true"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("tools.aqua.bgw.main.MainKt")
+    args = listOf("-PgenerateSamples=true")
+}
+
+tasks.register("setupGenerateSamples") {
+    doFirst {
+        generateSamples = true
+        buildPropertyFile()
+    }
+}
+
+tasks.named("dokkaHtmlPartial").configure {
+    shouldRunAfter("setupGenerateSamples")
+}
+
+tasks.register("generateDocsAndSamples") {
+    dependsOn("setupGenerateSamples", "dokkaHtmlPartial", "run")
+    doLast {
+        println("Successfully executed dokkaHtmlPartial and run.")
+    }
+}
+
+tasks.named("run").configure {
+    shouldRunAfter("dokkaHtmlPartial") // Ensure no overlap or conflicts.
 }

@@ -17,8 +17,23 @@
 
 package tools.aqua.bgw.main
 
+import PropData
+import jsonMapper
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import tools.aqua.bgw.application.Config
+import tools.aqua.bgw.core.Frontend
+import tools.aqua.bgw.main.examples.ExampleApplication
 import tools.aqua.bgw.main.view.Application
+import java.io.File
 
 internal fun main() {
-  Application.show()
+  if(!Config.USE_SOCKETS || Config.GENERATE_SAMPLES) {
+    ExampleApplication.showGameScene(ExampleApplication.exampleUIScene)
+    val jsonData = Json.encodeToString(ExampleApplication.exampleUIScene.map)
+    File("build/examples").mkdirs()
+    File("build/examples/bgwSamples.json").writeText(jsonData)
+  } else {
+    Application.show()
+  }
 }
