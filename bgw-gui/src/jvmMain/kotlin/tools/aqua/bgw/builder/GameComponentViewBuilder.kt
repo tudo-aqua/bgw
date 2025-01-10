@@ -38,7 +38,11 @@ internal object GameComponentViewBuilder {
     diceView.visuals.guiListener = { _, _ -> Frontend.updateComponent(diceView) }
   }
 
-  private fun buildHexagonView(hexagonView: HexagonView) {}
+  private fun buildHexagonView(hexagonView: HexagonView) {
+    hexagonView.sizeProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(hexagonView)
+    }
+  }
 
   private fun buildTokenView(tokenView: TokenView) {}
 }
