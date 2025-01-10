@@ -127,6 +127,21 @@ internal class AnimationScene : BoardGameScene() {
         )
     } */
 
+      label.onMouseClicked = {
+        this.playAnimation(
+            ScaleAnimation (
+                componentView = label,
+                fromScaleX = 0.5,
+                toScaleX = 2.0,
+                duration = 1000
+            ).apply {
+            onFinished = {
+                println("Finished")
+            }
+          }
+        )
+      }
+
     /* label.onMouseClicked = {
         (label.visual as ImageVisual).filters.blur = BlurFilter(4.0)
         (label.visual as ImageVisual).filters.saturation = SaturationFilter.GREYSCALE
@@ -156,7 +171,7 @@ internal class AnimationScene : BoardGameScene() {
         ) */
     } */
 
-    label.onMouseClicked = {
+    /* label.onMouseClicked = {
       this.playAnimation(
           RandomizeAnimation(
               gameComponentView = label,
@@ -172,7 +187,7 @@ internal class AnimationScene : BoardGameScene() {
               toVisual = ColorVisual.RED,
               duration = 2000,
               speed = 2))
-    }
+    } */
 
     dice.onMouseClicked = {
       /* showDialog(

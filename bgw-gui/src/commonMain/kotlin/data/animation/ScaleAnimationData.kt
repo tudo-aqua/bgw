@@ -21,6 +21,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal class ScaleAnimationData : ComponentAnimationData() {
-  var byScaleX = 0.0
-  var byScaleY = 0.0
+  var fromScaleX = 0.0
+  var fromScaleY = 0.0
+  var toScaleX = 0.0
+  var toScaleY = 0.0
 }
