@@ -17,9 +17,9 @@
 
 package tools.aqua.bgw.main.examples
 
-import tools.aqua.bgw.core.AspectRatio
 import tools.aqua.bgw.core.BoardGameApplication
 
 internal object ExampleApplication : BoardGameApplication() {
   val exampleUIScene = ExampleUIScene()
+  val exampleAnimationScene = ExampleAnimationScene()
 }

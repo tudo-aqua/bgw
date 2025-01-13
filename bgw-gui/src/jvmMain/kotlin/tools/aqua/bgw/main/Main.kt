@@ -28,7 +28,7 @@ import tools.aqua.bgw.main.view.Application
 import java.io.File
 
 internal fun main() {
-  if(!Config.USE_SOCKETS || Config.GENERATE_SAMPLES) {
+  if(Config.GENERATE_SAMPLES) {
     ExampleApplication.showGameScene(ExampleApplication.exampleUIScene)
     val jsonData = Json.encodeToString(ExampleApplication.exampleUIScene.map)
     File("build/examples").mkdirs()

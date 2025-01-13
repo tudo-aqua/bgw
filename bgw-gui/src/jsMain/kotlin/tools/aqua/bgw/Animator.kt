@@ -80,17 +80,21 @@ internal class Animator {
       this.animations.keys
           .filter { it.startsWith(componentId) }
           .forEach {
-            try {
-              document.body?.removeChild(this.animations[it]!!)
-              this.animations.remove(it)
-            } catch (_: Exception) {}
+              if(document.body != null && this.animations[it] != null && document.body?.contains(this.animations[it]!!) == true) {
+                  document.body?.removeChild(this.animations[it]!!)
+              }
+              if(this.animations[it] != null) {
+                  this.animations.remove(it)
+              }
           }
     } else {
       types.forEach {
-        try {
-          document.body?.removeChild(this.animations["$componentId--$it"]!!)
-          this.animations.remove("$componentId--$it")
-        } catch (_: Exception) {}
+          if(document.body != null && this.animations["$componentId--$it"] != null && document.body?.contains(this.animations["$componentId--$it"]!!) == true) {
+              document.body?.removeChild(this.animations["$componentId--$it"]!!)
+          }
+          if(this.animations["$componentId--$it"] != null) {
+              this.animations.remove("$componentId--$it")
+          }
       }
     }
   }

@@ -72,15 +72,18 @@ internal object AnimationMapper {
           (mapSpecific(animation) as FadeAnimationData).apply {
             fromOpacity = animation.fromOpacity
             toOpacity = animation.toOpacity
+            animationType = "fade"
           }
       is MovementAnimation<*> ->
           (mapSpecific(animation) as MovementAnimationData).apply {
             byX = (animation.toX - animation.fromX).toInt()
             byY = (animation.toY - animation.fromY).toInt()
+              animationType = "move"
           }
       is RotationAnimation<*> ->
           (mapSpecific(animation) as RotationAnimationData).apply {
             byAngle = animation.toAngle - animation.fromAngle
+            animationType = "rotate"
           }
       is ScaleAnimation<*> ->
           (mapSpecific(animation) as ScaleAnimationData).apply {
@@ -88,11 +91,13 @@ internal object AnimationMapper {
             fromScaleY = animation.fromScaleY
             toScaleX = animation.toScaleX
             toScaleY = animation.toScaleY
+            animationType = "scale"
           }
       is FlipAnimation<*> ->
           (mapSpecific(animation) as FlipAnimationData).apply {
             fromVisual = VisualMapper.map(animation.fromVisual)
             toVisual = VisualMapper.map(animation.toVisual)
+            animationType = "flip"
           }
       is SequentialAnimation ->
           (mapSpecific(animation) as SequentialAnimationData).apply {
@@ -107,11 +112,13 @@ internal object AnimationMapper {
             visuals = animation.visuals.map { VisualMapper.map(it) }
             toVisual = VisualMapper.map(animation.toVisual)
             speed = animation.speed
+              animationType = "random"
           }
       is DiceAnimation<*> ->
           (mapSpecific(animation) as DiceAnimationData).apply {
             toSide = animation.toSide
             speed = animation.speed
+              animationType = "dice"
           }
       is DelayAnimation ->
           (mapSpecific(animation) as DelayAnimationData).apply { duration = animation.duration }

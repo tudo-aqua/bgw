@@ -35,7 +35,7 @@ import tools.aqua.bgw.visual.ColorVisual
 import kotlin.reflect.KProperty0
 
 /** Metadata: [Scene] */
-internal class ExampleUIScene : BoardGameScene() {
+internal class ExampleUIScene : BoardGameScene(width = 622, height = 300) {
     val map = mutableMapOf<String, String>()
 
     val button = Button(

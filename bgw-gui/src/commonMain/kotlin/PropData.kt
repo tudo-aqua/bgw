@@ -71,6 +71,7 @@ internal abstract class AnimationData : Data() {
   var duration: Int = 0
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
+  var animationType : String = ""
 }
 
 @Serializable
