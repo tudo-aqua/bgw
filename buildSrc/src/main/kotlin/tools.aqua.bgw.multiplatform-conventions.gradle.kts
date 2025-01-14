@@ -34,6 +34,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tools.aqua.defaultFormat
 import java.net.URLClassLoader
+import java.nio.file.Files
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
@@ -187,17 +188,32 @@ tasks.named<Copy>("jvmProcessResources") {
   from(jsBrowserDistribution)
 }
 
+// region - Cleanup JCEF helper processes
+var globalTmpDir = ""
+
 tasks.named<JavaExec>("run") {
-  dependsOn(tasks.named<Jar>("jvmJar"))
-  classpath(tasks.named<Jar>("jvmJar"))
+    doFirst {
+        val tmpDir = Files.createTempDirectory("bgw-")
+        tmpDir.toFile().deleteOnExit()
+        globalTmpDir = tmpDir.toString()
+        jvmArgs = listOf("-DtmpDir=${tmpDir}")
+    }
+    dependsOn(tasks.named<Jar>("jvmJar"))
+    classpath(tasks.named<Jar>("jvmJar"))
 }
 
 gradle.buildFinished {
     try {
-        val applicationPIDs = file("build/application.pid").readText().split(",").map { it.toLong() }.toSet()
+        val applicationPIDs = file("$globalTmpDir/application.pid").readText().split(",").map { it.toLong() }.toSet()
         killJcefHelperProcesses(applicationPIDs)
-    } catch (e: Exception) {}
+        if(globalTmpDir.isNotEmpty()) { File(globalTmpDir).deleteRecursively() }
+    } catch (_: Exception) { }
 }
+
+fun killJcefHelperProcesses(pids: Set<Long>) {
+    pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
+}
+// endregion
 
 tasks.named("publish") {
     doFirst {
@@ -205,15 +221,6 @@ tasks.named("publish") {
         println("Published bgw-gui: ${rootProject.version}")
         println("=============================================================================")
     }
-}
-
-// Function to kill JCEF helper processes
-fun killJcefHelperProcesses(pids: Set<Long>) {
-  pids.forEach { pid ->
-      ProcessHandle.of(pid).ifPresent {
-          it.destroy()
-      }
-  }
 }
 
 publishing {

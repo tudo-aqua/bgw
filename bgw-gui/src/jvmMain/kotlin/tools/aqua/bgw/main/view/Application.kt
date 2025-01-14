@@ -17,8 +17,11 @@
 
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.AspectRatio
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.visual.ColorVisual
 
 internal object Application : BoardGameApplication(aspectRatio = AspectRatio.of(1080, 700)) {
   private val grid = GridGameScene()
@@ -37,7 +40,11 @@ internal object Application : BoardGameApplication(aspectRatio = AspectRatio.of(
     // showGameScene(animation)
     // showGameScene(grid)
     // showGameScene(dragDropScene)
-    // showMenuScene(uiScene)
+    showMenuScene(uiScene)
     // showGameScene(visualScene)
+  }
+
+  fun updateSome() {
+    hexGrid.background = ColorVisual(Color(255, 0, 0, 0.5))
   }
 }

@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import ID
 import data.event.*
+import react.dom.events.WheelEvent
 import react.dom.events.DragEvent as ReactDragEvent
 import react.dom.events.KeyboardEvent as ReactKeyEvent
 import react.dom.events.MouseEvent as ReactMouseEvent
@@ -27,6 +28,7 @@ import tools.aqua.bgw.DragMultiEvent
 import tools.aqua.bgw.DragStartEvent
 import tools.aqua.bgw.event.KeyCode
 import tools.aqua.bgw.event.MouseButtonType
+import tools.aqua.bgw.event.WheelDirection
 
 internal object ReactConverters {
   fun ReactMouseEvent<*, *>.toMouseEnteredData(targetID: ID?): MouseEnteredEventData {
@@ -135,5 +137,16 @@ internal object ReactConverters {
     }
 
     return DragGestureEnteredEventData("").apply { this.id = active?.id }
+  }
+
+  fun WheelEvent<*>.toScrollEventData(targetID: ID?): ScrollEventData {
+    return ScrollEventData(
+        direction = if (this.deltaY > 0) WheelDirection.DOWN else WheelDirection.UP,
+        shift = this.shiftKey,
+        alt = this.altKey,
+        ctrl = this.ctrlKey
+    ).apply {
+        this.id = targetID
+    }
   }
 }

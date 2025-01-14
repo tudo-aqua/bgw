@@ -143,7 +143,7 @@ internal var uiJob =
                           Triple(path, fontName, weight.toInt())
                         }
                   }
-          appData.action = message
+          appData.action = ActionProp.UPDATE_COMPONENT
           val json = jsonMapper.encodeToString(PropData(appData))
           runBlocking { componentChannel.sendToAllClients(json) }
         }

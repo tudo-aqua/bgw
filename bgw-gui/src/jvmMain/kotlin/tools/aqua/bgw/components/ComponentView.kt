@@ -500,13 +500,13 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   var onMouseClicked: ((MouseEvent) -> Unit)? = null
 
   /**
-   * Gets invoked with a [ScrollEvent] whenever the mouse wheel is turned while the mouse is inside
+   * Gets invoked with a [WheelEvent] whenever the mouse wheel is turned while the mouse is inside
    * this [ComponentView].
    *
-   * @see ScrollEvent
+   * @see WheelEvent
    * @see isDisabled
    */
-  var onScroll: ((ScrollEvent) -> Unit)? = null
+  var onWheel: ((WheelEvent) -> Unit)? = null
 
   /**
    * Gets invoked with a [KeyEvent] whenever a key is pressed while this [ComponentView] has focus.

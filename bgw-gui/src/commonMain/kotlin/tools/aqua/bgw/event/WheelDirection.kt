@@ -20,12 +20,12 @@ package tools.aqua.bgw.event
 import kotlinx.serialization.Serializable
 
 /**
- * Enum indicating direction of a [ScrollEvent].
+ * Enum indicating direction of a [WheelEvent].
  *
  * @since 0.7.1
  */
 @Serializable
-enum class ScrollDirection {
+enum class WheelDirection {
   /** Upwards scroll. */
   UP,
 
@@ -42,7 +42,7 @@ enum class ScrollDirection {
   operator fun times(scalar: Number): Double = scalar.toDouble() * (if (this == UP) 1 else -1)
 
   companion object {
-    /** Returns [ScrollDirection] based on scrolled delta value. */
-    internal fun of(delta: Number): ScrollDirection = if (delta.toDouble() < 0) DOWN else UP
+    /** Returns [WheelDirection] based on scrolled delta value. */
+    internal fun of(delta: Number): WheelDirection = if (delta.toDouble() < 0) DOWN else UP
   }
 }

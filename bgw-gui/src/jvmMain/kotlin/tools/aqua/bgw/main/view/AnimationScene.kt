@@ -129,10 +129,7 @@ internal class AnimationScene : BoardGameScene() {
 
       label.onMouseClicked = {
         this.playAnimation(
-            ScaleAnimation (
-                componentView = label,
-                fromScaleX = 0.5,
-                toScaleX = 2.0,
+            DelayAnimation (
                 duration = 1000
             ).apply {
             onFinished = {

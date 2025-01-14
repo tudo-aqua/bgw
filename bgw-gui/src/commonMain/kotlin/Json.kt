@@ -160,6 +160,7 @@ private val module = SerializersModule {
     subclass(CheckBoxChangedEventData::class)
     subclass(AnimationFinishedEventData::class)
     subclass(StructuredDataSelectEventData::class)
+    subclass(ScrollEventData::class)
   }
   polymorphic(InputEventData::class) {
     subclass(MouseEnteredEventData::class)

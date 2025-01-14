@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +15,17 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+package data.event
 
-package tools.aqua.bgw.event
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import tools.aqua.bgw.event.WheelDirection
 
-/**
- * Event that gets raised for mouse wheel inputs.
- *
- * @constructor Creates a [ScrollEvent].
- *
- * @property direction The scroll direction.
- * @property isControlDown Whether control key was pressed.
- * @property isShiftDown Whether shift key was pressed.
- * @property isAltDown Whether alt key was pressed.
- */
-class ScrollEvent(
-    val direction: ScrollDirection,
-    val isControlDown: Boolean,
-    val isShiftDown: Boolean,
-    val isAltDown: Boolean
-) : InputEvent()
+@Serializable
+@SerialName("ScrollEventData")
+internal class ScrollEventData(
+    val direction: WheelDirection,
+    val shift: Boolean,
+    val alt : Boolean,
+    val ctrl : Boolean
+) : EventData()

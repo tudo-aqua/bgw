@@ -18,15 +18,23 @@
 package tools.aqua.bgw.event
 
 import ComponentViewData
+import data.event.ColorInputChangedEventData
 import data.event.KeyEventAction
 import react.dom.html.HTMLAttributes
+import react.useState
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseExitedData
 import tools.aqua.bgw.builder.ReactConverters.toMousePressedEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseReleasedEventData
+import tools.aqua.bgw.builder.ReactConverters.toScrollEventData
 import web.dom.Element
+import web.timers.Timeout
+import web.timers.clearTimeout
+import web.timers.setTimeout
+import kotlin.math.abs
+import kotlin.math.sign
 
 internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentViewData) {
   /*onContextMenu = {
@@ -45,6 +53,7 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
   onKeyUp = {
     JCEFEventDispatcher.dispatchEvent(it.toKeyEventData(props.id, KeyEventAction.RELEASE))
   }
+  // onWheel = { JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id)) }
 
   if (props.hasMouseEnteredEvent) {
     onMouseEnter = { JCEFEventDispatcher.dispatchEvent(it.toMouseEnteredData(props.id)) }
@@ -52,5 +61,23 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
 
   if (props.hasMouseExitedEvent) {
     onMouseLeave = { JCEFEventDispatcher.dispatchEvent(it.toMouseExitedData(props.id)) }
+  }
+
+  var debounceTimeout: Timeout? = null
+  var lastScrollDirection: Double? = null
+
+  onWheel = {
+    val currentDirection = it.deltaY.sign
+    if (debounceTimeout == null || currentDirection != lastScrollDirection) {
+      debounceTimeout?.let { clearTimeout(it) }
+      debounceTimeout =
+        setTimeout(
+          {
+            JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id))
+            debounceTimeout = null
+          },
+          200)
+      lastScrollDirection = currentDirection
+    }
   }
 }

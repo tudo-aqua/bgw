@@ -64,9 +64,7 @@ internal class HexGridGameScene : BoardGameScene() {
     private val singleHex = HexagonView(posX = 1100, posY = 0, visual = ColorVisual.BLUE.copy().apply {
         style.borderRadius = BorderRadius(4)
     }, size = 50).apply {
-        onMouseClicked = {
-            size = 100.0
-        }
+        onWheel = { println("Scrolled ${it.direction} Alt: ${it.isAltDown} Shift: ${it.isShiftDown} Ctrl: ${it.isControlDown}") }
     }
 
     val paneDot = Label(posX = -3,

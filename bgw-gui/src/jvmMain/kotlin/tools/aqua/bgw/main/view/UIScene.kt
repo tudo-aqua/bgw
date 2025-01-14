@@ -25,7 +25,9 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
-internal class UIScene : MenuScene() {
+internal class UIScene : MenuScene(background = ColorVisual(Color(0, 0, 0)).apply {
+    transparency = 0.5
+}) {
   val combo =
       ComboBox<TestObject>(
               width = 1920,
@@ -60,7 +62,8 @@ internal class UIScene : MenuScene() {
           )
           .apply {
               onMouseClicked = {
-                  Application.hideMenuScene()
+                  Application.updateSome()
+                  Application.hideMenuScene(500)
               }
           }
 
