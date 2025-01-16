@@ -27,18 +27,18 @@ import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import java.io.ByteArrayOutputStream
 import java.time.Duration
+import java.util.Base64
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
 import jsonMapper
+import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.Frontend
-import java.io.ByteArrayOutputStream
-import java.util.Base64
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
-import kotlin.text.Charsets.UTF_8
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -113,12 +113,10 @@ internal fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: (sus
       }
     }
 
-
-
 internal fun gzip(content: String): String {
-    val bos = ByteArrayOutputStream()
-    GZIPOutputStream(bos).bufferedWriter(UTF_8).use { it.write(content) }
-    return Base64.getEncoder().encodeToString(bos.toByteArray())
+  val bos = ByteArrayOutputStream()
+  GZIPOutputStream(bos).bufferedWriter(UTF_8).use { it.write(content) }
+  return Base64.getEncoder().encodeToString(bos.toByteArray())
 }
 
 internal fun ungzip(content: ByteArray): String =

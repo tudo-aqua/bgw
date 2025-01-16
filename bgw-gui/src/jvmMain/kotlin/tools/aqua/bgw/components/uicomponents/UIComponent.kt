@@ -55,9 +55,7 @@ abstract class UIComponent(
    */
   internal var internalCSSProperty: StringProperty = StringProperty("")
 
-  /**
-   * Field that is used for internal styling purposes.
-   */
+  /** Field that is used for internal styling purposes. */
   internal var internalCSS: String
     get() = internalCSSProperty.value
     set(value) {

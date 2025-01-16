@@ -15,104 +15,88 @@
  * limitations under the License.
  */
 
-/* ------------------------------------------ */
-/*   THIS FILE INCLUDES AUTO-GENERATED CODE,  */
-/*       EXPLICIT FORMATING AND IMPORTS.      */
-/*                                            */
-/*         ! DO NOT MODIFY THIS FILE !        */
-/* ------------------------------------------ */
-
 package tools.aqua.bgw.main.examples
 
-import tools.aqua.bgw.main.examples.ExampleUIScene as AnimationScene
 import PropData
 import jsonMapper
+import kotlin.reflect.KProperty0
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.main.examples.ExampleUIScene as AnimationScene
 import tools.aqua.bgw.mapper.AnimationMapper
 import tools.aqua.bgw.visual.ColorVisual
-import kotlin.reflect.KFunction
-import kotlin.reflect.KProperty0
 
 /** Metadata: [AnimationScene] */
 internal class ExampleAnimationScene : BoardGameScene(width = 622, height = 300) {
-    val map = mutableMapOf<String, String>()
+  val map = mutableMapOf<String, String>()
 
-    val button = Button(
-        posX = 100,
-        posY = 50,
-        width = 200,
-        height = 100,
-        text = "I am a Button.",
-        visual = ColorVisual.LIGHT_GRAY
-    )
+  val button =
+      Button(
+          posX = 100,
+          posY = 50,
+          width = 200,
+          height = 100,
+          text = "I am a Button.",
+          visual = ColorVisual.LIGHT_GRAY)
 
-    val button2 = Button(
-        posX = 0,
-        posY = 0,
-        width = 200,
-        height = 200,
-        text = "Also a Button.",
-        visual = ColorVisual.RED
-    )
+  val button2 =
+      Button(
+          posX = 0,
+          posY = 0,
+          width = 200,
+          height = 200,
+          text = "Also a Button.",
+          visual = ColorVisual.RED)
 
-    val movementAnimation = MovementAnimation(
-        componentView = button,
-        fromX = 100.0,
-        toX = 200.0,
-        duration = 1000
-    )
+  val movementAnimation =
+      MovementAnimation(componentView = button, fromX = 100.0, toX = 200.0, duration = 1000)
 
-    val movementAnimationBy = MovementAnimation(
-        componentView = button,
-        byX = 100.0,
-        byY = 100.0,
-        duration = 1000
-    )
+  val movementAnimationBy =
+      MovementAnimation(componentView = button, byX = 100.0, byY = 100.0, duration = 1000)
 
-    init {
-        playAnimationAndSerialize(::movementAnimation, ::button)
-    }
+  init {
+    playAnimationAndSerialize(::movementAnimation, ::button)
+  }
 
-    fun playMovementAnimation() {
-        playAnimation(movementAnimation)
-    }
+  fun playMovementAnimation() {
+    playAnimation(movementAnimation)
+  }
 
-    private fun <T : ComponentView> setComponentAndSerialize(prop: KProperty0<T>) {
-        val comp = prop.get()
+  private fun <T : ComponentView> setComponentAndSerialize(prop: KProperty0<T>) {
+    val comp = prop.get()
 
-        clearComponents()
-        addComponents(comp)
+    clearComponents()
+    addComponents(comp)
 
-        val fullyQualifiedName = "${this::class.qualifiedName}.${prop.name}"
+    val fullyQualifiedName = "${this::class.qualifiedName}.${prop.name}"
 
-        val appData = SceneMapper.map(menuScene = null, gameScene = this)
-        val json = jsonMapper.encodeToString(PropData(appData))
-        map[fullyQualifiedName] = json
+    val appData = SceneMapper.map(menuScene = null, gameScene = this)
+    val json = jsonMapper.encodeToString(PropData(appData))
+    map[fullyQualifiedName] = json
 
-        clearComponents()
-    }
+    clearComponents()
+  }
 
-    private fun <T : ComponentView> playAnimationAndSerialize(
-        anim: KProperty0<Animation>,
-        prop: KProperty0<T>
-    ) {
-        val comp = prop.get()
-        val animation = anim.call()
+  private fun <T : ComponentView> playAnimationAndSerialize(
+      anim: KProperty0<Animation>,
+      prop: KProperty0<T>
+  ) {
+    val comp = prop.get()
+    val animation = anim.call()
 
-        val fullyQualifiedName = "${this::class.qualifiedName}.${anim.name}"
+    val fullyQualifiedName = "${this::class.qualifiedName}.${anim.name}"
 
-        clearComponents()
-        addComponents(comp)
+    clearComponents()
+    addComponents(comp)
 
-        val animationData = AnimationMapper.map(animation)
-        val json = jsonMapper.encodeToString(PropData(animationData))
-        map[fullyQualifiedName] = json
+    val animationData = AnimationMapper.map(animation)
+    val json = jsonMapper.encodeToString(PropData(animationData))
+    map[fullyQualifiedName] = json
 
-        println(map[fullyQualifiedName])
-    }
+    println(map[fullyQualifiedName])
+  }
 }

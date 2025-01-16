@@ -32,7 +32,6 @@ import tools.aqua.bgw.useDroppable
 import web.cssom.*
 import web.dom.Element
 import web.dom.document
-import web.dom.getComputedStyle
 
 internal external interface GridPaneProps : Props {
   var data: GridPaneData
@@ -67,13 +66,12 @@ internal val ReactGridPane =
           height = fit()
 
           if (props.data.layoutFromCenter) {
-            useEffect(listOf(props.data)) {
+            useLayoutEffect(listOf(props.data)) {
+              println("useLayoutEffect" + props.data.id + " - ${props.data.layoutFromCenter}")
               document.getElementById(props.data.id)?.let {
-                val rem =
-                    getComputedStyle(document.documentElement).fontSize.replace("px", "").toDouble()
                 val element = it
-                val width = element.offsetWidth / rem
-                val height = element.offsetHeight / rem
+                val width = convertToPx(element.offsetWidth.toDouble())
+                val height = convertToPx(element.offsetHeight.toDouble())
                 val x = (props.data.posX - width / 2)
                 val y = (props.data.posY - height / 2)
                 element.style.left = "${x}em"
@@ -81,7 +79,8 @@ internal val ReactGridPane =
               }
             }
           } else {
-            useEffect(listOf(props.data)) {
+            useLayoutEffect(listOf(props.data)) {
+              println("useLayoutEffect" + props.data.id + " - ${props.data.layoutFromCenter}")
               document.getElementById(props.data.id)?.let {
                 it.style.left = "${props.data.posX}em"
                 it.style.top = "${props.data.posY}em"

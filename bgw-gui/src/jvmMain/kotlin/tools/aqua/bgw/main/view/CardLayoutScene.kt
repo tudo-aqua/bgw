@@ -41,22 +41,24 @@ internal class CardLayoutScene : BoardGameScene() {
               alignment = Alignment.CENTER,
               visual = ColorVisual.LIGHT_GRAY)
           .apply {
-              val card =
-                  CardView(
-                      posX = 0,
-                      posY = 0,
-                      width = 100,
-                      height = 200,
-                      front = CompoundVisual(
+            val card =
+                CardView(
+                    posX = 0,
+                    posY = 0,
+                    width = 100,
+                    height = 200,
+                    front =
+                        CompoundVisual(
                             ColorVisual(Color(255, 0, 0)),
-                      ))
-              this.add(card)
+                        ))
+            this.add(card)
 
-              onMouseClicked = {
-                  (card.visual as CompoundVisual).children = listOf(*((card.visual as CompoundVisual).children.toTypedArray()), ColorVisual(Color(0, 255, 0)).apply {
-                      transparency = 0.1
-                  })
-              }
+            onMouseClicked = {
+              (card.visual as CompoundVisual).children =
+                  listOf(
+                      *((card.visual as CompoundVisual).children.toTypedArray()),
+                      ColorVisual(Color(0, 255, 0)).apply { transparency = 0.1 })
+            }
 
             println(this.iterator().asSequence().map { it.width }.toList())
             println(this.peek().width)

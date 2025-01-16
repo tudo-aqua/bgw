@@ -53,9 +53,7 @@ open class TableColumn<T>(
    */
   internal val titleProperty: StringProperty = StringProperty(title)
 
-  /**
-   * Title of this [TableColumn].
-   */
+  /** Title of this [TableColumn]. */
   var title: String
     get() = titleProperty.value
     set(value) {

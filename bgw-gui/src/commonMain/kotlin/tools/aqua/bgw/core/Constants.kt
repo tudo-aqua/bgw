@@ -65,7 +65,7 @@ const val DEFAULT_SCENE_HEIGHT: Double = 1080.0
  *
  * @since 0.2
  */
-const val DEFAULT_BLUR_RADIUS: Double = 63.0
+const val DEFAULT_BLUR_RADIUS: Double = 40.0
 
 /**
  * The default fade time for [MenuScene]s in [BoardGameApplication.showMenuScene] or

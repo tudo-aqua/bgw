@@ -26,6 +26,6 @@ import tools.aqua.bgw.event.WheelDirection
 internal class ScrollEventData(
     val direction: WheelDirection,
     val shift: Boolean,
-    val alt : Boolean,
-    val ctrl : Boolean
+    val alt: Boolean,
+    val ctrl: Boolean
 ) : EventData()

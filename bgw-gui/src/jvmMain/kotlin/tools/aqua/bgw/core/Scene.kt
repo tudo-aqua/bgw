@@ -76,9 +76,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    */
   internal val backgroundProperty: Property<Visual> = Property(background)
 
-  /**
-   * The background [Visual] of this [Scene].
-   */
+  /** The background [Visual] of this [Scene]. */
   var background: Visual
     get() = backgroundProperty.value
     set(value) {
@@ -96,9 +94,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    */
   internal val opacityProperty = DoubleProperty(1.0)
 
-  /**
-   * Opacity of the [background] of this [Scene].
-   */
+  /** Opacity of the [background] of this [Scene]. */
   var opacity: Double
     get() = opacityProperty.value
     set(value) {
@@ -115,9 +111,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   internal val zoomDetailProperty: Property<CoordinatePlain> =
       Property(CoordinatePlain(0, 0, width, height))
 
-  /**
-   * The currently displayed zoom detail of this [Scene].
-   */
+  /** The currently displayed zoom detail of this [Scene]. */
   internal var zoomDetail
     get() = zoomDetailProperty.value
     set(value) {

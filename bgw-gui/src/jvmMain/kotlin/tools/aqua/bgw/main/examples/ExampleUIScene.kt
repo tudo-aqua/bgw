@@ -15,64 +15,57 @@
  * limitations under the License.
  */
 
-/* ------------------------------------------ */
-/*   THIS FILE INCLUDES AUTO-GENERATED CODE,  */
-/*       EXPLICIT FORMATING AND IMPORTS.      */
-/*                                            */
-/*         ! DO NOT MODIFY THIS FILE !        */
-/* ------------------------------------------ */
-
 package tools.aqua.bgw.main.examples
 
-import tools.aqua.bgw.main.examples.ExampleUIScene as Scene
 import PropData
 import jsonMapper
+import kotlin.reflect.KProperty0
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.main.examples.ExampleUIScene as Scene
 import tools.aqua.bgw.visual.ColorVisual
-import kotlin.reflect.KProperty0
 
 /** Metadata: [Scene] */
 internal class ExampleUIScene : BoardGameScene(width = 622, height = 300) {
-    val map = mutableMapOf<String, String>()
+  val map = mutableMapOf<String, String>()
 
-    val button = Button(
-        posX = 100,
-        posY = 50,
-        width = 200,
-        height = 100,
-        text = "I am a Button.",
-        visual = ColorVisual.LIGHT_GRAY
-    )
+  val button =
+      Button(
+          posX = 100,
+          posY = 50,
+          width = 200,
+          height = 100,
+          text = "I am a Button.",
+          visual = ColorVisual.LIGHT_GRAY)
 
-    val button2 = Button(
-        posX = 0,
-        posY = 0,
-        width = 200,
-        height = 200,
-        text = "Also a Button.",
-        visual = ColorVisual.RED
-    )
+  val button2 =
+      Button(
+          posX = 0,
+          posY = 0,
+          width = 200,
+          height = 200,
+          text = "Also a Button.",
+          visual = ColorVisual.RED)
 
-    init {
-        setComponentAndSerialize(::button)
-        setComponentAndSerialize(::button2)
-    }
+  init {
+    setComponentAndSerialize(::button)
+    setComponentAndSerialize(::button2)
+  }
 
-    internal fun <T : ComponentView> setComponentAndSerialize(prop: KProperty0<T>) {
-        val comp = prop.get()
+  internal fun <T : ComponentView> setComponentAndSerialize(prop: KProperty0<T>) {
+    val comp = prop.get()
 
-        clearComponents()
-        addComponents(comp)
+    clearComponents()
+    addComponents(comp)
 
-        val fullyQualifiedName = "${this::class.qualifiedName}.${prop.name}"
+    val fullyQualifiedName = "${this::class.qualifiedName}.${prop.name}"
 
-        val appData = SceneMapper.map(menuScene = null, gameScene = this)
-        val json = jsonMapper.encodeToString(PropData(appData))
-        map[fullyQualifiedName] = json
+    val appData = SceneMapper.map(menuScene = null, gameScene = this)
+    val json = jsonMapper.encodeToString(PropData(appData))
+    map[fullyQualifiedName] = json
 
-        clearComponents()
-    }
+    clearComponents()
+  }
 }

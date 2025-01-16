@@ -127,17 +127,10 @@ internal class AnimationScene : BoardGameScene() {
         )
     } */
 
-      label.onMouseClicked = {
-        this.playAnimation(
-            DelayAnimation (
-                duration = 1000
-            ).apply {
-            onFinished = {
-                println("Finished")
-            }
-          }
-        )
-      }
+    label.onMouseClicked = {
+      this.playAnimation(
+          DelayAnimation(duration = 1000).apply { onFinished = { println("Finished") } })
+    }
 
     /* label.onMouseClicked = {
         (label.visual as ImageVisual).filters.blur = BlurFilter(4.0)

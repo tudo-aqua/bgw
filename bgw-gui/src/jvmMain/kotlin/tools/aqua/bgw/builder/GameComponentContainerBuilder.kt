@@ -38,9 +38,7 @@ internal object GameComponentContainerBuilder {
       is LinearLayout -> buildLinearLayout(gameComponentContainer)
       is Satchel -> buildSatchel(gameComponentContainer)
     }
-    gameComponentContainer.components.forEach {
-      ComponentViewBuilder.build(it)
-    }
+    gameComponentContainer.components.forEach { ComponentViewBuilder.build(it) }
   }
 
   private fun buildArea(area: Area<out GameComponentView>) {}
@@ -49,9 +47,7 @@ internal object GameComponentContainerBuilder {
     cardStack.alignmentProperty.guiListener = { _, _ -> Frontend.updateComponent(cardStack) }
   }
 
-  private fun buildHexagonGrid(hexagonGrid: HexagonGrid<out HexagonView>) {
-
-  }
+  private fun buildHexagonGrid(hexagonGrid: HexagonGrid<out HexagonView>) {}
 
   private fun buildLinearLayout(linearLayout: LinearLayout<out GameComponentView>) {
     linearLayout.spacingProperty.guiListener = { _, _ -> Frontend.updateComponent(linearLayout) }

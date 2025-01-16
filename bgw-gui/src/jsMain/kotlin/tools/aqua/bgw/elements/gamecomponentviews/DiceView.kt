@@ -27,6 +27,8 @@ import react.dom.aria.ariaPressed
 import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.*
+import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.cssom.*
@@ -77,6 +79,11 @@ internal val DiceView =
         }
 
         css(style)
+
+        bgwVisuals {
+          className = ClassName("visuals")
+          +VisualBuilder.build(props.data.visual)
+        }
 
         if (props.data.isDraggable) {
           onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }

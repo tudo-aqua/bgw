@@ -54,24 +54,19 @@ open class CameraPane<T : LayoutView<*>>(
     limitBounds: Boolean = true,
     internal val target: T
 ) : ComponentView(posX = posX, posY = posY, width = width, height = height, visual = visual) {
-  /**
-   * [Property] for the [zoom] state of the [CameraPane].
-   */
+  /** [Property] for the [zoom] state of the [CameraPane]. */
   internal val zoomProperty: DoubleProperty = DoubleProperty(1)
 
   internal var internalData: InternalCameraPanData = InternalCameraPanData()
 
-  /** Zoom factor of the camera starting from 1.
-   */
+  /** Zoom factor of the camera starting from 1. */
   var zoom: Double
     get() = zoomProperty.value
     set(value) {
       zoom(value)
     }
 
-  /**
-   * [Property] for the [interactive] state of the [CameraPane].
-   */
+  /** [Property] for the [interactive] state of the [CameraPane]. */
   internal val interactiveProperty: BooleanProperty = BooleanProperty(false)
 
   /**
@@ -89,8 +84,9 @@ open class CameraPane<T : LayoutView<*>>(
   /** [Property] for the [limitBounds] state of the [CameraPane]. */
   internal val limitBoundsProperty = BooleanProperty(limitBounds)
 
-  /** Determines if the target layout view should be limited to the bounds of the camera pane.
-   * This will also affect the panning of the camera pane with [pan] and [panBy] as well as zooming.
+  /**
+   * Determines if the target layout view should be limited to the bounds of the camera pane. This
+   * will also affect the panning of the camera pane with [pan] and [panBy] as well as zooming.
    *
    * @since 1.0
    */
@@ -126,7 +122,8 @@ open class CameraPane<T : LayoutView<*>>(
   internal val panMouseButtonProperty: Property<MouseButtonType> =
       Property(MouseButtonType.LEFT_BUTTON)
 
-  /** The mouse button that is used to pan the camera pane.
+  /**
+   * The mouse button that is used to pan the camera pane.
    *
    * @see interactive
    *

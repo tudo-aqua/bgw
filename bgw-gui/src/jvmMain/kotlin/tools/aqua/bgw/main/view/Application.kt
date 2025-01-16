@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.main.view
 
-import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.AspectRatio
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.Color

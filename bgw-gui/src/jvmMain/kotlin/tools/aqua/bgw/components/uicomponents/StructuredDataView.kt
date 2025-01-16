@@ -64,7 +64,7 @@ sealed class StructuredDataView<T>(
    * An [ObservableList] that contains the data objects. The first object in this [ObservableList]
    * will be the topmost row in the rendered [UIComponent].
    */
-  internal val items: ObservableList<T> = ObservableArrayList(items)
+  val items: ObservableList<T> = ObservableArrayList(items)
 
   /**
    * [Property] for the [selectionMode] of this [UIComponent].

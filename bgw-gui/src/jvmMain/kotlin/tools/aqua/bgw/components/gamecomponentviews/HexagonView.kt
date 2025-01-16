@@ -30,7 +30,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @param posX Horizontal coordinate for this [HexagonView]. Default: 0.
  * @param posY Vertical coordinate for this [HexagonView]. Default: 0.
- * @param size Represents the distance to the outermost corner of the [HexagonView]. Default: [DEFAULT_HEXAGON_SIZE].
+ * @param size Represents the distance to the outermost corner of the [HexagonView]. Default:
+ * [DEFAULT_HEXAGON_SIZE].
  * @param visual Visual for this [HexagonView].
  * @param orientation Orientation of the [HexagonView]. Default: [HexOrientation.POINTY_TOP].
  *
@@ -59,22 +60,20 @@ open class HexagonView(
         posY = posY,
         width = 2 * size.toDouble(),
         height = 2 * size.toDouble(),
-        visual = visual
-    ) {
+        visual = visual) {
 
-    /**
-     * [Property] for the size of the [HexagonView].
-     */
-    internal val sizeProperty: DoubleProperty = DoubleProperty(size.toDouble())
+  /** [Property] for the size of the [HexagonView]. */
+  internal val sizeProperty: DoubleProperty = DoubleProperty(size.toDouble())
 
-    /**
-     * Size of the [HexagonView]. For [HexOrientation.POINTY_TOP] this is the distance from the center
-     * to the top or bottom corner representing half the height of the container. For [HexOrientation.FLAT_TOP]
-     * this is the distance from the center to the left or right corner representing half the width of the container.
-     */
-    var size: Double
-        get() = sizeProperty.value
-        set(value) {
-            sizeProperty.value = value
-        }
+  /**
+   * Size of the [HexagonView]. For [HexOrientation.POINTY_TOP] this is the distance from the center
+   * to the top or bottom corner representing half the height of the container. For
+   * [HexOrientation.FLAT_TOP] this is the distance from the center to the left or right corner
+   * representing half the width of the container.
+   */
+  var size: Double
+    get() = sizeProperty.value
+    set(value) {
+      sizeProperty.value = value
+    }
 }

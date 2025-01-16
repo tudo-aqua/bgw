@@ -58,9 +58,7 @@ sealed class TextInputUIComponent(
    */
   internal val textProperty: StringProperty = StringProperty(text)
 
-  /**
-   * Text of this [TextInputUIComponent].
-   */
+  /** Text of this [TextInputUIComponent]. */
   var text: String
     get() = textProperty.value
     set(value) {
@@ -74,9 +72,7 @@ sealed class TextInputUIComponent(
    */
   internal val promptProperty: StringProperty = StringProperty(prompt)
 
-  /**
-   * Prompt of this [TextInputUIComponent].
-   */
+  /** Prompt of this [TextInputUIComponent]. */
   var prompt: String
     get() = promptProperty.value
     set(value) {

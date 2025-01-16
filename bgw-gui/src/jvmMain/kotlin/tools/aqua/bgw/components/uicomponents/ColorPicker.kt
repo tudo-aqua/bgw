@@ -58,9 +58,7 @@ open class ColorPicker(
    */
   internal val selectedColorProperty: Property<Color> = Property(initialColor)
 
-  /**
-   * The currently selected [Color].
-   */
+  /** The currently selected [Color]. */
   var selectedColor: Color
     get() = selectedColorProperty.value
     set(value) {

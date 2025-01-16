@@ -18,10 +18,9 @@
 package tools.aqua.bgw.event
 
 import ComponentViewData
-import data.event.ColorInputChangedEventData
 import data.event.KeyEventAction
+import kotlin.math.sign
 import react.dom.html.HTMLAttributes
-import react.useState
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -33,8 +32,6 @@ import web.dom.Element
 import web.timers.Timeout
 import web.timers.clearTimeout
 import web.timers.setTimeout
-import kotlin.math.abs
-import kotlin.math.sign
 
 internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentViewData) {
   /*onContextMenu = {
@@ -71,12 +68,12 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
     if (debounceTimeout == null || currentDirection != lastScrollDirection) {
       debounceTimeout?.let { clearTimeout(it) }
       debounceTimeout =
-        setTimeout(
-          {
-            JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id))
-            debounceTimeout = null
-          },
-          200)
+          setTimeout(
+              {
+                JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id))
+                debounceTimeout = null
+              },
+              200)
       lastScrollDirection = currentDirection
     }
   }

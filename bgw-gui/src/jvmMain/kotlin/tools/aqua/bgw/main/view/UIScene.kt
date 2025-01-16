@@ -25,9 +25,8 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
-internal class UIScene : MenuScene(background = ColorVisual(Color(0, 0, 0)).apply {
-    transparency = 0.5
-}) {
+internal class UIScene :
+    MenuScene(width = 500, background = ColorVisual(Color(255, 0, 0)).apply { transparency = 0.5 }) {
   val combo =
       ComboBox<TestObject>(
               width = 1920,
@@ -45,8 +44,8 @@ internal class UIScene : MenuScene(background = ColorVisual(Color(0, 0, 0)).appl
 
   private val toggleGroup =
       ToggleGroup().apply {
-        //onSelected = { button -> println("Selected: ${button.text}") }
-        //onDeselected = { button -> println("Deselected: ${button.text}") }
+        // onSelected = { button -> println("Selected: ${button.text}") }
+        // onDeselected = { button -> println("Deselected: ${button.text}") }
       }
 
   private val toggle =
@@ -61,10 +60,10 @@ internal class UIScene : MenuScene(background = ColorVisual(Color(0, 0, 0)).appl
               alignment = Alignment.CENTER,
           )
           .apply {
-              onMouseClicked = {
-                  Application.updateSome()
-                  Application.hideMenuScene(500)
-              }
+            onMouseClicked = {
+              Application.updateSome()
+              Application.hideMenuScene(500)
+            }
           }
 
   private val toggle2 =
@@ -76,11 +75,7 @@ internal class UIScene : MenuScene(background = ColorVisual(Color(0, 0, 0)).appl
               text = "Indeterminate",
               font = Font(20.0, Color.BLACK, "JetBrainsMono", Font.FontWeight.EXTRA_BOLD),
               visual = ColorVisual(Color.ORANGE))
-          .apply {
-            onMouseClicked = {
-                Application.showGameScene(Application.cardLayoutScene)
-            }
-          }
+          .apply { onMouseClicked = { Application.showGameScene(Application.cardLayoutScene) } }
 
   private val checkBox =
       CheckBox(

@@ -78,7 +78,7 @@ internal object AnimationMapper {
           (mapSpecific(animation) as MovementAnimationData).apply {
             byX = (animation.toX - animation.fromX).toInt()
             byY = (animation.toY - animation.fromY).toInt()
-              animationType = "move"
+            animationType = "move"
           }
       is RotationAnimation<*> ->
           (mapSpecific(animation) as RotationAnimationData).apply {
@@ -112,13 +112,13 @@ internal object AnimationMapper {
             visuals = animation.visuals.map { VisualMapper.map(it) }
             toVisual = VisualMapper.map(animation.toVisual)
             speed = animation.speed
-              animationType = "random"
+            animationType = "random"
           }
       is DiceAnimation<*> ->
           (mapSpecific(animation) as DiceAnimationData).apply {
             toSide = animation.toSide
             speed = animation.speed
-              animationType = "dice"
+            animationType = "dice"
           }
       is DelayAnimation ->
           (mapSpecific(animation) as DelayAnimationData).apply { duration = animation.duration }

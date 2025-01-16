@@ -89,9 +89,7 @@ open class ProgressBar(
    */
   internal val barColorProperty: Property<Color> = Property(barColor)
 
-  /**
-   * Bar [Color] of this [ProgressBar].
-   */
+  /** Bar [Color] of this [ProgressBar]. */
   var barColor: Color
     get() = barColorProperty.value
     set(value) {
@@ -107,5 +105,5 @@ open class ProgressBar(
    *
    * @see progress
    */
-  var onProgressed: ((Number) -> Unit)? = null
+  var onProgressed: ((Double) -> Unit)? = null
 }

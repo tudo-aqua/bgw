@@ -36,7 +36,12 @@ internal external interface SceneProps : Props {
 internal val Scene =
     FC<SceneProps> { props ->
       bgwScene {
-        css { transition = menuTransition() }
+        css {
+          width = props.data.width.em
+          height = props.data.height.em
+          position = Position.relative
+          transition = menuTransition()
+        }
 
         bgwVisuals {
           className = ClassName("visuals")

@@ -87,9 +87,7 @@ sealed class BinaryStateButton(
    */
   internal val selectedProperty: BooleanProperty = BooleanProperty(isSelected)
 
-  /**
-   * Selected state for this [ToggleButton].
-   */
+  /** Selected state for this [ToggleButton]. */
   var isSelected: Boolean
     get() = selectedProperty.value
     set(value) {
@@ -106,6 +104,7 @@ sealed class BinaryStateButton(
       } else {
         onDeselected?.invoke()
       }
+      onSelectionChanged?.invoke(selectedProperty.value)
     }
   }
 
@@ -126,4 +125,14 @@ sealed class BinaryStateButton(
    * @since 1.0
    */
   var onDeselected: (() -> Unit)? = null
+
+  /**
+   * Gets called when the selection state of this [BinaryStateButton] changes.
+   *
+   * @see onSelected
+   * @see onDeselected
+   *
+   * @since 1.0
+   */
+  var onSelectionChanged: ((Boolean) -> Unit)? = null
 }

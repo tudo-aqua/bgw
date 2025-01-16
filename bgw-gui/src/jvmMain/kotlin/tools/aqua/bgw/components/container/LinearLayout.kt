@@ -83,9 +83,7 @@ open class LinearLayout<T : GameComponentView>(
    */
   internal val spacingProperty: DoubleProperty = DoubleProperty(spacing.toDouble())
 
-  /**
-   * Spacing for this [LinearLayout].
-   */
+  /** Spacing for this [LinearLayout]. */
   var spacing: Double
     get() = spacingProperty.value
     set(value) {

@@ -79,9 +79,7 @@ open class ListView<T>(
    */
   internal val orientationProperty: Property<Orientation> = Property(orientation)
 
-  /**
-   * [Orientation] of this [ListView] displayed.
-   */
+  /** [Orientation] of this [ListView] displayed. */
   var orientation: Orientation
     get() = orientationProperty.value
     set(value) {

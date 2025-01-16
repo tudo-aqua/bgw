@@ -65,9 +65,7 @@ abstract class LabeledUIComponent(
    */
   internal val isWrapTextProperty: BooleanProperty = BooleanProperty(isWrapText)
 
-  /**
-   * Defines if text should be wrapped, if it exceeds the [Label]'s [width].
-   */
+  /** Defines if text should be wrapped, if it exceeds the [Label]'s [width]. */
   var isWrapText: Boolean
     get() = isWrapTextProperty.value
     set(value) {
@@ -81,9 +79,7 @@ abstract class LabeledUIComponent(
    */
   internal val textProperty: StringProperty = StringProperty(text)
 
-  /**
-   * Label of this [LabeledUIComponent].
-   */
+  /** Label of this [LabeledUIComponent]. */
   var text: String
     get() = textProperty.value
     set(value) {
@@ -97,9 +93,7 @@ abstract class LabeledUIComponent(
    */
   internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
-  /**
-   * [Alignment] of this [LabeledUIComponent].
-   */
+  /** [Alignment] of this [LabeledUIComponent]. */
   var alignment: Alignment
     get() = alignmentProperty.value
     set(value) {

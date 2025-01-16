@@ -76,9 +76,7 @@ open class CheckBox(
    */
   internal val isCheckedProperty: BooleanProperty = BooleanProperty(isChecked)
 
-  /**
-   * The checked state.
-   */
+  /** The checked state. */
   var isChecked: Boolean
     get() = isCheckedProperty.value
     set(value) {
@@ -92,9 +90,7 @@ open class CheckBox(
    */
   internal val isIndeterminateAllowedProperty: BooleanProperty = BooleanProperty(allowIndeterminate)
 
-  /**
-   * [Boolean] whether this component allows an indeterminate state.
-   */
+  /** [Boolean] whether this component allows an indeterminate state. */
   var isIndeterminateAllowed: Boolean
     get() = isIndeterminateAllowedProperty.value
     set(value) {
@@ -108,9 +104,7 @@ open class CheckBox(
    */
   internal val isIndeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 
-  /**
-   * [Boolean] whether this component in the indeterminate state.
-   */
+  /** [Boolean] whether this component in the indeterminate state. */
   var isIndeterminate: Boolean
     get() = isIndeterminateProperty.value
     set(value) {

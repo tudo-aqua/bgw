@@ -70,4 +70,18 @@ open class BoardGameScene(
   fun unlock() {
     lockedProperty.value = false
   }
+
+  init {
+    lockedProperty.internalListener = { _, new -> onLockChanged?.invoke(new) }
+  }
+
+  /**
+   * Gets invoked whenever the [lock] state of this [BoardGameScene] changes.
+   *
+   * @see lock
+   * @see unlock
+   *
+   * @since 1.0
+   */
+  var onLockChanged: ((Boolean) -> Unit)? = null
 }

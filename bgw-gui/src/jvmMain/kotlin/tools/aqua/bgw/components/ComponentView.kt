@@ -234,9 +234,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    */
   internal val scaleXProperty: DoubleProperty = DoubleProperty(1.0)
 
-  /**
-   * Horizontal scale of this [ComponentView].
-   */
+  /** Horizontal scale of this [ComponentView]. */
   var scaleX: Double
     get() = scaleXProperty.value
     set(value) {
@@ -250,9 +248,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    */
   internal val scaleYProperty: DoubleProperty = DoubleProperty(1.0)
 
-  /**
-   * Vertical scale of this [ComponentView].
-   */
+  /** Vertical scale of this [ComponentView]. */
   var scaleY: Double
     get() = scaleYProperty.value
     set(value) {
@@ -328,9 +324,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    */
   internal val visualProperty: Property<Visual> = Property(visual)
 
-  /**
-   * Current [Visual].
-   */
+  /** Current [Visual]. */
   open var visual: Visual
     get() = visualProperty.value
     /** Sets a copy of the given [Visual] [value] to this field and refreshes GUI. */
@@ -447,9 +441,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    */
   internal val isFocusableProperty: BooleanProperty = BooleanProperty(true)
 
-  /**
-   * Controls whether this [ComponentView] is focusable or not.
-   */
+  /** Controls whether this [ComponentView] is focusable or not. */
   var isFocusable: Boolean
     get() = isFocusableProperty.value
     set(value) {

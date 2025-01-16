@@ -50,9 +50,7 @@ open class TextVisual(
    */
   internal val textProperty: StringProperty = StringProperty(text)
 
-  /**
-   * The displayed [text].
-   */
+  /** The displayed [text]. */
   var text: String
     get() = textProperty.value
     set(value) {
@@ -66,9 +64,7 @@ open class TextVisual(
    */
   internal val fontProperty: Property<Font> = Property(font)
 
-  /**
-   * The displayed [text] [Font].
-   */
+  /** The displayed [text] [Font]. */
   var font: Font
     get() = fontProperty.value
     set(value) {
@@ -82,9 +78,7 @@ open class TextVisual(
    */
   internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
-  /**
-   * The [text] [Alignment].
-   */
+  /** The [text] [Alignment]. */
   var alignment: Alignment
     get() = alignmentProperty.value
     set(value) {
@@ -98,9 +92,7 @@ open class TextVisual(
    */
   internal val offsetXProperty: DoubleProperty = DoubleProperty(offsetX)
 
-  /**
-   * The x-axis [text] offset.
-   */
+  /** The x-axis [text] offset. */
   var offsetX: Double
     get() = offsetXProperty.value
     set(value) {
@@ -114,9 +106,7 @@ open class TextVisual(
    */
   internal val offsetYProperty: DoubleProperty = DoubleProperty(offsetY)
 
-  /**
-   * The y-axis [text] offset.
-   */
+  /** The y-axis [text] offset. */
   var offsetY: Double
     get() = offsetYProperty.value
     set(value) {

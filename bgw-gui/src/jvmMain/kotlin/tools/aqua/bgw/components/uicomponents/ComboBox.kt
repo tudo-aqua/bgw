@@ -85,9 +85,7 @@ open class ComboBox<T>(
    */
   internal val observableItemsList: ObservableList<T> = ObservableArrayList()
 
-  /**
-   * Items [List] for this [ComboBox].
-   */
+  /** Items [List] for this [ComboBox]. */
   var items: List<T>
     get() = observableItemsList.toList()
     set(value) {

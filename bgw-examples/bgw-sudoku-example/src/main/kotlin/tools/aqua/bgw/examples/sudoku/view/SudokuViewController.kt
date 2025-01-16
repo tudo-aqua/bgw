@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,11 +77,11 @@ class SudokuViewController : BoardGameApplication(windowTitle = "Sudoku") {
 
   /** Registers events for [sudokuSettingsScene]. */
   private fun SudokuSettingsScene.registerEvents() {
-    showTimerToggleButton.button.selectedProperty.addListener { _, nV ->
+    showTimerToggleButton.button.onSelectionChanged = { nV ->
       logicController.settings.showTimer.value = nV
     }
 
-    instantCheckToggleButton.button.selectedProperty.addListener { _, nV ->
+    instantCheckToggleButton.button.onSelectionChanged = { nV ->
       logicController.settings.instantCheck.value = nV
 
       if (nV) logicController.showErrors() else sudokuGameScene.sudokuGrid.clearHints()

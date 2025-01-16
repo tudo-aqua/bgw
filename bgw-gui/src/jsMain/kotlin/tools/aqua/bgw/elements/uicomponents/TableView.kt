@@ -90,10 +90,10 @@ internal val TableView =
               bgwText {
                 className = ClassName("text")
                 css {
-                  padding = 5.em
-                  paddingTop = 3.em
-                  paddingBottom = 8.em
-                  width = 100.pct - 10.em
+                  padding = 1.em
+                  paddingTop = 0.5.em
+                  paddingBottom = 1.em
+                  width = 100.pct
                   fontStyle = column.font.fontStyle.let { it.unsafeCast<FontStyle>() }
                   fontWeight = integer(column.font.fontWeight)
                   fontSize = column.font.size.em
@@ -108,10 +108,10 @@ internal val TableView =
                 bgwText {
                   className = ClassName("text")
                   css {
-                    padding = 5.em
-                    paddingTop = 3.em
-                    paddingBottom = 3.em
-                    width = 100.pct - 10.em
+                    padding = 1.em
+                    paddingTop = 0.5.em
+                    paddingBottom = 0.5.em
+                    width = 100.pct
                     fontStyle = column.font.fontStyle.let { it.unsafeCast<FontStyle>() }
                     fontWeight = integer(column.font.fontWeight)
                     fontSize = column.font.size.em

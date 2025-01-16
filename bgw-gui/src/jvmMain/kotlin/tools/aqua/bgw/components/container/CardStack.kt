@@ -69,9 +69,7 @@ open class CardStack<T : CardView>(
    */
   internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
-  /**
-   * [Alignment] of [CardView]s in this [CardStack].
-   */
+  /** [Alignment] of [CardView]s in this [CardStack]. */
   var alignment: Alignment
     get() = alignmentProperty.value
     set(value) {

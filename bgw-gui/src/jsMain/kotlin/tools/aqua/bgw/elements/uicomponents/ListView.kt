@@ -93,9 +93,9 @@ internal val ListView =
               bgwText {
                 className = ClassName("text")
                 css {
-                  padding = 5.em
-                  paddingTop = 3.em
-                  paddingBottom = 3.em
+                  padding = 1.em
+                  paddingTop = 0.5.em
+                  paddingBottom = 0.5.em
                   width = 100.pct
                   fontStyle = props.data.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
                   fontWeight = integer(props.data.font!!.fontWeight)

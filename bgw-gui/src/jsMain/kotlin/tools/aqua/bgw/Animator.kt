@@ -26,7 +26,6 @@ import org.w3c.dom.Node
 import react.dom.render
 import tools.aqua.bgw.builder.VisualBuilder
 import web.cssom.ElementCSSInlineStyle
-import web.cssom.Scale
 import web.dom.Element
 import web.timers.clearInterval
 import web.timers.setInterval
@@ -80,21 +79,25 @@ internal class Animator {
       this.animations.keys
           .filter { it.startsWith(componentId) }
           .forEach {
-              if(document.body != null && this.animations[it] != null && document.body?.contains(this.animations[it]!!) == true) {
-                  document.body?.removeChild(this.animations[it]!!)
-              }
-              if(this.animations[it] != null) {
-                  this.animations.remove(it)
-              }
+            if (document.body != null &&
+                this.animations[it] != null &&
+                document.body?.contains(this.animations[it]!!) == true) {
+              document.body?.removeChild(this.animations[it]!!)
+            }
+            if (this.animations[it] != null) {
+              this.animations.remove(it)
+            }
           }
     } else {
       types.forEach {
-          if(document.body != null && this.animations["$componentId--$it"] != null && document.body?.contains(this.animations["$componentId--$it"]!!) == true) {
-              document.body?.removeChild(this.animations["$componentId--$it"]!!)
-          }
-          if(this.animations["$componentId--$it"] != null) {
-              this.animations.remove("$componentId--$it")
-          }
+        if (document.body != null &&
+            this.animations["$componentId--$it"] != null &&
+            document.body?.contains(this.animations["$componentId--$it"]!!) == true) {
+          document.body?.removeChild(this.animations["$componentId--$it"]!!)
+        }
+        if (this.animations["$componentId--$it"] != null) {
+          this.animations.remove("$componentId--$it")
+        }
       }
     }
   }
@@ -107,12 +110,12 @@ internal class Animator {
   private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID) -> Unit) {
     val animations = animation.animations
 
-      animations.forEach {
-          val component = it as? ComponentAnimationData ?: return
-          val componentId = component.componentView?.id.toString()
+    animations.forEach {
+      val component = it as? ComponentAnimationData ?: return
+      val componentId = component.componentView?.id.toString()
 
-          clearComponentAnimations(componentId)
-      }
+      clearComponentAnimations(componentId)
+    }
 
     var currentDuration = 0
     for (anim in animations) {
@@ -128,12 +131,12 @@ internal class Animator {
   private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID) -> Unit) {
     val animations = animation.animations
 
-      animations.forEach {
-          val component = it as? ComponentAnimationData ?: return
-          val componentId = component.componentView?.id.toString()
+    animations.forEach {
+      val component = it as? ComponentAnimationData ?: return
+      val componentId = component.componentView?.id.toString()
 
-          clearComponentAnimations(componentId)
-      }
+      clearComponentAnimations(componentId)
+    }
 
     for (anim in animations) {
       startAnimation(anim, animations, callback)
@@ -163,9 +166,10 @@ internal class Animator {
     // Toggle old animation off
     element.classList.toggle("${componentId}--$type--props", false)
 
-      if(animation is ScaleAnimationData) {
-          (element as ElementCSSInlineStyle).style.scale = "${animation.fromScaleX} ${animation.fromScaleY}"
-      }
+    if (animation is ScaleAnimationData) {
+      (element as ElementCSSInlineStyle).style.scale =
+          "${animation.fromScaleX} ${animation.fromScaleY}"
+    }
 
     setTimeout(
         {
@@ -174,7 +178,8 @@ internal class Animator {
           newElement.id = "${componentId}--$type"
 
           // Add new style element to body
-          newElement.innerHTML = getAnimationCSS(type, componentId, animation, parallelAnimation.toMutableList())
+          newElement.innerHTML =
+              getAnimationCSS(type, componentId, animation, parallelAnimation.toMutableList())
           document.body?.appendChild(newElement)
 
           // Toggle new animation on and save style element
@@ -308,16 +313,16 @@ internal class Animator {
   private fun getTransitionCSS(animationList: List<AnimationData>): String {
     val transitions =
         animationList.joinToString(", ") {
-            when (it) {
-                is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
-                is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
-                is RotationAnimationData -> "rotate ${it.duration}ms ease-in-out"
-                is ScaleAnimationData -> "scale ${it.duration}ms ease-in-out"
-                else -> ""
-            }
+          when (it) {
+            is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
+            is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
+            is RotationAnimationData -> "rotate ${it.duration}ms ease-in-out"
+            is ScaleAnimationData -> "scale ${it.duration}ms ease-in-out"
+            else -> ""
+          }
         }
 
-      return """
+    return """
             transition: $transitions;
         """.trimIndent()
   }
@@ -328,10 +333,10 @@ internal class Animator {
       animationData: AnimationData,
       parallelAnimations: MutableList<AnimationData> = mutableListOf()
   ): String {
-      println("Getting animation CSS for $type and data ${animationData is MovementAnimationData}")
-      if(parallelAnimations.isEmpty()) {
-            parallelAnimations.add(animationData)
-      }
+    println("Getting animation CSS for $type and data ${animationData is MovementAnimationData}")
+    if (parallelAnimations.isEmpty()) {
+      parallelAnimations.add(animationData)
+    }
     return when (animationData) {
       is FadeAnimationData ->
           """

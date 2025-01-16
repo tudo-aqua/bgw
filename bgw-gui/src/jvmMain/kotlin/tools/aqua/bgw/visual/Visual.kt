@@ -20,7 +20,6 @@
 package tools.aqua.bgw.visual
 
 import IDGenerator
-import tools.aqua.bgw.observable.Observable
 import tools.aqua.bgw.style.*
 
 /**

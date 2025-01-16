@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,7 +61,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
     if (isCurrentPlayer) cardView.showFront()
 
     // update label
-    viewController.mauMauGameScene.drawStackInfo.textProperty.value =
+    viewController.mauMauGameScene.drawStackInfo.text =
         viewController.logicController.game.drawStack.size().toString()
 
     // add event handlers to drawn card
@@ -105,7 +105,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
         cardView.posY = 0.0
 
         // update label
-        viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+        viewController.mauMauGameScene.gameStackInfo.text =
             viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
       }
 
@@ -119,7 +119,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
       cardView.posY = 0.0
 
       // update label
-      viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+      viewController.mauMauGameScene.gameStackInfo.text =
           viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
     }
 
@@ -292,10 +292,10 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
         })
 
     // update labels
-    viewController.mauMauGameScene.drawStackInfo.textProperty.value =
+    viewController.mauMauGameScene.drawStackInfo.text =
         viewController.logicController.game.drawStack.size().toString()
 
-    viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+    viewController.mauMauGameScene.gameStackInfo.text =
         viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 
     // Add elements to hands
@@ -403,9 +403,8 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
           })
 
       // update labels
-      mauMauGameScene.drawStackInfo.textProperty.value =
-          logicController.game.drawStack.size().toString()
-      mauMauGameScene.gameStackInfo.textProperty.value =
+      mauMauGameScene.drawStackInfo.text = logicController.game.drawStack.size().toString()
+      mauMauGameScene.gameStackInfo.text =
           logicController.game.gameStack.cards.peek().cardSuit.toString()
     }
   }

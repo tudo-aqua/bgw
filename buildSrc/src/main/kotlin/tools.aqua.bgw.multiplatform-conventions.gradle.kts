@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The BoardGameWork Authors
+ * Copyright 2024-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,12 @@
  * limitations under the License.
  */
 
-import com.diffplug.gradle.spotless.KotlinExtension
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
 import java.lang.ProcessHandle
-import java.lang.management.ManagementFactory
-import java.lang.management.OperatingSystemMXBean
-import java.util.stream.Collectors
+import java.nio.file.Files
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
@@ -33,11 +30,6 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tools.aqua.defaultFormat
-import java.net.URLClassLoader
-import java.nio.file.Files
-import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
-import kotlin.reflect.KProperty
 
 plugins {
   kotlin("multiplatform")
@@ -60,14 +52,14 @@ fun buildPropertyFile() {
     writeText(generateProperties())
   }
 
-    rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
-        println("Generate properties into $absolutePath")
-        parentFile.mkdirs()
-        writeText(generateProperties("application"))
-    }
+  rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
+    println("Generate properties into $absolutePath")
+    parentFile.mkdirs()
+    writeText(generateProperties("application"))
+  }
 
-    println("useSockets: $useSockets")
-    println("generateSamples: $generateSamples")
+  println("useSockets: $useSockets")
+  println("generateSamples: $generateSamples")
 }
 
 fun generateProperties(suffix: String = "") =
@@ -156,7 +148,7 @@ kotlin {
         implementation(npm("react-zoom-pan-pinch", "3.6.1"))
       }
     }
-    //val jsTest by getting
+    // val jsTest by getting
   }
 }
 
@@ -192,35 +184,38 @@ tasks.named<Copy>("jvmProcessResources") {
 var globalTmpDir = ""
 
 tasks.named<JavaExec>("run") {
-    doFirst {
-        val tmpDir = Files.createTempDirectory("bgw-")
-        tmpDir.toFile().deleteOnExit()
-        globalTmpDir = tmpDir.toString()
-        jvmArgs = listOf("-DtmpDir=${tmpDir}")
-    }
-    dependsOn(tasks.named<Jar>("jvmJar"))
-    classpath(tasks.named<Jar>("jvmJar"))
+  doFirst {
+    val tmpDir = Files.createTempDirectory("bgw-")
+    tmpDir.toFile().deleteOnExit()
+    globalTmpDir = tmpDir.toString()
+    jvmArgs = listOf("-DtmpDir=${tmpDir}")
+  }
+  dependsOn(tasks.named<Jar>("jvmJar"))
+  classpath(tasks.named<Jar>("jvmJar"))
 }
 
 gradle.buildFinished {
-    try {
-        val applicationPIDs = file("$globalTmpDir/application.pid").readText().split(",").map { it.toLong() }.toSet()
-        killJcefHelperProcesses(applicationPIDs)
-        if(globalTmpDir.isNotEmpty()) { File(globalTmpDir).deleteRecursively() }
-    } catch (_: Exception) { }
+  try {
+    val applicationPIDs =
+        file("$globalTmpDir/application.pid").readText().split(",").map { it.toLong() }.toSet()
+    killJcefHelperProcesses(applicationPIDs)
+    if (globalTmpDir.isNotEmpty()) {
+      File(globalTmpDir).deleteRecursively()
+    }
+  } catch (_: Exception) {}
 }
 
 fun killJcefHelperProcesses(pids: Set<Long>) {
-    pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
+  pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
 }
 // endregion
 
 tasks.named("publish") {
-    doFirst {
-        println("=============================================================================")
-        println("Published bgw-gui: ${rootProject.version}")
-        println("=============================================================================")
-    }
+  doFirst {
+    println("=============================================================================")
+    println("Published bgw-gui: ${rootProject.version}")
+    println("=============================================================================")
+  }
 }
 
 publishing {
@@ -233,50 +228,46 @@ publishing {
   }
 }
 
-//spotless {
-//    kotlin {
-//        target(rootProject.fileTree("bgw-gui/src") {
-//            include("**/*.kt")
-//            exclude("**/Config.kt")
-//        })
-//        defaultFormat(rootProject)
-//    }
-//}
+spotless {
+  kotlin {
+    target(
+        rootProject.fileTree("bgw-gui/src") {
+          include("**/*.kt")
+          exclude("**/Config.kt")
+        })
+    defaultFormat(rootProject)
+  }
+}
 
 // Ignore yarn.lock mismatches
 rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin::class.java) {
-    rootProject.the<YarnRootExtension>().yarnLockMismatchReport =
-        YarnLockMismatchReport.NONE
-    rootProject.the<YarnRootExtension>().reportNewYarnLock = false
-    rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
+  rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.NONE
+  rootProject.the<YarnRootExtension>().reportNewYarnLock = false
+  rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
 }
 
 tasks.register<JavaExec>("runWithSamples") {
-    group = "application"
-    description = "Runs the application with generateSamples=true"
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass.set("tools.aqua.bgw.main.MainKt")
-    args = listOf("-PgenerateSamples=true")
+  group = "application"
+  description = "Runs the application with generateSamples=true"
+  classpath = sourceSets["main"].runtimeClasspath
+  mainClass.set("tools.aqua.bgw.main.MainKt")
+  args = listOf("-PgenerateSamples=true")
 }
 
 tasks.register("setupGenerateSamples") {
-    doFirst {
-        generateSamples = true
-        buildPropertyFile()
-    }
+  doFirst {
+    generateSamples = true
+    buildPropertyFile()
+  }
 }
 
-tasks.named("dokkaHtmlPartial").configure {
-    shouldRunAfter("setupGenerateSamples")
-}
+tasks.named("dokkaHtmlPartial").configure { shouldRunAfter("setupGenerateSamples") }
 
 tasks.register("generateDocsAndSamples") {
-    dependsOn("setupGenerateSamples", "dokkaHtmlPartial", "run")
-    doLast {
-        println("Successfully executed dokkaHtmlPartial and run.")
-    }
+  dependsOn("setupGenerateSamples", "dokkaHtmlPartial", "run")
+  doLast { println("Successfully executed dokkaHtmlPartial and run.") }
 }
 
 tasks.named("run").configure {
-    shouldRunAfter("dokkaHtmlPartial") // Ensure no overlap or conflicts.
+  shouldRunAfter("dokkaHtmlPartial") // Ensure no overlap or conflicts.
 }

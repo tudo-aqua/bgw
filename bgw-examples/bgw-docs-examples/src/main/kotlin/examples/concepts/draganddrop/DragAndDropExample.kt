@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,6 +61,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
       }
     }
     redArea.onDragDropped = { dragEvent ->
+      dragEvent.draggedComponent.removeFromParent()
       redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
     }
 
@@ -71,6 +72,7 @@ class DragAndDropExample : BoardGameApplication("Drag and drop example") {
       }
     }
     greenArea.onDragDropped = { dragEvent ->
+      dragEvent.draggedComponent.removeFromParent()
       greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,12 +63,12 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 
     checkBox.isIndeterminateAllowed = true
 
-    checkBox.isCheckedProperty.addListener { _, newValue ->
+    checkBox.onCheckedChanged = { newValue ->
       outputLabel.text =
           if (newValue) "The check box is checked!" else "The check box is unchecked!"
     }
 
-    checkBox.isIndeterminateProperty.addListener { _, newValue ->
+    checkBox.onIndeterminateChanged = { newValue ->
       if (newValue) outputLabel.text = "The check box is indeterminate!"
     }
 
@@ -88,9 +88,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
                 text = "This is a ColorPicker. Use it to change the colour of this text!")
             .apply { isWrapText = true }
 
-    colorPicker.selectedColorProperty.addListener { _, newValue ->
-      colorPickerLabel.font = Font(color = newValue)
-    }
+    colorPicker.onColorSelected = { newValue -> colorPickerLabel.font = Font(color = newValue) }
 
     menuScene.addComponents(colorPicker, colorPickerLabel)
 
@@ -103,7 +101,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
 
     comboBox.items = listOf(0.0, 1.0, 2.0)
 
-    comboBox.selectedItemProperty.addListener { _, newValue ->
+    comboBox.onItemSelected = { newValue ->
       outputLabel.text = "Combo box selection is : $newValue"
     }
 
@@ -126,7 +124,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
       progressBar.progress = if (progressBar.progress > 1.0) 0.0 else progressBar.progress + 0.05
     }
 
-    progressBar.progressProperty.addListener { _, newValue ->
+    progressBar.onProgressed = { newValue ->
       when {
         newValue > 0.8 -> progressBar.barColor = Color.RED
         newValue > 0.5 -> progressBar.barColor = Color.YELLOW
@@ -160,10 +158,9 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
                 alignment = Alignment.CENTER_LEFT)
             .apply { isWrapText = true }
 
-    radioButton.selectedProperty.addListener { _, newValue ->
-      radioLabel.text =
-          if (newValue) "This is a selected radio button!" else "This is a deselected radio button!"
-    }
+    radioButton.onSelected = { radioLabel.text = "This is a selected radio button!" }
+
+    radioButton.onDeselected = { radioLabel.text = "This is a deselected radio button!" }
 
     menuScene.addComponents(radioButton, radioLabel)
 
@@ -179,17 +176,15 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
                 alignment = Alignment.CENTER_LEFT)
             .apply { isWrapText = true }
 
-    toggleButton.selectedProperty.addListener { _, newValue ->
-      toggleLabel.text =
-          if (newValue) "This is a selected toggle button!"
-          else "This is a deselected toggle button!"
-    }
+    toggleButton.onSelected = { -> toggleLabel.text = "This is a selected toggle button!" }
+
+    toggleButton.onDeselected = { toggleLabel.text = "This is a deselected toggle button!" }
 
     menuScene.addComponents(toggleButton, toggleLabel)
 
     // TextArea
     val textArea = TextArea(posX = 50, posY = 600, prompt = "Type something! This is the prompt.")
-    textArea.textProperty.addListener { _, newValue -> outputLabel.text = newValue }
+    textArea.onTextChanged = { newValue -> outputLabel.text = newValue }
 
     val textAreaLabel =
         Label(
@@ -206,7 +201,7 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
     val textField =
         TextField(
             posX = 450, posY = 600, width = 300, prompt = "Type something! This is the prompt.")
-    textField.textProperty.addListener { _, newValue -> outputLabel.text = newValue }
+    textField.onTextChanged = { newValue -> outputLabel.text = newValue }
 
     val textFieldLabel =
         Label(
