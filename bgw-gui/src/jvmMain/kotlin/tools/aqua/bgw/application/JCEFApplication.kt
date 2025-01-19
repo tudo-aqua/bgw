@@ -31,6 +31,7 @@ import java.io.File
 import java.net.ServerSocket
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 import java.util.stream.Collectors
 import javax.imageio.ImageIO
 import javax.swing.JFrame
@@ -49,7 +50,6 @@ import me.friwi.jcefmaven.EnumPlatform
 import me.friwi.jcefmaven.EnumProgress
 import org.cef.CefApp
 import org.cef.CefClient
-import org.cef.CefSettings
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
@@ -64,6 +64,8 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.FileDialog
+import tools.aqua.bgw.dialog.FileDialogMode
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
@@ -74,7 +76,7 @@ internal object Constants {
 }
 
 internal class JCEFApplication : Application {
-  private var frame: MainFrame? = null
+  var frame: MainFrame? = null
 
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
@@ -134,6 +136,17 @@ internal class JCEFApplication : Application {
 
             try {
               when (eventData) {
+                is FilesPickedEventData -> {
+                  if (Frontend.openedFileDialog != null &&
+                      eventData.id == Frontend.openedFileDialog?.id) {
+                    if (eventData.paths.isNotEmpty()) {
+                      Frontend.openedFileDialog?.onPathsSelected?.invoke(eventData.paths)
+                    } else {
+                      Frontend.openedFileDialog?.onSelectionCancelled?.invoke()
+                    }
+                    Frontend.openedFileDialog = null
+                  }
+                }
                 is MouseEnteredEventData -> {
                   component.onMouseEntered?.invoke(
                       MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY))
@@ -303,6 +316,7 @@ internal class MainFrame(
   var animationMsgRouter: CefMessageRouter? = null
   var globalEventMsgRouter: CefMessageRouter? = null
   var client: CefClient
+  var activeBrowser: CefBrowser
 
   var dialogMap: MutableMap<CefBrowser, DialogData> = mutableMapOf()
 
@@ -310,7 +324,7 @@ internal class MainFrame(
     // region - CEF Initialization / Settings
     val builder = CefAppBuilder()
     builder.cefSettings.windowless_rendering_enabled = useOSR
-    builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+    // builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
 
     val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
     val defaultDirs = ProjectDirectories.from("bgw-gui", "tools.aqua", BGWAppName)
@@ -462,6 +476,7 @@ internal class MainFrame(
     // endregion
 
     val browser = client.createBrowser("$startURL:${Constants.PORT}", useOSR, isTransparent)
+    activeBrowser = browser
     val browserUI = browser.uiComponent
 
     // region - Browser Client Handlers
@@ -578,24 +593,88 @@ internal class MainFrame(
     return pids.filter { it in getChildrenJCEFHelperProcesses() }.toSet()
   }
 
-  fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
+  internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
     browser.executeJavaScript(
         """
                 document.write(`
                     <html>
                         <head>        
                             <style>
-                                body {
-                                    background-color: #f0f0f0;
-                                    font-family: sans-serif;
-                                }
+                                * {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: white;
+  font-family: sans-serif;
+  padding: 1rem;
+  width: calc(100% - 2rem);
+}
+
+h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+p {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.75;
+  margin-bottom: 2rem;
+}
+
+.code-scroll {
+  border-radius: 1rem;
+  background: #0f0f0f;
+  color: white;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  height: 15rem;
+  overflow: auto;
+}
+
+.code-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+code {
+  color: white;
+  box-sizing: border-box;
+  width: 100%;
+  height: fit-content;
+  display: block;
+}
+
+.footer {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+span {
+    display: inline-block;  
+    width: 29px;
+}
                             </style>
                         </head>
                         <body>
                             <h1>${dialogData.header}</h1>
                             <p>${dialogData.message}</p>
-                            <code>${dialogData.exception}</code>
-                            <button onClick="window.close()">Close</button>
+                            <div class="code-scroll">
+                                <code>${dialogData.exception.replace(Regex("\\t"), "<span></span>").replace(Regex("\\n"), "<br>")}</code>
+                            </div>
+                            <div class="footer">
+                              <p>1 of 4</p>
+                              <div class="buttons">
+                                <button onClick="window.close()">Close</button>
+                              </div>
+                            </div>
                         </body>
                     </html>`);
             """.trimIndent(),
@@ -603,7 +682,7 @@ internal class MainFrame(
         0)
   }
 
-  fun openNewDialog(dialogData: DialogData) {
+  internal fun openNewDialog(dialogData: DialogData) {
     val dialogFrame = client.createBrowser("about:blank", false, false)
     val dialogUI = dialogFrame.uiComponent
 
@@ -614,7 +693,38 @@ internal class MainFrame(
     dialog.iconImage = iconImage
     dialog.contentPane.add(dialogUI, BorderLayout.CENTER)
     dialog.pack()
-    dialog.setSize(600, 300)
+    dialog.setSize(500, 700)
     dialog.isVisible = true
+  }
+
+  internal fun openNewFileDialog(fileDialog: FileDialog) {
+    val type =
+        when (fileDialog.mode) {
+          FileDialogMode.OPEN_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN
+          FileDialogMode.OPEN_MULTIPLE_FILES ->
+              CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_MULTIPLE
+          FileDialogMode.SAVE_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_SAVE
+          // FileDialogMode.CHOOSE_DIRECTORY ->
+          // CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_FOLDER
+          FileDialogMode.CHOOSE_DIRECTORY -> TODO("Not yet implemented")
+        }
+
+    val defaultFile = fileDialog.initialFileName
+    val extensions = fileDialog.extensionFilters.mapNotNull { it.getExtensionsString() }
+    println(extensions)
+
+    activeBrowser.runFileDialog(
+        type,
+        fileDialog.title,
+        defaultFile,
+        Vector(extensions),
+        0,
+    ) { selectedFiles ->
+      if (selectedFiles.isNotEmpty()) {
+        fileDialog.onPathsSelected?.invoke(selectedFiles)
+      } else {
+        fileDialog.onSelectionCancelled?.invoke()
+      }
+    }
   }
 }

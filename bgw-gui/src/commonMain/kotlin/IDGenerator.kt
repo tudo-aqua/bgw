@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,25 +15,18 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("unused")
 
-package tools.aqua.bgw.visual
+internal object IDGenerator {
+  private var idCounter = 0
+  private var toggleGroupCounter = 0
+  private var visualIdCounter = 0
+  private var animationIdCounter = 0
+  private var dialogIdCounter = 0
 
-import IDGenerator
-
-/**
- * Visual baseclass.
- *
- * @constructor Creates a [Visual].
- */
-abstract class Visual {
-  internal val id = IDGenerator.generateVisualID()
-
-  /** Copies this [Visual] to a new object. */
-  abstract fun copy(): Visual
-
-  companion object {
-    /** An empty [Visual]. */
-    val EMPTY: Visual = CompoundVisual()
-  }
+  fun generateID(): String = "bgw-id-${idCounter++}"
+  fun generateVisualID(): String = "bgw-vis-${visualIdCounter++}"
+  fun generateToggleGroupID(): String = "bgw-tg-${toggleGroupCounter++}"
+  fun generateAnimationID(): String = "bgw-anim-${animationIdCounter++}"
+  fun generateDialogID(): String = "bgw-dialog-${dialogIdCounter++}"
 }

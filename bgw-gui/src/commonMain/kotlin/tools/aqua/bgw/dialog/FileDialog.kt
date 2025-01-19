@@ -19,8 +19,6 @@
 
 package tools.aqua.bgw.dialog
 
-import tools.aqua.bgw.io.File
-
 /**
  * A [FileDialog] such as a file chooser or save dialog, depending on [FileDialogMode].
  *
@@ -35,10 +33,35 @@ import tools.aqua.bgw.io.File
  * @see FileDialogMode
  * @see ExtensionFilter
  */
-data class FileDialog(
+class FileDialog(
     val mode: FileDialogMode,
     val title: String = "",
     val initialFileName: String = "",
-    val initialDirectoryPath: File? = null,
+    val initialDirectoryPath: String? = null,
     val extensionFilters: List<ExtensionFilter> = emptyList()
-)
+) {
+  internal val id = IDGenerator.generateDialogID()
+
+  /**
+   * Gets invoked whenever this [FileDialog] is used to select file(s). It always returns a list of
+   * selected file paths.
+   *
+   * If [mode] is [FileDialogMode.OPEN_FILE], [FileDialogMode.SAVE_FILE] or
+   * [FileDialogMode.CHOOSE_DIRECTORY] it will always contain exactly one element.
+   *
+   * If [mode] is [FileDialogMode.OPEN_MULTIPLE_FILES] it will contain multiple elements.
+   *
+   * @see FileDialogMode
+   *
+   * @since 1.0
+   */
+  var onPathsSelected: ((List<String>) -> Unit)? = null
+
+  /**
+   * Gets invoked whenever this [FileDialog] is closed without selecting a path or the selection was
+   * cancelled.
+   *
+   * @since 1.0
+   */
+  var onSelectionCancelled: (() -> Unit)? = null
+}

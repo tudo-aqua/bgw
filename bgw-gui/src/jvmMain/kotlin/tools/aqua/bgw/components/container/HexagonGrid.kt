@@ -96,6 +96,7 @@ class HexagonGrid<T : HexagonView>(
   operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
     map[columnIndex to rowIndex]?.run { observableComponents.remove(this) }
     component.orientation = orientation
+    component.parent = this
     map[columnIndex to rowIndex] = component
     observableComponents.add(component)
   }
@@ -155,8 +156,18 @@ class HexagonGrid<T : HexagonView>(
     heightProperty.setSilent(maxY - minY)
   }
 
-  override fun T.onRemove() {}
-  override fun T.onAdd() {}
+  override fun T.onRemove() {
+    map.forEach { (coords, hexagon) ->
+      if (hexagon == this) {
+        map.remove(coords)
+        return
+      }
+    }
+  }
+
+  override fun T.onAdd() {
+    this.parent = this@HexagonGrid
+  }
 
   /** Enumeration class representing the coordinate system options for the hexagon grid. */
   enum class CoordinateSystem {

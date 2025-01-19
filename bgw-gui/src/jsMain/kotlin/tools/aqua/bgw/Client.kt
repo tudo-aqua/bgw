@@ -21,10 +21,12 @@ import ActionProp
 import AnimationData
 import AppData
 import Data
+import FileDialogData
 import ID
 import JsonData
 import PropData
 import data.event.AnimationFinishedEventData
+import data.event.FilesPickedEventData
 import data.event.LoadEventData
 import jsonMapper
 import kotlin.math.floor
@@ -40,6 +42,7 @@ import react.dom.render
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
+import web.fs.FileSystemFileHandle
 import web.timers.setTimeout
 
 internal var internalSocket: WebSocket? = null
@@ -120,7 +123,38 @@ internal fun handleReceivedData(receivedData: Data) {
         JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
       }
     }
+    /* is FileDialogData -> {
+      when (receivedData.mode) {
+        "open_file" -> {
+          window.asDynamic().showOpenFilePicker(
+            jso {
+              id = receivedData.id
+              multiple = false
+            }
+          ).then { handle -> sendFile(handle[0] as FileSystemFileHandle, receivedData)
+          }.catch {
+            JCEFEventDispatcher.dispatchEvent(FilesPickedEventData(emptyList()).apply { id = receivedData.id })
+          }
+        }
+        "open_multiple_files" -> {
+        }
+        "save_file" -> {
+        }
+        "choose_directory" -> {
+        }
+        else -> {}
+      }
+    } */
     else -> {}
+  }
+}
+
+internal fun sendFile(handle: FileSystemFileHandle, dialog: FileDialogData) {
+  handle.getFileAsync().then { file ->
+    println(file.webkitRelativePath)
+    JCEFEventDispatcher.dispatchEvent(
+        FilesPickedEventData(listOf(file.name)).apply { id = dialog.id })
+    println("File picked: ${file.name}")
   }
 }
 

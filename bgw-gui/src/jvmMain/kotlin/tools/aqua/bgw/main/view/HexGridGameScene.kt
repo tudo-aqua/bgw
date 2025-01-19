@@ -37,19 +37,13 @@ import tools.aqua.bgw.visual.Visual
 internal class HexGridGameScene : BoardGameScene() {
   private val hexGrid =
       HexagonGrid<HexagonView>(
-              width = 500,
-              height = 500,
-              posX = 0,
-              posY = 0,
-              coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET,
-              visual = Visual.EMPTY,
-              orientation = HexOrientation.POINTY_TOP)
-          .apply {
-            onMouseClicked = {
-              placeOnHexGrid(
-                  HexagonView(visual = ColorVisual(Color(0, 0, 255)), size = 40).apply {})
-            }
-          }
+          width = 500,
+          height = 500,
+          posX = 0,
+          posY = 0,
+          coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET,
+          visual = Visual.EMPTY,
+          orientation = HexOrientation.POINTY_TOP)
 
   private val satchel =
       Satchel<HexagonView>(
@@ -140,7 +134,7 @@ internal class HexGridGameScene : BoardGameScene() {
               height = 50,
               text = "Pan By",
               visual = ColorVisual(Color(0, 255, 0)))
-          .apply { onMouseClicked = { cameraPane.panBy(200, 100) } }
+          .apply { onMouseClicked = { println(hexGrid.components[50]) } }
 
   val panZeroButton =
       Button(

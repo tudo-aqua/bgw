@@ -19,6 +19,8 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import IDGenerator
+
 /**
  * A [ToggleGroup] may be set as an attribute in [ToggleButton] or [RadioButton].
  *

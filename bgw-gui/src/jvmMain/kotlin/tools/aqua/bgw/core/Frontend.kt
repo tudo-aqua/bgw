@@ -23,7 +23,6 @@ import ActionProp
 import PropData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import java.io.File
 import java.util.*
 import jsonMapper
 import kotlinx.coroutines.runBlocking
@@ -35,7 +34,7 @@ import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.componentChannel
 import tools.aqua.bgw.binding.messageQueue
 import tools.aqua.bgw.binding.module
-import tools.aqua.bgw.builder.*
+import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.components.container.GameComponentContainer
@@ -77,6 +76,8 @@ internal class Frontend {
 
   companion object {
     internal var applicationEngine: Application = JCEFApplication()
+
+    internal var openedFileDialog: FileDialog? = null
 
     /** Current scene scale. */
     internal var sceneScale: Double = 1.0
@@ -248,11 +249,14 @@ internal class Frontend {
      * Shows the given [FileDialog].
      *
      * @param dialog the [FileDialog] to be shown.
-     *
-     * @return chosen file(s) or [Optional.empty] if canceled.
      */
-    internal fun showFileDialog(dialog: FileDialog): Optional<List<File>> =
-        TODO("Not yet implemented")
+    internal fun showFileDialog(dialog: FileDialog) {
+      openedFileDialog = dialog
+      /* val dialogData = DialogMapper.map(dialog)
+      val json = jsonMapper.encodeToString(PropData(dialogData))
+      runBlocking { componentChannel.sendToAllClients(json) } */
+      (applicationEngine as JCEFApplication).frame?.openNewFileDialog(dialog)
+    }
 
     /** Starts the application. */
     internal fun show() {

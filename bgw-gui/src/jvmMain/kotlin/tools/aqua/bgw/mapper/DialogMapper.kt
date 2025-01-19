@@ -18,16 +18,30 @@
 package tools.aqua.bgw.mapper
 
 import DialogData
+import FileDialogData
 import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.FileDialog
 
 internal object DialogMapper {
   fun map(dialog: Dialog): DialogData {
     return DialogData().apply {
+      id = dialog.id
       dialogType = dialog.dialogType
       title = dialog.title
       header = dialog.header
       message = dialog.message
       exception = dialog.exception.stackTraceToString()
+    }
+  }
+
+  fun map(fileDialog: FileDialog): FileDialogData {
+    return FileDialogData().apply {
+      id = fileDialog.id
+      mode = fileDialog.mode.toString().lowercase()
+      title = fileDialog.title
+      initialFileName = fileDialog.initialFileName
+      initialDirectoryPath = fileDialog.initialDirectoryPath
+      extensionFilters = fileDialog.extensionFilters.map { it.description to it.extensions }
     }
   }
 }

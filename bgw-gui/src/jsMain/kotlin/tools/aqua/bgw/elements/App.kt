@@ -523,7 +523,7 @@ internal val App =
               +SceneBuilder.build(menuScene)
             }
           }
-          if(menuScene != null) {
+          if (menuScene != null) {
             bgwBlur {
               css {
                 position = Position.absolute
@@ -556,7 +556,7 @@ internal inline val bgwScenes: IntrinsicType<HTMLAttributes<Element>>
 internal inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_menu_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
-internal inline val bgwBlur : IntrinsicType<HTMLAttributes<Element>>
+internal inline val bgwBlur: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_blur".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
 internal inline val bgwGameScene: IntrinsicType<HTMLAttributes<Element>>

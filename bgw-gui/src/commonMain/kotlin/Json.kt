@@ -67,6 +67,7 @@ private val module = SerializersModule {
     subclass(CompoundVisualData::class)
     // DIALOGS
     subclass(DialogData::class)
+    subclass(FileDialogData::class)
     // ANIMATIONS
     subclass(FadeAnimationData::class)
     subclass(MovementAnimationData::class)
@@ -161,6 +162,7 @@ private val module = SerializersModule {
     subclass(AnimationFinishedEventData::class)
     subclass(StructuredDataSelectEventData::class)
     subclass(ScrollEventData::class)
+    subclass(FilesPickedEventData::class)
   }
   polymorphic(InputEventData::class) {
     subclass(MouseEnteredEventData::class)

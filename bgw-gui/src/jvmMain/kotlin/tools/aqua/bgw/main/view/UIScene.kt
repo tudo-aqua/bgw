@@ -26,7 +26,8 @@ import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
 internal class UIScene :
-    MenuScene(width = 500, background = ColorVisual(Color(255, 0, 0)).apply { transparency = 0.5 }) {
+    MenuScene(
+        width = 500, background = ColorVisual(Color(255, 0, 0)).apply { transparency = 0.5 }) {
   val combo =
       ComboBox<TestObject>(
               width = 1920,

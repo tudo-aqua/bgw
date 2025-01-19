@@ -76,11 +76,22 @@ internal abstract class AnimationData : Data() {
 
 @Serializable
 internal class DialogData : Data() {
+  var id: ID = ""
   var dialogType: DialogType = DialogType.INFORMATION
   var title: String = ""
   var header: String = ""
   var message: String = ""
   var exception: String = ""
+}
+
+@Serializable
+internal class FileDialogData : Data() {
+  var id: ID = ""
+  var mode: String = ""
+  var title: String = ""
+  var initialFileName: String = ""
+  var initialDirectoryPath: String? = null
+  var extensionFilters: List<Pair<String, List<String>>> = emptyList()
 }
 
 @Serializable

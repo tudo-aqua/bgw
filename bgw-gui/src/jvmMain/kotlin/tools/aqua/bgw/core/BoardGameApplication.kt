@@ -19,7 +19,6 @@
 
 package tools.aqua.bgw.core
 
-import java.io.File
 import java.util.*
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
@@ -239,7 +238,7 @@ open class BoardGameApplication(
    *
    * @return Chosen file(s) or [Optional.empty] if canceled.
    */
-  fun showFileDialog(dialog: FileDialog): Optional<List<File>> = Frontend.showFileDialog(dialog)
+  fun showFileDialog(dialog: FileDialog) = Frontend.showFileDialog(dialog)
 
   /**
    * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and

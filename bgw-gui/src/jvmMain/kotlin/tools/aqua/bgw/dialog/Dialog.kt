@@ -41,6 +41,8 @@ internal constructor(
     val exception: Throwable,
     val buttons: List<ButtonType>
 ) {
+  internal val id = IDGenerator.generateDialogID()
+
   /**
    * Creates a Dialog.
    *

@@ -26,6 +26,9 @@ import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.dialog.ExtensionFilter
+import tools.aqua.bgw.dialog.FileDialog
+import tools.aqua.bgw.dialog.FileDialogMode
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
@@ -70,12 +73,28 @@ internal class CardLayoutScene : BoardGameScene() {
               height = 200,
               posX = 700,
               posY = 700,
-              text = "Add Card",
+              text = "Open Dialog",
               visual = ColorVisual(Color(255, 0, 0)))
           .apply {
-            dropAcceptor = { it.draggedComponent is CardView && it.draggedComponent != this }
+            onMouseClicked = {
+              val dialog =
+                  FileDialog(
+                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
+                      title = "Open BGW File",
+                      initialDirectoryPath = "F:\\Test",
+                      initialFileName = "test.bgw",
+                      extensionFilters =
+                          listOf(
+                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
+                              ExtensionFilter("BoardGameWork File", "bgw"),
+                              ExtensionFilter("All Files", "*")))
 
-            onDragDropped = { event -> println("Dropped ${event.draggedComponent} on $this") }
+              Application.showFileDialog(dialog)
+
+              dialog.onPathsSelected = { paths -> println("Selected paths: $paths") }
+
+              dialog.onSelectionCancelled = { println("Selection cancelled") }
+            }
           }
 
   val layout =

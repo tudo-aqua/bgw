@@ -15,16 +15,8 @@
  * limitations under the License.
  */
 
-@file:Suppress("unused")
+package data.event
 
-internal object IDGenerator {
-  private var idCounter = 0
-  private var toggleGroupCounter = 0
-  private var visualIdCounter = 0
-  private var animationIdCounter = 0
+import kotlinx.serialization.Serializable
 
-  fun generateID(): String = "bgw-id-${idCounter++}"
-  fun generateVisualID(): String = "bgw-vis-${visualIdCounter++}"
-  fun generateToggleGroupID(): String = "bgw-tg-${toggleGroupCounter++}"
-  fun generateAnimationID(): String = "bgw-anim-${animationIdCounter++}"
-}
+@Serializable internal class FilesPickedEventData(var paths: List<String>) : EventData()
