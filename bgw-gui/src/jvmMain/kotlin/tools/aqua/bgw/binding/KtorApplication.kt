@@ -18,6 +18,7 @@
 package tools.aqua.bgw.binding
 
 import ActionProp
+import AppData
 import PropData
 import SceneMapper
 import io.ktor.http.*
@@ -29,16 +30,20 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import java.io.ByteArrayOutputStream
 import java.time.Duration
-import java.util.Base64
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import jsonMapper
 import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.Frontend
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicReference
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -56,7 +61,7 @@ internal val componentChannel: Channel =
                               }
                         }))
         it.send(json)
-        if (!uiJob.isActive) uiJob.start()
+        // if (!uiJob.isActive) uiJob.start()
       }
     }
 
@@ -100,6 +105,7 @@ internal fun Application.configureRouting() {
 }
 
 internal val messageQueue = mutableListOf<ActionProp>()
+private val messageQueueMutex = Mutex()
 
 internal fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: (suspend () -> Unit)) =
     this.async {
@@ -122,29 +128,50 @@ internal fun gzip(content: String): String {
 internal fun ungzip(content: ByteArray): String =
     GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
-internal var uiJob =
-    CoroutineScope(Dispatchers.IO).launchPeriodicAsync(10) {
-      if ((Frontend.applicationEngine as JCEFApplication).getTitle() !==
-          Frontend.application.title) {
-        (Frontend.applicationEngine as JCEFApplication).setTitle(Frontend.application.title)
-      }
+private val updateStack = Collections.synchronizedList(Stack<AppData>())
+private val debounceTimeMillis = 5L // Adjust this value as needed
+private val debounceMutex = Mutex()
+private var debounceJob: Job? = null
 
-      if (messageQueue.isNotEmpty()) {
-        val isSceneLoaded = Frontend.boardGameScene != null
-        val message = messageQueue.removeFirst()
-        val result = runCatching {
-          val appData =
-              SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene)
-                  .apply {
+internal fun enqueueUpdate(data: AppData) {
+    updateStack.add(data)
+    debounceJob?.cancel()
+    debounceJob = CoroutineScope(Dispatchers.IO).launch {
+        delay(debounceTimeMillis)
+        debounceMutex.withLock {
+            processLastUpdate()
+        }
+    }
+}
+
+private suspend fun processLastUpdate() {
+    val lastUpdate = updateStack.lastOrNull()
+    updateStack.clear()
+    lastUpdate?.let {
+        try {
+            val json = jsonMapper.encodeToString(PropData(lastUpdate))
+            println("Processing update: $json")
+            componentChannel.sendToAllClients(json)
+        } catch (e: Exception) {
+            println("Error sending update: $e")
+        }
+    }
+}
+
+internal fun markDirty(prop: ActionProp) {
+    val isSceneLoaded = Frontend.boardGameScene != null
+    runCatching {
+        val appData =
+            SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene)
+                .apply {
                     fonts =
                         Frontend.loadedFonts.map { (path, fontName, weight) ->
-                          Triple(path, fontName, weight.toInt())
+                            Triple(path, fontName, weight.toInt())
                         }
-                  }
-          appData.action = ActionProp.UPDATE_COMPONENT
-          val json = jsonMapper.encodeToString(PropData(appData))
-          runBlocking { componentChannel.sendToAllClients(json) }
-        }
-        messageQueue.clear()
-      }
+                }
+        appData.action = prop
+        val json = jsonMapper.encodeToString(PropData(appData))
+        println("Collecting updates... Size: " + updateStack.size)
+        enqueueUpdate(appData)
     }
+}

@@ -50,6 +50,7 @@ import me.friwi.jcefmaven.EnumPlatform
 import me.friwi.jcefmaven.EnumProgress
 import org.cef.CefApp
 import org.cef.CefClient
+import org.cef.CefSettings
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.browser.CefMessageRouter
@@ -303,7 +304,6 @@ internal class JCEFApplication : Application {
   }
 }
 
-@OptIn(ExperimentalSerializationApi::class, DelicateCoroutinesApi::class)
 internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
@@ -324,7 +324,7 @@ internal class MainFrame(
     // region - CEF Initialization / Settings
     val builder = CefAppBuilder()
     builder.cefSettings.windowless_rendering_enabled = useOSR
-    // builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+    builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
 
     val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
     val defaultDirs = ProjectDirectories.from("bgw-gui", "tools.aqua", BGWAppName)

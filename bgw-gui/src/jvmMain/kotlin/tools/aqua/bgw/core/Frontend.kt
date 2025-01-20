@@ -32,6 +32,7 @@ import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.componentChannel
+import tools.aqua.bgw.binding.markDirty
 import tools.aqua.bgw.binding.messageQueue
 import tools.aqua.bgw.binding.module
 import tools.aqua.bgw.builder.SceneBuilder
@@ -150,7 +151,7 @@ internal class Frontend {
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
       menuScene = scene
-      messageQueue.add(ActionProp.SHOW_MENU_SCENE)
+      markDirty(ActionProp.SHOW_MENU_SCENE)
     }
 
     internal fun sendAnimation(animation: Animation) {
@@ -166,7 +167,7 @@ internal class Frontend {
      */
     internal fun hideMenuScene(fadeTime: Double) {
       menuScene = null
-      messageQueue.add(ActionProp.HIDE_MENU_SCENE)
+      markDirty(ActionProp.HIDE_MENU_SCENE)
     }
 
     /**
@@ -176,7 +177,7 @@ internal class Frontend {
      */
     internal fun showGameScene(scene: BoardGameScene) {
       boardGameScene = scene
-      messageQueue.add(ActionProp.SHOW_GAME_SCENE)
+      markDirty(ActionProp.SHOW_GAME_SCENE)
     }
 
     /**
@@ -213,13 +214,13 @@ internal class Frontend {
 
     internal fun updateComponent(component: ComponentView) {
       // println("Sending update for component ${component.id}")
-      messageQueue.add(ActionProp.UPDATE_COMPONENT)
+      markDirty(ActionProp.UPDATE_COMPONENT)
       // val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       // runBlocking { sendToAllClients(json) }
     }
 
     internal fun updateVisual(visual: Visual) {
-      messageQueue.add(ActionProp.UPDATE_VISUAL)
+      markDirty(ActionProp.UPDATE_VISUAL)
       // val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
       // runBlocking { sendToAllClients(json) }
     }
