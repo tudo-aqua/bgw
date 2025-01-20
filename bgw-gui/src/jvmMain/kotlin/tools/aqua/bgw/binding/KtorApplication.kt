@@ -170,8 +170,8 @@ internal fun markDirty(prop: ActionProp) {
                         }
                 }
         appData.action = prop
-        val json = jsonMapper.encodeToString(PropData(appData))
-        println("Collecting updates... Size: " + updateStack.size)
+        // val json = jsonMapper.encodeToString(PropData(appData))
+        // println("Collecting updates... Size: " + updateStack.size)
         enqueueUpdate(appData)
     }
 }
