@@ -73,8 +73,8 @@ internal fun HTML.index() {
     div {
       classes = setOf("bgw-root-container")
       div {
-        classes = setOf("bgw-portal")
-        id = "bgw-portal"
+        classes = setOf("bgw-dialogs")
+        id = "bgw-dialogs"
       }
       div {
         classes = setOf("bgw-root")
@@ -169,7 +169,7 @@ internal fun markDirty(prop: ActionProp) {
                             Triple(path, fontName, weight.toInt())
                         }
                 }
-        appData.action = prop
+        appData.action = ActionProp.UPDATE_COMPONENT
         // val json = jsonMapper.encodeToString(PropData(appData))
         // println("Collecting updates... Size: " + updateStack.size)
         enqueueUpdate(appData)
