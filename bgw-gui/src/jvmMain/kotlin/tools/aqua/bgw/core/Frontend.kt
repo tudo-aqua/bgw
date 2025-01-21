@@ -60,14 +60,14 @@ import tools.aqua.bgw.visual.Visual
 internal class Frontend {
 
   /** Starts the application. */
-  fun start() {
+  fun start(onClose: () -> Unit) {
     embeddedServer(
             Netty,
             port = Constants.PORT,
             host = "localhost",
             module = io.ktor.server.application.Application::module)
         .start(wait = false)
-    applicationEngine.start {
+    applicationEngine.start(onClose) {
       applicationEngine.clearAllEventListeners()
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
@@ -240,8 +240,11 @@ internal class Frontend {
      * @return chosen button or [Optional.empty] if canceled.
      */
     internal fun showDialog(dialog: Dialog): Optional<ButtonType> {
+      println("Showing dialog ${dialog.id}")
       val dialogData = DialogMapper.map(dialog)
-      applicationEngine.openNewDialog(dialogData)
+      val json = jsonMapper.encodeToString(PropData(dialogData))
+      runBlocking { componentChannel.sendToAllClients(json) }
+      // applicationEngine.openNewDialog(dialogData)
 
       return Optional.empty()
     }
@@ -260,8 +263,8 @@ internal class Frontend {
     }
 
     /** Starts the application. */
-    internal fun show() {
-      Frontend().start()
+    internal fun show(onClose: () -> Unit) {
+      Frontend().start(onClose)
     }
 
     /** Stops the application. */

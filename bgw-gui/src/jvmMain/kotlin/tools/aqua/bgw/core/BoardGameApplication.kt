@@ -30,6 +30,7 @@ import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
+import java.util.concurrent.CountDownLatch
 
 /**
  * Baseclass for all BGW Applications. Extend from this class in order to create your own game
@@ -313,7 +314,11 @@ open class BoardGameApplication(
 
   /** Shows the [BoardGameApplication]. */
   fun show() {
-    Frontend.show()
+    val latch = CountDownLatch(1)
+    Frontend.show {
+      latch.countDown()
+    }
+    latch.await()
   }
 
   /** Returns the [show] function, thus closing the application window. */

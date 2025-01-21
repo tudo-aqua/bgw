@@ -21,6 +21,7 @@ import ActionProp
 import AnimationData
 import AppData
 import Data
+import DialogData
 import FileDialogData
 import ID
 import JsonData
@@ -40,6 +41,7 @@ import react.dom.client.Root
 import react.dom.client.createRoot
 import react.dom.render
 import tools.aqua.bgw.elements.App
+import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 import web.fs.FileSystemFileHandle
@@ -51,7 +53,10 @@ internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 internal var animator: Animator = Animator()
 
 internal lateinit var container: HTMLElement
+internal lateinit var dialogContainer : HTMLElement
 internal lateinit var root: Root
+internal lateinit var dialogRoot : Root
+internal val dialogMap = mutableMapOf<ID, DialogData>()
 
 internal fun main() {
   if (Config.USE_SOCKETS) {
@@ -59,6 +64,12 @@ internal fun main() {
     webSocket?.onopen = {}
     webSocket?.onmessage = { event ->
       val cont = document.getElementById("bgw-root")
+      val dialog = document.getElementById("bgw-dialogs")
+
+      if(cont != null) {
+        dialogContainer = dialog as HTMLElement
+      }
+
       if (cont != null) {
         container = cont as HTMLElement
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
@@ -87,34 +98,33 @@ internal fun main() {
 internal fun handleReceivedData(receivedData: Data) {
   when (receivedData) {
     is AppData -> {
-      val app = receivedData
 
-      if (app.action == ActionProp.HIDE_MENU_SCENE) {
+      if (receivedData.action == ActionProp.HIDE_MENU_SCENE) {
         console.log("[SCENE] Hiding Menu Scene")
         val element = document.querySelector("#menuScene") as HTMLElement
         element.classList.toggle("scene--visible", false)
         setTimeout(
             {
               if (!Config.USE_SOCKETS) {
-                renderApp(app)
+                renderApp(receivedData)
               } else {
-                renderAppFast(app)
+                renderAppFast(receivedData)
               }
             },
             300)
-      } else if (app.action == ActionProp.SHOW_MENU_SCENE) {
+      } else if (receivedData.action == ActionProp.SHOW_MENU_SCENE) {
         if (!Config.USE_SOCKETS) {
-          renderApp(app)
+          renderApp(receivedData)
         } else {
-          renderAppFast(app)
+          renderAppFast(receivedData)
         }
         val element = document.querySelector("#menuScene") as HTMLElement
         setTimeout({ element.classList.toggle("scene--visible", true) }, 50)
       } else {
         if (!Config.USE_SOCKETS) {
-          renderApp(app)
+          renderApp(receivedData)
         } else {
-          renderAppFast(app)
+          renderAppFast(receivedData)
         }
       }
     }
@@ -122,6 +132,10 @@ internal fun handleReceivedData(receivedData: Data) {
       animator.startAnimation(receivedData) {
         JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
       }
+    }
+    is DialogData -> {
+      dialogMap[receivedData.id] = receivedData
+      renderDialogs()
     }
     /* is FileDialogData -> {
       when (receivedData.mode) {
@@ -173,6 +187,18 @@ internal fun renderAppFast(appData: AppData) {
   }
   root.render(App.create { data = appData })
   JCEFEventDispatcher.dispatchEvent(LoadEventData())
+}
+
+internal fun renderDialogs() {
+  println("Rendering Dialogs $dialogMap")
+    if (!::dialogRoot.isInitialized) {
+        dialogRoot = createRoot(dialogContainer as Element)
+    }
+    dialogRoot.render(
+        Dialog.create {
+            data = dialogMap.values.toList()
+        }
+    )
 }
 
 internal fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }

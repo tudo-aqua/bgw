@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.main.view
 
+import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.container.Satchel
@@ -27,7 +28,10 @@ import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.HexOrientation
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.ColorVisual
@@ -134,7 +138,33 @@ internal class HexGridGameScene : BoardGameScene() {
               height = 50,
               text = "Pan By",
               visual = ColorVisual(Color(0, 255, 0)))
-          .apply { onMouseClicked = { println(hexGrid.components[50]) } }
+          .apply {
+              onMouseClicked = {
+                  playAnimation(DelayAnimation(5000).apply {
+                      onFinished = {
+                          Frontend.showDialog(Dialog(
+                              DialogType.INFORMATION,
+                              title = "Test",
+                              header = "Test",
+                              message = "Test"
+                          ))
+                      }
+                  })
+
+                  playAnimation(DelayAnimation(2000).apply {
+                      onFinished = {
+                          Frontend.showDialog(Dialog(
+                              DialogType.INFORMATION,
+                              title = "HALLO",
+                              header = "...",
+                              message = "2ter"
+                          ))
+                      }
+                  })
+
+                println(hexGrid.components[50])
+              }
+          }
 
   val panZeroButton =
       Button(

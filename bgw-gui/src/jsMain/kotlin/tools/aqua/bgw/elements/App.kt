@@ -88,7 +88,7 @@ internal val App =
 
           // BLUE
           "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-            ".bgw-root" {
+            ".bgw-root, .bgw-dialogs" {
               fontSize = (100.0 / props.data.height).cqh
               width = 100.cqw
               height = 100.cqh
@@ -115,7 +115,7 @@ internal val App =
 
           // RED
           "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-            ".bgw-root" {
+            ".bgw-root, .bgw-dialogs" {
               fontSize = (100.0 / props.data.width).cqw
               width = 100.cqw
               height = 100.cqh
@@ -142,7 +142,7 @@ internal val App =
 
           // GREEN
           "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-            ".bgw-root" {
+            ".bgw-root, .bgw-dialogs" {
               fontSize = (100.0 / props.data.height).cqh
               width = 100.cqw
               height = 100.cqh
@@ -169,7 +169,7 @@ internal val App =
 
           // YELLOW
           "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-            ".bgw-root" {
+            ".bgw-root, .bgw-dialogs" {
               fontSize = (100.0 / props.data.width).cqw
               width = 100.cqw
               height = 100.cqh

@@ -81,7 +81,7 @@ internal class JCEFApplication : Application {
 
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
-  override fun start(callback: (Any) -> Unit) {
+  override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
     println("[BGW] Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
       frame = MainFrame(loadCallback = callback)
@@ -95,6 +95,11 @@ internal class JCEFApplication : Application {
       frame?.defaultCloseOperation = EXIT_ON_CLOSE
       frame?.isVisible = true
     }
+
+      // Call the onClose callback when the application is closed
+      Runtime.getRuntime().addShutdownHook(Thread {
+          onClose()
+      })
   }
 
   @OptIn(DelicateCoroutinesApi::class)
@@ -284,13 +289,19 @@ internal class JCEFApplication : Application {
               }
             } catch (e: Exception) {
               val mainFrame = this@JCEFApplication.frame
-              mainFrame?.openNewDialog(
+                Frontend.showDialog(
+                    Dialog(
+                        "Error",
+                        "Error",
+                        "An error occurred while handling an event: ${e.message}",
+                        exception = e))
+              /* mainFrame?.openNewDialog(
                   DialogMapper.map(
                       Dialog(
                           "Error",
                           "Error",
                           "An error occurred while handling an event: ${e.message}",
-                          exception = e)))
+                          exception = e))) */
             }
             return true
           }
