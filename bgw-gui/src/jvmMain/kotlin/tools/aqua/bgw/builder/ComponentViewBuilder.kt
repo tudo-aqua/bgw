@@ -65,6 +65,10 @@ internal object ComponentViewBuilder {
       isDisabledProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       isFocusableProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       visualProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+
+      dropAcceptorProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+      onMouseEnteredProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+      onMouseExitedProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
     }
   }
 }

@@ -53,9 +53,9 @@ internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 internal var animator: Animator = Animator()
 
 internal lateinit var container: HTMLElement
-internal lateinit var dialogContainer : HTMLElement
+internal lateinit var dialogContainer: HTMLElement
 internal lateinit var root: Root
-internal lateinit var dialogRoot : Root
+internal lateinit var dialogRoot: Root
 internal val dialogMap = mutableMapOf<ID, DialogData>()
 
 internal fun main() {
@@ -66,7 +66,7 @@ internal fun main() {
       val cont = document.getElementById("bgw-root")
       val dialog = document.getElementById("bgw-dialogs")
 
-      if(cont != null) {
+      if (cont != null) {
         dialogContainer = dialog as HTMLElement
       }
 
@@ -191,14 +191,10 @@ internal fun renderAppFast(appData: AppData) {
 
 internal fun renderDialogs() {
   println("Rendering Dialogs $dialogMap")
-    if (!::dialogRoot.isInitialized) {
-        dialogRoot = createRoot(dialogContainer as Element)
-    }
-    dialogRoot.render(
-        Dialog.create {
-            data = dialogMap.values.toList()
-        }
-    )
+  if (!::dialogRoot.isInitialized) {
+    dialogRoot = createRoot(dialogContainer as Element)
+  }
+  dialogRoot.render(Dialog.create { data = dialogMap.values.toList() })
 }
 
 internal fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }

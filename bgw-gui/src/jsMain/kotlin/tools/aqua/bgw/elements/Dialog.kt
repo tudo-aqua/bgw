@@ -27,88 +27,85 @@ import react.dom.html.ReactHTML.p
 import web.cssom.*
 
 internal external interface DialogProps : Props {
-    var data: List<DialogData>
+  var data: List<DialogData>
 }
 
-internal val Dialog = FC<DialogProps> { props ->
-    val size = props.data.size
-    val (num, setNum) = useState(0)
-    val (current, setCurrent) = useState(props.data[0])
+internal val Dialog =
+    FC<DialogProps> { props ->
+      val size = props.data.size
+      val (num, setNum) = useState(0)
+      val (current, setCurrent) = useState(props.data[0])
 
-    div {
+      div {
         css {
-            width = 100.pct
-            height = 100.pct
-            position = Position.fixed
-            top = 0.px
-            left = 0.px
-            inset = 0.px
-            zIndex = zIndex(2147483647)
-            display = Display.flex
-            justifyContent = JustifyContent.center
-            alignItems = AlignItems.center
-            backgroundColor = Color("#00000050")
+          width = 100.pct
+          height = 100.pct
+          position = Position.fixed
+          top = 0.px
+          left = 0.px
+          inset = 0.px
+          zIndex = zIndex(2147483647)
+          display = Display.flex
+          justifyContent = JustifyContent.center
+          alignItems = AlignItems.center
+          backgroundColor = Color("#00000050")
         }
 
         div {
+          css {
+            width = 500.em
+            height = 500.em
+            backgroundColor = Color("#FFFFFF")
+            color = Color("#000000")
+          }
+
+          h1 {
+            css { fontSize = 20.em }
+            +current.title
+          }
+
+          p {
+            css { fontSize = 16.em }
+            +current.header
+            +current.message
+          }
+
+          div {
             css {
-                width = 500.em
-                height = 500.em
-                backgroundColor = Color("#FFFFFF")
-                color = Color("#000000")
+              width = 100.pct
+              display = Display.flex
+              justifyContent = JustifyContent.spaceBetween
+              alignItems = AlignItems.center
             }
 
-            h1 {
-                css {
-                    fontSize = 20.em
+            button {
+              onClick = {
+                if (num > 0) {
+                  setNum(num - 1)
+                  setCurrent(props.data[num - 1])
                 }
-                +current.title
+              }
+              +"Previous"
             }
 
             p {
-                css {
-                    fontSize = 16.em
-                }
-                +current.header
-                +current.message
+              css {
+                fontSize = 16.em
+                textAlign = TextAlign.center
+              }
+              +"${num + 1} / $size"
             }
 
-            div {
-                css {
-                    width = 100.pct
-                    display = Display.flex
-                    justifyContent = JustifyContent.spaceBetween
-                    alignItems = AlignItems.center
+            button {
+              onClick = {
+                if (num < size - 1) {
+                  setNum(num + 1)
+                  setCurrent(props.data[num + 1])
                 }
-
-                button {
-                    onClick = {
-                        if (num > 0) {
-                            setNum(num - 1)
-                            setCurrent(props.data[num - 1])
-                        }
-                    }
-                    +"Previous"
-                }
-
-                p {
-                    css {
-                        fontSize = 16.em
-                        textAlign = TextAlign.center
-                    }
-                    +"${num + 1} / $size"
-                }
-
-                button {
-                    onClick = {
-                        if (num < size - 1) {
-                            setNum(num + 1)
-                            setCurrent(props.data[num + 1])
-                        }
-                    }
-                    +"Next"
-                }
+              }
+              +"Next"
             }
+          }
         }
+      }
     }
-}

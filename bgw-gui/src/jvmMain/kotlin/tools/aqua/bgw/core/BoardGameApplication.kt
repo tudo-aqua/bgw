@@ -20,6 +20,7 @@
 package tools.aqua.bgw.core
 
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.ButtonType
@@ -30,7 +31,6 @@ import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
-import java.util.concurrent.CountDownLatch
 
 /**
  * Baseclass for all BGW Applications. Extend from this class in order to create your own game
@@ -315,9 +315,7 @@ open class BoardGameApplication(
   /** Shows the [BoardGameApplication]. */
   fun show() {
     val latch = CountDownLatch(1)
-    Frontend.show {
-      latch.countDown()
-    }
+    Frontend.show { latch.countDown() }
     latch.await()
   }
 

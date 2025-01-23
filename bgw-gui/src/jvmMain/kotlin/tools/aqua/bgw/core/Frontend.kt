@@ -33,7 +33,6 @@ import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.componentChannel
 import tools.aqua.bgw.binding.markDirty
-import tools.aqua.bgw.binding.messageQueue
 import tools.aqua.bgw.binding.module
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.components.ComponentView

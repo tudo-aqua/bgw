@@ -43,7 +43,6 @@ import kotlin.system.exitProcess
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.CefBuildInfo
 import me.friwi.jcefmaven.EnumPlatform
@@ -96,10 +95,8 @@ internal class JCEFApplication : Application {
       frame?.isVisible = true
     }
 
-      // Call the onClose callback when the application is closed
-      Runtime.getRuntime().addShutdownHook(Thread {
-          onClose()
-      })
+    // Call the onClose callback when the application is closed
+    Runtime.getRuntime().addShutdownHook(Thread { onClose() })
   }
 
   @OptIn(DelicateCoroutinesApi::class)
@@ -289,19 +286,13 @@ internal class JCEFApplication : Application {
               }
             } catch (e: Exception) {
               val mainFrame = this@JCEFApplication.frame
-                Frontend.showDialog(
-                    Dialog(
-                        "Error",
-                        "Error",
-                        "An error occurred while handling an event: ${e.message}",
-                        exception = e))
-              /* mainFrame?.openNewDialog(
+              mainFrame?.openNewDialog(
                   DialogMapper.map(
                       Dialog(
                           "Error",
                           "Error",
                           "An error occurred while handling an event: ${e.message}",
-                          exception = e))) */
+                          exception = e)))
             }
             return true
           }
@@ -681,7 +672,6 @@ span {
                                 <code>${dialogData.exception.replace(Regex("\\t"), "<span></span>").replace(Regex("\\n"), "<br>")}</code>
                             </div>
                             <div class="footer">
-                              <p>1 of 4</p>
                               <div class="buttons">
                                 <button onClick="window.close()">Close</button>
                               </div>
@@ -704,7 +694,8 @@ span {
     dialog.iconImage = iconImage
     dialog.contentPane.add(dialogUI, BorderLayout.CENTER)
     dialog.pack()
-    dialog.setSize(500, 700)
+    dialog.setSize(800, 500)
+    dialog.setLocationRelativeTo(this)
     dialog.isVisible = true
   }
 

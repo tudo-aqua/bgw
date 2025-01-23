@@ -30,6 +30,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import java.io.ByteArrayOutputStream
 import java.time.Duration
+import java.util.*
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import jsonMapper
@@ -39,11 +40,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
-import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.core.Frontend
-import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.atomic.AtomicReference
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -134,44 +131,42 @@ private val debounceMutex = Mutex()
 private var debounceJob: Job? = null
 
 internal fun enqueueUpdate(data: AppData) {
-    updateStack.add(data)
-    debounceJob?.cancel()
-    debounceJob = CoroutineScope(Dispatchers.IO).launch {
+  updateStack.add(data)
+  debounceJob?.cancel()
+  debounceJob =
+      CoroutineScope(Dispatchers.IO).launch {
         delay(debounceTimeMillis)
-        debounceMutex.withLock {
-            processLastUpdate()
-        }
-    }
+        debounceMutex.withLock { processLastUpdate() }
+      }
 }
 
 private suspend fun processLastUpdate() {
-    val lastUpdate = updateStack.lastOrNull()
-    updateStack.clear()
-    lastUpdate?.let {
-        try {
-            val json = jsonMapper.encodeToString(PropData(lastUpdate))
-            println("Processing update: $json")
-            componentChannel.sendToAllClients(json)
-        } catch (e: Exception) {
-            println("Error sending update: $e")
-        }
+  val lastUpdate = updateStack.lastOrNull()
+  updateStack.clear()
+  lastUpdate?.let {
+    try {
+      val json = jsonMapper.encodeToString(PropData(lastUpdate))
+      // println("Processing update: $json")
+      componentChannel.sendToAllClients(json)
+    } catch (e: Exception) {
+      println("Error sending update: $e")
     }
+  }
 }
 
 internal fun markDirty(prop: ActionProp) {
-    val isSceneLoaded = Frontend.boardGameScene != null
-    runCatching {
-        val appData =
-            SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene)
-                .apply {
-                    fonts =
-                        Frontend.loadedFonts.map { (path, fontName, weight) ->
-                            Triple(path, fontName, weight.toInt())
-                        }
-                }
-        appData.action = ActionProp.UPDATE_COMPONENT
-        // val json = jsonMapper.encodeToString(PropData(appData))
-        // println("Collecting updates... Size: " + updateStack.size)
-        enqueueUpdate(appData)
-    }
+  val isSceneLoaded = Frontend.boardGameScene != null
+  runCatching {
+    val appData =
+        SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
+          fonts =
+              Frontend.loadedFonts.map { (path, fontName, weight) ->
+                Triple(path, fontName, weight.toInt())
+              }
+        }
+    appData.action = ActionProp.UPDATE_COMPONENT
+    // val json = jsonMapper.encodeToString(PropData(appData))
+    // println("Collecting updates... Size: " + updateStack.size)
+    enqueueUpdate(appData)
+  }
 }

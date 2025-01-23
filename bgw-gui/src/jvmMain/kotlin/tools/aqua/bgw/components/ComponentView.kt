@@ -448,21 +448,31 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
       isFocusableProperty.value = value
     }
 
+  internal val onMouseEnteredProperty = Property<((MouseEvent) -> Unit)?>(null)
   /**
    * Gets invoked with a [MouseEvent] whenever the mouse enters this [ComponentView].
    *
    * @see Event
    * @see isDisabled
    */
-  var onMouseEntered: ((MouseEvent) -> Unit)? = null
+  var onMouseEntered: ((MouseEvent) -> Unit)?
+    get() = onMouseEnteredProperty.value
+    set(value) {
+      onMouseEnteredProperty.value = value
+    }
 
+  internal val onMouseExitedProperty = Property<((MouseEvent) -> Unit)?>(null)
   /**
    * Gets invoked with a [MouseEvent] whenever the mouse leaves this [ComponentView].
    *
    * @see Event
    * @see isDisabled
    */
-  var onMouseExited: ((MouseEvent) -> Unit)? = null
+  var onMouseExited: ((MouseEvent) -> Unit)?
+    get() = onMouseExitedProperty.value
+    set(value) {
+      onMouseExitedProperty.value = value
+    }
 
   /**
    * Gets invoked with a [MouseEvent] whenever the mouse is pressed inside this [ComponentView].
@@ -528,9 +538,11 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @see isFocusable
    */
   @Deprecated(
-      "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
+      "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.",
+      ReplaceWith("onKeyPressed"))
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
+  internal val dropAcceptorProperty = Property<((DragEvent) -> Boolean)?>(null)
   /**
    * Returns whether this [ComponentView] is a valid drop target for the dragged component in the
    * given [DragEvent] or not.
@@ -550,7 +562,11 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @see DropEvent
    * @see isDisabled
    */
-  var dropAcceptor: ((DragEvent) -> Boolean)? = null
+  var dropAcceptor: ((DragEvent) -> Boolean)?
+    get() = dropAcceptorProperty.value
+    set(value) {
+      dropAcceptorProperty.value = value
+    }
 
   /**
    * Gets invoked with a [DragEvent] whenever the mouse enters this [ComponentView] while performing

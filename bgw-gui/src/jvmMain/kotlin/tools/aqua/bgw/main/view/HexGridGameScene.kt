@@ -139,31 +139,33 @@ internal class HexGridGameScene : BoardGameScene() {
               text = "Pan By",
               visual = ColorVisual(Color(0, 255, 0)))
           .apply {
-              onMouseClicked = {
-                  playAnimation(DelayAnimation(5000).apply {
-                      onFinished = {
-                          Frontend.showDialog(Dialog(
+            onMouseClicked = {
+              playAnimation(
+                  DelayAnimation(5000).apply {
+                    onFinished = {
+                      Frontend.showDialog(
+                          Dialog(
                               DialogType.INFORMATION,
                               title = "Test",
                               header = "Test",
-                              message = "Test"
-                          ))
-                      }
+                              message = "Test"))
+                    }
                   })
 
-                  playAnimation(DelayAnimation(2000).apply {
-                      onFinished = {
-                          Frontend.showDialog(Dialog(
+              playAnimation(
+                  DelayAnimation(2000).apply {
+                    onFinished = {
+                      Frontend.showDialog(
+                          Dialog(
                               DialogType.INFORMATION,
                               title = "HALLO",
                               header = "...",
-                              message = "2ter"
-                          ))
-                      }
+                              message = "2ter"))
+                    }
                   })
 
-                println(hexGrid.components[50])
-              }
+              println(hexGrid.components[50])
+            }
           }
 
   val panZeroButton =
