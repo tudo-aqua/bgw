@@ -24,9 +24,10 @@ import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.core.*
-import tools.aqua.bgw.main.examples.ExampleUIScene as AnimationScene
+import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.main.examples.ExampleAnimationScene as AnimationScene
 import tools.aqua.bgw.mapper.AnimationMapper
 import tools.aqua.bgw.visual.ColorVisual
 
@@ -34,51 +35,33 @@ import tools.aqua.bgw.visual.ColorVisual
 internal class ExampleAnimationScene : BoardGameScene(width = 622, height = 300) {
   val map = mutableMapOf<String, String>()
 
-  val button =
-      Button(
-          posX = 100,
-          posY = 50,
-          width = 200,
-          height = 100,
-          text = "I am a Button.",
-          visual = ColorVisual.LIGHT_GRAY)
+  val greyToken =
+      TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
 
-  val button2 =
-      Button(
-          posX = 0,
-          posY = 0,
-          width = 200,
-          height = 200,
-          text = "Also a Button.",
-          visual = ColorVisual.RED)
+  val redToken =
+    TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
 
-  val movementAnimation =
-      MovementAnimation(componentView = button, fromX = 100.0, toX = 200.0, duration = 1000)
+  /** Creates a movement animation that moves the token from x = 100 to x = 200 in 1 second. */
+  val movementAnimationTo =
+      MovementAnimation(componentView = greyToken, fromX = 100.0, toX = 200.0, duration = 1000)
 
+  /** Creates a movement animation that moves the token by x = 200 and y = 50 in 2 seconds. */
   val movementAnimationBy =
-      MovementAnimation(componentView = button, byX = 100.0, byY = 100.0, duration = 1000)
+      MovementAnimation(componentView = redToken, byX = 200.0, byY = 50.0, duration = 2000)
 
   init {
-    playAnimationAndSerialize(::movementAnimation, ::button)
+    setComponentAndSerialize(::greyToken)
+    setComponentAndSerialize(::redToken)
+    playAnimationAndSerialize(::movementAnimationTo, ::greyToken)
+    playAnimationAndSerialize(::movementAnimationBy, ::redToken)
   }
 
-  fun playMovementAnimation() {
-    playAnimation(movementAnimation)
+  fun playMovementAnimationTo() {
+    playAnimation(movementAnimationTo)
   }
 
-  private fun <T : ComponentView> setComponentAndSerialize(prop: KProperty0<T>) {
-    val comp = prop.get()
-
-    clearComponents()
-    addComponents(comp)
-
-    val fullyQualifiedName = "${this::class.qualifiedName}.${prop.name}"
-
-    val appData = SceneMapper.map(menuScene = null, gameScene = this)
-    val json = jsonMapper.encodeToString(PropData(appData))
-    map[fullyQualifiedName] = json
-
-    clearComponents()
+  fun playMovementAnimationBy() {
+    playAnimation(movementAnimationBy)
   }
 
   private fun <T : ComponentView> playAnimationAndSerialize(
@@ -96,7 +79,20 @@ internal class ExampleAnimationScene : BoardGameScene(width = 622, height = 300)
     val animationData = AnimationMapper.map(animation)
     val json = jsonMapper.encodeToString(PropData(animationData))
     map[fullyQualifiedName] = json
+  }
 
-    println(map[fullyQualifiedName])
+  internal fun <T : ComponentView> setComponentAndSerialize(prop: KProperty0<T>) {
+    val comp = prop.get()
+
+    clearComponents()
+    addComponents(comp)
+
+    val fullyQualifiedName = "${this::class.qualifiedName}.${prop.name}"
+
+    val appData = SceneMapper.map(menuScene = null, gameScene = this)
+    val json = jsonMapper.encodeToString(PropData(appData))
+    map[fullyQualifiedName] = json
+
+    clearComponents()
   }
 }

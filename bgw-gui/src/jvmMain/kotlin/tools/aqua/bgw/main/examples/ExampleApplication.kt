@@ -19,7 +19,7 @@ package tools.aqua.bgw.main.examples
 
 import tools.aqua.bgw.core.BoardGameApplication
 
-internal object ExampleApplication : BoardGameApplication() {
+internal object ExampleApplication : BoardGameApplication(width = 622, height = 300) {
   val exampleUIScene = ExampleUIScene()
   val exampleAnimationScene = ExampleAnimationScene()
 }

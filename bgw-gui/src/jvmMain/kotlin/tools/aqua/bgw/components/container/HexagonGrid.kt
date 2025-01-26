@@ -94,11 +94,15 @@ class HexagonGrid<T : HexagonView>(
    * @param component The hexagon component to set.
    */
   operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
-    map[columnIndex to rowIndex]?.run { observableComponents.remove(this) }
+    map[columnIndex to rowIndex]?.run {
+      observableComponents.remove(this)
+      onRemove?.invoke(this)
+    }
     component.orientation = orientation
     component.parent = this
     map[columnIndex to rowIndex] = component
     observableComponents.add(component)
+    onAdd?.invoke(component)
   }
 
   /**
@@ -154,6 +158,11 @@ class HexagonGrid<T : HexagonView>(
 
     widthProperty.setSilent(maxX - minX)
     heightProperty.setSilent(maxY - minY)
+
+    components.forEach {
+      it.posXProperty.setSilent(it.posXProperty.value - minX)
+      it.posYProperty.setSilent(it.posYProperty.value - minY)
+    }
   }
 
   override fun T.onRemove() {

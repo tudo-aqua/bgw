@@ -25,12 +25,14 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.main.examples.ExampleUIScene as Scene
+import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.visual.ColorVisual
 
 /** Metadata: [Scene] */
 internal class ExampleUIScene : BoardGameScene(width = 622, height = 300) {
   val map = mutableMapOf<String, String>()
 
+  /** Create a light gray button. */
   val button =
       Button(
           posX = 100,
@@ -40,6 +42,7 @@ internal class ExampleUIScene : BoardGameScene(width = 622, height = 300) {
           text = "I am a Button.",
           visual = ColorVisual.LIGHT_GRAY)
 
+  /** Creates a red button with large border radius. */
   val button2 =
       Button(
           posX = 0,
@@ -47,7 +50,7 @@ internal class ExampleUIScene : BoardGameScene(width = 622, height = 300) {
           width = 200,
           height = 200,
           text = "Also a Button.",
-          visual = ColorVisual.RED)
+          visual = ColorVisual.RED.apply { style.borderRadius = BorderRadius.LARGE })
 
   init {
     setComponentAndSerialize(::button)

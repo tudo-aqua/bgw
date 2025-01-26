@@ -67,6 +67,7 @@ internal val internalChannel: Channel =
 
 internal fun HTML.index() {
   body {
+    style = "width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none;"
     div {
       classes = setOf("bgw-root-container")
       div {
