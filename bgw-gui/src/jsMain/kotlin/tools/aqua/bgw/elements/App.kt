@@ -182,7 +182,7 @@ internal val App =
               width = 100.cqw
               height = (100.0 / props.data.width * props.data.height).cqw
               position = Position.relative
-              backgroundColor = rgb(0, 0, 0, 1.0)
+              backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
               display = Display.block
             }
@@ -517,13 +517,14 @@ internal val App =
               zIndex = zIndex(1000)
             }
 
-            if (menuScene != null) {
+            if (menuScene != undefined) {
               ariaExpanded = true
 
               +SceneBuilder.build(menuScene)
             }
           }
-          if (menuScene != null) {
+
+          if (menuScene != undefined) {
             bgwBlur {
               css {
                 position = Position.absolute
@@ -535,6 +536,7 @@ internal val App =
               }
             }
           }
+
           val gameScene = props.data.gameScene
           bgwGameScene {
             css { position = Position.absolute }

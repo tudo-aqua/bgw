@@ -77,23 +77,24 @@ internal class CardLayoutScene : BoardGameScene() {
               visual = ColorVisual(Color(255, 0, 0)))
           .apply {
             onMouseClicked = {
-              val dialog =
-                  FileDialog(
-                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
-                      title = "Open BGW File",
-                      initialDirectoryPath = "F:\\Test",
-                      initialFileName = "test.bgw",
-                      extensionFilters =
-                          listOf(
-                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
-                              ExtensionFilter("BoardGameWork File", "bgw"),
-                              ExtensionFilter("All Files", "*")))
-
-              Application.showFileDialog(dialog)
-
-              dialog.onPathsSelected = { paths -> println("Selected paths: $paths") }
-
-              dialog.onSelectionCancelled = { println("Selection cancelled") }
+                Application.showMenuScene(Application.menuScene)
+//              val dialog =
+//                  FileDialog(
+//                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
+//                      title = "Open BGW File",
+//                      initialDirectoryPath = "F:\\Test",
+//                      initialFileName = "test.bgw",
+//                      extensionFilters =
+//                          listOf(
+//                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
+//                              ExtensionFilter("BoardGameWork File", "bgw"),
+//                              ExtensionFilter("All Files", "*")))
+//
+//              Application.showFileDialog(dialog)
+//
+//              dialog.onPathsSelected = { paths -> println("Selected paths: $paths") }
+//
+//              dialog.onSelectionCancelled = { println("Selection cancelled") }
             }
           }
 
@@ -110,6 +111,7 @@ internal class CardLayoutScene : BoardGameScene() {
           .apply {
             onMouseClicked = { event ->
               if (event.button == MouseButtonType.LEFT_BUTTON) {
+                  this.visual = ColorVisual(Color(0, 255, 0))
                 this.add(
                     CardView(
                             posX = 0,
