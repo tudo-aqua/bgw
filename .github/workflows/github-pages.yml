@@ -11,27 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # Required for version number generation
+        uses: actions/checkout@v4
 
-      - name: Validate Gradle artifacts
-        uses: gradle/wrapper-validation-action@v1
-
-      - name: Set up JDK
-        uses: actions/setup-java@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: temurin
-          java-version: 11
+          node-version: "20"
 
-      - name: Generate Page
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: :bgw-docs:jekyllBuild
+      - name: Install dependencies
+        run: yarn install
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.0
-        with:
-          branch: gh-pages
-          folder: bgw-docs/build/jekyll
-          single-commit: true
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          yarn run deploy -- -u "github-actions-bot <support+actions@github.com>"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
