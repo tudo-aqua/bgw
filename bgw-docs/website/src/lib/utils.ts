@@ -1,0 +1,462 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+String.prototype.isEmpty = function () {
+  return this.trim().length === 0;
+};
+
+export function isNumber(value?: string | number): boolean {
+  return value != null && value !== "" && !isNaN(Number(value.toString()));
+}
+
+Array.prototype.takeRight = function (n: number) {
+  return this.slice(this.length - n, this.length);
+};
+
+Array.prototype.fromRight = function (n: number) {
+  return this[this.length - n - 1];
+};
+
+Array.prototype.excludeLast = function (n: number = 1) {
+  return this.slice(0, this.length - n);
+};
+
+Array.prototype.moveLastToFirst = function () {
+  if (this.length === 0) return this;
+  const last = this.fromRight(0);
+  return [last, ...this.excludeLast()];
+};
+
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+String.prototype.toTitleCase = function () {
+  return this.split(" ")
+    .map((word) => word.capitalize())
+    .join(" ");
+};
+
+export function isListener(c: any) {
+  return c.name.startsWith("on") && c.signature.indexOf("->") > 0;
+}
+
+export function createKotlinCodeLinebreaks(code: string, length: number = 100) {
+  if (code.length < length) {
+    return code.replace(/(\s+)?:(\s+)?/gm, " : ");
+  }
+
+  return formatAll(code);
+}
+
+export function normalizeKotlinCode(input: string): string {
+  const lines = input.trim().split("\n");
+  console.log(lines);
+  const normalizedLines: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    // Remove leading/trailing whitespace
+    let currentLine = lines[i].trim();
+
+    // Skip truly empty lines
+    if (!currentLine) {
+      normalizedLines.push("");
+      continue;
+    }
+
+    // Combine lines until we hit an empty line or semicolon
+    let nextIndex = i + 1;
+    while (nextIndex < lines.length) {
+      const nextLine = lines[nextIndex].trim();
+      if (!nextLine || currentLine.endsWith(";")) break;
+
+      currentLine += " " + nextLine;
+      i = nextIndex;
+      nextIndex++;
+    }
+
+    // Normalize all whitespace to single spaces
+    currentLine = currentLine.replace(/\s+/g, " ");
+    normalizedLines.push(currentLine);
+  }
+
+  console.log(normalizedLines);
+  return normalizedLines.join("\n");
+}
+
+export function formatAll(input: string): string {
+  let normalized = normalizeKotlinCode(input);
+  return normalized.split("\n").map(formatKotlinCode).join("\n");
+}
+
+export function formatKotlinCode(input: string): string {
+  input = input.trim();
+  let formatted = "";
+  let inString = false;
+  let lastChar = "";
+  let indentLevel = 0;
+  const indentSize = 4;
+  let currentLine = "";
+
+  // Define matching bracket pairs
+  const bracketPairs = {
+    "(": ")",
+    "{": "}",
+    "[": "]",
+  };
+
+  // Enhanced bracket info including parent context
+  const brackets: Array<{
+    char: string;
+    pos: number;
+    context?: string; // Store context like 'apply', 'run', etc.
+  }> = [];
+
+  const addLine = () => {
+    if (currentLine.trim()) {
+      if (formatted === "") {
+        formatted += currentLine.trim() + "\n"; // Do not indent the first line
+      } else {
+        formatted +=
+          " ".repeat(indentLevel * indentSize) + currentLine.trim() + "\n";
+      }
+    } else {
+      formatted += "\n";
+    }
+    currentLine = "";
+  };
+
+  const isColorConstructor = (pos: number): boolean => {
+    const beforeContent = input.slice(Math.max(0, pos - 6), pos).trim();
+    if (!beforeContent.endsWith("Color")) return false;
+
+    let j = pos + 1;
+    let content = "";
+    let depth = 1;
+
+    while (j < input.length && depth > 0) {
+      if (input[j] === "(") depth++;
+      if (input[j] === ")") depth--;
+      content += input[j];
+      j++;
+    }
+
+    // Remove whitespace and check if it's a valid color format
+    const params = content
+      .slice(0, -1)
+      .trim()
+      .split(",")
+      .map((p) => p.trim());
+
+    // Valid formats:
+    // Color(0xFF00FF00) - Single hex parameter
+    // Color(255, 255, 255) - RGB
+    // Color(255, 255, 255, 255) - RGBA
+    return (
+      (params.length === 1 && params[0].startsWith("0x")) ||
+      (params.length === 3 && params.every((p) => !isNaN(Number(p)))) ||
+      (params.length === 4 && params.every((p) => !isNaN(Number(p))))
+    );
+  };
+
+  const isInsideColorConstructor = (): boolean => {
+    if (brackets.length === 0) return false;
+    const lastBracket = brackets[brackets.length - 1];
+    return isColorConstructor(lastBracket.pos);
+  };
+
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+
+    // Handle strings
+    if (char === '"' && lastChar !== "\\") {
+      inString = !inString;
+    }
+
+    if (!inString) {
+      // Check if next content is a generic or empty
+      const isGenericOrEmpty = (pos: number): boolean => {
+        let j = pos + 1;
+        let content = "";
+        while (
+          j < input.length &&
+          input[j] !== ")" &&
+          input[j] !== "}" &&
+          input[j] !== "]"
+        ) {
+          if (!input[j].match(/\s/)) content += input[j];
+          j++;
+        }
+        return (
+          content.length === 0 ||
+          (content.length === 1 && content.match(/[A-Z]/))
+        );
+      };
+
+      // Opening brackets
+      if (Object.keys(bracketPairs).includes(char)) {
+        const context = currentLine.trim().endsWith("apply")
+          ? "apply"
+          : undefined;
+        brackets.push({ char, pos: i, context });
+
+        if (isGenericOrEmpty(i) || isColorConstructor(i)) {
+          currentLine += char;
+        } else {
+          currentLine += char;
+          addLine();
+          indentLevel++; // Moved after addLine() to increase indent for next line
+        }
+      }
+      // Closing brackets
+      else if (Object.values(bracketPairs).includes(char)) {
+        if (brackets.length > 0) {
+          const lastBracket = brackets[brackets.length - 1];
+          if (bracketPairs[lastBracket.char] === char) {
+            brackets.pop();
+            const isSimpleBracket =
+              isGenericOrEmpty(lastBracket.pos) ||
+              isColorConstructor(lastBracket.pos);
+
+            if (!isSimpleBracket && currentLine.trim()) {
+              addLine();
+              indentLevel--;
+              currentLine = char;
+            } else {
+              currentLine += char;
+            }
+          }
+        }
+      }
+      // Handle commas and other line breaks
+      else if (char === "," || char === ";") {
+        currentLine += char;
+        if (
+          !isInsideColorConstructor() &&
+          !currentLine.trim().startsWith(") :")
+        ) {
+          addLine();
+        }
+      } else if (char === "\n") {
+        addLine();
+      } else {
+        currentLine += char;
+      }
+    } else {
+      currentLine += char;
+    }
+
+    lastChar = char;
+  }
+
+  // Add remaining content
+  if (currentLine.trim()) {
+    addLine();
+  }
+
+  return formatted.trim();
+}
+
+// Database Configuration
+export const idbConfig = {
+  databaseName: "bgw-db",
+  version: 1,
+  stores: [
+    {
+      name: "images",
+      id: { keyPath: "id", autoIncrement: true },
+      indices: [
+        { name: "name", keyPath: "name", options: { unique: true } },
+        { name: "src", keyPath: "src" },
+      ],
+    },
+  ],
+};
+
+export const layoutMap = {
+  animation: {
+    title: "Animation",
+    description: "Animations are a powerful tool to bring your app to life.",
+    icon: "motion_play",
+    package: "tools.aqua.bgw.animation",
+  },
+  components: {
+    title: "Components",
+    description: "Components are the building blocks of your BGW app.",
+    icon: "shapes",
+    package: "tools.aqua.bgw.components",
+  },
+  container: {
+    title: "Container",
+    description:
+      "Containers are used to layout and align your game components.",
+    icon: "stacks",
+    package: "tools.aqua.bgw.components.container",
+  },
+  gamecomponentviews: {
+    title: "GameComponentViews",
+    description: "GameComponentViews are used to display your game components.",
+    icon: "playing_cards",
+    package: "tools.aqua.bgw.components.gamecomponentviews",
+  },
+  layoutviews: {
+    title: "LayoutViews",
+    description: "LayoutViews are used to layout and align your ui components.",
+    icon: "view_carousel",
+    package: "tools.aqua.bgw.components.layoutviews",
+  },
+  uicomponents: {
+    title: "UIComponents",
+    description: "UIComponents are used to build your UI.",
+    icon: "buttons_alt",
+    package: "tools.aqua.bgw.components.uicomponents",
+  },
+  core: {
+    title: "Core",
+    description: "Includes core classes, functions and constants.",
+    icon: "token",
+    package: "tools.aqua.bgw.core",
+  },
+  dialog: {
+    title: "Dialog",
+    description: "Dialogs are popups that can be used to display information.",
+    icon: "wysiwyg",
+    package: "tools.aqua.bgw.dialog",
+  },
+  event: {
+    title: "Event",
+    description: "Events are used to handle user interactions.",
+    icon: "web_traffic",
+    package: "tools.aqua.bgw.event",
+  },
+  io: {
+    title: "IO",
+    description: "IO classes are used to read and write files.",
+    icon: "save",
+    package: "tools.aqua.bgw.io",
+  },
+  observable: {
+    title: "Observable",
+    description: "Observables are used to listen for changes in your data.",
+    icon: "visibility",
+    package: "tools.aqua.bgw.observable",
+  },
+  lists: {
+    title: "Lists",
+    description:
+      "Observable lists are used to store data as a list and observe changes.",
+    icon: "format_list_numbered",
+    package: "tools.aqua.bgw.observable.lists",
+  },
+  properties: {
+    title: "Properties",
+    description: "Properties are used to store data and observe changes.",
+    icon: "123",
+    package: "tools.aqua.bgw.observable.properties",
+  },
+  style: {
+    title: "Style",
+    description: "Style classes are used to style your components.",
+    icon: "style",
+    package: "tools.aqua.bgw.style",
+  },
+  util: {
+    title: "Util",
+    description: "Util classes are used to perform common tasks.",
+    icon: "function",
+    package: "tools.aqua.bgw.util",
+  },
+  visual: {
+    title: "Visual",
+    description: "Visual classes are used to give your components color.",
+    icon: "colors",
+    package: "tools.aqua.bgw.visual",
+  },
+};
+
+export const guideStructure = {
+  "Discover BoardGameWork": {
+    icon: "school",
+    items: [
+      { title: "Installation", url: "/guides/installation" },
+      { title: "Getting Started", url: "/guides/getting-started" },
+      { title: "Declaring Scenes", url: "/guides/declaring-scenes" },
+      { title: "Using Components", url: "/guides/using-components" },
+      { title: "Handling Events", url: "/guides/handling-events" },
+    ],
+    dir: "",
+  },
+  Components: {
+    icon: "widgets",
+    items: [
+      {
+        title: "Component View",
+        url: "/guides/components/componentview",
+      },
+      {
+        title: "Dynamic Component",
+        url: "/guides/components/dynamiccomponentview",
+      },
+      {
+        title: "Game Components",
+        url: "/guides/components/gamecomponents",
+      },
+      {
+        title: "UI Components",
+        url: "/guides/components/uicomponents",
+      },
+      { title: "Layout", url: "/guides/components/layout" },
+      { title: "Container", url: "/guides/components/container" },
+    ],
+    dir: "components",
+  },
+  Concepts: {
+    icon: "lightbulb",
+    items: [
+      { title: "Animations", url: "/guides/concepts/animations" },
+      {
+        title: "Drag and Drop",
+        url: "/guides/concepts/drag-and-drop",
+      },
+      { title: "Observable", url: "/guides/concepts/observable" },
+      { title: "User Input", url: "/guides/concepts/user-input" },
+      { title: "Visual", url: "/guides/concepts/visual" },
+    ],
+    dir: "concepts",
+  },
+  Dialogs: {
+    icon: "chat",
+    items: [
+      { title: "Dialog", url: "/guides/dialogs/dialog" },
+      { title: "File Dialog", url: "/guides/dialogs/file-dialog" },
+    ],
+    dir: "dialogs",
+  },
+  Util: {
+    icon: "build",
+    items: [
+      {
+        title: "Bidirectional Map",
+        url: "/guides/util/bidirectionalmap",
+      },
+      { title: "Coordinate", url: "/guides/util/coordinate" },
+      { title: "Stack", url: "/guides/util/stack" },
+    ],
+    dir: "util",
+  },
+  Network: {
+    icon: "lan",
+    items: [
+      {
+        title: "Communication",
+        url: "/guides/network/communication",
+      },
+      { title: "JSON", url: "/guides/network/json" },
+    ],
+    dir: "network",
+  },
+};

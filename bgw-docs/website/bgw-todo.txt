@@ -1,0 +1,99 @@
+BGW TODO
+- ✅ CameraPane panBy
+(- CameraPane panToElement / focusComponent -> Gibt BGW-ID an React)
+- ✅ CameraPane pan / panBy inkl. Zoom-Angabe
+- ✅ CameraPane Zoom an BGW zurückgeben (Zoom-Event)
+- ✅ CameraPane anchorPoint fixen (pan triggert nicht immer?)
+- ✅ CameraPane Visuals
+(- CameraPane horizontal / vertikal sperren)
+- ✅ CameraPane pan Button
+
+Generelles TODOs:
+- KDoc anpassen
+- Guides umschreiben / anpassen für 1.0
+- Guides-Website fertig machen
+- Examples einbauen
+- BGW-Playground-Website fertig machen
+  - Export von Components
+  - CameraPane Props richtig
+- BGW-Net: Dokumentation / Guides
+- Pipeline Scripts schreiben
+- Changelog schreiben?
+
+BGW Implementation TODOs / Missing Features:
+- WindowMode (Fullscreen, Maximized, etc)
+- ScaleMode
+- AspectRatio
+- GridPane CenterModes / ColumnWidths / RowWidths
+- ListView Columns (Width)
+- ToggleGroup Event
+- Dialogs
+  - Direkt als Overlay in BGW?
+  - Custom BGW-Buttons in Liste von Buttons anzeigen und "nur" onMouseClicked-Event erlauben
+  - "Default theme" haben und Styling manuell festlegen
+    - z.B. Hintergrund, Abrundung, Width / Height, Font
+  - https://dribbble.com/shots/24022941-Onboarding-tooltip
+- ✅ FileDialog
+
+- ✴️ Since x.x in Properties anzeigen (Inherited fehlen)
+- ✴️ Since x.x in Functions anzeigen (Inherited fehlen)
+- ✅ Since x.x in Primary Constructor anzeigen
+- ✅ Since x.x in Values anzeigen
+- ✅ Since x.x rechts neben Property von passendem Constructor-Param anzeigen?
+- ✅ Mehrere selbe Throws anzeigen (Fehler gefunden in ImageVisual-Klasse) -> Parser hat nur ein Throws vom selben Typen? -> KDoc gibt nichts raus...
+- Detailseite Throws anzeigen?
+- ✅ Class, Enum, etc groß schreiben
+- Icons für Class, Enum, etc erstellen
+- ✅ Since x.x clickbar machen und auf Tag bei Github verlinken
+- ✅ New Lines in Klassendoku durch <br> ersetzen
+- ✅ Funktions-Overload führt zu angehangener (doppelter) Dokumentation
+- @sample verwenden und (irgendwie) als Preview anzeigen
+- Suche (für Guides und Doku? Schwierig.)
+
+# WindowMode.MAXIMIZED is no longer used as of BGW 1.0.
+
+
+
+
+(?<=^|\s).+Exception(?=:)
+java.lang.IndexOutOfBoundsException: Index 50 out of bounds for length 7
+at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:64)
+at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:70)
+at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:248)
+at java.base/java.util.Objects.checkIndex(Objects.java:374)
+at java.base/java.util.ArrayList.get(ArrayList.java:459)
+at tools.aqua.bgw.main.view.HexGridGameScene.panButton$lambda$13$lambda$12(HexGridGameScene.kt:137)
+at tools.aqua.bgw.application.JCEFApplication$registerEventListeners$handler$1.onQuery(JCEFApplication.kt:173)
+
+
+✅ Properties irgendwie private machen? Führen zu Verwirrung.
+✅ EventListener hinzufügen
+
+
+BGW TODO bis 02.12.
+- ✅ Hexgrid dynamisch erweitern lassen
+- ✅ Drag'n Drop schöner machen
+- ✅ Drag'n Drop klappt nicht auf einer Area?
+- ✅ Satchel muss Inhalte verbergen
+- ✅ Font Loading ist broken (aber nur bei MauMau die "Staatliches"-Font?)
+- ✅ Font Loading braucht Fallback für alte BGW-Projekte
+- ✅ Color braucht Fallback für alte BGW-Projekte
+- ✅ Placeholder sind zu groß
+- ✅ Outline bei Fokus um Inputs weg
+- ✅ Fenstertitel kann nicht gesetzt werden
+- ✅ Logs entfernen
+- ✅ onKey-Events hinzufügen
+- ✅ Hovereffekte hinzufügen
+- ✅ Sensor für Click-Events bei Draggable-Components einbauen
+- ✅ Error-Messages haben keinen Stacktrace
+- ✅ HexGrid Rotation einbauen (Flat-Top / Pointy-Top)
+- ✅ BidirectionalMap-Funktionen übernehmen
+- ✅ CSS Properties wieder hinzufügen
+
+- ✅ HexGrid in CameraPane testen
+- ✅ Satchel mit HexViews testen
+- ✅ Rotation von HexViews in Grid testen
+
+- ✅ Drag'n Drop mit CameraPain
+
+- ✅ BGW-Net Folien fertig machen

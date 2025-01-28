@@ -1,0 +1,19 @@
+.preview-tabs {
+  .code-area {
+    pointer-events: none;
+  }
+
+  .CodeMirror-scroll {
+    padding-block: 0;
+  }
+}
+
+.code-tabs {
+  .code-area {
+    pointer-events: none;
+  }
+
+  .CodeMirror-scroll {
+    // padding-block: 0;
+  }
+}

@@ -1,0 +1,113 @@
+.markdown {
+  h1 {
+    @apply font-bold text-4xl mt-20;
+
+    &:first-child {
+      @apply mt-0;
+    }
+  }
+
+  h2 {
+    @apply font-bold text-3xl mt-12;
+  }
+
+  & > p {
+    @apply text-muted-foreground mt-6 text-lg text-justify;
+
+    code {
+      @apply font-mono text-primary text-base;
+    }
+  }
+
+  tbody > tbody {
+    width: 100%;
+  }
+
+  .guide-banner {
+    @apply text-base pr-6 mt-8;
+
+    i {
+      @apply text-lg;
+    }
+  }
+
+  tbody .guide-banner {
+    @apply my-0;
+  }
+
+  pre {
+    @apply mt-8;
+  }
+
+  tr {
+    & > td:first-child {
+      @apply pl-8 font-mono text-foreground text-sm;
+    }
+
+    & > td {
+      @apply text-base;
+    }
+  }
+
+  a {
+    @apply font-bold relative inline-flex items-center transition-colors duration-200 ease-in-out;
+    margin-right: 1.1em;
+
+    &:after {
+      content: "open_in_new";
+      font-family: "Material Symbols Rounded";
+      font-size: 0.8em;
+      margin-top: 0.1em;
+      position: absolute;
+      right: -1.35em;
+    }
+
+    &:hover {
+      @apply text-primary-foreground;
+    }
+  }
+
+  h1 + *,
+  h2 + * {
+    @apply mt-6;
+  }
+
+  .code-tabs,
+  .preview-tabs {
+    @apply mt-6;
+  }
+
+  .ruler + * {
+    @apply mt-0;
+  }
+}
+
+// .component {
+//   code a {
+//     @apply font-bold relative inline-flex pr-1 items-center;
+
+//     &:after {
+//       content: "open_in_new";
+//       font-family: "Material Symbols Rounded";
+//       font-size: 0.8em;
+//       @apply pl-1.5;
+//       margin-top: 0.1em;
+//     }
+//   }
+// }
+
+.component {
+  .docs-banner {
+    & > p {
+      @apply text-base;
+    }
+  }
+
+  p {
+    @apply text-lg;
+
+    code {
+      @apply font-mono text-primary text-base;
+    }
+  }
+}
