@@ -28,7 +28,6 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tools.aqua.defaultFormat
 
 plugins {
@@ -73,7 +72,13 @@ fun generateProperties(suffix: String = "") =
     }
 """.trimIndent()
 
-tasks.withType<KotlinCompile> { buildPropertyFile() }
+if (!project.extra.has("useSockets")) {
+  project.extra.set("useSockets", "true")
+}
+
+if (!project.extra.has("generateSamples")) {
+  project.extra.set("generateSamples", "false")
+}
 
 val kdocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
