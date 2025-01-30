@@ -154,7 +154,7 @@ open class BoardGameApplication(
    * It is visible in the space that appears if the application window ratio does not fit the
    * [Scene] ratio.
    *
-   * Do not mix up this [Property] with the [Scene] background [Visual] [Scene.background].
+   * Do not mix up with the [Scene.background] [Visual].
    */
   var background: Visual
     get() = Frontend.backgroundProperty.value

@@ -65,7 +65,12 @@ abstract class LabeledUIComponent(
    */
   internal val isWrapTextProperty: BooleanProperty = BooleanProperty(isWrapText)
 
-  /** Defines if text should be wrapped, if it exceeds the [Label]'s [width]. */
+  /**
+   * Defines if text should be wrapped, if it exceeds the [Label]'s [width].
+   *
+   * @since 0.2
+   *
+   */
   var isWrapText: Boolean
     get() = isWrapTextProperty.value
     set(value) {

@@ -33,7 +33,7 @@ import tools.aqua.bgw.visual.Visual
  * The [formatFunction] is used to gain a String representation of each item. If no [formatFunction]
  * is specified the [toString] function gets used instead.
  *
- * Whenever the user selects an item, the [selectedItemProperty] gets updated.
+ * Whenever the user selects an item, the [selectedItem] gets updated.
  *
  * @constructor Creates a [ComboBox].
  *
@@ -44,9 +44,11 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [ComboBox]. Default: [DEFAULT_COMBOBOX_HEIGHT].
  * @param font [Font] to be used for the options. Default: default [Font] constructor.
  * @property prompt Prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever
- * the [selectedItemProperty] value is `null`.Default: empty string.
+ * the [selectedItem] value is `null`. Default: empty string.
  * @param items The initial selection of items. Default: empty list.
  * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
+ *
+ * @since 0.1
  */
 open class ComboBox<T>(
     posX: Number = 0,
@@ -54,6 +56,7 @@ open class ComboBox<T>(
     width: Number = DEFAULT_COMBOBOX_WIDTH,
     height: Number = DEFAULT_COMBOBOX_HEIGHT,
     font: Font = Font(),
+    /** Prompt for this [ComboBox]. */
     val prompt: String = "",
     items: List<T> = emptyList(),
     formatFunction: ((T) -> String)? = null,
@@ -85,7 +88,7 @@ open class ComboBox<T>(
    */
   internal val observableItemsList: ObservableList<T> = ObservableArrayList()
 
-  /** Items [List] for this [ComboBox]. */
+  /** [List] of all selectable items for this [ComboBox]. */
   var items: List<T>
     get() = observableItemsList.toList()
     set(value) {
@@ -148,6 +151,8 @@ open class ComboBox<T>(
    * Gets invoked whenever an item is selected.
    *
    * @see selectedItem
+   *
+   * @since 0.10
    */
   var onItemSelected: ((T?) -> Unit)? = null
 }

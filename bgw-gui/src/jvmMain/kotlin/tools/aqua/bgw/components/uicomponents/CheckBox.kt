@@ -44,6 +44,8 @@ import tools.aqua.bgw.visual.Visual
  * @param isChecked The initial checked state. Default: `false`.
  * @param allowIndeterminate The initial [isIndeterminateAllowed] state. Default: `false`.
  * @param isIndeterminate The initial [isIndeterminate] state. Default: `false`.
+ *
+ * @since 0.1
  */
 open class CheckBox(
     posX: Number = 0,
@@ -76,7 +78,7 @@ open class CheckBox(
    */
   internal val isCheckedProperty: BooleanProperty = BooleanProperty(isChecked)
 
-  /** The checked state. */
+  /** [Boolean] whether this component is checked. */
   var isChecked: Boolean
     get() = isCheckedProperty.value
     set(value) {
@@ -104,7 +106,7 @@ open class CheckBox(
    */
   internal val isIndeterminateProperty: BooleanProperty = BooleanProperty(isIndeterminate)
 
-  /** [Boolean] whether this component in the indeterminate state. */
+  /** [Boolean] whether this component is in the indeterminate state. */
   var isIndeterminate: Boolean
     get() = isIndeterminateProperty.value
     set(value) {
@@ -118,16 +120,20 @@ open class CheckBox(
   }
 
   /**
-   * Gets invoked whenever this [CheckBox] gets checked or unchecked.
+   * Gets invoked whenever this [CheckBox] changes the checked state.
    *
    * @see isChecked
+   *
+   * @since 0.10
    */
   var onCheckedChanged: ((Boolean) -> Unit)? = null
 
   /**
-   * Gets invoked whenever this [CheckBox] gets set to indeterminate or not.
+   * Gets invoked whenever this [CheckBox] changes the indeterminate state.
    *
    * @see isIndeterminate
+   *
+   * @since 0.10
    */
   var onIndeterminateChanged: ((Boolean) -> Unit)? = null
 }

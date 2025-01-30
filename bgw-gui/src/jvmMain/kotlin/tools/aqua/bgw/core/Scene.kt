@@ -190,62 +190,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
     Frontend.sendAnimation(animation)
   }
 
-  //	/**
-  //	 * Zooms [Scene] to given bounds.
-  //	 *
-  //	 * @param fromX left bound.
-  //	 * @param fromY top bound.
-  //	 * @param toX right bound.
-  //	 * @param toY bottom bound.
-  //	 */
-  //	fun zoomTo(fromX: Number, fromY: Number, toX: Number, toY: Number): Unit =
-  //		zoomTo(fromX.toDouble(), fromY.toDouble(), toX.toDouble(), toY.toDouble())
-
-  //	/**
-  //	 * Zooms [Scene] to given bounds.
-  //	 *
-  //	 * @param from top left [Coordinate].
-  //	 * @param to bottom right [Coordinate].
-  //	 */
-  //	fun zoomTo(from: Coordinate, to: Coordinate): Unit =
-  //		zoomTo(from.xCoord, from.yCoord, to.xCoord, to.yCoord)
-
-  //	/**
-  //	 * Zooms [Scene] to given bounds.
-  //	 *
-  //	 * @param to layout bounds.
-  //	 */
-  //	fun zoomTo(to: CoordinatePlain): Unit =
-  //		zoomTo(to.topLeft, to.bottomRight)
-
-  //	/**
-  //	 * Zooms scene out to max bounds.
-  //	 */
-  //	fun zoomOut() {
-  //		zoomDetail = CoordinatePlain(0, 0, width, height)
-  //	}
-
-  //	/**
-  //	 * Sets [zoomDetailProperty] to given bounds.
-  //	 * Checks for targets out of layout bounds.
-  //	 */
-  //	private fun zoomTo(fromX: Double, fromY: Double, toX: Double, toY: Double) {
-  //		when {
-  //			fromX < 0 || fromY < 0 || toX < 0 || toY < 0 ->
-  //				throw IllegalArgumentException("All bounds must be positive.")
-  //			fromX >= toX ->
-  //				throw IllegalArgumentException("Right X bound is not greater than left X bound.")
-  //			fromY >= toY ->
-  //				throw IllegalArgumentException("Bottom Y bound is not greater than top Y bound.")
-  //			toX > width ->
-  //				throw IllegalArgumentException("Right X bound is greater than scene width.")
-  //			toY > height ->
-  //				throw IllegalArgumentException("Bottom Y bound is greater than scene height.")
-  //		}
-  //
-  //		zoomDetail = CoordinatePlain(fromX, fromY, toX, toY)
-  //	}
-
   /**
    * Searches [node] recursively through the visual tree and logs path where the [node] appears as
    * first component and the [rootNode] as last.
