@@ -35,7 +35,7 @@ enum class WindowMode {
    * [BoardGameApplication.isMaximized] as 'true'. Overrides [BoardGameApplication.isFullScreen] as
    * 'false'.
    */
-  @Deprecated("WindowMode.MAXIMIZED is no longer used as of BGW 1.0.") MAXIMIZED,
+  @Deprecated("WindowMode.MAXIMIZED is no longer used as of BGW 0.10.") MAXIMIZED,
 
   /**
    * Starts Application as maximized window. Overrides [BoardGameApplication.isFullScreen] as

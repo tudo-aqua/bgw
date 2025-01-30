@@ -53,7 +53,7 @@ class FileDialog(
    *
    * @see FileDialogMode
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onPathsSelected: ((List<String>) -> Unit)? = null
 
@@ -61,7 +61,7 @@ class FileDialog(
    * Gets invoked whenever this [FileDialog] is closed without selecting a path or the selection was
    * cancelled.
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onSelectionCancelled: (() -> Unit)? = null
 }

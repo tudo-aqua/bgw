@@ -58,7 +58,7 @@ class HexagonGrid<T : HexagonView>(
 
     /**
      * The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
-     * @since 1.0
+     * @since 0.10
      */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
@@ -67,7 +67,7 @@ class HexagonGrid<T : HexagonView>(
 
   /** A mutable map that stores the hexagons in the grid. */
   @Deprecated(
-      "Getting components using the map is no longer supported as of BGW 1.0.",
+      "Getting components using the map is no longer supported as of BGW 0.10.",
       ReplaceWith("this.components"))
   val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 

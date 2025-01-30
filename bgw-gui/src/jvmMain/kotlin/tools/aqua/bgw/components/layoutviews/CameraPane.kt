@@ -88,7 +88,7 @@ open class CameraPane<T : LayoutView<*>>(
    * Determines if the target layout view should be limited to the bounds of the camera pane. This
    * will also affect the panning of the camera pane with [pan] and [panBy] as well as zooming.
    *
-   * @since 1.0
+   * @since 0.10
    */
   var limitBounds: Boolean
     get() = limitBoundsProperty.value
@@ -144,7 +144,7 @@ open class CameraPane<T : LayoutView<*>>(
    *
    * @see zoom
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onZoomed: ((Number) -> Unit)? = null
 
@@ -162,7 +162,7 @@ open class CameraPane<T : LayoutView<*>>(
    * @see pan
    * @see panBy
    *
-   * @since 1.0
+   * @since 0.10
    */
   fun pan(x: Number, y: Number, zoom: Double, smooth: Boolean = true) {
     panData =
@@ -210,7 +210,7 @@ open class CameraPane<T : LayoutView<*>>(
    * @see pan
    * @see panBy
    *
-   * @since 1.0
+   * @since 0.10
    */
   fun panBy(xOffset: Number, yOffset: Number, zoom: Double, smooth: Boolean = true) {
     panData =
