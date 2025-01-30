@@ -20,6 +20,8 @@ rootProject.name = "bgw"
 include(
     "bgw-gui",
     "bgw-docs",
+    "bgw-docs:parser",
+    "bgw-docs:website",
     "bgw-examples:bgw-docs-examples",
     "bgw-examples:bgw-maumau-example",
     "bgw-examples:bgw-sudoku-example",

@@ -43,34 +43,76 @@ plugins {
 node {
   version.set("20.17.0")
   download.set(true)
-  nodeProjectDir.set(projectDir.resolve("website"))
+  nodeProjectDir.set(projectDir)
 }
 
-tasks.register<GradleBuild>("docsBuild") {
-  group = "documentation"
-  tasks =
-      listOf(
-          ":bgw-docs:website:buildAndCopyRuntimeTask",
-          ":bgw-docs:parser:buildAndCopySamplesTask",
-          ":bgw-docs:parser:buildAndCopyDokkaJson",
-          "yarnPreDeploy")
+tasks.register("generateSamplesConfig") {
+  this.group = "build"
+  doFirst { project.extra["generateSamples"] = "true" }
+  doLast { buildPropertyFile() }
+  finalizedBy(":bgw-gui:build")
 }
 
-tasks.register("yarnInstall", YarnTask::class) {
-  group = "yarn"
-  args.set(listOf("install"))
+tasks.register("generateSamples") {
+  this.group = "build"
+  dependsOn("generateSamplesConfig")
+  mustRunAfter(":bgw-gui:build")
+  finalizedBy(":bgw-gui:run")
 }
 
-tasks.register("yarnPreDeploy", YarnTask::class) {
-  dependsOn("yarnInstall")
-  group = "yarn"
-  args.set(listOf("predeploy"))
+tasks.register("buildAndCopySamples") {
+  this.group = "build"
+  dependsOn("generateSamples")
+  mustRunAfter(":bgw-gui:run")
+  doLast {
+    val sourceDir = project(":bgw-gui").buildDir.resolve("examples/bgwSamples.json")
+    val destinationDir = projectDir.resolve("../website/public/bgw")
+    println("Copying files from $sourceDir to $destinationDir")
+    copy {
+      from(sourceDir)
+      into(destinationDir)
+    }
+  }
 }
 
-tasks.register("docsServe", YarnTask::class) {
-  dependsOn("docsBuild", "yarnInstall")
-  this.group = "documentation"
-  args.set(listOf("run", "dev"))
+tasks.register("buildAndCopyDokkaHtml") {
+  dependsOn(":bgw-gui:dokkaHtmlPartial")
+  this.group = "build"
+  doLast {
+    val sourceDir = project(":bgw-gui").buildDir.resolve("dokka/htmlPartial")
+    val destinationDir = projectDir.resolve("example/htmlPartial")
+    println("Copying files from $sourceDir to $destinationDir")
+    copy {
+      from(sourceDir)
+      into(destinationDir)
+    }
+  }
+}
+
+tasks.register("dokkaJson", YarnTask::class) {
+  dependsOn("npmInstall", "buildAndCopyDokkaHtml")
+  this.group = "build"
+  doFirst { projectDir.resolve("output").mkdir() }
+  args.set(listOf("run", "build"))
+}
+
+tasks.register("buildAndCopyDokkaJson") {
+  dependsOn("dokkaJson")
+  this.group = "build"
+  doLast {
+    val sourceDir = projectDir.resolve("output/cleanedStructure.json")
+    val destinationDir = projectDir.resolve("../website/public/bgw")
+    println("Copying files from $sourceDir to $destinationDir")
+    copy {
+      from(sourceDir)
+      into(destinationDir)
+    }
+  }
+}
+
+tasks.register<GradleBuild>("buildAndCopySamplesTask") {
+  this.group = "build"
+  tasks = listOf("buildAndCopySamples")
 }
 
 val wrappersVersion = "-pre.831"

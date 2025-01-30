@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import com.github.gradle.node.yarn.task.YarnTask
 import io.ktor.http.*
 
 /*
@@ -35,42 +34,39 @@ import io.ktor.http.*
  * limitations under the License.
  */
 
-plugins {
-  id("tools.aqua.bgw.base-conventions")
-  id("com.github.node-gradle.node") version "7.1.0"
+plugins { id("tools.aqua.bgw.base-conventions") }
+
+tasks.register("generateRuntime") {
+  this.group = "build"
+  doFirst {
+    println("Generated runtime with sockets disabled.")
+    project.extra["useSockets"] = "false"
+  }
+  doLast { buildPropertyFile() }
+  finalizedBy(
+      ":bgw-gui:compileProductionExecutableKotlinJs",
+      ":bgw-gui:compileTestDevelopmentExecutableKotlinJs",
+      ":bgw-gui:build")
 }
 
-node {
-  version.set("20.17.0")
-  download.set(true)
-  nodeProjectDir.set(projectDir.resolve("website"))
+tasks.register("buildAndCopyRuntime") {
+  dependsOn("generateRuntime")
+  this.group = "build"
+  mustRunAfter(":bgw-gui:build")
+  doLast {
+    val sourceDir = project(":bgw-gui").buildDir.resolve("dist/js/productionExecutable/bgw-gui.js")
+    val destinationDir = projectDir.resolve("public/bgw")
+    println("Copying files from $sourceDir to $destinationDir")
+    copy {
+      from(sourceDir)
+      into(destinationDir)
+    }
+  }
 }
 
-tasks.register<GradleBuild>("docsBuild") {
-  group = "documentation"
-  tasks =
-      listOf(
-          ":bgw-docs:website:buildAndCopyRuntimeTask",
-          ":bgw-docs:parser:buildAndCopySamplesTask",
-          ":bgw-docs:parser:buildAndCopyDokkaJson",
-          "yarnPreDeploy")
-}
-
-tasks.register("yarnInstall", YarnTask::class) {
-  group = "yarn"
-  args.set(listOf("install"))
-}
-
-tasks.register("yarnPreDeploy", YarnTask::class) {
-  dependsOn("yarnInstall")
-  group = "yarn"
-  args.set(listOf("predeploy"))
-}
-
-tasks.register("docsServe", YarnTask::class) {
-  dependsOn("docsBuild", "yarnInstall")
-  this.group = "documentation"
-  args.set(listOf("run", "dev"))
+tasks.register<GradleBuild>("buildAndCopyRuntimeTask") {
+  group = "build"
+  tasks = listOf("buildAndCopyRuntime")
 }
 
 val wrappersVersion = "-pre.831"
