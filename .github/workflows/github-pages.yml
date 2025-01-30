@@ -7,28 +7,32 @@ on:
       - docs_new_backend
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: ./bgw-docs/website
-
 jobs:
   github-pages-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/checkout@v2
         with:
-          node-version: "20"
+          fetch-depth: 0 # Required for version number generation
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Validate Gradle artifacts
+        uses: gradle/wrapper-validation-action@v1
 
-      - name: Deploy with gh-pages
-        run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          yarn run deploy -- -u "github-actions-bot <support+actions@github.com>"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Generate Page
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :bgw-docs:docsBuild
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages
+          folder: bgw-docs/website/dist
+          single-commit: true
