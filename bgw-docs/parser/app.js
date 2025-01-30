@@ -814,7 +814,7 @@ function parseFileToJSON(tree) {
   if (tree.path.includes("index")) {
     console.log(tree);
   }
-  if (tree.path.endsWith("\\index.html")) {
+  if (tree.path.endsWith("\\index.html") || tree.path.endsWith("/index.html")) {
     isClassGlobal = "global";
   } else if (
     tree.breadcrumbs.length > 1 &&
