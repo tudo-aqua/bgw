@@ -26,15 +26,14 @@ import tools.aqua.bgw.components.ComponentView
  *
  * Receiver is the dragged component.
  *
- * @constructor Creates a [DropEvent] containing [draggedComponent] and [dragTargets].
+ * @constructor Creates a [DropEvent] containing [draggedComponent] and [dropTarget].
  *
  * @property draggedComponent Currently dragged [ComponentView].
- * @property dragTargets [List] of all [ComponentView]s that accepted the drag gesture in case of a
- * dragGestureEnded [Event]. Contains all accepting [ComponentView]s in the order they accepted.
+ * @property dropTarget [ComponentView] that is a possible drop target below the currently dragged component.
  *
  * @see DragEvent
  */
 class DropEvent(
     val draggedComponent: ComponentView,
-    val dragTargets: List<ComponentView> = emptyList()
+    val dropTarget: ComponentView? = null
 ) : Event()

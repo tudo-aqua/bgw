@@ -549,7 +549,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * Implement this function in such a way that it returns `true` if this [ComponentView] accepts
    * the drop of the given [DropEvent.draggedComponent] or `false` if a drop is not valid. The
-   * [DropEvent.draggedComponent] will snap back if all available drop targets return `false`.
+   * [DropEvent.draggedComponent] will snap back if the available drop target returns `false`.
    *
    * It is advised not to modify the [Scene] or its children in this function. A better suited
    * function to modify the [Scene] or its children after a drag and drop gesture is [onDragDropped]

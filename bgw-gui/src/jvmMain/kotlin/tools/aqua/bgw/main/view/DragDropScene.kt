@@ -54,7 +54,7 @@ internal class DragDropScene : BoardGameScene() {
         onDragGestureEnded = { event, success ->
           println("Drag gesture ended: $success")
           println(event.draggedComponent)
-          println(event.dragTargets)
+          println(event.dropTarget)
         }
 
         onMouseEntered = { posY += 20 }

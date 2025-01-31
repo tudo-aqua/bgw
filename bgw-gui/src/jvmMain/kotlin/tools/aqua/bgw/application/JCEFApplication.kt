@@ -268,16 +268,12 @@ internal class JCEFApplication : Application {
                     if (eventData.droppedOn != null) {
                       val root = component.getRootNode()
                       val target = root.findComponent(eventData.droppedOn!!)
-                      if (target?.dropAcceptor != null &&
-                          target.dropAcceptor?.invoke(DragEvent(component)) == true) {
+                      if (target?.dropAcceptor != null) {
                         component.onDragGestureEnded?.invoke(
-                            DropEvent(component, listOf(target)), true)
-                      } else if (target?.dropAcceptor != null) {
-                        component.onDragGestureEnded?.invoke(
-                            DropEvent(component, listOf(target)), false)
+                            DropEvent(component, target), target.dropAcceptor?.invoke(DragEvent(component)) == true)
                       }
                     } else {
-                      component.onDragGestureEnded?.invoke(DropEvent(component, emptyList()), false)
+                      component.onDragGestureEnded?.invoke(DropEvent(component, null), false)
                     }
                   }
                 }
