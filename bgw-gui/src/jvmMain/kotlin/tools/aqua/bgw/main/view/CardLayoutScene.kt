@@ -26,9 +26,6 @@ import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
-import tools.aqua.bgw.dialog.ExtensionFilter
-import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.dialog.FileDialogMode
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
@@ -77,24 +74,25 @@ internal class CardLayoutScene : BoardGameScene() {
               visual = ColorVisual(Color(255, 0, 0)))
           .apply {
             onMouseClicked = {
-                Application.showMenuScene(Application.menuScene)
-//              val dialog =
-//                  FileDialog(
-//                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
-//                      title = "Open BGW File",
-//                      initialDirectoryPath = "F:\\Test",
-//                      initialFileName = "test.bgw",
-//                      extensionFilters =
-//                          listOf(
-//                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
-//                              ExtensionFilter("BoardGameWork File", "bgw"),
-//                              ExtensionFilter("All Files", "*")))
-//
-//              Application.showFileDialog(dialog)
-//
-//              dialog.onPathsSelected = { paths -> println("Selected paths: $paths") }
-//
-//              dialog.onSelectionCancelled = { println("Selection cancelled") }
+              Application.showMenuScene(Application.menuScene)
+              //              val dialog =
+              //                  FileDialog(
+              //                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
+              //                      title = "Open BGW File",
+              //                      initialDirectoryPath = "F:\\Test",
+              //                      initialFileName = "test.bgw",
+              //                      extensionFilters =
+              //                          listOf(
+              //                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
+              //                              ExtensionFilter("BoardGameWork File", "bgw"),
+              //                              ExtensionFilter("All Files", "*")))
+              //
+              //              Application.showFileDialog(dialog)
+              //
+              //              dialog.onPathsSelected = { paths -> println("Selected paths: $paths")
+              // }
+              //
+              //              dialog.onSelectionCancelled = { println("Selection cancelled") }
             }
           }
 
@@ -111,7 +109,7 @@ internal class CardLayoutScene : BoardGameScene() {
           .apply {
             onMouseClicked = { event ->
               if (event.button == MouseButtonType.LEFT_BUTTON) {
-                  this.visual = ColorVisual(Color(0, 255, 0))
+                this.visual = ColorVisual(Color(0, 255, 0))
                 this.add(
                     CardView(
                             posX = 0,

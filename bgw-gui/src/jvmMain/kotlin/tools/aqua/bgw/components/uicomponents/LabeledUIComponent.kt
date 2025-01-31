@@ -69,7 +69,6 @@ abstract class LabeledUIComponent(
    * Defines if text should be wrapped, if it exceeds the [Label]'s [width].
    *
    * @since 0.2
-   *
    */
   var isWrapText: Boolean
     get() = isWrapTextProperty.value

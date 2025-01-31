@@ -38,20 +38,18 @@ import tools.aqua.bgw.util.BidirectionalMap
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
-import kotlin.math.sqrt
 
 internal class HexGridGameScene : BoardGameScene() {
   private val hexGrid =
       HexagonGrid<HexagonView>(
-          width = 500,
-          height = 500,
-          posX = 0,
-          posY = 0,
-          coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET,
-          visual = Visual.EMPTY,
-          orientation = HexOrientation.POINTY_TOP).apply {
-              isLayoutFromCenter = false
-      }
+              width = 500,
+              height = 500,
+              posX = 0,
+              posY = 0,
+              coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET,
+              visual = Visual.EMPTY,
+              orientation = HexOrientation.POINTY_TOP)
+          .apply { isLayoutFromCenter = false }
 
   private val satchel =
       Satchel<HexagonView>(
@@ -74,7 +72,7 @@ internal class HexGridGameScene : BoardGameScene() {
               visual = ColorVisual.BLUE.copy().apply { style.borderRadius = BorderRadius(4) },
               size = 50)
           .apply {
-            onWheel = {
+            onMouseWheel = {
               println(
                   "Scrolled ${it.direction} Alt: ${it.isAltDown} Shift: ${it.isShiftDown} Ctrl: ${it.isControlDown}")
             }
@@ -245,27 +243,35 @@ internal class HexGridGameScene : BoardGameScene() {
     targetPane.height = hexGrid.height
   }
 
-    /** Function to calculate the bounds of the hex grid */
-    private fun calculateHexGridBounds(grid : HexagonGrid<HexagonView>) : Pair<Double, Double> {
-        var minX = Double.MAX_VALUE
-        var minY = Double.MAX_VALUE
+  /** Function to calculate the bounds of the hex grid */
+  private fun calculateHexGridBounds(grid: HexagonGrid<HexagonView>): Pair<Double, Double> {
+    var minX = Double.MAX_VALUE
+    var minY = Double.MAX_VALUE
 
-        grid.components.forEach {
-            if(it.actualPosX < minX) minX = it.actualPosX
-            if(it.actualPosY < minY) minY = it.actualPosY
-        }
-
-        return Pair(minX, minY)
+    grid.components.forEach {
+      if (it.actualPosX < minX) minX = it.actualPosX
+      if (it.actualPosY < minY) minY = it.actualPosY
     }
 
-    /* Function to build tokens on the hex grid at (0,0) of each HexagonView. */
-    fun buildTokens() {
+    return Pair(minX, minY)
+  }
 
-        hexGrid.components.forEach {
-            val token = TokenView(visual = ColorVisual.RED, width = 20, height = 20, posX = it.actualPosX, posY = it.actualPosY)
-            targetPane.add(token)
-        }
+  /* Function to build tokens on the hex grid at (0,0) of each HexagonView. */
+  fun buildTokens() {
+
+    hexGrid.components.forEach {
+      val token =
+          TokenView(
+              visual = ColorVisual.RED,
+              width = 20,
+              height = 20,
+              posX = it.actualPosX,
+              posY = it.actualPosY)
+      targetPane.add(token)
     }
+
+    hexGrid
+  }
 
   fun refreshHexGrid() {
     buildHexGrid()
@@ -274,11 +280,9 @@ internal class HexGridGameScene : BoardGameScene() {
   init {
     buildHexGrid()
 
-      hexGrid.components.forEach {
-          println("${it.actualPosX} - ${it.actualPosY}")
-      }
+    hexGrid.components.forEach { println("${it.actualPosX} - ${it.actualPosY}") }
 
-      buildTokens()
+    buildTokens()
 
     targetPane.add(singleHex)
     addComponents(cameraPane, panButton, panZeroButton, zoomButton, centerDot)

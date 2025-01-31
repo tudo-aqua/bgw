@@ -24,7 +24,6 @@ import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.main.examples.ExampleAnimationScene as AnimationScene
@@ -39,7 +38,7 @@ internal class ExampleAnimationScene : BoardGameScene(width = 622, height = 300)
       TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
 
   val redToken =
-    TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
+      TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
 
   /** Creates a movement animation that moves the token from x = 100 to x = 200 in 1 second. */
   val movementAnimationTo =

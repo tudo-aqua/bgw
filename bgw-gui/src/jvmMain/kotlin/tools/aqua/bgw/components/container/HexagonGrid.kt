@@ -66,10 +66,7 @@ class HexagonGrid<T : HexagonView>(
         posX = posX, posY = posY, width = width, height = height, visual = visual) {
 
   /** A mutable map that stores the hexagons in the grid. */
-  @Deprecated(
-      "Getting components using the map is no longer supported as of BGW 0.10.",
-      ReplaceWith("this.components"))
-  val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
+  internal val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
 
   init {
     observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
@@ -83,6 +80,8 @@ class HexagonGrid<T : HexagonView>(
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
    * @return The hexagon at the specified coordinates, or null if no hexagon is found.
+   *
+   * @see components
    */
   operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
 
@@ -92,6 +91,8 @@ class HexagonGrid<T : HexagonView>(
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
    * @param component The hexagon component to set.
+   *
+   * @see components
    */
   operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
     map[columnIndex to rowIndex]?.run {
@@ -103,6 +104,36 @@ class HexagonGrid<T : HexagonView>(
     map[columnIndex to rowIndex] = component
     observableComponents.add(component)
     onAdd?.invoke(component)
+  }
+
+  /**
+   * Returns all hexagons in the grid as a map from [OffsetCoordinate] to [T].
+   *
+   * @return A map from [OffsetCoordinate] to [T] containing all hexagons in the grid.
+   *
+   * @see components
+   *
+   * @since 0.10
+   */
+  fun getCoordinateMap(): Map<OffsetCoordinate, T> {
+    return map
+  }
+
+  /**
+   * Removes the hexagon at the specified column index and row index.
+   *
+   * @param columnIndex The column index of the hexagon.
+   * @param rowIndex The row index of the hexagon.
+   *
+   * @see components
+   *
+   * @since 0.10
+   */
+  fun remove(columnIndex: Int, rowIndex: Int) {
+    map[columnIndex to rowIndex]?.run {
+      observableComponents.remove(this)
+      onRemove?.invoke(this)
+    }
   }
 
   /**

@@ -18,12 +18,15 @@
 package tools.aqua.bgw.core
 
 /**
- * Class representing an aspect ratio between the window sides.
+ * Class representing the initial aspect ratio between the window sides.
  *
  * @property ratio Ratio as fraction.
  *
  * @since 0.3
  */
+@Deprecated(
+    "AspectRatio is no longer used as of BGW 0.10.",
+    ReplaceWith("BoardGameApplication.width and BoardGameApplication.height"))
 data class AspectRatio
 internal constructor(internal val ratio: Double = DEFAULT_WINDOW_WIDTH / DEFAULT_WINDOW_HEIGHT) {
   companion object {

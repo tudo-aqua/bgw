@@ -99,7 +99,8 @@ abstract class UIComponent(
    * this [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using
    * this feature.
    */
-  @Deprecated("CSS Styling is no longer supported as of BGW 0.10.", ReplaceWith("this.visual.style"))
+  @Deprecated(
+      "CSS Styling is no longer supported as of BGW 0.10.", ReplaceWith("this.visual.style"))
   var backgroundStyle: String
     get() = backgroundStyleProperty.value
     set(value) {
@@ -125,7 +126,8 @@ abstract class UIComponent(
    * this [UIComponent]. Critical failures, bugs or other undefined behaviour could occur when using
    * this feature.
    */
-  @Deprecated("CSS Styling is no longer supported as of BGW 0.10.", ReplaceWith("this.visual.style"))
+  @Deprecated(
+      "CSS Styling is no longer supported as of BGW 0.10.", ReplaceWith("this.visual.style"))
   var componentStyle: String
     get() = componentStyleProperty.value
     set(value) {

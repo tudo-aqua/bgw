@@ -152,10 +152,11 @@ private suspend fun processLastUpdate() {
       finalUpdate = json
       // println("Processing update: $json")
       componentChannel.sendToAllClients(json)
-        refreshJob = CoroutineScope(Dispatchers.IO).launch {
-          delay(50)
-          checkForMissingState()
-        }
+      refreshJob =
+          CoroutineScope(Dispatchers.IO).launch {
+            delay(50)
+            checkForMissingState()
+          }
     } catch (e: Exception) {
       println("Error sending update: $e")
     }
@@ -163,27 +164,27 @@ private suspend fun processLastUpdate() {
 }
 
 internal fun checkForMissingState() {
-    val appData = collectAppData()
-    val json = jsonMapper.encodeToString(PropData(appData))
-    if (json != finalUpdate) {
-        // println("Missing state detected. Sending update...")
-        enqueueUpdate(appData)
-    }
-    finalUpdate = ""
+  val appData = collectAppData()
+  val json = jsonMapper.encodeToString(PropData(appData))
+  if (json != finalUpdate) {
+    // println("Missing state detected. Sending update...")
+    enqueueUpdate(appData)
+  }
+  finalUpdate = ""
 
-    refreshJob?.cancel()
+  refreshJob?.cancel()
 }
 
 internal fun collectAppData(): AppData {
-    val appData =
-        SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
-            fonts =
-                Frontend.loadedFonts.map { (path, fontName, weight) ->
-                    Triple(path, fontName, weight.toInt())
-                }
-        }
-    appData.action = ActionProp.UPDATE_COMPONENT
-    return appData
+  val appData =
+      SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
+        fonts =
+            Frontend.loadedFonts.map { (path, fontName, weight) ->
+              Triple(path, fontName, weight.toInt())
+            }
+      }
+  appData.action = ActionProp.UPDATE_COMPONENT
+  return appData
 }
 
 internal fun markDirty(prop: ActionProp) {

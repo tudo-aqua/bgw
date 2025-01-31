@@ -18,6 +18,7 @@
 package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.BoardGameScene
@@ -33,7 +34,7 @@ internal class DragDropScene : BoardGameScene() {
       Pane<ComponentView>(
               posX = 500, posY = 500, width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY)
           .apply {
-            dropAcceptor = { it.draggedComponent is TokenView }
+            dropAcceptor = { it.draggedComponent is HexagonView }
             onDragDropped = {
               source.remove(it.draggedComponent)
               add(it.draggedComponent)
@@ -49,6 +50,12 @@ internal class DragDropScene : BoardGameScene() {
       TokenView(posX = 20, posY = 100, visual = ColorVisual.RED, width = 100, height = 100).apply {
         isDraggable = true
         onDragGestureStarted = {}
+
+        onDragGestureEnded = { event, success ->
+          println("Drag gesture ended: $success")
+          println(event.draggedComponent)
+          println(event.dragTargets)
+        }
 
         onMouseEntered = { posY += 20 }
 

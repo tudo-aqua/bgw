@@ -17,6 +17,7 @@
 
 package data.event
 
+import ID
 import kotlinx.serialization.Serializable
 
-@Serializable internal class DragGestureEndedEventData(var dropped: Boolean) : EventData()
+@Serializable internal class DragGestureEndedEventData(var droppedOn: ID?) : EventData()
