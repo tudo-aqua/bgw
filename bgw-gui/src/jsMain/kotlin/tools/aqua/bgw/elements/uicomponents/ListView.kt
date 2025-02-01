@@ -77,7 +77,7 @@ internal val ListView =
             className = ClassName("components")
             id = props.data.id + "--components"
             css {
-              width = fit()
+              width = 100.pct
               display = Display.flex
               flexDirection = FlexDirection.column
               alignItems = AlignItems.start

@@ -127,7 +127,7 @@ internal class VisualScene : BoardGameScene() {
 
   init {
     addComponents(list, label, table, card)
-    list.select(1)
+    list.selectIndex(1)
 
     list.selectedItems.addListener { _, newValue -> println(newValue) }
   }

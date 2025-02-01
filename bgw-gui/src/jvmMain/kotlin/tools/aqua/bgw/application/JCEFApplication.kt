@@ -193,7 +193,7 @@ internal class JCEFApplication : Application {
                   if (component is ComboBox<*>) component.select(eventData.selectedItem)
                 }
                 is StructuredDataSelectEventData -> {
-                  if (component is StructuredDataView<*>) component.select(eventData.index)
+                  if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
                 }
                 is TextInputChangedEventData -> {
                   if (component is TextInputUIComponent) component.text = eventData.value

@@ -379,6 +379,8 @@ internal val App =
           ".bgw-root *:has(*[aria-roledescription='draggable'][aria-pressed='true'])" {
             zIndex = important(integer(1000000))
           }
+
+          "bgw_scroll::-webkit-scrollbar" { display = None.none }
         }
       }
 

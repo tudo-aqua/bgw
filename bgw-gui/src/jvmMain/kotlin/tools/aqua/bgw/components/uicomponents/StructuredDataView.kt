@@ -196,7 +196,7 @@ sealed class StructuredDataView<T>(
     selectedItemsList.clear()
     selectedIndicesList.clear()
 
-    if(it) onSelectionChanged?.invoke(selectedItemsList.toList())
+    if (it) onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /**
@@ -205,7 +205,7 @@ sealed class StructuredDataView<T>(
    * @throws IllegalStateException If selection mode is [SelectionMode.NONE].
    * @throws IllegalArgumentException If [index] is out of bounds.
    */
-  fun select(index: Int) {
+  fun selectIndex(index: Int) {
     checkSelectionEnabled()
     require(index in items.indices) { "Index is out of bounds." }
 
@@ -227,7 +227,7 @@ sealed class StructuredDataView<T>(
       "Cannot select element because it is not contained in this UIComponent."
     }
 
-    select(items.indexOf(element))
+    selectIndex(items.indexOf(element))
   }
 
   /**
@@ -237,7 +237,7 @@ sealed class StructuredDataView<T>(
    * @throws IllegalArgumentException If [UIComponent] is empty.
    */
   fun selectFirst() {
-    select(0)
+    selectIndex(0)
   }
 
   /**
@@ -247,7 +247,7 @@ sealed class StructuredDataView<T>(
    * @throws IllegalArgumentException If [UIComponent] is empty.
    */
   fun selectLast() {
-    select(items.size - 1)
+    selectIndex(items.size - 1)
   }
 
   /**
@@ -264,8 +264,8 @@ sealed class StructuredDataView<T>(
       "Cannot select next item in selection mode '$selectionMode'."
     }
 
-    if (selectedIndices.isEmpty()) select(0)
-    else if (selectedIndices[0] < items.size - 1) select(selectedIndices[0] + 1)
+    if (selectedIndices.isEmpty()) selectIndex(0)
+    else if (selectedIndices[0] < items.size - 1) selectIndex(selectedIndices[0] + 1)
   }
 
   /**
@@ -281,8 +281,8 @@ sealed class StructuredDataView<T>(
       "Cannot select previous item in selection mode '$selectionMode'."
     }
 
-    if (selectedIndices.isEmpty()) select(items.size - 1)
-    else if (selectedIndices[0] > 0) select(selectedIndices[0] - 1)
+    if (selectedIndices.isEmpty()) selectIndex(items.size - 1)
+    else if (selectedIndices[0] > 0) selectIndex(selectedIndices[0] - 1)
   }
 
   /**
@@ -323,7 +323,6 @@ sealed class StructuredDataView<T>(
   /** Checks selection mode not to be [SelectionMode.NONE]. */
   private fun checkSelectionEnabled(): Unit =
       check(selectionMode != SelectionMode.NONE) { "Cannot select items in selection mode 'NONE'." }
-
 
   /**
    * Gets invoked whenever items are selected or deselected.
