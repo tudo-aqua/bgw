@@ -174,6 +174,8 @@ sealed class StructuredDataView<T>(
         selectedIndicesList.add(it)
       }
     }
+
+    onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /** Internal event handler for selection. */
@@ -185,12 +187,16 @@ sealed class StructuredDataView<T>(
       selectedItemsList.add(this.items[it])
       selectedIndicesList.add(it)
     }
+
+    onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /** Internal event handler for selection. */
-  internal var onSelectNoneEvent: (() -> Unit)? = {
+  internal var onSelectNoneEvent: ((Boolean) -> Unit)? = {
     selectedItemsList.clear()
     selectedIndicesList.clear()
+
+    if(it) onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /**
@@ -204,7 +210,7 @@ sealed class StructuredDataView<T>(
     require(index in items.indices) { "Index is out of bounds." }
 
     if (selectedIndices.size > 0 && selectionMode == SelectionMode.SINGLE) {
-      clearSelection()
+      selectNone(false)
     }
 
     onSelectionEvent?.invoke(index)
@@ -305,10 +311,26 @@ sealed class StructuredDataView<T>(
   fun clearSelection() {
     checkSelectionEnabled()
 
-    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke()
+    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke(true)
+  }
+
+  internal fun selectNone(emitEvent: Boolean) {
+    checkSelectionEnabled()
+
+    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke(emitEvent)
   }
 
   /** Checks selection mode not to be [SelectionMode.NONE]. */
   private fun checkSelectionEnabled(): Unit =
       check(selectionMode != SelectionMode.NONE) { "Cannot select items in selection mode 'NONE'." }
+
+
+  /**
+   * Gets invoked whenever items are selected or deselected.
+   *
+   * @see selectedItems
+   *
+   * @since 0.10
+   */
+  var onSelectionChanged: ((List<T>) -> Unit)? = null
 }

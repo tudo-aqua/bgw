@@ -38,8 +38,8 @@ internal object Application : BoardGameApplication(aspectRatio = AspectRatio.of(
     // showGameScene(hexGrid)
     // showGameScene(animation)
     // showGameScene(grid)
-    showGameScene(dragDropScene)
-    // showMenuScene(uiScene)
+    // showGameScene(dragDropScene)
+    showMenuScene(uiScene)
     // showGameScene(visualScene)
   }
 

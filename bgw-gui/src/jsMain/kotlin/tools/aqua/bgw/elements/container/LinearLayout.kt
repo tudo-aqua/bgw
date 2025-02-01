@@ -24,6 +24,7 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
 import react.*
+import react.dom.aria.ariaDetails
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DroppableOptions
@@ -60,6 +61,8 @@ internal val LinearLayout =
         id = props.data.id
         className = ClassName("linearLayout")
         css { cssBuilderIntern(props.data) }
+
+        ariaDetails = props.data.orientation
 
         ref = elementRef
         useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }

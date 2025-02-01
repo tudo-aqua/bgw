@@ -80,8 +80,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   var onDragGestureStarted: ((DragEvent) -> Unit)? = null
 
   /**
-   * Gets invoked with a [DragEvent] whenever a mouse movement occurs during a drag gesture with this
-   * [ComponentView].
+   * Gets invoked with a [DragEvent] whenever a mouse movement occurs during a drag gesture with
+   * this [ComponentView].
    *
    * @see DragEvent
    */

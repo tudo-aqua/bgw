@@ -270,7 +270,8 @@ internal class JCEFApplication : Application {
                       val target = root.findComponent(eventData.droppedOn!!)
                       if (target?.dropAcceptor != null) {
                         component.onDragGestureEnded?.invoke(
-                            DropEvent(component, target), target.dropAcceptor?.invoke(DragEvent(component)) == true)
+                            DropEvent(component, target),
+                            target.dropAcceptor?.invoke(DragEvent(component)) == true)
                       }
                     } else {
                       component.onDragGestureEnded?.invoke(DropEvent(component, null), false)

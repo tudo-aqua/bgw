@@ -29,11 +29,10 @@ import tools.aqua.bgw.components.ComponentView
  * @constructor Creates a [DropEvent] containing [draggedComponent] and [dropTarget].
  *
  * @property draggedComponent Currently dragged [ComponentView].
- * @property dropTarget [ComponentView] that is a possible drop target below the currently dragged component.
+ * @property dropTarget [ComponentView] that is a possible drop target below the currently dragged
+ * component.
  *
  * @see DragEvent
  */
-class DropEvent(
-    val draggedComponent: ComponentView,
-    val dropTarget: ComponentView? = null
-) : Event()
+class DropEvent(val draggedComponent: ComponentView, val dropTarget: ComponentView? = null) :
+    Event()

@@ -277,6 +277,10 @@ internal val App =
 
           ".text, .components" { position = Position.absolute }
 
+          "bgw_linear_layout[aria-details='horizontal'] > bgw_contents > *" {
+            top = important(Globals.unset)
+          }
+
           "bgw_linear_layout > bgw_contents > div > *" {
             position = important(Position.relative)
             left = important(Globals.unset)
