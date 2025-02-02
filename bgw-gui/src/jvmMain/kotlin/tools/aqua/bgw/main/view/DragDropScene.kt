@@ -18,6 +18,8 @@
 package tools.aqua.bgw.main.view
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.container.Area
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.Pane
@@ -26,24 +28,43 @@ import tools.aqua.bgw.visual.ColorVisual
 
 internal class DragDropScene : BoardGameScene() {
   private val source =
-      Pane<ComponentView>(width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY).apply {
+      Area<GameComponentView>(width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY).apply {
         zIndex = 1
+          isDraggable = true
+
+          dropAcceptor = { it.draggedComponent is TokenView || it.draggedComponent is Area<*> }
+            onDragDropped = {
+                println("You got fooled")
+                this.visual = ColorVisual.GREEN
+            }
       }
 
   private val target =
-      Pane<ComponentView>(
+      Pane<GameComponentView>(
               posX = 500, posY = 500, width = 500, height = 500, visual = ColorVisual.LIGHT_GRAY)
           .apply {
-            dropAcceptor = { it.draggedComponent is HexagonView }
+            dropAcceptor = { it.draggedComponent is TokenView || it.draggedComponent is Area<*> }
             onDragDropped = {
-              source.remove(it.draggedComponent)
-              add(it.draggedComponent)
-              (it.draggedComponent as TokenView).isDraggable = false
+                if(it.draggedComponent is TokenView) {
+                  source.remove(it.draggedComponent as TokenView)
+                  add(it.draggedComponent as TokenView)
+                  (it.draggedComponent as TokenView).isDraggable = false
+                } else if(it.draggedComponent is Area<*>) {
+                    val area = it.draggedComponent as Area<GameComponentView>
+                    val components = area.components
+                    components.forEach { component ->
+                        if(component is TokenView) {
+                            area.remove(component)
+                            add(component)
+                            component.isDraggable = false
+                        }
+                    }
+                }
             }
           }
 
   private val randomPane =
-      Pane<ComponentView>(
+      Pane<GameComponentView>(
           posX = 500, posY = 0, width = 500, height = 500, visual = ColorVisual.BLUE)
 
   private val token =
