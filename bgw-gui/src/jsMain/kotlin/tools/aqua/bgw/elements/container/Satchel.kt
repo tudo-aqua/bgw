@@ -50,11 +50,11 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: SatchelData) 
 internal val Satchel =
     FC<SatchelProps> { props ->
       val draggable =
-        useDraggable(
-          object : DraggableOptions {
-            override var id: String = props.data.id
-            override var disabled = !props.data.isDraggable
-          })
+          useDraggable(
+              object : DraggableOptions {
+                override var id: String = props.data.id
+                override var disabled = !props.data.isDraggable
+              })
 
       val droppable =
           useDroppable(
@@ -66,8 +66,8 @@ internal val Satchel =
       val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         translate =
-          "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<
-                  Translate>()
+            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<
+                Translate>()
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
       }
 

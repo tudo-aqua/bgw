@@ -22,15 +22,20 @@ import jsonMapper
 import kotlin.reflect.KProperty0
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.container.LinearLayout
+import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.*
+import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.main.examples.ExampleDocsScene as Scene
 import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.TextVisual
 
 /** Metadata: [Scene] */
 internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
@@ -253,7 +258,7 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
             selectIndex(2)
           }
 
-  val linearLayout =
+  val _linearLayout =
       LinearLayout<GameComponentView>(
           posX = 0,
           posY = 0,
@@ -262,6 +267,214 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
           orientation = Orientation.HORIZONTAL,
           alignment = Alignment.CENTER,
           spacing = 50)
+
+  val absoluteLabel =
+      Label(posX = 75, posY = 112, width = 75, height = 75, visual = ColorVisual(Color(0xc6ff6e)))
+
+  val paneLabel =
+      Label(posX = 75, posY = 112, width = 75, height = 75, visual = ColorVisual(Color(0x6dbeff)))
+
+  val pane =
+      Pane<ComponentView>(
+              posX = 223,
+              posY = 0,
+              width = 222,
+              height = 300,
+              visual = ColorVisual(Color(0x0f141f)))
+          .apply { add(paneLabel) }
+
+  val purpleLabel = Label(width = 75, height = 75, visual = ColorVisual(Color(0xbb6dff)))
+
+  val redLabel = Label(width = 75, height = 75, visual = ColorVisual(Color(0xef4444)))
+
+  val orangeLabel = Label(width = 75, height = 75, visual = ColorVisual(Color(0xfa6c56)))
+
+  val yellowLabel = Label(width = 75, height = 75, visual = ColorVisual(Color(0xffc656)))
+
+  val gridPane =
+      GridPane<ComponentView>(
+              posX = 100,
+              posY = 27.5,
+              layoutFromCenter = false,
+              rows = 3,
+              columns = 3,
+              spacing = 10)
+          .apply {
+            this[0, 0] = purpleLabel
+            this[1, 1] = redLabel
+            this[2, 1] = orangeLabel
+            this[2, 2] = yellowLabel
+          }
+
+  val panLabel =
+      Label(
+          posX = 300,
+          posY = 410,
+          width = 400,
+          height = 200,
+          text = "Drag to pan the camera. Scroll to zoom.",
+          alignment = Alignment.CENTER,
+          font = Font(20.0, Color.WHITE))
+
+  val targetLayout =
+      Pane<ComponentView>(
+              width = 1000, height = 1000, visual = ImageVisual("assets/elements/background.png"))
+          .apply { add(panLabel) }
+  val cameraPane =
+      CameraPane(width = width, height = height, target = targetLayout, limitBounds = true).apply {
+        interactive = true
+      }
+
+  val absoluteToken =
+      TokenView(
+          posX = 75,
+          posY = 112,
+          width = 75,
+          height = 75,
+          visual = ColorVisual(Color(0x6dbeff)).apply { style.borderRadius = BorderRadius.FULL })
+
+  val areaToken =
+      TokenView(
+          posX = 75, posY = 112, width = 75, height = 75, visual = ColorVisual(Color(0xbb6dff)))
+
+  val area =
+      Area<GameComponentView>(
+              posX = 223,
+              posY = 0,
+              width = 222,
+              height = 300,
+              visual = ColorVisual(Color(0x0f141f)))
+          .apply { add(areaToken) }
+
+  val redCard =
+      CardView(width = 100, height = 160, front = ColorVisual(Color(0xef4444))).apply {
+        rotation = -6.0
+      }
+
+  val orangeCard =
+      CardView(width = 100, height = 160, front = ColorVisual(Color(0xfa6c56))).apply {
+        rotation = 8.0
+      }
+
+  val yellowCard =
+      CardView(width = 100, height = 160, front = ColorVisual(Color(0xffc656))).apply {
+        rotation = -1.0
+      }
+
+  val cardStack =
+      CardStack<CardView>(
+              posX = centerX(100),
+              posY = centerY(160),
+              width = 100,
+              height = 160,
+              alignment = Alignment.CENTER)
+          .apply {
+            add(redCard)
+            add(orangeCard)
+            add(yellowCard)
+          }
+
+  val greenCard = CardView(width = 100, height = 160, front = ColorVisual(Color(0xc6ff6e)))
+
+  val blueCard = CardView(width = 100, height = 160, front = ColorVisual(Color(0x6dbeff)))
+
+  val purpleCard = CardView(width = 100, height = 160, front = ColorVisual(Color(0xbb6dff)))
+
+  val linearLayout =
+      LinearLayout<GameComponentView>(
+              posX = centerX(200),
+              posY = centerY(160),
+              width = 200,
+              height = 160,
+              orientation = Orientation.HORIZONTAL,
+              alignment = Alignment.CENTER,
+              spacing = 20)
+          .apply {
+            add(greenCard)
+            add(blueCard)
+            add(purpleCard)
+          }
+
+  val hiddenToken =
+      TokenView(
+          width = 50,
+          height = 50,
+          visual = ColorVisual(Color(0x6dbeff)).apply { style.borderRadius = BorderRadius.FULL })
+
+  val satchel =
+      Satchel<TokenView>(
+              posX = centerX(100),
+              posY = centerY(100),
+              width = 100,
+              height = 100,
+              visual = ColorVisual(Color(0x0f141f)))
+          .apply { add(hiddenToken) }
+
+
+    val offsetHexagonGrid = HexagonGrid<HexagonView>(
+        posX = 0,
+        posY = 0,
+        coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET
+    ).apply {
+        for (x in 0..3) {
+            for (y in 0..4) {
+                val hexagon = HexagonView(visual = CompoundVisual(
+                    ColorVisual(Color(0xfa6c56)),
+                    TextVisual("$x, $y", font = Font(10.0, Color(0x0f141f)))
+                ), size = 30)
+                this[x, y] = hexagon
+            }
+        }
+    }
+
+    val axialHexagonGrid = HexagonGrid<HexagonView>(
+        posX = 0,
+        posY = 0,
+        coordinateSystem = HexagonGrid.CoordinateSystem.AXIAL
+    ).apply {
+        for (row in -2..2) {
+            for (col in -2..2) {
+                if(row + col in -2..2) {
+                    val hexagon = HexagonView(visual = CompoundVisual(
+                        ColorVisual(Color(0xc6ff6e)),
+                        TextVisual("$col, $row", font = Font(10.0, Color(0x0f141f)))
+                    ), size = 30)
+                    this[col, row] = hexagon
+                }
+            }
+        }
+    }
+
+    val offsetTargetLayout =
+        Pane<ComponentView>(
+            width = 1000, height = 1000
+        )
+        .apply {
+            add(offsetHexagonGrid)
+
+            width = offsetHexagonGrid.actualWidth
+            height = offsetHexagonGrid.actualHeight
+        }
+    val offsetCameraPane =
+        CameraPane(width = width, height = height, target = offsetTargetLayout, limitBounds = false).apply {
+            interactive = true
+        }
+
+    val axialTargetLayout =
+        Pane<ComponentView>(
+            width = 1000, height = 1000
+        )
+        .apply {
+            add(axialHexagonGrid)
+
+            width = axialHexagonGrid.actualWidth
+            height = axialHexagonGrid.actualHeight
+        }
+
+    val axialCameraPane =
+        CameraPane(width = width, height = height, target = axialTargetLayout, limitBounds = false).apply {
+            interactive = true
+        }
 
   init {
     setComponentsAndSerialize("tokenExample", ::tokenRect, ::tokenCircle)
@@ -278,6 +491,15 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
     setUIComponentsAndSerialize("textExample", ::textArea, ::textField, ::passwordField)
     setUIComponentsAndSerialize("listViewExample", ::listView)
     setUIComponentsAndSerialize("tableViewExample", ::table)
+    setUIComponentsAndSerialize("paneExample", ::absoluteLabel, ::pane)
+    setUIComponentsAndSerialize("gridPaneExample", ::gridPane)
+    setUIComponentsAndSerialize("cameraPaneExample", ::cameraPane)
+    setUIComponentsAndSerialize("areaExample", ::absoluteToken, ::area)
+    setUIComponentsAndSerialize("cardStackExample", ::cardStack)
+    setUIComponentsAndSerialize("linearLayoutExample", ::linearLayout)
+    setUIComponentsAndSerialize("satchelExample", ::satchel)
+    setUIComponentsAndSerialize("offsetHexagonGridExample", ::offsetCameraPane)
+    setUIComponentsAndSerialize("axialHexagonGridExample", ::axialCameraPane)
   }
 
   internal fun centerX(width: Int): Double {
@@ -293,14 +515,14 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
       vararg props: KProperty0<T>
   ) {
     clearComponents()
-    linearLayout.clear()
+    _linearLayout.clear()
 
     props.forEach { prop ->
       val comp = prop.get()
-      linearLayout.add(comp as GameComponentView)
+      _linearLayout.add(comp as GameComponentView)
     }
 
-    addComponents(linearLayout)
+    addComponents(_linearLayout)
 
     val fullyQualifiedName = "${this::class.qualifiedName}.$name"
 

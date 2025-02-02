@@ -23,9 +23,7 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.Visual
 
-private typealias OffsetCoordinate = Pair<Int, Int>
-
-private typealias AxialCoordinate = Pair<Int, Int>
+private typealias HexCoordinate = Pair<Int, Int>
 
 /**
  * A class representing a grid of hexagons.
@@ -66,7 +64,7 @@ class HexagonGrid<T : HexagonView>(
         posX = posX, posY = posY, width = width, height = height, visual = visual) {
 
   /** A mutable map that stores the hexagons in the grid. */
-  internal val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
+  internal val map: MutableMap<HexCoordinate, T> = mutableMapOf()
 
   init {
     observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
@@ -107,15 +105,15 @@ class HexagonGrid<T : HexagonView>(
   }
 
   /**
-   * Returns all hexagons in the grid as a map from [OffsetCoordinate] to [T].
+   * Returns all hexagons in the grid as a map from [HexCoordinate] to [T].
    *
-   * @return A map from [OffsetCoordinate] to [T] containing all hexagons in the grid.
+   * @return A map from [HexCoordinate] to [T] containing all hexagons in the grid.
    *
    * @see components
    *
    * @since 0.10
    */
-  fun getCoordinateMap(): Map<OffsetCoordinate, T> {
+  fun getCoordinateMap(): Map<HexCoordinate, T> {
     return map
   }
 

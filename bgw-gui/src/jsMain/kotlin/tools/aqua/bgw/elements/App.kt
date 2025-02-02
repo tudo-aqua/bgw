@@ -380,6 +380,11 @@ internal val App =
             zIndex = important(integer(1000000))
           }
 
+          "bgw_satchel bgw_contents *[aria-roledescription='draggable']:not([aria-pressed='true'])" {
+            width = important(100.pct)
+            height = important(100.pct)
+          }
+
           "bgw_scroll::-webkit-scrollbar" { display = None.none }
         }
       }

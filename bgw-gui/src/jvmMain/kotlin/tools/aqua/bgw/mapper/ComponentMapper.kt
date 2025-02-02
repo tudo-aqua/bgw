@@ -335,8 +335,8 @@ internal object RecursiveMapper {
       }
       is GameComponentContainer<*> -> {
         ContainerMapper.map(component).apply {
-            isDraggable = component.isDraggable
-            isDragged = component.isDragged
+          isDraggable = component.isDraggable
+          isDragged = component.isDragged
         }
       }
       else -> {

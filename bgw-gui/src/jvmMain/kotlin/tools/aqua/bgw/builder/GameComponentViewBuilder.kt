@@ -31,7 +31,9 @@ internal object GameComponentViewBuilder {
       is TokenView -> buildTokenView(gameComponentView)
     }
 
-    gameComponentView.isDraggableProperty.guiListener = { _, _ -> Frontend.updateComponent(gameComponentView) }
+    gameComponentView.isDraggableProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(gameComponentView)
+    }
   }
 
   private fun buildCardView(cardView: CardView) {}

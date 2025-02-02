@@ -58,10 +58,10 @@ internal object JCEFEventDispatcher : EventDispatcher {
 
   private fun initialize() {
     js(
-        "window.bgwQuery = function(request) { window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
+        "window.bgwQuery = function(request) { if(window.cefQuery) window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
     js(
-        "window.bgwAnimationQuery = function(request) { window.cefAnimationQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
+        "window.bgwAnimationQuery = function(request) { if(window.cefAnimationQuery) window.cefAnimationQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
     js(
-        "window.bgwSceneQuery = function(request) { window.cefSceneQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
+        "window.bgwSceneQuery = function(request) { if(window.cefSceneQuery) window.cefSceneQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
   }
 }
