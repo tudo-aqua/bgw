@@ -39,6 +39,10 @@ internal object GameComponentContainerBuilder {
       is Satchel -> buildSatchel(gameComponentContainer)
     }
     gameComponentContainer.components.forEach { ComponentViewBuilder.build(it) }
+    
+    gameComponentContainer.isDraggableProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(gameComponentContainer)
+    }
   }
 
   private fun buildArea(area: Area<out GameComponentView>) {}
