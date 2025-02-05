@@ -238,10 +238,11 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
     menuScene.addComponents(listView, listViewLabel)
 
     // TableView
-    val table = TableView<Int>(posX = 450, posY = 800, width = 300, height = 200,
-        selectionMode = SelectionMode.SINGLE)
+    val table =
+        TableView<Int>(
+            posX = 450, posY = 800, width = 300, height = 200, selectionMode = SelectionMode.SINGLE)
 
-      table.onSelectionChanged = { newValue -> println(newValue) }
+    table.onSelectionChanged = { newValue -> println(newValue) }
 
     table.columns.add(TableColumn(title = "Value", width = 100) { "$it" })
 

@@ -22,7 +22,6 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.HexagonGrid
 import tools.aqua.bgw.components.container.Satchel
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
-import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
@@ -256,23 +255,6 @@ internal class HexGridGameScene : BoardGameScene() {
     return Pair(minX, minY)
   }
 
-  /* Function to build tokens on the hex grid at (0,0) of each HexagonView. */
-  fun buildTokens() {
-
-    hexGrid.components.forEach {
-      val token =
-          TokenView(
-              visual = ColorVisual.RED,
-              width = 20,
-              height = 20,
-              posX = it.actualPosX,
-              posY = it.actualPosY)
-      targetPane.add(token)
-    }
-
-    hexGrid
-  }
-
   fun refreshHexGrid() {
     buildHexGrid()
   }
@@ -281,8 +263,6 @@ internal class HexGridGameScene : BoardGameScene() {
     buildHexGrid()
 
     hexGrid.components.forEach { println("${it.actualPosX} - ${it.actualPosY}") }
-
-    buildTokens()
 
     targetPane.add(singleHex)
     addComponents(cameraPane, panButton, panZeroButton, zoomButton, centerDot)

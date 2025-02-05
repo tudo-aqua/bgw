@@ -32,7 +32,9 @@ class ProtocolScene : BoardGameScene(height = 800, width = 500, background = Col
   private val messagePane =
       GridPane<MessageView>(
               posX = 25, posY = 0, columns = 1, rows = 1, layoutFromCenter = false, spacing = 10)
-          .apply { onMouseWheel = { posY = min(max(posY + it.direction * 50, currentZMin), -40.0) } }
+          .apply {
+            onMouseWheel = { posY = min(max(posY + it.direction * 50, currentZMin), -40.0) }
+          }
 
   init {
     addComponents(messagePane)

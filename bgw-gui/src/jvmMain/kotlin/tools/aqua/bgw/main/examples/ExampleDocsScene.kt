@@ -410,71 +410,66 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
               visual = ColorVisual(Color(0x0f141f)))
           .apply { add(hiddenToken) }
 
-
-    val offsetHexagonGrid = HexagonGrid<HexagonView>(
-        posX = 0,
-        posY = 0,
-        coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET
-    ).apply {
-        for (x in 0..3) {
-            for (y in 0..4) {
-                val hexagon = HexagonView(visual = CompoundVisual(
-                    ColorVisual(Color(0xfa6c56)),
-                    TextVisual("$x, $y", font = Font(10.0, Color(0x0f141f)))
-                ), size = 30)
+  val offsetHexagonGrid =
+      HexagonGrid<HexagonView>(
+              posX = 0, posY = 0, coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET)
+          .apply {
+            for (x in 0..3) {
+              for (y in 0..4) {
+                val hexagon =
+                    HexagonView(
+                        visual =
+                            CompoundVisual(
+                                ColorVisual(Color(0xfa6c56)),
+                                TextVisual("$x, $y", font = Font(10.0, Color(0x0f141f)))),
+                        size = 30)
                 this[x, y] = hexagon
+              }
             }
-        }
-    }
+          }
 
-    val axialHexagonGrid = HexagonGrid<HexagonView>(
-        posX = 0,
-        posY = 0,
-        coordinateSystem = HexagonGrid.CoordinateSystem.AXIAL
-    ).apply {
-        for (row in -2..2) {
-            for (col in -2..2) {
-                if(row + col in -2..2) {
-                    val hexagon = HexagonView(visual = CompoundVisual(
-                        ColorVisual(Color(0xc6ff6e)),
-                        TextVisual("$col, $row", font = Font(10.0, Color(0x0f141f)))
-                    ), size = 30)
-                    this[col, row] = hexagon
+  val axialHexagonGrid =
+      HexagonGrid<HexagonView>(
+              posX = 0, posY = 0, coordinateSystem = HexagonGrid.CoordinateSystem.AXIAL)
+          .apply {
+            for (row in -2..2) {
+              for (col in -2..2) {
+                if (row + col in -2..2) {
+                  val hexagon =
+                      HexagonView(
+                          visual =
+                              CompoundVisual(
+                                  ColorVisual(Color(0xc6ff6e)),
+                                  TextVisual("$col, $row", font = Font(10.0, Color(0x0f141f)))),
+                          size = 30)
+                  this[col, row] = hexagon
                 }
+              }
             }
-        }
-    }
+          }
 
-    val offsetTargetLayout =
-        Pane<ComponentView>(
-            width = 1000, height = 1000
-        )
-        .apply {
-            add(offsetHexagonGrid)
+  val offsetTargetLayout =
+      Pane<ComponentView>(width = 1000, height = 1000).apply {
+        add(offsetHexagonGrid)
 
-            width = offsetHexagonGrid.actualWidth
-            height = offsetHexagonGrid.actualHeight
-        }
-    val offsetCameraPane =
-        CameraPane(width = width, height = height, target = offsetTargetLayout, limitBounds = false).apply {
-            interactive = true
-        }
+        width = offsetHexagonGrid.actualWidth
+        height = offsetHexagonGrid.actualHeight
+      }
+  val offsetCameraPane =
+      CameraPane(width = width, height = height, target = offsetTargetLayout, limitBounds = false)
+          .apply { interactive = true }
 
-    val axialTargetLayout =
-        Pane<ComponentView>(
-            width = 1000, height = 1000
-        )
-        .apply {
-            add(axialHexagonGrid)
+  val axialTargetLayout =
+      Pane<ComponentView>(width = 1000, height = 1000).apply {
+        add(axialHexagonGrid)
 
-            width = axialHexagonGrid.actualWidth
-            height = axialHexagonGrid.actualHeight
-        }
+        width = axialHexagonGrid.actualWidth
+        height = axialHexagonGrid.actualHeight
+      }
 
-    val axialCameraPane =
-        CameraPane(width = width, height = height, target = axialTargetLayout, limitBounds = false).apply {
-            interactive = true
-        }
+  val axialCameraPane =
+      CameraPane(width = width, height = height, target = axialTargetLayout, limitBounds = false)
+          .apply { interactive = true }
 
   init {
     setComponentsAndSerialize("tokenExample", ::tokenRect, ::tokenCircle)
