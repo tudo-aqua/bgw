@@ -62,8 +62,8 @@ fun generateDefaultProperties(suffix: String = "") =
     package tools.aqua.bgw${if (suffix.isNotEmpty()) ".$suffix" else ""}
 
     internal object Config {
-        val USE_SOCKETS = "true"
-        val GENERATE_SAMPLES = "false"
+        val USE_SOCKETS = true
+        val GENERATE_SAMPLES = false
         val BGW_VERSION = "${rootProject.version}"
     }
 """.trimIndent()
