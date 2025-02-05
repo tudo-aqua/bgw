@@ -28,7 +28,6 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import tools.aqua.defaultFormat
 
 plugins {
@@ -40,40 +39,44 @@ plugins {
   id("org.jetbrains.dokka")
 }
 
-val useSockets: String? = project.findProperty("useSockets")?.toString()
-var generateSamples = project.findProperty("generateSamples")?.toString()?.toBoolean() ?: false
 val propertyFile = "Config.kt"
 val wrappersVersion = "-pre.831"
 
-fun buildPropertyFile() {
+fun buildDefaultPropertyFile() {
+  println("Build default property files")
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
     println("Generate properties into $absolutePath")
     parentFile.mkdirs()
-    writeText(generateProperties())
+    writeText(generateDefaultProperties())
   }
 
   rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
     println("Generate properties into $absolutePath")
     parentFile.mkdirs()
-    writeText(generateProperties("application"))
+    writeText(generateDefaultProperties("application"))
   }
-
-  println("useSockets: $useSockets")
-  println("generateSamples: $generateSamples")
 }
 
-fun generateProperties(suffix: String = "") =
+fun generateDefaultProperties(suffix: String = "") =
     """
     package tools.aqua.bgw${if (suffix.isNotEmpty()) ".$suffix" else ""}
 
     internal object Config {
-        val USE_SOCKETS = ${useSockets ?: "true"}
-        val GENERATE_SAMPLES = $generateSamples
+        val USE_SOCKETS = true
+        val GENERATE_SAMPLES = false
         val BGW_VERSION = "${rootProject.version}"
     }
 """.trimIndent()
 
-tasks.withType<KotlinCompile> { buildPropertyFile() }
+if (!project.extra.has("useSockets")) {
+  project.extra.set("useSockets", "true")
+}
+
+if (!project.extra.has("generateSamples")) {
+  project.extra.set("generateSamples", "false")
+}
+
+buildDefaultPropertyFile()
 
 val kdocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
@@ -244,30 +247,4 @@ rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
   rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.NONE
   rootProject.the<YarnRootExtension>().reportNewYarnLock = false
   rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
-}
-
-tasks.register<JavaExec>("runWithSamples") {
-  group = "application"
-  description = "Runs the application with generateSamples=true"
-  classpath = sourceSets["main"].runtimeClasspath
-  mainClass.set("tools.aqua.bgw.main.MainKt")
-  args = listOf("-PgenerateSamples=true")
-}
-
-tasks.register("setupGenerateSamples") {
-  doFirst {
-    generateSamples = true
-    buildPropertyFile()
-  }
-}
-
-tasks.named("dokkaHtmlPartial").configure { shouldRunAfter("setupGenerateSamples") }
-
-tasks.register("generateDocsAndSamples") {
-  dependsOn("setupGenerateSamples", "dokkaHtmlPartial", "run")
-  doLast { println("Successfully executed dokkaHtmlPartial and run.") }
-}
-
-tasks.named("run").configure {
-  shouldRunAfter("dokkaHtmlPartial") // Ensure no overlap or conflicts.
 }

@@ -27,11 +27,11 @@ jobs:
       - name: Generate Page
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: :bgw-docs:jekyllBuild
+          arguments: :bgw-docs:docsBuild
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
           branch: gh-pages
-          folder: bgw-docs/build/jekyll
+          folder: bgw-docs/website/dist
           single-commit: true
