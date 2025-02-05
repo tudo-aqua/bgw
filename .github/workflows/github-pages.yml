@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - docs_new_backend
   workflow_dispatch:
 
 jobs:
