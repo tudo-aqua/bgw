@@ -8,15 +8,11 @@ import {
 import { ErrorBoundary } from "react-error-boundary";
 import "./index.scss";
 import React, { ErrorInfo } from "react";
-import Dashboard from "@/pages/Dashboard.tsx";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
-import Parser from "@/pages/Parser.tsx";
 import BGWPlayground from "@/pages/BGWPlayground.tsx";
-import ComponentDocs from "./pages/docs/Layout";
-import { DndContext } from "@dnd-kit/core";
-import Test from "./pages/Test";
-import Layout from "./pages/docs/Layout";
+import BGWDocsLayout from "./pages/BGWDocsLayout";
+import { guideStructure } from "./lib/utils";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +39,50 @@ const myErrorHandler = (error: Error, errorInfo: ErrorInfo) => {
   // ...
 };
 
+async function loadAllGuides() {
+  // Create a flat array of all guide URLs from the guideStructure
+  const guideUrls = Object.values(guideStructure).flatMap((section) =>
+    section.items.map((item) => ({
+      url: item.url.replace("/guides", "").replace(".md", "").toLowerCase(),
+      path: item.url,
+    }))
+  );
+
+  // Add the installation guide which is the default
+  guideUrls.unshift({
+    url: "installation",
+    path: "/guides/installation",
+  });
+
+  // Fetch all guides in parallel
+  const guides = await Promise.all(
+    guideUrls.map(async ({ url, path }) => {
+      try {
+        const response = await fetch(`/bgw/guides/topics/${url}.md`);
+        if (!response.ok) {
+          console.warn(`Failed to load guide: ${url}`);
+          return null;
+        }
+        const text = await response.text();
+        return {
+          path,
+          content: text,
+        };
+      } catch (err) {
+        console.warn(`Failed to load guide: ${url}`, err);
+        return null;
+      }
+    })
+  );
+
+  // Filter out failed fetches and create a map
+  const guidesMap = Object.fromEntries(
+    guides.filter((g) => g !== null).map((g) => [g.path, g.content])
+  );
+
+  return guidesMap;
+}
+
 async function docsLoader() {
   const [docsResponse, samplesResponse] = await Promise.all([
     fetch("/bgw/bgw/cleanedStructure.json"),
@@ -52,18 +92,28 @@ async function docsLoader() {
   const docs = await docsResponse.json();
   const samples = await samplesResponse.json();
 
-  return { dirs: docs, allSamples: samples };
+  return {
+    dirs: docs,
+    allSamples: samples,
+  };
+}
+
+const savedPath = sessionStorage.getItem("redirectPath");
+if (savedPath) {
+  console.warn("Redirecting to", savedPath);
+  sessionStorage.removeItem("redirectPath");
+  window.history.replaceState(null, "", savedPath);
 }
 
 const router = createBrowserRouter(
   [
     {
       path: "/playground",
-      Component: Dashboard,
+      Component: BGWPlayground,
     },
     {
       path: "/docs",
-      Component: Layout,
+      Component: BGWDocsLayout,
       loader: docsLoader,
       children: [
         {
@@ -73,7 +123,7 @@ const router = createBrowserRouter(
     },
     {
       path: "/guides",
-      Component: Layout,
+      Component: BGWDocsLayout,
       loader: docsLoader,
       children: [
         {
@@ -83,7 +133,7 @@ const router = createBrowserRouter(
     },
     {
       path: "/",
-      Component: Layout,
+      Component: BGWDocsLayout,
       loader: docsLoader,
       children: [
         {
@@ -100,7 +150,7 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   //<React.StrictMode>
   <>
-    <div className="hidden text-[#BB6DFF] text-[#FFFFFFB3] text-[#6DBEFF] text-[#FFC656] bg-[#BB6DFF]/20 bg-[#6DBEFF]/20 bg-[#FFC656]/20 !bg-[#BB6DFF]/20 !bg-[#6DBEFF]/20 !bg-[#FFC656]/20 hover:!bg-[#BB6DFF]/20 hover:!bg-[#6DBEFF]/20 hover:!bg-[#FFC656]/20"></div>
+    <div className="hidden text-[#BB6DFF] text-[#ef4444] text-[#c6ff6e] text-[#FFFFFFB3] text-[#6DBEFF] text-[#FFC656] bg-[#BB6DFF]/20 bg-[#6DBEFF]/20 bg-[#FFC656]/20 !bg-[#BB6DFF]/20 !bg-[#6DBEFF]/20 !bg-[#FFC656]/20 hover:!bg-[#BB6DFF]/20 hover:!bg-[#6DBEFF]/20 hover:!bg-[#FFC656]/20"></div>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <TooltipProvider>
         <QueryClientProvider client={queryClient}>

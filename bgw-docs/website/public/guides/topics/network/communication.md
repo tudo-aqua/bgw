@@ -1,6 +1,9 @@
 [BoardGameClientKDoc]: /guides/bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-board-game-client/index.html
 [NetworkLoggingKDoc]: /guides/bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-network-logging/index.html
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # Network communication
 
 This section deals with the integration of network communication to establish multiplayer modes over the internet.

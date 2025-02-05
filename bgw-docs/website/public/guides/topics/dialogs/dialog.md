@@ -6,6 +6,9 @@
 [showDialogNonBlockingKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show-dialog-non-blocking.html
 [OptionalDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # Dialog
 
 This section showcases the different types of [Dialogs][DialogKDoc]
@@ -58,11 +61,6 @@ Dialog(
 ```
 
 ![exception_dialog](exception_dialog.png)
-
-An example with all dialog types can be found here:
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/dialog/DialogExample.kt){:
-.btn }
 
 ## Showing a dialog
 

@@ -21,7 +21,6 @@ export const useDocsStore = create<DocsState>((set) => ({
   codeBlocksToLoad: 0,
   loadedCodeBlocks: 0,
   setCodeBlocksToLoad: (count) => {
-    console.log("Setting code blocks to load", count);
     set({ codeBlocksToLoad: count });
   },
   incrementLoadedCodeBlocks: () => {
@@ -31,7 +30,6 @@ export const useDocsStore = create<DocsState>((set) => ({
     set((state) => ({ codeBlocksToLoad: state.codeBlocksToLoad + 1 }));
   },
   resetCodeBlocks: () => {
-    console.log("Resetting code blocks");
     set({ codeBlocksToLoad: 0, loadedCodeBlocks: 0 });
   },
 }));

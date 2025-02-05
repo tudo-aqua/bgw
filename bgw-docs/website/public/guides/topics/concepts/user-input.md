@@ -9,6 +9,9 @@
 [DnDExample]: /guides/drag-and-drop/DragAndDropExample
 [UIComponentViewDoc]: /guides/components/uicomponents/uicomponents
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # User Input
 
 The BGW framework uses events to communicate user input to Components. To execute code when a specific event is fired, a
@@ -19,11 +22,6 @@ Components can be enabled for drag and drop whenever they extend
 
 For a more detailed introduction for Drag and Drop
 head [here][DnDExample].
-
-The full source code for this example can be found here:
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
-.btn }
 
 ## Component declaration
 
@@ -105,70 +103,5 @@ Global key listeners may become helpful to show menus or move playing pieces by 
 gameScene.onKeyPressed = { event ->
   if (event.keyCode == KeyCode.ESCAPE)
     exit()
-}
-```
-
-## Full example on all available methods of dealing with user input
-
-This example uses all available fields that can be set to handle user input on [ComponentViews][ComponentViewKDoc] and [DynamicComponentViews][DynamicComponentViewKDoc].
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/userinput/UserInputExample.kt){:
-.btn }
-
-```kotlin
-fun main() {
-  UserInputExample()
-}
-
-class UserInputExample: BoardGameApplication("User input example") {
-
-  val button : Button = Button(height = 150, width = 300, posX = 30, posY = 30).apply {
-    visual = ColorVisual.GREEN
-  }
-
-  val token : TokenView = TokenView(posX = 500, posY = 30, visual = ColorVisual.RED)
-
-  val gameScene : BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-
-  init {
-    // handling user input on ComponentView
-    button.onMouseClicked = this::handleMouseClicked
-
-    button.onMousePressed = { mouseEvent -> button.text = "pressed ${mouseEvent.button}" }
-    button.onMouseReleased = { mouseEvent -> button.text = "released ${mouseEvent.button}" }
-    button.onMouseEntered = { button.visual = ColorVisual.MAGENTA }
-    button.onMouseExited = { button.visual = ColorVisual.GREEN }
-    button.onKeyPressed = { keyEvent -> button.text = "pressed key: ${keyEvent.keyCode}" }
-    button.onKeyReleased = { keyEvent -> button.text = "released key: ${keyEvent.keyCode}" }
-    button.onKeyTyped = { keyEvent -> button.text = "typed key: ${keyEvent.character}" }
-    button.dropAcceptor = { true }
-    button.onDragDropped = {
-      it.draggedComponent.reposition(500, 30)
-      it.draggedComponent.rotation = 0.0
-      gameScene.addComponents(token)
-    }
-    button.onDragGestureEntered = { dragEvent -> button.visual = dragEvent.draggedComponent.visual }
-    button.onDragGestureExited = { button.visual = ColorVisual.GREEN }
-
-    // Additional function references available only to DynamicComponentViews
-    token.isDraggable = true
-
-    token.onDragGestureMoved = { token.rotate(5) }
-    token.onDragGestureStarted = { token.scale(1.2) }
-    token.onDragGestureEnded = { _, success -> if (success) token.resize(50, 50) }
-
-    // Global input listener
-    gameScene.onKeyPressed = { event ->
-      if (event.keyCode == KeyCode.ESCAPE)
-        exit()
-    }
-
-    showGameScene(gameScene.apply { addComponents(button, token) })
-    show()
-  }
-
-  private fun handleMouseClicked(@Suppress("UNUSED_PARAMETER") mouseEvent: MouseEvent) {
-    button.text = "someone clicked on me!"
-  }
 }
 ```

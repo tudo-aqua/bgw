@@ -1,6 +1,7 @@
 .markdown {
+  @apply pb-16 mb-10 max-2xl:pb-0 max-2xl:mb-0 max-2xl:w-[calc(100vw-3.5rem)];
   h1 {
-    @apply font-bold text-4xl mt-20;
+    @apply font-bold text-4xl mt-20 max-xl:text-3xl max-xl:mt-16;
 
     &:first-child {
       @apply mt-0;
@@ -8,7 +9,23 @@
   }
 
   h2 {
-    @apply font-bold text-3xl mt-12;
+    @apply font-bold text-3xl mt-12 max-xl:text-2xl max-xl:mt-8;
+  }
+
+  h3 {
+    @apply font-bold text-2xl mt-8 max-xl:text-xl max-xl:mt-6;
+  }
+
+  h4 {
+    @apply font-bold text-xl mt-8;
+  }
+
+  h5 {
+    @apply font-bold text-lg mt-8;
+  }
+
+  p code {
+    @apply font-mono text-sm;
   }
 
   & > p {
@@ -17,6 +34,10 @@
     code {
       @apply font-mono text-primary text-base;
     }
+  }
+
+  & > .code-tab {
+    @apply mt-6;
   }
 
   tbody > tbody {
@@ -39,13 +60,55 @@
     @apply mt-8;
   }
 
-  tr {
-    & > td:first-child {
-      @apply pl-8 font-mono text-foreground text-sm;
+  table[orientation="vertical"] {
+    tr {
+      & > td:first-child {
+        @apply pl-8 font-mono text-sm;
+      }
+
+      & > td {
+        @apply text-base;
+      }
     }
 
-    & > td {
-      @apply text-base;
+    thead > tr:first-child {
+      @apply font-bold;
+    }
+
+    tr {
+      @apply flex w-full;
+    }
+
+    td {
+      @apply flex items-center w-full flex-initial;
+    }
+
+    tbody td > code {
+      @apply text-sm text-muted-foreground;
+    }
+
+    th * {
+      @apply text-sm text-foreground;
+    }
+
+    td > i {
+      @apply text-sm pr-3;
+    }
+  }
+
+  table[orientation="horizontal"] {
+    tr {
+      & > td:first-child {
+        @apply pl-8 font-mono text-sm font-bold bg-secondary text-foreground w-20 flex-shrink-0;
+      }
+
+      & > td:not(:first-child) {
+        @apply text-base text-muted-foreground pl-8;
+      }
+    }
+
+    td > i {
+      @apply text-sm pr-3;
     }
   }
 
@@ -53,13 +116,33 @@
     @apply font-bold relative inline-flex items-center transition-colors duration-200 ease-in-out;
     margin-right: 1.1em;
 
-    &:after {
+    &:not(.link__ref):not(.link__guide):not(.link__none):after {
       content: "open_in_new";
       font-family: "Material Symbols Rounded";
       font-size: 0.8em;
       margin-top: 0.1em;
       position: absolute;
       right: -1.35em;
+    }
+
+    &.link__ref:before {
+      content: "description";
+      font-family: "Material Symbols Rounded";
+      font-size: 0.8em;
+      margin-top: 0.15em;
+      position: absolute;
+      right: -1.35em;
+      font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+
+    &.link__guide:after {
+      content: "book_2";
+      font-family: "Material Symbols Rounded";
+      font-size: 0.8em;
+      margin-top: 0.2em;
+      position: absolute;
+      right: -1.35em;
+      font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
     }
 
     &:hover {
@@ -72,6 +155,15 @@
     @apply mt-6;
   }
 
+  h3 + *,
+  h4 + * {
+    @apply mt-4;
+  }
+
+  h5 + * {
+    @apply mt-2;
+  }
+
   .code-tabs,
   .preview-tabs {
     @apply mt-6;
@@ -79,6 +171,62 @@
 
   .ruler + * {
     @apply mt-0;
+  }
+
+  .fieldset {
+    // Change to bg-background for original color
+    @apply mt-4 bg-muted/50;
+
+    & > p > code {
+      @apply font-mono text-primary text-sm;
+    }
+
+    // Remove for original color
+    .code-tab > div {
+      @apply bg-secondary;
+    }
+  }
+
+  p + .fieldset,
+  p + div > table {
+    @apply mt-6;
+  }
+
+  .fieldset .guide-banner {
+    @apply m-0 mt-3;
+  }
+
+  .fieldset > p {
+    @apply text-muted-foreground mt-3 py-1 px-2 text-base;
+  }
+
+  bgw_scene > bgw_visuals > bgw_color_visual {
+    @apply bg-[#161d29];
+    // @apply bg-red-500;
+  }
+
+  ul {
+    @apply list-disc pl-6 mt-4;
+
+    li {
+      @apply text-lg py-1 text-muted-foreground;
+
+      code {
+        @apply font-mono text-primary text-base;
+      }
+    }
+  }
+
+  ol {
+    @apply list-decimal pl-6 mt-4;
+
+    li {
+      @apply text-lg py-1 text-muted-foreground;
+
+      code {
+        @apply font-mono text-primary text-base;
+      }
+    }
   }
 }
 
@@ -98,6 +246,8 @@
 
 .component {
   .docs-banner {
+    @apply max-xl:flex-col max-xl:gap-2 max-xl:items-start max-xl:py-3;
+
     & > p {
       @apply text-base;
     }
@@ -109,5 +259,9 @@
     code {
       @apply font-mono text-primary text-base;
     }
+  }
+
+  bgw_scene > bgw_visuals > bgw_color_visual {
+    @apply bg-[#161d29];
   }
 }

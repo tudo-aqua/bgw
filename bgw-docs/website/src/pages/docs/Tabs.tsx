@@ -33,7 +33,7 @@ function CodeTabs({ values, children }: { values: string[]; children: any }) {
   return (
     <Tabs
       defaultValue={values[0]}
-      className="w-full code-tabs mb-4 mt-4"
+      className="w-full mt-4 mb-4 code-tabs"
       onValueChange={(newValue) => {
         changeVisibilityOfTabs(newValue);
         setCurrentTab(newValue);

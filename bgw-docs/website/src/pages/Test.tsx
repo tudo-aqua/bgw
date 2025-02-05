@@ -27,9 +27,7 @@ function DraggableDND() {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      onClick={() => {
-        console.log("clicked");
-      }}
+      onClick={() => {}}
     ></button>
   );
 }

@@ -16,6 +16,9 @@
 [indexOfKDoc]: /docs/tools.aqua.bgw.util/-stack/index-of.html
 [NoSuchElementExceptionKDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-no-such-element-exception/
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # Stack
 
 ## Usage

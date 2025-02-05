@@ -18,6 +18,9 @@
 [ObservableLinkedListKDoc]: /docs/tools.aqua.bgw.observable/-observable-linked-list/index.html
 [IllegalArgumentExceptionKDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # Observable
 
 This section showcases the different types of observables in the BGW framework. [Observables][ObservableKDoc] are used

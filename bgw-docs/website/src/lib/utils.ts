@@ -1,5 +1,12 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  BooleanValue,
+  ChoiceValue,
+  ColorValue,
+  NumberValue,
+  StringValue,
+} from "./components";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,7 +62,7 @@ export function createKotlinCodeLinebreaks(code: string, length: number = 100) {
 
 export function normalizeKotlinCode(input: string): string {
   const lines = input.trim().split("\n");
-  console.log(lines);
+
   const normalizedLines: string[] = [];
 
   for (let i = 0; i < lines.length; i++) {
@@ -84,7 +91,6 @@ export function normalizeKotlinCode(input: string): string {
     normalizedLines.push(currentLine);
   }
 
-  console.log(normalizedLines);
   return normalizedLines.join("\n");
 }
 
@@ -116,13 +122,16 @@ export function formatKotlinCode(input: string): string {
     context?: string; // Store context like 'apply', 'run', etc.
   }> = [];
 
-  const addLine = () => {
+  const addLine = (extra: string = "") => {
     if (currentLine.trim()) {
       if (formatted === "") {
-        formatted += currentLine.trim() + "\n"; // Do not indent the first line
+        formatted += currentLine.trim() + extra + "\n"; // Do not indent the first line
       } else {
         formatted +=
-          " ".repeat(indentLevel * indentSize) + currentLine.trim() + "\n";
+          " ".repeat(indentLevel * indentSize) +
+          currentLine.trim() +
+          extra +
+          "\n";
       }
     } else {
       formatted += "\n";
@@ -232,7 +241,7 @@ export function formatKotlinCode(input: string): string {
           }
         }
       }
-      // Handle commas and other line breaks
+      // Handle commas, comments and other line breaks
       else if (char === "," || char === ";") {
         currentLine += char;
         if (
@@ -241,6 +250,8 @@ export function formatKotlinCode(input: string): string {
         ) {
           addLine();
         }
+      } else if (char === "/" && lastChar === "*") {
+        addLine("/");
       } else if (char === "\n") {
         addLine();
       } else {
@@ -261,18 +272,58 @@ export function formatKotlinCode(input: string): string {
   return formatted.trim();
 }
 
+function reconstructSingleProperty(prop: any) {
+  switch (prop.propType) {
+    case "number":
+      return NumberValue.fromJSON(prop);
+    case "string":
+      return StringValue.fromJSON(prop);
+    case "boolean":
+      return BooleanValue.fromJSON(prop);
+    case "color":
+      return ColorValue.fromJSON(prop);
+    case "choice":
+      return ChoiceValue.fromJSON(prop);
+    default:
+      return prop;
+  }
+}
+
+export function reconstructProperties(component: any) {
+  if (!component || typeof component !== "object") {
+    return component;
+  }
+
+  Object.keys(component).forEach((key) => {
+    const value = component[key];
+
+    if (value && typeof value === "object") {
+      if (value.propType) {
+        // If it has propType, reconstruct this property
+        component[key] = reconstructSingleProperty(value);
+      } else {
+        // Otherwise recursively process nested object
+        component[key] = reconstructProperties(value);
+      }
+    }
+  });
+
+  return component;
+}
 // Database Configuration
 export const idbConfig = {
-  databaseName: "bgw-db",
+  databaseName: "bgw-playground",
   version: 1,
   stores: [
     {
       name: "images",
-      id: { keyPath: "id", autoIncrement: true },
-      indices: [
-        { name: "name", keyPath: "name", options: { unique: true } },
-        { name: "src", keyPath: "src" },
-      ],
+      id: { keyPath: "name" },
+      indices: [{ name: "name", keyPath: "name", options: { unique: true } }],
+    },
+    {
+      name: "workspaces",
+      id: { keyPath: "id" },
+      indices: [{ name: "id", keyPath: "id", options: { unique: true } }],
     },
   ],
 };
@@ -394,11 +445,11 @@ export const guideStructure = {
     icon: "widgets",
     items: [
       {
-        title: "Component View",
+        title: "ComponentView",
         url: "/guides/components/componentview",
       },
       {
-        title: "Dynamic Component",
+        title: "DynamicComponentView",
         url: "/guides/components/dynamiccomponentview",
       },
       {
@@ -409,7 +460,7 @@ export const guideStructure = {
         title: "UI Components",
         url: "/guides/components/uicomponents",
       },
-      { title: "Layout", url: "/guides/components/layout" },
+      { title: "Layouts", url: "/guides/components/layout" },
       { title: "Container", url: "/guides/components/container" },
     ],
     dir: "components",
@@ -425,6 +476,10 @@ export const guideStructure = {
       { title: "Observable", url: "/guides/concepts/observable" },
       { title: "User Input", url: "/guides/concepts/user-input" },
       { title: "Visual", url: "/guides/concepts/visual" },
+      {
+        title: "Advanced Usage",
+        url: "/guides/concepts/advanced-usage",
+      },
     ],
     dir: "concepts",
   },

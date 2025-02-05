@@ -1,11 +1,46 @@
 ﻿import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import React, { useEffect, useState } from "react";
 import * as Components from "@/lib/components.ts";
-import { DataClass, DataClasses } from "@/lib/components.ts";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area.tsx";
-import useWebSocket from "react-use-websocket";
+import {
+  BooleanValue,
+  ChoiceValue,
+  ColorValue,
+  ColorVisualData,
+  ComponentViewData,
+  CompoundVisualData,
+  DataClass,
+  DiceViewData,
+  Droppable,
+  generateId,
+  ImageVisualData,
+  NumberValue,
+  PropertyValue,
+  SingleLayerVisualData,
+  StringValue,
+  TextVisualData,
+} from "@/lib/components.ts";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { Switch } from "@/components/ui/switch.tsx";
+import { ColorPicker } from "@/components/ui/color-picker.tsx";
 import { useMap } from "@uidotdev/usehooks";
 import {
   Dialog,
@@ -17,61 +52,300 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Toggle } from "@/components/ui/toggle.tsx";
+import {
+  DndProvider,
+  getBackendOptions,
+  MultiBackend,
+  Tree,
+} from "@minoru/react-dnd-treeview";
+import { ImagePicker } from "@/components/ui/image-picker.tsx";
+import { SimpleColorPicker } from "@/components/ui/gradient-picker.tsx";
+import { TextPicker } from "@/components/ui/text-picker.tsx";
+import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu.tsx";
+import Parser from "@/pages/Parser.tsx";
 import ImageViewer from "@/pages/ImageViewer.tsx";
 import setupIndexedDB, { useIndexedDBStore } from "use-indexeddb";
-import { idbConfig } from "@/lib/utils.ts";
-import ReactKotlinPlayground from "@/lib/kotlin-playground/ReactKotlinPlayground";
-import { render } from "react-dom";
-import { CodeParser } from "@/lib/parser.ts";
-import { constructors } from "@/lib/constructors.ts";
-import { useLoaderData } from "react-router";
-import { ConstructorAPIImportInfo } from "@/lib/types.ts";
+import { idbConfig, reconstructProperties } from "@/lib/utils.ts";
+import { ConstructorAPIImportInfo, Guides } from "@/lib/types.ts";
+import SettingsField from "@/components/SettingsField.tsx";
+import { exportComponent } from "@/lib/exporter.ts";
+import Playground from "@/pages/Playground.tsx";
+import { Link } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
-function Dashboard() {
-  // const { data: constructorData = {} as ConstructorAPIImportInfo[], loading } = useFetch(
-  //     `http://localhost:8080/api/2.0.10/compiler/constructors`,
-  //     {
-  //         method: "GET",
-  //         headers: {
-  //             Accept: "application/json",
-  //             "Content-Type": "application/json",
-  //         },
-  //     },
-  //     []
-  // );
-
-  // const { data : result, post } = useFetch(
-  //     `http://localhost:8080/api/2.0.10/compiler/run`,
-  //     {
-  //         method: "POST",
-  //         headers: {
-  //             Accept: "application/json",
-  //             "Content-Type": "application/json",
-  //         },
-  //     }
-  // );
-
-  // useEffect(() => {
-  //     console.log(loading, constructorData)
-  //     window.conData = constructorData
-  // }, [constructorData, loading]);
-
+function BGWPlayground() {
   useEffect(() => {
     setupIndexedDB(idbConfig)
-      .then(() => console.log("success"))
-      .catch((e) => console.error("error / unsupported", e));
+      .then(() => {
+        loadSavedWorkspace();
+      })
+      .catch((err) => console.error("IndexedDB initialization failed:", err));
   }, []);
 
-  //Public API that will echo messages sent to it back to the client
-  const [socketUrl, setSocketUrl] = useState("ws://localhost:5173/ws");
-  const { sendJsonMessage } = useWebSocket(socketUrl);
+  const { update: saveWorkspace, getByID: loadWorkspace } =
+    useIndexedDBStore("workspaces");
 
+  const saveCurrentWorkspace = (workspaceId: string = "default") => {
+    const workspace = {
+      id: workspaceId,
+      components: allComponents,
+      treeData,
+      sceneWidth,
+      sceneHeight,
+    };
+
+    saveWorkspace(workspace)
+      .then()
+      .catch((err) => console.error("Failed to save workspace:", err));
+  };
+
+  const loadSavedWorkspace = async (workspaceId: string = "default") => {
+    try {
+      const saved = await loadWorkspace(workspaceId);
+      if (saved) {
+        // Restore components
+        allComponents.clear();
+        saved.components.forEach((c) =>
+          allComponents.set(c.id, reconstructProperties(c))
+        );
+
+        // Restore other state
+        setTreeData(saved.treeData);
+        setSceneWidth(saved.sceneWidth);
+        setSceneHeight(saved.sceneHeight);
+
+        sendOutputElements();
+        setOutputDirty((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error("Failed to load workspace:", err);
+    }
+  };
+
+  const [advancedMode, setAdvancedMode] = useState(false);
+  const [showPermanentGuides, setShowPermanentGuides] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fullScreen, setFullScreen] = useState(false);
+
+  const [compileError, setCompileError] = useState(null);
+  const [projectError, setProjectError] = useState(null);
+  const [projectWarning, setProjectWarning] = useState(null);
+
+  const [sceneWidth, setSceneWidth] = useState(1920);
+  const [sceneHeight, setSceneHeight] = useState(1080);
+
+  const onError = (message, source, lineno, colno, error) => {
+    if (message.includes("window.cef")) return;
+    if (message.includes("JsonDecodingException")) setCompileError(message);
+  };
+
+  useEffect(() => {
+    window.onerror = onError;
+
+    return () => {
+      window.onerror = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  const captureKeyEvent = (e) => {
+    if (selectedClass == null) return;
+    let delta = e.shiftKey ? 10 : 1;
+    let bounds = e.altKey;
+
+    if (!bounds) {
+      if (e.key === "ArrowRight") {
+        if (!selectedClass.posX || selectedClass.posX.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            posX: new NumberValue(
+              "posX",
+              prev.posX.value + delta,
+              "Position X"
+            ),
+          };
+        });
+      } else if (e.key === "ArrowLeft") {
+        if (!selectedClass.posX || selectedClass.posX.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            posX: new NumberValue(
+              "posX",
+              prev.posX.value - delta,
+              "Position X"
+            ),
+          };
+        });
+      } else if (e.key === "ArrowUp") {
+        if (!selectedClass.posY || selectedClass.posY.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            posY: new NumberValue(
+              "posY",
+              prev.posY.value - delta,
+              "Position Y"
+            ),
+          };
+        });
+      } else if (e.key === "ArrowDown") {
+        if (!selectedClass.posY || selectedClass.posY.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            posY: new NumberValue(
+              "posY",
+              prev.posY.value + delta,
+              "Position Y"
+            ),
+          };
+        });
+      }
+    } else {
+      if (e.key === "ArrowRight") {
+        if (!selectedClass.width || selectedClass.width.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            width: new NumberValue("width", prev.width.value + delta, "Width"),
+          };
+        });
+      } else if (e.key === "ArrowLeft") {
+        if (!selectedClass.width || selectedClass.width.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            width: new NumberValue("width", prev.width.value - delta, "Width"),
+          };
+        });
+      } else if (e.key === "ArrowUp") {
+        if (!selectedClass.height || selectedClass.height.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            height: new NumberValue(
+              "height",
+              prev.height.value - delta,
+              "Height"
+            ),
+          };
+        });
+      } else if (e.key === "ArrowDown") {
+        if (!selectedClass.height || selectedClass.height.disabled) return;
+        e.preventDefault();
+        setSelectedClass((prev: object) => {
+          return {
+            ...prev,
+            height: new NumberValue(
+              "height",
+              prev.height.value + delta,
+              "Height"
+            ),
+          };
+        });
+      }
+    }
+  };
+
+  const modifyElementPosition = (elementId, x: number, y: number) => {
+    let preview = document.getElementById("bgw-root");
+    let bounds = preview.getBoundingClientRect();
+
+    let scenes = document.getElementById("bgw-root").children[0];
+    let sceneBounds = scenes.getBoundingClientRect();
+
+    const scaleX = sceneWidth / sceneBounds.width;
+    const scaleY = sceneHeight / sceneBounds.height;
+
+    let yDiff = sceneBounds.top - bounds.top;
+    let xDiff = sceneBounds.left - bounds.left;
+
+    let actualX = x - xDiff;
+    let actualY = y - yDiff;
+
+    const translatedX = actualX * scaleX;
+    const translatedY = actualY * scaleY;
+
+    setSelectedClass((prev: object) => {
+      return {
+        ...prev,
+        posX: new NumberValue("posX", Math.round(translatedX), "Position X"),
+        posY: new NumberValue("posY", Math.round(translatedY), "Position Y"),
+      };
+    });
+  };
+
+  const sendJsonMessage = (message) => {
+    const event = new CustomEvent("BGW_MSG", {
+      detail: JSON.stringify(message),
+    });
+
+    document.dispatchEvent(event);
+  };
+
+  const [selectedComponentType, setSelectedComponentType] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
+
+  const [parsedCodeObjects, setParsedCodeObjects] = useState(null);
 
   const [selectedComponentId, setSelectedComponentId] = useState("");
   const allComponents = useMap([]);
 
+  const [allFonts, setAllFonts] = useState([]);
+
   const [treeData, setTreeData] = useState([]);
+  const handleDrop = (newTreeData) => {
+    setTreeData(newTreeData);
+  };
+
+  const checkDrop = (source, targetId, target) => {
+    if (targetId === 0) return true;
+
+    let sourceElem = getElementFromId(source.id);
+    let targetElem = getElementFromId(target.id);
+
+    if (sourceElem == null || targetElem == null) return false;
+
+    if (!Droppable[targetElem.type]) return true;
+    let droppable = Droppable[targetElem.type].whitelist;
+    let allowed = false;
+    droppable.forEach((type) => {
+      if (sourceElem.objectType.includes(type)) {
+        allowed = true;
+      }
+    });
+
+    return allowed;
+  };
 
   const getInstantiableByData = (data: string) => {
     const flat = Object.entries(Components.Instantiable).flatMap((e) =>
@@ -79,6 +353,20 @@ function Dashboard() {
     );
     return flat.find((e) => e[1].cls === data)[1];
   };
+
+  const getType = (value: PropertyValue | null) => {
+    if (value === null) {
+      return "null";
+    }
+
+    if (value.propType) {
+      return value.propType;
+    } else {
+      return "null";
+    }
+  };
+
+  const [outputDirty, setOutputDirty] = useState(0);
 
   const [imageGallery, setImageGallery] = useState([]);
   const { getAll, getOneByKey } = useIndexedDBStore("images");
@@ -96,58 +384,1129 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    if (loading) return;
-    const code = `
-            import tools.aqua.bgw.components.gamecomponentviews.*
-            import tools.aqua.bgw.components.layoutviews.*
-            import tools.aqua.bgw.components.container.*
-            import tools.aqua.bgw.components.uicomponents.*
-            import tools.aqua.bgw.core.*
-            import tools.aqua.bgw.visual.*
-        
-            class GameScene() : BoardGameScene(1920, 1080, background = ColorVisual.WHITE) {
-            
-            }
-        `;
-    handleCodeChange(code);
-  }, [loading]);
-
-  useEffect(() => {
-    console.log(selectedClass);
     if (selectedClass === null) return;
     allComponents.set(selectedClass.id, selectedClass);
     sendOutputElements();
+
+    window.addEventListener("keydown", captureKeyEvent);
+
+    if (currentGuide != null) {
+      showElementGuides(currentGuide.id);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", captureKeyEvent);
+    };
   }, [selectedClass, treeData]);
 
-  // Initialize the Kotlin Playground
   useEffect(() => {
-    const node = document.getElementById("kotlin__playground");
-    const props = {
-      autoIndent: 2,
-      targetPlatform: "jvm",
-      theme: "default",
-      "auto-indent": "true",
-      server: "http://localhost:8080",
-      //"data-autocomplete": "true",
-      onChange: (code) => {
-        handleCodeChange(code);
-      },
-    };
+    if (currentGuide != null && !showPermanentGuides) {
+      hideElementGuides();
+    } else if (currentGuide != null) {
+      showElementGuides(currentGuide.id);
+    } else if (showPermanentGuides && selectedComponentId != "") {
+      showElementGuides(selectedComponentId);
+    }
+  }, [showPermanentGuides, fullScreen]);
 
-    const code = `
-            import tools.aqua.bgw.components.gamecomponentviews.*
-            import tools.aqua.bgw.components.layoutviews.*
-            import tools.aqua.bgw.components.container.*
-            import tools.aqua.bgw.components.uicomponents.*
-            import tools.aqua.bgw.core.*
-            import tools.aqua.bgw.visual.*
-        
-            class GameScene() : BoardGameScene(1920, 1080, background = ColorVisual.WHITE) {
-            
+  useEffect(() => {
+    setCompileError(null);
+    sendOutputElements();
+  }, [outputDirty, sceneWidth, sceneHeight]);
+
+  useEffect(() => {
+    if (allComponents.size > 0) {
+      saveCurrentWorkspace();
+    }
+  }, [allComponents, treeData, sceneWidth, sceneHeight, selectedClass]);
+
+  const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
+    if (attr === "visual") return getVisualInputs(elementClass);
+    if (attr.startsWith("vis_")) return getVisualInputs(elementClass, attr);
+    if (attr === "front") return getVisualInputs(elementClass, "front");
+    if (attr === "back") return getVisualInputs(elementClass, "back");
+    if (attr === "font") return getFontInputs(elementClass);
+
+    const res = Object.entries(elementClass).find((p) => p[0] === attr);
+
+    if (attr === "sideCount") {
+      return getSideCountInput(res, elementClass);
+    }
+
+    if (attr === "column" || attr === "row") {
+      return getSpecialInputElement(res, elementClass.id);
+    }
+
+    return getInputElement(res);
+  };
+
+  const getSideCountInput = (
+    entry: [string, PropertyValue],
+    elementClass: DiceViewData
+  ) => {
+    return (
+      <div className="flex flex-row items-center justify-between w-full gap-4">
+        <Label className="shrink-0 w-[43%] text-white/70" htmlFor={entry[0]}>
+          {entry[1].name}
+        </Label>
+        <Input
+          id={entry[0]}
+          type="number"
+          placeholder={entry[1].value}
+          value={entry[1].value}
+          onChange={(e) => {
+            setSelectedClass((prev: object) => {
+              return {
+                ...prev,
+                [entry[0]]: new NumberValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+              };
+            });
+
+            const currentVisuals = Object.keys(elementClass).filter((k) =>
+              k.startsWith("vis_")
+            );
+
+            if (currentVisuals.length < parseInt(e.target.value)) {
+              for (
+                let i = currentVisuals.length;
+                i < parseInt(e.target.value);
+                i++
+              ) {
+                if (elementClass[`vis_${i}`]) continue;
+                setSelectedClass((prev: object) => {
+                  return {
+                    ...prev,
+                    [`vis_${i}`]: new CompoundVisualData(),
+                  };
+                });
+              }
+            } else if (currentVisuals.length > parseInt(e.target.value)) {
+              for (
+                let i = currentVisuals.length - 1;
+                i >= parseInt(e.target.value);
+                i--
+              ) {
+                if (elementClass[`vis_${i}`]) {
+                  setSelectedClass((prev: object) => {
+                    const newData = { ...prev };
+                    delete newData[`vis_${i}`];
+                    return newData;
+                  });
+                }
+              }
             }
-        `;
-    render(React.createElement(ReactKotlinPlayground, props, code), node);
-  }, []);
+
+            setSelectedClass((prev: object) => {
+              return {
+                ...prev,
+                currentSide: new ChoiceValue(
+                  "currentSide",
+                  prev.currentSide.value >= e.target.value
+                    ? e.target.value
+                    : prev.currentSide.value,
+                  Array.from(
+                    { length: parseInt(e.target.value) },
+                    (_, i) => i + 1
+                  ).map((i) => i.toString()),
+                  "Current Side"
+                ),
+              };
+            });
+          }}
+        />
+      </div>
+    );
+  };
+
+  const changeValueOfVisual = (
+    child: SingleLayerVisualData,
+    attr: string,
+    value: any,
+    visAttr: string = "visual"
+  ) => {
+    setSelectedClass((prev: DataClass) => {
+      return {
+        ...prev,
+        [visAttr]: {
+          ...prev[visAttr],
+          children: prev[visAttr].children.map((c) => {
+            if (c === child) {
+              return {
+                ...c,
+                [attr]: value,
+              };
+            }
+            return c;
+          }),
+        },
+      };
+    });
+  };
+
+  const changeValueOfVisualFont = (
+    child: TextVisualData,
+    attr: string,
+    value: any,
+    visAttr: string = "visual"
+  ) => {
+    setSelectedClass((prev: DataClass) => {
+      return {
+        ...prev,
+        [visAttr]: {
+          ...prev[visAttr],
+          children: prev[visAttr].children.map((c) => {
+            if (c === child) {
+              return {
+                ...c,
+                font: {
+                  ...c.font,
+                  [attr]: value,
+                },
+              };
+            }
+            return c;
+          }),
+        },
+      };
+    });
+  };
+
+  const changeValueOfInherited = (
+    attr: string,
+    value: any,
+    childAttr: string = "visual"
+  ) => {
+    setSelectedClass((prev: DataClass) => {
+      return {
+        ...prev,
+        [childAttr]: {
+          ...prev[childAttr],
+          [attr]: value,
+        },
+      };
+    });
+  };
+
+  const getFontInputs = (elementClass: DataClass) => {
+    return (
+      <div className="grid w-full gap-6">
+        <div className="flex gap-3">
+          {getDistinctInheritedInputElement("family", "font")}
+        </div>
+        <div className="flex gap-3">
+          {getDistinctInheritedInputElement("color", "font")}
+          {getDistinctInheritedInputElement("size", "font")}
+          {getDistinctInheritedInputElement("fontStyle", "font")}
+          {getDistinctInheritedInputElement("fontWeight", "font")}
+        </div>
+      </div>
+    );
+  };
+
+  const getVisualInputs = (
+    elementClass: DataClass,
+    visAttr: string = "visual"
+  ) => {
+    return (
+      <>
+        <div className="grid w-full gap-3">
+          {elementClass[visAttr].children.map((child) => {
+            if (child.type === "ColorVisualData") {
+              return (
+                <div className="flex gap-3">
+                  <ColorPicker
+                    className="w-full"
+                    color={child.color}
+                    setColor={(value) => {
+                      changeValueOfVisual(child, "color", value, visAttr);
+                    }}
+                  >
+                    {getDistinctVisualInputElement(
+                      child,
+                      "transparency",
+                      visAttr
+                    )}
+                  </ColorPicker>
+                  <Button
+                    variant="secondary"
+                    onClick={() => removeVisualElement(child, visAttr)}
+                  >
+                    <i className="text-lg material-symbols-rounded text-white/90">
+                      delete
+                    </i>
+                  </Button>
+                </div>
+              );
+            } else if (child.type === "ImageVisualData") {
+              return (
+                <div className="flex gap-3">
+                  <ImagePicker
+                    className="w-full"
+                    image={child.path}
+                    setImage={(value) => {
+                      if (value.startsWith("http")) {
+                        changeValueOfVisual(child, "path", value, visAttr);
+                      } else {
+                        getOneByKey("name", value).then((image) => {
+                          if (image) {
+                            changeValueOfVisual(
+                              child,
+                              "path",
+                              image.src,
+                              visAttr
+                            );
+                          } else {
+                            alert("Image not found");
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    {getDistinctVisualInputElement(
+                      child,
+                      "transparency",
+                      visAttr
+                    )}
+                    {getDistinctVisualInputElement(child, "flipped", visAttr)}
+                    <div className="flex gap-3">
+                      {getDistinctVisualInputElement(child, "width", visAttr)}
+                      {getDistinctVisualInputElement(child, "height", visAttr)}
+                    </div>
+                    <div className="flex gap-3">
+                      {getDistinctVisualInputElement(child, "offsetX", visAttr)}
+                      {getDistinctVisualInputElement(child, "offsetY", visAttr)}
+                    </div>
+                  </ImagePicker>
+                  <Button
+                    variant="secondary"
+                    onClick={() => removeVisualElement(child, visAttr)}
+                  >
+                    <i className="text-lg material-symbols-rounded text-white/90">
+                      delete
+                    </i>
+                  </Button>
+                </div>
+              );
+            } else if (child.type === "TextVisualData") {
+              return (
+                <div className="flex gap-3">
+                  <TextPicker
+                    className="w-full"
+                    text={child.text}
+                    setText={(value) => {
+                      changeValueOfVisual(child, "text", value, visAttr);
+                    }}
+                  >
+                    <div className="flex gap-3">
+                      {getDistinctVisualInputElement(
+                        child,
+                        "transparency",
+                        visAttr
+                      )}
+                      {getDistinctVisualInputElement(child, "flipped", visAttr)}
+                    </div>
+                    <div className="grid w-full gap-3">
+                      <div className="flex gap-3">
+                        <div className="flex gap-3 w-[45%]">
+                          {getDistinctVisualFontInputElement(
+                            child,
+                            "family",
+                            visAttr
+                          )}
+                          {getDistinctVisualFontInputElement(
+                            child,
+                            "color",
+                            visAttr
+                          )}
+                        </div>
+                        <div className="flex gap-3 w-[15%]">
+                          {getDistinctVisualFontInputElement(
+                            child,
+                            "size",
+                            visAttr
+                          )}
+                        </div>
+                        <div className="flex gap-3 w-[40%]">
+                          {getDistinctVisualFontInputElement(
+                            child,
+                            "fontStyle",
+                            visAttr
+                          )}
+                          {getDistinctVisualFontInputElement(
+                            child,
+                            "fontWeight",
+                            visAttr
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      {getDistinctVisualInputElement(
+                        child,
+                        "horizontalAlignment",
+                        visAttr
+                      )}
+                      {getDistinctVisualInputElement(
+                        child,
+                        "verticalAlignment",
+                        visAttr
+                      )}
+                    </div>
+                    <div className="flex gap-3">
+                      {getDistinctVisualInputElement(child, "offsetX", visAttr)}
+                      {getDistinctVisualInputElement(child, "offsetY", visAttr)}
+                    </div>
+                  </TextPicker>
+                  <Button
+                    variant="secondary"
+                    onClick={() => removeVisualElement(child, visAttr)}
+                  >
+                    <i className="text-lg material-symbols-rounded text-white/90">
+                      delete
+                    </i>
+                  </Button>
+                </div>
+              );
+            }
+          })}
+        </div>
+        <div className="flex w-full gap-3">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              setSelectedClass((prev: DataClass) => {
+                return {
+                  ...prev,
+                  [visAttr]: {
+                    ...prev[visAttr],
+                    children: [
+                      ...prev[visAttr].children,
+                      new ColorVisualData(),
+                    ],
+                  },
+                };
+              });
+            }}
+          >
+            Add Color
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              setSelectedClass((prev: DataClass) => {
+                return {
+                  ...prev,
+                  [visAttr]: {
+                    ...prev[visAttr],
+                    children: [
+                      ...prev[visAttr].children,
+                      new ImageVisualData(),
+                    ],
+                  },
+                };
+              });
+            }}
+          >
+            Add Image
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              setSelectedClass((prev: DataClass) => {
+                return {
+                  ...prev,
+                  [visAttr]: {
+                    ...prev[visAttr],
+                    children: [...prev[visAttr].children, new TextVisualData()],
+                  },
+                };
+              });
+            }}
+          >
+            Add Text
+          </Button>
+        </div>
+      </>
+    );
+  };
+
+  const getDistinctVisualInputElement = (
+    child: SingleLayerVisualData,
+    attr: string,
+    visAttr: string = "visual"
+  ) => {
+    const res = Object.entries(child).find((p) => p[0] === attr);
+    return getVisualInputElement(res, child, visAttr);
+  };
+
+  const getDistinctVisualFontInputElement = (
+    child: TextVisualData,
+    attr: string,
+    visAttr: string = "visual"
+  ) => {
+    const res = Object.entries(child["font"]).find((p) => p[0] === attr);
+    return getVisualFontInputElement(res, child, visAttr);
+  };
+
+  const getDistinctInheritedInputElement = (
+    attr: string,
+    childAttr: string = "font"
+  ) => {
+    const res = Object.entries(selectedClass[childAttr]).find(
+      (p) => p[0] === attr
+    );
+    return getInheritedInputElement(res, childAttr);
+  };
+
+  const removeVisualElement = (
+    child: SingleLayerVisualData,
+    visAttr: string
+  ) => {
+    setSelectedClass((prev: DataClass) => {
+      return {
+        ...prev,
+        [visAttr]: {
+          ...prev[visAttr],
+          children: prev[visAttr].children.filter((c) => c !== child),
+        },
+      };
+    });
+  };
+
+  const getVisualInputElement = (
+    entry: [string, PropertyValue],
+    child: SingleLayerVisualData,
+    visAttr: string = "visual"
+  ) => {
+    if (entry[0] === "id") return null;
+
+    const type = getType(entry[1]);
+    if (type === "null") return null;
+
+    if (type === "number") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="number"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              changeValueOfVisual(
+                child,
+                entry[1].property,
+                new NumberValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "string") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="text"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              changeValueOfVisual(
+                child,
+                entry[1].property,
+                new StringValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "boolean") {
+      return (
+        <div className="flex items-center justify-between w-full h-8">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Switch
+            id={entry[0]}
+            defaultChecked={entry[1].value}
+            checked={entry[1].value}
+            onCheckedChange={(e) => {
+              changeValueOfVisual(
+                child,
+                entry[1].property,
+                new BooleanValue(entry[1].property, e, entry[1].name),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "choice") {
+      return (
+        <div className="flex flex-col w-full gap-3">
+          <Label className="text-white/70">{entry[1].name}</Label>
+          <Select
+            value={entry[1].value}
+            onValueChange={(value) => {
+              changeValueOfVisual(
+                child,
+                entry[1].property,
+                new ChoiceValue(
+                  entry[1].property,
+                  value,
+                  entry[1].possibleValues,
+                  entry[1].name
+                ),
+                visAttr
+              );
+            }}
+          >
+            <SelectTrigger
+              id={entry[0]}
+              className="items-start [&_[data-description]]:hidden"
+            >
+              <SelectValue placeholder={entry[1].value} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {entry[1].possibleValues.map((choice) => {
+                  return (
+                    <SelectItem value={choice}>
+                      <div className="flex items-center gap-5 text-muted-foreground">
+                        <div className="grid gap-0.5">
+                          <span className="font-medium text-foreground">
+                            {choice}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      );
+    }
+  };
+
+  const getVisualFontInputElement = (
+    entry: [string, PropertyValue],
+    child: TextVisualData,
+    visAttr: string = "visual"
+  ) => {
+    if (entry[0] === "id") return null;
+
+    const type = getType(entry[1]);
+    if (type === "null") return null;
+
+    if (type === "number") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="number"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              changeValueOfVisualFont(
+                child,
+                entry[1].property,
+                new NumberValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "string") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="text"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              changeValueOfVisualFont(
+                child,
+                entry[1].property,
+                new StringValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "boolean") {
+      return (
+        <div className="flex items-center justify-between w-full h-8">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Switch
+            id={entry[0]}
+            defaultChecked={entry[1].value}
+            checked={entry[1].value}
+            onCheckedChange={(e) => {
+              changeValueOfVisualFont(
+                child,
+                entry[1].property,
+                new BooleanValue(entry[1].property, e, entry[1].name),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "choice") {
+      return (
+        <div className="flex flex-col w-full gap-3">
+          <Label className="text-white/70">{entry[1].name}</Label>
+          <Select
+            value={entry[1].value}
+            onValueChange={(value) => {
+              changeValueOfVisualFont(
+                child,
+                entry[1].property,
+                new ChoiceValue(
+                  entry[1].property,
+                  value,
+                  entry[1].possibleValues,
+                  entry[1].name
+                ),
+                visAttr
+              );
+            }}
+          >
+            <SelectTrigger
+              id={entry[0]}
+              className="items-start [&_[data-description]]:hidden"
+            >
+              <SelectValue placeholder={entry[1].value} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {entry[1].possibleValues.map((choice) => {
+                  return (
+                    <SelectItem value={choice}>
+                      <div className="flex items-center gap-5 text-muted-foreground">
+                        <div className="grid gap-0.5">
+                          <span className="font-medium text-foreground">
+                            {choice}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      );
+    } else if (type === "color") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <SimpleColorPicker
+            className="w-full"
+            background={entry[1].value}
+            setBackground={(value) => {
+              changeValueOfVisualFont(
+                child,
+                entry[1].property,
+                new ColorValue(entry[1].property, value, entry[1].name),
+                visAttr
+              );
+            }}
+          />
+        </div>
+      );
+    }
+  };
+
+  const getInheritedInputElement = (
+    entry: [string, PropertyValue],
+    childAttr: string = "font"
+  ) => {
+    if (entry[0] === "id") return null;
+
+    const type = getType(entry[1]);
+    if (type === "null") return null;
+
+    if (type === "number") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="number"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              changeValueOfInherited(
+                entry[1].property,
+                new NumberValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+                childAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "string") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="text"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              changeValueOfInherited(
+                entry[1].property,
+                new StringValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+                childAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "boolean") {
+      return (
+        <div className="flex items-center justify-between w-full h-8">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Switch
+            id={entry[0]}
+            defaultChecked={entry[1].value}
+            checked={entry[1].value}
+            onCheckedChange={(e) => {
+              changeValueOfInherited(
+                entry[1].property,
+                new BooleanValue(entry[1].property, e, entry[1].name),
+                childAttr
+              );
+            }}
+          />
+        </div>
+      );
+    } else if (type === "choice") {
+      return (
+        <div className="flex flex-col w-full gap-3">
+          <Label className="text-white/70">{entry[1].name}</Label>
+          <Select
+            value={entry[1].value}
+            onValueChange={(value) => {
+              changeValueOfInherited(
+                entry[1].property,
+                new ChoiceValue(
+                  entry[1].property,
+                  value,
+                  entry[1].possibleValues,
+                  entry[1].name
+                ),
+                childAttr
+              );
+            }}
+          >
+            <SelectTrigger
+              id={entry[0]}
+              className="items-start [&_[data-description]]:hidden"
+            >
+              <SelectValue placeholder={entry[1].value} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {entry[1].possibleValues.map((choice) => {
+                  return (
+                    <SelectItem value={choice}>
+                      <div className="flex items-center gap-5 text-muted-foreground">
+                        <div className="grid gap-0.5">
+                          <span className="font-medium text-foreground">
+                            {choice}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      );
+    } else if (type === "color") {
+      return (
+        <div className="grid w-full gap-3">
+          <Label className="text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <SimpleColorPicker
+            className="w-full"
+            background={entry[1].value}
+            setBackground={(value) => {
+              changeValueOfInherited(
+                entry[1].property,
+                new ColorValue(entry[1].property, value, entry[1].name),
+                childAttr
+              );
+            }}
+          />
+        </div>
+      );
+    }
+  };
+
+  const getSpecialInputElement = (
+    entry: [string, PropertyValue],
+    id: string
+  ) => {
+    if (entry[0] === "id") return null;
+    const type = getType(entry[1]);
+    if (type === "null") return null;
+    if (entry[1].disabled) return null;
+
+    if (type === "number") {
+      return (
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="number"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              allComponents.set(id, {
+                ...allComponents.get(id),
+                [entry[0]]: new NumberValue(
+                  entry[1].property,
+                  e.target.value,
+                  entry[1].name
+                ),
+              });
+              setOutputDirty(outputDirty + 1);
+            }}
+          />
+        </div>
+      );
+    }
+  };
+
+  const getInputElement = (entry: [string, PropertyValue]) => {
+    if (entry[0] === "id") return null;
+    const type = getType(entry[1]);
+    if (type === "null") return null;
+    if (entry[1].disabled) return null;
+
+    if (type === "number") {
+      return (
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="number"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              setSelectedClass((prev: object) => {
+                return {
+                  ...prev,
+                  [entry[0]]: new NumberValue(
+                    entry[1].property,
+                    e.target.value,
+                    entry[1].name
+                  ),
+                };
+              });
+            }}
+          />
+        </div>
+      );
+    } else if (type === "string") {
+      return (
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Input
+            id={entry[0]}
+            type="text"
+            placeholder={entry[1].value}
+            value={entry[1].value}
+            onChange={(e) => {
+              setSelectedClass((prev: object) => {
+                return {
+                  ...prev,
+                  [entry[0]]: new StringValue(
+                    entry[1].property,
+                    e.target.value,
+                    entry[1].name
+                  ),
+                };
+              });
+            }}
+          />
+        </div>
+      );
+    } else if (type === "boolean") {
+      return (
+        <div className="flex flex-row items-center justify-between w-full h-8 gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <Switch
+            id={entry[0]}
+            defaultChecked={entry[1].value}
+            checked={entry[1].value}
+            onCheckedChange={(e) => {
+              setSelectedClass((prev: object) => {
+                return {
+                  ...prev,
+                  [entry[0]]: new BooleanValue(
+                    entry[1].property,
+                    e,
+                    entry[1].name
+                  ),
+                };
+              });
+            }}
+          />
+        </div>
+      );
+    } else if (type === "color") {
+      return (
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70" htmlFor={entry[0]}>
+            {entry[1].name}
+          </Label>
+          <SimpleColorPicker
+            className="w-full"
+            background={entry[1].value}
+            setBackground={(value) => {
+              setSelectedClass((prev: object) => {
+                return {
+                  ...prev,
+                  [entry[0]]: new ColorValue(
+                    entry[1].property,
+                    value,
+                    entry[1].name
+                  ),
+                };
+              });
+            }}
+          />
+        </div>
+      );
+    } else if (type === "choice") {
+      return (
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70">
+            {entry[1].name}
+          </Label>
+          <Select
+            value={entry[1].value}
+            onValueChange={(value) => {
+              setSelectedClass((prev: object) => {
+                return {
+                  ...prev,
+                  [entry[0]]: new ChoiceValue(
+                    entry[1].property,
+                    value,
+                    entry[1].possibleValues,
+                    entry[1].name
+                  ),
+                };
+              });
+            }}
+          >
+            <SelectTrigger
+              id={entry[0]}
+              className="items-start [&_[data-description]]:hidden"
+            >
+              <SelectValue placeholder={entry[1].value} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {entry[1].possibleValues.map((choice) => {
+                  return (
+                    <SelectItem value={choice}>
+                      <div className="flex items-center gap-5 text-muted-foreground">
+                        <div className="grid gap-0.5">
+                          <span className="font-medium text-foreground">
+                            {choice}
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      );
+    }
+  };
 
   const getElementFromId = (id) => {
     if (id === 0) return null;
@@ -166,128 +1525,352 @@ function Dashboard() {
     return children;
   };
 
-  const handleCodeChange = (code: string) => {
-    post("", {
-      args: "",
-      files: [
-        {
-          name: "File.kt",
-          text: code,
-          publicId: "",
-        },
-        {
-          name: "Main.kt",
-          text: "import tools.aqua.bgw.components.gamecomponentviews.*\nimport tools.aqua.bgw.components.layoutviews.*\nimport tools.aqua.bgw.components.container.*\nimport tools.aqua.bgw.components.uicomponents.*\nimport tools.aqua.bgw.core.*\nimport tools.aqua.bgw.visual.*\nimport tools.aqua.bgw.builder.*\n\nfun main() {\n    println(SceneBuilder.respondJSON(GameScene()))\n}",
-          publicId: "",
-        },
-      ],
-      confType: "java",
-    }).then((data) => {
-      console.log(data);
-      if (data !== null && data.exception === null) {
-        let res = JSON.parse(
-          data.text.replace("</outStream>", "").replace("<outStream>", "")
-        );
-        console.log(res);
-        sendJsonMessage(res);
-      }
-    });
-
-    /* let parser = new CodeParser()
-        let result = parser.tryParse(code)
-
-        allComponents.clear()
-        while(treeData.length > 0) {
-            treeData.pop()
-        }
-
-        if(result) {
-            for (let newObj of result) {
-                allComponents.set(newObj.id, newObj)
-                treeData.push({
-                    "id": newObj.id,
-                    "parent": 0,
-                    "droppable": newObj.objectType.includes("TableViewData") || newObj.objectType.includes("LayoutViewData") || newObj.objectType.includes("ToggleGroupData") || newObj.objectType.includes("GameComponentContainerData") || newObj.objectType.includes("GridElementData") || newObj.objectType.includes("CameraPaneData") || newObj.objectType.includes("HexagonGridElementData"),
-                    "text": newObj.name.value
-                })
-                setSelectedClass(newObj);
-                setSelectedComponentId(newObj.id)
-            }
-        } */
-
-    const possibleComponents = window.conData
-      .filter((c) => {
-        return c.icon === "class" || c.icon === "enum";
-      })
-      .map((c) => {
-        return c.shortName;
-      });
-
-    document.querySelectorAll(".cm-variable").forEach((e) => {
-      if (possibleComponents.find((c) => c === e.innerHTML)) {
-        e.classList.add("cm-bgw");
-        e.removeEventListener("mouseenter", openTooltip);
-        e.removeEventListener("mouseleave", closeTooltip);
-        e.addEventListener("mouseenter", openTooltip);
-        e.addEventListener("mouseleave", closeTooltip);
-      }
-    });
+  const renderError = (error: string) => {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <i
+              className={`material-symbols-rounded text-xl text-red-500 right-4 absolute`}
+            >
+              emergency_home
+            </i>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{error}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
   };
 
-  const openTooltip = (e) => {
-    let elem = e.target.innerHTML.trim();
-    let foundComp = window.conData.find((c) => c.shortName === elem);
+  const renderWarning = (warning: string) => {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <i
+              className={`material-symbols-rounded text-xl text-yellow-500 right-4 absolute`}
+            >
+              warning
+            </i>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{warning}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
 
-    //let component = getInstantiableByData(e.target.innerHTML + "Data")
+  const renderInfo = (info: string) => {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <i
+              className={`material-symbols-rounded text-xl text-white/70 right-4 absolute`}
+            >
+              info
+            </i>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{info}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
 
-    e.target.classList.add("hovered");
-    if (foundComp !== null && foundComp.constructors.length > 0) {
-      let tooltip = document.createElement("div");
-      tooltip.classList.add("tooltip");
-      tooltip.innerHTML =
-        `<b>${foundComp.fullName}</b>` +
-        Object.entries(foundComp.constructors[0])
-          .map((entry) => {
-            return `<div class="flex gap-3">
-                    <span>${escapeHtml(entry[0])}</span>
-                    :
-                    <span>${escapeHtml(entry[1])}</span>
-                </div>`;
-          })
-          .join("");
-      tooltip.style.position = "fixed";
-      tooltip.style.pointerEvents = "none";
-      tooltip.style.top = e.target.getBoundingClientRect().top + 28 + "px";
-      tooltip.style.left = e.target.getBoundingClientRect().right - 25 + "px";
-      tooltip.style.zIndex = "999999999";
-      document.body.appendChild(tooltip);
-    } else if (foundComp !== null) {
-      let tooltip = document.createElement("div");
-      tooltip.classList.add("tooltip");
-      tooltip.innerHTML = `<b>${foundComp.fullName}</b>`;
-      tooltip.style.position = "fixed";
-      tooltip.style.pointerEvents = "none";
-      tooltip.style.top = e.target.getBoundingClientRect().top + 28 + "px";
-      tooltip.style.left = e.target.getBoundingClientRect().right - 25 + "px";
-      tooltip.style.zIndex = "999999999";
-      document.body.appendChild(tooltip);
+  const [exportOpened, setExportOpened] = useState(false);
+
+  const renderTreeNode = (
+    node,
+    depth: number,
+    isOpen: boolean,
+    onToggle: (e) => void
+  ) => {
+    let elem = allComponents.get(node.id);
+    if (elem == null) return null;
+
+    checkPossibleErrors(node);
+
+    return (
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          {getTreeNode(node, depth, isOpen, onToggle, elem)}
+        </ContextMenuTrigger>
+        <ContextMenuContent className="w-48">
+          {/*<ContextMenuLabel className="mb-2 ml-2">{elem.name.value.trim() == "" ? getInstantiableByData(elem.type).name : elem.name.value}</ContextMenuLabel>*/}
+          <ContextMenuItem
+            className="gap-3 cursor-pointer"
+            onClick={() => {
+              setSelectedClass(elem);
+              setSelectedComponentId(elem.id);
+              duplicateComponent(elem.id);
+            }}
+          >
+            <i className="ml-2 text-lg material-symbols-rounded text-muted-foreground">
+              tab_inactive
+            </i>
+            <p className="font-medium text-muted-foreground">Duplicate</p>
+          </ContextMenuItem>
+          <ContextMenuItem
+            className="gap-3 cursor-pointer"
+            onClick={() => {
+              setSelectedClass(elem);
+              setSelectedComponentId(elem.id);
+              setExportOpened(true);
+            }}
+          >
+            <i className="ml-2 text-lg material-symbols-rounded text-muted-foreground">
+              code
+            </i>
+            <p className="font-medium text-muted-foreground">Export</p>
+          </ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem
+            className="text-red-500 hover:!bg-red-500/20 gap-3 cursor-pointer"
+            onClick={() => {
+              deleteComponent(elem.id);
+            }}
+          >
+            <i className="ml-2 text-lg text-red-500 material-symbols-rounded">
+              delete_forever
+            </i>
+            <p className="font-medium text-red-500">Delete</p>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    );
+  };
+
+  const getTreeNode = (
+    node,
+    depth: number,
+    isOpen: boolean,
+    onToggle: (e) => void,
+    elem
+  ) => {
+    let selected = elem.id === selectedComponentId;
+    let opened = isOpen;
+    let data = getInstantiableByData(elem.type);
+
+    /* return (
+            <Toggle pressed={selected}
+                    defaultPressed={selected}
+                    onMouseEnter={() => {showElementGuides(elem.id, data.color)}}
+                    onMouseLeave={() => {hideElementGuides()}}
+                    className={`flex items-center gap-3 mt-1 mb-1 justify-start cursor-pointer relative main__toggle ${selected ? `!bg-[${data.color}]/20` : ""} hover:!bg-[${data.color}]/20`}
+                    style={{
+                        marginLeft: depth * 30,
+                        width: `calc(100% - ${depth * 30}px)`,
+                        maxWidth: `calc(100% - ${depth * 30}px)`
+                    }}
+                    onPressedChange={() => {
+                        if(selected) {
+                            setSelectedComponentId(null)
+                            setSelectedClass(null)
+                            return
+                        }
+                        setSelectedComponentId(elem.id)
+                        setSelectedClass(elem)
+                    }}>
+                {node.droppable && (
+                    <i className={`material-symbols-rounded text-lg`}
+                       onClick={(event) => { event.preventDefault(); event.stopPropagation(); onToggle(event) }}>{isOpen ? "expand_more" : "chevron_right"}</i>
+                )}
+                <i className={`material-symbols-rounded main__toggle__icon text-xl text-[${data.color}]`}>{data.icon}</i>
+                <span
+                    className={`font-medium ${selected ? `text-[${getInstantiableByData(elem.type).color}]` : "text-white/70"} overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left`}>{elem.name.value.trim() == "" ? getInstantiableByData(elem.type).name : elem.name.value}</span>
+                { node.info && node.info.type === "error" ? renderError(node.info.message) : node.info && node.info.type === "warning" ? renderWarning(node.info.message) : node.info && node.info.type === "info" ? renderInfo(node.info.message) : null}
+            </Toggle>
+        ) */
+
+    return (
+      <Toggle
+        pressed={selected}
+        defaultPressed={selected}
+        onMouseEnter={() => {
+          showElementGuides(elem.id, data.color);
+        }}
+        onMouseLeave={() => {
+          if (!selected) hideElementGuides();
+          if (showPermanentGuides) {
+            showElementGuides(selectedComponentId, data.color);
+          } else {
+            hideElementGuides();
+          }
+        }}
+        className={`flex items-center gap-3 mt-1 mb-1 justify-start cursor-pointer relative main__toggle`}
+        style={{
+          marginLeft: depth * 30,
+          width: `calc(100% - ${depth * 30}px)`,
+          maxWidth: `calc(100% - ${depth * 30}px)`,
+        }}
+        title={elem.name.value.trim() == "" ? data.name : elem.name.value}
+        onPressedChange={() => {
+          if (selected) {
+            setSelectedComponentId(null);
+            setSelectedClass(null);
+            hideElementGuides();
+            return;
+          }
+          setSelectedComponentId(elem.id);
+          setSelectedClass(elem);
+          showElementGuides(elem.id);
+        }}
+      >
+        {node.droppable && (
+          <i
+            className={`material-symbols-rounded text-lg`}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onToggle(event);
+            }}
+          >
+            {isOpen ? "expand_more" : "chevron_right"}
+          </i>
+        )}
+        <i
+          className={`material-symbols-rounded main__toggle__icon text-xl text-[${data.color}]`}
+        >
+          {data.icon}
+        </i>
+        <span
+          className={`font-medium ${
+            selected ? `text-white` : "text-white/70"
+          } overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left`}
+        >
+          {elem.name.value.trim() == ""
+            ? getInstantiableByData(elem.type).name
+            : elem.name.value}
+        </span>
+        {node.info && node.info.type === "error"
+          ? renderError(node.info.message)
+          : node.info && node.info.type === "warning"
+          ? renderWarning(node.info.message)
+          : node.info && node.info.type === "info"
+          ? renderInfo(node.info.message)
+          : null}
+      </Toggle>
+    );
+  };
+
+  const [currentGuide, setCurrentGuide] = useState<Guides | null>(null);
+
+  const showElementGuides = (id: string, color: string = "#ffffff") => {
+    let guide: Guides = {
+      id: id,
+      color: color,
+      x: -9999,
+      y: -9999,
+      width: 0,
+      height: 0,
+    };
+
+    let guideElement = document.getElementById(id);
+    if (guideElement == null) {
+      setCurrentGuide(guide);
+      return;
     }
+
+    let parentElement = document.getElementById("bgw-preview");
+    if (parentElement == null) {
+      setCurrentGuide(guide);
+      return;
+    }
+
+    let parentRect = parentElement.getBoundingClientRect();
+    let rect = guideElement.getBoundingClientRect();
+
+    guide = {
+      id: id,
+      color: color,
+      x: rect.x - parentRect.x,
+      y: rect.y - parentRect.y,
+      width: rect.width,
+      height: rect.height,
+    };
+
+    setCurrentGuide(guide);
   };
 
-  const escapeHtml = (unsafe: string) => {
-    return unsafe
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  };
-
-  const closeTooltip = (e) => {
-    e.target.classList.remove("hovered");
-    document.querySelectorAll(".tooltip").forEach((e) => {
-      e.remove();
+  const setGuidePosition = (guidePos: any) => {
+    if (currentGuide == null) return;
+    setCurrentGuide({
+      ...currentGuide,
+      x: guidePos.x,
+      y: guidePos.y,
     });
+  };
+
+  const hideElementGuides = () => {
+    setCurrentGuide(null);
+  };
+
+  const duplicateComponent = (id: string, parentId: string | number = 0) => {
+    const elem = allComponents.get(id);
+    const node = treeData.find((n) => n.id === id);
+    const children = getAllChildren(id);
+
+    const newId = generateId();
+    const newElem = { ...elem, id: newId };
+    newElem.name = new StringValue(
+      "name",
+      `${
+        elem.name.value.trim() == ""
+          ? getInstantiableByData(elem.type).name
+          : elem.name.value
+      } (Copy)`,
+      "Name"
+    );
+    allComponents.set(newId, newElem);
+
+    if (children.length > 0) {
+      children.forEach((child) => {
+        duplicateComponent(child.id, newId);
+      });
+    }
+
+    setSelectedClass(newElem);
+    treeData.push({
+      id: newElem.id,
+      parent: parentId,
+      droppable:
+        newElem.objectType.includes("TableViewData") ||
+        newElem.objectType.includes("LayoutViewData") ||
+        newElem.objectType.includes("ToggleGroupData") ||
+        newElem.objectType.includes("GameComponentContainerData") ||
+        newElem.objectType.includes("GridElementData") ||
+        newElem.objectType.includes("CameraPaneData") ||
+        newElem.objectType.includes("HexagonGridElementData"),
+      text: newElem.name.value,
+    });
+
+    setSelectedComponentId(newElem.id);
+    showElementGuides(newElem.id);
+    setOutputDirty(outputDirty + 1);
+  };
+
+  const deleteComponent = (id: string) => {
+    const children = getAllChildren(id);
+
+    if (children.length > 0) {
+      children.forEach((child) => {
+        deleteComponent(child.id);
+      });
+    }
+
+    allComponents.delete(id);
+    setTreeData(treeData.filter((n) => n.id !== id));
+
+    setSelectedClass(null);
+    setSelectedComponentId(null);
+    setOutputDirty(outputDirty + 1);
+
+    saveCurrentWorkspace();
   };
 
   const checkPossibleErrors = (node) => {
@@ -523,7 +2106,7 @@ function Dashboard() {
     return null;
   };
 
-  const getOutputElementsFromTree = () => {
+  const getOutputElementsFromTree = (isExport: boolean = false) => {
     const components: DataClass[] = [];
     const allComponentsCopy = {};
 
@@ -540,6 +2123,15 @@ function Dashboard() {
           allComponentsCopy[elem.id].current === "front"
             ? allComponentsCopy[elem.id].front
             : allComponentsCopy[elem.id].back;
+      } else if (
+        elem.type === "HexagonViewData" ||
+        elem.type === "HexagonGridData"
+      ) {
+        allComponentsCopy[elem.id].orientation = allComponentsCopy[
+          elem.id
+        ].orientation
+          .replace(" ", "_")
+          .toLowerCase();
       } else if (elem.type === "DiceViewData") {
         let listToDel = [];
         allComponentsCopy[elem.id].visuals = Object.entries(
@@ -587,8 +2179,21 @@ function Dashboard() {
       delete allComponentsCopy[elem.id].verticalAlignment;
     });
 
+    if (!isExport) {
+      setProjectError(null);
+      setProjectWarning(null);
+    }
+
     treeData.forEach((node) => {
-      checkPossibleErrors(node);
+      let possErrors = checkPossibleErrors(node);
+      if (!isExport) {
+        if (possErrors && possErrors.type === "error") {
+          setProjectError(possErrors.message);
+        } else if (possErrors && possErrors.type === "warning") {
+          setProjectWarning(possErrors.message);
+        }
+      }
+
       let elem = allComponentsCopy[node.id];
       if (elem == null) return;
       if (node.info && node.info.type == "error") return;
@@ -607,7 +2212,6 @@ function Dashboard() {
       if (parentNode && parentNode.info && parentNode.info.type == "error")
         return;
 
-      console.log(parent.type, elem.objectType);
       if (
         parent.type === "ToggleGroupData" &&
         elem.objectType.includes("BinaryStateButtonData")
@@ -629,6 +2233,7 @@ function Dashboard() {
       } else if (parent.objectType.includes("HexagonGridElementData")) {
         parent.hexagon = elem;
         const nextParent = allComponentsCopy[parentNode.parent];
+        parent.hexagon.orientation = nextParent.orientation;
         if (nextParent && nextParent.objectType.includes("HexagonGridData")) {
           nextParent.map[parent.column + "/" + parent.row] = elem;
         }
@@ -650,7 +2255,6 @@ function Dashboard() {
   };
 
   const sendOutputElements = () => {
-    // return;
     if (allComponents.size === 0) return;
 
     // const components : DataClass[] = []
@@ -662,61 +2266,660 @@ function Dashboard() {
 
     const comps = JSON.parse(JSON.stringify(components));
 
+    setCompileError(null);
+
     sendJsonMessage({
-      data: {
-        type: "AppData",
-        gameScene: {
-          width: 1920,
-          height: 1080,
-          background: {
-            type: "CompoundVisualData",
-            id: "bgw-vis-2",
-            children: [
-              {
-                type: "ColorVisualData",
-                id: "bgw-vis-2",
-                transparency: 1.0,
-                flipped: "none",
-                color: "rgba(255, 255, 255, 1.0)",
-              },
-            ],
+      container: "bgw-root",
+      props: {
+        data: {
+          type: "AppData",
+          gameScene: {
+            width: sceneWidth,
+            height: sceneHeight,
+            background: {
+              type: "CompoundVisualData",
+              id: "bgw-vis-2",
+              children: [
+                {
+                  type: "ColorVisualData",
+                  id: "bgw-vis-2",
+                  transparency: 1.0,
+                  flipped: "none",
+                  color: "rgba(255, 255, 255, 1.0)",
+                },
+              ],
+            },
+            components: comps,
           },
-          components: comps,
+          width: sceneWidth,
+          height: sceneHeight,
         },
-        width: 1920,
-        height: 1080,
       },
     });
   };
 
+  const getAddComponentSelect = () => {
+    return (
+      <Select
+        onValueChange={(value) => {
+          setSelectedComponentType(value);
+        }}
+      >
+        <SelectTrigger
+          id="model"
+          className="items-start [&_[data-description]]:hidden"
+        >
+          <SelectValue placeholder="Select a component" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel className="text-muted-foreground">
+              UIComponents
+            </SelectLabel>
+            {Object.entries(Components.Instantiable.UIElements).map((entry) => {
+              return (
+                <SelectItem
+                  value={entry[1]["cls"]}
+                  disabled={entry[1].disabled}
+                >
+                  <div className="flex items-center gap-5 text-muted-foreground">
+                    <i
+                      className={`material-symbols-rounded text-xl text-[${entry[1].color}]`}
+                    >
+                      {entry[1].icon}
+                    </i>
+                    <div className="grid gap-0.5">
+                      <span className="font-medium text-foreground">
+                        {entry[0]}
+                      </span>
+                      <p className="text-xs" data-description>
+                        {entry[1].description}
+                      </p>
+                    </div>
+                    {entry[1].disabled && (
+                      <i className="absolute text-xl material-symbols-rounded right-5">
+                        emergency_home
+                      </i>
+                    )}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectGroup>
+          <div className="pt-2 mb-2"></div>
+          <SelectGroup>
+            <SelectLabel className="text-muted-foreground">
+              GameComponents
+            </SelectLabel>
+            {Object.entries(Components.Instantiable.GameElements).map(
+              (entry) => {
+                return (
+                  <SelectItem
+                    value={entry[1]["cls"]}
+                    disabled={entry[1].disabled}
+                  >
+                    <div className="flex items-center gap-5 text-muted-foreground">
+                      <i
+                        className={`material-symbols-rounded text-xl text-[${entry[1].color}]`}
+                      >
+                        {entry[1].icon}
+                      </i>
+                      <div className="grid gap-0.5">
+                        <span className="font-medium text-foreground">
+                          {entry[0]}
+                        </span>
+                        <p className="text-xs" data-description>
+                          {entry[1].description}
+                        </p>
+                      </div>
+                      {entry[1].disabled && (
+                        <i className="absolute text-xl material-symbols-rounded right-5">
+                          emergency_home
+                        </i>
+                      )}
+                    </div>
+                  </SelectItem>
+                );
+              }
+            )}
+          </SelectGroup>
+          <div className="pt-2 mb-2"></div>
+          <SelectGroup>
+            <SelectLabel className="text-muted-foreground">Layouts</SelectLabel>
+            {Object.entries(Components.Instantiable.LayoutElements).map(
+              (entry) => {
+                return (
+                  <SelectItem
+                    value={entry[1]["cls"]}
+                    disabled={entry[1].disabled}
+                  >
+                    <div className="flex items-center gap-5 text-muted-foreground">
+                      <i
+                        className={`material-symbols-rounded text-xl text-[${entry[1].color}]`}
+                      >
+                        {entry[1].icon}
+                      </i>
+                      <div className="grid gap-0.5">
+                        <span className="font-medium text-foreground">
+                          {entry[0]}
+                        </span>
+                        <p className="text-xs" data-description>
+                          {entry[1].description}
+                        </p>
+                      </div>
+                      {entry[1].disabled && (
+                        <i className="absolute text-xl material-symbols-rounded right-5">
+                          emergency_home
+                        </i>
+                      )}
+                    </div>
+                  </SelectItem>
+                );
+              }
+            )}
+          </SelectGroup>
+          <div className="pt-2 mb-2"></div>
+          <SelectGroup>
+            <SelectLabel className="text-muted-foreground">
+              Container
+            </SelectLabel>
+            {Object.entries(Components.Instantiable.ContainerElements).map(
+              (entry) => {
+                return (
+                  <SelectItem
+                    value={entry[1]["cls"]}
+                    disabled={entry[1].disabled}
+                  >
+                    <div className="flex items-center gap-5 text-muted-foreground">
+                      <i
+                        className={`material-symbols-rounded text-xl text-[${entry[1].color}]`}
+                      >
+                        {entry[1].icon}
+                      </i>
+                      <div className="grid gap-0.5">
+                        <span className="font-medium text-foreground">
+                          {entry[0]}
+                        </span>
+                        <p className="text-xs" data-description>
+                          {entry[1].description}
+                        </p>
+                      </div>
+                      {entry[1].disabled && (
+                        <i className="absolute text-xl material-symbols-rounded right-5">
+                          emergency_home
+                        </i>
+                      )}
+                    </div>
+                  </SelectItem>
+                );
+              }
+            )}
+          </SelectGroup>
+          <div className="pt-2 mb-2"></div>
+          <SelectGroup>
+            <SelectLabel className="text-muted-foreground">Special</SelectLabel>
+            {Object.entries(Components.Instantiable.SpecialElements).map(
+              (entry) => {
+                return (
+                  <SelectItem
+                    value={entry[1]["cls"]}
+                    disabled={entry[1].disabled}
+                  >
+                    <div className="flex items-center gap-5 text-muted-foreground">
+                      <i
+                        className={`material-symbols-rounded text-xl text-[${entry[1].color}]`}
+                      >
+                        {entry[1].icon}
+                      </i>
+                      <div className="grid gap-0.5">
+                        <span className="font-medium text-foreground">
+                          {entry[0]}
+                        </span>
+                        <p className="text-xs" data-description>
+                          {entry[1].description}
+                        </p>
+                      </div>
+                      {entry[1].disabled && (
+                        <i className="absolute text-xl material-symbols-rounded right-5">
+                          emergency_home
+                        </i>
+                      )}
+                    </div>
+                  </SelectItem>
+                );
+              }
+            )}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    );
+  };
+
+  const getPropDataInputs = (elementClass: DataClass) => {
+    return (
+      <>
+        {getNameInputs(elementClass)}
+        {elementClass.type === "TableColumnData"
+          ? getFontsInputs(elementClass)
+          : null}
+        {getRestSettingsInputs(elementClass)}
+      </>
+    );
+  };
+
+  const getComponentViewDataInputs = (elementClass: DataClass) => {
+    return (
+      <>
+        {getNameInputs(elementClass)}
+        {getPositionInputs(elementClass)}
+        {getSizeInputs(elementClass)}
+        {getVisualsInputs(elementClass)}
+        {advancedMode && getDisplayInputs(elementClass)}
+        {advancedMode && getTransformInputs(elementClass)}
+        {elementClass.font &&
+        !elementClass.objectType.includes("StructuredDataViewData") &&
+        !elementClass.type === "ColorPickerData"
+          ? getFontsInputs(elementClass)
+          : null}
+        {getRestSettingsInputs(elementClass)}
+      </>
+    );
+  };
+
+  const getNameInputs = (elementClass: DataClass) => {
+    return (
+      <SettingsField
+        title={getInstantiableByData(elementClass.type).name}
+        icon={getInstantiableByData(elementClass.type).icon}
+      >
+        {getDistinctInputElement(elementClass, "name")}
+      </SettingsField>
+    );
+  };
+
+  const tryGetParent = (elementClass: DataClass) => {
+    if (elementClass === null) return null;
+    const ownNode = treeData.find((node) => node.id === elementClass.id);
+    if (ownNode.parent === 0) return null;
+    const parentNode = treeData.find((node) => node.id === ownNode.parent);
+    return getElementFromId(parentNode.id);
+  };
+
+  const getBoundsInputs = (elementClass: DataClass) => {
+    if (elementClass === null) return null;
+    const parent = tryGetParent(elementClass);
+
+    if (
+      elementClass.type === "HexagonViewData" &&
+      parent &&
+      parent.type === "HexagonGridElementData"
+    ) {
+      return (
+        <SettingsField title={`Bounds`}>
+          <div className="flex gap-3">
+            {getDistinctInputElement(parent, "row")}
+            {getDistinctInputElement(parent, "column")}
+          </div>
+          <div className="flex gap-3">
+            {getDistinctInputElement(elementClass, "size")}
+          </div>
+        </SettingsField>
+      );
+    } else if (
+      elementClass.objectType.includes("ComponentViewData") &&
+      parent &&
+      parent.type === "GridElementData"
+    ) {
+      return (
+        <SettingsField title={`Bounds`}>
+          <div className="flex gap-3">
+            {getDistinctInputElement(parent, "row")}
+            {getDistinctInputElement(parent, "column")}
+          </div>
+          <div className="flex gap-3">
+            {getDistinctInputElement(elementClass, "width")}
+            {getDistinctInputElement(elementClass, "height")}
+          </div>
+        </SettingsField>
+      );
+    }
+
+    return (
+      <SettingsField title={`Bounds`}>
+        <div className="flex gap-3">
+          {getDistinctInputElement(elementClass, "posX")}
+          {getDistinctInputElement(elementClass, "posY")}
+        </div>
+        <div className="flex gap-3">
+          {elementClass.type === "HexagonViewData" ? (
+            getDistinctInputElement(elementClass, "size")
+          ) : (
+            <>
+              {getDistinctInputElement(elementClass, "width")}
+              {getDistinctInputElement(elementClass, "height")}
+            </>
+          )}
+        </div>
+      </SettingsField>
+    );
+  };
+
+  const getPositionInputs = (elementClass: DataClass) => {
+    if (elementClass === null) return null;
+    const parent = tryGetParent(elementClass);
+
+    if (
+      elementClass.type === "HexagonViewData" &&
+      parent &&
+      parent.type === "HexagonGridElementData"
+    ) {
+      return (
+        <SettingsField title={`Position`}>
+          {getDistinctInputElement(parent, "row")}
+          {getDistinctInputElement(parent, "column")}
+        </SettingsField>
+      );
+    } else if (
+      elementClass.objectType.includes("ComponentViewData") &&
+      parent &&
+      parent.type === "GridElementData"
+    ) {
+      return (
+        <SettingsField title={`Position`}>
+          {getDistinctInputElement(parent, "row")}
+          {getDistinctInputElement(parent, "column")}
+        </SettingsField>
+      );
+    }
+
+    return (
+      <SettingsField title={`Position`}>
+        {getDistinctInputElement(elementClass, "posX")}
+        {getDistinctInputElement(elementClass, "posY")}
+      </SettingsField>
+    );
+  };
+
+  const getSizeInputs = (elementClass: DataClass) => {
+    if (elementClass === null) return null;
+    const parent = tryGetParent(elementClass);
+
+    if (
+      elementClass.type === "HexagonViewData" &&
+      parent &&
+      parent.type === "HexagonGridElementData"
+    ) {
+      return (
+        <SettingsField title={`Size`}>
+          {getDistinctInputElement(elementClass, "size")}
+        </SettingsField>
+      );
+    } else if (
+      elementClass.objectType.includes("ComponentViewData") &&
+      parent &&
+      parent.type === "GridElementData"
+    ) {
+      return (
+        <SettingsField title={`Size`}>
+          {getDistinctInputElement(elementClass, "width")}
+          {getDistinctInputElement(elementClass, "height")}
+        </SettingsField>
+      );
+    }
+
+    return (
+      <SettingsField title={`Size`}>
+        {elementClass.type === "HexagonViewData" ? (
+          getDistinctInputElement(elementClass, "size")
+        ) : (
+          <>
+            {getDistinctInputElement(elementClass, "width")}
+            {getDistinctInputElement(elementClass, "height")}
+          </>
+        )}
+      </SettingsField>
+    );
+  };
+
+  const getVisualsInputs = (elementClass: DataClass) => {
+    if (elementClass.type === "CardViewData") {
+      return (
+        <>
+          <SettingsField title={`Visuals Front`}>
+            {getDistinctInputElement(elementClass, "front")}
+          </SettingsField>
+          <SettingsField title={`Visuals Back`}>
+            {getDistinctInputElement(elementClass, "back")}
+          </SettingsField>
+        </>
+      );
+    } else if (elementClass.type === "DiceViewData") {
+      return Object.keys(elementClass)
+        .filter((key) => key.startsWith("vis_"))
+        .map((key, index) => {
+          return (
+            <SettingsField title={`Visuals Side ${index + 1}`}>
+              {getDistinctInputElement(elementClass, key)}
+            </SettingsField>
+          );
+        });
+    } else {
+      return (
+        <SettingsField title="Visuals">
+          {getDistinctInputElement(elementClass, "visual")}
+        </SettingsField>
+      );
+    }
+  };
+
+  const getDisplayInputs = (elementClass: DataClass) => {
+    return (
+      <SettingsField title="Display">
+        {getDistinctInputElement(elementClass, "opacity")}
+        {/* getDistinctInputElement(elementClass, "zIndex") */}
+        {getDistinctInputElement(elementClass, "isVisible")}
+        {getDistinctInputElement(elementClass, "isDisabled")}
+        {/* getDistinctInputElement(elementClass, "isFocusable") */}
+      </SettingsField>
+    );
+  };
+
+  const getTransformInputs = (elementClass: DataClass) => {
+    return (
+      <SettingsField title="Transform">
+        {getDistinctInputElement(elementClass, "scaleX")}
+        {getDistinctInputElement(elementClass, "scaleY")}
+        {getDistinctInputElement(elementClass, "rotation")}
+      </SettingsField>
+    );
+  };
+
+  const getFontsInputs = (elementClass: DataClass) => {
+    return (
+      <SettingsField title="Font">
+        {getDistinctInputElement(elementClass, "font")}
+      </SettingsField>
+    );
+  };
+
+  const getRestSettingsInputs = (elementClass: DataClass) => {
+    return (
+      <SettingsField title={`Settings`}>
+        {Object.entries(elementClass).map((entry) => {
+          if (entry[0] === "width" && elementClass.type === "TableColumnData")
+            return getInputElement(entry);
+          if (
+            [
+              "posX",
+              "posY",
+              "width",
+              "height",
+              "visual",
+              "front",
+              "back",
+              "currentVisual",
+              "opacity",
+              "isVisible",
+              "isDisabled",
+              "isFocusable",
+              "name",
+              "id",
+              "zIndex",
+              "scaleX",
+              "scaleY",
+              "rotation",
+              "size",
+              "component",
+              "group",
+              "items",
+            ].includes(entry[0])
+          )
+            return null;
+          else if (entry[0] === "sideCount")
+            return getDistinctInputElement(elementClass, "sideCount");
+          return getInputElement(entry);
+        })}
+      </SettingsField>
+    );
+  };
+
+  const getDataInputs = (elementClass: DataClass | null) => {
+    if (elementClass === null) return null;
+
+    if (elementClass.objectType.includes("ComponentViewData")) {
+      return getComponentViewDataInputs(elementClass);
+    } else {
+      return getPropDataInputs(elementClass);
+    }
+
+    return null;
+  };
+
+  const [draggingGuide, setDraggingGuide] = useState(false);
+  const [draggingBounds, setDraggingBounds] = useState({
+    x: 0,
+    y: 0,
+  });
+  const [draggingGuidesStart, setDraggingGuidesStart] = useState({
+    x: 0,
+    y: 0,
+  });
+
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <div className="fixed w-full h-full bg-muted left-0 top-0 right-0 bottom-0 z-[900000] flex items-center justify-center">
-          <img src={"bgw_animated.svg"} className="w-[150px]" />
+          <img src={"bgw_animated.svg"} className="w-[150px] mt-[136px]" />
         </div>
-      ) : null}
-      <div className="grid h-screen w-full">
+      ) : null} */}
+      <div className="fixed w-screen h-screen bg-muted inset-0 z-[900000] hidden items-center justify-center max-2xl:flex max-2xl:flex-col">
+        <img src={"logo.svg"} className="w-40 mb-0" />
+        <Badge variant="property" className="gap-2 rounded-sm py-1.5 px-3 mb-5">
+          <i className="text-xs material-symbols-rounded">draw_abstract</i>
+          <p>Playground (Alpha)</p>
+        </Badge>
+        <h1 className="font-semibold text-center w-[70%]">
+          BGW Playground is not yet available on mobile.
+        </h1>
+        <Link to="/">
+          <Button
+            variant="property"
+            size="sm"
+            className="absolute items-center h-10 gap-2 bottom-3 left-4 right-4"
+          >
+            <i className="text-lg material-symbols-rounded">arrow_back</i>
+            <p>Go back</p>
+          </Button>
+        </Link>
+      </div>
+      <div className="grid w-full h-screen max-2xl:overflow-hidden">
         <div className="flex flex-col">
           <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4 justify-between">
-            <h1 className="text-xl font-semibold">BGW Playground</h1>
+            <div className="flex items-center gap-4">
+              <Link to="/" className="flex items-center h-full">
+                <i className="text-xl material-symbols-rounded">arrow_back</i>
+              </Link>
+              <Link to="/" className="flex items-center gap-4">
+                <img src="/bgw/logo.svg" className="w-8 h-8" />
+                <h1 className="text-xl font-semibold">BoardGameWork</h1>
+              </Link>
+              <Badge
+                variant="property"
+                className="gap-2 rounded-sm py-1.5 px-3"
+              >
+                <i className="text-xs material-symbols-rounded">
+                  draw_abstract
+                </i>
+                <p>Playground (Alpha)</p>
+              </Badge>
+            </div>
             <Drawer>
               <DrawerTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <i className="material-symbols-rounded text-xl">settings</i>
+                <Button variant="secondary" size="icon" className="md:hidden">
+                  <i className="text-xl material-symbols-rounded">settings</i>
                   <span className="sr-only">Settings</span>
                 </Button>
               </DrawerTrigger>
             </Drawer>
             <div className="flex gap-3">
-              <Dialog>
+              <Toggle
+                variant={"default"}
+                className="w-fit shrink-0"
+                size={"sm"}
+                onPressedChange={() => {
+                  setShowPermanentGuides(!showPermanentGuides);
+                }}
+                defaultPressed={showPermanentGuides}
+              >
+                Permanent Guides
+              </Toggle>
+              <Toggle
+                variant={"default"}
+                className="w-fit shrink-0"
+                size={"sm"}
+                onPressedChange={() => {
+                  setAdvancedMode(!advancedMode);
+                }}
+              >
+                Expert Mode
+              </Toggle>
+              <Dialog
+                open={exportOpened}
+                onOpenChange={() => {
+                  setExportOpened(false);
+                }}
+              >
+                <DialogContent className="max-w-[800px]" forceMount={true}>
+                  <DialogHeader>
+                    <DialogTitle>Code Export</DialogTitle>
+                    <DialogDescription>
+                      This action will export the selected component as code.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-3 component__select">
+                    <Playground
+                      code={
+                        exportOpened
+                          ? exportComponent(
+                              null,
+                              getOutputElementsFromTree(true),
+                              selectedComponentId
+                            )
+                          : ""
+                      }
+                      open={exportOpened}
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+              {/* <Dialog>
                 <DialogTrigger className="w-full" asChild>
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
-                    className="ml-auto gap-3 text-sm w-fit"
+                    className="gap-3 ml-auto text-sm w-fit"
                   >
-                    <i className="material-symbols-rounded text-lg">
+                    <i className="text-lg material-symbols-rounded">
                       perm_media
                     </i>
                     Images
@@ -735,47 +2938,285 @@ function Dashboard() {
                     images={imageGallery}
                   />
                 </DialogContent>
-              </Dialog>
-              <Button
-                variant="outline"
+              </Dialog> */}
+              {/* <Button
+                variant="secondary"
                 size="sm"
-                className="ml-auto gap-3 text-sm"
+                className="gap-3 ml-auto text-sm"
               >
-                <i className="material-symbols-rounded text-lg">publish</i>
+                <i className="text-lg material-symbols-rounded">publish</i>
                 Share
-              </Button>
+              </Button> */}
             </div>
           </header>
-          <main className="grid flex-1 gap-4 h-full max-h-[calc(100vh-57px)] p-4 md:grid-cols-2 lg:grid-cols-12">
-            <ScrollArea
-              className="h-full relative pr-5 col-span-5 flex bg-muted/50 rounded-xl"
+          <main className="flex items-center flex-1 h-full max-h-[calc(100vh-57px)] relative">
+            <div
+              className="relative w-[17.5%] max-w-[385px] shrink-0 max-h-[calc(100vh-57px)] h-full flex flex-col gap-3"
               x-chunk="dashboard-03-chunk-0"
             >
-              <code id={"kotlin__playground"}></code>
-              <ScrollBar orientation="horizontal"></ScrollBar>
-              <ScrollBar orientation="vertical"></ScrollBar>
-            </ScrollArea>
+              <fieldset className="relative grid h-full max-h-full gap-3 pl-4 pr-4 overflow-hidden">
+                <ScrollArea className="h-full max-h-full component__scroll">
+                  <DndProvider
+                    backend={MultiBackend}
+                    options={getBackendOptions()}
+                  >
+                    <div className="pb-[4rem]">
+                      <Tree
+                        tree={treeData}
+                        rootId={0}
+                        render={(node, { depth, isOpen, onToggle }) => {
+                          return renderTreeNode(node, depth, isOpen, onToggle);
+                        }}
+                        onDrop={handleDrop}
+                        sort={false}
+                        insertDroppableFirst={false}
+                        canDrop={(
+                          tree,
+                          { dragSource, dropTargetId, dropTarget }
+                        ) => {
+                          let valid = checkDrop(
+                            dragSource,
+                            dropTargetId,
+                            dropTarget
+                          );
+                          if (!valid) return false;
+
+                          if (dragSource?.parent === dropTargetId) {
+                            return true;
+                          }
+                        }}
+                        dropTargetOffset={10}
+                        placeholderRender={(node, { depth }) => (
+                          <div
+                            className="bg-purple-500 tree__placeholder"
+                            style={{ left: `${depth * 30}px` }}
+                          ></div>
+                        )}
+                      />
+                    </div>
+                  </DndProvider>
+                </ScrollArea>
+                <div className="absolute bottom-0 left-0 right-0 h-20 rounded-none hide__gradient bg-gradient-to-t from-background to-background/0"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-20 rounded-none hide__gradient bg-gradient-to-t from-background to-background/0"></div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="absolute items-center h-10 gap-2 bottom-3 left-4 right-4"
+                    >
+                      <i className="text-lg material-symbols-rounded">add</i>
+                      <p>Add Component</p>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add Component</DialogTitle>
+                      <DialogDescription>
+                        This action will add an element to the scene.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-3 component__select">
+                      {getAddComponentSelect()}
+                    </div>
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button
+                          variant="secondary"
+                          onClick={() => {
+                            let newObj = new Components.DataClasses[
+                              selectedComponentType
+                            ]();
+                            setSelectedClass(newObj);
+                            treeData.push({
+                              id: newObj.id,
+                              parent: 0,
+                              droppable:
+                                newObj.objectType.includes("TableViewData") ||
+                                newObj.objectType.includes("LayoutViewData") ||
+                                newObj.objectType.includes("ToggleGroupData") ||
+                                newObj.objectType.includes(
+                                  "GameComponentContainerData"
+                                ) ||
+                                newObj.objectType.includes("GridElementData") ||
+                                newObj.objectType.includes("CameraPaneData") ||
+                                newObj.objectType.includes(
+                                  "HexagonGridElementData"
+                                ),
+                              text: newObj.name.value,
+                            });
+                            setSelectedComponentId(newObj.id);
+                            showElementGuides(newObj.id);
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </fieldset>
+            </div>
             <div
-              className={`relative flex h-full min-h-[50vh] flex-col bg-muted/50 rounded-xl ${
-                selectedClass == null ? "col-span-7" : "col-span-7"
+              className={`relative flex h-full min-h-[50vh] w-full flex-col overflow-hidden bg-muted/30 ${
+                fullScreen ? "preview--fullscreen" : ""
               }`}
+              id={"bgw-preview"}
+              onMouseMove={(e) => {
+                if (draggingGuide) {
+                  let shift = e.shiftKey;
+                  let ctrl = e.ctrlKey;
+                  let x = e.clientX - draggingBounds.x;
+                  let y = e.clientY - draggingBounds.y;
+
+                  setGuidePosition({
+                    x: draggingGuidesStart.x + x,
+                    y: draggingGuidesStart.y + y,
+                  });
+                  // setDraggingBounds({x: x, y: y})
+                  //modifyElementPosition(selectedComponentId, currentGuide.x + x, currentGuide.y + y)
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (draggingGuide) {
+                  setDraggingGuide(false);
+                  let shift = e.shiftKey;
+                  let ctrl = e.ctrlKey;
+                  let x = e.clientX - draggingBounds.x;
+                  let y = e.clientY - draggingBounds.y;
+
+                  setGuidePosition({
+                    x: draggingGuidesStart.x + x,
+                    y: draggingGuidesStart.y + y,
+                  });
+                  modifyElementPosition(
+                    selectedComponentId,
+                    draggingGuidesStart.x + x,
+                    draggingGuidesStart.y + y
+                  );
+                  setDraggingBounds({ x: 0, y: 0 });
+                }
+              }}
+              onMouseUp={(e) => {
+                if (draggingGuide) {
+                  setDraggingGuide(false);
+                  let shift = e.shiftKey;
+                  let ctrl = e.ctrlKey;
+                  let x = e.clientX - draggingBounds.x;
+                  let y = e.clientY - draggingBounds.y;
+
+                  setGuidePosition({
+                    x: draggingGuidesStart.x + x,
+                    y: draggingGuidesStart.y + y,
+                  });
+                  modifyElementPosition(
+                    selectedComponentId,
+                    draggingGuidesStart.x + x,
+                    draggingGuidesStart.y + y
+                  );
+                  setDraggingBounds({ x: 0, y: 0 });
+                }
+              }}
             >
-              <Badge variant="outline" className="absolute right-3 top-3">
-                Output
+              <Button
+                variant="error"
+                className={`absolute left-3 bottom-3 z-40 ${
+                  compileError != null || projectError != null
+                    ? "flex"
+                    : "hidden"
+                }`}
+                title={compileError}
+              >
+                <i className="mr-3 text-lg material-symbols-rounded">
+                  emergency_home
+                </i>
+                <p>Project contains errors: The preview might be incorrect.</p>
+              </Button>
+              <Button
+                variant="warning"
+                className={`absolute left-3 bottom-3 z-40 ${
+                  compileError == null &&
+                  projectError == null &&
+                  projectWarning != null
+                    ? "flex"
+                    : "hidden"
+                }`}
+              >
+                <i className="mr-3 text-lg material-symbols-rounded">warning</i>
+                <p>
+                  Project contains warnings: The preview might be incorrect.
+                </p>
+              </Button>
+              <Button
+                variant="secondary"
+                className="absolute z-40 right-3 bottom-3"
+                onClick={() => setFullScreen(!fullScreen)}
+              >
+                <i className="text-lg material-symbols-rounded">
+                  {fullScreen ? "fullscreen_exit" : "fullscreen"}
+                </i>
+              </Button>
+              <Badge variant="muted" className="absolute right-3 top-3">
+                Preview
               </Badge>
-              <Badge variant="outline" className="absolute left-3 top-3">
-                1920x1080
+              <Badge
+                variant="muted"
+                className="absolute z-10 left-3 top-3"
+                onClick={() => {
+                  let sceneWidth = prompt("Enter the scene width", "1920");
+                  let sceneHeight = prompt("Enter the scene height", "1080");
+                  if (sceneWidth === null || sceneHeight === null) return;
+                  setSceneWidth(parseInt(sceneWidth));
+                  setSceneHeight(parseInt(sceneHeight));
+                }}
+              >
+                {sceneWidth}x{sceneHeight}
               </Badge>
-              <div className="flex flex-1 justify-center items-center">
-                <iframe
-                  className="w-full h-full rounded-xl bg-transparent"
-                  src="../../public/index.html"
-                ></iframe>
+              <div
+                className="flex items-center justify-center flex-1 bgw-root-container"
+                id="bgw-root-container"
+              >
+                <div
+                  className="w-full h-full rounded-xl bgw-root"
+                  id="bgw-root"
+                ></div>
                 {/*{*/}
                 {/*    selectedClass !== null ? drawOutputElement(selectedClass) : null*/}
                 {/*}*/}
               </div>
+              {currentGuide !== null ? (
+                <div
+                  className="guide"
+                  onMouseDown={(e) => {
+                    return;
+                    setDraggingGuide(true);
+                    setDraggingBounds({ x: e.clientX, y: e.clientY });
+                    setDraggingGuidesStart({
+                      x: currentGuide.x,
+                      y: currentGuide.y,
+                    });
+                  }}
+                  draggable={true}
+                  style={{
+                    left: currentGuide.x,
+                    top: currentGuide.y,
+                    width: currentGuide.width,
+                    height: currentGuide.height,
+                  }}
+                ></div>
+              ) : null}
             </div>
+            <ScrollArea
+              className="h-full relative hidden flex-col items-center gap-8 md:flex pr-5 pl-5 w-[25%] shrink-0 max-w-[400px]"
+              x-chunk="dashboard-03-chunk-0"
+              style={{
+                visibility: selectedClass == null ? "hidden" : "visible",
+              }}
+            >
+              <div className="grid items-start w-full data__inputs">
+                {getDataInputs(selectedClass)}
+              </div>
+            </ScrollArea>
           </main>
         </div>
       </div>
@@ -783,4 +3224,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default BGWPlayground;

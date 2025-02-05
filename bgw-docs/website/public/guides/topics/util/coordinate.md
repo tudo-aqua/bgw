@@ -3,6 +3,9 @@
 [rotatedKDoc]: /docs/tools.aqua.bgw.util/-coordinate/rotated.html
 [rotatedPlainKDoc]: /docs/tools.aqua.bgw.util/-coordinate-plain/rotated.html
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # Coordinates
 
 ## [Coordinate][CoordinateDoc]

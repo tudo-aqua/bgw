@@ -1,5 +1,5 @@
+[BoardGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/index.html
 [GameComponentDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
-[ContainerDoc]: /docs/tools.aqua.bgw.components.container/-game-component-container/index.html
 [TokenDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-token-view/index.html
 [CardDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
 [CardStackDoc]: /docs/tools.aqua.bgw.components.container/-card-stack/index.html
@@ -7,43 +7,19 @@
 [DiceDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-dice-view/index.html
 [DiceAnimationDoc]: /docs/tools.aqua.bgw.animation/-dice-animation/index.html
 [HexagonDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-hexagon-view/index.html
-[ComponentViewDoc]: /guides/components/componentview
-[DynamicView]: /guides/components/dynamiccomponentview
+[GameComponentKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/index.html
+[ComponentView]: /guides/components/componentview
+[DynamicComponentView]: /guides/components/dynamiccomponentview
+[GameComponentsDoc]: /guides/components/gamecomponents
+[LayoutViewDoc]: /guides/components/layout
+[UIComponentsDoc]: /guides/components/uicomponents
+[ContainerDoc]: /guides/components/container
 [DnDDoc]: /guides/concepts/drag-and-drop
 [AnimationDoc]: /guides/concepts/animations
 
 # GameComponentViews
 
-<tldr>
-    <p><format style="bold">Components for displaying game elements</format></p>
-    <p>→ &nbsp; <a href="http://">DynamicComponentView</a></p>
-</tldr>
-
-<chapter title="GameComponentViews" collapsible="true" default-state="expanded">
-    <table style="header-column">
-    <tr>
-        <td width="20%">CardView</td>
-        <td>Component for displaying a playing card with two visuals</td>
-    </tr>
-    <tr>
-        <td>DiceView</td>
-        <td>Component for displaying a dice with n visuals</td>
-    </tr>
-    <tr>
-        <td id="hexagon-view-def">HexagonView</td>
-        <td>Component for displaying a hexagon with one visual</td>
-    </tr>
-    <tr>
-        <td>TokenView</td>
-        <td>Component for displaying a token with one visual</td>
-    </tr>
-    </table>
-</chapter>
-
-## Prior knowledge
-
-All GameComponentViews inherit from [ComponentView][ComponentViewDoc] and [DynamicView][DynamicView].
-It is therefore helpful to read those documentations first as the features from those superclasses don't get repeated here.
+<tldr>Components for displaying game elements</tldr>
 
 ## Introduction
 
@@ -51,34 +27,144 @@ It is therefore helpful to read those documentations first as the features from 
 form of game tokens.
 GameComponentViews can be added to [GameComponentContainers][ContainerDoc] and be made draggable as explained in
 [this][DnDDoc] tutorial.
-Helpful animations can be found [here][AnimationDoc]
+Helpful animations can be found [here][AnimationDoc].
 
-## Generic Token
+All [GameComponentViews][GameComponentKDoc] inherit from [ComponentView][ComponentView] and [DynamicComponentView][DynamicComponentView]. Because they are dynamic components, they can only be used in [BoardGameScenes][BoardGameSceneKDoc].
+It is therefore helpful to read those documentations first as the features from those superclasses don't get repeated here.
 
-For a generic token use [TokenView][TokenDoc]. It takes its position and dimensions as well as one visual as
-a constructor parameter.
+Please also take a look at corresponding [Containers][ContainerDoc], [Layouts][LayoutViewDoc] and [UIComponents][UIComponentsDoc].
 
-## Cards
+---
 
-For cards use [CardView][CardDoc]. It by default takes a front and back visual and offers additional functions to handle
-the card.
-As cards are a common concept, there exists a [CardStack][CardStackDoc] especially for CardViews.
-For card hands, a [LinearLayout][LinearLayoutDoc] may become handy.
+> The following examples are visually accurate representations of BGW components based on the provided code snippets.
+> All example listeners however are purely illustrative and do not execute any code when interacting with the components in this guide.
+> {style="warning"}
 
-The CardView can also be used for other two-sided tokens.
+<br>
 
-## Dice
+## TokenView
 
-The [DiceView][DiceDoc] class takes a list of visuals for its sides.
-It is not limited to a D6 and has the exact amount of sides as it has visuals, where the visual at index i is the i-1th
-side e.g. the visual at index 0 is side 1.
-If the list of visuals gets altered the amount of sides changes too.
+<tldr>Component for displaying simple game tokens</tldr>
 
-For a dice roll there exists a dedicated [DiceAnimation][DiceAnimationDoc].
+The [TokenView][TokenDoc] is a versatile component for creating generic game tokens. It only requires position coordinates, dimensions, and a single visual element. Use TokenView when you need a simple, single-sided game piece.
 
-## Hexagons
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.tokenExample">
+val tokenRect = TokenView(
+    posX = 0, 
+    posY = 0,
+    width = 100,
+    height = 100,
+    visual = ColorVisual(Color(0xc6ff6e))
+)
+&nbsp;
+val tokenCircle = TokenView(
+    posX = 180, 
+    posY = 0,
+    width = 100,
+    height = 100,
+    visual = ColorVisual(Color(0xffc656)).apply {
+        style.borderRadius = BorderRadius.FULL 
+    }
+)
+</preview>
 
-The [HexagonView][HexagonDoc] component can also be utilized for hexagonal tokens,
-providing a versatile solution for displaying various hexagonal-shaped elements.
+---
 
-Hexagons only have one visual.
+## CardView
+
+<tldr>Component for displaying playing cards</tldr>
+
+[CardViews][CardDoc] are designed for implementing playing cards or any two-sided game component. They require front and back visuals and provide methods for card manipulation like flipping.
+
+If you want to manage multiple cards, use [CardStack][CardStackDoc] for deck functionality. The [LinearLayout][LinearLayoutDoc] is ideal for displaying cards in a hand.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.cardExample">
+val cardImage = CardView(
+    posX = 0,
+    posY = 0,
+    width = 120,
+    height = 200,
+    front = ImageVisual("fortify.png")
+)
+&nbsp;
+val cardBack = CardView(
+    posX = 200,
+    posY = 0,
+    width = 120,
+    height = 200,
+    front = ImageVisual("fortify.png"),
+    back = ImageVisual("back.png")
+)
+&nbsp;
+/* Show the back side of the card */
+cardBack.showBack()
+</preview>
+
+---
+
+## DiceView
+
+<tldr>Component for displaying customizable dice</tldr>
+
+A [DiceView][DiceDoc] creates customizable two-dimensional dice with any number of sides. Each side corresponds to a visual in the provided list, where index 0 represents side 1.
+If the list of visuals gets altered the amount of sides changes too and the dice will update accordingly.
+
+There is also a dedicated [DiceAnimation][DiceAnimationDoc] for rolling effects.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.diceExample">
+val diceDefaultSide = DiceView(
+    posX = 0,
+    posY = 0,
+    width = 100,
+    height = 100,
+    visuals = listOf(ColorVisual(Color(0xef4444)))
+)
+&nbsp;
+val diceCustomSide = DiceView(
+    posX = 180,
+    posY = 0,
+    width = 100,
+    height = 100,
+    visuals = listOf(
+        ColorVisual(Color(0xc6ff6e)),
+        ColorVisual(Color(0xffc656)),
+        ColorVisual(
+            /* Orange color */
+            Color(0xfa6c56)
+        ),
+        ColorVisual(Color(0xef4444)),
+        ColorVisual(Color(0xbb6dff)),
+        ColorVisual(Color(0x6dbeff))
+    )
+)
+&nbsp;
+/* Set the dice to show the orange side */
+diceCustomSide.currentSide = 2
+</preview>
+
+---
+
+## HexagonView
+
+<tldr>Component for displaying hexagonal game pieces</tldr>
+
+The [HexagonView][HexagonDoc] creates hexagonal game pieces with a single visual thus providing a versatile solution for displaying various hexagonal-shaped elements.
+
+Every Hexagon by default has its tips pointing up and down defined by `HexOrientation.POINTY_TOP`. It can however also have its tips pointing left and right by passing `HexOrientation.FLAT_TOP` to the constructor.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.hexagonExample">
+val hexagonPointy = HexagonView(
+    posX = 0,
+    posY = 0,
+    size = 60,
+    visual = ColorVisual(Color(0xbb6dff))
+)
+&#13;
+val hexagonFlat = HexagonView(
+    posX = 180,
+    posY = 0,
+    size = 60,
+    visual = ColorVisual(Color(0x6dbeff)),
+    orientation = HexOrientation.FLAT_TOP
+)
+</preview>

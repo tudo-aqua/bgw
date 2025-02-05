@@ -14,14 +14,14 @@ import "./codePreview.scss";
 import { createRoot } from "react-dom/client";
 import ReactKotlinPlayground, {
   ReactKotlinPlaygroundProps,
-} from "@/lib/kotlin-playground/ReactKotlinPlayground";
+} from "@/components/ReactKotlinPlayground";
 import { useDocsStore } from "@/stores/docsStore";
 import asyncComponent from "./asyncComponent";
 import { useLocation } from "react-router";
 import { Button } from "@/components/ui/button";
 
 const AsyncPlayground = asyncComponent(
-  () => import("@/lib/kotlin-playground/ReactKotlinPlayground")
+  () => import("@/components/ReactKotlinPlayground")
 );
 
 const CodeTab = React.memo(function CodeTab({
@@ -57,23 +57,26 @@ const CodeTab = React.memo(function CodeTab({
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full max-w-full code-tab">
       {copy && (
         <Button
-          className="absolute right-4 top-4 z-10 h-8 w-8 p-0 hover:bg-muted/80 text-muted-foreground hover:text-white"
+          className="absolute z-10 w-8 h-8 p-0 right-4 top-4 hover:bg-muted/80 text-muted-foreground hover:text-white max-xl:hidden"
           variant="ghost"
           onClick={handleCopyCode}
         >
-          <i className="material-symbols-rounded text-xl">content_copy</i>
+          <i className="text-xl material-symbols-rounded">content_copy</i>
         </Button>
       )}
-      <AsyncPlayground
-        className="h-full relative pr-5 pl-3 col-span-5 flex bg-muted/50 rounded-xl pointer-events-none"
-        {...props}
-        key={code + location.pathname}
-      >
-        {code}
-      </AsyncPlayground>
+      <ScrollArea className="max-w-full overflow-scroll max-xl:w-full bg-muted/50 rounded-xl xl:overflow-hidden">
+        <AsyncPlayground
+          className="relative flex h-full col-span-5 pl-3 pr-5 pointer-events-none"
+          {...props}
+          key={code + location.pathname}
+        >
+          {code}
+        </AsyncPlayground>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 });

@@ -1,12 +1,10 @@
 {
-  "name": "bgw-docs",
-  "private": true,
+  "name": "bgw-website",
   "version": "1.0",
   "type": "module",
-  "license": "Apache-2.0",
   "scripts": {
-    "dev": "vite --base=/bgw/",
-    "build": "vite build --base=/bgw/",
+    "dev": "vite --base=/bgw",
+    "build": "vite build --base=/bgw",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "yarn run build",

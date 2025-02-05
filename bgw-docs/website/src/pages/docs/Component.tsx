@@ -30,6 +30,7 @@ import { useDocsStore } from "@/stores/docsStore";
 import { createKotlinCodeLinebreaks, isListener } from "@/lib/utils";
 import PreviewTab from "./PreviewTab";
 import Elements from "./Elements";
+import { Banner } from "@/components/ui/banner";
 
 const exceptionIcons = {
   IllegalArgumentException: "data_alert",
@@ -240,7 +241,6 @@ function Component({
   function getExamples(comp: any) {
     let extraExamples = [];
     if (comp && comp.details && comp.details.samples) {
-      console.log(comp.details.samples);
       extraExamples = [...comp.details.samples];
     }
 
@@ -261,7 +261,7 @@ function Component({
     let samples = extraExamples.map((s: any) => {
       if (allSamples && allSamples[s.codepoint[0]]) {
         return (
-          <div className="border-none rounded-xl w-full">
+          <div className="w-full border-none rounded-xl">
             <PreviewTab data={s} info={allSamples}></PreviewTab>
           </div>
         );
@@ -273,16 +273,16 @@ function Component({
         <>
           <div>
             <Collapsible open={openConstructors}>
-              <CollapsibleTrigger className="flex items-center relative gap-4 mb-7 w-full">
-                <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5">
+              <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-7">
+                <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
                   data_object
                 </i>
-                <h2 className="font-bold text-3xl">Examples</h2>
-                {/* <i className="material-symbols-rounded text-2xl text-primary-foreground right-1 absolute">
+                <h2 className="text-3xl font-bold max-xl:text-2xl">Examples</h2>
+                {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
                 {openConstructors ? "expand_less" : "expand_more"}
               </i> */}
               </CollapsibleTrigger>
-              <CollapsibleContent className="grid grid-cols-2 gap-5">
+              <CollapsibleContent className="grid grid-cols-2 gap-5 max-xl:grid-cols-1">
                 {samples}
               </CollapsibleContent>
             </Collapsible>
@@ -351,67 +351,58 @@ function Component({
       (comp.members.constructors.length > 0 || extraConstructors.length > 0)
     ) {
       return (
-        <div className="mb-16">
-          <Collapsible open={openConstructors}>
-            <CollapsibleTrigger className="flex items-center relative gap-4 mb-5 w-full">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5">
+        <div className="mb-16 max-xl:mb-8">
+          <Collapsible open={openConstructors} className="relative">
+            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
+              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
                 handyman
               </i>
-              <h2 className="font-bold text-3xl">Constructors</h2>
-              {/* <i className="material-symbols-rounded text-2xl text-primary-foreground right-1 absolute">
+              <h2 className="text-3xl font-bold max-xl:text-2xl">
+                Constructors
+              </h2>
+              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
                 {openConstructors ? "expand_less" : "expand_more"}
               </i> */}
             </CollapsibleTrigger>
             <CollapsibleContent className="flex flex-col gap-4">
-              {/* {comp.members.constructors.map((c: any) => (
-              <fieldset className="bg-background border-none rounded-xl p-3">
-                <CodeTab onLoad={() => { console.log("loaded") }}
-                  code={createKotlinCodeLinebreaks(c.signature)}
-                  autoIndent={false}
-                />
-                {c.brief && (
-                  <p className="text-muted-foreground">
-                    {parseMarkdownLinks(c.doc)}
-                  </p>
-                )}
-                {c.parameters && (
-                  <fieldset className="">{getParameters(c.parameters)}</fieldset>
-                )}
-              </fieldset>
-            ))} */}
-              {extraConstructors.map((c: any, index: number) => (
-                <fieldset
-                  className="bg-background border-none rounded-xl p-3 relative"
-                  id={`constructor_${index}`}
-                >
-                  <div className="absolute top-8 right-10 z-10 flex justify-center gap-2">
-                    {c.primary && <Badge variant="class">Primary</Badge>}
-                    {c.since && buildSince(c.since)}
+              {extraConstructors.map((c: any, index: number) => {
+                return (
+                  <div
+                    className="relative w-full p-3 border-none bg-background rounded-xl max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent"
+                    id={`constructor_${index}`}
+                  >
+                    <div className="absolute z-10 flex justify-center gap-2 top-8 right-10">
+                      {c.primary && <Badge variant="class">Primary</Badge>}
+                      {c.since && buildSince(c.since)}
+                    </div>
+                    <CodeTab
+                      code={createKotlinCodeLinebreaks(c.info.signature, 80)}
+                      autoIndent={false}
+                    />
+                    {c.parameters && (
+                      <div className="mt-3">
+                        {getClassParameters(
+                          c.parameters,
+                          comp.members.properties
+                        )}
+                      </div>
+                    )}
+                    {c.info.doc && (
+                      <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
+                        {parseMarkdownLinks(c.info.doc)}
+                      </p>
+                    )}
+                    {c.throws && (
+                      <>
+                        <h4 className="px-2 mt-5 mb-3 text-xs font-bold">
+                          Throws:
+                        </h4>
+                        {getClassThrows(c.throws)}
+                      </>
+                    )}
                   </div>
-                  <CodeTab
-                    code={createKotlinCodeLinebreaks(c.info.signature, 80)}
-                    autoIndent={false}
-                  />
-                  {c.parameters && (
-                    <fieldset className="mt-3">
-                      {getClassParameters(c.parameters)}
-                    </fieldset>
-                  )}
-                  {c.info.doc && (
-                    <p className="text-muted-foreground mt-3 py-1 px-2">
-                      {parseMarkdownLinks(c.info.doc)}
-                    </p>
-                  )}
-                  {c.throws && (
-                    <>
-                      <h4 className="font-bold text-xs mt-5 mb-3 px-2">
-                        Throws:
-                      </h4>
-                      {getClassThrows(c.throws)}
-                    </>
-                  )}
-                </fieldset>
-              ))}
+                );
+              })}
             </CollapsibleContent>
           </Collapsible>
         </div>
@@ -428,14 +419,14 @@ function Component({
       comp.members.functions.length > 0
     ) {
       return (
-        <div className="mb-16">
+        <div className="mb-16 max-xl:mb-8">
           <Collapsible open={openFunctions}>
-            <CollapsibleTrigger className="flex items-center gap-4 mb-5 relative w-full">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5">
+            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
+              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
                 function
               </i>
-              <h2 className="font-bold text-3xl">Functions</h2>
-              {/* <i className="material-symbols-rounded text-2xl text-primary-foreground right-1 absolute">
+              <h2 className="text-3xl font-bold max-xl:text-2xl">Functions</h2>
+              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
                 {openFunctions ? "expand_less" : "expand_more"}
               </i> */}
             </CollapsibleTrigger>
@@ -461,6 +452,8 @@ function Component({
                 let propLast = breadcrumbs.fromRight(1);
                 let inheritedFunc = null;
 
+                let inheritedDetails = null;
+
                 if (
                   last !== propLast &&
                   !propLast.startsWith("tools.aqua") &&
@@ -468,6 +461,17 @@ function Component({
                     c.name
                   )
                 ) {
+                  let inheritedComp = c.link
+                    .split("/")
+                    .reduce((o, i) => o[i], dirs);
+                  if (inheritedComp) {
+                    inheritedComp.details.forEach((d: any) => {
+                      if (d.info.signature === c.signature) {
+                        inheritedDetails = d;
+                      }
+                    });
+                  }
+
                   inherited.push(
                     <li>
                       <Link
@@ -514,13 +518,25 @@ function Component({
                   });
                 }
 
+                if (inheritedDetails && moreDetails === undefined) {
+                  moreDetails = inheritedDetails;
+                }
+
                 return (
-                  <fieldset
-                    className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${
+                  <div
+                    className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
                       isActive ? "active__elem" : " "
                     }`}
                     id={`func_${c.name}`}
                   >
+                    {moreDetails && moreDetails.deprecated && (
+                      <Banner
+                        variant="deprecated"
+                        className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                        icon={"running_with_errors"}
+                        subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
+                      />
+                    )}
                     {moreDetails &&
                       moreDetails.since &&
                       buildSince(
@@ -537,7 +553,7 @@ function Component({
                       <Link
                         to={"/docs/" + c.link}
                         key={c.name}
-                        className="group relative"
+                        className="relative group"
                       >
                         <CodeTab
                           code={createKotlinCodeLinebreaks(c.signature)}
@@ -560,34 +576,34 @@ function Component({
                       />
                     )}
                     {c.parameters && (
-                      <fieldset className="">
+                      <div className="">
                         {getParameters(c.parameters, c, inheritedFunc)}
-                      </fieldset>
+                      </div>
                     )}
                     {c.doc && (
-                      <p className="text-muted-foreground mt-3 py-1 px-2">
+                      <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                         {parseMarkdownLinks(c.doc)}
                       </p>
                     )}
                     {allThrows.length > 0 && (
                       <>
-                        <h4 className="font-bold text-xs mt-3 mb-3 px-2">
+                        <h4 className="px-2 mt-3 mb-3 text-xs font-bold">
                           Throws:
                         </h4>
                         {getClassThrows(allThrows)}
                       </>
                     )}
                     {inherited.length > 0 && (
-                      <div className="flex gap-2 items-center mt-3 relative h-6 ml-2">
-                        <h4 className="font-bold text-xs absolute left-0">
+                      <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
+                        <h4 className="absolute left-0 text-xs font-bold">
                           Inherited from:
                         </h4>
-                        <ul className="flex gap-2 items-center absolute left-28">
+                        <ul className="absolute flex items-center gap-2 left-28">
                           {inherited}
                         </ul>
                       </div>
                     )}
-                  </fieldset>
+                  </div>
                 );
               })}
             </CollapsibleContent>
@@ -608,14 +624,14 @@ function Component({
       }).length > 0
     ) {
       return (
-        <div className="mb-16">
+        <div className="mb-16 max-xl:mb-8">
           <Collapsible open={openProperties}>
-            <CollapsibleTrigger className="flex items-center gap-4 mb-5 relative w-full">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5">
+            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
+              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
                 action_key
               </i>
-              <h2 className="font-bold text-3xl">Properties</h2>
-              {/* <i className="material-symbols-rounded text-2xl text-primary-foreground right-1 absolute">
+              <h2 className="text-3xl font-bold max-xl:text-2xl">Properties</h2>
+              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
                 {openProperties ? "expand_less" : "expand_more"}
               </i> */}
             </CollapsibleTrigger>
@@ -633,6 +649,8 @@ function Component({
                   let last = comp.breadcrumbs.fromRight(0);
                   let propLast = breadcrumbs.fromRight(1);
 
+                  let inheritedDetails = null;
+
                   if (
                     last !== propLast &&
                     !propLast.startsWith("tools.aqua") &&
@@ -644,6 +662,17 @@ function Component({
                       "valueOf",
                     ].includes(c.name)
                   ) {
+                    let inheritedComp = c.link
+                      .split("/")
+                      .reduce((o, i) => o[i], dirs);
+                    if (inheritedComp) {
+                      inheritedComp.details.forEach((d: any) => {
+                        if (d.info.signature === c.signature) {
+                          inheritedDetails = d;
+                        }
+                      });
+                    }
+
                     inherited.push(
                       <li>
                         <Link
@@ -666,20 +695,32 @@ function Component({
                     moreDetails = moreDetails.details[0];
                   }
 
+                  if (inheritedDetails && moreDetails === undefined) {
+                    moreDetails = inheritedDetails;
+                  }
+
                   // if (inherited.length > 0) {
                   //   return null;
                   // }
 
                   return (
-                    // <fieldset className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
-                    // <fieldset className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
+                    // <div className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
+                    // <div className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
                     //   <div className="h-5 absolute w-1 rounded-xl left-[-20px] bg-purple-500" style={{display: isActive ? "block" : "none"}}></div>
-                    <fieldset
-                      className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${
+                    <div
+                      className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
                         isActive ? "active__elem" : " "
                       }`}
                       id={`prop_${c.name}`}
                     >
+                      {moreDetails && moreDetails.deprecated && (
+                        <Banner
+                          variant="deprecated"
+                          className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                          icon={"running_with_errors"}
+                          subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
+                        />
+                      )}
                       {moreDetails &&
                         moreDetails.since &&
                         buildSince(
@@ -696,7 +737,7 @@ function Component({
                         <Link
                           to={"/docs/" + c.link}
                           key={c.name}
-                          className="group relative"
+                          className="relative group"
                         >
                           <CodeTab
                             code={createKotlinCodeLinebreaks(c.signature)}
@@ -719,21 +760,21 @@ function Component({
                         />
                       )}
                       {c.doc && (
-                        <p className="text-muted-foreground mt-3 py-1 px-2">
+                        <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                           {parseMarkdownLinks(c.doc)}
                         </p>
                       )}
                       {inherited.length > 0 && (
-                        <div className="flex gap-2 items-center mt-3 relative h-6 ml-2">
-                          <h4 className="font-bold text-xs absolute left-0">
+                        <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
+                          <h4 className="absolute left-0 text-xs font-bold">
                             Inherited from:
                           </h4>
-                          <ul className="flex gap-2 items-center absolute left-28">
+                          <ul className="absolute flex items-center gap-2 left-28">
                             {inherited}
                           </ul>
                         </div>
                       )}
-                    </fieldset>
+                    </div>
                   );
                 })}
             </CollapsibleContent>
@@ -754,14 +795,14 @@ function Component({
       }).length > 0
     ) {
       return (
-        <div className="mb-16">
+        <div className="mb-16 max-xl:mb-8">
           <Collapsible open={openProperties}>
-            <CollapsibleTrigger className="flex items-center gap-4 mb-5 relative w-full">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5">
+            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
+              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
                 notifications_active
               </i>
-              <h2 className="font-bold text-3xl">Listeners</h2>
-              {/* <i className="material-symbols-rounded text-2xl text-primary-foreground right-1 absolute">
+              <h2 className="text-3xl font-bold max-xl:text-2xl">Listeners</h2>
+              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
                 {openProperties ? "expand_less" : "expand_more"}
               </i> */}
             </CollapsibleTrigger>
@@ -779,6 +820,8 @@ function Component({
                   let last = comp.breadcrumbs.fromRight(0);
                   let propLast = breadcrumbs.fromRight(1);
 
+                  let inheritedDetails = null;
+
                   if (
                     last !== propLast &&
                     !propLast.startsWith("tools.aqua") &&
@@ -790,6 +833,17 @@ function Component({
                       "valueOf",
                     ].includes(c.name)
                   ) {
+                    let inheritedComp = c.link
+                      .split("/")
+                      .reduce((o, i) => o[i], dirs);
+                    if (inheritedComp) {
+                      inheritedComp.details.forEach((d: any) => {
+                        if (d.info.signature === c.signature) {
+                          inheritedDetails = d;
+                        }
+                      });
+                    }
+
                     inherited.push(
                       <li>
                         <Link
@@ -812,20 +866,32 @@ function Component({
                     moreDetails = moreDetails.details[0];
                   }
 
+                  if (inheritedDetails && moreDetails === undefined) {
+                    moreDetails = inheritedDetails;
+                  }
+
                   // if (inherited.length > 0) {
                   //   return null;
                   // }
 
                   return (
-                    // <fieldset className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
-                    // <fieldset className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
+                    // <div className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
+                    // <div className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
                     //   <div className="h-5 absolute w-1 rounded-xl left-[-20px] bg-purple-500" style={{display: isActive ? "block" : "none"}}></div>
-                    <fieldset
-                      className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${
+                    <div
+                      className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
                         isActive ? "active__elem" : " "
                       }`}
                       id={`prop_${c.name}`}
                     >
+                      {moreDetails && moreDetails.deprecated && (
+                        <Banner
+                          variant="deprecated"
+                          className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                          icon={"running_with_errors"}
+                          subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
+                        />
+                      )}
                       {moreDetails &&
                         moreDetails.since &&
                         buildSince(
@@ -842,7 +908,7 @@ function Component({
                         <Link
                           to={"/docs/" + c.link}
                           key={c.name}
-                          className="group relative"
+                          className="relative group"
                         >
                           <CodeTab
                             code={createKotlinCodeLinebreaks(c.signature)}
@@ -865,21 +931,21 @@ function Component({
                         />
                       )}
                       {c.doc && (
-                        <p className="text-muted-foreground mt-3 py-1 px-2">
+                        <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                           {parseMarkdownLinks(c.doc)}
                         </p>
                       )}
                       {inherited.length > 0 && (
-                        <div className="flex gap-2 items-center mt-3 relative h-6 ml-2">
-                          <h4 className="font-bold text-xs absolute left-0">
+                        <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
+                          <h4 className="absolute left-0 text-xs font-bold">
                             Inherited from:
                           </h4>
-                          <ul className="flex gap-2 items-center absolute left-28">
+                          <ul className="absolute flex items-center gap-2 left-28">
                             {inherited}
                           </ul>
                         </div>
                       )}
-                    </fieldset>
+                    </div>
                   );
                 })}
             </CollapsibleContent>
@@ -960,21 +1026,21 @@ function Component({
       }
 
       return (
-        <div className="mb-16">
+        <div className="mb-16 max-xl:mb-8">
           <div className="flex items-center gap-4 mb-5">
-            <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5">
+            <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
               clear_all
             </i>
-            <h2 className="font-bold text-3xl">Values</h2>
+            <h2 className="text-3xl font-bold max-xl:text-2xl">Values</h2>
           </div>
-          <ul className="grid grid-cols-3 gap-4">
+          <ul className="grid grid-cols-3 gap-4 max-xl:grid-cols-2 max-md:grid-cols-1">
             {enumValues.map((c: any) => {
               let isActive =
                 window.location.hash.replace("#", "") ===
                 `enum_${c.details.info.name}`;
               return (
-                <fieldset
-                  className={`bg-background border-none p-3 rounded-xl h-full relative ${
+                <div
+                  className={`bg-background border-none p-3 rounded-xl h-full relative max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
                     isActive ? "active__elem" : " "
                   }`}
                   id={`enum_${c.details.info.name}`}
@@ -989,8 +1055,8 @@ function Component({
                     to={"/docs/" + c.breadcrumbs.join("/")}
                     key={c.details.info.name}
                   >
-                    <div className="enum__values bg-muted/50 p-5 rounded-xl flex">
-                      <span className="enum__value pl-2">
+                    <div className="flex p-5 enum__values bg-muted/50 rounded-xl">
+                      <span className="pl-2 enum__value">
                         {c.details.info.name}
                       </span>
                       {/* <span className="enum__value">{enumComp.breadcrumbs.includes("Companion") ? c.breadcrumbs.fromRight(2) : c.breadcrumbs.fromRight(1)}</span>
@@ -999,11 +1065,11 @@ function Component({
                     </div>
                   </Link>
                   {c.details.info.doc && (
-                    <p className="text-muted-foreground mt-3 px-2">
+                    <p className="px-2 mt-3 text-muted-foreground max-2xl:text-justify">
                       {parseMarkdownLinks(c.details.info.doc)}
                     </p>
                   )}
-                </fieldset>
+                </div>
               );
             })}
           </ul>
@@ -1028,7 +1094,7 @@ function Component({
     if (!parameters || parameters.length === 0) return null;
 
     return (
-      <Table className="rounded-md overflow-hidden bg-muted/50 rounded-xl mt-3">
+      <Table className="mt-3 overflow-hidden rounded-md bg-muted/50 rounded-xl">
         <TableHeader>
           <TableRow>
             <TableHead className="w-[200px] pl-6">Parameter</TableHead>
@@ -1042,18 +1108,18 @@ function Component({
             return (
               <TableRow key={p.name}>
                 <TableCell>
-                  <code className="relative rounded font-mono pl-2">
+                  <code className="relative pl-2 font-mono rounded">
                     {p.name}
                   </code>
                 </TableCell>
                 <TableCell>
-                  <code className="relative rounded font-mono">
+                  <code className="relative font-mono rounded">
                     {parseMarkdownLinksNoCode(p.type)}
                   </code>
                 </TableCell>
                 <TableCell>
                   {p.defaultValue ? (
-                    <code className="relative rounded font-mono">
+                    <code className="relative font-mono rounded">
                       {parseMarkdownLinksNoCode(p.defaultValue)}
                     </code>
                   ) : (
@@ -1091,11 +1157,11 @@ function Component({
       const linkTarget = match[2] ? `/docs/${match[2]}` : `#${match[1]}`;
       if (linkTarget.indexOf("#") != -1) {
         elements.push(
-          <code className="relative rounded font-mono">{linkText}</code>
+          <code className="relative font-mono rounded">{linkText}</code>
         );
       } else if (linkTarget.startsWith("https")) {
         elements.push(
-          <code className="relative rounded font-mono">
+          <code className="relative font-mono rounded">
             <Link
               className="text-primary"
               key={match.index}
@@ -1108,7 +1174,7 @@ function Component({
         );
       } else {
         elements.push(
-          <code className="relative rounded font-mono">
+          <code className="relative font-mono rounded">
             <Link
               className="text-primary"
               key={match.index}
@@ -1167,7 +1233,7 @@ function Component({
           elements.push(
             <code key={`${paragraphIndex}-${match.index}`}>
               <Link
-                className="text-primary font-mono"
+                className="font-mono text-primary"
                 to={linkTarget}
                 target="_blank"
               >
@@ -1178,7 +1244,7 @@ function Component({
         } else {
           elements.push(
             <code key={`${paragraphIndex}-${match.index}`}>
-              <Link className="text-primary font-mono" to={linkTarget}>
+              <Link className="font-mono text-primary" to={linkTarget}>
                 {linkText}
               </Link>
             </code>
@@ -1246,7 +1312,7 @@ function Component({
         elements.push(
           <code>
             <Link
-              className="text-primary font-mono"
+              className="font-mono text-primary"
               key={match.index}
               to={linkTarget}
               target="_blank"
@@ -1259,7 +1325,7 @@ function Component({
         elements.push(
           <code>
             <Link
-              className="text-primary font-mono"
+              className="font-mono text-primary"
               key={match.index}
               to={linkTarget}
             >
@@ -1347,16 +1413,38 @@ function Component({
     );
   }
 
-  function getClassParameters(parameters: any) {
+  function getClassParameters(parameters: any, properties: any) {
     return (
-      <fieldset className="flex flex-col gap-4 w-full bg-muted/50 rounded-xl overflow-hidden">
+      <div className="flex flex-col w-full gap-4 overflow-hidden bg-muted/50 rounded-xl">
         <Table>
           <TableBody>
             {parameters.map((p: any) => {
+              let addSince = null;
+              let foundProperty = properties?.find(
+                (prop: any) => prop.name === p.name
+              );
+              let link = foundProperty ? foundProperty.link : null;
+              let inheritedDetails = null;
+              if (link) {
+                let inheritedComp = link
+                  .split("/")
+                  .reduce((o, i) => o[i], dirs);
+                if (inheritedComp) {
+                  inheritedComp.details.forEach((d: any) => {
+                    if (d.info.signature === foundProperty.signature) {
+                      inheritedDetails = d;
+                    }
+                  });
+                }
+
+                if (inheritedDetails && inheritedDetails.since) {
+                  addSince = inheritedDetails.since;
+                }
+              }
               return (
                 <TableRow key={p.name} className="relative">
                   <TableCell className="w-[250px]">
-                    <code className="relative rounded pl-3 font-mono">
+                    <code className="relative pl-3 font-mono rounded">
                       {p.name}
                     </code>
                   </TableCell>
@@ -1365,76 +1453,79 @@ function Component({
                   </TableCell>
                   <TableCell className="pr-5">
                     {currentComponent[p.name] &&
-                      currentComponent[p.name].details &&
-                      currentComponent[p.name].details[0] &&
-                      currentComponent[p.name].details[0].since &&
-                      buildSince(
-                        currentComponent[p.name].details[0].since,
-                        "float-right"
-                      )}
+                    currentComponent[p.name].details &&
+                    currentComponent[p.name].details[0] &&
+                    currentComponent[p.name].details[0].since
+                      ? buildSince(
+                          currentComponent[p.name].details[0].since,
+                          "float-right"
+                        )
+                      : addSince
+                      ? buildSince(addSince, "float-right")
+                      : null}
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
-      </fieldset>
+      </div>
     );
   }
 
   function getClassThrows(throws: any) {
     return (
-      <fieldset className="flex flex-col gap-4 w-full bg-muted/50 rounded-xl overflow-hidden throws__table">
+      <div className="flex flex-col w-full gap-4 overflow-hidden rounded-xl throws__table">
         <Table>
           <TableBody>
             {throws.map((p: any) => (
               <TableRow
                 key={p.name}
-                className="border-b-red-500/5 bg-red-500/5 hover:bg-red-500/10 flex items-center"
+                className="flex items-center border-b-red-500/10 bg-red-500/10 hover:bg-red-500/15 max-xl:flex-col max-xl:py-2"
               >
-                <TableCell className="min-w-[350px] text-red-500 items-center inline-flex gap-1 pl-6 py-2">
-                  <i className="material-symbols-rounded text-lg text-red-500">
+                <TableCell className="min-w-[350px] text-red-500 items-center inline-flex gap-1 pl-6 py-2 max-xl:pl-3">
+                  <i className="text-lg text-red-500 material-symbols-rounded max-xl:hidden">
                     {exceptionIcons[p.name] || "warning"}
                   </i>
-                  <code className="relative rounded pl-3 font-mono">
+                  <code className="relative pl-3 font-mono rounded max-xl:pl-0 max-xl:text-xs">
                     {p.name}
                   </code>
                 </TableCell>
-                <TableCell className="text-sm w-full text-red-500 py-2">
+                <TableCell className="w-full py-2 text-sm text-red-500">
                   {p.doc ? parseMarkdownLinksNoCode(p.doc) : "-"}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </fieldset>
+      </div>
     );
   }
 
   function getPackageComponent(c: any) {
     return (
       <div>
-        <h2 className="font-bold text-4xl mb-4">{c.info.name}</h2>
-        <p className="text-muted-foreground text-justify mb-4">
+        <h2 className="mb-4 text-4xl font-bold">{c.info.name}</h2>
+        <p className="mb-4 text-justify text-muted-foreground max-2xl:text-justify">
           {parseMarkdownLinksNoCode(c.info.doc)}
         </p>
         <Separator className="my-4" />
-        <h4 className="font-bold text-xl mb-4 indent-1">API</h4>
+        <h4 className="mb-4 text-xl font-bold indent-1">API</h4>
         <CodeTab
           code={createKotlinCodeLinebreaks(c.info.signature)}
           autoIndent={false}
         />
         {c.parameters && (
           <>
-            <h4 className="font-bold text-xl mb-4 mt-10 indent-1">
+            <h4 className="mt-10 mb-4 text-xl font-bold indent-1">
               Parameters
             </h4>
-            {getClassParameters(c.parameters)}
+            {getClassParameters(c.parameters, null)}
           </>
         )}
         {c.throws && (
           <>
-            <h4 className="font-bold text-xl mb-4 mt-10 indent-1">Throws</h4>
+            <h4 className="mt-10 mb-4 text-xl font-bold indent-1">Throws</h4>
             {getClassThrows(c.throws)}
           </>
         )}
@@ -1448,16 +1539,16 @@ function Component({
 
     if (c.deprecated)
       banners.push(
-        <div className="bg-destructive/10 text-red-500 px-4 py-2 rounded-xl flex gap-8 items-center docs-banner">
+        <div className="flex items-center gap-8 px-4 py-2 text-red-500 bg-destructive/10 rounded-xl docs-banner">
           <div className="flex items-center gap-3">
-            <i className="material-symbols-rounded text-lg text-red-500">
+            <i className="text-lg text-red-500 material-symbols-rounded">
               running_with_errors
             </i>
             <h4 className="font-bold">Deprecated</h4>
           </div>
           <p>
             This API-Endpoint will be removed in future versions.{" "}
-            {c.deprecated.description}.
+            {c.deprecated.description}
           </p>
         </div>
       );
@@ -1465,9 +1556,9 @@ function Component({
     if (current && current["Companion"] && current["Companion"]._index)
       banners.push(
         <Link to={"/docs/" + current["Companion"]._index.breadcrumbs.join("/")}>
-          <div className="bg-bgw-blue/10 text-bgw-blue px-4 py-2 rounded-xl flex gap-8 items-center relative docs-banner">
+          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-blue/10 text-bgw-blue rounded-xl docs-banner">
             <div className="flex items-center gap-3">
-              <i className="material-symbols-rounded text-lg text-bgw-blue">
+              <i className="text-lg material-symbols-rounded text-bgw-blue">
                 note_stack_add
               </i>
               <h4 className="font-bold">Companion</h4>
@@ -1476,7 +1567,7 @@ function Component({
               This API-Endpoint may have additional properties in it's Companion
               object.
             </p>
-            <i className="material-symbols-rounded text-xl text-bgw-blue right-4 absolute">
+            <i className="absolute text-xl material-symbols-rounded text-bgw-blue right-4">
               chevron_right
             </i>
           </div>
@@ -1486,9 +1577,9 @@ function Component({
     if (full && full.breadcrumbs.includes("Companion"))
       banners.push(
         <Link to={"/docs/" + full.breadcrumbs.excludeLast().join("/")}>
-          <div className="bg-bgw-green/10 text-bgw-green px-4 py-2 rounded-xl flex gap-8 items-center relative docs-banner">
+          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-green/10 text-bgw-green rounded-xl docs-banner">
             <div className="flex items-center gap-3">
-              <i className="material-symbols-rounded text-lg text-bgw-green">
+              <i className="text-lg material-symbols-rounded text-bgw-green">
                 reply
               </i>
               <h4 className="font-bold">Context</h4>
@@ -1504,9 +1595,9 @@ function Component({
     if (current && !full && current.breadcrumbs.includes("Companion"))
       banners.push(
         <Link to={"/docs/" + current.breadcrumbs.excludeLast(2).join("/")}>
-          <div className="bg-bgw-green/10 text-bgw-green px-4 py-2 rounded-xl flex gap-8 items-center relative docs-banner">
+          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-green/10 text-bgw-green rounded-xl docs-banner">
             <div className="flex items-center gap-3">
-              <i className="material-symbols-rounded text-lg text-bgw-green">
+              <i className="text-lg material-symbols-rounded text-bgw-green">
                 reply
               </i>
               <h4 className="font-bold">Context</h4>
@@ -1527,9 +1618,9 @@ function Component({
     )
       banners.push(
         <Link to={"/docs/" + current.breadcrumbs.excludeLast(1).join("/")}>
-          <div className="bg-bgw-green/10 text-bgw-green px-4 py-2 rounded-xl flex gap-8 items-center relative docs-banner">
+          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-green/10 text-bgw-green rounded-xl docs-banner">
             <div className="flex items-center gap-3">
-              <i className="material-symbols-rounded text-lg text-bgw-green">
+              <i className="text-lg material-symbols-rounded text-bgw-green">
                 reply
               </i>
               <h4 className="font-bold">Context</h4>
@@ -1546,9 +1637,9 @@ function Component({
     // if (current && !full && current.breadcrumbs.includes("Companion"))
     //   banners.push(
     //     <Link to={"/docs/" + current.breadcrumbs.excludeLast(2).join("/")}>
-    //       <div className="bg-green-400/20 text-green-400 px-4 py-2 rounded-xl flex gap-8 items-center relative">
+    //       <div className="relative flex items-center gap-8 px-4 py-2 text-green-400 bg-green-400/20 rounded-xl">
     //         <div className="flex items-center gap-3">
-    //           <i className="material-symbols-rounded text-lg text-green-400">
+    //           <i className="text-lg text-green-400 material-symbols-rounded">
     //             reply
     //           </i>
     //           <h4 className="font-bold">Context</h4>
@@ -1571,9 +1662,9 @@ function Component({
         if (type.name === "Companion") return null;
         banners.push(
           <Link to={"/docs/" + type.link}>
-            <div className="bg-bgw-blue/10 text-bgw-blue px-4 py-2 rounded-xl flex gap-8 items-center relative docs-banner">
+            <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-blue/10 text-bgw-blue rounded-xl docs-banner">
               <div className="flex items-center gap-3">
-                <i className="material-symbols-rounded text-lg text-bgw-blue">
+                <i className="text-lg material-symbols-rounded text-bgw-blue">
                   note_stack
                 </i>
                 <h4 className="font-bold">
@@ -1581,7 +1672,7 @@ function Component({
                 </h4>
               </div>
               <p>{parseMarkdownNoLinks(type.doc)}</p>
-              <i className="material-symbols-rounded text-xl text-bgw-blue right-4 absolute">
+              <i className="absolute text-xl material-symbols-rounded text-bgw-blue right-4">
                 chevron_right
               </i>
             </div>
@@ -1685,35 +1776,35 @@ function Component({
     let banners = buildComponentBanners(c, full, current);
 
     return (
-      <div>
+      <div className="relative w-full max-xl:w-[calc(100vw-3.5rem)]">
         {banners.length > 0 && (
           <div className="flex flex-col gap-4 mb-8">{banners}</div>
         )}
-        <div className="flex gap-8 items-center mb-5">
-          <h2 className={`font-bold text-4xl`}>
+        <div className="flex items-center gap-8 mb-5">
+          <h2 className={`font-bold text-4xl max-xl:text-3xl`}>
             {c.info.name === "Companion"
               ? `${c.info.name} (${full.breadcrumbs.fromRight(1)})`
               : c.info.name}
           </h2>
-          <div className="flex gap-2 items-center mt-1">{tags}</div>
+          <div className="flex items-center gap-2 mt-1">{tags}</div>
         </div>
         {c.info.doc.trim() !== "" && (
-          <p className="text-muted-foreground text-justify mb-4 whitespace-pre-wrap flex flex-col gap-1">
+          <p className="flex flex-col gap-1 mb-4 text-justify whitespace-pre-wrap text-muted-foreground">
             {parseClassDoc(c.info.doc)}
           </p>
         )}
         {inheritors.length > 0 && (
-          <div className="flex gap-2 items-center mt-2 relative h-6">
-            <h4 className="font-bold text-xs absolute left-0">Inheritors:</h4>
-            <ul className="flex gap-2 absolute items-center left-20">
+          <div className="relative flex items-center h-6 gap-2 mt-2">
+            <h4 className="absolute left-0 text-xs font-bold">Inheritors:</h4>
+            <ul className="absolute flex items-center gap-2 left-20">
               {inheritors}
             </ul>
           </div>
         )}
         {seeAlso.length > 0 && (
-          <div className="flex gap-2 items-center mt-2 relative h-6">
-            <h4 className="font-bold text-xs absolute left-0">See also:</h4>
-            <ul className="flex gap-2 absolute items-center left-20">
+          <div className="relative flex items-center h-6 gap-2 mt-2">
+            <h4 className="absolute left-0 text-xs font-bold">See also:</h4>
+            <ul className="absolute flex items-center gap-2 left-20">
               {seeAlso}
             </ul>
           </div>
@@ -1725,15 +1816,15 @@ function Component({
         />
         {c.parameters && full === null && (
           <>
-            <h4 className="font-bold text-xl mb-4 mt-10 indent-1">
+            <h4 className="mt-10 mb-4 text-xl font-bold indent-1">
               Parameters
             </h4>
-            {getClassParameters(c.parameters)}
+            {getClassParameters(c.parameters, null)}
           </>
         )}
         {c.throws && (
           <>
-            <h4 className="font-bold text-xl mb-4 mt-10 indent-1">Throws</h4>
+            <h4 className="mt-10 mb-4 text-xl font-bold indent-1">Throws</h4>
             {getClassThrows(c.throws)}
           </>
         )}
@@ -1780,7 +1871,7 @@ function Component({
 
   return (
     <div className="flex justify-center w-full">
-      <div className="px-10 max-w-[1600px] pt-5 mb-10 w-full component">
+      <div className="px-10 max-w-[1600px] pt-5 mb-10 w-full component max-2xl:px-7 max-2xl:mb-0">
         {buildBreadcrumbs(location.pathname.replace("/", ""))}
         {buildCurrentComponent(currentComponent)}
         {/* {getTitle(currentComponent)} */}

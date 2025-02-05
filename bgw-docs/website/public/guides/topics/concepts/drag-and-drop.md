@@ -1,12 +1,14 @@
 [DragEventKDoc]: /docs/tools.aqua.bgw.event/-drag-event/
 [TokenKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-token-view/
 [AreaKDoc]: /docs/tools.aqua.bgw.examples.components.container/-area/
-
-[BoardGameApplicationDoc]:
+[BoardGameApplicationDoc]: /docs/tools.aqua.bgw.core/-board-game-application/
 [DynamicComponentViewDoc]: /guides/components/dynamiccomponent/dynamiccomponentview
 [TokenDoc]: /guides/components/gamecomponentviews
 [AreaDoc]: /guides/components/container/container#area
 [DragDropExample]: /guides/concepts/drag-and-drop/DragAndDropExample#complete-source-code-for-the-example
+
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
 
 # Drag and Drop
 
@@ -165,77 +167,3 @@ greenArea.onDragDropped = { dragEvent ->
 - Keep in mind that when dealing with situations, where multiple `dropAcceptor` invocations might return `true`,
   that the event `onDragDropped` gets invoked on multiple /components and no guarantee is given for the order of
   invocations.
-
-## Complete source code for the example
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt){:
-.btn }
-
-```kotlin
-fun main() {
-  DragAndDropExample()
-}
-
-class DragAndDropExample : BoardGameApplication("Drag and drop example") {
-  private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-
-  private val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
-  private val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
-
-  private val redArea: Area<TokenView> = Area(
-      height = 50,
-      width = 50,
-      posX = 200,
-      posY = 20,
-      visual = ColorVisual(255, 0, 0, 100)
-    )
-
-  private val greenArea: Area<TokenView> = Area(
-      height = 50,
-      width = 50,
-      posX = 200,
-      posY = 200,
-      visual = ColorVisual(0, 255, 0, 100)
-    )
-
-  init {
-    redToken.isDraggable = true
-    redToken.onDragGestureEnded = { _, success ->
-      if (success) {
-        redToken.isDraggable = false
-      }
-    }
-
-    greenToken.isDraggable = true
-    greenToken.onDragGestureEnded = { _, success ->
-      if (success) {
-        greenToken.isDraggable = false
-      }
-    }
-
-    redArea.dropAcceptor = { dragEvent ->
-      when (dragEvent.draggedComponent) {
-        is TokenView -> dragEvent.draggedComponent == redToken
-        else -> false
-      }
-    }
-    redArea.onDragDropped = { dragEvent ->
-      redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-    }
-
-    greenArea.dropAcceptor = { dragEvent ->
-      when (dragEvent.draggedComponent) {
-        is TokenView -> dragEvent.draggedComponent == greenToken
-        else -> false
-      }
-    }
-    greenArea.onDragDropped = { dragEvent ->
-      greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-    }
-
-    gameScene.addComponents(redToken, greenToken, redArea, greenArea)
-    showGameScene(gameScene)
-    show()
-  }
-}
-```

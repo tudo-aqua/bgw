@@ -1,27 +1,8 @@
 [MauMauRules]: https://en.wikipedia.org/wiki/Mau_Mau_(card_game)
 [BGW]: https://github.com/tudo-aqua/bgw
-[JavaFX 17]: https://openjfx.io/openjfx-docs/
 [AzulZuluOpenJDK]: https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk
-[Mac M1]: https://www.azul.com/downloads/?version=java-11-lts&os=macos&architecture=arm-64-bit&package=jdk-fx#download-openjdk
-[BoardGameApplicationKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/index.html
-[BoardGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/index.html
-[MenuSceneKDoc]: /docs/tools.aqua.bgw.core/-menu-scene/index.html
-[GameComponentKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
-[StaticComponentViewKDoc]: /docs/tools.aqua.bgw.components/-static-component-view/index.html
-[LabelKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-label/index.html
-[ButtonKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-button/index.html
-[ContainerKDoc]: /docs/tools.aqua.bgw.components.container/-game-component-container/index.html
-[CardStackKDoc]: /docs/tools.aqua.bgw.components.container/-card-stack/index.html
-[LinearLayoutKDoc]: /docs/tools.aqua.bgw.components.container/-linear-layout/index.html
-[showGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show-game-scene.html
-[showMenuSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show-menu-scene.html
-[showKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show.html
-[addComponentsKDoc]: /docs/tools.aqua.bgw.core/Scene/addComponents
-[UIComponentDoc]: /guides/components/uicomponents
-[LayoutViewDoc]: /guides/components/layout
-[VisualsDoc]: /guides/concepts/visual
-[GettingStarted]: /guides/getting-started
 [Kotlin]: https://kotlinlang.org/
+[GettingStarted]: /guides/getting-started
 
 # Welcome to BoardGameWork
 
@@ -31,12 +12,8 @@ of setting up your first game scene. We will use the popular [MauMau][MauMauRule
 
 ## Prerequisites
 
-The BoardGameWork is built on top of [JavaFX 17][JavaFX 17] and therefore requires at least JDK 11.
-Since JavaFX was decoupled from the JavaJDK as of JDK 11, BoardGameWork comes with JavaFX dependencies including their
-native libraries for various platforms like Windows, Linux and Mac.
-
-We recommend installing a JDK build that already includes JavaFX to ensure your platform is supported.
-[Azul Zulu Builds of OpenJDK][AzulZuluOpenJDK] support a wide range of platforms and architectures including [Mac M1][Mac M1].
+Before you can start using BGW, you will need a Java Development Kit (JDK) installed on your system. BGW requires at least
+Java 11 to run. You can download a compatible version of [Azul Zulu OpenJDK][AzulZuluOpenJDK] from the official website.
 
 ## Setup
 
@@ -45,7 +22,7 @@ Start by adding the latest version of BGW as a dependency to your project.
 <tabs group="gradleMaven">
     <tab title="Gradle" group-key="gradle">
         <code-block lang="apache"> 
-        implementation(group = "tools.aqua", name = "bgw-gui", version = "0.9")
+        implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
         </code-block>
     </tab>
     <tab title="Maven" group-key="maven">
@@ -53,13 +30,41 @@ Start by adding the latest version of BGW as a dependency to your project.
             &lt;dependency&gt;
     &lt;groupId&gt;tools.aqua&lt;/groupId&gt;
     &lt;artifactId&gt;bgw-gui&lt;/artifactId&gt;
-    &lt;version&gt;0.9&lt;/version&gt;
+    &lt;version&gt;0.10&lt;/version&gt;
 &lt;/dependency&gt;
         </code-block>
     </tab>
 </tabs>
 
-You also need to specify the correct JVM target in your build system.
+When running on JDK 16 or later, you need to add the following JVM arguments to your run configuration:
+
+<tabs group="gradleMaven">
+    <tab title="Gradle" group-key="gradle">
+        <code-block lang="apache">
+            application {
+    applicationDefaultJvmArgs = listOf(
+        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED",
+        "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED",
+        "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+}
+        </code-block>
+    </tab>
+    <tab title="Maven" group-key="maven">
+        <code-block lang="xml">
+            &lt;configuration&gt;
+    &lt;jvmArguments&gt;
+        --add-opens java.desktop/sun.awt=ALL-UNNAMED 
+        --add-opens java.desktop/java.awt.peer=ALL-UNNAMED 
+        --add-opens java.desktop/sun.lwawt=ALL-UNNAMED 
+        --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED
+    &lt;/jvmArguments&gt;
+&lt;/configuration&gt;
+        </code-block>
+    </tab>
+</tabs>
+
+It is therefore recommended to specify the correct JVM target in your build system.
 
 <tabs group="gradleMaven">
     <tab title="Gradle" group-key="gradle">
@@ -78,5 +83,5 @@ You also need to specify the correct JVM target in your build system.
     </tab>
 </tabs>
 
-> To learn more about creating your first board game application using BGW, continue with the [Getting Started][GettingStarted] section.
+> The basic setup should now be complete. To learn more about creating your first board game application using BGW, continue with the [Getting Started][GettingStarted] section.
 > {style="note"}

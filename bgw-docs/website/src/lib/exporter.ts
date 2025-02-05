@@ -107,15 +107,12 @@ export function exportComponent(component: any = null, all: any, id: string) {
       if (name.indexOf(" ") > -1) name = name.split(" ").join("_");
       name = name.replace(/[^a-zA-Z0-9_]/g, "");
 
-      console.log(parameters, properties);
       let apply = properties
         .map((prop) => {
           if (component[prop.name] === undefined) {
-            console.log(prop.name, "not found");
             return;
           }
           if (applyBlacklist.includes(prop.name)) {
-            console.log(prop.name, "is blacklisted");
             return;
           }
           if (
@@ -123,11 +120,9 @@ export function exportComponent(component: any = null, all: any, id: string) {
             referenceProperties.includes(prop.name) &&
             component[prop.name] === reference[prop.name].value
           ) {
-            console.log(prop.name, "is default");
             return;
           }
           if (prop.type == "Flip" && component[prop.name] === "none") {
-            console.log(prop.name, "is default");
             return;
           }
 
@@ -138,12 +133,11 @@ export function exportComponent(component: any = null, all: any, id: string) {
           } else {
             let property = Object.entries(reference).find((e) => {
               if (e[1] !== null && e[1].property !== undefined) {
-                console.log(e[1], e[1].property, prop.name);
                 return e[1].property === prop.name;
               }
               return false;
             });
-            console.log(prop.name);
+
             if (property) {
               return `${prop.name} = ${exportNonPrimitive(
                 component[property[0]],
@@ -177,12 +171,11 @@ export function exportComponent(component: any = null, all: any, id: string) {
                         } else {
                           let property = Object.entries(reference).find((e) => {
                             if (e[1] !== null && e[1].property !== undefined) {
-                              console.log(e[1], e[1].property, param.name);
                               return e[1].property === param.name;
                             }
                             return false;
                           });
-                          console.log(param.name);
+
                           if (property) {
                             return `${param.name} = ${exportNonPrimitive(
                               component[property[0]],
@@ -201,7 +194,6 @@ export function exportComponent(component: any = null, all: any, id: string) {
                 )`;
 
       if (apply.length > 0) {
-        console.log(apply);
         code += `.apply {
                     ${apply.join("\n")}
                 }`;
@@ -235,15 +227,17 @@ export function exportComponent(component: any = null, all: any, id: string) {
       return (childrenCode + code).trim();
     }
 
+    return `// Exporting is not supported yet and will be added soon.`;
     return `// No constructor found for ${found.shortName}`;
   }
 
+  return `// Exporting is not supported yet and will be added soon.`;
   return `// No constructor found for ${component.type}`;
 }
 
 function exportNonPrimitive(data: any, type: string = "", name: string = "") {
   let code = "";
-  console.log(data, type);
+
   if (type === "List<Visual>") {
     return `listOf(
             ${data
@@ -404,7 +398,6 @@ function exportNonPrimitive(data: any, type: string = "", name: string = "") {
               return;
 
             if (prop.type == "Flip" && data[prop.name] === "none") {
-              console.log(prop.name, "is default");
               return;
             }
             if (prop.type == "String") {

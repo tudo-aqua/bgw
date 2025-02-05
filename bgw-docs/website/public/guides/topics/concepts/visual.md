@@ -1,10 +1,15 @@
-[SingleLayerVisualKDoc]: /guides/concepts/visual/visual.html#singlelayervisual [ColorVisualKDoc]: /docs/tools.aqua.bgw.visual/-color-visual/
+[SingleLayerVisualKDoc]: /guides/concepts/visual/visual.html#singlelayervisual
+[ColorVisualKDoc]: /docs/tools.aqua.bgw.visual/-color-visual/
 [ImageVisualKDoc]: /docs/tools.aqua.bgw.visual/-image-visual/
 [TextVisualKDoc]: /docs/tools.aqua.bgw.visual/-text-visual/
-[CompoundVisualKDoc]: /guides/concepts/visual/visual.html#compoundvisual [FontKDoc]: /docs/tools.aqua.bgw.util/-font/
+[CompoundVisualKDoc]: /guides/concepts/visual/visual.html#compoundvisual
+[FontKDoc]: /docs/tools.aqua.bgw.util/-font/
 [FileDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/File.html
 [ColorDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Color.html
 [BufferedImageDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/image/BufferedImage.html
+
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
 
 # Visual
 
@@ -76,11 +81,6 @@ val visual: ImageVisual = ImageVisual(
 )
 ```
 
-The full example can be found here:
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/VisualsExample.kt){:
-.btn }
-
 ## [CompoundVisual][CompoundVisualKDoc]
 
 [CompoundVisuals][CompoundVisualKDoc] can be used to stack multiple visuals. Therefore, if
@@ -108,8 +108,3 @@ visual = CompoundVisual(
   }
 )
 ```
-
-The full example can be found here:
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/visuals/CompoundVisualsExample.kt){:
-.btn }

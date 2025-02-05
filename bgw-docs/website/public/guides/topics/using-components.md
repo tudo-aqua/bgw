@@ -1,28 +1,10 @@
-[MauMauRules]: https://en.wikipedia.org/wiki/Mau_Mau_(card_game)
-[BGW]: https://github.com/tudo-aqua/bgw
-[JavaFX 17]: https://openjfx.io/openjfx-docs/
-[AzulZuluOpenJDK]: https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk
-[Mac M1]: https://www.azul.com/downloads/?version=java-11-lts&os=macos&architecture=arm-64-bit&package=jdk-fx#download-openjdk
-[BoardGameApplicationKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/index.html
-[BoardGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/index.html
-[MenuSceneKDoc]: /docs/tools.aqua.bgw.core/-menu-scene/index.html
-[GameComponentKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/index.html
-[StaticComponentViewKDoc]: /docs/tools.aqua.bgw.components/-static-component-view/index.html
 [LabelKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-label/index.html
 [ButtonKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-button/index.html
-[ContainerKDoc]: /docs/tools.aqua.bgw.components.container/-game-component-container/index.html
 [CardStackKDoc]: /docs/tools.aqua.bgw.components.container/-card-stack/index.html
 [CardViewKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-card-view/index.html
 [LinearLayoutKDoc]: /docs/tools.aqua.bgw.components.container/-linear-layout/index.html
-[showGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show-game-scene.html
-[showMenuSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show-menu-scene.html
-[showKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/show.html
 [addComponentsKDoc]: /docs/tools.aqua.bgw.core/-scene/add-components.html
-[UIComponentDoc]: /guides/components/uicomponents
-[LayoutViewDoc]: /guides/components/layout
-[VisualsDoc]: /guides/concepts/visual
-[DeclaringScenes]: /guides/declaring-scenes
-[AdvancedComponents]: /guides/advanced-components
+[AdvancedComponents]: /guides/concepts/advanced-components
 [HandlingEvents]: /guides/handling-events
 
 # Using Components
@@ -36,51 +18,53 @@ All coordinates, including those for size and position, are defined in a virtual
 > All components added to a scene will have their position and size relative to the declared coordinate space (or layout element) they are added to.
 > {style="note"}
 
+---
+
 ## Declaring Components
 
 Components are declared by instantiating them with the desired parameters. The following example shows how to declare a [Label][LabelKDoc] that displays _"Main menu"_.
 
 ```kotlin
-    val menuLabel = Label(
-        height = 100,
-        width = 200,
-        posX = 50,
-        posY = 0,
-        text = "Main menu",
-        font = Font(fontWeight = Font.FontWeight.BOLD)
-    )
+val menuLabel = Label(
+    posX = 50,
+    posY = 0,
+    height = 100,
+    width = 200,
+    text = "Main menu",
+    font = Font(fontWeight = Font.FontWeight.BOLD)
+)
 ```
 
-> Components may inherit default values that can be overridden by passing the desired values as parameters.
+> Components may inherit default values that can be overridden by passing the desired values to the constructor or by setting them after component instantiation.
 
 Furthermore, we declare three [Buttons][ButtonKDoc] that display _"Continue"_, _"New Game"_ and _"Exit"_ for our `MauMauMenuScene`.
 
 ```kotlin
 val continueGameButton = Button(
-    height = 80,
-    width = 200,
     posX = 50,
     posY = 110,
+    height = 80,
+    width = 200,
     text = "Continue",
     font = Font(color = Color.WHITE),
     visual = ColorVisual.GREY
 )
 
 val newGameButton = Button(
-    height = 80,
-    width = 200,
     posX = 50,
     posY = 220,
+    height = 80,
+    width = 200,
     text = "New Game",
     font = Font(color = Color.WHITE),
     visual = ColorVisual.GREY
 )
 
 val exitButton = Button(
-    height = 80,
-    width = 200,
     posX = 50,
     posY = 330,
+    height = 80,
+    width = 200,
     text = "Exit",
     font = Font(color = Color.WHITE),
     visual = ColorVisual.GREY
@@ -89,6 +73,8 @@ val exitButton = Button(
 
 > The structure of all buttons is almost identical. For outsourcing them into a reusable component, please visit the [Advanced Components][AdvancedComponents] section.
 > { style="note" }
+
+---
 
 ## Adding Components
 
@@ -104,39 +90,39 @@ class MauMauMenuScene : MenuScene(
     background = ColorVisual(Color.WHITE)
 ) {
     val menuLabel = Label(
-        height = 100,
-        width = 200,
         posX = 50,
         posY = 0,
+        height = 100,
+        width = 200,
         text = "Main menu",
         font = Font(fontWeight = Font.FontWeight.BOLD)
     )
 
     val continueGameButton = Button(
-        height = 80,
-        width = 200,
         posX = 50,
         posY = 110,
+        height = 80,
+        width = 200,
         text = "Continue",
         font = Font(color = Color.WHITE),
         visual = ColorVisual.GREY
     )
 
     val newGameButton = Button(
-        height = 80,
-        width = 200,
         posX = 50,
         posY = 220,
+        height = 80,
+        width = 200,
         text = "New Game",
         font = Font(color = Color.WHITE),
         visual = ColorVisual.GREY
     )
 
     val exitButton = Button(
-        height = 80,
-        width = 200,
         posX = 50,
         posY = 330,
+        height = 80,
+        width = 200,
         text = "Exit",
         font = Font(color = Color.WHITE),
         visual = ColorVisual.GREY
@@ -153,43 +139,45 @@ class MauMauMenuScene : MenuScene(
 }
 ```
 
-To complete the example, we add the components to our `MauMauGameScene` as well. We create two [CardStack][CardStackKDoc] for the draw stack and the game stack, as well as two [LinearLayouts][LinearLayoutKDoc] for the player's hands. All four components get the generic type `CardView` to indicate that they will contain [CardViews][CardViewKDoc].
+To complete the example, we add the components to our `MauMauGameScene` as well. We create two [CardStacks][CardStackKDoc] for the draw stack and the game stack, as well as two [LinearLayouts][LinearLayoutKDoc] for the player's hands. All four components get the generic type `CardView` to indicate that they will contain [CardViews][CardViewKDoc].
+
+> Notice how `otherPlayerHand` is rotated by 180 degrees to display the cards in the opposite direction. Because `rotation` is not a constructor parameter, it must be set after the component is instantiated by using the `apply` scope function.
 
 ```kotlin
 class MauMauGameScene : BoardGameScene(
     background = ImageVisual("bg.jpg")
 ) {
     val drawStack: CardStack<CardView> = CardStack(
-        height = 200,
-        width = 130,
         posX = 750,
-        posY = 360,
+        posY = 360
+        height = 200,
+        width = 130,,
         visual = ColorVisual(255, 255, 255, 50)
     )
 
     val gameStack: CardStack<CardView> = CardStack(
-        height = 200,
-        width = 130,
         posX = 1040,
         posY = 360,
+        height = 200,
+        width = 130,
         visual = ColorVisual(255, 255, 255, 50)
     )
 
     var currentPlayerHand: LinearLayout<CardView> = LinearLayout(
-        height = 220,
-        width = 800,
         posX = 560,
         posY = 750,
+        height = 220,
+        width = 800,
         spacing = -50,
         alignment = Alignment.CENTER,
         visual = ColorVisual(255, 255, 255, 50)
     )
 
     var otherPlayerHand: LinearLayout<CardView> = LinearLayout(
-        height = 220,
-        width = 800,
         posX = 560,
         posY = 50,
+        height = 220,
+        width = 800,
         spacing = -50,
         alignment = Alignment.CENTER,
         visual = ColorVisual(255, 255, 255, 50)

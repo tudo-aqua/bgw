@@ -8,9 +8,27 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { layoutMap } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useDocsStore } from "@/stores/docsStore";
 
 function Elements({ comp, pkg }: { comp: any; pkg: string }) {
+  const { setSecondarySidebar } = useDocsStore();
+  const location = useLocation();
+
+  useEffect(() => {
+    const sidebarItems = sortedTypes.map((type) => ({
+      title: type.capitalize(),
+      url: location.pathname,
+      items: groupedElements[type].map(({ key, elem, details }) => ({
+        title: key,
+        url: details.url,
+      })),
+    }));
+
+    setSecondarySidebar(sidebarItems);
+  }, [location.pathname, comp]);
+
   function parseMarkdownNoLinks(text: string): JSX.Element {
     if (!text) return <span></span>;
 
@@ -129,23 +147,23 @@ function Elements({ comp, pkg }: { comp: any; pkg: string }) {
   });
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 mb-10">
       {sortedTypes.map((type) => (
         <div key={type} className="flex flex-col gap-5">
           <div className="flex flex-col gap-5">
             {groupedElements[type].map(({ key, elem, details }) => (
               <Link key={key} to={details.url} className="group">
-                <div className="bg-muted/50 border-none px-4 py-4 rounded-xl flex gap-5 items-start relative docs-banner w-full">
-                  <div className="flex items-center gap-5">
+                <div className="relative flex items-start w-full gap-5 px-4 py-4 border-none bg-muted/50 rounded-xl docs-banner max-xl:!px-5 max-xl:!pb-5 ">
+                  <div className="flex items-center gap-5 max-xl:hidden">
                     <Badge
                       variant={details.type}
-                      className="material-symbols-rounded rounded-lg aspect-square w-14 h-14 p-4 flex items-center justify-center text-2xl"
+                      className="flex items-center justify-center p-4 text-2xl rounded-lg material-symbols-rounded aspect-square w-14 h-14"
                     >
                       {icon}
                     </Badge>
                   </div>
-                  <div className="w-full min-h-[56px] flex items-center justify-between">
-                    <div className="w-[calc(100%-120px)]">
+                  <div className="w-full min-h-[56px] flex items-center justify-between max-xl:mt-1">
+                    <div className="w-[calc(100%-120px)] max-xl:w-full">
                       <h4
                         className={`font-bold text-lg ${
                           details.deprecated ? "line-through" : ""
@@ -159,7 +177,7 @@ function Elements({ comp, pkg }: { comp: any; pkg: string }) {
                       >
                         {key}
                       </h4>
-                      <h1 className="text-base text-muted-foreground group-hover:translate-x-1 transition-all duration-300">
+                      <h1 className="text-base transition-all duration-300 text-muted-foreground group-hover:translate-x-1 max-xl:text-justify max-xl:mt-2">
                         {elem._index &&
                         elem._index.details &&
                         elem._index.details.info &&
@@ -172,10 +190,19 @@ function Elements({ comp, pkg }: { comp: any; pkg: string }) {
                           : ""}
                       </h1>
                     </div>
-                    <Badge variant={details.type} className="mr-2 w-fit h-fit">
+                    <Badge
+                      variant={details.type}
+                      className="mr-2 w-fit h-fit max-xl:hidden"
+                    >
                       {details.type.capitalize()}
                     </Badge>
                   </div>
+                  <Badge
+                    variant={details.type}
+                    className="w-fit h-fit xl:hidden max-xl:mt-2"
+                  >
+                    {details.type.capitalize()}
+                  </Badge>
                 </div>
               </Link>
             ))}

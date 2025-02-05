@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -9,7 +9,7 @@ import Markdown from "react-markdown";
 import "./markdown.scss";
 import CodeTab from "./CodeTab";
 import { Banner } from "@/components/ui/banner";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CodeTabs from "./Tabs";
 import { TabsContent } from "@/components/ui/tabs";
 import {
@@ -37,18 +37,50 @@ import { guideStructure } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import PreviewTab from "./PreviewTab";
 
-function Guide({ location, allSamples }: { location: any; allSamples: any }) {
+const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
   const [text, setText] = useState("");
   const [currentLocation, setCurrentLocation] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { setSecondarySidebar } = useDocsStore();
+  const location = useLocation();
 
-  useEffect(() => {
-    if (location.hash) {
+  const fetchMarkdown = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      let path = location.pathname
+        .replace("/guides", "")
+        .replace(".md", "")
+        .toLowerCase();
+      if (path.trim() === "") path = "installation";
+
+      // Use relative path from public directory
+      const response = await fetch(`/bgw/guides/topics/${path}.md`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to load guide: ${response.statusText}`);
+      }
+
+      const md = await response.text();
+      setText(md);
+      setCurrentLocation(location.pathname);
+      setTimeout(() => {
+        scrollToHash(location.hash);
+      }, 100);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load guide");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  function scrollToHash(hash) {
+    if (hash) {
       document
-        .querySelectorAll(location.hash)[0]
+        .querySelectorAll(hash)[0]
         ?.scrollIntoView({ block: "start", inline: "nearest" });
     } else {
       document
@@ -62,76 +94,65 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
         )[0]
         ?.scrollTo(0, 0);
     }
+  }
 
-    if (location.pathname === currentLocation) return;
-    const fetchMarkdown = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        let path = location.pathname
-          .replace("/guides", "")
-          .replace(".md", "")
-          .toLowerCase();
-        if (path.trim() === "") path = "installation";
-
-        // Use relative path from public directory
-        const response = await fetch(`/bgw/guides/topics/${path}.md`);
-
-        if (!response.ok) {
-          throw new Error(`Failed to load guide: ${response.statusText}`);
-        }
-
-        const md = await response.text();
-        setText(md);
-        setCurrentLocation(location.pathname);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load guide");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMarkdown();
-  }, [location]);
+  function scrollToTop() {
+    document
+      .querySelectorAll(
+        "#comp-scroll-area div[data-radix-scroll-area-viewport]"
+      )[0]
+      ?.scrollTo(0, 0);
+    document
+      .querySelectorAll(
+        "#sidebar-scroll-area div[data-radix-scroll-area-viewport]"
+      )[0]
+      ?.scrollTo(0, 0);
+  }
 
   useEffect(() => {
-    const extractHeadings = (markdown: string) => {
-      const headingRegex = /^(#{1,6})\s+(.+)$/gm;
-      const headings = [];
-      let match;
+    scrollToTop();
+    if (location.pathname === currentLocation) return;
 
-      while ((match = headingRegex.exec(markdown)) !== null) {
-        const level = match[1].length;
-        const title = match[2];
-        const id = title.toLowerCase().replace(/[^\w]+/g, "-");
+    fetchMarkdown();
+  }, [location.pathname]);
 
-        headings.push({
-          title,
-          url: `#${id}`,
-          isActive: false,
-        });
-      }
+  useEffect(() => {
+    scrollToHash(location.hash);
+  }, [location.hash]);
 
-      // Create single "Page Content" group with all headings as children
-      const sidebarItems = [
-        {
-          title: "Page Content",
-          url: location.pathname,
-          items: headings,
-        },
-      ];
+  // useEffect(() => {
+  //   const extractHeadings = (markdown: string) => {
+  //     const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+  //     const headings = [];
+  //     let match;
 
-      setSecondarySidebar(sidebarItems);
-    };
+  //     while ((match = headingRegex.exec(markdown)) !== null) {
+  //       const level = match[1].length;
+  //       const title = match[2];
+  //       const id = title.toLowerCase().replace(/[^\w]+/g, "-");
 
-    if (text) {
-      extractHeadings(text);
-    }
-  }, [text, location.pathname]);
+  //       headings.push({
+  //         title,
+  //         url: `#${id}`,
+  //         isActive: false,
+  //       });
+  //     }
 
-  if (isLoading) return <div></div>;
-  if (error) return <div>Error: {error}</div>;
+  //     const sidebarItems = [
+  //       {
+  //         title: "Page Content",
+  //         url: location.pathname,
+  //         items: headings,
+  //       },
+  //     ];
+
+  //     setSecondarySidebar(sidebarItems);
+  //   };
+
+  //   if (text) {
+  //     extractHeadings(text);
+  //   }
+  // }, [text, location.pathname]);
 
   const renderBlockquote = (props: any) => {
     const { children, className, node, ...rest } = props;
@@ -198,8 +219,12 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
         return "";
       })
       .join("");
+    const copy =
+      node.properties?.copy !== undefined
+        ? node.properties?.copy === "true"
+        : false;
     return match ? (
-      <CodeTab code={text} autoIndent={true} copy={true} />
+      <CodeTab code={text} autoIndent={true} copy={copy} />
     ) : (
       <code className={className} {...rest}>
         {children}
@@ -270,7 +295,15 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
       let withoutHTML = convertDashesToCaps(withoutIndex);
 
       return (
-        <Link to={withoutHTML} target="_blank">
+        <Link className="link__ref" to={withoutHTML}>
+          {children}
+        </Link>
+      );
+    }
+
+    if (href.startsWith("/guides")) {
+      return (
+        <Link className="link__guide" to={href}>
           {children}
         </Link>
       );
@@ -298,10 +331,15 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
 
   const renderChapter = (props: any) => {
     const { children, title, collapsible } = props;
+
+    let icon = "book_5";
+    if (props.icon) {
+      icon = props.icon;
+    }
     return (
-      <Collapsible defaultOpen={true} className="mt-8 space-y-2 mb-4">
-        <CollapsibleTrigger className="font-bold text-lg flex items-center gap-3">
-          <i className="material-symbols-rounded text-xl">book_5</i>
+      <Collapsible defaultOpen={true} className="mt-8 mb-4 space-y-2">
+        <CollapsibleTrigger className="flex items-center gap-3 text-lg font-bold">
+          <i className="text-xl material-symbols-rounded">{icon}</i>
           {title}
         </CollapsibleTrigger>
         <CollapsibleContent>{children}</CollapsibleContent>
@@ -311,8 +349,12 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
 
   const renderTable = (props: any) => {
     const { children } = props;
+    let orientation = props.orientation || "vertical";
     return (
-      <Table className="rounded-md overflow-hidden bg-muted/50 rounded-xl mt-3">
+      <Table
+        className="mt-3 overflow-hidden rounded-xl bg-muted/50"
+        orientation={orientation}
+      >
         {children}
       </Table>
     );
@@ -369,7 +411,10 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
       return (
         <>
           <BreadcrumbItem>
-            <BreadcrumbLink to={`${currentPath}`}>
+            <BreadcrumbLink
+              to={`${currentPath}`}
+              className="pointer-events-none"
+            >
               {b === "guides"
                 ? "Guide"
                 : b
@@ -392,120 +437,207 @@ function Guide({ location, allSamples }: { location: any; allSamples: any }) {
     );
   }
 
+  const renderMarkdown = useMemo(() => {
+    return (
+      <Markdown
+        className="markdown"
+        children={text}
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          i: (props) => {
+            let color = props.color || "#ffffff";
+            return (
+              <i className={`material-symbols-rounded text-[${color}]`}>
+                {props.children}
+              </i>
+            );
+          },
+          signature: (props) => {
+            const { children, node, ...rest } = props;
+            return (
+              <div className="p-3 fieldset rounded-xl" {...rest}>
+                {children}
+              </div>
+            );
+          },
+          pre: (props) => {
+            const { node, inline, className, children, ...rest } = props;
+            return <CodeTab code={children.props.children} copy={true} />;
+          },
+          code: renderCode,
+          "code-block": renderCodeBlock,
+          tabs: (props) => {
+            const { children, ...rest } = props;
+            const values = React.Children.map(children, (child) => {
+              if (child.props && child.props["group-key"])
+                return child.props["group-key"];
+            });
+            let filteredChildren = children.filter(
+              (child) => child.props && child.props["group-key"]
+            );
+            let setValues = new Set(values);
+            return (
+              <CodeTabs values={Array.from(setValues) as string[]}>
+                {filteredChildren.map((child) => {
+                  return renderTab(child.props, child);
+                })}
+              </CodeTabs>
+            );
+          },
+          a: renderLink,
+          blockquote: renderBlockquote,
+          chapter: renderChapter,
+          table: renderTable,
+          tbody: renderTableBody,
+          thead: (props) => (
+            <TableHead className="w-full px-0 bg-secondary text-muted-foreground">
+              {props.children}
+            </TableHead>
+          ),
+          tr: renderTableRow,
+          td: renderTableCell,
+          th: renderTableCell,
+          h1: (props) => {
+            const id = props.children
+              ?.toString()
+              .toLowerCase()
+              .replace(/[^\w]+/g, "-");
+            return (
+              <h1
+                id={id}
+                className="relative cursor-pointer group"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}${window.location.pathname}#${id}`
+                  );
+                }}
+              >
+                {props.children}
+                <span className="absolute invisible group-hover:visible -left-8 max-2xl:!hidden">
+                  #
+                </span>
+              </h1>
+            );
+          },
+          h2: (props) => {
+            const id = props.children
+              ?.toString()
+              .toLowerCase()
+              .replace(/[^\w]+/g, "-");
+            return (
+              <h2 id={id} className="relative cursor-pointer group">
+                <Link to={`${location.pathname}#${id}`} className="link__none">
+                  {props.children}
+                  <span className="absolute invisible group-hover:visible -left-8 max-2xl:!hidden">
+                    #
+                  </span>
+                </Link>
+              </h2>
+            );
+          },
+          h3: (props) => {
+            const id = props.children
+              ?.toString()
+              .toLowerCase()
+              .replace(/[^\w]+/g, "-");
+            return (
+              <h3
+                id={id}
+                className="relative cursor-pointer group"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}${window.location.pathname}#${id}`
+                  );
+                }}
+              >
+                {props.children}
+                <span className="absolute invisible group-hover:visible -left-8 max-2xl:!hidden">
+                  #
+                </span>
+              </h3>
+            );
+          },
+          h4: (props) => {
+            const id = props.children
+              ?.toString()
+              .toLowerCase()
+              .replace(/[^\w]+/g, "-");
+            return (
+              <h4
+                id={id}
+                className="relative cursor-pointer group"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    `${window.location.origin}${window.location.pathname}#${id}`
+                  );
+                }}
+              >
+                {props.children}
+                <span className="absolute invisible group-hover:visible -left-8 max-2xl:!hidden">
+                  #
+                </span>
+              </h4>
+            );
+          },
+          h5: (props) => {
+            const id = props.children
+              ?.toString()
+              .toLowerCase()
+              .replace(/[^\w]+/g, "-");
+            return (
+              <h5 id={id} className="relative group">
+                {props.children}
+              </h5>
+            );
+          },
+          h6: (props) => {
+            const id = props.children
+              ?.toString()
+              .toLowerCase()
+              .replace(/[^\w]+/g, "-");
+            return (
+              <h6 id={id} className="relative group">
+                {props.children}
+              </h6>
+            );
+          },
+          img: renderImage,
+          tldr: (props) => (
+            <h6 className="-mt-5 text-base italic">{props.children}</h6>
+          ),
+          hr: (props) => <Separator className="my-10 ruler" />,
+          preview: (props) => {
+            return (
+              <PreviewTab
+                data={{
+                  sample: props.children,
+                  codepoint: [props.node.properties.key],
+                  doc: null,
+                }}
+                info={allSamples}
+                reformat={false}
+                sideBySide={true}
+                width={445}
+              />
+            );
+          },
+        }}
+      ></Markdown>
+    );
+  }, [text, location.pathname]);
+
+  if (isLoading) return <div></div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="flex justify-center w-full">
-      <div className="px-10 max-w-[1200px] pt-5 mb-10 w-full">
+      <div className="px-10 2xl:max-w-[1200px] pt-5 mb-10 xl:w-full max-xl:px-7">
         {buildBreadcrumbs(location.pathname.replace("/", ""))}
-        <Markdown
-          className="markdown"
-          children={text}
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw]}
-          components={{
-            code: (props) => renderCode(props),
-            "code-block": (props) => renderCodeBlock(props),
-            tabs: (props) => {
-              const { children, ...rest } = props;
-              const values = React.Children.map(children, (child) => {
-                if (child.props && child.props["group-key"])
-                  return child.props["group-key"];
-              });
-              let filteredChildren = children.filter(
-                (child) => child.props && child.props["group-key"]
-              );
-              let setValues = new Set(values);
-              return (
-                <CodeTabs values={Array.from(setValues) as string[]}>
-                  {filteredChildren.map((child) => {
-                    return renderTab(child.props, child);
-                  })}
-                </CodeTabs>
-              );
-            },
-            a: (props) => renderLink(props),
-            blockquote: (props) => renderBlockquote(props),
-            chapter: (props) => renderChapter(props),
-            table: (props) => renderTable(props),
-            tbody: (props) => renderTableBody(props),
-            tr: (props) => renderTableRow(props),
-            td: (props) => renderTableCell(props),
-            h1: (props) => (
-              <h1
-                id={props.children
-                  ?.toString()
-                  .toLowerCase()
-                  .replace(/[^\w]+/g, "-")}
-                {...props}
-              />
-            ),
-            h2: (props) => (
-              <h2
-                id={props.children
-                  ?.toString()
-                  .toLowerCase()
-                  .replace(/[^\w]+/g, "-")}
-                {...props}
-              />
-            ),
-            h3: (props) => (
-              <h3
-                id={props.children
-                  ?.toString()
-                  .toLowerCase()
-                  .replace(/[^\w]+/g, "-")}
-                {...props}
-              />
-            ),
-            h4: (props) => (
-              <h4
-                id={props.children
-                  ?.toString()
-                  .toLowerCase()
-                  .replace(/[^\w]+/g, "-")}
-                {...props}
-              />
-            ),
-            h5: (props) => (
-              <h5
-                id={props.children
-                  ?.toString()
-                  .toLowerCase()
-                  .replace(/[^\w]+/g, "-")}
-                {...props}
-              />
-            ),
-            h6: (props) => (
-              <h6
-                id={props.children
-                  ?.toString()
-                  .toLowerCase()
-                  .replace(/[^\w]+/g, "-")}
-                {...props}
-              />
-            ),
-            img: (props) => renderImage(props),
-            tldr: (props) => (
-              <h5 className="-mt-5 text-base italic">{props.children}</h5>
-            ),
-            hr: (props) => <Separator className="my-8 ruler" />,
-            preview: (props) => {
-              console.log(props);
-              return (
-                <PreviewTab
-                  data={{
-                    sample: props.children,
-                    codepoint: [props.node.properties.key],
-                    doc: null,
-                  }}
-                  info={allSamples}
-                />
-              );
-            },
-          }}
-        ></Markdown>
+        {renderMarkdown}
       </div>
     </div>
   );
-}
+});
 
 export default Guide;

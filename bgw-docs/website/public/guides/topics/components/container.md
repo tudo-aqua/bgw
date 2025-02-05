@@ -1,4 +1,6 @@
 [BGADocs]: /docs/tools.aqua.bgw.core/-board-game-application/
+[BoardGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/index.html
+[PaneKDoc]: /docs/tools.aqua.bgw.components.layoutviews/-pane/index.html
 [GameComponentViewKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-game-component-view/
 [ContainerKDoc]: /guides/bpwdgw-gui-kdoc/bgw-gui/tools.aqua.bgw.components.container/-game-component-container/index.html
 [AreaKDoc]: /docs/tools.aqua.bgw.components.container/-area/index.html
@@ -7,277 +9,400 @@
 [CardStackKDoc]: /docs/tools.aqua.bgw.components.container/-card-stack/index.html
 [LinearLayoutKDoc]: /docs/tools.aqua.bgw.components.container/-linear-layout/index.html
 [SatchelKDoc]: /docs/tools.aqua.bgw.components.container/-satchel/index.html
+[CameraPaneKDoc]: /docs/tools.aqua.bgw.components.layoutviews/-camera-pane/index.html
 [HexagonGridKDoc]: /docs/tools.aqua.bgw.components.container/-hexagon-grid/index.html
 [HexagonKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-hexagon-view/index.html
+[LayoutViewDoc]: /guides/components/layout
 [ComponentViewDoc]: /guides/components/componentview
+[GameComponentsDoc]: /guides/components/gamecomponents
 [DynamicView]: /guides/components/dynamiccomponentview
 [UIComponentsDoc]: /guides/components/uicomponents
 [ContainerExample]: /guides/components/container
 [IterableDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/
+[HexDoc]: https://www.redblobgames.com/grids/hexagons/
 
 # Container
 
-<tldr>
-    <p><format style="bold">Component especially for laying out game elements</format></p>
-    <p>→ &nbsp; <a href="http://">StaticComponentView</a></p>
-</tldr>
-
-<chapter title="Containers" collapsible="true" default-state="expanded">
-    <table style="header-column">
-    <tr>
-        <td width="20%">Area</td>
-        <td>Container for displaying a simple rectangular area</td>
-    </tr>
-    <tr>
-        <td>CardStack</td>
-        <td>Container for displaying a stack of n CardViews</td>
-    </tr>
-    <tr>
-        <td>HexagonGrid</td>
-        <td>Container for displaying a hexagonal grid of <a href="#hexagon-view-def">HexagonViews</a> with <a href="https://www.redblobgames.com/grids/hexagons/#coordinates">offset or axial coordinates</a></td>
-    </tr>
-    <tr>
-        <td>LinearLayout</td>
-        <td>Container for displaying a dynamically sized linear arrangement of n GameComponentViews</td>
-    </tr>
-    <tr>
-        <td>Satchel</td>
-        <td>Container for displaying a stack of n tokens</td>
-    </tr>
-    </table>
-</chapter>
-
-## Prior knowledge
-
-All containers inherit from [ComponentView][ComponentViewDoc] and [DynamicView][DynamicView].
-It is therefore helpful to read those documentations first as the features from those superclasses don't get repeated here.
+<tldr>Components especially for laying out game elements</tldr>
 
 ## Introduction
 
-Containers can be used to group
-[GameComponentViewKDoc][GameComponentViewKDoc]s.
+Containers are specifically designed to be used to group and lay out [GameComponentViews][GameComponentsDoc].
 
-[GameComponentContainer][ContainerKDoc]
-is the abstract baseclass for containers. Different implementations support different styles of layouting for the
-contained /components.
+[GameComponentContainer][ContainerKDoc] is the abstract baseclass for containers. Different implementations support different styles of layouting for the contained components.
 
-## Container features
+All [GameComponentContainers][ContainerKDoc] inherit from [ComponentView][ComponentViewDoc] and [DynamicComponentView][DynamicView]. Because they are dynamic components, they can only be used in [BoardGameScenes][BoardGameSceneKDoc].
+It is therefore helpful to read those documentations first as the features from those superclasses don't get repeated here.
 
-The Container features will be demonstrated using an [Area][AreaKDoc], since [GameComponentContainer][ContainerKDoc]
-is abstract and [Area][AreaKDoc] is just one of the discrete implementations.
+Please also take a look at corresponding [GameComponents][GameComponentsDoc], [Layouts][LayoutViewDoc] and [UIComponents][UIComponentsDoc].
 
-The complete source code for this example can be
-found [here][ContainerExample].
+##### Components
 
-To create a running example, the required /components are wrapped in a
-[BoardGameApplication][BGADocs].
+For easy access to the components contained in a container, the `components` property is provided.
 
-```kotlin
-class AreaExample : BoardGameApplication("Area example") {
-	val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+<signature>
+<code-block lang="kotlin" copy="false">
+components : List&lt;T&gt;
+</code-block>
 
-	val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50)
-	val area: Area<TokenView> = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY)
+This property holds all components that are currently contained in the container.
 
-	val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN)
-	val redToken: TokenView = TokenView(visual = ColorVisual.RED)
+</signature>
+
+To add components to a container, the `add(...)` functions are used. To remove components, the `remove(...)` functions are used. Additionally, there are functions to add and remove multiple components at once.
+
+<signature>
+<code-block lang="kotlin" copy="false">
+fun add(component: T, index: Int = components.size)
+</code-block>
+
+This function adds a component to the container at the specified index. If no index is provided, the component is added at the end of the components list.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+fun addAll(collection: Collection&lt;T&gt;)
+</code-block>
+
+This function adds all components from the collection to the container.
+
+</signature>
+
+<signature>
+<code-block lang="kotlin" copy="false">
+fun remove(component: T) : Boolean
+</code-block>
+
+This function removes the specified component from the container. It returns `true` if the component was removed successfully, `false` otherwise.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+fun removeAll(collection: Collection&lt;T&gt;) : Boolean
+</code-block>
+
+This function removes all components from the collection from the container. It returns `true` if all components were removed successfully, `false` otherwise.
+
+</signature>
+
+To simply remove all components from a container, the `clear()` function can be used.
+
+<signature>
+<code-block lang="kotlin" copy="false">
+fun clear() : List&lt;T&gt;
+</code-block>
+
+This function removes all components from the container without the need to provide a predicate and returns a list of the removed components.
+
+</signature>
+
+##### Listeners
+
+Every [GameComponentContainer][ContainerKDoc] allows to track when components are added to or removed from itself by adding the `onAdd` and `onRemove` listeners.
+
+<signature>
+<code-block lang="kotlin" copy="false">
+onAdd: (T.() -> Unit)? = null
+</code-block>
+
+This listener gets invoked when a component is added to the container. The added component is accessible through `this`.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+onRemove: (T.() -> Unit)? = null
+</code-block>
+
+This listener gets invoked when a component is removed from the container. The removed component is accessible through `this`.
+
+</signature>
+
+---
+
+> The following examples are visually accurate representations of BGW components based on the provided code snippets.
+> All example listeners however are purely illustrative and do not execute any code when interacting with the components in this guide.
+> {style="warning"}
+
+<br>
+
+## Area
+
+The [Area][AreaKDoc] is the simplest form of a container. Its contained components are positioned relative to the top-left corner of the Area. No further layouting is provided thus working similar to a [Pane][PaneKDoc] but designed for [GameComponentViews][GameComponentViewKDoc]. Like every other [GameComponentContainer][ContainerKDoc] it can be made draggable.
+
+The example shows two tokens with the first positioned relative to the scene, while the second is positioned relative to an area using the exact same coordinates. The area itself is shifted to the right thus the second token is also shifted to the right.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.areaExample">
+val absoluteToken = TokenView(
+    posX = 75,
+    posY = 75,
+    width = 75,
+    height = 75,
+    visual = ColorVisual(Color(0x6dbeff)).apply {
+        style.borderRadius = BorderRadius.FULL
+    }
+)
+&#13;
+val areaToken = TokenView(
+    posX = 75,
+    posY = 75,
+    width = 75,
+    height = 75,
+    visual = ColorVisual(Color(0xbb6dff))
+)
+&#13;
+val area = Area&lt;GameComponentView&gt;(
+    posX = 225,
+    posY = 0,
+    width = 225,
+    height = 225,
+    visual = ColorVisual(Color(0x0f141f))
+)
+&#13;
+area.add(areaToken)
+</preview>
+
+---
+
+## CardStack
+
+[CardStack][CardStackKDoc] is a special form of container. It can only contain [CardView][CardViewKDoc] and should be used to visualize card stacks. It provides automatic layouting and alignment features.
+
+The example shows three cards stacked on top of each other. Each card is rotated slightly to give the stack a more realistic look. Despite the rotation, the cards are still aligned in the center of the stack.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.cardStackExample">
+val redCard = CardView(
+    width = 100,
+    height = 160,
+    front = ColorVisual(Color(0xef4444))
+)
+&#13;
+val orangeCard = CardView(
+    width = 100,
+    height = 160,
+    front = ColorVisual(Color(0xfa6c56))
+)
+&#13;
+val yellowCard = CardView(
+    width = 100,
+    height = 160,
+    front = ColorVisual(Color(0xffc656))
+)
+&#13;
+redCard.rotation = -6.0
+orangeCard.rotation = 8.0
+yellowCard.rotation = -1.0
+&#13;
+val cardStack = CardStack&lt;CardView&gt;(
+    posX = 0,
+    posY = 0,
+    width = 100,
+    height = 160,
+    alignment = Alignment.CENTER
+)
+&#13;
+cardStack.addAll(listOf(redCard, orangeCard, yellowCard))
+</preview>
+
+##### Deck Functionality
+
+Because the [CardStack][CardStackKDoc] should behave like a real stack of cards and to streamline the process of adding and removing cards, the following functions are provided:
+
+<signature>
+<code-block lang="kotlin" copy="false">
+fun push(cardView: T)
+</code-block>
+
+This function adds a component to the top of the stack.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+fun pop() : T
+</code-block>
+
+This function removes and returns the component at the top of the stack.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+fun peek() : T
+</code-block>
+
+This function returns the component at the top of the stack without removing it.
+
+</signature>
+
+---
+
+## LinearLayout
+
+A [LinearLayout][LinearLayoutKDoc] spaces its components dynamically based on its dimensions, the components dimensions and the user defined spacing. Additionally, an orientation and alignment may be specified.
+
+In this example a LinearLayout is used to visualize a hand of cards aligned horizontally and centered. The spacing between the cards is set to `20`, but because the `width` of the LinearLayout is only `200`, the cards start to overlap and ignore the `spacing`. Otherwise the cards would be spaced evenly taking the `spacing` into account.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.linearLayoutExample">
+val greenCard = CardView(
+    width = 100,
+    height = 160,
+    front = ColorVisual(Color(0xc6ff6e))
+)
+&#13;
+val blueCard = CardView(
+    width = 100,
+    height = 160,
+    front = ColorVisual(Color(0x6dbeff))
+)
+&#13;
+val purpleCard = CardView(
+    width = 100,
+    height = 160,
+    front = ColorVisual(Color(0xbb6dff))
+)
+&#13;
+val linearLayout = LinearLayout&lt;GameComponentView&gt;(
+    posX = 0,
+    posY = 0,
+    width = 200,
+    height = 160,
+    orientation = Orientation.HORIZONTAL,
+    alignment = Alignment.CENTER,
+    spacing = 20
+)
+&#13;
+linearLayout.addAll(listOf(greenCard, blueCard, purpleCard))
+</preview>
+
+---
+
+## Satchel
+
+A [Satchel][SatchelKDoc] hides its components and reveals them, when they are removed. This container can be used to visualize an
+entity, where the user should not know what might get drawn next or what is in the container. All conatined components are automatically hidden and made draggable.
+
+In this example a token is added to a satchel. The token is not visible until you drag it out of the satchel.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.satchelExample">
+val hiddenToken = TokenView(
+    width = 50,
+    height = 50,
+    visual = ColorVisual(Color(0x6dbeff)).apply { 
+        style.borderRadius = BorderRadius.FULL 
+    }
+)
+&#13;
+val satchel = Satchel&lt;TokenView&gt;(
+    posX = 0,
+    posY = 0,
+    width = 100,
+    height = 100,
+    visual = ColorVisual(Color(0x0f141f))
+)
+&#13;
+satchel.add(hiddenToken)
+</preview>
+
+---
+
+## HexagonGrid
+
+As the name suggests, [HexagonGrids][HexagonGridKDoc] are grids of [HexagonViews][HexagonKDoc] in a coordinate system. Each hexagon can be accessed and manipulated using column and row coordinates.
+
+> Both examples use a [CameraPane][CameraPaneKDoc] to allow for panning and zooming in order for you to better see the coordinates. The camera pane is neither part of the [HexagonGrid][HexagonGridKDoc] itself nor provided in the code snippets.
+> {style="warning"}
+
+##### Offset Coordinate System
+
+A grid system where hexagons are laid out in a rectangular pattern with alternating offsets. Each hexagon's position is defined by column and row indices, similar to a traditional 2D grid. This makes it intuitive for grid-based game boards where hexagons need to align with a rectangular boundary.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.offsetHexagonGridExample">
+val offsetHexagonGrid = HexagonGrid&lt;HexagonView&gt;(
+    posX = 0,
+    posY = 0,
+    coordinateSystem = HexagonGrid.CoordinateSystem.OFFSET
+)
+&#13;
+/* Create a 4x5 grid of hexagons */
+for (x in 0..3) {
+    for (y in 0..4) {
+        val hexagon = HexagonView(
+            visual = CompoundVisual(
+                ColorVisual(Color(0xfa6c56)),
+                TextVisual(
+                    text = "$x, $y",
+                    font = Font(10.0, Color(0x0f141f))
+                )
+            ), 
+            size = 30
+        )
+        &#13;
+        offsetHexagonGrid[x, y] = hexagon
+    }
 }
-```
+</preview>
 
-### Add and remove
+##### Axial Coordinate System
 
-The most important feature of a container is to add to and remove /components from it.
+A more natural coordinate system for hexagonal grids that uses two axes `(q, r)` instead of traditional `(x, y)`. The q-axis runs from top-left to bottom-right, while the r-axis runs vertically. This system eliminates the need for offset calculations and simplifies many hexagonal grid algorithms. Additionally, it is more intuitive for hexagonal game boards that expand in all directions.
 
-Adding a Component is as simple as calling the `add()` function with the component as its argument. Optionally an
-index
-may be supplied. An example on how to add with or without index:
-
-```kotlin
-area.add(greenToken)
-area.add(redToken, 0)
-```
-
-The `greenToken` is added to the `area`. The index parameter was omitted, so it gets added at the end of the
-components list. In this case at index 0. Then the
-`redToken` is added explicitly at index 0, therefore `greenToken` is pushed back to index 1.
-
-Removing a Component is as simple as calling the `remove()` function with the component to remove as its argument.
-
-```kotlin
-area.remove(redToken)
-```
-
-The `redToken` is removed from the `area`, therefore the `greenToken` falls back down to index 0.
-
-There are some convenience functions for adding and removing multiple Components at once. Please refer to
-the [docs][AreaKDoc] for an in-depth overview.
-
-### onAdd and onRemove
-
-It is possible to specify code that gets executed with the component as its receiver, after it gets added or removed
-from the container. This is helpful whenever some modifications need to be made to any /components, after it is added or
-removed.
-
-In this example [TokenView][TokenKDoc]s get resized when they are added to `area`, and rotated by 45° when they are
-removed from `area`. To achieve this behaviour, the `onAdd` and `onRemove` fields are set.
-
-```kotlin
-area.onAdd = {
-	this.resize(100, 100)
-}
-area.onRemove = {
-	this.rotation += 45
-}
-```
-
-### Listeners
-
-Listeners for the /components list may be added to a container. They get invoked any time the /components list changes its
-state. In this example a Label gets updated with the number of /components currently contained in `area`.
-
-```kotlin
-area.addComponentsListener {
-	numberOfComponentsLabel.label = "Number of /components in this area: ${area.numberOfComponents()}"
-}
-```
-
-Listeners can be removed via the `clearComponentsListners()` or `removeComponentsListner()` functions.
-
-## Useful hints for dealing with containers
-
-- Containers provide an iterator over their /components list via
-  the [Iterable][IterableDoc] interface.
-- The position of /components contained in any containers with automatic layouting should never be modified, since the
-  containers handle positioning.
-
-- When using non-automatic layouting containers, do not forget to position the contained /components. Especially if they
-  get added after a drag and drop gesture.
-
-- Any Component can only ever be contained in one container at a time. Trying to add an already contained component to
-  another container will result in a runtime exception.
-
-- Containers can also be draggable and can act as a drag target.
-
-- ComponentListeners can be a great way of exposing dynamic information about a container via
-  sufficient [UIComponents][UIComponentsDoc].
-
-## Types of Containers
-
-### [Area][AreaKDoc]
-
-Area is the simplest form of a container. Its contained /components are positioned relative to the top-left corner of the
-Area. No further layouting is provided by the Area.
-
-### [CardStack][CardStackKDoc]
-
-CardStack is a special form of container. It can only contain
-[CardView][CardViewKDoc].
-It should be used to visualize card stacks. It provides automatic layouting and alignment features.
-
-### [LinearLayout][LinearLayoutKDoc]
-
-LinearLayout spaces its /components dynamically based on its dimensions, the /components dimensions, and the user defined
-spacing. Additionally, an orientation and alignment may be specified. In this image a LinearLayout is used to
-visualize a hand of cards:
-
-![image](LinearLayout.png)
-
-### [Satchel][SatchelKDoc]
-
-A satchel hides its /components and reveals them, when they are removed. This container can be used to visualize an
-entity, where the user should not know what might get drawn next, or what is in the container.
-
-### [HexagonGrid][HexagonGridKDoc]
-
-Represents a grid of hexagons in a coordinate system.
-Each hexagon can be accessed and manipulated using column and row indices.
-
-### Coordinate Systems
-
-The HexagonGrid class supports two coordinate systems: offset and axial.
-
-### Offset Coordinate System
-
-In the offset coordinate system, the hexagons are positioned using a grid of rectangular offsets. Each hexagon occupies a rectangular cell, and the coordinate values represent the row and column indices of the hexagons in the grid.
-
-![image](offset.png)
-
-### Axial Coordinate System
-
-In the axial coordinate system, the hexagons are positioned using axial coordinates. Each hexagon is defined by two axial coordinates: q (column) and r (row). The axial coordinates represent the column and row indices of the hexagons in the grid.
-
-![image](axial.png)
-
-### Example
-
-```kotlin
-val hexagonGrid: HexagonGrid<HexagonView> = HexagonGrid()
-
-for (row in 0..4) {
-  for (col in 0..4) {
-    val hexagon = HexagonView(visual = ColorVisual.RED)
-    hexagonGrid[col, row] = hexagon
-  }
-}
-```
-
-Here is an example on how to change the default coordinate system to axial.
-
-```kotlin
-val hexagonGrid: HexagonGrid<HexagonView> = HexagonGrid(coordinateSystem = CoordinateSystem.AXIAL)
-
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.axialHexagonGridExample">
+val axialHexagonGrid = HexagonGrid&lt;HexagonView&gt;(
+    posX = 0,
+    posY = 0,
+    coordinateSystem = HexagonGrid.CoordinateSystem.AXIAL
+)
+&#13;
+/* Create three rings of hexagons */
 for (row in -2..2) {
-  for (col in -2..2) {
-    val hexagon = HexagonView(visual = ColorVisual.BLUE)
-    hexagonGrid[col, row] = hexagon
-  }
-}
-```
-
-## Container overview
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/components/container/ContainerExample.kt){:
-.btn }
-
-## Complete source code for the example
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/components/container/AreaExample.kt){:
-.btn }
-
-```kotlin
-fun main() {
-  AreaExample()
-}
-
-class AreaExample : BoardGameApplication("Area example") {
-  private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
-
-  private val numberOfComponentsLabel: Label = Label(width = 400, posX = 50, posY = 50)
-  private val area: Area<TokenView> = Area(100, 400, 50, 100, ColorVisual.DARK_GRAY)
-
-  private val greenToken: TokenView = TokenView(visual = ColorVisual.GREEN)
-  private val redToken: TokenView = TokenView(visual = ColorVisual.RED)
-
-  init {
-    area.onAdd = {
-      this.resize(100, 100)
+    for (col in -2..2) {
+        /* Only add hexagons that would fit in a circle */
+        if(row + col in -2..2) {
+            val hexagon = HexagonView(
+                visual = CompoundVisual(
+                    ColorVisual(Color(0xc6ff6e)),
+                    TextVisual(
+                        text = "$col, $row",
+                        font = Font(10.0, Color(0x0f141f))
+                    )
+                ), 
+                size = 30
+            )
+            &#13;
+            axialHexagonGrid[col, row] = hexagon
+        }
     }
-    area.onRemove = {
-      this.rotation += 45
-    }
-
-    area.addComponentsListener {
-      numberOfComponentsLabel.label = "Number of /components in this area: ${area.numberOfComponents()}"
-    }
-
-    area.add(greenToken)
-    area.add(redToken, 0)
-
-    area.remove(redToken)
-
-    gameScene.addComponents(area, numberOfComponentsLabel)
-    showGameScene(gameScene)
-    show()
-  }
 }
-```
+</preview>
+
+> For a more detailed explanation of hexagonal grids, please refer to this [documentation][HexDoc].
+
+##### Components
+
+To access and manipulate the hexagons in a [HexagonGrid][HexagonGridKDoc], the `get` and `set` operators are used. This allows for either accessing hexagons using the array access syntax as done in the examples or directly using the `get()` and `set()` functions.
+
+<signature>
+<code-block lang="kotlin" copy="false">
+operator fun get(columnIndex: Int, rowIndex: Int) : T?
+</code-block>
+
+This function returns the hexagon at the specified column and row indices. If no hexagon exists at the specified indices, `null` is returned.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+operator fun set(columnIndex: Int, rowIndex: Int, component: T)
+</code-block>
+
+This function sets the hexagon at the specified column and row indices. If a hexagon already exists at the specified indices, it is replaced.
+
+</signature>
+
+Because the [GameComponentContainer's][ContainerKDoc] default method of getting all components is not entirely suitable for a grid (because it would be missing the coordinates), the `getCoordinateMap()` function is provided:
+
+<signature>
+<code-block lang="kotlin" copy="false">
+fun getCoordinateMap() : Map&lt;HexCoordinate, T&gt;
+</code-block>
+
+This function returns a map of all hexagons in the grid with their respective column and row indices using `HexCoordinate`, which is a simple typealias for `Pair<Int, Int>`.
+
+</signature>

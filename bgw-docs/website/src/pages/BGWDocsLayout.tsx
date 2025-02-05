@@ -28,18 +28,20 @@ import {
   NotebookTextIcon,
 } from "lucide-react";
 import { Link, useLoaderData, useLocation, useParams } from "react-router-dom";
-import Component from "./Component";
+import Component from "./docs/Component";
 import LoadingBar from "react-top-loading-bar";
-import Guide from "./Guide";
+import Guide from "./docs/Guide";
 
-import "./markdown.scss";
+import "./docs/markdown.scss";
 import { useDocsStore } from "@/stores/docsStore";
 import { Separator } from "@/components/ui/separator";
-import Packages from "./Packages";
+import Packages from "./docs/Packages";
 import { guideStructure, layoutMap } from "@/lib/utils";
 import { set } from "date-fns";
+import Main from "./docs/Main";
+import { Button } from "@/components/ui/button";
 
-function Layout() {
+function BGWDocsLayout() {
   const { dirs, allSamples } = useLoaderData();
 
   const { componentPath } = useParams();
@@ -47,6 +49,9 @@ function Layout() {
   const [currentPage, setCurrentPage] = useState<"docs" | "guides" | "main">(
     "main"
   );
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const { currentComponent, setCurrentComponent, secondarySidebar } =
     useDocsStore();
 
@@ -61,12 +66,11 @@ function Layout() {
       location.pathname = location.pathname.slice(0, -1);
     }
 
-    console.log(location.pathname);
     if (location.pathname === "/" || location.pathname.trim() === "") {
       setCurrentPage("main");
     } else if (location.pathname.startsWith("/docs")) {
       let path = location.pathname.replace("/docs/", "");
-      console.log(path);
+
       if (
         path.replace("/docs", "") === "" ||
         path.replace("/docs", "") === "/"
@@ -172,31 +176,31 @@ function Layout() {
               >
                 {currentPage === "main" ? (
                   <a href="#" className="flex items-center gap-4">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-accent text-sidebar-accent-foreground">
+                    <div className="flex items-center justify-center rounded-lg aspect-square size-8 bg-sidebar-accent text-sidebar-accent-foreground">
                       <img src="/bgw/logo.svg" className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v1.0</span>
+                      <span className="font-semibold">BGW - v0.10</span>
                       <span className="">Documentation</span>
                     </div>
                   </a>
                 ) : currentPage === "docs" ? (
                   <a href="#" className="flex items-center gap-4">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-purple-500/20  text-purple-500">
-                      <i className="material-symbols-rounded text-lg">topic</i>
+                    <div className="flex items-center justify-center text-purple-500 rounded-lg aspect-square size-8 bg-purple-500/20">
+                      <i className="text-lg material-symbols-rounded">topic</i>
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v1.0</span>
+                      <span className="font-semibold">BGW - v0.10</span>
                       <span className="">Reference</span>
                     </div>
                   </a>
                 ) : currentPage === "guides" ? (
                   <a href="#" className="flex items-center gap-4">
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-bgw-blue/20  text-bgw-blue">
-                      <i className="material-symbols-rounded text-lg">book_2</i>
+                    <div className="flex items-center justify-center rounded-lg aspect-square size-8 bg-bgw-blue/20 text-bgw-blue">
+                      <i className="text-lg material-symbols-rounded">book_2</i>
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v1.0</span>
+                      <span className="font-semibold">BGW - v0.10</span>
                       <span className="">Guides</span>
                     </div>
                   </a>
@@ -205,14 +209,14 @@ function Layout() {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
-        <SidebarContent className="h-fit flex-none pb-4">
+        <SidebarContent className="flex-none pb-4 h-fit">
           <SidebarGroup className="py-0">
             <SidebarMenu>
               <SidebarMenuItem>
                 <Link to="/">
                   {currentPage === "main" ? (
                     <SidebarMenuButton className="h-9 indent-1 text-sidebar-accent-foreground bg-sidebar-accent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                      <i className="material-symbols-rounded text-base">home</i>
+                      <i className="text-base material-symbols-rounded">home</i>
                       <span className="pl-1 font-medium">Home</span>
                     </SidebarMenuButton>
                   ) : (
@@ -226,10 +230,30 @@ function Layout() {
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <Link to="/guides">
+                  {currentPage === "guides" ? (
+                    <SidebarMenuButton className="h-9 indent-1 text-bgw-blue bg-bgw-blue/10 hover:bg-bgw-blue/10 hover:text-bgw-blue">
+                      <i className="text-base material-symbols-rounded">
+                        book_2
+                      </i>
+                      <span className="pl-1 font-medium">Guides</span>
+                    </SidebarMenuButton>
+                  ) : (
+                    <SidebarMenuButton className="h-9 indent-1 hover:bg-bgw-blue/10 hover:text-bgw-blue group active:bg-bgw-blue/10 active:text-bgw-blue">
+                      <i className="material-symbols-rounded text-base text-[#FFFFFFB3] group-hover:text-bgw-blue">
+                        book_2
+                      </i>
+                      <span className="pl-1 font-medium">Guides</span>
+                    </SidebarMenuButton>
+                  )}
+                </Link>
+              </SidebarMenuItem>
+
+              <SidebarMenuItem>
                 <Link to="/docs/">
                   {currentPage === "docs" ? (
-                    <SidebarMenuButton className="h-9 indent-1 text-purple-500 bg-purple-500/10 hover:bg-purple-500/10 hover:text-purple-500">
-                      <i className="material-symbols-rounded text-base">
+                    <SidebarMenuButton className="text-purple-500 h-9 indent-1 bg-purple-500/10 hover:bg-purple-500/10 hover:text-purple-500">
+                      <i className="text-base material-symbols-rounded">
                         topic
                       </i>
                       <span className="pl-1 font-medium">Reference</span>
@@ -245,27 +269,8 @@ function Layout() {
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link to="/guides">
-                  {currentPage === "guides" ? (
-                    <SidebarMenuButton className="h-9 indent-1 text-bgw-blue bg-bgw-blue/10 hover:bg-bgw-blue/10 hover:text-bgw-blue">
-                      <i className="material-symbols-rounded text-base">
-                        book_2
-                      </i>
-                      <span className="pl-1 font-medium">Guides</span>
-                    </SidebarMenuButton>
-                  ) : (
-                    <SidebarMenuButton className="h-9 indent-1 hover:bg-bgw-blue/10 hover:text-bgw-blue group active:bg-bgw-blue/10 active:text-bgw-blue">
-                      <i className="material-symbols-rounded text-base text-[#FFFFFFB3] group-hover:text-bgw-blue">
-                        book_2
-                      </i>
-                      <span className="pl-1 font-medium">Guides</span>
-                    </SidebarMenuButton>
-                  )}
-                </Link>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
                 <Link to="/playground">
-                  <SidebarMenuButton className="h-9 indent-1 hover:bg-bgw-green/10 hover:text-bgw-green group active:bg-bgw-green/10 active:text-bgw-green group">
+                  <SidebarMenuButton className="h-9 indent-1 hover:bg-bgw-green/10 hover:text-bgw-green group active:bg-bgw-green/10 active:text-bgw-green">
                     <i className="material-symbols-rounded text-base text-[#FFFFFFB3] group-hover:text-bgw-green">
                       draw_abstract
                     </i>
@@ -314,16 +319,11 @@ function Layout() {
   }, [location, allDirs]);
 
   function buildCurrentSidebar(loc) {
-    console.log(openedSections);
     return (
-      <Sidebar
-        variant="sidebar"
-        collapsible="none"
-        className="w-full bg-background"
-      >
+      <>
         {buildTopSidebar(loc)}
-        <SidebarContent>
-          <SidebarGroupLabel className="pl-4 h-fit pt-5">
+        <SidebarContent className="pb-4">
+          <SidebarGroupLabel className="pt-5 pl-4 h-fit">
             Packages
           </SidebarGroupLabel>
           <SidebarGroup className="py-0">
@@ -397,21 +397,17 @@ function Layout() {
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
-      </Sidebar>
+      </>
     );
   }
 
   function buildGuidesSidebar() {
     let structure = guideStructure;
     return (
-      <Sidebar
-        variant="sidebar"
-        collapsible="none"
-        className="w-full bg-background"
-      >
+      <>
         {buildTopSidebar(location)}
-        <SidebarContent>
-          <SidebarGroupLabel className="pl-4 h-fit pt-5">
+        <SidebarContent className="pb-4">
+          <SidebarGroupLabel className="pt-5 pl-4 h-fit">
             Guides
           </SidebarGroupLabel>
           <SidebarGroup className="py-0">
@@ -470,7 +466,7 @@ function Layout() {
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
-      </Sidebar>
+      </>
     );
   }
 
@@ -487,7 +483,7 @@ function Layout() {
             <SidebarGroup key={item.url + item.title + index}>
               <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu className="border-none font-mono p-0 gap-0">
+                <SidebarMenu className="gap-0 p-0 font-mono border-none">
                   {item.items.map((item, i) => (
                     <SidebarMenuItem
                       key={item.url + item.title + i}
@@ -533,7 +529,7 @@ function Layout() {
       setProgress(0);
       return;
     }
-    console.log(loadedCodeBlocks + " / " + codeBlocksToLoad);
+
     const percentage = (loadedCodeBlocks / codeBlocksToLoad) * 100;
     setProgress(percentage);
   }, [codeBlocksToLoad, loadedCodeBlocks]);
@@ -547,36 +543,58 @@ function Layout() {
           setProgress(0);
         }}
       />
-      <div className="grid h-screen w-full">
+      <div className="grid w-full h-screen">
         <div className="flex flex-col">
-          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4 justify-between">
-            <h1 className="text-xl font-semibold">BGW Docs</h1>
+          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4 justify-between max-2xl:justify-center">
+            <i
+              className="absolute text-xl cursor-pointer material-symbols-rounded 2xl:hidden left-7"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              menu
+            </i>
+            <Link to="/" className="flex items-center gap-4">
+              <img src="/bgw/logo.svg" className="w-8 h-8" />
+              <h1 className="text-xl font-semibold">BoardGameWork</h1>
+            </Link>
+            {/* <Link>
+              <Button variant="secondary" className="flex items-center gap-2">
+                <i className="text-xl material-symbols-rounded">settings</i>
+                <span>GitHub</span>
+              </Button>
+            </Link> */}
           </header>
-          <main className="flex items-center flex-1 h-full max-h-[calc(100vh-57px)]">
+          <main className="flex items-center flex-1 h-full max-h-[calc(100vh-57px)] max-2xl:w-screen max-2xl:max-w-screen relative">
             <div
-              className="relative w-[15%] max-w-[300px] shrink-0 max-h-[calc(100vh-57px)] h-full flex flex-col gap-3"
+              className="relative w-[300px] shrink-0 max-h-[calc(100vh-57px)] h-full flex flex-col gap-3 max-2xl:w-0"
               x-chunk="dashboard-03-chunk-0"
             >
-              {(currentPage === "docs" || currentPage === "main") &&
-                buildCurrentSidebar(location)}
-              {currentPage === "guides" && buildGuidesSidebar()}
+              <Sidebar
+                variant="sidebar"
+                collapsible="none"
+                className="w-full bg-background max-2xl:hidden"
+              >
+                {(currentPage === "docs" || currentPage === "main") &&
+                  buildCurrentSidebar(location)}
+                {currentPage === "guides" && buildGuidesSidebar()}
+              </Sidebar>
+              <Sidebar
+                variant="sidebar"
+                collapsible="icon"
+                className="w-full bg-background 2xl:hidden"
+                open={sidebarOpen}
+                onOpenChange={(isOpen) => setSidebarOpen(!sidebarOpen)}
+              >
+                {(currentPage === "docs" || currentPage === "main") &&
+                  buildCurrentSidebar(location)}
+                {currentPage === "guides" && buildGuidesSidebar()}
+              </Sidebar>
             </div>
             <ScrollArea
-              className="relative flex h-full min-h-[50vh] w-full flex-col overflow-hidden bg-muted/30"
+              className="relative flex h-full min-h-[50vh] w-full flex-col overflow-hidden bg-muted/30 max-2xl:flex-1 max-2xl:w-1"
               x-chunk="dashboard-03-chunk-0"
-              id="comp-scroll-area"
               ref={scrollRef}
             >
-              {currentPage === "main" && (
-                <div className="flex flex-col items-center justify-center h-full">
-                  <h1 className="text-3xl font-semibold">
-                    Welcome to BGW Docs
-                  </h1>
-                  <p className="text-lg text-center mt-4">
-                    Select a component from the sidebar to get started.
-                  </p>
-                </div>
-              )}
+              {currentPage === "main" && <Main></Main>}
               {currentPage === "docs" && currentComponent !== null && (
                 <Component
                   location={location}
@@ -587,13 +605,12 @@ function Layout() {
               {currentPage === "docs" && currentComponent === null && (
                 <Packages packages={layoutMap} />
               )}
-              {currentPage === "guides" && (
-                <Guide location={location} allSamples={allSamples} />
-              )}
+              {currentPage === "guides" && <Guide allSamples={allSamples} />}
             </ScrollArea>
             {currentPage === "docs" && (
+              // location.pathname.split("/").length > 3 &&
               <ScrollArea
-                className="h-full relative hidden flex-col items-center gap-8 md:flex px-1 w-[15%] shrink-0 max-w-[300px]"
+                className="h-full relative hidden flex-col items-center gap-8 2xl:flex px-1 shrink-0 w-[275px]"
                 x-chunk="dashboard-03-chunk-0"
                 id="sidebar-scroll-area"
               >
@@ -607,4 +624,4 @@ function Layout() {
   );
 }
 
-export default Layout;
+export default BGWDocsLayout;

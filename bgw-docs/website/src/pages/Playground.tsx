@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
 import { render } from "react-dom";
-import ReactKotlinPlayground from "@/lib/kotlin-playground/ReactKotlinPlayground";
+import ReactKotlinPlayground from "@/components/ReactKotlinPlayground";
 
 type PlaygroundProps = {
   code: string;

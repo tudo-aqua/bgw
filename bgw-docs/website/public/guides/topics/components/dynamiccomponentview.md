@@ -1,34 +1,78 @@
 [DynamicComponentViewKDoc]: /docs/tools.aqua.bgw.components/-dynamic-component-view/index.html
 [ComponentViewKDoc]: /docs/tools.aqua.bgw.components/-component-view/index.html
 [DragEventKDoc]: /docs/tools.aqua.bgw.event/-drag-event/index.html
+[DropEventKDoc]: /docs/tools.aqua.bgw.event/-drop-event/index.html
+[BoardGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/index.html
 
-# Dynamic Components
+# DynamicComponentView
 
-<tldr>
-    <p><format style="bold">Dynamic components for use only in BoardGameScenes</format></p>
-    <p>→ &nbsp; <a href="http://">ComponentView</a></p>
-</tldr>
+<tldr>Superclass for dynamic game components with drag-and-drop capabilities</tldr>
 
 ## Introduction
 
-[DynamicComponentView][DynamicComponentViewKDoc] is the baseclass for all [ComponentViews][ComponentViewKDoc] that are draggable.
-It introduces properties and functions referring to the drag and drop feature of the BGW.
+The [DynamicComponentView][DynamicComponentViewKDoc] is an abstract superclass that extends [ComponentView][ComponentViewKDoc]. It provides essential functionality for interactive game elements, focusing on drag-and-drop operations in BGW.
 
-### Properties
+> Subclasses of [DynamicComponentView][DynamicComponentViewKDoc] can only be used in [BoardGameScenes][BoardGameSceneKDoc].
+> {style="warning"}
 
-`isDraggable: Boolean` / `isDraggableProperty: BooleanProperty`:
+---
 
-Set this attribute / property to `true` to enable the drag and drop feature for this [DynamicComponentView][DynamicComponentViewKDoc].
-Draggable /components can be picked up by holding the left mouse button and follow the cursor until the mouse button gets released.
+## Properties
 
-`isDragged: Boolean` `isDraggedProperty: BooleanProperty`:
-Represents whether this [DynamicComponentView][DynamicComponentViewKDoc] is currently dragged or not.
-Gets set to `true` when the drag begins and to `false` after mouse button was released.
+Because [DynamicComponentView][DynamicComponentViewKDoc] extends [ComponentView][ComponentViewKDoc], it inherits all of its properties. The following section describes the important additional properties that are unique to [DynamicComponentViews][DynamicComponentViewKDoc].
 
-### Functions
+<signature>
+<code-block lang="kotlin" copy="false">
+isDraggable: Boolean
+</code-block>
 
-`onDragGestureStarted: ((DragEvent) -> Unit)?`: Gets invoked with a [DragEvent][DragEventKDoc] whenever a drag gesture is started on this component.
+Enable the drag-and-drop feature for this [DynamicComponentView][DynamicComponentViewKDoc]. When enabled, components can be picked up by holding the left mouse button and will follow the cursor until released.
 
-`onDragGestureMoved: ((DragEvent) -> Unit)?`: Gets invoked with a [DragEvent][DragEventKDoc] whenever the mouse was moved during a drag gesture.
+</signature>
 
-`onDragGestureEnded: ((DropEvent, Boolean) -> Unit)?`: Gets invoked with a [DragEvent][DragEventKDoc] after the drag gesture ended.
+<signature>
+<code-block lang="kotlin" copy="false">
+isDragged: Boolean
+</code-block>
+
+Indicates if this [DynamicComponentView][DynamicComponentViewKDoc] is currently being dragged. Value is `true` during an active drag operation and `false` otherwise.
+
+</signature>
+
+---
+
+## Listeners
+
+The following additional event handlers are available for elements inheriting [DynamicComponentView][DynamicComponentViewKDoc].
+
+<signature>
+<code-block lang="kotlin" copy="false">
+onDragGestureStarted: ((DragEvent) -> Unit)?
+</code-block>
+
+This listener gets invoked with a [DragEvent][DragEventKDoc] when a drag gesture starts on this component.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+onDragGestureMoved: ((DragEvent) -> Unit)?
+</code-block>
+
+This listener gets invoked with a [DragEvent][DragEventKDoc] when the mouse moves during a drag gesture.
+
+> The [DragEvent][DragEventKDoc] contains the currently dragged component.
+> {style="note"}
+
+</signature>
+
+<signature>
+<code-block lang="kotlin" copy="false">
+onDragGestureEnded: ((DropEvent, Boolean) -> Unit)?
+</code-block>
+
+This listener gets invoked with a [DropEvent][DropEventKDoc] and a boolean indicating if the drop was successful when a drag gesture ends.
+
+> The [DropEvent][DropEventKDoc] contains the currently dragged component and the drop target.
+> {style="note"}
+
+</signature>

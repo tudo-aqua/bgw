@@ -6,6 +6,9 @@
 [OptionalDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html
 [FilesDoc]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html
 
+> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
+> {style="danger"}
+
 # FileDialog
 
 This section showcases the different types of file dialogs in the BGW framework. FileDialog can be
@@ -23,11 +26,6 @@ class provides different [FileDialogModes][FileDialogModeKDoc]:
 
 Depending on the selection the [Dialog][DialogKDoc] will request the appropriate type (file vs. directory) and enable
 multi-selection.
-
-An example with all dialog types can be found here:
-
-[View it on GitHub](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/dialog/FileDialogExample.kt){:
-.btn }
 
 ## Showing a FileDialog
 
