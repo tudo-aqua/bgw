@@ -102,9 +102,6 @@ internal fun Application.configureRouting() {
   }
 }
 
-internal val messageQueue = mutableListOf<ActionProp>()
-private val messageQueueMutex = Mutex()
-
 internal fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: (suspend () -> Unit)) =
     this.async {
       if (repeatMillis > 0) {
@@ -131,8 +128,13 @@ private val debounceTimeMillis = 5L // Adjust this value as needed
 private val debounceMutex = Mutex()
 private var debounceJob: Job? = null
 
+private var refreshJob: Job? = null
+
+private var finalUpdate: String = ""
+
 internal fun enqueueUpdate(data: AppData) {
   updateStack.add(data)
+  refreshJob?.cancel()
   debounceJob?.cancel()
   debounceJob =
       CoroutineScope(Dispatchers.IO).launch {
@@ -147,26 +149,47 @@ private suspend fun processLastUpdate() {
   lastUpdate?.let {
     try {
       val json = jsonMapper.encodeToString(PropData(lastUpdate))
+      finalUpdate = json
       // println("Processing update: $json")
       componentChannel.sendToAllClients(json)
+      refreshJob =
+          CoroutineScope(Dispatchers.IO).launch {
+            delay(50)
+            checkForMissingState()
+          }
     } catch (e: Exception) {
       println("Error sending update: $e")
     }
   }
 }
 
+internal fun checkForMissingState() {
+  val appData = collectAppData()
+  val json = jsonMapper.encodeToString(PropData(appData))
+  if (json != finalUpdate) {
+    // println("Missing state detected. Sending update...")
+    enqueueUpdate(appData)
+  }
+  finalUpdate = ""
+
+  refreshJob?.cancel()
+}
+
+internal fun collectAppData(): AppData {
+  val appData =
+      SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
+        fonts =
+            Frontend.loadedFonts.map { (path, fontName, weight) ->
+              Triple(path, fontName, weight.toInt())
+            }
+      }
+  appData.action = ActionProp.UPDATE_COMPONENT
+  return appData
+}
+
 internal fun markDirty(prop: ActionProp) {
-  val isSceneLoaded = Frontend.boardGameScene != null
   runCatching {
-    val appData =
-        SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
-          fonts =
-              Frontend.loadedFonts.map { (path, fontName, weight) ->
-                Triple(path, fontName, weight.toInt())
-              }
-        }
-    appData.action = ActionProp.UPDATE_COMPONENT
-    // val json = jsonMapper.encodeToString(PropData(appData))
+    val appData = collectAppData()
     // println("Collecting updates... Size: " + updateStack.size)
     enqueueUpdate(appData)
   }

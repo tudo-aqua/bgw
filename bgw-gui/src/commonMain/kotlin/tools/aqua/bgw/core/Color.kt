@@ -27,7 +27,7 @@ package tools.aqua.bgw.core
  * @property blue Blue value. Must be in range 0 until 255.
  * @property alpha Alpha value. Must be in range 0.0 until 1.0.
  *
- * @since 1.0
+ * @since 0.10
  */
 data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double) {
 

@@ -23,9 +23,7 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.Visual
 
-private typealias OffsetCoordinate = Pair<Int, Int>
-
-private typealias AxialCoordinate = Pair<Int, Int>
+private typealias HexCoordinate = Pair<Int, Int>
 
 /**
  * A class representing a grid of hexagons.
@@ -58,7 +56,7 @@ class HexagonGrid<T : HexagonView>(
 
     /**
      * The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
-     * @since 1.0
+     * @since 0.10
      */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
@@ -66,10 +64,7 @@ class HexagonGrid<T : HexagonView>(
         posX = posX, posY = posY, width = width, height = height, visual = visual) {
 
   /** A mutable map that stores the hexagons in the grid. */
-  @Deprecated(
-      "Getting components using the map is no longer supported as of BGW 1.0.",
-      ReplaceWith("this.components"))
-  val map: MutableMap<OffsetCoordinate, T> = mutableMapOf()
+  internal val map: MutableMap<HexCoordinate, T> = mutableMapOf()
 
   init {
     observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
@@ -83,6 +78,8 @@ class HexagonGrid<T : HexagonView>(
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
    * @return The hexagon at the specified coordinates, or null if no hexagon is found.
+   *
+   * @see components
    */
   operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
 
@@ -92,6 +89,8 @@ class HexagonGrid<T : HexagonView>(
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
    * @param component The hexagon component to set.
+   *
+   * @see components
    */
   operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
     map[columnIndex to rowIndex]?.run {
@@ -103,6 +102,36 @@ class HexagonGrid<T : HexagonView>(
     map[columnIndex to rowIndex] = component
     observableComponents.add(component)
     onAdd?.invoke(component)
+  }
+
+  /**
+   * Returns all hexagons in the grid as a map from [HexCoordinate] to [T].
+   *
+   * @return A map from [HexCoordinate] to [T] containing all hexagons in the grid.
+   *
+   * @see components
+   *
+   * @since 0.10
+   */
+  fun getCoordinateMap(): Map<HexCoordinate, T> {
+    return map
+  }
+
+  /**
+   * Removes the hexagon at the specified column index and row index.
+   *
+   * @param columnIndex The column index of the hexagon.
+   * @param rowIndex The row index of the hexagon.
+   *
+   * @see components
+   *
+   * @since 0.10
+   */
+  fun remove(columnIndex: Int, rowIndex: Int) {
+    map[columnIndex to rowIndex]?.run {
+      observableComponents.remove(this)
+      onRemove?.invoke(this)
+    }
   }
 
   /**

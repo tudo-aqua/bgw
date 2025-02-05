@@ -21,14 +21,14 @@ import kotlin.random.Random
 import tools.aqua.bgw.components.container.CardStack
 import tools.aqua.bgw.components.container.LinearLayout
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Orientation
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
-import tools.aqua.bgw.dialog.ExtensionFilter
-import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.dialog.FileDialogMode
+import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
@@ -77,23 +77,25 @@ internal class CardLayoutScene : BoardGameScene() {
               visual = ColorVisual(Color(255, 0, 0)))
           .apply {
             onMouseClicked = {
-              val dialog =
-                  FileDialog(
-                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
-                      title = "Open BGW File",
-                      initialDirectoryPath = "F:\\Test",
-                      initialFileName = "test.bgw",
-                      extensionFilters =
-                          listOf(
-                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
-                              ExtensionFilter("BoardGameWork File", "bgw"),
-                              ExtensionFilter("All Files", "*")))
-
-              Application.showFileDialog(dialog)
-
-              dialog.onPathsSelected = { paths -> println("Selected paths: $paths") }
-
-              dialog.onSelectionCancelled = { println("Selection cancelled") }
+              Application.showMenuScene(Application.menuScene)
+              //              val dialog =
+              //                  FileDialog(
+              //                      mode = FileDialogMode.OPEN_MULTIPLE_FILES,
+              //                      title = "Open BGW File",
+              //                      initialDirectoryPath = "F:\\Test",
+              //                      initialFileName = "test.bgw",
+              //                      extensionFilters =
+              //                          listOf(
+              //                              ExtensionFilter("Images", "png", "jpg", "jpeg"),
+              //                              ExtensionFilter("BoardGameWork File", "bgw"),
+              //                              ExtensionFilter("All Files", "*")))
+              //
+              //              Application.showFileDialog(dialog)
+              //
+              //              dialog.onPathsSelected = { paths -> println("Selected paths: $paths")
+              // }
+              //
+              //              dialog.onSelectionCancelled = { println("Selection cancelled") }
             }
           }
 
@@ -104,17 +106,18 @@ internal class CardLayoutScene : BoardGameScene() {
               posX = 100,
               posY = 100,
               orientation = Orientation.VERTICAL,
-              alignment = Alignment.BOTTOM_CENTER,
+              alignment = Alignment.TOP_RIGHT,
               visual = ColorVisual.LIGHT_GRAY,
               spacing = 15)
           .apply {
             onMouseClicked = { event ->
               if (event.button == MouseButtonType.LEFT_BUTTON) {
+                this.visual = ColorVisual(Color(0, 255, 0))
                 this.add(
                     CardView(
                             posX = 0,
                             posY = 0,
-                            width = 100,
+                            width = Random.nextInt(100, 200),
                             height = 200,
                             front =
                                 ColorVisual(
@@ -139,8 +142,29 @@ internal class CardLayoutScene : BoardGameScene() {
             }
           }
 
+  val hexagonPointy = HexagonView(size = 50, visual = ColorVisual(Color(255, 0, 0)))
+
+  val hexagonFlat =
+      HexagonView(
+          size = 50, visual = ColorVisual(Color(0, 255, 0)), orientation = HexOrientation.FLAT_TOP)
+
+  val linearLayout =
+      LinearLayout<GameComponentView>(
+              posX = 500,
+              posY = 500,
+              width = 1118,
+              height = 300,
+              orientation = Orientation.HORIZONTAL,
+              alignment = Alignment.CENTER,
+              visual = ColorVisual.LIGHT_GRAY,
+              spacing = 50)
+          .apply {
+            add(hexagonPointy)
+            add(hexagonFlat)
+          }
+
   init {
-    addComponents(layout, button, cardStack)
+    addComponents(layout, button, cardStack, linearLayout)
     repeat(5) {
       val card =
           CardView(

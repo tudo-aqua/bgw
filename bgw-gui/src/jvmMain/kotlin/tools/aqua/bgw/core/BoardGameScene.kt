@@ -81,7 +81,7 @@ open class BoardGameScene(
    * @see lock
    * @see unlock
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onLockChanged: ((Boolean) -> Unit)? = null
 }

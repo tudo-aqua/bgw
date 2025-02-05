@@ -232,21 +232,21 @@ enum class KeyCode(
   /**
    * Constant for the Ä key.
    *
-   * @since 1.0
+   * @since 0.10
    */
   Ä("Ä", KeyType.LETTER),
 
   /**
    * Constant for the Ö key.
    *
-   * @since 1.0
+   * @since 0.10
    */
   Ö("Ö", KeyType.LETTER),
 
   /**
    * Constant for the Ü key.
    *
-   * @since 1.0
+   * @since 0.10
    */
   Ü("Ü", KeyType.LETTER),
   // endregion

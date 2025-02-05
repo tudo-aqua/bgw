@@ -36,6 +36,7 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [ProgressBar]. Default: 0.
  * @param width Width for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_WIDTH].
  * @param height Height for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_HEIGHT].
+ * @param visual [Visual] that is used to represent this [ProgressBar]. Default: empty [Visual].
  * @param progress The initial progress of this [ProgressBar]. Default 0.
  * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN].
  */
@@ -44,16 +45,12 @@ open class ProgressBar(
     posY: Number = 0,
     width: Number = DEFAULT_PROGRESSBAR_WIDTH,
     height: Number = DEFAULT_PROGRESSBAR_HEIGHT,
+    visual: Visual = Visual.EMPTY,
     progress: Double = 0.0,
     barColor: Color = Color.CYAN
 ) :
     UIComponent(
-        posX = posX,
-        posY = posY,
-        width = width,
-        height = height,
-        font = Font(),
-        visual = Visual.EMPTY) {
+        posX = posX, posY = posY, width = width, height = height, font = Font(), visual = visual) {
   /**
    * [Property] for the progress state of this [ProgressBar].
    *

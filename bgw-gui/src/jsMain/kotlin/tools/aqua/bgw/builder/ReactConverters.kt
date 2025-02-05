@@ -116,9 +116,8 @@ internal object ReactConverters {
   }
 
   fun DragEndEvent.toDragEndedEventData(): EventData {
-    val droppedOn = over
     val elementDragged = active?.id
-    return DragGestureEndedEventData(droppedOn != null).apply { this.id = elementDragged }
+    return DragGestureEndedEventData(over?.id).apply { this.id = elementDragged }
   }
 
   fun DragStartEvent.toDragStartedEventData(): EventData {

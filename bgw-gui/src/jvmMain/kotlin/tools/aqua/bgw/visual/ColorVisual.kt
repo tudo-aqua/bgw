@@ -33,7 +33,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
   /**
    * [Property] for the displayed [Color] of this [Visual].
    *
-   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%) and
+   * The alpha channel gets multiplied with the [transparency] i.e. alpha = 128 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
    *
    * @see color
@@ -43,7 +43,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
   /**
    * The displayed [Color] of this [Visual].
    *
-   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 128 (50%) and
+   * The alpha channel gets multiplied with the [transparency] i.e. alpha = 128 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
    */
   var color: Color
@@ -55,7 +55,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
   /**
    * Creates a solid [ColorVisual] filled with given RGBA values.
    *
-   * The alpha channel gets multiplied with the [transparencyProperty] i.e. alpha = 0.5 (50%) and
+   * The alpha channel gets multiplied with the [transparency] i.e. alpha = 0.5 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
    *
    * @param r Red channel between 0 and 255.

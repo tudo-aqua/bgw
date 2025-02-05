@@ -163,7 +163,7 @@ internal class JCEFApplication : Application {
                       MouseEvent(eventData.button, eventData.posX, eventData.posY))
                 }
                 is ScrollEventData -> {
-                  component.onWheel?.invoke(
+                  component.onMouseWheel?.invoke(
                       WheelEvent(
                           eventData.direction, eventData.ctrl, eventData.shift, eventData.alt))
                 }
@@ -193,7 +193,7 @@ internal class JCEFApplication : Application {
                   if (component is ComboBox<*>) component.select(eventData.selectedItem)
                 }
                 is StructuredDataSelectEventData -> {
-                  if (component is StructuredDataView<*>) component.select(eventData.index)
+                  if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
                 }
                 is TextInputChangedEventData -> {
                   if (component is TextInputUIComponent) component.text = eventData.value
@@ -260,6 +260,21 @@ internal class JCEFApplication : Application {
                     val target = root.findComponent(eventData.target)
                     if (target?.dropAcceptor != null) {
                       target.onDragGestureEntered?.invoke(DragEvent(component))
+                    }
+                  }
+                }
+                is DragGestureEndedEventData -> {
+                  if (component is DynamicComponentView && component.parent != null) {
+                    if (eventData.droppedOn != null) {
+                      val root = component.getRootNode()
+                      val target = root.findComponent(eventData.droppedOn!!)
+                      if (target?.dropAcceptor != null) {
+                        component.onDragGestureEnded?.invoke(
+                            DropEvent(component, target),
+                            target.dropAcceptor?.invoke(DragEvent(component)) == true)
+                      }
+                    } else {
+                      component.onDragGestureEnded?.invoke(DropEvent(component, null), false)
                     }
                   }
                 }

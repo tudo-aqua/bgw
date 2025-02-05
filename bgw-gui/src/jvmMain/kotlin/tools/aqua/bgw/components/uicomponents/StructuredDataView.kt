@@ -118,7 +118,7 @@ sealed class StructuredDataView<T>(
    * the elements in this [UIComponent]. Critical failures, bugs or other undefined behaviour could
    * occur when using this feature.
    */
-  @Deprecated("The property is no longer used as of BGW 1.0.")
+  @Deprecated("The property is no longer used as of BGW 0.10.")
   internal val selectionStyleProperty: Property<String> = Property("")
 
   /**
@@ -128,7 +128,7 @@ sealed class StructuredDataView<T>(
    * the elements in this [UIComponent]. Critical failures, bugs or other undefined behaviour could
    * occur when using this feature.
    */
-  @Deprecated("CSS Styling is no longer supported as of BGW 1.0.")
+  @Deprecated("CSS Styling is no longer supported as of BGW 0.10.")
   var selectionStyle: String
     get() = selectionStyleProperty.value
     set(value) {
@@ -174,6 +174,8 @@ sealed class StructuredDataView<T>(
         selectedIndicesList.add(it)
       }
     }
+
+    onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /** Internal event handler for selection. */
@@ -185,12 +187,16 @@ sealed class StructuredDataView<T>(
       selectedItemsList.add(this.items[it])
       selectedIndicesList.add(it)
     }
+
+    onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /** Internal event handler for selection. */
-  internal var onSelectNoneEvent: (() -> Unit)? = {
+  internal var onSelectNoneEvent: ((Boolean) -> Unit)? = {
     selectedItemsList.clear()
     selectedIndicesList.clear()
+
+    if (it) onSelectionChanged?.invoke(selectedItemsList.toList())
   }
 
   /**
@@ -199,12 +205,12 @@ sealed class StructuredDataView<T>(
    * @throws IllegalStateException If selection mode is [SelectionMode.NONE].
    * @throws IllegalArgumentException If [index] is out of bounds.
    */
-  fun select(index: Int) {
+  fun selectIndex(index: Int) {
     checkSelectionEnabled()
     require(index in items.indices) { "Index is out of bounds." }
 
     if (selectedIndices.size > 0 && selectionMode == SelectionMode.SINGLE) {
-      clearSelection()
+      selectNone(false)
     }
 
     onSelectionEvent?.invoke(index)
@@ -221,7 +227,7 @@ sealed class StructuredDataView<T>(
       "Cannot select element because it is not contained in this UIComponent."
     }
 
-    select(items.indexOf(element))
+    selectIndex(items.indexOf(element))
   }
 
   /**
@@ -231,7 +237,7 @@ sealed class StructuredDataView<T>(
    * @throws IllegalArgumentException If [UIComponent] is empty.
    */
   fun selectFirst() {
-    select(0)
+    selectIndex(0)
   }
 
   /**
@@ -241,7 +247,7 @@ sealed class StructuredDataView<T>(
    * @throws IllegalArgumentException If [UIComponent] is empty.
    */
   fun selectLast() {
-    select(items.size - 1)
+    selectIndex(items.size - 1)
   }
 
   /**
@@ -258,8 +264,8 @@ sealed class StructuredDataView<T>(
       "Cannot select next item in selection mode '$selectionMode'."
     }
 
-    if (selectedIndices.isEmpty()) select(0)
-    else if (selectedIndices[0] < items.size - 1) select(selectedIndices[0] + 1)
+    if (selectedIndices.isEmpty()) selectIndex(0)
+    else if (selectedIndices[0] < items.size - 1) selectIndex(selectedIndices[0] + 1)
   }
 
   /**
@@ -275,8 +281,8 @@ sealed class StructuredDataView<T>(
       "Cannot select previous item in selection mode '$selectionMode'."
     }
 
-    if (selectedIndices.isEmpty()) select(items.size - 1)
-    else if (selectedIndices[0] > 0) select(selectedIndices[0] - 1)
+    if (selectedIndices.isEmpty()) selectIndex(items.size - 1)
+    else if (selectedIndices[0] > 0) selectIndex(selectedIndices[0] - 1)
   }
 
   /**
@@ -305,10 +311,25 @@ sealed class StructuredDataView<T>(
   fun clearSelection() {
     checkSelectionEnabled()
 
-    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke()
+    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke(true)
+  }
+
+  internal fun selectNone(emitEvent: Boolean) {
+    checkSelectionEnabled()
+
+    if (selectedIndices.size > 0) onSelectNoneEvent?.invoke(emitEvent)
   }
 
   /** Checks selection mode not to be [SelectionMode.NONE]. */
   private fun checkSelectionEnabled(): Unit =
       check(selectionMode != SelectionMode.NONE) { "Cannot select items in selection mode 'NONE'." }
+
+  /**
+   * Gets invoked whenever items are selected or deselected.
+   *
+   * @see selectedItems
+   *
+   * @since 0.10
+   */
+  var onSelectionChanged: ((List<T>) -> Unit)? = null
 }

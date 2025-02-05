@@ -26,9 +26,7 @@ import tools.aqua.bgw.main.view.Application
 
 internal fun main() {
   if (Config.GENERATE_SAMPLES) {
-    val jsonData =
-        Json.encodeToString(
-            ExampleApplication.exampleUIScene.map + ExampleApplication.exampleAnimationScene.map)
+    val jsonData = Json.encodeToString(ExampleApplication.getMap())
     File("build/examples").mkdirs()
     File("build/examples/bgwSamples.json").writeText(jsonData)
   } else {

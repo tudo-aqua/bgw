@@ -27,7 +27,6 @@ import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
-import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -154,7 +153,7 @@ open class BoardGameApplication(
    * It is visible in the space that appears if the application window ratio does not fit the
    * [Scene] ratio.
    *
-   * Do not mix up this [Property] with the [Scene] background [Visual] [Scene.background].
+   * Do not mix up with the [Scene.background] [Visual].
    */
   var background: Visual
     get() = Frontend.backgroundProperty.value

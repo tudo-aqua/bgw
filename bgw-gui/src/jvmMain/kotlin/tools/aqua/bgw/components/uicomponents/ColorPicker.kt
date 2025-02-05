@@ -36,6 +36,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_WIDTH].
  * @param height Height for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_HEIGHT].
  * @param initialColor The [Color] that is initially selected. Default: [Color.WHITE].
+ *
+ * @since 0.1
  */
 open class ColorPicker(
     posX: Number = 0,
@@ -73,6 +75,8 @@ open class ColorPicker(
    * Gets invoked whenever the selected [Color] changes.
    *
    * @see selectedColor
+   *
+   * @since 0.10
    */
   var onColorSelected: ((Color) -> Unit)? = null
 }

@@ -73,25 +73,25 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
     }
 
   /**
-   * Gets invoked with a [DragEvent] whenever a drag gesture is started on this [ComponentView].
+   * Gets invoked with a [DragEvent] whenever a drag gesture is started with this [ComponentView].
    *
    * @see DragEvent
    */
   var onDragGestureStarted: ((DragEvent) -> Unit)? = null
 
   /**
-   * Gets invoked with a [DragEvent] whenever a mouse movement occurs during a drag gesture on this
-   * [ComponentView].
+   * Gets invoked with a [DragEvent] whenever a mouse movement occurs during a drag gesture with
+   * this [ComponentView].
    *
    * @see DragEvent
    */
   var onDragGestureMoved: ((DragEvent) -> Unit)? = null
 
   /**
-   * Gets invoked with a [DragEvent] whenever a drag gesture has ended on this rendered
+   * Gets invoked with a [DragEvent] whenever a drag gesture has ended with this rendered
    * [ComponentView].
    *
-   * Second parameter is `true` if at least one drop target accepted drop, `false` otherwise.
+   * Second parameter is `true` if the drop target accepted drop, `false` otherwise.
    *
    * @see DragEvent
    */

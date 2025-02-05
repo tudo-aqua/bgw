@@ -24,7 +24,7 @@ package tools.aqua.bgw.core
  *
  * @since 0.1
  */
-@Deprecated("ScaleMode is no longer used as of BGW 1.0.")
+@Deprecated("ScaleMode is no longer used as of BGW 0.10.")
 enum class ScaleMode {
   /** Fully automatic scaling to window size. */
   FULL,

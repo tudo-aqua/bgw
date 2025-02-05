@@ -45,7 +45,7 @@ import tools.aqua.bgw.observable.properties.StringProperty
  * @throws IllegalArgumentException If [path] is not a valid path or empty or if [path] was not
  * found in resources.
  *
- * @since 1.0
+ * @since 0.10
  */
 open class ImageVisual(
     path: String,

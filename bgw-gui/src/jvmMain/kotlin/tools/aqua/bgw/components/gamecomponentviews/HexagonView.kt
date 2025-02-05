@@ -51,7 +51,7 @@ open class HexagonView(
      *
      * @see HexOrientation
      *
-     * @since 1.0
+     * @since 0.10
      */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :

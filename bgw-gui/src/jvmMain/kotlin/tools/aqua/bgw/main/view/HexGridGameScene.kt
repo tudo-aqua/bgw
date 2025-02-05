@@ -72,7 +72,7 @@ internal class HexGridGameScene : BoardGameScene() {
               visual = ColorVisual.BLUE.copy().apply { style.borderRadius = BorderRadius(4) },
               size = 50)
           .apply {
-            onWheel = {
+            onMouseWheel = {
               println(
                   "Scrolled ${it.direction} Alt: ${it.isAltDown} Shift: ${it.isShiftDown} Ctrl: ${it.isControlDown}")
             }
@@ -269,6 +269,9 @@ internal class HexGridGameScene : BoardGameScene() {
               posY = it.actualPosY)
       targetPane.add(token)
     }
+  }
+
+    hexGrid
   }
 
   fun refreshHexGrid() {

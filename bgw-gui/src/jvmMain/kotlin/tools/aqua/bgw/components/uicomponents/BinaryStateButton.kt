@@ -113,7 +113,7 @@ sealed class BinaryStateButton(
    *
    * @see onDeselected
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onSelected: (() -> Unit)? = null
 
@@ -122,7 +122,7 @@ sealed class BinaryStateButton(
    *
    * @see onSelected
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onDeselected: (() -> Unit)? = null
 
@@ -132,7 +132,7 @@ sealed class BinaryStateButton(
    * @see onSelected
    * @see onDeselected
    *
-   * @since 1.0
+   * @since 0.10
    */
   var onSelectionChanged: ((Boolean) -> Unit)? = null
 }
