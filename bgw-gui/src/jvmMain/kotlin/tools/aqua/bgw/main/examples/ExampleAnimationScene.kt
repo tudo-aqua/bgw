@@ -22,10 +22,13 @@ import jsonMapper
 import kotlin.reflect.KProperty0
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.DiceAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.main.examples.ExampleAnimationScene as AnimationScene
 import tools.aqua.bgw.mapper.AnimationMapper
 import tools.aqua.bgw.visual.ColorVisual
@@ -34,25 +37,50 @@ import tools.aqua.bgw.visual.ColorVisual
 internal class ExampleAnimationScene : BoardGameScene(width = 622, height = 300) {
   val map = mutableMapOf<String, String>()
 
-  val greyToken =
-      TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
+  val greenToken =
+      TokenView(
+          posX = 100, posY = 100, width = 100, height = 100, visual = ColorVisual(Color(0xc6ff6e)))
 
-  val redToken =
-      TokenView(posX = 100, posY = 50, width = 100, height = 160, visual = ColorVisual.LIGHT_GRAY)
+  val blueToken =
+      TokenView(
+          posX = 100, posY = 100, width = 100, height = 100, visual = ColorVisual(Color(0x6dbeff)))
 
   /** Creates a movement animation that moves the token from x = 100 to x = 200 in 1 second. */
   val movementAnimationTo =
-      MovementAnimation(componentView = greyToken, fromX = 100.0, toX = 200.0, duration = 1000)
+      MovementAnimation(componentView = greenToken, fromX = 100.0, toX = 200.0, duration = 1000)
 
-  /** Creates a movement animation that moves the token by x = 200 and y = 50 in 2 seconds. */
+  /** Creates a movement animation that moves the token by x = 200 and y = -50 in 0.5 seconds. */
   val movementAnimationBy =
-      MovementAnimation(componentView = redToken, byX = 200.0, byY = 50.0, duration = 2000)
+      MovementAnimation(componentView = blueToken, byX = 200.0, byY = -50.0, duration = 500)
+
+  val diceCustomSide =
+      DiceView(
+          posX = 261,
+          posY = 100,
+          width = 100,
+          height = 100,
+          visuals =
+              listOf(
+                  ColorVisual(Color(0xc6ff6e)),
+                  ColorVisual(Color(0xffc656)),
+                  ColorVisual(Color(0xfa6c56)),
+                  ColorVisual(Color(0xef4444)),
+                  ColorVisual(Color(0xbb6dff)),
+                  ColorVisual(Color(0x6dbeff))))
+
+  /**
+   * Creates a dice animation that rolls the dice to side 3 (red) in 1 second. It shuffles the
+   * visual 20 times in that duration until landing on the desired side.
+   */
+  val diceAnimation = DiceAnimation(dice = diceCustomSide, toSide = 3, speed = 20, duration = 1000)
 
   init {
-    setComponentAndSerialize(::greyToken)
-    setComponentAndSerialize(::redToken)
-    playAnimationAndSerialize(::movementAnimationTo, ::greyToken)
-    playAnimationAndSerialize(::movementAnimationBy, ::redToken)
+    setComponentAndSerialize(::greenToken)
+    setComponentAndSerialize(::blueToken)
+    setComponentAndSerialize(::diceCustomSide)
+    playAnimationAndSerialize(::movementAnimationTo, ::greenToken)
+    playAnimationAndSerialize(::movementAnimationBy, ::blueToken)
+    playAnimationAndSerialize(::diceAnimation, ::diceCustomSide)
   }
 
   fun playMovementAnimationTo() {
@@ -61,6 +89,10 @@ internal class ExampleAnimationScene : BoardGameScene(width = 622, height = 300)
 
   fun playMovementAnimationBy() {
     playAnimation(movementAnimationBy)
+  }
+
+  fun playDiceAnimation() {
+    playAnimation(diceAnimation)
   }
 
   private fun <T : ComponentView> playAnimationAndSerialize(

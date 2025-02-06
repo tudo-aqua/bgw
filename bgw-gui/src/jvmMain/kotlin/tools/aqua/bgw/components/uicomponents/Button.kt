@@ -42,9 +42,6 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Visual for this button. Default: [ColorVisual.WHITE]
  *
  * @since 0.1
- *
- * @sample tools.aqua.bgw.main.examples.ExampleUIScene.button
- * @sample tools.aqua.bgw.main.examples.ExampleUIScene.button2
  */
 open class Button(
     posX: Number = 0,

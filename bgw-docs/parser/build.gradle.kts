@@ -122,13 +122,11 @@ val GENERATE_SAMPLES_DEFAULT = false
 fun buildPropertyFile() {
   val propertyFile = "Config.kt"
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
-    println("Generate properties into $absolutePath")
     parentFile.mkdirs()
     writeText(generateProperties())
   }
 
   rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
-    println("Generate properties into $absolutePath")
     parentFile.mkdirs()
     writeText(generateProperties("application"))
   }
@@ -136,9 +134,6 @@ fun buildPropertyFile() {
   val useSockets = project.findProperty("useSockets")?.toString()?.toBoolean() ?: USE_SOCKET_DEFAULT
   val generateSamples =
       project.findProperty("generateSamples")?.toString()?.toBoolean() ?: GENERATE_SAMPLES_DEFAULT
-
-  println("useSockets: $useSockets")
-  println("generateSamples: $generateSamples")
 }
 
 fun generateProperties(suffix: String = ""): String {

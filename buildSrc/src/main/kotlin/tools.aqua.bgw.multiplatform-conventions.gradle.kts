@@ -45,13 +45,11 @@ val wrappersVersion = "-pre.831"
 fun buildDefaultPropertyFile() {
   println("Build default property files")
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
-    println("Generate properties into $absolutePath")
     parentFile.mkdirs()
     writeText(generateDefaultProperties())
   }
 
   rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
-    println("Generate properties into $absolutePath")
     parentFile.mkdirs()
     writeText(generateDefaultProperties("application"))
   }
