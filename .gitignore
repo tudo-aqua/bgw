@@ -231,3 +231,6 @@ Gemfile.lock
 bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/Config.kt
 bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/Config.kt
 /kotlin-js-store/
+bgw-docs/website/public/bgw/bgw-gui.js
+bgw-docs/website/public/bgw/bgwSamples.json
+bgw-docs/website/public/bgw/cleanedStructure.json
