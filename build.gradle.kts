@@ -38,5 +38,10 @@ mavenMetadata {
 }
 
 koverMerged {
-  filters { projects { excludes += listOf(":bgw-docs", ":bgw-docs:parser", ":bgw-docs:website", ":bgw-examples", ":bgw-net") } }
+  filters {
+    projects {
+      excludes +=
+          listOf(":bgw-docs", ":bgw-docs:parser", ":bgw-docs:website", ":bgw-examples", ":bgw-net")
+    }
+  }
 }
