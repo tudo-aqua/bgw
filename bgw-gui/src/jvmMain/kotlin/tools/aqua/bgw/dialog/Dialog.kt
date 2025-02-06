@@ -24,7 +24,7 @@ package tools.aqua.bgw.dialog
  *
  * @constructor Private constructor. Refer to secondary constructors.
  *
- * @property dialogType The [DialogType] of the alert. Affects the displayed icon.
+ * @property dialogType The [DialogType] of the dialog. Affects the displayed icon.
  * @property title Title to be shown.
  * @property header Headline to be shown in the dialogs content.
  * @property message Message to be shown.
@@ -48,7 +48,7 @@ internal constructor(
    *
    * For exception dialogs refer to exception constructor.
    *
-   * @param dialogType The [DialogType] of the alert. Affects the displayed icon.
+   * @param dialogType The [DialogType] of the dialog. Affects the displayed icon.
    * @param title Title to be shown.
    * @param header Headline to be shown in the dialogs content.
    * @param message Message to be shown in the dialogs content.

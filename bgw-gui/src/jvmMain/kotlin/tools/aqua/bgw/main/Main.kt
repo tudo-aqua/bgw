@@ -22,14 +22,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tools.aqua.bgw.application.Config
 import tools.aqua.bgw.main.examples.ExampleApplication
-import tools.aqua.bgw.main.view.Application
 
 internal fun main() {
   if (Config.GENERATE_SAMPLES) {
     val jsonData = Json.encodeToString(ExampleApplication.getMap())
     File("build/examples").mkdirs()
     File("build/examples/bgwSamples.json").writeText(jsonData)
-  } else {
-    Application.show()
   }
 }
