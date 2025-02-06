@@ -75,7 +75,7 @@ jobs:
         arguments: koverReport koverMergedReport
 
     - name: Upload analysis results
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v4
       with:
         directory: 'build/reports/kover'
         fail_ci_if_error: true
