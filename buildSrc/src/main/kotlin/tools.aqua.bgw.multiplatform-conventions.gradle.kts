@@ -37,13 +37,13 @@ plugins {
   `maven-publish`
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
+  id("org.jetbrains.kotlinx.kover")
 }
 
 val propertyFile = "Config.kt"
 val wrappersVersion = "-pre.831"
 
 fun buildDefaultPropertyFile() {
-  println("Build default property files")
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
     parentFile.mkdirs()
     writeText(generateDefaultProperties())
