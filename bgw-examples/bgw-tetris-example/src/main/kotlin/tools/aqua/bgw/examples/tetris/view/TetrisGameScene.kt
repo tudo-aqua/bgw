@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +40,11 @@ class TetrisGameScene : BoardGameScene(background = ColorVisual.WHITE) {
           width = 200,
           height = 100,
           text = "Press ENTER\nto start game.",
-          font = Font(size = 30, color = java.awt.Color.WHITE, fontWeight = Font.FontWeight.BOLD),
+          font =
+              Font(
+                  size = 30,
+                  color = tools.aqua.bgw.core.Color.WHITE,
+                  fontWeight = Font.FontWeight.BOLD),
           alignment = Alignment.CENTER)
 
   /** Label showing the player has lost. */
@@ -52,7 +56,10 @@ class TetrisGameScene : BoardGameScene(background = ColorVisual.WHITE) {
               height = 100,
               text = "You LOST.",
               font =
-                  Font(size = 30, color = java.awt.Color.WHITE, fontWeight = Font.FontWeight.BOLD),
+                  Font(
+                      size = 30,
+                      color = tools.aqua.bgw.core.Color.WHITE,
+                      fontWeight = Font.FontWeight.BOLD),
               alignment = Alignment.CENTER)
           .apply { isVisible = false }
 

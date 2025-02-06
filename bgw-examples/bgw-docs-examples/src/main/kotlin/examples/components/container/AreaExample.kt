@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,13 +38,12 @@ class AreaExample : BoardGameApplication("Area example") {
   private val redToken: TokenView = TokenView(visual = ColorVisual.RED)
 
   init {
-    area.onAdd = { this.resize(100, 100) }
-    area.onRemove = { this.rotation += 45 }
-
-    area.addComponentsListener { _, _ ->
+    area.onAdd = {
+      this.resize(100, 100)
       numberOfComponentsLabel.text =
           "Number of components in this area: ${area.numberOfComponents()}"
     }
+    area.onRemove = { this.rotation += 45 }
 
     area.add(greenToken)
     area.add(redToken, 0)

@@ -1,0 +1,16 @@
+{
+  "name": "bgw-doc-parser",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "build": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SmileFX",
+  "license": "Apache-2.0",
+  "description": "",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "node-html-parser": "^6.1.13"
+  }
+}

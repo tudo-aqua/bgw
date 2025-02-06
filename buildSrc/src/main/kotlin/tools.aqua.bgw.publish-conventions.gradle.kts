@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,4 +58,12 @@ signing {
   setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
   useGpgCmd()
   sign(publishing.publications["maven"])
+}
+
+tasks.named("publish") {
+  doFirst {
+    println("=============================================================================")
+    println("Published bgw: ${rootProject.version}")
+    println("=============================================================================")
+  }
 }

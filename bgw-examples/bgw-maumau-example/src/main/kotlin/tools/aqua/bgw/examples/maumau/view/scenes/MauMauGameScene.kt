@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.examples.maumau.view.scenes
 
-import java.awt.Color
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 import tools.aqua.bgw.components.container.CardStack
@@ -28,6 +27,7 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.examples.maumau.entity.CardSuit
 import tools.aqua.bgw.examples.maumau.entity.CardValue
 import tools.aqua.bgw.examples.maumau.main.*
@@ -228,7 +228,7 @@ class MauMauGameScene : BoardGameScene(background = ImageVisual(BG_FILE)) {
         hintButton,
         mainMenuButton)
 
-    lockedProperty.addListener { _, nV -> waitForOpponentLabel.isVisible = nV }
+    onLockChanged = { nV -> waitForOpponentLabel.isVisible = nV }
   }
 
   /** Starts the dot animation. */

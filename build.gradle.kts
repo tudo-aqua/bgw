@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ group = "tools.aqua"
 
 mavenMetadata {
   developers.addAll(
-      Developer("Dominik Mäckel", "dominik.maeckel@tu-dortmund.de"),
+      Developer("Dominik Schmid", "dominik.schmid@tu-dortmund.de"),
       Developer("Simon Dierl", "simon.dierl@tu-dortmund.de"),
       Developer("Stefan Naujokat", "stefan.naujokat@tu-dortmund.de"),
       Developer("Till Schallau", "till.schallau@tu-dortmund.de"),
@@ -38,5 +38,10 @@ mavenMetadata {
 }
 
 koverMerged {
-  filters { projects { excludes += listOf(":bgw-docs", ":bgw-examples", ":bgw-net") } }
+  filters {
+    projects {
+      excludes +=
+          listOf(":bgw-docs", ":bgw-docs:parser", ":bgw-docs:website", ":bgw-examples", ":bgw-net")
+    }
+  }
 }

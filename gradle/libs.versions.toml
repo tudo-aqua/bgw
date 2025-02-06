@@ -2,7 +2,7 @@
 
 # Platforms
 
-kotlin = "1.7.10"
+kotlin = "1.9.10"
 spring = "2.7.14"
 vaadin = "23.1.6"
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,13 @@
 
 package tools.aqua.bgw.examples.maumau.view
 
-import java.awt.Color
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.examples.maumau.entity.MauMauCard
@@ -61,7 +61,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
     if (isCurrentPlayer) cardView.showFront()
 
     // update label
-    viewController.mauMauGameScene.drawStackInfo.textProperty.value =
+    viewController.mauMauGameScene.drawStackInfo.text =
         viewController.logicController.game.drawStack.size().toString()
 
     // add event handlers to drawn card
@@ -105,7 +105,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
         cardView.posY = 0.0
 
         // update label
-        viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+        viewController.mauMauGameScene.gameStackInfo.text =
             viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
       }
 
@@ -119,7 +119,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
       cardView.posY = 0.0
 
       // update label
-      viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+      viewController.mauMauGameScene.gameStackInfo.text =
           viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
     }
 
@@ -270,11 +270,10 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
 
       val cardView =
           CardView(
-                  height = 200,
-                  width = 130,
-                  front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
-                  back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT))
-              .apply { name = card.toString() }
+              height = 200,
+              width = 130,
+              front = CompoundVisual(cardFront, ColorVisual.TRANSPARENT),
+              back = CompoundVisual(cardBack, ColorVisual.TRANSPARENT))
 
       viewController.cardMap.add(card, cardView)
     }
@@ -293,10 +292,10 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
         })
 
     // update labels
-    viewController.mauMauGameScene.drawStackInfo.textProperty.value =
+    viewController.mauMauGameScene.drawStackInfo.text =
         viewController.logicController.game.drawStack.size().toString()
 
-    viewController.mauMauGameScene.gameStackInfo.textProperty.value =
+    viewController.mauMauGameScene.gameStackInfo.text =
         viewController.logicController.game.gameStack.cards.peek().cardSuit.toString()
 
     // Add elements to hands
@@ -404,9 +403,8 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
           })
 
       // update labels
-      mauMauGameScene.drawStackInfo.textProperty.value =
-          logicController.game.drawStack.size().toString()
-      mauMauGameScene.gameStackInfo.textProperty.value =
+      mauMauGameScene.drawStackInfo.text = logicController.game.drawStack.size().toString()
+      mauMauGameScene.gameStackInfo.text =
           logicController.game.gameStack.cards.peek().cardSuit.toString()
     }
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,12 @@
 
 package tools.aqua.bgw.net.protocol.client.service
 
-import java.awt.Color
 import java.awt.Font
 import java.awt.font.FontRenderContext
 import java.awt.geom.AffineTransform
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.net.common.GameAction
 import tools.aqua.bgw.net.protocol.client.view.ProtocolClientApplication
 import tools.aqua.bgw.net.protocol.client.view.messageviews.GameMessageView

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,12 @@
 
 package tools.aqua.bgw.examples.sudoku.view.customcomponents
 
-import java.awt.Color
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.ToggleButton
 import tools.aqua.bgw.components.uicomponents.UIComponent
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 

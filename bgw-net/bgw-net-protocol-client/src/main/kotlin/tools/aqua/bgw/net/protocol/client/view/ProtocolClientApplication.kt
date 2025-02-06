@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,8 @@
 
 package tools.aqua.bgw.net.protocol.client.view
 
-import java.awt.Color
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.net.protocol.client.service.NetworkService
 import tools.aqua.bgw.net.protocol.client.view.messageviews.*
 import tools.aqua.bgw.visual.ColorVisual

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,14 @@
 rootProject.name = "bgw"
 
 include(
+    "bgw-gui",
     "bgw-docs",
+    "bgw-docs:parser",
+    "bgw-docs:website",
     "bgw-examples:bgw-docs-examples",
     "bgw-examples:bgw-maumau-example",
     "bgw-examples:bgw-sudoku-example",
     "bgw-examples:bgw-tetris-example",
-    "bgw-gui",
     "bgw-net:bgw-net-client",
     "bgw-net:bgw-net-common",
     "bgw-net:bgw-net-server",

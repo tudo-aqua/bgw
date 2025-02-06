@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ mavenMetadata {
 }
 
 dependencies {
-  implementation(project(":bgw-gui"))
+  implementation(project(":bgw-gui", configuration = "jvmRuntimeElements"))
   implementation(project(":bgw-net:bgw-net-client"))
   implementation(project(":bgw-net:bgw-net-common"))
 }

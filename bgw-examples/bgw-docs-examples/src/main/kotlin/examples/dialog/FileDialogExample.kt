@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,14 +69,16 @@ class FileDialogExample : BoardGameApplication("FileDialog example") {
         visual = ColorVisual.WHITE
         onMouseClicked = {
           showFileDialog(
-                  FileDialog(
+              FileDialog(
                       mode = FileDialogMode.CHOOSE_DIRECTORY,
                       title = "Choose directory",
-                  ))
-              .ifPresent { l ->
-                println("Chosen Directory:")
-                l.forEach { t -> println(t) }
-              }
+                  )
+                  .apply {
+                    onPathsSelected = { l ->
+                      println("Chosen Directory:")
+                      l.forEach { t -> println(t) }
+                    }
+                  })
         }
       }
 

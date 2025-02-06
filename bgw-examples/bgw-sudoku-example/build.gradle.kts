@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 The BoardGameWork Authors
+ * Copyright 2022-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,6 @@ mavenMetadata {
   description.set("The BGW Sudoku example.")
 }
 
-dependencies { implementation(project(":bgw-gui")) }
+dependencies { implementation(project(":bgw-gui", configuration = "jvmRuntimeElements")) }
 
 application { mainClass.set("tools.aqua.bgw.examples.sudoku.main.MainKt") }
