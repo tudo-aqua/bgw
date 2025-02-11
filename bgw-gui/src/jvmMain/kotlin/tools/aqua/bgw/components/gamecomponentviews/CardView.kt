@@ -47,6 +47,8 @@ import tools.aqua.bgw.visual.Visual
  * @param back Visual to represent the back side of the card. Default: same [Visual] as front.
  *
  * @see CardSide
+ * @see Visual
+ * @see GameComponentView
  *
  * @since 0.1
  */

@@ -36,7 +36,8 @@ import tools.aqua.bgw.visual.Visual
  * @param orientation Orientation of the [HexagonView]. Default: [HexOrientation.POINTY_TOP].
  *
  * @see HexOrientation
- * @see HexagonView
+ * @see Visual
+ * @see GameComponentView
  *
  * @since 0.8
  */

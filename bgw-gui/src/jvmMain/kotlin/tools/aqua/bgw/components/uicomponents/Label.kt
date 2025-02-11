@@ -39,6 +39,12 @@ import tools.aqua.bgw.visual.Visual
  * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
+ *
+ * @see Font
+ * @see Alignment
+ * @see Visual
+ *
+ * @since 0.1
  */
 open class Label(
     posX: Number = 0,

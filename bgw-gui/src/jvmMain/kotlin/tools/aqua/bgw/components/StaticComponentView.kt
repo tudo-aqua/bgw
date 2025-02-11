@@ -19,14 +19,13 @@
 
 package tools.aqua.bgw.components
 
+import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Baseclass for all [ComponentView]s that are considered static.
- *
- * This class is used to distinguish between [ComponentView]s that can be used in [MenuScene]s and
- * those that can't.
+ * Baseclass for all [ComponentView]s that are considered static. Inheriting components can be added
+ * to [BoardGameScene]s and [MenuScene]s.
  *
  * Only StaticViews are allowed in [MenuScene]s.
  *
@@ -39,7 +38,10 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [StaticComponentView].
  * @param visual Visual for this [StaticComponentView].
  *
+ * @see BoardGameScene
  * @see MenuScene
+ * 
+ * @since 0.1
  */
 abstract class StaticComponentView<T : ComponentView>
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) :

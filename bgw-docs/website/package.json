@@ -1,6 +1,5 @@
 {
-  "name": "bgw-website",
-  "version": "1.0",
+  "name": "bgw-docs-website",
   "type": "module",
   "scripts": {
     "dev": "vite --base=/bgw",

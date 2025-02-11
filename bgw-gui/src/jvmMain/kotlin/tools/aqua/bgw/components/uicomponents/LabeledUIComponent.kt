@@ -42,6 +42,13 @@ import tools.aqua.bgw.visual.Visual
  * @param alignment Alignment to be used for the [text].
  * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width.
  * @param visual Background [Visual].
+ *
+ * @see Font
+ * @see Alignment
+ * @see Visual
+ * @see UIComponent
+ *
+ * @since 0.1
  */
 @Suppress("LongParameterList", "MemberVisibilityCanBePrivate")
 abstract class LabeledUIComponent(
@@ -97,7 +104,13 @@ abstract class LabeledUIComponent(
    */
   internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
-  /** [Alignment] of this [LabeledUIComponent]. */
+  /**
+   * [Alignment] of this [LabeledUIComponent].
+   *
+   * @see Alignment
+   *
+   * @since 0.2
+   */
   var alignment: Alignment
     get() = alignmentProperty.value
     set(value) {

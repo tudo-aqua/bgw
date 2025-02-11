@@ -42,6 +42,10 @@ import tools.aqua.bgw.visual.Visual
  *
  * @see ToggleGroup
  * @see RadioButton
+ * @see Font
+ * @see Alignment
+ * @see Visual
+ * @see LabeledUIComponent
  *
  * @since 0.5
  */

@@ -48,6 +48,15 @@ import tools.aqua.bgw.visual.Visual
  * @param selectionBackground Background for selected items in this [ListView]. Default:
  * [ColorVisual.BLUE].
  * @param formatFunction The [formatFunction] that is used to represent the items. Default: `null`.
+ *
+ * @see Font
+ * @see Visual
+ * @see Orientation
+ * @see SelectionMode
+ * @see ColorVisual
+ * @see StructuredDataView
+ *
+ * @since 0.1
  */
 open class ListView<T>(
     posX: Number = 0,
@@ -107,6 +116,17 @@ open class ListView<T>(
       formatFunctionProperty.value = value
     }
 
+  /**
+   * Manually trigger the [formatFunction] for a given item.
+   *
+   * @param item Item to format.
+   *
+   * @return Formatted [String] representation of the item.
+   *
+   * @see formatFunction
+   *
+   * @since 0.10
+   */
   fun formatItem(item: Any?): String {
     val function = formatFunction ?: { it: Any? -> it.toString() }
     return function(item as T)

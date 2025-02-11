@@ -811,9 +811,7 @@ function extractDetails(html, type, tree) {
 function parseFileToJSON(tree) {
   const content = fs.readFileSync(tree.path, "utf8");
   let isClassGlobal = "none";
-  if (tree.path.includes("index")) {
-    console.log(tree);
-  }
+
   if (tree.path.endsWith("\\index.html") || tree.path.endsWith("/index.html")) {
     isClassGlobal = "global";
   } else if (
@@ -861,7 +859,6 @@ function traverseTree(tree, file, rebuiltTree = {}) {
 }
 
 const directoryStructure = getDirectoryStructure(rootDir);
-// console.log(JSON.stringify(traverseTree(directoryStructure), null, 2));
 
 function removeNullValues(obj) {
   if (!obj || typeof obj !== "object") return obj;
@@ -893,7 +890,6 @@ function removeNullValues(obj) {
 }
 
 const cleanedStructure = removeNullValues(traverseTree(directoryStructure));
-// console.log(JSON.stringify(cleanedStructure, null, 2));
 
 // Save the JSON to a file in ./output
 fs.writeFileSync(

@@ -28,7 +28,10 @@ import tools.aqua.bgw.visual.Visual
  * @constructor Creates a [RootComponent].
  *
  * @param T Generic [ComponentView].
+ * @param scene Scene of this root component.
  * @property scene Scene of this root component.
+ *
+ * @since 0.1
  */
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
     ComponentView(posX = 0, posY = 0, width = 0, height = 0, visual = Visual.EMPTY),

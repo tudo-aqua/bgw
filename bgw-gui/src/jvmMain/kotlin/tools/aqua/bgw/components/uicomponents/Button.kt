@@ -41,6 +41,11 @@ import tools.aqua.bgw.visual.Visual
  * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
  * @param visual Visual for this button. Default: [ColorVisual.WHITE]
  *
+ * @see Font
+ * @see Alignment
+ * @see Visual
+ * @see LabeledUIComponent
+ *
  * @since 0.1
  */
 open class Button(

@@ -42,6 +42,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @see GridPane
  * @see Pane
+ * @see Visual
+ * @see ComponentView
  *
  * @since 0.8
  */

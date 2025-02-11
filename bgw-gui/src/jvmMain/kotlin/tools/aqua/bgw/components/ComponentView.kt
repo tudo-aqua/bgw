@@ -22,6 +22,7 @@ package tools.aqua.bgw.components
 import IDGenerator
 import kotlin.math.floor
 import tools.aqua.bgw.components.container.GameComponentContainer
+import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.Scene
@@ -44,11 +45,14 @@ import tools.aqua.bgw.visual.Visual
  * @param height height for this [ComponentView].
  * @param visual visual for this [ComponentView].
  *
- * @throws tools.aqua.bgw.exception.IllegalInheritanceException inheriting from this [Class] is not
- * advised, because it cannot be rendered and trying to do so will result in an
- * [tools.aqua.bgw.exception.IllegalInheritanceException].
+ * @throws tools.aqua.bgw.exception.IllegalInheritanceException Inheriting from this [Class] is not
+ * advised, because it cannot be rendered on its own. Trying to do so will result in an exception at
+ * runtime.
  *
+ * @see Visual
  * @see tools.aqua.bgw.exception.IllegalInheritanceException
+ *
+ * @since 0.1
  */
 abstract class ComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) {
@@ -62,7 +66,13 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    */
   internal val zIndexProperty: IntegerProperty = IntegerProperty(0)
 
-  /** Order of [ComponentView] inside of [parent]. */
+  /**
+   * Order of [ComponentView] inside of [parent].
+   *
+   * @see LayeredContainer
+   *
+   * @since 0.8
+   */
   var zIndex: Int
     get() = zIndexProperty.value
     set(value) {
@@ -88,6 +98,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * [RootComponent].
    *
    * If the component is contained within a container, parent is equal to that container.
+   *
    * @see Scene
    * @see GameComponentContainer
    */
@@ -96,7 +107,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /**
    * Field that indicates whether posX and posY denote the center or top left of this
-   * [ComponentView].
+   * [ComponentView]. Only relevant for [GridPane]s. Cannot be set manually.
    */
   var isLayoutFromCenter: Boolean = false
     internal set
@@ -279,6 +290,10 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   /**
    * Returns a [CoordinatePlain] containing the component's corner [Coordinate]s and its layout
    * bounds.
+   *
+   * @see CoordinatePlain
+   *
+   * @since 0.3
    */
   var layoutBounds: CoordinatePlain
     get() =
@@ -395,17 +410,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * For a list of affected functions refer to the `See Also` section.
    *
-   * @see onMouseEntered
-   * @see onMouseExited
-   * @see dropAcceptor
-   * @see onDragDropped
-   * @see onKeyPressed
-   * @see onKeyReleased
-   * @see onKeyTyped
-   * @see onMousePressed
-   * @see onMouseReleased
-   * @see onMouseClicked
-   *
    * @see isDisabled
    */
   internal val isDisabledProperty: BooleanProperty = BooleanProperty(false)
@@ -415,18 +419,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * `true` means no invocation, where `false` means invocation.
    *
-   * For a list of affected functions refer to the `See Also` section.
-   *
-   * @see onMouseEntered
-   * @see onMouseExited
-   * @see dropAcceptor
-   * @see onDragDropped
-   * @see onKeyPressed
-   * @see onKeyReleased
-   * @see onKeyTyped
-   * @see onMousePressed
-   * @see onMouseReleased
-   * @see onMouseClicked
+   * All listeners are effected and will not get invoked if this property is set to `true`.
    */
   var isDisabled: Boolean
     get() = isDisabledProperty.value
@@ -538,7 +531,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @see isFocusable
    */
   @Deprecated(
-      "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.",
+      "The onKeyTyped event is defined in this specification for reference and completeness.",
       ReplaceWith("onKeyPressed"))
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
@@ -573,6 +566,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * a drag gesture.
    *
    * @see DragEvent
+   * @see isDisabled
    */
   var onDragGestureEntered: ((DragEvent) -> Unit)? = null
 
@@ -581,6 +575,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * a drag gesture.
    *
    * @see DragEvent
+   * @see isDisabled
    */
   var onDragGestureExited: ((DragEvent) -> Unit)? = null
 
@@ -599,6 +594,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @param posX New X coordinate.
    * @param posY New Y coordinate.
+   *
+   * @since 0.3
    */
   fun reposition(posX: Number, posY: Number) {
     this.posX = posX.toDouble()
@@ -610,6 +607,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @param offsetX Offset for the X coordinate.
    * @param offsetY Offset for the Y coordinate.
+   *
+   * @since 0.3
    */
   fun offset(offsetX: Number, offsetY: Number) {
     this.posX += offsetX.toDouble()
@@ -621,6 +620,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @param width New width.
    * @param height New height.
+   *
+   * @since 0.3
    */
   fun resize(width: Number, height: Number) {
     this.width = width.toDouble()
@@ -633,6 +634,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @param scalar New scale.
    *
    * @throws IllegalArgumentException If the given [scalar] is negative.
+   *
+   * @since 0.3
    */
   fun scale(scalar: Number) {
     this.scale = checkScalarPositive(scalar)
@@ -645,6 +648,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @param scalar New x scale.
    *
    * @throws IllegalArgumentException If the given [scalar] is negative.
+   *
+   * @since 0.3
    */
   fun scaleX(scalar: Number) {
     this.scaleX = checkScalarPositive(scalar)
@@ -656,6 +661,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @param scalar New y scale.
    *
    * @throws IllegalArgumentException If the given [scalar] is negative.
+   *
+   * @since 0.3
    */
   fun scaleY(scalar: Number) {
     this.scaleY = checkScalarPositive(scalar)
@@ -680,6 +687,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Rotates this [ComponentView] by the given number of [degrees].
    *
    * @param degrees Degrees to add to current rotation. May be negative.
+   *
+   * @since 0.3
    */
   fun rotate(degrees: Number) {
     this.rotation += degrees.toDouble()
@@ -747,6 +756,11 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @throws IllegalStateException if the [ComponentView] does not have a parent
    * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
    * [ComponentView]
+   *
+   * @see LayeredContainer
+   * @see zIndex
+   *
+   * @since 0.8
    */
   fun toFront() {
     if (parent != null) {
@@ -775,6 +789,11 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * @throws IllegalStateException if the [ComponentView] does not have a parent
    * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
    * [ComponentView]
+   *
+   * @see LayeredContainer
+   * @see zIndex
+   *
+   * @since 0.8
    */
   fun toBack() {
     zIndexProperty.value =

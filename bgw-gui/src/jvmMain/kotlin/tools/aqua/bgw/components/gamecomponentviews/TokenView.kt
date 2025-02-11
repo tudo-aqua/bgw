@@ -38,6 +38,9 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this TokenView. Default: [DEFAULT_TOKEN_HEIGHT].
  * @param visual Visual for this TokenView.
  *
+ * @see Visual
+ * @see GameComponentView
+ *
  * @since 0.1
  */
 open class TokenView(

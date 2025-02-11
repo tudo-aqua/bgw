@@ -40,6 +40,16 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Background [Visual].
  * @param selectionMode Selection mode to be used for this [StructuredDataView].
  * @param selectionBackground Background for selected items in this [StructuredDataView].
+ *
+ * @see Font
+ * @see Visual
+ * @see SelectionMode
+ * @see ColorVisual
+ * @see ListView
+ * @see TableView
+ * @see UIComponent
+ *
+ * @since 0.6
  */
 sealed class StructuredDataView<T>(
     posX: Number,
@@ -87,6 +97,8 @@ sealed class StructuredDataView<T>(
    *
    * Selected items and indices may be observed by registering observers on [selectedItems] and
    * [selectedIndices].
+   *
+   * @since 0.6
    */
   var selectionMode: SelectionMode
     get() = selectionModeProperty.value
@@ -103,6 +115,8 @@ sealed class StructuredDataView<T>(
   /**
    * Background color for selected items in this [UIComponent]. Item selection is enabled via
    * [selectionMode].
+   *
+   * @since 0.6
    */
   var selectionBackground: ColorVisual
     get() = selectionBackgroundProperty.value
@@ -204,6 +218,8 @@ sealed class StructuredDataView<T>(
    *
    * @throws IllegalStateException If selection mode is [SelectionMode.NONE].
    * @throws IllegalArgumentException If [index] is out of bounds.
+   *
+   * @since 0.10
    */
   fun selectIndex(index: Int) {
     checkSelectionEnabled()

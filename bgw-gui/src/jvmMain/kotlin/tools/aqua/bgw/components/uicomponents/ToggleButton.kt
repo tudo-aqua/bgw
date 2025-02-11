@@ -54,7 +54,14 @@ import tools.aqua.bgw.visual.Visual
  * @param toggleGroup The ToggleGroup of this [ToggleButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY].
  *
+ * @see Font
+ * @see Alignment
  * @see ToggleGroup
+ * @see Visual
+ * @see RadioButton
+ * @see BinaryStateButton
+ *
+ * @since 0.1
  */
 class ToggleButton(
     posX: Number = 0,

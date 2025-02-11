@@ -17,7 +17,11 @@
 
 package tools.aqua.bgw.components
 
-/** An interface that describes a container which can hold [ComponentView] that can be layered. */
+/**
+ * An interface that describes a container which can hold [ComponentView] that can be layered.
+ *
+ * @since 0.8
+ */
 interface LayeredContainer<T : ComponentView> {
   /**
    * Puts the [component] to the front inside the [LayeredContainer].

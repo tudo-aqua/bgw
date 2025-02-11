@@ -43,8 +43,13 @@ import tools.aqua.bgw.visual.Visual
  * @param font [Font] to be used to display [text].
  * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
  *
+ * @see Font
+ * @see Visual
+ * @see TextInputUIComponent
  * @see TextField
  * @see PasswordField
+ *
+ * @since 0.1
  */
 open class TextArea(
     posX: Number = 0,
