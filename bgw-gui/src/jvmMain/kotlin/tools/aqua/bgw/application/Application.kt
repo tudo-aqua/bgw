@@ -29,4 +29,8 @@ internal interface Application {
   fun clearAllEventListeners() {}
 
   fun openNewDialog(dialogData: DialogData) {}
+
+  fun toggleFullscreen(boolean: Boolean) {}
+
+  fun toggleMaximized(boolean: Boolean) {}
 }

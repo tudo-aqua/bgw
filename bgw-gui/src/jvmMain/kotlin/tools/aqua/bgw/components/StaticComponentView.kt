@@ -40,7 +40,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @see BoardGameScene
  * @see MenuScene
- * 
+ *
  * @since 0.1
  */
 abstract class StaticComponentView<T : ComponentView>

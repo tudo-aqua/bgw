@@ -29,7 +29,7 @@ fun main() {
   UIComponentExample()
 }
 
-class UIComponentExample : BoardGameApplication("UIComponent Example") {
+class UIComponentExample : BoardGameApplication("UIComponent Example", width = 800, height = 1000) {
   private val menuScene = MenuScene(width = 800).apply { this.opacity = 1.0 }
 
   private val outputLabel =

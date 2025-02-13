@@ -16,7 +16,6 @@
  */
 
 import ComponentMapper.fillData
-import kotlin.math.max
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
@@ -575,7 +574,6 @@ internal object FontFaceMapper {
 
 internal object SceneMapper {
   private fun mapScene(scene: Scene<*>): SceneData {
-    // FIXME - DONE
     return SceneData().apply {
       components = scene.components.map { RecursiveMapper.map(it) }
       width = scene.width.toInt()
@@ -586,14 +584,12 @@ internal object SceneMapper {
 
   fun map(menuScene: MenuScene? = null, gameScene: BoardGameScene? = null): AppData {
     return AppData().apply {
-      this.width =
-          max(
-              menuScene?.width?.toInt() ?: DEFAULT_SCENE_WIDTH.toInt(),
-              gameScene?.width?.toInt() ?: DEFAULT_SCENE_WIDTH.toInt())
-      this.height =
-          max(
-              menuScene?.height?.toInt() ?: DEFAULT_SCENE_HEIGHT.toInt(),
-              gameScene?.height?.toInt() ?: DEFAULT_SCENE_HEIGHT.toInt())
+      this.width = Frontend.widthProperty.value.toInt()
+      this.height = Frontend.heightProperty.value.toInt()
+      this.alignment =
+          Pair(
+              Frontend.alignmentProperty.value.horizontalAlignment.name.lowercase(),
+              Frontend.alignmentProperty.value.verticalAlignment.name.lowercase())
       this.menuScene = if (menuScene != null) mapScene(menuScene) else null
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
     }

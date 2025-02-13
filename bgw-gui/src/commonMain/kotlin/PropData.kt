@@ -35,6 +35,7 @@ internal enum class ActionProp {
   HIDE_GAME_SCENE,
   UPDATE_COMPONENT,
   UPDATE_VISUAL,
+  UPDATE_APP,
   DRAG_START,
   DRAG_END,
   DRAG_DROP,
@@ -53,6 +54,7 @@ internal class AppData : Data() {
   var fonts: List<Triple<String, String, Int>> = emptyList()
   var width: Int = 0
   var height: Int = 0
+  var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
 }
 

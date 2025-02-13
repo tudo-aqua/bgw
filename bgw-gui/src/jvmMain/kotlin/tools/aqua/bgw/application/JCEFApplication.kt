@@ -22,9 +22,7 @@ import DialogData
 import ID
 import data.event.*
 import dev.dirs.ProjectDirectories
-import java.awt.BorderLayout
-import java.awt.EventQueue
-import java.awt.KeyboardFocusManager
+import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
@@ -63,6 +61,7 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode
@@ -105,6 +104,14 @@ internal class JCEFApplication : Application {
       frame?.dispose()
       exitProcess(0)
     }
+  }
+
+  override fun toggleFullscreen(boolean: Boolean) {
+    frame?.toggleFullscreen(boolean)
+  }
+
+  override fun toggleMaximized(boolean: Boolean) {
+    frame?.extendedState = if (boolean) JFrame.MAXIMIZED_BOTH else JFrame.NORMAL
   }
 
   override fun clearAllEventListeners() {
@@ -328,6 +335,7 @@ internal class MainFrame(
     loadCallback: (Any) -> Unit
 ) : JFrame() {
   private var browserFocus = true
+  private var fullscreenFrame: JFrame? = null
 
   var msgRouter: CefMessageRouter? = null
   var animationMsgRouter: CefMessageRouter? = null
@@ -535,13 +543,36 @@ internal class MainFrame(
             model.clear()
           }
         })
+
+    client.addDisplayHandler(
+        object : CefDisplayHandlerAdapter() {
+          override fun onFullscreenModeChange(browser: CefBrowser?, fullscreen: Boolean) {
+            if (fullscreen) {
+              Frontend.isFullScreenProperty.setInternal(true)
+            } else {
+              Frontend.isFullScreenProperty.setInternal(false)
+            }
+          }
+        })
     // endregion
 
     // region - Frame Settings
     contentPane.add(browserUI, BorderLayout.CENTER)
     pack()
-    setSize(1280, 720)
+    setSize(1280, 750)
     isVisible = true
+    if (Frontend.isMaximizedProperty.value) {
+      extendedState = MAXIMIZED_BOTH
+    }
+
+    if (Frontend.isFullScreenProperty.value) {
+      toggleFullscreen(true)
+    } else {
+      toggleFullscreen(false)
+    }
+
+    setLocationRelativeTo(null)
+
     addWindowListener(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
@@ -582,6 +613,38 @@ internal class MainFrame(
             dispose()
           }
         })
+
+    addWindowStateListener { e ->
+      if (e.newState == MAXIMIZED_BOTH) {
+        Frontend.isMaximizedProperty.setInternal(true)
+      } else {
+        Frontend.isMaximizedProperty.setInternal(false)
+      }
+    }
+  }
+
+  internal fun toggleFullscreen(boolean: Boolean) {
+    if (isDisplayable) {
+      if (boolean) {
+        if (fullscreenFrame == null) {
+          fullscreenFrame = JFrame()
+          fullscreenFrame?.isUndecorated = true
+          fullscreenFrame?.extendedState = JFrame.MAXIMIZED_BOTH
+          fullscreenFrame?.contentPane = contentPane
+          fullscreenFrame?.iconImage = iconImage
+          fullscreenFrame?.title = title
+          fullscreenFrame?.isVisible = true
+          isVisible = false
+        }
+      } else {
+        fullscreenFrame?.let { fsFrame ->
+          contentPane = fsFrame.contentPane
+          fsFrame.isVisible = false
+          fullscreenFrame = null
+          isVisible = true
+        }
+      }
+    }
   }
 
   internal fun getChildProcessIds(process: ProcessHandle = ProcessHandle.current()): Set<Long> {

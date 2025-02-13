@@ -87,12 +87,6 @@ internal class Frontend {
     /** [BoardGameApplication] instance. */
     internal lateinit var application: BoardGameApplication
 
-    /** Initial aspect ratio passed to [BoardGameApplication]. */
-    internal lateinit var initialAspectRatio: AspectRatio
-
-    /** Initial window mode passed to [BoardGameApplication]. */
-    internal var initialWindowMode: WindowMode? = null
-
     // region Properties
     /** Property for the window title. */
     internal val titleProperty: StringProperty = StringProperty()
@@ -111,6 +105,9 @@ internal class Frontend {
 
     /** Property whether application is currently fullscreen. */
     internal val isFullScreenProperty = BooleanProperty(false)
+
+    internal val alignmentProperty =
+        Property(Alignment.of(VerticalAlignment.CENTER, HorizontalAlignment.CENTER))
 
     /** Property for the current application width. */
     internal val widthProperty =
@@ -159,6 +156,23 @@ internal class Frontend {
       runBlocking { componentChannel.sendToAllClients(json) }
     }
 
+    internal fun setWindowMode(windowMode: WindowMode) {
+      when (windowMode) {
+        WindowMode.NORMAL -> {
+          isMaximizedProperty.value = false
+          isFullScreenProperty.value = false
+        }
+        WindowMode.MAXIMIZED -> {
+          isMaximizedProperty.value = true
+          isFullScreenProperty.value = false
+        }
+        WindowMode.FULLSCREEN -> {
+          isMaximizedProperty.value = false
+          isFullScreenProperty.value = true
+        }
+      }
+    }
+
     /**
      * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
      *
@@ -185,7 +199,9 @@ internal class Frontend {
      * @param newHorizontalAlignment new alignment to set.
      */
     internal fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
-      TODO("Not yet implemented")
+      alignmentProperty.value =
+          Alignment.of(alignmentProperty.value.verticalAlignment, newHorizontalAlignment)
+      markDirty(ActionProp.UPDATE_APP)
     }
 
     /**
@@ -194,7 +210,9 @@ internal class Frontend {
      * @param newVerticalAlignment new alignment to set.
      */
     internal fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
-      TODO("Not yet implemented")
+      alignmentProperty.value =
+          Alignment.of(newVerticalAlignment, alignmentProperty.value.horizontalAlignment)
+      markDirty(ActionProp.UPDATE_APP)
     }
 
     /**
@@ -279,6 +297,7 @@ internal class Frontend {
       return false
     }
 
+    @Deprecated("This function is no longer needed as of BGW 0.10.")
     fun runLater(task: Runnable) {
       task.run()
     }

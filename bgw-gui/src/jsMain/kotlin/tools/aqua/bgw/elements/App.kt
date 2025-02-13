@@ -516,8 +516,7 @@ internal val App =
             width = 100.pct
             height = 100.pct
             display = Display.flex
-            justifyContent = JustifyContent.center
-            alignItems = AlignItems.center
+            alignmentBuilder(props.data)
           }
 
           val menuScene = props.data.menuScene

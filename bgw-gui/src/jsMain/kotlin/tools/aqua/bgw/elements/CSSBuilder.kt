@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.elements
 
+import AppData
 import CardStackData
 import ComboBoxData
 import ComponentViewData
@@ -94,6 +95,23 @@ internal fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData
       }
   alignItems =
       when (componentViewData.alignment.second) {
+        "top" -> AlignItems.flexStart
+        "center" -> AlignItems.center
+        "bottom" -> AlignItems.flexEnd
+        else -> AlignItems.center
+      }
+}
+
+internal fun PropertiesBuilder.alignmentBuilder(data: AppData) {
+  justifyContent =
+      when (data.alignment.first) {
+        "left" -> JustifyContent.flexStart
+        "center" -> JustifyContent.center
+        "right" -> JustifyContent.flexEnd
+        else -> JustifyContent.center
+      }
+  alignItems =
+      when (data.alignment.second) {
         "top" -> AlignItems.flexStart
         "center" -> AlignItems.center
         "bottom" -> AlignItems.flexEnd
