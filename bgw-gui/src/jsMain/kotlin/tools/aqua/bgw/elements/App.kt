@@ -36,6 +36,7 @@ import tools.aqua.bgw.builder.ReactConverters.toDragMoveEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.SceneBuilder
+import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -517,6 +518,11 @@ internal val App =
             height = 100.pct
             display = Display.flex
             alignmentBuilder(props.data)
+          }
+
+          bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.background)
           }
 
           val menuScene = props.data.menuScene

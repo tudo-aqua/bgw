@@ -38,9 +38,6 @@ import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import jsonMapper
 import kotlin.concurrent.timer
 import kotlin.system.exitProcess
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.CefBuildInfo
 import me.friwi.jcefmaven.EnumPlatform
@@ -98,12 +95,8 @@ internal class JCEFApplication : Application {
     Runtime.getRuntime().addShutdownHook(Thread { onClose() })
   }
 
-  @OptIn(DelicateCoroutinesApi::class)
   override fun stop() {
-    GlobalScope.launch {
-      frame?.dispose()
-      exitProcess(0)
-    }
+    frame?.gracefulShutdown()
   }
 
   override fun toggleFullscreen(boolean: Boolean) {
@@ -112,6 +105,10 @@ internal class JCEFApplication : Application {
 
   override fun toggleMaximized(boolean: Boolean) {
     frame?.extendedState = if (boolean) JFrame.MAXIMIZED_BOTH else JFrame.NORMAL
+  }
+
+  override fun resize(width: Int, height: Int) {
+    frame?.setSize(width, height)
   }
 
   override fun clearAllEventListeners() {
@@ -530,6 +527,8 @@ internal class MainFrame(
                 dialogMap.remove(validBrowser)
               }
             }
+
+            Frontend.application.onWindowShown?.invoke()
           }
         })
     client.addContextMenuHandler(
@@ -576,6 +575,7 @@ internal class MainFrame(
     addWindowListener(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
+            Frontend.application.onWindowClosed?.invoke()
             println("[BGW] BGW Runtime shutting down...")
             try {
               CefApp.getInstance().dispose()
@@ -620,6 +620,24 @@ internal class MainFrame(
       } else {
         Frontend.isMaximizedProperty.setInternal(false)
       }
+    }
+
+    //    addComponentListener(
+    //        object : ComponentAdapter() {
+    //          override fun componentResized(e: ComponentEvent) {
+    //            Frontend.widthProperty.setInternal(this@MainFrame.width.toDouble())
+    //            Frontend.heightProperty.setInternal(this@MainFrame.height.toDouble())
+    //          }
+    //        })
+  }
+
+  internal fun gracefulShutdown() {
+    Frontend.application.onWindowClosed?.invoke()
+    println("[BGW] BGW Runtime shutting down...")
+    try {
+      CefApp.getInstance().dispose()
+    } catch (_: Exception) {} finally {
+      exitProcess(0)
     }
   }
 

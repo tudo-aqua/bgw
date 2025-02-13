@@ -33,4 +33,6 @@ internal interface Application {
   fun toggleFullscreen(boolean: Boolean) {}
 
   fun toggleMaximized(boolean: Boolean) {}
+
+  fun resize(width: Int, height: Int) {}
 }

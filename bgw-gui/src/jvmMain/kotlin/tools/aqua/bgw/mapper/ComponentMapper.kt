@@ -586,6 +586,7 @@ internal object SceneMapper {
     return AppData().apply {
       this.width = Frontend.widthProperty.value.toInt()
       this.height = Frontend.heightProperty.value.toInt()
+      this.background = VisualMapper.map(Frontend.backgroundProperty.value)
       this.alignment =
           Pair(
               Frontend.alignmentProperty.value.horizontalAlignment.name.lowercase(),

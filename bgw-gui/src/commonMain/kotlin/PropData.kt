@@ -54,6 +54,7 @@ internal class AppData : Data() {
   var fonts: List<Triple<String, String, Int>> = emptyList()
   var width: Int = 0
   var height: Int = 0
+  var background: VisualData? = null
   var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
 }

@@ -51,6 +51,8 @@ import tools.aqua.bgw.visual.Visual
  * @param windowMode Initial window mode. Overrides [isMaximized] and [isFullScreen] if passed.
  * Refer to [WindowMode] docs for further information about the effects.
  *
+ * @throws IllegalStateException If a second application is created.
+ *
  * @see BoardGameScene
  * @see MenuScene
  *
@@ -77,6 +79,7 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var icon: ImageVisual?
+    // TODO: Re-add support for setting the icon
     get() = Frontend.iconProperty.value
     set(value) {
       Frontend.iconProperty.value = value
@@ -95,6 +98,7 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var fullscreenExitCombination: KeyEvent?
+    // TODO: Re-add support for setting the exit combination
     get() = Frontend.fullscreenExitCombinationProperty.value
     set(value) {
       Frontend.fullscreenExitCombinationProperty.value = value
@@ -113,6 +117,7 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var fullscreenExitCombinationHint: String?
+    // TODO: Re-add support for setting the exit combination hint
     get() = Frontend.fullscreenExitCombinationHintProperty.value
     set(value) {
       Frontend.fullscreenExitCombinationHintProperty.value = value
@@ -126,6 +131,9 @@ open class BoardGameApplication(
     get() = Frontend.widthProperty.value
     set(value) {
       Frontend.widthProperty.value = value.toDouble()
+      if (!isFullScreen && !isMaximized) {
+        Frontend.applicationEngine.resize(value.toInt(), windowHeight.toInt())
+      }
     }
 
   /**
@@ -136,6 +144,9 @@ open class BoardGameApplication(
     get() = Frontend.heightProperty.value
     set(value) {
       Frontend.heightProperty.value = value.toDouble()
+      if (!isFullScreen && !isMaximized) {
+        Frontend.applicationEngine.resize(windowWidth.toInt(), value.toInt())
+      }
     }
 
   /**
@@ -214,7 +225,10 @@ open class BoardGameApplication(
    *
    * @since 0.7
    */
-  fun showDialogNonBlocking(dialog: Dialog): Unit = Frontend.showDialogNonBlocking(dialog)
+  fun showDialogNonBlocking(dialog: Dialog): Unit {
+    // TODO: Implement non-blocking dialogs
+    Frontend.showDialog(dialog)
+  }
 
   /**
    * Shows a dialog and blocks further thread execution.
