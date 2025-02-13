@@ -62,6 +62,7 @@ internal class AppData : Data() {
 @Serializable
 internal class SceneData : Data() {
   var id: ID = ""
+  var locked: Boolean = false
   var width: Int = 0
   var height: Int = 0
   var background: VisualData? = null

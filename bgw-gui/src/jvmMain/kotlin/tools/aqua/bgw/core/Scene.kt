@@ -40,6 +40,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @see BoardGameScene
  * @see MenuScene
+ *
+ * @since 0.1
  */
 sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
 
@@ -61,9 +63,11 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   @Suppress("LeakingThis") internal val dragGestureRootNode: RootComponent<T> = RootComponent(this)
 
   /** The width of this [Scene] in virtual coordinates. */
+  // TODO: Change to property for updating during runtime
   val width: Double = width.toDouble()
 
   /** The height of this [Scene] in virtual coordinates. */
+  // TODO: Change to property for updating during runtime
   val height: Double = height.toDouble()
 
   /** All [ComponentView]s on the root node. */
@@ -143,14 +147,14 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @see onKeyPressed
    */
   @Deprecated(
-      "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
+      "The onKeyTyped event is defined in this specification for reference and completeness.")
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
-  /** Gets invoked with no event whenever a scene is shown. */
+  /** Gets invoked with no event whenever a scene gets shown. */
   var onSceneShown: (() -> Unit)? = null
 
-  /** Gets invoked with no event whenever a scene is hid. */
-  var onSceneHid: (() -> Unit)? = null
+  /** Gets invoked with no event whenever a scene gets hidden. */
+  var onSceneHidden: (() -> Unit)? = null
 
   /**
    * Adds all given [ComponentView]s to the root node and [rootComponents] list.

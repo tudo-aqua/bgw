@@ -576,6 +576,7 @@ internal object SceneMapper {
   private fun mapScene(scene: Scene<*>): SceneData {
     return SceneData().apply {
       components = scene.components.map { RecursiveMapper.map(it) }
+      locked = if (scene is BoardGameScene) scene.lockedProperty.value else false
       width = scene.width.toInt()
       height = scene.height.toInt()
       background = VisualMapper.map(scene.background)

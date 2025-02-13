@@ -554,6 +554,18 @@ internal val App =
           }
 
           val gameScene = props.data.gameScene
+          if (gameScene != undefined && gameScene.locked) {
+            bgwLock {
+              css {
+                position = Position.absolute
+                width = props.data.width.em
+                height = props.data.height.em
+                backgroundColor = rgb(0, 0, 0, 0.0)
+                zIndex = zIndex(998)
+              }
+            }
+          }
+
           bgwGameScene {
             css { position = Position.absolute }
 
@@ -576,6 +588,9 @@ internal inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>
 
 internal inline val bgwBlur: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_blur".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+
+internal inline val bgwLock: IntrinsicType<HTMLAttributes<Element>>
+  get() = "bgw_lock".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
 internal inline val bgwGameScene: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_game_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

@@ -98,10 +98,10 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var fullscreenExitCombination: KeyEvent?
-    // TODO: Re-add support for setting the exit combination
     get() = Frontend.fullscreenExitCombinationProperty.value
     set(value) {
-      Frontend.fullscreenExitCombinationProperty.value = value
+      TODO()
+      // Frontend.fullscreenExitCombinationProperty.value = value
     }
 
   /**
@@ -117,10 +117,10 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var fullscreenExitCombinationHint: String?
-    // TODO: Re-add support for setting the exit combination hint
     get() = Frontend.fullscreenExitCombinationHintProperty.value
     set(value) {
-      Frontend.fullscreenExitCombinationHintProperty.value = value
+      TODO()
+      // Frontend.fullscreenExitCombinationHintProperty.value = value
     }
 
   /**
