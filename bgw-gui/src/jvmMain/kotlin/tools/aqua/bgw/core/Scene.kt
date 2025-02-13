@@ -27,7 +27,6 @@ import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
-import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -105,21 +104,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
       require(value in 0.0..1.0) { "Value must be between 0 and 1 inclusive." }
 
       opacityProperty.value = value
-    }
-
-  /**
-   * [Property] for the currently displayed zoom detail of this [Scene].
-   *
-   * @see zoomDetail
-   */
-  internal val zoomDetailProperty: Property<CoordinatePlain> =
-      Property(CoordinatePlain(0, 0, width, height))
-
-  /** The currently displayed zoom detail of this [Scene]. */
-  internal var zoomDetail
-    get() = zoomDetailProperty.value
-    set(value) {
-      zoomDetailProperty.value = value
     }
 
   /** All [Animation]s currently playing. */

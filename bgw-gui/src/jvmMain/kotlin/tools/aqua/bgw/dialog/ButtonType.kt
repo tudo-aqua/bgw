@@ -23,6 +23,11 @@ package tools.aqua.bgw.dialog
  * Enum for all available button types.
  *
  * @property text displayed button text.
+ *
+ * @see Dialog
+ * @see DialogType
+ *
+ * @since 0.1
  */
 enum class ButtonType(private val text: String) {
   /** A [ButtonType] that displays "Apply". */

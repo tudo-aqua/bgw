@@ -31,6 +31,11 @@ package tools.aqua.bgw.dialog
  * @property exception [Throwable] to be shown in expandable content.
  * @property buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
  * used if you don't pass any [ButtonType]s.
+ *
+ * @see DialogType
+ * @see ButtonType
+ *
+ * @since 0.1
  */
 data class Dialog
 internal constructor(
@@ -54,6 +59,11 @@ internal constructor(
    * @param message Message to be shown in the dialogs content.
    * @param buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
    * used if you don't pass any [ButtonType]s.
+   *
+   * @see DialogType
+   * @see ButtonType
+   *
+   * @since 0.1
    */
   constructor(
       dialogType: DialogType,
@@ -76,6 +86,8 @@ internal constructor(
    * @param header Headline to be shown in the dialogs content.
    * @param message Message to be shown.
    * @param exception [Throwable] to be shown in expandable content.
+   *
+   * @since 0.1
    */
   constructor(
       title: String,

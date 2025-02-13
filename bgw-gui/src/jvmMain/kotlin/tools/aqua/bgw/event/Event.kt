@@ -23,6 +23,8 @@ package tools.aqua.bgw.event
  * [Event] baseclass.
  *
  * @constructor Empty constructor.
+ *
+ * @since 0.1
  */
 abstract class Event {
   internal var id: String? = null
