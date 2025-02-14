@@ -422,13 +422,13 @@ internal object ContainerMapper {
 
 internal object StyleMapper {
   fun map(style: Style): Map<String, String> {
-    return style.getDeclarations()
+    return style.mapDeclarations()
   }
 }
 
 internal object FilterMapper {
-  fun map(filters: Filter): Map<String, String?> {
-    return filters.getDeclarations()
+  fun map(filters: Filter): Map<String, String> {
+    return filters.mapDeclarations()
   }
 }
 

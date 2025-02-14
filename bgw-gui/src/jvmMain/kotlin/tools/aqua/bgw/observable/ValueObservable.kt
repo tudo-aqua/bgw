@@ -22,7 +22,7 @@ package tools.aqua.bgw.observable
 /**
  * Basic observable with value.
  *
- * @constructor Empty constructor.
+ * @since 0.1
  */
 @Suppress("UnnecessaryAbstractClass")
 abstract class ValueObservable<T> {
@@ -90,28 +90,6 @@ abstract class ValueObservable<T> {
   }
 
   /**
-   * Adds a [listener] and calls [ValueObserver.update] on this new listener with given initial
-   * value. The listener will be removed after the first notification. This is useful for one-time
-   * listeners. The listener will only be called if the new value equals [expectedValue].
-   *
-   * @param initialValue Initial value to notify.
-   * @param expectedValue Expected value to notify.
-   */
-  fun once(initialValue: T, expectedValue: T, listener: ((T, T) -> Unit)) {
-    val observer =
-        object : ValueObserver<T> {
-          override fun update(oldValue: T, newValue: T) {
-            if (newValue == expectedValue) {
-              listener.invoke(oldValue, newValue)
-              listeners.remove(this)
-            }
-          }
-        }
-    listeners.add(observer)
-    observer.update(initialValue, initialValue)
-  }
-
-  /**
    * Adds a [listener] silently.
    *
    * @param listener listener to add.
@@ -132,6 +110,30 @@ abstract class ValueObservable<T> {
   /** Removes all listeners. */
   fun clearListeners() {
     listeners.clear()
+  }
+
+  /**
+   * Adds a [listener] and calls [ValueObserver.update] on this new listener with given initial
+   * value. The listener will be removed after the first notification. This is useful for one-time
+   * listeners. The listener will only be called if the new value equals [expectedValue].
+   *
+   * @param initialValue Initial value to notify.
+   * @param expectedValue Expected value to notify.
+   *
+   * @since 0.10
+   */
+  fun once(initialValue: T, expectedValue: T, listener: ((T, T) -> Unit)) {
+    val observer =
+        object : ValueObserver<T> {
+          override fun update(oldValue: T, newValue: T) {
+            if (newValue == expectedValue) {
+              listener.invoke(oldValue, newValue)
+              listeners.remove(this)
+            }
+          }
+        }
+    listeners.add(observer)
+    observer.update(initialValue, initialValue)
   }
 
   /**

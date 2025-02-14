@@ -17,7 +17,11 @@
 
 package tools.aqua.bgw.observable
 
-/** Observer interface for observable properties with values. */
+/**
+ * Observer interface for observable properties with values.
+ *
+ * @since 0.1
+ */
 fun interface ValueObserver<T> {
   /**
    * Can be implemented to react on changes to the observed property.

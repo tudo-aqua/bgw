@@ -17,20 +17,23 @@
 
 package tools.aqua.bgw.style
 
-import tools.aqua.bgw.observable.Observable
+import tools.aqua.bgw.visual.SingleLayerVisual
 
-class Filter : Observable() {
-  private val declarations = mutableMapOf<String, FilterDeclaration>()
-
-  fun getDeclarations(): Map<String, String?> {
-    return declarations.mapValues { it.value.toFilter() }
-  }
-
-  fun applyDeclarations(filter: Filter) {
-    declarations.clear()
-    declarations.putAll(filter.declarations)
-  }
-
+/**
+ * Class that combines different filters applied to a [SingleLayerVisual].
+ *
+ * @see BlurFilter
+ * @see SaturationFilter
+ * @see SepiaFilter
+ *
+ * @since 0.10
+ */
+class Filter : StylingDeclarationObservable() {
+  /**
+   * Defines the blur filter applied to the [SingleLayerVisual].
+   *
+   * @see BlurFilter
+   */
   var blur: BlurFilter = BlurFilter.NONE
     set(value) {
       field = value
@@ -39,6 +42,11 @@ class Filter : Observable() {
     }
     get() = declarations["blur"] as BlurFilter
 
+  /**
+   * Defines the saturation filter applied to the [SingleLayerVisual].
+   *
+   * @see SaturationFilter
+   */
   var saturation: SaturationFilter = SaturationFilter.NONE
     set(value) {
       field = value
@@ -47,6 +55,11 @@ class Filter : Observable() {
     }
     get() = declarations["saturation"] as SaturationFilter
 
+  /**
+   * Defines the sepia filter applied to the [SingleLayerVisual].
+   *
+   * @see SepiaFilter
+   */
   var sepia: SepiaFilter = SepiaFilter.NONE
     set(value) {
       field = value
@@ -56,39 +69,56 @@ class Filter : Observable() {
     get() = declarations["sepia"] as SepiaFilter
 }
 
-interface FilterDeclaration {
-  var value: String?
-  fun toFilter(): String?
-}
-
-class BlurFilter(radius: Double) : FilterDeclaration {
-  override var value: String? = ""
+/**
+ * Enum class representing the blur filter applied to a [SingleLayerVisual].
+ *
+ * @constructor Creates a [BlurFilter] with the given radius.
+ *
+ * @param radius Radius must be greater or equal to 0.
+ *
+ * @since 0.10
+ */
+class BlurFilter(radius: Double) : StylingDeclaration {
+  internal var value: String? = ""
 
   init {
     value = if (radius > 0.0) "${radius}em" else null
   }
 
-  override fun toFilter(): String? {
-    return if (value != null) "blur($value)" else null
+  override fun toValue(): String {
+    return if (value != null) "blur($value)" else ""
   }
 
   companion object {
+    /** No blur filter applied. */
     val NONE = BlurFilter(0.0)
+    /** 4 pixel blur filter applied. */
     val SMALL = BlurFilter(4.0)
+    /** 8 pixel blur filter applied. */
     val MEDIUM = BlurFilter(8.0)
+    /** 16 pixel blur filter applied. */
     val LARGE = BlurFilter(16.0)
   }
 }
 
-class SaturationFilter(saturation: Double) : FilterDeclaration {
-  override var value: String? = ""
+/**
+ * Enum class representing the saturation filter applied to a [SingleLayerVisual].
+ *
+ * @constructor Creates a [SaturationFilter] with the given saturation value.
+ *
+ * @param saturation Saturation value must be greater or equal to 0.
+ *
+ * @since 0.10
+ */
+class SaturationFilter(saturation: Double) : StylingDeclaration {
+  internal var value: String? = ""
 
   init {
     value = if (saturation != 1.0) "$saturation" else null
   }
 
-  override fun toFilter(): String? {
-    return if (value != null) "saturate($value)" else null
+  override fun toValue(): String {
+    return if (value != null) "saturate($value)" else ""
   }
 
   companion object {
@@ -97,19 +127,30 @@ class SaturationFilter(saturation: Double) : FilterDeclaration {
   }
 }
 
-class SepiaFilter(sepia: Double) : FilterDeclaration {
-  override var value: String? = ""
+/**
+ * Enum class representing the sepia filter applied to a [SingleLayerVisual].
+ *
+ * @constructor Creates a [SepiaFilter] with the given sepia value.
+ *
+ * @param sepia Sepia value must be between 0 and 1.
+ *
+ * @since 0.10
+ */
+class SepiaFilter(sepia: Double) : StylingDeclaration {
+  internal var value: String? = ""
 
   init {
     value = if (sepia != 0.0) "$sepia" else null
   }
 
-  override fun toFilter(): String? {
-    return if (value != null) "sepia($value)" else null
+  override fun toValue(): String {
+    return if (value != null) "sepia($value)" else ""
   }
 
   companion object {
+    /** No sepia filter applied. */
     val NONE = SepiaFilter(0.0)
+    /** Full sepia filter applied. */
     val SEPIA = SepiaFilter(1.0)
   }
 }

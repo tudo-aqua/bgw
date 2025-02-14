@@ -24,7 +24,7 @@ import tools.aqua.bgw.observable.ValueObservable
 /**
  * An observable [List] implementation.
  *
- * @constructor Creates an [ReadonlyObservableList].
+ * @since 0.6
  */
 abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<T> {
 

@@ -25,5 +25,7 @@ package tools.aqua.bgw.observable.properties
  * @constructor Creates a [ReadonlyIntegerProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: 0.
+ *
+ * @since 0.3
  */
 open class ReadonlyIntegerProperty(initialValue: Int = 0) : ReadonlyProperty<Int>(initialValue)

@@ -17,6 +17,13 @@
 
 package tools.aqua.bgw.style
 
+import tools.aqua.bgw.visual.SingleLayerVisual
+
+/**
+ * Enum class representing the flip of a [SingleLayerVisual].
+ *
+ * @since 0.10
+ */
 enum class Flip {
   NONE,
   HORIZONTAL,

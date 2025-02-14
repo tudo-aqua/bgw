@@ -23,5 +23,7 @@ package tools.aqua.bgw.observable.properties
  * @constructor Creates a [DoubleProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: 0.0.
+ *
+ * @since 0.1
  */
 open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())

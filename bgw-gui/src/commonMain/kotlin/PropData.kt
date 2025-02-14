@@ -317,7 +317,7 @@ internal class LinearLayoutData : GameComponentContainerData() {
 internal sealed class SingleLayerVisualData(
     var transparency: Double = 0.0,
     var style: Map<String, String> = emptyMap(),
-    var filters: Map<String, String?> = emptyMap(),
+    var filters: Map<String, String> = emptyMap(),
     var flipped: String = ""
 ) : VisualData()
 

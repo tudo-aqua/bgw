@@ -159,10 +159,10 @@ internal fun PropertiesBuilder.styleBuilder(style: Map<String, String>) {
   cursor = style["cursor"]?.unsafeCast<Cursor>() ?: "auto".unsafeCast<Cursor>()
 }
 
-internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String?>) {
+internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String>) {
   val filterList = mutableListOf<String>()
   filters.values.forEach {
-    if (it != null) {
+    if (it.trim() != "") {
       filterList.add(it)
     }
   }

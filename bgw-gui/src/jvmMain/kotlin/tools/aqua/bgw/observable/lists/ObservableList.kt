@@ -22,7 +22,7 @@ package tools.aqua.bgw.observable.lists
 /**
  * An observable [List] implementation.
  *
- * @constructor Creates an [ObservableList].
+ * @since 0.1
  */
 abstract class ObservableList<T> : ReadonlyObservableList<T>() {
   /**
@@ -173,6 +173,8 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * @return `true` if this list changed as a result of the call.
    *
    * @throws NullPointerException If the specified collection is null.
+   *
+   * @since 0.6
    */
   fun setAll(elements: Collection<T>): Boolean {
     val snapshot = this.toList()
@@ -350,6 +352,8 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * @param o Element to be removed from this list, if present.
    *
    * @return `true` if this list contained the specified element.
+   *
+   * @since 0.8
    */
   fun removeSilent(o: T): Boolean = list.remove(o)
 }

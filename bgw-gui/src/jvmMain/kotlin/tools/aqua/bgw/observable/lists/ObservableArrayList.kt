@@ -24,6 +24,11 @@ package tools.aqua.bgw.observable.lists
  *
  * @param T Type of [List] elements.
  * @param elements Initial elements in this [ObservableList].
+ *
+ * @see ObservableList
+ * @see ObservableLinkedList
+ *
+ * @since 0.1
  */
 open class ObservableArrayList<T>(elements: Collection<T> = emptyList()) : ObservableList<T>() {
   /** List field. */

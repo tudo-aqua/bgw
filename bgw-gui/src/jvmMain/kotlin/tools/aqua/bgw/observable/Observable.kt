@@ -22,7 +22,7 @@ package tools.aqua.bgw.observable
 /**
  * Basic observable.
  *
- * @constructor Empty constructor.
+ * @since 0.1
  */
 @Suppress("UnnecessaryAbstractClass")
 abstract class Observable {

@@ -23,5 +23,7 @@ package tools.aqua.bgw.observable.properties
  * @constructor Creates a [StringProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: Empty string.
+ *
+ * @since 0.1
  */
 open class StringProperty(initialValue: String = "") : Property<String>(initialValue)
