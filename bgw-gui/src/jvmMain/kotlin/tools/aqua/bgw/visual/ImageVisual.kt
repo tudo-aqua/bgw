@@ -36,7 +36,7 @@ import tools.aqua.bgw.observable.properties.StringProperty
  *
  * @constructor Loads an [ImageVisual] from a path in resources.
  *
- * @param path Location of image file relative to /resources.
+ * @param path Location of image file relative to "resources".
  * @property width Width of sub-image. Pass -1 to use full width. Default: -1.
  * @property height Height of sub-image. Pass -1 to use full height. Default: -1.
  * @property offsetX Left bound of sub-image. Default: 0.
@@ -44,6 +44,11 @@ import tools.aqua.bgw.observable.properties.StringProperty
  *
  * @throws IllegalArgumentException If [path] is not a valid path or empty or if [path] was not
  * found in resources.
+ *
+ * @see SingleLayerVisual
+ * @see CompoundVisual
+ * @see TextVisual
+ * @see ColorVisual
  *
  * @since 0.10
  */
@@ -69,13 +74,27 @@ open class ImageVisual(
 
   internal val pathProperty = StringProperty(path)
 
+  /**
+   * Location of image file relative to "resources".
+   *
+   * @since 0.10
+   */
   var path: String
     get() = pathProperty.value
     set(value) {
       pathProperty.value = value
     }
 
-  /** Load image from [BufferedImage]. */
+  /**
+   * Load image from [BufferedImage].
+   *
+   * @see SingleLayerVisual
+   * @see CompoundVisual
+   * @see TextVisual
+   * @see ColorVisual
+   *
+   * @since 0.1
+   */
   constructor(
       image: BufferedImage,
       width: Int = -1,

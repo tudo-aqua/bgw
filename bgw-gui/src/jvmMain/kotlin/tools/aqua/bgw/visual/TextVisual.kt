@@ -35,6 +35,13 @@ import tools.aqua.bgw.util.Font
  * @param alignment [Alignment] for the [text]. Default: [Alignment.CENTER].
  * @param offsetX The horizontal offset of the [text] from its anchorpoint. Default: 0.
  * @param offsetY The vertical offset of the [text] from its anchorpoint. Default: 0.
+ *
+ * @see SingleLayerVisual
+ * @see CompoundVisual
+ * @see ColorVisual
+ * @see ImageVisual
+ *
+ * @since 0.1
  */
 open class TextVisual(
     text: String,
@@ -78,7 +85,11 @@ open class TextVisual(
    */
   internal val alignmentProperty: Property<Alignment> = Property(alignment)
 
-  /** The [text] [Alignment]. */
+  /**
+   * The [text] [Alignment].
+   *
+   * @since 0.2
+   */
   var alignment: Alignment
     get() = alignmentProperty.value
     set(value) {
@@ -92,7 +103,11 @@ open class TextVisual(
    */
   internal val offsetXProperty: DoubleProperty = DoubleProperty(offsetX)
 
-  /** The x-axis [text] offset. */
+  /**
+   * The x-axis [text] offset.
+   *
+   * @since 0.2
+   */
   var offsetX: Double
     get() = offsetXProperty.value
     set(value) {
@@ -106,7 +121,11 @@ open class TextVisual(
    */
   internal val offsetYProperty: DoubleProperty = DoubleProperty(offsetY)
 
-  /** The y-axis [text] offset. */
+  /**
+   * The y-axis [text] offset.
+   *
+   * @since 0.2
+   */
   var offsetY: Double
     get() = offsetYProperty.value
     set(value) {
