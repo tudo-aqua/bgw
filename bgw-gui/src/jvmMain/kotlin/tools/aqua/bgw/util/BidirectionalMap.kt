@@ -26,29 +26,25 @@ package tools.aqua.bgw.util
  *
  * Example:
  *
- * A -> B
+ * [(A -> B), (A -> C)]
  *
- * A -> C
+ * is invalid because A is contained twice in the Domain.
  *
- * is invalid because A is contained twice in the Domain.<br>
+ * [(A -> B), (C -> B)]
  *
- * A -> B
+ * is invalid because B is contained twice in the coDomain.
  *
- * C -> B
- *
- * is invalid because B is contained twice in the coDomain.<br>
- *
- * A -> B
- *
- * C -> A
+ * [(A -> B), (C -> A)]
  *
  * is valid because A is only contained once in the domain and in the coDomain.
  *
- * @constructor Creates a map with the given set of elements mapping pair.first -> pair.second.
+ * @constructor Creates a map with the given set of elements mapping `pair.first` -> `pair.second`.
  *
  * @param T Type of domain elements.
  * @param R Type of co-domain elements.
  * @param elements Elements to be initialized in the map.
+ *
+ * @since 0.1
  */
 open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
   private val map: MutableList<Pair<T, R>> = mutableListOf()
@@ -62,15 +58,33 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
     /** @return The amount of pairs. */
     get() = map.size
 
-  /** Represents the domain keys of this map as a set. */
+  /**
+   * Represents the domain keys of this map as a set.
+   *
+   * @return The domain keys of this map as a set.
+   *
+   * @since 0.9
+   */
   val keysForward: Set<T>
     get() = map.map { it.first }.toSet()
 
-  /** Represents the co-domain keys of this map as a set. */
+  /**
+   * Represents the co-domain keys of this map as a set.
+   *
+   * @return The co-domain keys of this map as a set.
+   *
+   * @since 0.9
+   */
   val keysBackward: Set<R>
     get() = map.map { it.second }.toSet()
 
-  /** Represents the entries of this map as a set. */
+  /**
+   * Represents the entries of this map as a set.
+   *
+   * @return The entries of this map as a set.
+   *
+   * @since 0.9
+   */
   val entries: Set<Pair<T, R>>
     get() = map.toSet()
 
@@ -78,8 +92,12 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Get the value for a given domain key.
    *
    * @param it Domain key.
+   *
    * @return Value (from the co-domain) for given domain key.
+   *
    * @throws NoSuchElementException If no such element in the domain is found.
+   *
+   * @since 0.9
    */
   operator fun get(it: T): Any {
     if (containsForward(it)) return forward(it) else throw NoSuchElementException()
@@ -91,6 +109,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @param it Key (from the domain) to set the value for.
    * @param value Value (from the co-domain) to set for given domain key.
+   *
+   * @since 0.9
    */
   operator fun set(it: T, value: R) {
     put(it, value)
@@ -126,13 +146,13 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Adds all relations A -> B. If any of the given items already exist, it gets ignored. If any
    * item contains a key or value that already exists, the map remains unchanged.
    *
-   * Example: Map: [(A->B), (C->D)]
+   * Using the example map of [(A -> B), (C -> D)]:
    *
-   * addAll[(E->F),(G->H)] results in [(A->B), (C->D), (E->F),(G->H)] : true
+   * addAll[(E -> F), (G -> H)] results in [(A -> B), (C -> D), (E -> F), (G -> H)] : true.
    *
-   * addAll[(A->B),(E->F)] results in [(A->B), (C->D), (E->F),] : true
+   * addAll[(A -> B), (E -> F)] results in [(A -> B), (C -> D), (E -> F)] : true.
    *
-   * addAll[(A->C),(E->F)] results in [(A->B), (C->D)] : false
+   * addAll[(A -> C), (E -> F)] results in [(A -> B), (C -> D)] : false.
    *
    * @return `true` if all elements were added to the map or were already contained, `false`
    * otherwise.
@@ -298,7 +318,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @see getCoDomain
    */
-  @Deprecated("Use keysForward instead", ReplaceWith("keysForward"))
+  @Deprecated("This function is no longer supported as of BGW 0.9.", ReplaceWith("keysForward"))
   fun getDomain(): Set<T> = map.map { t -> t.first }.toSet()
 
   /**
@@ -306,7 +326,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @see getDomain
    */
-  @Deprecated("Use keysBackward instead", ReplaceWith("keysBackward"))
+  @Deprecated("This function is no longer supported as of BGW 0.9.", ReplaceWith("keysBackward"))
   fun getCoDomain(): Set<R> = map.map { t -> t.second }.toSet()
 
   /** Clears the map. */
@@ -334,8 +354,11 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @param key Key (from the domain) to set the value for.
    * @param value Value (from the co-domain) to set for given domain key.
+   *
    * @return Pair of overwritten pairs. First element is the pair that was overwritten in the domain
    * (or null), second element is the pair that was overwritten in the co-domain (or null).
+   *
+   * @since 0.9
    */
   fun put(key: T, value: R): Pair<Pair<T, R>?, Pair<T, R>?> {
     val firstPair = map.firstOrNull { t -> t.first == key }
@@ -352,6 +375,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Set the given entries. Overwrites existing values in domain and co-domain.
    *
    * @param items Entries to set.
+   *
+   * @since 0.9
    */
   fun putAll(vararg items: Pair<T, R>) {
     items.forEach { put(it.first, it.second) }
@@ -361,6 +386,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Set the given entries. Overwrites existing values in domain and co-domain.
    *
    * @param bidirectionalMap Entries to set from another [BidirectionalMap].
+   *
+   * @since 0.9
    */
   fun putAll(bidirectionalMap: BidirectionalMap<T, R>) {
     bidirectionalMap.entries.forEach { entry -> put(entry.first, entry.second) }

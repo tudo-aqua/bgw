@@ -38,7 +38,7 @@ interface StylingDeclaration {
  *
  * @since 0.10
  */
-open class StylingDeclarationObservable : Observable() {
+abstract class StylingDeclarationObservable : Observable() {
   internal val declarations = mutableMapOf<String, StylingDeclaration>()
 
   internal fun mapDeclarations(): Map<String, String> {

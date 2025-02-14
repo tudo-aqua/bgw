@@ -19,14 +19,16 @@ package tools.aqua.bgw.util
 
 import kotlin.math.PI
 
-/** Utility class for trigonometry functions. */
+/**
+ * Utility class for trigonometry functions.
+ *
+ * @since 0.3
+ */
 object Trig {
   /** Sin function for angles in degrees. */
-  @Suppress("GrazieInspection")
   fun sinD(degrees: Number): Double = kotlin.math.sin(degrees.toDouble().toRadians())
 
   /** Cos function for angles in degrees. */
-  @Suppress("GrazieInspection")
   fun cosD(degrees: Number): Double = kotlin.math.cos(degrees.toDouble().toRadians())
 
   private fun Double.toRadians(): Double = this * (PI / 180.0)

@@ -22,6 +22,7 @@ import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.MenuScene
+import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 
@@ -39,7 +40,8 @@ class UIComponentExample : BoardGameApplication("UIComponent Example", width = 8
           width = 300,
           text = "I am a Label.",
           alignment = Alignment.CENTER,
-          isWrapText = true)
+          isWrapText = true,
+          visual = ColorVisual.GREEN.apply { style.borderRadius = BorderRadius.XXL })
 
   init {
     menuScene.addComponents(outputLabel)
