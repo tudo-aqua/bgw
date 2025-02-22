@@ -40,6 +40,7 @@ import { guideStructure, layoutMap } from "@/lib/utils";
 import { set } from "date-fns";
 import Main from "./docs/Main";
 import { Button } from "@/components/ui/button";
+import SearchField from "@/components/SearchField";
 
 function BGWDocsLayout() {
   const { dirs, allSamples } = useLoaderData();
@@ -556,6 +557,7 @@ function BGWDocsLayout() {
               <img src="/bgw/logo.svg" className="w-8 h-8" />
               <h1 className="text-xl font-semibold">BoardGameWork</h1>
             </Link>
+            <SearchField />
             {/* <Link>
               <Button variant="secondary" className="flex items-center gap-2">
                 <i className="text-xl material-symbols-rounded">settings</i>

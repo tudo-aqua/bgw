@@ -12,7 +12,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import BGWPlayground from "@/pages/BGWPlayground.tsx";
 import BGWDocsLayout from "./pages/BGWDocsLayout";
-import { guideStructure } from "./lib/utils";
+import { convertMarkdownToHtml, guideStructure } from "./lib/utils";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,9 +64,12 @@ async function loadAllGuides() {
           return null;
         }
         const text = await response.text();
+        const html = await convertMarkdownToHtml(text);
         return {
           path,
           content: text,
+          html: html,
+          searchText: html.replace(/<[^>]*>/g, ""), // Strip HTML tags for searching
         };
       } catch (err) {
         console.warn(`Failed to load guide: ${url}`, err);
@@ -77,16 +80,72 @@ async function loadAllGuides() {
 
   // Filter out failed fetches and create a map
   const guidesMap = Object.fromEntries(
-    guides.filter((g) => g !== null).map((g) => [g.path, g.content])
+    guides.filter((g) => g !== null).map((g) => [g.path, g])
   );
 
   return guidesMap;
 }
 
+export const guidesMap = await loadAllGuides();
+
+function getGuideInfo(path: string) {
+  for (const [section, data] of Object.entries(guideStructure)) {
+    const guide = data.items.find((item) => item.url === path);
+    if (guide) {
+      return {
+        section,
+        title: guide.title,
+        icon: data.icon,
+      };
+    }
+  }
+  return null;
+}
+
+export function searchGuides(query: string) {
+  const results = [];
+  const searchRegex = new RegExp(`(${query})`, "gi");
+
+  for (const [path, guide] of Object.entries(guidesMap)) {
+    if (
+      path.toLowerCase().includes(query.toLowerCase()) ||
+      guide.searchText.toLowerCase().includes(query.toLowerCase())
+    ) {
+      let snippet = "";
+      const match = searchRegex.exec(guide.searchText);
+      if (match) {
+        const start = Math.max(0, match.index - 50);
+        const end = Math.min(
+          guide.searchText.length,
+          match.index + query.length + 50
+        );
+        snippet =
+          (start > 0 ? "..." : "") +
+          guide.searchText
+            .slice(start, end)
+            .trim()
+            .replace(
+              searchRegex,
+              '<mark class="bg-transparent font-bold text-purple-400">$1</mark>'
+            ) +
+          (end < guide.searchText.length ? "..." : "");
+      }
+      const guideInfo = getGuideInfo(path);
+      results.push([
+        path,
+        snippet || guide.searchText.slice(0, 100) + "...",
+        guideInfo,
+      ]);
+    }
+  }
+  return results;
+}
+
 async function docsLoader() {
-  const [docsResponse, samplesResponse] = await Promise.all([
+  const [docsResponse, samplesResponse, guides] = await Promise.all([
     fetch("/bgw/bgw/cleanedStructure.json"),
     fetch("/bgw/bgw/bgwSamples.json"),
+    loadAllGuides(),
   ]);
 
   const docs = await docsResponse.json();
@@ -95,6 +154,7 @@ async function docsLoader() {
   return {
     dirs: docs,
     allSamples: samples,
+    guides,
   };
 }
 
