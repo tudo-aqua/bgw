@@ -65,11 +65,15 @@ async function loadAllGuides() {
         }
         const text = await response.text();
         const html = await convertMarkdownToHtml(text);
+        const cleanedHtml = html.replace(
+          /{\s?style="(note|danger|warning|info)"\s?}/g,
+          ""
+        );
         return {
           path,
           content: text,
-          html: html,
-          searchText: html.replace(/<[^>]*>/g, ""), // Strip HTML tags for searching
+          html: cleanedHtml,
+          searchText: cleanedHtml.replace(/<[^>]*>/g, ""),
         };
       } catch (err) {
         console.warn(`Failed to load guide: ${url}`, err);
@@ -82,6 +86,8 @@ async function loadAllGuides() {
   const guidesMap = Object.fromEntries(
     guides.filter((g) => g !== null).map((g) => [g.path, g])
   );
+
+  console.log("Loaded guides", guidesMap);
 
   return guidesMap;
 }
@@ -142,10 +148,9 @@ export function searchGuides(query: string) {
 }
 
 async function docsLoader() {
-  const [docsResponse, samplesResponse, guides] = await Promise.all([
+  const [docsResponse, samplesResponse] = await Promise.all([
     fetch("/bgw/bgw/cleanedStructure.json"),
     fetch("/bgw/bgw/bgwSamples.json"),
-    loadAllGuides(),
   ]);
 
   const docs = await docsResponse.json();
@@ -154,7 +159,6 @@ async function docsLoader() {
   return {
     dirs: docs,
     allSamples: samples,
-    guides,
   };
 }
 

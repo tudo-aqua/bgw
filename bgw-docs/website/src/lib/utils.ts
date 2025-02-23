@@ -14,6 +14,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
 import rehypeStringify from "rehype-stringify";
+import { visit } from "unist-util-visit";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -318,13 +319,36 @@ export function reconstructProperties(component: any) {
   return component;
 }
 
+// Custom rehype plugin to transform <preview> tags into <code> tags
+function rehypePreviewToCode() {
+  return (tree) => {
+    visit(tree, (node) => {
+      if (node.type === "raw" && node.value.includes("<preview>")) {
+        // Replace preview tags with code tags in raw HTML
+        node.value = node.value
+          .replace(/<preview>/g, "<code>")
+          .replace(/<\/preview>/g, "</code>");
+      }
+      if (node.type === "element" && node.tagName === "preview") {
+        node.tagName = "code";
+      }
+    });
+  };
+}
+
 export async function convertMarkdownToHtml(markdown: string): Promise<string> {
   const result = await unified()
     .use(remarkParse)
     .use(remarkGfm)
-    .use(remarkRehype)
-    .use(rehypeRaw)
-    .use(rehypeStringify)
+    .use(remarkRehype, {
+      allowDangerousHtml: true, // Allow raw HTML in markdown
+      passThrough: ["preview"], // Preserve preview tags
+    })
+    .use(rehypeRaw) // Parse raw HTML
+    .use(rehypePreviewToCode) // Transform preview to code tags
+    .use(rehypeStringify, {
+      allowDangerousHtml: true, // Preserve HTML in output
+    })
     .process(markdown);
 
   return result.toString();
