@@ -329,7 +329,8 @@ internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
     isTransparent: Boolean = false,
-    loadCallback: (Any) -> Unit
+    loadCallback: (Any) -> Unit,
+    debugLogging: Boolean = false
 ) : JFrame() {
   private var browserFocus = true
   private var fullscreenFrame: JFrame? = null
@@ -346,7 +347,10 @@ internal class MainFrame(
     // region - CEF Initialization / Settings
     val builder = CefAppBuilder()
     builder.cefSettings.windowless_rendering_enabled = useOSR
-    builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+
+    if (!debugLogging) {
+      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+    }
 
     val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
     val defaultDirs = ProjectDirectories.from("bgw-gui", "tools.aqua", BGWAppName)
