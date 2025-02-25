@@ -15,6 +15,26 @@ export const theme = {
       "2xl": "1400px",
     },
   },
+  screens: {
+    sm: "40rem",
+    md: "48rem",
+    lg: "64rem",
+    xl: "80rem",
+    "2xl": "85rem",
+    "3xl": "96rem",
+    "max-2xl": { max: "85rem" },
+    "max-3xl": { max: "96rem" },
+    "min-sm": { min: "40rem" },
+    "min-md": { min: "48rem" },
+    "min-lg": { min: "64rem" },
+    "min-xl": { min: "80rem" },
+    "min-2xl": { min: "85rem" },
+    "min-3xl": { min: "96rem" },
+    "max-sm": { max: "40rem" },
+    "max-md": { max: "48rem" },
+    "max-lg": { max: "64rem" },
+    "max-xl": { max: "80rem" },
+  },
   extend: {
     colors: {
       border: "hsl(var(--border))",
@@ -76,20 +96,12 @@ export const theme = {
     },
     keyframes: {
       "accordion-down": {
-        from: {
-          height: "0",
-        },
-        to: {
-          height: "var(--radix-accordion-content-height)",
-        },
+        from: { height: "0" },
+        to: { height: "var(--radix-accordion-content-height)" },
       },
       "accordion-up": {
-        from: {
-          height: "var(--radix-accordion-content-height)",
-        },
-        to: {
-          height: "0",
-        },
+        from: { height: "var(--radix-accordion-content-height)" },
+        to: { height: "0" },
       },
     },
     animation: {
