@@ -17,7 +17,11 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-/** Enum for orientations [HORIZONTAL] and [VERTICAL]. */
+/**
+ * Enum for orientations [HORIZONTAL] and [VERTICAL].
+ *
+ * @since 0.1
+ */
 enum class Orientation {
   /** [HORIZONTAL] orientation. */
   HORIZONTAL,

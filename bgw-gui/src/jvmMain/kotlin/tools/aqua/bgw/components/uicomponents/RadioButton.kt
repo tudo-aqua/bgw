@@ -57,8 +57,13 @@ import tools.aqua.bgw.visual.Visual
  * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
  *
- * @see ToggleButton
+ * @see Font
  * @see ToggleGroup
+ * @see Visual
+ * @see BinaryStateButton
+ * @see ToggleButton
+ *
+ * @since 0.1
  */
 open class RadioButton(
     posX: Number = 0,

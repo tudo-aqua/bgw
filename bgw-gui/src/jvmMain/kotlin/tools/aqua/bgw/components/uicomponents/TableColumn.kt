@@ -38,6 +38,9 @@ import tools.aqua.bgw.util.Font
  * the [TableView] to get a [String] for its cell.
  *
  * @see TableView
+ * @see Font
+ *
+ * @since 0.1
  */
 open class TableColumn<T>(
     title: String,
@@ -96,6 +99,8 @@ open class TableColumn<T>(
    * [Font] of this [TableColumn].
    *
    * @see Font
+   *
+   * @since 0.6
    */
   var font: Font
     get() = fontProperty.value
@@ -124,6 +129,17 @@ open class TableColumn<T>(
       formatFunctionProperty.value = value
     }
 
+  /**
+   * Manually trigger the [formatFunction] for a given item.
+   *
+   * @param item Item to format.
+   *
+   * @return Formatted [String] representation of the item.
+   *
+   * @see formatFunction
+   *
+   * @since 0.10
+   */
   fun formatItem(item: Any?): String {
     val function = formatFunction ?: { it: Any? -> it.toString() }
     return function(item as T)

@@ -125,18 +125,15 @@ function convertDashesToCaps(str) {
 
 function pathToPackage(path, breadcrumbs) {
   if (path.startsWith("http")) {
-    console.log("##############", path);
     return path;
   }
 
   if (breadcrumbs.indexOf("ComponentView") !== -1) {
-    console.log("path", path);
   }
 
   path = path.replace(/\.html.+$/, "");
 
   if (path.indexOf("/") === -1 && path !== "_index") {
-    console.log("breadcrumbs", breadcrumbs);
     return [...breadcrumbs, path]
       .join("/")
       .replace(/(\/|_)?index/g, "")

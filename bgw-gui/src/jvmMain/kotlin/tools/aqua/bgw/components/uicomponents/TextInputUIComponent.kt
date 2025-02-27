@@ -37,6 +37,12 @@ import tools.aqua.bgw.visual.Visual
  * @param prompt Prompt for this [TextInputUIComponent].
  * @param font Font to be used for the [text].
  * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
+ *
+ * @see Font
+ * @see Visual
+ * @see UIComponent
+ *
+ * @since 0.2
  */
 sealed class TextInputUIComponent(
     posX: Number,

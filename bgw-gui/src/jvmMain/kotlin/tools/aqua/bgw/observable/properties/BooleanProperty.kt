@@ -23,5 +23,7 @@ package tools.aqua.bgw.observable.properties
  * @constructor Creates a [BooleanProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: `false`.
+ *
+ * @since 0.1
  */
 open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)

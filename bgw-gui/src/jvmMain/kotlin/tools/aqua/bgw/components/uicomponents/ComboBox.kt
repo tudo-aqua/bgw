@@ -49,6 +49,10 @@ import tools.aqua.bgw.visual.Visual
  * @param items The initial selection of items. Default: empty list.
  * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
  *
+ * @see Font
+ * @see Visual
+ * @see UIComponent
+ *
  * @since 0.1
  */
 open class ComboBox<T>(
@@ -72,10 +76,6 @@ open class ComboBox<T>(
     else selectedItemProperty.value = observableItemsList[selectedItem]
 
     onItemSelected?.invoke(selectedItemProperty.value)
-  }
-
-  internal fun getSelectedIndex(): Int {
-    return observableItemsList.indexOf(selectedItem)
   }
 
   /**
@@ -142,6 +142,35 @@ open class ComboBox<T>(
 
       selectedItemProperty.value = selectedItem
     }
+  }
+
+  /**
+   * Get the index of the currently selected item.
+   *
+   * @return The index of the currently selected item.
+   *
+   * @see selectedItem
+   *
+   * @since 0.10
+   */
+  fun getSelectedIndex(): Int {
+    return observableItemsList.indexOf(selectedItem)
+  }
+
+  /**
+   * Manually trigger the [formatFunction] for a given item.
+   *
+   * @param item Item to format.
+   *
+   * @return Formatted [String] representation of the item.
+   *
+   * @see formatFunction
+   *
+   * @since 0.10
+   */
+  fun formatItem(item: Any?): String {
+    val function = formatFunction ?: { it: Any? -> it.toString() }
+    return function(item as T)
   }
 
   /**

@@ -26,8 +26,11 @@ import tools.aqua.bgw.components.ComponentView
  *
  * @constructor Creates a [DragEvent] containing [draggedComponent].
  *
+ * @param draggedComponent Currently dragged [ComponentView].
  * @property draggedComponent Currently dragged [ComponentView].
  *
  * @see DropEvent
+ *
+ * @since 0.1
  */
 class DragEvent(val draggedComponent: ComponentView) : Event()

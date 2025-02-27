@@ -111,6 +111,11 @@ internal class Animator {
     val animations = animation.animations
 
     animations.forEach {
+      if (it is DelayAnimationData ||
+          it is SequentialAnimationData ||
+          it is ParallelAnimationData ||
+          it is SteppedComponentAnimationData)
+          return@forEach
       val component = it as? ComponentAnimationData ?: return
       val componentId = component.componentView?.id.toString()
 
@@ -132,6 +137,11 @@ internal class Animator {
     val animations = animation.animations
 
     animations.forEach {
+      if (it is DelayAnimationData ||
+          it is SequentialAnimationData ||
+          it is ParallelAnimationData ||
+          it is SteppedComponentAnimationData)
+          return@forEach
       val component = it as? ComponentAnimationData ?: return
       val componentId = component.componentView?.id.toString()
 

@@ -41,8 +41,9 @@ import tools.aqua.bgw.visual.Visual
  * @param height height for this [GameComponentContainer].
  * @param visual visual for this [GameComponentContainer].
  *
- * @see GameComponentView
  * @see DynamicComponentView
+ * @see GameComponentView
+ * @see Visual
  *
  * @since 0.1
  */

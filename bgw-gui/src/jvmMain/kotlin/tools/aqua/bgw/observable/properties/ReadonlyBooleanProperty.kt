@@ -25,6 +25,8 @@ package tools.aqua.bgw.observable.properties
  * @constructor Creates a [ReadonlyBooleanProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: `false`.
+ *
+ * @since 0.3
  */
 open class ReadonlyBooleanProperty(initialValue: Boolean = false) :
     ReadonlyProperty<Boolean>(initialValue)

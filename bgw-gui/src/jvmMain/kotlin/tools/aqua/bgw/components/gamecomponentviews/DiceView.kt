@@ -39,6 +39,9 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [DiceView]. Default: [DEFAULT_DICE_HEIGHT].
  * @param visuals List of visuals to represent the sides of the die.
  *
+ * @see Visual
+ * @see GameComponentView
+ *
  * @since 0.1
  */
 open class DiceView(

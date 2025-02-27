@@ -23,5 +23,7 @@ package tools.aqua.bgw.event
  * InputEvent baseclass.
  *
  * @constructor Empty constructor.
+ *
+ * @since 0.1
  */
 abstract class InputEvent : Event()

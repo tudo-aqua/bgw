@@ -53,11 +53,11 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
   // onWheel = { JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id)) }
 
   if (props.hasMouseEnteredEvent) {
-    onMouseEnter = { JCEFEventDispatcher.dispatchEvent(it.toMouseEnteredData(props.id)) }
+    onMouseOver = { JCEFEventDispatcher.dispatchEvent(it.toMouseEnteredData(props.id)) }
   }
 
   if (props.hasMouseExitedEvent) {
-    onMouseLeave = { JCEFEventDispatcher.dispatchEvent(it.toMouseExitedData(props.id)) }
+    onMouseOut = { JCEFEventDispatcher.dispatchEvent(it.toMouseExitedData(props.id)) }
   }
 
   var debounceTimeout: Timeout? = null

@@ -41,6 +41,8 @@ private typealias HexCoordinate = Pair<Int, Int>
  * @see CoordinateSystem
  * @see HexOrientation
  * @see HexagonView
+ * @see Visual
+ * @see GameComponentContainer
  *
  * @since 0.8
  */

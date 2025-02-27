@@ -17,7 +17,15 @@
 
 package tools.aqua.bgw.components.uicomponents
 
-/** Enum indicating allowed selection mode. */
+/**
+ * Enum indicating allowed selection mode.
+ *
+ * @see StructuredDataView
+ * @see ListView
+ * @see TableView
+ *
+ * @since 0.6
+ */
 enum class SelectionMode {
   /** Enum constant indicating that NO selection is possible. */
   NONE,

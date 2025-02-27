@@ -29,6 +29,8 @@ import tools.aqua.bgw.util.Trig.sinD
  *
  * @param xCoord The x coordinate.
  * @param yCoord The y coordinate.
+ *
+ * @since 0.1
  */
 open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
 
@@ -64,6 +66,8 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * @param factor factor to multiply with.
    *
    * @return New coordinate object containing multiplied [Coordinate] with [factor].
+   *
+   * @since 0.3
    */
   operator fun times(factor: Number): Coordinate =
       Coordinate(xCoord * factor.toDouble(), yCoord * factor.toDouble())
@@ -74,27 +78,17 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * @param denominator denominator to divide by.
    *
    * @return New coordinate object containing divided [Coordinate] by [denominator].
+   *
+   * @throws IllegalArgumentException If [denominator] is 0.
+   *
+   * @since 0.3
    */
   operator fun div(denominator: Number): Coordinate {
     require(denominator != 0) { "Dividing by zero is not allowed." }
     return Coordinate(xCoord / denominator.toDouble(), yCoord / denominator.toDouble())
   }
 
-  /**
-   * Rotates [Coordinate] by [angle] degrees around center point.
-   *
-   * With
-   *
-   * - Angle t,
-   *
-   * - Center point Z
-   *
-   * - Coordinate P
-   *
-   * [ cos(phi) -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
-   *
-   * [ sin(phi) cos(phi) ] [ Py - Zy ] [ Zy ] [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
-   */
+  /** Rotates [Coordinate] by [angle] degrees around center point. */
   fun rotated(angle: Number, center: Coordinate): Coordinate =
       Coordinate(
           xCoord =
@@ -105,21 +99,7 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
                   cosD(angle) * (yCoord - center.yCoord) +
                   center.yCoord)
 
-  /**
-   * Rotates coordinate by angle degrees around point (0,0).
-   *
-   * With
-   *
-   * - Angle t,
-   *
-   * - Center point Z
-   *
-   * - Coordinate P
-   *
-   * [ cos(phi) -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
-   *
-   * [ sin(phi) cos(phi) ] [ Py - Zy ] [ Zy ] [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
-   */
+  /** Rotates coordinate by angle degrees around point (0,0). */
   fun rotated(angle: Double): Coordinate = rotated(angle, Coordinate(0, 0))
 
   /** Prints [xCoord] and [yCoord] as String. */

@@ -33,6 +33,13 @@ import tools.aqua.bgw.observable.lists.ObservableList
  *
  * @param children Children [SingleLayerVisual]s in the order they should be displayed, where the
  * first [SingleLayerVisual] gets displayed at the bottom of the stack.
+ *
+ * @see Visual
+ * @see ColorVisual
+ * @see TextVisual
+ * @see ImageVisual
+ *
+ * @since 0.1
  */
 open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
 
@@ -67,6 +74,13 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
    *
    * @param children Children [SingleLayerVisual]s in the order they should be displayed, where the
    * first [SingleLayerVisual] gets displayed at the bottom of the stack.
+   *
+   * @see Visual
+   * @see ColorVisual
+   * @see TextVisual
+   * @see ImageVisual
+   *
+   * @since 0.1
    */
   constructor(vararg children: SingleLayerVisual) : this(children.toList())
 

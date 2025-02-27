@@ -38,6 +38,10 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [Pane].
  * @param visual Visual for this [Pane]. Default: [Visual.EMPTY].
  *
+ * @see ComponentView
+ * @see Visual
+ * @see LayoutView
+ *
  * @since 0.1
  */
 open class Pane<T : ComponentView>(

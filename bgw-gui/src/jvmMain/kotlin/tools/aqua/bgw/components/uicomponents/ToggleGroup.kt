@@ -35,6 +35,9 @@ import IDGenerator
  *
  * @see ToggleButton
  * @see RadioButton
+ * @see BinaryStateButton
+ *
+ * @since 0.1
  */
 open class ToggleGroup {
   internal val id = IDGenerator.generateToggleGroupID()
@@ -65,6 +68,8 @@ open class ToggleGroup {
    * Gets called when a [ToggleButton] or [RadioButton] gets selected.
    *
    * @see onDeselected
+   *
+   * @since 0.10
    */
   var onSelected: ((BinaryStateButton) -> Unit)? = null
 
@@ -72,6 +77,8 @@ open class ToggleGroup {
    * Gets called when a [ToggleButton] or [RadioButton] gets deselected.
    *
    * @see onSelected
+   *
+   * @since 0.10
    */
   var onDeselected: ((BinaryStateButton) -> Unit)? = null
 }

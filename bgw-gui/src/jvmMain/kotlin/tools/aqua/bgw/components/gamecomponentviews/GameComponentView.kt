@@ -34,7 +34,12 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [GameComponentView].
  * @param visual Visual for this [GameComponentView].
  *
- * @see tools.aqua.bgw.components.container
+ * @see DynamicComponentView
+ * @see CardView
+ * @see TokenView
+ * @see HexagonView
+ * @see DiceView
+ * @see Visual
  */
 sealed class GameComponentView(
     posX: Number,

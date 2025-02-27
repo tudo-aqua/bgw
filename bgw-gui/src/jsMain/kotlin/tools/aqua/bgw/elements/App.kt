@@ -36,6 +36,7 @@ import tools.aqua.bgw.builder.ReactConverters.toDragMoveEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.SceneBuilder
+import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -516,8 +517,12 @@ internal val App =
             width = 100.pct
             height = 100.pct
             display = Display.flex
-            justifyContent = JustifyContent.center
-            alignItems = AlignItems.center
+            alignmentBuilder(props.data)
+          }
+
+          bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.background)
           }
 
           val menuScene = props.data.menuScene
@@ -549,6 +554,18 @@ internal val App =
           }
 
           val gameScene = props.data.gameScene
+          if (gameScene != undefined && gameScene.locked) {
+            bgwLock {
+              css {
+                position = Position.absolute
+                width = props.data.width.em
+                height = props.data.height.em
+                backgroundColor = rgb(0, 0, 0, 0.0)
+                zIndex = zIndex(998)
+              }
+            }
+          }
+
           bgwGameScene {
             css { position = Position.absolute }
 
@@ -571,6 +588,9 @@ internal inline val bgwMenuScene: IntrinsicType<HTMLAttributes<Element>>
 
 internal inline val bgwBlur: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_blur".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+
+internal inline val bgwLock: IntrinsicType<HTMLAttributes<Element>>
+  get() = "bgw_lock".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
 internal inline val bgwGameScene: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_game_scene".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

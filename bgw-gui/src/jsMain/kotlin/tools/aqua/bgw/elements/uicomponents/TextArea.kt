@@ -52,6 +52,8 @@ internal val TextArea =
 
       val elementRef = useRef<Element>(null)
 
+      val (inputValue, setInputValue) = useState(props.data.text)
+
       bgwTextArea {
         id = props.data.id
         className = ClassName("textArea")
@@ -68,7 +70,7 @@ internal val TextArea =
         textarea {
           placeholder = props.data.prompt
           defaultValue = props.data.text
-          value = props.data.text
+          value = inputValue
           spellCheck = false
           css {
             fontBuilder(props.data)
@@ -82,6 +84,7 @@ internal val TextArea =
           }
           onChange = {
             val value = it.target.value
+            setInputValue(value)
             JCEFEventDispatcher.dispatchEvent(
                 TextInputChangedEventData(value).apply { id = props.data.id })
           }

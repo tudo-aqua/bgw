@@ -47,6 +47,7 @@ import tools.aqua.bgw.visual.Visual
  *
  * @see GameComponentView
  * @see Visual
+ * @see GameComponentContainer
  *
  * @since 0.1
  */

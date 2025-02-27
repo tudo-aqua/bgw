@@ -29,6 +29,11 @@ import tools.aqua.bgw.visual.Visual
  * @param width [Scene] [width] in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
  * @param height [Scene] [height] in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
  * @param background [BoardGameScene] [background] [Visual]. Default: [ColorVisual.WHITE].
+ *
+ * @see Scene
+ * @see BoardGameScene
+ *
+ * @since 0.1
  */
 open class MenuScene(
     width: Number = DEFAULT_SCENE_WIDTH,

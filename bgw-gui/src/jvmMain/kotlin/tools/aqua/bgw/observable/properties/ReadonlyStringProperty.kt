@@ -25,6 +25,8 @@ package tools.aqua.bgw.observable.properties
  * @constructor Creates a [ReadonlyStringProperty] with given initial value.
  *
  * @param initialValue Initial Value. Default: Empty string.
+ *
+ * @since 0.3
  */
 open class ReadonlyStringProperty(initialValue: String = "") :
     ReadonlyProperty<String>(initialValue)

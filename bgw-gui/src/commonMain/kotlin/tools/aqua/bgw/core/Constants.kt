@@ -30,14 +30,14 @@ const val DEFAULT_WINDOW_TITLE: String = "BoardGameWork Application"
  *
  * @since 0.2
  */
-const val DEFAULT_WINDOW_WIDTH: Double = 1280.0
+const val DEFAULT_WINDOW_WIDTH: Double = 1920.0
 
 /**
  * Default window height in non-maximized mode.
  *
  * @since 0.2
  */
-const val DEFAULT_WINDOW_HEIGHT: Double = 747.0
+const val DEFAULT_WINDOW_HEIGHT: Double = 1080.0
 
 /**
  * Default minimization factor of window.

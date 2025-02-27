@@ -26,6 +26,14 @@ package tools.aqua.bgw.observable.properties
  *
  * @param T Type of boxed data.
  * @param initialValue Initial value of this property.
+ *
+ * @see ReadonlyProperty
+ * @see BooleanProperty
+ * @see DoubleProperty
+ * @see IntegerProperty
+ * @see LimitedDoubleProperty
+ *
+ * @since 0.1
  */
 open class Property<T>(initialValue: T) : ReadonlyProperty<T>(initialValue = initialValue) {
   override var value: T

@@ -48,6 +48,7 @@ import tools.aqua.bgw.visual.Visual
  * @see CardView
  * @see Visual
  * @see Alignment
+ * @see GameComponentContainer
  *
  * @since 0.1
  */

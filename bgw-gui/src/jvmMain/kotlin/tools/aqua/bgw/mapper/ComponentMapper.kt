@@ -16,7 +16,6 @@
  */
 
 import ComponentMapper.fillData
-import kotlin.math.max
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
@@ -200,7 +199,7 @@ internal object ComponentMapper {
           }
       is ProgressBar ->
           (mapSpecific(componentView) as ProgressBarData).apply {
-            progress = componentView.progress
+            progress = componentView.progress.coerceIn(0.0, 1.0)
             barColor =
                 "rgba(${componentView.barColor.red}, ${componentView.barColor.green}, ${componentView.barColor.blue}, ${componentView.barColor.alpha})"
           }
@@ -423,13 +422,13 @@ internal object ContainerMapper {
 
 internal object StyleMapper {
   fun map(style: Style): Map<String, String> {
-    return style.getDeclarations()
+    return style.mapDeclarations()
   }
 }
 
 internal object FilterMapper {
-  fun map(filters: Filter): Map<String, String?> {
-    return filters.getDeclarations()
+  fun map(filters: Filter): Map<String, String> {
+    return filters.mapDeclarations()
   }
 }
 
@@ -575,9 +574,9 @@ internal object FontFaceMapper {
 
 internal object SceneMapper {
   private fun mapScene(scene: Scene<*>): SceneData {
-    // FIXME - DONE
     return SceneData().apply {
       components = scene.components.map { RecursiveMapper.map(it) }
+      locked = if (scene is BoardGameScene) scene.lockedProperty.value else false
       width = scene.width.toInt()
       height = scene.height.toInt()
       background = VisualMapper.map(scene.background)
@@ -586,14 +585,13 @@ internal object SceneMapper {
 
   fun map(menuScene: MenuScene? = null, gameScene: BoardGameScene? = null): AppData {
     return AppData().apply {
-      this.width =
-          max(
-              menuScene?.width?.toInt() ?: DEFAULT_SCENE_WIDTH.toInt(),
-              gameScene?.width?.toInt() ?: DEFAULT_SCENE_WIDTH.toInt())
-      this.height =
-          max(
-              menuScene?.height?.toInt() ?: DEFAULT_SCENE_HEIGHT.toInt(),
-              gameScene?.height?.toInt() ?: DEFAULT_SCENE_HEIGHT.toInt())
+      this.width = Frontend.widthProperty.value.toInt()
+      this.height = Frontend.heightProperty.value.toInt()
+      this.background = VisualMapper.map(Frontend.backgroundProperty.value)
+      this.alignment =
+          Pair(
+              Frontend.alignmentProperty.value.horizontalAlignment.name.lowercase(),
+              Frontend.alignmentProperty.value.verticalAlignment.name.lowercase())
       this.menuScene = if (menuScene != null) mapScene(menuScene) else null
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
     }

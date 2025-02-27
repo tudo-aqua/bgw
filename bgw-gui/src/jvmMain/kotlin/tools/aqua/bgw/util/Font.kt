@@ -30,13 +30,16 @@ import tools.aqua.bgw.util.Font.FontWeight
  *
  * @constructor Creates a [Font].
  *
- * @property size Size of this Font in `px`. Maybe a floating-point value. Default: 14.
+ * @property size Size of this Font in `px`. Default: 14.
  * @property color Color of this font. Default: [Color.BLACK].
  * @property family Font family as a String for this Font. Default: "Arial".
  * @property fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
  * @property fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
  *
+ * @see FontWeight
  * @see FontStyle
+ *
+ * @since 0.1
  */
 data class Font(
     val size: Number = DEFAULT_FONT_SIZE,
@@ -60,21 +63,49 @@ data class Font(
 
   /**
    * Enum class for representing all available font weights for the Font class.
+   *
    * @see Font
+   *
+   * @since 0.1
    */
   enum class FontWeight {
+    /**
+     * Thin font weight.
+     *
+     * @since 0.10
+     */
     THIN,
+    /**
+     * Extra light font weight.
+     *
+     * @since 0.10
+     */
     EXTRA_LIGHT,
     /** Light font weight. */
     LIGHT,
     /** Normal font weight. */
     NORMAL,
+    /**
+     * Medium font weight.
+     *
+     * @since 0.10
+     */
     MEDIUM,
-    /** Font style weight is bolder than [NORMAL] but not as bold as [BOLD]. */
+    /** Semi-bold font weight. */
     SEMI_BOLD,
     /** Bold font weight. */
     BOLD,
+    /**
+     * Extra bold font weight.
+     *
+     * @since 0.10
+     */
     EXTRA_BOLD,
+    /**
+     * Black font weight.
+     *
+     * @since 0.10
+     */
     BLACK;
 
     /**
@@ -100,6 +131,8 @@ data class Font(
    * Enum class for representing all available font styles for the Font class.
    *
    * @see Font
+   *
+   * @since 0.1
    */
   enum class FontStyle {
     /** Normal font style. */

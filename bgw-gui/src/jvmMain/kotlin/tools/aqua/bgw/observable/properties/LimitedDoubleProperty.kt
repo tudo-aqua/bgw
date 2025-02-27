@@ -31,6 +31,8 @@ package tools.aqua.bgw.observable.properties
  * @param initialValue Initial Value. Default: [lowerBoundInclusive].
  *
  * @throws IllegalArgumentException If a value out of range is set as initialValue.
+ *
+ * @since 0.1
  */
 open class LimitedDoubleProperty(
     lowerBoundInclusive: Number = Double.NEGATIVE_INFINITY,

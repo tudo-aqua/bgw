@@ -38,7 +38,13 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_HEIGHT].
  * @param visual [Visual] that is used to represent this [ProgressBar]. Default: empty [Visual].
  * @param progress The initial progress of this [ProgressBar]. Default 0.
- * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN].
+ * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN]
+ *
+ * @see Visual
+ * @see Color
+ * @see UIComponent
+ *
+ * @since 0.1
  */
 open class ProgressBar(
     posX: Number = 0,
@@ -98,9 +104,11 @@ open class ProgressBar(
   }
 
   /**
-   * Gets invoked whenever this [ProgressBar]'s progress changes.
+   * Gets invoked whenever this [ProgressBar]'s bar progress changes.
    *
    * @see progress
+   *
+   * @since 0.10
    */
   var onProgressed: ((Double) -> Unit)? = null
 }

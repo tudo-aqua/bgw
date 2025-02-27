@@ -24,6 +24,10 @@ package tools.aqua.bgw.util
  * manipulate the [Stack].
  *
  * @constructor Creates a [Stack] with, given initial elements.
+ *
+ * @param elements Initial elements for this [Stack].
+ *
+ * @since 0.2
  */
 open class Stack<T>(elements: Collection<T>) {
 
@@ -33,10 +37,24 @@ open class Stack<T>(elements: Collection<T>) {
   val size: Int
     get() = data.size
 
-  /** Creates a [Stack] with vararg initial elements. */
-  constructor(vararg element: T) : this(element.toList())
+  /**
+   * Creates a [Stack] with vararg initial elements.
+   *
+   * @constructor Creates a [Stack] with vararg initial elements.
+   *
+   * @param elements Initial elements for this [Stack].
+   *
+   * @since 0.3
+   */
+  constructor(vararg elements: T) : this(elements.toList())
 
-  /** Creates an empty [Stack]. */
+  /**
+   * Creates an empty [Stack].
+   *
+   * @constructor Creates an empty [Stack].
+   *
+   * @since 0.3
+   */
   constructor() : this(emptyList())
 
   /**
@@ -56,6 +74,8 @@ open class Stack<T>(elements: Collection<T>) {
    * Pops the topmost element in this [Stack].
    *
    * @return Topmost element in this [Stack] or null if the [Stack] is empty.
+   *
+   * @since 0.3
    */
   fun popOrNull(): T? = data.removeLastOrNull()
 
@@ -132,6 +152,8 @@ open class Stack<T>(elements: Collection<T>) {
    * Returns the topmost element in this [Stack] but does not pop it.
    *
    * @return Topmost element in this [Stack] or null if the [Stack] is empty.
+   *
+   * @since 0.3
    */
   fun peekOrNull(): T? = data.lastOrNull()
 
@@ -179,6 +201,8 @@ open class Stack<T>(elements: Collection<T>) {
    * Sorts this [Stack].
    *
    * @param comparator Comparator for sorting.
+   *
+   * @since 0.3
    */
   fun sort(comparator: Comparator<in T>) {
     data.sortWith(comparator)

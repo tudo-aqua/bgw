@@ -18,12 +18,17 @@
 package tools.aqua.bgw.observable.lists
 
 /**
- * An observable [LinkedList].
+ * An observable [MutableList].
  *
  * @constructor Creates an [ObservableLinkedList] with given initial elements.
  *
  * @param T Type of [List] elements.
  * @param elements Initial elements in this [ObservableList].
+ *
+ * @see ObservableList
+ * @see ObservableArrayList
+ *
+ * @since 0.1
  */
 open class ObservableLinkedList<T>(elements: Collection<T> = emptyList()) : ObservableList<T>() {
   /** List field. */

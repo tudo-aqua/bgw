@@ -22,9 +22,7 @@ import DialogData
 import ID
 import data.event.*
 import dev.dirs.ProjectDirectories
-import java.awt.BorderLayout
-import java.awt.EventQueue
-import java.awt.KeyboardFocusManager
+import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
@@ -40,9 +38,6 @@ import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import jsonMapper
 import kotlin.concurrent.timer
 import kotlin.system.exitProcess
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.CefBuildInfo
 import me.friwi.jcefmaven.EnumPlatform
@@ -63,6 +58,7 @@ import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.dialog.FileDialogMode
@@ -72,7 +68,7 @@ import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  // val PORT = 5173
+  val DEBUG = false
 }
 
 internal class JCEFApplication : Application {
@@ -83,7 +79,7 @@ internal class JCEFApplication : Application {
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
     println("[BGW] Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
-      frame = MainFrame(loadCallback = callback)
+      frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
       JCEFApplication::class
           .java
           .getResource("/icon.png")
@@ -99,12 +95,20 @@ internal class JCEFApplication : Application {
     Runtime.getRuntime().addShutdownHook(Thread { onClose() })
   }
 
-  @OptIn(DelicateCoroutinesApi::class)
   override fun stop() {
-    GlobalScope.launch {
-      frame?.dispose()
-      exitProcess(0)
-    }
+    frame?.gracefulShutdown()
+  }
+
+  override fun toggleFullscreen(boolean: Boolean) {
+    frame?.toggleFullscreen(boolean)
+  }
+
+  override fun toggleMaximized(boolean: Boolean) {
+    frame?.extendedState = if (boolean) JFrame.MAXIMIZED_BOTH else JFrame.NORMAL
+  }
+
+  override fun resize(width: Int, height: Int) {
+    frame?.setSize(width, height)
   }
 
   override fun clearAllEventListeners() {
@@ -325,9 +329,11 @@ internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
     isTransparent: Boolean = false,
-    loadCallback: (Any) -> Unit
+    loadCallback: (Any) -> Unit,
+    debugLogging: Boolean = false
 ) : JFrame() {
   private var browserFocus = true
+  private var fullscreenFrame: JFrame? = null
 
   var msgRouter: CefMessageRouter? = null
   var animationMsgRouter: CefMessageRouter? = null
@@ -341,7 +347,10 @@ internal class MainFrame(
     // region - CEF Initialization / Settings
     val builder = CefAppBuilder()
     builder.cefSettings.windowless_rendering_enabled = useOSR
-    builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+
+    if (!debugLogging) {
+      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+    }
 
     val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
     val defaultDirs = ProjectDirectories.from("bgw-gui", "tools.aqua", BGWAppName)
@@ -522,6 +531,8 @@ internal class MainFrame(
                 dialogMap.remove(validBrowser)
               }
             }
+
+            Frontend.application.onWindowShown?.invoke()
           }
         })
     client.addContextMenuHandler(
@@ -535,16 +546,40 @@ internal class MainFrame(
             model.clear()
           }
         })
+
+    client.addDisplayHandler(
+        object : CefDisplayHandlerAdapter() {
+          override fun onFullscreenModeChange(browser: CefBrowser?, fullscreen: Boolean) {
+            if (fullscreen) {
+              Frontend.isFullScreenProperty.setInternal(true)
+            } else {
+              Frontend.isFullScreenProperty.setInternal(false)
+            }
+          }
+        })
     // endregion
 
     // region - Frame Settings
     contentPane.add(browserUI, BorderLayout.CENTER)
     pack()
-    setSize(1280, 720)
+    setSize(1280, 750)
     isVisible = true
+    if (Frontend.isMaximizedProperty.value) {
+      extendedState = MAXIMIZED_BOTH
+    }
+
+    if (Frontend.isFullScreenProperty.value) {
+      toggleFullscreen(true)
+    } else {
+      toggleFullscreen(false)
+    }
+
+    setLocationRelativeTo(null)
+
     addWindowListener(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
+            Frontend.application.onWindowClosed?.invoke()
             println("[BGW] BGW Runtime shutting down...")
             try {
               CefApp.getInstance().dispose()
@@ -582,6 +617,56 @@ internal class MainFrame(
             dispose()
           }
         })
+
+    addWindowStateListener { e ->
+      if (e.newState == MAXIMIZED_BOTH) {
+        Frontend.isMaximizedProperty.setInternal(true)
+      } else {
+        Frontend.isMaximizedProperty.setInternal(false)
+      }
+    }
+
+    //    addComponentListener(
+    //        object : ComponentAdapter() {
+    //          override fun componentResized(e: ComponentEvent) {
+    //            Frontend.widthProperty.setInternal(this@MainFrame.width.toDouble())
+    //            Frontend.heightProperty.setInternal(this@MainFrame.height.toDouble())
+    //          }
+    //        })
+  }
+
+  internal fun gracefulShutdown() {
+    Frontend.application.onWindowClosed?.invoke()
+    println("[BGW] BGW Runtime shutting down...")
+    try {
+      CefApp.getInstance().dispose()
+    } catch (_: Exception) {} finally {
+      exitProcess(0)
+    }
+  }
+
+  internal fun toggleFullscreen(boolean: Boolean) {
+    if (isDisplayable) {
+      if (boolean) {
+        if (fullscreenFrame == null) {
+          fullscreenFrame = JFrame()
+          fullscreenFrame?.isUndecorated = true
+          fullscreenFrame?.extendedState = JFrame.MAXIMIZED_BOTH
+          fullscreenFrame?.contentPane = contentPane
+          fullscreenFrame?.iconImage = iconImage
+          fullscreenFrame?.title = title
+          fullscreenFrame?.isVisible = true
+          isVisible = false
+        }
+      } else {
+        fullscreenFrame?.let { fsFrame ->
+          contentPane = fsFrame.contentPane
+          fsFrame.isVisible = false
+          fullscreenFrame = null
+          isVisible = true
+        }
+      }
+    }
   }
 
   internal fun getChildProcessIds(process: ProcessHandle = ProcessHandle.current()): Set<Long> {

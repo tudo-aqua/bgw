@@ -29,4 +29,10 @@ internal interface Application {
   fun clearAllEventListeners() {}
 
   fun openNewDialog(dialogData: DialogData) {}
+
+  fun toggleFullscreen(boolean: Boolean) {}
+
+  fun toggleMaximized(boolean: Boolean) {}
+
+  fun resize(width: Int, height: Int) {}
 }

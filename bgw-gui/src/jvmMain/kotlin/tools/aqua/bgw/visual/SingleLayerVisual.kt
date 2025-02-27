@@ -29,6 +29,14 @@ import tools.aqua.bgw.style.Style
  * Baseclass for single layer visuals.
  *
  * @constructor Creates a [SingleLayerVisual].
+ *
+ * @see Visual
+ * @see CompoundVisual
+ * @see TextVisual
+ * @see ImageVisual
+ * @see ColorVisual
+ *
+ * @since 0.1
  */
 sealed class SingleLayerVisual : Visual() {
   /**
@@ -62,6 +70,8 @@ sealed class SingleLayerVisual : Visual() {
    * Additional styling that gets applied to this [Visual].
    *
    * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+   *
+   * @since 0.10
    */
   val style: Style
     get() = styleProperty
@@ -77,6 +87,8 @@ sealed class SingleLayerVisual : Visual() {
    * Additional filters that get applied to this [Visual].
    *
    * Critical failures, bugs or other undefined behaviour could occur when using this feature.
+   *
+   * @since 0.10
    */
   val filters: Filter
     get() = filtersProperty
@@ -92,6 +104,8 @@ sealed class SingleLayerVisual : Visual() {
    * The [flipped] state of this [Visual].
    *
    * @see Flip
+   *
+   * @since 0.10
    */
   var flipped: Flip
     get() = flippedProperty.value

@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.elements
 
+import AppData
 import CardStackData
 import ComboBoxData
 import ComponentViewData
@@ -101,6 +102,23 @@ internal fun PropertiesBuilder.alignmentBuilder(componentViewData: CardStackData
       }
 }
 
+internal fun PropertiesBuilder.alignmentBuilder(data: AppData) {
+  justifyContent =
+      when (data.alignment.first) {
+        "left" -> JustifyContent.flexStart
+        "center" -> JustifyContent.center
+        "right" -> JustifyContent.flexEnd
+        else -> JustifyContent.center
+      }
+  alignItems =
+      when (data.alignment.second) {
+        "top" -> AlignItems.flexStart
+        "center" -> AlignItems.center
+        "bottom" -> AlignItems.flexEnd
+        else -> AlignItems.center
+      }
+}
+
 internal fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
   fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
   fontWeight = integer(componentViewData.font!!.fontWeight)
@@ -141,10 +159,10 @@ internal fun PropertiesBuilder.styleBuilder(style: Map<String, String>) {
   cursor = style["cursor"]?.unsafeCast<Cursor>() ?: "auto".unsafeCast<Cursor>()
 }
 
-internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String?>) {
+internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String>) {
   val filterList = mutableListOf<String>()
   filters.values.forEach {
-    if (it != null) {
+    if (it.trim() != "") {
       filterList.add(it)
     }
   }

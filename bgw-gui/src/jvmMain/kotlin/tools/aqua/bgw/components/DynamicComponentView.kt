@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components
 
+import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.observable.properties.BooleanProperty
@@ -27,7 +28,8 @@ import tools.aqua.bgw.observable.properties.ReadonlyBooleanProperty
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Baseclass for all [ComponentView]s that can be draggable.
+ * Baseclass for all [ComponentView]s that can be draggable. Inheriting components can only be added
+ * to [BoardGameScene]s.
  *
  * @constructor Creates a [DynamicComponentView].
  *
@@ -37,8 +39,7 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [DynamicComponentView].
  * @param visual Visual for this [DynamicComponentView].
  *
- * @see tools.aqua.bgw.core.BoardGameScene
- * @see tools.aqua.bgw.core.MenuScene
+ * @see BoardGameScene
  */
 abstract class DynamicComponentView
 internal constructor(posX: Number, posY: Number, width: Number, height: Number, visual: Visual) :

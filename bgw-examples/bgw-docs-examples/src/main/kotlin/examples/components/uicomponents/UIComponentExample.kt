@@ -29,7 +29,7 @@ fun main() {
   UIComponentExample()
 }
 
-class UIComponentExample : BoardGameApplication("UIComponent Example") {
+class UIComponentExample : BoardGameApplication("UIComponent Example", width = 800, height = 1000) {
   private val menuScene = MenuScene(width = 800).apply { this.opacity = 1.0 }
 
   private val outputLabel =
@@ -39,7 +39,8 @@ class UIComponentExample : BoardGameApplication("UIComponent Example") {
           width = 300,
           text = "I am a Label.",
           alignment = Alignment.CENTER,
-          isWrapText = true)
+          isWrapText = true,
+          visual = ColorVisual.GREEN)
 
   init {
     menuScene.addComponents(outputLabel)

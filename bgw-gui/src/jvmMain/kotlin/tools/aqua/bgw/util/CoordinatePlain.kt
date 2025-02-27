@@ -22,22 +22,23 @@ package tools.aqua.bgw.util
 /**
  * A CoordinatePlain with its four corners as [Coordinate]s.
  *
- * @constructor Creates a [CoordinatePlain] with given corner coordinates.
- *
- * @property topLeft Top left corner coordinate.
- * @property topRight Top right corner coordinate.
- * @property bottomLeft Bottom left corner coordinate.
- * @property bottomRight Bottom right corner coordinate.
- *
  * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
  * than BOTTOM_RIGHT corner coordinate.
+ *
+ * @see Coordinate
+ *
+ * @since 0.1
  */
 open class CoordinatePlain
 private constructor(
-    val topLeft: Coordinate,
-    val topRight: Coordinate,
-    val bottomLeft: Coordinate,
-    val bottomRight: Coordinate
+    /** Top left corner coordinate. */
+    private val topLeft: Coordinate,
+    /** Top right corner coordinate. */
+    private val topRight: Coordinate,
+    /** Bottom left corner coordinate. */
+    private val bottomLeft: Coordinate,
+    /** Bottom right corner coordinate. */
+    private val bottomRight: Coordinate
 ) {
 
   /** Top left bound coordinate. */
@@ -83,6 +84,13 @@ private constructor(
    * @param topLeftY The yCoord of the top left corner
    * @param bottomRightX The xCoord of the bottom right corner
    * @param bottomRightY The yCoord of the bottom right corner
+   *
+   * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
+   * than BOTTOM_RIGHT corner coordinate.
+   *
+   * @see Coordinate
+   *
+   * @since 0.3
    */
   constructor(
       topLeftX: Number,
@@ -96,10 +104,11 @@ private constructor(
       bottomRight = Coordinate(bottomRightX, bottomRightY),
   ) {
     require(topLeftX.toDouble() <= bottomRightX.toDouble()) {
-      "Top left corner is not to the right of bottom left corner."
+      "Top left xCoord must be smaller or equal to bottom right xCoord."
     }
+
     require(topLeftY.toDouble() <= bottomRightY.toDouble()) {
-      "Top left corner is not to the right of bottom left corner."
+      "Top left yCoord must be smaller or equal to bottom right yCoord."
     }
   }
 
@@ -113,6 +122,10 @@ private constructor(
    *
    * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
    * than BOTTOM_RIGHT corner coordinate.
+   *
+   * @see Coordinate
+   *
+   * @since 0.1
    */
   constructor(
       topLeft: Coordinate,
@@ -122,17 +135,7 @@ private constructor(
   /**
    * Rotates [CoordinatePlain] by angle degrees around center point.
    *
-   * With
-   *
-   * - Angle t,
-   *
-   * - Center point Z
-   *
-   * - Coordinate P
-   *
-   * [ cos(phi) -sin(phi) ] * [ Px - Zx ] + [ Zx ] = [ cos(phi)*(Px-Zx) - sin(phi)*(Py-Zy) + Zx ]
-   *
-   * [ sin(phi) cos(phi) ] [ Py - Zy ] [ Zy ] [ sin(phi)*(Px-Zx) + cos(phi)*(Py-Zy) + Zy ]
+   * @since 0.3
    */
   fun rotated(angle: Number, center: Coordinate): CoordinatePlain =
       CoordinatePlain(

@@ -143,6 +143,11 @@ internal fun enqueueUpdate(data: AppData) {
       }
 }
 
+internal fun forceUpdate() {
+  debounceJob?.cancel()
+  CoroutineScope(Dispatchers.IO).launch { debounceMutex.withLock { processLastUpdate() } }
+}
+
 private suspend fun processLastUpdate() {
   val lastUpdate = updateStack.lastOrNull()
   updateStack.clear()

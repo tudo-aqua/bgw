@@ -20,6 +20,8 @@
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.ParallelAnimation
+import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
@@ -27,7 +29,6 @@ import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
-import tools.aqua.bgw.util.CoordinatePlain
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -40,6 +41,8 @@ import tools.aqua.bgw.visual.Visual
  *
  * @see BoardGameScene
  * @see MenuScene
+ *
+ * @since 0.1
  */
 sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
 
@@ -61,9 +64,11 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   @Suppress("LeakingThis") internal val dragGestureRootNode: RootComponent<T> = RootComponent(this)
 
   /** The width of this [Scene] in virtual coordinates. */
+  // TODO: Change to property for updating during runtime
   val width: Double = width.toDouble()
 
   /** The height of this [Scene] in virtual coordinates. */
+  // TODO: Change to property for updating during runtime
   val height: Double = height.toDouble()
 
   /** All [ComponentView]s on the root node. */
@@ -103,21 +108,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
       opacityProperty.value = value
     }
 
-  /**
-   * [Property] for the currently displayed zoom detail of this [Scene].
-   *
-   * @see zoomDetail
-   */
-  internal val zoomDetailProperty: Property<CoordinatePlain> =
-      Property(CoordinatePlain(0, 0, width, height))
-
-  /** The currently displayed zoom detail of this [Scene]. */
-  internal var zoomDetail
-    get() = zoomDetailProperty.value
-    set(value) {
-      zoomDetailProperty.value = value
-    }
-
   /** All [Animation]s currently playing. */
   internal val animations: ObservableList<Animation> = ObservableArrayList()
 
@@ -143,14 +133,14 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @see onKeyPressed
    */
   @Deprecated(
-      "The onKeyTyped event is defined in this specification for reference and completeness and will be removed in a future version.")
+      "The onKeyTyped event is defined in this specification for reference and completeness.")
   var onKeyTyped: ((KeyEvent) -> Unit)? = null
 
-  /** Gets invoked with no event whenever a scene is shown. */
+  /** Gets invoked with no event whenever a scene gets shown. */
   var onSceneShown: (() -> Unit)? = null
 
-  /** Gets invoked with no event whenever a scene is hid. */
-  var onSceneHid: (() -> Unit)? = null
+  /** Gets invoked with no event whenever a scene gets hidden. */
+  var onSceneHidden: (() -> Unit)? = null
 
   /**
    * Adds all given [ComponentView]s to the root node and [rootComponents] list.
@@ -181,13 +171,28 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
-   * Plays given [Animation].
+   * Plays given [Animation] non-blocking. This means that any subsequent updates may be executed
+   * before the [Animation] actually starts playing.
    *
    * @param animation [Animation] to play.
    */
   fun playAnimation(animation: Animation) {
-    animations.add(animation)
+    addAnimationRecursively(animation)
     Frontend.sendAnimation(animation)
+  }
+
+  private fun addAnimationRecursively(animation: Animation) {
+    when (animation) {
+      is SequentialAnimation -> {
+        animation.animations.forEach { addAnimationRecursively(it) }
+        animations.add(animation)
+      }
+      is ParallelAnimation -> {
+        animation.animations.forEach { addAnimationRecursively(it) }
+        animations.add(animation)
+      }
+      else -> animations.add(animation)
+    }
   }
 
   /**

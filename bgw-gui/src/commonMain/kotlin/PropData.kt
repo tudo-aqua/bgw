@@ -35,6 +35,7 @@ internal enum class ActionProp {
   HIDE_GAME_SCENE,
   UPDATE_COMPONENT,
   UPDATE_VISUAL,
+  UPDATE_APP,
   DRAG_START,
   DRAG_END,
   DRAG_DROP,
@@ -53,12 +54,15 @@ internal class AppData : Data() {
   var fonts: List<Triple<String, String, Int>> = emptyList()
   var width: Int = 0
   var height: Int = 0
+  var background: VisualData? = null
+  var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
 }
 
 @Serializable
 internal class SceneData : Data() {
   var id: ID = ""
+  var locked: Boolean = false
   var width: Int = 0
   var height: Int = 0
   var background: VisualData? = null
@@ -313,7 +317,7 @@ internal class LinearLayoutData : GameComponentContainerData() {
 internal sealed class SingleLayerVisualData(
     var transparency: Double = 0.0,
     var style: Map<String, String> = emptyMap(),
-    var filters: Map<String, String?> = emptyMap(),
+    var filters: Map<String, String> = emptyMap(),
     var flipped: String = ""
 ) : VisualData()
 

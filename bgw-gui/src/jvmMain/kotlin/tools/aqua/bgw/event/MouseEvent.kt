@@ -25,7 +25,26 @@ package tools.aqua.bgw.event
  * @constructor Creates a [MouseEvent] with given [button].
  *
  * @property button Corresponding mouse button enum value.
- * @property posX The X-coordinate of the mouse event position.
- * @property posY The Y-coordinate of the mouse event position.
+ * @param button Corresponding mouse button enum value.
+ * @param posX The X-coordinate of the mouse event position.
+ * @param posY The Y-coordinate of the mouse event position.
+ *
+ * @since 0.1
  */
-class MouseEvent(val button: MouseButtonType, val posX: Number, val posY: Number) : InputEvent()
+class MouseEvent(
+    val button: MouseButtonType,
+
+    /**
+     * The X-coordinate of the mouse event position.
+     *
+     * @since 0.8
+     */
+    val posX: Number,
+
+    /**
+     * The Y-coordinate of the mouse event position.
+     *
+     * @since 0.8
+     */
+    val posY: Number
+) : InputEvent()

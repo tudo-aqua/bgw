@@ -37,6 +37,9 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_HEIGHT].
  * @param initialColor The [Color] that is initially selected. Default: [Color.WHITE].
  *
+ * @see Color
+ * @see UIComponent
+ *
  * @since 0.1
  */
 open class ColorPicker(

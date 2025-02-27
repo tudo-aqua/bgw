@@ -45,6 +45,11 @@ import tools.aqua.bgw.visual.Visual
  * @param allowIndeterminate The initial [isIndeterminateAllowed] state. Default: `false`.
  * @param isIndeterminate The initial [isIndeterminate] state. Default: `false`.
  *
+ * @see Font
+ * @see Alignment
+ * @see Visual
+ * @see LabeledUIComponent
+ *
  * @since 0.1
  */
 open class CheckBox(

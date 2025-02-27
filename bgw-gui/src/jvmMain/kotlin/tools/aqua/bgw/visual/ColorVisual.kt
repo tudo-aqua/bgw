@@ -28,6 +28,8 @@ import tools.aqua.bgw.observable.properties.Property
  * @constructor Creates a solid [ColorVisual] filled with given [Color].
  *
  * @param color Color to use as filling.
+ *
+ * @since 0.1
  */
 open class ColorVisual(color: Color) : SingleLayerVisual() {
   /**
@@ -58,11 +60,20 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    * The alpha channel gets multiplied with the [transparency] i.e. alpha = 0.5 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
    *
+   * @constructor Creates a solid [ColorVisual] filled with given RGBA values.
+   *
    * @param r Red channel between 0 and 255.
    * @param g Green channel between 0 and 255.
    * @param b Blue channel between 0 and 255.
    * @param alpha Alpha channel (0 - 255 for Int, 0.0 - 1.0 for Double). Value is 1.0 by default and
    * if parameter is out of a valid range.
+   *
+   * @see SingleLayerVisual
+   * @see CompoundVisual
+   * @see TextVisual
+   * @see ImageVisual
+   *
+   * @since 0.1
    */
   constructor(
       r: Int,
@@ -81,11 +92,13 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
           }))
 
   /**
-   * A solid color visual. Displays a rectangle filled with the given [color].
+   * A solid color visual. Displays a rectangle filled with the given java.awt.Color.
    *
    * @constructor Creates a solid [ColorVisual] filled with given [java.awt.Color].
    *
    * @param color Color to use as filling.
+   *
+   * @since 0.10
    */
   constructor(color: java.awt.Color) : this(Color(color.red, color.green, color.blue, color.alpha))
 

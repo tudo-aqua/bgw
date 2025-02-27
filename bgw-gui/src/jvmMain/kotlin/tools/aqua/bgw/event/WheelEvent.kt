@@ -28,6 +28,15 @@ package tools.aqua.bgw.event
  * @property isControlDown Whether control key was pressed.
  * @property isShiftDown Whether shift key was pressed.
  * @property isAltDown Whether alt key was pressed.
+ *
+ * @param direction The scroll direction.
+ * @param isControlDown Whether control key was pressed.
+ * @param isShiftDown Whether shift key was pressed.
+ * @param isAltDown Whether alt key was pressed.
+ *
+ * @see WheelDirection
+ *
+ * @since 0.7.1
  */
 class WheelEvent(
     val direction: WheelDirection,

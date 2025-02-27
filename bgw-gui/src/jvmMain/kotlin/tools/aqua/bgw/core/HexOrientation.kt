@@ -17,7 +17,17 @@
 
 package tools.aqua.bgw.core
 
-/** Enumeration class representing the orientation options for hexagonal grids and views. */
+import tools.aqua.bgw.components.container.HexagonGrid
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
+
+/**
+ * Enumeration class representing the orientation options for hexagonal grids and views.
+ *
+ * @see HexagonView
+ * @see HexagonGrid
+ *
+ * @since 0.10
+ */
 enum class HexOrientation {
   POINTY_TOP,
   FLAT_TOP

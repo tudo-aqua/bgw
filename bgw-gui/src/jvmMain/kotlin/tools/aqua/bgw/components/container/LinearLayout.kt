@@ -59,6 +59,7 @@ import tools.aqua.bgw.visual.Visual
  * @see Orientation
  * @see Alignment
  * @see Visual
+ * @see GameComponentContainer
  *
  * @since 0.1
  */

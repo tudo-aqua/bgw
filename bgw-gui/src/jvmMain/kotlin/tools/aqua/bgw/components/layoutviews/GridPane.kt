@@ -42,6 +42,11 @@ import tools.aqua.bgw.visual.Visual
  * (`false`). Default: `true`.
  * @param visual Initial visual for this [GridPane]. Default: [Visual.EMPTY].
  *
+ * @see ComponentView
+ * @see Visual
+ * @see GridIteratorElement
+ * @see LayoutView
+ *
  * @since 0.1
  */
 open class GridPane<T : ComponentView>(
