@@ -99,7 +99,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @since 0.9
    */
-  operator fun get(it: T): Any {
+  operator fun get(it: T): R {
     if (containsForward(it)) return forward(it) else throw NoSuchElementException()
   }
 
