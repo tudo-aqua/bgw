@@ -69,16 +69,16 @@ private val module = SerializersModule {
     subclass(DialogData::class)
     subclass(FileDialogData::class)
     // ANIMATIONS
+    subclass(DelayAnimationData::class)
+    subclass(DiceAnimationData::class)
     subclass(FadeAnimationData::class)
-    subclass(MovementAnimationData::class)
-    subclass(RotationAnimationData::class)
-    subclass(ScaleAnimationData::class)
     subclass(FlipAnimationData::class)
-    subclass(SequentialAnimationData::class)
+    subclass(MovementAnimationData::class)
     subclass(ParallelAnimationData::class)
     subclass(RandomizeAnimationData::class)
-    subclass(DiceAnimationData::class)
-    subclass(DelayAnimationData::class)
+    subclass(RotationAnimationData::class)
+    subclass(ScaleAnimationData::class)
+    subclass(SequentialAnimationData::class)
   }
   polymorphic(LayoutViewData::class) {
     subclass(PaneData::class)
@@ -180,12 +180,16 @@ private val module = SerializersModule {
   }
   // ANIMATIONS
   polymorphic(AnimationData::class) {
+    subclass(DelayAnimationData::class)
+    subclass(DiceAnimationData::class)
     subclass(FadeAnimationData::class)
+    subclass(FlipAnimationData::class)
     subclass(MovementAnimationData::class)
+    subclass(ParallelAnimationData::class)
+    subclass(RandomizeAnimationData::class)
     subclass(RotationAnimationData::class)
     subclass(ScaleAnimationData::class)
-    subclass(FlipAnimationData::class)
-    subclass(DelayAnimationData::class)
+    subclass(SequentialAnimationData::class)
   }
 }
 

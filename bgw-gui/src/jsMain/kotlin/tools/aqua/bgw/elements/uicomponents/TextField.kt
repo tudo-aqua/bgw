@@ -52,6 +52,8 @@ internal val TextField =
 
       val elementRef = useRef<Element>(null)
 
+      val (inputValue, setInputValue) = useState(props.data.text)
+
       bgwTextField {
         id = props.data.id
         className = ClassName("textField")
@@ -68,7 +70,7 @@ internal val TextField =
         input {
           placeholder = props.data.prompt
           defaultValue = props.data.text
-          value = props.data.text
+          value = inputValue
           spellCheck = false
           css {
             inputBuilder(props.data)
@@ -81,6 +83,7 @@ internal val TextField =
           }
           onChange = {
             val value = it.target.value
+            setInputValue(value)
             JCEFEventDispatcher.dispatchEvent(
                 TextInputChangedEventData(value).apply { id = props.data.id })
           }

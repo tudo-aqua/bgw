@@ -68,7 +68,7 @@ import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  // val PORT = 5173
+  val DEBUG = false
 }
 
 internal class JCEFApplication : Application {
@@ -79,7 +79,7 @@ internal class JCEFApplication : Application {
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
     println("[BGW] Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
-      frame = MainFrame(loadCallback = callback)
+      frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
       JCEFApplication::class
           .java
           .getResource("/icon.png")

@@ -20,6 +20,8 @@
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.ParallelAnimation
+import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
@@ -169,13 +171,28 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
-   * Plays given [Animation].
+   * Plays given [Animation] non-blocking. This means that any subsequent updates may be executed
+   * before the [Animation] actually starts playing.
    *
    * @param animation [Animation] to play.
    */
   fun playAnimation(animation: Animation) {
-    animations.add(animation)
+    addAnimationRecursively(animation)
     Frontend.sendAnimation(animation)
+  }
+
+  private fun addAnimationRecursively(animation: Animation) {
+    when (animation) {
+      is SequentialAnimation -> {
+        animation.animations.forEach { addAnimationRecursively(it) }
+        animations.add(animation)
+      }
+      is ParallelAnimation -> {
+        animation.animations.forEach { addAnimationRecursively(it) }
+        animations.add(animation)
+      }
+      else -> animations.add(animation)
+    }
   }
 
   /**
