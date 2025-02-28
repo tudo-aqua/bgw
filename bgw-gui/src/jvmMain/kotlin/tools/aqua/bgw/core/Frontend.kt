@@ -23,15 +23,17 @@ import ActionProp
 import PropData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import java.lang.Runnable
 import java.util.*
 import jsonMapper
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.componentChannel
+import tools.aqua.bgw.binding.forceUpdate
 import tools.aqua.bgw.binding.markDirty
 import tools.aqua.bgw.binding.module
 import tools.aqua.bgw.builder.SceneBuilder
@@ -153,6 +155,7 @@ internal class Frontend {
     }
 
     internal fun sendAnimation(animation: Animation) {
+      forceUpdate()
       val animationData = AnimationMapper.map(animation)
       val json = jsonMapper.encodeToString(PropData(animationData))
       runBlocking { componentChannel.sendToAllClients(json) }

@@ -53,6 +53,8 @@ internal val PasswordField =
 
       val elementRef = useRef<Element>(null)
 
+      val (inputValue, setInputValue) = useState(props.data.text)
+
       bgwPasswordField {
         id = props.data.id
         className = ClassName("passwordField")
@@ -71,7 +73,7 @@ internal val PasswordField =
           placeholder = props.data.prompt
           type = InputType.password
           defaultValue = props.data.text
-          value = props.data.text
+          value = inputValue
           spellCheck = false
           css {
             fontBuilder(props.data)
@@ -84,6 +86,7 @@ internal val PasswordField =
           }
           onChange = {
             val value = it.target.value
+            setInputValue(value)
             JCEFEventDispatcher.dispatchEvent(
                 TextInputChangedEventData(value).apply { id = props.data.id })
           }

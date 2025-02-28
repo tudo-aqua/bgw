@@ -18,6 +18,7 @@
 package tools.aqua.bgw.mapper
 
 import AnimationData
+import RecursiveMapper
 import data.animation.*
 import tools.aqua.bgw.animation.*
 
@@ -34,7 +35,7 @@ internal object AnimationMapper {
   ): ComponentAnimationData {
     return this.apply {
       id = componentAnimation.id
-      componentView = ComponentMapper.map(componentAnimation.componentView)
+      componentView = RecursiveMapper.map(componentAnimation.componentView)
       duration = componentAnimation.duration
     }
   }

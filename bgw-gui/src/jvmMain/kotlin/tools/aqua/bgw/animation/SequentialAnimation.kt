@@ -45,7 +45,7 @@ data class SequentialAnimation(
    * Creates a new [SequentialAnimation] Additional constructor that enables the use of varargs for
    * the animations.
    *
-   * @param animation The [Animation]s that this [ParallelAnimation] should contain.
+   * @param animation The [Animation]s that this [SequentialAnimation] should contain.
    *
    * @see Animation
    * @see ParallelAnimation

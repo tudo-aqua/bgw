@@ -325,76 +325,167 @@ function BGWDocsLayout() {
         {buildTopSidebar(loc)}
         <SidebarContent className="pb-4">
           <SidebarGroupLabel className="pt-5 pl-4 h-fit">
-            Packages
+            Packages (GUI)
           </SidebarGroupLabel>
           <SidebarGroup className="py-0">
             <SidebarMenu>
-              {navMain.map((item) => (
-                <Collapsible
-                  key={item.title}
-                  asChild
-                  open={openedSections.includes(item.title)}
-                  onOpenChange={(isOpen) => {
-                    setOpenedSections(
-                      isOpen
-                        ? [...openedSections, item.title]
-                        : openedSections.filter(
-                            (section) => section !== item.title
-                          )
-                    );
-                  }}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        className="h-9 indent-1"
-                      >
-                        {item.icon && (
-                          <i className="material-symbols-rounded text-base text-[#FFFFFFB3]">
-                            {layoutMap[item.title].icon}
-                          </i>
-                        )}
-                        <span className="pl-1 font-medium">
-                          {layoutMap[item.title].title}
-                        </span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub className="ml-[18px] mr-[7px] pr-0">
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={subItem.isActive}
-                              className={`h-9 indent-1 ${
-                                subItem.deprecated ? "line-through" : ""
-                              }`}
-                            >
-                              <Link to={subItem.url}>
-                                {subItem.type && (
-                                  <BadgeIcon variant={subItem.type}></BadgeIcon>
-                                )}
-                                <span
-                                  className={
-                                    !subItem.isInstantiable
-                                      ? "text-muted-foreground italic"
-                                      : ""
-                                  }
-                                >
-                                  {subItem.title}
-                                </span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
+              {navMain
+                .filter((i) => {
+                  return (
+                    layoutMap[i.title] !== undefined &&
+                    layoutMap[i.title].module === "bgw-gui"
+                  );
+                })
+                .map((item) => (
+                  <Collapsible
+                    key={item.title}
+                    asChild
+                    open={openedSections.includes(item.title)}
+                    onOpenChange={(isOpen) => {
+                      setOpenedSections(
+                        isOpen
+                          ? [...openedSections, item.title]
+                          : openedSections.filter(
+                              (section) => section !== item.title
+                            )
+                      );
+                    }}
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          tooltip={item.title}
+                          className="h-9 indent-1"
+                        >
+                          {item.icon && (
+                            <i className="material-symbols-rounded text-base text-[#FFFFFFB3]">
+                              {layoutMap[item.title].icon}
+                            </i>
+                          )}
+                          <span className="pl-1 font-medium">
+                            {layoutMap[item.title].title}
+                          </span>
+                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub className="ml-[18px] mr-[7px] pr-0">
+                          {item.items?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={subItem.isActive}
+                                className={`h-9 indent-1 ${
+                                  subItem.deprecated ? "line-through" : ""
+                                }`}
+                              >
+                                <Link to={subItem.url}>
+                                  {subItem.type && (
+                                    <BadgeIcon
+                                      variant={subItem.type}
+                                    ></BadgeIcon>
+                                  )}
+                                  <span
+                                    className={
+                                      !subItem.isInstantiable
+                                        ? "text-muted-foreground italic"
+                                        : ""
+                                    }
+                                  >
+                                    {subItem.title}
+                                  </span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ))}
+            </SidebarMenu>
+          </SidebarGroup>
+          <SidebarGroupLabel className="pt-5 pl-4 h-fit">
+            Packages (Network)
+          </SidebarGroupLabel>
+          <SidebarGroup className="py-0">
+            <SidebarMenu>
+              {navMain
+                .filter((i) => {
+                  return (
+                    layoutMap[i.title] !== undefined &&
+                    layoutMap[i.title].module === "bgw-net"
+                  );
+                })
+                .map((item) => (
+                  <Collapsible
+                    key={item.title}
+                    asChild
+                    open={openedSections.includes(item.title)}
+                    onOpenChange={(isOpen) => {
+                      setOpenedSections(
+                        isOpen
+                          ? [...openedSections, item.title]
+                          : openedSections.filter(
+                              (section) => section !== item.title
+                            )
+                      );
+                    }}
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          tooltip={item.title}
+                          className="h-9 indent-1"
+                        >
+                          {item.icon && (
+                            <i className="material-symbols-rounded text-base text-[#FFFFFFB3]">
+                              {layoutMap[item.title].icon}
+                            </i>
+                          )}
+                          <span className="pl-1 font-medium">
+                            {layoutMap[item.title].title}
+                          </span>
+                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub className="ml-[18px] mr-[7px] pr-0">
+                          {item.items?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={subItem.isActive}
+                                className={`h-9 indent-1 ${
+                                  subItem.deprecated ? "line-through" : ""
+                                }`}
+                              >
+                                <Link to={subItem.url}>
+                                  {subItem.type && (
+                                    <BadgeIcon
+                                      variant={subItem.type}
+                                    ></BadgeIcon>
+                                  )}
+                                  <span
+                                    className={
+                                      !subItem.isInstantiable
+                                        ? "text-muted-foreground italic"
+                                        : ""
+                                    }
+                                  >
+                                    {subItem.title}
+                                  </span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ))}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
