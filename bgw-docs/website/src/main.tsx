@@ -13,6 +13,7 @@ import { ThemeProvider } from "@/components/theme-provider.tsx";
 import BGWPlayground from "@/pages/BGWPlayground.tsx";
 import BGWDocsLayout from "./pages/BGWDocsLayout";
 import { convertMarkdownToHtml, guideStructure } from "./lib/utils";
+import Test from "./pages/Test";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,10 +24,11 @@ const queryClient = new QueryClient({
 });
 
 const getConstructors = async () => {
-  let c = await fetch(`http://localhost:8080/api/2.0.10/compiler/constructors`);
+  let c = await fetch("/bgw/bgw/constructors.json");
+  if (!c.ok) return null;
 
-  if (c.status !== 200) return null;
-  return await c.json();
+  c = await c.json();
+  return c;
 };
 
 const loaderPlayground = async ({ params }) => {
@@ -93,6 +95,8 @@ async function loadAllGuides() {
 }
 
 export const guidesMap = await loadAllGuides();
+
+export const constructors = await getConstructors();
 
 function getGuideInfo(path: string) {
   for (const [section, data] of Object.entries(guideStructure)) {
@@ -162,6 +166,18 @@ async function docsLoader() {
   };
 }
 
+async function playgroundLoader() {
+  const [constructorsResponse] = await Promise.all([
+    fetch("/bgw/bgw/constructors.json"),
+  ]);
+
+  const constructors = await constructorsResponse.json();
+
+  return {
+    constructors,
+  };
+}
+
 const savedPath = sessionStorage.getItem("redirectPath");
 if (savedPath) {
   console.warn("Redirecting to", savedPath);
@@ -174,6 +190,7 @@ const router = createBrowserRouter(
     {
       path: "/playground",
       Component: BGWPlayground,
+      loader: playgroundLoader,
     },
     {
       path: "/docs",
@@ -194,6 +211,10 @@ const router = createBrowserRouter(
           path: "*",
         },
       ],
+    },
+    {
+      path: "/tests",
+      Component: Test,
     },
     {
       path: "/",

@@ -80,13 +80,21 @@ import {
 import Parser from "@/pages/Parser.tsx";
 import ImageViewer from "@/pages/ImageViewer.tsx";
 import setupIndexedDB, { useIndexedDBStore } from "use-indexeddb";
-import { idbConfig, reconstructProperties } from "@/lib/utils.ts";
+import {
+  createKotlinCodeLinebreaks,
+  idbConfig,
+  reconstructProperties,
+} from "@/lib/utils.ts";
 import { ConstructorAPIImportInfo, Guides } from "@/lib/types.ts";
 import SettingsField from "@/components/SettingsField.tsx";
 import { exportComponent } from "@/lib/exporter.ts";
 import Playground from "@/pages/Playground.tsx";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import CodeTab from "./docs/CodeTab";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent } from "@radix-ui/react-tabs";
+import LiveCodeTab from "./docs/LiveCodeTab";
 
 function BGWPlayground() {
   useEffect(() => {
@@ -99,6 +107,8 @@ function BGWPlayground() {
 
   const { update: saveWorkspace, getByID: loadWorkspace } =
     useIndexedDBStore("workspaces");
+
+  const { constructors } = useLoaderData();
 
   const saveCurrentWorkspace = (workspaceId: string = "default") => {
     const workspace = {
@@ -2522,8 +2532,24 @@ function BGWPlayground() {
           ? getFontsInputs(elementClass)
           : null}
         {getRestSettingsInputs(elementClass)}
+        {getCodeExport()}
       </>
     );
+  };
+
+  const getCodeExport = () => {
+    try {
+      return (
+        <div className="flex flex-col max-w-[calc(400px-2.5rem)] gap-4 p-3 pb-8">
+          <LiveCodeTab
+            getOutputElements={getOutputElementsFromTree}
+            selectedComponentId={selectedComponentId}
+          />
+        </div>
+      );
+    } catch (error) {
+      return null;
+    }
   };
 
   const getNameInputs = (elementClass: DataClass) => {
@@ -2883,35 +2909,6 @@ function BGWPlayground() {
               >
                 Expert Mode
               </Toggle>
-              <Dialog
-                open={exportOpened}
-                onOpenChange={() => {
-                  setExportOpened(false);
-                }}
-              >
-                <DialogContent className="max-w-[800px]" forceMount={true}>
-                  <DialogHeader>
-                    <DialogTitle>Code Export</DialogTitle>
-                    <DialogDescription>
-                      This action will export the selected component as code.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-3 component__select">
-                    <Playground
-                      code={
-                        exportOpened
-                          ? exportComponent(
-                              null,
-                              getOutputElementsFromTree(true),
-                              selectedComponentId
-                            )
-                          : ""
-                      }
-                      open={exportOpened}
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
               {/* <Dialog>
                 <DialogTrigger className="w-full" asChild>
                   <Button
@@ -3161,7 +3158,7 @@ function BGWPlayground() {
               </Badge>
               <Badge
                 variant="muted"
-                className="absolute z-10 left-3 top-3"
+                className="absolute z-10 mr-2 left-3 top-3"
                 onClick={() => {
                   let sceneWidth = prompt("Enter the scene width", "1920");
                   let sceneHeight = prompt("Enter the scene height", "1080");
@@ -3209,6 +3206,7 @@ function BGWPlayground() {
             <ScrollArea
               className="h-full relative hidden flex-col items-center gap-8 md:flex pr-5 pl-5 w-[25%] shrink-0 max-w-[400px]"
               x-chunk="dashboard-03-chunk-0"
+              id="data__inputs__sidebar"
               style={{
                 visibility: selectedClass == null ? "hidden" : "visible",
               }}

@@ -134,6 +134,10 @@ const ReactKotlinPlayground: FC<
     initPlayground();
   }, []);
 
+  useEffect(() => {
+    console.log(children);
+  }, [children]);
+
   const elementProps = Object.keys(props).reduce((result, name) => {
     if (EVENTS.indexOf(name) === -1)
       result[normalizeAttribute(name)] = props[name];
@@ -147,7 +151,7 @@ const ReactKotlinPlayground: FC<
       <code
         {...elementProps}
         ref={codeRef}
-        className="text-sm px-4 py-5 text-background/0"
+        className="px-4 py-5 text-sm text-background/0"
       >
         {children}
       </code>

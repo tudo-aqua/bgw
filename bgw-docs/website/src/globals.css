@@ -44,6 +44,8 @@
     --bgw-green: 84 100% 71%;
     --bgw-orange: 8 94% 66%;
     --bgw-gray: 204 8% 82%;
+    --bgw-pink: 292 96% 73%;
+    --bgw-red: 0 84% 60%;
   }
 
   .dark {
@@ -88,6 +90,8 @@
     --bgw-green: 84 100% 71%;
     --bgw-orange: 8 94% 66%;
     --bgw-gray: 204 8% 82%;
+    --bgw-pink: 292 96% 73%;
+    --bgw-red: 0 84% 60%;
 
     --gradient: linear-gradient(
       90deg,

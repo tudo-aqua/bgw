@@ -1,0 +1,179 @@
+/* This is a theme distributed by `starry-night`.
+ * It’s based on what GitHub uses on their site.
+ * See <https://github.com/wooorm/starry-night> for more info. */
+:root {
+  --color-prettylights-syntax-comment: #9198a1;
+  --color-prettylights-syntax-constant: #fa6c56;
+  --color-prettylights-syntax-constant-other-reference-link: #96d0ff;
+  --color-prettylights-syntax-entity: #6dbeff;
+  --color-prettylights-syntax-storage-modifier-import: #f0f6fc;
+  --color-prettylights-syntax-entity-tag: #8ddb8c;
+  --color-prettylights-syntax-keyword: #ea7afc;
+  --color-prettylights-syntax-string: #c6ff6e;
+  --color-prettylights-syntax-variable: #f69d50;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #e5534b;
+  --color-prettylights-syntax-brackethighlighter-angle: #9198a1;
+  --color-prettylights-syntax-invalid-illegal-text: #f0f6fc;
+  --color-prettylights-syntax-invalid-illegal-bg: #922323;
+  --color-prettylights-syntax-carriage-return-text: #f0f6fc;
+  --color-prettylights-syntax-carriage-return-bg: #ad2e2c;
+  --color-prettylights-syntax-string-regexp: #8ddb8c;
+  --color-prettylights-syntax-markup-list: #eac55f;
+  --color-prettylights-syntax-markup-heading: #316dca;
+  --color-prettylights-syntax-markup-italic: #f0f6fc;
+  --color-prettylights-syntax-markup-bold: #f0f6fc;
+  --color-prettylights-syntax-markup-deleted-text: #ffd8d3;
+  --color-prettylights-syntax-markup-deleted-bg: #78191b;
+  --color-prettylights-syntax-markup-inserted-text: #b4f1b4;
+  --color-prettylights-syntax-markup-inserted-bg: #1b4721;
+  --color-prettylights-syntax-markup-changed-text: #ffddb0;
+  --color-prettylights-syntax-markup-changed-bg: #682d0f;
+  --color-prettylights-syntax-markup-ignored-text: #f0f6fc;
+  --color-prettylights-syntax-markup-ignored-bg: #255ab2;
+  --color-prettylights-syntax-meta-diff-range: #dcbdfb;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #3d444d;
+}
+
+.starry-night-container {
+  @apply text-bgw-gray;
+  font-size: 14px;
+  font-family: "JetBrains Mono", monospace;
+  line-height: 24px;
+  color: #ced2d4;
+  padding-block: 19px;
+  padding-inline: 26px;
+  font-weight: 400;
+
+  * {
+    font-weight: 400;
+  }
+}
+
+.pl-c {
+  color: var(--color-prettylights-syntax-comment);
+}
+
+.pl-c1,
+.pl-s .pl-v {
+  color: var(--color-prettylights-syntax-constant);
+}
+
+.pl-e,
+.pl-en {
+  color: var(--color-prettylights-syntax-entity);
+}
+
+.pl-smi,
+.pl-s .pl-s1 {
+  color: var(--color-prettylights-syntax-storage-modifier-import);
+}
+
+.pl-ent {
+  color: var(--color-prettylights-syntax-entity-tag);
+}
+
+.pl-k {
+  color: var(--color-prettylights-syntax-keyword);
+}
+
+.pl-s,
+.pl-pds,
+.pl-s .pl-pse .pl-s1,
+.pl-sr,
+.pl-sr .pl-cce,
+.pl-sr .pl-sre,
+.pl-sr .pl-sra {
+  color: var(--color-prettylights-syntax-string);
+}
+
+.pl-v,
+.pl-smw {
+  color: var(--color-prettylights-syntax-variable);
+}
+
+.pl-bu {
+  color: var(--color-prettylights-syntax-brackethighlighter-unmatched);
+}
+
+.pl-ii {
+  color: var(--color-prettylights-syntax-invalid-illegal-text);
+  background-color: var(--color-prettylights-syntax-invalid-illegal-bg);
+}
+
+.pl-c2 {
+  color: var(--color-prettylights-syntax-carriage-return-text);
+  background-color: var(--color-prettylights-syntax-carriage-return-bg);
+}
+
+.pl-sr .pl-cce {
+  color: var(--color-prettylights-syntax-string-regexp);
+}
+
+.pl-ml {
+  color: var(--color-prettylights-syntax-markup-list);
+}
+
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+  color: var(--color-prettylights-syntax-markup-heading);
+}
+
+.pl-mi {
+  color: var(--color-prettylights-syntax-markup-italic);
+}
+
+.pl-mb {
+  color: var(--color-prettylights-syntax-markup-bold);
+}
+
+.pl-md {
+  color: var(--color-prettylights-syntax-markup-deleted-text);
+  background-color: var(--color-prettylights-syntax-markup-deleted-bg);
+}
+
+.pl-mi1 {
+  color: var(--color-prettylights-syntax-markup-inserted-text);
+  background-color: var(--color-prettylights-syntax-markup-inserted-bg);
+}
+
+.pl-mc {
+  color: var(--color-prettylights-syntax-markup-changed-text);
+  background-color: var(--color-prettylights-syntax-markup-changed-bg);
+}
+
+.pl-mi2 {
+  color: var(--color-prettylights-syntax-markup-ignored-text);
+  background-color: var(--color-prettylights-syntax-markup-ignored-bg);
+}
+
+.pl-mdr {
+  color: var(--color-prettylights-syntax-meta-diff-range);
+}
+
+.pl-ba {
+  color: var(--color-prettylights-syntax-brackethighlighter-angle);
+}
+
+.pl-sg {
+  color: var(--color-prettylights-syntax-sublimelinter-gutter-mark);
+}
+
+.pl-corl {
+  color: var(--color-prettylights-syntax-constant-other-reference-link);
+}
+
+// /** Custom classes */
+
+// .pl-k {
+//   @apply text-bgw-pink;
+// }
+
+// .pl-en,
+// .pl-smi {
+//   @apply text-white;
+// }
+
+// .pl-c1 {
+//   @apply text-bgw-yellow;
+// }
