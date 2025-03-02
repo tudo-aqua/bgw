@@ -20,8 +20,6 @@ package tools.aqua.bgw.elements.container
 import LinearLayoutData
 import csstype.PropertiesBuilder
 import emotion.react.css
-import kotlinx.browser.document
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.get
 import react.*
 import react.dom.aria.*
@@ -34,6 +32,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.fit
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDraggable
 import tools.aqua.bgw.useDroppable
@@ -97,6 +96,40 @@ internal val LinearLayout =
           onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
         }
 
+        val spaceOccupied =
+            props.data.components.sumOf {
+              if (props.data.orientation == "horizontal") it.width else it.height
+            }
+        val spaceOccupiedWithGaps =
+            spaceOccupied + (props.data.components.size - 1) * props.data.spacing
+        var possibleGapPerComponent =
+            if (props.data.orientation == "horizontal")
+                (props.data.width - spaceOccupied) / (props.data.components.size - 1)
+            else (props.data.height - spaceOccupied) / (props.data.components.size - 1)
+
+        val canAdjustLayout =
+            if (props.data.orientation == "horizontal" && props.data.width >= spaceOccupied) true
+            else props.data.height >= spaceOccupied
+
+        val canAdjustLayoutWithGaps =
+            if (props.data.orientation == "horizontal" && props.data.width >= spaceOccupiedWithGaps)
+                true
+            else props.data.height >= spaceOccupiedWithGaps
+
+        if (props.data.spacing <= 0 && canAdjustLayoutWithGaps) {
+          possibleGapPerComponent = props.data.spacing
+        } else if (props.data.spacing <= 0 && !canAdjustLayoutWithGaps) {
+          possibleGapPerComponent =
+              if (props.data.orientation == "horizontal")
+                  (props.data.width - spaceOccupied) / (props.data.components.size - 1)
+              else (props.data.height - spaceOccupied) / (props.data.components.size - 1)
+        } else {
+          possibleGapPerComponent =
+              if (props.data.orientation == "horizontal")
+                  (props.data.width - spaceOccupied) / (props.data.components.size - 1)
+              else (props.data.height - spaceOccupied) / (props.data.components.size - 1)
+        }
+
         bgwContents {
           className = ClassName("components")
           id = props.data.id + "--components"
@@ -109,11 +142,15 @@ internal val LinearLayout =
                 else FlexDirection.column
             if (props.data.orientation == "horizontal") {
               justifyContent =
-                  when (props.data.alignment.first) {
-                    "left" -> JustifyContent.flexStart
-                    "center" -> JustifyContent.center
-                    "right" -> JustifyContent.flexEnd
-                    else -> JustifyContent.center
+                  if (canAdjustLayoutWithGaps) {
+                    when (props.data.alignment.first) {
+                      "left" -> JustifyContent.flexStart
+                      "center" -> JustifyContent.center
+                      "right" -> JustifyContent.flexEnd
+                      else -> JustifyContent.center
+                    }
+                  } else {
+                    JustifyContent.center
                   }
               alignItems =
                   when (props.data.alignment.second) {
@@ -131,46 +168,81 @@ internal val LinearLayout =
                     else -> AlignItems.center
                   }
               justifyContent =
-                  when (props.data.alignment.second) {
-                    "top" -> JustifyContent.flexStart
-                    "center" -> JustifyContent.center
-                    "bottom" -> JustifyContent.flexEnd
-                    else -> JustifyContent.center
+                  if (canAdjustLayoutWithGaps) {
+                    when (props.data.alignment.second) {
+                      "top" -> JustifyContent.flexStart
+                      "center" -> JustifyContent.center
+                      "bottom" -> JustifyContent.flexEnd
+                      else -> JustifyContent.center
+                    }
+                  } else {
+                    JustifyContent.center
                   }
             }
-            // gap = props.data.spacing.em
+
+            if (props.data.spacing >= 0 || !canAdjustLayoutWithGaps) {
+              if (props.data.orientation == "horizontal") {
+                gap =
+                    if (props.data.width >= spaceOccupiedWithGaps) {
+                      props.data.spacing.em
+                    } else if (props.data.width >= spaceOccupied) {
+                      possibleGapPerComponent.em
+                    } else {
+                      Globals.unset
+                    }
+              } else {
+                gap =
+                    if (props.data.height >= spaceOccupiedWithGaps) {
+                      props.data.spacing.em
+                    } else if (props.data.height >= spaceOccupied) {
+                      possibleGapPerComponent.em
+                    } else {
+                      Globals.unset
+                    }
+              }
+            }
           }
 
-          props.data.components.forEach {
-            +NodeBuilder.build(it)
-            /* div {
+          props.data.components.forEachIndexed { index, it ->
+            if ((props.data.orientation == "horizontal" && props.data.width >= spaceOccupied ||
+                props.data.orientation == "vertical" && props.data.height >= spaceOccupied) &&
+                props.data.spacing > 0) {
+              +NodeBuilder.build(it)
+            } else {
+              div {
                 css {
-                    position = Position.relative
-                    flex = Flex(number(1.0), number(1.0), Auto.auto)
-                    maxWidth = it.width.em
-                    width = it.width.em
-                    // margin = (props.data.spacing / 2).em
-                    marginTop = it.posY.em
-                    display = Display.flex
-                    alignItems = AlignItems.center
-                    justifyContent = JustifyContent.center
+                  position = Position.relative
+                  flex = Flex(number(1.0), number(1.0), Auto.auto)
+                  width = fit()
+                  height = fit()
+                  maxWidth = fit()
+                  maxHeight = fit()
+                  marginBlock =
+                      if (props.data.orientation == "horizontal") Globals.unset
+                      else (possibleGapPerComponent / 2).em
+                  marginInline =
+                      if (props.data.orientation == "horizontal") (possibleGapPerComponent / 2).em
+                      else Globals.unset
+                  display = Display.flex
+                  alignItems = AlignItems.center
+                  justifyContent = JustifyContent.center
+
+                  if (props.data.orientation == "horizontal") {
+                    if (index == 0) {
+                      marginLeft = 0.em
+                    } else if (index == props.data.components.size - 1) {
+                      marginRight = 0.em
+                    }
+                  } else {
+                    if (index == 0) {
+                      marginTop = 0.em
+                    } else if (index == props.data.components.size - 1) {
+                      marginBottom = 0.em
+                    }
+                  }
                 }
 
                 +NodeBuilder.build(it)
-            } */
-          }
-
-          useLayoutEffect(listOf(props.data)) {
-            document.getElementById(props.data.id + "--components")?.let {
-              for (i in 0 until it.childElementCount) {
-                val child = it.children[i] as HTMLElement
-                if (props.data.orientation == "vertical") {
-                  child.style.marginBottom = "${props.data.spacing}em"
-                  child.style.marginLeft = "0"
-                } else {
-                  child.style.marginRight = "${props.data.spacing}em"
-                  child.style.marginTop = "0"
-                }
               }
             }
           }
