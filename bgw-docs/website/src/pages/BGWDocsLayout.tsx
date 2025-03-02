@@ -637,7 +637,7 @@ function BGWDocsLayout() {
       />
       <div className="grid w-full h-screen">
         <div className="flex flex-col">
-          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4 justify-between max-2xl:justify-center">
+          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 bg-background px-4 justify-between max-2xl:justify-center">
             <i
               className="absolute text-xl cursor-pointer material-symbols-rounded 2xl:hidden left-7"
               onClick={() => setSidebarOpen(!sidebarOpen)}

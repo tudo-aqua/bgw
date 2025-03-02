@@ -300,9 +300,9 @@ button {
   }
 }
 
-.data__inputs fieldset {
-  border-radius: 0 !important;
-  border-bottom: 1px solid hsl(var(--secondary));
+.data__inputs > div {
+  // border-radius: 0 !important;
+  // border-bottom: 1px solid hsl(var(--secondary));
 
   &:has(div[data-state="open"]) {
     padding-bottom: 1.5rem !important;
@@ -310,7 +310,7 @@ button {
 
   &:last-child {
     border-bottom: none;
-    padding-bottom: 1.5rem !important;
+    // padding-bottom: 1.5rem !important;
   }
 
   &:first-child {

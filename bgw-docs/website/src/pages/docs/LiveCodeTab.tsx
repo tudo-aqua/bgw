@@ -33,6 +33,10 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
     }
   };
 
+  const copyCode = (code) => () => {
+    navigator.clipboard.writeText(code);
+  };
+
   return (
     <>
       {/* <div className="flex items-center justify-between mb-2">
@@ -61,19 +65,32 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
         </div>
       </div> */}
 
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-3">
+      <div className="flex flex-col max-w-full p-5 px-5 overflow-hidden rounded-lg bg-background live-code">
+        <div className="flex flex-row items-center justify-between mb-3">
           <h2 className="text-sm font-bold">Generated Code</h2>
+          <div className="flex gap-3">
+            <i
+              className="text-lg transition-colors cursor-pointer material-symbols-rounded text-white/70 hover:text-white"
+              onClick={copyCode(code)}
+            >
+              content_copy
+            </i>
+            <i
+              className="text-lg transition-colors cursor-pointer material-symbols-rounded text-white/70 hover:text-white"
+              onClick={handleManualUpdate}
+            >
+              refresh
+            </i>
+          </div>
         </div>
-        <i
-          className="text-lg transition-colors cursor-pointer material-symbols-rounded text-white/70 hover:text-white"
-          onClick={handleManualUpdate}
-        >
-          refresh
-        </i>
-      </div>
 
-      <CodeTab code={code} autoIndent={false} copy={true} key="live-code-tab" />
+        <CodeTab
+          code={code}
+          autoIndent={false}
+          copy={false}
+          key="live-code-tab"
+        />
+      </div>
     </>
   );
 };

@@ -13,9 +13,9 @@ type SettingsFieldProps = {
 
 function SettingsField({ title, icon, children }: SettingsFieldProps) {
   return (
-    <fieldset className="flex flex-col w-full gap-4 p-3">
+    <div className="flex flex-col w-full max-w-full min-w-full gap-4 p-5 px-5 overflow-hidden rounded-lg bg-background">
       <Collapsible defaultOpen={true}>
-        <CollapsibleTrigger className="cursor-pointer" asChild>
+        <CollapsibleTrigger className="cursor-pointer select-none" asChild>
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-3">
               {icon && (
@@ -39,7 +39,7 @@ function SettingsField({ title, icon, children }: SettingsFieldProps) {
           {children}
         </CollapsibleContent>
       </Collapsible>
-    </fieldset>
+    </div>
   );
 }
 

@@ -59,7 +59,7 @@ export function SimpleColorPicker({
           <Input
             id="custom"
             value={background}
-            className="h-8 col-span-2 mt-4"
+            className="h-10 col-span-2 mt-3"
             onChange={(e) => setBackground(e.currentTarget.value)}
           />
         </div>

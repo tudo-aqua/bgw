@@ -1880,6 +1880,11 @@ class-variance-authority@^0.7.1:
   dependencies:
     clsx "^2.1.1"
 
+classnames@^2.3.2:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.5.1.tgz#ba774c614be0f016da105c858e7159eae8e7687b"
+  integrity sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==
+
 clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
@@ -2136,6 +2141,11 @@ dnd-multi-backend@^7.0.0-alpha.4:
   version "7.1.3"
   resolved "https://registry.npmjs.org/dnd-multi-backend/-/dnd-multi-backend-7.1.3.tgz"
   integrity sha512-INOAt4p/5fkaAUpXu0I+ialm1Ewi9HmIhs/558RFrhBZ0s/XGL991w3A2GvBuaPQNsZJEzCJh0mv/0dswxfSfQ==
+
+dnd-multi-backend@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/dnd-multi-backend/-/dnd-multi-backend-8.1.2.tgz#bf6a6ea9f6a9f5d58cabe12fd927753a753aeb92"
+  integrity sha512-KPDVEsiM+6gNEegqZYTWJQgJxYV4vB91tUrvoKJjaS0wwWqT/jNU0P7xJAwCue/cbasJNvk2dFZH7tC+bjX1Rg==
 
 doctrine@^3.0.0:
   version "3.0.0"
@@ -2818,6 +2828,11 @@ ignore@^5.2.0, ignore@^5.3.1:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.2.tgz#3cd40e729f3643fd87cb04e50bf0eb722bc596f5"
   integrity sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==
+
+immutability-helper@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/immutability-helper/-/immutability-helper-3.1.1.tgz#2b86b2286ed3b1241c9e23b7b21e0444f52f77b7"
+  integrity sha512-Q0QaXjPjwIju/28TsugCHNEASwoCcJSyJV3uO1sOIQGI0jKgm9f41Lvz0DZj3n46cNCyAZTsEYoY4C2bVRUzyQ==
 
 immutable@^5.0.2:
   version "5.0.3"
@@ -3974,6 +3989,15 @@ queue-microtask@^1.2.2:
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
+rdndmb-html5-to-touch@^8.0.0:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/rdndmb-html5-to-touch/-/rdndmb-html5-to-touch-8.1.2.tgz#ab5379974e66e57624a95a79632248b2d32bc354"
+  integrity sha512-efi3MaXYxWaLMd5xzF1bVvmX8erTMhYHSlaMjQe+tynf4IdtgRYfKLwYg+4Z5eq4k7idrjKHQOIMDE6D8LjnOA==
+  dependencies:
+    dnd-multi-backend "^8.1.2"
+    react-dnd-html5-backend "^16.0.1"
+    react-dnd-touch-backend "^16.0.1"
+
 react-colorful@^5.6.1:
   version "5.6.1"
   resolved "https://registry.npmjs.org/react-colorful/-/react-colorful-5.6.1.tgz"
@@ -3990,6 +4014,19 @@ react-dnd-html5-backend@^16.0.1:
   integrity sha512-Wu3dw5aDJmOGw8WjH1I1/yTH+vlXEL4vmjk5p+MHxP8HuHJS1lAGeIdG/hze1AvNeXWo/JgULV87LyQOr+r5jw==
   dependencies:
     dnd-core "^16.0.1"
+
+react-dnd-multi-backend@^8.0.0:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-dnd-multi-backend/-/react-dnd-multi-backend-8.1.2.tgz#2be039e33d98d063d1f3d89d1a8ce1f487b900aa"
+  integrity sha512-Ecj+gwr5B7zRiWqkDU5sUvUmufcu97WnsZFHnqHrWFJhTXAXQnhrperHLFktNP2CnQYtAgbucodr1if0MWpEaA==
+  dependencies:
+    dnd-multi-backend "^8.1.2"
+    react-dnd-preview "^8.1.2"
+
+react-dnd-preview@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-dnd-preview/-/react-dnd-preview-8.1.2.tgz#a679f62a7bdec30b167ed5a10c7f7ed58095b167"
+  integrity sha512-j5M1NcQBItOCYXONRbCNs6MzW7u4KygeOGZlztNNguTs1/f2d7q1fRnQjFLjCpgeg5Gy/JrTFrbRThZglJP5dg==
 
 react-dnd-touch-backend@^16.0.1:
   version "16.0.1"
@@ -4065,6 +4102,22 @@ react-merge-refs@^2.0.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-2.1.1.tgz"
   integrity sha512-jLQXJ/URln51zskhgppGJ2ub7b2WFKGq3cl3NYKtlHoTG+dN2q7EzWrn3hN3EgPsTMvpR9tpq5ijdp7YwFZkag==
+
+react-mosaic-component@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-mosaic-component/-/react-mosaic-component-6.1.1.tgz#d4bb790bd43da12916d6f0c6994f06242bbc621e"
+  integrity sha512-Ivuj6AxRDlo/H8OiEDU1mdgivxuKbwGOa5Ub6Yf+bHcu0JWioT7ttlpCWF63/gKrJBlRMB6fW9/eNOXINg9+Gg==
+  dependencies:
+    classnames "^2.3.2"
+    immutability-helper "^3.1.1"
+    lodash "^4.17.21"
+    prop-types "^15.8.1"
+    rdndmb-html5-to-touch "^8.0.0"
+    react-dnd "^16.0.1"
+    react-dnd-html5-backend "^16.0.1"
+    react-dnd-multi-backend "^8.0.0"
+    react-dnd-touch-backend "^16.0.1"
+    uuid "^9.0.0"
 
 react-query@^3.39.3:
   version "3.39.3"
@@ -4778,6 +4831,11 @@ util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@^9.0.0:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 vaul@^0.9.1:
   version "0.9.9"
