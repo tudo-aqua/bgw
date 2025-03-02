@@ -9,63 +9,45 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 import PreviewTab from "./docs/PreviewTab";
+import CodeTab from "./docs/CodeTab";
+import { createKotlinCodeLinebreaks } from "@/lib/utils";
+import ReactKotlinPlayground from "@/components/ReactKotlinPlayground";
 
-function DraggableDND() {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: "unique-id",
-  });
+function Test() {
+  const [selectedCode, setSelectedCode] = React.useState(0);
 
-  const style = {
-    transform: CSS.Translate.toString(transform),
+  const kotlinSnippets = [
+    `fun main() {
+      val greeting = "Hello, Kotlin!"
+      println(greeting)
+    }`,
+    `data class Person(
+      val name: String,
+      val age: Int
+    )
+    
+    fun main() {
+      val person = Person("Alice", 30)
+      println(person)
+    }`,
+  ];
+
+  const handleToggle = () => {
+    setSelectedCode((prev) => (prev === 0 ? 1 : 0));
   };
 
   return (
-    <button
-      id="unique-id"
-      className="w-[100px] h-[50px] bg-red-400"
-      style={style}
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      onClick={() => {}}
-    ></button>
-  );
-}
-
-function DroppableDND(props) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: "droppable",
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={`w-[300px] h-[300px] ${isOver ? "bg-green-400" : "bg-white"}`}
-      style={{
-        zoom: 2,
-        position: "absolute",
-        top: "50%",
-      }}
-    >
-      {props.children}
+    <div className="p-4">
+      <button
+        onClick={handleToggle}
+        className="px-4 py-2 mb-4 text-white bg-blue-500 rounded"
+      >
+        Toggle Code
+      </button>
+      <CodeTab
+        code={createKotlinCodeLinebreaks(kotlinSnippets[selectedCode])}
+      />
     </div>
-  );
-}
-
-function Test() {
-  let pointerSensor = useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 10,
-    },
-  });
-
-  let allSensors = useSensors(pointerSensor);
-
-  return (
-    <>
-      <PreviewTab codeId={0}></PreviewTab>
-      <PreviewTab codeId={1}></PreviewTab>
-    </>
   );
 }
 

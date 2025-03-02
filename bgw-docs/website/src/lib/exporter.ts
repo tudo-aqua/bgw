@@ -7,8 +7,7 @@
 // import constructors from "@/bgw/constructors.json";
 import { ConstructorAPIImportInfo } from "@/lib/types.ts";
 import * as Components from "@/lib/components.ts";
-
-const constructors = [];
+import { constructors } from "@/main";
 
 const applyBlacklist = [
   "id",
@@ -227,11 +226,11 @@ export function exportComponent(component: any = null, all: any, id: string) {
       return (childrenCode + code).trim();
     }
 
-    return `// Exporting is not supported yet and will be added soon.`;
+    //return `// Exporting is not supported yet and will be added soon.`;
     return `// No constructor found for ${found.shortName}`;
   }
 
-  return `// Exporting is not supported yet and will be added soon.`;
+  // return `// Exporting is not supported yet and will be added soon.`;
   return `// No constructor found for ${component.type}`;
 }
 

@@ -76,7 +76,10 @@ tasks.register("buildAndCopySamples") {
 }
 
 tasks.register("buildAndCopyDokkaHtml") {
-  dependsOn(":bgw-gui:dokkaHtmlPartial")
+  dependsOn(
+      rootProject.project(":bgw-gui").tasks.named("dokkaHtmlPartial"),
+      rootProject.project(":bgw-net:bgw-net-client").tasks.named("dokkaHtmlPartial"),
+      rootProject.project(":bgw-net:bgw-net-common").tasks.named("dokkaHtmlPartial"))
   this.group = "build"
   doLast {
     val sourceDir = project(":bgw-gui").buildDir.resolve("dokka/htmlPartial")
@@ -85,6 +88,26 @@ tasks.register("buildAndCopyDokkaHtml") {
     copy {
       from(sourceDir)
       into(destinationDir)
+    }
+
+    val sourceDir2 =
+        rootProject.project(":bgw-net:bgw-net-client").buildDir.resolve("dokka/htmlPartial")
+    val destinationDir2 = projectDir.resolve("example/htmlPartial")
+    println("Copying files from $sourceDir2 to $destinationDir2")
+    copy {
+      from(sourceDir2)
+      into(destinationDir2)
+      rename("package-list", "package-list-client")
+    }
+
+    val sourceDir3 =
+        rootProject.project(":bgw-net:bgw-net-common").buildDir.resolve("dokka/htmlPartial")
+    val destinationDir3 = projectDir.resolve("example/htmlPartial")
+    println("Copying files from $sourceDir3 to $destinationDir3")
+    copy {
+      from(sourceDir3)
+      into(destinationDir3)
+      rename("package-list", "package-list-common")
     }
   }
 }

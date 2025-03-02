@@ -38,7 +38,7 @@ import {
   StringValue,
   TextVisualData,
 } from "@/lib/components.ts";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { ColorPicker } from "@/components/ui/color-picker.tsx";
 import { useMap } from "@uidotdev/usehooks";
@@ -80,13 +80,26 @@ import {
 import Parser from "@/pages/Parser.tsx";
 import ImageViewer from "@/pages/ImageViewer.tsx";
 import setupIndexedDB, { useIndexedDBStore } from "use-indexeddb";
-import { idbConfig, reconstructProperties } from "@/lib/utils.ts";
+import {
+  createKotlinCodeLinebreaks,
+  idbConfig,
+  reconstructProperties,
+} from "@/lib/utils.ts";
 import { ConstructorAPIImportInfo, Guides } from "@/lib/types.ts";
 import SettingsField from "@/components/SettingsField.tsx";
 import { exportComponent } from "@/lib/exporter.ts";
 import Playground from "@/pages/Playground.tsx";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
+import CodeTab from "./docs/CodeTab";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TabsContent } from "@radix-ui/react-tabs";
+import LiveCodeTab from "./docs/LiveCodeTab";
+import { EyeDropperPicker } from "@/components/ui/background-picker";
+import { Mosaic } from "react-mosaic-component";
+
+import "react-mosaic-component/react-mosaic-component.css";
+import "./playground.scss";
 
 function BGWPlayground() {
   useEffect(() => {
@@ -100,6 +113,8 @@ function BGWPlayground() {
   const { update: saveWorkspace, getByID: loadWorkspace } =
     useIndexedDBStore("workspaces");
 
+  const { constructors } = useLoaderData();
+
   const saveCurrentWorkspace = (workspaceId: string = "default") => {
     const workspace = {
       id: workspaceId,
@@ -107,6 +122,7 @@ function BGWPlayground() {
       treeData,
       sceneWidth,
       sceneHeight,
+      sceneBackground,
     };
 
     saveWorkspace(workspace)
@@ -128,6 +144,7 @@ function BGWPlayground() {
         setTreeData(saved.treeData);
         setSceneWidth(saved.sceneWidth);
         setSceneHeight(saved.sceneHeight);
+        setSceneBackground(saved.sceneBackground);
 
         sendOutputElements();
         setOutputDirty((prev) => prev + 1);
@@ -146,8 +163,10 @@ function BGWPlayground() {
   const [projectError, setProjectError] = useState(null);
   const [projectWarning, setProjectWarning] = useState(null);
 
+  const [sceneSelected, setSceneSelected] = useState(false);
   const [sceneWidth, setSceneWidth] = useState(1920);
   const [sceneHeight, setSceneHeight] = useState(1080);
+  const [sceneBackground, setSceneBackground] = useState("#ffffff");
 
   const onError = (message, source, lineno, colno, error) => {
     if (message.includes("window.cef")) return;
@@ -412,13 +431,20 @@ function BGWPlayground() {
   useEffect(() => {
     setCompileError(null);
     sendOutputElements();
-  }, [outputDirty, sceneWidth, sceneHeight]);
+  }, [outputDirty, sceneWidth, sceneHeight, sceneBackground]);
 
   useEffect(() => {
     if (allComponents.size > 0) {
       saveCurrentWorkspace();
     }
-  }, [allComponents, treeData, sceneWidth, sceneHeight, selectedClass]);
+  }, [
+    allComponents,
+    treeData,
+    sceneWidth,
+    sceneBackground,
+    sceneHeight,
+    selectedClass,
+  ]);
 
   const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
     if (attr === "visual") return getVisualInputs(elementClass);
@@ -604,6 +630,57 @@ function BGWPlayground() {
           {getDistinctInheritedInputElement("fontWeight", "font")}
         </div>
       </div>
+    );
+  };
+
+  const getSceneInputs = () => {
+    return (
+      <SettingsField title={"Scene"} icon={"slideshow"}>
+        <div className="flex items-center w-full gap-3">
+          <Label className="shrink-0 w-[43%] text-white/70">Background</Label>
+          <EyeDropperPicker
+            className="w-full ml-1"
+            background={sceneBackground}
+            setBackground={(value) => {
+              setSceneBackground(value);
+            }}
+          ></EyeDropperPicker>
+        </div>
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label
+            className="shrink-0 w-[43%] text-white/70"
+            htmlFor={"sceneWidth"}
+          >
+            Width
+          </Label>
+          <Input
+            id={"sceneWidth"}
+            type="number"
+            placeholder={"1920"}
+            value={sceneWidth}
+            onChange={(e) => {
+              setSceneWidth(e.target.value);
+            }}
+          />
+        </div>
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label
+            className="shrink-0 w-[43%] text-white/70"
+            htmlFor={"sceneHeight"}
+          >
+            Height
+          </Label>
+          <Input
+            id={"sceneHeight"}
+            type="number"
+            placeholder={"1080"}
+            value={sceneHeight}
+            onChange={(e) => {
+              setSceneHeight(e.target.value);
+            }}
+          />
+        </div>
+      </SettingsField>
     );
   };
 
@@ -1615,19 +1692,6 @@ function BGWPlayground() {
             </i>
             <p className="font-medium text-muted-foreground">Duplicate</p>
           </ContextMenuItem>
-          <ContextMenuItem
-            className="gap-3 cursor-pointer"
-            onClick={() => {
-              setSelectedClass(elem);
-              setSelectedComponentId(elem.id);
-              setExportOpened(true);
-            }}
-          >
-            <i className="ml-2 text-lg material-symbols-rounded text-muted-foreground">
-              code
-            </i>
-            <p className="font-medium text-muted-foreground">Export</p>
-          </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem
             className="text-red-500 hover:!bg-red-500/20 gap-3 cursor-pointer"
@@ -1708,17 +1772,18 @@ function BGWPlayground() {
           width: `calc(100% - ${depth * 30}px)`,
           maxWidth: `calc(100% - ${depth * 30}px)`,
         }}
-        title={elem.name.value.trim() == "" ? data.name : elem.name.value}
         onPressedChange={() => {
           if (selected) {
             setSelectedComponentId(null);
             setSelectedClass(null);
             hideElementGuides();
+            setSceneSelected(false);
             return;
           }
           setSelectedComponentId(elem.id);
           setSelectedClass(elem);
           showElementGuides(elem.id);
+          setSceneSelected(false);
         }}
       >
         {node.droppable && (
@@ -1742,6 +1807,7 @@ function BGWPlayground() {
           className={`font-medium ${
             selected ? `text-white` : "text-white/70"
           } overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left`}
+          title={elem.name.value.trim() == "" ? data.name : elem.name.value}
         >
           {elem.name.value.trim() == ""
             ? getInstantiableByData(elem.type).name
@@ -2278,14 +2344,14 @@ function BGWPlayground() {
             height: sceneHeight,
             background: {
               type: "CompoundVisualData",
-              id: "bgw-vis-2",
+              id: "bgw-vis-0",
               children: [
                 {
                   type: "ColorVisualData",
-                  id: "bgw-vis-2",
+                  id: "bgw-vis-0",
                   transparency: 1.0,
                   flipped: "none",
-                  color: "rgba(255, 255, 255, 1.0)",
+                  color: sceneBackground,
                 },
               ],
             },
@@ -2508,6 +2574,7 @@ function BGWPlayground() {
   };
 
   const getComponentViewDataInputs = (elementClass: DataClass) => {
+    console.log(elementClass);
     return (
       <>
         {getNameInputs(elementClass)}
@@ -2518,12 +2585,58 @@ function BGWPlayground() {
         {advancedMode && getTransformInputs(elementClass)}
         {elementClass.font &&
         !elementClass.objectType.includes("StructuredDataViewData") &&
-        !elementClass.type === "ColorPickerData"
+        elementClass.type !== "ColorPickerData"
           ? getFontsInputs(elementClass)
           : null}
         {getRestSettingsInputs(elementClass)}
+        {getCodeExport()}
       </>
     );
+  };
+
+  const getSceneDisplay = () => {
+    return (
+      <Toggle
+        pressed={sceneSelected}
+        defaultPressed={false}
+        className={`flex items-center gap-3 justify-start cursor-pointer relative main__toggle w-full rounded-lg ${
+          sceneSelected ? "!bg-bgw-green/10" : ""
+        } hover:bg-bgw-green/10 bg-bgw-green/5`}
+        title="Scene"
+        onPressedChange={() => {
+          setSelectedComponentId(null);
+          setSelectedClass(null);
+          hideElementGuides();
+          setSceneSelected(!sceneSelected);
+        }}
+      >
+        <i
+          className={`material-symbols-rounded main__toggle__icon text-xl text-bgw-green`}
+        >
+          slideshow
+        </i>
+        <span
+          className={`font-medium overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left text-bgw-green`}
+        >
+          Scene
+        </span>
+      </Toggle>
+    );
+  };
+
+  const getCodeExport = () => {
+    try {
+      return (
+        <div className="flex flex-col w-full gap-4">
+          <LiveCodeTab
+            getOutputElements={getOutputElementsFromTree}
+            selectedComponentId={selectedComponentId}
+          />
+        </div>
+      );
+    } catch (error) {
+      return null;
+    }
   };
 
   const getNameInputs = (elementClass: DataClass) => {
@@ -2784,6 +2897,8 @@ function BGWPlayground() {
   };
 
   const getDataInputs = (elementClass: DataClass | null) => {
+    if (sceneSelected) return getSceneInputs();
+
     if (elementClass === null) return null;
 
     if (elementClass.objectType.includes("ComponentViewData")) {
@@ -2803,6 +2918,281 @@ function BGWPlayground() {
   const [draggingGuidesStart, setDraggingGuidesStart] = useState({
     x: 0,
     y: 0,
+  });
+
+  const ELEMENT_MAP: { [key: string]: JSX.Element } = {
+    "left-sidebar": (
+      <div
+        className="relative shrink-0 max-h-[calc(100vh-57px)] h-full flex flex-col gap-3"
+        x-chunk="dashboard-03-chunk-0"
+      >
+        <div className="flex flex-row gap-3 rounded-lg h-fit">
+          {getSceneDisplay()}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="secondary"
+                className="items-center w-10 h-10 rounded-lg hover:bg-bgw-green/10 bg-bgw-green/5"
+              >
+                <i className="text-lg material-symbols-rounded text-bgw-green">
+                  add
+                </i>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add Component</DialogTitle>
+                <DialogDescription>
+                  This action will add an element to the scene.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-3 component__select">
+                {getAddComponentSelect()}
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      let newObj = new Components.DataClasses[
+                        selectedComponentType
+                      ]();
+                      setSelectedClass(newObj);
+                      treeData.push({
+                        id: newObj.id,
+                        parent: 0,
+                        droppable:
+                          newObj.objectType.includes("TableViewData") ||
+                          newObj.objectType.includes("LayoutViewData") ||
+                          newObj.objectType.includes("ToggleGroupData") ||
+                          newObj.objectType.includes(
+                            "GameComponentContainerData"
+                          ) ||
+                          newObj.objectType.includes("GridElementData") ||
+                          newObj.objectType.includes("CameraPaneData") ||
+                          newObj.objectType.includes("HexagonGridElementData"),
+                        text: newObj.name.value,
+                      });
+                      setSelectedComponentId(newObj.id);
+                      showElementGuides(newObj.id);
+                    }}
+                  >
+                    Add
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <div className="relative grid h-full max-h-full gap-3 p-4 overflow-hidden rounded-lg bg-background">
+          <ScrollArea className="h-full max-h-full component__scroll">
+            <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+              <div className="pb-[4rem] -mt-4">
+                <Tree
+                  tree={treeData}
+                  rootId={0}
+                  render={(node, { depth, isOpen, onToggle }) => {
+                    return renderTreeNode(node, depth, isOpen, onToggle);
+                  }}
+                  onDrop={handleDrop}
+                  sort={false}
+                  insertDroppableFirst={false}
+                  canDrop={(tree, { dragSource, dropTargetId, dropTarget }) => {
+                    let valid = checkDrop(dragSource, dropTargetId, dropTarget);
+                    if (!valid) return false;
+
+                    if (dragSource?.parent === dropTargetId) {
+                      return true;
+                    }
+                  }}
+                  dropTargetOffset={10}
+                  placeholderRender={(node, { depth }) => (
+                    <div
+                      className="bg-purple-500 tree__placeholder"
+                      style={{ left: `${depth * 30}px` }}
+                    ></div>
+                  )}
+                />
+              </div>
+            </DndProvider>
+          </ScrollArea>
+        </div>
+      </div>
+    ),
+    preview: (
+      <div
+        className={`relative flex h-full min-h-[50vh] w-full flex-col overflow-hidden bg-background ${
+          fullScreen ? "preview--fullscreen" : ""
+        }`}
+        id={"bgw-preview"}
+        onMouseMove={(e) => {
+          if (draggingGuide) {
+            let shift = e.shiftKey;
+            let ctrl = e.ctrlKey;
+            let x = e.clientX - draggingBounds.x;
+            let y = e.clientY - draggingBounds.y;
+
+            setGuidePosition({
+              x: draggingGuidesStart.x + x,
+              y: draggingGuidesStart.y + y,
+            });
+            // setDraggingBounds({x: x, y: y})
+            //modifyElementPosition(selectedComponentId, currentGuide.x + x, currentGuide.y + y)
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (draggingGuide) {
+            setDraggingGuide(false);
+            let shift = e.shiftKey;
+            let ctrl = e.ctrlKey;
+            let x = e.clientX - draggingBounds.x;
+            let y = e.clientY - draggingBounds.y;
+
+            setGuidePosition({
+              x: draggingGuidesStart.x + x,
+              y: draggingGuidesStart.y + y,
+            });
+            modifyElementPosition(
+              selectedComponentId,
+              draggingGuidesStart.x + x,
+              draggingGuidesStart.y + y
+            );
+            setDraggingBounds({ x: 0, y: 0 });
+          }
+        }}
+        onMouseUp={(e) => {
+          if (draggingGuide) {
+            setDraggingGuide(false);
+            let shift = e.shiftKey;
+            let ctrl = e.ctrlKey;
+            let x = e.clientX - draggingBounds.x;
+            let y = e.clientY - draggingBounds.y;
+
+            setGuidePosition({
+              x: draggingGuidesStart.x + x,
+              y: draggingGuidesStart.y + y,
+            });
+            modifyElementPosition(
+              selectedComponentId,
+              draggingGuidesStart.x + x,
+              draggingGuidesStart.y + y
+            );
+            setDraggingBounds({ x: 0, y: 0 });
+          }
+        }}
+      >
+        <Button
+          variant="error"
+          className={`absolute left-3 bottom-3 z-40 ${
+            compileError != null || projectError != null ? "flex" : "hidden"
+          }`}
+          title={compileError}
+        >
+          <i className="mr-3 text-lg material-symbols-rounded">
+            emergency_home
+          </i>
+          <p>Scene errors detected. Preview may be inaccurate.</p>
+        </Button>
+        <Button
+          variant="warning"
+          className={`absolute left-3 bottom-3 z-40 ${
+            compileError == null &&
+            projectError == null &&
+            projectWarning != null
+              ? "flex"
+              : "hidden"
+          }`}
+        >
+          <i className="mr-3 text-lg material-symbols-rounded">warning</i>
+          <p>Scene warnings detected. Preview may be inaccurate.</p>
+        </Button>
+        <Button
+          variant="secondary"
+          className="absolute z-40 right-3 bottom-3"
+          onClick={() => setFullScreen(!fullScreen)}
+        >
+          <i className="text-lg material-symbols-rounded">
+            {fullScreen ? "fullscreen_exit" : "fullscreen"}
+          </i>
+        </Button>
+        <Badge variant="muted" className="absolute z-10 mr-2 left-3 top-3">
+          Preview: {sceneWidth}x{sceneHeight}
+        </Badge>
+        <Tooltip delayDuration={700} align="start" sideOffset={5}>
+          <TooltipTrigger asChild>
+            <img
+              src="/bgw/logo.svg"
+              alt="Preview"
+              className="absolute z-10 w-6 top-3 right-4 opacity-20 hover:opacity-100 cursor-help"
+            />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>BGW Live-Preview</p>
+          </TooltipContent>
+        </Tooltip>
+        <div
+          className="flex items-center justify-center flex-1 bgw-root-container"
+          id="bgw-root-container"
+        >
+          <div
+            className="w-full h-full rounded-xl bgw-root"
+            id="bgw-root"
+          ></div>
+          {/*{*/}
+          {/*    selectedClass !== null ? drawOutputElement(selectedClass) : null*/}
+          {/*}*/}
+        </div>
+        {currentGuide !== null ? (
+          <div
+            className="guide"
+            onMouseDown={(e) => {
+              return;
+              setDraggingGuide(true);
+              setDraggingBounds({ x: e.clientX, y: e.clientY });
+              setDraggingGuidesStart({
+                x: currentGuide.x,
+                y: currentGuide.y,
+              });
+            }}
+            draggable={true}
+            style={{
+              left: currentGuide.x,
+              top: currentGuide.y,
+              width: currentGuide.width,
+              height: currentGuide.height,
+            }}
+          ></div>
+        ) : null}
+      </div>
+    ),
+    "right-sidebar": (
+      <div
+        className="relative w-full h-full overflow-x-hidden overflow-y-auto"
+        x-chunk="dashboard-03-chunk-0"
+        id="data__inputs__sidebar"
+        orientation="vertical"
+        style={{
+          visibility:
+            selectedClass == null && !sceneSelected ? "hidden" : "visible",
+        }}
+      >
+        <div className="flex flex-col items-start w-full gap-3 data__inputs">
+          {getDataInputs(selectedClass)}
+        </div>
+      </div>
+    ),
+  };
+
+  const [mosaicState, setMosaicState] = useState({
+    direction: "row",
+    first: {
+      direction: "row",
+      first: "left-sidebar",
+      second: "preview",
+      splitPercentage: 20,
+    },
+    second: "right-sidebar",
+    splitPercentage: 80,
   });
 
   return (
@@ -2834,7 +3224,7 @@ function BGWPlayground() {
       </div>
       <div className="grid w-full h-screen max-2xl:overflow-hidden">
         <div className="flex flex-col">
-          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4 justify-between">
+          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 bg-background px-4 justify-between">
             <div className="flex items-center gap-4">
               <Link to="/" className="flex items-center h-full">
                 <i className="text-xl material-symbols-rounded">arrow_back</i>
@@ -2883,35 +3273,6 @@ function BGWPlayground() {
               >
                 Expert Mode
               </Toggle>
-              <Dialog
-                open={exportOpened}
-                onOpenChange={() => {
-                  setExportOpened(false);
-                }}
-              >
-                <DialogContent className="max-w-[800px]" forceMount={true}>
-                  <DialogHeader>
-                    <DialogTitle>Code Export</DialogTitle>
-                    <DialogDescription>
-                      This action will export the selected component as code.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-3 component__select">
-                    <Playground
-                      code={
-                        exportOpened
-                          ? exportComponent(
-                              null,
-                              getOutputElementsFromTree(true),
-                              selectedComponentId
-                            )
-                          : ""
-                      }
-                      open={exportOpened}
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
               {/* <Dialog>
                 <DialogTrigger className="w-full" asChild>
                   <Button
@@ -2949,274 +3310,15 @@ function BGWPlayground() {
               </Button> */}
             </div>
           </header>
-          <main className="flex items-center flex-1 h-full max-h-[calc(100vh-57px)] relative">
-            <div
-              className="relative w-[17.5%] max-w-[385px] shrink-0 max-h-[calc(100vh-57px)] h-full flex flex-col gap-3"
-              x-chunk="dashboard-03-chunk-0"
-            >
-              <fieldset className="relative grid h-full max-h-full gap-3 pl-4 pr-4 overflow-hidden">
-                <ScrollArea className="h-full max-h-full component__scroll">
-                  <DndProvider
-                    backend={MultiBackend}
-                    options={getBackendOptions()}
-                  >
-                    <div className="pb-[4rem]">
-                      <Tree
-                        tree={treeData}
-                        rootId={0}
-                        render={(node, { depth, isOpen, onToggle }) => {
-                          return renderTreeNode(node, depth, isOpen, onToggle);
-                        }}
-                        onDrop={handleDrop}
-                        sort={false}
-                        insertDroppableFirst={false}
-                        canDrop={(
-                          tree,
-                          { dragSource, dropTargetId, dropTarget }
-                        ) => {
-                          let valid = checkDrop(
-                            dragSource,
-                            dropTargetId,
-                            dropTarget
-                          );
-                          if (!valid) return false;
-
-                          if (dragSource?.parent === dropTargetId) {
-                            return true;
-                          }
-                        }}
-                        dropTargetOffset={10}
-                        placeholderRender={(node, { depth }) => (
-                          <div
-                            className="bg-purple-500 tree__placeholder"
-                            style={{ left: `${depth * 30}px` }}
-                          ></div>
-                        )}
-                      />
-                    </div>
-                  </DndProvider>
-                </ScrollArea>
-                <div className="absolute bottom-0 left-0 right-0 h-20 rounded-none hide__gradient bg-gradient-to-t from-background to-background/0"></div>
-                <div className="absolute bottom-0 left-0 right-0 h-20 rounded-none hide__gradient bg-gradient-to-t from-background to-background/0"></div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="absolute items-center h-10 gap-2 bottom-3 left-4 right-4"
-                    >
-                      <i className="text-lg material-symbols-rounded">add</i>
-                      <p>Add Component</p>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add Component</DialogTitle>
-                      <DialogDescription>
-                        This action will add an element to the scene.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-3 component__select">
-                      {getAddComponentSelect()}
-                    </div>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button
-                          variant="secondary"
-                          onClick={() => {
-                            let newObj = new Components.DataClasses[
-                              selectedComponentType
-                            ]();
-                            setSelectedClass(newObj);
-                            treeData.push({
-                              id: newObj.id,
-                              parent: 0,
-                              droppable:
-                                newObj.objectType.includes("TableViewData") ||
-                                newObj.objectType.includes("LayoutViewData") ||
-                                newObj.objectType.includes("ToggleGroupData") ||
-                                newObj.objectType.includes(
-                                  "GameComponentContainerData"
-                                ) ||
-                                newObj.objectType.includes("GridElementData") ||
-                                newObj.objectType.includes("CameraPaneData") ||
-                                newObj.objectType.includes(
-                                  "HexagonGridElementData"
-                                ),
-                              text: newObj.name.value,
-                            });
-                            setSelectedComponentId(newObj.id);
-                            showElementGuides(newObj.id);
-                          }}
-                        >
-                          Add
-                        </Button>
-                      </DialogClose>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </fieldset>
-            </div>
-            <div
-              className={`relative flex h-full min-h-[50vh] w-full flex-col overflow-hidden bg-muted/30 ${
-                fullScreen ? "preview--fullscreen" : ""
-              }`}
-              id={"bgw-preview"}
-              onMouseMove={(e) => {
-                if (draggingGuide) {
-                  let shift = e.shiftKey;
-                  let ctrl = e.ctrlKey;
-                  let x = e.clientX - draggingBounds.x;
-                  let y = e.clientY - draggingBounds.y;
-
-                  setGuidePosition({
-                    x: draggingGuidesStart.x + x,
-                    y: draggingGuidesStart.y + y,
-                  });
-                  // setDraggingBounds({x: x, y: y})
-                  //modifyElementPosition(selectedComponentId, currentGuide.x + x, currentGuide.y + y)
-                }
+          <main className="flex items-center flex-1 h-full max-h-[calc(100vh-57px)] relative bg-muted/30 ">
+            <Mosaic<string>
+              renderTile={(id, path) => {
+                return ELEMENT_MAP[id];
               }}
-              onMouseLeave={(e) => {
-                if (draggingGuide) {
-                  setDraggingGuide(false);
-                  let shift = e.shiftKey;
-                  let ctrl = e.ctrlKey;
-                  let x = e.clientX - draggingBounds.x;
-                  let y = e.clientY - draggingBounds.y;
-
-                  setGuidePosition({
-                    x: draggingGuidesStart.x + x,
-                    y: draggingGuidesStart.y + y,
-                  });
-                  modifyElementPosition(
-                    selectedComponentId,
-                    draggingGuidesStart.x + x,
-                    draggingGuidesStart.y + y
-                  );
-                  setDraggingBounds({ x: 0, y: 0 });
-                }
-              }}
-              onMouseUp={(e) => {
-                if (draggingGuide) {
-                  setDraggingGuide(false);
-                  let shift = e.shiftKey;
-                  let ctrl = e.ctrlKey;
-                  let x = e.clientX - draggingBounds.x;
-                  let y = e.clientY - draggingBounds.y;
-
-                  setGuidePosition({
-                    x: draggingGuidesStart.x + x,
-                    y: draggingGuidesStart.y + y,
-                  });
-                  modifyElementPosition(
-                    selectedComponentId,
-                    draggingGuidesStart.x + x,
-                    draggingGuidesStart.y + y
-                  );
-                  setDraggingBounds({ x: 0, y: 0 });
-                }
-              }}
-            >
-              <Button
-                variant="error"
-                className={`absolute left-3 bottom-3 z-40 ${
-                  compileError != null || projectError != null
-                    ? "flex"
-                    : "hidden"
-                }`}
-                title={compileError}
-              >
-                <i className="mr-3 text-lg material-symbols-rounded">
-                  emergency_home
-                </i>
-                <p>Project contains errors: The preview might be incorrect.</p>
-              </Button>
-              <Button
-                variant="warning"
-                className={`absolute left-3 bottom-3 z-40 ${
-                  compileError == null &&
-                  projectError == null &&
-                  projectWarning != null
-                    ? "flex"
-                    : "hidden"
-                }`}
-              >
-                <i className="mr-3 text-lg material-symbols-rounded">warning</i>
-                <p>
-                  Project contains warnings: The preview might be incorrect.
-                </p>
-              </Button>
-              <Button
-                variant="secondary"
-                className="absolute z-40 right-3 bottom-3"
-                onClick={() => setFullScreen(!fullScreen)}
-              >
-                <i className="text-lg material-symbols-rounded">
-                  {fullScreen ? "fullscreen_exit" : "fullscreen"}
-                </i>
-              </Button>
-              <Badge variant="muted" className="absolute right-3 top-3">
-                Preview
-              </Badge>
-              <Badge
-                variant="muted"
-                className="absolute z-10 left-3 top-3"
-                onClick={() => {
-                  let sceneWidth = prompt("Enter the scene width", "1920");
-                  let sceneHeight = prompt("Enter the scene height", "1080");
-                  if (sceneWidth === null || sceneHeight === null) return;
-                  setSceneWidth(parseInt(sceneWidth));
-                  setSceneHeight(parseInt(sceneHeight));
-                }}
-              >
-                {sceneWidth}x{sceneHeight}
-              </Badge>
-              <div
-                className="flex items-center justify-center flex-1 bgw-root-container"
-                id="bgw-root-container"
-              >
-                <div
-                  className="w-full h-full rounded-xl bgw-root"
-                  id="bgw-root"
-                ></div>
-                {/*{*/}
-                {/*    selectedClass !== null ? drawOutputElement(selectedClass) : null*/}
-                {/*}*/}
-              </div>
-              {currentGuide !== null ? (
-                <div
-                  className="guide"
-                  onMouseDown={(e) => {
-                    return;
-                    setDraggingGuide(true);
-                    setDraggingBounds({ x: e.clientX, y: e.clientY });
-                    setDraggingGuidesStart({
-                      x: currentGuide.x,
-                      y: currentGuide.y,
-                    });
-                  }}
-                  draggable={true}
-                  style={{
-                    left: currentGuide.x,
-                    top: currentGuide.y,
-                    width: currentGuide.width,
-                    height: currentGuide.height,
-                  }}
-                ></div>
-              ) : null}
-            </div>
-            <ScrollArea
-              className="h-full relative hidden flex-col items-center gap-8 md:flex pr-5 pl-5 w-[25%] shrink-0 max-w-[400px]"
-              x-chunk="dashboard-03-chunk-0"
-              style={{
-                visibility: selectedClass == null ? "hidden" : "visible",
-              }}
-            >
-              <div className="grid items-start w-full data__inputs">
-                {getDataInputs(selectedClass)}
-              </div>
-            </ScrollArea>
+              className="flex w-full h-full"
+              value={mosaicState}
+              onChange={setMosaicState}
+            ></Mosaic>
           </main>
         </div>
       </div>
