@@ -95,6 +95,7 @@ import CodeTab from "./docs/CodeTab";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import LiveCodeTab from "./docs/LiveCodeTab";
+import { EyeDropperPicker } from "@/components/ui/background-picker";
 
 function BGWPlayground() {
   useEffect(() => {
@@ -117,6 +118,7 @@ function BGWPlayground() {
       treeData,
       sceneWidth,
       sceneHeight,
+      sceneBackground,
     };
 
     saveWorkspace(workspace)
@@ -138,6 +140,7 @@ function BGWPlayground() {
         setTreeData(saved.treeData);
         setSceneWidth(saved.sceneWidth);
         setSceneHeight(saved.sceneHeight);
+        setSceneBackground(saved.sceneBackground);
 
         sendOutputElements();
         setOutputDirty((prev) => prev + 1);
@@ -156,8 +159,10 @@ function BGWPlayground() {
   const [projectError, setProjectError] = useState(null);
   const [projectWarning, setProjectWarning] = useState(null);
 
+  const [sceneSelected, setSceneSelected] = useState(false);
   const [sceneWidth, setSceneWidth] = useState(1920);
   const [sceneHeight, setSceneHeight] = useState(1080);
+  const [sceneBackground, setSceneBackground] = useState("#ffffff");
 
   const onError = (message, source, lineno, colno, error) => {
     if (message.includes("window.cef")) return;
@@ -422,13 +427,20 @@ function BGWPlayground() {
   useEffect(() => {
     setCompileError(null);
     sendOutputElements();
-  }, [outputDirty, sceneWidth, sceneHeight]);
+  }, [outputDirty, sceneWidth, sceneHeight, sceneBackground]);
 
   useEffect(() => {
     if (allComponents.size > 0) {
       saveCurrentWorkspace();
     }
-  }, [allComponents, treeData, sceneWidth, sceneHeight, selectedClass]);
+  }, [
+    allComponents,
+    treeData,
+    sceneWidth,
+    sceneBackground,
+    sceneHeight,
+    selectedClass,
+  ]);
 
   const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
     if (attr === "visual") return getVisualInputs(elementClass);
@@ -614,6 +626,57 @@ function BGWPlayground() {
           {getDistinctInheritedInputElement("fontWeight", "font")}
         </div>
       </div>
+    );
+  };
+
+  const getSceneInputs = () => {
+    return (
+      <SettingsField title={"Scene"} icon={"slideshow"}>
+        <div className="flex items-center w-full gap-3">
+          <Label className="shrink-0 w-[43%] text-white/70">Background</Label>
+          <EyeDropperPicker
+            className="w-full ml-1"
+            background={sceneBackground}
+            setBackground={(value) => {
+              setSceneBackground(value);
+            }}
+          ></EyeDropperPicker>
+        </div>
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label
+            className="shrink-0 w-[43%] text-white/70"
+            htmlFor={"sceneWidth"}
+          >
+            Width
+          </Label>
+          <Input
+            id={"sceneWidth"}
+            type="number"
+            placeholder={"1920"}
+            value={sceneWidth}
+            onChange={(e) => {
+              setSceneWidth(e.target.value);
+            }}
+          />
+        </div>
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label
+            className="shrink-0 w-[43%] text-white/70"
+            htmlFor={"sceneHeight"}
+          >
+            Height
+          </Label>
+          <Input
+            id={"sceneHeight"}
+            type="number"
+            placeholder={"1080"}
+            value={sceneHeight}
+            onChange={(e) => {
+              setSceneHeight(e.target.value);
+            }}
+          />
+        </div>
+      </SettingsField>
     );
   };
 
@@ -1724,11 +1787,13 @@ function BGWPlayground() {
             setSelectedComponentId(null);
             setSelectedClass(null);
             hideElementGuides();
+            setSceneSelected(false);
             return;
           }
           setSelectedComponentId(elem.id);
           setSelectedClass(elem);
           showElementGuides(elem.id);
+          setSceneSelected(false);
         }}
       >
         {node.droppable && (
@@ -2288,14 +2353,14 @@ function BGWPlayground() {
             height: sceneHeight,
             background: {
               type: "CompoundVisualData",
-              id: "bgw-vis-2",
+              id: "bgw-vis-0",
               children: [
                 {
                   type: "ColorVisualData",
-                  id: "bgw-vis-2",
+                  id: "bgw-vis-0",
                   transparency: 1.0,
                   flipped: "none",
-                  color: "rgba(255, 255, 255, 1.0)",
+                  color: sceneBackground,
                 },
               ],
             },
@@ -2534,6 +2599,36 @@ function BGWPlayground() {
         {getRestSettingsInputs(elementClass)}
         {getCodeExport()}
       </>
+    );
+  };
+
+  const getSceneDisplay = () => {
+    return (
+      <Toggle
+        pressed={sceneSelected}
+        defaultPressed={false}
+        className={`flex items-center gap-3 mt-4 justify-start cursor-pointer relative main__toggle w-full ${
+          sceneSelected ? "!bg-bgw-green/10" : ""
+        } hover:bg-bgw-green/5`}
+        title="Scene"
+        onPressedChange={() => {
+          setSelectedComponentId(null);
+          setSelectedClass(null);
+          hideElementGuides();
+          setSceneSelected(!sceneSelected);
+        }}
+      >
+        <i
+          className={`material-symbols-rounded main__toggle__icon text-xl text-bgw-green`}
+        >
+          slideshow
+        </i>
+        <span
+          className={`font-medium overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left text-bgw-green`}
+        >
+          Scene
+        </span>
+      </Toggle>
     );
   };
 
@@ -2810,6 +2905,8 @@ function BGWPlayground() {
   };
 
   const getDataInputs = (elementClass: DataClass | null) => {
+    if (sceneSelected) return getSceneInputs();
+
     if (elementClass === null) return null;
 
     if (elementClass.objectType.includes("ComponentViewData")) {
@@ -2957,6 +3054,8 @@ function BGWPlayground() {
                     backend={MultiBackend}
                     options={getBackendOptions()}
                   >
+                    {getSceneDisplay()}
+                    <Separator className="mt-4" />
                     <div className="pb-[4rem]">
                       <Tree
                         tree={treeData}
@@ -3208,7 +3307,10 @@ function BGWPlayground() {
               x-chunk="dashboard-03-chunk-0"
               id="data__inputs__sidebar"
               style={{
-                visibility: selectedClass == null ? "hidden" : "visible",
+                visibility:
+                  selectedClass == null && !sceneSelected
+                    ? "hidden"
+                    : "visible",
               }}
             >
               <div className="grid items-start w-full data__inputs">

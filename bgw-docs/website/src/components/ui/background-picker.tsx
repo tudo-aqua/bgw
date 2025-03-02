@@ -9,7 +9,41 @@ import { cn } from "../../lib/utils";
 import { HexColorPicker } from "react-colorful";
 import { Separator } from "@/components/ui/separator.tsx";
 
-export function SimpleColorPicker({
+function EyeDropper({
+  onSelectColor,
+  children,
+  className,
+}: {
+  onSelectColor: (color: string) => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const handleClick = async () => {
+    // Check if the EyeDropper API is available
+    if (!("EyeDropper" in window)) {
+      alert("Your browser does not support the EyeDropper API");
+      return;
+    }
+
+    try {
+      // @ts-ignore - EyeDropper API is not yet in TypeScript's lib
+      const dropper = new window.EyeDropper();
+      const result = await dropper.open();
+      onSelectColor(result.sRGBHex);
+    } catch (e) {
+      // User canceled the selection
+      console.log(e);
+    }
+  };
+
+  return (
+    <div className={className} onClick={handleClick}>
+      {children}
+    </div>
+  );
+}
+
+export function EyeDropperPicker({
   background,
   setBackground,
   className,
@@ -56,12 +90,19 @@ export function SimpleColorPicker({
       >
         <div className="flex flex-col">
           <HexColorPicker color={background} onChange={setBackground} />
-          <Input
-            id="custom"
-            value={background}
-            className="h-8 col-span-2 mt-4"
-            onChange={(e) => setBackground(e.currentTarget.value)}
-          />
+          <div className="flex gap-3 mt-3">
+            <EyeDropper onSelectColor={(color) => setBackground(color)}>
+              <Button variant="secondary" className="h-10">
+                <i className="text-base material-symbols-rounded">colorize</i>
+              </Button>
+            </EyeDropper>
+            <Input
+              id="custom"
+              value={background}
+              className="h-10"
+              onChange={(e) => setBackground(e.currentTarget.value)}
+            />
+          </div>
         </div>
       </PopoverContent>
     </Popover>
