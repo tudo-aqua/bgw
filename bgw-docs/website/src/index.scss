@@ -410,3 +410,11 @@ button[role="combobox"] {
 .component p:not(.docs__text) ~ .docs__header {
   margin-top: 1rem;
 }
+
+.whole__code {
+  width: 100%;
+  height: 100%;
+  .code-tab > div[dir="ltr"] {
+    background-color: transparent !important;
+  }
+}

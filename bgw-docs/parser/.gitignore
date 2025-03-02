@@ -1,4 +1,5 @@
 /node_modules/
 /example/
 /output/
+/build/
 package-lock.json
