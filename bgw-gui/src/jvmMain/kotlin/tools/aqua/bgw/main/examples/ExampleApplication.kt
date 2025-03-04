@@ -20,11 +20,15 @@ package tools.aqua.bgw.main.examples
 import tools.aqua.bgw.core.BoardGameApplication
 
 internal object ExampleApplication : BoardGameApplication(width = 622, height = 300) {
-  val exampleUIScene = ExampleUIScene()
-  val exampleAnimationScene = ExampleAnimationScene()
-  val exampleDocsScene = ExampleDocsScene()
+  private val exampleUIScene = ExampleUIScene()
+  private val exampleAnimationScene = ExampleAnimationScene()
+  private val exampleDocsScene = ExampleDocsScene()
+  private val advancedSceneComponents = AdvancedSceneComponents()
 
   fun getMap(): Map<String, String> {
-    return exampleUIScene.map + exampleAnimationScene.map + exampleDocsScene.map
+    return exampleUIScene.map +
+        exampleAnimationScene.map +
+        exampleDocsScene.map +
+        advancedSceneComponents.map
   }
 }

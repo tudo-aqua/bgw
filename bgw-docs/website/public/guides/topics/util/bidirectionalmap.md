@@ -8,8 +8,8 @@
 [forwardOrNullKDoc]: /docs/tools.aqua.bgw.util/-bidirectional-map/forward-or-null.html
 [backwardKDoc]: /docs/tools.aqua.bgw.util/-bidirectional-map/backward.html
 [backwardOrNullKDoc]: /docs/tools.aqua.bgw.util/-bidirectional-map/backward-or-null.html
-[getDomainKDoc]: /docs/tools.aqua.bgw.util/-bidirectional-map/get-domain.html
-[getCoDomainKDoc]: /docs/tools.aqua.bgw.util/-bidirectional-map/get-co-domain.html
+[getDomainKDoc]: /docs/tools.aqua.bgw.util/BidirectionalMap/keysForward
+[getCoDomainKDoc]: /docs/tools.aqua.bgw.util/BidirectionalMap/keysBackward
 [IllegalArgumentExceptionDoc]: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-argument-exception/
 
 > This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
@@ -29,10 +29,10 @@ The map takes two generic parameters for the type of the domain and co-domain ob
 The constructor takes initial elements as varargs.
 
 ```kotlin
-val map: Bidirectionalmap<Int, String> = Bidirectionalmap(
-  Tuple<Int, String>(1, "ONE"),
-  Tuple<Int, String>(6, "SIX"),
-  Tuple<Int, String>(10, "TEN")
+val map: BidirectionalMap<Int, String> = BidirectionalMap(
+  Pair<Int, String>(1, "ONE"),
+  Pair<Int, String>(6, "SIX"),
+  Pair<Int, String>(10, "TEN")
 )
 ```
 
@@ -59,5 +59,5 @@ Looking up elements can be accomplished by
 
 The set of entries gets returned by
 
-- [getDomain][getDomainKDoc]
-- [getCoDomain][getCoDomainKDoc]
+- [keysForward][getDomainKDoc]
+- [keysBackward][getCoDomainKDoc]

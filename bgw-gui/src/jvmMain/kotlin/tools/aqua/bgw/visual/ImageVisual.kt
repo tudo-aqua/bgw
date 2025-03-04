@@ -95,6 +95,9 @@ open class ImageVisual(
    *
    * @since 0.1
    */
+  @Deprecated(
+      "Using BufferedImages is no longer recommended as of BGW 0.10, as they cause poor performance.",
+      ReplaceWith("ImageVisual(path)"))
   constructor(
       image: BufferedImage,
       width: Int = -1,

@@ -6,6 +6,12 @@
   .CodeMirror-scroll {
     padding-block: 0;
   }
+
+  bgw_scenes {
+    & > bgw_visuals {
+      display: none;
+    }
+  }
 }
 
 .code-tabs {

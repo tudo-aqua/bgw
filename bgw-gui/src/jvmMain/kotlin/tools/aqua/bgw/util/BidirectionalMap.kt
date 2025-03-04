@@ -313,22 +313,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    */
   fun containsBackward(value: R): Boolean = map.any { t -> t.second == value }
 
-  /**
-   * Returns the domain of this map as a set.
-   *
-   * @see getCoDomain
-   */
-  @Deprecated("This function is no longer supported as of BGW 0.9.", ReplaceWith("keysForward"))
-  fun getDomain(): Set<T> = map.map { t -> t.first }.toSet()
-
-  /**
-   * Returns the coDomain of this map as a set.
-   *
-   * @see getDomain
-   */
-  @Deprecated("This function is no longer supported as of BGW 0.9.", ReplaceWith("keysBackward"))
-  fun getCoDomain(): Set<R> = map.map { t -> t.second }.toSet()
-
   /** Clears the map. */
   fun clear() {
     map.clear()
