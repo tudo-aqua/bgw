@@ -17,10 +17,20 @@
 
 package tools.aqua.bgw.net.protocol.client.view.messageviews
 
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.Pane
-import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.style.BorderRadius
+import tools.aqua.bgw.visual.SingleLayerVisual
 
 /** [MessageView] baseclass. */
-sealed class MessageView : Pane<Label>(posX = 0, posY = 0, height = 0, width = 450) {
-  protected val cornerStyle: String = "-fx-background-radius: 10px;"
-}
+sealed class MessageView(visual: SingleLayerVisual) :
+    Pane<ComponentView>(
+        posX = 0,
+        posY = 0,
+        height = 0,
+        width = 450,
+        visual =
+            visual.apply {
+              transparency = 0.2
+              style.borderRadius = BorderRadius(10.0)
+            })
