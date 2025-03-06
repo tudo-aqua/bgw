@@ -53,9 +53,7 @@ open class ReadonlyProperty<T>(initialValue: T) : ValueObservable<T>() {
       }
     }
 
-  /**
-   * Overrides [value] of this property without notifying listeners.
-   */
+  /** Overrides [value] of this property without notifying listeners. */
   internal open fun setSilent(value: T) {
     if (boxedValue != value) {
       boxedValue = value
