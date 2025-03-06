@@ -54,15 +54,11 @@ open class ReadonlyProperty<T>(initialValue: T) : ValueObservable<T>() {
     }
 
   /**
-   * Overrides [value] of this property without notifying public listeners.
-   *
-   * Only notifies GUI listener.
+   * Overrides [value] of this property without notifying listeners.
    */
   internal open fun setSilent(value: T) {
-    val savedValue = boxedValue
     if (boxedValue != value) {
       boxedValue = value
-      notifyGUIListener(savedValue, value)
     }
   }
 
