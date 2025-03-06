@@ -93,22 +93,16 @@ class GameMessageView(
 
     // Add text lines
     for (i in text.indices) {
-      val chars = text[i].toCharArray().size
-      val charWidth = 15
-      val maxCharsPerLine = (width - marginLeft - marginRight) / charWidth
-      val lines = maxOf(chars / maxCharsPerLine, 1.0)
-      val neededHeight = lines * 12
-
       add(
-          TextArea(
+          Label(
               posX = marginLeft,
               posY = height,
               width = width - marginLeft - marginRight - 5,
-              height = if (neededHeight > 200) 200.0 else neededHeight + 10,
+              height = messageLineHeight,
               text = text[i],
               font = playerFont,
               visual = Visual.EMPTY))
-      height += if (neededHeight > 200) 220.0 else neededHeight + 20
+      height += messageLineHeight
     }
 
     height += marginBottom
