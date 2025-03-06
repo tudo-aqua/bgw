@@ -20,9 +20,10 @@ package tools.aqua.bgw.net.protocol.client.view.messageviews
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
 
 /** [MessageView] displaying "Connected to server". */
-class ConnectedMessageView : MessageView() {
+class ConnectedMessageView : MessageView(ColorVisual(Color(0x00eaff))) {
 
   private val messageHeight: Double = 50.0
   private val colorStyle = "-fx-background-color: #00eaff;"
@@ -31,12 +32,11 @@ class ConnectedMessageView : MessageView() {
     height = messageHeight
     addAll(
         Label(
-                posX = 0,
-                posY = height - messageHeight,
-                width = width,
-                height = messageHeight,
-                text = "- Connected to server -",
-                font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.SEMI_BOLD))
-            .apply { backgroundStyle = "$colorStyle$cornerStyle" })
+            posX = 0,
+            posY = height - messageHeight,
+            width = width,
+            height = messageHeight,
+            text = "- Connected to server -",
+            font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.NORMAL)))
   }
 }

@@ -18,9 +18,10 @@
 package tools.aqua.bgw.net.protocol.client.view.messageviews
 
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.visual.ColorVisual
 
 /** [MessageView] as spacer. */
-class SpacerMessageView : MessageView() {
+class SpacerMessageView : MessageView(ColorVisual.TRANSPARENT) {
   init {
     height = 780.0
     addAll(Label(posX = 0, posY = 0, width = width, height = height))
