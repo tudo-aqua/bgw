@@ -372,7 +372,7 @@ function Component({
                 id={`constructor_${index}`}
               >
                 <div className="absolute z-10 flex justify-center gap-2 top-8 right-10">
-                  {c.primary && <Badge variant="class">Primary</Badge>}
+                  {/* {c.primary && <Badge variant="class">Primary</Badge>} */}
                   {c.since && buildSince(c.since)}
                 </div>
                 <CodeDisplay code={c.info.signature} lineLength={80} />
