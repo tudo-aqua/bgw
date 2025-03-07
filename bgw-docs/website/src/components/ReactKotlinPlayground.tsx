@@ -134,10 +134,6 @@ const ReactKotlinPlayground: FC<
     initPlayground();
   }, []);
 
-  useEffect(() => {
-    console.log(children);
-  }, [children]);
-
   const elementProps = Object.keys(props).reduce((result, name) => {
     if (EVENTS.indexOf(name) === -1)
       result[normalizeAttribute(name)] = props[name];

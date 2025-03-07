@@ -327,6 +327,18 @@ function Component({
     return [];
   }
 
+  function getParamsFromSignature(signature: string) {
+    if (!signature.includes("(")) return [];
+    let params = signature.split("(")[1].split(")")[0].split(",");
+    return params.map((p) => {
+      const parts = p.trim().split(":");
+      return {
+        name: parts[0].replace(/(val|var)/, "").trim(),
+        type: parts[1]?.split("=")[0].trim() || "",
+      };
+    });
+  }
+
   function getConstructors(comp: any) {
     let extraConstructors = [];
     if (
@@ -341,21 +353,33 @@ function Component({
       if (!c.since && comp.details && comp.details.since) {
         c.since = comp.details.since;
       }
+
+      let own = getParamsFromSignature(c.info.signature);
+      let global = getParamsFromSignature(comp.details.info.signature);
+
+      console.log(own, global);
+
+      if (own.length === global.length) {
+        c.primary = own.every(
+          (param, index) =>
+            param.name === global[index].name &&
+            param.type === global[index].type
+        );
+      }
     });
 
-    extraConstructors = extraConstructors.moveLastToFirst();
-    if (extraConstructors.length > 0) {
-      extraConstructors[0].primary = true;
-    }
-
     extraConstructors.sort((a: any, b: any) => {
+      // Primary constructor comes first
+      if (a.primary && !b.primary) return -1;
+      if (!a.primary && b.primary) return 1;
+
+      // If both have since values, sort by since
       if (a.since && b.since) {
         return a.since >= b.since ? 1 : -1;
       }
+
       return 0;
     });
-
-    // TODO: Find primary constructor based on signature
 
     if (
       comp &&
@@ -371,8 +395,20 @@ function Component({
                 className="relative w-full p-3 border-none bg-background rounded-xl max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent"
                 id={`constructor_${index}`}
               >
-                <div className="absolute z-10 flex justify-center gap-2 top-8 right-10">
-                  {/* {c.primary && <Badge variant="class">Primary</Badge>} */}
+                {c.deprecated && (
+                  <Banner
+                    variant="deprecated"
+                    className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                    icon={"running_with_errors"}
+                    subText={`This API-Endpoint will be removed in future versions.  ${c.deprecated.description}`}
+                  />
+                )}
+                <div
+                  className={`absolute z-10 flex justify-center gap-2 ${
+                    c.deprecated ? "top-[92px]" : "top-8"
+                  } right-10`}
+                >
+                  {c.primary && <Badge variant="class">Primary</Badge>}
                   {c.since && buildSince(c.since)}
                 </div>
                 <CodeDisplay code={c.info.signature} lineLength={80} />
