@@ -2317,6 +2317,9 @@ function BGWPlayground() {
       }
     });
 
+    if (isExport) {
+      return { components, allComponentsCopy };
+    }
     return components;
   };
 
@@ -3116,7 +3119,7 @@ function BGWPlayground() {
           </i>
         </Button>
         <Badge variant="muted" className="absolute z-10 mr-2 left-3 top-3">
-          Preview: {sceneWidth}x{sceneHeight}
+          {sceneWidth}x{sceneHeight}
         </Badge>
         <Tooltip delayDuration={700} align="start" sideOffset={5}>
           <TooltipTrigger asChild>

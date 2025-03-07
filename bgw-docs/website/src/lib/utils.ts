@@ -61,6 +61,7 @@ export function isListener(c: any) {
 }
 
 export function createKotlinCodeLinebreaks(code: string, length: number = 100) {
+  code = code.replace(/^@Synchronized/, "");
   if (code.length < length) {
     return code.replace(/(\s+)?:(\s+)?/gm, " : ");
   }

@@ -11,9 +11,23 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
 
   useEffect(() => {
     if (selectedComponentId && autoUpdate) {
+      let allComponents = getOutputElements(true).allComponentsCopy;
+      let component = allComponents[selectedComponentId];
+      if (!component) {
+        console.error(
+          "Component not found in allComponents",
+          selectedComponentId
+        );
+        return;
+      }
+
       try {
         const generatedCode = createKotlinCodeLinebreaks(
-          exportComponent(null, getOutputElements(true), selectedComponentId)
+          exportComponent(
+            component,
+            getOutputElements(true).components,
+            selectedComponentId
+          )
         );
         setCode(generatedCode);
       } catch (error) {
@@ -25,7 +39,11 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
   const handleManualUpdate = () => {
     try {
       const generatedCode = createKotlinCodeLinebreaks(
-        exportComponent(null, getOutputElements(true), selectedComponentId)
+        exportComponent(
+          null,
+          getOutputElements(true).components,
+          selectedComponentId
+        )
       );
       setCode(generatedCode);
     } catch (error) {

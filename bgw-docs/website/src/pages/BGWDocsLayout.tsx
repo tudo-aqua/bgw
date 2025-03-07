@@ -42,8 +42,10 @@ import Main from "./docs/Main";
 import { Button } from "@/components/ui/button";
 import SearchField from "@/components/SearchField";
 
+import { dirs } from "@/main";
+
 function BGWDocsLayout() {
-  const { dirs, allSamples } = useLoaderData();
+  const { allSamples } = useLoaderData();
 
   const { componentPath } = useParams();
   const [currentName, setCurrentName] = useState(componentPath || "");
@@ -689,11 +691,7 @@ function BGWDocsLayout() {
             >
               {currentPage === "main" && <Main></Main>}
               {currentPage === "docs" && currentComponent !== null && (
-                <Component
-                  location={location}
-                  dirs={allDirs}
-                  allSamples={allSamples}
-                />
+                <Component location={location} allSamples={allSamples} />
               )}
               {currentPage === "docs" && currentComponent === null && (
                 <Packages packages={layoutMap} />

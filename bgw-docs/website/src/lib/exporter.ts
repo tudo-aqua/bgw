@@ -7,7 +7,8 @@
 // import constructors from "@/bgw/constructors.json";
 import { ConstructorAPIImportInfo } from "@/lib/types.ts";
 import * as Components from "@/lib/components.ts";
-import { constructors } from "@/main";
+// import { constructors } from "@/lib/constructors.ts";
+import { dirs } from "@/main";
 
 const applyBlacklist = [
   "id",
@@ -35,6 +36,13 @@ const applyBlacklistNonPrimitive = [
   "selectedItem",
 ];
 
+const mappingNames = {
+  front: "frontVisual",
+  back: "backVisual",
+  layoutFromCenter: "isLayoutFromCenter",
+  allowIndeterminate: "isIndeterminateAllowed",
+};
+
 const getInstantiableByData = (data: string) => {
   const flat = Object.entries(Components.Instantiable).flatMap((e) =>
     Object.entries(e[1])
@@ -43,10 +51,121 @@ const getInstantiableByData = (data: string) => {
 };
 
 export function exportComponent(component: any = null, all: any, id: string) {
+  let compName = component.type.replace("Data", "");
+  let { index, comp, mainConstructor, mainConstructorParams, properties } =
+    getConstructorAndProperties(compName);
+  if (!index || !comp || !mainConstructorParams || !properties)
+    return `// No constructor found for ${compName}`;
+
+  // Take Instatiable class from components.ts
+  let referenceClass = getInstantiableByData(component.type).cls;
+  let reference = new Components.DataClasses[referenceClass]();
+  let referenceProperties = Object.entries(reference)
+    .map((e) => e[0])
+    .filter((e) => properties.find((prop) => prop.name === e));
+
+  // Process component name to include no special characters or spaces
+  let name =
+    component.name.trim() === ""
+      ? compName.charAt(0).toLowerCase() + compName.slice(1)
+      : component.name.charAt(0).toLowerCase() + component.name.slice(1);
+  if (name.indexOf(" ") > -1) name = name.split(" ").join("_");
+  name = name.replace(/[^a-zA-Z0-9_]/g, "");
+
+  let code = `val ${name} = ${compName}(`;
+  if (mainConstructor.parameters.length !== mainConstructorParams.length) {
+    let genericType = "ComponentView";
+    try {
+      genericType = index.details.info.signature
+        .split("(")[0]
+        .split("<")[1]
+        .split(">")[0]
+        .split(":")[1]
+        .trim();
+    } catch (_) {
+      /* empty */
+    }
+    code = `val ${name} = ${compName}<${genericType}>(`;
+  }
+
+  let computedParams = [];
+  let computedApply = [];
+
+  for (let param of mainConstructorParams) {
+    let pName = param.name;
+    if (component[pName] === undefined) continue;
+
+    if (
+      ["String", "Number", "Boolean", "Double", "Int", "Float"].includes(
+        param.type
+      )
+    ) {
+      computedParams.push(`${pName} = ${component[pName]}`);
+    } else {
+      let exp = exportNonPrimitive(component[pName], param.type, pName);
+
+      if (exp.trim() === "") continue;
+      computedParams.push(`${pName} = ${exp}`);
+    }
+  }
+
+  for (let prop of referenceProperties) {
+    if (component[prop] === undefined) continue;
+    if (applyBlacklist.includes(prop)) continue;
+    if (mainConstructorParams.find((param) => param.name === prop)) continue;
+    if (component[prop] === reference[prop].value) continue;
+
+    computedApply.push(`${prop} = ${component[prop]}`);
+  }
+
+  if (computedApply.length === 0) {
+    return `${code}${computedParams.join(", ")})`;
+  }
+
+  return `${code}${computedParams.join(", ")}).apply {\n${computedApply.join(
+    ",\n"
+  )}\n}`;
+}
+
+function exportNonPrimitive(data: any, type: string = "", name: string = "") {
+  if (data === undefined) return "";
+  let code = "";
+
+  if (type === "List<Visual>") {
+    return `PRIM_listOf()`;
+  } else if (type === "Color") {
+    return `PRIM_Color(0x${data.replace("#", "").toUpperCase()})`;
+  } else if (type === "ColorVisual" && name === "selectionBackground") {
+    return `PRIM_ColorVisual(Color(0x${data.replace("#", "").toUpperCase()}))`;
+  } else if (type === "Alignment") {
+    return `PRIM_Alignment.CENTER`;
+  } else if (type === "Orientation") {
+    return `PRIM_Orientation.VERTICAL`;
+  } else if (type === "SelectionMode") {
+    return `PRIM_SelectionMode.${data.toUpperCase()}`;
+  } else if (type === "Font.FontStyle") {
+    return `PRIM_Font.FontStyle.NORMAL`;
+  } else if (type === "Flip") {
+    return `PRIM_Flip.NONE`;
+  } else if (data.type) {
+    console.log("[DATA TYPE]", data.type.replace("Data", ""));
+    const { index, comp, mainConstructor, mainConstructorParams, properties } =
+      getConstructorAndProperties(data.type.replace("Data", ""));
+    if (!index || !comp || !mainConstructorParams || !properties) return `NON`;
+  }
+}
+
+export function exportComponentOld(
+  component: any = null,
+  all: any,
+  id: string
+) {
   if (component == null) {
     component = all.find((e) => e.id === id);
   }
   if (!component) return "";
+
+  console.log("[EXPORTING]", component);
 
   let elements = constructors.filter(
     (con) => con.fullName === component.type.replace("Data", "")
@@ -138,20 +257,29 @@ export function exportComponent(component: any = null, all: any, id: string) {
             });
 
             if (property) {
-              return `${prop.name} = ${exportNonPrimitive(
+              console.log("[NON PRIM 1]", prop.name);
+              let exp = exportNonPrimitive(
                 component[property[0]],
                 prop.type,
                 prop.name
-              )}`;
+              );
+              if (exp.trim() === "") return;
+              return `${prop.name} = ${exp}`;
             }
-            return `${prop.name} = ${exportNonPrimitive(
+
+            console.log("[NON PRIM 2]", prop.name);
+            let exp = exportNonPrimitive(
               component[prop.name],
               prop.type,
               prop.name
-            )}`;
+            );
+
+            if (exp.trim() === "") return;
+            return `${prop.name} = ${exp}`;
           }
         })
-        .filter((e) => e);
+        .filter((e) => e)
+        .filter((e) => e !== undefined && e !== null && e !== "");
 
       let code = `
                 val ${name} = ${found.shortName}(
@@ -169,6 +297,11 @@ export function exportComponent(component: any = null, all: any, id: string) {
                           return `${param.name} = `;
                         } else {
                           let property = Object.entries(reference).find((e) => {
+                            if (component[param.name] === undefined)
+                              return false;
+
+                            if (component[param.name] === undefined)
+                              return false;
                             if (e[1] !== null && e[1].property !== undefined) {
                               return e[1].property === param.name;
                             }
@@ -176,19 +309,28 @@ export function exportComponent(component: any = null, all: any, id: string) {
                           });
 
                           if (property) {
-                            return `${param.name} = ${exportNonPrimitive(
+                            console.log("[NON PRIM 3]", param.name);
+                            let exp = exportNonPrimitive(
                               component[property[0]],
                               param.type,
                               param.name
-                            )}`;
+                            );
+                            if (exp.trim() === "") return;
+                            return `${param.name} = ${exp}`;
                           }
-                          return `${param.name} = ${exportNonPrimitive(
+
+                          console.log("[NON PRIM 4]", param.name);
+                          let exp = exportNonPrimitive(
                             component[param.name],
                             param.type,
                             param.name
-                          )}`;
+                          );
+                          if (exp.trim() === "") return;
+                          return `${param.name} = ${exp}`;
                         }
                       })
+                      .filter((e) => e)
+                      .filter((e) => e !== undefined && e !== null && e !== "")
                       .join(",\n")}
                 )`;
 
@@ -200,7 +342,7 @@ export function exportComponent(component: any = null, all: any, id: string) {
 
       let childrenCode = "";
 
-      if (Droppable[component.type]) {
+      /* if (Droppable[component.type]) {
         if (
           component.type === "CardStackData" ||
           component.type === "PaneData"
@@ -223,7 +365,8 @@ export function exportComponent(component: any = null, all: any, id: string) {
       if (all.length > 0) {
         return (childrenCode + code).trim();
       }
-      return (childrenCode + code).trim();
+      return (childrenCode + code).trim();*/
+      return code;
     }
 
     //return `// Exporting is not supported yet and will be added soon.`;
@@ -234,7 +377,72 @@ export function exportComponent(component: any = null, all: any, id: string) {
   return `// No constructor found for ${component.type}`;
 }
 
-function exportNonPrimitive(data: any, type: string = "", name: string = "") {
+function getConstructorAndProperties(compName: string): {
+  index: any;
+  comp: any;
+  mainConstructor: any;
+  mainConstructorParams: any;
+  properties: any;
+} {
+  let matchingPkg = Object.keys(dirs).filter((e) => {
+    let pkg = dirs[e];
+    return pkg[compName] !== undefined;
+  });
+
+  if (!matchingPkg || matchingPkg.length === 0) return null;
+
+  let element = dirs[matchingPkg[0]][compName];
+  if (!element) return null;
+
+  let index = element["_index"];
+  let comp = element[compName];
+  if (!comp || !index) return null;
+
+  let constructors = comp.details;
+  let properties = index.members.properties.map((prop) => {
+    return {
+      name: prop.name,
+      type: prop.signature.split(":")[1].trim().replace("?", ""),
+    };
+  });
+
+  console.log(constructors);
+
+  // Get main constructor from API-Reference
+  let mainConstructor = constructors.fromRight(0);
+  console.log(
+    properties,
+    mainConstructor.parameters.map((e) => e.name)
+  );
+  let mainConstructorParams = mainConstructor.parameters
+    .filter((param) => param.name.length > 1)
+    .map((param) => {
+      let newName = param.name;
+      if (!properties.find((prop) => prop.name === param.name)) {
+        newName = mappingNames[param.name] || param.name;
+      }
+      return {
+        name: param.name,
+        type: properties.find((prop) => prop.name === newName).type,
+      };
+    });
+
+  return {
+    index,
+    comp,
+    mainConstructor,
+    mainConstructorParams,
+    properties,
+  };
+}
+
+function exportNonPrimitiveOld(
+  data: any,
+  type: string = "",
+  name: string = ""
+) {
+  console.log(data, type, name);
+  if (data === undefined) return "";
   let code = "";
 
   if (type === "List<Visual>") {

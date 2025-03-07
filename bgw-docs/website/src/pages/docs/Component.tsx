@@ -42,7 +42,8 @@ import {
   SinceBadge,
   ThrowsTable,
 } from "@/components/docs/DocComponents";
-import { parseMarkdownLinks } from "@/lib/docUtils";
+import { dirs } from "@/main";
+import { parseMarkdownLinks, parseMarkdownNoLinks } from "@/lib/docUtils";
 
 const exceptionIcons = {
   IllegalArgumentException: "data_alert",
@@ -63,11 +64,9 @@ const exceptionIcons = {
 
 function Component({
   location,
-  dirs,
   allSamples,
 }: {
   location: any;
-  dirs: any;
   allSamples: any;
 }) {
   const {
@@ -441,40 +440,42 @@ function Component({
                 c.name
               )
             ) {
-              let inheritedComp = c.link
-                .split("/")
-                .reduce((o, i) => o[i], dirs);
-              if (inheritedComp) {
-                inheritedComp.details.forEach((d: any) => {
-                  if (d.info.signature === c.signature) {
-                    inheritedDetails = d;
-                  }
-                });
-              }
-
-              inherited.push(
-                <li>
-                  <Link
-                    to={
-                      "/docs/" +
-                      breadcrumbs.excludeLast().join("/") +
-                      "#func_" +
-                      c.name
+              if (!c.link.startsWith("https")) {
+                let inheritedComp = c.link
+                  .split("/")
+                  .reduce((o, i) => o[i], dirs);
+                if (inheritedComp) {
+                  inheritedComp.details.forEach((d: any) => {
+                    if (d.info.signature === c.signature) {
+                      inheritedDetails = d;
                     }
-                    key={last}
-                  >
-                    <Badge variant="muted">{propLast}</Badge>
-                  </Link>
-                </li>
-              );
+                  });
+                }
 
-              inheritedFunc = breadcrumbs.reduce((o, i) => o[i], dirs);
-              if (inheritedFunc) {
-                inheritedFunc.details.forEach((d: any) => {
-                  if (d.throws && d.info.signature === c.signature) {
-                    allThrows.push(...d.throws);
-                  }
-                });
+                inherited.push(
+                  <li>
+                    <Link
+                      to={
+                        "/docs/" +
+                        breadcrumbs.excludeLast().join("/") +
+                        "#func_" +
+                        c.name
+                      }
+                      key={last}
+                    >
+                      <Badge variant="muted">{propLast}</Badge>
+                    </Link>
+                  </li>
+                );
+
+                inheritedFunc = breadcrumbs.reduce((o, i) => o[i], dirs);
+                if (inheritedFunc) {
+                  inheritedFunc.details.forEach((d: any) => {
+                    if (d.throws && d.info.signature === c.signature) {
+                      allThrows.push(...d.throws);
+                    }
+                  });
+                }
               }
             }
 

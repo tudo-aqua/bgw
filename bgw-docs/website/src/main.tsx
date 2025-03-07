@@ -31,6 +31,14 @@ const getConstructors = async () => {
   return c;
 };
 
+const getDirs = async () => {
+  let c = await fetch("/bgw/bgw/cleanedStructure.json");
+  if (!c.ok) return null;
+
+  c = await c.json();
+  return c;
+};
+
 const loaderPlayground = async ({ params }) => {
   const c = await getConstructors();
   if (!c) return redirect("/parser");
@@ -98,6 +106,8 @@ export const guidesMap = await loadAllGuides();
 
 export const constructors = await getConstructors();
 
+export const dirs = await getDirs();
+
 function getGuideInfo(path: string) {
   for (const [section, data] of Object.entries(guideStructure)) {
     const guide = data.items.find((item) => item.url === path);
@@ -152,17 +162,26 @@ export function searchGuides(query: string) {
 }
 
 async function docsLoader() {
-  const [docsResponse, samplesResponse] = await Promise.all([
-    fetch("/bgw/bgw/cleanedStructure.json"),
+  const [samplesResponse] = await Promise.all([
     fetch("/bgw/bgw/bgwSamples.json"),
   ]);
 
-  const docs = await docsResponse.json();
   const samples = await samplesResponse.json();
 
   return {
-    dirs: docs,
     allSamples: samples,
+  };
+}
+
+async function exportLoader() {
+  const [constructorsResponse] = await Promise.all([
+    fetch("/bgw/bgw/constructors.json"),
+  ]);
+
+  const constructors = await constructorsResponse.json();
+
+  return {
+    constructors: constructors,
   };
 }
 
@@ -190,7 +209,7 @@ const router = createBrowserRouter(
     {
       path: "/playground",
       Component: BGWPlayground,
-      loader: playgroundLoader,
+      loader: exportLoader,
     },
     {
       path: "/docs",
