@@ -20,9 +20,10 @@ package tools.aqua.bgw.net.protocol.client.view.messageviews
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
 
 /** [MessageView] displaying "Player XXX has left the room". */
-class PlayerLeftMessageView(player: String) : MessageView() {
+class PlayerLeftMessageView(player: String) : MessageView(ColorVisual(Color(0xB15B2E))) {
 
   private val messageHeight: Double = 50.0
   private val colorStyle = "-fx-background-color: #B15B2E;"
@@ -31,12 +32,11 @@ class PlayerLeftMessageView(player: String) : MessageView() {
     height = messageHeight
     addAll(
         Label(
-                posX = 0,
-                posY = height - messageHeight,
-                width = width,
-                height = messageHeight,
-                text = "- Player \"$player\" has left the room -",
-                font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.SEMI_BOLD))
-            .apply { backgroundStyle = "$colorStyle$cornerStyle" })
+            posX = 0,
+            posY = height - messageHeight,
+            width = width,
+            height = messageHeight,
+            text = "- Player \"$player\" has left the room -",
+            font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.NORMAL)))
   }
 }

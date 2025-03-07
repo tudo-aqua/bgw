@@ -21,6 +21,8 @@ import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.Visual
 
 /** [MessageView] displaying a GameMessage. */
 class GameMessageView(
@@ -29,7 +31,7 @@ class GameMessageView(
     playerNameColor: Color,
     messageType: String,
     text: List<String>,
-) : MessageView() {
+) : MessageView(ColorVisual(Color(0x2969c0))) {
 
   private val timestampLineHeight: Double = 10.0
   private val playerNameLineHeight: Double = 25.0
@@ -38,6 +40,9 @@ class GameMessageView(
   private val marginLeft: Double = 20.0
   private val marginRight: Double = 10.0
   private val marginBottom: Double = 0.0
+
+  val playerFont: Font =
+      Font(size = 12, color = playerNameColor, fontWeight = Font.FontWeight.NORMAL)
 
   private val colorStyle = "-fx-background-color: #2969c0;"
 
@@ -69,7 +74,7 @@ class GameMessageView(
             width = width - marginLeft - marginRight,
             height = playerNameLineHeight,
             text = player,
-            font = Font(size = 14, color = playerNameColor, fontWeight = Font.FontWeight.BOLD),
+            font = Font(size = 14, color = playerNameColor, fontWeight = Font.FontWeight.NORMAL),
             alignment = Alignment.TOP_LEFT))
     height += playerNameLineHeight
 
@@ -81,7 +86,7 @@ class GameMessageView(
             width = width - marginLeft - marginRight,
             height = messageLineHeight + 10,
             text = messageType,
-            font = Font(size = 16, color = playerNameColor, fontWeight = Font.FontWeight.BOLD),
+            font = Font(size = 14, color = playerNameColor, fontWeight = Font.FontWeight.NORMAL),
             alignment = Alignment.TOP_CENTER))
     height += messageLineHeight + 10
 
@@ -91,25 +96,21 @@ class GameMessageView(
           Label(
               posX = marginLeft,
               posY = height,
-              width = width - marginLeft - marginRight,
+              width = width - marginLeft - marginRight - 5,
               height = messageLineHeight,
               text = text[i],
-              font = textFont,
-              alignment = Alignment.TOP_LEFT))
+              font = playerFont,
+              visual = Visual.EMPTY))
       height += messageLineHeight
     }
 
     height += marginBottom
 
     // Add background
-    add(
-        Label(posX = 0, posY = 0, width = width, height = height).apply {
-          backgroundStyle = "$colorStyle$cornerStyle"
-        },
-        0)
+    add(Label(posX = 0, posY = 0, width = width, height = height), 0)
   }
 
   companion object {
-    internal val textFont: Font = Font(size = 12, color = Color.WHITE)
+    val textFont: Font = Font(size = 12, color = Color.BLACK, fontWeight = Font.FontWeight.NORMAL)
   }
 }

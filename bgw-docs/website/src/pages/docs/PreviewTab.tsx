@@ -134,7 +134,7 @@ function PreviewTab({
   if (sideBySide) {
     return (
       <div className="flex gap-4 preview-tabs max-xl:flex-col max-xl:w-[calc(100vw-3.5rem)]">
-        <div className="w-2/5 max-xl:w-full">
+        <div className="flex-shrink-0 w-[calc((100%-1rem)/5*2)] min-w-2/5 max-xl:w-full">
           <div className="relative">
             {isAnimation && (
               <div className="absolute top-0 right-0 z-10 inline-flex items-center justify-center h-10 gap-2 rounded-xl text-muted-foreground">
@@ -185,7 +185,7 @@ function PreviewTab({
             </fieldset>
           )}
         </div>
-        <div className="w-3/5 relative h-[300px] max-xl:w-full">
+        <div className="w-[calc((100%-1rem)/5*3)] relative h-[300px] max-xl:w-full">
           <Button
             className="absolute z-10 w-8 h-8 p-0 right-5 top-4 hover:bg-muted/80 text-muted-foreground hover:text-white max-md:hidden"
             variant="ghost"

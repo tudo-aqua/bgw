@@ -1,4 +1,5 @@
-[0.9]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8.2
+[0.10]: https://github.com/tudo-aqua/bgw/releases/tag/v0.10
+[0.9]: https://github.com/tudo-aqua/bgw/releases/tag/v0.9
 [0.8.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8.1
 [0.8]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8
 [0.7.3]: https://github.com/tudo-aqua/bgw/releases/tag/v0.7.3
@@ -21,27 +22,88 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 0.9.5-Pre - 30.01.2024
+## [0.10] - 04.03.2025
+
+### Breaking Changes
+
+- Migrated backend from _JavaFX_ to _JCEF_ for better performance and compatibility.
+- All `properties` are now internal and cannot be accessed directly anymore - use the corresponding attributes and the new _event-based API_ instead.
+- `ImageVisual`s should now be instantiated using a `path` and cropped with the respective parameters instead of using `BufferedImage`s.
 
 ### Added
-- Added `HexOrientation` to `HexagonGrid` and `HexagonView` to support different orientations of hexagons.
 
-## 0.9.4-Pre - 15.01.2024
+**Events:**
+- Added `onPathsSelected` event to `FileDialog` to listen for file selection.
+- Added `onSelectionCancelled` event to `FileDialog` to listen for file selection cancellation.
+- Added `onZoomed` event to `CameraPane` to listen for zoom events.
+- Added `onSelected` event to `BinaryStateButton` to listen for selection of the button.
+- Added `onDeselected` event to `BinaryStateButton` to listen for deselection of the button.
+- Added `onSelectionChanged` event to `BinaryStateButton` to listen for all selection changes of the button.
+- Added `onCheckedChanged` event to `CheckBox` to listen for all checked state changes of the checkbox.
+- Added `onIndeterminateChanged` event to `CheckBox` to listen for all indeterminate state changes of the checkbox.
+- Added `onColorSelected` event to `ColorPicker` to listen for color selection.
+- Added `onItemSelected` event to `ComboBox` to listen for item selection.
+- Added `onSelectionChanged` event to `ListView` and `TableView` to listen for selection changes.
+- Added `onProgressed` event to `ProgressBar` to listen for progress changes.
+- Added `onSelected` event to `ToggleGroup` to listen for selection of a `BinaryStateButton` in the group.
+- Added `onDeselected` event to `ToggleGroup` to listen for deselection of a `BinaryStateButton` in the group.
+- Added `onLockChanged` event to `BoardGameScene` to listen for lock changes.
+
+**Styling:**
+- Added `Color` class to represent colors in BGW.
+- Added `Flip` style class to support flipping of `Visual` elements.
+- Added `BlurFilter`, `SaturationFilter` and `SepiaFilter` style classes to support image filters on `Visual` elements.
+- Added `BorderRadius` and `Cursor` style classes to support custom styling of `Visual` elements.
+- Added `style`, `filters` and `flipped` properties to `SingleLayerVisual` to apply custom styling.
+
+**Misc:**
+- Added `Ä`, `Ö`, `Ü` to `KeyCode` enum for German keyboard layout.
+- Added `LIME`, `BROWN` and `PURPLE` variants to `ColorVisual`.
+- Added `HexOrientation` class to support different orientations of hexagons in `HexagonGrid` and `HexagonView`.
+- Added `getCoordinateMap()` function to `HexagonGrid` to get a map of all hexagons with their respective `HexCoordinate`.
+- Added `remove(columnIndex, rowIndex)` function to `HexagonGrid` to remove a hexagon at a specific position.
+- Added `limitBounds` property to `CameraPane` to limit the camera's movement to the target bounds.
+- Added `pan(x, y, zoom, smooth)` function to `CameraPane` to zoom while panning the camera to a specific position.
+- Added `panBy(xOffset, yOffset, zoom, smooth)` function to `CameraPane` to zoom while panning the camera by a specific offset.
+- Added `getSelectedIndex()` function to `ComboBox` to get the index of the selected item.
+- Added `formatItem(item)` function to `ComboBox` to format any item without displaying it.
+- Added `formatItem(item)` function to `ListView`, `TableView` and `TableColumn` to format any item without displaying it.
+- Added `selectIndex(index)` function to `ListView` and `TableView` to select an item by index.
+- Added `loadFont(path, fontName, weight)` function to `BoardGameApplication` to define name and weight of a font loaded from a file.
+- Added `dropTarget` to `DragEvent` to get the target of a drag event.
+- Added `THIN`, `EXTRA_LIGHT`, `MEDIUM`, `EXTRA_BOLD`, `BLACK` font weights to `FontWeight` enum to support a wider range of fonts.
 
 ### Fixed
-- Fixed `TextInputUIComponent` not showing prompt text when text is empty.
 
-## 0.9.2-Pre - 15.12.2023
-
-### Added
-- Added missing `Cursor` CSS styles.
+- Fixed broken `CardStack` alignment.
+- Fixed `TextInputUIComponent` prompt not displaying.
+- Fixed `FileDialog` extension filters not showing specified file types.
+- Fixed font loading not working from packaged builds.
+- Fixed `CardView` visual not updating properly.
+- Fixed first `Button` in a scene being focused by default.
+- Fixed window resizing leading to wrongly scaled game view.
 
 ### Changed
-- Refactored `Visual` styling properties observer.
-- Propagate compound visual styles to children.
 
-### Fixed
-- Fixed CSS style properties not being set correctly.
+- Reworked `CameraPane` to make it more intuitive.
+- Changed behavior of `LinearLayout` to layout components instead of the child components positioning themselves.
+
+### Removed
+
+- Removed previously added horizontal and vertical pan lock as well as zoom lock for `CameraPane`.
+- Removed previously deprecated `getDomain()` and `getCoDomain()` in `BiDirectionalMap` in favor of `keysForward` and `keysBackward`.
+- Removed misleading `CardStack.first()` and `CardStack.last()` functions in favor for actual stack operations.
+
+### Deprecated
+
+- Deprecated `properties` in favor of the new _event-based API_.
+- Deprecated `BufferedImage` constructor in `ImageVisual` in favor of the new `path` constructor.
+- Deprecated `ScaleMode` enum for defining the scaling behavior of `Scene`s.
+- Deprecated `setScaleMode(newScaleMode)` function in `BoardGameApplication`.
+- Deprecated `AspectRatio` for defining the initial aspect ratio of the `BoardGameApplication`.
+- Deprecated `onKeyTyped` in favor of `onKeyPressed` and `onKeyReleased` in `Scene` and `ComponentView`.
+- Deprecated `selectionStyle`, `componentStyle` and `backgroundStyle` css styles in favor of the new dedicated style classes.
+- Deprecated `runOnGUIThread(task)` in `BoardGameApplication` and `runLater(task)` in `Frontend` as they are no longer needed.
 
 ## [0.9] - 27.11.2023
 
@@ -64,6 +126,10 @@ All notable changes to this project will be documented in this file.
 - Fixed `ComboBox` throwing exception when trying to deselect an item
 - Fixed `CameraPane` zoom to work properly with `panBy` and `pan function
 - Fixed constructor overload for individual alignments in `LinearLayout`
+
+### Deprecated
+
+- Deprecated `getDomain()` and `getCoDomain()` in `BiDirectionalMap` in favor of `keysForward` and `keysBackward`
 
 ## [0.8.1] - 21.07.2023
 
