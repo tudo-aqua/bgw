@@ -60,8 +60,6 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
    * The alpha channel gets multiplied with the [transparency] i.e. alpha = 0.5 (50%) and
    * [transparency] = 0.5 (50%) leads to 25% visibility / 75% transparency.
    *
-   * @constructor Creates a solid [ColorVisual] filled with given RGBA values.
-   *
    * @param r Red channel between 0 and 255.
    * @param g Green channel between 0 and 255.
    * @param b Blue channel between 0 and 255.
@@ -92,15 +90,19 @@ open class ColorVisual(color: Color) : SingleLayerVisual() {
           }))
 
   /**
-   * A solid color visual. Displays a rectangle filled with the given java.awt.Color.
+   * Creates a solid [ColorVisual] filled with given [java.awt.Color]. This is only a fallback for
+   * legacy BGW versions and will be removed in future versions.
    *
-   * @constructor Creates a solid [ColorVisual] filled with given [java.awt.Color].
+   * @param awtColor Color to use as filling.
    *
-   * @param color Color to use as filling.
+   * @see Color
    *
    * @since 0.10
    */
-  constructor(color: java.awt.Color) : this(Color(color.red, color.green, color.blue, color.alpha))
+  @Deprecated("Using java.awt.Color is no longer recommended as of BGW 0.10.", ReplaceWith("Color"))
+  constructor(
+      awtColor: java.awt.Color
+  ) : this(Color(awtColor.red, awtColor.green, awtColor.blue, awtColor.alpha))
 
   /** Copies this [ColorVisual] to a new object. */
   override fun copy(): ColorVisual =

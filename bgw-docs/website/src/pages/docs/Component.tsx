@@ -344,6 +344,8 @@ function Component({
       return 0;
     });
 
+    // TODO: Find primary constructor based on signature
+
     if (
       comp &&
       comp.members &&
@@ -372,7 +374,7 @@ function Component({
                     id={`constructor_${index}`}
                   >
                     <div className="absolute z-10 flex justify-center gap-2 top-8 right-10">
-                      {c.primary && <Badge variant="class">Primary</Badge>}
+                      {/* {c.primary && <Badge variant="class">Primary</Badge>} */}
                       {c.since && buildSince(c.since)}
                     </div>
                     <CodeTab
@@ -461,40 +463,42 @@ function Component({
                     c.name
                   )
                 ) {
-                  let inheritedComp = c.link
-                    .split("/")
-                    .reduce((o, i) => o[i], dirs);
-                  if (inheritedComp) {
-                    inheritedComp.details.forEach((d: any) => {
-                      if (d.info.signature === c.signature) {
-                        inheritedDetails = d;
-                      }
-                    });
-                  }
-
-                  inherited.push(
-                    <li>
-                      <Link
-                        to={
-                          "/docs/" +
-                          breadcrumbs.excludeLast().join("/") +
-                          "#func_" +
-                          c.name
+                  if (!c.link.startsWith("https")) {
+                    let inheritedComp = c.link
+                      .split("/")
+                      .reduce((o, i) => o[i], dirs);
+                    if (inheritedComp) {
+                      inheritedComp.details.forEach((d: any) => {
+                        if (d.info.signature === c.signature) {
+                          inheritedDetails = d;
                         }
-                        key={last}
-                      >
-                        <Badge variant="muted">{propLast}</Badge>
-                      </Link>
-                    </li>
-                  );
+                      });
+                    }
 
-                  inheritedFunc = breadcrumbs.reduce((o, i) => o[i], dirs);
-                  if (inheritedFunc) {
-                    inheritedFunc.details.forEach((d: any) => {
-                      if (d.throws && d.info.signature === c.signature) {
-                        allThrows.push(...d.throws);
-                      }
-                    });
+                    inherited.push(
+                      <li>
+                        <Link
+                          to={
+                            "/docs/" +
+                            breadcrumbs.excludeLast().join("/") +
+                            "#func_" +
+                            c.name
+                          }
+                          key={last}
+                        >
+                          <Badge variant="muted">{propLast}</Badge>
+                        </Link>
+                      </li>
+                    );
+
+                    inheritedFunc = breadcrumbs.reduce((o, i) => o[i], dirs);
+                    if (inheritedFunc) {
+                      inheritedFunc.details.forEach((d: any) => {
+                        if (d.throws && d.info.signature === c.signature) {
+                          allThrows.push(...d.throws);
+                        }
+                      });
+                    }
                   }
                 }
 
@@ -556,7 +560,9 @@ function Component({
                         className="relative group"
                       >
                         <CodeTab
-                          code={createKotlinCodeLinebreaks(c.signature)}
+                          code={createKotlinCodeLinebreaks(
+                            c.signature.replace(/^@Synchronized/, "")
+                          )}
                           autoIndent={false}
                         />
                         <i
@@ -571,7 +577,9 @@ function Component({
                       </Link>
                     ) : (
                       <CodeTab
-                        code={createKotlinCodeLinebreaks(c.signature)}
+                        code={createKotlinCodeLinebreaks(
+                          c.signature.replace(/^@Synchronized/, "")
+                        )}
                         autoIndent={false}
                       />
                     )}
