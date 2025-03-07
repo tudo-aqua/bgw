@@ -355,6 +355,8 @@ function Component({
       return 0;
     });
 
+    // TODO: Find primary constructor based on signature
+
     if (
       comp &&
       comp.members &&

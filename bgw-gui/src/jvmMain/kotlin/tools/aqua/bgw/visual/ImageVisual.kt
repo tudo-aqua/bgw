@@ -86,7 +86,8 @@ open class ImageVisual(
     }
 
   /**
-   * Load image from [BufferedImage].
+   * Load image from [BufferedImage]. This is only a fallback for legacy BGW versions and will be
+   * removed in future versions.
    *
    * @see SingleLayerVisual
    * @see CompoundVisual

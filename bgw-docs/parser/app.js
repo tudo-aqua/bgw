@@ -262,10 +262,15 @@ function parseFunction($, el, tree) {
     // const functionPattern =
     //   /^(?:(?:suspend|private|protected|public|internal|inline|open|abstract|override|operator)\s+)*fun\s+(?:[\w<>]+\.)?(\w+)\s*(?:<[^>]+>)?\s*\((.*?)\)(?:\s*:\s*(.+))?$/s;
     const functionPattern =
-      /^(?:(?:suspend|private|protected|public|internal|inline|abstract|override|operator)\s+)*fun\s+(\w+)\s*(?:<[^>]+>)?\s*\((.*?)\)(?:\s*:\s*(.+))?$/s;
-    const match = func.match(functionPattern);
+      /^(?:(?:suspend|private|protected|public|internal|inline|abstract|override|operator|open)\s+)*fun\s+(\w+)\s*(?:<[^>]+>)?\s*\((.*?)\)(?:\s*:\s*(.+))?$/s;
+    const match = func.replace(/^@Synchronized/, "").match(functionPattern);
 
     if (!match) {
+      console.warn(`Could not parse Kotlin function: ${func}`);
+      return null;
+    }
+
+    if(func.includes("toFront") || func.includes("toBack") || func.includes("setZIndex")) {
       console.warn(`Could not parse Kotlin function: ${func}`);
       return null;
     }

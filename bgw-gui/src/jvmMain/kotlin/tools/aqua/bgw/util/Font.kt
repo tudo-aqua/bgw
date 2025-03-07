@@ -36,6 +36,12 @@ import tools.aqua.bgw.util.Font.FontWeight
  * @property fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
  * @property fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
  *
+ * @param size Size of this Font in `px`. Default: 14.
+ * @param color Color of this font. Default: [Color.BLACK].
+ * @param family Font family as a String for this Font. Default: "Arial".
+ * @param fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
+ * @param fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
+ *
  * @see FontWeight
  * @see FontStyle
  *
@@ -48,6 +54,22 @@ data class Font(
     val fontWeight: FontWeight = FontWeight.NORMAL,
     val fontStyle: FontStyle = FontStyle.NORMAL
 ) {
+
+  /**
+   * Creates a [Font] with the given [java.awt.Color]. This is only a fallback for legacy BGW
+   * versions and will be removed in future versions.
+   *
+   * @param size Size of this Font in `px`. Default: 14.
+   * @param awtColor [java.awt.Color] to use for this Font.
+   * @param family Font family as a String for this Font. Default: "Arial".
+   * @param fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
+   * @param fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
+   *
+   * @see Color
+   *
+   * @since 0.10
+   */
+  @Deprecated("Using java.awt.Color is no longer recommended as of BGW 0.10.", ReplaceWith("Color"))
   constructor(
       size: Number = DEFAULT_FONT_SIZE,
       awtColor: java.awt.Color,
