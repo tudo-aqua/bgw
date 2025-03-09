@@ -21,18 +21,19 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
         return;
       }
 
-      try {
-        const generatedCode = createKotlinCodeLinebreaks(
-          exportComponent(
-            component,
-            getOutputElements(true).components,
-            selectedComponentId
-          )
-        );
-        setCode(generatedCode);
-      } catch (error) {
-        console.error("Failed to generate code:", error);
-      }
+      // try {
+      const generatedCode = createKotlinCodeLinebreaks(
+        exportComponent(
+          component,
+          getOutputElements(true).components,
+          selectedComponentId
+        ),
+        0
+      );
+      setCode(generatedCode);
+      // } catch (error) {
+      //   console.error("Failed to generate code:", error);
+      // }
     }
   }, [selectedComponentId, getOutputElements, autoUpdate]);
 
@@ -43,7 +44,8 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
           null,
           getOutputElements(true).components,
           selectedComponentId
-        )
+        ),
+        0
       );
       setCode(generatedCode);
     } catch (error) {
@@ -103,11 +105,19 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
         </div>
 
         <CodeTab
-          code={code}
+          code={
+            // "// Generating code is still in alpha.\n" +
+            // "// Correctness of the generated output is not guaranteed.\n" +
+            code
+          }
           autoIndent={false}
           copy={false}
           key="live-code-tab"
         />
+        <p className="mt-4 ml-1 text-xs text-justify text-white/70">
+          Generating code is still in alpha, correctness of the output is not
+          guaranteed.
+        </p>
       </div>
     </>
   );

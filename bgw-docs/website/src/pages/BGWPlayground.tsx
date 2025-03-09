@@ -2184,7 +2184,12 @@ function BGWPlayground() {
 
       //if(elem.type === "GridElementData") return
 
-      if (elem.type === "CardViewData") {
+      if (elem.type === "ProgressBarData") {
+        allComponentsCopy[elem.id].progress = Math.min(
+          1,
+          Math.max(0, parseFloat(allComponentsCopy[elem.id].progress))
+        );
+      } else if (elem.type === "CardViewData") {
         allComponentsCopy[elem.id].currentVisual =
           allComponentsCopy[elem.id].current === "front"
             ? allComponentsCopy[elem.id].front

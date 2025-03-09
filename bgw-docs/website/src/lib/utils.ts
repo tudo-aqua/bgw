@@ -355,6 +355,18 @@ export async function convertMarkdownToHtml(markdown: string): Promise<string> {
   return result.toString();
 }
 
+export function getParamsFromSignature(signature: string) {
+  if (!signature.includes("(")) return [];
+  let params = signature.split("(")[1].split(")")[0].split(",");
+  return params.map((p) => {
+    const parts = p.trim().split(":");
+    return {
+      name: parts[0].replace(/(val|var)/, "").trim(),
+      type: parts[1]?.split("=")[0].trim() || "",
+    };
+  });
+}
+
 // Database Configuration
 export const idbConfig = {
   databaseName: "bgw-playground",

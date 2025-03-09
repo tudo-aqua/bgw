@@ -27,7 +27,11 @@ import {
 } from "@/components/ui/collapsible";
 import { set } from "date-fns";
 import { useDocsStore } from "@/stores/docsStore";
-import { createKotlinCodeLinebreaks, isListener } from "@/lib/utils";
+import {
+  createKotlinCodeLinebreaks,
+  getParamsFromSignature,
+  isListener,
+} from "@/lib/utils";
 import PreviewTab from "./PreviewTab";
 import Elements from "./Elements";
 import { Banner } from "@/components/ui/banner";
@@ -325,18 +329,6 @@ function Component({
     }
 
     return [];
-  }
-
-  function getParamsFromSignature(signature: string) {
-    if (!signature.includes("(")) return [];
-    let params = signature.split("(")[1].split(")")[0].split(",");
-    return params.map((p) => {
-      const parts = p.trim().split(":");
-      return {
-        name: parts[0].replace(/(val|var)/, "").trim(),
-        type: parts[1]?.split("=")[0].trim() || "",
-      };
-    });
   }
 
   function getConstructors(comp: any) {
