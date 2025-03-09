@@ -349,8 +349,6 @@ function Component({
       let own = getParamsFromSignature(c.info.signature);
       let global = getParamsFromSignature(comp.details.info.signature);
 
-      console.log(own, global);
-
       if (own.length === global.length) {
         c.primary = own.every(
           (param, index) =>

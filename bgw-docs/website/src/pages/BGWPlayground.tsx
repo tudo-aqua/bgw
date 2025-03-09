@@ -2329,7 +2329,37 @@ function BGWPlayground() {
   };
 
   const sendOutputElements = () => {
-    if (allComponents.size === 0) return;
+    if (allComponents.size === 0) {
+      sendJsonMessage({
+        container: "bgw-root",
+        props: {
+          data: {
+            type: "AppData",
+            gameScene: {
+              width: sceneWidth,
+              height: sceneHeight,
+              background: {
+                type: "CompoundVisualData",
+                id: "bgw-vis-0",
+                children: [
+                  {
+                    type: "ColorVisualData",
+                    id: "bgw-vis-0",
+                    transparency: 1.0,
+                    flipped: "none",
+                    color: sceneBackground,
+                  },
+                ],
+              },
+              components: [],
+            },
+            width: sceneWidth,
+            height: sceneHeight,
+          },
+        },
+      });
+      return;
+    }
 
     // const components : DataClass[] = []
     // allComponents.forEach((value, key) => {
@@ -2582,7 +2612,6 @@ function BGWPlayground() {
   };
 
   const getComponentViewDataInputs = (elementClass: DataClass) => {
-    console.log(elementClass);
     return (
       <>
         {getNameInputs(elementClass)}
@@ -2864,6 +2893,50 @@ function BGWPlayground() {
   };
 
   const getRestSettingsInputs = (elementClass: DataClass) => {
+    let countOfSettings = 0;
+
+    Object.entries(elementClass).forEach((entry) => {
+      if (entry[0] === "width" && elementClass.type === "TableColumnData") {
+        return countOfSettings++;
+      }
+      if (
+        [
+          "posX",
+          "posY",
+          "width",
+          "height",
+          "visual",
+          "front",
+          "back",
+          "currentVisual",
+          "opacity",
+          "isVisible",
+          "isDisabled",
+          "isFocusable",
+          "name",
+          "id",
+          "zIndex",
+          "scaleX",
+          "scaleY",
+          "rotation",
+          "size",
+          "component",
+          "group",
+          "items",
+        ].includes(entry[0])
+      ) {
+        return null;
+      } else if (entry[0] === "sideCount") {
+        return countOfSettings++;
+      }
+
+      if (getInputElement(entry) !== null) {
+        countOfSettings++;
+      }
+    });
+
+    if (countOfSettings === 0) return null;
+
     return (
       <SettingsField title={`Settings`}>
         {Object.entries(elementClass).map((entry) => {
@@ -3175,7 +3248,7 @@ function BGWPlayground() {
     ),
     "right-sidebar": (
       <div
-        className="relative w-full h-full overflow-x-hidden overflow-y-auto"
+        className="relative w-full h-full pt-4 pb-4 overflow-x-hidden overflow-y-auto"
         x-chunk="dashboard-03-chunk-0"
         id="data__inputs__sidebar"
         orientation="vertical"

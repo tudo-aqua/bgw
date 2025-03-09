@@ -115,7 +115,7 @@ const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
           key="live-code-tab"
         />
         <p className="mt-4 ml-1 text-xs text-justify text-white/70">
-          Generating code is still in alpha, correctness of the output is not
+          Code generation is still in alpha, correctness of the output is not
           guaranteed.
         </p>
       </div>
