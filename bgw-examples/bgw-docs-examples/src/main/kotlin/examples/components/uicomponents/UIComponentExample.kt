@@ -96,7 +96,11 @@ class UIComponentExample : BoardGameApplication("UIComponent Example", width = 8
     // ComboBox
     val comboBox =
         ComboBox<Double>(
-            posX = 50, posY = 350, width = 300, prompt = "Select an option! This is the prompt.", visual = ColorVisual.RED)
+            posX = 50,
+            posY = 350,
+            width = 300,
+            prompt = "Select an option! This is the prompt.",
+            visual = ColorVisual.RED)
 
     comboBox.formatFunction = { "Option ${it.toInt()}" }
 

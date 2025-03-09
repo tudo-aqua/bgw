@@ -24,7 +24,6 @@ import tools.aqua.bgw.core.DEFAULT_COLOR_PICKER_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_COLOR_PICKER_WIDTH
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -54,12 +53,7 @@ open class ColorPicker(
     visual: Visual = Visual.EMPTY
 ) :
     UIComponent(
-        posX = posX,
-        posY = posY,
-        width = width,
-        height = height,
-        font = Font(),
-        visual = visual) {
+        posX = posX, posY = posY, width = width, height = height, font = Font(), visual = visual) {
   /**
    * [Property] for the currently selected [Color].
    *
