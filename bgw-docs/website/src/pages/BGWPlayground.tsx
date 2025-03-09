@@ -41,7 +41,7 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { ColorPicker } from "@/components/ui/color-picker.tsx";
-import { useMap } from "@uidotdev/usehooks";
+import { useLocalStorage, useMap } from "@uidotdev/usehooks";
 import {
   Dialog,
   DialogClose,
@@ -102,6 +102,8 @@ import "react-mosaic-component/react-mosaic-component.css";
 import "./playground.scss";
 
 function BGWPlayground() {
+  const [currentWorkspace, setCurrentWorkspace] = useState("default");
+
   useEffect(() => {
     setupIndexedDB(idbConfig)
       .then(() => {
@@ -110,14 +112,71 @@ function BGWPlayground() {
       .catch((err) => console.error("IndexedDB initialization failed:", err));
   }, []);
 
-  const { update: saveWorkspace, getByID: loadWorkspace } =
-    useIndexedDBStore("workspaces");
+  const [allWorkspaces, setAllWorkspaces] = useState([]);
 
-  const { constructors } = useLoaderData();
+  const {
+    update: saveWorkspace,
+    getByID: loadWorkspace,
+    add: createWorkspace,
+    getAll: getAllWorkspaces,
+    deleteByID: deleteWorkspace,
+  } = useIndexedDBStore("workspaces");
+
+  const listWorkspaces = async () => {
+    const workspaces = await getAllWorkspaces();
+
+    workspaces.sort((a, b) => {
+      if (a.id === "default") return -1;
+      if (b.id === "default") return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    setAllWorkspaces(workspaces);
+  };
+
+  const deleteWorkspaceById = (id: string) => {
+    if (!id) return;
+    if (id === "default") return;
+
+    deleteWorkspace(id)
+      .then()
+      .catch((err) => console.error("Failed to delete workspace:", err));
+
+    if (currentWorkspace === id) {
+      loadSavedWorkspace("default");
+    }
+
+    listWorkspaces();
+  };
+
+  const createEmptyWorkspace = () => {
+    const workspace = {
+      id: "abcdefghijklmnopqrstuvwxyz"
+        .split("")
+        .sort(() => 0.5 - Math.random())
+        .join("")
+        .slice(0, 10),
+      name: `${new Date().toISOString().split(".")[0].replace(/[:.]/g, "-")}`,
+      components: [],
+      treeData: [],
+      sceneWidth: 1920,
+      sceneHeight: 1080,
+      sceneBackground: "#ffffff",
+    };
+
+    createWorkspace(workspace)
+      .then()
+      .catch((err) => console.error("Failed to create workspace:", err));
+
+    listWorkspaces();
+
+    loadSavedWorkspace(workspace.id);
+  };
 
   const saveCurrentWorkspace = (workspaceId: string = "default") => {
     const workspace = {
       id: workspaceId,
+      name: sceneName,
       components: allComponents,
       treeData,
       sceneWidth,
@@ -128,6 +187,8 @@ function BGWPlayground() {
     saveWorkspace(workspace)
       .then()
       .catch((err) => console.error("Failed to save workspace:", err));
+
+    listWorkspaces();
   };
 
   const loadSavedWorkspace = async (workspaceId: string = "default") => {
@@ -142,9 +203,11 @@ function BGWPlayground() {
 
         // Restore other state
         setTreeData(saved.treeData);
-        setSceneWidth(saved.sceneWidth);
-        setSceneHeight(saved.sceneHeight);
-        setSceneBackground(saved.sceneBackground);
+        setSceneWidth(saved.sceneWidth ?? 1920);
+        setSceneHeight(saved.sceneHeight ?? 1080);
+        setSceneBackground(saved.sceneBackground ?? "#ffffff");
+        setSceneName(saved.name ?? "Default");
+        setCurrentWorkspace(workspaceId);
 
         sendOutputElements();
         setOutputDirty((prev) => prev + 1);
@@ -167,6 +230,7 @@ function BGWPlayground() {
   const [sceneWidth, setSceneWidth] = useState(1920);
   const [sceneHeight, setSceneHeight] = useState(1080);
   const [sceneBackground, setSceneBackground] = useState("#ffffff");
+  const [sceneName, setSceneName] = useState("Default");
 
   const onError = (message, source, lineno, colno, error) => {
     if (message.includes("window.cef")) return;
@@ -434,9 +498,7 @@ function BGWPlayground() {
   }, [outputDirty, sceneWidth, sceneHeight, sceneBackground]);
 
   useEffect(() => {
-    if (allComponents.size > 0) {
-      saveCurrentWorkspace();
-    }
+    saveCurrentWorkspace(currentWorkspace);
   }, [
     allComponents,
     treeData,
@@ -444,6 +506,7 @@ function BGWPlayground() {
     sceneBackground,
     sceneHeight,
     selectedClass,
+    sceneName,
   ]);
 
   const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
@@ -635,52 +698,135 @@ function BGWPlayground() {
 
   const getSceneInputs = () => {
     return (
-      <SettingsField title={"Scene"} icon={"slideshow"}>
-        <div className="flex items-center w-full gap-3">
-          <Label className="shrink-0 w-[43%] text-white/70">Background</Label>
-          <EyeDropperPicker
-            className="w-full ml-1"
-            background={sceneBackground}
-            setBackground={(value) => {
-              setSceneBackground(value);
-            }}
-          ></EyeDropperPicker>
-        </div>
-        <div className="flex flex-row items-center justify-between w-full gap-4">
-          <Label
-            className="shrink-0 w-[43%] text-white/70"
-            htmlFor={"sceneWidth"}
+      <>
+        <SettingsField title={`Scene (${sceneName})`} icon={"slideshow"}>
+          <div className="flex flex-row items-center justify-between w-full gap-4">
+            <Label
+              className="shrink-0 w-[43%] text-white/70"
+              htmlFor={"sceneName"}
+            >
+              Name
+            </Label>
+            <Input
+              id={"sceneName"}
+              type="text"
+              placeholder={"Default"}
+              value={sceneName}
+              onChange={(e) => {
+                setSceneName(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex items-center w-full gap-3">
+            <Label className="shrink-0 w-[43%] text-white/70">Background</Label>
+            <EyeDropperPicker
+              className="w-full ml-1"
+              background={sceneBackground}
+              setBackground={(value) => {
+                setSceneBackground(value);
+              }}
+            ></EyeDropperPicker>
+          </div>
+          <div className="flex flex-row items-center justify-between w-full gap-4">
+            <Label
+              className="shrink-0 w-[43%] text-white/70"
+              htmlFor={"sceneWidth"}
+            >
+              Width
+            </Label>
+            <Input
+              id={"sceneWidth"}
+              type="number"
+              placeholder={"1920"}
+              value={sceneWidth}
+              onChange={(e) => {
+                setSceneWidth(e.target.value);
+              }}
+            />
+          </div>
+          <div className="flex flex-row items-center justify-between w-full gap-4">
+            <Label
+              className="shrink-0 w-[43%] text-white/70"
+              htmlFor={"sceneHeight"}
+            >
+              Height
+            </Label>
+            <Input
+              id={"sceneHeight"}
+              type="number"
+              placeholder={"1080"}
+              value={sceneHeight}
+              onChange={(e) => {
+                setSceneHeight(e.target.value);
+              }}
+            />
+          </div>
+        </SettingsField>
+        {allWorkspaces.length > 0 && (
+          <SettingsField
+            title={`Saved Scenes`}
+            icon={"bookmarks"}
+            hideRightIcon={true}
           >
-            Width
-          </Label>
-          <Input
-            id={"sceneWidth"}
-            type="number"
-            placeholder={"1920"}
-            value={sceneWidth}
-            onChange={(e) => {
-              setSceneWidth(e.target.value);
-            }}
-          />
-        </div>
-        <div className="flex flex-row items-center justify-between w-full gap-4">
-          <Label
-            className="shrink-0 w-[43%] text-white/70"
-            htmlFor={"sceneHeight"}
-          >
-            Height
-          </Label>
-          <Input
-            id={"sceneHeight"}
-            type="number"
-            placeholder={"1080"}
-            value={sceneHeight}
-            onChange={(e) => {
-              setSceneHeight(e.target.value);
-            }}
-          />
-        </div>
-      </SettingsField>
+            <div className="grid gap-3">
+              {allWorkspaces.map((w) => {
+                return (
+                  <div className="flex flex-row gap-3 rounded-lg h-fit">
+                    <Button
+                      variant="secondary"
+                      className={`flex items-center gap-3 justify-start cursor-pointer relative main__toggle w-full rounded-lg`}
+                      title={w.name}
+                      onClick={() => {
+                        loadSavedWorkspace(w.id);
+                      }}
+                    >
+                      <i
+                        className={`material-symbols-rounded main__toggle__icon text-xl`}
+                      >
+                        {w.id === currentWorkspace
+                          ? "check_box"
+                          : "check_box_outline_blank"}
+                      </i>
+                      <span
+                        className={`font-medium overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left`}
+                      >
+                        {w.name}
+                      </span>
+                    </Button>
+                    {w.id !== "default" && (
+                      <Button
+                        variant="secondary"
+                        onClick={() => deleteWorkspaceById(w.id)}
+                      >
+                        <i className="text-lg material-symbols-rounded">
+                          delete
+                        </i>
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <Button
+              className={`flex items-center gap-3 justify-center cursor-pointer relative main__toggle w-full rounded-lg hover:bg-bgw-green/10 bg-bgw-green/5 text-bgw-green`}
+              onClick={() => {
+                createEmptyWorkspace();
+              }}
+            >
+              <i
+                className={`material-symbols-rounded main__toggle__icon text-xl text-bgw-green`}
+              >
+                add
+              </i>
+              <span
+                className={`font-medium overflow-hidden text-ellipsis whitespace-nowrap text-left text-bgw-green`}
+              >
+                Add Scene
+              </span>
+            </Button>
+          </SettingsField>
+        )}
+      </>
     );
   };
 
@@ -1936,7 +2082,7 @@ function BGWPlayground() {
     setSelectedComponentId(null);
     setOutputDirty(outputDirty + 1);
 
-    saveCurrentWorkspace();
+    saveCurrentWorkspace(currentWorkspace);
   };
 
   const checkPossibleErrors = (node) => {
@@ -2639,7 +2785,7 @@ function BGWPlayground() {
         className={`flex items-center gap-3 justify-start cursor-pointer relative main__toggle w-full rounded-lg ${
           sceneSelected ? "!bg-bgw-green/10" : ""
         } hover:bg-bgw-green/10 bg-bgw-green/5`}
-        title="Scene"
+        title={sceneName}
         onPressedChange={() => {
           setSelectedComponentId(null);
           setSelectedClass(null);
@@ -2655,7 +2801,7 @@ function BGWPlayground() {
         <span
           className={`font-medium overflow-hidden text-ellipsis w-7/12 whitespace-nowrap text-left text-bgw-green`}
         >
-          Scene
+          Scene ({sceneName})
         </span>
       </Toggle>
     );
@@ -3335,7 +3481,7 @@ function BGWPlayground() {
             <div className="flex gap-3">
               <Toggle
                 variant={"default"}
-                className="w-fit shrink-0"
+                className="w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green"
                 size={"sm"}
                 onPressedChange={() => {
                   setShowPermanentGuides(!showPermanentGuides);
@@ -3346,7 +3492,7 @@ function BGWPlayground() {
               </Toggle>
               <Toggle
                 variant={"default"}
-                className="w-fit shrink-0"
+                className={`w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green`}
                 size={"sm"}
                 onPressedChange={() => {
                   setAdvancedMode(!advancedMode);
