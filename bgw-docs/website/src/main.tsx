@@ -97,8 +97,6 @@ async function loadAllGuides() {
     guides.filter((g) => g !== null).map((g) => [g.path, g])
   );
 
-  console.log("Loaded guides", guidesMap);
-
   return guidesMap;
 }
 
@@ -159,6 +157,177 @@ export function searchGuides(query: string) {
     }
   }
   return results;
+}
+
+export function searchDirs(query: string) {
+  if (!query || query.trim() === "") return [];
+
+  const results = [];
+  const searchQuery = query.toLowerCase();
+  const seenPaths = new Set(); // Track unique paths
+
+  // Iterate through each package
+  Object.entries(dirs).forEach(([packageName, packageContent]) => {
+    // Iterate through each class in the package
+    Object.entries(packageContent).forEach(([className, classContent]) => {
+      if (
+        ["_index", "breadcrumbs", "name", "ordinal", "entries"].includes(
+          className
+        )
+      )
+        return;
+      const searchRegex = new RegExp(`(${searchQuery})`, "gi");
+
+      // Check if class name matches
+      if (className.toLowerCase().includes(searchQuery)) {
+        const indexData = classContent._index || {};
+        const details = indexData.details || {};
+        const info = details.info || {};
+
+        const path = `${packageName}.${className}`;
+        if (!seenPaths.has(path)) {
+          seenPaths.add(path);
+          results.push([
+            packageName,
+            {
+              type: "class",
+              className,
+              signature: info.signature || className,
+              doc: info.doc || "",
+              path,
+              highlight: className.replace(
+                searchRegex,
+                '<mark class="bg-transparent font-bold text-purple-400">$1</mark>'
+              ),
+            },
+          ]);
+        }
+      }
+
+      // Get class members from _index if available
+      const indexMembers = classContent._index?.members || {};
+
+      // Search in properties
+      const properties = indexMembers.properties || [];
+      properties.forEach((prop) => {
+        if (
+          ["_index", "breadcrumbs", "name", "ordinal", "entries"].includes(
+            prop.name
+          )
+        )
+          return;
+        if (prop.name.toLowerCase().includes(searchQuery)) {
+          const path = `${packageName}.${className}.${prop.name}`;
+          if (!seenPaths.has(path)) {
+            seenPaths.add(path);
+            results.push([
+              packageName,
+              {
+                type: "property",
+                className,
+                name: prop.name,
+                signature: prop.signature || "",
+                doc: prop.doc || "",
+                path,
+                highlight: prop.name.replace(
+                  searchRegex,
+                  '<mark class="bg-transparent font-bold text-purple-400">$1</mark>'
+                ),
+              },
+            ]);
+          }
+        }
+      });
+
+      // Search in constructors by name only
+      const constructors = indexMembers.constructors || [];
+      if (
+        className.toLowerCase().includes(searchQuery) &&
+        constructors.length > 0
+      ) {
+        const path = `${packageName}.${className}.${className}`;
+        if (!seenPaths.has(path)) {
+          seenPaths.add(path);
+          results.push([
+            packageName,
+            {
+              type: "constructor",
+              className,
+              signature: constructors[0].signature || "",
+              doc: constructors[0].doc || "",
+              path,
+              highlight: className.replace(
+                searchRegex,
+                '<mark class="bg-transparent font-bold text-purple-400">$1</mark>'
+              ),
+            },
+          ]);
+        }
+      }
+
+      // Search in other members by name (functions, etc.)
+      Object.entries(classContent).forEach(([memberName, memberContent]) => {
+        // Skip _index as we've already processed it
+        if (
+          [
+            "_index",
+            "breadcrumbs",
+            "name",
+            "ordinal",
+            "entries",
+            "package",
+            "path",
+            "type",
+            "details",
+            "members",
+          ].includes(memberName)
+        )
+          return;
+
+        if (memberName.toLowerCase().includes(searchQuery)) {
+          const path = `${packageName}.${className}.${memberName}`;
+          if (!seenPaths.has(path)) {
+            seenPaths.add(path);
+            results.push([
+              packageName,
+              {
+                type: "member",
+                className,
+                memberName,
+                signature: memberContent.details?.[0]?.info?.signature || "",
+                doc: memberContent.details?.[0]?.info?.doc || "",
+                path,
+                highlight: memberName.replace(
+                  searchRegex,
+                  '<mark class="bg-transparent font-bold text-purple-400">$1</mark>'
+                ),
+              },
+            ]);
+          }
+        }
+      });
+    });
+  });
+
+  let pushedPathClasses = new Set();
+
+  let uniqueResults = results.filter((e) => {
+    if (!pushedPathClasses.has(e[0] + "-" + e[1].className)) {
+      pushedPathClasses.add(e[0] + "-" + e[1].className);
+      return true;
+    }
+
+    return false;
+  });
+
+  uniqueResults.sort((a, b) => {
+    const aPath = a[0].split(".").pop();
+    const bPath = b[0].split(".").pop();
+
+    return aPath.localeCompare(bPath);
+  });
+
+  return uniqueResults.slice(0, 30); // Limit results to 30 entries
 }
 
 async function docsLoader() {

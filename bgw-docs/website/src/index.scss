@@ -418,3 +418,11 @@ button[role="combobox"] {
     background-color: transparent !important;
   }
 }
+
+div[data-radix-scroll-area-viewport] > div {
+  display: block !important;
+}
+
+.search-dialog button:has(svg) {
+  display: none;
+}
