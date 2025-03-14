@@ -26,7 +26,6 @@ import ComboBoxData
 import ComponentViewData
 import DiceViewData
 import GameComponentContainerData
-import GridElementData
 import HexagonGridData
 import HexagonViewData
 import LabelData
@@ -40,11 +39,9 @@ import TextAreaData
 import TextFieldData
 import ToggleButtonData
 import TokenViewData
-import emotion.react.css
 import react.*
 import react.ReactElement
 import react.create
-import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.elements.container.HexagonGrid as ReactHexagonGrid
 import tools.aqua.bgw.elements.gamecomponentviews.CardView as ReactCardView
 import tools.aqua.bgw.elements.gamecomponentviews.DiceView as ReactDiceView
@@ -65,8 +62,6 @@ import tools.aqua.bgw.elements.uicomponents.TextArea as ReactTextArea
 import tools.aqua.bgw.elements.uicomponents.TextField as ReactTextField
 import tools.aqua.bgw.elements.uicomponents.ToggleButton as ReactToggleButton
 import web.cssom.*
-import web.cssom.integer
-import web.dom.Element
 
 internal object NodeBuilder {
   fun build(componentViewData: ComponentViewData): ReactElement<*> {
@@ -97,38 +92,4 @@ internal object NodeBuilder {
               "Unknown component type: ${componentViewData::class.simpleName}")
     }
   }
-
-  fun build(gridElementData: GridElementData): ReactElement<*> {
-    return FC<GridPaneElementProps> { props ->
-          bgwGridElement {
-            css {
-              gridColumn = integer(gridElementData.column + 1)
-              gridRow = integer(gridElementData.row + 1)
-              justifySelf =
-                  when (gridElementData.alignment.first) {
-                    "left" -> JustifySelf.flexStart
-                    "center" -> JustifySelf.center
-                    "right" -> JustifySelf.flexEnd
-                    else -> JustifySelf.center
-                  }
-              alignSelf =
-                  when (gridElementData.alignment.second) {
-                    "top" -> AlignSelf.flexStart
-                    "center" -> AlignSelf.center
-                    "bottom" -> AlignSelf.flexEnd
-                    else -> AlignSelf.center
-                  }
-            }
-            +props.data.component?.let { build(it) }
-          }
-        }
-        .create { data = gridElementData }
-  }
 }
-
-internal external interface GridPaneElementProps : Props {
-  var data: GridElementData
-}
-
-internal inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
-  get() = "bgw_grid_element".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
