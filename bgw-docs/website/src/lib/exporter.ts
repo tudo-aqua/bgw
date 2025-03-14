@@ -7,19 +7,25 @@
 // import constructors from "@/bgw/constructors.json";
 import { ConstructorAPIImportInfo } from "@/lib/types.ts";
 import * as Components from "@/lib/components.ts";
-
-const constructors = [];
+// import { constructors } from "@/lib/constructors.ts";
+import { dirs } from "@/main";
+import { getParamsFromSignature } from "./utils";
 
 const applyBlacklist = [
   "id",
   "type",
   "name",
   "components",
-  "visual",
   "alignment",
+  "visual",
   "selectedColor",
   "font",
+  "selectedItems",
   "selectedItem",
+  "style",
+  "filters",
+  "flipped",
+  "scroll",
 ];
 const applyBlacklistNonPrimitive = [
   "id",
@@ -33,8 +39,17 @@ const applyBlacklistNonPrimitive = [
   "style",
   "selectedColor",
   "font",
+  "selectedItems",
   "selectedItem",
 ];
+
+const mappingNames = {
+  front: "frontVisual",
+  back: "backVisual",
+  layoutFromCenter: "isLayoutFromCenter",
+  allowIndeterminate: "isIndeterminateAllowed",
+  initialColor: "selectedColor",
+};
 
 const getInstantiableByData = (data: string) => {
   const flat = Object.entries(Components.Instantiable).flatMap((e) =>
@@ -43,279 +58,223 @@ const getInstantiableByData = (data: string) => {
   return flat.find((e) => e[1].cls === data)[1];
 };
 
-export function exportComponent(component: any = null, all: any, id: string) {
-  if (component == null) {
-    component = all.find((e) => e.id === id);
-  }
-  if (!component) return "";
+const getNonPrimitiveByType = (type: string) => {
+  return Object.entries(Components.NonPrimitiveDataClasses).find(
+    (e) => e[0] === type
+  )[1];
+};
 
-  let elements = constructors.filter(
-    (con) => con.fullName === component.type.replace("Data", "")
+const isInstantiable = (type: string) => {
+  return Object.keys(Components.Instantiable).some((e) => e === type);
+};
+
+const isNonPrimitive = (type: string) => {
+  return Object.keys(Components.NonPrimitiveDataClasses).some(
+    (e) => e === type
   );
+};
+
+export function exportComponent(component: any = null, all: any, id: string) {
+  let compName = component.type.replace("Data", "");
+  let { index, comp, mainConstructor, mainConstructorParams, properties } =
+    getConstructorAndProperties(compName);
+  if (!index || !comp || !mainConstructorParams || !properties)
+    return `// No constructor found for ${compName}`;
+
+  // Take Instatiable class from components.ts
   let referenceClass = getInstantiableByData(component.type).cls;
   let reference = new Components.DataClasses[referenceClass]();
-  let referenceProperties = Object.entries(reference).map((e) => e[0]);
+  let referenceProperties = Object.entries(reference)
+    .map((e) => e[0])
+    .filter((e) => properties.find((prop) => prop.name === e));
 
-  if (elements.length > 0) {
-    let found = elements[0] as ConstructorAPIImportInfo;
-    let constructor =
-      found.constructors.length > 0 ? found.constructors[0] : null;
+  // Process component name to include no special characters or spaces
+  let name =
+    component.name.trim() === ""
+      ? compName.charAt(0).toLowerCase() + compName.slice(1)
+      : component.name.charAt(0).toLowerCase() + component.name.slice(1);
+  if (name.indexOf(" ") > -1) name = name.split(" ").join("_");
+  name = name.replace(/[^a-zA-Z0-9_]/g, "");
 
-    if (constructor) {
-      let parameters = Object.entries(constructor).map((param) => {
-        return {
-          name: param[0],
-          type: param[1],
-          primitive:
-            param[1] === "String" ||
-            param[1] === "Number" ||
-            param[1] === "Boolean" ||
-            param[1] === "Double" ||
-            param[1] === "Int" ||
-            param[1] === "Float",
-        };
-      });
-      let properties = [];
-      found.properties
-        .map((prop) => {
-          return {
-            name: prop.first,
-            type: prop.second,
-            primitive:
-              prop.second === "String" ||
-              prop.second === "Number" ||
-              prop.second === "Boolean" ||
-              prop.second === "Double" ||
-              prop.second === "Int" ||
-              prop.second === "Float",
-          };
-        })
-        .forEach((prop) => {
-          if (
-            properties.find((p) => p.name === prop.name && p.type === prop.type)
-          )
-            return;
-          if (!referenceProperties.includes(prop.name)) return;
-          if (constructor[prop.name]) return;
-          properties.push(prop);
-        });
-
-      let name =
-        component.name.trim() === ""
-          ? found.shortName.charAt(0).toLowerCase() + found.shortName.slice(1)
-          : component.name.charAt(0).toLowerCase() + component.name.slice(1);
-      if (name.indexOf(" ") > -1) name = name.split(" ").join("_");
-      name = name.replace(/[^a-zA-Z0-9_]/g, "");
-
-      let apply = properties
-        .map((prop) => {
-          if (component[prop.name] === undefined) {
-            return;
-          }
-          if (applyBlacklist.includes(prop.name)) {
-            return;
-          }
-          if (
-            prop.primitive &&
-            referenceProperties.includes(prop.name) &&
-            component[prop.name] === reference[prop.name].value
-          ) {
-            return;
-          }
-          if (prop.type == "Flip" && component[prop.name] === "none") {
-            return;
-          }
-
-          if (prop.type == "String") {
-            return `${prop.name} = "${component[prop.name]}"`;
-          } else if (prop.primitive) {
-            return `${prop.name} = ${component[prop.name]}`;
-          } else {
-            let property = Object.entries(reference).find((e) => {
-              if (e[1] !== null && e[1].property !== undefined) {
-                return e[1].property === prop.name;
-              }
-              return false;
-            });
-
-            if (property) {
-              return `${prop.name} = ${exportNonPrimitive(
-                component[property[0]],
-                prop.type,
-                prop.name
-              )}`;
-            }
-            return `${prop.name} = ${exportNonPrimitive(
-              component[prop.name],
-              prop.type,
-              prop.name
-            )}`;
-          }
-        })
-        .filter((e) => e);
-
-      let code = `
-                val ${name} = ${found.shortName}(
-                    ${parameters
-                      .map((param) => {
-                        if (param.type == "String") {
-                          return `${param.name} = "${component[param.name]}"`;
-                        } else if (param.primitive) {
-                          return `${param.name} = ${component[param.name]}`;
-                        } else if (param.name === "formatFunction") {
-                          return `${param.name} = { item -> item.toString() }`;
-                        } else if (param.name === "items") {
-                          return `${param.name} = listOf()`;
-                        } else if (param.name === "toggleGroup") {
-                          return `${param.name} = `;
-                        } else {
-                          let property = Object.entries(reference).find((e) => {
-                            if (e[1] !== null && e[1].property !== undefined) {
-                              return e[1].property === param.name;
-                            }
-                            return false;
-                          });
-
-                          if (property) {
-                            return `${param.name} = ${exportNonPrimitive(
-                              component[property[0]],
-                              param.type,
-                              param.name
-                            )}`;
-                          }
-                          return `${param.name} = ${exportNonPrimitive(
-                            component[param.name],
-                            param.type,
-                            param.name
-                          )}`;
-                        }
-                      })
-                      .join(",\n")}
-                )`;
-
-      if (apply.length > 0) {
-        code += `.apply {
-                    ${apply.join("\n")}
-                }`;
-      }
-
-      let childrenCode = "";
-
-      if (Droppable[component.type]) {
-        if (
-          component.type === "CardStackData" ||
-          component.type === "PaneData"
-        ) {
-          childrenCode = component.components
-            .map((child) => {
-              return exportComponent(child, [], child.id);
-            })
-            .join("\n");
-          // TODO - Fix
-        } else if (component.type === "HexagonGridData") {
-          childrenCode = component.map.values
-            .map((child) => {
-              return exportComponent(child, [], child.id);
-            })
-            .join("\n");
-        }
-      }
-
-      if (all.length > 0) {
-        return (childrenCode + code).trim();
-      }
-      return (childrenCode + code).trim();
+  let code = `val ${name} = ${compName}(`;
+  if (mainConstructor.parameters.length !== mainConstructorParams.length) {
+    let genericType = "ComponentView";
+    try {
+      genericType = index.details.info.signature
+        .split("(")[0]
+        .split("<")[1]
+        .split(">")[0]
+        .split(":")[1]
+        .trim();
+    } catch (_) {
+      /* empty */
     }
-
-    return `// Exporting is not supported yet and will be added soon.`;
-    return `// No constructor found for ${found.shortName}`;
+    if (component.objectType.includes("StructuredDataViewData")) {
+      genericType = "Int";
+    }
+    if (component.objectType.includes("ComboBoxData")) {
+      genericType = "String";
+    }
+    code = `val ${name} = ${compName}<${genericType}>(`;
   }
 
-  return `// Exporting is not supported yet and will be added soon.`;
-  return `// No constructor found for ${component.type}`;
+  let computedParams = [];
+  let computedApply = [];
+
+  for (let param of mainConstructorParams) {
+    let pName = param.name;
+    let newName = param.propertyName;
+
+    let actualName = newName;
+
+    if (component[newName] === undefined && component[pName] === undefined)
+      continue;
+
+    if (component[newName] === undefined) {
+      actualName = pName;
+    } else if (component[pName] === undefined) {
+      actualName = newName;
+    }
+
+    if (
+      ["String", "Number", "Boolean", "Double", "Int", "Float"].includes(
+        param.type
+      )
+    ) {
+      if (param.type === "String")
+        computedParams.push(`${pName} = "${component[actualName]}"`);
+      else if (param.type === "Double")
+        computedParams.push(
+          `${pName} = ${
+            parseFloat(component[actualName]) ===
+            parseInt(component[actualName])
+              ? parseFloat(component[actualName]).toFixed(1)
+              : parseFloat(component[actualName])
+          }`
+        );
+      else computedParams.push(`${pName} = ${component[actualName]}`);
+    } else {
+      if (actualName === "target") {
+        computedParams.push(`${pName} = Pane() // Replace with your target`);
+        continue;
+      }
+      let exp = exportNonPrimitive(
+        component[actualName],
+        param.type,
+        actualName
+      );
+
+      if (!exp) continue;
+      if (exp.trim() === "") continue;
+      computedParams.push(`${pName} = ${exp}`);
+    }
+  }
+
+  for (let prop of referenceProperties) {
+    if (component[prop] === undefined) continue;
+    if (applyBlacklist.includes(prop)) continue;
+    if (mainConstructorParams.find((param) => param.name === prop)) continue;
+    if (component[prop] === reference[prop].value) continue;
+
+    computedApply.push(`${prop} = ${component[prop]}`);
+  }
+
+  if (computedApply.length === 0) {
+    return `${code}${computedParams.join(", ")})`;
+  }
+
+  return `${code}${computedParams.join(", ")}).apply {\n${computedApply.join(
+    ",\n"
+  )}\n}`;
 }
 
 function exportNonPrimitive(data: any, type: string = "", name: string = "") {
+  if (data === undefined) return "";
+  let actualType = type.replace("Data", "");
   let code = "";
 
   if (type === "List<Visual>") {
     return `listOf(
-            ${data
-              .map((child) => {
-                return exportNonPrimitive(child);
-              })
-              .join(",\n")}
-        )`;
+      ${data
+        .map((child) => {
+          return exportNonPrimitive(child);
+        })
+        .join(",\n")}
+      )`;
+  } else if (type === "ObservableList<T>" && name === "items") {
+    return `listOf(
+      ${data.join(", ")}
+      )`;
+  } else if (type === "List<T>" && name === "items") {
+    return `listOf(
+      ${data
+        .map((child) => {
+          return '"' + child.second + '"';
+        })
+        .join(", ")}
+      )`;
   } else if (type === "Color") {
     return `Color(0x${data.replace("#", "").toUpperCase()})`;
   } else if (type === "ColorVisual" && name === "selectionBackground") {
     return `ColorVisual(Color(0x${data.replace("#", "").toUpperCase()}))`;
   } else if (type === "Alignment") {
-    let possibleAlignments = constructors.filter(
-      (con) =>
-        con.fullName.startsWith("Alignment") && con.fullName !== con.shortName
-    );
     if (data.first === "center" && data.second === "center") {
       return "Alignment.CENTER";
     } else {
-      let found = possibleAlignments.find((align) => {
-        let split = align.returnType.toLowerCase().split("_");
-        return split[0] === data.second && split[1] === data.first;
-      });
-      if (found) {
-        return found.fullName;
-      }
+      const found = Object.keys(getFolderForComponent("Alignment")).find(
+        (e) => e.toLowerCase() === `${data.second}_${data.first}`.toLowerCase()
+      );
+      if (!found) return `Alignment.CENTER`;
 
-      return `Alignment.CENTER`;
+      return `Alignment.${data.second.toUpperCase()}_${data.first.toUpperCase()}`;
     }
   } else if (type === "Orientation") {
-    let possible = constructors.filter((con) =>
-      con.fullName.startsWith("Orientation")
+    const found = Object.keys(getFolderForComponent("Orientation")).find(
+      (e) => e.toLowerCase() === data.toLowerCase()
     );
-    let found = possible.find(
-      (style) => style.returnType.toLowerCase() === data.toLowerCase()
-    );
-    if (found) {
-      return `Orientation.${data.toUpperCase()}`;
-    }
+    if (!found) return `Orientation.VERTICAL`;
 
-    return `Orientation.VERTICAL`;
+    return `Orientation.${data.toUpperCase()}`;
+  } else if (type === "HexOrientation") {
+    const found = Object.keys(getFolderForComponent("HexOrientation")).find(
+      (e) => e.toLowerCase() === data.toLowerCase()
+    );
+    if (!found) return `HexOrientation.POINTY_TOP`;
+
+    return `HexOrientation.${data.toUpperCase()}`;
+  } else if (type === "HexagonGrid.CoordinateSystem") {
+    const folder = getFolderForComponent("HexagonGrid");
+    if (!folder) return `HexagonGrid.CoordinateSystem.OFFSET`;
+
+    const found = Object.keys(folder["CoordinateSystem"]).find(
+      (e) => e.toLowerCase() === data.toLowerCase()
+    );
+    if (!found) return `HexagonGrid.CoordinateSystem.OFFSET`;
+
+    return `HexagonGrid.CoordinateSystem.${data.toUpperCase()}`;
   } else if (type === "SelectionMode") {
-    let possible = constructors.filter((con) =>
-      con.fullName.startsWith("SelectionMode")
+    const found = Object.keys(getFolderForComponent("SelectionMode")).find(
+      (e) => e.toLowerCase() === data.toLowerCase()
     );
-    let found = possible.find(
-      (style) => style.returnType.toLowerCase() === data.toLowerCase()
-    );
-    if (found) {
-      return `SelectionMode.${data.toUpperCase()}`;
-    }
+    if (!found) return `SelectionMode.SINGLE`;
 
-    return `SelectionMode.SINGLE`;
+    return `SelectionMode.${data.toUpperCase()}`;
   } else if (type === "Font.FontStyle") {
-    let possible = ["normal", "italic", "oblique"];
-    // TODO - Add enum classes in classes to constructors.json
-    // let found = possible.find((style) => style.returnType.toLowerCase() === data.toLowerCase())
-    if (possible.includes(data.toLowerCase())) {
-      return `Font.FontStyle.${data.toUpperCase()}`;
-    }
+    const folder = getFolderForComponent("Font");
+    if (!folder) return `Font.FontStyle.NORMAL`;
 
-    return `Font.FontStyle.NORMAL`;
-  } else if (type === "Flip") {
-    let possible = constructors.filter((con) =>
-      con.fullName.startsWith("Flip")
+    const found = Object.keys(folder["FontStyle"]).find(
+      (e) => e.toLowerCase() === data.toLowerCase()
     );
-    let found = possible.find(
-      (style) => style.returnType.toLowerCase() === data.toLowerCase()
-    );
-    if (possible.includes(data.toLowerCase())) {
-      return `Flip.${data.toUpperCase()}`;
-    }
 
-    return `Flip.NONE`;
+    if (!found) return `Font.FontStyle.NORMAL`;
+    return `Font.FontStyle.${data.toUpperCase()}`;
   } else if (type === "Font.FontWeight") {
-    let valueToIndex = (parseInt(data) - 100) / 100;
-    let possible = [
+    const folder = getFolderForComponent("Font");
+    if (!folder) return `Font.FontWeight.NORMAL`;
+
+    const valueToIndex = (parseInt(data) - 100) / 100;
+    const possible = [
       "thin",
       "extra_light",
       "light",
@@ -326,138 +285,208 @@ function exportNonPrimitive(data: any, type: string = "", name: string = "") {
       "extra_bold",
       "black",
     ];
-    // let found = possible.find((style) => style.returnType.toLowerCase() === data.toLowerCase())
+
     if (valueToIndex >= 0 && valueToIndex < possible.length) {
       return `Font.FontWeight.${possible[valueToIndex].toUpperCase()}`;
     }
 
     return `Font.FontWeight.NORMAL`;
-  } else if (data.type) {
-    console.warn("[DATA TYPE]", data.type);
-    let elements = constructors.filter(
-      (con) => con.fullName === data.type.replace("Data", "")
+  } else if (type === "Flip") {
+    const folder = getFolderForComponent("Flip");
+    if (!folder) return `Flip.NONE`;
+
+    const found = Object.keys(folder).find(
+      (e) => e.toLowerCase() === data.toLowerCase()
     );
-    let reference = new Components.NonPrimitiveDataClasses[data.type]();
-    let referenceProperties = Object.entries(reference).map((e) => e[0]);
+    if (!found) return `Flip.NONE`;
 
-    if (elements.length > 0) {
-      let found = elements[0] as ConstructorAPIImportInfo;
-      let constructor =
-        found.constructors.length > 0 ? found.constructors[0] : null;
-
-      if (constructor) {
-        let parameters = Object.entries(constructor).map((param) => {
-          return {
-            name: param[0],
-            type: param[1],
-            primitive:
-              param[1] === "String" ||
-              param[1] === "Number" ||
-              param[1] === "Boolean" ||
-              param[1] === "Double" ||
-              param[1] === "Int" ||
-              param[1] === "Float",
-          };
-        });
-        let properties = [];
-        found.properties
-          .map((prop) => {
-            return {
-              name: prop.first,
-              type: prop.second,
-              primitive:
-                prop.second === "String" ||
-                prop.second === "Number" ||
-                prop.second === "Boolean" ||
-                prop.second === "Double" ||
-                prop.second === "Int" ||
-                prop.second === "Float",
-            };
-          })
-          .forEach((prop) => {
-            if (
-              properties.find(
-                (p) => p.name === prop.name && p.type === prop.type
-              )
-            )
-              return;
-            if (!referenceProperties.includes(prop.name)) return;
-            if (constructor[prop.name]) return;
-            properties.push(prop);
-          });
-
-        let apply = properties
-          .map((prop) => {
-            if (data[prop.name] === undefined) return;
-            if (applyBlacklistNonPrimitive.includes(prop.name)) return;
-            if (
-              prop.primitive &&
-              referenceProperties.includes(prop.name) &&
-              data[prop.name] === reference[prop.name].value
-            )
-              return;
-
-            if (prop.type == "Flip" && data[prop.name] === "none") {
-              return;
-            }
-            if (prop.type == "String") {
-              return `${prop.name} = "${data[prop.name]}"`;
-            } else if (prop.primitive) {
-              return `${prop.name} = ${data[prop.name]}`;
-            } else {
-              return `${prop.name} = ${exportNonPrimitive(
-                data[prop.name],
-                prop.type
-              )}`;
-            }
-          })
-          .filter((e) => e);
-
-        if (data.type === "CompoundVisualData") {
-          if (data.children.length === 1) {
-            code = exportNonPrimitive(data.children[0], data.children[0].type);
-          } else {
-            code = `${found.shortName}(
-                            ${data.children
-                              .map((child) => {
-                                return exportNonPrimitive(child, child.type);
-                              })
-                              .join(",\n")}
-                        )`;
-          }
-        } else if (data.type === "ColorVisualData") {
-          code = `${found.shortName}(Color(0x${data.color
-            .replace("#", "")
-            .toUpperCase()}))`;
-        } else {
-          code = `${found.shortName}(
-                            ${parameters
-                              .map((param) => {
-                                if (param.type == "String") {
-                                  return `${param.name} = "${
-                                    data[param.name]
-                                  }"`;
-                                } else if (param.primitive) {
-                                  return `${param.name} = ${data[param.name]}`;
-                                } else {
-                                  return `${param.name} = ${exportNonPrimitive(
-                                    data[param.name],
-                                    param.type
-                                  )}`;
-                                }
-                              })
-                              .join(",\n")}
-                    )`;
-        }
-
-        if (apply.length > 0) {
-          code += `.apply {
-                        ${apply.join("\n")}
-                    }`;
-        }
+    return `Flip.${data.toUpperCase()}`;
+  } else if (data.type) {
+    if (data.type === "CompoundVisualData") {
+      if (data.children.length === 1) {
+        return exportNonPrimitive(data.children[0], data.children[0].type);
+      } else {
+        return `CompoundVisual(
+                  ${data.children
+                    .map((child) => {
+                      return exportNonPrimitive(child, child.type);
+                    })
+                    .join(",\n")}
+                )`;
       }
     }
+    // else if (data.type === "ColorVisualData") {
+    //   let code = `ColorVisual(Color(0x${data.color
+    //     .replace("#", "")
+    //     .toUpperCase()}))`;
+
+    //   return code;
+    // }
+    else {
+      const {
+        index,
+        comp,
+        mainConstructor,
+        mainConstructorParams,
+        properties,
+      } = getConstructorAndProperties(data.type.replace("Data", ""));
+      if (!index || !comp || !mainConstructorParams || !properties)
+        return `NON`;
+
+      let code = `${actualType}(`;
+      if (mainConstructor.parameters.length !== mainConstructorParams.length) {
+        let genericType = "ComponentView";
+        try {
+          genericType = index.details.info.signature
+            .split("(")[0]
+            .split("<")[1]
+            .split(">")[0]
+            .split(":")[1]
+            .trim();
+        } catch (_) {
+          /* empty */
+        }
+        code = `${actualType}<${genericType}>(`;
+      }
+
+      let computedParams = [];
+      let computedApply = [];
+
+      for (let param of mainConstructorParams) {
+        let pName = param.name;
+
+        if (
+          ["String", "Number", "Boolean", "Double", "Int", "Float"].includes(
+            param.type
+          )
+        ) {
+          if (param.type === "String")
+            computedParams.push(`${pName} = "${data[pName]}"`);
+          else if (param.type === "Double")
+            computedParams.push(`${pName} = ${parseFloat(data[pName])}`);
+          else computedParams.push(`${pName} = ${data[pName]}`);
+        } else {
+          let exp = exportNonPrimitive(data[pName], param.type, pName);
+
+          if (exp.trim() === "") continue;
+          computedParams.push(`${pName} = ${exp}`);
+        }
+      }
+
+      if (isNonPrimitive(type)) {
+        let reference = new Components.NonPrimitiveDataClasses[type]();
+        let referenceProperties = Object.entries(reference)
+          .map((e) => e[0])
+          .filter((e) => properties.find((prop) => prop.name === e));
+
+        for (let prop of referenceProperties) {
+          if (data[prop] === undefined) continue;
+          if (applyBlacklist.includes(prop)) continue;
+          if (mainConstructorParams.find((param) => param.name === prop))
+            continue;
+          if (data[prop] === reference[prop].value) continue;
+
+          computedApply.push(`${prop} = ${data[prop]}`);
+        }
+      }
+
+      if (computedApply.length === 0) {
+        return `${code}${computedParams.join(", ")})`;
+      }
+
+      return `${code}${computedParams.join(
+        ", "
+      )}).apply {\n${computedApply.join(",\n")}\n}`;
+    }
+  }
+}
+
+function getFolderForComponent(compName: string) {
+  let matchingPkg = Object.keys(dirs).filter((e) => {
+    let pkg = dirs[e];
+    return pkg[compName] !== undefined;
+  });
+
+  if (!matchingPkg || matchingPkg.length === 0) return null;
+
+  let element = dirs[matchingPkg[0]][compName];
+  if (!element) return null;
+
+  return element;
+}
+
+function getConstructorAndProperties(compName: string): {
+  index: any;
+  comp: any;
+  mainConstructor: any;
+  mainConstructorParams: any;
+  properties: any;
+} {
+  let matchingPkg = Object.keys(dirs).filter((e) => {
+    let pkg = dirs[e];
+    return pkg[compName] !== undefined;
+  });
+
+  if (!matchingPkg || matchingPkg.length === 0) return null;
+
+  let element = dirs[matchingPkg[0]][compName];
+  if (!element) return null;
+
+  let index = element["_index"];
+  let comp = element[compName];
+  if (!comp || !index) return null;
+
+  let constructors = comp.details;
+  let properties = index.members.properties.map((prop) => {
+    return {
+      name: prop.name,
+      type: prop.signature.split(":")[1].trim().replace("?", ""),
+    };
+  });
+
+  // Get main constructor from API-Reference
+  constructors.forEach((c: any) => {
+    let own = getParamsFromSignature(c.info.signature);
+    let global = getParamsFromSignature(index.details.info.signature);
+
+    if (own.length === global.length) {
+      c.primary = own.every(
+        (param, i) =>
+          param.name === global[i].name && param.type === global[i].type
+      );
+    }
+  });
+
+  let mainConstructor = constructors.find((c: any) => c.primary);
+  if (!mainConstructor) {
+    mainConstructor = constructors.fromRight(0);
   }
 
-  return code;
+  let extractedTypes = getParamsFromSignature(mainConstructor.info.signature);
+
+  let mainConstructorParams = mainConstructor.parameters
+    .filter((param) => param.name.length > 1)
+    .map((param) => {
+      let newName = param.name;
+      if (!properties.find((prop) => prop.name === param.name)) {
+        newName = mappingNames[param.name] || param.name;
+      }
+
+      let type1 = extractedTypes.find((e) => e.name === param.name);
+      let type2 = properties.find((e) => e.name === newName);
+
+      return {
+        name: param.name,
+        propertyName: newName,
+        type: type1 ? type1.type : type2 ? type2.type : "String",
+      };
+    });
+
+  return {
+    index,
+    comp,
+    mainConstructor,
+    mainConstructorParams,
+    properties,
+  };
 }

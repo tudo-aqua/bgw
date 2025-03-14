@@ -13,6 +13,32 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // define a new console
+      var console = (function (oldCons) {
+        return {
+          log: function (text, ...args) {
+            oldCons.log(text, ...args);
+          },
+          info: function (text) {
+            oldCons.info(text);
+          },
+          warn: function (text) {
+            oldCons.warn(text);
+          },
+          error: function (text) {
+            if (text.startsWith("Warning:")) return;
+            oldCons.error(text);
+          },
+          debug: function (text) {
+            oldCons.debug(text);
+          },
+        };
+      })(window.console);
+
+      //Then redefine the old console
+      window.console = console;
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     <script src="/bgw/bgw-gui.js"></script>
   </body>

@@ -40,9 +40,12 @@ import { guideStructure, layoutMap } from "@/lib/utils";
 import { set } from "date-fns";
 import Main from "./docs/Main";
 import { Button } from "@/components/ui/button";
+import SearchField from "@/components/SearchField";
+
+import { dirs } from "@/main";
 
 function BGWDocsLayout() {
-  const { dirs, allSamples } = useLoaderData();
+  const { allSamples } = useLoaderData();
 
   const { componentPath } = useParams();
   const [currentName, setCurrentName] = useState(componentPath || "");
@@ -636,7 +639,7 @@ function BGWDocsLayout() {
       />
       <div className="grid w-full h-screen">
         <div className="flex flex-col">
-          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4 justify-between max-2xl:justify-center">
+          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 bg-background px-4 justify-between max-2xl:justify-center">
             <i
               className="absolute text-xl cursor-pointer material-symbols-rounded 2xl:hidden left-7"
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -647,6 +650,7 @@ function BGWDocsLayout() {
               <img src="/bgw/logo.svg" className="w-8 h-8" />
               <h1 className="text-xl font-semibold">BoardGameWork</h1>
             </Link>
+            <SearchField />
             {/* <Link>
               <Button variant="secondary" className="flex items-center gap-2">
                 <i className="text-xl material-symbols-rounded">settings</i>
@@ -687,11 +691,7 @@ function BGWDocsLayout() {
             >
               {currentPage === "main" && <Main></Main>}
               {currentPage === "docs" && currentComponent !== null && (
-                <Component
-                  location={location}
-                  dirs={allDirs}
-                  allSamples={allSamples}
-                />
+                <Component location={location} allSamples={allSamples} />
               )}
               {currentPage === "docs" && currentComponent === null && (
                 <Packages packages={layoutMap} />

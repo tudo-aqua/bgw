@@ -43,6 +43,7 @@ import tools.aqua.bgw.visual.Visual
  * @see Font
  * @see Alignment
  * @see Visual
+ * @see LabeledUIComponent
  *
  * @since 0.1
  */

@@ -93,7 +93,6 @@ function PreviewTab({
 
   useEffect(() => {
     if (currentTab !== "code") {
-      console.log(msg);
       sendJsonMessage(msg);
       return;
     }

@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { unified } from "unified";
 import { twMerge } from "tailwind-merge";
 import {
   BooleanValue,
@@ -7,6 +8,13 @@ import {
   NumberValue,
   StringValue,
 } from "./components";
+
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeRaw from "rehype-raw";
+import rehypeStringify from "rehype-stringify";
+import { visit } from "unist-util-visit";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -53,6 +61,7 @@ export function isListener(c: any) {
 }
 
 export function createKotlinCodeLinebreaks(code: string, length: number = 100) {
+  code = code.replace(/^@Synchronized/, "");
   if (code.length < length) {
     return code.replace(/(\s+)?:(\s+)?/gm, " : ");
   }
@@ -310,6 +319,54 @@ export function reconstructProperties(component: any) {
 
   return component;
 }
+
+// Custom rehype plugin to transform <preview> tags into <code> tags
+function rehypePreviewToCode() {
+  return (tree) => {
+    visit(tree, (node) => {
+      if (node.type === "raw" && node.value.includes("<preview>")) {
+        // Replace preview tags with code tags in raw HTML
+        node.value = node.value
+          .replace(/<preview>/g, "<code>")
+          .replace(/<\/preview>/g, "</code>");
+      }
+      if (node.type === "element" && node.tagName === "preview") {
+        node.tagName = "code";
+      }
+    });
+  };
+}
+
+export async function convertMarkdownToHtml(markdown: string): Promise<string> {
+  const result = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype, {
+      allowDangerousHtml: true, // Allow raw HTML in markdown
+      passThrough: ["preview"], // Preserve preview tags
+    })
+    .use(rehypeRaw) // Parse raw HTML
+    .use(rehypePreviewToCode) // Transform preview to code tags
+    .use(rehypeStringify, {
+      allowDangerousHtml: true, // Preserve HTML in output
+    })
+    .process(markdown);
+
+  return result.toString();
+}
+
+export function getParamsFromSignature(signature: string) {
+  if (!signature.includes("(")) return [];
+  let params = signature.split("(")[1].split(")")[0].split(",");
+  return params.map((p) => {
+    const parts = p.trim().split(":");
+    return {
+      name: parts[0].replace(/(val|var)/, "").trim(),
+      type: parts[1]?.split("=")[0].trim() || "",
+    };
+  });
+}
+
 // Database Configuration
 export const idbConfig = {
   databaseName: "bgw-playground",

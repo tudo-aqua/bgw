@@ -36,8 +36,10 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_WIDTH].
  * @param height Height for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_HEIGHT].
  * @param initialColor The [Color] that is initially selected. Default: [Color.WHITE].
+ * @param visual [Visual] for this [ColorPicker]. Default: [Visual.EMPTY].
  *
  * @see Color
+ * @see Visual
  * @see UIComponent
  *
  * @since 0.1
@@ -47,15 +49,11 @@ open class ColorPicker(
     posY: Number = 0,
     width: Number = DEFAULT_COLOR_PICKER_WIDTH,
     height: Number = DEFAULT_COLOR_PICKER_HEIGHT,
-    initialColor: Color = Color.WHITE
+    initialColor: Color = Color.WHITE,
+    visual: Visual = Visual.EMPTY
 ) :
     UIComponent(
-        posX = posX,
-        posY = posY,
-        width = width,
-        height = height,
-        font = Font(),
-        visual = Visual.EMPTY) {
+        posX = posX, posY = posY, width = width, height = height, font = Font(), visual = visual) {
   /**
    * [Property] for the currently selected [Color].
    *

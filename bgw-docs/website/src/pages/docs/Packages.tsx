@@ -49,8 +49,6 @@ function Packages({ packages }: { packages: any }) {
       },
     ];
 
-    console.log(sidebarItems);
-
     setSecondarySidebar(sidebarItems);
   }, [location.pathname]);
 

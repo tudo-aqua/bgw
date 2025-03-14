@@ -421,8 +421,14 @@ class CheckBoxData extends LabeledUIComponentData {
 // -> Only allow adding strings to items array
 class ComboBoxData extends UIComponentData {
   /* ✅ Done */ prompt: StringValue = new StringValue("prompt", "", "Prompt");
-  /* ✅ Done */ items: [number, string][] = [];
-  /* ✅ Done */ selectedItem: [number, string] | null = null;
+  /* ✅ Done */ items: {
+    first: number;
+    second: string;
+  }[] = [];
+  /* ✅ Done */ selectedItem: {
+    first: number;
+    second: string;
+  } | null = null;
 
   constructor() {
     super();
@@ -430,6 +436,12 @@ class ComboBoxData extends UIComponentData {
     this.type = "ComboBoxData";
     this.width.value = 120;
     this.height.value = 30;
+    this.items = [
+      { first: 1, second: "One" },
+      { first: 2, second: "Two" },
+      { first: 3, second: "Three" },
+    ];
+    this.selectedItem = this.items[0];
   }
 }
 
@@ -598,6 +610,8 @@ class StructuredDataViewData extends UIComponentData {
     super();
     this.objectType.push("StructuredDataViewData");
     this.type = "StructuredDataViewData";
+    this.items = ["2", "4", "10"];
+    this.selectedItems = [1];
   }
 }
 
@@ -612,6 +626,7 @@ class TableColumnData extends PropData {
     super();
     this.objectType.push("TableColumnData");
     this.type = "TableColumnData";
+    this.items = ["2", "4", "10"];
   }
 }
 
@@ -671,7 +686,7 @@ class CameraPaneData extends ComponentViewData {
   /* ✅ Done */ zoom: NumberValue = new NumberValue("zoom", 1.0, "Zoom");
   /* ✅ Done */ interactive: BooleanValue = new BooleanValue(
     "interactive",
-    true,
+    false,
     "Interactive"
   );
   /* ✅ Done */ scroll: { xCoord: number; yCoord: number } = {

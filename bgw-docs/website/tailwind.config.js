@@ -85,8 +85,12 @@ export const theme = {
         purple: "hsl(var(--bgw-purple))",
         blue: "hsl(var(--bgw-blue))",
         green: "hsl(var(--bgw-green))",
+        gray: "hsl(var(--bgw-gray))",
+        white: "hsl(var(--bgw-white))",
         yellow: "hsl(var(--bgw-yellow))",
         orange: "hsl(var(--bgw-orange))",
+        red: "hsl(var(--bgw-red))",
+        pink: "hsl(var(--bgw-pink))",
       },
     },
     borderRadius: {
