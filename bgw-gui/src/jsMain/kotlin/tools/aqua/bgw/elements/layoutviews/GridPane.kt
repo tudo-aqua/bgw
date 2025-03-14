@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.elements.layoutviews
 
+import GridElementData
 import GridPaneData
 import csstype.PropertiesBuilder
 import emotion.react.css
@@ -24,7 +25,7 @@ import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DroppableOptions
-import tools.aqua.bgw.builder.NodeBuilder
+import tools.aqua.bgw.builder.NodeBuilder.build
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.applyCommonEventHandlers
@@ -40,6 +41,13 @@ internal external interface GridPaneProps : Props {
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: GridPaneData) {
   cssBuilder(componentViewData)
 }
+
+internal external interface GridPaneElementProps : Props {
+  var data: GridElementData
+}
+
+internal inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
+  get() = "bgw_grid_element".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
 
 internal val ReactGridPane =
     FC<GridPaneProps> { props ->
@@ -104,12 +112,29 @@ internal val ReactGridPane =
             height = fit()
             gap = props.data.spacing.em
           }
-          props.data.grid.forEach {
-            val component = it.component
-            if (component == null) {
-              div {}
-            } else {
-              +NodeBuilder.build(it)
+
+          props.data.grid.forEach { gridElementData ->
+            bgwGridElement {
+              css {
+                gridColumn = integer(gridElementData.column + 1)
+                gridRow = integer(gridElementData.row + 1)
+                justifySelf =
+                    when (gridElementData.alignment.first) {
+                      "left" -> JustifySelf.flexStart
+                      "center" -> JustifySelf.center
+                      "right" -> JustifySelf.flexEnd
+                      else -> JustifySelf.center
+                    }
+                alignSelf =
+                    when (gridElementData.alignment.second) {
+                      "top" -> AlignSelf.flexStart
+                      "center" -> AlignSelf.center
+                      "bottom" -> AlignSelf.flexEnd
+                      else -> AlignSelf.center
+                    }
+              }
+
+              gridElementData.component?.let { +build(it) }
             }
           }
         }

@@ -54,8 +54,11 @@ internal val TextField =
 
       val (inputValue, setInputValue) = useState(props.data.text)
 
+      useEffect(listOf(props.data.text)) { setInputValue(props.data.text) }
+
       bgwTextField {
         id = props.data.id
+        key = props.data.id
         className = ClassName("textField")
         css { cssBuilderIntern(props.data) }
 

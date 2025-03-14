@@ -54,8 +54,11 @@ internal val TextArea =
 
       val (inputValue, setInputValue) = useState(props.data.text)
 
+      useEffect(listOf(props.data.text)) { setInputValue(props.data.text) }
+
       bgwTextArea {
         id = props.data.id
+        key = props.data.id
         className = ClassName("textArea")
         css { cssBuilderIntern(props.data) }
 

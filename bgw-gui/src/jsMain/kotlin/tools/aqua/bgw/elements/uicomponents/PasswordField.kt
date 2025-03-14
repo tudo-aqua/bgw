@@ -55,8 +55,11 @@ internal val PasswordField =
 
       val (inputValue, setInputValue) = useState(props.data.text)
 
+      useEffect(listOf(props.data.text)) { setInputValue(props.data.text) }
+
       bgwPasswordField {
         id = props.data.id
+        key = props.data.id
         className = ClassName("passwordField")
         css { cssBuilderIntern(props.data) }
 
