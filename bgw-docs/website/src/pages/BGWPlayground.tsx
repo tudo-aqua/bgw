@@ -102,7 +102,7 @@ import "react-mosaic-component/react-mosaic-component.css";
 import "./playground.scss";
 
 function BGWPlayground() {
-  const [currentWorkspace, setCurrentWorkspace] = useState("default");
+  const [currentWorkspace, setCurrentWorkspace] = useState(null);
 
   useEffect(() => {
     setupIndexedDB(idbConfig)
@@ -173,7 +173,9 @@ function BGWPlayground() {
     loadSavedWorkspace(workspace.id);
   };
 
-  const saveCurrentWorkspace = (workspaceId: string = "default") => {
+  const saveCurrentWorkspace = (workspaceId: string) => {
+    if (!workspaceId) return;
+
     const workspace = {
       id: workspaceId,
       name: sceneName,
