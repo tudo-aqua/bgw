@@ -43,7 +43,7 @@ internal external interface CheckBoxProps : Props {
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData) {
   cssBuilder(componentViewData)
-  display = Display.flex
+  display = if (componentViewData.isVisible) Display.flex else None.none
   alignItems = AlignItems.center
   justifyItems = JustifyItems.flexStart
   gap = 10.em
@@ -114,6 +114,7 @@ internal val CheckBox =
             width = 100.pct
             height = 100.pct
             position = Position.relative
+            wordBreak = WordBreak.breakAll
           }
         }
 

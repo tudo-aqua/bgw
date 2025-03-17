@@ -27,10 +27,27 @@ import {
 } from "@/components/ui/collapsible";
 import { set } from "date-fns";
 import { useDocsStore } from "@/stores/docsStore";
-import { createKotlinCodeLinebreaks, isListener } from "@/lib/utils";
+import {
+  createKotlinCodeLinebreaks,
+  getParamsFromSignature,
+  isListener,
+} from "@/lib/utils";
 import PreviewTab from "./PreviewTab";
 import Elements from "./Elements";
 import { Banner } from "@/components/ui/banner";
+import {
+  ClassParametersTable,
+  CodeDisplay,
+  CollapsibleSection,
+  ComponentBanner,
+  ComponentBreadcrumbs,
+  EnumValueCard,
+  ParametersTable,
+  SinceBadge,
+  ThrowsTable,
+} from "@/components/docs/DocComponents";
+import { dirs } from "@/main";
+import { parseMarkdownLinks, parseMarkdownNoLinks } from "@/lib/docUtils";
 
 const exceptionIcons = {
   IllegalArgumentException: "data_alert",
@@ -51,11 +68,9 @@ const exceptionIcons = {
 
 function Component({
   location,
-  dirs,
   allSamples,
 }: {
   location: any;
-  dirs: any;
   allSamples: any;
 }) {
   const {
@@ -330,21 +345,31 @@ function Component({
       if (!c.since && comp.details && comp.details.since) {
         c.since = comp.details.since;
       }
+
+      let own = getParamsFromSignature(c.info.signature);
+      let global = getParamsFromSignature(comp.details.info.signature);
+
+      if (own.length === global.length) {
+        c.primary = own.every(
+          (param, index) =>
+            param.name === global[index].name &&
+            param.type === global[index].type
+        );
+      }
     });
 
-    extraConstructors = extraConstructors.moveLastToFirst();
-    if (extraConstructors.length > 0) {
-      extraConstructors[0].primary = true;
-    }
-
     extraConstructors.sort((a: any, b: any) => {
+      // Primary constructor comes first
+      if (a.primary && !b.primary) return -1;
+      if (!a.primary && b.primary) return 1;
+
+      // If both have since values, sort by since
       if (a.since && b.since) {
         return a.since >= b.since ? 1 : -1;
       }
+
       return 0;
     });
-
-    // TODO: Find primary constructor based on signature
 
     if (
       comp &&
@@ -353,61 +378,52 @@ function Component({
       (comp.members.constructors.length > 0 || extraConstructors.length > 0)
     ) {
       return (
-        <div className="mb-16 max-xl:mb-8">
-          <Collapsible open={openConstructors} className="relative">
-            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
-                handyman
-              </i>
-              <h2 className="text-3xl font-bold max-xl:text-2xl">
-                Constructors
-              </h2>
-              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
-                {openConstructors ? "expand_less" : "expand_more"}
-              </i> */}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-4">
-              {extraConstructors.map((c: any, index: number) => {
-                return (
-                  <div
-                    className="relative w-full p-3 border-none bg-background rounded-xl max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent"
-                    id={`constructor_${index}`}
-                  >
-                    <div className="absolute z-10 flex justify-center gap-2 top-8 right-10">
-                      {/* {c.primary && <Badge variant="class">Primary</Badge>} */}
-                      {c.since && buildSince(c.since)}
-                    </div>
-                    <CodeTab
-                      code={createKotlinCodeLinebreaks(c.info.signature, 80)}
-                      autoIndent={false}
-                    />
-                    {c.parameters && (
-                      <div className="mt-3">
-                        {getClassParameters(
-                          c.parameters,
-                          comp.members.properties
-                        )}
-                      </div>
-                    )}
-                    {c.info.doc && (
-                      <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
-                        {parseMarkdownLinks(c.info.doc)}
-                      </p>
-                    )}
-                    {c.throws && (
-                      <>
-                        <h4 className="px-2 mt-5 mb-3 text-xs font-bold">
-                          Throws:
-                        </h4>
-                        {getClassThrows(c.throws)}
-                      </>
-                    )}
+        <CollapsibleSection title="Constructors" icon={"handyman"}>
+          {extraConstructors.map((c: any, index: number) => {
+            return (
+              <div
+                className="relative w-full p-3 border-none bg-background rounded-xl max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent"
+                id={`constructor_${index}`}
+              >
+                {c.deprecated && (
+                  <Banner
+                    variant="deprecated"
+                    className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                    icon={"running_with_errors"}
+                    subText={`This API-Endpoint will be removed in future versions.  ${c.deprecated.description}`}
+                  />
+                )}
+                <div
+                  className={`absolute z-10 flex justify-center gap-2 ${
+                    c.deprecated ? "top-[92px]" : "top-8"
+                  } right-10`}
+                >
+                  {c.primary && <Badge variant="class">Primary</Badge>}
+                  {c.since && buildSince(c.since)}
+                </div>
+                <CodeDisplay code={c.info.signature} lineLength={80} />
+                {c.parameters && (
+                  <div className="mt-3">
+                    {getClassParameters(c.parameters, comp.members.properties)}
                   </div>
-                );
-              })}
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+                )}
+                {c.info.doc && (
+                  <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
+                    {parseMarkdownLinks(c.info.doc)}
+                  </p>
+                )}
+                {c.throws && (
+                  <>
+                    <h4 className="px-2 mt-5 mb-3 text-xs font-bold">
+                      Throws:
+                    </h4>
+                    {getClassThrows(c.throws)}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </CollapsibleSection>
       );
     }
     return null;
@@ -421,202 +437,172 @@ function Component({
       comp.members.functions.length > 0
     ) {
       return (
-        <div className="mb-16 max-xl:mb-8">
-          <Collapsible open={openFunctions}>
-            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
-                function
-              </i>
-              <h2 className="text-3xl font-bold max-xl:text-2xl">Functions</h2>
-              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
-                {openFunctions ? "expand_less" : "expand_more"}
-              </i> */}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-4">
-              {comp.members.functions.map((c: any) => {
-                let isActive =
-                  window.location.hash.replace("#", "") === `func_${c.name}`;
+        <CollapsibleSection title="Functions" icon={"function"}>
+          {comp.members.functions.map((c: any) => {
+            let isActive =
+              window.location.hash.replace("#", "") === `func_${c.name}`;
 
-                let matchingFunction = currentComponent[c.name];
-                let allThrows = [];
+            let matchingFunction = currentComponent[c.name];
+            let allThrows = [];
 
-                if (matchingFunction && matchingFunction.details) {
-                  matchingFunction.details.forEach((d: any) => {
+            if (matchingFunction && matchingFunction.details) {
+              matchingFunction.details.forEach((d: any) => {
+                if (d.throws && d.info.signature === c.signature) {
+                  allThrows.push(...d.throws);
+                }
+              });
+            }
+
+            let inherited = [];
+            let breadcrumbs = c.link.split("/");
+            let last = comp.breadcrumbs.fromRight(0);
+            let propLast = breadcrumbs.fromRight(1);
+            let inheritedFunc = null;
+
+            let inheritedDetails = null;
+
+            if (
+              last !== propLast &&
+              !propLast.startsWith("tools.aqua") &&
+              !["ordinal", "name", "values", "entries", "valueOf"].includes(
+                c.name
+              )
+            ) {
+              if (!c.link.startsWith("https")) {
+                let inheritedComp = c.link
+                  .split("/")
+                  .reduce((o, i) => o[i], dirs);
+                if (inheritedComp) {
+                  inheritedComp.details.forEach((d: any) => {
+                    if (d.info.signature === c.signature) {
+                      inheritedDetails = d;
+                    }
+                  });
+                }
+
+                inherited.push(
+                  <li>
+                    <Link
+                      to={
+                        "/docs/" +
+                        breadcrumbs.excludeLast().join("/") +
+                        "#func_" +
+                        c.name
+                      }
+                      key={last}
+                    >
+                      <Badge variant="muted">{propLast}</Badge>
+                    </Link>
+                  </li>
+                );
+
+                inheritedFunc = breadcrumbs.reduce((o, i) => o[i], dirs);
+                if (inheritedFunc) {
+                  inheritedFunc.details.forEach((d: any) => {
                     if (d.throws && d.info.signature === c.signature) {
                       allThrows.push(...d.throws);
                     }
                   });
                 }
+              }
+            }
 
-                let inherited = [];
-                let breadcrumbs = c.link.split("/");
-                let last = comp.breadcrumbs.fromRight(0);
-                let propLast = breadcrumbs.fromRight(1);
-                let inheritedFunc = null;
+            if (
+              !inheritedFunc &&
+              matchingFunction &&
+              matchingFunction.details
+            ) {
+              inheritedFunc = matchingFunction;
+            }
 
-                let inheritedDetails = null;
+            // TODO - Show also for inherited
+            let moreDetails = currentComponent[c.name];
+            if (
+              moreDetails &&
+              moreDetails.details &&
+              moreDetails.details.length > 0
+            ) {
+              moreDetails = moreDetails.details.find((d: any) => {
+                return d.info.signature === c.signature;
+              });
+            }
 
-                if (
-                  last !== propLast &&
-                  !propLast.startsWith("tools.aqua") &&
-                  !["ordinal", "name", "values", "entries", "valueOf"].includes(
-                    c.name
-                  )
-                ) {
-                  if (!c.link.startsWith("https")) {
-                    let inheritedComp = c.link
-                      .split("/")
-                      .reduce((o, i) => o[i], dirs);
-                    if (inheritedComp) {
-                      inheritedComp.details.forEach((d: any) => {
-                        if (d.info.signature === c.signature) {
-                          inheritedDetails = d;
-                        }
-                      });
-                    }
+            if (inheritedDetails && moreDetails === undefined) {
+              moreDetails = inheritedDetails;
+            }
 
-                    inherited.push(
-                      <li>
-                        <Link
-                          to={
-                            "/docs/" +
-                            breadcrumbs.excludeLast().join("/") +
-                            "#func_" +
-                            c.name
-                          }
-                          key={last}
-                        >
-                          <Badge variant="muted">{propLast}</Badge>
-                        </Link>
-                      </li>
-                    );
-
-                    inheritedFunc = breadcrumbs.reduce((o, i) => o[i], dirs);
-                    if (inheritedFunc) {
-                      inheritedFunc.details.forEach((d: any) => {
-                        if (d.throws && d.info.signature === c.signature) {
-                          allThrows.push(...d.throws);
-                        }
-                      });
-                    }
-                  }
-                }
-
-                if (
-                  !inheritedFunc &&
-                  matchingFunction &&
-                  matchingFunction.details
-                ) {
-                  inheritedFunc = matchingFunction;
-                }
-
-                // TODO - Show also for inherited
-                let moreDetails = currentComponent[c.name];
-                if (
-                  moreDetails &&
-                  moreDetails.details &&
-                  moreDetails.details.length > 0
-                ) {
-                  moreDetails = moreDetails.details.find((d: any) => {
-                    return d.info.signature === c.signature;
-                  });
-                }
-
-                if (inheritedDetails && moreDetails === undefined) {
-                  moreDetails = inheritedDetails;
-                }
-
-                return (
-                  <div
-                    className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
-                      isActive ? "active__elem" : " "
-                    }`}
-                    id={`func_${c.name}`}
+            return (
+              <div
+                className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
+                  isActive ? "active__elem" : " "
+                }`}
+                id={`func_${c.name}`}
+              >
+                {moreDetails && moreDetails.deprecated && (
+                  <Banner
+                    variant="deprecated"
+                    className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                    icon={"running_with_errors"}
+                    subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
+                  />
+                )}
+                {moreDetails &&
+                  moreDetails.since &&
+                  buildSince(moreDetails.since, "absolute top-8 right-10 z-10")}
+                {!["ordinal", "name", "values", "entries", "valueOf"].includes(
+                  c.name
+                ) ? (
+                  <Link
+                    to={"/docs/" + c.link}
+                    key={c.name}
+                    className="relative group"
                   >
-                    {moreDetails && moreDetails.deprecated && (
-                      <Banner
-                        variant="deprecated"
-                        className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
-                        icon={"running_with_errors"}
-                        subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
-                      />
-                    )}
-                    {moreDetails &&
-                      moreDetails.since &&
-                      buildSince(
-                        moreDetails.since,
-                        "absolute top-8 right-10 z-10"
-                      )}
-                    {![
-                      "ordinal",
-                      "name",
-                      "values",
-                      "entries",
-                      "valueOf",
-                    ].includes(c.name) ? (
-                      <Link
-                        to={"/docs/" + c.link}
-                        key={c.name}
-                        className="relative group"
-                      >
-                        <CodeTab
-                          code={createKotlinCodeLinebreaks(
-                            c.signature.replace(/^@Synchronized/, "")
-                          )}
-                          autoIndent={false}
-                        />
-                        <i
-                          className={`material-symbols-rounded text-xl text-muted-foreground/80 absolute top-[16px] group-hover:opacity-100 opacity-0 transition-opacity ${
-                            moreDetails && moreDetails.since
-                              ? "right-28"
-                              : "right-5"
-                          }`}
-                        >
-                          open_in_new
-                        </i>
-                      </Link>
-                    ) : (
-                      <CodeTab
-                        code={createKotlinCodeLinebreaks(
-                          c.signature.replace(/^@Synchronized/, "")
-                        )}
-                        autoIndent={false}
-                      />
-                    )}
-                    {c.parameters && (
-                      <div className="">
-                        {getParameters(c.parameters, c, inheritedFunc)}
-                      </div>
-                    )}
-                    {c.doc && (
-                      <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
-                        {parseMarkdownLinks(c.doc)}
-                      </p>
-                    )}
-                    {allThrows.length > 0 && (
-                      <>
-                        <h4 className="px-2 mt-3 mb-3 text-xs font-bold">
-                          Throws:
-                        </h4>
-                        {getClassThrows(allThrows)}
-                      </>
-                    )}
-                    {inherited.length > 0 && (
-                      <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
-                        <h4 className="absolute left-0 text-xs font-bold">
-                          Inherited from:
-                        </h4>
-                        <ul className="absolute flex items-center gap-2 left-28">
-                          {inherited}
-                        </ul>
-                      </div>
-                    )}
+                    <CodeDisplay code={c.signature} />
+                    <i
+                      className={`material-symbols-rounded text-xl text-muted-foreground/80 absolute top-[16px] group-hover:opacity-100 opacity-0 transition-opacity ${
+                        moreDetails && moreDetails.since
+                          ? "right-28"
+                          : "right-5"
+                      }`}
+                    >
+                      open_in_new
+                    </i>
+                  </Link>
+                ) : (
+                  <CodeDisplay code={c.signature} />
+                )}
+                {c.parameters && (
+                  <div className="">
+                    {getParameters(c.parameters, c, inheritedFunc)}
                   </div>
-                );
-              })}
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+                )}
+                {c.doc && (
+                  <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
+                    {parseMarkdownLinks(c.doc)}
+                  </p>
+                )}
+                {allThrows.length > 0 && (
+                  <>
+                    <h4 className="px-2 mt-3 mb-3 text-xs font-bold">
+                      Throws:
+                    </h4>
+                    {getClassThrows(allThrows)}
+                  </>
+                )}
+                {inherited.length > 0 && (
+                  <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
+                    <h4 className="absolute left-0 text-xs font-bold">
+                      Inherited from:
+                    </h4>
+                    <ul className="absolute flex items-center gap-2 left-28">
+                      {inherited}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </CollapsibleSection>
       );
     }
     return null;
@@ -632,162 +618,139 @@ function Component({
       }).length > 0
     ) {
       return (
-        <div className="mb-16 max-xl:mb-8">
-          <Collapsible open={openProperties}>
-            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
-                action_key
-              </i>
-              <h2 className="text-3xl font-bold max-xl:text-2xl">Properties</h2>
-              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
-                {openProperties ? "expand_less" : "expand_more"}
-              </i> */}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-4">
-              {comp.members.properties
-                .filter((c: any) => {
-                  return !isListener(c);
-                })
-                .map((c: any) => {
-                  let isActive =
-                    window.location.hash.replace("#", "") === `prop_${c.name}`;
+        <CollapsibleSection title="Properties" icon={"action_key"}>
+          {comp.members.properties
+            .filter((c: any) => {
+              return !isListener(c);
+            })
+            .map((c: any) => {
+              let isActive =
+                window.location.hash.replace("#", "") === `prop_${c.name}`;
 
-                  let inherited = [];
-                  let breadcrumbs = c.link.split("/");
-                  let last = comp.breadcrumbs.fromRight(0);
-                  let propLast = breadcrumbs.fromRight(1);
+              let inherited = [];
+              let breadcrumbs = c.link.split("/");
+              let last = comp.breadcrumbs.fromRight(0);
+              let propLast = breadcrumbs.fromRight(1);
 
-                  let inheritedDetails = null;
+              let inheritedDetails = null;
 
-                  if (
-                    last !== propLast &&
-                    !propLast.startsWith("tools.aqua") &&
-                    ![
-                      "ordinal",
-                      "name",
-                      "values",
-                      "entries",
-                      "valueOf",
-                    ].includes(c.name)
-                  ) {
-                    let inheritedComp = c.link
-                      .split("/")
-                      .reduce((o, i) => o[i], dirs);
-                    if (inheritedComp) {
-                      inheritedComp.details.forEach((d: any) => {
-                        if (d.info.signature === c.signature) {
-                          inheritedDetails = d;
-                        }
-                      });
+              if (
+                last !== propLast &&
+                !propLast.startsWith("tools.aqua") &&
+                !["ordinal", "name", "values", "entries", "valueOf"].includes(
+                  c.name
+                )
+              ) {
+                let inheritedComp = c.link
+                  .split("/")
+                  .reduce((o, i) => o[i], dirs);
+                if (inheritedComp) {
+                  inheritedComp.details.forEach((d: any) => {
+                    if (d.info.signature === c.signature) {
+                      inheritedDetails = d;
                     }
+                  });
+                }
 
-                    inherited.push(
-                      <li>
-                        <Link
-                          to={"/docs/" + breadcrumbs.excludeLast().join("/")}
-                          key={last}
-                        >
-                          <Badge variant="muted">{propLast}</Badge>
-                        </Link>
-                      </li>
-                    );
-                  }
-
-                  // TODO - Show also for inherited
-                  let moreDetails = currentComponent[c.name];
-                  if (
-                    moreDetails &&
-                    moreDetails.details &&
-                    moreDetails.details[0]
-                  ) {
-                    moreDetails = moreDetails.details[0];
-                  }
-
-                  if (inheritedDetails && moreDetails === undefined) {
-                    moreDetails = inheritedDetails;
-                  }
-
-                  // if (inherited.length > 0) {
-                  //   return null;
-                  // }
-
-                  return (
-                    // <div className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
-                    // <div className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
-                    //   <div className="h-5 absolute w-1 rounded-xl left-[-20px] bg-purple-500" style={{display: isActive ? "block" : "none"}}></div>
-                    <div
-                      className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
-                        isActive ? "active__elem" : " "
-                      }`}
-                      id={`prop_${c.name}`}
+                inherited.push(
+                  <li>
+                    <Link
+                      to={"/docs/" + breadcrumbs.excludeLast().join("/")}
+                      key={last}
                     >
-                      {moreDetails && moreDetails.deprecated && (
-                        <Banner
-                          variant="deprecated"
-                          className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
-                          icon={"running_with_errors"}
-                          subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
-                        />
-                      )}
-                      {moreDetails &&
-                        moreDetails.since &&
-                        buildSince(
-                          moreDetails.since,
-                          "absolute top-8 right-10 z-10"
-                        )}
-                      {![
-                        "ordinal",
-                        "name",
-                        "values",
-                        "entries",
-                        "valueOf",
-                      ].includes(c.name) ? (
-                        <Link
-                          to={"/docs/" + c.link}
-                          key={c.name}
-                          className="relative group"
-                        >
-                          <CodeTab
-                            code={createKotlinCodeLinebreaks(c.signature)}
-                            autoIndent={false}
-                          />
-                          <i
-                            className={`material-symbols-rounded text-xl text-muted-foreground/80 absolute top-[16px] group-hover:opacity-100 opacity-0 transition-opacity ${
-                              moreDetails && moreDetails.since
-                                ? "right-28"
-                                : "right-5"
-                            }`}
-                          >
-                            open_in_new
-                          </i>
-                        </Link>
-                      ) : (
-                        <CodeTab
-                          code={createKotlinCodeLinebreaks(c.signature)}
-                          autoIndent={false}
-                        />
-                      )}
-                      {c.doc && (
-                        <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
-                          {parseMarkdownLinks(c.doc)}
-                        </p>
-                      )}
-                      {inherited.length > 0 && (
-                        <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
-                          <h4 className="absolute left-0 text-xs font-bold">
-                            Inherited from:
-                          </h4>
-                          <ul className="absolute flex items-center gap-2 left-28">
-                            {inherited}
-                          </ul>
-                        </div>
-                      )}
+                      <Badge variant="muted">{propLast}</Badge>
+                    </Link>
+                  </li>
+                );
+              }
+
+              // TODO - Show also for inherited
+              let moreDetails = currentComponent[c.name];
+              if (
+                moreDetails &&
+                moreDetails.details &&
+                moreDetails.details[0]
+              ) {
+                moreDetails = moreDetails.details[0];
+              }
+
+              if (inheritedDetails && moreDetails === undefined) {
+                moreDetails = inheritedDetails;
+              }
+
+              // if (inherited.length > 0) {
+              //   return null;
+              // }
+
+              return (
+                // <div className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
+                // <div className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
+                //   <div className="h-5 absolute w-1 rounded-xl left-[-20px] bg-purple-500" style={{display: isActive ? "block" : "none"}}></div>
+                <div
+                  className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
+                    isActive ? "active__elem" : " "
+                  }`}
+                  id={`prop_${c.name}`}
+                >
+                  {moreDetails && moreDetails.deprecated && (
+                    <Banner
+                      variant="deprecated"
+                      className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                      icon={"running_with_errors"}
+                      subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
+                    />
+                  )}
+                  {moreDetails &&
+                    moreDetails.since &&
+                    buildSince(
+                      moreDetails.since,
+                      "absolute top-8 right-10 z-10"
+                    )}
+                  {![
+                    "ordinal",
+                    "name",
+                    "values",
+                    "entries",
+                    "valueOf",
+                  ].includes(c.name) ? (
+                    <Link
+                      to={"/docs/" + c.link}
+                      key={c.name}
+                      className="relative group"
+                    >
+                      <CodeDisplay code={c.signature} />
+                      <i
+                        className={`material-symbols-rounded text-xl text-muted-foreground/80 absolute top-[16px] group-hover:opacity-100 opacity-0 transition-opacity ${
+                          moreDetails && moreDetails.since
+                            ? "right-28"
+                            : "right-5"
+                        }`}
+                      >
+                        open_in_new
+                      </i>
+                    </Link>
+                  ) : (
+                    <CodeDisplay code={c.signature} />
+                  )}
+                  {c.doc && (
+                    <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
+                      {parseMarkdownLinks(c.doc)}
+                    </p>
+                  )}
+                  {inherited.length > 0 && (
+                    <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
+                      <h4 className="absolute left-0 text-xs font-bold">
+                        Inherited from:
+                      </h4>
+                      <ul className="absolute flex items-center gap-2 left-28">
+                        {inherited}
+                      </ul>
                     </div>
-                  );
-                })}
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+                  )}
+                </div>
+              );
+            })}
+        </CollapsibleSection>
       );
     }
     return null;
@@ -803,162 +766,139 @@ function Component({
       }).length > 0
     ) {
       return (
-        <div className="mb-16 max-xl:mb-8">
-          <Collapsible open={openProperties}>
-            <CollapsibleTrigger className="relative flex items-center w-full gap-4 mb-5">
-              <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
-                notifications_active
-              </i>
-              <h2 className="text-3xl font-bold max-xl:text-2xl">Listeners</h2>
-              {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
-                {openProperties ? "expand_less" : "expand_more"}
-              </i> */}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="flex flex-col gap-4">
-              {comp.members.properties
-                .filter((c: any) => {
-                  return isListener(c);
-                })
-                .map((c: any) => {
-                  let isActive =
-                    window.location.hash.replace("#", "") === `prop_${c.name}`;
+        <CollapsibleSection title="Listeners" icon={"notifications_active"}>
+          {comp.members.properties
+            .filter((c: any) => {
+              return isListener(c);
+            })
+            .map((c: any) => {
+              let isActive =
+                window.location.hash.replace("#", "") === `prop_${c.name}`;
 
-                  let inherited = [];
-                  let breadcrumbs = c.link.split("/");
-                  let last = comp.breadcrumbs.fromRight(0);
-                  let propLast = breadcrumbs.fromRight(1);
+              let inherited = [];
+              let breadcrumbs = c.link.split("/");
+              let last = comp.breadcrumbs.fromRight(0);
+              let propLast = breadcrumbs.fromRight(1);
 
-                  let inheritedDetails = null;
+              let inheritedDetails = null;
 
-                  if (
-                    last !== propLast &&
-                    !propLast.startsWith("tools.aqua") &&
-                    ![
-                      "ordinal",
-                      "name",
-                      "values",
-                      "entries",
-                      "valueOf",
-                    ].includes(c.name)
-                  ) {
-                    let inheritedComp = c.link
-                      .split("/")
-                      .reduce((o, i) => o[i], dirs);
-                    if (inheritedComp) {
-                      inheritedComp.details.forEach((d: any) => {
-                        if (d.info.signature === c.signature) {
-                          inheritedDetails = d;
-                        }
-                      });
+              if (
+                last !== propLast &&
+                !propLast.startsWith("tools.aqua") &&
+                !["ordinal", "name", "values", "entries", "valueOf"].includes(
+                  c.name
+                )
+              ) {
+                let inheritedComp = c.link
+                  .split("/")
+                  .reduce((o, i) => o[i], dirs);
+                if (inheritedComp) {
+                  inheritedComp.details.forEach((d: any) => {
+                    if (d.info.signature === c.signature) {
+                      inheritedDetails = d;
                     }
+                  });
+                }
 
-                    inherited.push(
-                      <li>
-                        <Link
-                          to={"/docs/" + breadcrumbs.excludeLast().join("/")}
-                          key={last}
-                        >
-                          <Badge variant="muted">{propLast}</Badge>
-                        </Link>
-                      </li>
-                    );
-                  }
-
-                  // TODO - Show also for inherited
-                  let moreDetails = currentComponent[c.name];
-                  if (
-                    moreDetails &&
-                    moreDetails.details &&
-                    moreDetails.details[0]
-                  ) {
-                    moreDetails = moreDetails.details[0];
-                  }
-
-                  if (inheritedDetails && moreDetails === undefined) {
-                    moreDetails = inheritedDetails;
-                  }
-
-                  // if (inherited.length > 0) {
-                  //   return null;
-                  // }
-
-                  return (
-                    // <div className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
-                    // <div className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
-                    //   <div className="h-5 absolute w-1 rounded-xl left-[-20px] bg-purple-500" style={{display: isActive ? "block" : "none"}}></div>
-                    <div
-                      className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
-                        isActive ? "active__elem" : " "
-                      }`}
-                      id={`prop_${c.name}`}
+                inherited.push(
+                  <li>
+                    <Link
+                      to={"/docs/" + breadcrumbs.excludeLast().join("/")}
+                      key={last}
                     >
-                      {moreDetails && moreDetails.deprecated && (
-                        <Banner
-                          variant="deprecated"
-                          className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
-                          icon={"running_with_errors"}
-                          subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
-                        />
-                      )}
-                      {moreDetails &&
-                        moreDetails.since &&
-                        buildSince(
-                          moreDetails.since,
-                          "absolute top-8 right-10 z-10"
-                        )}
-                      {![
-                        "ordinal",
-                        "name",
-                        "values",
-                        "entries",
-                        "valueOf",
-                      ].includes(c.name) ? (
-                        <Link
-                          to={"/docs/" + c.link}
-                          key={c.name}
-                          className="relative group"
-                        >
-                          <CodeTab
-                            code={createKotlinCodeLinebreaks(c.signature)}
-                            autoIndent={false}
-                          />
-                          <i
-                            className={`material-symbols-rounded text-xl text-muted-foreground/80 absolute top-[16px] group-hover:opacity-100 opacity-0 transition-opacity ${
-                              moreDetails && moreDetails.since
-                                ? "right-28"
-                                : "right-5"
-                            }`}
-                          >
-                            open_in_new
-                          </i>
-                        </Link>
-                      ) : (
-                        <CodeTab
-                          code={createKotlinCodeLinebreaks(c.signature)}
-                          autoIndent={false}
-                        />
-                      )}
-                      {c.doc && (
-                        <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
-                          {parseMarkdownLinks(c.doc)}
-                        </p>
-                      )}
-                      {inherited.length > 0 && (
-                        <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
-                          <h4 className="absolute left-0 text-xs font-bold">
-                            Inherited from:
-                          </h4>
-                          <ul className="absolute flex items-center gap-2 left-28">
-                            {inherited}
-                          </ul>
-                        </div>
-                      )}
+                      <Badge variant="muted">{propLast}</Badge>
+                    </Link>
+                  </li>
+                );
+              }
+
+              // TODO - Show also for inherited
+              let moreDetails = currentComponent[c.name];
+              if (
+                moreDetails &&
+                moreDetails.details &&
+                moreDetails.details[0]
+              ) {
+                moreDetails = moreDetails.details[0];
+              }
+
+              if (inheritedDetails && moreDetails === undefined) {
+                moreDetails = inheritedDetails;
+              }
+
+              // if (inherited.length > 0) {
+              //   return null;
+              // }
+
+              return (
+                // <div className={`bg-background rounded-xl p-3 ${isActive ? "border-l-4 border-purple-500 border-solid" : "border-none "}`} id={`prop_${c.name}`}>
+                // <div className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 ${isActive ? "w-[calc(100%-20px)] ml-[20px]" : " "}`} id={`prop_${c.name}`}>
+                //   <div className="h-5 absolute w-1 rounded-xl left-[-20px] bg-purple-500" style={{display: isActive ? "block" : "none"}}></div>
+                <div
+                  className={`flex flex-col justify-center bg-background rounded-xl border-none relative p-3 max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
+                    isActive ? "active__elem" : " "
+                  }`}
+                  id={`prop_${c.name}`}
+                >
+                  {moreDetails && moreDetails.deprecated && (
+                    <Banner
+                      variant="deprecated"
+                      className="h-12 mt-0 mb-3 text-sm max-2xl:h-fit"
+                      icon={"running_with_errors"}
+                      subText={`This API-Endpoint will be removed in future versions.  ${moreDetails.deprecated.description}`}
+                    />
+                  )}
+                  {moreDetails &&
+                    moreDetails.since &&
+                    buildSince(
+                      moreDetails.since,
+                      "absolute top-8 right-10 z-10"
+                    )}
+                  {![
+                    "ordinal",
+                    "name",
+                    "values",
+                    "entries",
+                    "valueOf",
+                  ].includes(c.name) ? (
+                    <Link
+                      to={"/docs/" + c.link}
+                      key={c.name}
+                      className="relative group"
+                    >
+                      <CodeDisplay code={c.signature} />
+                      <i
+                        className={`material-symbols-rounded text-xl text-muted-foreground/80 absolute top-[16px] group-hover:opacity-100 opacity-0 transition-opacity ${
+                          moreDetails && moreDetails.since
+                            ? "right-28"
+                            : "right-5"
+                        }`}
+                      >
+                        open_in_new
+                      </i>
+                    </Link>
+                  ) : (
+                    <CodeDisplay code={c.signature} />
+                  )}
+                  {c.doc && (
+                    <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
+                      {parseMarkdownLinks(c.doc)}
+                    </p>
+                  )}
+                  {inherited.length > 0 && (
+                    <div className="relative flex items-center h-6 gap-2 mt-3 ml-2">
+                      <h4 className="absolute left-0 text-xs font-bold">
+                        Inherited from:
+                      </h4>
+                      <ul className="absolute flex items-center gap-2 left-28">
+                        {inherited}
+                      </ul>
                     </div>
-                  );
-                })}
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
+                  )}
+                </div>
+              );
+            })}
+        </CollapsibleSection>
       );
     }
     return null;
@@ -1034,54 +974,53 @@ function Component({
       }
 
       return (
-        <div className="mb-16 max-xl:mb-8">
-          <div className="flex items-center gap-4 mb-5">
-            <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
-              clear_all
-            </i>
-            <h2 className="text-3xl font-bold max-xl:text-2xl">Values</h2>
-          </div>
+        <CollapsibleSection title="Values" icon={"clear_all"}>
           <ul className="grid grid-cols-3 gap-4 max-xl:grid-cols-2 max-md:grid-cols-1">
             {enumValues.map((c: any) => {
               let isActive =
                 window.location.hash.replace("#", "") ===
                 `enum_${c.details.info.name}`;
               return (
-                <div
-                  className={`bg-background border-none p-3 rounded-xl h-full relative max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
-                    isActive ? "active__elem" : " "
-                  }`}
-                  id={`enum_${c.details.info.name}`}
-                >
-                  {c.details &&
-                    c.details.since &&
-                    buildSince(
-                      moreDetails.since,
-                      "absolute top-8 right-10 z-10"
-                    )}
-                  <Link
-                    to={"/docs/" + c.breadcrumbs.join("/")}
-                    key={c.details.info.name}
-                  >
-                    <div className="flex p-5 enum__values bg-muted/50 rounded-xl">
-                      <span className="pl-2 enum__value">
-                        {c.details.info.name}
-                      </span>
-                      {/* <span className="enum__value">{enumComp.breadcrumbs.includes("Companion") ? c.breadcrumbs.fromRight(2) : c.breadcrumbs.fromRight(1)}</span>
-                    <p className="">.</p>
-                    <span className="enum__value">{c.details.info.name}</span> */}
-                    </div>
-                  </Link>
-                  {c.details.info.doc && (
-                    <p className="px-2 mt-3 text-muted-foreground max-2xl:text-justify">
-                      {parseMarkdownLinks(c.details.info.doc)}
-                    </p>
-                  )}
-                </div>
+                <EnumValueCard
+                  name={c.details.info.name}
+                  doc={c.details.info.doc}
+                  since={c.details && c.details.since}
+                  breadcrumbs={c.breadcrumbs}
+                  isActive={isActive}
+                />
+
+                // <div
+                //   className={`bg-background border-none p-3 rounded-xl h-full relative max-xl:px-7 max-xl:w-screen max-xl:-ml-7 max-xl:rounded-none max-xl:bg-transparent ${
+                //     isActive ? "active__elem" : " "
+                //   }`}
+                //   id={`enum_${c.details.info.name}`}
+                // >
+                //   {c.details &&
+                //     c.details.since &&
+                //     buildSince(
+                //       moreDetails.since,
+                //       "absolute top-8 right-10 z-10"
+                //     )}
+                //   <Link
+                //     to={"/docs/" + c.breadcrumbs.join("/")}
+                //     key={c.details.info.name}
+                //   >
+                //     <div className="flex p-5 enum__values bg-muted/50 rounded-xl">
+                //       <span className="pl-2 enum__value">
+                //         {c.details.info.name}
+                //       </span>
+                //     </div>
+                //   </Link>
+                //   {c.details.info.doc && (
+                //     <p className="px-2 mt-3 text-muted-foreground max-2xl:text-justify">
+                //       {parseMarkdownLinks(c.details.info.doc)}
+                //     </p>
+                //   )}
+                // </div>
               );
             })}
           </ul>
-        </div>
+        </CollapsibleSection>
       );
     }
     return null;
@@ -1102,107 +1041,12 @@ function Component({
     if (!parameters || parameters.length === 0) return null;
 
     return (
-      <Table className="mt-3 overflow-hidden rounded-md bg-muted/50 rounded-xl">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[200px] pl-6">Parameter</TableHead>
-            <TableHead className="w-[200px]">Type</TableHead>
-            <TableHead className="w-[200px]">Default</TableHead>
-            <TableHead>Description</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {parameters.map((p: any) => {
-            return (
-              <TableRow key={p.name}>
-                <TableCell>
-                  <code className="relative pl-2 font-mono rounded">
-                    {p.name}
-                  </code>
-                </TableCell>
-                <TableCell>
-                  <code className="relative font-mono rounded">
-                    {parseMarkdownLinksNoCode(p.type)}
-                  </code>
-                </TableCell>
-                <TableCell>
-                  {p.defaultValue ? (
-                    <code className="relative font-mono rounded">
-                      {parseMarkdownLinksNoCode(p.defaultValue)}
-                    </code>
-                  ) : (
-                    "-"
-                  )}
-                </TableCell>
-                <TableCell>{p.doc ? parseMarkdownLinks(p.doc) : "-"}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+      <ParametersTable
+        parameters={parameters}
+        inheritedFunc={inheritedFunc}
+        func={func}
+      />
     );
-  }
-
-  function parseMarkdownLinks(text: string): JSX.Element[] {
-    return parseMarkdownLinksNoCode(text);
-    if (!text) return [];
-
-    const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g;
-    let lastIndex = 0;
-    const elements: JSX.Element[] = [];
-    let match;
-
-    while ((match = linkRegex.exec(text)) !== null) {
-      // Add text before the link
-      if (match.index > lastIndex) {
-        elements.push(
-          <span key={lastIndex}>{text.slice(lastIndex, match.index)}</span>
-        );
-      }
-
-      // Add the link, use link text or target if text is empty
-      const linkText = match[1] || match[2];
-      const linkTarget = match[2] ? `/docs/${match[2]}` : `#${match[1]}`;
-      if (linkTarget.indexOf("#") != -1) {
-        elements.push(
-          <code className="relative font-mono rounded">{linkText}</code>
-        );
-      } else if (linkTarget.startsWith("https")) {
-        elements.push(
-          <code className="relative font-mono rounded">
-            <Link
-              className="text-primary"
-              key={match.index}
-              to={linkTarget}
-              target="_blank"
-            >
-              {linkText}
-            </Link>
-          </code>
-        );
-      } else {
-        elements.push(
-          <code className="relative font-mono rounded">
-            <Link
-              className="text-primary"
-              key={match.index}
-              to={window.location.host + `/docs/${linkTarget}`}
-            >
-              {linkText}
-            </Link>
-          </code>
-        );
-      }
-
-      lastIndex = linkRegex.lastIndex;
-    }
-
-    // Add remaining text
-    if (lastIndex < text.length) {
-      elements.push(<span key={lastIndex}>{text.slice(lastIndex)}</span>);
-    }
-
-    return elements;
   }
 
   function parseClassDoc(text: string): JSX.Element[] {
@@ -1291,254 +1135,23 @@ function Component({
     });
   }
 
-  function parseMarkdownLinksNoCode(text: string): JSX.Element[] {
-    if (!text) return [];
-
-    const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g;
-    let lastIndex = 0;
-    const elements: JSX.Element[] = [];
-    let match;
-
-    while ((match = linkRegex.exec(text)) !== null) {
-      // Add text before the link
-      if (match.index > lastIndex) {
-        elements.push(
-          <span key={lastIndex}>{text.slice(lastIndex, match.index)}</span>
-        );
-      }
-
-      // Add the link, use link text or target if text is empty
-      const linkText = match[1] || match[2];
-      let linkTarget = match[2] ? `/docs/${match[2]}` : `#${match[1]}`;
-
-      if (text.includes("https://") || text.includes("http://")) {
-        linkTarget = match[2];
-      }
-      if (linkTarget.indexOf("#") != -1) {
-        elements.push(linkText);
-      } else if (linkTarget.startsWith("https")) {
-        elements.push(
-          <code>
-            <Link
-              className="font-mono text-primary"
-              key={match.index}
-              to={linkTarget}
-              target="_blank"
-            >
-              {linkText}
-            </Link>
-          </code>
-        );
-      } else {
-        elements.push(
-          <code>
-            <Link
-              className="font-mono text-primary"
-              key={match.index}
-              to={linkTarget}
-            >
-              {linkText}
-            </Link>
-          </code>
-        );
-      }
-
-      lastIndex = linkRegex.lastIndex;
-    }
-
-    // Add remaining text
-    if (lastIndex < text.length) {
-      elements.push(<span key={lastIndex}>{text.slice(lastIndex)}</span>);
-    }
-
-    return elements;
-  }
-
-  function parseMarkdownNoLinks(text: string): JSX.Element[] {
-    if (!text) return [];
-
-    const linkRegex = /\[([^\]]*)\]\(([^)]*)\)/g;
-    let lastIndex = 0;
-    const elements: JSX.Element[] = [];
-    let match;
-
-    while ((match = linkRegex.exec(text)) !== null) {
-      // Add text before the link
-      if (match.index > lastIndex) {
-        elements.push(
-          <span key={lastIndex}>{text.slice(lastIndex, match.index)}</span>
-        );
-      }
-
-      // Add the link, use link text or target if text is empty
-      const linkText = match[1] || match[2];
-      let linkTarget = match[2] ? `/docs/${match[2]}` : `#${match[1]}`;
-
-      if (text.includes("https://") || text.includes("http://")) {
-        linkTarget = match[2];
-      }
-      if (linkTarget.indexOf("#") != -1) {
-        elements.push(linkText);
-      } else if (linkTarget.startsWith("https")) {
-        elements.push(<span>{linkText}</span>);
-      } else {
-        elements.push(<span>{linkText}</span>);
-      }
-
-      lastIndex = linkRegex.lastIndex;
-    }
-
-    // Add remaining text
-    if (lastIndex < text.length) {
-      elements.push(<span key={lastIndex}>{text.slice(lastIndex)}</span>);
-    }
-
-    return elements;
-  }
-
-  function buildBreadcrumbs(path: string) {
-    let paths = path.split("/");
-    let currentPath = "";
-
-    let breadcrumbs = paths.map((b: string, index: number) => {
-      currentPath += "/" + b;
-      return (
-        <>
-          <BreadcrumbItem>
-            <BreadcrumbLink to={`${currentPath}`}>
-              {b === "docs" ? "Reference" : b}
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          {index < paths.length - 1 && <BreadcrumbSeparator />}
-        </>
-      );
-    });
-
-    return (
-      <Breadcrumb className="mb-10">
-        <BreadcrumbList>{breadcrumbs}</BreadcrumbList>
-      </Breadcrumb>
-    );
-  }
+  const buildBreadcrumbs = (path: string) => (
+    <ComponentBreadcrumbs path={path} />
+  );
 
   function getClassParameters(parameters: any, properties: any) {
     return (
-      <div className="flex flex-col w-full gap-4 overflow-hidden bg-muted/50 rounded-xl">
-        <Table>
-          <TableBody>
-            {parameters.map((p: any) => {
-              let addSince = null;
-              let foundProperty = properties?.find(
-                (prop: any) => prop.name === p.name
-              );
-              let link = foundProperty ? foundProperty.link : null;
-              let inheritedDetails = null;
-              if (link) {
-                let inheritedComp = link
-                  .split("/")
-                  .reduce((o, i) => o[i], dirs);
-                if (inheritedComp) {
-                  inheritedComp.details.forEach((d: any) => {
-                    if (d.info.signature === foundProperty.signature) {
-                      inheritedDetails = d;
-                    }
-                  });
-                }
-
-                if (inheritedDetails && inheritedDetails.since) {
-                  addSince = inheritedDetails.since;
-                }
-              }
-              return (
-                <TableRow key={p.name} className="relative">
-                  <TableCell className="w-[250px]">
-                    <code className="relative pl-3 font-mono rounded">
-                      {p.name}
-                    </code>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {p.doc ? parseMarkdownLinksNoCode(p.doc) : "-"}
-                  </TableCell>
-                  <TableCell className="pr-5">
-                    {currentComponent[p.name] &&
-                    currentComponent[p.name].details &&
-                    currentComponent[p.name].details[0] &&
-                    currentComponent[p.name].details[0].since
-                      ? buildSince(
-                          currentComponent[p.name].details[0].since,
-                          "float-right"
-                        )
-                      : addSince
-                      ? buildSince(addSince, "float-right")
-                      : null}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+      <ClassParametersTable
+        parameters={parameters}
+        properties={properties}
+        currentComponent={currentComponent}
+        dirs={dirs}
+      />
     );
   }
 
   function getClassThrows(throws: any) {
-    return (
-      <div className="flex flex-col w-full gap-4 overflow-hidden rounded-xl throws__table">
-        <Table>
-          <TableBody>
-            {throws.map((p: any) => (
-              <TableRow
-                key={p.name}
-                className="flex items-center border-b-red-500/10 bg-red-500/10 hover:bg-red-500/15 max-xl:flex-col max-xl:py-2"
-              >
-                <TableCell className="min-w-[350px] text-red-500 items-center inline-flex gap-1 pl-6 py-2 max-xl:pl-3">
-                  <i className="text-lg text-red-500 material-symbols-rounded max-xl:hidden">
-                    {exceptionIcons[p.name] || "warning"}
-                  </i>
-                  <code className="relative pl-3 font-mono rounded max-xl:pl-0 max-xl:text-xs">
-                    {p.name}
-                  </code>
-                </TableCell>
-                <TableCell className="w-full py-2 text-sm text-red-500">
-                  {p.doc ? parseMarkdownLinksNoCode(p.doc) : "-"}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  }
-
-  function getPackageComponent(c: any) {
-    return (
-      <div>
-        <h2 className="mb-4 text-4xl font-bold">{c.info.name}</h2>
-        <p className="mb-4 text-justify text-muted-foreground max-2xl:text-justify">
-          {parseMarkdownLinksNoCode(c.info.doc)}
-        </p>
-        <Separator className="my-4" />
-        <h4 className="mb-4 text-xl font-bold indent-1">API</h4>
-        <CodeTab
-          code={createKotlinCodeLinebreaks(c.info.signature)}
-          autoIndent={false}
-        />
-        {c.parameters && (
-          <>
-            <h4 className="mt-10 mb-4 text-xl font-bold indent-1">
-              Parameters
-            </h4>
-            {getClassParameters(c.parameters, null)}
-          </>
-        )}
-        {c.throws && (
-          <>
-            <h4 className="mt-10 mb-4 text-xl font-bold indent-1">Throws</h4>
-            {getClassThrows(c.throws)}
-          </>
-        )}
-      </div>
-    );
+    return <ThrowsTable throws={throws} exceptionIcons={exceptionIcons} />;
   }
 
   function buildComponentBanners(c: any, full: any, current: any) {
@@ -1547,75 +1160,51 @@ function Component({
 
     if (c.deprecated)
       banners.push(
-        <div className="flex items-center gap-8 px-4 py-2 text-red-500 bg-destructive/10 rounded-xl docs-banner">
-          <div className="flex items-center gap-3">
-            <i className="text-lg text-red-500 material-symbols-rounded">
-              running_with_errors
-            </i>
-            <h4 className="font-bold">Deprecated</h4>
-          </div>
-          <p>
-            This API-Endpoint will be removed in future versions.{" "}
-            {c.deprecated.description}
-          </p>
-        </div>
+        <ComponentBanner
+          type={"deprecated"}
+          description={`This API-Endpoint will be removed in future versions. ${c.deprecated.description}`}
+          title={"Deprecated"}
+          icon={"running_with_errors"}
+        />
       );
 
     if (current && current["Companion"] && current["Companion"]._index)
       banners.push(
-        <Link to={"/docs/" + current["Companion"]._index.breadcrumbs.join("/")}>
-          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-blue/10 text-bgw-blue rounded-xl docs-banner">
-            <div className="flex items-center gap-3">
-              <i className="text-lg material-symbols-rounded text-bgw-blue">
-                note_stack_add
-              </i>
-              <h4 className="font-bold">Companion</h4>
-            </div>
-            <p>
-              This API-Endpoint may have additional properties in it's Companion
-              object.
-            </p>
-            <i className="absolute text-xl material-symbols-rounded text-bgw-blue right-4">
-              chevron_right
-            </i>
-          </div>
-        </Link>
+        <ComponentBanner
+          type={"companion"}
+          title={"Companion"}
+          icon={"note_stack_add"}
+          description={
+            "This API-Endpoint may have additional properties in it's Companion object."
+          }
+          link={"/docs/" + current["Companion"]._index.breadcrumbs.join("/")}
+        />
       );
 
     if (full && full.breadcrumbs.includes("Companion"))
       banners.push(
-        <Link to={"/docs/" + full.breadcrumbs.excludeLast().join("/")}>
-          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-green/10 text-bgw-green rounded-xl docs-banner">
-            <div className="flex items-center gap-3">
-              <i className="text-lg material-symbols-rounded text-bgw-green">
-                reply
-              </i>
-              <h4 className="font-bold">Context</h4>
-            </div>
-            <p>
-              This Companion object may contain additional static properties for{" "}
-              {full.breadcrumbs.fromRight(1)}.
-            </p>
-          </div>
-        </Link>
+        <ComponentBanner
+          type={"context"}
+          title={"Context"}
+          icon={"reply"}
+          description={`This Companion object may contain additional static properties for ${full.breadcrumbs.fromRight(
+            1
+          )}.`}
+          link={"/docs/" + full.breadcrumbs.excludeLast().join("/")}
+        />
       );
 
     if (current && !full && current.breadcrumbs.includes("Companion"))
       banners.push(
-        <Link to={"/docs/" + current.breadcrumbs.excludeLast(2).join("/")}>
-          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-green/10 text-bgw-green rounded-xl docs-banner">
-            <div className="flex items-center gap-3">
-              <i className="text-lg material-symbols-rounded text-bgw-green">
-                reply
-              </i>
-              <h4 className="font-bold">Context</h4>
-            </div>
-            <p>
-              This property is part of the Companion object for{" "}
-              {current.breadcrumbs.fromRight(2)}.
-            </p>
-          </div>
-        </Link>
+        <ComponentBanner
+          type={"context"}
+          title={"Context"}
+          icon={"reply"}
+          description={`This property is part of the Companion object for ${current.breadcrumbs.fromRight(
+            2
+          )}.`}
+          link={"/docs/" + current.breadcrumbs.excludeLast(2).join("/")}
+        />
       );
 
     if (
@@ -1625,40 +1214,16 @@ function Component({
       current.breadcrumbs.fromRight(0) === current.breadcrumbs.fromRight(1)
     )
       banners.push(
-        <Link to={"/docs/" + current.breadcrumbs.excludeLast(1).join("/")}>
-          <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-green/10 text-bgw-green rounded-xl docs-banner">
-            <div className="flex items-center gap-3">
-              <i className="text-lg material-symbols-rounded text-bgw-green">
-                reply
-              </i>
-              <h4 className="font-bold">Context</h4>
-            </div>
-            <p>
-              This reference includes additional constructor details for{" "}
-              {current.breadcrumbs.fromRight(1)}.
-            </p>
-          </div>
-        </Link>
+        <ComponentBanner
+          type={"context"}
+          title={"Context"}
+          icon={"reply"}
+          description={`This reference includes additional constructor details for ${current.breadcrumbs.fromRight(
+            1
+          )}.`}
+          link={"/docs/" + current.breadcrumbs.excludeLast(1).join("/")}
+        />
       );
-
-    // TODO: Add a "back" button if this is type of other class
-    // if (current && !full && current.breadcrumbs.includes("Companion"))
-    //   banners.push(
-    //     <Link to={"/docs/" + current.breadcrumbs.excludeLast(2).join("/")}>
-    //       <div className="relative flex items-center gap-8 px-4 py-2 text-green-400 bg-green-400/20 rounded-xl">
-    //         <div className="flex items-center gap-3">
-    //           <i className="text-lg text-green-400 material-symbols-rounded">
-    //             reply
-    //           </i>
-    //           <h4 className="font-bold">Context</h4>
-    //         </div>
-    //         <p>
-    //           This property is part of the Companion object for{" "}
-    //           {current.breadcrumbs.fromRight(2)}.
-    //         </p>
-    //       </div>
-    //     </Link>
-    //   );
 
     if (
       full &&
@@ -1668,23 +1233,15 @@ function Component({
     ) {
       full.members.types.forEach((type) => {
         if (type.name === "Companion") return null;
+
         banners.push(
-          <Link to={"/docs/" + type.link}>
-            <div className="relative flex items-center gap-8 px-4 py-2 bg-bgw-blue/10 text-bgw-blue rounded-xl docs-banner">
-              <div className="flex items-center gap-3">
-                <i className="text-lg material-symbols-rounded text-bgw-blue">
-                  note_stack
-                </i>
-                <h4 className="font-bold">
-                  {c.info.name}.{type.name}
-                </h4>
-              </div>
-              <p>{parseMarkdownNoLinks(type.doc)}</p>
-              <i className="absolute text-xl material-symbols-rounded text-bgw-blue right-4">
-                chevron_right
-              </i>
-            </div>
-          </Link>
+          <ComponentBanner
+            type={"type"}
+            title={c.info.name + "." + type.name}
+            icon={"note_stack"}
+            description={parseMarkdownNoLinks(type.doc)}
+            link={"/docs/" + type.link}
+          />
         );
       });
     }
@@ -1693,15 +1250,7 @@ function Component({
   }
 
   function buildSince(since: string, className: string = "") {
-    return (
-      <Link
-        to={`https://github.com/tudo-aqua/bgw/releases/tag/v${since}`}
-        target="_blank"
-        className={className}
-      >
-        <Badge variant="mutedLink">Since {since}</Badge>
-      </Link>
-    );
+    return <SinceBadge since={since} className={className} />;
   }
 
   function getCompleteComponent(c: any, full: any, current: any) {
@@ -1818,10 +1367,7 @@ function Component({
           </div>
         )}
         <div className="mt-8"></div>
-        <CodeTab
-          code={createKotlinCodeLinebreaks(c.info.signature)}
-          autoIndent={false}
-        />
+        <CodeDisplay code={c.info.signature} />
         {c.parameters && full === null && (
           <>
             <h4 className="mt-10 mb-4 text-xl font-bold indent-1">

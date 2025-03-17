@@ -45,7 +45,6 @@ export class CodeParser {
     });
 
     let separatedTokens = this.getTokensStartingWithValOrVar(tokens);
-    console.warn("BY VAL SEPERATED TOKENS >>>>>", separatedTokens);
 
     let result: object[] = [];
     separatedTokens.forEach((tokens) => {
@@ -56,10 +55,6 @@ export class CodeParser {
 
       let assignment = tokens.findIndex((token) => {
         return token.type == "ASSIGNMENT";
-      });
-
-      console.info("FOUND CONSTRUCTOR ASSIGNMENTS >>>>>", { ...assignments });
-      console.info("FOUND APPLYS >>>>>", { ...applys });
 
       if (assignment == -1) return;
       if (assignment == 0 || assignment == tokens.length - 1) return;

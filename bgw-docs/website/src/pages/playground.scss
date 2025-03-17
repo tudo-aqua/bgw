@@ -1,0 +1,33 @@
+body {
+  overflow: hidden !important;
+}
+
+.mosaic-root {
+  inset: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.mosaic-tile {
+  @apply rounded-lg m-2 my-4 overflow-hidden;
+}
+
+.mosaic-tile:nth-child(1) {
+  @apply ml-4;
+}
+
+.mosaic-tile:nth-child(5) {
+  @apply m-0 ml-2 mr-4 rounded-none;
+}
+
+.mosaic-split {
+  @apply hover:bg-background;
+}
+
+#data__inputs__sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.live-code .code-tab > div {
+  @apply bg-secondary/30 rounded-md;
+}

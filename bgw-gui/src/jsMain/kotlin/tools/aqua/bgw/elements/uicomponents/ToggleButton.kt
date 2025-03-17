@@ -41,11 +41,12 @@ internal external interface ToggleButtonProps : Props {
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonData) {
-  display = Display.flex
+  display = if (componentViewData.isVisible) Display.flex else None.none
   cssBuilder(componentViewData)
   alignItems = AlignItems.center
   justifyItems = JustifyItems.flexStart
   gap = 10.em
+  pointerEvents = if (componentViewData.isDisabled) None.none else PointerEvents.all
 }
 
 internal val ToggleButton =
@@ -107,6 +108,7 @@ internal val ToggleButton =
             width = 100.pct
             height = 100.pct
             position = Position.relative
+            wordBreak = WordBreak.breakAll
           }
         }
 
