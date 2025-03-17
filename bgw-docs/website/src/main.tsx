@@ -100,11 +100,10 @@ async function loadAllGuides() {
   return guidesMap;
 }
 
-export const guidesMap = await loadAllGuides();
-
-export const constructors = await getConstructors();
-
-export const dirs = await getDirs();
+// Declare variables to store the loaded data
+export let guidesMap = {};
+export let constructors = null;
+export let dirs = null;
 
 function getGuideInfo(path: string) {
   for (const [section, data] of Object.entries(guideStructure)) {
@@ -373,64 +372,89 @@ if (savedPath) {
   window.history.replaceState(null, "", savedPath);
 }
 
-const router = createBrowserRouter(
-  [
-    {
-      path: "/playground",
-      Component: BGWPlayground,
-      loader: exportLoader,
-    },
-    {
-      path: "/docs",
-      Component: BGWDocsLayout,
-      loader: docsLoader,
-      children: [
-        {
-          path: "*",
-        },
-      ],
-    },
-    {
-      path: "/guides",
-      Component: BGWDocsLayout,
-      loader: docsLoader,
-      children: [
-        {
-          path: "*",
-        },
-      ],
-    },
-    {
-      path: "/tests",
-      Component: Test,
-    },
-    {
-      path: "/",
-      Component: BGWDocsLayout,
-      loader: docsLoader,
-      children: [
-        {
-          path: "*",
-        },
-      ],
-    },
-  ],
-  {
-    basename: "/bgw",
-  }
-);
+// Create a function to initialize the app
+async function initializeApp() {
+  // Load all the data
+  guidesMap = await loadAllGuides();
+  constructors = await getConstructors();
+  dirs = await getDirs();
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  //<React.StrictMode>
-  <>
-    <div className="hidden text-[#BB6DFF] text-[#ef4444] text-[#c6ff6e] text-[#FFFFFFB3] text-[#6DBEFF] text-[#FFC656] bg-[#BB6DFF]/20 bg-[#6DBEFF]/20 bg-[#FFC656]/20 !bg-[#BB6DFF]/20 !bg-[#6DBEFF]/20 !bg-[#FFC656]/20 hover:!bg-[#BB6DFF]/20 hover:!bg-[#6DBEFF]/20 hover:!bg-[#FFC656]/20"></div>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <TooltipProvider>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </TooltipProvider>
-    </ThemeProvider>
-  </>
-  //</React.StrictMode>,
-);
+  // Create the router after data is loaded
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/playground",
+        Component: BGWPlayground,
+        loader: exportLoader,
+      },
+      {
+        path: "/docs",
+        Component: BGWDocsLayout,
+        loader: docsLoader,
+        children: [
+          {
+            path: "*",
+          },
+        ],
+      },
+      {
+        path: "/guides",
+        Component: BGWDocsLayout,
+        loader: docsLoader,
+        children: [
+          {
+            path: "*",
+          },
+        ],
+      },
+      // {
+      //   path: "/tests",
+      //   Component: Test,
+      // },
+      {
+        path: "/",
+        Component: BGWDocsLayout,
+        loader: docsLoader,
+        children: [
+          {
+            path: "*",
+          },
+        ],
+      },
+    ],
+    {
+      basename: "/bgw",
+    }
+  );
+
+  ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+    //<React.StrictMode>
+    <>
+      <div className="hidden text-[#BB6DFF] text-[#ef4444] text-[#c6ff6e] text-[#FFFFFFB3] text-[#6DBEFF] text-[#FFC656] bg-[#BB6DFF]/20 bg-[#6DBEFF]/20 bg-[#FFC656]/20 !bg-[#BB6DFF]/20 !bg-[#6DBEFF]/20 !bg-[#FFC656]/20 hover:!bg-[#BB6DFF]/20 hover:!bg-[#6DBEFF]/20 hover:!bg-[#FFC656]/20"></div>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <TooltipProvider>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </>
+    //</React.StrictMode>,
+  );
+}
+
+// Start the application
+initializeApp().catch((error) => {
+  console.error("Failed to initialize the application:", error);
+  // Show some error UI if initialization fails
+  ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+    <div className="p-8 text-center">
+      <h1 className="mb-4 text-2xl font-bold text-red-500">
+        Application Error
+      </h1>
+      <p>
+        Failed to load required data. Please refresh the page and try again.
+      </p>
+    </div>
+  );
+});

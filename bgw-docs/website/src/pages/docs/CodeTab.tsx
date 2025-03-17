@@ -19,7 +19,7 @@ import { useDocsStore } from "@/stores/docsStore";
 import asyncComponent from "./asyncComponent";
 import { useLocation } from "react-router";
 import { Button } from "@/components/ui/button";
-import StarryNight from "@/components/StarryNight";
+import CodeExport from "@/components/CodeExport";
 
 const AsyncPlayground = asyncComponent(
   () => import("@/components/ReactKotlinPlayground")
@@ -70,7 +70,7 @@ const CodeTab = React.memo(function CodeTab({
       )}
       <ScrollArea className="max-w-full overflow-scroll max-xl:w-full bg-muted/50 rounded-xl xl:overflow-hidden">
         {location.pathname === "/playground" ? (
-          <StarryNight code={code} language="kotlin" />
+          <CodeExport code={code} language="kotlin" />
         ) : (
           <AsyncPlayground
             className="relative flex h-full col-span-5 pl-3 pr-5 pointer-events-none"

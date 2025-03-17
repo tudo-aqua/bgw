@@ -4,7 +4,7 @@ import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import kotlinGrammar from "../lib/source.kotlin.js"; // Import your custom Kotlin grammar
 
-import "./StarryNight.scss";
+import "./codeExport.scss";
 
 async function highlight(language: string, code: string) {
   // Initialize starry-night with common grammars plus your custom Kotlin grammar
@@ -23,13 +23,7 @@ async function highlight(language: string, code: string) {
   return reactNode;
 }
 
-const StarryNight = ({
-  code,
-  language,
-}: {
-  code: string;
-  language: string;
-}) => {
+const CodeExport = ({ code, language }: { code: string; language: string }) => {
   const [highlighted, setHighlighted] = useState("");
 
   useEffect(() => {
@@ -45,4 +39,4 @@ const StarryNight = ({
   );
 };
 
-export default StarryNight;
+export default CodeExport;
