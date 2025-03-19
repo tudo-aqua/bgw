@@ -401,7 +401,11 @@ function Component({
                   {c.primary && <Badge variant="class">Primary</Badge>}
                   {c.since && buildSince(c.since)}
                 </div>
-                <CodeDisplay code={c.info.signature} lineLength={80} />
+                <CodeDisplay
+                  code={c.info.signature}
+                  lineLength={80}
+                  defaultHighlighter={true}
+                />
                 {c.parameters && (
                   <div className="mt-3">
                     {getClassParameters(c.parameters, comp.members.properties)}
@@ -549,7 +553,7 @@ function Component({
                 {moreDetails &&
                   moreDetails.since &&
                   buildSince(moreDetails.since, "absolute top-8 right-10 z-10")}
-                {!["ordinal", "name", "values", "entries", "valueOf"].includes(
+                {/* {!["ordinal", "name", "values", "entries", "valueOf"].includes(
                   c.name
                 ) ? (
                   <Link
@@ -570,7 +574,9 @@ function Component({
                   </Link>
                 ) : (
                   <CodeDisplay code={c.signature} />
-                )}
+                )} */}
+
+                <CodeDisplay code={c.signature} />
                 {c.parameters && (
                   <div className="">
                     {getParameters(c.parameters, c, inheritedFunc)}
@@ -706,7 +712,7 @@ function Component({
                       moreDetails.since,
                       "absolute top-8 right-10 z-10"
                     )}
-                  {![
+                  {/* {![
                     "ordinal",
                     "name",
                     "values",
@@ -731,7 +737,8 @@ function Component({
                     </Link>
                   ) : (
                     <CodeDisplay code={c.signature} />
-                  )}
+                  )} */}
+                  <CodeDisplay code={c.signature} />
                   {c.doc && (
                     <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                       {parseMarkdownLinks(c.doc)}
@@ -854,7 +861,7 @@ function Component({
                       moreDetails.since,
                       "absolute top-8 right-10 z-10"
                     )}
-                  {![
+                  {/* {![
                     "ordinal",
                     "name",
                     "values",
@@ -879,7 +886,9 @@ function Component({
                     </Link>
                   ) : (
                     <CodeDisplay code={c.signature} />
-                  )}
+                  )} */}
+
+                  <CodeDisplay code={c.signature} />
                   {c.doc && (
                     <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                       {parseMarkdownLinks(c.doc)}
@@ -1367,7 +1376,7 @@ function Component({
           </div>
         )}
         <div className="mt-8"></div>
-        <CodeDisplay code={c.info.signature} />
+        <CodeDisplay code={c.info.signature} defaultHighlighter={true} />
         {c.parameters && full === null && (
           <>
             <h4 className="mt-10 mb-4 text-xl font-bold indent-1">

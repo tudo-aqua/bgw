@@ -76,12 +76,288 @@ export const CollapsibleSection = ({
 };
 
 // Code signature display component
-export const CodeDisplay = ({ code, autoIndent = false, lineLength = 100 }) => (
-  <CodeTab
-    code={createKotlinCodeLinebreaks(code, lineLength)}
-    autoIndent={autoIndent}
-  />
-);
+export const CodeDisplay = ({
+  code,
+  autoIndent = false,
+  lineLength = 100,
+  defaultHighlighter = false,
+}) => {
+  if (defaultHighlighter)
+    return (
+      <CodeTab
+        code={createKotlinCodeLinebreaks(code, lineLength)}
+        autoIndent={autoIndent}
+      />
+    );
+
+  return (
+    <div className="relative w-full max-w-full px-6 py-5 font-mono text-sm code-tab bg-muted/50 rounded-xl">
+      {kotlinTypeHighlighter(createKotlinCodeLinebreaks(code, lineLength))}
+    </div>
+  );
+};
+
+export const kotlinTypeHighlighter = (signature: string) => {
+  if (!signature) return null;
+
+  // Define styling classes for different syntax elements
+  const styles = {
+    keyword: "text-bgw-pink", // Keywords like fun, var
+    defaultType: "text-bgw-yellow", // Types like String, Boolean
+    type: "text-bgw-blue", // BGW types
+    functionName: "text-white", // Function/property names
+    paramName: "text-bgw-blue", // Parameter names
+    symbol: "text-bgw-gray", // Symbols like : ( ) ,
+    operator: "text-bgw-white", // Operators like -> ? =
+    generic: "text-bgw-white", // Generic type params
+    genericType: "text-bgw-blue", // Generic type references
+    space: "", // Spaces
+    defaultValue: "text-bgw-red", // Default values
+    stringProperty: "text-bgw-green", // String literals
+    numberProperty: "text-bgw-orange", // Number literals
+    booleanProperty: "text-bgw-orange", // Boolean literals (true, false, null)
+    property: "text-bgw-blue", // Property references
+    number: "text-bgw-orange", // Number literals
+    constant: "text-bgw-yellow", // Constants in capital letters
+  };
+
+  // Known Kotlin keywords
+  const keywords = [
+    "val",
+    "var",
+    "fun",
+    "open",
+    "override",
+    "abstract",
+    "final",
+    "internal",
+    "private",
+    "protected",
+    "public",
+    "constructor",
+    "companion",
+    "object",
+    "class",
+    "interface",
+    "enum",
+    "suspend",
+    "vararg",
+    "in",
+    "operator",
+    "set",
+    "get",
+  ];
+
+  // Known Kotlin types
+  const types = [
+    // Basic types
+    "Int",
+    "Long",
+    "Short",
+    "Byte",
+    "Float",
+    "Double",
+    "Boolean",
+    "Char",
+    "String",
+    "Number",
+    "Any",
+    "Unit",
+    "Nothing",
+    // Unsigned types
+    "UInt",
+    "ULong",
+    "UShort",
+    "UByte",
+    // Array types
+    "Array",
+    "ByteArray",
+    "ShortArray",
+    "IntArray",
+    "LongArray",
+    "FloatArray",
+    "DoubleArray",
+    "BooleanArray",
+    "CharArray",
+    // Collection types
+    "List",
+    "Set",
+    "Map",
+    "Collection",
+    "MutableList",
+    "MutableSet",
+    "MutableMap",
+    "ArrayList",
+    "HashMap",
+    "HashSet",
+    "LinkedHashMap",
+    "LinkedHashSet",
+    // Other common types
+    "Pair",
+    "Triple",
+    "Any",
+    "Unit",
+    "Nothing",
+    "Void",
+    "Sequence",
+    "Iterable",
+    // Function types
+    "Function",
+    "Function0",
+    "Function1",
+    "Function2",
+    "Function3",
+    "Function4",
+    "Function5",
+    // Common Kotlin stdlib
+    "Throwable",
+    "Exception",
+    "Error",
+    "Comparable",
+    "Lazy",
+    "Result",
+  ];
+
+  // Tokenize the signature
+  const tokens: { text: string; type: string }[] = [];
+  let currentToken = "";
+  let inDefaultValue = false;
+
+  // Helper to process and add the current token
+  const addToken = () => {
+    if (currentToken) {
+      let type = "default";
+
+      if (keywords.includes(currentToken)) {
+        type = "keyword";
+      }
+      // Identify types (starting with capital letters)
+      else if (/^[A-Z][a-zA-Z0-9_]*$/.test(currentToken)) {
+        if (types.includes(currentToken)) {
+          type = "defaultType";
+        } else if (
+          /^[A-Z][A-Z0-9_]*$/.test(currentToken) &&
+          currentToken === currentToken.toUpperCase()
+        ) {
+          if (currentToken.length > 1) type = "constant";
+          else type = "genericType";
+        } else {
+          type = "type";
+        }
+      }
+      // Function or property names
+      else if (
+        tokens.length > 0 &&
+        (tokens[tokens.length - 1].text === "fun" ||
+          tokens[tokens.length - 1].text === "val" ||
+          tokens[tokens.length - 1].text === "var")
+      ) {
+        type = "functionName";
+      }
+      // Default value properties
+      else if (inDefaultValue) {
+        if (/^[0-9]+$/.test(currentToken)) {
+          type = "numberProperty";
+        } else if (/^".*"$/.test(currentToken) || /^'.*'$/.test(currentToken)) {
+          type = "stringProperty";
+        } else if (["true", "false", "null"].includes(currentToken)) {
+          type = "booleanProperty";
+        } else {
+          type = "property";
+        }
+      }
+
+      tokens.push({ text: currentToken, type });
+      currentToken = "";
+    }
+  };
+
+  // First pass: tokenize the signature
+  for (let i = 0; i < signature.length; i++) {
+    const char = signature[i];
+
+    if (/[\s:(),<>?=.]/.test(char)) {
+      addToken();
+
+      // Handle arrow operator
+      if (
+        char === "-" &&
+        i + 1 < signature.length &&
+        signature[i + 1] === ">"
+      ) {
+        tokens.push({ text: "->", type: "operator" });
+        i++; // Skip the next character
+      }
+      // Handle other special characters
+      else if (char === ":") {
+        tokens.push({ text: char, type: "symbol" });
+      } else if (char === "?") {
+        tokens.push({ text: char, type: "operator" });
+      } else if (char === "=") {
+        tokens.push({ text: char, type: "operator" });
+        inDefaultValue = true;
+      } else if (char === ".") {
+        tokens.push({ text: char, type: "symbol" });
+      } else if (char === "<" || char === ">") {
+        tokens.push({ text: char, type: "generic" });
+      } else if (char === "(" || char === ")" || char === ",") {
+        tokens.push({ text: char, type: "symbol" });
+        // Reset default value flag on closing parenthesis or comma
+        if (char === ")" || char === ",") {
+          inDefaultValue = false;
+        }
+      } else if (char === " ") {
+        tokens.push({ text: char, type: "space" });
+      }
+    } else {
+      currentToken += char;
+    }
+  }
+
+  // Add any final token
+  addToken();
+
+  // Second pass: identify parameter names
+  if (
+    tokens.filter((t) => t.type === "keyword" && t.text === "fun").length > 0
+  ) {
+    for (let i = 0; i < tokens.length; i++) {
+      // Parameter names are typically followed by a colon (possibly with spaces in between)
+      if (tokens[i].type === "default") {
+        // Look ahead for a colon, skipping any space tokens
+        let j = i + 1;
+        while (j < tokens.length && tokens[j].type === "space") {
+          j++;
+        }
+
+        // If we found a colon, this is a parameter name
+        if (j < tokens.length && tokens[j].text === ":") {
+          tokens[i].type = "paramName";
+        }
+      }
+    }
+  }
+
+  // Convert to JSX elements
+  // TODO - Add links to types
+  const elements = tokens.map((token, index) => {
+    // if (token.type === "type")
+    //   return (
+    //     <Link key={index} to={`/docs/`} className={styles[token.type] || ""}>
+    //       <span key={index} className={styles[token.type] || ""}>
+    //         {token.text}
+    //       </span>
+    //     </Link>
+    //   );
+    return (
+      <span key={index} className={styles[token.type] || ""}>
+        {token.text}
+      </span>
+    );
+  });
+
+  return <>{elements}</>;
+};
 
 // Parameter table for functions and constructors
 export const ParametersTable = ({ parameters, func, inheritedFunc }) => {
