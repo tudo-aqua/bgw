@@ -81,23 +81,27 @@ export const CodeDisplay = ({
   autoIndent = false,
   lineLength = 100,
   defaultHighlighter = false,
+  links = {},
 }) => {
-  if (defaultHighlighter)
-    return (
-      <CodeTab
-        code={createKotlinCodeLinebreaks(code, lineLength)}
-        autoIndent={autoIndent}
-      />
-    );
+  // if (defaultHighlighter)
+  //   return (
+  //     <CodeTab
+  //       code={createKotlinCodeLinebreaks(code, lineLength)}
+  //       autoIndent={autoIndent}
+  //     />
+  //   );
 
   return (
-    <div className="relative w-full max-w-full px-6 py-5 font-mono text-sm code-tab bg-muted/50 rounded-xl">
-      {kotlinTypeHighlighter(createKotlinCodeLinebreaks(code, lineLength))}
-    </div>
+    <pre className="relative w-full max-w-full px-7 py-[19px] font-mono text-sm code-display bg-muted/50 rounded-xl">
+      {kotlinTypeHighlighter(
+        createKotlinCodeLinebreaks(code, lineLength),
+        links
+      )}
+    </pre>
   );
 };
 
-export const kotlinTypeHighlighter = (signature: string) => {
+export const kotlinTypeHighlighter = (signature: string, links = {}) => {
   if (!signature) return null;
 
   // Define styling classes for different syntax elements
@@ -112,6 +116,8 @@ export const kotlinTypeHighlighter = (signature: string) => {
     generic: "text-bgw-white", // Generic type params
     genericType: "text-bgw-blue", // Generic type references
     space: "", // Spaces
+    newline: "", // Newlines
+    tab: "", // Tabs
     defaultValue: "text-bgw-red", // Default values
     stringProperty: "text-bgw-green", // String literals
     numberProperty: "text-bgw-orange", // Number literals
@@ -146,6 +152,8 @@ export const kotlinTypeHighlighter = (signature: string) => {
     "operator",
     "set",
     "get",
+    "sealed",
+    "data",
   ];
 
   // Known Kotlin types
@@ -161,9 +169,6 @@ export const kotlinTypeHighlighter = (signature: string) => {
     "Char",
     "String",
     "Number",
-    "Any",
-    "Unit",
-    "Nothing",
     // Unsigned types
     "UInt",
     "ULong",
@@ -231,6 +236,14 @@ export const kotlinTypeHighlighter = (signature: string) => {
       if (keywords.includes(currentToken)) {
         type = "keyword";
       }
+      // Identify floating point numbers
+      else if (/^[0-9]+\.[0-9]+$/.test(currentToken)) {
+        type = inDefaultValue ? "numberProperty" : "number";
+      }
+      // Identify integer numbers
+      else if (/^[0-9]+$/.test(currentToken)) {
+        type = inDefaultValue ? "numberProperty" : "number";
+      }
       // Identify types (starting with capital letters)
       else if (/^[A-Z][a-zA-Z0-9_]*$/.test(currentToken)) {
         if (types.includes(currentToken)) {
@@ -275,6 +288,48 @@ export const kotlinTypeHighlighter = (signature: string) => {
   // First pass: tokenize the signature
   for (let i = 0; i < signature.length; i++) {
     const char = signature[i];
+
+    // Handle newlines
+    if (char === "\n") {
+      addToken();
+      tokens.push({ text: "\n", type: "newline" });
+      continue;
+    }
+
+    // Handle tabs or indentation (4 spaces)
+    if (char === "\t") {
+      addToken();
+      tokens.push({ text: "\t", type: "tab" });
+      continue;
+    }
+
+    // Check for 4 spaces at the beginning of a line for indentation
+    if (
+      char === " " &&
+      (tokens.length === 0 || tokens[tokens.length - 1].type === "newline") &&
+      i + 3 < signature.length &&
+      signature[i + 1] === " " &&
+      signature[i + 2] === " " &&
+      signature[i + 3] === " "
+    ) {
+      addToken();
+      tokens.push({ text: "    ", type: "tab" });
+      i += 3; // Skip the next three spaces
+      continue;
+    }
+
+    // Special case for floating point numbers
+    if (
+      char === "." &&
+      currentToken !== "" &&
+      /^[0-9]+$/.test(currentToken) &&
+      i + 1 < signature.length &&
+      /[0-9]/.test(signature[i + 1])
+    ) {
+      // This is a decimal point in a number, so keep accumulating
+      currentToken += char;
+      continue;
+    }
 
     if (/[\s:(),<>?=.]/.test(char)) {
       addToken();
@@ -341,14 +396,74 @@ export const kotlinTypeHighlighter = (signature: string) => {
   // Convert to JSX elements
   // TODO - Add links to types
   const elements = tokens.map((token, index) => {
-    // if (token.type === "type")
-    //   return (
-    //     <Link key={index} to={`/docs/`} className={styles[token.type] || ""}>
-    //       <span key={index} className={styles[token.type] || ""}>
-    //         {token.text}
-    //       </span>
-    //     </Link>
-    //   );
+    if (
+      token.text === "." &&
+      tokens[index - 1]?.type === "type" &&
+      tokens[index + 1]?.type === "type"
+    ) {
+      let link = links[tokens[index - 1].text + "." + tokens[index + 1].text];
+      if (!link.startsWith("http")) {
+        link = `/docs/${link}`;
+      }
+      return (
+        <Link key={index} to={link} className={styles["type"] || ""}>
+          <span key={index} className={"underline underline-offset-4"}>
+            {token.text}
+          </span>
+        </Link>
+      );
+    } else if (
+      token.type === "type" &&
+      tokens[index + 1]?.text === "." &&
+      tokens[index + 2]?.type === "type"
+    ) {
+      let link = links[token.text + "." + tokens[index + 2].text];
+      if (!link.startsWith("http")) {
+        link = `/docs/${link}`;
+      }
+      return (
+        <Link key={index} to={link} className={styles[token.type] || ""}>
+          <span key={index} className={"underline underline-offset-4"}>
+            {token.text}
+          </span>
+        </Link>
+      );
+    } else if (
+      token.type === "type" &&
+      tokens[index - 1]?.text === "." &&
+      tokens[index - 2]?.type === "type"
+    ) {
+      let link = links[tokens[index - 2].text + "." + token.text];
+      if (!link.startsWith("http")) {
+        link = `/docs/${link}`;
+      }
+      return (
+        <Link key={index} to={link} className={styles[token.type] || ""}>
+          <span key={index} className={"underline underline-offset-4"}>
+            {token.text}
+          </span>
+        </Link>
+      );
+    } else if (
+      token.type === "type" ||
+      token.type === "defaultType" ||
+      token.type === "genericType"
+    ) {
+      if (links[token.text]) {
+        let link = links[token.text];
+        if (!link.startsWith("http")) {
+          link = `/docs/${link}`;
+        }
+        return (
+          <Link key={index} to={link} className={styles[token.type] || ""}>
+            <span key={index} className={"underline underline-offset-4"}>
+              {token.text}
+            </span>
+          </Link>
+        );
+      }
+    }
+
     return (
       <span key={index} className={styles[token.type] || ""}>
         {token.text}

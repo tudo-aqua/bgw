@@ -18,7 +18,7 @@ import LoadingBar from "react-top-loading-bar";
 
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CodeTab from "./CodeTab";
 import { Collapsible } from "@radix-ui/react-collapsible";
 import {
@@ -403,6 +403,7 @@ function Component({
                 </div>
                 <CodeDisplay
                   code={c.info.signature}
+                  links={c.info.signatureLinks}
                   lineLength={80}
                   defaultHighlighter={true}
                 />
@@ -576,7 +577,7 @@ function Component({
                   <CodeDisplay code={c.signature} />
                 )} */}
 
-                <CodeDisplay code={c.signature} />
+                <CodeDisplay code={c.signature} links={c.signatureLinks} />
                 {c.parameters && (
                   <div className="">
                     {getParameters(c.parameters, c, inheritedFunc)}
@@ -738,7 +739,7 @@ function Component({
                   ) : (
                     <CodeDisplay code={c.signature} />
                   )} */}
-                  <CodeDisplay code={c.signature} />
+                  <CodeDisplay code={c.signature} links={c.signatureLinks} />
                   {c.doc && (
                     <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                       {parseMarkdownLinks(c.doc)}
@@ -888,7 +889,7 @@ function Component({
                     <CodeDisplay code={c.signature} />
                   )} */}
 
-                  <CodeDisplay code={c.signature} />
+                  <CodeDisplay code={c.signature} links={c.signatureLinks} />
                   {c.doc && (
                     <p className="px-2 py-1 mt-3 text-muted-foreground max-2xl:text-justify">
                       {parseMarkdownLinks(c.doc)}
@@ -1376,7 +1377,11 @@ function Component({
           </div>
         )}
         <div className="mt-8"></div>
-        <CodeDisplay code={c.info.signature} defaultHighlighter={true} />
+        <CodeDisplay
+          code={c.info.signature}
+          links={c.info.signatureLinks}
+          defaultHighlighter={true}
+        />
         {c.parameters && full === null && (
           <>
             <h4 className="mt-10 mb-4 text-xl font-bold indent-1">

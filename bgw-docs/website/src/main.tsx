@@ -419,7 +419,6 @@ async function extractDirsToLookup() {
     });
   });
 
-  console.log(classLookup);
   return classLookup;
 }
 

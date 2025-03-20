@@ -32,7 +32,6 @@ function EyeDropper({
       onSelectColor(result.sRGBHex);
     } catch (e) {
       // User canceled the selection
-      console.log(e);
     }
   };
 

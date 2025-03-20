@@ -419,6 +419,10 @@ button[role="combobox"] {
   }
 }
 
+.code-display {
+  line-height: 1.5rem;
+}
+
 div[data-radix-scroll-area-viewport] > div {
   display: block !important;
 }
