@@ -79,6 +79,41 @@ function getDirectoryStructure(dir) {
   return results;
 }
 
+Array.prototype.last = function () {
+  return this[this.length - 1];
+};
+
+Array.prototype.fromRight = function (index) {
+  if (index > this.length) return null;
+  return this[this.length - index];
+};
+
+function extractLinksFromSignature($, signature, breadcrumbs = []) {
+  const links = {};
+
+  $(signature)
+    .find("a")
+    .each((i, el) => {
+      const link = $(el).attr("href");
+      const text = $(el).text().trim();
+
+      let finalLink = pathToPackage(convertDashesToCaps(link), breadcrumbs);
+      let splitFinal = finalLink.split("/");
+      if (splitFinal.last() === splitFinal.fromRight(2)) {
+        splitFinal.pop();
+      }
+      finalLink = splitFinal.join("/");
+
+      if (finalLink.trim().length === 0) {
+        return;
+      }
+
+      links[text] = finalLink;
+    });
+
+  return links;
+}
+
 // ---
 
 function parseConstructor($, el, tree) {
@@ -170,6 +205,7 @@ function parseConstructor($, el, tree) {
 
   return {
     signature: constructorText, // Use original text to preserve 'constructor' keyword
+    signatureLinks: extractLinksFromSignature($, el, tree.breadcrumbs),
     parameters: params,
     doc: processedBrief || "",
     isSecondaryConstructor, // Add flag to indicate constructor type
@@ -223,6 +259,7 @@ function parseProperty($, el, tree) {
 
     const result = {
       signature: property,
+      signatureLinks: extractLinksFromSignature($, el, tree.breadcrumbs),
       modifier: modifier || "",
       name,
       link: parsedLink,
@@ -270,7 +307,11 @@ function parseFunction($, el, tree) {
       return null;
     }
 
-    if(func.includes("toFront") || func.includes("toBack") || func.includes("setZIndex")) {
+    if (
+      func.includes("toFront") ||
+      func.includes("toBack") ||
+      func.includes("setZIndex")
+    ) {
       console.warn(`Could not parse Kotlin function: ${func}`);
       return null;
     }
@@ -280,6 +321,7 @@ function parseFunction($, el, tree) {
     if (!params.trim()) {
       return {
         signature: func,
+        signatureLinks: extractLinksFromSignature($, el, tree.breadcrumbs),
         name,
         link: parsedLink,
         parameters: [],
@@ -352,6 +394,7 @@ function parseFunction($, el, tree) {
 
     const result = {
       signature: func,
+      signatureLinks: extractLinksFromSignature($, el, tree.breadcrumbs),
       name,
       parameters,
       link: parsedLink,
@@ -620,6 +663,8 @@ function getClassDetails($, tree) {
     type: null,
   };
 
+  let signatureLinks = {};
+
   if (signature) {
     // Split signature into words and filter out empty strings
     const words = signature.split(/\s+/).filter((word) => word.length > 0);
@@ -642,12 +687,22 @@ function getClassDetails($, tree) {
       if (classModifiers.includes(word)) classMetadata.modifiers.push(word);
       if (types.includes(word)) classMetadata.type = word;
     });
+
+    let wholeSignature = $(".content.sourceset-dependent-content")
+      .find(".symbol.monospace")
+      .first();
+    signatureLinks = extractLinksFromSignature(
+      $,
+      wholeSignature,
+      tree.breadcrumbs
+    );
   }
 
   return {
     info: {
       name,
       signature,
+      signatureLinks,
       doc,
       tags: classMetadata,
     },
@@ -679,6 +734,12 @@ function getExtraDetails($, tree) {
       .text()
       .trim();
 
+    let wholeSignature = loaded("body").find(".symbol.monospace").first();
+    let signatureLinks = extractLinksFromSignature(
+      $,
+      wholeSignature,
+      tree.breadcrumbs
+    );
     let docElements = loaded("body > .paragraph");
     let docArray = [];
     let realElements = [];
@@ -769,6 +830,7 @@ function getExtraDetails($, tree) {
       info: {
         name,
         signature,
+        signatureLinks,
         doc,
       },
       inheritors: getClassAttribute(

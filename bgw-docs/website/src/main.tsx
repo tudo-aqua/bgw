@@ -104,6 +104,7 @@ async function loadAllGuides() {
 export let guidesMap = {};
 export let constructors = null;
 export let dirs = null;
+export let classLookup = {};
 
 function getGuideInfo(path: string) {
   for (const [section, data] of Object.entries(guideStructure)) {
@@ -329,6 +330,98 @@ export function searchDirs(query: string) {
   return uniqueResults.slice(0, 30); // Limit results to 30 entries
 }
 
+async function extractDirsToLookup() {
+  let classLookup = {};
+
+  Object.entries(dirs).forEach(([packageName, packageContent]) => {
+    Object.entries(packageContent).forEach(([className, classContent]) => {
+      if (
+        ["_index", "breadcrumbs", "name", "ordinal", "entries"].includes(
+          className
+        )
+      )
+        return;
+
+      const indexData = classContent._index || {};
+      const details = indexData.details || {};
+      const info = details.info || {};
+
+      const path = `${packageName}.${className}`;
+      classLookup[path] = {
+        type: "class",
+        className,
+        signature: info.signature || className,
+        doc: info.doc || "",
+        path,
+      };
+
+      const indexMembers = classContent._index?.members || {};
+
+      const properties = indexMembers.properties || [];
+      properties.forEach((prop) => {
+        if (
+          ["_index", "breadcrumbs", "name", "ordinal", "entries"].includes(
+            prop.name
+          )
+        )
+          return;
+
+        const path = `${packageName}.${className}.${prop.name}`;
+        classLookup[path] = {
+          type: "property",
+          className,
+          name: prop.name,
+          signature: prop.signature || "",
+          doc: prop.doc || "",
+          path,
+        };
+      });
+
+      const constructors = indexMembers.constructors || [];
+      if (constructors.length > 0) {
+        const path = `${packageName}.${className}.${className}`;
+        classLookup[path] = {
+          type: "constructor",
+          className,
+          signature: constructors[0].signature || "",
+          doc: constructors[0].doc || "",
+          path,
+        };
+      }
+
+      Object.entries(classContent).forEach(([memberName, memberContent]) => {
+        if (
+          [
+            "_index",
+            "breadcrumbs",
+            "name",
+            "ordinal",
+            "entries",
+            "package",
+            "path",
+            "type",
+            "details",
+            "members",
+          ].includes(memberName)
+        )
+          return;
+
+        const path = `${packageName}.${className}.${memberName}`;
+        classLookup[path] = {
+          type: "member",
+          className,
+          memberName,
+          signature: memberContent.details?.[0]?.info?.signature || "",
+          doc: memberContent.details?.[0]?.info?.doc || "",
+          path,
+        };
+      });
+    });
+  });
+
+  return classLookup;
+}
+
 async function docsLoader() {
   const [samplesResponse] = await Promise.all([
     fetch("/bgw/bgw/bgwSamples.json"),
@@ -378,6 +471,7 @@ async function initializeApp() {
   guidesMap = await loadAllGuides();
   constructors = await getConstructors();
   dirs = await getDirs();
+  // classLookup = await extractDirsToLookup();
 
   // Create the router after data is loaded
   const router = createBrowserRouter(
