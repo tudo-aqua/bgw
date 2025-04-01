@@ -50,5 +50,5 @@ const val GAME_ID: String = "MauMau"
 /** Button font. */
 val MENU_BUTTON_FONT: Font = Font(color = Color.WHITE, fontStyle = Font.FontStyle.ITALIC)
 
-/** Debug CLI flag you need to pass to start the protocol client */
+/** Debug CLI flag you need to pass to start the protocol client. */
 const val DEBUG_FLAG: String = "--debug"
