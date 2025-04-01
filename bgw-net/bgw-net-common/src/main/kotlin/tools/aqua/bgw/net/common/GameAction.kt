@@ -28,29 +28,30 @@ import tools.aqua.bgw.net.common.annotations.GameActionReceiver
  *
  * @see GameActionReceiver
  */
-@GameActionClass abstract class GameAction {
+@GameActionClass
+abstract class GameAction {
 
-    /**
-     * Must be overridden to provide a string representation of the GameAction.
-     * If the derived class is a data class, this method is already implemented.
-     */
-    abstract override fun toString(): String
+  /**
+   * Must be overridden to provide a string representation of the GameAction. If the derived class
+   * is a data class, this method is already implemented.
+   */
+  abstract override fun toString(): String
 
-    /**
-     * Formats the message in a safe way.
-     *
-     * @return formatted message or [toString] if [formatMessage] returns `null`.
-     */
-    fun formatMessageSafe(): String = formatMessage() ?: toString()
+  /**
+   * Formats the message in a safe way.
+   *
+   * @return formatted message or [toString] if [formatMessage] returns `null`.
+   */
+  fun formatMessageSafe(): String = formatMessage() ?: toString()
 
-    /**
-     * Formats the message. Override this method to provide a formatted message.
-     * If this method returns `null`, [toString] will be used instead.
-     *
-     * But don't rely on [toString] to format the message in a readable format.
-     * Thus implement this method if you want to a properly formatted message to debug or display.
-     *
-     * @return formatted message or `null` if [toString] should be used.
-     */
-    abstract fun formatMessage(): String?
+  /**
+   * Formats the message. Override this method to provide a formatted message. If this method
+   * returns `null`, [toString] will be used instead.
+   *
+   * But don't rely on [toString] to format the message in a readable format. Thus implement this
+   * method if you want to a properly formatted message to debug or display.
+   *
+   * @return formatted message or `null` if [toString] should be used.
+   */
+  abstract fun formatMessage(): String?
 }
