@@ -92,7 +92,7 @@ class NetworkService(private val view: ProtocolClientApplication) {
 
   /** Returns string representation of [message]. */
   fun parseMessage(message: GameAction): List<String> {
-    val lines = message.toString().split("\n")
+    val lines = message.formatMessageSafe().split("\n")
     val result = mutableListOf<String>()
 
     val font =
