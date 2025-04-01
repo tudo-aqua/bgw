@@ -80,7 +80,7 @@ class MessageService(
   private fun handleGameMessage(session: WebSocketSession, msg: GameActionMessage) {
     val player = session.player
     val game = player.game
-    var errors: Optional<List<String>> = Optional.empty()
+    var errors: Optional<Map<String, List<String>>> = Optional.empty()
     val status =
         if (player.isSpectator) {
           GameActionResponseStatus.SPECTATOR_ONLY
@@ -96,13 +96,16 @@ class MessageService(
           GameActionResponseStatus.NO_ASSOCIATED_GAME
         }
 
-    player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyList() }))
+    player.session.sendMessage(GameActionResponse(status, errors.orElseGet { emptyMap() }))
 
     if (status == GameActionResponseStatus.SUCCESS) {
       game?.broadcastMessage(
           player,
           GameActionMessage(
-              payload = msg.payload, prettyPrint = msg.prettyPrint, sender = player.name))
+              clazz = msg.clazz,
+              payload = msg.payload,
+              prettyPrint = msg.prettyPrint,
+              sender = player.name))
     }
   }
 

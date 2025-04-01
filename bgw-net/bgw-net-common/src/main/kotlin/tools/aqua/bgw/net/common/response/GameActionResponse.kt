@@ -25,5 +25,7 @@ package tools.aqua.bgw.net.common.response
  * @property status Status code.
  * @property errorMessages List of errors.
  */
-class GameActionResponse(val status: GameActionResponseStatus, val errorMessages: List<String>) :
-    Response()
+class GameActionResponse(
+    val status: GameActionResponseStatus,
+    val errorMessages: Map<String, List<String>>
+) : Response()
