@@ -21,7 +21,6 @@ import tools.aqua.bgw.examples.maumau.view.MauMauViewController
 
 /** Entry point. If the `--debug` flag is passed, the protocol client is started. */
 fun main(args: Array<String>) {
-  println(args)
   if(DEBUG_FLAG in args) tools.aqua.bgw.net.protocol.client.main.main()
   else MauMauViewController()
 }
