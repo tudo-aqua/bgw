@@ -26,6 +26,7 @@ dependencies {
   implementation(project(":bgw-gui", configuration = "jvmRuntimeElements"))
   implementation(project(":bgw-net:bgw-net-client"))
   implementation(project(":bgw-net:bgw-net-common"))
+  implementation(project(":bgw-net:bgw-net-protocol-client"))
 }
 
 application { mainClass.set("tools.aqua.bgw.examples.maumau.main.MainKt") }
