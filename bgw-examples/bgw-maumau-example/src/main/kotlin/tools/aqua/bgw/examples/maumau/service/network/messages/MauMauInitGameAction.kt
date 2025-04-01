@@ -35,7 +35,7 @@ data class MauMauInitGameAction(
     val drawStack: List<MauMauGameCard>,
     val gameStack: MauMauGameCard,
 ) : GameAction() {
-  override fun toString(): String =
+  override fun formatMessage(): String =
       "Host cards: ${hostCards.joinToString(", ")}\n" +
           "Your cards: ${yourCards.joinToString(", ")}\n" +
           "Draw stack: ${drawStack.joinToString(", ")}\n" +

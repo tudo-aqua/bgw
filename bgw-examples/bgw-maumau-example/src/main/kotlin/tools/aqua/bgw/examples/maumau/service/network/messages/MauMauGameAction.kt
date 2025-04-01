@@ -28,7 +28,7 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
  */
 @GameActionClass
 data class MauMauGameAction(val action: String, val card: MauMauGameCard? = null) : GameAction() {
-  override fun toString(): String {
+  override fun formatMessage(): String {
     val text =
         when (action) {
           "PLAY_CARD" -> "Played the $card."

@@ -27,5 +27,5 @@ import tools.aqua.bgw.net.common.annotations.GameActionClass
  */
 @GameActionClass
 data class MauMauEndGameAction(val winner: String) : GameAction() {
-  override fun toString(): String = "$winner has won the game!"
+  override fun formatMessage(): String = "$winner has won the game!"
 }
