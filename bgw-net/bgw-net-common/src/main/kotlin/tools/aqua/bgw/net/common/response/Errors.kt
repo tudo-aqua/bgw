@@ -37,12 +37,11 @@ class Errors(items: Map<String, List<String>>) : LinkedHashMap<String, List<Stri
    *
    * @return a string representation of this [Errors] object
    */
-  override fun toString(): String {
-    return this.entries.joinToString("\n\n") { (title, errors) ->
-      """
+  override fun toString(): String =
+      this.entries.joinToString("\n\n") { (title, errors) ->
+        """
             [$title]
             ${errors.joinToString(",\n") { "\"$it\"" }}
             """.trimIndent()
-    }
-  }
+      }
 }
