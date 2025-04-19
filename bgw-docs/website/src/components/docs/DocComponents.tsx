@@ -94,7 +94,10 @@ export const CodeDisplay = ({
   return (
     <pre className="relative w-full max-w-full px-7 py-[19px] font-mono text-sm code-display bg-muted/50 rounded-xl">
       {kotlinTypeHighlighter(
-        createKotlinCodeLinebreaks(code, lineLength),
+        createKotlinCodeLinebreaks(
+          code.replace(/@Target\(.*?\)/, ""),
+          lineLength
+        ),
         links
       )}
     </pre>
@@ -140,6 +143,7 @@ export const kotlinTypeHighlighter = (signature: string, links = {}) => {
     "private",
     "protected",
     "public",
+    "annotation",
     "constructor",
     "companion",
     "object",
@@ -149,6 +153,7 @@ export const kotlinTypeHighlighter = (signature: string, links = {}) => {
     "suspend",
     "vararg",
     "in",
+    "out",
     "operator",
     "set",
     "get",

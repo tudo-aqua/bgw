@@ -107,7 +107,9 @@ function BGWPlayground() {
   useEffect(() => {
     setupIndexedDB(idbConfig)
       .then(() => {
-        loadSavedWorkspace();
+        createDefaultWorkspace();
+        listWorkspaces();
+        loadSavedWorkspace("default");
       })
       .catch((err) => console.error("IndexedDB initialization failed:", err));
   }, []);
@@ -217,6 +219,26 @@ function BGWPlayground() {
     } catch (err) {
       console.error("Failed to load workspace:", err);
     }
+  };
+
+  const createDefaultWorkspace = () => {
+    const workspace = {
+      id: "default",
+      name: "Default",
+      components: [],
+      treeData: [],
+      sceneWidth: 1920,
+      sceneHeight: 1080,
+      sceneBackground: "#ffffff",
+    };
+
+    createWorkspace(workspace)
+      .then()
+      .catch((err) =>
+        console.error("Failed to create default workspace:", err)
+      );
+
+    listWorkspaces();
   };
 
   const [advancedMode, setAdvancedMode] = useState(false);
