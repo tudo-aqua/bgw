@@ -23,7 +23,8 @@ import ID
 import data.animation.*
 import kotlinx.browser.document
 import org.w3c.dom.Node
-import react.dom.render
+import react.dom.client.Root
+import react.dom.client.createRoot
 import tools.aqua.bgw.builder.VisualBuilder
 import web.cssom.ElementCSSInlineStyle
 import web.dom.Element
@@ -239,15 +240,17 @@ internal class Animator {
           animations["$componentId--$type"] = newElement
 
           val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+          var visualRoot: Root? = null
+
           if (oldVisuals != null) {
-            render(VisualBuilder.build(animation.fromVisual), oldVisuals)
+            visualRoot = createRoot(oldVisuals)
+            visualRoot.render(VisualBuilder.build(animation.fromVisual))
           }
 
           setTimeout(
               {
-                val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
                 if (oldVisuals != null) {
-                  render(VisualBuilder.build(animation.toVisual), oldVisuals)
+                  visualRoot?.render(VisualBuilder.build(animation.toVisual))
                 }
               },
               duration / 2)
@@ -269,12 +272,18 @@ internal class Animator {
     val componentId = animation.componentView?.id.toString()
     val duration = animation.duration
 
+    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    var visualRoot: Root? = null
+
+    if (oldVisuals != null) {
+      visualRoot = createRoot(oldVisuals)
+    }
+
     val interval =
         setInterval(
             {
-              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(animation.visuals.random()), oldVisuals)
+                visualRoot?.render(VisualBuilder.build(animation.visuals.random()))
               }
             },
             duration / animation.speed)
@@ -282,9 +291,8 @@ internal class Animator {
     setTimeout(
         {
           clearInterval(interval)
-          val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
           if (oldVisuals != null) {
-            render(VisualBuilder.build(animation.toVisual), oldVisuals)
+            visualRoot?.render(VisualBuilder.build(animation.toVisual))
           }
           callback.invoke(animation.id)
         },
@@ -298,12 +306,18 @@ internal class Animator {
     val dice = animation.componentView as? DiceViewData ?: return
     val duration = animation.duration
 
+    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    var visualRoot: Root? = null
+
+    if (oldVisuals != null) {
+      visualRoot = createRoot(oldVisuals)
+    }
+
     val interval =
         setInterval(
             {
-              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(dice.visuals.random()), oldVisuals)
+                visualRoot?.render(VisualBuilder.build(dice.visuals.random()))
               }
             },
             duration / animation.speed)
@@ -311,9 +325,8 @@ internal class Animator {
     setTimeout(
         {
           clearInterval(interval)
-          val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
           if (oldVisuals != null) {
-            render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
+            visualRoot?.render(VisualBuilder.build(dice.visuals[animation.toSide]))
           }
           callback.invoke(animation.id)
         },

@@ -25,7 +25,6 @@ import emotion.react.css
 import emotion.react.styles
 import kotlinx.browser.document
 import react.*
-import react.dom.aria.ariaExpanded
 import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.*

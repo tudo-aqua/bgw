@@ -23,7 +23,7 @@ package tools.aqua.bgw
 import react.*
 
 @JsName("TransformWrapper")
-internal external val TransformWrapper: ComponentClass<TransformWrapperProps>
+internal external val TransformWrapper: ComponentType<TransformWrapperProps>
 
 internal external interface TransformWrapperProps :
     PropsWithStyle,
@@ -100,7 +100,7 @@ internal external interface VelocityAnimation {
 }
 
 @JsName("TransformComponent")
-internal external val TransformComponent: ComponentClass<TransformComponentProps>
+internal external val TransformComponent: ComponentType<TransformComponentProps>
 
 internal external interface TransformComponentProps :
     PropsWithStyle, PropsWithChildren, PropsWithClassName {

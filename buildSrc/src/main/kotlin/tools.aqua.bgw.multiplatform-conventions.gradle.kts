@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
+import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.dokkaHtml
+import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.dokkaJavadoc
+import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.java
+import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.spotless
 import java.lang.ProcessHandle
 import java.nio.file.Files
 import org.gradle.api.publish.maven.MavenPublication
@@ -41,7 +41,7 @@ plugins {
 }
 
 val propertyFile = "Config.kt"
-val wrappersVersion = "-pre.831"
+val wrappersVersion = "2025.5.6"
 
 fun buildDefaultPropertyFile() {
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
@@ -124,7 +124,7 @@ kotlin {
   }
   sourceSets {
     val commonMain by getting {
-      dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") }
+      dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0") }
     }
     val commonTest by getting { dependencies { implementation(kotlin("test")) } }
     val jvmMain by getting {
@@ -134,17 +134,19 @@ kotlin {
         implementation("io.ktor:ktor-server-websockets:2.3.11")
         implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
-        implementation("me.friwi:jcefmaven:132.3.1")
+        implementation("me.friwi:jcefmaven:135.0.20")
         implementation("dev.dirs:directories:26")
       }
     }
     val jvmTest by getting
     val jsMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3${wrappersVersion}")
+        implementation(
+            "org.jetbrains.kotlin-wrappers:kotlin-emotion-react:${wrappersVersion}-11.14.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${wrappersVersion}-19.1.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:${wrappersVersion}-19.1.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:${wrappersVersion}-19.1.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-use:${wrappersVersion}")
         implementation(npm("@dnd-kit/core", "6.2.0"))
         implementation(npm("react-zoom-pan-pinch", "3.6.1"))
       }

@@ -39,7 +39,7 @@ import org.w3c.dom.WebSocket
 import react.*
 import react.dom.client.Root
 import react.dom.client.createRoot
-import react.dom.render
+import react.dom.client.hydrateRoot
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -57,6 +57,8 @@ internal lateinit var dialogContainer: HTMLElement
 internal lateinit var root: Root
 internal lateinit var dialogRoot: Root
 internal val dialogMap = mutableMapOf<ID, DialogData>()
+
+internal var exampleRoots = mutableMapOf<ID, Root>()
 
 internal fun main() {
   if (Config.USE_SOCKETS) {
@@ -88,14 +90,16 @@ internal fun main() {
 
           val cont = document.getElementById(containerId)
           if (cont != null) {
-            container = cont as HTMLElement
-            handleReceivedData(receivedData!!)
+            if (!exampleRoots.containsKey(containerId)) {
+              exampleRoots[containerId] = createRoot(cont as Element)
+            }
+            handleReceivedData(receivedData!!, containerId)
           }
         })
   }
 }
 
-internal fun handleReceivedData(receivedData: Data) {
+internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-root") {
   when (receivedData) {
     is AppData -> {
 
@@ -106,7 +110,7 @@ internal fun handleReceivedData(receivedData: Data) {
         setTimeout(
             {
               if (!Config.USE_SOCKETS) {
-                renderApp(receivedData)
+                renderSingleRoot(receivedData, containerId)
               } else {
                 renderAppFast(receivedData)
               }
@@ -114,7 +118,7 @@ internal fun handleReceivedData(receivedData: Data) {
             300)
       } else if (receivedData.action == ActionProp.SHOW_MENU_SCENE) {
         if (!Config.USE_SOCKETS) {
-          renderApp(receivedData)
+          renderSingleRoot(receivedData, containerId)
         } else {
           renderAppFast(receivedData)
         }
@@ -122,7 +126,7 @@ internal fun handleReceivedData(receivedData: Data) {
         setTimeout({ element.classList.toggle("scene--visible", true) }, 50)
       } else {
         if (!Config.USE_SOCKETS) {
-          renderApp(receivedData)
+          renderSingleRoot(receivedData, containerId)
         } else {
           renderAppFast(receivedData)
         }
@@ -172,15 +176,20 @@ internal fun sendFile(handle: FileSystemFileHandle, dialog: FileDialogData) {
   }
 }
 
-/** Renders the app with React 17 syntax to provide fallback for BGW Playground web app. */
-internal fun renderApp(appData: AppData) {
-  render(
-      App.create { data = appData },
-      container as Element,
-      callback = { JCEFEventDispatcher.dispatchEvent(LoadEventData()) })
+/** Renders single elements for BGW Playground web app. */
+internal fun renderSingleRoot(appData: AppData, containerId: String) {
+  if (exampleRoots.containsKey(containerId)) {
+    val localRoot = exampleRoots[containerId]
+    localRoot?.render(App.create { data = appData })
+  } else {
+    val cont = document.getElementById(containerId)
+    if (cont != null) {
+      exampleRoots[containerId] = hydrateRoot(cont as Element, App.create { data = appData })
+    }
+  }
 }
 
-/** Renders the app with React 18 syntax. */
+/** Renders the BGW interface. */
 internal fun renderAppFast(appData: AppData) {
   if (!::root.isInitialized) {
     root = createRoot(container as Element)
