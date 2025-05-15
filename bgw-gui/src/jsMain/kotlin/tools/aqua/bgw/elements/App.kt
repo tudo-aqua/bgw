@@ -258,7 +258,6 @@ internal val App =
 
           "bgw_menu_scene[aria-expanded='true'] > bgw_scene" {
             opacity = number(1.0)
-            backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
           }
 
           "bgw_camera_pane" { overflow = Overflow.hidden }
