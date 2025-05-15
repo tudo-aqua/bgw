@@ -68,7 +68,7 @@ import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  val DEBUG = false
+  val DEBUG = true
 }
 
 internal class JCEFApplication : Application {
@@ -77,7 +77,8 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
-    println("[BGW] Starting BGW Runtime (${Constants.PORT})")
+    if (Constants.DEBUG) println("[BGW] Starting BGW Runtime (http://localhost:${Constants.PORT})")
+    else println("[BGW] Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
       frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
       JCEFApplication::class

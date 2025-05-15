@@ -31,7 +31,7 @@ import tools.aqua.bgw.observable.properties.Property
  *
  * @since 0.1
  */
-open class ColorVisual(color: Color) : SingleLayerVisual() {
+open class ColorVisual(color: Color) : SingleLayerVisual(0.0) {
   /**
    * [Property] for the displayed [Color] of this [Visual].
    *

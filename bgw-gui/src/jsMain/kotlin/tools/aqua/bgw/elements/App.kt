@@ -256,9 +256,7 @@ internal val App =
             clipPath = polygonPath("25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%")
           }
 
-          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" {
-            opacity = number(1.0)
-          }
+          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" { opacity = number(1.0) }
 
           "bgw_camera_pane" { overflow = Overflow.hidden }
 

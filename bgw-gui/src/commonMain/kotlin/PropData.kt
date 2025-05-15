@@ -318,7 +318,8 @@ internal sealed class SingleLayerVisualData(
     var transparency: Double = 0.0,
     var style: Map<String, String> = emptyMap(),
     var filters: Map<String, String> = emptyMap(),
-    var flipped: String = ""
+    var flipped: String = "",
+    var rotation: Double = 0.0
 ) : VisualData()
 
 @Serializable internal data class ColorVisualData(var color: String = "") : SingleLayerVisualData()

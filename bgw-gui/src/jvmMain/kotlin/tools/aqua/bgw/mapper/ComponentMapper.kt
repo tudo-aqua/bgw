@@ -445,6 +445,7 @@ internal object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
+                rotation = visual.rotation
               }
           is ImageVisual ->
               ImageVisualData().apply {
@@ -460,6 +461,7 @@ internal object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
+                rotation = visual.rotation
               }
           is TextVisual ->
               TextVisualData().apply {
@@ -472,6 +474,7 @@ internal object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
+                rotation = visual.rotation
                 alignment =
                     Pair(
                         visual.alignment.horizontalAlignment.name.lowercase(),
