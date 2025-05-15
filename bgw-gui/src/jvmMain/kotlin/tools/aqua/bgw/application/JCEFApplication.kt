@@ -200,7 +200,10 @@ internal class JCEFApplication : Application {
                   if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
                 }
                 is TextInputChangedEventData -> {
-                  if (component is TextInputUIComponent) component.text = eventData.value
+                  if (component is TextInputUIComponent) {
+                    component.textProperty.setSilent(eventData.value)
+                    component.onTextChanged?.invoke(eventData.value)
+                  }
                 }
                 is ColorInputChangedEventData -> {
                   // println("Text changed")

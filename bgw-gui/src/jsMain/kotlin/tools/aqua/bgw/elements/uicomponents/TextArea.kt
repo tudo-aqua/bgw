@@ -29,6 +29,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.*
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
+import tools.aqua.bgw.event.useDebouncedCallback
 import tools.aqua.bgw.useDroppable
 import web.cssom.*
 import web.dom.Element
@@ -53,8 +54,28 @@ internal val TextArea =
       val elementRef = useRef<Element>(null)
 
       val (inputValue, setInputValue) = useState(props.data.text)
+      val lastPropText = useRef(props.data.text)
+      val lastLocalUpdate = useRef(0L)
 
-      useEffect(listOf(props.data.text)) { setInputValue(props.data.text) }
+      // Handle incoming updates from JVM
+      useEffect(listOf(props.data.text)) {
+        val now = js("Date.now()").unsafeCast<Long>()
+        // Only accept JVM updates if not recently updated locally (prevents flickering)
+        if (props.data.text != lastPropText.current &&
+            (now - lastLocalUpdate.current!! > 500 || props.data.text != inputValue)) {
+          lastPropText.current = props.data.text
+          setInputValue(props.data.text)
+        }
+      }
+
+      // Debounced dispatch for performance
+      val debouncedDispatch =
+          useDebouncedCallback(
+              { value: String ->
+                JCEFEventDispatcher.dispatchEvent(
+                    TextInputChangedEventData(value).apply { id = props.data.id })
+              },
+              200)
 
       bgwTextArea {
         id = props.data.id
@@ -88,8 +109,18 @@ internal val TextArea =
           onChange = {
             val value = it.target.value
             setInputValue(value)
-            JCEFEventDispatcher.dispatchEvent(
-                TextInputChangedEventData(value).apply { id = props.data.id })
+
+            lastLocalUpdate.current = js("Date.now()").unsafeCast<Long>()
+
+            // Special handling for empty or backspace operations
+            if (value.isEmpty() || value.length < inputValue.length) {
+              // Send backspace/delete events immediately to prevent flickering
+              JCEFEventDispatcher.dispatchEvent(
+                  TextInputChangedEventData(value).apply { id = props.data.id })
+            } else {
+              // Use debouncing for regular typing for performance
+              debouncedDispatch(value)
+            }
           }
         }
 
