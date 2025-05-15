@@ -221,13 +221,13 @@ open class LinearLayout<T : GameComponentView>(
           HorizontalAlignment.RIGHT -> width - newTotalContentWidth
         }
     observableComponents.fold(initial) { acc: Double, component: T ->
-      component.posYProperty.setSilent(
+      component.inParentPosYProperty.setSilent(
           when (alignment.verticalAlignment) {
             VerticalAlignment.TOP -> 0.0
             VerticalAlignment.CENTER -> (height - component.height) / 2
             VerticalAlignment.BOTTOM -> height - component.height
           })
-      component.posXProperty.setSilent(acc)
+      component.inParentPosXProperty.setSilent(acc)
       acc + component.width + newSpacing
     }
   }
@@ -253,8 +253,8 @@ open class LinearLayout<T : GameComponentView>(
           VerticalAlignment.BOTTOM -> height - newTotalContentHeight
         }
     observableComponents.fold(initial) { acc: Double, component: T ->
-      component.posYProperty.setSilent(acc)
-      component.posXProperty.setSilent(
+      component.inParentPosYProperty.setSilent(acc)
+      component.inParentPosXProperty.setSilent(
           when (alignment.horizontalAlignment) {
             HorizontalAlignment.LEFT -> 0.0
             HorizontalAlignment.CENTER -> (width - component.width) / 2

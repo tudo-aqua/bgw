@@ -363,6 +363,10 @@ internal object ContainerMapper {
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
+            alignment =
+                Pair(
+                    container.alignment.horizontalAlignment.name.lowercase(),
+                    container.alignment.verticalAlignment.name.lowercase())
           }
       is HexagonGrid<*> -> {
         val tempMap = mutableMapOf<String, HexagonViewData>()

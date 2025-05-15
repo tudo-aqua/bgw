@@ -145,8 +145,7 @@ open class CardStack<T : CardView>(
   }
 
   private fun T.layoutX() {
-
-    posXProperty.setSilent(
+    inParentPosXProperty.setSilent(
         when (alignment.horizontalAlignment) {
           HorizontalAlignment.LEFT -> 0.0
           HorizontalAlignment.CENTER -> (this@CardStack.width - this.width) / 2
@@ -155,7 +154,7 @@ open class CardStack<T : CardView>(
   }
 
   private fun T.layoutY() {
-    posYProperty.setSilent(
+    inParentPosYProperty.setSilent(
         when (alignment.verticalAlignment) {
           VerticalAlignment.TOP -> 0.0
           VerticalAlignment.CENTER -> (this@CardStack.height - this.height) / 2

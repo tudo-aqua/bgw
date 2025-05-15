@@ -277,8 +277,8 @@ internal val App =
 
           "bgw_linear_layout > bgw_contents > div > *, bgw_linear_layout > bgw_contents > *" {
             position = important(Position.relative)
-            left = important(Globals.unset)
-            top = important(Globals.unset)
+            // left = important(Globals.unset)
+            // top = important(Globals.unset)
             flexGrow = number(0.0)
             flexShrink = number(0.0)
           }

@@ -75,7 +75,6 @@ internal val ReactGridPane =
 
           if (props.data.layoutFromCenter) {
             useLayoutEffect(listOf(props.data)) {
-              println("useLayoutEffect" + props.data.id + " - ${props.data.layoutFromCenter}")
               document.getElementById(props.data.id)?.let {
                 val element = it
                 val width = convertToPx(element.offsetWidth.toDouble())
@@ -88,7 +87,6 @@ internal val ReactGridPane =
             }
           } else {
             useLayoutEffect(listOf(props.data)) {
-              println("useLayoutEffect" + props.data.id + " - ${props.data.layoutFromCenter}")
               document.getElementById(props.data.id)?.let {
                 it.style.left = "${props.data.posX}em"
                 it.style.top = "${props.data.posY}em"
@@ -132,6 +130,9 @@ internal val ReactGridPane =
                       "bottom" -> AlignSelf.flexEnd
                       else -> AlignSelf.center
                     }
+                position = Position.relative
+                left = gridElementData.component?.posX?.em
+                top = gridElementData.component?.posY?.em
               }
 
               gridElementData.component?.let { +build(it) }

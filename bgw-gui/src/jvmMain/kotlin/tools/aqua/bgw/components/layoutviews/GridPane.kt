@@ -19,6 +19,7 @@
 
 package tools.aqua.bgw.components.layoutviews
 
+import kotlin.math.abs
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.DEFAULT_GRID_SPACING
@@ -64,8 +65,6 @@ open class GridPane<T : ComponentView>(
   internal var updateGui: (() -> Unit)? = null
 
   internal val grid: ComponentViewGrid<T> = ComponentViewGrid(rows = rows, columns = columns)
-  internal var renderedRowHeights = DoubleArray(rows) { 0.0 }
-  internal var renderedColWidths = DoubleArray(columns) { 0.0 }
 
   /** Current column count. */
   val columns: Int
@@ -108,8 +107,6 @@ open class GridPane<T : ComponentView>(
     grid[columnIndex, rowIndex]?.apply {
       widthProperty.internalListener = null
       heightProperty.internalListener = null
-      posXProperty.internalListener = null
-      posYProperty.internalListener = null
       parent = null
     }
 
@@ -117,16 +114,34 @@ open class GridPane<T : ComponentView>(
         component?.apply {
           widthProperty.internalListener = { _, _ -> updateGui?.invoke() }
           heightProperty.internalListener = { _, _ -> updateGui?.invoke() }
-          posXProperty.internalListener = { _, _ -> posXProperty.setSilent(0.0) }
-          posYProperty.internalListener = { _, _ -> posYProperty.setSilent(0.0) }
           parent = this@GridPane
         }
 
-    component?.run {
-      posXProperty.setSilent(0.0)
-      posYProperty.setSilent(0.0)
-    }
+    setColumnWidth(columnIndex, maxOf(getColumnWidth(columnIndex), component?.actualWidth ?: 0.0))
+    setRowHeight(rowIndex, maxOf(getRowHeight(rowIndex), component?.actualHeight ?: 0.0))
+
+    layout()
+
     updateGui?.invoke()
+  }
+
+  internal fun layout() {
+    grid.forEach { cell ->
+      val component = cell.component
+      val columnIndex = cell.columnIndex
+      val rowIndex = cell.rowIndex
+
+      setColumnWidth(columnIndex, maxOf(getColumnWidth(columnIndex), component?.actualWidth ?: 0.0))
+      setRowHeight(rowIndex, maxOf(getRowHeight(rowIndex), component?.actualHeight ?: 0.0))
+
+      component?.let {
+        val pos = getActualChildPosition(it)
+        if (pos != null) {
+          it.inParentPosXProperty.setSilent(pos.xCoord)
+          it.inParentPosYProperty.setSilent(pos.yCoord)
+        }
+      }
+    }
   }
 
   /**
@@ -148,7 +163,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
     grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, alignment = value)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -160,7 +175,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
     grid.setColumnCenterMode(columnIndex = columnIndex, alignment = value)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -172,7 +187,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowCenterMode(rowIndex: Int, value: Alignment) {
     grid.setRowCenterMode(rowIndex = rowIndex, alignment = value)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -183,7 +198,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setCenterMode(value: Alignment) {
     grid.setCenterMode(alignment = value)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -214,7 +229,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnWidth(columnIndex: Int, columnWidth: Number) {
     grid.setColumnWidth(columnIndex = columnIndex, columnWidth = columnWidth.toDouble())
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -232,7 +247,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnWidths(columnWidth: Number) {
     grid.setColumnWidths(columnWidth = columnWidth.toDouble())
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -251,7 +266,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnWidths(columnWidths: DoubleArray) {
     grid.setColumnWidths(columnWidths = columnWidths)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -265,7 +280,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoColumnWidth(columnIndex: Int) {
     grid.setColumnWidth(columnIndex = columnIndex, columnWidth = COLUMN_WIDTH_AUTO)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -277,7 +292,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoColumnWidths() {
     grid.setColumnWidths(columnWidths = DoubleArray(columns) { COLUMN_WIDTH_AUTO })
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -307,7 +322,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeight(rowIndex: Int, rowHeight: Number) {
     grid.setRowHeight(rowIndex = rowIndex, rowHeight = rowHeight.toDouble())
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -325,7 +340,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeights(rowHeight: Number) {
     grid.setRowHeights(rowHeight = rowHeight.toDouble())
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -344,7 +359,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeights(rowHeights: DoubleArray) {
     grid.setRowHeights(rowHeights = rowHeights)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -358,7 +373,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoRowHeight(rowIndex: Int) {
     grid.setRowHeight(rowIndex = rowIndex, rowHeight = ROW_HEIGHT_AUTO)
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -370,7 +385,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoRowHeights() {
     grid.setRowHeights(rowHeights = DoubleArray(rows) { ROW_HEIGHT_AUTO })
-    updateGui?.invoke()
+    // updateGui?.invoke()
   }
 
   /**
@@ -579,11 +594,15 @@ open class GridPane<T : ComponentView>(
           .firstOrNull()
 
   private fun getRelativeChildOffset(it: GridIteratorElement<T>): Coordinate {
-    val cols = renderedColWidths.toMutableList().subList(0, it.columnIndex)
-    val rows = renderedRowHeights.toMutableList().subList(0, it.rowIndex)
+    if (it.component == null) return Coordinate(0.0, 0.0)
+    val cols = grid.getColumnWidths().toMutableList().subList(0, it.columnIndex)
+    val rows = grid.getRowHeights().toMutableList().subList(0, it.rowIndex)
 
-    val cellOffsetX = renderedColWidths[it.columnIndex] - (it.component?.actualWidth ?: 0.0)
-    val cellOffsetY = renderedRowHeights[it.rowIndex] - (it.component?.actualHeight ?: 0.0)
+    val currentCol = grid.getColumnWidths()[it.columnIndex]
+    val currentRow = grid.getRowHeights()[it.rowIndex]
+
+    val cellOffsetX = abs(it.component.actualWidth - currentCol)
+    val cellOffsetY = abs(it.component.actualHeight - currentRow)
 
     val cellAlignment = getCellCenterMode(columnIndex = it.columnIndex, rowIndex = it.rowIndex)
     val cellAlignmentX = cellAlignment.horizontalAlignment.positionMultiplier
