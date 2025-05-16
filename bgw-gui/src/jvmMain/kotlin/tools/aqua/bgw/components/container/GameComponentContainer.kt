@@ -151,7 +151,7 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * @throws IllegalArgumentException If a [GameComponentView] is already contained.
    */
   fun addAll(vararg components: T) {
-    require(this is HexagonGrid<*>) {
+    require(this !is HexagonGrid<*>) {
       "HexagonGrid does not support adding components. Use set() instead."
     }
 
@@ -174,7 +174,7 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    */
   @Synchronized
   fun addAll(collection: Collection<T>) {
-    require(this is HexagonGrid<*>) {
+    require(this !is HexagonGrid<*>) {
       "HexagonGrid does not support adding components. Use set() instead."
     }
     try {
