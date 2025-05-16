@@ -316,6 +316,7 @@ internal class JCEFApplication : Application {
                           "Error",
                           "An error occurred while handling an event: ${e.message}",
                           exception = e)))
+              e.printStackTrace()
             }
             return true
           }
@@ -702,89 +703,173 @@ internal class MainFrame(
   internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
     browser.executeJavaScript(
         """
-                document.write(`
-                    <html>
-                        <head>        
-                            <style>
-                                * {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  background-color: white;
-  font-family: sans-serif;
-  padding: 1rem;
-  width: calc(100% - 2rem);
-}
-
-h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-p {
-  margin-top: 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  opacity: 0.75;
-  margin-bottom: 2rem;
-}
-
-.code-scroll {
-  border-radius: 1rem;
-  background: #0f0f0f;
-  color: white;
-  padding: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  display: block;
-  height: 15rem;
-  overflow: auto;
-}
-
-.code-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-code {
-  color: white;
-  box-sizing: border-box;
-  width: 100%;
-  height: fit-content;
-  display: block;
-}
-
-.footer {
-  width: 100%;
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-span {
-    display: inline-block;  
-    width: 29px;
-}
-                            </style>
-                        </head>
-                        <body>
-                            <h1>${dialogData.header}</h1>
-                            <p>${dialogData.message}</p>
-                            <div class="code-scroll">
-                                <code>${dialogData.exception.replace(Regex("\\t"), "<span></span>").replace(Regex("\\n"), "<br>")}</code>
-                            </div>
-                            <div class="footer">
-                              <div class="buttons">
-                                <button onClick="window.close()">Close</button>
-                              </div>
-                            </div>
-                        </body>
-                    </html>`);
-            """.trimIndent(),
+        document.write(`
+            <html>
+                <head>        
+                    <style>
+                        * {
+                            padding: 0;
+                            margin: 0;
+                            box-sizing: border-box;
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+                        }
+                        
+                        *::-webkit-scrollbar {
+                            display: none;
+                        }
+                        
+                        body {
+                            background-color: #161d29;
+                            color: white;
+                            padding: 1.5rem;
+                            padding-inline: 2rem;
+                            width: 100%;
+                            height: 100vh;
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        
+                        .header {
+                            display: flex;
+                            align-items: baseline;
+                            margin-bottom: 1rem;
+                            padding-bottom: 0.5rem;
+                            flex-direction: column;
+                            gap: 0.25rem;
+                        }
+                        
+                        h1 {
+                            font-size: 1.25rem;
+                            font-weight: 700;
+                            color: white;
+                        }
+                        
+                        .message {
+                            font-size: 0.85rem;
+                            color: #9ca3af;
+                            flex: 1;
+                        }
+                        
+                        .stack-container {
+                            flex: 1;
+                            border-radius: 0.75rem;
+                            background: #121824;
+                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        
+                        .stack-header {
+                            background: #0f141f;
+                            color: #e6e6e6;
+                            padding: 0.75rem 1rem;
+                            padding-inline: 1.5rem;
+                            font-size: 0.9rem;
+                            font-weight: 500;
+                        }
+                        
+                        .code-scroll {
+                            padding: 1rem;
+                            padding-inline: 1.5rem;
+                            overflow: auto;
+                            height: 100%;
+                        }
+                        
+                        .code-scroll::-webkit-scrollbar {
+                            display: none;
+                        }
+                        
+                        code {
+                            color: #e6e6e6;
+                            font-family: monospace;
+                            font-size: 0.9rem;
+                            line-height: 1.5;
+                        }
+                        
+                        .footer {
+                            margin-top: 1rem;
+                            display: flex;
+                            justify-content: flex-end;
+                        }
+                        
+                        button {
+                            background-color: #121824;
+                            color: white;
+                            border: none;
+                            border-radius: 0.25rem;
+                            padding: 0.5rem 1.25rem;
+                            font-size: 0.9rem;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: background-color 0.2s;
+                        }
+                        
+                        button:hover {
+                            background-color: #0f141f;
+                        }
+                        
+                        /* Syntax highlighting classes */
+                        .pkg { color: #6dbeff; font-family: monospace; }
+                        .cls { color: #ffc656; font-family: monospace; }
+                        .method { color: #ffc656; font-family: monospace; }
+                        .line { color: #9ca3af; font-family: monospace; }
+                        .elem { color: #ea7afc; font-family: monospace; }
+                        .msg { color: #9ca3af; font-style: italic; font-family: monospace; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>${extractExceptionType(dialogData.exception)}</h1>
+                        <div class="message">${dialogData.message}</div>
+                    </div>
+                    
+                    <div class="stack-container">
+                        <div class="stack-header">Stacktrace</div>
+                        <div class="code-scroll">
+                            <code>${syntaxHighlightStackTrace(dialogData.exception)}</code>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        <button onClick="window.close()">Dismiss</button>
+                    </div>
+                </body>
+            </html>`);
+        """.trimIndent(),
         browser.url,
         0)
+  }
+
+  private fun extractExceptionType(trace: String?): String {
+    if (trace == null) return ""
+
+    val exceptionType = trace.substringBefore(":")
+    return exceptionType.replace(":", "").split(".").last().trim()
+  }
+
+  private fun syntaxHighlightStackTrace(trace: String?): String {
+    if (trace == null) return ""
+
+    return trace
+        .replace(Regex("\\\$(\\d+|\\w+)"), "")
+        // Match package.Class@hexIdentifier patterns
+        .replace(Regex("(\\w+(?:\\.\\w+)+)@([0-9a-f]+)"), "<span class=\"elem\">$1@$2</span>")
+        // Match standard stack trace lines with file and line numbers
+        .replace(
+            Regex("at ((?:[\\w.]+\\.)+)(.+)\\((.*?):(\\d+)\\)"),
+            "<span class=\"msg\">at</span> <span class=\"pkg\">$1</span><span class=\"method\">$2</span><span class=\"line\">($3:$4)</span>")
+        // Match exception class names with message
+        .replace(
+            Regex("^([^:\\n]+Exception|[^:\\n]+Error):(.*)", RegexOption.MULTILINE),
+            "<span class=\"cls\">$1</span>:<span class=\"msg\">$2</span>")
+        // Highlight "Caused by:" sections
+        .replace("Caused by: ", "<span class=\"msg\">Caused by: </span>")
+        // Replace tabs with proper spacing
+        .replace("\t", "<span style=\"display:inline-block;width:20px;\"></span>")
+        // Replace newlines with HTML breaks
+        .replace("\n", "<br>")
+        .trimIndent()
+        .trim()
   }
 
   internal fun openNewDialog(dialogData: DialogData) {
@@ -796,9 +881,10 @@ span {
     val dialog = JFrame()
     dialog.title = dialogData.message
     dialog.iconImage = iconImage
+    dialog.background = java.awt.Color(0x161d29)
     dialog.contentPane.add(dialogUI, BorderLayout.CENTER)
     dialog.pack()
-    dialog.setSize(800, 500)
+    dialog.setSize(1200, 500)
     dialog.setLocationRelativeTo(this)
     dialog.isVisible = true
   }
