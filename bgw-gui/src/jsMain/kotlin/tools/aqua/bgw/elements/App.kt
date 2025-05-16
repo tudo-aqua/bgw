@@ -256,10 +256,7 @@ internal val App =
             clipPath = polygonPath("25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%")
           }
 
-          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" {
-            opacity = number(1.0)
-            backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
-          }
+          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" { opacity = number(1.0) }
 
           "bgw_camera_pane" { overflow = Overflow.hidden }
 
@@ -280,8 +277,8 @@ internal val App =
 
           "bgw_linear_layout > bgw_contents > div > *, bgw_linear_layout > bgw_contents > *" {
             position = important(Position.relative)
-            left = important(Globals.unset)
-            top = important(Globals.unset)
+            // left = important(Globals.unset)
+            // top = important(Globals.unset)
             flexGrow = number(0.0)
             flexShrink = number(0.0)
           }

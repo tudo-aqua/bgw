@@ -41,6 +41,7 @@ internal val TextVisual =
           styleBuilder(props.data.style)
           flipBuilder(props.data.flipped)
           filterBuilder(props.data.filters)
+          transform = rotatez(props.data.rotation.deg)
           fontFamily = (props.data.font?.family ?: "Arial") as FontFamily?
           fontWeight = (props.data.font?.fontWeight ?: "normal") as FontWeight?
           fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?

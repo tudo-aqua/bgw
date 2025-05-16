@@ -68,7 +68,7 @@ import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  val DEBUG = false
+  const val DEBUG = false
 }
 
 internal class JCEFApplication : Application {
@@ -77,7 +77,8 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
-    println("[BGW] Starting BGW Runtime (${Constants.PORT})")
+    if (Constants.DEBUG) println("[BGW] Starting BGW Runtime (http://localhost:${Constants.PORT})")
+    else println("[BGW] Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
       frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
       JCEFApplication::class
@@ -200,7 +201,10 @@ internal class JCEFApplication : Application {
                   if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
                 }
                 is TextInputChangedEventData -> {
-                  if (component is TextInputUIComponent) component.text = eventData.value
+                  if (component is TextInputUIComponent) {
+                    component.textProperty.setSilent(eventData.value)
+                    component.onTextChanged?.invoke(eventData.value)
+                  }
                 }
                 is ColorInputChangedEventData -> {
                   // println("Text changed")

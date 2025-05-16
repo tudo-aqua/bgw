@@ -43,6 +43,7 @@ internal val ColorVisual =
           filterBuilder(props.data.filters)
           backgroundColor = Color(props.data.color)
           opacity = number(props.data.transparency)
+          transform = rotatez(props.data.rotation.deg)
         }
       }
     }

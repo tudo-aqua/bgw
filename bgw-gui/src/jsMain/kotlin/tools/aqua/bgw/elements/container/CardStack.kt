@@ -26,6 +26,7 @@ import react.dom.aria.ariaDisabled
 import react.dom.aria.ariaPressed
 import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
@@ -103,7 +104,18 @@ internal val CardStack =
             alignmentBuilder(props.data)
           }
 
-          props.data.components.forEach { +NodeBuilder.build(it) }
+          props.data.components.forEachIndexed { index, component ->
+            Fragment {
+              key = component.id + index
+              div {
+                css {
+                  width = component.width.em
+                  height = component.height.em
+                }
+                +NodeBuilder.build(component)
+              }
+            }
+          }
         }
 
         applyCommonEventHandlers(props.data)

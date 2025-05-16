@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Migrated backend from _JavaFX_ to _JCEF_ for better performance and compatibility.
 - All `properties` are now internal and cannot be accessed directly anymore - use the corresponding attributes and the new _event-based API_ instead.
 - `ImageVisual`s should now be instantiated using a `path` and cropped with the respective parameters instead of using `BufferedImage`s.
+- The `actualPosX` and `actualPosY` properties in `ComponentView` have been changed to return the absolute position of the component in the scene.
 
 ### Added
 
@@ -55,6 +56,7 @@ All notable changes to this project will be documented in this file.
 - Added `BlurFilter`, `SaturationFilter` and `SepiaFilter` style classes to support image filters on `Visual` elements.
 - Added `BorderRadius` and `Cursor` style classes to support custom styling of `Visual` elements.
 - Added `style`, `filters` and `flipped` properties to `SingleLayerVisual` to apply custom styling.
+- Added `rotation` as an initial parameter to `ImageVisual` and `TextVisual` to set the initial rotation of the visual.
 
 **Misc:**
 - Added `Ä`, `Ö`, `Ü` to `KeyCode` enum for German keyboard layout.
@@ -72,6 +74,7 @@ All notable changes to this project will be documented in this file.
 - Added `loadFont(path, fontName, weight)` function to `BoardGameApplication` to define name and weight of a font loaded from a file.
 - Added `dropTarget` to `DragEvent` to get the target of a drag event.
 - Added `THIN`, `EXTRA_LIGHT`, `MEDIUM`, `EXTRA_BOLD`, `BLACK` font weights to `FontWeight` enum to support a wider range of fonts.
+- Added `inParentPosX` and `inParentPosY` properties to `ComponentView` to get the position of a component in its parent.
 
 ### Fixed
 
@@ -82,6 +85,7 @@ All notable changes to this project will be documented in this file.
 - Fixed `CardView` visual not updating properly.
 - Fixed first `Button` in a scene being focused by default.
 - Fixed window resizing leading to wrongly scaled game view.
+- Fixed `actualPosX` and `actualPosY` properties in `ComponentView` to return the correct absolute position of the component.
 
 ### Changed
 

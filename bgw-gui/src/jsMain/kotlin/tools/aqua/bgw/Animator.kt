@@ -322,7 +322,7 @@ internal class Animator {
 
   private fun getTransitionCSS(animationList: List<AnimationData>): String {
     val transitions =
-        animationList.joinToString(", ") {
+        animationList.map {
           when (it) {
             is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
             is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
@@ -333,7 +333,7 @@ internal class Animator {
         }
 
     return """
-            transition: $transitions;
+            transition: ${transitions.filter { it.isNotEmpty() }.joinToString(", ")};
         """.trimIndent()
   }
 

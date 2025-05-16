@@ -21,6 +21,8 @@ import ComponentViewData
 import data.event.KeyEventAction
 import kotlin.math.sign
 import react.dom.html.HTMLAttributes
+import react.useEffect
+import react.useRef
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEventData
@@ -76,5 +78,17 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
               200)
       lastScrollDirection = currentDirection
     }
+  }
+}
+
+fun <T> useDebouncedCallback(callback: (T) -> Unit, delay: Int): (T) -> Unit {
+  val callbackRef = useRef(callback)
+  val timeoutRef = useRef<Timeout>(null)
+
+  useEffect(listOf(callback)) { callbackRef.current = callback }
+
+  return { value: T ->
+    timeoutRef.current?.let { clearTimeout(it) }
+    timeoutRef.current = setTimeout({ callbackRef.current?.let { it(value) } }, delay)
   }
 }

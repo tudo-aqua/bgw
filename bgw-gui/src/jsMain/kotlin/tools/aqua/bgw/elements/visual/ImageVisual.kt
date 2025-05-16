@@ -49,6 +49,7 @@ internal val ImageVisual =
             styleBuilder(props.data.style)
             flipBuilder(props.data.flipped)
             filterBuilder(props.data.filters)
+            transform = rotatez(props.data.rotation.deg)
 
             width = 100.pct
             height = 100.pct
@@ -103,6 +104,8 @@ internal val ImageVisual =
             styleBuilder(props.data.style)
             flipBuilder(props.data.flipped)
             filterBuilder(props.data.filters)
+            transform = rotatez(props.data.rotation.deg)
+
             backgroundImage = url(props.data.path)
 
             backgroundSize = BackgroundSize.cover
