@@ -43,10 +43,11 @@ internal constructor(
     val title: String,
     val header: String,
     val message: String,
-    val exception: Throwable,
-    val buttons: List<ButtonType>
+    val exception: Throwable
 ) {
   internal val id = IDGenerator.generateDialogID()
+
+  internal var buttonTypes: MutableList<ButtonType> = mutableListOf()
 
   /**
    * Creates a Dialog.
@@ -71,10 +72,11 @@ internal constructor(
       header: String,
       message: String,
       vararg buttons: ButtonType
-  ) : this(dialogType, title, header, message, Exception("empty"), buttons.asList()) {
+  ) : this(dialogType, title, header, message, Exception("empty")) {
     require(dialogType != DialogType.EXCEPTION) {
       "To create an Exception dialog use exception dialog constructor."
     }
+    buttonTypes.addAll(buttons.toList())
   }
 
   /**
@@ -94,5 +96,26 @@ internal constructor(
       header: String,
       message: String,
       exception: Throwable
-  ) : this(DialogType.EXCEPTION, title, header, message, exception, emptyList())
+  ) : this(DialogType.EXCEPTION, title, header, message, exception)
+
+  init {
+    if (buttonTypes.isEmpty()) {
+      buttonTypes.addAll(
+          when (dialogType) {
+            DialogType.NONE -> listOf(ButtonType.OK)
+            DialogType.INFORMATION -> listOf(ButtonType.OK)
+            DialogType.WARNING -> listOf(ButtonType.OK)
+            DialogType.CONFIRMATION -> listOf(ButtonType.YES, ButtonType.NO)
+            DialogType.ERROR -> listOf(ButtonType.OK)
+            DialogType.EXCEPTION -> listOf(ButtonType.DISMISS)
+          })
+    }
+  }
+
+  /**
+   * Gets invoked whenever a button in the dialog is clicked.
+   *
+   * @since 0.10
+   */
+  var onButtonClicked: ((ButtonType) -> Unit)? = null
 }

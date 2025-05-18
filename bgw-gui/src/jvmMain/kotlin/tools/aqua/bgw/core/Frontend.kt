@@ -43,7 +43,6 @@ import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
-import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
@@ -110,6 +109,8 @@ internal class Frontend {
 
     internal val alignmentProperty =
         Property(Alignment.of(VerticalAlignment.CENTER, HorizontalAlignment.CENTER))
+
+    internal val openedDialogs = mutableMapOf<String, Dialog>()
 
     /** Property for the current application width. */
     internal val widthProperty =
@@ -261,17 +262,13 @@ internal class Frontend {
      * Shows a dialog and blocks further thread execution.
      *
      * @param dialog the [Dialog] to show
-     *
-     * @return chosen button or [Optional.empty] if canceled.
      */
-    internal fun showDialog(dialog: Dialog): Optional<ButtonType> {
-      println("Showing dialog ${dialog.id}")
+    internal fun showDialog(dialog: Dialog) {
       val dialogData = DialogMapper.map(dialog)
-      val json = jsonMapper.encodeToString(PropData(dialogData))
-      runBlocking { componentChannel.sendToAllClients(json) }
-      // applicationEngine.openNewDialog(dialogData)
-
-      return Optional.empty()
+      // val json = jsonMapper.encodeToString(PropData(dialogData))
+      // runBlocking { componentChannel.sendToAllClients(json) }
+      openedDialogs[dialog.id] = dialog
+      applicationEngine.openNewDialog(dialogData)
     }
 
     /**

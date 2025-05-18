@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.mapper
 
+import ButtonTypeData
 import DialogData
 import FileDialogData
 import tools.aqua.bgw.dialog.Dialog
@@ -31,6 +32,14 @@ internal object DialogMapper {
       header = dialog.header
       message = dialog.message
       exception = dialog.exception.stackTraceToString()
+      buttons =
+          dialog.buttonTypes.map {
+            ButtonTypeData().apply {
+              text = it.text
+              backgroundColor = it.bg
+              foregroundColor = it.fg
+            }
+          }
     }
   }
 

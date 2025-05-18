@@ -30,12 +30,14 @@ All notable changes to this project will be documented in this file.
 - All `properties` are now internal and cannot be accessed directly anymore - use the corresponding attributes and the new _event-based API_ instead.
 - `ImageVisual`s should now be instantiated using a `path` and cropped with the respective parameters instead of using `BufferedImage`s.
 - The `actualPosX` and `actualPosY` properties in `ComponentView` have been changed to return the absolute position of the component in the scene.
+- Dialogs were adjusted to use the new _event-based API_ and are now non-blocking by default.
 
 ### Added
 
 **Events:**
 - Added `onPathsSelected` event to `FileDialog` to listen for file selection.
 - Added `onSelectionCancelled` event to `FileDialog` to listen for file selection cancellation.
+- Added `onButtonClicked` event to `Dialog` to listen for button clicks.
 - Added `onZoomed` event to `CameraPane` to listen for zoom events.
 - Added `onSelected` event to `BinaryStateButton` to listen for selection of the button.
 - Added `onDeselected` event to `BinaryStateButton` to listen for deselection of the button.
@@ -97,6 +99,7 @@ All notable changes to this project will be documented in this file.
 - Removed previously added horizontal and vertical pan lock as well as zoom lock for `CameraPane`.
 - Removed previously deprecated `getDomain()` and `getCoDomain()` in `BiDirectionalMap` in favor of `keysForward` and `keysBackward`.
 - Removed misleading `CardStack.first()` and `CardStack.last()` functions in favor for actual stack operations.
+- Removed `Optional` return value from `showDialog()` and `showFileDialog()` functions in `BoardGameApplication`.
 
 ### Deprecated
 

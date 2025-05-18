@@ -18,6 +18,7 @@
 package tools.aqua.bgw.application
 
 import Base64
+import DialogButtonClickData
 import DialogData
 import ID
 import data.event.*
@@ -53,15 +54,16 @@ import org.cef.callback.CefContextMenuParams
 import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
+import tools.aqua.bgw.builder.DialogBuilder
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.dialog.FileDialogMode
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
@@ -343,6 +345,7 @@ internal class MainFrame(
   var msgRouter: CefMessageRouter? = null
   var animationMsgRouter: CefMessageRouter? = null
   var globalEventMsgRouter: CefMessageRouter? = null
+  var dialogMsgRouter: CefMessageRouter? = null
   var client: CefClient
   var activeBrowser: CefBrowser
 
@@ -504,6 +507,45 @@ internal class MainFrame(
           }
         }
     animationMsgRouter?.addHandler(animationHandler, true)
+
+    // Dialog Button Handler
+    val dialogConfig = CefMessageRouterConfig()
+    dialogConfig.jsQueryFunction = "cefDialogQuery"
+    dialogConfig.jsCancelFunction = "cefDialogQueryCancel"
+    dialogMsgRouter = CefMessageRouter.create(dialogConfig)
+    client.addMessageRouter(dialogMsgRouter)
+    val dialogButtonHandler =
+        object : CefMessageRouterHandlerAdapter() {
+          override fun onQuery(
+              browser: CefBrowser,
+              frame: CefFrame,
+              query_id: Long,
+              request: String,
+              persistent: Boolean,
+              callback: CefQueryCallback
+          ): Boolean {
+            try {
+              val data = jsonMapper.decodeFromString<DialogButtonClickData>(request)
+
+              // Find the dialog by ID and invoke the button callback
+              val dialog = Frontend.openedDialogs[data.dialogId]
+              val buttonType = dialog?.buttonTypes?.get(data.buttonIndex)
+              if (dialog != null && buttonType != null) {
+                Frontend.openedDialogs.remove(data.dialogId)
+                dialog.onButtonClicked?.invoke(buttonType)
+              }
+              Frontend.openedDialogs.remove(data.dialogId)
+
+              callback.success("")
+              return true
+            } catch (e: Exception) {
+              e.printStackTrace()
+            }
+            return false
+          }
+        }
+
+    dialogMsgRouter?.addHandler(dialogButtonHandler, true)
     // endregion
 
     val browser = client.createBrowser("$startURL:${Constants.PORT}", useOSR, isTransparent)
@@ -532,7 +574,9 @@ internal class MainFrame(
               val dialogData = dialogMap[validBrowser]
 
               if (dialogData != null && validBrowser != null) {
-                setDialogContent(validBrowser, dialogData)
+                if (dialogData.dialogType == DialogType.EXCEPTION)
+                    DialogBuilder.setExceptionDialogContent(validBrowser, dialogData)
+                else DialogBuilder.setDialogContent(validBrowser, dialogData)
                 dialogMap.remove(validBrowser)
               }
             }
@@ -700,178 +744,6 @@ internal class MainFrame(
     return pids.filter { it in getChildrenJCEFHelperProcesses() }.toSet()
   }
 
-  internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
-    browser.executeJavaScript(
-        """
-        document.write(`
-            <html>
-                <head>        
-                    <style>
-                        * {
-                            padding: 0;
-                            margin: 0;
-                            box-sizing: border-box;
-                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-                        }
-                        
-                        *::-webkit-scrollbar {
-                            display: none;
-                        }
-                        
-                        body {
-                            background-color: #161d29;
-                            color: white;
-                            padding: 1.5rem;
-                            padding-inline: 2rem;
-                            width: 100%;
-                            height: 100vh;
-                            display: flex;
-                            flex-direction: column;
-                        }
-                        
-                        .header {
-                            display: flex;
-                            align-items: baseline;
-                            margin-bottom: 1rem;
-                            padding-bottom: 0.5rem;
-                            flex-direction: column;
-                            gap: 0.25rem;
-                        }
-                        
-                        h1 {
-                            font-size: 1.25rem;
-                            font-weight: 700;
-                            color: white;
-                        }
-                        
-                        .message {
-                            font-size: 0.85rem;
-                            color: #9ca3af;
-                            flex: 1;
-                        }
-                        
-                        .stack-container {
-                            flex: 1;
-                            border-radius: 0.75rem;
-                            background: #121824;
-                            overflow: hidden;
-                            display: flex;
-                            flex-direction: column;
-                        }
-                        
-                        .stack-header {
-                            background: #0f141f;
-                            color: #e6e6e6;
-                            padding: 0.75rem 1rem;
-                            padding-inline: 1.5rem;
-                            font-size: 0.9rem;
-                            font-weight: 500;
-                        }
-                        
-                        .code-scroll {
-                            padding: 1rem;
-                            padding-inline: 1.5rem;
-                            overflow: auto;
-                            height: 100%;
-                        }
-                        
-                        .code-scroll::-webkit-scrollbar {
-                            display: none;
-                        }
-                        
-                        code {
-                            color: #e6e6e6;
-                            font-family: monospace;
-                            font-size: 0.9rem;
-                            line-height: 1.5;
-                        }
-                        
-                        .footer {
-                            margin-top: 1rem;
-                            display: flex;
-                            justify-content: flex-end;
-                        }
-                        
-                        button {
-                            background-color: #121824;
-                            color: white;
-                            border: none;
-                            border-radius: 0.25rem;
-                            padding: 0.5rem 1.25rem;
-                            font-size: 0.9rem;
-                            font-weight: 500;
-                            cursor: pointer;
-                            transition: background-color 0.2s;
-                        }
-                        
-                        button:hover {
-                            background-color: #0f141f;
-                        }
-                        
-                        /* Syntax highlighting classes */
-                        .pkg { color: #6dbeff; font-family: monospace; }
-                        .cls { color: #ffc656; font-family: monospace; }
-                        .method { color: #ffc656; font-family: monospace; }
-                        .line { color: #9ca3af; font-family: monospace; }
-                        .elem { color: #ea7afc; font-family: monospace; }
-                        .msg { color: #9ca3af; font-style: italic; font-family: monospace; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>${extractExceptionType(dialogData.exception)}</h1>
-                        <div class="message">${dialogData.message}</div>
-                    </div>
-                    
-                    <div class="stack-container">
-                        <div class="stack-header">Stacktrace</div>
-                        <div class="code-scroll">
-                            <code>${syntaxHighlightStackTrace(dialogData.exception)}</code>
-                        </div>
-                    </div>
-                    
-                    <div class="footer">
-                        <button onClick="window.close()">Dismiss</button>
-                    </div>
-                </body>
-            </html>`);
-        """.trimIndent(),
-        browser.url,
-        0)
-  }
-
-  private fun extractExceptionType(trace: String?): String {
-    if (trace == null) return ""
-
-    val exceptionType = trace.substringBefore(":")
-    return exceptionType.replace(":", "").split(".").last().trim()
-  }
-
-  private fun syntaxHighlightStackTrace(trace: String?): String {
-    if (trace == null) return ""
-
-    return trace
-        .replace(Regex("\\\$(\\d+|\\w+)"), "")
-        // Match package.Class@hexIdentifier patterns
-        .replace(Regex("(\\w+(?:\\.\\w+)+)@([0-9a-f]+)"), "<span class=\"elem\">$1@$2</span>")
-        // Match standard stack trace lines with file and line numbers
-        .replace(
-            Regex("at ((?:[\\w.]+\\.)+)(.+)\\((.*?):(\\d+)\\)"),
-            "<span class=\"msg\">at</span> <span class=\"pkg\">$1</span><span class=\"method\">$2</span><span class=\"line\">($3:$4)</span>")
-        // Match exception class names with message
-        .replace(
-            Regex("^([^:\\n]+Exception|[^:\\n]+Error):(.*)", RegexOption.MULTILINE),
-            "<span class=\"cls\">$1</span>:<span class=\"msg\">$2</span>")
-        // Highlight "Caused by:" sections
-        .replace("Caused by: ", "<span class=\"msg\">Caused by: </span>")
-        // Replace tabs with proper spacing
-        .replace("\t", "<span style=\"display:inline-block;width:20px;\"></span>")
-        // Replace newlines with HTML breaks
-        .replace("\n", "<br>")
-        .trimIndent()
-        .trim()
-  }
-
   internal fun openNewDialog(dialogData: DialogData) {
     val dialogFrame = client.createBrowser("about:blank", false, false)
     val dialogUI = dialogFrame.uiComponent
@@ -879,12 +751,18 @@ internal class MainFrame(
     dialogMap[dialogFrame] = dialogData
 
     val dialog = JFrame()
-    dialog.title = dialogData.message
     dialog.iconImage = iconImage
     dialog.background = java.awt.Color(0x161d29)
     dialog.contentPane.add(dialogUI, BorderLayout.CENTER)
-    dialog.pack()
-    dialog.setSize(1200, 500)
+    if (dialogData.dialogType == DialogType.EXCEPTION) {
+      dialog.minimumSize = Dimension(600, 500)
+      dialog.setSize(1200, 500)
+      dialog.title = dialogData.message
+    } else {
+      dialog.minimumSize = Dimension(600, 350)
+      dialog.setSize(600, 350)
+      dialog.title = dialogData.title
+    }
     dialog.setLocationRelativeTo(this)
     dialog.isVisible = true
   }
@@ -898,7 +776,7 @@ internal class MainFrame(
           FileDialogMode.SAVE_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_SAVE
           // FileDialogMode.CHOOSE_DIRECTORY ->
           // CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_FOLDER
-          FileDialogMode.CHOOSE_DIRECTORY -> TODO("Not yet implemented")
+          FileDialogMode.CHOOSE_DIRECTORY -> TODO("This feature is currently not supported.")
         }
 
     val defaultFile = fileDialog.initialFileName
