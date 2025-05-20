@@ -547,7 +547,7 @@ internal val App =
           }
 
           val gameScene = props.data.gameScene
-          if (gameScene != undefined && gameScene.locked) {
+          if (gameScene != undefined) {
             bgwLock {
               css {
                 position = Position.absolute
@@ -555,6 +555,7 @@ internal val App =
                 height = props.data.height.em
                 backgroundColor = rgb(0, 0, 0, 0.0)
                 zIndex = zIndex(998)
+                display = if (props.data.gameScene?.locked ?: false) Display.block else None.none
               }
             }
           }
