@@ -86,6 +86,14 @@ internal class DialogData : Data() {
   var header: String = ""
   var message: String = ""
   var exception: String = ""
+  var buttons: List<ButtonTypeData> = emptyList()
+}
+
+@Serializable
+internal class ButtonTypeData : Data() {
+  var text: String = ""
+  var backgroundColor: String = ""
+  var foregroundColor: String = ""
 }
 
 @Serializable
@@ -97,6 +105,9 @@ internal class FileDialogData : Data() {
   var initialDirectoryPath: String? = null
   var extensionFilters: List<Pair<String, List<String>>> = emptyList()
 }
+
+@Serializable
+internal class DialogButtonClickData(val dialogId: String, val buttonIndex: Int) : Data()
 
 @Serializable
 internal abstract class ComponentViewData : Data() {

@@ -23,7 +23,6 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
@@ -234,17 +233,13 @@ open class BoardGameApplication(
    * Shows a dialog and blocks further thread execution.
    *
    * @param dialog The [Dialog] to show.
-   *
-   * @return Chosen button or [Optional.empty] if canceled.
    */
-  fun showDialog(dialog: Dialog): Optional<ButtonType> = Frontend.showDialog(dialog)
+  fun showDialog(dialog: Dialog) = Frontend.showDialog(dialog)
 
   /**
    * Shows the given [FileDialog].
    *
    * @param dialog The [FileDialog] to be shown.
-   *
-   * @return Chosen file(s) or [Optional.empty] if canceled.
    */
   fun showFileDialog(dialog: FileDialog) = Frontend.showFileDialog(dialog)
 
