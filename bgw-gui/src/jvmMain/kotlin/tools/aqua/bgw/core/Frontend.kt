@@ -112,6 +112,8 @@ internal class Frontend {
 
     internal val openedDialogs = mutableMapOf<String, Dialog>()
 
+    internal var lastFadeTime: Double = 0.0
+
     /** Property for the current application width. */
     internal val widthProperty =
         LimitedDoubleProperty(
@@ -148,7 +150,8 @@ internal class Frontend {
      * @param scene menu scene to show.
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
-    internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
+    internal fun showMenuScene(scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      lastFadeTime = fadeTime
       menuScene?.onSceneHidden?.invoke()
       menuScene = scene
       markDirty(ActionProp.SHOW_MENU_SCENE)
@@ -184,7 +187,8 @@ internal class Frontend {
      *
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
-    internal fun hideMenuScene(fadeTime: Double) {
+    internal fun hideMenuScene(fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      lastFadeTime = fadeTime
       menuScene?.onSceneHidden?.invoke()
       menuScene = null
       markDirty(ActionProp.HIDE_MENU_SCENE)

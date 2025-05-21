@@ -601,6 +601,7 @@ internal object SceneMapper {
               Frontend.alignmentProperty.value.verticalAlignment.name.lowercase())
       this.menuScene = if (menuScene != null) mapScene(menuScene) else null
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
+      this.fadeTime = Frontend.lastFadeTime.toInt()
     }
   }
 }

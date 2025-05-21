@@ -24,10 +24,12 @@ import emotion.react.Global
 import emotion.react.css
 import emotion.react.styles
 import kotlinx.browser.document
+import kotlinx.browser.window
 import react.*
 import react.dom.aria.ariaExpanded
 import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
@@ -519,29 +521,57 @@ internal val App =
           }
 
           val menuScene = props.data.menuScene
+          val (isMenuVisible, setMenuVisible) = useState(menuScene != undefined)
+          var timeoutId: Int? = null
+
+          // Effect to handle visibility changes when menuScene changes
+          useEffectWithCleanup(menuScene) {
+            if (menuScene != undefined) {
+              setMenuVisible(true)
+            } else {
+              // Start a timer to remove the component after transition completes
+              window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
+            }
+
+            onCleanup { window.clearTimeout(timeoutId ?: 0) }
+          }
+
           bgwMenuScene {
             id = "menuScene"
             css {
               position = Position.absolute
               zIndex = zIndex(1000)
+              transition = menuTransition(props.data.fadeTime)
+              opacity = if (menuScene != undefined) number(1.0) else number(0.0)
+              // Keep the element in the DOM but invisible until transition completes
+              visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
             }
 
-            if (menuScene != undefined) {
-              ariaExpanded = true
-
-              +SceneBuilder.build(menuScene)
+            // Always render component when isMenuVisible, even if menuScene is undefined
+            if (isMenuVisible) {
+              ariaExpanded = menuScene != undefined
+              // Only build the scene content if menuScene is defined
+              menuScene?.let { +SceneBuilder.build(it) }
             }
           }
 
-          if (menuScene != undefined) {
-            bgwBlur {
-              css {
-                position = Position.absolute
-                width = props.data.width.em
-                height = props.data.height.em
-                backgroundColor = rgb(0, 0, 0, 0.0)
-                zIndex = zIndex(999)
-                backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
+          bgwBlur {
+            css {
+              position = Position.absolute
+              zIndex = zIndex(999)
+              backdropFilter = backgroundBlur(if (menuScene != undefined) 1.0 else 0.0)
+              transition = menuTransition(props.data.fadeTime)
+              // Same visibility logic as with the menu
+              visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
+            }
+
+            if (isMenuVisible) {
+              ariaExpanded = menuScene != undefined
+              div {
+                css {
+                  width = props.data.width.em
+                  height = props.data.height.em
+                }
               }
             }
           }
@@ -610,8 +640,11 @@ internal fun minContent(): GridTemplateTracks = "min-content".unsafeCast<GridTem
 
 internal fun bgwContainer(): ContainerName = "bgwContainer".unsafeCast<ContainerName>()
 
-internal fun menuTransition(): Transition =
-    ".3s opacity, .3s backdrop-filter".unsafeCast<Transition>()
+internal fun menuTransition(fadeTime: Int): Transition =
+    "${fadeTime}ms opacity, ${fadeTime}ms backdrop-filter".unsafeCast<Transition>()
+
+internal fun backgroundBlur(opacity: Double): BackdropFilter =
+    "blur(${DEFAULT_BLUR_RADIUS}em) opacity($opacity)".unsafeCast<BackdropFilter>()
 
 internal fun transition(duration: Int, property: String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()
