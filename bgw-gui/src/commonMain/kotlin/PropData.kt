@@ -77,6 +77,7 @@ internal abstract class AnimationData : Data() {
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
+  var isStop: Boolean = false
 }
 
 @Serializable

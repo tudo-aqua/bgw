@@ -21,6 +21,7 @@ package tools.aqua.bgw.core
 
 import ActionProp
 import PropData
+import data.animation.DelayAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import java.lang.Runnable
@@ -161,6 +162,17 @@ internal class Frontend {
     internal fun sendAnimation(animation: Animation) {
       forceUpdate()
       val animationData = AnimationMapper.map(animation)
+      val json = jsonMapper.encodeToString(PropData(animationData))
+      runBlocking { componentChannel.sendToAllClients(json) }
+    }
+
+    internal fun stopAnimations() {
+      forceUpdate()
+      val animationData =
+          DelayAnimationData().apply {
+            id = "stopAnimations"
+            isStop = true
+          }
       val json = jsonMapper.encodeToString(PropData(animationData))
       runBlocking { componentChannel.sendToAllClients(json) }
     }

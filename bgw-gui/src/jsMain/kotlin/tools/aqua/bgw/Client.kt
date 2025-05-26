@@ -35,6 +35,8 @@ import kotlin.random.Random
 import kotlinx.browser.document
 import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLStyleElement
+import org.w3c.dom.NodeList
 import org.w3c.dom.WebSocket
 import react.*
 import react.dom.client.Root
@@ -50,7 +52,6 @@ import web.timers.setTimeout
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
 internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
-internal var animator: Animator = Animator()
 
 internal lateinit var container: HTMLElement
 internal lateinit var dialogContainer: HTMLElement
@@ -95,10 +96,22 @@ internal fun main() {
   }
 }
 
+internal fun resetAnimations() {
+  val styles = document.body?.querySelectorAll("style") as NodeList
+  for (i in 0 until styles.length) {
+    val style = styles.item(i) as HTMLStyleElement
+    document.body?.removeChild(style)
+  }
+}
+
+internal fun stopAnimations() {
+  Animator.clearAllTimeoutsAndIntervals()
+  resetAnimations()
+}
+
 internal fun handleReceivedData(receivedData: Data) {
   when (receivedData) {
     is AppData -> {
-
       if (receivedData.action == ActionProp.HIDE_MENU_SCENE) {
         console.log("[SCENE] Hiding Menu Scene")
         val element = document.querySelector("#menuScene") as HTMLElement
@@ -121,15 +134,22 @@ internal fun handleReceivedData(receivedData: Data) {
         val element = document.querySelector("#menuScene") as HTMLElement
         setTimeout({ element.classList.toggle("scene--visible", true) }, 50)
       } else {
+        // Cancel all pending animation timeouts before new render to prevent incorrect resets
+        Animator.cancelCleanupTimeouts()
         if (!Config.USE_SOCKETS) {
           renderApp(receivedData)
         } else {
           renderAppFast(receivedData)
         }
       }
+      stopAnimations()
     }
     is AnimationData -> {
-      animator.startAnimation(receivedData) {
+      if (receivedData.isStop) {
+        stopAnimations()
+        return
+      }
+      Animator.startAnimation(receivedData) {
         JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
       }
     }

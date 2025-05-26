@@ -172,7 +172,13 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /**
    * Plays given [Animation] non-blocking. This means that any subsequent updates may be executed
-   * before the [Animation] actually starts playing.
+   * before the [Animation] actually starts playing. [ComponentView]s that are part of the
+   * [Animation] will reset their state immediately to the state before the [Animation] was played,
+   * once the [Animation] is finished.
+   *
+   * The [Animation] only animates the [ComponentView] visually and does not update its state. The
+   * Component will reset its visual state on next refresh if the state is not set in onFinished,
+   * which is the suggested way of usage.
    *
    * @param animation [Animation] to play.
    */
@@ -193,6 +199,16 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
       }
       else -> animations.add(animation)
     }
+  }
+
+  /**
+   * Stops all currently playing [Animation]s and resets visual state of all [ComponentView]s that
+   * were currently animating immediately.
+   *
+   * @see Animation
+   */
+  fun stopAllAnimations() {
+    Frontend.stopAnimations()
   }
 
   /**
