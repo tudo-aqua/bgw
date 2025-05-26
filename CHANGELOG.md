@@ -59,6 +59,7 @@ All notable changes to this project will be documented in this file.
 - Added `BorderRadius` and `Cursor` style classes to support custom styling of `Visual` elements.
 - Added `style`, `filters` and `flipped` properties to `SingleLayerVisual` to apply custom styling.
 - Added `rotation` as an initial parameter to `ImageVisual` and `TextVisual` to set the initial rotation of the visual.
+- Added `blurRadius` property to `MenuScene` constructor to define the initial blur radius of the menu scene background.
 
 **Misc:**
 - Added `Ä`, `Ö`, `Ü` to `KeyCode` enum for German keyboard layout.
@@ -71,12 +72,14 @@ All notable changes to this project will be documented in this file.
 - Added `panBy(xOffset, yOffset, zoom, smooth)` function to `CameraPane` to zoom while panning the camera by a specific offset.
 - Added `getSelectedIndex()` function to `ComboBox` to get the index of the selected item.
 - Added `formatItem(item)` function to `ComboBox` to format any item without displaying it.
+- Added `isReadonly` property to `TextInputUIComponent` to make input fields read-only.
 - Added `formatItem(item)` function to `ListView`, `TableView` and `TableColumn` to format any item without displaying it.
 - Added `selectIndex(index)` function to `ListView` and `TableView` to select an item by index.
 - Added `loadFont(path, fontName, weight)` function to `BoardGameApplication` to define name and weight of a font loaded from a file.
 - Added `dropTarget` to `DragEvent` to get the target of a drag event.
 - Added `THIN`, `EXTRA_LIGHT`, `MEDIUM`, `EXTRA_BOLD`, `BLACK` font weights to `FontWeight` enum to support a wider range of fonts.
 - Added `inParentPosX` and `inParentPosY` properties to `ComponentView` to get the position of a component in its parent.
+- Added `stopAllAnimations()` function to `Scene` to immediately stop all animations currently running.
 
 ### Fixed
 
