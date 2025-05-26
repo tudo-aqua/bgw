@@ -118,6 +118,7 @@ internal object ComponentMapper {
           font = FontMapper.map(componentView.font)
           text = componentView.text
           prompt = componentView.prompt
+          isReadonly = componentView.isReadonly
         }
       }
       is UIComponent -> {

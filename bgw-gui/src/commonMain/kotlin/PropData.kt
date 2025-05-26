@@ -154,6 +154,7 @@ internal abstract class LabeledUIComponentData : UIComponentData() {
 internal abstract class TextInputUIComponentData : UIComponentData() {
   var text: String = ""
   var prompt: String = ""
+  var isReadonly: Boolean = false
 }
 
 @Serializable
