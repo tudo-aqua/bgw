@@ -39,7 +39,6 @@ import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.cssom.*
@@ -559,7 +558,10 @@ internal val App =
             css {
               position = Position.absolute
               zIndex = zIndex(999)
-              backdropFilter = backgroundBlur(if (menuScene != undefined) 1.0 else 0.0)
+              backdropFilter =
+                  backgroundBlur(
+                      if (menuScene != undefined && props.data.blurRadius > 0.0) 1.0 else 0.0,
+                      props.data.blurRadius)
               transition = menuTransition(props.data.fadeTime)
               // Same visibility logic as with the menu
               visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
@@ -643,8 +645,8 @@ internal fun bgwContainer(): ContainerName = "bgwContainer".unsafeCast<Container
 internal fun menuTransition(fadeTime: Int): Transition =
     "${fadeTime}ms opacity, ${fadeTime}ms backdrop-filter".unsafeCast<Transition>()
 
-internal fun backgroundBlur(opacity: Double): BackdropFilter =
-    "blur(${DEFAULT_BLUR_RADIUS}em) opacity($opacity)".unsafeCast<BackdropFilter>()
+internal fun backgroundBlur(opacity: Double, blurRadius: Double): BackdropFilter =
+    "blur(${blurRadius}em) opacity($opacity)".unsafeCast<BackdropFilter>()
 
 internal fun transition(duration: Int, property: String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()

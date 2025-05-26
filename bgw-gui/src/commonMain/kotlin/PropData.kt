@@ -58,6 +58,7 @@ internal class AppData : Data() {
   var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
   var fadeTime: Int = 0
+  var blurRadius: Double = 0.0
 }
 
 @Serializable
