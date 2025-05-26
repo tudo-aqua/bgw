@@ -57,6 +57,8 @@ internal class AppData : Data() {
   var background: VisualData? = null
   var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
+  var fadeTime: Int = 0
+  var blurRadius: Double = 0.0
 }
 
 @Serializable
@@ -76,6 +78,7 @@ internal abstract class AnimationData : Data() {
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
+  var isStop: Boolean = false
 }
 
 @Serializable
@@ -151,6 +154,7 @@ internal abstract class LabeledUIComponentData : UIComponentData() {
 internal abstract class TextInputUIComponentData : UIComponentData() {
   var text: String = ""
   var prompt: String = ""
+  var isReadonly: Boolean = false
 }
 
 @Serializable

@@ -358,6 +358,9 @@ internal class MainFrame(
 
     if (!debugLogging) {
       builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+    } else {
+      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_INFO
+      builder.cefSettings.remote_debugging_port = 2504
     }
 
     val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"

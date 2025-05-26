@@ -20,6 +20,7 @@
 package tools.aqua.bgw.components.uicomponents
 
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.observable.properties.StringProperty
 import tools.aqua.bgw.util.Font
@@ -83,6 +84,25 @@ sealed class TextInputUIComponent(
     get() = promptProperty.value
     set(value) {
       promptProperty.value = value
+    }
+
+  /** [Property] indicating whether this [TextInputUIComponent] is readonly. */
+  internal val isReadonlyProperty = BooleanProperty(false)
+
+  /**
+   * Indicates whether this [TextInputUIComponent] is readonly.
+   *
+   * If set to `true`, the user cannot change the [text] of this component. The [prompt] will be
+   * shown instead of the [text] if it is empty.
+   *
+   * Programmatically, the [text] can still be changed.
+   *
+   * @since 0.10
+   */
+  var isReadonly: Boolean
+    get() = isReadonlyProperty.value
+    set(value) {
+      isReadonlyProperty.value = value
     }
 
   init {
