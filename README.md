@@ -1,3 +1,8 @@
+[BGW]: https://github.com/tudo-aqua/bgw
+[AzulZuluOpenJDK]: https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk
+[Kotlin]: https://kotlinlang.org/
+[GettingStarted]: https://tudo-aqua.github.io/bgw/guides/getting-started
+
 # BoardGameWork
 <!--[![Code Style](https://github.com/tudo-aqua/bgw-core/actions/workflows/code-style.yml/badge.svg)](https://github.com/tudo-aqua/bgw/security/code-scanning)-->
 [![Build](https://github.com/tudo-aqua/bgw-core/actions/workflows/analyze-build-deploy.yml/badge.svg)](https://github.com/tudo-aqua/bgw-core/actions)
@@ -7,30 +12,24 @@
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-net-common&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-net-common)
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-net-client&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-net-client)
 [![Maven Central](https://img.shields.io/maven-central/v/tools.aqua/bgw-gui?label=MavenCentral%20bgw-net-server&logo=apache-maven)](https://search.maven.org/artifact/tools.aqua/bgw-net-server)
-
-[![KDocs BGW-Gui](https://img.shields.io/static/v1?label=kDoc%20bgw-gui&message=overview&color=blue)](https://tudo-aqua.github.io/bgw/bgw-gui-kdoc/index.html)
-[![KDocs BGW-Gui](https://img.shields.io/static/v1?label=kDoc%20bgw-net-common&message=overview&color=blue)](https://tudo-aqua.github.io/bgw/bgw-net-common-kdoc/index.html)
-[![KDocs BGW-Gui](https://img.shields.io/static/v1?label=kDoc%20bgw-net-client&message=overview&color=blue)](https://tudo-aqua.github.io/bgw/bgw-net-client-kdoc/index.html)
 ------------
 
-BoardGameWork is a framework for creating 2D board game applications.
+[BoardGameWork (BGW)][BGW] is a framework for creating 2D board game applications using [Kotlin][Kotlin].
 
-Read on [how to get started](https://tudo-aqua.github.io/bgw/), or take a look at the complete API documentation for [bgw-gui](https://tudo-aqua.github.io/bgw/bgw-gui-kdoc/index.html), [bgw-net-common](https://tudo-aqua.github.io/bgw/bgw-net-common-kdoc/index.html), or [bgw-net-client](https://tudo-aqua.github.io/bgw/bgw-net-client-kdoc/index.html).
+Start with BGW using the dedicated [Getting Started](https://tudo-aqua.github.io/bgw/guides/getting-started) guide, take a look at the complete [API Reference](https://tudo-aqua.github.io/bgw/docs/) or learn more concepts in the [Advanced Usage](https://tudo-aqua.github.io/bgw/guides/concepts/advanced-usage) section.
 
-Examples are available for [MauMau](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-maumau-example), [Sudoku](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-sudoku-example) and [Tetris](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-tetris-example).
+Additionally, three examples are available for [MauMau](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-maumau-example), [Sudoku](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-sudoku-example) and [Tetris](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-tetris-example).
+
+Visit the [Playground](https://tudo-aqua.github.io/bgw/playground) to see BGW in action and try out some of its features.
 
 <!-- GETTING STARTED -->
 
 ## Getting Started
 
-
 ### Prerequisites
 
-<!-- https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk -->
-
-BoardGameWork is built on top of [JavaFX 17](https://openjfx.io/openjfx-docs/) and therefore requires at least JDK 11. Since JavaFX was decoupled from the JavaJDK as of JDK 11, BoardGameWork comes with JavaFX dependencies including their native libraries for various platforms like Windows, Linux and Mac.
-
-We recommend installing a JDK build that already includes JavaFX to ensure your platform is supported. [Azul Zulu Builds of OpenJDK](https://www.azul.com/downloads/?version=java-11-lts&package=jdk-fx#download-openjdk) support a wide range of platforms and architectures including [Mac M1](https://www.azul.com/downloads/?version=java-11-lts&os=macos&architecture=arm-64-bit&package=jdk-fx#download-openjdk).
+Before you can start using BGW, you will need a Java Development Kit (JDK) installed on your system. BGW requires at least
+Java 11 to run. You can download a compatible version of [Azul Zulu OpenJDK][AzulZuluOpenJDK] from the official website.
 
 ### Setup
 
@@ -38,19 +37,45 @@ Start by adding the latest version of BGW as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation("tools.aqua:bgw-gui:0.9")
+implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
 ```
 
 #### Maven
 ```xml
 <dependency>
-  <groupId>tools.aqua</groupId>
-  <artifactId>bgw-gui</artifactId>
-  <version>0.9</version>
+    <groupId>tools.aqua</groupId>
+    <artifactId>bgw-gui</artifactId>
+    <version>0.10</version>
 </dependency>
 ``` 
 
-You also need to specify the correct JVM target in your build system.
+When running on JDK 16 or later, you need to add the following JVM arguments to your run configuration:
+
+#### Gradle
+```gradle
+application {
+    applicationDefaultJvmArgs = listOf(
+        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED",
+        "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED",
+        "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED"
+    )
+}
+```
+
+#### Maven
+```xml
+<configuration>
+    <jvmArguments>
+        --add-opens java.desktop/sun.awt=ALL-UNNAMED
+        --add-opens java.desktop/java.awt.peer=ALL-UNNAMED
+        --add-opens java.desktop/sun.lwawt=ALL-UNNAMED
+        --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED
+    </jvmArguments>
+</configuration>
+```
+
+It is therefore recommended to explicitly specify the correct JVM target (e.g. 11 in this case) in your build system:
 
 #### Gradle
 ```gradle
@@ -65,3 +90,5 @@ compileKotlin {
     <jvmTarget>11</jvmTarget>
 </configuration>
 ```
+
+The basic setup should now be complete. To learn more about creating your first board game application using BGW, continue with the [Getting Started][GettingStarted] section or visit the [Playground](https://tudo-aqua.github.io/bgw/playground).
