@@ -158,16 +158,21 @@ internal class JCEFApplication : Application {
                   }
                 }
                 is MouseEnteredEventData -> {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
                   component.onMouseEntered?.invoke(
-                      MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY))
+                      MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
                 }
                 is MouseExitedEventData -> {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
                   component.onMouseExited?.invoke(
-                      MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY))
+                      MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
                 }
                 is MousePressedEventData -> {
-                  component.onMousePressed?.invoke(
-                      MouseEvent(eventData.button, eventData.posX, eventData.posY))
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                  component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY))
                 }
                 is ScrollEventData -> {
                   component.onMouseWheel?.invoke(
@@ -175,12 +180,15 @@ internal class JCEFApplication : Application {
                           eventData.direction, eventData.ctrl, eventData.shift, eventData.alt))
                 }
                 is MouseReleasedEventData -> {
-                  component.onMouseReleased?.invoke(
-                      MouseEvent(eventData.button, eventData.posX, eventData.posY))
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                  component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY))
                 }
-                is MouseEventData ->
-                    component.onMouseClicked?.invoke(
-                        MouseEvent(eventData.button, eventData.posX, eventData.posY))
+                is MouseEventData -> {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                  component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY))
+                }
                 is KeyEventData -> {
                   val keyEvent =
                       KeyEvent(

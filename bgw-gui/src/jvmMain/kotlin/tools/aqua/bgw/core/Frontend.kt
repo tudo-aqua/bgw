@@ -300,6 +300,18 @@ internal class Frontend {
       (applicationEngine as JCEFApplication).frame?.openNewFileDialog(dialog)
     }
 
+    internal fun relativePositionsToAbsolute(
+        relativeX: Double,
+        relativeY: Double
+    ): Pair<Double, Double> {
+      val currentScene =
+          menuScene
+              ?: boardGameScene
+                  ?: throw IllegalStateException(
+                  "No scene is currently displayed. Cannot convert relative positions to absolute.")
+      return Pair(relativeX * currentScene.width, relativeY * currentScene.height)
+    }
+
     /** Starts the application. */
     internal fun show(onClose: () -> Unit) {
       Frontend().start(onClose)
