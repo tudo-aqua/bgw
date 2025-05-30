@@ -143,6 +143,13 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   var onSceneHidden: (() -> Unit)? = null
 
   /**
+   * Gets invoked whenever the scene is rescaled because the window was resized.
+   *
+   * @since 0.10
+   */
+  var onSceneRescaled: (() -> Unit)? = null
+
+  /**
    * Adds all given [ComponentView]s to the root node and [rootComponents] list.
    *
    * @param components Components to add.

@@ -51,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - Added `onSelected` event to `ToggleGroup` to listen for selection of a `BinaryStateButton` in the group.
 - Added `onDeselected` event to `ToggleGroup` to listen for deselection of a `BinaryStateButton` in the group.
 - Added `onLockChanged` event to `BoardGameScene` to listen for lock changes.
+- Added `onSceneRescaled` event to `MenuScene` and `BoardGameScene` to listen for scene rescales when the window is resized.
 
 **Styling:**
 - Added `Color` class to represent colors in BGW.

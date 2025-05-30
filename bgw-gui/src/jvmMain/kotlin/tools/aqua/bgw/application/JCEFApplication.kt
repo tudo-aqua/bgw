@@ -24,6 +24,7 @@ import ID
 import data.event.*
 import dev.dirs.ProjectDirectories
 import java.awt.*
+import java.awt.event.ComponentEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
@@ -686,13 +687,31 @@ internal class MainFrame(
       }
     }
 
-    //    addComponentListener(
-    //        object : ComponentAdapter() {
-    //          override fun componentResized(e: ComponentEvent) {
-    //            Frontend.widthProperty.setInternal(this@MainFrame.width.toDouble())
-    //            Frontend.heightProperty.setInternal(this@MainFrame.height.toDouble())
-    //          }
-    //        })
+    // Add component listener with debounce to detect window size changes
+    var resizeTimer: Timer? = null
+    val resizeDelay = 100L // milliseconds to wait after last resize event
+
+    addComponentListener(
+        object : java.awt.event.ComponentAdapter() {
+          override fun componentResized(e: ComponentEvent) {
+            // Cancel existing timer if still running
+            resizeTimer?.cancel()
+
+            // Create new timer that will trigger rescale events after delay
+            resizeTimer =
+                Timer().apply {
+                  schedule(
+                      object : TimerTask() {
+                        override fun run() {
+                          // Call onSceneRescaled for both scenes when window size changes
+                          Frontend.menuScene?.onSceneRescaled?.invoke()
+                          Frontend.boardGameScene?.onSceneRescaled?.invoke()
+                        }
+                      },
+                      resizeDelay)
+                }
+          }
+        })
   }
 
   internal fun gracefulShutdown() {
