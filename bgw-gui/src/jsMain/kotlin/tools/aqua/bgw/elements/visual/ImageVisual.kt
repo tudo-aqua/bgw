@@ -43,13 +43,14 @@ internal external interface ImageVisualProps : Props {
 
 internal val ImageVisual =
     FC<ImageVisualProps> { props ->
+      println("ImageVisual: ${props.data.id} - ${props.data.flipped}")
+
       if (props.data.width != -1 && props.data.height != -1) {
         bgwImageVisual {
           css {
             styleBuilder(props.data.style)
-            flipBuilder(props.data.flipped)
+            flipBuilder(props.data.flipped, props.data.rotation)
             filterBuilder(props.data.filters)
-            transform = rotatez(props.data.rotation.deg)
 
             width = 100.pct
             height = 100.pct
@@ -102,9 +103,8 @@ internal val ImageVisual =
 
           css {
             styleBuilder(props.data.style)
-            flipBuilder(props.data.flipped)
+            flipBuilder(props.data.flipped, props.data.rotation)
             filterBuilder(props.data.filters)
-            transform = rotatez(props.data.rotation.deg)
 
             backgroundImage = url(props.data.path)
 
