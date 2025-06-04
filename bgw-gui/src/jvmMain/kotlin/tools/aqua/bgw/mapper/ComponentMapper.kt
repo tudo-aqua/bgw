@@ -291,7 +291,7 @@ internal object LayoutMapper {
     return when (layout) {
       is Pane<*> ->
           (PaneData().fillData(layout) as PaneData).apply {
-            components = layout.components.map { RecursiveMapper.map(it) }
+            components = layout.components.map { RecursiveMapper.map(it) }.toMutableList()
             if (layout.dropAcceptor != null) {
               isDroppable = true
             }
@@ -352,7 +352,7 @@ internal object ContainerMapper {
       is Area<*> ->
           (AreaData().fillData(container) as AreaData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
@@ -360,7 +360,7 @@ internal object ContainerMapper {
       is CardStack<*> ->
           (CardStackData().fillData(container) as CardStackData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
@@ -400,7 +400,7 @@ internal object ContainerMapper {
       is LinearLayout<*> ->
           (LinearLayoutData().fillData(container) as LinearLayoutData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
             spacing = container.spacing.toInt()
             orientation = container.orientation.name.lowercase()
             alignment =
@@ -415,7 +415,7 @@ internal object ContainerMapper {
       is Satchel ->
           (SatchelData().fillData(container) as SatchelData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) } as List<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
 
             if (container.dropAcceptor != null) {
               isDroppable = true
@@ -586,7 +586,8 @@ internal object FontFaceMapper {
 internal object SceneMapper {
   private fun mapScene(scene: Scene<*>): SceneData {
     return SceneData().apply {
-      components = scene.components.map { RecursiveMapper.map(it) }
+      id = scene.rootNode.id
+      components = scene.components.map { RecursiveMapper.map(it) }.toMutableList()
       locked = if (scene is BoardGameScene) scene.lockedProperty.value else false
       width = scene.width.toInt()
       height = scene.height.toInt()

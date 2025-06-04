@@ -71,7 +71,7 @@ import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  const val DEBUG = false
+  const val DEBUG = true
 }
 
 internal class JCEFApplication : Application {

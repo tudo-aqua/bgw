@@ -28,8 +28,16 @@ import tools.aqua.bgw.core.Frontend
 
 internal object GameComponentContainerBuilder {
   fun build(gameComponentContainer: GameComponentContainer<out DynamicComponentView>) {
-    gameComponentContainer.observableComponents.guiListener = { _, _ ->
-      Frontend.updateComponent(gameComponentContainer)
+    gameComponentContainer.observableComponents.guiListener = { a, b ->
+      val oldSet = a.toSet()
+      val newSet = b.toSet()
+
+      val removed = oldSet - newSet
+      val added = newSet - oldSet
+
+      removed.forEach { Frontend.removeComponent(it, gameComponentContainer.id) }
+
+      added.forEach { Frontend.addComponent(it, gameComponentContainer.id) }
     }
     when (gameComponentContainer) {
       is Area -> buildArea(gameComponentContainer)

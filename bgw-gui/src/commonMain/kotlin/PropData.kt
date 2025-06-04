@@ -39,6 +39,8 @@ internal enum class ActionProp {
   DRAG_START,
   DRAG_END,
   DRAG_DROP,
+  ADD_COMPONENT,
+  REMOVE_COMPONENT,
 }
 
 @Serializable internal class JsonData(var container: String = "bgw-root", var props: PropData)
@@ -68,7 +70,7 @@ internal class SceneData : Data() {
   var width: Int = 0
   var height: Int = 0
   var background: VisualData? = null
-  var components: List<ComponentViewData> = emptyList()
+  var components: MutableList<ComponentViewData> = mutableListOf()
 }
 
 @Serializable
@@ -241,7 +243,7 @@ internal class TableViewData : StructuredDataViewData() {
 
 @Serializable
 internal class PaneData : LayoutViewData() {
-  var components: List<ComponentViewData> = emptyList()
+  var components: MutableList<ComponentViewData> = mutableListOf()
 }
 
 @Serializable
@@ -298,7 +300,7 @@ internal class HexagonViewData : GameComponentViewData() {
 // CONTAINER
 @Serializable
 internal abstract class GameComponentContainerData : ComponentViewData() {
-  var components: List<GameComponentViewData> = emptyList()
+  var components: MutableList<GameComponentViewData> = mutableListOf()
 }
 
 @Serializable internal class AreaData : GameComponentContainerData() {}
@@ -311,7 +313,7 @@ internal class CardStackData : GameComponentContainerData() {
 @Serializable
 internal class HexagonGridData : GameComponentContainerData() {
   var coordinateSystem: String = ""
-  var map: Map<String, HexagonViewData> = emptyMap()
+  var map: MutableMap<String, HexagonViewData> = mutableMapOf()
   var spacing: Int = 0
   var orientation: String = ""
 }

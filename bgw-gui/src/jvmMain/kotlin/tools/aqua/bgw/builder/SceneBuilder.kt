@@ -27,7 +27,17 @@ internal object SceneBuilder {
   fun build(boardGameScene: BoardGameScene) {
     boardGameScene.lockedProperty.guiListener = { _, _ -> Frontend.updateScene() }
     boardGameScene.internalLockedProperty.guiListener = { _, _ -> Frontend.updateScene() }
-    boardGameScene.rootComponents.guiListener = { _, _ -> Frontend.updateScene() }
+    boardGameScene.rootComponents.guiListener = { a, b ->
+      val oldSet = a.toSet()
+      val newSet = b.toSet()
+
+      val removed = oldSet - newSet
+      val added = newSet - oldSet
+
+      removed.forEach { Frontend.removeComponent(it, boardGameScene.rootNode.id) }
+
+      added.forEach { Frontend.addComponent(it) }
+    }
     boardGameScene.components.forEach { ComponentViewBuilder.build(it) }
     boardGameScene.backgroundProperty.guiListener = { _, _ -> Frontend.updateScene() }
     boardGameScene.opacityProperty.guiListener = { _, _ -> Frontend.updateScene() }

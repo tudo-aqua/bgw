@@ -41,7 +41,17 @@ internal object LayoutViewBuilder {
   }
 
   private fun buildPane(pane: Pane<*>) {
-    pane.observableComponents.guiListener = { _, _ -> Frontend.updateComponent(pane) }
+    pane.observableComponents.guiListener = { a, b ->
+      val oldSet = a.toSet()
+      val newSet = b.toSet()
+
+      val removed = oldSet - newSet
+      val added = newSet - oldSet
+
+      removed.forEach { Frontend.removeComponent(it, pane.id) }
+
+      added.forEach { Frontend.addComponent(it, pane.id) }
+    }
     pane.components.forEach { component -> ComponentViewBuilder.build(component) }
   }
 }

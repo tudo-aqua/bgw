@@ -17,12 +17,15 @@
 
 package examples.concepts.visuals
 
+import tools.aqua.bgw.components.container.CardStack
+import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
-import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 
 fun main() {
@@ -32,46 +35,47 @@ fun main() {
 class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
   private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.GRAY)
 
-  private val token1: TokenView =
-      TokenView(
-          posX = 660,
-          posY = 400,
-          height = 200,
-          width = 130,
-          visual = CompoundVisual(ColorVisual.YELLOW, TextVisual(text = "Hint")))
-  private val token2: TokenView =
-      TokenView(
-          posX = 860,
-          posY = 400,
-          height = 200,
-          width = 130,
-          visual =
-              CompoundVisual(
-                  ImageVisual(
-                      path = "card_deck.png",
-                      width = 130,
-                      height = 200,
-                      offsetX = 260,
-                      offsetY = 200),
-                  TextVisual(text = "3 of Diamonds")))
-  private val token3: TokenView =
-      TokenView(
-          posX = 1060,
-          posY = 400,
-          height = 200,
-          width = 130,
-          visual =
-              CompoundVisual(
-                  ImageVisual(
-                      path = "card_deck.png",
-                      width = 130,
-                      height = 200,
-                      offsetX = 260,
-                      offsetY = 200),
-                  ColorVisual.GREEN.apply { transparency = 0.2 }))
+  private val gridView = GridPane<TokenView>(
+    columns = 35,
+    rows = 35,
+    posX = 0,
+    posY = 0,
+    spacing = 10
+  )
 
   init {
-    gameScene.addComponents(token1, token2, token3)
+    gameScene.addComponents(gridView)
+
+      for(i in 0 until gridView.columns) {
+        for(j in 0 until gridView.rows) {
+          val tokenView = TokenView(
+            posX = 0,
+            posY = 0,
+            width = 50,
+            height = 50,
+            visual = CompoundVisual(
+              ColorVisual.RED,
+              TextVisual(text = "($i, $j)")
+            )
+          )
+
+          tokenView.onMouseClicked = { event ->
+            if (event.button == MouseButtonType.LEFT_BUTTON) {
+              tokenView.visual = CompoundVisual(
+                ColorVisual.GREEN,
+                TextVisual(text = "Clicked at ($i, $j)")
+              )
+            } else if (event.button == MouseButtonType.RIGHT_BUTTON) {
+              tokenView.visual = CompoundVisual(
+                ColorVisual.RED,
+                TextVisual(text = "($i, $j)")
+              )
+            }
+          }
+          gridView[i, j] = tokenView
+        }
+      }
+
     showGameScene(gameScene)
     show()
   }

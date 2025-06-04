@@ -33,6 +33,7 @@ import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
+import tools.aqua.bgw.binding.addUpdate
 import tools.aqua.bgw.binding.componentChannel
 import tools.aqua.bgw.binding.forceUpdate
 import tools.aqua.bgw.binding.markDirty
@@ -254,15 +255,25 @@ internal class Frontend {
       showGameScene(boardGameScene!!)
     }
 
-    internal fun updateComponent(component: ComponentView) {
+    internal fun updateComponent(component: ComponentView, overrideParent: String? = null) {
       // println("Sending update for component ${component.id}")
-      markDirty(ActionProp.UPDATE_COMPONENT)
+      // markDirty(ActionProp.UPDATE_COMPONENT)
       // val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       // runBlocking { sendToAllClients(json) }
+
+      addUpdate(component, ActionProp.UPDATE_COMPONENT, overrideParent ?: component.parent?.id ?: "")
+    }
+
+    internal fun addComponent(component: ComponentView, overrideParent: String? = null) {
+      addUpdate(component, ActionProp.ADD_COMPONENT, overrideParent ?: component.parent?.id ?: "")
+    }
+
+    internal fun removeComponent(component: ComponentView, overrideParent: String? = null) {
+      addUpdate(component, ActionProp.REMOVE_COMPONENT, overrideParent ?: component.parent?.id ?: "")
     }
 
     internal fun updateVisual(visual: Visual) {
-      markDirty(ActionProp.UPDATE_VISUAL)
+      // markDirty(ActionProp.UPDATE_VISUAL)
       // val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
       // runBlocking { sendToAllClients(json) }
     }

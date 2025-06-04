@@ -28,18 +28,16 @@ import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import java.io.ByteArrayOutputStream
 import java.time.Duration
 import java.util.*
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
 import jsonMapper
-import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.Frontend
 
 internal val componentChannel: Channel =
@@ -66,6 +64,11 @@ internal val internalChannel: Channel =
     Channel("/internal").apply { onClientMessage = { session, text -> } }
 
 internal fun HTML.index() {
+  head {
+    meta(
+        name = "viewport",
+        content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+  }
   body {
     style = "width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none;"
     div {
@@ -101,27 +104,6 @@ internal fun Application.configureRouting() {
     static("/static") { resources() }
   }
 }
-
-internal fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: (suspend () -> Unit)) =
-    this.async {
-      if (repeatMillis > 0) {
-        while (isActive) {
-          action()
-          delay(repeatMillis)
-        }
-      } else {
-        action()
-      }
-    }
-
-internal fun gzip(content: String): String {
-  val bos = ByteArrayOutputStream()
-  GZIPOutputStream(bos).bufferedWriter(UTF_8).use { it.write(content) }
-  return Base64.getEncoder().encodeToString(bos.toByteArray())
-}
-
-internal fun ungzip(content: ByteArray): String =
-    GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
 private val updateStack = Collections.synchronizedList(Stack<AppData>())
 private val debounceTimeMillis = 5L // Adjust this value as needed
@@ -193,9 +175,41 @@ internal fun collectAppData(): AppData {
 }
 
 internal fun markDirty(prop: ActionProp) {
+  // println("Marking dirty: $prop")
   runCatching {
     val appData = collectAppData()
     // println("Collecting updates... Size: " + updateStack.size)
     enqueueUpdate(appData)
   }
+}
+
+internal val messageQueue = mutableMapOf<String, Triple<ActionProp, String, String>>()
+internal val messageQueueMutex = Mutex()
+internal var messageQueueJob: Job? = null
+internal var lastUpdateTime: Long = 0L
+
+internal fun addUpdate(component: ComponentView, action: ActionProp, parent: String = "") {
+  if (action == ActionProp.REMOVE_COMPONENT) {
+    messageQueue[component.id] = Triple(action, parent, "")
+  } else {
+    val serializedComponent = jsonMapper.encodeToString(RecursiveMapper.map(component))
+    messageQueue[component.id] = Triple(action, parent,serializedComponent)
+  }
+  println(messageQueue)
+
+  messageQueueJob?.cancel()
+  messageQueueJob =
+      CoroutineScope(Dispatchers.IO).launch {
+        messageQueueMutex.withLock {
+          if (messageQueue.isNotEmpty()) {
+            delay(5) // Debounce time
+            val updates = messageQueue.toMap()
+            messageQueue.clear()
+            lastUpdateTime = System.currentTimeMillis()
+            val json = Json.encodeToString(updates)
+            componentChannel.sendToAllClients(json)
+            println("Sent updates: $json")
+          }
+        }
+      }
 }
