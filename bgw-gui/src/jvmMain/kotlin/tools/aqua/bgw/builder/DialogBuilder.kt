@@ -170,7 +170,7 @@ internal object DialogBuilder {
                         $css
                         
                         ${dialogData.buttons.mapIndexed { index, button ->
-                            ".button-${index} { background-color: ${button.backgroundColor}15; color: ${button.foregroundColor}; } .button-${index}:hover { background-color: ${button.backgroundColor}20; }"
+                            ".button-${index} { background-color: ${escapeHtml(button.backgroundColor)}15; color: ${escapeHtml(button.foregroundColor)}; } .button-${index}:hover { background-color: ${escapeHtml(button.backgroundColor)}20; }"
                         }.joinToString("\n")}
                     </style>
                 </head>
@@ -178,20 +178,20 @@ internal object DialogBuilder {
                     <div class="header">
                         ${getIcon(dialogData.dialogType)}
                         <div class="header-content">
-                            <h1 style="margin-top: -0.2rem; padding: 0px;">${dialogData.header}</h1>
+                            <h1 style="margin-top: -0.2rem; padding: 0px;">${escapeHtml(dialogData.header)}</h1>
                         </div>
                     </div>
                     
                     <div class="stack-container">
                         <div class="code-scroll">
-                            <code>${dialogData.message}</code>
+                            <code>${escapeHtml(dialogData.message)}</code>
                         </div>
                     </div>
                     
                     <div class="footer">
                         ${
                             dialogData.buttons.mapIndexed { index, button -> 
-                                "<button onClick=\"buttonClicked($index)\">${button.text}</button>"
+                                "<button onClick=\"buttonClicked($index)\">${escapeHtml(button.text)}</button>"
                             }.joinToString("\n")
                         }
                     </div>
@@ -240,7 +240,7 @@ internal object DialogBuilder {
                         ${getIcon(dialogData.dialogType, 36)}
                         <div class="header-content">
                             <h1>${extractExceptionType(dialogData.exception)}</h1>
-                            <div class="message">${dialogData.message}</div>
+                            <div class="message">${escapeHtml(dialogData.message)}</div>
                         </div>
                     </div>
                     
@@ -314,5 +314,9 @@ internal object DialogBuilder {
         .replace("\n", "<br>")
         .trimIndent()
         .trim()
+  }
+
+  private fun escapeHtml(text: String): String {
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
   }
 }

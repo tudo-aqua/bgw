@@ -55,6 +55,8 @@ import org.cef.callback.CefContextMenuParams
 import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
+import org.cef.misc.BoolRef
+import org.cef.network.CefRequest
 import tools.aqua.bgw.builder.DialogBuilder
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
@@ -578,6 +580,38 @@ internal class MainFrame(
             browserFocus = false
           }
         })
+
+    // Prevent dragging files into the browser
+    client.addDragHandler { browser, dragData, mask -> true }
+
+    // Prevent navigation to external URLs
+    client.addRequestHandler(
+        object : CefRequestHandlerAdapter() {
+          override fun onBeforeBrowse(
+              browser: CefBrowser,
+              frame: CefFrame,
+              request: CefRequest,
+              user_gesture: Boolean,
+              is_redirect: Boolean
+          ): Boolean {
+            val originalURL = "$startURL:${Constants.PORT}"
+            return !request.url.startsWith(originalURL) && frame.isMain
+          }
+        })
+
+    // Disable keyboard shortcuts
+    client.addKeyboardHandler(
+        object : CefKeyboardHandlerAdapter() {
+          override fun onPreKeyEvent(
+              browser: CefBrowser?,
+              event: CefKeyboardHandler.CefKeyEvent?,
+              is_keyboard_shortcut: BoolRef?
+          ): Boolean {
+            return event != null &&
+                event.type == CefKeyboardHandler.CefKeyEvent.EventType.KEYEVENT_KEYDOWN
+          }
+        })
+
     client.addLoadHandler(
         object : CefLoadHandlerAdapter() {
           override fun onLoadEnd(browserArg: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
