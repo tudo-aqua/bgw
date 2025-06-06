@@ -22,9 +22,14 @@ import tools.aqua.bgw.net.common.Message
 /**
  * Message indicating a game action that was performed by the [sender].
  *
+ * @property clazz Class of the [payload].
  * @property payload Data to be transmitted.
  * @property prettyPrint Pretty print string of the [payload] for debugging and displaying purposes.
  * @property sender Sender identification.
  */
-class GameActionMessage(val payload: String, val prettyPrint: String, val sender: String) :
-    Message()
+class GameActionMessage(
+    val clazz: String,
+    val payload: String,
+    val prettyPrint: String,
+    val sender: String
+) : Message()
