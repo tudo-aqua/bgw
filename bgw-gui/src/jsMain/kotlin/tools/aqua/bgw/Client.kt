@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw
 
-import ActionProp
 import AnimationData
 import AppData
 import Data
@@ -37,8 +36,6 @@ import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLStyleElement
 import org.w3c.dom.NodeList
-import org.w3c.dom.HTMLStyleElement
-import org.w3c.dom.NodeList
 import org.w3c.dom.WebSocket
 import react.*
 import react.dom.client.Root
@@ -49,12 +46,10 @@ import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 import web.fs.FileSystemFileHandle
-import web.timers.setTimeout
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
 internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
-internal var animator: Animator = Animator()
 
 internal lateinit var container: HTMLElement
 internal lateinit var dialogContainer: HTMLElement
@@ -104,53 +99,38 @@ internal fun main() {
 }
 
 internal fun resetAnimations() {
-    val styles = document.body?.querySelectorAll("style") as NodeList
-    for (i in 0 until styles.length) {
-        val style = styles.item(i) as HTMLStyleElement
-        document.body?.removeChild(style)
-    }
+  val styles = document.body?.querySelectorAll("style") as NodeList
+  for (i in 0 until styles.length) {
+    val style = styles.item(i) as HTMLStyleElement
+    document.body?.removeChild(style)
+  }
+}
+
+internal fun stopAnimationsWithoutCallbacks() {
+  println("Stopping animations without callbacks")
+  Animator.clearAllTimeoutsAndIntervals(excludeDelay = true)
+  resetAnimations()
 }
 
 internal fun stopAnimations() {
-    Animator.clearAllTimeoutsAndIntervals()
-    resetAnimations()
+  println("Stopping animations with callbacks")
+  Animator.clearAllTimeoutsAndIntervals()
+  resetAnimations()
 }
 
 internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-root") {
   when (receivedData) {
+    // Handle app data sent from JVM to JS client
     is AppData -> {
-      if (receivedData.action == ActionProp.HIDE_MENU_SCENE) {
-        console.log("[SCENE] Hiding Menu Scene")
-        val element = document.querySelector("#menuScene") as HTMLElement
-        element.classList.toggle("scene--visible", false)
-        setTimeout(
-            {
-              if (!Config.USE_SOCKETS) {
-                renderSingleRoot(receivedData, containerId)
-              } else {
-                renderAppFast(receivedData)
-              }
-            },
-            300)
-      } else if (receivedData.action == ActionProp.SHOW_MENU_SCENE) {
-        if (!Config.USE_SOCKETS) {
-          renderSingleRoot(receivedData, containerId)
-        } else {
-          renderAppFast(receivedData)
-        }
-        val element = document.querySelector("#menuScene") as HTMLElement
-        setTimeout({ element.classList.toggle("scene--visible", true) }, 50)
+      Animator.cancelCleanupTimeouts()
+      if (!Config.USE_SOCKETS) {
+        renderSingleRoot(receivedData, containerId)
       } else {
-        // Cancel all pending animation timeouts before new render to prevent incorrect resets
-        Animator.cancelCleanupTimeouts()
-        if (!Config.USE_SOCKETS) {
-          renderSingleRoot(receivedData, containerId)
-        } else {
-          renderAppFast(receivedData)
-        }
+        renderAppFast(receivedData)
       }
-      stopAnimations()
+      // stopAnimationsWithoutCallbacks()
     }
+    // Handle animations sent from JVM to JS client
     is AnimationData -> {
       if (receivedData.isStop) {
         stopAnimations()
@@ -160,32 +140,11 @@ internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-r
         JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
       }
     }
+    // Handle dialogs sent from JVM to JS client
     is DialogData -> {
       dialogMap[receivedData.id] = receivedData
       renderDialogs()
     }
-    /* is FileDialogData -> {
-      when (receivedData.mode) {
-        "open_file" -> {
-          window.asDynamic().showOpenFilePicker(
-            jso {
-              id = receivedData.id
-              multiple = false
-            }
-          ).then { handle -> sendFile(handle[0] as FileSystemFileHandle, receivedData)
-          }.catch {
-            JCEFEventDispatcher.dispatchEvent(FilesPickedEventData(emptyList()).apply { id = receivedData.id })
-          }
-        }
-        "open_multiple_files" -> {
-        }
-        "save_file" -> {
-        }
-        "choose_directory" -> {
-        }
-        else -> {}
-      }
-    } */
     else -> {}
   }
 }

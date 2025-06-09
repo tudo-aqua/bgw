@@ -184,8 +184,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * once the [Animation] is finished.
    *
    * The [Animation] only animates the [ComponentView] visually and does not update its state. The
-   * Component will reset its visual state on next refresh if the state is not set in onFinished,
-   * which is the suggested way of usage.
+   * Component will reset its visual state after the animation finished if the state is not manually
+   * set in onFinished, which is the suggested way of usage.
    *
    * @param animation [Animation] to play.
    */
