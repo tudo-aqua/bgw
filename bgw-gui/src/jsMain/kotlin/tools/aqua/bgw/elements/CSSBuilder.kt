@@ -169,13 +169,16 @@ internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String>) {
   filter = cssFilter(filterList)
 }
 
-internal fun PropertiesBuilder.flipBuilder(flipped: String) {
-  if (flipped == "horizontal") {
-    transform = scalex(-1)
-  } else if (flipped == "vertical") {
-    transform = scaley(-1)
-  } else if (flipped == "both") {
-    transform = scale(-1, -1)
+internal fun PropertiesBuilder.flipBuilder(flipped: String, rotation: Double) {
+  transform = flipAndRotationBuilder(flipped, rotation).unsafeCast<Transform>()
+}
+
+internal fun flipAndRotationBuilder(flipped: String, rotation: Double): String {
+  return when (flipped) {
+    "horizontal" -> "scaleX(-1) rotateZ(${rotation}deg)"
+    "vertical" -> "scaleY(-1) rotateZ(${rotation}deg)"
+    "both" -> "scaleX(-1) scaleY(-1) rotateZ(${rotation}deg)"
+    else -> "rotateZ(${rotation}deg)"
   }
 }
 

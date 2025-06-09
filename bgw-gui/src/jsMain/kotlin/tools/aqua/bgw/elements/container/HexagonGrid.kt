@@ -109,7 +109,7 @@ internal val HexagonGrid =
               if (props.data.coordinateSystem == "offset") {
                 bgwHexagonContent {
                   val size = it.value.size
-                  val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val w = size * sqrt(3.0)
                   val h = 2 * size
                   val q = it.key.split("/")[0].toInt()
                   val r = it.key.split("/")[1].toInt()
@@ -127,15 +127,15 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em
-                    top = y.em
+                    left = x.em + it.value.posX.em
+                    top = y.em + it.value.posY.em
                   }
                   +NodeBuilder.build(it.value)
                 }
               } else {
                 bgwHexagonContent {
                   val size = it.value.size
-                  val w = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val w = size * sqrt(3.0)
                   val h = 2 * size
                   var q = it.key.split("/")[0].toInt()
                   var r = it.key.split("/")[1].toInt()
@@ -155,8 +155,8 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em
-                    top = y.em
+                    left = x.em + it.value.posX.em
+                    top = y.em + it.value.posY.em
                   }
                   +NodeBuilder.build(it.value)
                 }
@@ -166,7 +166,7 @@ internal val HexagonGrid =
                 bgwHexagonContent {
                   val size = it.value.size
                   val w = 2 * size
-                  val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val h = size * sqrt(3.0)
                   val q = it.key.split("/")[0].toInt()
                   val r = it.key.split("/")[1].toInt()
 
@@ -176,15 +176,15 @@ internal val HexagonGrid =
                       if (q % 2 == 0) h * r + props.data.spacing * (r - 1)
                       else h * r + props.data.spacing * (r - 1) + h / 2
 
-                  if (x < minX) minX = x.toDouble()
-                  if (x + w > maxX) maxX = (x + w).toDouble()
+                  if (x < minX) minX = x
+                  if (x + w > maxX) maxX = x + w
                   if (y < minY) minY = y
                   if (y + h > maxY) maxY = y + h
 
                   css {
                     position = Position.absolute
-                    left = x.em
-                    top = y.em
+                    left = x.em + it.value.posX.em
+                    top = y.em + it.value.posY.em
                   }
                   +NodeBuilder.build(it.value)
                 }
@@ -192,7 +192,7 @@ internal val HexagonGrid =
                 bgwHexagonContent {
                   val size = it.value.size
                   val w = 2 * size
-                  val h = (size * sqrt(3.0)).toString().substring(0, 3).toDouble()
+                  val h = size * sqrt(3.0)
                   var q = it.key.split("/")[0].toInt()
                   var r = it.key.split("/")[1].toInt()
 
@@ -211,8 +211,8 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em
-                    top = y.em
+                    left = x.em + it.value.posX.em
+                    top = y.em + it.value.posY.em
                   }
                   +NodeBuilder.build(it.value)
                 }

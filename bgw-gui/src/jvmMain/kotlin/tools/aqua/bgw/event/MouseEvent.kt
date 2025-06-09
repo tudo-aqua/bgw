@@ -26,8 +26,10 @@ package tools.aqua.bgw.event
  *
  * @property button Corresponding mouse button enum value.
  * @param button Corresponding mouse button enum value.
- * @param posX The X-coordinate of the mouse event position.
- * @param posY The Y-coordinate of the mouse event position.
+ * @param posX The absolute X-coordinate of the mouse event position in the active
+ * [tools.aqua.bgw.core.Scene].
+ * @param posY The absolute Y-coordinate of the mouse event position in the active
+ * [tools.aqua.bgw.core.Scene].
  *
  * @since 0.1
  */
@@ -35,14 +37,16 @@ class MouseEvent(
     val button: MouseButtonType,
 
     /**
-     * The X-coordinate of the mouse event position.
+     * The absolute X-coordinate of the mouse event position in the active
+     * [tools.aqua.bgw.core.Scene].
      *
      * @since 0.8
      */
     val posX: Number,
 
     /**
-     * The Y-coordinate of the mouse event position.
+     * The absolute Y-coordinate of the mouse event position in the active
+     * [tools.aqua.bgw.core.Scene].
      *
      * @since 0.8
      */

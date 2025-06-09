@@ -347,6 +347,20 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
 
     this.rowHeights = rowHeights
   }
+
+  /**
+   * Returns preferred column widths ([COLUMN_WIDTH_AUTO] for auto).
+   *
+   * @return Preferred column widths.
+   */
+  fun getColumnWidths(): DoubleArray = columnWidths
+
+  /**
+   * Returns preferred row heights ([ROW_HEIGHT_AUTO] for auto).
+   *
+   * @return Preferred row heights.
+   */
+  fun getRowHeights(): DoubleArray = rowHeights
   // endregion
 
   // region Grow/Trim

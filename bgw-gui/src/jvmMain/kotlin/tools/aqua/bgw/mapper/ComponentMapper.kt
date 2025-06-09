@@ -118,6 +118,7 @@ internal object ComponentMapper {
           font = FontMapper.map(componentView.font)
           text = componentView.text
           prompt = componentView.prompt
+          isReadonly = componentView.isReadonly
         }
       }
       is UIComponent -> {
@@ -363,6 +364,10 @@ internal object ContainerMapper {
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
+            alignment =
+                Pair(
+                    container.alignment.horizontalAlignment.name.lowercase(),
+                    container.alignment.verticalAlignment.name.lowercase())
           }
       is HexagonGrid<*> -> {
         val tempMap = mutableMapOf<String, HexagonViewData>()
@@ -445,6 +450,7 @@ internal object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
+                rotation = visual.rotation
               }
           is ImageVisual ->
               ImageVisualData().apply {
@@ -460,6 +466,7 @@ internal object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
+                rotation = visual.rotation
               }
           is TextVisual ->
               TextVisualData().apply {
@@ -472,6 +479,7 @@ internal object VisualMapper {
                 style = StyleMapper.map(visual.style)
                 filters = FilterMapper.map(visual.filters)
                 flipped = visual.flipped.name.lowercase()
+                rotation = visual.rotation
                 alignment =
                     Pair(
                         visual.alignment.horizontalAlignment.name.lowercase(),
@@ -511,6 +519,7 @@ internal object VisualMapper {
             style = StyleMapper.map(visual.style)
             filters = FilterMapper.map(visual.filters)
             flipped = visual.flipped.name.lowercase()
+            rotation = visual.rotation
           }
       is ImageVisual ->
           ImageVisualData().apply {
@@ -526,6 +535,7 @@ internal object VisualMapper {
             style = StyleMapper.map(visual.style)
             filters = FilterMapper.map(visual.filters)
             flipped = visual.flipped.name.lowercase()
+            rotation = visual.rotation
           }
       is TextVisual ->
           TextVisualData().apply {
@@ -538,6 +548,7 @@ internal object VisualMapper {
             style = StyleMapper.map(visual.style)
             filters = FilterMapper.map(visual.filters)
             flipped = visual.flipped.name.lowercase()
+            rotation = visual.rotation
             alignment =
                 Pair(
                     visual.alignment.horizontalAlignment.name.lowercase(),
@@ -594,6 +605,8 @@ internal object SceneMapper {
               Frontend.alignmentProperty.value.verticalAlignment.name.lowercase())
       this.menuScene = if (menuScene != null) mapScene(menuScene) else null
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
+      this.fadeTime = Frontend.lastFadeTime.toInt()
+      this.blurRadius = menuScene?.blurRadius ?: DEFAULT_BLUR_RADIUS
     }
   }
 }

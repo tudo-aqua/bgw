@@ -221,10 +221,12 @@ internal val CameraPane =
         minScale = if (props.data.limitBounds) minZoom else 0.1
         maxScale = 4.0
         initialScale = if (props.data.limitBounds) initialZoom else 1.0
-        disabled = !props.data.interactive
-        wheel = jso { step = 0.1 }
+        wheel = jso {
+          disabled = !props.data.interactive
+          step = 0.1
+        }
         panning = jso {
-          disabled = false
+          disabled = !props.data.interactive
           wheelPanning = false
           velocityDisabled = true
           allowLeftClickPan = props.data.panButton == "left_button"

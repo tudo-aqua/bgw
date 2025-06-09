@@ -128,6 +128,9 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
     require(component.parent == null) {
       "Component $component is already contained in another container."
     }
+    require(this !is HexagonGrid<*>) {
+      "HexagonGrid does not support adding components at a specific index. Use set() instead."
+    }
     require(index in 0..observableComponents.size) { "Index $index is out of list range." }
 
     observableComponents.add(index, component)
@@ -148,6 +151,10 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * @throws IllegalArgumentException If a [GameComponentView] is already contained.
    */
   fun addAll(vararg components: T) {
+    require(this !is HexagonGrid<*>) {
+      "HexagonGrid does not support adding components. Use set() instead."
+    }
+
     try {
       addAll(components.toList())
     } catch (e: IllegalArgumentException) {
@@ -167,6 +174,9 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    */
   @Synchronized
   fun addAll(collection: Collection<T>) {
+    require(this !is HexagonGrid<*>) {
+      "HexagonGrid does not support adding components. Use set() instead."
+    }
     try {
       collection.forEach { add(it) }
     } catch (e: IllegalArgumentException) {

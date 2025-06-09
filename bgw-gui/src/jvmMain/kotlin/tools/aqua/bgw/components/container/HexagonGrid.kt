@@ -164,25 +164,27 @@ class HexagonGrid<T : HexagonView>(
         if (orientation == HexOrientation.POINTY_TOP) {
           hexagon.orientation = HexOrientation.POINTY_TOP
           val hexWidth = width / 2 * sqrt(3.0)
-          posXProperty.setSilent(hexWidth * q + if (r % 2 == 0) 0.0 else hexWidth / 2)
-          posYProperty.setSilent(height * r - r * height / 4)
+          inParentPosXProperty.setSilent(hexWidth * q + if (r % 2 == 0) 0.0 else hexWidth / 2)
+          inParentPosYProperty.setSilent(height * r - r * height / 4)
 
-          if (posXProperty.value < minX) minX = posXProperty.value
-          if (posYProperty.value < minY) minY = posYProperty.value
+          if (inParentPosXProperty.value < minX) minX = inParentPosXProperty.value
+          if (inParentPosYProperty.value < minY) minY = inParentPosYProperty.value
 
-          if (posXProperty.value + hexWidth > maxX) maxX = posXProperty.value + hexWidth
-          if (posYProperty.value + height > maxY) maxY = posYProperty.value + height
+          if (inParentPosXProperty.value + hexWidth > maxX)
+              maxX = inParentPosXProperty.value + hexWidth
+          if (inParentPosYProperty.value + height > maxY) maxY = inParentPosYProperty.value + height
         } else {
           hexagon.orientation = HexOrientation.FLAT_TOP
           val hexHeight = height / 2 * sqrt(3.0)
-          posYProperty.setSilent(hexHeight * q + if (r % 2 == 0) 0.0 else hexHeight / 2)
-          posXProperty.setSilent(width * r - r * width / 4)
+          inParentPosYProperty.setSilent(hexHeight * q + if (r % 2 == 0) 0.0 else hexHeight / 2)
+          inParentPosXProperty.setSilent(width * r - r * width / 4)
 
-          if (posXProperty.value < minX) minX = posXProperty.value
-          if (posYProperty.value < minY) minY = posYProperty.value
+          if (inParentPosXProperty.value < minX) minX = inParentPosXProperty.value
+          if (inParentPosYProperty.value < minY) minY = inParentPosYProperty.value
 
-          if (posXProperty.value + width > maxX) maxX = posXProperty.value + width
-          if (posYProperty.value + hexHeight > maxY) maxY = posYProperty.value + hexHeight
+          if (inParentPosXProperty.value + width > maxX) maxX = inParentPosXProperty.value + width
+          if (inParentPosYProperty.value + hexHeight > maxY)
+              maxY = inParentPosYProperty.value + hexHeight
         }
       }
     }
@@ -191,8 +193,8 @@ class HexagonGrid<T : HexagonView>(
     heightProperty.setSilent(maxY - minY)
 
     components.forEach {
-      it.posXProperty.setSilent(it.posXProperty.value - minX)
-      it.posYProperty.setSilent(it.posYProperty.value - minY)
+      it.inParentPosXProperty.setSilent(it.inParentPosXProperty.value - minX)
+      it.inParentPosYProperty.setSilent(it.inParentPosYProperty.value - minY)
     }
   }
 

@@ -29,12 +29,15 @@ All notable changes to this project will be documented in this file.
 - Migrated backend from _JavaFX_ to _JCEF_ for better performance and compatibility.
 - All `properties` are now internal and cannot be accessed directly anymore - use the corresponding attributes and the new _event-based API_ instead.
 - `ImageVisual`s should now be instantiated using a `path` and cropped with the respective parameters instead of using `BufferedImage`s.
+- The `actualPosX` and `actualPosY` properties in `ComponentView` have been changed to return the absolute position of the component in the scene.
+- Dialogs were adjusted to use the new _event-based API_ and are now non-blocking by default.
 
 ### Added
 
 **Events:**
 - Added `onPathsSelected` event to `FileDialog` to listen for file selection.
 - Added `onSelectionCancelled` event to `FileDialog` to listen for file selection cancellation.
+- Added `onButtonClicked` event to `Dialog` to listen for button clicks.
 - Added `onZoomed` event to `CameraPane` to listen for zoom events.
 - Added `onSelected` event to `BinaryStateButton` to listen for selection of the button.
 - Added `onDeselected` event to `BinaryStateButton` to listen for deselection of the button.
@@ -48,6 +51,7 @@ All notable changes to this project will be documented in this file.
 - Added `onSelected` event to `ToggleGroup` to listen for selection of a `BinaryStateButton` in the group.
 - Added `onDeselected` event to `ToggleGroup` to listen for deselection of a `BinaryStateButton` in the group.
 - Added `onLockChanged` event to `BoardGameScene` to listen for lock changes.
+- Added `onSceneRescaled` event to `MenuScene` and `BoardGameScene` to listen for scene rescales when the window is resized.
 
 **Styling:**
 - Added `Color` class to represent colors in BGW.
@@ -55,6 +59,8 @@ All notable changes to this project will be documented in this file.
 - Added `BlurFilter`, `SaturationFilter` and `SepiaFilter` style classes to support image filters on `Visual` elements.
 - Added `BorderRadius` and `Cursor` style classes to support custom styling of `Visual` elements.
 - Added `style`, `filters` and `flipped` properties to `SingleLayerVisual` to apply custom styling.
+- Added `rotation` as an initial parameter to `ImageVisual` and `TextVisual` to set the initial rotation of the visual.
+- Added `blurRadius` property to `MenuScene` constructor to define the initial blur radius of the menu scene background.
 
 **Misc:**
 - Added `Ä`, `Ö`, `Ü` to `KeyCode` enum for German keyboard layout.
@@ -67,11 +73,14 @@ All notable changes to this project will be documented in this file.
 - Added `panBy(xOffset, yOffset, zoom, smooth)` function to `CameraPane` to zoom while panning the camera by a specific offset.
 - Added `getSelectedIndex()` function to `ComboBox` to get the index of the selected item.
 - Added `formatItem(item)` function to `ComboBox` to format any item without displaying it.
+- Added `isReadonly` property to `TextInputUIComponent` to make input fields read-only.
 - Added `formatItem(item)` function to `ListView`, `TableView` and `TableColumn` to format any item without displaying it.
 - Added `selectIndex(index)` function to `ListView` and `TableView` to select an item by index.
 - Added `loadFont(path, fontName, weight)` function to `BoardGameApplication` to define name and weight of a font loaded from a file.
 - Added `dropTarget` to `DragEvent` to get the target of a drag event.
 - Added `THIN`, `EXTRA_LIGHT`, `MEDIUM`, `EXTRA_BOLD`, `BLACK` font weights to `FontWeight` enum to support a wider range of fonts.
+- Added `inParentPosX` and `inParentPosY` properties to `ComponentView` to get the position of a component in its parent.
+- Added `stopAllAnimations()` function to `Scene` to immediately stop all animations currently running.
 
 ### Fixed
 
@@ -82,6 +91,7 @@ All notable changes to this project will be documented in this file.
 - Fixed `CardView` visual not updating properly.
 - Fixed first `Button` in a scene being focused by default.
 - Fixed window resizing leading to wrongly scaled game view.
+- Fixed `actualPosX` and `actualPosY` properties in `ComponentView` to return the correct absolute position of the component.
 
 ### Changed
 
@@ -93,6 +103,7 @@ All notable changes to this project will be documented in this file.
 - Removed previously added horizontal and vertical pan lock as well as zoom lock for `CameraPane`.
 - Removed previously deprecated `getDomain()` and `getCoDomain()` in `BiDirectionalMap` in favor of `keysForward` and `keysBackward`.
 - Removed misleading `CardStack.first()` and `CardStack.last()` functions in favor for actual stack operations.
+- Removed `Optional` return value from `showDialog()` and `showFileDialog()` functions in `BoardGameApplication`.
 
 ### Deprecated
 

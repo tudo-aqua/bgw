@@ -57,6 +57,8 @@ internal class AppData : Data() {
   var background: VisualData? = null
   var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
+  var fadeTime: Int = 0
+  var blurRadius: Double = 0.0
 }
 
 @Serializable
@@ -76,6 +78,7 @@ internal abstract class AnimationData : Data() {
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
+  var isStop: Boolean = false
 }
 
 @Serializable
@@ -86,6 +89,14 @@ internal class DialogData : Data() {
   var header: String = ""
   var message: String = ""
   var exception: String = ""
+  var buttons: List<ButtonTypeData> = emptyList()
+}
+
+@Serializable
+internal class ButtonTypeData : Data() {
+  var text: String = ""
+  var backgroundColor: String = ""
+  var foregroundColor: String = ""
 }
 
 @Serializable
@@ -97,6 +108,9 @@ internal class FileDialogData : Data() {
   var initialDirectoryPath: String? = null
   var extensionFilters: List<Pair<String, List<String>>> = emptyList()
 }
+
+@Serializable
+internal class DialogButtonClickData(val dialogId: String, val buttonIndex: Int) : Data()
 
 @Serializable
 internal abstract class ComponentViewData : Data() {
@@ -140,6 +154,7 @@ internal abstract class LabeledUIComponentData : UIComponentData() {
 internal abstract class TextInputUIComponentData : UIComponentData() {
   var text: String = ""
   var prompt: String = ""
+  var isReadonly: Boolean = false
 }
 
 @Serializable
@@ -318,7 +333,8 @@ internal sealed class SingleLayerVisualData(
     var transparency: Double = 0.0,
     var style: Map<String, String> = emptyMap(),
     var filters: Map<String, String> = emptyMap(),
-    var flipped: String = ""
+    var flipped: String = "",
+    var rotation: Double = 0.0
 ) : VisualData()
 
 @Serializable internal data class ColorVisualData(var color: String = "") : SingleLayerVisualData()

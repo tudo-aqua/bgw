@@ -24,9 +24,11 @@ import emotion.react.Global
 import emotion.react.css
 import emotion.react.styles
 import kotlinx.browser.document
+import kotlinx.browser.window
 import react.*
 import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
@@ -36,7 +38,6 @@ import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.core.DEFAULT_BLUR_RADIUS
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.cssom.*
@@ -255,10 +256,7 @@ internal val App =
             clipPath = polygonPath("25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%")
           }
 
-          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" {
-            opacity = number(1.0)
-            backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
-          }
+          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" { opacity = number(1.0) }
 
           "bgw_camera_pane" { overflow = Overflow.hidden }
 
@@ -279,8 +277,8 @@ internal val App =
 
           "bgw_linear_layout > bgw_contents > div > *, bgw_linear_layout > bgw_contents > *" {
             position = important(Position.relative)
-            left = important(Globals.unset)
-            top = important(Globals.unset)
+            // left = important(Globals.unset)
+            // top = important(Globals.unset)
             flexGrow = number(0.0)
             flexShrink = number(0.0)
           }
@@ -521,35 +519,66 @@ internal val App =
           }
 
           val menuScene = props.data.menuScene
+          val (isMenuVisible, setMenuVisible) = useState(menuScene != undefined)
+          var timeoutId: Int? = null
+
+          // Effect to handle visibility changes when menuScene changes
+          useEffectWithCleanup(menuScene) {
+            if (menuScene != undefined) {
+              setMenuVisible(true)
+            } else {
+              // Start a timer to remove the component after transition completes
+              window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
+            }
+
+            onCleanup { window.clearTimeout(timeoutId ?: 0) }
+          }
+
           bgwMenuScene {
             id = "menuScene"
             css {
               position = Position.absolute
               zIndex = zIndex(1000)
+              transition = menuTransition(props.data.fadeTime)
+              opacity = if (menuScene != undefined) number(1.0) else number(0.0)
+              // Keep the element in the DOM but invisible until transition completes
+              visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
             }
 
-            if (menuScene != undefined) {
-              ariaExpanded = true
-
-              +SceneBuilder.build(menuScene)
+            // Always render component when isMenuVisible, even if menuScene is undefined
+            if (isMenuVisible) {
+              ariaExpanded = menuScene != undefined
+              // Only build the scene content if menuScene is defined
+              menuScene?.let { +SceneBuilder.build(it) }
             }
           }
 
-          if (menuScene != undefined) {
-            bgwBlur {
-              css {
-                position = Position.absolute
-                width = props.data.width.em
-                height = props.data.height.em
-                backgroundColor = rgb(0, 0, 0, 0.0)
-                zIndex = zIndex(999)
-                backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
+          bgwBlur {
+            css {
+              position = Position.absolute
+              zIndex = zIndex(999)
+              backdropFilter =
+                  backgroundBlur(
+                      if (menuScene != undefined && props.data.blurRadius > 0.0) 1.0 else 0.0,
+                      props.data.blurRadius)
+              transition = menuTransition(props.data.fadeTime)
+              // Same visibility logic as with the menu
+              visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
+            }
+
+            if (isMenuVisible) {
+              ariaExpanded = menuScene != undefined
+              div {
+                css {
+                  width = props.data.width.em
+                  height = props.data.height.em
+                }
               }
             }
           }
 
           val gameScene = props.data.gameScene
-          if (gameScene != undefined && gameScene.locked) {
+          if (gameScene != undefined) {
             bgwLock {
               css {
                 position = Position.absolute
@@ -557,6 +586,7 @@ internal val App =
                 height = props.data.height.em
                 backgroundColor = rgb(0, 0, 0, 0.0)
                 zIndex = zIndex(998)
+                display = if (props.data.gameScene?.locked ?: false) Display.block else None.none
               }
             }
           }
@@ -611,8 +641,11 @@ internal fun minContent(): GridTemplateTracks = "min-content".unsafeCast<GridTem
 
 internal fun bgwContainer(): ContainerName = "bgwContainer".unsafeCast<ContainerName>()
 
-internal fun menuTransition(): Transition =
-    ".3s opacity, .3s backdrop-filter".unsafeCast<Transition>()
+internal fun menuTransition(fadeTime: Int): Transition =
+    "${fadeTime}ms opacity, ${fadeTime}ms backdrop-filter".unsafeCast<Transition>()
+
+internal fun backgroundBlur(opacity: Double, blurRadius: Double): BackdropFilter =
+    "blur(${blurRadius}em) opacity($opacity)".unsafeCast<BackdropFilter>()
 
 internal fun transition(duration: Int, property: String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()

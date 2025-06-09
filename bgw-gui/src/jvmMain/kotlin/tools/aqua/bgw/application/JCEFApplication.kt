@@ -18,11 +18,13 @@
 package tools.aqua.bgw.application
 
 import Base64
+import DialogButtonClickData
 import DialogData
 import ID
 import data.event.*
 import dev.dirs.ProjectDirectories
 import java.awt.*
+import java.awt.event.ComponentEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
@@ -53,22 +55,25 @@ import org.cef.callback.CefContextMenuParams
 import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
+import org.cef.misc.BoolRef
+import org.cef.network.CefRequest
+import tools.aqua.bgw.builder.DialogBuilder
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.dialog.FileDialogMode
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  val DEBUG = false
+  const val DEBUG = false
 }
 
 internal class JCEFApplication : Application {
@@ -77,7 +82,8 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
-    println("[BGW] Starting BGW Runtime (${Constants.PORT})")
+    if (Constants.DEBUG) println("[BGW] Starting BGW Runtime (http://localhost:${Constants.PORT})")
+    else println("[BGW] Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
       frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
       JCEFApplication::class
@@ -155,16 +161,21 @@ internal class JCEFApplication : Application {
                   }
                 }
                 is MouseEnteredEventData -> {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
                   component.onMouseEntered?.invoke(
-                      MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY))
+                      MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
                 }
                 is MouseExitedEventData -> {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
                   component.onMouseExited?.invoke(
-                      MouseEvent(MouseButtonType.UNSPECIFIED, eventData.posX, eventData.posY))
+                      MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
                 }
                 is MousePressedEventData -> {
-                  component.onMousePressed?.invoke(
-                      MouseEvent(eventData.button, eventData.posX, eventData.posY))
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                  component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY))
                 }
                 is ScrollEventData -> {
                   component.onMouseWheel?.invoke(
@@ -172,12 +183,15 @@ internal class JCEFApplication : Application {
                           eventData.direction, eventData.ctrl, eventData.shift, eventData.alt))
                 }
                 is MouseReleasedEventData -> {
-                  component.onMouseReleased?.invoke(
-                      MouseEvent(eventData.button, eventData.posX, eventData.posY))
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                  component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY))
                 }
-                is MouseEventData ->
-                    component.onMouseClicked?.invoke(
-                        MouseEvent(eventData.button, eventData.posX, eventData.posY))
+                is MouseEventData -> {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                  component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY))
+                }
                 is KeyEventData -> {
                   val keyEvent =
                       KeyEvent(
@@ -200,7 +214,10 @@ internal class JCEFApplication : Application {
                   if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
                 }
                 is TextInputChangedEventData -> {
-                  if (component is TextInputUIComponent) component.text = eventData.value
+                  if (component is TextInputUIComponent) {
+                    component.textProperty.setSilent(eventData.value)
+                    component.onTextChanged?.invoke(eventData.value)
+                  }
                 }
                 is ColorInputChangedEventData -> {
                   // println("Text changed")
@@ -312,6 +329,7 @@ internal class JCEFApplication : Application {
                           "Error",
                           "An error occurred while handling an event: ${e.message}",
                           exception = e)))
+              e.printStackTrace()
             }
             return true
           }
@@ -338,6 +356,7 @@ internal class MainFrame(
   var msgRouter: CefMessageRouter? = null
   var animationMsgRouter: CefMessageRouter? = null
   var globalEventMsgRouter: CefMessageRouter? = null
+  var dialogMsgRouter: CefMessageRouter? = null
   var client: CefClient
   var activeBrowser: CefBrowser
 
@@ -350,6 +369,9 @@ internal class MainFrame(
 
     if (!debugLogging) {
       builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+    } else {
+      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_INFO
+      builder.cefSettings.remote_debugging_port = 2504
     }
 
     val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
@@ -499,6 +521,45 @@ internal class MainFrame(
           }
         }
     animationMsgRouter?.addHandler(animationHandler, true)
+
+    // Dialog Button Handler
+    val dialogConfig = CefMessageRouterConfig()
+    dialogConfig.jsQueryFunction = "cefDialogQuery"
+    dialogConfig.jsCancelFunction = "cefDialogQueryCancel"
+    dialogMsgRouter = CefMessageRouter.create(dialogConfig)
+    client.addMessageRouter(dialogMsgRouter)
+    val dialogButtonHandler =
+        object : CefMessageRouterHandlerAdapter() {
+          override fun onQuery(
+              browser: CefBrowser,
+              frame: CefFrame,
+              query_id: Long,
+              request: String,
+              persistent: Boolean,
+              callback: CefQueryCallback
+          ): Boolean {
+            try {
+              val data = jsonMapper.decodeFromString<DialogButtonClickData>(request)
+
+              // Find the dialog by ID and invoke the button callback
+              val dialog = Frontend.openedDialogs[data.dialogId]
+              val buttonType = dialog?.buttonTypes?.get(data.buttonIndex)
+              if (dialog != null && buttonType != null) {
+                Frontend.openedDialogs.remove(data.dialogId)
+                dialog.onButtonClicked?.invoke(buttonType)
+              }
+              Frontend.openedDialogs.remove(data.dialogId)
+
+              callback.success("")
+              return true
+            } catch (e: Exception) {
+              e.printStackTrace()
+            }
+            return false
+          }
+        }
+
+    dialogMsgRouter?.addHandler(dialogButtonHandler, true)
     // endregion
 
     val browser = client.createBrowser("$startURL:${Constants.PORT}", useOSR, isTransparent)
@@ -519,6 +580,38 @@ internal class MainFrame(
             browserFocus = false
           }
         })
+
+    // Prevent dragging files into the browser
+    client.addDragHandler { browser, dragData, mask -> true }
+
+    // Prevent navigation to external URLs
+    client.addRequestHandler(
+        object : CefRequestHandlerAdapter() {
+          override fun onBeforeBrowse(
+              browser: CefBrowser,
+              frame: CefFrame,
+              request: CefRequest,
+              user_gesture: Boolean,
+              is_redirect: Boolean
+          ): Boolean {
+            val originalURL = "$startURL:${Constants.PORT}"
+            return !request.url.startsWith(originalURL) && frame.isMain
+          }
+        })
+
+    // Disable keyboard shortcuts
+    client.addKeyboardHandler(
+        object : CefKeyboardHandlerAdapter() {
+          override fun onPreKeyEvent(
+              browser: CefBrowser?,
+              event: CefKeyboardHandler.CefKeyEvent?,
+              is_keyboard_shortcut: BoolRef?
+          ): Boolean {
+            return event != null &&
+                event.type == CefKeyboardHandler.CefKeyEvent.EventType.KEYEVENT_KEYDOWN
+          }
+        })
+
     client.addLoadHandler(
         object : CefLoadHandlerAdapter() {
           override fun onLoadEnd(browserArg: CefBrowser, frame: CefFrame, httpStatusCode: Int) {
@@ -527,7 +620,9 @@ internal class MainFrame(
               val dialogData = dialogMap[validBrowser]
 
               if (dialogData != null && validBrowser != null) {
-                setDialogContent(validBrowser, dialogData)
+                if (dialogData.dialogType == DialogType.EXCEPTION)
+                    DialogBuilder.setExceptionDialogContent(validBrowser, dialogData)
+                else DialogBuilder.setDialogContent(validBrowser, dialogData)
                 dialogMap.remove(validBrowser)
               }
             }
@@ -626,13 +721,31 @@ internal class MainFrame(
       }
     }
 
-    //    addComponentListener(
-    //        object : ComponentAdapter() {
-    //          override fun componentResized(e: ComponentEvent) {
-    //            Frontend.widthProperty.setInternal(this@MainFrame.width.toDouble())
-    //            Frontend.heightProperty.setInternal(this@MainFrame.height.toDouble())
-    //          }
-    //        })
+    // Add component listener with debounce to detect window size changes
+    var resizeTimer: Timer? = null
+    val resizeDelay = 100L // milliseconds to wait after last resize event
+
+    addComponentListener(
+        object : java.awt.event.ComponentAdapter() {
+          override fun componentResized(e: ComponentEvent) {
+            // Cancel existing timer if still running
+            resizeTimer?.cancel()
+
+            // Create new timer that will trigger rescale events after delay
+            resizeTimer =
+                Timer().apply {
+                  schedule(
+                      object : TimerTask() {
+                        override fun run() {
+                          // Call onSceneRescaled for both scenes when window size changes
+                          Frontend.menuScene?.onSceneRescaled?.invoke()
+                          Frontend.boardGameScene?.onSceneRescaled?.invoke()
+                        }
+                      },
+                      resizeDelay)
+                }
+          }
+        })
   }
 
   internal fun gracefulShutdown() {
@@ -695,94 +808,6 @@ internal class MainFrame(
     return pids.filter { it in getChildrenJCEFHelperProcesses() }.toSet()
   }
 
-  internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
-    browser.executeJavaScript(
-        """
-                document.write(`
-                    <html>
-                        <head>        
-                            <style>
-                                * {
-  padding: 0;
-  margin: 0;
-}
-
-body {
-  background-color: white;
-  font-family: sans-serif;
-  padding: 1rem;
-  width: calc(100% - 2rem);
-}
-
-h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-p {
-  margin-top: 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  opacity: 0.75;
-  margin-bottom: 2rem;
-}
-
-.code-scroll {
-  border-radius: 1rem;
-  background: #0f0f0f;
-  color: white;
-  padding: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  display: block;
-  height: 15rem;
-  overflow: auto;
-}
-
-.code-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-code {
-  color: white;
-  box-sizing: border-box;
-  width: 100%;
-  height: fit-content;
-  display: block;
-}
-
-.footer {
-  width: 100%;
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-span {
-    display: inline-block;  
-    width: 29px;
-}
-                            </style>
-                        </head>
-                        <body>
-                            <h1>${dialogData.header}</h1>
-                            <p>${dialogData.message}</p>
-                            <div class="code-scroll">
-                                <code>${dialogData.exception.replace(Regex("\\t"), "<span></span>").replace(Regex("\\n"), "<br>")}</code>
-                            </div>
-                            <div class="footer">
-                              <div class="buttons">
-                                <button onClick="window.close()">Close</button>
-                              </div>
-                            </div>
-                        </body>
-                    </html>`);
-            """.trimIndent(),
-        browser.url,
-        0)
-  }
-
   internal fun openNewDialog(dialogData: DialogData) {
     val dialogFrame = client.createBrowser("about:blank", false, false)
     val dialogUI = dialogFrame.uiComponent
@@ -790,11 +815,18 @@ span {
     dialogMap[dialogFrame] = dialogData
 
     val dialog = JFrame()
-    dialog.title = dialogData.message
     dialog.iconImage = iconImage
+    dialog.background = java.awt.Color(0x161d29)
     dialog.contentPane.add(dialogUI, BorderLayout.CENTER)
-    dialog.pack()
-    dialog.setSize(800, 500)
+    if (dialogData.dialogType == DialogType.EXCEPTION) {
+      dialog.minimumSize = Dimension(600, 500)
+      dialog.setSize(1200, 500)
+      dialog.title = dialogData.message
+    } else {
+      dialog.minimumSize = Dimension(600, 350)
+      dialog.setSize(600, 350)
+      dialog.title = dialogData.title
+    }
     dialog.setLocationRelativeTo(this)
     dialog.isVisible = true
   }
@@ -808,7 +840,7 @@ span {
           FileDialogMode.SAVE_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_SAVE
           // FileDialogMode.CHOOSE_DIRECTORY ->
           // CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_FOLDER
-          FileDialogMode.CHOOSE_DIRECTORY -> TODO("Not yet implemented")
+          FileDialogMode.CHOOSE_DIRECTORY -> TODO("This feature is currently not supported.")
         }
 
     val defaultFile = fileDialog.initialFileName

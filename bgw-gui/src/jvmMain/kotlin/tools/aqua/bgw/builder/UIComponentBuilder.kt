@@ -60,6 +60,9 @@ internal object UIComponentBuilder {
     textInputUIComponent.promptProperty.guiListener = { _, _ ->
       Frontend.updateComponent(textInputUIComponent)
     }
+    textInputUIComponent.isReadonlyProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(textInputUIComponent)
+    }
     when (textInputUIComponent) {
       is TextArea -> buildTextArea(textInputUIComponent)
       is TextField -> buildTextField(textInputUIComponent)

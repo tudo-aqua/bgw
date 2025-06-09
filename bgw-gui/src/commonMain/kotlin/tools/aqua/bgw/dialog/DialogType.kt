@@ -64,7 +64,7 @@ enum class DialogType {
 
   /**
    * The [EXCEPTION] dialog type configures the dialog to show an exception stack trace. This
-   * includes an 'exception' image, an appropriate title and header, and just a [ButtonType.OK]
+   * includes an 'exception' image, an appropriate title and header, and just a [ButtonType.DISMISS]
    * button for the user to click on to dismiss the dialog.
    */
   EXCEPTION

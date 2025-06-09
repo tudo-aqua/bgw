@@ -21,6 +21,7 @@ package tools.aqua.bgw.core
 
 import ActionProp
 import PropData
+import data.animation.DelayAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import java.lang.Runnable
@@ -43,7 +44,6 @@ import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
-import tools.aqua.bgw.dialog.ButtonType
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
@@ -111,6 +111,10 @@ internal class Frontend {
     internal val alignmentProperty =
         Property(Alignment.of(VerticalAlignment.CENTER, HorizontalAlignment.CENTER))
 
+    internal val openedDialogs = mutableMapOf<String, Dialog>()
+
+    internal var lastFadeTime: Double = 0.0
+
     /** Property for the current application width. */
     internal val widthProperty =
         LimitedDoubleProperty(
@@ -147,7 +151,8 @@ internal class Frontend {
      * @param scene menu scene to show.
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
-    internal fun showMenuScene(scene: MenuScene, fadeTime: Double) {
+    internal fun showMenuScene(scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      lastFadeTime = fadeTime
       menuScene?.onSceneHidden?.invoke()
       menuScene = scene
       markDirty(ActionProp.SHOW_MENU_SCENE)
@@ -157,6 +162,17 @@ internal class Frontend {
     internal fun sendAnimation(animation: Animation) {
       forceUpdate()
       val animationData = AnimationMapper.map(animation)
+      val json = jsonMapper.encodeToString(PropData(animationData))
+      runBlocking { componentChannel.sendToAllClients(json) }
+    }
+
+    internal fun stopAnimations() {
+      forceUpdate()
+      val animationData =
+          DelayAnimationData().apply {
+            id = "stopAnimations"
+            isStop = true
+          }
       val json = jsonMapper.encodeToString(PropData(animationData))
       runBlocking { componentChannel.sendToAllClients(json) }
     }
@@ -183,7 +199,8 @@ internal class Frontend {
      *
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
-    internal fun hideMenuScene(fadeTime: Double) {
+    internal fun hideMenuScene(fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      lastFadeTime = fadeTime
       menuScene?.onSceneHidden?.invoke()
       menuScene = null
       markDirty(ActionProp.HIDE_MENU_SCENE)
@@ -261,17 +278,13 @@ internal class Frontend {
      * Shows a dialog and blocks further thread execution.
      *
      * @param dialog the [Dialog] to show
-     *
-     * @return chosen button or [Optional.empty] if canceled.
      */
-    internal fun showDialog(dialog: Dialog): Optional<ButtonType> {
-      println("Showing dialog ${dialog.id}")
+    internal fun showDialog(dialog: Dialog) {
       val dialogData = DialogMapper.map(dialog)
-      val json = jsonMapper.encodeToString(PropData(dialogData))
-      runBlocking { componentChannel.sendToAllClients(json) }
-      // applicationEngine.openNewDialog(dialogData)
-
-      return Optional.empty()
+      // val json = jsonMapper.encodeToString(PropData(dialogData))
+      // runBlocking { componentChannel.sendToAllClients(json) }
+      openedDialogs[dialog.id] = dialog
+      applicationEngine.openNewDialog(dialogData)
     }
 
     /**
@@ -285,6 +298,18 @@ internal class Frontend {
       val json = jsonMapper.encodeToString(PropData(dialogData))
       runBlocking { componentChannel.sendToAllClients(json) } */
       (applicationEngine as JCEFApplication).frame?.openNewFileDialog(dialog)
+    }
+
+    internal fun relativePositionsToAbsolute(
+        relativeX: Double,
+        relativeY: Double
+    ): Pair<Double, Double> {
+      val currentScene =
+          menuScene
+              ?: boardGameScene
+                  ?: throw IllegalStateException(
+                  "No scene is currently displayed. Cannot convert relative positions to absolute.")
+      return Pair(relativeX * currentScene.width, relativeY * currentScene.height)
     }
 
     /** Starts the application. */

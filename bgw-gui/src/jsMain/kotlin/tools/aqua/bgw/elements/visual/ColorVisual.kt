@@ -39,7 +39,7 @@ internal val ColorVisual =
         id = props.data.id
         css {
           styleBuilder(props.data.style)
-          flipBuilder(props.data.flipped)
+          flipBuilder(props.data.flipped, props.data.rotation)
           filterBuilder(props.data.filters)
           backgroundColor = Color(props.data.color)
           opacity = number(props.data.transparency)

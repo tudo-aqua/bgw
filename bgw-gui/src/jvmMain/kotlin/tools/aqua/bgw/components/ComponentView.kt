@@ -21,10 +21,8 @@ package tools.aqua.bgw.components
 
 import IDGenerator
 import kotlin.math.floor
-import tools.aqua.bgw.components.container.GameComponentContainer
-import tools.aqua.bgw.components.layoutviews.GridPane
-import tools.aqua.bgw.components.layoutviews.LayoutView
-import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.components.container.*
+import tools.aqua.bgw.components.layoutviews.*
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
 import tools.aqua.bgw.observable.properties.*
@@ -128,6 +126,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Horizontal position of this [ComponentView].
    *
    * @see actualPosX
+   * @see inParentPosX
    */
   var posX: Double
     get() = posXProperty.value
@@ -136,18 +135,40 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
     }
 
   /**
-   * Horizontal position of this [ComponentView] considering scale.
+   * Absolute horizontal position of this [ComponentView] in the [Scene]. Does not take panning and
+   * zooming of a [CameraPane] into account.
    *
    * @see posX
+   * @see inParentPosX
    */
   var actualPosX: Double
     get() {
       val parent = parent
-      val offset = if (parent != null && parent.isLayoutFromCenter) parent.actualWidth / 2 else 0.0
+      val parentPosX = parent?.actualPosX ?: 0.0
+      val offset =
+          if (parent != null && parent is GridPane<*> && parent.isLayoutFromCenter) {
+            parent.grid.getColumnWidths().toMutableList().sumOf { it } / 2 +
+                (parent.spacing * (parent.grid.columns - 1)) / 2
+          } else 0.0
 
-      return posX + (width - actualWidth) / 2 - offset
+      return posX + parentPosX + inParentPosXProperty.value - offset
     }
     private set(_) {}
+
+  /** [Property] for the horizontal position of this [ComponentView] relative to its parent. */
+  internal var inParentPosXProperty = DoubleProperty(0.0)
+
+  /**
+   * Relative horizontal position of this [ComponentView] in its parent. Is equal to [posX] if the
+   * parent is not self-layouting like [CardStack], [HexagonGrid], [LinearLayout] or [GridPane].
+   *
+   * @see posX
+   * @see actualPosX
+   */
+  val inParentPosX: Double
+    get() {
+      return posX + inParentPosXProperty.value
+    }
 
   /**
    * [Property] for the vertical position of this [ComponentView].
@@ -161,6 +182,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Vertical position of this [ComponentView].
    *
    * @see actualPosY
+   * @see inParentPosY
    */
   var posY: Double
     get() = posYProperty.value
@@ -169,18 +191,40 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
     }
 
   /**
-   * Vertical position of this [ComponentView] considering scale.
+   * Absolute vertical position of this [ComponentView] in the [Scene]. Does not take panning and
+   * zooming of a [CameraPane] into account.
    *
    * @see posY
+   * @see inParentPosY
    */
   var actualPosY: Double
     get() {
       val parent = parent
-      val offset = if (parent != null && parent.isLayoutFromCenter) parent.actualHeight / 2 else 0.0
+      val parentPosY = parent?.actualPosY ?: 0.0
+      val offset =
+          if (parent != null && parent is GridPane<*> && parent.isLayoutFromCenter) {
+            parent.grid.getRowHeights().toMutableList().sumOf { it } / 2 +
+                (parent.spacing * (parent.grid.rows - 1)) / 2
+          } else 0.0
 
-      return posY + (height - actualHeight) / 2 - offset
+      return posY + parentPosY + inParentPosYProperty.value - offset
     }
     private set(_) {}
+
+  /** [Property] for the vertical position of this [ComponentView] relative to its parent. */
+  internal var inParentPosYProperty = DoubleProperty(0.0)
+
+  /**
+   * Relative vertical position of this [ComponentView] in its parent. Is equal to [posY] if the
+   * parent is self-layouting like [CardStack], [HexagonGrid], [LinearLayout] or [GridPane].
+   *
+   * @see posY
+   * @see actualPosY
+   */
+  val inParentPosY: Double
+    get() {
+      return posY + inParentPosYProperty.value
+    }
 
   /**
    * [Property] for the [width] of this [ComponentView].

@@ -92,6 +92,7 @@ internal external interface BoundsType {
 }
 
 internal external interface WheelProps {
+  var disabled: Boolean
   var step: Double
 }
 

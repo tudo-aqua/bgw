@@ -19,6 +19,7 @@ package tools.aqua.bgw.builder
 
 import ID
 import data.event.*
+import kotlinx.browser.document
 import react.dom.events.DragEvent as ReactDragEvent
 import react.dom.events.KeyboardEvent as ReactKeyEvent
 import react.dom.events.MouseEvent as ReactMouseEvent
@@ -31,15 +32,51 @@ import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.WheelDirection
 
 internal object ReactConverters {
+  fun getSceneOffset(): Pair<Pair<Double, Double>, Pair<Double, Double>> {
+    val menuScene = document.getElementById("menuScene")
+    val gameScene = document.getElementById("boardGameScene")
+
+    if (menuScene != null && gameScene != null) {
+      val menuSceneOffset = menuScene.getBoundingClientRect()
+      if (menuSceneOffset.width == 0.0 && menuSceneOffset.height == 0.0) {
+        // If the menu scene is not visible, we return the game scene offset.
+        val gameSceneOffset = gameScene.getBoundingClientRect()
+        return Pair(
+            Pair(gameSceneOffset.left, gameSceneOffset.top),
+            Pair(gameSceneOffset.width, gameSceneOffset.height))
+      }
+      return Pair(
+          Pair(menuSceneOffset.left, menuSceneOffset.top),
+          Pair(menuSceneOffset.width, menuSceneOffset.height))
+    } else if (gameScene != null) {
+      val gameSceneOffset = gameScene.getBoundingClientRect()
+      return Pair(
+          Pair(gameSceneOffset.left, gameSceneOffset.top),
+          Pair(gameSceneOffset.width, gameSceneOffset.height))
+    } else {
+      return Pair(Pair(0.0, 0.0), Pair(0.0, 0.0))
+    }
+  }
+
+  fun mousePositionToScenePosition(clientX: Double, clientY: Double): Pair<Double, Double> {
+    val (offset, size) = getSceneOffset()
+    val absoluteX = (clientX - offset.first) / size.first
+    val absoluteY = (clientY - offset.second) / size.second
+
+    return Pair(absoluteX, absoluteY)
+  }
   fun ReactMouseEvent<*, *>.toMouseEnteredData(targetID: ID?): MouseEnteredEventData {
-    return MouseEnteredEventData(clientX, clientY).apply { this.id = targetID }
+    val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
+    return MouseEnteredEventData(posX, posY).apply { this.id = targetID }
   }
 
   fun ReactMouseEvent<*, *>.toMouseExitedData(targetID: ID?): MouseExitedEventData {
-    return MouseExitedEventData(clientX, clientY).apply { this.id = targetID }
+    val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
+    return MouseExitedEventData(posX, posY).apply { this.id = targetID }
   }
 
   fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {
+    val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MouseEventData(
             when (button as Int) {
               0 -> MouseButtonType.LEFT_BUTTON
@@ -49,12 +86,13 @@ internal object ReactConverters {
               4 -> MouseButtonType.OTHER
               else -> MouseButtonType.UNSPECIFIED
             },
-            clientX,
-            clientY)
+            posX,
+            posY)
         .apply { this.id = targetID }
   }
 
   fun ReactMouseEvent<*, *>.toMousePressedEventData(targetID: ID?): MousePressedEventData {
+    val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MousePressedEventData(
             when (button as Int) {
               0 -> MouseButtonType.LEFT_BUTTON
@@ -64,12 +102,13 @@ internal object ReactConverters {
               4 -> MouseButtonType.OTHER
               else -> MouseButtonType.UNSPECIFIED
             },
-            clientX,
-            clientY)
+            posX,
+            posY)
         .apply { this.id = targetID }
   }
 
   fun ReactMouseEvent<*, *>.toMouseReleasedEventData(targetID: ID?): MouseReleasedEventData {
+    val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MouseReleasedEventData(
             when (button as Int) {
               0 -> MouseButtonType.LEFT_BUTTON
@@ -79,8 +118,8 @@ internal object ReactConverters {
               4 -> MouseButtonType.OTHER
               else -> MouseButtonType.UNSPECIFIED
             },
-            clientX,
-            clientY)
+            posX,
+            posY)
         .apply { this.id = targetID }
   }
 

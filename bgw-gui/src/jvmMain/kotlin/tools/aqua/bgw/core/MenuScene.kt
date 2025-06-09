@@ -29,6 +29,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width [Scene] [width] in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
  * @param height [Scene] [height] in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
  * @param background [BoardGameScene] [background] [Visual]. Default: [ColorVisual.WHITE].
+ * @param blurRadius The radius of the blur effect applied to the background of this [MenuScene].
+ * Default: [DEFAULT_BLUR_RADIUS].
  *
  * @see Scene
  * @see BoardGameScene
@@ -38,7 +40,13 @@ import tools.aqua.bgw.visual.Visual
 open class MenuScene(
     width: Number = DEFAULT_SCENE_WIDTH,
     height: Number = DEFAULT_SCENE_HEIGHT,
-    background: Visual = ColorVisual.WHITE
+    background: Visual = ColorVisual.WHITE,
+    /**
+     * The radius of the blur effect applied to the underlying [Scene]s.
+     *
+     * @since 0.10
+     */
+    val blurRadius: Double = DEFAULT_BLUR_RADIUS,
 ) :
     Scene<StaticComponentView<out StaticComponentView<*>>>(
         width = width, height = height, background = background) {

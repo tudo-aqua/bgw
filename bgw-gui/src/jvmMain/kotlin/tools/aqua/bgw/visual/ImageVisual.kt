@@ -41,6 +41,7 @@ import tools.aqua.bgw.observable.properties.StringProperty
  * @property height Height of sub-image. Pass -1 to use full height. Default: -1.
  * @property offsetX Left bound of sub-image. Default: 0.
  * @property offsetY Top bound of sub-image. Default: 0.
+ * @param rotation Rotation of the image in degrees. Default: 0.
  *
  * @throws IllegalArgumentException If [path] is not a valid path or empty or if [path] was not
  * found in resources.
@@ -57,8 +58,9 @@ open class ImageVisual(
     val width: Int = -1,
     val height: Int = -1,
     val offsetX: Int = 0,
-    val offsetY: Int = 0
-) : SingleLayerVisual() {
+    val offsetY: Int = 0,
+    rotation: Number = 0,
+) : SingleLayerVisual(rotation.toDouble()) {
 
   init {
     require(!path.startsWith("http://") && !path.startsWith("https://")) {
@@ -117,7 +119,7 @@ open class ImageVisual(
   }
 
   override fun copy(): ImageVisual {
-    return ImageVisual(path, width, height, offsetX, offsetY).apply {
+    return ImageVisual(path, width, height, offsetX, offsetY, rotation).apply {
       transparency = this@ImageVisual.transparency
       style.applyDeclarations(this@ImageVisual.style)
       filters.applyDeclarations(this@ImageVisual.filters)

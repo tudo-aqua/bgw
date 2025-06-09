@@ -29,31 +29,38 @@ package tools.aqua.bgw.dialog
  *
  * @since 0.1
  */
-enum class ButtonType(private val text: String) {
+enum class ButtonType(
+    internal val text: String,
+    internal val bg: String = "#121824",
+    internal val fg: String = "#ffffff"
+) {
   /** A [ButtonType] that displays "Apply". */
-  APPLY("APPLY"),
+  APPLY("Apply"),
 
   /** A [ButtonType] that displays "OK". */
   OK("OK"),
 
   /** A [ButtonType] that displays "Cancel". */
-  CANCEL("CANCEL"),
+  CANCEL("Cancel"),
 
   /** A [ButtonType] that displays "Close". */
-  CLOSE("CLOSE"),
+  CLOSE("Close"),
 
   /** A [ButtonType] that displays "Yes". */
-  YES("YES"),
+  YES("Yes"),
 
   /** A [ButtonType] that displays "No". */
-  NO("NO"),
+  NO("No"),
 
   /** A [ButtonType] that displays "Finish". */
-  FINISH("FINISH"),
+  FINISH("Finish"),
 
   /** A [ButtonType] that displays "Next". */
-  NEXT("NEXT"),
+  NEXT("Next"),
 
   /** A[ButtonType] that displays "Previous". */
-  PREVIOUS("PREVIOUS")
+  PREVIOUS("Previous"),
+
+  /** A [ButtonType] that displays "Dismiss". */
+  DISMISS("Dismiss"),
 }

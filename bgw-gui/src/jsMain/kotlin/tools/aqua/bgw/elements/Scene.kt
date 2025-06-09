@@ -40,7 +40,6 @@ internal val Scene =
           width = props.data.width.em
           height = props.data.height.em
           position = Position.relative
-          transition = menuTransition()
         }
 
         bgwVisuals {

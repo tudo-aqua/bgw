@@ -28,8 +28,6 @@ import tools.aqua.bgw.style.Style
 /**
  * Baseclass for single layer visuals.
  *
- * @constructor Creates a [SingleLayerVisual].
- *
  * @see Visual
  * @see CompoundVisual
  * @see TextVisual
@@ -38,7 +36,7 @@ import tools.aqua.bgw.style.Style
  *
  * @since 0.1
  */
-sealed class SingleLayerVisual : Visual() {
+sealed class SingleLayerVisual(rot: Double) : Visual() {
   /**
    * Property for the [transparency] / alpha channel for this [Visual].
    *
@@ -58,6 +56,16 @@ sealed class SingleLayerVisual : Visual() {
     set(value) {
       transparencyProperty.value = value
     }
+
+  internal val rotationProperty: Property<Double> = Property(rot)
+
+  /**
+   * The rotation of this [Visual] in degrees.
+   *
+   * Must be set between 0 and 360. Default: 0.
+   */
+  val rotation: Double
+    get() = rotationProperty.value
 
   /**
    * Property for the [style] applied to this [Visual].

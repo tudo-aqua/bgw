@@ -68,6 +68,7 @@ private val module = SerializersModule {
     // DIALOGS
     subclass(DialogData::class)
     subclass(FileDialogData::class)
+    subclass(DialogButtonClickData::class)
     // ANIMATIONS
     subclass(DelayAnimationData::class)
     subclass(DiceAnimationData::class)

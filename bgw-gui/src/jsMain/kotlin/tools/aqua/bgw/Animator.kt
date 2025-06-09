@@ -26,18 +26,22 @@ import org.w3c.dom.Node
 import react.dom.client.Root
 import react.dom.client.createRoot
 import tools.aqua.bgw.builder.VisualBuilder
-import web.cssom.ElementCSSInlineStyle
 import web.dom.Element
+import web.timers.Interval
+import web.timers.Timeout
 import web.timers.clearInterval
+import web.timers.clearTimeout
 import web.timers.setInterval
 import web.timers.setTimeout
 
-internal class Animator {
+internal object Animator {
   private val animations = mutableMapOf<String, Node>()
+  private val timeouts = mutableMapOf<String, Timeout>()
+  private val intervals = mutableMapOf<String, Interval>()
+  private val resetFunctions = mutableMapOf<String, () -> Unit>()
 
-  companion object {
-    const val DELTA_MS = 20
-  }
+  const val DELTA_MS = 20
+  const val CLEANUP_MS = 100
 
   fun startAnimation(
       animationData: AnimationData,
@@ -104,8 +108,13 @@ internal class Animator {
   }
 
   private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
-    console.log("Starting delay animation")
-    setTimeout({ callback.invoke(animation.id) }, animation.duration)
+    timeouts["${animation.id}-setup"] =
+        setTimeout(
+            {
+              clearSingleTimeoutAndInterval(animation.id)
+              callback.invoke(animation.id)
+            },
+            animation.duration)
   }
 
   private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID) -> Unit) {
@@ -125,12 +134,82 @@ internal class Animator {
 
     var currentDuration = 0
     for (anim in animations) {
-      setTimeout({ startAnimation(anim, animations, callback = callback) }, currentDuration)
+      val component = anim as? ComponentAnimationData ?: return
+      val componentId = component.componentView?.id.toString()
+
+      timeouts["${anim.id}-all"] =
+          setTimeout({ startAnimation(anim, animations, callback = callback) }, currentDuration)
       currentDuration += anim.duration
       if (anim == animations.last()) {
         val totalDuration = currentDuration + DELTA_MS
-        setTimeout({ callback.invoke(animation.id) }, totalDuration)
+        val callbackTimeout =
+            setTimeout(
+                {
+                  clearSingleTimeoutAndInterval(animation.id)
+                  callback.invoke(animation.id)
+                  timeouts["${animation.id}-cleanup"] =
+                      setTimeout({ clearComponentAnimations(componentId) }, CLEANUP_MS)
+                },
+                totalDuration)
+        timeouts["${animation.id}-callback"] = callbackTimeout
       }
+    }
+  }
+
+  fun cancelCleanupTimeouts() {
+    val matchingCleanups = timeouts.keys.filter { it.endsWith("-cleanup") }
+
+    for (i in 0 until matchingCleanups.size) {
+      val key = matchingCleanups.elementAt(i)
+      timeouts[key]?.let { clearTimeout(it) }
+      timeouts.remove(key)
+    }
+
+    // Also remove any reset functions as they would reset visuals too
+    val cleanupResetFunctions = resetFunctions.keys.filter { it.contains("-cleanup") }
+    cleanupResetFunctions.forEach { key -> resetFunctions.remove(key) }
+  }
+
+  fun clearAllTimeoutsAndIntervals() {
+    for (i in 0 until intervals.size) {
+      intervals.values.elementAt(i).let { clearInterval(it) }
+    }
+
+    for (i in 0 until timeouts.size) {
+      timeouts.values.elementAt(i).let { clearTimeout(it) }
+    }
+
+    for (i in 0 until resetFunctions.size) {
+      resetFunctions.values.elementAt(i).invoke()
+    }
+
+    intervals.clear()
+    timeouts.clear()
+    resetFunctions.clear()
+  }
+
+  private fun clearSingleTimeoutAndInterval(animationId: ID, excludeCleanup: Boolean = false) {
+    val matchingIntervals = intervals.keys.filter { it.startsWith(animationId) }
+    val matchingTimeouts = timeouts.keys.filter { it.startsWith(animationId) }
+    val matchingResetFunctions = resetFunctions.keys.filter { it.startsWith(animationId) }
+
+    for (i in 0 until matchingIntervals.size) {
+      intervals[matchingIntervals.elementAt(i)]?.let { clearInterval(it) }
+      intervals.remove(matchingIntervals.elementAt(i))
+    }
+
+    for (i in 0 until matchingTimeouts.size) {
+      if (excludeCleanup && matchingTimeouts.elementAt(i).endsWith("-cleanup")) {
+        println("[S] Skipping timeout: ${matchingTimeouts.elementAt(i)}")
+      } else {
+        timeouts[matchingTimeouts.elementAt(i)]?.let { clearTimeout(it) }
+        timeouts.remove(matchingTimeouts.elementAt(i))
+      }
+    }
+
+    for (i in 0 until matchingResetFunctions.size) {
+      // resetFunctions[matchingResetFunctions.elementAt(i)]?.invoke()
+      resetFunctions.remove(matchingResetFunctions.elementAt(i))
     }
   }
 
@@ -150,10 +229,21 @@ internal class Animator {
     }
 
     for (anim in animations) {
+      val component = anim as? ComponentAnimationData ?: return
+      val componentId = component.componentView?.id.toString()
+
       startAnimation(anim, animations, callback)
       if (anim == animations.last()) {
         val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
-        setTimeout({ callback.invoke(animation.id) }, maxDuration + DELTA_MS)
+        timeouts["${animation.id}-callback"] =
+            setTimeout(
+                {
+                  clearSingleTimeoutAndInterval(animation.id)
+                  callback.invoke(animation.id)
+                  timeouts["${animation.id}-cleanup"] =
+                      setTimeout({ clearComponentAnimations(componentId) }, CLEANUP_MS)
+                },
+                maxDuration + DELTA_MS)
       }
     }
   }
@@ -178,35 +268,56 @@ internal class Animator {
     element.classList.toggle("${componentId}--$type--props", false)
 
     if (animation is ScaleAnimationData) {
-      (element as ElementCSSInlineStyle).style.scale =
-          "${animation.fromScaleX} ${animation.fromScaleY}"
+      // Create initialization style element for initial scale
+      val initStyleElement = document.createElement("style")
+      initStyleElement.id = "${componentId}--$type--init"
+
+      // Add CSS to set initial scale
+      initStyleElement.innerHTML =
+          """
+            #${componentId} {
+              scale: ${animation.fromScaleX} ${animation.fromScaleY};
+            }
+          """.trimIndent()
+
+      document.body?.appendChild(initStyleElement)
+      animations["$componentId--$type--init"] = initStyleElement
     }
 
-    setTimeout(
-        {
-          // Create new style element
-          val newElement = document.createElement("style")
-          newElement.id = "${componentId}--$type"
+    timeouts["${animation.id}-init"] =
+        setTimeout(
+            {
+              // Create new style element
+              val newElement = document.createElement("style")
+              newElement.id = "${componentId}--$type"
 
-          // Add new style element to body
-          newElement.innerHTML =
-              getAnimationCSS(type, componentId, animation, parallelAnimation.toMutableList())
-          document.body?.appendChild(newElement)
+              // Add new style element to body
+              newElement.innerHTML =
+                  getAnimationCSS(type, componentId, animation, parallelAnimation.toMutableList())
+              document.body?.appendChild(newElement)
 
-          // Toggle new animation on and save style element
-          element.classList.toggle("${componentId}--$type--props", true)
-          element.classList.toggle("${componentId}--$type", true)
-          animations["$componentId--$type"] = newElement
+              // Toggle new animation on and save style element
+              element.classList.toggle("${componentId}--$type--props", true)
+              element.classList.toggle("${componentId}--$type", true)
+              animations["$componentId--$type"] = newElement
 
-          setTimeout(
-              {
-                // Toggle new animation off
-                element.classList.toggle("${componentId}--$type--props", false)
-                callback.invoke(animation.id)
-              },
-              duration)
-        },
-        50)
+              timeouts["${animation.id}-start"] =
+                  setTimeout(
+                      {
+                        // Toggle new animation off
+                        element.classList.toggle("${componentId}--$type--props", false)
+                        clearSingleTimeoutAndInterval(animation.id)
+                        callback.invoke(animation.id)
+                        if (parallelAnimation.isEmpty()) {
+                          timeouts["${animation.id}-cleanup"] =
+                              setTimeout(
+                                  { clearComponentAnimations(componentId, listOf(type)) },
+                                  CLEANUP_MS)
+                        }
+                      },
+                      duration)
+            },
+            50)
   }
 
   private fun startFlipAnimation(animation: FlipAnimationData, callback: (ID) -> Unit) {
@@ -224,46 +335,73 @@ internal class Animator {
     // Toggle old animation off
     element.classList.toggle("${componentId}--$type--props", false)
 
-    setTimeout(
-        {
-          // Create new style element
-          val newElement = document.createElement("style")
-          newElement.id = "${componentId}--$type"
+    resetFunctions["${animation.id}-flip-cleanup"] = {
+      val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+      if (visuals != null) {
+        try {
+          render(VisualBuilder.build(animation.componentView?.visual), visuals)
+        } catch (e: Exception) {
+          println("Error rendering dice side: ${e.message}")
+        }
+      }
+    }
 
-          // Add new style element to body
-          newElement.innerHTML = getAnimationCSS(type, componentId, animation)
-          document.body?.appendChild(newElement)
+    timeouts["${animation.id}-init"] =
+        setTimeout(
+            {
+              // Create new style element
+              val newElement = document.createElement("style")
+              newElement.id = "${componentId}--$type"
 
-          // Toggle new animation on and save style element
-          element.classList.toggle("${componentId}--$type--props", true)
-          element.classList.toggle("${componentId}--$type", true)
-          animations["$componentId--$type"] = newElement
+              // Add new style element to body
+              newElement.innerHTML = getAnimationCSS(type, componentId, animation)
+              document.body?.appendChild(newElement)
 
-          val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-          var visualRoot: Root? = null
+              // Toggle new animation on and save style element
+              element.classList.toggle("${componentId}--$type--props", true)
+              element.classList.toggle("${componentId}--$type", true)
+              animations["$componentId--$type"] = newElement
 
-          if (oldVisuals != null) {
-            visualRoot = createRoot(oldVisuals)
-            visualRoot.render(VisualBuilder.build(animation.fromVisual))
-          }
+              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+              var visualRoot: Root? = null
 
-          setTimeout(
-              {
-                if (oldVisuals != null) {
-                  visualRoot?.render(VisualBuilder.build(animation.toVisual))
-                }
-              },
-              duration / 2)
+              if (oldVisuals != null) {
+                visualRoot = createRoot(oldVisuals)
+                visualRoot.render(VisualBuilder.build(animation.fromVisual))
+              }
 
-          setTimeout(
-              {
-                // Toggle new animation off
-                element.classList.toggle("${componentId}--$type--props", false)
-                callback.invoke(animation.id)
-              },
-              duration)
-        },
-        50)
+              timeouts["${animation.id}-start"] =
+                  setTimeout(
+                      {
+                        val oldVisuals =
+                            document.querySelector("#${componentId} > bgw_visuals") as Element?
+                        if (oldVisuals != null) {
+                          visualRoot?.render(VisualBuilder.build(animation.toVisual))
+                        }
+                      },
+                      duration / 2)
+
+              timeouts["${animation.id}-callback"] =
+                  setTimeout(
+                      {
+                        // Toggle new animation off
+                        element.classList.toggle("${componentId}--$type--props", false)
+                        callback.invoke(animation.id)
+                        timeouts["${animation.id}-flip-cleanup"] =
+                            setTimeout(
+                                {
+                                  if (oldVisuals != null) {
+                                    // Render the old visual after the animation is done
+                                      visualRoot?.render(
+                                        VisualBuilder.build(animation.componentView?.visual))
+                                  }
+                                },
+                                CLEANUP_MS)
+                        clearSingleTimeoutAndInterval(animation.id, true)
+                      },
+                      duration)
+            },
+            50)
   }
 
   private fun startRandomizeAnimation(animation: RandomizeAnimationData, callback: (ID) -> Unit) {
@@ -276,10 +414,10 @@ internal class Animator {
     var visualRoot: Root? = null
 
     if (oldVisuals != null) {
-      visualRoot = createRoot(oldVisuals)
+        visualRoot = createRoot(oldVisuals)
     }
 
-    val interval =
+    intervals["${animation.id}-random"] =
         setInterval(
             {
               if (oldVisuals != null) {
@@ -288,15 +426,37 @@ internal class Animator {
             },
             duration / animation.speed)
 
-    setTimeout(
-        {
-          clearInterval(interval)
-          if (oldVisuals != null) {
-            visualRoot?.render(VisualBuilder.build(animation.toVisual))
-          }
-          callback.invoke(animation.id)
-        },
-        duration)
+    resetFunctions["${animation.id}-random-cleanup"] = {
+      val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+      if (visuals != null) {
+        try {
+            visualRoot?.render(VisualBuilder.build(animation.componentView?.visual))
+        } catch (e: Exception) {
+          println("Error rendering dice side: ${e.message}")
+        }
+      }
+    }
+
+    timeouts["${animation.id}-callback"] =
+        setTimeout(
+            {
+              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+              if (oldVisuals != null) {
+                  visualRoot?.render(VisualBuilder.build(animation.toVisual))
+              }
+              callback.invoke(animation.id)
+              timeouts["${animation.id}-random-cleanup"] =
+                  setTimeout(
+                      {
+                        if (oldVisuals != null) {
+                          // Render the old visual after the animation is done
+                            visualRoot?.render(VisualBuilder.build(animation.componentView?.visual))
+                        }
+                      },
+                      CLEANUP_MS)
+              clearSingleTimeoutAndInterval(animation.id, true)
+            },
+            duration)
   }
 
   private fun startDiceAnimation(animation: DiceAnimationData, callback: (ID) -> Unit) {
@@ -306,14 +466,14 @@ internal class Animator {
     val dice = animation.componentView as? DiceViewData ?: return
     val duration = animation.duration
 
-    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-    var visualRoot: Root? = null
+      val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+      var visualRoot: Root? = null
 
-    if (oldVisuals != null) {
-      visualRoot = createRoot(oldVisuals)
-    }
+      if (oldVisuals != null) {
+          visualRoot = createRoot(oldVisuals)
+      }
 
-    val interval =
+    intervals["${animation.id}-dice"] =
         setInterval(
             {
               if (oldVisuals != null) {
@@ -322,20 +482,42 @@ internal class Animator {
             },
             duration / animation.speed)
 
-    setTimeout(
-        {
-          clearInterval(interval)
-          if (oldVisuals != null) {
-            visualRoot?.render(VisualBuilder.build(dice.visuals[animation.toSide]))
-          }
-          callback.invoke(animation.id)
-        },
-        duration)
+    resetFunctions["${animation.id}-dice-cleanup"] = {
+      val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+      if (visuals != null) {
+        try {
+            visualRoot?.render(VisualBuilder.build(dice.visuals[dice.currentSide]))
+        } catch (e: Exception) {
+          println("Error rendering dice side: ${e.message}")
+        }
+      }
+    }
+
+    timeouts["${animation.id}-callback"] =
+        setTimeout(
+            {
+              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+              if (oldVisuals != null) {
+                  visualRoot?.render(VisualBuilder.build(dice.visuals[animation.toSide]))
+              }
+              callback.invoke(animation.id)
+              timeouts["${animation.id}-dice-cleanup"] =
+                  setTimeout(
+                      {
+                        if (oldVisuals != null) {
+                          // Render the old visual after the animation is done
+                            visualRoot?.render(VisualBuilder.build(dice.visuals[dice.currentSide]))
+                        }
+                      },
+                      CLEANUP_MS)
+              clearSingleTimeoutAndInterval(animation.id, true)
+            },
+            duration)
   }
 
   private fun getTransitionCSS(animationList: List<AnimationData>): String {
     val transitions =
-        animationList.joinToString(", ") {
+        animationList.map {
           when (it) {
             is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
             is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
@@ -346,7 +528,7 @@ internal class Animator {
         }
 
     return """
-            transition: $transitions;
+            transition: ${transitions.filter { it.isNotEmpty() }.joinToString(", ")};
         """.trimIndent()
   }
 
@@ -356,7 +538,6 @@ internal class Animator {
       animationData: AnimationData,
       parallelAnimations: MutableList<AnimationData> = mutableListOf()
   ): String {
-    println("Getting animation CSS for $type and data ${animationData is MovementAnimationData}")
     if (parallelAnimations.isEmpty()) {
       parallelAnimations.add(animationData)
     }

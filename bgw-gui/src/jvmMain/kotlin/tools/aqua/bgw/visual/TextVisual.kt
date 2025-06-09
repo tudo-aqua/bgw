@@ -35,6 +35,7 @@ import tools.aqua.bgw.util.Font
  * @param alignment [Alignment] for the [text]. Default: [Alignment.CENTER].
  * @param offsetX The horizontal offset of the [text] from its anchorpoint. Default: 0.
  * @param offsetY The vertical offset of the [text] from its anchorpoint. Default: 0.
+ * @param rotation The rotation of the [text] in degrees. Default: 0.
  *
  * @see SingleLayerVisual
  * @see CompoundVisual
@@ -49,7 +50,8 @@ open class TextVisual(
     alignment: Alignment = Alignment.CENTER,
     offsetX: Number = 0,
     offsetY: Number = 0,
-) : SingleLayerVisual() {
+    rotation: Number = 0,
+) : SingleLayerVisual(rotation.toDouble()) {
   /**
    * [Property] for the displayed [text].
    *
@@ -134,11 +136,8 @@ open class TextVisual(
 
   /** Copies this [TextVisual] to a new object. */
   override fun copy(): TextVisual =
-      TextVisual(text, font).apply {
+      TextVisual(text, font, alignment, offsetX, offsetY, rotation).apply {
         transparency = this@TextVisual.transparency
-        alignment = this@TextVisual.alignment
-        offsetX = this@TextVisual.offsetX
-        offsetY = this@TextVisual.offsetY
         style.applyDeclarations(this@TextVisual.style)
         filters.applyDeclarations(this@TextVisual.filters)
         flipped = this@TextVisual.flipped
