@@ -969,5 +969,5 @@ const cleanedStructure = removeNullValues(traverseTree(directoryStructure));
 // Save the JSON to a file in ./output
 fs.writeFileSync(
   "./output/cleanedStructure.json",
-  JSON.stringify(cleanedStructure, null, 2)
+  JSON.stringify(cleanedStructure)
 );

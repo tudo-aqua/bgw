@@ -115,12 +115,7 @@ kotlin {
   }
   js(IR) {
     binaries.executable()
-    browser {
-      commonWebpackConfig {
-        cssSupport { enabled.set(true) }
-        mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
-      }
-    }
+    browser { commonWebpackConfig { cssSupport { enabled.set(true) } } }
   }
   sourceSets {
     val commonMain by getting {
