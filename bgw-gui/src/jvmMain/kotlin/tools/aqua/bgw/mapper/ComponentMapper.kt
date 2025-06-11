@@ -201,8 +201,7 @@ internal object ComponentMapper {
       is ProgressBar ->
           (mapSpecific(componentView) as ProgressBarData).apply {
             progress = componentView.progress.coerceIn(0.0, 1.0)
-            barColor =
-                "rgba(${componentView.barColor.red}, ${componentView.barColor.green}, ${componentView.barColor.blue}, ${componentView.barColor.alpha})"
+            barVisual = VisualMapper.map(componentView.barVisual)
           }
 
       // TODO - StructuredDataView

@@ -203,7 +203,7 @@ internal class ColorPickerData : UIComponentData() {
 @Serializable
 internal class ProgressBarData : UIComponentData() {
   var progress: Double = 0.0
-  var barColor: String = "#000000"
+  var barVisual: VisualData? = null
 }
 
 @Serializable internal class TextAreaData : TextInputUIComponentData() {}

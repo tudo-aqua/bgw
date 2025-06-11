@@ -25,6 +25,7 @@ import tools.aqua.bgw.core.DEFAULT_PROGRESSBAR_WIDTH
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -38,7 +39,7 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_HEIGHT].
  * @param visual [Visual] that is used to represent this [ProgressBar]. Default: empty [Visual].
  * @param progress The initial progress of this [ProgressBar]. Default 0.
- * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN]
+ * @param barVisual The initial bar [ColorVisual] of this [ProgressBar]. Default [ColorVisual.CYAN].
  *
  * @see Visual
  * @see Color
@@ -53,10 +54,39 @@ open class ProgressBar(
     height: Number = DEFAULT_PROGRESSBAR_HEIGHT,
     visual: Visual = Visual.EMPTY,
     progress: Double = 0.0,
-    barColor: Color = Color.CYAN
+    barVisual: ColorVisual = ColorVisual.CYAN
 ) :
     UIComponent(
         posX = posX, posY = posY, width = width, height = height, font = Font(), visual = visual) {
+
+  /**
+   * A [ProgressBar].
+   *
+   * @constructor Creates a [ProgressBar].
+   *
+   * @param posX Horizontal coordinate for this [ProgressBar]. Default: 0.
+   * @param posY Vertical coordinate for this [ProgressBar]. Default: 0.
+   * @param width Width for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_WIDTH].
+   * @param height Height for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_HEIGHT].
+   * @param visual [Visual] that is used to represent this [ProgressBar]. Default: empty [Visual].
+   * @param progress The initial progress of this [ProgressBar]. Default 0.
+   * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN]
+   *
+   * @see Visual
+   * @see Color
+   * @see UIComponent
+   *
+   * @since 0.1
+   */
+  constructor(
+      posX: Number = 0,
+      posY: Number = 0,
+      width: Number = DEFAULT_PROGRESSBAR_WIDTH,
+      height: Number = DEFAULT_PROGRESSBAR_HEIGHT,
+      visual: Visual = Visual.EMPTY,
+      progress: Double = 0.0,
+      barColor: Color = Color.CYAN
+  ) : this(posX, posY, width, height, visual, progress, ColorVisual(barColor))
   /**
    * [Property] for the progress state of this [ProgressBar].
    *
@@ -86,17 +116,31 @@ open class ProgressBar(
     }
 
   /**
-   * [Property] for the bar [Color] of this [ProgressBar].
+   * [Property] for the bar [ColorVisual] of this [ProgressBar].
    *
    * @see barColor
+   * @see barVisual
    */
-  internal val barColorProperty: Property<Color> = Property(barColor)
+  internal val barVisualProperty: Property<ColorVisual> = Property(barVisual)
 
   /** Bar [Color] of this [ProgressBar]. */
   var barColor: Color
-    get() = barColorProperty.value
+    get() = barVisualProperty.value.color
     set(value) {
-      barColorProperty.value = value
+      barVisualProperty.value.color = value
+    }
+
+  /**
+   * Bar [Visual] of this [ProgressBar].
+   *
+   * @see barColor
+   *
+   * @since 0.10
+   */
+  var barVisual: ColorVisual
+    get() = barVisualProperty.value
+    set(value) {
+      barVisualProperty.value = value
     }
 
   init {

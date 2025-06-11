@@ -95,8 +95,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Reworked `CameraPane` to make it more intuitive.
+- Changed behavior of `CameraPane` to make it more intuitive.
 - Changed behavior of `LinearLayout` to layout components instead of the child components positioning themselves.
+- Changed default `ProgressBar` constructor to use a stylable `barVisual` instead of a simple `barColor`.
 
 ### Removed
 

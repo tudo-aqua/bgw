@@ -117,7 +117,7 @@ internal object UIComponentBuilder {
 
   private fun buildProgressBar(progressBar: ProgressBar) {
     progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
-    progressBar.barColorProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
+    progressBar.barVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
   }
 
   private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {
