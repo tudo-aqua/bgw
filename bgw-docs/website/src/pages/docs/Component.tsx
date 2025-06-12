@@ -283,6 +283,9 @@ function Component({
       }
     });
 
+    let title = "Example" + (samples.length > 1 ? "s" : "");
+    let isAnimationExample = extraExamples.map((s: any) => s.codepoint.join("-")).join("//").indexOf("Animation") > -1;
+
     if (samples.length > 0) {
       return (
         <>
@@ -292,16 +295,23 @@ function Component({
                 <i className="material-symbols-rounded text-3xl text-primary-foreground mt-0.5 max-xl:text-2xl">
                   data_object
                 </i>
-                <h2 className="text-3xl font-bold max-xl:text-2xl">Examples</h2>
+                <h2 className="text-3xl font-bold max-xl:text-2xl">{title}</h2>
                 {/* <i className="absolute text-2xl material-symbols-rounded text-primary-foreground right-1">
                 {openConstructors ? "expand_less" : "expand_more"}
               </i> */}
               </CollapsibleTrigger>
-              <CollapsibleContent className="grid grid-cols-2 gap-5 max-xl:grid-cols-1">
+              <CollapsibleContent className={`grid ${samples.length === 1 ? "grid-cols-1" : "grid-cols-2"} gap-5 max-xl:grid-cols-1`}>
                 {samples}
               </CollapsibleContent>
             </Collapsible>
           </div>
+            {isAnimationExample && (
+          <Banner
+              variant="warning"
+              subText={
+                "Animations only affect the components while they are running. The component's state resets immediately to its state before the animation upon completion, if not updated in onFinished."
+              }
+          />)}
           <Separator className="my-8 mt-10" />
         </>
       );

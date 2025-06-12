@@ -47,6 +47,10 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @see Animation
  * @see DiceView
  *
+ * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.diceCustomSide
+ * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.diceAnimation
+ * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playDiceAnimation
+ *
  * @since 0.1
  */
 class DiceAnimation<T : DiceView>(

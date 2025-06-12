@@ -3378,7 +3378,7 @@ function BGWPlayground() {
             />
           </TooltipTrigger>
           <TooltipContent>
-            <p>BGW Live-Preview</p>
+            <p className="text-sm">BGW Live-Preview</p>
           </TooltipContent>
         </Tooltip>
         <div

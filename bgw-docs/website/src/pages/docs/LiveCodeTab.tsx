@@ -4,6 +4,7 @@ import CodeTab from "@/pages/docs/CodeTab";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createKotlinCodeLinebreaks } from "@/lib/utils";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 const LiveCodeTab = ({ getOutputElements, selectedComponentId }) => {
   const [code, setCode] = useState("");

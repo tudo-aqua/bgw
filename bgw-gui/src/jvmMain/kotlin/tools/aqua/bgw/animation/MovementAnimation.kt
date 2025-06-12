@@ -43,6 +43,10 @@ import tools.aqua.bgw.util.Coordinate
  * @see Animation
  * @see ComponentView
  *
+ * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.greenToken
+ * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationTo
+ * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playMovementAnimationTo
+ *
  * @since 0.1
  */
 class MovementAnimation<T : ComponentView>(
@@ -77,6 +81,10 @@ class MovementAnimation<T : ComponentView>(
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
+   *
+   * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.blueToken
+   * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationBy
+   * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playMovementAnimationBy
    *
    * @since 0.1
    */

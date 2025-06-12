@@ -15,6 +15,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card.tsx";
+import {ComponentBanner} from "@/components/docs/DocComponents.tsx";
+import {Banner} from "@/components/ui/banner.tsx";
 
 const AsyncPlayground = asyncComponent(
   () => import("@/components/ReactKotlinPlayground")
@@ -174,7 +177,7 @@ function PreviewTab({
                 />
               </TooltipTrigger>
               <TooltipContent>
-                <p>BGW Live-Preview</p>
+                <p className="text-sm">BGW Live-Preview</p>
               </TooltipContent>
             </Tooltip>
           </div>
@@ -256,10 +259,22 @@ function PreviewTab({
         <TabsContent value="preview">
           <div className="bgw-root-container flex !h-[300px] justify-center items-center !relative">
             <div
-              className="w-full h-full rounded-xl bgw-root border !bg-[#161d29] border-none"
+              className="w-full h-full rounded-t-xl bgw-root border !bg-[#161d29] border-none"
               id={`bgw-root-${randomId}`}
             ></div>
           </div>
+          <Tooltip delayDuration={700} align="start" sideOffset={5}>
+            <TooltipTrigger asChild>
+              <img
+                  src="/bgw/logo.svg"
+                  alt="Preview"
+                  className="absolute w-6 bottom-3 left-4 opacity-20 hover:opacity-100 cursor-help transition-opacity"
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-sm">BGW Live-Preview</p>
+            </TooltipContent>
+          </Tooltip>
         </TabsContent>
         <TabsContent className="h-[300px]" value="code" ref={codeRef}>
           <div className="relative h-[300px]">
@@ -271,11 +286,11 @@ function PreviewTab({
               <i className="text-xl material-symbols-rounded">content_copy</i>
             </Button>
             <ScrollArea
-              className="h-full relative pr-5 col-span-5 flex bg-[#161d29] rounded-xl"
+              className="h-full relative pr-5 col-span-5 flex bg-[#161d29] rounded-t-xl"
               x-chunk="dashboard-03-chunk-0"
             >
               <AsyncPlayground
-                className="relative flex h-full py-2 pl-3 pr-5 pointer-events-none rounded-xl"
+                className="relative flex h-full py-2 pl-3 pr-5 pointer-events-none rounded-t-xl"
                 id={`kotlin__playground-${randomId}`}
                 {...props}
                 key={code + location.pathname}
@@ -289,7 +304,7 @@ function PreviewTab({
         </TabsContent>
       </Tabs>
       {doc && (
-        <fieldset className="p-5 pt-8 -mt-3 bg-background rounded-b-xl text-muted-foreground">
+        <fieldset className="p-5 pt-7 -mt-3 bg-background rounded-b-xl text-muted-foreground">
           <p>{doc}</p>
         </fieldset>
       )}
