@@ -24,6 +24,7 @@ import emotion.react.css
 import react.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.option
+import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.select
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.VisualBuilder
@@ -32,6 +33,7 @@ import tools.aqua.bgw.event.JCEFEventDispatcher
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDroppable
 import web.cssom.*
+import web.cssom.NamedColor.Companion.transparent
 import web.dom.Element
 
 internal external interface ComboBoxProps : Props {
@@ -53,6 +55,8 @@ internal val ComboBox =
 
       val elementRef = useRef<Element>(null)
 
+      val selectedIndex = props.data.selectedItem?.first ?: -1
+
       bgwComboBox {
         id = props.data.id
         className = ClassName("comboBox")
@@ -63,28 +67,78 @@ internal val ComboBox =
 
         bgwVisuals {
           className = ClassName("visuals")
-          +VisualBuilder.build(props.data.visual)
+          +VisualBuilder.build(
+              if (selectedIndex == -1) props.data.visual else props.data.itemVisuals[selectedIndex])
         }
 
         select {
           css {
-            fontBuilder(props.data)
             comboBoxBuilder(props.data)
+            fontBuilder(props.data)
             outline = None.none
             border = None.none
             position = Position.absolute
-            textIndent = 1.em
+            boxSizing = BoxSizing.borderBox
+            paddingLeft = 1.em
+            display = Display.flex
+            alignItems = AlignItems.center
           }
-          option {
-            value = (-1).toString()
-            +props.data.prompt
-            selected = props.data.selectedItem == null
+          if (!props.data.disallowUnselect) {
+            option {
+              value = (-1).toString()
+              selected = props.data.selectedItem == null
+
+              css {
+                border = None.none
+                outline = None.none
+                boxSizing = BoxSizing.borderBox
+                paddingLeft = 1.em
+                position = Position.relative
+                background = transparent
+              }
+
+              +VisualBuilder.build(props.data.visual)
+
+              p {
+                +props.data.prompt
+
+                css {
+                  position = Position.relative
+                  zIndex = zIndex(1)
+                  margin = 0.px
+                  cursor = Cursor.pointer
+                  simpleFontBuilder(props.data)
+                }
+              }
+            }
           }
-          props.data.items.forEach {
+          props.data.items.forEachIndexed { index, it ->
             option {
               value = it.first.toString()
-              +it.second
               selected = props.data.selectedItem?.first == it.first
+
+              css {
+                border = None.none
+                outline = None.none
+                boxSizing = BoxSizing.borderBox
+                paddingLeft = 1.em
+                position = Position.relative
+                background = transparent
+              }
+
+              +VisualBuilder.build(props.data.itemVisuals[index])
+
+              p {
+                +it.second
+
+                css {
+                  position = Position.relative
+                  zIndex = zIndex(1)
+                  margin = 0.px
+                  cursor = Cursor.pointer
+                  simpleFontBuilder(props.data)
+                }
+              }
             }
           }
           onChange = {

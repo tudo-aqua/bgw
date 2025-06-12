@@ -48,6 +48,8 @@ import tools.aqua.bgw.visual.Visual
  * the [selectedItem] value is `null`. Default: empty string.
  * @param items The initial selection of items. Default: empty list.
  * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
+ * @param disallowUnselect If `true`, the user is not allowed to unselect the currently selected
+ * item. By default, the first item is selected.
  *
  * @see Font
  * @see Visual
@@ -66,6 +68,14 @@ open class ComboBox<T>(
     val prompt: String = "",
     items: List<T> = emptyList(),
     formatFunction: ((T) -> String)? = null,
+    /**
+     * If `true`, the user is not allowed to unselect the currently selected item. By default, the
+     * first item get selected instead of `null`.
+     *
+     * @since 0.10
+     */
+    val disallowUnselect: Boolean = false,
+    itemVisuals: List<Visual> = emptyList(),
 ) :
     UIComponent(
         posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
@@ -91,6 +101,22 @@ open class ComboBox<T>(
     set(value) {
       observableItemsList.clear()
       observableItemsList.addAll(value)
+    }
+
+  internal val itemVisualProperty: Property<List<Visual>> = Property(itemVisuals)
+
+  /**
+   * [List] of [Visual]s that are used to represent each item in the [ComboBox].
+   *
+   * The order of the visuals must match the order of the items. If no visual is specified for an
+   * item, the default visual of the [ComboBox] is used.
+   *
+   * @since 0.10
+   */
+  var itemVisuals: List<Visual>
+    get() = itemVisualProperty.value
+    set(value) {
+      itemVisualProperty.value = value
     }
 
   /**
@@ -136,6 +162,13 @@ open class ComboBox<T>(
 
   init {
     observableItemsList.addAll(items)
+
+    if (disallowUnselect && items.isNotEmpty()) {
+      selectedItemProperty.value = items.first()
+    } else if (disallowUnselect) {
+      throw IllegalArgumentException(
+          "If disallowUnselect is true, items must initially not be empty because the first item will be selected by default.")
+    }
 
     if (selectedItem != null) {
       require(items.contains(selectedItem)) { "Items list does not contain element to select." }

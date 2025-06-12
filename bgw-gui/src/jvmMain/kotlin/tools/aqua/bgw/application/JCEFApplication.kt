@@ -384,6 +384,8 @@ internal class MainFrame(
             ?: Files.createTempDirectory("bgw-").toString().also { File(it).deleteOnExit() }
 
     builder.cefSettings.root_cache_path = tmpDir
+    builder.cefSettings.cache_path = tmpDir
+    builder.cefSettings.log_file = "$tmpDir/bgw.log"
 
     builder.setProgressHandler { enumProgress, fl ->
       if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {

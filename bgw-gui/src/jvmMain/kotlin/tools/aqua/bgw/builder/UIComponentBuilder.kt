@@ -97,6 +97,7 @@ internal object UIComponentBuilder {
     comboBox.observableItemsList.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
     comboBox.selectedItemProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
     comboBox.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
+    comboBox.itemVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
   }
 
   private fun buildTextArea(textArea: TextArea) {}

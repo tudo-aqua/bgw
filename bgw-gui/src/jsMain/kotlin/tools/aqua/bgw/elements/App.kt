@@ -381,6 +381,29 @@ internal val App =
           }
 
           "bgw_scroll::-webkit-scrollbar" { display = None.none }
+
+          "select, ::picker(select)" {
+            appearance = important(baseSelect())
+            border = None.none
+            backgroundColor = rgb(0, 0, 0, 0.0)
+          }
+
+          "option::checkmark, ::picker-icon" { display = None.none }
+
+          "option" {
+            minInlineSize = fit()
+            minBlockSize = fit()
+            paddingBlock = 0.5.em
+            paddingInline = 0.em
+          }
+
+          "select" {
+            border = None.none
+            paddingBlock = 0.em
+            paddingInline = 0.em
+            minInlineSize = fit()
+            minBlockSize = fit()
+          }
         }
       }
 
@@ -650,6 +673,8 @@ internal fun backgroundBlur(opacity: Double, blurRadius: Double): BackdropFilter
 
 internal fun transition(duration: Int, property: String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()
+
+internal fun baseSelect(): Appearance = "base-select".unsafeCast<Appearance>()
 
 internal fun transitionAll(duration: Int): Transition = "${duration}ms".unsafeCast<Transition>()
 

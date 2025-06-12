@@ -256,6 +256,11 @@ internal object ComponentMapper {
               Pair(
                   comboBox.getSelectedIndex(),
                   comboBox.formatFunction?.invoke(selItem) ?: comboBox.selectedItem.toString())
+      disallowUnselect = comboBox.disallowUnselect
+      itemVisuals =
+          comboBox.items.mapIndexed { index, _ ->
+            VisualMapper.map(comboBox.itemVisuals.getOrElse(index) { comboBox.visual })
+          }
     }
   }
 }

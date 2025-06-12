@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file.
 - Added `style`, `filters` and `flipped` properties to `SingleLayerVisual` to apply custom styling.
 - Added `rotation` as an initial parameter to `ImageVisual` and `TextVisual` to set the initial rotation of the visual.
 - Added `blurRadius` property to `MenuScene` constructor to define the initial blur radius of the menu scene background.
+- Added `itemVisuals` list to `ComboBox` to allow custom visuals for each item in the combo box.
 
 **Misc:**
 - Added `Ä`, `Ö`, `Ü` to `KeyCode` enum for German keyboard layout.
@@ -81,6 +82,7 @@ All notable changes to this project will be documented in this file.
 - Added `THIN`, `EXTRA_LIGHT`, `MEDIUM`, `EXTRA_BOLD`, `BLACK` font weights to `FontWeight` enum to support a wider range of fonts.
 - Added `inParentPosX` and `inParentPosY` properties to `ComponentView` to get the position of a component in its parent.
 - Added `stopAllAnimations()` function to `Scene` to immediately stop all animations currently running.
+- Added `disallowUnselect` property to `ComboBox` to prevent deselection of the currently selected item and hide prompt text.
 
 ### Fixed
 

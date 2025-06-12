@@ -176,7 +176,9 @@ internal class CheckBoxData : LabeledUIComponentData() {
 internal class ComboBoxData : UIComponentData() {
   var prompt: String = ""
   var items: List<Pair<Int, String>> = emptyList()
+  var itemVisuals: List<VisualData> = emptyList()
   var selectedItem: Pair<Int, String>? = null
+  var disallowUnselect: Boolean = false
 }
 
 @Serializable internal class LabelData : LabeledUIComponentData() {}
