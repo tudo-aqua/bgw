@@ -80,8 +80,8 @@ internal val TableView =
               className = ClassName("column")
               id = props.data.id + "--column-$i"
               css {
-                width = column.width.em
-                minWidth = column.width.em
+                width = column.width.bgw
+                minWidth = column.width.bgw
                 display = Display.flex
                 flexDirection = FlexDirection.column
                 alignItems = AlignItems.start
@@ -90,13 +90,13 @@ internal val TableView =
               bgwText {
                 className = ClassName("text")
                 css {
-                  padding = 1.em
-                  paddingTop = 0.5.em
-                  paddingBottom = 1.em
+                  boxSizing = BoxSizing.borderBox
+                  paddingInline = 10.bgw
+                  paddingBlock = 5.bgw
                   width = 100.pct
                   fontStyle = column.font.fontStyle.let { it.unsafeCast<FontStyle>() }
                   fontWeight = integer(column.font.fontWeight)
-                  fontSize = column.font.size.em
+                  fontSize = column.font.size.bgw
                   fontFamily = cssFont(column.font.family)
                   color = column.font.color.unsafeCast<Color>()
                   minWidth = fit()
@@ -108,13 +108,13 @@ internal val TableView =
                 bgwText {
                   className = ClassName("text")
                   css {
-                    padding = 1.em
-                    paddingTop = 0.5.em
-                    paddingBottom = 0.5.em
+                    boxSizing = BoxSizing.borderBox
+                    paddingInline = 10.bgw
+                    paddingBlock = 5.bgw
                     width = 100.pct
                     fontStyle = column.font.fontStyle.let { it.unsafeCast<FontStyle>() }
                     fontWeight = integer(column.font.fontWeight)
-                    fontSize = column.font.size.em
+                    fontSize = column.font.size.bgw
                     fontFamily = cssFont(column.font.family)
                     color = column.font.color.unsafeCast<Color>()
                     minWidth = fit()

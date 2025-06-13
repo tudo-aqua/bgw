@@ -79,9 +79,11 @@ internal val ComboBox =
             border = None.none
             position = Position.absolute
             boxSizing = BoxSizing.borderBox
-            paddingLeft = 1.em
+            paddingLeft = 10.bgw
             display = Display.flex
             alignItems = AlignItems.center
+            minWidth = props.data.width.bgw
+            minHeight = props.data.height.bgw
           }
           if (!props.data.disallowUnselect) {
             option {
@@ -92,9 +94,13 @@ internal val ComboBox =
                 border = None.none
                 outline = None.none
                 boxSizing = BoxSizing.borderBox
-                paddingLeft = 1.em
+                paddingLeft = 10.bgw
                 position = Position.relative
                 background = transparent
+                minWidth = props.data.width.bgw
+                minHeight = props.data.height.bgw
+                maxWidth = props.data.width.bgw
+                overflow = Overflow.hidden
               }
 
               +VisualBuilder.build(props.data.visual)
@@ -121,9 +127,13 @@ internal val ComboBox =
                 border = None.none
                 outline = None.none
                 boxSizing = BoxSizing.borderBox
-                paddingLeft = 1.em
+                paddingLeft = 10.bgw
                 position = Position.relative
                 background = transparent
+                minWidth = props.data.width.bgw
+                minHeight = props.data.height.bgw
+                maxWidth = props.data.width.bgw
+                overflow = Overflow.hidden
               }
 
               +VisualBuilder.build(props.data.itemVisuals[index])

@@ -50,6 +50,8 @@ import tools.aqua.bgw.visual.Visual
  * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
  * @param disallowUnselect If `true`, the user is not allowed to unselect the currently selected
  * item. By default, the first item is selected.
+ * @param itemVisuals The [List] of [Visual]s that are used to represent each item in the [ComboBox]
+ * .
  *
  * @see Font
  * @see Visual

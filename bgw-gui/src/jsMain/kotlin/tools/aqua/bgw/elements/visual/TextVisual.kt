@@ -23,6 +23,7 @@ import react.FC
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
@@ -44,7 +45,7 @@ internal val TextVisual =
           fontFamily = (props.data.font?.family ?: "Arial") as FontFamily?
           fontWeight = (props.data.font?.fontWeight ?: "normal") as FontWeight?
           fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?
-          fontSize = props.data.font?.size?.em
+          fontSize = props.data.font?.size?.bgw
           color = Color(props.data.font?.color ?: "black")
           justifyContent =
               when (props.data.alignment.first) {
@@ -68,8 +69,8 @@ internal val TextVisual =
                 else -> AlignItems.center
               }
 
-          left = props.data.offsetX.em
-          top = props.data.offsetY.em
+          left = props.data.offsetX.bgw
+          top = props.data.offsetY.bgw
           opacity = number(props.data.transparency)
         }
         +props.data.text

@@ -544,7 +544,7 @@ internal object Animator {
                 }
                 
                 .${componentId}--${type} {
-                    translate: ${animationData.byX}em ${animationData.byY}em;
+                    translate: calc(var(--bgwUnit) * ${animationData.byX}) calc(var(--bgwUnit) * ${animationData.byY});
                 }
             """.trimIndent()
       is RotationAnimationData ->

@@ -37,8 +37,8 @@ internal val Scene =
     FC<SceneProps> { props ->
       bgwScene {
         css {
-          width = props.data.width.em
-          height = props.data.height.em
+          width = props.data.width.bgw
+          height = props.data.height.bgw
           position = Position.relative
         }
 

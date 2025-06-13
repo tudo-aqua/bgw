@@ -76,10 +76,10 @@ class BorderRadius : StylingDeclaration {
    * @since 0.10
    */
   constructor(radius: Number) {
-    topLeft = "${radius}em"
-    topRight = "${radius}em"
-    bottomRight = "${radius}em"
-    bottomLeft = "${radius}em"
+    topLeft = "calc(var(--bgwUnit) * ${radius})"
+    topRight = "calc(var(--bgwUnit) * ${radius})"
+    bottomRight = "calc(var(--bgwUnit) * ${radius})"
+    bottomLeft = "calc(var(--bgwUnit) * ${radius})"
   }
 
   /**
@@ -95,10 +95,10 @@ class BorderRadius : StylingDeclaration {
    * @since 0.10
    */
   constructor(topLeft: Number, topRight: Number, bottomRight: Number, bottomLeft: Number) {
-    this.topLeft = "${topLeft}em"
-    this.topRight = "${topRight}em"
-    this.bottomRight = "${bottomRight}em"
-    this.bottomLeft = "${bottomLeft}em"
+    this.topLeft = "calc(var(--bgwUnit) * ${topLeft})"
+    this.topRight = "calc(var(--bgwUnit) * ${topRight})"
+    this.bottomRight = "calc(var(--bgwUnit) * ${bottomRight})"
+    this.bottomLeft = "calc(var(--bgwUnit) * ${bottomLeft})"
   }
 
   /**

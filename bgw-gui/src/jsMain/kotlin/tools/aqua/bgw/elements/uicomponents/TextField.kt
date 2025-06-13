@@ -135,7 +135,8 @@ internal val TextField =
             fontBuilder(props.data)
             outline = None.none
             border = None.none
-            textIndent = 1.em
+            boxSizing = BoxSizing.borderBox
+            paddingLeft = 10.bgw
 
             placeholder { placeholderFontBuilder(props.data) }
           }

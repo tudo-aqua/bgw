@@ -28,6 +28,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.canvas
 import react.dom.html.ReactHTML.img
 import react.useEffect
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
@@ -112,8 +113,8 @@ internal val ImageVisual =
             backgroundRepeat = BackgroundRepeat.noRepeat
             backgroundPosition = Background.center as BackgroundPosition
 
-            left = props.data.offsetX.em
-            top = props.data.offsetY.em
+            left = props.data.offsetX.bgw
+            top = props.data.offsetY.bgw
 
             opacity = number(props.data.transparency)
             // TODO...

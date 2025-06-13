@@ -135,6 +135,8 @@ internal val TextArea =
             inputBuilder(props.data)
             resize = None.none
             boxSizing = BoxSizing.borderBox
+            paddingInline = 10.bgw
+            paddingBlock = 5.bgw
             outline = None.none
             border = None.none
 

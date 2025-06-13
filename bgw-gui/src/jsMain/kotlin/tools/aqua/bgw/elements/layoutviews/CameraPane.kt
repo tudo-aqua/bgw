@@ -29,6 +29,7 @@ import tools.aqua.bgw.TransformComponent
 import tools.aqua.bgw.TransformWrapper
 import tools.aqua.bgw.builder.LayoutNodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -46,19 +47,55 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CameraPaneDat
 }
 
 internal fun convertToRem(px: Double): Double {
-  val currentRem =
+  val containerBounds = document.getElementById("bgw-root")?.getBoundingClientRect()
+  val containerWidth = containerBounds?.width ?: 0.0
+  val containerHeight = containerBounds?.height ?: 0.0
+
+  val newRem =
       document.getElementById("bgw-root")?.let {
-        getComputedStyle(it).fontSize.replace("px", "").toDouble()
+        getComputedStyle(it).getPropertyValue("--bgwUnit")
       }
-  return px * currentRem!!
+
+  val isHeightRelative = newRem?.contains("cqh") ?: false
+  val isWidthRelative = newRem?.contains("cqw") ?: false
+  val numberValue = newRem?.replace("cqh", "")?.replace("cqw", "")?.toDoubleOrNull() ?: 1.0
+
+  val currentRem =
+      if (isHeightRelative) {
+        containerHeight * (numberValue / 100.0)
+      } else if (isWidthRelative) {
+        containerWidth * (numberValue / 100.0)
+      } else {
+        1.0
+      }
+
+  return px * currentRem
 }
 
 internal fun convertToPx(rem: Double): Double {
-  val currentRem =
+  val newRem =
       document.getElementById("bgw-root")?.let {
-        getComputedStyle(it).fontSize.replace("px", "").toDouble()
+        getComputedStyle(it).getPropertyValue("--bgwUnit")
       }
-  return rem / currentRem!!
+
+  val containerBounds = document.getElementById("bgw-root")?.getBoundingClientRect()
+  val containerWidth = containerBounds?.width ?: 0.0
+  val containerHeight = containerBounds?.height ?: 0.0
+
+  val isHeightRelative = newRem?.contains("cqh") ?: false
+  val isWidthRelative = newRem?.contains("cqw") ?: false
+  val numberValue = newRem?.replace("cqh", "")?.replace("cqw", "")?.toDoubleOrNull() ?: 1.0
+
+  val currentRem =
+      if (isHeightRelative) {
+        containerHeight * (numberValue / 100.0)
+      } else if (isWidthRelative) {
+        containerWidth * (numberValue / 100.0)
+      } else {
+        1.0
+      }
+
+  return rem / currentRem
 }
 
 internal val CameraPane =
@@ -324,10 +361,10 @@ internal val CameraPane =
 
         TransformComponent {
           wrapperStyle = jso {
-            width = props.data.width.em
-            height = props.data.height.em
-            left = props.data.posX.em
-            top = props.data.posY.em
+            width = props.data.width.bgw
+            height = props.data.height.bgw
+            left = props.data.posX.bgw
+            top = props.data.posY.bgw
             position = Position.absolute
           }
 

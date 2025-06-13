@@ -53,19 +53,19 @@ internal val Dialog =
 
         div {
           css {
-            width = 500.em
-            height = 500.em
+            width = 500.bgw
+            height = 500.bgw
             backgroundColor = Color("#FFFFFF")
             color = Color("#000000")
           }
 
           h1 {
-            css { fontSize = 20.em }
+            css { fontSize = 20.bgw }
             +current.title
           }
 
           p {
-            css { fontSize = 16.em }
+            css { fontSize = 16.bgw }
             +current.header
             +current.message
           }
@@ -90,7 +90,7 @@ internal val Dialog =
 
             p {
               css {
-                fontSize = 16.em
+                fontSize = 16.bgw
                 textAlign = TextAlign.center
               }
               +"${num + 1} / $size"

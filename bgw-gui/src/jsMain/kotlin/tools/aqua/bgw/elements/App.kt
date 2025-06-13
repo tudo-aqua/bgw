@@ -91,7 +91,7 @@ internal val App =
           // BLUE
           "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
             ".bgw-root, .bgw-dialogs" {
-              fontSize = (100.0 / props.data.height).cqh
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.height).cqh)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -106,19 +106,13 @@ internal val App =
               backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
               display = Display.block
-            }
-
-            "input[type='color']" { fontSize = (100.0 / props.data.height).cqh }
-
-            "bgw_togglebutton > input[type='checkbox'], bgw_checkbox > input[type='checkbox'], bgw_radiobutton > input[type='radio']" {
-              fontSize = (100.0 / props.data.height).cqh
             }
           }
 
           // RED
           "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
             ".bgw-root, .bgw-dialogs" {
-              fontSize = (100.0 / props.data.width).cqw
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.width).cqw)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -134,18 +128,12 @@ internal val App =
               overflow = Overflow.hidden
               display = Display.block
             }
-
-            "input[type='color']" { fontSize = (100.0 / props.data.width).cqw }
-
-            "bgw_togglebutton > input[type='checkbox'], bgw_checkbox > input[type='checkbox'], bgw_radiobutton > input[type='radio']" {
-              fontSize = (100.0 / props.data.width).cqw
-            }
           }
 
           // GREEN
           "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
             ".bgw-root, .bgw-dialogs" {
-              fontSize = (100.0 / props.data.height).cqh
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.height).cqh)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -161,18 +149,12 @@ internal val App =
               overflow = Overflow.hidden
               display = Display.block
             }
-
-            "input[type='color']" { fontSize = (100.0 / props.data.height).cqh }
-
-            "bgw_togglebutton > input[type='checkbox'], bgw_checkbox > input[type='checkbox'], bgw_radiobutton > input[type='radio']" {
-              fontSize = (100.0 / props.data.height).cqh
-            }
           }
 
           // YELLOW
           "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
             ".bgw-root, .bgw-dialogs" {
-              fontSize = (100.0 / props.data.width).cqw
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.width).cqw)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -187,12 +169,6 @@ internal val App =
               backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
               display = Display.block
-            }
-
-            "input[type='color']" { fontSize = (100.0 / props.data.width).cqw }
-
-            "bgw_togglebutton > input[type='checkbox'], bgw_checkbox > input[type='checkbox'], bgw_radiobutton > input[type='radio']" {
-              fontSize = (100.0 / props.data.width).cqw
             }
           }
 
@@ -246,7 +222,7 @@ internal val App =
             inset = 0.px
             backgroundColor = rgb(0, 0, 0, 0.0)
             zIndex = integer(999)
-            backdropFilter = blur(DEFAULT_BLUR_RADIUS.em)
+            backdropFilter = blur(bgwUnit(DEFAULT_BLUR_RADIUS))
           } */
 
           "bgw_hexagon_view[aria-details='hex-pointy_top']" {
@@ -303,45 +279,45 @@ internal val App =
           "textarea::-webkit-scrollbar" { display = None.none }
 
           "input[type='color']::-webkit-color-swatch" {
-            borderRadius = 3.em
+            borderRadius = bgwUnit(3)
             border = None.none
           }
 
           "bgw_togglebutton" {
             position = Position.relative
             display = Display.inlineFlex
-            width = 30.em
-            height = 18.em
+            width = bgwUnit(30)
+            height = bgwUnit(18)
           }
 
           "bgw_togglebutton > input[type='checkbox']" {
             opacity = number(0.0)
             position = Position.relative
-            width = 36.em
-            minWidth = 36.em
+            width = bgwUnit(36)
+            minWidth = bgwUnit(36)
             height = 100.pct
           }
 
           ".toggle" {
             position = Position.absolute
-            left = 4.em
-            width = 30.em
-            height = 18.em
+            left = 4.bgw
+            width = 30.bgw
+            height = 18.bgw
             backgroundColor = rgb(145, 145, 145)
             transition = transition(300, "background-color")
-            borderRadius = 3.em
+            borderRadius = 3.bgw
           }
 
           ".toggle::before" {
             content = Content("")
             position = Position.absolute
-            width = 12.em
-            height = 12.em
-            left = 3.em
-            top = 3.em
+            width = 12.bgw
+            height = 12.bgw
+            left = 3.bgw
+            top = 3.bgw
             backgroundColor = rgb(255, 255, 255)
             transition = transition(300, "transform")
-            borderRadius = 3.em
+            borderRadius = 3.bgw
           }
 
           "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
@@ -349,7 +325,7 @@ internal val App =
           }
 
           "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
-            transform = translatex(12.em)
+            transform = translatex(12.bgw)
           }
 
           ".bgw-root" {
@@ -393,14 +369,14 @@ internal val App =
           "option" {
             minInlineSize = fit()
             minBlockSize = fit()
-            paddingBlock = 0.5.em
-            paddingInline = 0.em
+            paddingBlock = 0.5.bgw
+            paddingInline = 0.bgw
           }
 
           "select" {
             border = None.none
-            paddingBlock = 0.em
-            paddingInline = 0.em
+            paddingBlock = 0.bgw
+            paddingInline = 0.bgw
             minInlineSize = fit()
             minBlockSize = fit()
           }
@@ -594,8 +570,8 @@ internal val App =
               ariaExpanded = menuScene != undefined
               div {
                 css {
-                  width = props.data.width.em
-                  height = props.data.height.em
+                  width = props.data.width.bgw
+                  height = props.data.height.bgw
                 }
               }
             }
@@ -606,8 +582,8 @@ internal val App =
             bgwLock {
               css {
                 position = Position.absolute
-                width = props.data.width.em
-                height = props.data.height.em
+                width = props.data.width.bgw
+                height = props.data.height.bgw
                 backgroundColor = rgb(0, 0, 0, 0.0)
                 zIndex = zIndex(998)
                 display = if (props.data.gameScene?.locked ?: false) Display.block else None.none
@@ -669,7 +645,7 @@ internal fun menuTransition(fadeTime: Int): Transition =
     "${fadeTime}ms opacity, ${fadeTime}ms backdrop-filter".unsafeCast<Transition>()
 
 internal fun backgroundBlur(opacity: Double, blurRadius: Double): BackdropFilter =
-    "blur(${blurRadius}em) opacity($opacity)".unsafeCast<BackdropFilter>()
+    "blur(calc(var(--bgwUnit) * ${blurRadius})) opacity($opacity)".unsafeCast<BackdropFilter>()
 
 internal fun transition(duration: Int, property: String): Transition =
     "${duration}ms $property".unsafeCast<Transition>()
@@ -683,3 +659,10 @@ internal inline fun <T> jsObject(builder: T.() -> Unit): T {
   builder(obj.unsafeCast<T>())
   return obj.unsafeCast<T>()
 }
+
+internal fun bgwUnit(value: Number): Length {
+  return "calc(var(--bgwUnit) * ${value})".unsafeCast<Length>()
+}
+
+internal inline val Number.bgw: Length
+  get() = ("calc(var(--bgwUnit) * ${this})").unsafeCast<Length>()
