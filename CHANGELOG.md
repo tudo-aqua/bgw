@@ -83,6 +83,7 @@ All notable changes to this project will be documented in this file.
 - Added `inParentPosX` and `inParentPosY` properties to `ComponentView` to get the position of a component in its parent.
 - Added `stopAllAnimations()` function to `Scene` to immediately stop all animations currently running.
 - Added `disallowUnselect` property to `ComboBox` to prevent deselection of the currently selected item and hide prompt text.
+- Added `interpolation` property to `MovementAnimation`, `FadeAnimation`, `ScaleAnimation` and `RotationAnimation` to define the interpolation of the animation.
 
 ### Fixed
 
@@ -94,6 +95,7 @@ All notable changes to this project will be documented in this file.
 - Fixed first `Button` in a scene being focused by default.
 - Fixed window resizing leading to wrongly scaled game view.
 - Fixed `actualPosX` and `actualPosY` properties in `ComponentView` to return the correct absolute position of the component.
+- Fixed `onSceneShown` now triggering correctly when the scene is fully rendered.
 
 ### Changed
 

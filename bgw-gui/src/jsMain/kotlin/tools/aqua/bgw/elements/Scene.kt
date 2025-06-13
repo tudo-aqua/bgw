@@ -18,14 +18,17 @@
 package tools.aqua.bgw.elements
 
 import SceneData
+import data.event.LoadEventData
 import emotion.react.css
 import react.FC
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
+import react.useEffect
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.cssom.*
 import web.dom.Element
 
@@ -36,6 +39,10 @@ internal external interface SceneProps : Props {
 internal val Scene =
     FC<SceneProps> { props ->
       bgwScene {
+        useEffect(listOf(props.data.id)) {
+          JCEFEventDispatcher.dispatchEvent(LoadEventData().apply { id = props.data.id })
+        }
+
         css {
           width = props.data.width.bgw
           height = props.data.height.bgw

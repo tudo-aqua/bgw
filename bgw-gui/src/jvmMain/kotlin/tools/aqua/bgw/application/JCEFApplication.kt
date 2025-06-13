@@ -386,6 +386,7 @@ internal class MainFrame(
     builder.cefSettings.root_cache_path = tmpDir
     builder.cefSettings.cache_path = tmpDir
     builder.cefSettings.log_file = "$tmpDir/bgw.log"
+    builder.jcefArgs.add("--disable-pinch")
 
     builder.setProgressHandler { enumProgress, fl ->
       if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
@@ -430,6 +431,20 @@ internal class MainFrame(
             val json = Base64.decode(request)
             val eventData = jsonMapper.decodeFromString<EventData>(json)
             if (eventData is LoadEventData) {
+              eventData.id?.indexOf("bgw-scene-")?.let {
+                if (it >= -1) {
+                  val sceneId = eventData.id ?: return false
+                  if (Frontend.boardGameScene?.id == sceneId &&
+                      Frontend.boardGameScene?.isVisible != true) {
+                    Frontend.boardGameScene?.isVisible = true
+                    Frontend.boardGameScene?.onSceneShown?.invoke()
+                  }
+                  if (Frontend.menuScene?.id == sceneId && Frontend.menuScene?.isVisible != true) {
+                    Frontend.menuScene?.isVisible = true
+                    Frontend.menuScene?.onSceneShown?.invoke()
+                  }
+                }
+              }
               loadCallback.invoke(Unit)
               return true
             }

@@ -152,11 +152,14 @@ internal class Frontend {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      if (menuScene == scene) {
+        return
+      }
       lastFadeTime = fadeTime
+      menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
       menuScene = scene
       markDirty(ActionProp.SHOW_MENU_SCENE)
-      scene.onSceneShown?.invoke()
     }
 
     internal fun sendAnimation(animation: Animation) {
@@ -200,7 +203,11 @@ internal class Frontend {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      if (menuScene == null) {
+        return
+      }
       lastFadeTime = fadeTime
+      menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
       menuScene = null
       markDirty(ActionProp.HIDE_MENU_SCENE)
@@ -212,10 +219,13 @@ internal class Frontend {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
+      if (boardGameScene == scene) {
+        return
+      }
+      boardGameScene?.isVisible = false
       boardGameScene?.onSceneHidden?.invoke()
       boardGameScene = scene
       markDirty(ActionProp.SHOW_GAME_SCENE)
-      scene.onSceneShown?.invoke()
     }
 
     /**
