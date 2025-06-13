@@ -500,14 +500,28 @@ internal object Animator {
             duration)
   }
 
+  private fun easingFromInterpolation(interpolation: String): String {
+    return when (interpolation) {
+      "linear" -> "linear"
+      "smooth" -> "ease-in-out"
+      "spring" -> "cubic-bezier(.41,0,.41,1.49)"
+      "steps" -> "steps(10, end)"
+      else -> "ease-in-out" // Default fallback
+    }
+  }
+
   private fun getTransitionCSS(animationList: List<AnimationData>): String {
     val transitions =
         animationList.map {
           when (it) {
-            is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
-            is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
-            is RotationAnimationData -> "rotate ${it.duration}ms ease-in-out"
-            is ScaleAnimationData -> "scale ${it.duration}ms ease-in-out"
+            is FadeAnimationData ->
+                "opacity ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
+            is MovementAnimationData ->
+                "translate ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
+            is RotationAnimationData ->
+                "rotate ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
+            is ScaleAnimationData ->
+                "scale ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
             else -> ""
           }
         }

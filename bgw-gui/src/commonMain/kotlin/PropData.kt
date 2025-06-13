@@ -79,6 +79,7 @@ internal abstract class AnimationData : Data() {
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
   var isStop: Boolean = false
+  var interpolation: String = "linear"
 }
 
 @Serializable

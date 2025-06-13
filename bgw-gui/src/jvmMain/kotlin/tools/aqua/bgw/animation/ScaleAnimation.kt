@@ -20,6 +20,8 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.core.AnimationInterpolation
+import tools.aqua.bgw.core.AnimationInterpolation.SMOOTH
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 
 /**
@@ -36,6 +38,8 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @param fromScaleY Initial Y position. Default: Current [ComponentView.posY].
  * @param toScaleY Resulting Y position. Default: Current [ComponentView.posY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+ * [AnimationInterpolation.SMOOTH].
  *
  * @see ComponentAnimation
  * @see Animation
@@ -49,7 +53,15 @@ class ScaleAnimation<T : ComponentView>(
     toScaleX: Number = componentView.scaleX,
     fromScaleY: Number = componentView.scaleY,
     toScaleY: Number = componentView.scaleY,
-    duration: Int = DEFAULT_ANIMATION_SPEED
+    duration: Int = DEFAULT_ANIMATION_SPEED,
+    /**
+     * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
+     *
+     * @see AnimationInterpolation
+     *
+     * @since 0.10
+     */
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
   /** Initial X scale. */
@@ -71,6 +83,8 @@ class ScaleAnimation<T : ComponentView>(
    * @param byScaleX Relative X scale.
    * @param byScaleY Relative Y scale.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
+   * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+   * [AnimationInterpolation.SMOOTH].
    *
    * @see ComponentAnimation
    * @see Animation
@@ -82,12 +96,14 @@ class ScaleAnimation<T : ComponentView>(
       componentView: T,
       byScaleX: Number = 0.0,
       byScaleY: Number = 0.0,
-      duration: Int = 1000
+      duration: Int = 1000,
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
   ) : this(
       componentView = componentView,
       toScaleX = componentView.scaleX * byScaleX.toDouble(),
       toScaleY = componentView.scaleY * byScaleY.toDouble(),
-      duration = duration)
+      duration = duration,
+      interpolation = interpolation)
 
   /**
    * A scale animation. Scales given [ComponentView] by given scalar.
@@ -95,6 +111,8 @@ class ScaleAnimation<T : ComponentView>(
    * @param componentView [ComponentView] to animate
    * @param byScale Relative scale.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
+   * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+   * [AnimationInterpolation.SMOOTH].
    *
    * @see ComponentAnimation
    * @see Animation
@@ -105,10 +123,12 @@ class ScaleAnimation<T : ComponentView>(
   constructor(
       componentView: T,
       byScale: Number = 0.0,
-      duration: Int = 1000
+      duration: Int = 1000,
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
   ) : this(
       componentView = componentView,
       toScaleX = componentView.scaleX * byScale.toDouble(),
       toScaleY = componentView.scaleY * byScale.toDouble(),
-      duration = duration)
+      duration = duration,
+      interpolation = interpolation)
 }
