@@ -352,7 +352,8 @@ internal object ContainerMapper {
       is Area<*> ->
           (AreaData().fillData(container) as AreaData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
@@ -360,7 +361,8 @@ internal object ContainerMapper {
       is CardStack<*> ->
           (CardStackData().fillData(container) as CardStackData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
@@ -400,7 +402,8 @@ internal object ContainerMapper {
       is LinearLayout<*> ->
           (LinearLayoutData().fillData(container) as LinearLayoutData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
             spacing = container.spacing.toInt()
             orientation = container.orientation.name.lowercase()
             alignment =
@@ -415,7 +418,8 @@ internal object ContainerMapper {
       is Satchel ->
           (SatchelData().fillData(container) as SatchelData).apply {
             components =
-                container.components.map { RecursiveMapper.map(it) }.toMutableList() as MutableList<GameComponentViewData>
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
 
             if (container.dropAcceptor != null) {
               isDroppable = true

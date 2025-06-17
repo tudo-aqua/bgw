@@ -38,9 +38,9 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
   private val gridView = GridPane<TokenView>(
     columns = 35,
     rows = 35,
-    posX = 0,
-    posY = 0,
-    spacing = 10
+    posX = 1920 / 2,
+    posY = 1080 / 2,
+    spacing = 10,
   )
 
   init {
@@ -53,10 +53,7 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
             posY = 0,
             width = 50,
             height = 50,
-            visual = CompoundVisual(
-              ColorVisual.RED,
-              TextVisual(text = "($i, $j)")
-            )
+            visual = ColorVisual.RED
           )
 
           tokenView.onMouseClicked = { event ->

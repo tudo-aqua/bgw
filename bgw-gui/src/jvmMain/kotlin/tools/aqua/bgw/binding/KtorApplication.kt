@@ -193,7 +193,7 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
     messageQueue[component.id] = Triple(action, parent, "")
   } else {
     val serializedComponent = jsonMapper.encodeToString(RecursiveMapper.map(component))
-    messageQueue[component.id] = Triple(action, parent,serializedComponent)
+    messageQueue[component.id] = Triple(action, parent, serializedComponent)
   }
   println(messageQueue)
 

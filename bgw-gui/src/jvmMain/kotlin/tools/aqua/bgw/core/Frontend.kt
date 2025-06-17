@@ -261,7 +261,8 @@ internal class Frontend {
       // val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
       // runBlocking { sendToAllClients(json) }
 
-      addUpdate(component, ActionProp.UPDATE_COMPONENT, overrideParent ?: component.parent?.id ?: "")
+      addUpdate(
+          component, ActionProp.UPDATE_COMPONENT, overrideParent ?: component.parent?.id ?: "")
     }
 
     internal fun addComponent(component: ComponentView, overrideParent: String? = null) {
@@ -269,7 +270,8 @@ internal class Frontend {
     }
 
     internal fun removeComponent(component: ComponentView, overrideParent: String? = null) {
-      addUpdate(component, ActionProp.REMOVE_COMPONENT, overrideParent ?: component.parent?.id ?: "")
+      addUpdate(
+          component, ActionProp.REMOVE_COMPONENT, overrideParent ?: component.parent?.id ?: "")
     }
 
     internal fun updateVisual(visual: Visual) {

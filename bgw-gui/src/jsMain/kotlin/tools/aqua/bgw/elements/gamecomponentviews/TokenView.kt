@@ -20,6 +20,8 @@ package tools.aqua.bgw.elements.gamecomponentviews
 import TokenViewData
 import csstype.PropertiesBuilder
 import emotion.react.css
+import preact.signals.react.useComputed
+import preact.signals.react.useSignal
 import react.*
 import react.dom.aria.ariaDescribedBy
 import react.dom.aria.ariaDisabled
@@ -27,6 +29,7 @@ import react.dom.aria.ariaPressed
 import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwVisuals
@@ -59,6 +62,12 @@ internal val TokenView =
                 override var disabled = !props.data.isDroppable
               })
 
+      // Get or create the signal for this component's ID
+      val componentSignal = useSignal(getOrCreateSignal(props.data.id))
+
+      // We can use the value directly or create computed values based on it
+      val updateCount = useComputed { componentSignal.value.value }
+
       val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         translate =
@@ -84,6 +93,22 @@ internal val TokenView =
         bgwVisuals {
           className = ClassName("visuals")
           +VisualBuilder.build(props.data.visual)
+        }
+
+        // Display update counter from signal
+        span {
+          css {
+            position = Position.absolute
+            top = 5.px
+            right = 5.px
+            backgroundColor = rgb(0, 0, 0, 0.5)
+            color = NamedColor.white
+            padding = Padding(2.px, 5.px)
+            borderRadius = 10.px
+            fontSize = 12.px
+            fontWeight = FontWeight.bold
+          }
+          +"Updates: $updateCount"
         }
 
         if (props.data.isDraggable) {
