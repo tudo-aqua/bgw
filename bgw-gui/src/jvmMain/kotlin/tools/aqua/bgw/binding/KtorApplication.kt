@@ -22,6 +22,32 @@ import AnimationData
 import AppData
 import PropData
 import SceneMapper
+import data.event.AnimationFinishedEventData
+import data.event.CheckBoxChangedEventData
+import data.event.ColorInputChangedEventData
+import data.event.DragDroppedEventData
+import data.event.DragGestureEndedEventData
+import data.event.DragGestureEnteredEventData
+import data.event.DragGestureExitedEventData
+import data.event.DragGestureMovedEventData
+import data.event.DragGestureStartedEventData
+import data.event.EventData
+import data.event.FilesPickedEventData
+import data.event.InternalCameraPanData
+import data.event.KeyEventAction
+import data.event.KeyEventData
+import data.event.LoadEventData
+import data.event.MouseEnteredEventData
+import data.event.MouseEventData
+import data.event.MouseExitedEventData
+import data.event.MousePressedEventData
+import data.event.MouseReleasedEventData
+import data.event.RadioChangedEventData
+import data.event.ScrollEventData
+import data.event.SelectionChangedEventData
+import data.event.StructuredDataSelectEventData
+import data.event.TextInputChangedEventData
+import data.event.TransformChangedEventData
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -29,19 +55,38 @@ import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import java.io.ByteArrayOutputStream
 import java.time.Duration
 import java.util.*
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
 import jsonMapper
-import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.uicomponents.BinaryStateButton
+import tools.aqua.bgw.components.uicomponents.CheckBox
+import tools.aqua.bgw.components.uicomponents.ColorPicker
+import tools.aqua.bgw.components.uicomponents.ComboBox
+import tools.aqua.bgw.components.uicomponents.StructuredDataView
+import tools.aqua.bgw.components.uicomponents.TextInputUIComponent
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.Frontend
+import tools.aqua.bgw.core.findComponent
+import tools.aqua.bgw.core.getRootNode
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.event.AnimationFinishedEvent
+import tools.aqua.bgw.event.DragEvent
+import tools.aqua.bgw.event.DropEvent
+import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.event.MouseButtonType
+import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.event.WheelEvent
+import tools.aqua.bgw.mapper.DialogMapper
+import tools.aqua.bgw.util.Coordinate
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -483,14 +528,14 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
   messageQueueJob?.cancel()
   messageQueueJob =
       CoroutineScope(Dispatchers.IO).launch {
-          if (messageQueue.isNotEmpty()) {
-            val updates = messageQueue.toMap()
-            messageQueue.clear()
-            lastUpdateTime = System.currentTimeMillis()
-            println("Serializing updates at ${Date().time}")
-            val json = Json.encodeToString(updates)
-            componentChannel.sendToAllClients(json)
-            println("Sent updates at ${Date().time}")
-          }
+        if (messageQueue.isNotEmpty()) {
+          val updates = messageQueue.toMap()
+          messageQueue.clear()
+          lastUpdateTime = System.currentTimeMillis()
+          println("Serializing updates at ${Date().time}")
+          val json = Json.encodeToString(updates)
+          componentChannel.sendToAllClients(json)
+          println("Sent updates at ${Date().time}")
+        }
       }
 }

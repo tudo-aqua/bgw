@@ -20,26 +20,16 @@ package tools.aqua.bgw
 import ActionProp
 import AnimationData
 import AppData
-import AreaData
-import CameraPaneData
-import CardStackData
 import ComponentViewData
 import Data
 import DialogData
-import FileDialogData
 import ID
 import JsonData
-import LayoutViewData
-import LinearLayoutData
-import PaneData
 import PropData
-import SatchelData
 import data.event.AnimationFinishedEventData
-import data.event.FilesPickedEventData
 import data.event.LoadEventData
 import jsonMapper
-import kotlin.math.floor
-import kotlin.random.Random
+import kotlin.js.Date
 import kotlinx.browser.document
 import kotlinx.serialization.json.Json
 import org.w3c.dom.CustomEvent
@@ -57,23 +47,27 @@ import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
-import web.fs.FileSystemFileHandle
 import web.timers.setTimeout
-import kotlin.js.Date
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
 internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 
 // Signal registry for component updates
-internal val componentSignals = mutableMapOf<String, Signal<Int>>()
+internal val componentSignals = mutableMapOf<String, Signal<PropData>>()
 
 // Function to get or create a signal for a component ID
-internal fun getOrCreateSignal(id: String): Signal<Int> {
-  return componentSignals.getOrPut(id) { signal(0) }
+internal fun getOrCreateSignal(id: String, data : ComponentViewData? = null): Signal<PropData> {
+  println("getOrCreateSignal called for ID: $id with data: $data")
+  if(data == null) {
+    return componentSignals.getOrPut(id) { signal(PropData()) }
+  }
+  return componentSignals.getOrPut(id) { signal(PropData().apply {
+    this.data = data
+  }) }
 }
 
-internal fun getSignal(id: String): Signal<Int> {
+internal fun getSignal(id: String): Signal<PropData> {
   return componentSignals[id] ?: throw IllegalArgumentException("Signal for ID $id not found")
 }
 
@@ -148,12 +142,21 @@ internal fun handleSingleUpdates(data: String) {
     val parentId = triple.second
     val data = triple.third
 
-//    println(
-//        "Handling single update for ID: $id (Parent: ${parentId}), Action: $action, Data: $data")
+    //    println(
+    //        "Handling single update for ID: $id (Parent: ${parentId}), Action: $action, Data:
+    // $data")
+
+    // Parse the data into a ComponentViewData object
+    val componentData: ComponentViewData? = try {
+      jsonMapper.decodeFromString(data)
+    } catch (e: Exception) {
+      console.error("Failed to decode data for ID: $id", e)
+      null
+    }
 
     // Update signal for this component ID - increment the counter
     val signal = getOrCreateSignal(id)
-    signal.value++
+    signal.value.data = componentData
 
     println("Updated signal at ${Date.now()} for ID: $id, new value: ${signal.value}")
 

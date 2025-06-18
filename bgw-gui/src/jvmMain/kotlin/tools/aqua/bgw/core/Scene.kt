@@ -47,8 +47,6 @@ import tools.aqua.bgw.visual.Visual
 sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
   internal val id = IDGenerator.generateSceneID()
 
-  internal val id = IDGenerator.generateSceneID()
-
   /**
    * [MutableList] containing all [ComponentView]s currently below mouse position while performing a
    * drag gesture.

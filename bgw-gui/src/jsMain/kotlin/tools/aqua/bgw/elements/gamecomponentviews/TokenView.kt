@@ -20,10 +20,8 @@ package tools.aqua.bgw.elements.gamecomponentviews
 import TokenViewData
 import csstype.PropertiesBuilder
 import emotion.react.css
-import preact.signals.core.computed
-import preact.signals.core.effect
-import preact.signals.react.useComputed
-import preact.signals.react.useSignal
+import js.objects.jso
+import kotlin.js.Date
 import preact.signals.react.useSignalEffect
 import react.*
 import react.dom.aria.ariaDescribedBy
@@ -35,12 +33,13 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.span
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.jsObject
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.cssom.*
 import web.dom.Element
-import kotlin.js.Date
 
 internal external interface TokenViewProps : Props {
   var data: TokenViewData
@@ -50,17 +49,28 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData
   cssBuilder(componentViewData)
 }
 
-val colorList = listOf(
-    NamedColor.green,
-    NamedColor.blue,
-    NamedColor.yellow,
-    NamedColor.purple,
-    NamedColor.orange,
-    NamedColor.cyan
-)
-
 internal val TokenView =
-    FC<TokenViewProps> { props ->
+    FC<TokenViewProps> { p ->
+
+      // Get the signal for this component's ID
+      val componentSignal = getOrCreateSignal(p.data.id, p.data)
+      val (props, setProps) = useState(
+          jso<TokenViewProps> {
+            data = p.data
+          })
+
+      // Subscribe to signal changes and update React state
+      useSignalEffect {
+        val signalValue = componentSignal.value.data as TokenViewData
+        console.log(
+          "TokenView: Signal changed at ${Date.now()} for ${p.data.id} to $signalValue")
+        setProps(jso<TokenViewProps> {
+          data = signalValue
+        })
+      }
+
+      // ----------------------------------------------------------------------------------------------
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -74,23 +84,6 @@ internal val TokenView =
                 override var id: String = props.data.id
                 override var disabled = !props.data.isDroppable
               })
-
-      // Get the signal for this component's ID
-      val componentSignal = getOrCreateSignal(props.data.id)
-      val (count, setCount) = useState(0)
-
-      // Subscribe to signal changes and update React state
-      useSignalEffect {
-        val signalValue = componentSignal.value
-        console.log("TokenView: Signal changed at ${Date.now()} for ${props.data.id} to $signalValue")
-        setCount(signalValue)
-      }
-
-      useEffect(listOf(count)) {
-        // This effect runs whenever the count changes
-        console.log("TokenView: Count finally updated to $count for ${props.data.id} at ${Date.now()}")
-        console.log("^^^^^^^^")
-      }
 
       val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
@@ -117,26 +110,6 @@ internal val TokenView =
         bgwVisuals {
           className = ClassName("visuals")
           +VisualBuilder.build(props.data.visual)
-        }
-
-        // Display update counter from signal
-        span {
-          css {
-            position = Position.absolute
-            top = 0.em
-            right = 0.em
-            backgroundColor = if(count == 0) NamedColor.red else colorList.random()
-            color = NamedColor.white
-            display = Display.flex
-            alignItems = AlignItems.center
-            justifyContent = JustifyContent.center
-            width = 100.pct
-            height = 100.pct
-            fontSize = 12.em
-            fontWeight = FontWeight.bold
-          }
-          // Use the React state value which gets updated by the signal
-          +count.toString()
         }
 
         if (props.data.isDraggable) {

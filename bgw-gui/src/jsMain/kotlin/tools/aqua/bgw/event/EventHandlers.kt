@@ -19,6 +19,7 @@ package tools.aqua.bgw.event
 
 import ComponentViewData
 import data.event.KeyEventAction
+import kotlin.js.Date
 import kotlin.math.sign
 import react.dom.html.HTMLAttributes
 import react.useEffect
@@ -34,7 +35,6 @@ import web.dom.Element
 import web.timers.Timeout
 import web.timers.clearTimeout
 import web.timers.setTimeout
-import kotlin.js.Date
 
 internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentViewData) {
   /*onContextMenu = {
