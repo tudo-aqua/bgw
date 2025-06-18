@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
+  "@class": "tools.aqua.bgw.examples.maumau.service.network.messages.MauMauShuffleStackGameAction",
   "title": "MauMau Shuffle Stack Schema",
   "required": [
     "drawStack",
