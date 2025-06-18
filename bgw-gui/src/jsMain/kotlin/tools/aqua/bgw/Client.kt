@@ -136,7 +136,9 @@ internal fun handleReceivedData(receivedData: Data) {
           renderAppFast(receivedData)
         }
       }
-      stopAnimations()
+      if (!receivedData.forcedByAnimation) {
+        // stopAnimations()
+      }
     }
     is AnimationData -> {
       if (receivedData.isStop) {

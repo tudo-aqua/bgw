@@ -471,7 +471,8 @@ internal fun enqueueUpdate(data: AppData) {
 internal suspend fun forceAnimationUpdate(animationData: AnimationData) {
   debounceJob?.cancel()
   updateStack.clear()
-  val json = jsonMapper.encodeToString(PropData(collectAppData()))
+  val json =
+      jsonMapper.encodeToString(PropData(collectAppData().apply { forcedByAnimation = true }))
   componentChannel.sendToAllClients(json)
   val animationJson = jsonMapper.encodeToString(PropData(animationData))
   componentChannel.sendToAllClients(animationJson)

@@ -97,15 +97,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
 
   init {
     buttonDelay.onMouseClicked = {
-      gameScene.lock()
-      gameScene.playAnimation(
-          DelayAnimation(duration = 2000).apply {
-            onFinished = {
-              println("Delay finished!")
-              gameScene.unlock()
-              showDialog(Dialog(DialogType.NONE, "", "", ""))
-            }
-          })
+      gameScene.stopAllAnimations()
     }
     buttonMovement.onMouseClicked = {
       gameScene.playAnimation(
