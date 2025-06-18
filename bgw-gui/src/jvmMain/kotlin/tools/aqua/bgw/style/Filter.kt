@@ -82,7 +82,7 @@ class BlurFilter(radius: Double) : StylingDeclaration {
   internal var value: String? = ""
 
   init {
-    value = if (radius > 0.0) "${radius}em" else null
+    value = if (radius > 0.0) "calc(var(--bgwUnit) * ${radius})" else null
   }
 
   override fun toValue(): String {

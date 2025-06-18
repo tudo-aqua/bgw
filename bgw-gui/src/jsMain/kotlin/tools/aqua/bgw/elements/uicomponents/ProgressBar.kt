@@ -17,6 +17,8 @@
 
 package tools.aqua.bgw.elements.uicomponents
 
+import ColorVisualData
+import CompoundVisualData
 import ProgressBarData
 import csstype.PropertiesBuilder
 import emotion.react.css
@@ -48,6 +50,8 @@ internal val ProgressBar =
               })
 
       val elementRef = useRef<Element>(null)
+      val colorVisual =
+          (props.data.barVisual as CompoundVisualData).children.first() as ColorVisualData
 
       bgwProgress {
         tabIndex = 0
@@ -69,11 +73,13 @@ internal val ProgressBar =
           css {
             width = (props.data.progress * 100).pct
             height = 100.pct
-            backgroundColor = Color(props.data.barColor)
+            backgroundColor = Color(colorVisual.color)
             position = Position.absolute
             left = 0.px
             top = 0.px
             transition = transition(500, "width")
+            styleBuilder(colorVisual.style)
+            filterBuilder(colorVisual.filters)
           }
         }
 

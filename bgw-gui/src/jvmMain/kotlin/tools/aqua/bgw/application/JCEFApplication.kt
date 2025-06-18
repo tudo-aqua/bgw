@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.application
 
-import Base64
 import DialogButtonClickData
 import DialogData
 import ID
@@ -55,19 +54,15 @@ import org.cef.callback.CefContextMenuParams
 import org.cef.callback.CefMenuModel
 import org.cef.callback.CefQueryCallback
 import org.cef.handler.*
+import org.cef.misc.BoolRef
+import org.cef.network.CefRequest
 import tools.aqua.bgw.builder.DialogBuilder
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.DynamicComponentView
-import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.*
-import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.*
-import tools.aqua.bgw.mapper.DialogMapper
-import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
@@ -137,7 +132,7 @@ internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
     isTransparent: Boolean = false,
-    loadCallback: (Any) -> Unit,
+    val loadCallback: (Any) -> Unit,
     debugLogging: Boolean = false
 ) : JFrame() {
   private var browserFocus = true
@@ -174,6 +169,9 @@ internal class MainFrame(
             ?: Files.createTempDirectory("bgw-").toString().also { File(it).deleteOnExit() }
 
     builder.cefSettings.root_cache_path = tmpDir
+    builder.cefSettings.cache_path = tmpDir
+    builder.cefSettings.log_file = "$tmpDir/bgw.log"
+    builder.jcefArgs.add("--disable-pinch")
 
     builder.setProgressHandler { enumProgress, fl ->
       if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
@@ -198,119 +196,6 @@ internal class MainFrame(
 
     client = cefApp.createClient()
     // endregion
-
-    // region - Component Update Message Router
-    val config = CefMessageRouterConfig()
-    config.jsQueryFunction = "cefQuery"
-    config.jsCancelFunction = "cefQueryCancel"
-    msgRouter = CefMessageRouter.create(config)
-    client.addMessageRouter(msgRouter)
-    val myHandler: CefMessageRouterHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<EventData>(json)
-            if (eventData is LoadEventData) {
-              loadCallback.invoke(Unit)
-              return true
-            }
-            return false
-          }
-        }
-    msgRouter?.addHandler(myHandler, true)
-    // endregion
-
-    // region - Global Event Message Router
-    val globalEventConfig = CefMessageRouterConfig()
-    globalEventConfig.jsQueryFunction = "cefSceneQuery"
-    globalEventConfig.jsCancelFunction = "cefSceneQueryCancel"
-    globalEventMsgRouter = CefMessageRouter.create(globalEventConfig)
-    client.addMessageRouter(globalEventMsgRouter)
-    val globalHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<KeyEventData>(json)
-
-            try {
-              val keyEvent =
-                  KeyEvent(
-                      eventData.keyCode,
-                      eventData.character,
-                      eventData.isControlDown,
-                      eventData.isShiftDown,
-                      eventData.isAltDown)
-              val menuScene = Frontend.menuScene
-              val boardGameScene = Frontend.boardGameScene
-
-              when (eventData.action) {
-                KeyEventAction.PRESS -> {
-                  menuScene?.onKeyPressed?.invoke(keyEvent)
-                  boardGameScene?.onKeyPressed?.invoke(keyEvent)
-                }
-                KeyEventAction.RELEASE -> {
-                  menuScene?.onKeyReleased?.invoke(keyEvent)
-                  boardGameScene?.onKeyReleased?.invoke(keyEvent)
-                }
-                KeyEventAction.TYPE -> {
-                  menuScene?.onKeyTyped?.invoke(keyEvent)
-                  boardGameScene?.onKeyTyped?.invoke(keyEvent)
-                }
-              }
-              return true
-            } catch (e: Exception) {}
-
-            return false
-          }
-        }
-    globalEventMsgRouter?.addHandler(globalHandler, true)
-    // endregion
-
-    // region - Animation Message Router
-    val animationConfig = CefMessageRouterConfig()
-    animationConfig.jsQueryFunction = "cefAnimationQuery"
-    animationConfig.jsCancelFunction = "cefAnimationQueryCancel"
-    animationMsgRouter = CefMessageRouter.create(animationConfig)
-    client.addMessageRouter(animationMsgRouter)
-    val animationHandler: CefMessageRouterHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(json)
-            if (eventData is AnimationFinishedEventData) {
-              val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-              val boardGameSceneAnimations =
-                  Frontend.boardGameScene?.animations?.toList() ?: listOf()
-              val animations = menuSceneAnimations + boardGameSceneAnimations
-              val animation = animations.find { it.id == eventData.id }
-              animation?.onFinished?.invoke(AnimationFinishedEvent())
-              return true
-            }
-            return false
-          }
-        }
-    animationMsgRouter?.addHandler(animationHandler, true)
 
     // Dialog Button Handler
     val dialogConfig = CefMessageRouterConfig()
@@ -370,6 +255,38 @@ internal class MainFrame(
             browserFocus = false
           }
         })
+
+    // Prevent dragging files into the browser
+    client.addDragHandler { browser, dragData, mask -> true }
+
+    // Prevent navigation to external URLs
+    client.addRequestHandler(
+        object : CefRequestHandlerAdapter() {
+          override fun onBeforeBrowse(
+              browser: CefBrowser,
+              frame: CefFrame,
+              request: CefRequest,
+              user_gesture: Boolean,
+              is_redirect: Boolean
+          ): Boolean {
+            val originalURL = "$startURL:${Constants.PORT}"
+            return !request.url.startsWith(originalURL) && frame.isMain
+          }
+        })
+
+    // Disable keyboard shortcuts
+    client.addKeyboardHandler(
+        object : CefKeyboardHandlerAdapter() {
+          override fun onPreKeyEvent(
+              browser: CefBrowser?,
+              event: CefKeyboardHandler.CefKeyEvent?,
+              is_keyboard_shortcut: BoolRef?
+          ): Boolean {
+            return event != null &&
+                event.type == CefKeyboardHandler.CefKeyEvent.EventType.KEYEVENT_KEYDOWN
+          }
+        })
+
     client.addLoadHandler(
         object : CefLoadHandlerAdapter() {
           override fun onLoadEnd(browserArg: CefBrowser, frame: CefFrame, httpStatusCode: Int) {

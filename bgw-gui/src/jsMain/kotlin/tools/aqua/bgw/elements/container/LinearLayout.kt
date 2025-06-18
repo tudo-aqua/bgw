@@ -29,6 +29,7 @@ import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
@@ -184,18 +185,18 @@ internal val LinearLayout =
               if (props.data.orientation == "horizontal") {
                 gap =
                     if (props.data.width >= spaceOccupiedWithGaps) {
-                      props.data.spacing.em
+                      props.data.spacing.bgw
                     } else if (props.data.width >= spaceOccupied) {
-                      possibleGapPerComponent.em
+                      possibleGapPerComponent.bgw
                     } else {
                       Globals.unset
                     }
               } else {
                 gap =
                     if (props.data.height >= spaceOccupiedWithGaps) {
-                      props.data.spacing.em
+                      props.data.spacing.bgw
                     } else if (props.data.height >= spaceOccupied) {
-                      possibleGapPerComponent.em
+                      possibleGapPerComponent.bgw
                     } else {
                       Globals.unset
                     }
@@ -219,9 +220,9 @@ internal val LinearLayout =
                   maxHeight = fit()
                   marginBlock =
                       if (props.data.orientation == "horizontal") Globals.unset
-                      else (possibleGapPerComponent / 2).em
+                      else (possibleGapPerComponent / 2).bgw
                   marginInline =
-                      if (props.data.orientation == "horizontal") (possibleGapPerComponent / 2).em
+                      if (props.data.orientation == "horizontal") (possibleGapPerComponent / 2).bgw
                       else Globals.unset
                   display = Display.flex
                   alignItems = AlignItems.center
@@ -229,15 +230,15 @@ internal val LinearLayout =
 
                   if (props.data.orientation == "horizontal") {
                     if (index == 0) {
-                      marginLeft = 0.em
+                      marginLeft = 0.bgw
                     } else if (index == props.data.components.size - 1) {
-                      marginRight = 0.em
+                      marginRight = 0.bgw
                     }
                   } else {
                     if (index == 0) {
-                      marginTop = 0.em
+                      marginTop = 0.bgw
                     } else if (index == props.data.components.size - 1) {
-                      marginBottom = 0.em
+                      marginBottom = 0.bgw
                     }
                   }
                 }

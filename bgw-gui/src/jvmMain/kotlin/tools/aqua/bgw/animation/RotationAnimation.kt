@@ -20,6 +20,8 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.core.AnimationInterpolation
+import tools.aqua.bgw.core.AnimationInterpolation.SMOOTH
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
 
 /**
@@ -45,7 +47,17 @@ class RotationAnimation<T : ComponentView>(
     componentView: T,
     fromAngle: Number = componentView.rotation,
     toAngle: Number = componentView.rotation,
-    duration: Int = DEFAULT_ANIMATION_DURATION
+    duration: Int = DEFAULT_ANIMATION_DURATION,
+    /**
+     * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
+     * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+     * [AnimationInterpolation.SMOOTH].
+     *
+     * @see AnimationInterpolation
+     *
+     * @since 0.10
+     */
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
   /** Initial angle. */
@@ -60,6 +72,8 @@ class RotationAnimation<T : ComponentView>(
    * @param componentView [ComponentView] to animate
    * @param byAngle relative angle. Default: 0
    * @param duration [Animation] duration in milliseconds. Default: 1 second
+   * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+   * [AnimationInterpolation.SMOOTH].
    *
    * @see ComponentAnimation
    * @see Animation
@@ -70,9 +84,11 @@ class RotationAnimation<T : ComponentView>(
   constructor(
       componentView: T,
       byAngle: Double = 0.0,
-      duration: Int = 1000
+      duration: Int = 1000,
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
   ) : this(
       componentView = componentView,
       toAngle = componentView.rotation + byAngle,
-      duration = duration)
+      duration = duration,
+      interpolation = interpolation)
 }

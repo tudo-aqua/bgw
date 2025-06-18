@@ -44,7 +44,7 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: RadioButtonDa
   cssBuilder(componentViewData)
   alignItems = AlignItems.center
   justifyItems = JustifyItems.flexStart
-  gap = 10.em
+  gap = 10.bgw
   pointerEvents = if (componentViewData.isDisabled) None.none else PointerEvents.all
 }
 
@@ -82,9 +82,9 @@ internal val RadioButton =
           name = props.data.group
 
           css {
-            width = 20.em
-            height = 20.em
-            maxWidth = 20.em
+            width = 20.bgw
+            height = 20.bgw
+            maxWidth = 20.bgw
             zIndex = integer(1)
             outline = None.none
             border = None.none

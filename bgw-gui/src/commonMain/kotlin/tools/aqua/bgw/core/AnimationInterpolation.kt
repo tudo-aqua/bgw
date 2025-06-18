@@ -15,21 +15,20 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.application
+package tools.aqua.bgw.core
 
-import DialogData
-
-internal interface Application {
-  fun start(onClose: () -> Unit, callback: (Any) -> Unit)
-  fun stop()
-
-  fun clearAllEventListeners() {}
-
-  fun openNewDialog(dialogData: DialogData) {}
-
-  fun toggleFullscreen(boolean: Boolean) {}
-
-  fun toggleMaximized(boolean: Boolean) {}
-
-  fun resize(width: Int, height: Int) {}
+/**
+ * Enum class representing different types of animations that can be applied to UI components.
+ *
+ * @since 0.10
+ */
+enum class AnimationInterpolation {
+  /** Animation type that animates the change in a linear fashion. */
+  LINEAR,
+  /** Animation type that animates the change in a smooth, non-linear fashion. */
+  SMOOTH,
+  /** Animation type that animates the change with a spring effect. */
+  SPRING,
+  /** Animation type that animates the change in 10 steps, without smoothing. */
+  STEPS
 }

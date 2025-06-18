@@ -20,6 +20,7 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 
 /**
@@ -34,6 +35,8 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @param fromOpacity Initial opacity. Default: Current [ComponentView.opacity].
  * @param toOpacity Resulting opacity. Default: Current [ComponentView.opacity].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+ * [AnimationInterpolation.SMOOTH].
  *
  * @see ComponentAnimation
  * @see Animation
@@ -45,7 +48,15 @@ class FadeAnimation<T : ComponentView>(
     componentView: T,
     fromOpacity: Number = componentView.opacity,
     toOpacity: Number = componentView.opacity,
-    duration: Int = DEFAULT_ANIMATION_SPEED
+    duration: Int = DEFAULT_ANIMATION_SPEED,
+    /**
+     * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
+     *
+     * @see AnimationInterpolation
+     *
+     * @since 0.10
+     */
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
   /** Initial opacity. */
   val fromOpacity: Double = fromOpacity.toDouble()

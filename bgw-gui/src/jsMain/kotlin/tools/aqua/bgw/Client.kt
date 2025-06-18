@@ -27,11 +27,6 @@ import ComponentViewData
 import Data
 import DialogData
 import FileDialogData
-import GameComponentContainerData
-import GameComponentViewData
-import GridPaneData
-import HexagonGridData
-import HexagonViewData
 import ID
 import JsonData
 import LayoutViewData
@@ -182,7 +177,6 @@ internal fun handleReceivedData(receivedData: Data) {
     is AppData -> {
       lastAppData = receivedData
       if (receivedData.action == ActionProp.HIDE_MENU_SCENE) {
-        console.log("[SCENE] Hiding Menu Scene")
         val element = document.querySelector("#menuScene") as HTMLElement
         element.classList.toggle("scene--visible", false)
         setTimeout(
@@ -211,7 +205,9 @@ internal fun handleReceivedData(receivedData: Data) {
           renderAppFast(receivedData)
         }
       }
-      stopAnimations()
+      if (!receivedData.forcedByAnimation) {
+        // stopAnimations()
+      }
     }
     is AnimationData -> {
       if (receivedData.isStop) {
@@ -226,41 +222,7 @@ internal fun handleReceivedData(receivedData: Data) {
       dialogMap[receivedData.id] = receivedData
       renderDialogs()
     }
-    /* is FileDialogData -> {
-      when (receivedData.mode) {
-        "open_file" -> {
-          window.asDynamic().showOpenFilePicker(
-            jso {
-              id = receivedData.id
-              multiple = false
-            }
-          ).then { handle -> sendFile(handle[0] as FileSystemFileHandle, receivedData)
-          }.catch {
-            JCEFEventDispatcher.dispatchEvent(FilesPickedEventData(emptyList()).apply { id = receivedData.id })
-          }
-        }
-        "open_multiple_files" -> {
-        }
-        "save_file" -> {
-        }
-        "choose_directory" -> {
-        }
-        else -> {}
-      }
-    } */
-    else -> {
-      // Handle other data types if necessary
-      println("Received unknown data type: ${receivedData::class.simpleName}")
-    }
-  }
-}
-
-internal fun sendFile(handle: FileSystemFileHandle, dialog: FileDialogData) {
-  handle.getFileAsync().then { file ->
-    println(file.webkitRelativePath)
-    JCEFEventDispatcher.dispatchEvent(
-        FilesPickedEventData(listOf(file.name)).apply { id = dialog.id })
-    println("File picked: ${file.name}")
+    else -> {}
   }
 }
 
@@ -289,14 +251,5 @@ internal fun renderDialogs() {
   dialogRoot.render(Dialog.create { data = dialogMap.values.toList() })
 }
 
-internal fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }
-
 internal fun ChildrenBuilder.appendChildren(components: List<ReactElement<*>>) =
     components.forEach { +it }
-
-internal fun randomHexColor(): String {
-  val chars = "0123456789ABCDEF"
-  var color = "#"
-  repeat(6) { color += chars[floor(Random.nextDouble() * 16).toInt()] }
-  return color
-}

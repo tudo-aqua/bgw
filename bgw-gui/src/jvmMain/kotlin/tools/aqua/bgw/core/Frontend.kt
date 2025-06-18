@@ -25,17 +25,15 @@ import data.animation.DelayAnimationData
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import java.lang.Runnable
-import java.util.*
 import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
-import tools.aqua.bgw.application.Application
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.addUpdate
 import tools.aqua.bgw.binding.componentChannel
-import tools.aqua.bgw.binding.forceUpdate
+import tools.aqua.bgw.binding.forceAnimationUpdate
 import tools.aqua.bgw.binding.markDirty
 import tools.aqua.bgw.binding.module
 import tools.aqua.bgw.builder.SceneBuilder
@@ -78,7 +76,7 @@ internal class Frontend {
   }
 
   companion object {
-    internal var applicationEngine: Application = JCEFApplication()
+    internal var applicationEngine: JCEFApplication = JCEFApplication()
 
     internal var openedFileDialog: FileDialog? = null
 
@@ -153,29 +151,31 @@ internal class Frontend {
      * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun showMenuScene(scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      if (menuScene == scene) {
+        return
+      }
       lastFadeTime = fadeTime
+      menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
       menuScene = scene
       markDirty(ActionProp.SHOW_MENU_SCENE)
-      scene.onSceneShown?.invoke()
     }
 
     internal fun sendAnimation(animation: Animation) {
-      forceUpdate()
       val animationData = AnimationMapper.map(animation)
-      val json = jsonMapper.encodeToString(PropData(animationData))
-      runBlocking { componentChannel.sendToAllClients(json) }
+      runBlocking { forceAnimationUpdate(animationData) }
     }
 
     internal fun stopAnimations() {
-      forceUpdate()
       val animationData =
           DelayAnimationData().apply {
             id = "stopAnimations"
             isStop = true
           }
-      val json = jsonMapper.encodeToString(PropData(animationData))
-      runBlocking { componentChannel.sendToAllClients(json) }
+      runBlocking {
+        val animationJson = jsonMapper.encodeToString(PropData(animationData))
+        componentChannel.sendToAllClients(animationJson)
+      }
     }
 
     internal fun setWindowMode(windowMode: WindowMode) {
@@ -201,7 +201,11 @@ internal class Frontend {
      * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
      */
     internal fun hideMenuScene(fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      if (menuScene == null) {
+        return
+      }
       lastFadeTime = fadeTime
+      menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
       menuScene = null
       markDirty(ActionProp.HIDE_MENU_SCENE)
@@ -213,10 +217,13 @@ internal class Frontend {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
+      if (boardGameScene == scene) {
+        return
+      }
+      boardGameScene?.isVisible = false
       boardGameScene?.onSceneHidden?.invoke()
       boardGameScene = scene
       markDirty(ActionProp.SHOW_GAME_SCENE)
-      scene.onSceneShown?.invoke()
     }
 
     /**
@@ -252,7 +259,7 @@ internal class Frontend {
 
     /** Manually refreshes currently displayed [Scene]s. */
     internal fun updateScene() {
-      showGameScene(boardGameScene!!)
+      markDirty(ActionProp.SHOW_GAME_SCENE)
     }
 
     internal fun updateComponent(component: ComponentView, overrideParent: String? = null) {
@@ -310,7 +317,7 @@ internal class Frontend {
       /* val dialogData = DialogMapper.map(dialog)
       val json = jsonMapper.encodeToString(PropData(dialogData))
       runBlocking { componentChannel.sendToAllClients(json) } */
-      (applicationEngine as JCEFApplication).frame?.openNewFileDialog(dialog)
+      applicationEngine.frame?.openNewFileDialog(dialog)
     }
 
     internal fun relativePositionsToAbsolute(
@@ -336,7 +343,7 @@ internal class Frontend {
     }
 
     fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean {
-      if (loadedFonts.filter { it.first == path }.isEmpty()) {
+      if (loadedFonts.none { it.first == path }) {
         loadedFonts.add(Triple(path, fontName, weight))
         return true
       }

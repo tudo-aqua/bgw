@@ -32,6 +32,7 @@ import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.alignmentBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
@@ -109,8 +110,8 @@ internal val CardStack =
               key = component.id + index
               div {
                 css {
-                  width = component.width.em
-                  height = component.height.em
+                  width = component.width.bgw
+                  height = component.height.bgw
                 }
                 +NodeBuilder.build(component)
               }

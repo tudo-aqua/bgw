@@ -33,6 +33,7 @@ import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
@@ -131,8 +132,8 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em + it.value.posX.em
-                    top = y.em + it.value.posY.em
+                    left = x.bgw + it.value.posX.bgw
+                    top = y.bgw + it.value.posY.bgw
                   }
                   +NodeBuilder.build(it.value)
                 }
@@ -159,8 +160,8 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em + it.value.posX.em
-                    top = y.em + it.value.posY.em
+                    left = x.bgw + it.value.posX.bgw
+                    top = y.bgw + it.value.posY.bgw
                   }
                   +NodeBuilder.build(it.value)
                 }
@@ -187,8 +188,8 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em + it.value.posX.em
-                    top = y.em + it.value.posY.em
+                    left = x.bgw + it.value.posX.bgw
+                    top = y.bgw + it.value.posY.bgw
                   }
                   +NodeBuilder.build(it.value)
                 }
@@ -215,8 +216,8 @@ internal val HexagonGrid =
 
                   css {
                     position = Position.absolute
-                    left = x.em + it.value.posX.em
-                    top = y.em + it.value.posY.em
+                    left = x.bgw + it.value.posX.bgw
+                    top = y.bgw + it.value.posY.bgw
                   }
                   +NodeBuilder.build(it.value)
                 }
@@ -224,10 +225,10 @@ internal val HexagonGrid =
             }
             css {
               position = Position.absolute
-              width = (maxX + abs(minX)).em
-              height = (maxY + abs(minY)).em
-              left = (-minX).em
-              top = (-minY).em
+              width = (maxX + abs(minX)).bgw
+              height = (maxY + abs(minY)).bgw
+              left = (-minX).bgw
+              top = (-minY).bgw
             }
           }
         }

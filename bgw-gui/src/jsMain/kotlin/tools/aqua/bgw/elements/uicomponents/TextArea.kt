@@ -60,6 +60,7 @@ internal val TextArea =
       val typingTimeout = useRef<Timeout>(null)
       val lastHandledText = useRef(props.data.text) // Track last handled text from JVM
       val propChangeCount = useRef(0) // Count prop changes to detect repeats
+      val lastUserInput = useRef(props.data.text) // Track last user input
 
       useEffect(listOf(props.data.text)) {
         // Increment prop change counter to track distinct prop updates
@@ -69,34 +70,44 @@ internal val TextArea =
         val isNewText = props.data.text != lastHandledText.current
 
         if (isTyping.current === true) {
-          // When user is typing, just track that this update happened but don't apply it yet
+          // When user is typing, don't override their input
+          // Store the JVM update to potentially apply later
+          lastHandledText.current = props.data.text
         } else if (isNewText || props.data.text != inputValue) {
           // Apply the update if:
           // 1. It's a new text value from the JVM that we haven't handled before OR
           // 2. The current input value doesn't match the JVM value
           lastHandledText.current = props.data.text
           setInputValue(props.data.text)
-        } else {
-          // For handling cases where multiple identical updates arrive while not typing
         }
       }
 
       // Explicitly handle focus/blur events to improve typing detection
-      val handleFocus = { isTyping.current = true }
+      val handleFocus = {
+        // Clear any pending typing timeout when focusing
+        if (typingTimeout.current != null) {
+          clearTimeout(typingTimeout.current)
+          typingTimeout.current = null
+        }
+        isTyping.current = true
+      }
 
       val handleBlur = {
-        // Small delay before marking as no longer typing (to handle click interactions)
-        setTimeout(
-            {
-              isTyping.current = false
+        // Immediately capture the current input value as the last user input
+        lastUserInput.current = inputValue
 
-              // When user finishes typing, check if we need to apply any pending JVM updates
-              if (props.data.text != inputValue) {
-                lastHandledText.current = props.data.text
-                setInputValue(props.data.text)
-              }
-            },
-            200)
+        // Immediately dispatch the final value to ensure it's not lost
+        JCEFEventDispatcher.dispatchEvent(
+            TextInputChangedEventData(inputValue).apply { id = props.data.id })
+
+        // Reset typing state immediately to prevent conflicts with other fields
+        isTyping.current = false
+
+        // Clear any pending timeout
+        if (typingTimeout.current != null) {
+          clearTimeout(typingTimeout.current)
+          typingTimeout.current = null
+        }
       }
 
       bgwTextArea {
@@ -117,12 +128,15 @@ internal val TextArea =
           placeholder = props.data.prompt
           defaultValue = props.data.text
           value = inputValue
+          key = "textArea-${props.data.id}"
           spellCheck = false
           css {
             fontBuilder(props.data)
             inputBuilder(props.data)
             resize = None.none
             boxSizing = BoxSizing.borderBox
+            paddingInline = 10.bgw
+            paddingBlock = 5.bgw
             outline = None.none
             border = None.none
 
@@ -134,11 +148,12 @@ internal val TextArea =
 
             val value = it.target.value
             setInputValue(value)
+            lastUserInput.current = value
 
             JCEFEventDispatcher.dispatchEvent(
                 TextInputChangedEventData(value).apply { id = props.data.id })
 
-            // Reset typing state after a short delay
+            // Reset typing state after a shorter delay
             if (typingTimeout.current != null) {
               clearTimeout(typingTimeout.current)
             }
@@ -146,16 +161,12 @@ internal val TextArea =
                 setTimeout(
                     {
                       isTyping.current = false
-
-                      // Check for pending updates when typing stops
-                      if (props.data.text != value && value.isNotBlank()) {
-                        lastHandledText.current = props.data.text
-                        setInputValue(props.data.text)
-                      }
+                      typingTimeout.current = null
                     },
-                    400)
+                    200) // Reduced from 400ms to make it more responsive
           }
 
+          onFocus = { handleFocus() }
           onBlur = { handleBlur() }
         }
 

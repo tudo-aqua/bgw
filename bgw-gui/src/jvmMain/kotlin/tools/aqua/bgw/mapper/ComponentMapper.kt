@@ -201,8 +201,7 @@ internal object ComponentMapper {
       is ProgressBar ->
           (mapSpecific(componentView) as ProgressBarData).apply {
             progress = componentView.progress.coerceIn(0.0, 1.0)
-            barColor =
-                "rgba(${componentView.barColor.red}, ${componentView.barColor.green}, ${componentView.barColor.blue}, ${componentView.barColor.alpha})"
+            barVisual = VisualMapper.map(componentView.barVisual)
           }
 
       // TODO - StructuredDataView
@@ -257,6 +256,11 @@ internal object ComponentMapper {
               Pair(
                   comboBox.getSelectedIndex(),
                   comboBox.formatFunction?.invoke(selItem) ?: comboBox.selectedItem.toString())
+      disallowUnselect = comboBox.disallowUnselect
+      itemVisuals =
+          comboBox.items.mapIndexed { index, _ ->
+            VisualMapper.map(comboBox.itemVisuals.getOrElse(index) { comboBox.visual })
+          }
     }
   }
 }

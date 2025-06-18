@@ -28,6 +28,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.canvas
 import react.dom.html.ReactHTML.img
 import react.useEffect
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
@@ -43,8 +44,6 @@ internal external interface ImageVisualProps : Props {
 
 internal val ImageVisual =
     FC<ImageVisualProps> { props ->
-      println("ImageVisual: ${props.data.id} - ${props.data.flipped}")
-
       if (props.data.width != -1 && props.data.height != -1) {
         bgwImageVisual {
           css {
@@ -112,8 +111,8 @@ internal val ImageVisual =
             backgroundRepeat = BackgroundRepeat.noRepeat
             backgroundPosition = Background.center as BackgroundPosition
 
-            left = props.data.offsetX.em
-            top = props.data.offsetY.em
+            left = props.data.offsetX.bgw
+            top = props.data.offsetY.bgw
 
             opacity = number(props.data.transparency)
             // TODO...

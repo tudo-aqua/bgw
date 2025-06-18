@@ -97,6 +97,7 @@ internal object UIComponentBuilder {
     comboBox.observableItemsList.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
     comboBox.selectedItemProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
     comboBox.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
+    comboBox.itemVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
   }
 
   private fun buildTextArea(textArea: TextArea) {}
@@ -117,7 +118,7 @@ internal object UIComponentBuilder {
 
   private fun buildProgressBar(progressBar: ProgressBar) {
     progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
-    progressBar.barColorProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
+    progressBar.barVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
   }
 
   private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {

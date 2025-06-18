@@ -81,15 +81,15 @@ internal val ReactGridPane =
                 val height = convertToPx(element.offsetHeight.toDouble())
                 val x = (props.data.posX - width / 2)
                 val y = (props.data.posY - height / 2)
-                element.style.left = "${x}em"
-                element.style.top = "${y}em"
+                element.style.left = x.bgw.toString()
+                element.style.top = y.bgw.toString()
               }
             }
           } else {
             useLayoutEffect(listOf(props.data)) {
               document.getElementById(props.data.id)?.let {
-                it.style.left = "${props.data.posX}em"
-                it.style.top = "${props.data.posY}em"
+                it.style.left = props.data.posX.bgw.toString()
+                it.style.top = props.data.posY.bgw.toString()
               }
             }
           }
@@ -108,7 +108,7 @@ internal val ReactGridPane =
             display = Display.grid
             width = fit()
             height = fit()
-            gap = props.data.spacing.em
+            gap = props.data.spacing.bgw
           }
 
           props.data.grid.forEach { gridElementData ->
@@ -131,8 +131,8 @@ internal val ReactGridPane =
                       else -> AlignSelf.center
                     }
                 position = Position.relative
-                left = gridElementData.component?.posX?.em
-                top = gridElementData.component?.posY?.em
+                left = gridElementData.component?.posX?.bgw
+                top = gridElementData.component?.posY?.bgw
               }
 
               gridElementData.component?.let { +build(it) }
