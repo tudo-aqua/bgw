@@ -39,14 +39,9 @@ internal object ComponentViewBuilder {
       is CameraPane<out LayoutView<*>> -> CameraPaneBuilder.build(componentView)
       is UIComponent -> UIComponentBuilder.build(componentView)
     }
-    registerEventListeners(componentView)
     registerObservers(componentView)
 
     VisualBuilder.build(componentView.visual)
-  }
-
-  private fun registerEventListeners(componentView: ComponentView) {
-    Frontend.applicationEngine.registerEventListeners(componentView)
   }
 
   @Suppress("DuplicatedCode")

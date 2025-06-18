@@ -22,16 +22,12 @@ import AnimationData
 import AppData
 import Data
 import DialogData
-import FileDialogData
 import ID
 import JsonData
 import PropData
 import data.event.AnimationFinishedEventData
-import data.event.FilesPickedEventData
 import data.event.LoadEventData
 import jsonMapper
-import kotlin.math.floor
-import kotlin.random.Random
 import kotlinx.browser.document
 import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
@@ -46,7 +42,6 @@ import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
-import web.fs.FileSystemFileHandle
 import web.timers.setTimeout
 
 internal var internalSocket: WebSocket? = null
@@ -113,7 +108,6 @@ internal fun handleReceivedData(receivedData: Data) {
   when (receivedData) {
     is AppData -> {
       if (receivedData.action == ActionProp.HIDE_MENU_SCENE) {
-        console.log("[SCENE] Hiding Menu Scene")
         val element = document.querySelector("#menuScene") as HTMLElement
         element.classList.toggle("scene--visible", false)
         setTimeout(
@@ -157,38 +151,7 @@ internal fun handleReceivedData(receivedData: Data) {
       dialogMap[receivedData.id] = receivedData
       renderDialogs()
     }
-    /* is FileDialogData -> {
-      when (receivedData.mode) {
-        "open_file" -> {
-          window.asDynamic().showOpenFilePicker(
-            jso {
-              id = receivedData.id
-              multiple = false
-            }
-          ).then { handle -> sendFile(handle[0] as FileSystemFileHandle, receivedData)
-          }.catch {
-            JCEFEventDispatcher.dispatchEvent(FilesPickedEventData(emptyList()).apply { id = receivedData.id })
-          }
-        }
-        "open_multiple_files" -> {
-        }
-        "save_file" -> {
-        }
-        "choose_directory" -> {
-        }
-        else -> {}
-      }
-    } */
     else -> {}
-  }
-}
-
-internal fun sendFile(handle: FileSystemFileHandle, dialog: FileDialogData) {
-  handle.getFileAsync().then { file ->
-    println(file.webkitRelativePath)
-    JCEFEventDispatcher.dispatchEvent(
-        FilesPickedEventData(listOf(file.name)).apply { id = dialog.id })
-    println("File picked: ${file.name}")
   }
 }
 
@@ -217,14 +180,5 @@ internal fun renderDialogs() {
   dialogRoot.render(Dialog.create { data = dialogMap.values.toList() })
 }
 
-internal fun List<ReactElement<*>>.toFC() = FC<Props> { appendChildren(this@toFC) }
-
 internal fun ChildrenBuilder.appendChildren(components: List<ReactElement<*>>) =
     components.forEach { +it }
-
-internal fun randomHexColor(): String {
-  val chars = "0123456789ABCDEF"
-  var color = "#"
-  repeat(6) { color += chars[floor(Random.nextDouble() * 16).toInt()] }
-  return color
-}

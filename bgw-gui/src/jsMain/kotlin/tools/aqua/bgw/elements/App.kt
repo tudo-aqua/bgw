@@ -586,7 +586,7 @@ internal val App =
                 height = props.data.height.bgw
                 backgroundColor = rgb(0, 0, 0, 0.0)
                 zIndex = zIndex(998)
-                display = if (props.data.gameScene?.locked ?: false) Display.block else None.none
+                display = if (gameScene.locked) Display.block else None.none
               }
             }
           }

@@ -18,13 +18,10 @@
 package tools.aqua.bgw.application
 
 import DialogData
-import tools.aqua.bgw.components.ComponentView
 
 internal interface Application {
   fun start(onClose: () -> Unit, callback: (Any) -> Unit)
   fun stop()
-
-  fun registerEventListeners(component: ComponentView)
 
   fun clearAllEventListeners() {}
 

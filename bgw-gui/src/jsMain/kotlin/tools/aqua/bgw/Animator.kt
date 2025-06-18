@@ -59,13 +59,10 @@ internal object Animator {
           is ScaleAnimationData ->
               startComponentAnimation("scale", animationData, parallelAnimations, callback)
           is FlipAnimationData -> startFlipAnimation(animationData, callback)
-          // is ShakeAnimation<*> -> TODO()
-
           is SteppedComponentAnimationData -> {
             when (animationData) {
               is RandomizeAnimationData -> startRandomizeAnimation(animationData, callback)
               is DiceAnimationData -> startDiceAnimation(animationData, callback)
-              else -> throw IllegalArgumentException("Unknown animation type")
             }
           }
           else -> throw IllegalArgumentException("Unknown animation type")
@@ -198,9 +195,7 @@ internal object Animator {
     }
 
     for (i in 0 until matchingTimeouts.size) {
-      if (excludeCleanup && matchingTimeouts.elementAt(i).endsWith("-cleanup")) {
-        println("[S] Skipping timeout: ${matchingTimeouts.elementAt(i)}")
-      } else {
+      if (excludeCleanup && matchingTimeouts.elementAt(i).endsWith("-cleanup")) {} else {
         timeouts[matchingTimeouts.elementAt(i)]?.let { clearTimeout(it) }
         timeouts.remove(matchingTimeouts.elementAt(i))
       }
@@ -300,7 +295,7 @@ internal object Animator {
               element.classList.toggle("${componentId}--$type", true)
               animations["$componentId--$type"] = newElement
 
-              timeouts["${animation.id}-start"] =
+              timeouts["${animation.id}-callback"] =
                   setTimeout(
                       {
                         // Toggle new animation off
