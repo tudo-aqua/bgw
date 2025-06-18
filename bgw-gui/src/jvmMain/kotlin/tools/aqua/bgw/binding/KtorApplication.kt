@@ -21,6 +21,30 @@ import ActionProp
 import AppData
 import PropData
 import SceneMapper
+import data.event.CheckBoxChangedEventData
+import data.event.ColorInputChangedEventData
+import data.event.DragDroppedEventData
+import data.event.DragGestureEndedEventData
+import data.event.DragGestureEnteredEventData
+import data.event.DragGestureExitedEventData
+import data.event.DragGestureMovedEventData
+import data.event.DragGestureStartedEventData
+import data.event.EventData
+import data.event.FilesPickedEventData
+import data.event.InternalCameraPanData
+import data.event.KeyEventAction
+import data.event.KeyEventData
+import data.event.MouseEnteredEventData
+import data.event.MouseEventData
+import data.event.MouseExitedEventData
+import data.event.MousePressedEventData
+import data.event.MouseReleasedEventData
+import data.event.RadioChangedEventData
+import data.event.ScrollEventData
+import data.event.SelectionChangedEventData
+import data.event.StructuredDataSelectEventData
+import data.event.TextInputChangedEventData
+import data.event.TransformChangedEventData
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -37,8 +61,29 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.uicomponents.BinaryStateButton
+import tools.aqua.bgw.components.uicomponents.CheckBox
+import tools.aqua.bgw.components.uicomponents.ColorPicker
+import tools.aqua.bgw.components.uicomponents.ComboBox
+import tools.aqua.bgw.components.uicomponents.StructuredDataView
+import tools.aqua.bgw.components.uicomponents.TextInputUIComponent
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.Frontend
+import tools.aqua.bgw.core.findComponent
+import tools.aqua.bgw.core.getRootNode
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.event.DragEvent
+import tools.aqua.bgw.event.DropEvent
+import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.event.MouseButtonType
+import tools.aqua.bgw.event.MouseEvent
+import tools.aqua.bgw.event.WheelEvent
+import tools.aqua.bgw.mapper.DialogMapper
+import tools.aqua.bgw.util.Coordinate
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -58,7 +103,252 @@ internal val componentChannel: Channel =
         it.send(json)
         // if (!uiJob.isActive) uiJob.start()
       }
+      onClientMessage = { session, text ->
+        println("Received message: $text at ${Date().time}")
+          try {
+              eventListener(text)
+          } catch (e: Exception) {
+            println("Error processing message: $text")
+          }
+      }
     }
+
+internal fun eventListener(text : String) {
+    val eventData = jsonMapper.decodeFromString<EventData>(text)
+    val id = eventData.id
+    if(id != null && id.isNotBlank()) {
+        val component = Frontend.getComponentById(id)
+        if (component != null) {
+
+            try {
+                when (eventData) {
+                    is FilesPickedEventData -> {
+                        if (Frontend.openedFileDialog != null &&
+                            eventData.id == Frontend.openedFileDialog?.id
+                        ) {
+                            if (eventData.paths.isNotEmpty()) {
+                                Frontend.openedFileDialog?.onPathsSelected?.invoke(eventData.paths)
+                            } else {
+                                Frontend.openedFileDialog?.onSelectionCancelled?.invoke()
+                            }
+                            Frontend.openedFileDialog = null
+                        }
+                    }
+
+                    is MouseEnteredEventData -> {
+                        val (posX, posY) =
+                            Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                        component.onMouseEntered?.invoke(
+                            MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY)
+                        )
+                    }
+
+                    is MouseExitedEventData -> {
+                        val (posX, posY) =
+                            Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                        component.onMouseExited?.invoke(
+                            MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY)
+                        )
+                    }
+
+                    is MousePressedEventData -> {
+                        val (posX, posY) =
+                            Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                        component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY))
+                    }
+
+                    is ScrollEventData -> {
+                        component.onMouseWheel?.invoke(
+                            WheelEvent(
+                                eventData.direction, eventData.ctrl, eventData.shift, eventData.alt
+                            )
+                        )
+                    }
+
+                    is MouseReleasedEventData -> {
+                        val (posX, posY) =
+                            Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                        component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY))
+                    }
+
+                    is MouseEventData -> {
+
+                        println("<<<< Received onClick: ${eventData.id} at ${Date().time}")
+                        val (posX, posY) =
+                            Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                        component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY))
+                    }
+
+                    is KeyEventData -> {
+                        val keyEvent =
+                            KeyEvent(
+                                eventData.keyCode,
+                                eventData.character,
+                                eventData.isControlDown,
+                                eventData.isShiftDown,
+                                eventData.isAltDown
+                            )
+                        when (eventData.action) {
+                            KeyEventAction.PRESS -> component.onKeyPressed?.invoke(keyEvent)
+                            KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
+                            KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
+                        }
+                    }
+
+                    is SelectionChangedEventData -> {
+                        // println("Selection changed")
+                        if (component is ComboBox<*>) component.select(eventData.selectedItem)
+                    }
+
+                    is StructuredDataSelectEventData -> {
+                        if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
+                    }
+
+                    is TextInputChangedEventData -> {
+                        if (component is TextInputUIComponent) {
+                            component.textProperty.setSilent(eventData.value)
+                            component.onTextChanged?.invoke(eventData.value)
+                        }
+                    }
+
+                    is ColorInputChangedEventData -> {
+                        // println("Text changed")
+                        if (component is ColorPicker) component.selectedColor = Color(eventData.value)
+                    }
+
+                    is CheckBoxChangedEventData -> {
+                        if (component is CheckBox) {
+                            if (component.isIndeterminateAllowedProperty.value) {
+                                if (eventData.value &&
+                                    !component.isCheckedProperty.value &&
+                                    !component.isIndeterminateProperty.value
+                                ) {
+                                    component.isIndeterminate = true
+                                } else if (eventData.value &&
+                                    component.isIndeterminateProperty.value &&
+                                    !component.isCheckedProperty.value
+                                ) {
+                                    component.isIndeterminate = false
+                                    component.isChecked = true
+                                } else if (!eventData.value &&
+                                    !component.isIndeterminateProperty.value &&
+                                    component.isCheckedProperty.value
+                                ) {
+                                    component.isChecked = false
+                                }
+                            } else {
+                                component.isChecked = eventData.value
+                                if (component.isIndeterminateProperty.value) {
+                                    component.isIndeterminate = false
+                                }
+                            }
+                        }
+                    }
+
+                    is RadioChangedEventData -> {
+                        if (component is BinaryStateButton) component.isSelected = eventData.value
+                    }
+
+                    is TransformChangedEventData -> {
+                        if (component is CameraPane<*>) {
+                            if (component.zoomProperty.value != eventData.zoomLevel) {
+                                component.onZoomed?.invoke(eventData.zoomLevel)
+                            }
+                            component.zoomProperty.setInternal(eventData.zoomLevel)
+                            component.panDataProperty.setInternal(InternalCameraPanData())
+                            component.anchorPointProperty.setInternal(
+                                Coordinate(eventData.anchor.first, eventData.anchor.second)
+                            )
+                        }
+                    }
+
+                    is DragGestureStartedEventData -> {
+                        if (component is DynamicComponentView) {
+                            component.onDragGestureStarted?.invoke(DragEvent(component))
+                            component.isDragged = true
+                        }
+                    }
+
+                    is DragGestureMovedEventData -> {
+                        if (component is DynamicComponentView) {
+                            component.onDragGestureMoved?.invoke(DragEvent(component))
+                        }
+                    }
+
+                    is DragGestureEnteredEventData -> {
+                        if (component is DynamicComponentView &&
+                            eventData.target.isNotBlank() &&
+                            component.parent != null
+                        ) {
+                            val root = component.getRootNode()
+                            val target = root.findComponent(eventData.target)
+                            if (target?.dropAcceptor != null) {
+                                target.onDragGestureEntered?.invoke(DragEvent(component))
+                            }
+                        }
+                    }
+
+                    is DragGestureEndedEventData -> {
+                        if (component is DynamicComponentView && component.parent != null) {
+                            if (eventData.droppedOn != null) {
+                                val root = component.getRootNode()
+                                val target = root.findComponent(eventData.droppedOn!!)
+                                if (target?.dropAcceptor != null) {
+                                    component.onDragGestureEnded?.invoke(
+                                        DropEvent(component, target),
+                                        target.dropAcceptor?.invoke(DragEvent(component)) == true
+                                    )
+                                }
+                            } else {
+                                component.onDragGestureEnded?.invoke(DropEvent(component, null), false)
+                            }
+                        }
+                    }
+
+                    is DragGestureExitedEventData -> {
+                        if (component is DynamicComponentView &&
+                            eventData.target.isNotBlank() &&
+                            component.parent != null
+                        ) {
+                            val root = component.getRootNode()
+                            val target = root.findComponent(eventData.target)
+                            if (target?.dropAcceptor != null) {
+                                target.onDragGestureExited?.invoke(DragEvent(component))
+                            }
+                        }
+                    }
+
+                    is DragDroppedEventData -> {
+                        val root = component.getRootNode()
+                        val target = root.findComponent(eventData.target)
+                        val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
+                        if (dropped == true) {
+                            target.onDragDropped?.invoke(DragEvent(component))
+                            (component as DynamicComponentView).isDragged = false
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                val mainFrame = (Frontend.applicationEngine as JCEFApplication).frame
+                mainFrame?.openNewDialog(
+                    DialogMapper.map(
+                        Dialog(
+                            "Error",
+                            "Error",
+                            "An error occurred while handling an event: ${e.message}",
+                            exception = e
+                        )
+                    )
+                )
+                e.printStackTrace()
+            }
+        } else {
+            println("Component with ID $id not found for event: $text")
+        }
+    } else {
+        println("Received event with empty or null ID: $text")
+    }
+}
 
 internal val internalChannel: Channel =
     Channel("/internal").apply { onClientMessage = { session, text -> } }
@@ -195,21 +485,18 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
     val serializedComponent = jsonMapper.encodeToString(RecursiveMapper.map(component))
     messageQueue[component.id] = Triple(action, parent, serializedComponent)
   }
-  println(messageQueue)
 
   messageQueueJob?.cancel()
   messageQueueJob =
       CoroutineScope(Dispatchers.IO).launch {
-        messageQueueMutex.withLock {
           if (messageQueue.isNotEmpty()) {
-            delay(5) // Debounce time
             val updates = messageQueue.toMap()
             messageQueue.clear()
             lastUpdateTime = System.currentTimeMillis()
+            println("Serializing updates at ${Date().time}")
             val json = Json.encodeToString(updates)
             componentChannel.sendToAllClients(json)
-            println("Sent updates: $json")
+            println("Sent updates at ${Date().time}")
           }
-        }
       }
 }

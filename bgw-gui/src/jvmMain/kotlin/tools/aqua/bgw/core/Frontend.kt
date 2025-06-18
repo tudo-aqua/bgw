@@ -347,6 +347,10 @@ internal class Frontend {
     fun runLater(task: Runnable) {
       task.run()
     }
+
+    internal fun getComponentById(id: String): ComponentView? {
+      return boardGameScene?.findComponent(id) ?: menuScene?.findComponent(id)
+    }
     // endregion
   }
 }

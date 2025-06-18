@@ -34,13 +34,17 @@ import web.dom.Element
 import web.timers.Timeout
 import web.timers.clearTimeout
 import web.timers.setTimeout
+import kotlin.js.Date
 
 internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentViewData) {
   /*onContextMenu = {
     it.preventDefault()
     JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
   }*/
-  onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id)) }
+  onClick = {
+    println(">>>> Triggered onClick: ${props.id} at ${Date.now()}")
+    JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
+  }
   onMouseDown = { JCEFEventDispatcher.dispatchEvent(it.toMousePressedEventData(props.id)) }
   onMouseUp = { JCEFEventDispatcher.dispatchEvent(it.toMouseReleasedEventData(props.id)) }
 

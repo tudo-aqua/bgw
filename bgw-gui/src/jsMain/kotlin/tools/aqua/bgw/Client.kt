@@ -64,6 +64,7 @@ import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 import web.fs.FileSystemFileHandle
 import web.timers.setTimeout
+import kotlin.js.Date
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
@@ -75,6 +76,10 @@ internal val componentSignals = mutableMapOf<String, Signal<Int>>()
 // Function to get or create a signal for a component ID
 internal fun getOrCreateSignal(id: String): Signal<Int> {
   return componentSignals.getOrPut(id) { signal(0) }
+}
+
+internal fun getSignal(id: String): Signal<Int> {
+  return componentSignals[id] ?: throw IllegalArgumentException("Signal for ID $id not found")
 }
 
 internal var lastAppData: AppData? = null
@@ -101,6 +106,7 @@ internal fun main() {
         container = cont as HTMLElement
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
         if (receivedData == null) {
+          println("Received data from WebSocket at ${Date.now()}")
           handleSingleUpdates(event.data.toString())
         } else {
           handleReceivedData(receivedData!!)
@@ -147,18 +153,20 @@ internal fun handleSingleUpdates(data: String) {
     val parentId = triple.second
     val data = triple.third
 
-    println(
-        "Handling single update for ID: $id (Parent: ${parentId}), Action: $action, Data: $data")
+//    println(
+//        "Handling single update for ID: $id (Parent: ${parentId}), Action: $action, Data: $data")
 
     // Update signal for this component ID - increment the counter
     val signal = getOrCreateSignal(id)
     signal.value++
 
+    println("Updated signal at ${Date.now()} for ID: $id, new value: ${signal.value}")
+
     // You could also store more complex data in signals if needed
     // For now we're just incrementing a counter for demonstration
   }
 
-  if (lastAppData != null) {
+  /*if (lastAppData != null) {
     if (!Config.USE_SOCKETS) {
       renderApp(lastAppData!!)
     } else {
@@ -166,7 +174,7 @@ internal fun handleSingleUpdates(data: String) {
     }
   } else {
     console.warn("No lastAppData available to render after single updates.")
-  }
+  }*/
 }
 
 internal fun handleReceivedData(receivedData: Data) {
@@ -291,164 +299,4 @@ internal fun randomHexColor(): String {
   var color = "#"
   repeat(6) { color += chars[floor(Random.nextDouble() * 16).toInt()] }
   return color
-}
-
-/**
- * Adds a component to a specific parent by ID
- *
- * @param appData The app data structure
- * @param parentId The ID of the parent component to add to
- * @param component The component to add
- * @return Boolean indicating success/failure
- */
-internal fun addComponentToParent(
-    appData: AppData?,
-    parentId: String,
-    component: ComponentViewData
-): Boolean {
-  if (appData == null) return false
-
-  // Check if parent is a scene
-  if (appData.gameScene?.id == parentId) {
-    appData.gameScene?.components?.add(component)
-    println("Added component ${component.id} to game scene")
-    return true
-  }
-
-  if (appData.menuScene?.id == parentId) {
-    appData.menuScene?.components?.add(component)
-    println("Added component ${component.id} to menu scene")
-    return true
-  }
-
-  // Search for parent in game scene
-  if (findAndAddToParent(appData.gameScene?.components ?: emptyList(), parentId, component)) {
-    return true
-  }
-
-  // Search for parent in menu scene
-  if (findAndAddToParent(appData.menuScene?.components ?: emptyList(), parentId, component)) {
-    return true
-  }
-
-  return false
-}
-
-/** Recursively searches for a parent component by ID and adds the new component to it */
-internal fun findAndAddToParent(
-    components: List<ComponentViewData>,
-    parentId: String,
-    newComponent: ComponentViewData
-): Boolean {
-  for (component in components) {
-    // Check if this component is the parent we're looking for
-    if (component.id == parentId) {
-      when (component) {
-        // Handle all the different container types
-        is AreaData -> {
-          if (newComponent is GameComponentViewData) {
-            component.components.add(newComponent)
-            println("Added component ${newComponent.id} to AreaData parent ${component.id}")
-            return true
-          }
-        }
-        is CardStackData -> {
-          if (newComponent is GameComponentViewData) {
-            component.components.add(newComponent)
-            println("Added component ${newComponent.id} to CardStackData parent ${component.id}")
-            return true
-          }
-        }
-        is LinearLayoutData -> {
-          if (newComponent is GameComponentViewData) {
-            component.components.add(newComponent)
-            println("Added component ${newComponent.id} to LinearLayoutData parent ${component.id}")
-            return true
-          }
-        }
-        is HexagonGridData -> {
-          if (newComponent is GameComponentViewData) {
-            component.components.add(newComponent)
-            println("Added component ${newComponent.id} to HexagonGridData parent ${component.id}")
-            return true
-          } else if (newComponent is HexagonViewData) {
-            // Add to hex map if the new component is a hex
-            component.map[newComponent.id] = newComponent
-            println("Added hexagon ${newComponent.id} to HexagonGridData map")
-            return true
-          }
-        }
-        is SatchelData -> {
-          if (newComponent is GameComponentViewData) {
-            component.components.add(newComponent)
-            println("Added component ${newComponent.id} to SatchelData parent ${component.id}")
-            return true
-          }
-        }
-        is PaneData -> {
-          component.components.add(newComponent)
-          println("Added component ${newComponent.id} to PaneData parent ${component.id}")
-          return true
-        }
-        is GridPaneData -> {
-          // For GridPane, we need to find an empty cell or use specified cell coordinates
-          // This is a simplification - in a real implementation, you might need logic
-          // to determine the proper cell to place the component
-          for (gridElement in component.grid) {
-            if (gridElement.component == null) {
-              gridElement.component = newComponent
-              println(
-                  "Added component ${newComponent.id} to GridPaneData cell (${gridElement.column},${gridElement.row})")
-              return true
-            }
-          }
-          println("No empty cell found in GridPaneData ${component.id}")
-        }
-        is CameraPaneData -> {
-          if (component.target == null && newComponent is LayoutViewData) {
-            component.target = newComponent
-            println("Set target of CameraPaneData ${component.id} to ${newComponent.id}")
-            return true
-          }
-        }
-      }
-    }
-
-    // Recursively search in child components
-    val found =
-        when (component) {
-          is AreaData,
-          is CardStackData,
-          is LinearLayoutData,
-          is HexagonGridData,
-          is SatchelData -> {
-            findAndAddToParent(
-                (component as GameComponentContainerData).components, parentId, newComponent)
-          }
-          is PaneData -> {
-            findAndAddToParent(component.components, parentId, newComponent)
-          }
-          is GridPaneData -> {
-            var found = false
-            component.grid.forEach { gridElement ->
-              if (gridElement.component != null) {
-                found =
-                    found ||
-                        findAndAddToParent(listOf(gridElement.component!!), parentId, newComponent)
-              }
-            }
-            found
-          }
-          is CameraPaneData -> {
-            if (component.target != null) {
-              findAndAddToParent(listOf(component.target!!), parentId, newComponent)
-            } else false
-          }
-          else -> false
-        }
-
-    if (found) return true
-  }
-
-  return false
 }

@@ -27,6 +27,7 @@ import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.TextVisual
+import java.util.Date
 
 fun main() {
   CompoundVisualsExample()
@@ -40,7 +41,7 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
     rows = 35,
     posX = 1920 / 2,
     posY = 1080 / 2,
-    spacing = 10,
+    spacing = 2,
   )
 
   init {
@@ -57,17 +58,10 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
           )
 
           tokenView.onMouseClicked = { event ->
-            if (event.button == MouseButtonType.LEFT_BUTTON) {
-              tokenView.visual = CompoundVisual(
-                ColorVisual.GREEN,
-                TextVisual(text = "Clicked at ($i, $j)")
-              )
-            } else if (event.button == MouseButtonType.RIGHT_BUTTON) {
-              tokenView.visual = CompoundVisual(
-                ColorVisual.RED,
-                TextVisual(text = "($i, $j)")
-              )
-            }
+            println("-------")
+            println("Clicked view at ${Date().time}")
+            tokenView.visual = listOf(ColorVisual.GREEN, ColorVisual.BLUE, ColorVisual.YELLOW,
+              ColorVisual.PURPLE, ColorVisual.ORANGE, ColorVisual.CYAN).random()
           }
           gridView[i, j] = tokenView
         }

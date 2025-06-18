@@ -23,6 +23,8 @@ import data.event.KeyEventData
 import jsonMapper
 import kotlinx.browser.window
 import kotlinx.serialization.encodeToString
+import org.w3c.dom.WebSocket
+import tools.aqua.bgw.webSocket
 
 internal object JCEFEventDispatcher : EventDispatcher {
   init {
@@ -49,6 +51,16 @@ internal object JCEFEventDispatcher : EventDispatcher {
 
   override fun dispatchEvent(event: EventData) {
     val json = jsonMapper.encodeToString(event)
+    // Check WebSocket state before sending
+    if (webSocket != null && webSocket?.readyState == WebSocket.OPEN) {
+      try {
+        webSocket?.send(json)
+      } catch (e: Throwable) {
+        println("WebSocket send error: $e")
+      }
+    } else {
+      println("WebSocket is not open, cannot send event: $json")
+    }
     try {
       window.asDynamic().bgwQuery(Base64.encode(json))
     } catch (e: Throwable) {
@@ -58,7 +70,7 @@ internal object JCEFEventDispatcher : EventDispatcher {
 
   private fun initialize() {
     js(
-        "window.bgwQuery = function(request) { if(window.cefQuery) window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
+        "window.bgwQuery = function(request) { if(window.cefQuery) { window.cefQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}); console.log(Date.now()); } }")
     js(
         "window.bgwAnimationQuery = function(request) { if(window.cefAnimationQuery) window.cefAnimationQuery({request: request, persistent: false, onSuccess: function (response) {}, onFailure: function (error_code, error_message) {}}) }")
     js(

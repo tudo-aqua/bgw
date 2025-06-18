@@ -24,8 +24,6 @@ internal interface Application {
   fun start(onClose: () -> Unit, callback: (Any) -> Unit)
   fun stop()
 
-  fun registerEventListeners(component: ComponentView)
-
   fun clearAllEventListeners() {}
 
   fun openNewDialog(dialogData: DialogData) {}
