@@ -21,7 +21,6 @@ import TokenViewData
 import csstype.PropertiesBuilder
 import emotion.react.css
 import js.objects.jso
-import kotlin.js.Date
 import preact.signals.react.useSignalEffect
 import react.*
 import react.dom.aria.ariaDescribedBy
@@ -38,6 +37,7 @@ import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.jsObject
 import tools.aqua.bgw.event.applyCommonEventHandlers
+import tools.aqua.bgw.hooks.useComponentSignal
 import web.cssom.*
 import web.dom.Element
 
@@ -52,51 +52,39 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData
 internal val TokenView =
     FC<TokenViewProps> { p ->
 
-      // Get the signal for this component's ID
-      val componentSignal = getOrCreateSignal(p.data.id, p.data)
-      val (props, setProps) = useState(
-          jso<TokenViewProps> {
-            data = p.data
-          })
-
-      // Subscribe to signal changes and update React state
-      useSignalEffect {
-        val signalValue = componentSignal.value.data as TokenViewData
-        console.log(
-          "TokenView: Signal changed at ${Date.now()} for ${p.data.id} to $signalValue")
-        setProps(jso<TokenViewProps> {
-          data = signalValue
-        })
-      }
+      val props = useComponentSignal<TokenViewData>(
+          id = p.data.id,
+          initialData = p.data
+      )
 
       // ----------------------------------------------------------------------------------------------
 
       val draggable =
           useDraggable(
               object : DraggableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDraggable
+                override var id: String = props.id
+                override var disabled = !props.isDraggable
               })
 
       val droppable =
           useDroppable(
               object : DroppableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var id: String = props.id
+                override var disabled = !props.isDroppable
               })
 
       val style: PropertiesBuilder.() -> Unit = {
-        cssBuilderIntern(props.data)
+        cssBuilderIntern(props)
         translate =
             "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<
                 Translate>()
-        cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
+        cursor = if (props.isDraggable) Cursor.pointer else Cursor.default
       }
 
       val elementRef = useRef<Element>(null)
 
       bgwTokenView {
-        id = props.data.id
+        id = props.id
         className = ClassName("tokenView")
 
         ref = elementRef
@@ -109,14 +97,14 @@ internal val TokenView =
 
         bgwVisuals {
           className = ClassName("visuals")
-          +VisualBuilder.build(props.data.visual)
+          +VisualBuilder.build(props.visual)
         }
 
-        if (props.data.isDraggable) {
-          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
+        if (props.isDraggable) {
+          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.id) }
         }
 
-        applyCommonEventHandlers(props.data)
+        applyCommonEventHandlers(props)
 
         ariaDescribedBy = draggable.attributes.ariaDescribedBy
         ariaDisabled = draggable.attributes.ariaDisabled

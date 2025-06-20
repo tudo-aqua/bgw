@@ -532,10 +532,8 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
           val updates = messageQueue.toMap()
           messageQueue.clear()
           lastUpdateTime = System.currentTimeMillis()
-          println("Serializing updates at ${Date().time}")
           val json = Json.encodeToString(updates)
           componentChannel.sendToAllClients(json)
-          println("Sent updates at ${Date().time}")
         }
       }
 }

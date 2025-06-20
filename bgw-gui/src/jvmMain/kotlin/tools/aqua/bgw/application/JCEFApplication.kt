@@ -65,7 +65,7 @@ import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.*
 
 internal object Constants {
-  val PORT = ServerSocket(0).use { it.localPort }
+  var PORT = ServerSocket(0).use { it.localPort }
   const val DEBUG = true
 }
 

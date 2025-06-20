@@ -58,8 +58,6 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
           )
 
           tokenView.onMouseClicked = { event ->
-            println("-------")
-            println("Clicked view at ${Date().time}")
             tokenView.visual = listOf(ColorVisual.GREEN, ColorVisual.BLUE, ColorVisual.YELLOW,
               ColorVisual.PURPLE, ColorVisual.ORANGE, ColorVisual.CYAN).random()
           }

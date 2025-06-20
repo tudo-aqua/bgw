@@ -42,7 +42,6 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
     JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
   }*/
   onClick = {
-    println(">>>> Triggered onClick: ${props.id} at ${Date.now()}")
     JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
   }
   onMouseDown = { JCEFEventDispatcher.dispatchEvent(it.toMousePressedEventData(props.id)) }

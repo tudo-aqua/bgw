@@ -58,10 +58,12 @@ internal val componentSignals = mutableMapOf<String, Signal<PropData>>()
 
 // Function to get or create a signal for a component ID
 internal fun getOrCreateSignal(id: String, data : ComponentViewData? = null): Signal<PropData> {
-  println("getOrCreateSignal called for ID: $id with data: $data")
   if(data == null) {
+    println("getOrCreateSignal called for ID: $id without data")
     return componentSignals.getOrPut(id) { signal(PropData()) }
   }
+
+  println("getOrCreateSignal called for ID: $id with data: $data")
   return componentSignals.getOrPut(id) { signal(PropData().apply {
     this.data = data
   }) }
@@ -95,7 +97,6 @@ internal fun main() {
         container = cont as HTMLElement
         val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
         if (receivedData == null) {
-          println("Received data from WebSocket at ${Date.now()}")
           handleSingleUpdates(event.data.toString())
         } else {
           handleReceivedData(receivedData!!)
@@ -142,10 +143,6 @@ internal fun handleSingleUpdates(data: String) {
     val parentId = triple.second
     val data = triple.third
 
-    //    println(
-    //        "Handling single update for ID: $id (Parent: ${parentId}), Action: $action, Data:
-    // $data")
-
     // Parse the data into a ComponentViewData object
     val componentData: ComponentViewData? = try {
       jsonMapper.decodeFromString(data)
@@ -154,25 +151,26 @@ internal fun handleSingleUpdates(data: String) {
       null
     }
 
-    // Update signal for this component ID - increment the counter
-    val signal = getOrCreateSignal(id)
-    signal.value.data = componentData
+    if (componentData != null) {
+      // Get the existing signal or create a new one
+      val signal = componentSignals[id]
 
-    println("Updated signal at ${Date.now()} for ID: $id, new value: ${signal.value}")
+      if (signal != null) {
+        // Update the existing signal with the new data
+        // Creating a new PropData object to ensure the change is detected
+        signal.value = PropData().apply {
+          this.data = componentData
+        }
+      } else {
+        // Create a new signal if it doesn't exist
+        componentSignals[id] = signal(PropData().apply {
+          this.data = componentData
+        })
+      }
 
-    // You could also store more complex data in signals if needed
-    // For now we're just incrementing a counter for demonstration
-  }
-
-  /*if (lastAppData != null) {
-    if (!Config.USE_SOCKETS) {
-      renderApp(lastAppData!!)
-    } else {
-      renderAppFast(lastAppData!!)
+      println("Updated signal at ${Date.now()} for ID: $id, action: $action")
     }
-  } else {
-    console.warn("No lastAppData available to render after single updates.")
-  }*/
+  }
 }
 
 internal fun handleReceivedData(receivedData: Data) {
