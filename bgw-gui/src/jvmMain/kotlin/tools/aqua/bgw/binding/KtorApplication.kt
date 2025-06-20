@@ -527,15 +527,11 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
     messageQueue[component.id] = Triple(action, parent, serializedComponent)
   }
 
-  // TODO: Fix hierarchy serialization not showing all fields if not explicitly cast
   val gameScene = Frontend.boardGameScene
   if (gameScene != null) {
     val simpleHierarchy = ComponentIdMapper.map(gameScene)
     println("Simple hierarchy: ${idJson.encodeToString(simpleHierarchy)}")
   }
-
-  val grid = ComponentIdMapper.map(component.parent!!)
-  println("Grid: ${idJson.encodeToString(grid)}")
 
   messageQueueJob?.cancel()
   messageQueueJob =

@@ -17,66 +17,21 @@
 
 @file:Suppress("unused")
 
-import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
 
-@Serializable internal sealed class IDData
-
+/**
+ * Minimal data structure to represent a component's ID and its hierarchy. Only includes fields that
+ * are actually used by each component type.
+ */
 @Serializable
-internal class IDSceneData : IDData() {
-  var id: ID = ""
-  var components: MutableList<IDComponentViewData> = mutableListOf()
-}
-
-@Serializable
-internal abstract class IDComponentViewData : IDData() {
-  var id: ID = ""
-}
-
-// LAYOUT VIEWS
-@Serializable internal abstract class IDLayoutViewData : IDComponentViewData() {}
-
-@Serializable
-internal class IDPaneData : IDLayoutViewData() {
-  var components: MutableList<IDComponentViewData> = mutableListOf()
-}
-
-@Serializable
-internal class IDGridPaneData : IDLayoutViewData() {
-  var grid: List<IDGridElementData> = emptyList()
-}
-
-@Serializable
-@Polymorphic
-internal class IDGridElementData(
-    var column: Int,
-    var row: Int,
-    var component: IDComponentViewData?
+internal data class ComponentIdData(
+    val id: ID,
+    val components: List<ComponentIdData>? = null,
+    val grid: List<GridPosition>? = null,
+    val componentsMap: Map<String, ComponentIdData>? = null,
+    val target: ComponentIdData? = null
 )
 
+/** Represents a component position in a grid */
 @Serializable
-internal class IDCameraPaneData : IDComponentViewData() {
-  var target: IDLayoutViewData? = null
-}
-
-// GAME COMPONENT VIEWS
-@Serializable internal open class IDGameComponentViewData : IDComponentViewData() {}
-
-// CONTAINER
-@Serializable
-internal abstract class IDGameComponentContainerData : IDComponentViewData() {
-  var components: MutableList<IDGameComponentViewData> = mutableListOf()
-}
-
-@Serializable internal class IDAreaData : IDGameComponentContainerData() {}
-
-@Serializable internal class IDCardStackData : IDGameComponentContainerData() {}
-
-@Serializable
-internal class IDHexagonGridData : IDGameComponentContainerData() {
-  var map: MutableMap<String, IDGameComponentViewData> = mutableMapOf()
-}
-
-@Serializable internal class IDLinearLayoutData : IDGameComponentContainerData() {}
-
-@Serializable internal class IDSatchelData : IDGameComponentContainerData() {}
+internal data class GridPosition(val column: Int, val row: Int, val component: ComponentIdData)

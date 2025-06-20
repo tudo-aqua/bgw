@@ -17,28 +17,10 @@
 
 package tools.aqua.bgw.mapper
 
-import ID
-import IDAreaData
-import IDCameraPaneData
-import IDCardStackData
-import IDComponentViewData
-import IDData
-import IDGameComponentContainerData
-import IDGameComponentViewData
-import IDGridElementData
-import IDGridPaneData
-import IDHexagonGridData
-import IDLayoutViewData
-import IDLinearLayoutData
-import IDPaneData
-import IDSatchelData
-import IDSceneData
-import kotlinx.serialization.ExperimentalSerializationApi
+import ComponentIdData
+import GridPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json as KJson
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.*
@@ -47,23 +29,37 @@ import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.*
 
+internal val idJson = KJson { encodeDefaults = false }
 /**
  * Component mapper that creates a simplified version of ComponentView hierarchy containing only IDs
- * and structure information.
+ * and minimal structure information.
  */
 internal object ComponentIdMapper {
+  /** Configure JSON serialization to exclude null values */
 
-  /** Maps a ComponentView to a simplified IDComponentViewData containing only ID and structure info */
-  fun map(componentView: ComponentView): IDComponentViewData {
-    println("Mapping component: ${componentView.id} of type ${componentView::class.simpleName}")
+  /** Maps a ComponentView to a simplified ComponentIdData containing only ID and structure info */
+  fun map(componentView: ComponentView): ComponentIdData {
     return when (componentView) {
-      // Layout Views (containers that can have child components)
-      is Pane<*> -> {
-        IDPaneData().apply {
-          id = componentView.id
-          components = componentView.components.map { map(it) }.toMutableList()
-        }
+      // Container components with a list of children
+      is Pane<*>,
+      is Area<*>,
+      is CardStack<*>,
+      is LinearLayout<*>,
+      is Satchel<*> -> {
+        val children =
+            when (componentView) {
+              is Pane<*> -> componentView.components.map { map(it) }
+              is Area<*> -> componentView.components.map { map(it) }
+              is CardStack<*> -> componentView.components.map { map(it) }
+              is LinearLayout<*> -> componentView.components.map { map(it) }
+              is Satchel<*> -> componentView.components.map { map(it) }
+              else -> emptyList() // Will never happen due to when condition
+            }
+
+        ComponentIdData(id = componentView.id, components = children)
       }
+
+      // Grid components with positioned children
       is GridPane<*> -> {
         val grid =
             componentView.grid.clone().apply {
@@ -71,133 +67,54 @@ internal object ComponentIdMapper {
               removeEmptyRows()
             }
 
-        IDGridPaneData().apply {
-          id = componentView.id
-          this.grid =
-              grid
-                  .mapNotNull { element ->
-                    if (element.component != null) {
-                      IDGridElementData(
-                          column = element.columnIndex,
-                          row = element.rowIndex,
-                          component = map(element.component))
-                    } else null
-                  }
-                  .toList()
-        }
-      }
-      is CameraPane<*> -> {
-        IDCameraPaneData().apply {
-          id = componentView.id
-          target =
-              map(componentView.target) as IDLayoutViewData
-        }
+        ComponentIdData(
+            id = componentView.id,
+            grid =
+                grid.mapNotNull { element ->
+                  if (element.component != null) {
+                    GridPosition(
+                        column = element.columnIndex,
+                        row = element.rowIndex,
+                        component = map(element.component))
+                  } else null
+                })
       }
 
-      // Game Component Containers
-      is Area<*> -> {
-        IDAreaData().apply {
-          id = componentView.id
-          components = componentView.components.map { map(it) as IDGameComponentViewData }.toMutableList()
-        }
-      }
-      is CardStack<*> -> {
-        IDCardStackData().apply {
-          id = componentView.id
-          components = componentView.components.map { map(it) as IDGameComponentViewData }.toMutableList()
-        }
-      }
+      // Hexagon grid with a map of children
       is HexagonGrid<*> -> {
-        IDHexagonGridData().apply {
-          id = componentView.id
-          map = componentView.map.mapKeys { entry ->
-            "${entry.key.first}/${entry.key.second}"
-          }.mapValues { (_, componentView) ->
-            map(componentView) as IDGameComponentViewData
-          }.toMutableMap()
-        }
+        ComponentIdData(
+            id = componentView.id,
+            componentsMap =
+                componentView.map
+                    .mapKeys { "${it.key.first}/${it.key.second}" }
+                    .mapValues { map(it.value) })
       }
-      is LinearLayout<*> -> {
-        IDLinearLayoutData().apply {
-          id = componentView.id
-          components = componentView.components.map { map(it) as IDGameComponentViewData }.toMutableList()
-        }
-      }
-      is Satchel<*> -> {
-        IDSatchelData().apply {
-          id = componentView.id
-          components = componentView.components.map { map(it) as IDGameComponentViewData }.toMutableList()
-        }
+
+      // Camera pane with a target
+      is CameraPane<*> -> {
+        ComponentIdData(
+            id = componentView.id,
+            target = if (componentView.target != null) map(componentView.target) else null)
       }
 
       // Regular components (leaves in the component tree)
-      else -> IDGameComponentViewData().apply {
-        id = componentView.id
-        // For regular components, we don't need to map children since they are not containers
-        // Just store the ID and type information
-      }
+      else -> ComponentIdData(id = componentView.id)
     }
   }
 
-  fun map(scene: Scene<*>): IDSceneData {
-    return IDSceneData().apply {
-      id = scene.id
-      components = scene.components.map { map(it) }.toMutableList()
-    }
+  fun map(scene: Scene<*>): ComponentIdData {
+    return ComponentIdData(id = scene.id, components = scene.components.map { map(it) })
   }
 
-  /** Serializes a scene to a JSON string with proper type information */
+  /** Serializes a scene to a JSON string */
   fun serializeScene(scene: Scene<*>): String {
     val idScene = map(scene)
     return idJson.encodeToString(idScene)
   }
 
-  /** Serializes a component to a JSON string with proper type information */
+  /** Serializes a component to a JSON string */
   fun serializeComponent(component: ComponentView): String {
     val idComponent = map(component)
     return idJson.encodeToString(idComponent)
   }
-}
-
-/** Define serialization module for Id components to ensure proper polymorphic serialization */
-private val idModule = SerializersModule {
-  polymorphic(IDData::class) {
-    subclass(IDSceneData::class)
-    subclass(IDPaneData::class)
-    subclass(IDGridPaneData::class)
-    subclass(IDCameraPaneData::class)
-    subclass(IDAreaData::class)
-    subclass(IDCardStackData::class)
-    subclass(IDHexagonGridData::class)
-    subclass(IDLinearLayoutData::class)
-    subclass(IDSatchelData::class)
-  }
-  polymorphic(IDComponentViewData::class) {
-    subclass(IDPaneData::class)
-    subclass(IDGridPaneData::class)
-    subclass(IDCameraPaneData::class)
-    subclass(IDAreaData::class)
-    subclass(IDCardStackData::class)
-    subclass(IDHexagonGridData::class)
-    subclass(IDLinearLayoutData::class)
-    subclass(IDSatchelData::class)
-    subclass(IDGameComponentViewData::class)
-  }
-  polymorphic(IDLayoutViewData::class) {
-    subclass(IDPaneData::class)
-    subclass(IDGridPaneData::class)
-  }
-  polymorphic(IDGameComponentContainerData::class) {
-    subclass(IDAreaData::class)
-    subclass(IDCardStackData::class)
-    subclass(IDHexagonGridData::class)
-    subclass(IDLinearLayoutData::class)
-    subclass(IDSatchelData::class)
-  }
-}
-
-/** Json configuration for Id component serialization */
-internal val idJson = KJson {
-  serializersModule = idModule
-  ignoreUnknownKeys = true
 }
