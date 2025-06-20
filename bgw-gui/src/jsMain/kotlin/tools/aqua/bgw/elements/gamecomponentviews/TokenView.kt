@@ -20,8 +20,6 @@ package tools.aqua.bgw.elements.gamecomponentviews
 import TokenViewData
 import csstype.PropertiesBuilder
 import emotion.react.css
-import js.objects.jso
-import preact.signals.react.useSignalEffect
 import react.*
 import react.dom.aria.ariaDescribedBy
 import react.dom.aria.ariaDisabled
@@ -29,13 +27,10 @@ import react.dom.aria.ariaPressed
 import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.span
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
-import tools.aqua.bgw.elements.jsObject
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.hooks.useComponentSignal
 import web.cssom.*
@@ -51,11 +46,7 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData
 
 internal val TokenView =
     FC<TokenViewProps> { p ->
-
-      val props = useComponentSignal<TokenViewData>(
-          id = p.data.id,
-          initialData = p.data
-      )
+      val props = useComponentSignal<TokenViewData>(id = p.data.id, initialData = p.data)
 
       // ----------------------------------------------------------------------------------------------
 

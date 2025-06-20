@@ -57,16 +57,14 @@ internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 internal val componentSignals = mutableMapOf<String, Signal<PropData>>()
 
 // Function to get or create a signal for a component ID
-internal fun getOrCreateSignal(id: String, data : ComponentViewData? = null): Signal<PropData> {
-  if(data == null) {
+internal fun getOrCreateSignal(id: String, data: ComponentViewData? = null): Signal<PropData> {
+  if (data == null) {
     println("getOrCreateSignal called for ID: $id without data")
     return componentSignals.getOrPut(id) { signal(PropData()) }
   }
 
   println("getOrCreateSignal called for ID: $id with data: $data")
-  return componentSignals.getOrPut(id) { signal(PropData().apply {
-    this.data = data
-  }) }
+  return componentSignals.getOrPut(id) { signal(PropData().apply { this.data = data }) }
 }
 
 internal fun getSignal(id: String): Signal<PropData> {
@@ -144,12 +142,13 @@ internal fun handleSingleUpdates(data: String) {
     val data = triple.third
 
     // Parse the data into a ComponentViewData object
-    val componentData: ComponentViewData? = try {
-      jsonMapper.decodeFromString(data)
-    } catch (e: Exception) {
-      console.error("Failed to decode data for ID: $id", e)
-      null
-    }
+    val componentData: ComponentViewData? =
+        try {
+          jsonMapper.decodeFromString(data)
+        } catch (e: Exception) {
+          console.error("Failed to decode data for ID: $id", e)
+          null
+        }
 
     if (componentData != null) {
       // Get the existing signal or create a new one
@@ -158,14 +157,10 @@ internal fun handleSingleUpdates(data: String) {
       if (signal != null) {
         // Update the existing signal with the new data
         // Creating a new PropData object to ensure the change is detected
-        signal.value = PropData().apply {
-          this.data = componentData
-        }
+        signal.value = PropData().apply { this.data = componentData }
       } else {
         // Create a new signal if it doesn't exist
-        componentSignals[id] = signal(PropData().apply {
-          this.data = componentData
-        })
+        componentSignals[id] = signal(PropData().apply { this.data = componentData })
       }
 
       println("Updated signal at ${Date.now()} for ID: $id, action: $action")

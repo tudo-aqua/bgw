@@ -145,8 +145,10 @@ kotlin {
         implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1${wrappersVersion}")
         implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1${wrappersVersion}")
         implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-preact-signals-core:1.8.0${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-preact-signals-react:2.2.0${wrappersVersion}")
+        implementation(
+            "org.jetbrains.kotlin-wrappers:kotlin-preact-signals-core:1.8.0${wrappersVersion}")
+        implementation(
+            "org.jetbrains.kotlin-wrappers:kotlin-preact-signals-react:2.2.0${wrappersVersion}")
         implementation(npm("@dnd-kit/core", "6.2.0"))
         implementation(npm("react-zoom-pan-pinch", "3.6.1"))
       }

@@ -19,7 +19,6 @@ package tools.aqua.bgw.event
 
 import ComponentViewData
 import data.event.KeyEventAction
-import kotlin.js.Date
 import kotlin.math.sign
 import react.dom.html.HTMLAttributes
 import react.useEffect
@@ -41,9 +40,7 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
     it.preventDefault()
     JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
   }*/
-  onClick = {
-    JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
-  }
+  onClick = { JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id)) }
   onMouseDown = { JCEFEventDispatcher.dispatchEvent(it.toMousePressedEventData(props.id)) }
   onMouseUp = { JCEFEventDispatcher.dispatchEvent(it.toMouseReleasedEventData(props.id)) }
 

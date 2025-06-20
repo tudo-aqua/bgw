@@ -17,17 +17,11 @@
 
 package examples.concepts.visuals
 
-import tools.aqua.bgw.components.container.CardStack
-import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.CompoundVisual
-import tools.aqua.bgw.visual.TextVisual
-import java.util.Date
 
 fun main() {
   CompoundVisualsExample()
@@ -36,34 +30,37 @@ fun main() {
 class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
   private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.GRAY)
 
-  private val gridView = GridPane<TokenView>(
-    columns = 35,
-    rows = 35,
-    posX = 1920 / 2,
-    posY = 1080 / 2,
-    spacing = 2,
-  )
+  private val gridView =
+      GridPane<TokenView>(
+          columns = 3,
+          rows = 3,
+          posX = 1920 / 2,
+          posY = 1080 / 2,
+          spacing = 2,
+      )
 
   init {
     gameScene.addComponents(gridView)
 
-      for(i in 0 until gridView.columns) {
-        for(j in 0 until gridView.rows) {
-          val tokenView = TokenView(
-            posX = 0,
-            posY = 0,
-            width = 50,
-            height = 50,
-            visual = ColorVisual.RED
-          )
+    for (i in 0 until gridView.columns) {
+      for (j in 0 until gridView.rows) {
+        val tokenView =
+            TokenView(posX = 0, posY = 0, width = 50, height = 50, visual = ColorVisual.RED)
 
-          tokenView.onMouseClicked = { event ->
-            tokenView.visual = listOf(ColorVisual.GREEN, ColorVisual.BLUE, ColorVisual.YELLOW,
-              ColorVisual.PURPLE, ColorVisual.ORANGE, ColorVisual.CYAN).random()
-          }
-          gridView[i, j] = tokenView
+        tokenView.onMouseClicked = { event ->
+          tokenView.visual =
+              listOf(
+                      ColorVisual.GREEN,
+                      ColorVisual.BLUE,
+                      ColorVisual.YELLOW,
+                      ColorVisual.PURPLE,
+                      ColorVisual.ORANGE,
+                      ColorVisual.CYAN)
+                  .random()
         }
+        gridView[i, j] = tokenView
       }
+    }
 
     showGameScene(gameScene)
     show()

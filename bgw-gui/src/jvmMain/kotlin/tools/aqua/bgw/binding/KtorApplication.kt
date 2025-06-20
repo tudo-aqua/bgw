@@ -85,7 +85,9 @@ import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.event.WheelEvent
+import tools.aqua.bgw.mapper.ComponentIdMapper
 import tools.aqua.bgw.mapper.DialogMapper
+import tools.aqua.bgw.mapper.idJson
 import tools.aqua.bgw.util.Coordinate
 
 internal val componentChannel: Channel =
@@ -524,6 +526,16 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
     val serializedComponent = jsonMapper.encodeToString(RecursiveMapper.map(component))
     messageQueue[component.id] = Triple(action, parent, serializedComponent)
   }
+
+  // TODO: Fix hierarchy serialization not showing all fields if not explicitly cast
+  val gameScene = Frontend.boardGameScene
+  if (gameScene != null) {
+    val simpleHierarchy = ComponentIdMapper.map(gameScene)
+    println("Simple hierarchy: ${idJson.encodeToString(simpleHierarchy)}")
+  }
+
+  val grid = ComponentIdMapper.map(component.parent!!)
+  println("Grid: ${idJson.encodeToString(grid)}")
 
   messageQueueJob?.cancel()
   messageQueueJob =
