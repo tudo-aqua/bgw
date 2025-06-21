@@ -271,6 +271,9 @@ internal class CameraPaneData : ComponentViewData() {
   var panButton: String = "left_button"
   var limitBounds: Boolean = true
   var internalPanData: InternalCameraPanData = InternalCameraPanData()
+  var isVerticalLocked: Boolean = false
+  var isHorizontalLocked: Boolean = false
+  var isZoomLocked: Boolean = false
 }
 
 @Serializable internal class CoordinateData(val xCoord: Double = 0.0, val yCoord: Double = 0.0)

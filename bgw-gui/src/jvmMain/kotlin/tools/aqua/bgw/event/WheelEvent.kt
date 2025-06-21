@@ -33,6 +33,7 @@ package tools.aqua.bgw.event
  * @param isControlDown Whether control key was pressed.
  * @param isShiftDown Whether shift key was pressed.
  * @param isAltDown Whether alt key was pressed.
+ * @param scrollOffset The amount of scroll since last trigger.
  *
  * @see WheelDirection
  *
@@ -42,5 +43,14 @@ class WheelEvent(
     val direction: WheelDirection,
     val isControlDown: Boolean,
     val isShiftDown: Boolean,
-    val isAltDown: Boolean
+    val isAltDown: Boolean,
+    /**
+     * The amount of scroll since last [WheelEvent] for the specific component. Value is always
+     * positive, usage in combination with [direction] is recommended.
+     *
+     * @see direction
+     *
+     * @since 0.10
+     */
+    val scrollOffset: Double = 0.0
 ) : InputEvent()

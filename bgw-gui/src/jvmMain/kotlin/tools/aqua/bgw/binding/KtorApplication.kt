@@ -234,7 +234,12 @@ internal fun eventListener(text: String) {
           }
           is ScrollEventData -> {
             component.onMouseWheel?.invoke(
-                WheelEvent(eventData.direction, eventData.ctrl, eventData.shift, eventData.alt))
+                WheelEvent(
+                    eventData.direction,
+                    eventData.ctrl,
+                    eventData.shift,
+                    eventData.alt,
+                    eventData.delta))
           }
           is MouseReleasedEventData -> {
             val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)

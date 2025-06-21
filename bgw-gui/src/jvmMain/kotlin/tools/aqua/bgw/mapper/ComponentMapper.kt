@@ -52,8 +52,6 @@ internal object ComponentMapper {
       if (componentView.dropAcceptor != null) {
         isDroppable = true
       }
-      // layoutFromCenter
-      // isDraggable
       hasMouseEnteredEvent = componentView.onMouseEntered != null
       hasMouseExitedEvent = componentView.onMouseExited != null
     }
@@ -138,11 +136,9 @@ internal object ComponentMapper {
             internalPanData = componentView.panData
             panButton = componentView.panMouseButton.name.lowercase()
             limitBounds = componentView.limitBounds
-
-            // ! nightly - isVerticalLocked
-            // ! nightly - isHorizontalLocked
-            // ! nightly - isZoomLocked
-            // ! nightly - panMouseButton
+            isVerticalLocked = componentView.isVerticalLocked
+            isHorizontalLocked = componentView.isHorizontalLocked
+            isZoomLocked = componentView.isZoomLocked
           }
       is GameComponentView -> {
         when (componentView) {
