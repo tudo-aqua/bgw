@@ -20,6 +20,7 @@ package tools.aqua.bgw
 import ActionProp
 import AnimationData
 import AppData
+import BGWUpdate
 import ComponentViewData
 import Data
 import DialogData
@@ -134,13 +135,9 @@ internal fun stopAnimations() {
 }
 
 internal fun handleSingleUpdates(data: String) {
-  val jsonData: MutableMap<String, Triple<ActionProp, String, String>> = Json.decodeFromString(data)
+  val update: BGWUpdate = Json.decodeFromString(data)
 
-  jsonData.forEach { (id, triple) ->
-    val action = triple.first
-    val parentId = triple.second
-    val data = triple.third
-
+  update.updates.forEach { (id, data) ->
     // Parse the data into a ComponentViewData object
     val componentData: ComponentViewData? =
         try {
@@ -163,7 +160,7 @@ internal fun handleSingleUpdates(data: String) {
         componentSignals[id] = signal(PropData().apply { this.data = componentData })
       }
 
-      println("Updated signal at ${Date.now()} for ID: $id, action: $action")
+      println("Updated signal at ${Date.now()} for ID: $id")
     }
   }
 }

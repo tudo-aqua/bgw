@@ -84,7 +84,7 @@ internal object ComponentIdMapper {
       is HexagonGrid<*> -> {
         ComponentIdData(
             id = componentView.id,
-            componentsMap =
+            map =
                 componentView.map
                     .mapKeys { "${it.key.first}/${it.key.second}" }
                     .mapValues { map(it.value) })
@@ -94,7 +94,8 @@ internal object ComponentIdMapper {
       is CameraPane<*> -> {
         ComponentIdData(
             id = componentView.id,
-            target = if (componentView.target != null) map(componentView.target) else null)
+            target = map(componentView.target)
+        )
       }
 
       // Regular components (leaves in the component tree)

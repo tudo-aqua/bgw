@@ -57,6 +57,7 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
                       ColorVisual.ORANGE,
                       ColorVisual.CYAN)
                   .random()
+            gridView.set(i,j, null)
         }
         gridView[i, j] = tokenView
       }

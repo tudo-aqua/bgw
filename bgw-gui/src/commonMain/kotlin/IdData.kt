@@ -28,10 +28,17 @@ internal data class ComponentIdData(
     val id: ID,
     val components: List<ComponentIdData>? = null,
     val grid: List<GridPosition>? = null,
-    val componentsMap: Map<String, ComponentIdData>? = null,
+    val map: Map<String, ComponentIdData>? = null,
     val target: ComponentIdData? = null
 )
 
 /** Represents a component position in a grid */
 @Serializable
 internal data class GridPosition(val column: Int, val row: Int, val component: ComponentIdData)
+
+@Serializable
+internal data class BGWUpdate(
+    val gameSceneHierarchy : String? = null,
+    val menuSceneHierarchy : String? = null,
+    val updates : Map<ID, String> = emptyMap()
+)

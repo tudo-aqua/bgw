@@ -20,6 +20,7 @@ package tools.aqua.bgw.binding
 import ActionProp
 import AnimationData
 import AppData
+import BGWUpdate
 import PropData
 import SceneMapper
 import data.event.AnimationFinishedEventData
@@ -66,7 +67,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.container.GameComponentContainer
 import tools.aqua.bgw.components.layoutviews.CameraPane
+import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
 import tools.aqua.bgw.components.uicomponents.CheckBox
 import tools.aqua.bgw.components.uicomponents.ColorPicker
@@ -518,30 +521,44 @@ internal val messageQueue = mutableMapOf<String, Triple<ActionProp, String, Stri
 internal val messageQueueMutex = Mutex()
 internal var messageQueueJob: Job? = null
 internal var lastUpdateTime: Long = 0L
+internal var needsHierarchyUpdate = false
 
 internal fun addUpdate(component: ComponentView, action: ActionProp, parent: String = "") {
+  if (action == ActionProp.REMOVE_COMPONENT || action == ActionProp.ADD_COMPONENT || action == ActionProp.SHOW_MENU_SCENE || action == ActionProp.SHOW_GAME_SCENE) {
+    needsHierarchyUpdate = true
+  } else if (action == ActionProp.UPDATE_COMPONENT && (component is LayoutView<*> || component is CameraPane<*> || component is GameComponentContainer<*>)) {
+    needsHierarchyUpdate = true
+  }
+
   if (action == ActionProp.REMOVE_COMPONENT) {
     messageQueue[component.id] = Triple(action, parent, "")
   } else {
+    // TODO - Remove components, target, and hierarchy updates from single component updates
     val serializedComponent = jsonMapper.encodeToString(RecursiveMapper.map(component))
     messageQueue[component.id] = Triple(action, parent, serializedComponent)
   }
 
   val gameScene = Frontend.boardGameScene
-  if (gameScene != null) {
-    val simpleHierarchy = ComponentIdMapper.map(gameScene)
-    println("Simple hierarchy: ${idJson.encodeToString(simpleHierarchy)}")
-  }
+  val menuScene = Frontend.menuScene
 
   messageQueueJob?.cancel()
   messageQueueJob =
-      CoroutineScope(Dispatchers.IO).launch {
+    CoroutineScope(Dispatchers.IO).launch {
+      messageQueueMutex.withLock {
         if (messageQueue.isNotEmpty()) {
-          val updates = messageQueue.toMap()
+          delay(5) // Debounce time
+          val wholeUpdate = BGWUpdate(
+            gameSceneHierarchy = if(gameScene != null && needsHierarchyUpdate) idJson.encodeToString(ComponentIdMapper.map(gameScene)) else null,
+            menuSceneHierarchy = if(menuScene != null && needsHierarchyUpdate) idJson.encodeToString(ComponentIdMapper.map(menuScene)) else null,
+            updates = messageQueue.mapValues { it.value.third })
+          needsHierarchyUpdate = false
           messageQueue.clear()
           lastUpdateTime = System.currentTimeMillis()
-          val json = Json.encodeToString(updates)
-          componentChannel.sendToAllClients(json)
+
+          val jsonWholeUpdate = jsonMapper.encodeToString(wholeUpdate)
+          println("Whole update: $jsonWholeUpdate")
+          componentChannel.sendToAllClients(jsonWholeUpdate)
         }
       }
+    }
 }
