@@ -19,6 +19,7 @@ package tools.aqua.bgw.event
 
 import ComponentViewData
 import data.event.KeyEventAction
+import kotlin.math.abs
 import kotlin.math.sign
 import react.dom.html.HTMLAttributes
 import react.useEffect
@@ -64,18 +65,22 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
 
   var debounceTimeout: Timeout? = null
   var lastScrollDirection: Double? = null
+  var combinedDelta = 0.0
 
   onWheel = {
     val currentDirection = it.deltaY.sign
+    combinedDelta += if (it.deltaY != 0.0) it.deltaY else it.deltaX
     if (debounceTimeout == null || currentDirection != lastScrollDirection) {
       debounceTimeout?.let { clearTimeout(it) }
       debounceTimeout =
           setTimeout(
               {
-                JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id))
+                JCEFEventDispatcher.dispatchEvent(
+                    it.toScrollEventData(props.id, abs(combinedDelta)))
                 debounceTimeout = null
+                combinedDelta = 0.0
               },
-              200)
+              50)
       lastScrollDirection = currentDirection
     }
   }

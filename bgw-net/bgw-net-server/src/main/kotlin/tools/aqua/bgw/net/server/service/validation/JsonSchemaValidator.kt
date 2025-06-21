@@ -29,10 +29,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import tools.aqua.bgw.net.common.message.GameActionMessage
-import tools.aqua.bgw.net.server.BGW_META_SCHEMA_JSON_URL_STRING
-import tools.aqua.bgw.net.server.EXAMPLE_SCHEMA_JSON_URL_STRING
-import tools.aqua.bgw.net.server.MAUMAU_GAME_ID
-import tools.aqua.bgw.net.server.META_SCHEMA_JSON_URL_STRING
+import tools.aqua.bgw.net.server.*
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGame
 import tools.aqua.bgw.net.server.entity.tables.SchemasByGameRepository
 
@@ -63,32 +60,49 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
   private val schemaCache = mutableMapOf<String, List<JsonSchema>>()
 
   /**
-   * Validates the payload of [GameActionMessage] against all schemas for this [gameID]. Returns
-   * [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
+   * Validates the [GameActionMessage] with the payload against the schema matching the class and
+   * the gameID. Returns a list of validation errors. If there is not matching schema with that
+   * class it checks against all other schemas for that game. If there is no schema for that game it
+   * throws a [JsonSchemaNotFoundException].
    *
    * @param message The [GameActionMessage] with the payload, that gets validated.
    * @param gameID The identifier for the [SchemasByGame] entities in the Database.
    *
-   * @return a [List] of [String] representations of the validation errors that occurred during
-   * validation or [Optional.EMPTY] if there were no errors.
+   * @return a [Optional] containing a [Map] of [String] to [List] of [String] representations of
+   * the validation errors that occurred during validation. The key of the map is the schema class
+   * name. The value is a list of validation errors that occurred during validation.
    *
    * @throws JsonSchemaNotFoundException whenever [gameID] did not resolve to any [SchemasByGame]
    * entity.
    */
-  override fun validate(message: GameActionMessage, gameID: String): Optional<List<String>> {
+  override fun validate(
+      message: GameActionMessage,
+      gameID: String
+  ): Optional<Map<String, List<String>>> {
     val payload = mapper.readTree(message.payload)
-    val errors =
+    val schemas =
         (schemaCache[gameID]
-                ?: schemasByGameRepository
-                    .findAll()
-                    .filter { it.gameID == gameID }
-                    .map {
-                      JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(it.schema)
-                    }
-                    .also { schemaCache[gameID] = it })
-            .map { validate(it, payload) }
+            ?: schemasByGameRepository
+                .findAll()
+                .filter { it.gameID == gameID }
+                .map {
+                  JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(it.schema)
+                }
+                .also { schemaCache[gameID] = it })
 
-    return if (errors.any { it.isEmpty() }) Optional.empty() else Optional.of(errors.flatten())
+    val matchingSchema = schemas.firstOrNull { it.clazz == message.clazz }
+
+    val errors =
+        if (matchingSchema != null) {
+          mapOf(matchingSchema.title to validate(matchingSchema, payload))
+        } else {
+          schemas.associate { schema -> schema.title to validate(schema, payload) }
+        }
+
+    /* If there is at least one schema which has no validation errors */
+    val foundAtLeastOneMatchingSchema = errors.any { it.value.isEmpty() }
+
+    return if (foundAtLeastOneMatchingSchema) Optional.empty() else Optional.of(errors)
   }
 
   /**

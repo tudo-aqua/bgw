@@ -27,5 +27,6 @@ internal class ScrollEventData(
     val direction: WheelDirection,
     val shift: Boolean,
     val alt: Boolean,
-    val ctrl: Boolean
+    val ctrl: Boolean,
+    val delta: Double = 0.0
 ) : EventData()

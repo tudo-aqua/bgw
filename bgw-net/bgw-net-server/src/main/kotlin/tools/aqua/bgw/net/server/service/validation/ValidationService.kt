@@ -30,20 +30,23 @@ interface ValidationService {
   val metaSchemas: List<JsonSchema>
 
   /**
-   * Validates the payload of [GameActionMessage] against all schemas for this [gameID]. Returns
-   * [Optional.EMPTY] iff a schema matched the payload or a list of validation errors.
+   * Validates the [GameActionMessage] with the payload against the schema matching the class and
+   * the gameID. Returns a list of validation errors. If there is not matching schema with that
+   * class it checks against all other schemas for that game. If there is no schema for that game it
+   * throws a [JsonSchemaNotFoundException].
    *
    * @param message The [GameActionMessage] with the payload, that gets validated.
    * @param gameID The identifier for the [SchemasByGame] entities in the Database.
    *
-   * @return a [List] of [String] representations of the validation errors that occurred during
-   * validation or [Optional.EMPTY] if there were no errors.
+   * @return a [Optional] containing a [Map] of [String] to [List] of [String] representations of
+   * the validation errors that occurred during validation. The key of the map is the schema class
+   * name. The value is a list of validation errors that occurred during validation.
    *
    * @throws JsonSchemaNotFoundException whenever [gameID] did not resolve to any [SchemasByGame]
    * entity.
    */
   @Throws(JsonSchemaNotFoundException::class)
-  fun validate(message: GameActionMessage, gameID: String): Optional<List<String>>
+  fun validate(message: GameActionMessage, gameID: String): Optional<Map<String, List<String>>>
 
   /**
    * Validates the [schemaNode] against the [reference] schema. Returns a list of validation errors.

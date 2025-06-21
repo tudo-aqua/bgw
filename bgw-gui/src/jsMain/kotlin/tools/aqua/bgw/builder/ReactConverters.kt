@@ -177,12 +177,13 @@ internal object ReactConverters {
     return DragGestureEnteredEventData("").apply { this.id = active?.id }
   }
 
-  fun WheelEvent<*>.toScrollEventData(targetID: ID?): ScrollEventData {
+  fun WheelEvent<*>.toScrollEventData(targetID: ID?, delta: Double): ScrollEventData {
     return ScrollEventData(
             direction = if (this.deltaY > 0) WheelDirection.DOWN else WheelDirection.UP,
             shift = this.shiftKey,
             alt = this.altKey,
-            ctrl = this.ctrlKey)
+            ctrl = this.ctrlKey,
+            delta = delta)
         .apply { this.id = targetID }
   }
 }

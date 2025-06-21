@@ -65,11 +65,14 @@ internal external interface PanningProps {
   var allowLeftClickPan: Boolean
   var allowMiddleClickPan: Boolean
   var allowRightClickPan: Boolean
+  var lockAxisX: Boolean
+  var lockAxisY: Boolean
 }
 
 internal external interface ReactZoomPanPinchContentRef {
   var instance: ReactZoomPanPinchContext
   var setTransform: (x: Number, y: Number, scale: Number, animationTime: Number) -> Unit
+  var centerView: (scale: Number, animationTime: Number, animationName: String) -> Unit
 }
 
 internal external interface ReactZoomPanPinchContext {

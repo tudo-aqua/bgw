@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.net.server
 
+import com.networknt.schema.JsonSchema
 import org.springframework.web.socket.WebSocketSession
 import tools.aqua.bgw.net.server.entity.GameInstance
 import tools.aqua.bgw.net.server.entity.Player
@@ -58,3 +59,17 @@ val WebSocketSession.player: Player
     val player = attributes["player"] ?: error("missing attribute")
     if (player is Player) return player else error("wrong type")
   }
+
+/** The class attribute name for schema validation. */
+const val SCHEMA_CLASS_ATTRIBUTE_NAME = "@class"
+
+/** The title attribute name for schema validation. */
+const val SCHEMA_TITLE_ATTRIBUTE_NAME = "title"
+
+/** The class attribute for schema validation. */
+val JsonSchema.clazz: String
+  get() = this.schemaNode.get(SCHEMA_CLASS_ATTRIBUTE_NAME).asText()
+
+/** The title attribute for schema validation. */
+val JsonSchema.title: String
+  get() = this.schemaNode.get(SCHEMA_TITLE_ATTRIBUTE_NAME).asText()

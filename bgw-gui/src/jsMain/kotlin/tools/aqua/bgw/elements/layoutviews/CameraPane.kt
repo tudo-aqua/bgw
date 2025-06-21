@@ -250,7 +250,8 @@ internal val CameraPane =
       }
 
       TransformWrapper {
-        centerZoomedOut = props.data.limitBounds
+        centerZoomedOut =
+            props.data.limitBounds || props.data.isHorizontalLocked || props.data.isVerticalLocked
         disablePadding = true
         smooth = false
         limitToBounds = props.data.limitBounds
@@ -259,7 +260,7 @@ internal val CameraPane =
         maxScale = 4.0
         initialScale = if (props.data.limitBounds) initialZoom else 1.0
         wheel = jso {
-          disabled = !props.data.interactive
+          disabled = !props.data.interactive || props.data.isZoomLocked
           step = 0.1
         }
         panning = jso {
@@ -269,6 +270,8 @@ internal val CameraPane =
           allowLeftClickPan = props.data.panButton == "left_button"
           allowMiddleClickPan = props.data.panButton == "mouse_wheel"
           allowRightClickPan = props.data.panButton == "right_button"
+          lockAxisX = props.data.isHorizontalLocked
+          lockAxisY = props.data.isVerticalLocked
         }
         pinch = jso { disabled = true }
         doubleClick = jso { disabled = true }
@@ -287,6 +290,9 @@ internal val CameraPane =
         //        }
 
         onZoomStop = { ctx ->
+          //          if(props.data.isHorizontalLocked || props.data.isVerticalLocked) {
+          //            ctx.centerView(ctx.instance.transformState.scale, 0, "ease-out")
+          //          }
           val currentX = ctx.instance.transformState.positionX
           val currentY = ctx.instance.transformState.positionY
 

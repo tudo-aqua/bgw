@@ -1,10 +1,14 @@
 {
   "properties": {
+    "@class": {
+      "type": "string"
+    },
     "title": {
       "type": "string"
     }
   },
   "required": [
-    "title"
+    "title",
+    "@class"
   ]
 }

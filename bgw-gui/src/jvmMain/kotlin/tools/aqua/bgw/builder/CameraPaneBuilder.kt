@@ -31,6 +31,13 @@ internal object CameraPaneBuilder {
     cameraPane.panDataProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
     cameraPane.panMouseButtonProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
     cameraPane.limitBoundsProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
+    cameraPane.isVerticalLockedProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(cameraPane)
+    }
+    cameraPane.isHorizontalLockedProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(cameraPane)
+    }
+    cameraPane.isZoomLockedProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
     ComponentViewBuilder.build(cameraPane.target)
   }
 }

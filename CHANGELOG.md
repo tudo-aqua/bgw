@@ -84,6 +84,8 @@ All notable changes to this project will be documented in this file.
 - Added `stopAllAnimations()` function to `Scene` to immediately stop all animations currently running.
 - Added `disallowUnselect` property to `ComboBox` to prevent deselection of the currently selected item and hide prompt text.
 - Added `interpolation` property to `MovementAnimation`, `FadeAnimation`, `ScaleAnimation` and `RotationAnimation` to define the interpolation of the animation.
+- Added `isHorizontalLocked`, `isVerticalLocked` and `isZoomLocked` properties to `CameraPane` to lock panning and zooming in specific directions.
+- Added `scrollOffset` property to `WheelEvent` to get the scroll offset since the last event triggered.
 
 ### Fixed
 
