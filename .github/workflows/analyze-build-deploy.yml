@@ -53,34 +53,6 @@ jobs:
         sarif_file: sarif
         wait-for-processing: true
 
-  kover:
-    name: Generate Kover report
-    needs: safety-check
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # Required for version number generation
-
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: temurin
-        java-version: ${{ env.JDK_VERSION }}
-
-    - name: Run Kover
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: koverReport koverMergedReport
-
-    - name: Upload analysis results
-      uses: codecov/codecov-action@v4
-      with:
-        directory: 'build/reports/kover'
-        fail_ci_if_error: true
-        verbose: true
-
   junit-test:
     name: Run JUnit tests
     needs: safety-check
