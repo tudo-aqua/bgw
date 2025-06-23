@@ -19,25 +19,40 @@ import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
+import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.publishing
+import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.signing
 import java.lang.ProcessHandle
 import java.nio.file.Files
+import kotlin.collections.forEach
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+import tools.aqua.GlobalMavenMetadataExtension
+import tools.aqua.MavenMetadataExtension
 import tools.aqua.defaultFormat
+import tools.aqua.developer
+import tools.aqua.github
+import tools.aqua.license
 
 plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
-  application
-  `maven-publish`
+
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
+
+  application
+  `maven-publish`
+  `java-library`
+  signing
 }
 
 val propertyFile = "Config.kt"
@@ -211,13 +226,7 @@ fun killJcefHelperProcesses(pids: Set<Long>) {
 }
 // endregion
 
-tasks.named("publish") {
-  doFirst {
-    println("=============================================================================")
-    println("Published bgw-gui: ${rootProject.version}")
-    println("=============================================================================")
-  }
-}
+val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
 publishing {
   publications {
@@ -225,7 +234,36 @@ publishing {
       groupId = "tools.aqua"
       artifactId = "bgw-gui"
       from(components["kotlin"])
+
+      pom {
+        name.set(mavenMetadata.name)
+        description.set(mavenMetadata.description)
+
+        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+
+        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+
+        globalMetadata.githubProject.get().let {
+          github(it.organization, it.project, it.mainBranch)
+        }
+
+        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
+      }
     }
+  }
+}
+
+signing {
+  setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
+  useGpgCmd()
+  sign(publishing.publications["maven"])
+}
+
+tasks.named("publish") {
+  doFirst {
+    println("=============================================================================")
+    println("Published bgw-gui: ${rootProject.version}")
+    println("=============================================================================")
   }
 }
 
