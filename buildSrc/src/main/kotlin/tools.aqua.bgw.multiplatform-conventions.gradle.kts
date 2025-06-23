@@ -234,22 +234,15 @@ publishing {
       groupId = "tools.aqua"
       artifactId = "bgw-gui"
       from(components["kotlin"])
-      artifact(tasks.named<Jar>("jvmJar")) {
-        classifier = "jvm"
-      }
-      artifact(tasks.named<Jar>("jsJar")) {
-        classifier = "js"
-      }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jsSourcesJar")) {
-        classifier = "js-sources"
-      }
+      artifact(tasks.named<Jar>("jvmJar")) { classifier = "jvm" }
+      artifact(tasks.named<Jar>("jsJar")) { classifier = "js" }
+      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jsSourcesJar")) { classifier = "js-sources" }
       artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jvmSourcesJar")) {
         classifier = "jvm-sources"
       }
       artifact(tasks.named<org.gradle.jvm.tasks.Jar>("metadataSourcesJar")) {
         classifier = "metadata-sources"
       }
-
       pom {
         name.set(mavenMetadata.name)
         description.set(mavenMetadata.description)
@@ -271,7 +264,11 @@ publishing {
 signing {
   setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
   useGpgCmd()
-  sign(publishing.publications["maven"])
+  sign(
+      publishing.publications["maven"],
+      publishing.publications["kotlinMultiplatform"],
+      publishing.publications["js"],
+      publishing.publications["jvm"])
 }
 
 tasks.named("publish") {
