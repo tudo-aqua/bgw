@@ -42,32 +42,32 @@ import tools.aqua.github
 import tools.aqua.license
 
 plugins {
-  kotlin("multiplatform")
-  kotlin("plugin.serialization")
+    kotlin("multiplatform")
+    kotlin("plugin.serialization")
 
-  id("io.gitlab.arturbosch.detekt")
-  id("org.jetbrains.dokka")
-  id("org.jetbrains.kotlinx.kover")
+    id("io.gitlab.arturbosch.detekt")
+    id("org.jetbrains.dokka")
+    id("org.jetbrains.kotlinx.kover")
 
-  application
-  `maven-publish`
-  `java-library`
-  signing
+    application
+    `maven-publish`
+    `java-library`
+    signing
 }
 
 val propertyFile = "Config.kt"
 val wrappersVersion = "-pre.831"
 
 fun buildDefaultPropertyFile() {
-  rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
-    parentFile.mkdirs()
-    writeText(generateDefaultProperties())
-  }
+    rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
+        parentFile.mkdirs()
+        writeText(generateDefaultProperties())
+    }
 
-  rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
-    parentFile.mkdirs()
-    writeText(generateDefaultProperties("application"))
-  }
+    rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
+        parentFile.mkdirs()
+        writeText(generateDefaultProperties("application"))
+    }
 }
 
 fun generateDefaultProperties(suffix: String = "") =
@@ -82,220 +82,212 @@ fun generateDefaultProperties(suffix: String = "") =
 """.trimIndent()
 
 if (!project.extra.has("useSockets")) {
-  project.extra.set("useSockets", "true")
+    project.extra.set("useSockets", "true")
 }
 
 if (!project.extra.has("generateSamples")) {
-  project.extra.set("generateSamples", "false")
+    project.extra.set("generateSamples", "false")
 }
 
 buildDefaultPropertyFile()
 
 val kdocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("kdoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    }
+tasks.registering(Jar::class) {
+    archiveClassifier.set("kdoc")
+    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+}
 
 val kdoc: Configuration by
-    configurations.creating {
-      isCanBeConsumed = true
-      isCanBeResolved = false
-    }
+configurations.creating {
+    isCanBeConsumed = true
+    isCanBeResolved = false
+}
 
 artifacts { add(kdoc.name, kdocJar) }
 
 val javadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    }
+tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+}
 
 java {
-  withSourcesJar()
-  withJavadocJar()
+    withSourcesJar()
+    withJavadocJar()
 }
 
 repositories {
-  jcenter()
-  mavenCentral()
-  maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+    jcenter()
+    mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
 kotlin {
-  jvmToolchain(11)
-  jvm {
-    withJava()
-    testRuns["test"].executionTask.configure { useJUnitPlatform() }
-  }
-  js(IR) {
-    binaries.executable()
-    browser {
-      commonWebpackConfig {
-        cssSupport { enabled.set(true) }
-        mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
-      }
+    jvmToolchain(11)
+    jvm {
+        withJava()
+        testRuns["test"].executionTask.configure { useJUnitPlatform() }
     }
-  }
-  sourceSets {
-    val commonMain by getting {
-      dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") }
+    js(IR) {
+        binaries.executable()
+        browser {
+            commonWebpackConfig {
+                cssSupport { enabled.set(true) }
+                mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
+            }
+        }
     }
-    val commonTest by getting { dependencies { implementation(kotlin("test")) } }
-    val jvmMain by getting {
-      dependencies {
-        implementation("io.ktor:ktor-server-core:2.3.11")
-        implementation("io.ktor:ktor-server-netty:2.3.11")
-        implementation("io.ktor:ktor-server-websockets:2.3.11")
-        implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
-        implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
-        implementation("me.friwi:jcefmaven:135.0.20")
-        implementation("dev.dirs:directories:26")
-      }
+    sourceSets {
+        val commonMain by getting {
+            dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") }
+        }
+        val commonTest by getting { dependencies { implementation(kotlin("test")) } }
+        val jvmMain by getting {
+            dependencies {
+                implementation("io.ktor:ktor-server-core:2.3.11")
+                implementation("io.ktor:ktor-server-netty:2.3.11")
+                implementation("io.ktor:ktor-server-websockets:2.3.11")
+                implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
+                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
+                implementation("me.friwi:jcefmaven:135.0.20")
+                implementation("dev.dirs:directories:26")
+            }
+        }
+        val jvmTest by getting
+        val jsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1${wrappersVersion}")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1${wrappersVersion}")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1${wrappersVersion}")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3${wrappersVersion}")
+                implementation(npm("@dnd-kit/core", "6.2.0"))
+                implementation(npm("react-zoom-pan-pinch", "3.6.1"))
+            }
+        }
+        // val jsTest by getting
     }
-    val jvmTest by getting
-    val jsMain by getting {
-      dependencies {
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3${wrappersVersion}")
-        implementation(npm("@dnd-kit/core", "6.2.0"))
-        implementation(npm("react-zoom-pan-pinch", "3.6.1"))
-      }
-    }
-    // val jsTest by getting
-  }
 }
 
 application {
-  mainClass.set("tools.aqua.bgw.main.MainKt")
-  applicationDefaultJvmArgs =
-      listOf(
-          "--add-opens",
-          "java.desktop/sun.awt=ALL-UNNAMED",
-          "--add-opens",
-          "java.desktop/java.awt.peer=ALL-UNNAMED")
-
-  if (System.getProperty("os.name").contains("Mac")) {
+    mainClass.set("tools.aqua.bgw.main.MainKt")
     applicationDefaultJvmArgs =
         listOf(
             "--add-opens",
             "java.desktop/sun.awt=ALL-UNNAMED",
             "--add-opens",
-            "java.desktop/java.awt.peer=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/sun.lwawt=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
-  }
+            "java.desktop/java.awt.peer=ALL-UNNAMED"
+        )
+
+    if (System.getProperty("os.name").contains("Mac")) {
+        applicationDefaultJvmArgs =
+            listOf(
+                "--add-opens",
+                "java.desktop/sun.awt=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/java.awt.peer=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/sun.lwawt=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/sun.lwawt.macosx=ALL-UNNAMED"
+            )
+    }
 }
 
 tasks.named<Copy>("jvmProcessResources") {
-  val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
-  from(jsBrowserDistribution)
+    val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
+    from(jsBrowserDistribution)
 }
 
 // region - Cleanup JCEF helper processes
 var globalTmpDir = ""
 
 tasks.named<JavaExec>("run") {
-  doFirst {
-    val tmpDir = Files.createTempDirectory("bgw-")
-    tmpDir.toFile().deleteOnExit()
-    globalTmpDir = tmpDir.toString()
-    jvmArgs = listOf("-DtmpDir=${tmpDir}")
-  }
-  dependsOn(tasks.named<Jar>("jvmJar"))
-  classpath(tasks.named<Jar>("jvmJar"))
+    doFirst {
+        val tmpDir = Files.createTempDirectory("bgw-")
+        tmpDir.toFile().deleteOnExit()
+        globalTmpDir = tmpDir.toString()
+        jvmArgs = listOf("-DtmpDir=${tmpDir}")
+    }
+    dependsOn(tasks.named<Jar>("jvmJar"))
+    classpath(tasks.named<Jar>("jvmJar"))
 }
 
 gradle.buildFinished {
-  try {
-    val applicationPIDs =
-        file("$globalTmpDir/application.pid").readText().split(",").map { it.toLong() }.toSet()
-    killJcefHelperProcesses(applicationPIDs)
-    if (globalTmpDir.isNotEmpty()) {
-      File(globalTmpDir).deleteRecursively()
+    try {
+        val applicationPIDs =
+            file("$globalTmpDir/application.pid").readText().split(",").map { it.toLong() }.toSet()
+        killJcefHelperProcesses(applicationPIDs)
+        if (globalTmpDir.isNotEmpty()) {
+            File(globalTmpDir).deleteRecursively()
+        }
+    } catch (_: Exception) {
     }
-  } catch (_: Exception) {}
 }
 
 fun killJcefHelperProcesses(pids: Set<Long>) {
-  pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
+    pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
 }
 // endregion
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
 publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      groupId = "tools.aqua"
-      artifactId = "bgw-gui"
-      from(components["kotlin"])
-      artifact(tasks.named<Jar>("jvmJar")) {
-        classifier = "jvm"
-      }
-      artifact(tasks.named<Jar>("jsJar")) {
-        classifier = "js"
-      }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jsSourcesJar")) {
-        classifier = "js-sources"
-      }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jvmSourcesJar")) {
-        classifier = "jvm-sources"
-      }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("metadataSourcesJar")) {
-        classifier = "metadata-sources"
-      }
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "tools.aqua"
+            artifactId = "bgw-gui"
+            from(components["kotlin"])
+            pom {
+                name.set(mavenMetadata.name)
+                description.set(mavenMetadata.description)
 
-      pom {
-        name.set(mavenMetadata.name)
-        description.set(mavenMetadata.description)
+                val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
 
-        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+                developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
 
-        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+                globalMetadata.githubProject.get().let {
+                    github(it.organization, it.project, it.mainBranch)
+                }
 
-        globalMetadata.githubProject.get().let {
-          github(it.organization, it.project, it.mainBranch)
+                licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
+            }
         }
-
-        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
-      }
     }
-  }
 }
 
 signing {
-  setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
-  useGpgCmd()
-  sign(publishing.publications["maven"])
+    setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
+    useGpgCmd()
+    sign(
+        publishing.publications["maven"],
+        publishing.publications["kotlinMultiplatform"],
+        publishing.publications["js"],
+        publishing.publications["jvm"]
+    )
 }
 
 tasks.named("publish") {
-  doFirst {
-    println("=============================================================================")
-    println("Published bgw-gui: ${rootProject.version}")
-    println("=============================================================================")
-  }
+    doFirst {
+        println("=============================================================================")
+        println("Published bgw-gui: ${rootProject.version}")
+        println("=============================================================================")
+    }
 }
 
 spotless {
-  kotlin {
-    target(
-        rootProject.fileTree("bgw-gui/src") {
-          include("**/*.kt")
-          exclude("**/Config.kt")
-        })
-    defaultFormat(rootProject)
-  }
+    kotlin {
+        target(
+            rootProject.fileTree("bgw-gui/src") {
+                include("**/*.kt")
+                exclude("**/Config.kt")
+            })
+        defaultFormat(rootProject)
+    }
 }
 
 // Ignore yarn.lock mismatches
 rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin::class.java) {
-  rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.NONE
-  rootProject.the<YarnRootExtension>().reportNewYarnLock = false
-  rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
+    rootProject.the<YarnRootExtension>().yarnLockMismatchReport = YarnLockMismatchReport.NONE
+    rootProject.the<YarnRootExtension>().reportNewYarnLock = false
+    rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
 }
