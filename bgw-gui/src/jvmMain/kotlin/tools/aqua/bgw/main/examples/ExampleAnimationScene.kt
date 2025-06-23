@@ -31,6 +31,7 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.main.examples.ExampleAnimationScene as AnimationScene
 import tools.aqua.bgw.mapper.AnimationMapper
+import tools.aqua.bgw.mapper.SceneMapper
 import tools.aqua.bgw.visual.ColorVisual
 
 /** Metadata: [AnimationScene] */

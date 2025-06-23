@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-import ComponentSingleMapper.fillData
-import tools.aqua.bgw.application.Constants
+import ComponentMapper.fillData
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.*
@@ -26,9 +25,8 @@ import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.mapper.VisualMapper
-import tools.aqua.bgw.util.Font
 
-internal object ComponentSingleMapper {
+internal object ComponentMapper {
   fun ComponentViewData.fillData(componentView: ComponentView): ComponentViewData {
     return this.apply {
       id = componentView.id
@@ -128,6 +126,7 @@ internal object ComponentSingleMapper {
       }
       is CameraPane<*> ->
           (CameraPaneData().fillData(componentView) as CameraPaneData).apply {
+            target = LayoutAllMapper.map(componentView.target)
             interactive = componentView.interactive
             internalPanData = componentView.panData
             panButton = componentView.panMouseButton.name.lowercase()
@@ -257,36 +256,12 @@ internal object ComponentSingleMapper {
   }
 }
 
-internal object FontMapper {
-  private val fontWeightMap =
-      mapOf(
-          Font.FontWeight.THIN to 100,
-          Font.FontWeight.EXTRA_LIGHT to 200,
-          Font.FontWeight.LIGHT to 300,
-          Font.FontWeight.NORMAL to 400,
-          Font.FontWeight.MEDIUM to 500,
-          Font.FontWeight.SEMI_BOLD to 600,
-          Font.FontWeight.BOLD to 700,
-          Font.FontWeight.EXTRA_BOLD to 800,
-          Font.FontWeight.BLACK to 900)
-
-  fun map(font: Font): FontData {
-    return FontData().apply {
-      size = font.size.toInt()
-      color =
-          "rgba(${font.color.red}, ${font.color.green}, ${font.color.blue}, ${font.color.alpha})"
-      family = font.family
-      fontWeight = fontWeightMap[font.fontWeight] ?: 400
-      fontStyle = font.fontStyle.name.lowercase()
-    }
-  }
-}
-
-internal object LayoutMapper {
+internal object LayoutAllMapper {
   fun map(layout: LayoutView<*>): LayoutViewData {
     return when (layout) {
       is Pane<*> ->
           (PaneData().fillData(layout) as PaneData).apply {
+            components = layout.components.map { RecursiveMapper.map(it) }.toMutableList()
             if (layout.dropAcceptor != null) {
               isDroppable = true
             }
@@ -300,6 +275,17 @@ internal object LayoutMapper {
                 }
             columns = grid.columns
             rows = grid.rows
+            this.grid =
+                grid.map {
+                  val alignment = layout.getCellCenterMode(it.columnIndex, it.rowIndex)
+                  GridElementData(
+                      it.columnIndex,
+                      it.rowIndex,
+                      if (it.component != null) RecursiveMapper.map(it.component) else null,
+                      alignment =
+                          alignment.horizontalAlignment.name.lowercase() to
+                              alignment.verticalAlignment.name.lowercase())
+                }
             spacing = layout.spacing.toInt()
             layoutFromCenter = layout.isLayoutFromCenter
             if (layout.dropAcceptor != null) {
@@ -311,17 +297,23 @@ internal object LayoutMapper {
   }
 }
 
-internal object ContainerMapper {
+internal object ContainerAllMapper {
   fun map(container: GameComponentContainer<*>): GameComponentContainerData {
     return when (container) {
       is Area<*> ->
           (AreaData().fillData(container) as AreaData).apply {
+            components =
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
           }
       is CardStack<*> ->
           (CardStackData().fillData(container) as CardStackData).apply {
+            components =
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
@@ -331,8 +323,24 @@ internal object ContainerMapper {
                     container.alignment.verticalAlignment.name.lowercase())
           }
       is HexagonGrid<*> -> {
+        val tempMap = mutableMapOf<String, HexagonViewData>()
+        container.map.forEach { (key, value) ->
+          tempMap["${key.first}/${key.second}"] =
+              (HexagonViewData().fillData(value) as HexagonViewData).apply {
+                id = value.id
+                posX = value.posX.toInt()
+                posY = value.posY.toInt()
+                visual = VisualMapper.map(value.visual)
+                size = value.size.toInt()
+                orientation = container.orientation.name.lowercase()
+                // isDraggable = value.isDraggable          // TODO - Element has no root node
+                // dragging out
+              }
+        }
+
         (HexagonGridData().fillData(container) as HexagonGridData).apply {
           coordinateSystem = container.coordinateSystem.name.lowercase()
+          map = tempMap
           spacing = 0
           orientation = container.orientation.name.lowercase()
           // components ?!
@@ -344,6 +352,9 @@ internal object ContainerMapper {
       }
       is LinearLayout<*> ->
           (LinearLayoutData().fillData(container) as LinearLayoutData).apply {
+            components =
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
             spacing = container.spacing.toInt()
             orientation = container.orientation.name.lowercase()
             alignment =
@@ -357,6 +368,10 @@ internal object ContainerMapper {
           }
       is Satchel ->
           (SatchelData().fillData(container) as SatchelData).apply {
+            components =
+                container.components.map { RecursiveMapper.map(it) }.toMutableList()
+                    as MutableList<GameComponentViewData>
+
             if (container.dropAcceptor != null) {
               isDroppable = true
             }
@@ -365,20 +380,20 @@ internal object ContainerMapper {
   }
 }
 
-internal object RecursiveSingleMapper {
+internal object RecursiveMapper {
     fun map(component: ComponentView): ComponentViewData {
         return when (component) {
             is LayoutView<*> -> {
-                LayoutMapper.map(component)
+                LayoutAllMapper.map(component)
             }
             is GameComponentContainer<*> -> {
-                ContainerMapper.map(component).apply {
+                ContainerAllMapper.map(component).apply {
                     isDraggable = component.isDraggable
                     isDragged = component.isDragged
                 }
             }
             else -> {
-                ComponentSingleMapper.map(component)
+                ComponentMapper.map(component)
             }
         }
     }

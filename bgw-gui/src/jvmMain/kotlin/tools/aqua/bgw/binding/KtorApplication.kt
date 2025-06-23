@@ -22,7 +22,6 @@ import AnimationData
 import AppData
 import BGWUpdate
 import PropData
-import SceneMapper
 import data.event.AnimationFinishedEventData
 import data.event.CheckBoxChangedEventData
 import data.event.ColorInputChangedEventData
@@ -49,6 +48,7 @@ import data.event.SelectionChangedEventData
 import data.event.StructuredDataSelectEventData
 import data.event.TextInputChangedEventData
 import data.event.TransformChangedEventData
+import idJson
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -90,7 +90,7 @@ import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.event.WheelEvent
 import tools.aqua.bgw.mapper.ComponentIdMapper
 import tools.aqua.bgw.mapper.DialogMapper
-import tools.aqua.bgw.mapper.idJson
+import tools.aqua.bgw.mapper.SceneMapper
 import tools.aqua.bgw.util.Coordinate
 
 internal val componentChannel: Channel =
@@ -538,8 +538,7 @@ internal fun addUpdate(component: ComponentView, action: ActionProp, parent: Str
   if (action == ActionProp.REMOVE_COMPONENT) {
     messageQueue[component.id] = Triple(action, parent, "")
   } else {
-    // TODO - Remove components, target, and hierarchy updates from single component updates
-    val serializedComponent = jsonMapper.encodeToString(RecursiveMapper.map(component))
+    val serializedComponent = jsonMapper.encodeToString(RecursiveSingleMapper.map(component))
     messageQueue[component.id] = Triple(action, parent, serializedComponent)
   }
 

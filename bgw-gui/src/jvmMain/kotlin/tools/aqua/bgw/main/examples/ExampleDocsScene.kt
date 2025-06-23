@@ -29,6 +29,7 @@ import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
+import tools.aqua.bgw.mapper.SceneMapper
 import tools.aqua.bgw.main.examples.ExampleDocsScene as Scene
 import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.util.Font

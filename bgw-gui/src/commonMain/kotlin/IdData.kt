@@ -18,6 +18,7 @@
 @file:Suppress("unused")
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json as KJson
 
 /**
  * Minimal data structure to represent a component's ID and its hierarchy. Only includes fields that
@@ -42,3 +43,15 @@ internal data class BGWUpdate(
     val menuSceneHierarchy : String? = null,
     val updates : Map<ID, String> = emptyMap()
 )
+
+internal data class SceneIdData(
+    val id: ID,
+    val components: List<ComponentIdData> = emptyList()
+)
+
+internal data class IdData(
+    val gameScene: SceneIdData? = null,
+    val menuScene: SceneIdData? = null
+)
+
+internal val idJson = KJson { encodeDefaults = false }

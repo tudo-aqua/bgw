@@ -21,14 +21,18 @@ import ActionProp
 import AnimationData
 import AppData
 import BGWUpdate
+import ComponentIdData
 import ComponentViewData
 import Data
 import DialogData
 import ID
+import IdData
 import JsonData
 import PropData
+import SceneIdData
 import data.event.AnimationFinishedEventData
 import data.event.LoadEventData
+import idJson
 import jsonMapper
 import kotlin.js.Date
 import kotlinx.browser.document
@@ -56,6 +60,7 @@ internal var handlers: MutableMap<ID, (Data) -> Unit> = mutableMapOf()
 
 // Signal registry for component updates
 internal val componentSignals = mutableMapOf<String, Signal<PropData>>()
+internal val appSignal = Signal(AppData())
 
 // Function to get or create a signal for a component ID
 internal fun getOrCreateSignal(id: String, data: ComponentViewData? = null): Signal<PropData> {
@@ -66,6 +71,17 @@ internal fun getOrCreateSignal(id: String, data: ComponentViewData? = null): Sig
 
   println("getOrCreateSignal called for ID: $id with data: $data")
   return componentSignals.getOrPut(id) { signal(PropData().apply { this.data = data }) }
+}
+
+internal fun getOrCreateAppSignal(data: AppData? = null): Signal<AppData> {
+    if (data == null) {
+        println("getOrCreateAppSignal called without data")
+        return appSignal
+    }
+
+    println("getOrCreateAppSignal called with data: $data")
+    appSignal.value = data
+    return appSignal
 }
 
 internal fun getSignal(id: String): Signal<PropData> {
@@ -163,6 +179,30 @@ internal fun handleSingleUpdates(data: String) {
       println("Updated signal at ${Date.now()} for ID: $id")
     }
   }
+
+  var gameSceneHierarchy: SceneIdData? = null
+  var menuSceneHierarchy: SceneIdData? = null
+
+  if(update.gameSceneHierarchy != null) {
+    val comp : ComponentIdData = idJson.decodeFromString<ComponentIdData>(update.gameSceneHierarchy)
+    gameSceneHierarchy = SceneIdData(
+      id = comp.id,
+      components = comp.components ?: emptyList()
+    )
+  }
+
+    if(update.menuSceneHierarchy != null) {
+        val comp : ComponentIdData = idJson.decodeFromString<ComponentIdData>(update.menuSceneHierarchy)
+        menuSceneHierarchy = SceneIdData(
+          id = comp.id,
+          components = comp.components ?: emptyList()
+        )
+    }
+
+  val idData = IdData(
+    gameScene = gameSceneHierarchy,
+    menuScene = menuSceneHierarchy
+  )
 }
 
 internal fun handleReceivedData(receivedData: Data) {
@@ -233,6 +273,18 @@ internal fun renderAppFast(appData: AppData) {
     root = createRoot(container as Element)
   }
   root.render(App.create { data = appData })
+  JCEFEventDispatcher.dispatchEvent(LoadEventData())
+}
+
+/** Renders the app with React 18 syntax. */
+internal fun renderAppSingles(hierarchy : IdData) {
+  if (!::root.isInitialized) {
+    root = createRoot(container as Element)
+  }
+  root.render(App.create {
+    data = null
+    this.hierarchy = hierarchy
+  })
   JCEFEventDispatcher.dispatchEvent(LoadEventData())
 }
 

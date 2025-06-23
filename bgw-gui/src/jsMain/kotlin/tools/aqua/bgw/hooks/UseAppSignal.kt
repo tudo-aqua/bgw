@@ -17,40 +17,36 @@
 
 package tools.aqua.bgw.hooks
 
+import AppData
 import ComponentViewData
 import kotlin.js.Date
 import preact.signals.react.useSignalEffect
 import react.useState
+import tools.aqua.bgw.getOrCreateAppSignal
 import tools.aqua.bgw.getOrCreateSignal
 
 /**
  * Custom hook that connects a component to the signals system. It handles getting or creating the
  * signal for a component and updating the props when the signal changes.
  *
- * @param T The ComponentViewData type (e.g., TokenViewData, CardViewData)
- *
- * @param id The ID of the component
- * @param initialData The initial data for the component
+ * @param initialData The initial data for the app
  * @return The props object that will automatically update when the signal changes
  */
-internal inline fun <reified T : ComponentViewData> useComponentSignal(
-    id: String,
-    initialData: T
-): T {
-  // Get or create signal for this component
-  val componentSignal = getOrCreateSignal(id, initialData)
+internal fun useAppSignal(
+    initialData: AppData
+): AppData {
+    // Get or create signal for this component
+    val componentSignal = getOrCreateAppSignal(initialData)
 
-  // Set up React state to hold the component props
-  val (props, setProps) = useState(initialData)
+    // Set up React state to hold the component props
+    val (props, setProps) = useState(initialData)
 
-  // Subscribe to signal changes and update React state
-  useSignalEffect {
-    val signalValue = componentSignal.value.data
-    if (signalValue != null && signalValue is T) {
-      console.log("Signal changed at ${Date.now()} for $id")
-      setProps(signalValue)
+    // Subscribe to signal changes and update React state
+    useSignalEffect {
+        val signalValue = componentSignal.value
+        console.log("App Signal changed at ${Date.now()}")
+        setProps(signalValue)
     }
-  }
 
-  return props
+    return props
 }

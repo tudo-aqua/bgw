@@ -32,8 +32,8 @@ class CompoundVisualsExample : BoardGameApplication("CompoundVisuals example") {
 
   private val gridView =
       GridPane<TokenView>(
-          columns = 3,
-          rows = 3,
+          columns = 5,
+          rows = 5,
           posX = 1920 / 2,
           posY = 1080 / 2,
           spacing = 2,

@@ -19,8 +19,8 @@ package tools.aqua.bgw.mapper
 
 import ComponentIdData
 import GridPosition
+import idJson
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json as KJson
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.gamecomponentviews.*
@@ -28,8 +28,6 @@ import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.core.*
-
-internal val idJson = KJson { encodeDefaults = false }
 /**
  * Component mapper that creates a simplified version of ComponentView hierarchy containing only IDs
  * and minimal structure information.
@@ -105,17 +103,5 @@ internal object ComponentIdMapper {
 
   fun map(scene: Scene<*>): ComponentIdData {
     return ComponentIdData(id = scene.id, components = scene.components.map { map(it) })
-  }
-
-  /** Serializes a scene to a JSON string */
-  fun serializeScene(scene: Scene<*>): String {
-    val idScene = map(scene)
-    return idJson.encodeToString(idScene)
-  }
-
-  /** Serializes a component to a JSON string */
-  fun serializeComponent(component: ComponentView): String {
-    val idComponent = map(component)
-    return idJson.encodeToString(idComponent)
   }
 }

@@ -18,6 +18,7 @@
 package tools.aqua.bgw.elements
 
 import AppData
+import IdData
 import data.event.DragGestureExitedEventData
 import data.event.KeyEventAction
 import emotion.react.Global
@@ -41,18 +42,23 @@ import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import tools.aqua.bgw.hooks.useAppSignal
+import tools.aqua.bgw.hooks.useComponentSignal
 import web.cssom.*
 import web.dom.Element
 
 internal external interface AppProps : Props {
-  var data: AppData
+  var data: AppData?
+  var hierarchy: IdData?
 }
 
 internal val App =
-    FC<AppProps> { props ->
+    FC<AppProps> { p ->
       useEffect { webSocket?.send("Hello from Client!") }
 
-      props.data.fonts.forEach { font ->
+      val props = useAppSignal(p.data ?: AppData())
+
+      props.fonts.forEach { font ->
         Global {
           styles {
             fontFace {
@@ -89,9 +95,9 @@ internal val App =
           }
 
           // BLUE
-          "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
+          "@container bgwContainer (min-aspect-ratio: ${props.width}/${props.height}) and (orientation: landscape)" {
             ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.height).cqh)
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.height).cqh)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -101,7 +107,7 @@ internal val App =
 
             "bgw_scenes" {
               height = 100.cqh
-              width = (100.0 / props.data.height * props.data.width).cqh
+              width = (100.0 / props.height * props.width).cqh
               position = Position.relative
               backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
@@ -110,9 +116,9 @@ internal val App =
           }
 
           // RED
-          "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
+          "@container bgwContainer (max-aspect-ratio: ${props.width}/${props.height}) and (orientation: landscape)" {
             ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.width).cqw)
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.width).cqw)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -122,7 +128,7 @@ internal val App =
 
             "bgw_scenes" {
               width = 100.cqw
-              height = (100.0 / props.data.width * props.data.height).cqw
+              height = (100.0 / props.width * props.height).cqw
               position = Position.relative
               backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
@@ -131,9 +137,9 @@ internal val App =
           }
 
           // GREEN
-          "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
+          "@container bgwContainer (min-aspect-ratio: ${props.width}/${props.height}) and (orientation: portrait)" {
             ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.height).cqh)
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.height).cqh)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -143,7 +149,7 @@ internal val App =
 
             "bgw_scenes" {
               height = 100.cqh
-              width = (100.0 / props.data.height * props.data.width).cqh
+              width = (100.0 / props.height * props.width).cqh
               position = Position.relative
               backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
@@ -152,9 +158,9 @@ internal val App =
           }
 
           // YELLOW
-          "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
+          "@container bgwContainer (max-aspect-ratio: ${props.width}/${props.height}) and (orientation: portrait)" {
             ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.width).cqw)
+              set(CustomPropertyName("--bgwUnit"), (100.0 / props.width).cqw)
               width = 100.cqw
               height = 100.cqh
               margin = 0.px
@@ -164,7 +170,7 @@ internal val App =
 
             "bgw_scenes" {
               width = 100.cqw
-              height = (100.0 / props.data.width * props.data.height).cqw
+              height = (100.0 / props.width * props.height).cqw
               position = Position.relative
               backgroundColor = rgb(0, 0, 0, 0.0)
               overflow = Overflow.hidden
@@ -510,15 +516,15 @@ internal val App =
             width = 100.pct
             height = 100.pct
             display = Display.flex
-            alignmentBuilder(props.data)
+            alignmentBuilder(props)
           }
 
           bgwVisuals {
             className = ClassName("visuals")
-            +VisualBuilder.build(props.data.background)
+            +VisualBuilder.build(props.background)
           }
 
-          val menuScene = props.data.menuScene
+          val menuScene = props.menuScene
           val (isMenuVisible, setMenuVisible) = useState(menuScene != undefined)
           var timeoutId: Int? = null
 
@@ -528,7 +534,7 @@ internal val App =
               setMenuVisible(true)
             } else {
               // Start a timer to remove the component after transition completes
-              window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
+              window.setTimeout({ setMenuVisible(false) }, props.fadeTime)
             }
 
             onCleanup { window.clearTimeout(timeoutId ?: 0) }
@@ -539,7 +545,7 @@ internal val App =
             css {
               position = Position.absolute
               zIndex = zIndex(1000)
-              transition = menuTransition(props.data.fadeTime)
+              transition = menuTransition(props.fadeTime)
               opacity = if (menuScene != undefined) number(1.0) else number(0.0)
               // Keep the element in the DOM but invisible until transition completes
               visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
@@ -559,9 +565,9 @@ internal val App =
               zIndex = zIndex(999)
               backdropFilter =
                   backgroundBlur(
-                      if (menuScene != undefined && props.data.blurRadius > 0.0) 1.0 else 0.0,
-                      props.data.blurRadius)
-              transition = menuTransition(props.data.fadeTime)
+                      if (menuScene != undefined && props.blurRadius > 0.0) 1.0 else 0.0,
+                      props.blurRadius)
+              transition = menuTransition(props.fadeTime)
               // Same visibility logic as with the menu
               visibility = if (isMenuVisible) Visibility.visible else Visibility.hidden
             }
@@ -570,20 +576,20 @@ internal val App =
               ariaExpanded = menuScene != undefined
               div {
                 css {
-                  width = props.data.width.bgw
-                  height = props.data.height.bgw
+                  width = props.width.bgw
+                  height = props.height.bgw
                 }
               }
             }
           }
 
-          val gameScene = props.data.gameScene
+          val gameScene = props.gameScene
           if (gameScene != undefined) {
             bgwLock {
               css {
                 position = Position.absolute
-                width = props.data.width.bgw
-                height = props.data.height.bgw
+                width = props.width.bgw
+                height = props.height.bgw
                 backgroundColor = rgb(0, 0, 0, 0.0)
                 zIndex = zIndex(998)
                 display = if (gameScene.locked) Display.block else None.none
