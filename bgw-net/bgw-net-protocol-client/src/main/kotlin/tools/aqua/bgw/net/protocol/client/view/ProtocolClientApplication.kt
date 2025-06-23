@@ -23,23 +23,23 @@ import tools.aqua.bgw.net.protocol.client.service.NetworkService
 import tools.aqua.bgw.net.protocol.client.view.messageviews.*
 import tools.aqua.bgw.visual.ColorVisual
 
-/** The [BoardGameApplication] class.
+/**
+ * The [BoardGameApplication] class.
  *
  * @param serverAddress The address of the server to connect to.
  * @param secret The secret to use for the connection.
  * @param gameID The ID of the game to join or host.
  * @param sessionID The session ID to use for the connection.
- *
  */
 class ProtocolClientApplication(
     serverAddress: String = "sopra.cs.tu-dortmund.de:80/bgw-net/connect",
     secret: String = "",
     gameID: String = "",
     sessionID: String = ""
-) :
-    BoardGameApplication(width = 500, height = 815, windowTitle = "BGW Protocol Client") {
+) : BoardGameApplication(width = 500, height = 815, windowTitle = "BGW Protocol Client") {
 
-  private val connectionScene: ConnectionScene = ConnectionScene(serverAddress, secret, gameID, sessionID)
+  private val connectionScene: ConnectionScene =
+      ConnectionScene(serverAddress, secret, gameID, sessionID)
   private val protocolScene: ProtocolScene = ProtocolScene()
   private val networkService: NetworkService = NetworkService(this)
 

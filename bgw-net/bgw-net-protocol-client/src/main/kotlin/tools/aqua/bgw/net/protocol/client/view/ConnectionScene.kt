@@ -22,13 +22,13 @@ import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 
-/** The connection startup screen.
+/**
+ * The connection startup screen.
  *
  * @param serverAddress The address of the server to connect to.
  * @param secret The secret to use for the connection.
  * @param gameID The ID of the game to join or host.
  * @param sessionID The session ID to use for the connection.
- *
  */
 class ConnectionScene(
     serverAddress: String = "",
@@ -64,7 +64,13 @@ class ConnectionScene(
 
   /** [TextField] for the session id. */
   val sessionIDText: TextField =
-      TextField(posX = 50, posY = 200, height = 40, width = width - 100, prompt = "sessionID", text = sessionID)
+      TextField(
+          posX = 50,
+          posY = 200,
+          height = 40,
+          width = width - 100,
+          prompt = "sessionID",
+          text = sessionID)
 
   /** [Button] for joining a game. */
   val buttonJoin: Button =
