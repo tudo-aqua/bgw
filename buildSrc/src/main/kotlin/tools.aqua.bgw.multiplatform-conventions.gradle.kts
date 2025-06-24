@@ -16,7 +16,6 @@
  */
 
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
 import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.publishing
@@ -32,6 +31,7 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
@@ -108,7 +108,7 @@ artifacts { add(kdoc.name, kdocJar) }
 val javadocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
       archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
     }
 
 java {
@@ -167,6 +167,43 @@ kotlin {
     // val jsTest by getting
   }
 }
+
+val jvmJavadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      archiveAppendix.set("jvm")
+      from(tasks.named<DokkaTask>("dokkaHtmlJvm").flatMap { it.outputDirectory })
+    }
+
+val jsJavadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      archiveAppendix.set("js")
+      from(tasks.named<DokkaTask>("dokkaHtmlJs").flatMap { it.outputDirectory })
+    }
+
+val commonJavadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      archiveAppendix.set("kotlin")
+      from(tasks.named<DokkaTask>("dokkaHtmlCommon").flatMap { it.outputDirectory })
+    }
+
+val dokkaHtmlJvm by
+    tasks.creating(DokkaTask::class) {
+      outputDirectory.set(buildDir.resolve("dokka/jvm"))
+      dokkaSourceSets { named("jvmMain") }
+    }
+val dokkaHtmlJs by
+    tasks.creating(DokkaTask::class) {
+      outputDirectory.set(buildDir.resolve("dokka/js"))
+      dokkaSourceSets { named("jsMain") }
+    }
+val dokkaHtmlCommon by
+    tasks.creating(DokkaTask::class) {
+      outputDirectory.set(buildDir.resolve("dokka/common"))
+      dokkaSourceSets { named("commonMain") }
+    }
 
 application {
   mainClass.set("tools.aqua.bgw.main.MainKt")
@@ -230,18 +267,11 @@ val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
 publishing {
   publications {
-    create<MavenPublication>("maven") {
-      groupId = "tools.aqua"
-      artifactId = "bgw-gui"
-      from(components["kotlin"])
-      artifact(tasks.named<Jar>("jvmJar")) { classifier = "jvm" }
-      artifact(tasks.named<Jar>("jsJar")) { classifier = "js" }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jsSourcesJar")) { classifier = "js-sources" }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("jvmSourcesJar")) {
-        classifier = "jvm-sources"
-      }
-      artifact(tasks.named<org.gradle.jvm.tasks.Jar>("metadataSourcesJar")) {
-        classifier = "metadata-sources"
+    withType<MavenPublication> {
+      when (name) {
+        "jvm" -> artifact(jvmJavadocJar)
+        "js" -> artifact(jsJavadocJar)
+        else -> artifact(commonJavadocJar)
       }
       pom {
         name.set(mavenMetadata.name)
@@ -264,11 +294,7 @@ publishing {
 signing {
   setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
   useGpgCmd()
-  sign(
-      publishing.publications["maven"],
-      publishing.publications["kotlinMultiplatform"],
-      publishing.publications["js"],
-      publishing.publications["jvm"])
+  sign(publishing.publications)
 }
 
 tasks.named("publish") {
