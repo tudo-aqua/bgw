@@ -87,6 +87,9 @@ All notable changes to this project will be documented in this file.
 - Added `isHorizontalLocked`, `isVerticalLocked` and `isZoomLocked` properties to `CameraPane` to lock panning and zooming in specific directions.
 - Added `scrollOffset` property to `WheelEvent` to get the scroll offset since the last event triggered.
 
+**Network:**
+- Added constructor arguments for `bgw-net-protocol-client` to configure the BGW-Net Protocol client in your project.
+
 ### Fixed
 
 - Fixed broken `CardStack` alignment.
