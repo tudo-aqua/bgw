@@ -16,7 +16,6 @@
  */
 
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaJavadoc
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
 import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
 import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.publishing
@@ -108,7 +107,7 @@ artifacts { add(kdoc.name, kdocJar) }
 val javadocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
       archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
     }
 
 java {
@@ -243,6 +242,25 @@ publishing {
       artifact(tasks.named<org.gradle.jvm.tasks.Jar>("metadataSourcesJar")) {
         classifier = "metadata-sources"
       }
+      artifact(javadocJar) { classifier = "javadoc" }
+
+      pom {
+        name.set(mavenMetadata.name)
+        description.set(mavenMetadata.description)
+
+        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+
+        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+
+        globalMetadata.githubProject.get().let {
+          github(it.organization, it.project, it.mainBranch)
+        }
+
+        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
+      }
+    }
+
+    withType<MavenPublication> {
       pom {
         name.set(mavenMetadata.name)
         description.set(mavenMetadata.description)
@@ -264,11 +282,7 @@ publishing {
 signing {
   setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
   useGpgCmd()
-  sign(
-      publishing.publications["maven"],
-      publishing.publications["kotlinMultiplatform"],
-      publishing.publications["js"],
-      publishing.publications["jvm"])
+  sign(publishing.publications)
 }
 
 tasks.named("publish") {
