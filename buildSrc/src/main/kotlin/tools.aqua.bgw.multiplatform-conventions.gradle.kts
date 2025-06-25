@@ -16,6 +16,7 @@
  */
 
 import gradle.kotlin.dsl.accessors._7bceb54c174f154aa7f0d632213e663d.spotless
+import java.nio.file.Files
 import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
@@ -27,7 +28,6 @@ import tools.aqua.defaultFormat
 import tools.aqua.developer
 import tools.aqua.github
 import tools.aqua.license
-import java.nio.file.Files
 
 plugins {
   kotlin("multiplatform")

@@ -38,15 +38,10 @@ mavenMetadata {
 }
 
 kover {
-    merge {
-        subprojects {
-            it.name !in listOf(
-                "bgw-docs",
-                "bgw-docs:parser",
-                "bgw-docs:website",
-                "bgw-examples",
-                "bgw-net"
-            )
-        }
+  merge {
+    subprojects {
+      it.name !in
+          listOf("bgw-docs", "bgw-docs:parser", "bgw-docs:website", "bgw-examples", "bgw-net")
     }
+  }
 }

@@ -65,9 +65,6 @@ spotless {
   }
 }
 
-kover {
-  merge {
-  }
-}
+kover { merge {} }
 
 nexusPublishing { repositories { sonatype() } }
