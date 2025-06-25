@@ -32,8 +32,6 @@ import tools.aqua.bgw.visual.Visual
  * The [formatFunction] is used to gain a [String] representation of each item. If no
  * [formatFunction] is specified the [toString] function gets used instead.
  *
- * @constructor Creates a [ListView].
- *
  * @param T Generic [ListView] content.
  * @param posX Horizontal coordinate for this [ListView]. Default: 0.
  * @param posY Vertical coordinate for this [ListView]. Default: 0.
@@ -44,18 +42,17 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Background [Visual]. Default: [ColorVisual.WHITE].
  * @param orientation Orientation for this [ListView]. Default: [Orientation.VERTICAL].
  * @param selectionMode Selection mode to be used for this [ListView]. Default:
- * [SelectionMode.SINGLE].
+ *   [SelectionMode.SINGLE].
  * @param selectionBackground Background for selected items in this [ListView]. Default:
- * [ColorVisual.BLUE].
+ *   [ColorVisual.BLUE].
  * @param formatFunction The [formatFunction] that is used to represent the items. Default: `null`.
- *
+ * @constructor Creates a [ListView].
  * @see Font
  * @see Visual
  * @see Orientation
  * @see SelectionMode
  * @see ColorVisual
  * @see StructuredDataView
- *
  * @since 0.1
  */
 open class ListView<T>(
@@ -120,11 +117,8 @@ open class ListView<T>(
    * Manually trigger the [formatFunction] for a given item.
    *
    * @param item Item to format.
-   *
    * @return Formatted [String] representation of the item.
-   *
    * @see formatFunction
-   *
    * @since 0.10
    */
   fun formatItem(item: Any?): String {

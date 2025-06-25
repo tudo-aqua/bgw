@@ -35,21 +35,17 @@ import tools.aqua.bgw.visual.Visual
  *
  * It defines important fields and functions that are necessary to visualize inheriting components.
  *
- * @constructor Creates a [ComponentView].
- *
  * @param posX the X coordinate for this [ComponentView] relative to its container.
  * @param posY the Y coordinate for this [ComponentView] relative to its container.
  * @param width width for this [ComponentView].
  * @param height height for this [ComponentView].
  * @param visual visual for this [ComponentView].
- *
+ * @constructor Creates a [ComponentView].
  * @throws tools.aqua.bgw.exception.IllegalInheritanceException Inheriting from this [Class] is not
- * advised, because it cannot be rendered on its own. Trying to do so will result in an exception at
- * runtime.
- *
+ *   advised, because it cannot be rendered on its own. Trying to do so will result in an exception
+ *   at runtime.
  * @see Visual
  * @see tools.aqua.bgw.exception.IllegalInheritanceException
- *
  * @since 0.1
  */
 abstract class ComponentView
@@ -68,7 +64,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Order of [ComponentView] inside of [parent].
    *
    * @see LayeredContainer
-   *
    * @since 0.8
    */
   var zIndex: Int
@@ -112,6 +107,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
   /** Name field only for debugging purposes. Has no effect on rendering. */
   val name: String = this::class.simpleName + "@" + this.hashCode().toHexString()
+
   private fun Int.toHexString() = "0x" + this.toString(16).padStart(8, '0')
 
   /**
@@ -314,8 +310,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Scale of this [ComponentView].
    *
    * @throws IllegalStateException When invoking getter if scaleX and scaleY differ. Use scaleX and
-   * scaleY getters instead. Safe to use if scale is equal in both directions.
-   *
+   *   scaleY getters instead. Safe to use if scale is equal in both directions.
    * @see scaleX
    * @see scaleY
    */
@@ -336,7 +331,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * bounds.
    *
    * @see CoordinatePlain
-   *
    * @since 0.3
    */
   var layoutBounds: CoordinatePlain
@@ -638,7 +632,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @param posX New X coordinate.
    * @param posY New Y coordinate.
-   *
    * @since 0.3
    */
   fun reposition(posX: Number, posY: Number) {
@@ -651,7 +644,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @param offsetX Offset for the X coordinate.
    * @param offsetY Offset for the Y coordinate.
-   *
    * @since 0.3
    */
   fun offset(offsetX: Number, offsetY: Number) {
@@ -664,7 +656,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @param width New width.
    * @param height New height.
-   *
    * @since 0.3
    */
   fun resize(width: Number, height: Number) {
@@ -676,9 +667,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Scales this [ComponentView] by the given [scalar].
    *
    * @param scalar New scale.
-   *
    * @throws IllegalArgumentException If the given [scalar] is negative.
-   *
    * @since 0.3
    */
   fun scale(scalar: Number) {
@@ -686,13 +675,10 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
   }
 
   /**
-   *
    * Scales this [ComponentView]'s width by the given [scalar].
    *
    * @param scalar New x scale.
-   *
    * @throws IllegalArgumentException If the given [scalar] is negative.
-   *
    * @since 0.3
    */
   fun scaleX(scalar: Number) {
@@ -703,9 +689,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Scales this [ComponentView]'s height by the given [scalar].
    *
    * @param scalar New y scale.
-   *
    * @throws IllegalArgumentException If the given [scalar] is negative.
-   *
    * @since 0.3
    */
   fun scaleY(scalar: Number) {
@@ -716,7 +700,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Checks given [scalar] for being positive.
    *
    * @param scalar scalar to be checked.
-   *
    * @throws IllegalArgumentException If the given [scalar] is negative.
    */
   private fun checkScalarPositive(scalar: Number): Double {
@@ -731,7 +714,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Rotates this [ComponentView] by the given number of [degrees].
    *
    * @param degrees Degrees to add to current rotation. May be negative.
-   *
    * @since 0.3
    */
   fun rotate(degrees: Number) {
@@ -742,10 +724,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Removes this component from its parent.
    *
    * @return Returns the former parent.
-   *
    * @throws IllegalStateException If this component is not contained in any container. Use parent
-   * field to check.
-   *
+   *   field to check.
    * @see parent
    */
   fun removeFromParent(): ComponentView {
@@ -760,7 +740,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Removes component from container's children if supported.
    *
    * @param component Child to be removed.
-   *
    * @throws RuntimeException If the componentView does not support children.
    */
   internal abstract fun removeChild(component: ComponentView)
@@ -773,7 +752,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Returns `null` on all [ComponentView]s not supporting this feature.
    *
    * @param child Child to find.
-   *
    * @return Coordinate of given child in this [ComponentView] or `null` if not supported.
    */
   @Suppress("FunctionOnlyReturningConstant")
@@ -788,7 +766,6 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    * Returns `null` on all [ComponentView]s not supporting this feature.
    *
    * @param child Child to find.
-   *
    * @return Coordinate of given child in this [ComponentView] or `null` if not supported.
    */
   @Suppress("FunctionOnlyReturningConstant")
@@ -799,11 +776,9 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @throws IllegalStateException if the [ComponentView] does not have a parent
    * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
-   * [ComponentView]
-   *
+   *   [ComponentView]
    * @see LayeredContainer
    * @see zIndex
-   *
    * @since 0.8
    */
   fun toFront() {
@@ -832,11 +807,9 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @throws IllegalStateException if the [ComponentView] does not have a parent
    * @throws IllegalStateException if the [parent] is not [LayeredContainer] with the generic type
-   * [ComponentView]
-   *
+   *   [ComponentView]
    * @see LayeredContainer
    * @see zIndex
-   *
    * @since 0.8
    */
   fun toBack() {

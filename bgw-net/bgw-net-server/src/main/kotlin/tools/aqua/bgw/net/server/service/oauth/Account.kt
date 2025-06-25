@@ -17,8 +17,8 @@
 
 package tools.aqua.bgw.net.server.service.oauth
 
+import jakarta.persistence.*
 import java.io.Serializable
-import javax.persistence.*
 
 /** Represents a user account login in with an oauth provider. */
 @Entity

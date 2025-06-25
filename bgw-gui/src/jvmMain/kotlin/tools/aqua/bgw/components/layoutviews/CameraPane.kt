@@ -38,13 +38,11 @@ import tools.aqua.bgw.visual.Visual
  * @param visual The visual representation of the camera pane. Default is an empty visual.
  * @param target The target [LayoutView] that this camera pane will display.
  * @param limitBounds Whether the target layout view should be limited to the bounds of the camera
- * pane. Default is true.
- *
+ *   pane. Default is true.
  * @see GridPane
  * @see Pane
  * @see Visual
  * @see ComponentView
- *
  * @since 0.8
  */
 open class CameraPane<T : LayoutView<*>>(
@@ -130,7 +128,6 @@ open class CameraPane<T : LayoutView<*>>(
    * @see interactive
    * @see isVerticalLocked
    * @see isZoomLocked
-   *
    * @since 0.10
    */
   var isHorizontalLocked: Boolean
@@ -148,7 +145,6 @@ open class CameraPane<T : LayoutView<*>>(
    * @see interactive
    * @see isHorizontalLocked
    * @see isZoomLocked
-   *
    * @since 0.10
    */
   var isVerticalLocked: Boolean
@@ -165,7 +161,6 @@ open class CameraPane<T : LayoutView<*>>(
    * @see interactive
    * @see isHorizontalLocked
    * @see isVerticalLocked
-   *
    * @since 0.10
    */
   var isZoomLocked: Boolean
@@ -181,7 +176,6 @@ open class CameraPane<T : LayoutView<*>>(
    * The mouse button that is used to pan the camera pane.
    *
    * @see interactive
-   *
    * @since 0.9
    */
   var panMouseButton: MouseButtonType
@@ -198,7 +192,6 @@ open class CameraPane<T : LayoutView<*>>(
    * Gets invoked whenever the camera pane is zoomed.
    *
    * @see zoom
-   *
    * @since 0.10
    */
   var onZoomed: ((Number) -> Unit)? = null
@@ -212,11 +205,9 @@ open class CameraPane<T : LayoutView<*>>(
    * @param y The y-coordinate to scroll to.
    * @param zoom The zoom level to zoom to.
    * @param smooth Whether the pan should be smooth (or instant). Default is true.
-   *
    * @see limitBounds
    * @see pan
    * @see panBy
-   *
    * @since 0.10
    */
   fun pan(x: Number, y: Number, zoom: Double, smooth: Boolean = true) {
@@ -236,7 +227,6 @@ open class CameraPane<T : LayoutView<*>>(
    * @param x The x-coordinate to scroll to.
    * @param y The y-coordinate to scroll to.
    * @param smooth Whether the pan should be smooth (or instant). Default is true.
-   *
    * @see limitBounds
    * @see pan
    * @see panBy
@@ -260,11 +250,9 @@ open class CameraPane<T : LayoutView<*>>(
    * @param yOffset The amount to pan the view vertically.
    * @param zoom The zoom level to zoom to.
    * @param smooth Whether the pan should be smooth (or instant). Default is true.
-   *
    * @see limitBounds
    * @see pan
    * @see panBy
-   *
    * @since 0.10
    */
   fun panBy(xOffset: Number, yOffset: Number, zoom: Double, smooth: Boolean = true) {
@@ -283,7 +271,6 @@ open class CameraPane<T : LayoutView<*>>(
    * @param xOffset The amount to pan the view horizontally.
    * @param yOffset The amount to pan the view vertically.
    * @param smooth Whether the pan should be smooth (or instant). Default is true.
-   *
    * @see limitBounds
    * @see pan
    * @see panBy
@@ -305,7 +292,6 @@ open class CameraPane<T : LayoutView<*>>(
    * target layout view will be limited to the bounds of the camera pane.
    *
    * @param zoom The zoom level to zoom to.
-   *
    * @see limitBounds
    */
   private fun zoom(zoom: Double) {

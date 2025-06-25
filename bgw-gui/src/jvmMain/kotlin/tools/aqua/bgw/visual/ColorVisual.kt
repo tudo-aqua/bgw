@@ -25,10 +25,8 @@ import tools.aqua.bgw.observable.properties.Property
 /**
  * A solid color visual. Displays a rectangle filled with the given [color].
  *
- * @constructor Creates a solid [ColorVisual] filled with given [Color].
- *
  * @param color Color to use as filling.
- *
+ * @constructor Creates a solid [ColorVisual] filled with given [Color].
  * @since 0.1
  */
 open class ColorVisual(color: Color) : SingleLayerVisual(0.0) {
@@ -64,13 +62,11 @@ open class ColorVisual(color: Color) : SingleLayerVisual(0.0) {
    * @param g Green channel between 0 and 255.
    * @param b Blue channel between 0 and 255.
    * @param alpha Alpha channel (0 - 255 for Int, 0.0 - 1.0 for Double). Value is 1.0 by default and
-   * if parameter is out of a valid range.
-   *
+   *   if parameter is out of a valid range.
    * @see SingleLayerVisual
    * @see CompoundVisual
    * @see TextVisual
    * @see ImageVisual
-   *
    * @since 0.1
    */
   constructor(
@@ -94,9 +90,7 @@ open class ColorVisual(color: Color) : SingleLayerVisual(0.0) {
    * legacy BGW versions and will be removed in future versions.
    *
    * @param awtColor Color to use as filling.
-   *
    * @see Color
-   *
    * @since 0.10
    */
   @Deprecated("Using java.awt.Color is no longer recommended as of BGW 0.10.", ReplaceWith("Color"))

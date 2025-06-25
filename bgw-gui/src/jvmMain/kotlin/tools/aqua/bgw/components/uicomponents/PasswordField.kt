@@ -29,24 +29,21 @@ import tools.aqua.bgw.visual.Visual
  *
  * Whenever user input occurs the [text] field gets updated.
  *
- * @constructor Creates a [PasswordField].
- *
  * @param posX Horizontal coordinate for this [PasswordField]. Default: 0.
  * @param posY Vertical coordinate for this [PasswordField]. Default: 0.
  * @param width Width for this [PasswordField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
  * @param height Height for this [PasswordField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
  * @param text Initial text for this [PasswordField]. Default: empty String.
  * @param prompt Prompt for this [PasswordField]. This gets displayed as a prompt to the user
- * whenever the label is an empty string. Default: empty string.
+ *   whenever the label is an empty string. Default: empty string.
  * @param font [Font] to be used to display [text].
  * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
- *
+ * @constructor Creates a [PasswordField].
  * @see Font
  * @see Visual
  * @see TextInputUIComponent
  * @see TextField
  * @see TextArea
- *
  * @since 0.7.3
  */
 open class PasswordField(

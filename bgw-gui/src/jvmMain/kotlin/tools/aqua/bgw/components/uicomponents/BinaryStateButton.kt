@@ -39,14 +39,12 @@ import tools.aqua.bgw.visual.Visual
  * @param isSelected The initial state for this [BinaryStateButton].
  * @param toggleGroup The ToggleGroup of this [BinaryStateButton].
  * @param visual Background [Visual].
- *
  * @see ToggleGroup
  * @see RadioButton
  * @see Font
  * @see Alignment
  * @see Visual
  * @see LabeledUIComponent
- *
  * @since 0.5
  */
 sealed class BinaryStateButton(
@@ -116,7 +114,6 @@ sealed class BinaryStateButton(
    * Gets called when this [BinaryStateButton] is selected.
    *
    * @see onDeselected
-   *
    * @since 0.10
    */
   var onSelected: (() -> Unit)? = null
@@ -125,7 +122,6 @@ sealed class BinaryStateButton(
    * Gets called when this [BinaryStateButton] is deselected.
    *
    * @see onSelected
-   *
    * @since 0.10
    */
   var onDeselected: (() -> Unit)? = null
@@ -135,7 +131,6 @@ sealed class BinaryStateButton(
    *
    * @see onSelected
    * @see onDeselected
-   *
    * @since 0.10
    */
   var onSelectionChanged: ((Boolean) -> Unit)? = null

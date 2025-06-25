@@ -29,8 +29,6 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A simple [Button] with a [text].
  *
- * @constructor Creates a [Button].
- *
  * @param posX Horizontal coordinate for this [Button]. Default: 0.
  * @param posY Vertical coordinate for this [Button]. Default: 0.
  * @param width Width for this [Button]. Default: [DEFAULT_BUTTON_WIDTH].
@@ -40,12 +38,11 @@ import tools.aqua.bgw.visual.Visual
  * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
  * @param visual Visual for this button. Default: [ColorVisual.WHITE]
- *
+ * @constructor Creates a [Button].
  * @see Font
  * @see Alignment
  * @see Visual
  * @see LabeledUIComponent
- *
  * @since 0.1
  */
 open class Button(

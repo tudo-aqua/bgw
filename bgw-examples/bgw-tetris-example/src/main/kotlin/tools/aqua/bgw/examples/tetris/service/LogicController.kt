@@ -99,8 +99,7 @@ class LogicController(private val view: Refreshable) {
    * Navigates current piece in given direction if possible.
    *
    * @param keyCode Pressed key. Has to be an Arrow key or an [IllegalArgumentException] will be
-   * thrown.
-   *
+   *   thrown.
    * @throws IllegalArgumentException If [keyCode] is not an arrow key.
    */
   fun navigate(keyCode: KeyCode) {

@@ -40,11 +40,9 @@ import tools.aqua.bgw.visual.Visual
  * @param width width for this [GameComponentContainer].
  * @param height height for this [GameComponentContainer].
  * @param visual visual for this [GameComponentContainer].
- *
  * @see DynamicComponentView
  * @see GameComponentView
  * @see Visual
- *
  * @since 0.1
  */
 sealed class GameComponentContainer<T : DynamicComponentView>(
@@ -115,7 +113,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    *
    * @param component Component to add.
    * @param index Index at which [component] will be added (Z-Height).
-   *
    * @throws IllegalArgumentException If [component] is already contained.
    * @throws IllegalArgumentException If [index] is out of bounds for [components].
    */
@@ -169,7 +166,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * [IllegalArgumentException] is thrown and no further [GameComponentView] is added.
    *
    * @param collection Collection containing the [GameComponentView]s to add.
-   *
    * @throws IllegalArgumentException If a [GameComponentView] is already contained.
    */
   @Synchronized
@@ -188,7 +184,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Removes the [GameComponentView] specified by the parameter from this [GameComponentContainer].
    *
    * @param component The [GameComponentView] to remove.
-   *
    * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
    */
   @Synchronized
@@ -218,7 +213,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Removes all [GameComponentView]s contained in [collection] from this [GameComponentContainer].
    *
    * @param collection The [GameComponentView]s to remove.
-   *
    * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
    */
   @Synchronized
@@ -229,7 +223,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Removes all [GameComponentView]s matching the [predicate] from this [GameComponentContainer].
    *
    * @param predicate The predicate to evaluate.
-   *
    * @return `true` if the [GameComponentContainer] was altered by the call, `false` otherwise.
    */
   @Synchronized
@@ -238,6 +231,7 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
 
   /**
    * Returns the size of the [components] list.
+   *
    * @see components
    */
   fun numberOfComponents(): Int = observableComponents.size
@@ -246,7 +240,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Returns whether the [components] list is empty.
    *
    * @return `true` if this list contains no components, `false` otherwise.
-   *
    * @see isNotEmpty
    * @see components
    */
@@ -256,7 +249,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Returns whether the [components] list is not empty.
    *
    * @return `true` if this list contains components, `false` otherwise.
-   *
    * @see isEmpty
    * @see components
    */
@@ -266,7 +258,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Returning a contained child's coordinates within this container.
    *
    * @param child Child to find.
-   *
    * @return Coordinate of given child in this container relative to containers anchor point.
    */
   override fun getChildPosition(child: ComponentView): Coordinate? =
@@ -276,7 +267,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Returning a contained child's coordinates within this container with scale.
    *
    * @param child Child to find.
-   *
    * @return Coordinate of given child in this container relative to containers anchor point.
    */
   override fun getActualChildPosition(child: ComponentView): Coordinate? =
@@ -286,7 +276,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * Removes [component] from container's children.
    *
    * @param component Child to be removed.
-   *
    * @throws IllegalArgumentException If the child's type is incompatible with container's type.
    */
   override fun removeChild(component: ComponentView) {
@@ -309,7 +298,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * accordingly.
    *
    * @param component Child that is moved to the front.
-   *
    * @since 0.8
    */
   override fun toFront(component: T) {
@@ -325,7 +313,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    * accordingly.
    *
    * @param component Child that is moved to the back.
-   *
    * @since 0.8
    */
   override fun toBack(component: T) {
@@ -342,7 +329,6 @@ sealed class GameComponentContainer<T : DynamicComponentView>(
    *
    * @param component Child that is moved accordingly.
    * @param zIndex The value that is used to compare the order of [observableComponents].
-   *
    * @since 0.8
    */
   override fun setZIndex(component: T, zIndex: Int) {

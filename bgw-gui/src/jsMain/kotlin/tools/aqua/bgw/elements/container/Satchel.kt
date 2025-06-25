@@ -62,8 +62,8 @@ internal val Satchel =
       val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         translate =
-            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<
-                Translate>()
+            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}"
+                .unsafeCast<Translate>()
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
       }
 

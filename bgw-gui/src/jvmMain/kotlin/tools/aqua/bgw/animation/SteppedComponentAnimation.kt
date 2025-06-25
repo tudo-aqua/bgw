@@ -28,11 +28,9 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
  * @param gameComponentView [GameComponentView] to animate.
  * @param duration Duration in milliseconds.
  * @param speed Count of changes to be performed in [duration].
- *
  * @see ComponentAnimation
  * @see Animation
  * @see GameComponentView
- *
  * @since 0.2
  */
 sealed class SteppedComponentAnimation<T : GameComponentView>(

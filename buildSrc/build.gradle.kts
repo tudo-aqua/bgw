@@ -20,10 +20,6 @@ plugins { `kotlin-dsl` }
 repositories {
   gradlePluginPortal()
   mavenCentral()
-  maven {
-    url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
-    name = "ktor-eap"
-  }
 }
 
 dependencies {
@@ -31,7 +27,6 @@ dependencies {
   implementation(libs.bundles.ktor.netty)
 
   implementation(libs.commons.compress)
-  implementation(libs.dockerClient)
 
   implementation(libs.gradle.bmVersions)
   implementation(libs.gradle.dependencyManagement)

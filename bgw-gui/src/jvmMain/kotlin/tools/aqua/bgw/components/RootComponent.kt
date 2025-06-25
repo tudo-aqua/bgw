@@ -25,12 +25,10 @@ import tools.aqua.bgw.visual.Visual
 /**
  * The root component in the view hierarchy of a [Scene].
  *
- * @constructor Creates a [RootComponent].
- *
  * @param T Generic [ComponentView].
  * @param scene Scene of this root component.
  * @property scene Scene of this root component.
- *
+ * @constructor Creates a [RootComponent].
  * @since 0.1
  */
 class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>) :
@@ -40,7 +38,6 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * Removes [component] from the [scene].
    *
    * @param component Child to be removed.
-   *
    * @throws IllegalArgumentException If the child's type is incompatible with scene's type.
    */
   override fun removeChild(component: ComponentView) {
@@ -56,7 +53,6 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * accordingly.
    *
    * @param component Child that is moved to the front.
-   *
    * @since 0.8
    */
   override fun toFront(component: T) {
@@ -73,7 +69,6 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * accordingly.
    *
    * @param component Child that is moved to the back.
-   *
    * @since 0.8
    */
   override fun toBack(component: T) {
@@ -91,7 +86,6 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    *
    * @param component Child that is moved accordingly.
    * @param zIndex The value that is used to compare the order of components.
-   *
    * @since 0.8
    */
   override fun setZIndex(component: T, zIndex: Int) {

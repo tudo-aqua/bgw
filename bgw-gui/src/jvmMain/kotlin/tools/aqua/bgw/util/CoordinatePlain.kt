@@ -23,10 +23,8 @@ package tools.aqua.bgw.util
  * A CoordinatePlain with its four corners as [Coordinate]s.
  *
  * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
- * than BOTTOM_RIGHT corner coordinate.
- *
+ *   than BOTTOM_RIGHT corner coordinate.
  * @see Coordinate
- *
  * @since 0.1
  */
 open class CoordinatePlain
@@ -84,12 +82,9 @@ private constructor(
    * @param topLeftY The yCoord of the top left corner
    * @param bottomRightX The xCoord of the bottom right corner
    * @param bottomRightY The yCoord of the bottom right corner
-   *
    * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
-   * than BOTTOM_RIGHT corner coordinate.
-   *
+   *   than BOTTOM_RIGHT corner coordinate.
    * @see Coordinate
-   *
    * @since 0.3
    */
   constructor(
@@ -119,12 +114,9 @@ private constructor(
    *
    * @param topLeft [Coordinate] of top left corner
    * @param bottomRight [Coordinate] of bottom right corner
-   *
    * @throws IllegalArgumentException If TOP_LEFT corner coordinates are larger in x or y direction
-   * than BOTTOM_RIGHT corner coordinate.
-   *
+   *   than BOTTOM_RIGHT corner coordinate.
    * @see Coordinate
-   *
    * @since 0.1
    */
   constructor(

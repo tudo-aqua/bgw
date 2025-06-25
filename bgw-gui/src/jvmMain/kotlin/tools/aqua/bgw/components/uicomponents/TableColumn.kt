@@ -27,19 +27,16 @@ import tools.aqua.bgw.util.Font
 /**
  * A [TableColumn] may be used to represent a column in a [TableView].
  *
- * @constructor Creates a [TableColumn].
- *
  * @param T [TableView] content type.
  * @param title The title for this [TableColumn]. It gets displayed in the header row of the
- * [TableView].
+ *   [TableView].
  * @param width The [width] for this [TableColumn].
  * @param font [Font] to be used for this [TableColumn]. Default: default [Font] constructor.
  * @param formatFunction The format function for this [TableColumn]. It gets applied to each item in
- * the [TableView] to get a [String] for its cell.
- *
+ *   the [TableView] to get a [String] for its cell.
+ * @constructor Creates a [TableColumn].
  * @see TableView
  * @see Font
- *
  * @since 0.1
  */
 open class TableColumn<T>(
@@ -67,7 +64,6 @@ open class TableColumn<T>(
    * [Property] for the width of this [TableColumn]. Must not be negative.
    *
    * @throws IllegalArgumentException If a negative value was set.
-   *
    * @see width
    */
   internal val widthProperty: LimitedDoubleProperty =
@@ -99,7 +95,6 @@ open class TableColumn<T>(
    * [Font] of this [TableColumn].
    *
    * @see Font
-   *
    * @since 0.6
    */
   var font: Font
@@ -133,11 +128,8 @@ open class TableColumn<T>(
    * Manually trigger the [formatFunction] for a given item.
    *
    * @param item Item to format.
-   *
    * @return Formatted [String] representation of the item.
-   *
    * @see formatFunction
-   *
    * @since 0.10
    */
   fun formatItem(item: Any?): String {

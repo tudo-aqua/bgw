@@ -22,19 +22,16 @@ package tools.aqua.bgw.dialog
 /**
  * Shows a dialog containing the given [message] and [buttons].
  *
- * @constructor Private constructor. Refer to secondary constructors.
- *
  * @property dialogType The [DialogType] of the dialog. Affects the displayed icon.
  * @property title Title to be shown.
  * @property header Headline to be shown in the dialogs content.
  * @property message Message to be shown.
  * @property exception [Throwable] to be shown in expandable content.
  * @property buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
- * used if you don't pass any [ButtonType]s.
- *
+ *   used if you don't pass any [ButtonType]s.
+ * @constructor Private constructor. Refer to secondary constructors.
  * @see DialogType
  * @see ButtonType
- *
  * @since 0.1
  */
 data class Dialog
@@ -59,11 +56,9 @@ internal constructor(
    * @param header Headline to be shown in the dialogs content.
    * @param message Message to be shown in the dialogs content.
    * @param buttons Buttons to be shown. Standard set of buttons according to [dialogType] will be
-   * used if you don't pass any [ButtonType]s.
-   *
+   *   used if you don't pass any [ButtonType]s.
    * @see DialogType
    * @see ButtonType
-   *
    * @since 0.1
    */
   constructor(
@@ -88,7 +83,6 @@ internal constructor(
    * @param header Headline to be shown in the dialogs content.
    * @param message Message to be shown.
    * @param exception [Throwable] to be shown in expandable content.
-   *
    * @since 0.1
    */
   constructor(

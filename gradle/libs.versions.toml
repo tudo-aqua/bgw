@@ -2,19 +2,17 @@
 
 # Platforms
 
-kotlin = "1.9.10"
-spring = "2.7.14"
-vaadin = "23.1.6"
+kotlin = "2.0.21"
+spring = "3.5.3"
+vaadin = "24.7.0"
 
 # Other
 
-jackson = "2.13.5"
-jekyllDocker = "4.2.0"
-junit = "5.9.0"
-ktor = "2.1.0"
-openjfx = "18.0.2"
-guava = "32.0.1-jre"
-testcontainers = "1.17.3"
+jackson = "2.19.1"
+junit = "5.13.1"
+ktor = "3.1.3"
+guava = "33.4.8-jre"
+testcontainers = "1.21.2"
 
 [libraries]
 
@@ -22,11 +20,7 @@ testcontainers = "1.17.3"
 
 assertj = { group = "org.assertj", name = "assertj-core", version = "3.23.1" }
 
-commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.21" }
-
-dockerClient = { group = "de.gesellix", name = "docker-client", version = "2022-07-28T22-55-00" }
-
-hibernateTypes = { group = "com.vladmihalcea", name = "hibernate-types-55", version = "2.18.0" }
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.27.1" }
 
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
@@ -36,12 +30,10 @@ guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 
 javaWebSocket = { group = "org.java-websocket", name = "Java-WebSocket", version = "1.5.3" }
 
-jfoenix = { group = "com.jfoenix", name = "jfoenix", version = "9.0.10" }
-
 jsonSchemaValidator = { group = "com.networknt", name = "json-schema-validator", version = "1.0.72" }
 
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.4" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.3" }
@@ -49,19 +41,10 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 ktor-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 
-openjfx-base = { group = "org.openjfx", name = "javafx-base", version.ref = "openjfx" }
-openjfx-controls = { group = "org.openjfx", name = "javafx-controls", version.ref = "openjfx" }
-openjfx-fxml = { group = "org.openjfx", name = "javafx-fxml", version.ref = "openjfx" }
-openjfx-graphics = { group = "org.openjfx", name = "javafx-graphics", version.ref = "openjfx" }
-openjfx-media = { group = "org.openjfx", name = "javafx-media", version.ref = "openjfx" }
-openjfx-swing = { group = "org.openjfx", name = "javafx-swing", version.ref = "openjfx" }
-openjfx-web = { group = "org.openjfx", name = "javafx-web", version.ref = "openjfx" }
-
-postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.4.3" }
+postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.7.7" }
 
 testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
-h2database-h2 = { group = "com.h2database", name = "h2", version = "2.1.214" }
-
+h2database-h2 = { group = "com.h2database", name = "h2", version = "2.3.232" }
 
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
 spring-boot-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
@@ -69,6 +52,7 @@ spring-boot-test = { group = "org.springframework.boot", name = "spring-boot-sta
 spring-boot-vaadin = { group = "com.vaadin", name = "vaadin-spring-boot-starter" }
 spring-boot-websocket = { group = "org.springframework.boot", name = "spring-boot-starter-websocket" }
 spring-boot-oauth2-client = { group = "org.springframework.boot", name = "spring-boot-starter-oauth2-client" }
+spring-boot-logging = { group = "org.springframework.boot", name = "spring-boot-starter-logging" }
 
 ilay = { group = "org.ilay", name = "ilay", version = "3.0-Final" }
 
@@ -76,18 +60,18 @@ vaadin-bom = { group = "com.vaadin", name = "vaadin-bom", version.ref = "vaadin"
 
 # Gradle Plugins
 
-gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "kotlin" }
+gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version = "2.0.0" }
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
 gradle-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
 
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.42.0" }
 gradle-dependencyManagement = { group = "io.spring.gradle", name = "dependency-management-plugin", version = "1.0.13.RELEASE" }
-gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.21.0" }
+gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.8" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.3.0" }
 gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover", version = "0.6.0-Beta" }
 gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
-gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "6.9.1" }
+gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "7.0.4" }
 gradle-spring-boot = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "spring" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "2.1.0" }
 gradle-vaadin = { group = "com.vaadin", name = "vaadin-gradle-plugin", version.ref = "vaadin" }
@@ -99,7 +83,6 @@ dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin",
 [bundles]
 
 ktor-netty = ["ktor-core", "ktor-netty"]
-openjfx-small = ["openjfx-base", "openjfx-controls", "openjfx-graphics"]
 test = ["assertj", "junit-jupiter"]
 
 gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin", "gradle-kotlin-allopen", "gradle-kotlin-noarg"]

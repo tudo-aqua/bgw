@@ -31,8 +31,6 @@ import tools.aqua.bgw.visual.Visual
 /**
  * Defines a [LayoutView] that orders components in a grid structure.
  *
- * @constructor Creates a [GridPane] with given [rows] and [columns].
- *
  * @param T Generic [ComponentView].
  * @param posX Horizontal coordinate for this [GridPane]. Default: 0.
  * @param posY Vertical coordinate for this [GridPane]. Default: 0.
@@ -40,14 +38,13 @@ import tools.aqua.bgw.visual.Visual
  * @param rows Initial row count.
  * @param spacing Spacing between rows and columns. Default: [DEFAULT_GRID_SPACING].
  * @param layoutFromCenter Whether the [GridPane] should anchor in the center (`true`) or top-Left
- * (`false`). Default: `true`.
+ *   (`false`). Default: `true`.
  * @param visual Initial visual for this [GridPane]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates a [GridPane] with given [rows] and [columns].
  * @see ComponentView
  * @see Visual
  * @see GridIteratorElement
  * @see LayoutView
- *
  * @since 0.1
  */
 open class GridPane<T : ComponentView>(
@@ -205,7 +202,6 @@ open class GridPane<T : ComponentView>(
    * Returns the set column width for the given column.
    *
    * @param columnIndex Target column.
-   *
    * @see setColumnWidth
    * @see setColumnWidths
    * @see setAutoColumnWidth
@@ -219,10 +215,8 @@ open class GridPane<T : ComponentView>(
    *
    * @param columnIndex Target column.
    * @param columnWidth New column width. Use [COLUMN_WIDTH_AUTO] to restore automatic resizing
-   * behaviour.
-   *
+   *   behaviour.
    * @throws IllegalArgumentException If value was negative.
-   *
    * @see setColumnWidths
    * @see setAutoColumnWidth
    * @see setAutoColumnWidths
@@ -237,10 +231,8 @@ open class GridPane<T : ComponentView>(
    * this column.
    *
    * @param columnWidth New column width for all columns. Use [COLUMN_WIDTH_AUTO] to restore
-   * automatic resizing behaviour.
-   *
+   *   automatic resizing behaviour.
    * @throws IllegalArgumentException If value is negative.
-   *
    * @see setColumnWidth
    * @see setAutoColumnWidth
    * @see setAutoColumnWidths
@@ -255,11 +247,9 @@ open class GridPane<T : ComponentView>(
    * this column.
    *
    * @param columnWidths New column widths. Array index 0 get applied for the first column etc. Use
-   * [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
-   *
+   *   [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
    * @throws IllegalArgumentException If Array size does not match column count or values were
-   * negative.
-   *
+   *   negative.
    * @see setColumnWidth
    * @see setAutoColumnWidth
    * @see setAutoColumnWidths
@@ -273,7 +263,6 @@ open class GridPane<T : ComponentView>(
    * Restores automatic resizing behavior for desired column.
    *
    * @param columnIndex Target column.
-   *
    * @see setColumnWidth
    * @see setColumnWidths
    * @see setAutoColumnWidths
@@ -299,7 +288,6 @@ open class GridPane<T : ComponentView>(
    * Returns the set row height for the given row.
    *
    * @param rowIndex Target row.
-   *
    * @see setRowHeight
    * @see setRowHeights
    * @see setAutoRowHeight
@@ -313,9 +301,7 @@ open class GridPane<T : ComponentView>(
    *
    * @param rowIndex Target row.
    * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
-   *
    * @throws IllegalArgumentException If value was negative.
-   *
    * @see setRowHeights
    * @see setAutoColumnWidth
    * @see setAutoColumnWidths
@@ -330,10 +316,8 @@ open class GridPane<T : ComponentView>(
    * row.
    *
    * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
-   *
    * @throws IllegalArgumentException If Array size does not match row count or values were
-   * negative.
-   *
+   *   negative.
    * @see setRowHeight
    * @see setAutoRowHeight
    * @see setAutoRowHeights
@@ -348,11 +332,9 @@ open class GridPane<T : ComponentView>(
    * row.
    *
    * @param rowHeights New row heights. Array index 0 get applied for the first row etc. Use
-   * [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
-   *
+   *   [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
    * @throws IllegalArgumentException If Array size does not match row count or values were
-   * negative.
-   *
+   *   negative.
    * @see setRowHeight
    * @see setAutoRowHeight
    * @see setAutoRowHeights
@@ -366,7 +348,6 @@ open class GridPane<T : ComponentView>(
    * Restores automatic resizing behavior for desired row.
    *
    * @param rowIndex Target row.
-   *
    * @see setRowHeight
    * @see setRowHeights
    * @see setAutoColumnWidths
@@ -399,15 +380,11 @@ open class GridPane<T : ComponentView>(
    * @param right Column count to be added to the right.
    * @param top Row count to be added on the top.
    * @param bottom Row count to be added on the bottom.
-   *
    * @return `true` if the grid has changed by this operation, `false` otherwise.
-   *
    * @throws IllegalArgumentException If any value passed was negative.
-   *
    * @see trim
    * @see removeEmptyColumns
    * @see removeEmptyRows
-   *
    * @see addColumns
    * @see removeColumn
    * @see addRows
@@ -433,11 +410,9 @@ open class GridPane<T : ComponentView>(
    * If the grid was empty the grid gets trimmed to size 0x0.
    *
    * @return `true` if the grid has changed by this operation, `false` otherwise.
-   *
    * @see grow
    * @see removeEmptyColumns
    * @see removeEmptyRows
-   *
    * @see addColumns
    * @see removeColumn
    * @see addRows
@@ -457,7 +432,6 @@ open class GridPane<T : ComponentView>(
    *
    * @param columnIndex Index on which the new column should be added
    * @param count Column count to be added. Default: 1
-   *
    * @see addRows
    * @see removeColumn
    */
@@ -471,7 +445,6 @@ open class GridPane<T : ComponentView>(
    * left in the grid, it gets trimmed to size 0x0.
    *
    * @param columnIndex Index of the column to be deleted.
-   *
    * @see addColumns
    * @see removeEmptyColumns
    */
@@ -503,7 +476,6 @@ open class GridPane<T : ComponentView>(
    *
    * @param rowIndex Index after which the new row should be added
    * @param count Count of rows to be added. Default: 1
-   *
    * @see addColumns
    * @see removeRow
    */
@@ -518,7 +490,6 @@ open class GridPane<T : ComponentView>(
    * If there is no row left in the grid, it gets trimmed to size 0x0.
    *
    * @param rowIndex Index of the row te be deleted.
-   *
    * @see addRows
    * @see removeEmptyRows
    */
@@ -564,7 +535,6 @@ open class GridPane<T : ComponentView>(
    * left corner.
    *
    * @param child Child to find.
-   *
    * @return coordinate of given child in this [GridPane].
    */
   override fun getChildPosition(child: ComponentView): Coordinate? =
@@ -575,7 +545,6 @@ open class GridPane<T : ComponentView>(
    * left corner with scale.
    *
    * @param child Child to find.
-   *
    * @return coordinate of given child in this [GridPane].
    */
   override fun getActualChildPosition(child: ComponentView): Coordinate? =

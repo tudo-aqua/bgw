@@ -28,20 +28,17 @@ import tools.aqua.bgw.util.Font
 /**
  * A visual displaying text.
  *
- * @constructor Creates a [TextVisual] with given [text].
- *
  * @param text Text to display.
  * @param font [Font] to be used for the [text]. Default: default [Font] constructor.
  * @param alignment [Alignment] for the [text]. Default: [Alignment.CENTER].
  * @param offsetX The horizontal offset of the [text] from its anchorpoint. Default: 0.
  * @param offsetY The vertical offset of the [text] from its anchorpoint. Default: 0.
  * @param rotation The rotation of the [text] in degrees. Default: 0.
- *
+ * @constructor Creates a [TextVisual] with given [text].
  * @see SingleLayerVisual
  * @see CompoundVisual
  * @see ColorVisual
  * @see ImageVisual
- *
  * @since 0.1
  */
 open class TextVisual(

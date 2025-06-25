@@ -25,7 +25,6 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
  *
  * @see HexagonView
  * @see HexagonGrid
- *
  * @since 0.10
  */
 enum class HexOrientation {

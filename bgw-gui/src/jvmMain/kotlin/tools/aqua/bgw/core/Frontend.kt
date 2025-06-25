@@ -139,6 +139,7 @@ internal class Frontend {
     internal var menuScene: MenuScene? = null
 
     internal var loadedFonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
+
     // endregion
 
     // region Internal functions
@@ -314,7 +315,7 @@ internal class Frontend {
       val currentScene =
           menuScene
               ?: boardGameScene
-                  ?: throw IllegalStateException(
+              ?: throw IllegalStateException(
                   "No scene is currently displayed. Cannot convert relative positions to absolute.")
       return Pair(relativeX * currentScene.width, relativeY * currentScene.height)
     }

@@ -33,7 +33,6 @@ import tools.aqua.bgw.style.Style
  * @see TextVisual
  * @see ImageVisual
  * @see ColorVisual
- *
  * @since 0.1
  */
 sealed class SingleLayerVisual(rot: Double) : Visual() {
@@ -112,7 +111,6 @@ sealed class SingleLayerVisual(rot: Double) : Visual() {
    * The [flipped] state of this [Visual].
    *
    * @see Flip
-   *
    * @since 0.10
    */
   var flipped: Flip

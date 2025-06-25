@@ -102,7 +102,6 @@ class SudokuGrid(
    * @param box Box index. Must be in 0..8.
    * @param row Row index. Must be in 0..2.
    * @param col Column index. Must be in 0..2.
-   *
    * @return The cell's value.
    */
   operator fun get(box: Int, row: Int, col: Int): Int? {
@@ -117,7 +116,6 @@ class SudokuGrid(
    * @param box Box index. Must be in 0..8.
    * @param row Row index. Must be in 0..2.
    * @param col Column index. Must be in 0..2.
-   *
    * @return The [SudokuCell].
    */
   fun getCell(box: Int, row: Int, col: Int): SudokuCell {

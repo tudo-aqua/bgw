@@ -34,22 +34,19 @@ import tools.aqua.bgw.visual.Visual
  * The positioning of contained [CardView]s gets ignored and the specified alignment gets used to
  * position them instead.
  *
- * @constructor Creates a [CardStack].
- *
  * @param T Generic [CardView].
  * @param posX Horizontal coordinate for this [CardStack]. Default: 0.
  * @param posY Vertical coordinate for this [CardStack]. Default: 0.
  * @param width Width for this [CardStack]. Default: [DEFAULT_CARD_STACK_WIDTH].
  * @param height Height for this [CardStack]. Default: [DEFAULT_CARD_STACK_HEIGHT].
  * @param alignment Specifies how the contained [CardView]s should be aligned. Default:
- * [Alignment.CENTER]
+ *   [Alignment.CENTER]
  * @param visual Visual for this [CardStack]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates a [CardStack].
  * @see CardView
  * @see Visual
  * @see Alignment
  * @see GameComponentContainer
- *
  * @since 0.1
  */
 open class CardStack<T : CardView>(

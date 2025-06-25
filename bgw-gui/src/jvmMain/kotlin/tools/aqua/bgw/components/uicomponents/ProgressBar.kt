@@ -31,8 +31,6 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [ProgressBar].
  *
- * @constructor Creates a [ProgressBar].
- *
  * @param posX Horizontal coordinate for this [ProgressBar]. Default: 0.
  * @param posY Vertical coordinate for this [ProgressBar]. Default: 0.
  * @param width Width for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_WIDTH].
@@ -40,11 +38,10 @@ import tools.aqua.bgw.visual.Visual
  * @param visual [Visual] that is used to represent this [ProgressBar]. Default: empty [Visual].
  * @param progress The initial progress of this [ProgressBar]. Default 0.
  * @param barVisual The initial bar [ColorVisual] of this [ProgressBar]. Default [ColorVisual.CYAN].
- *
+ * @constructor Creates a [ProgressBar].
  * @see Visual
  * @see Color
  * @see UIComponent
- *
  * @since 0.1
  */
 open class ProgressBar(
@@ -62,8 +59,6 @@ open class ProgressBar(
   /**
    * A [ProgressBar].
    *
-   * @constructor Creates a [ProgressBar].
-   *
    * @param posX Horizontal coordinate for this [ProgressBar]. Default: 0.
    * @param posY Vertical coordinate for this [ProgressBar]. Default: 0.
    * @param width Width for this [ProgressBar]. Default: [DEFAULT_PROGRESSBAR_WIDTH].
@@ -71,11 +66,10 @@ open class ProgressBar(
    * @param visual [Visual] that is used to represent this [ProgressBar]. Default: empty [Visual].
    * @param progress The initial progress of this [ProgressBar]. Default 0.
    * @param barColor The initial bar color of this [ProgressBar]. Default [Color.CYAN]
-   *
+   * @constructor Creates a [ProgressBar].
    * @see Visual
    * @see Color
    * @see UIComponent
-   *
    * @since 0.1
    */
   constructor(
@@ -87,6 +81,7 @@ open class ProgressBar(
       progress: Double = 0.0,
       barColor: Color = Color.CYAN
   ) : this(posX, posY, width, height, visual, progress, ColorVisual(barColor))
+
   /**
    * [Property] for the progress state of this [ProgressBar].
    *
@@ -134,7 +129,6 @@ open class ProgressBar(
    * Bar [Visual] of this [ProgressBar].
    *
    * @see barColor
-   *
    * @since 0.10
    */
   var barVisual: ColorVisual
@@ -151,7 +145,6 @@ open class ProgressBar(
    * Gets invoked whenever this [ProgressBar]'s bar progress changes.
    *
    * @see progress
-   *
    * @since 0.10
    */
   var onProgressed: ((Double) -> Unit)? = null

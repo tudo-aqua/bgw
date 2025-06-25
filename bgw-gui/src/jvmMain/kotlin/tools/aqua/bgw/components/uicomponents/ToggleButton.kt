@@ -39,8 +39,6 @@ import tools.aqua.bgw.visual.Visual
  * An exception to this rule is, whenever a new [ToggleButton] that is currently selected gets added
  * to the ToggleGroup.
  *
- * @constructor Creates a [ToggleButton].
- *
  * @param posX Horizontal coordinate for this [ToggleButton]. Default: 0.
  * @param posY Vertical coordinate for this [ToggleButton]. Default: 0.
  * @param width Width for this [ToggleButton]. Default: [DEFAULT_TOGGLE_BUTTON_WIDTH].
@@ -49,18 +47,17 @@ import tools.aqua.bgw.visual.Visual
  * @param font Font to be used for this [ToggleButton]. Default: default [Font] constructor.
  * @param alignment Alignment to be used for this [ToggleButton].
  * @param isWrapText Defines if [text] should be wrapped, if it exceeds the label's width. Default:
- * `false`.
+ *   `false`.
  * @param isSelected The initial state for this [ToggleButton]. Default: `false`.
  * @param toggleGroup The ToggleGroup of this [ToggleButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates a [ToggleButton].
  * @see Font
  * @see Alignment
  * @see ToggleGroup
  * @see Visual
  * @see RadioButton
  * @see BinaryStateButton
- *
  * @since 0.1
  */
 class ToggleButton(

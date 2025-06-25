@@ -23,10 +23,8 @@ package tools.aqua.bgw.util
  * [Stack] represents a Last In First Out (LIFO) data structure. It provides useful functions to
  * manipulate the [Stack].
  *
- * @constructor Creates a [Stack] with, given initial elements.
- *
  * @param elements Initial elements for this [Stack].
- *
+ * @constructor Creates a [Stack] with, given initial elements.
  * @since 0.2
  */
 open class Stack<T>(elements: Collection<T>) {
@@ -40,10 +38,8 @@ open class Stack<T>(elements: Collection<T>) {
   /**
    * Creates a [Stack] with vararg initial elements.
    *
-   * @constructor Creates a [Stack] with vararg initial elements.
-   *
    * @param elements Initial elements for this [Stack].
-   *
+   * @constructor Creates a [Stack] with vararg initial elements.
    * @since 0.3
    */
   constructor(vararg elements: T) : this(elements.toList())
@@ -52,7 +48,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Creates an empty [Stack].
    *
    * @constructor Creates an empty [Stack].
-   *
    * @since 0.3
    */
   constructor() : this(emptyList())
@@ -61,7 +56,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Pops the topmost element in this [Stack].
    *
    * @return Topmost element in this [Stack].
-   *
    * @throws NoSuchElementException If the stack is empty.
    */
   fun pop(): T {
@@ -74,7 +68,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Pops the topmost element in this [Stack].
    *
    * @return Topmost element in this [Stack] or null if the [Stack] is empty.
-   *
    * @since 0.3
    */
   fun popOrNull(): T? = data.removeLastOrNull()
@@ -84,9 +77,7 @@ open class Stack<T>(elements: Collection<T>) {
    * element in the stack gets the list's head i.e. index `0`.
    *
    * @param numToPop Specifies how many elements to pop.
-   *
    * @return The popped elements in a List, with the last popped element at the highest index.
-   *
    * @throws IllegalArgumentException If numToPop is negative or greater than the [Stack]'s size.
    */
   fun popAll(numToPop: Int = data.size): List<T> {
@@ -139,7 +130,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Returns the topmost element in this [Stack] but does not pop it.
    *
    * @return Topmost element in this [Stack].
-   *
    * @throws NoSuchElementException If the stack is empty.
    */
   fun peek(): T {
@@ -152,7 +142,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Returns the topmost element in this [Stack] but does not pop it.
    *
    * @return Topmost element in this [Stack] or null if the [Stack] is empty.
-   *
    * @since 0.3
    */
   fun peekOrNull(): T? = data.lastOrNull()
@@ -161,7 +150,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Returns all elements in this [Stack], with the last pushed Element at the highest index.
    *
    * @return All elements in this [Stack] as [List].
-   *
    * @throws IllegalArgumentException If numToPeek is negative or greater than the [Stack]'s size.
    */
   fun peekAll(numToPeek: Int = data.size): List<T> {
@@ -201,7 +189,6 @@ open class Stack<T>(elements: Collection<T>) {
    * Sorts this [Stack].
    *
    * @param comparator Comparator for sorting.
-   *
    * @since 0.3
    */
   fun sort(comparator: Comparator<in T>) {

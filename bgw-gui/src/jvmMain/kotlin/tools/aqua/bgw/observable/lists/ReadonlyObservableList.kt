@@ -60,7 +60,6 @@ abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<
    * that `Objects.equals(o, e)`.
    *
    * @param o Element whose presence in this list is to be tested.
-   *
    * @return `true` if this list contains the specified element, `false` otherwise.
    */
   operator fun contains(o: Any?): Boolean = list.contains(o)
@@ -91,9 +90,7 @@ abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<
    * Returns the element at the specified position in this list.
    *
    * @param index Index of the element to return.
-   *
    * @return The element at the specified position in this list.
-   *
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   operator fun get(index: Int): T = list[index]
@@ -102,9 +99,8 @@ abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<
    * May return the element at the specified position in this list or null.
    *
    * @param index Index of the element to return.
-   *
    * @return The element at the specified position in this list or null if the index exceeds the
-   * list's bounds.
+   *   list's bounds.
    */
   fun getOrNull(index: Int): T? {
     return if (index >= 0 && index <= list.size) get(index) else null
