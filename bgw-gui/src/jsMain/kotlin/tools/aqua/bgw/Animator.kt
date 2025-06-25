@@ -60,13 +60,10 @@ internal object Animator {
           is ScaleAnimationData ->
               startComponentAnimation("scale", animationData, parallelAnimations, callback)
           is FlipAnimationData -> startFlipAnimation(animationData, callback)
-          // is ShakeAnimation<*> -> TODO()
-
           is SteppedComponentAnimationData -> {
             when (animationData) {
               is RandomizeAnimationData -> startRandomizeAnimation(animationData, callback)
               is DiceAnimationData -> startDiceAnimation(animationData, callback)
-              else -> throw IllegalArgumentException("Unknown animation type")
             }
           }
           else -> throw IllegalArgumentException("Unknown animation type")
@@ -203,9 +200,7 @@ internal object Animator {
     }
 
     for (i in 0 until matchingTimeouts.size) {
-      if (excludeCleanup && matchingTimeouts.elementAt(i).endsWith("-cleanup")) {
-        println("[S] Skipping timeout: ${matchingTimeouts.elementAt(i)}")
-      } else {
+      if (excludeCleanup && matchingTimeouts.elementAt(i).endsWith("-cleanup")) {} else {
         timeouts[matchingTimeouts.elementAt(i)]?.let { clearTimeout(it) }
         timeouts.remove(matchingTimeouts.elementAt(i))
       }
@@ -305,7 +300,7 @@ internal object Animator {
               element.classList.toggle("${componentId}--$type", true)
               animations["$componentId--$type"] = newElement
 
-              timeouts["${animation.id}-start"] =
+              timeouts["${animation.id}-callback"] =
                   setTimeout(
                       {
                         // Toggle new animation off
@@ -519,14 +514,28 @@ internal object Animator {
             duration)
   }
 
+  private fun easingFromInterpolation(interpolation: String): String {
+    return when (interpolation) {
+      "linear" -> "linear"
+      "smooth" -> "ease-in-out"
+      "spring" -> "cubic-bezier(.41,0,.41,1.49)"
+      "steps" -> "steps(10, end)"
+      else -> "ease-in-out" // Default fallback
+    }
+  }
+
   private fun getTransitionCSS(animationList: List<AnimationData>): String {
     val transitions =
         animationList.map {
           when (it) {
-            is FadeAnimationData -> "opacity ${it.duration}ms ease-in-out"
-            is MovementAnimationData -> "translate ${it.duration}ms ease-in-out"
-            is RotationAnimationData -> "rotate ${it.duration}ms ease-in-out"
-            is ScaleAnimationData -> "scale ${it.duration}ms ease-in-out"
+            is FadeAnimationData ->
+                "opacity ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
+            is MovementAnimationData ->
+                "translate ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
+            is RotationAnimationData ->
+                "rotate ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
+            is ScaleAnimationData ->
+                "scale ${it.duration}ms ${easingFromInterpolation(it.interpolation)}"
             else -> ""
           }
         }
@@ -563,7 +572,7 @@ internal object Animator {
                 }
                 
                 .${componentId}--${type} {
-                    translate: ${animationData.byX}em ${animationData.byY}em;
+                    translate: calc(var(--bgwUnit) * ${animationData.byX}) calc(var(--bgwUnit) * ${animationData.byY});
                 }
             """.trimIndent()
       is RotationAnimationData ->

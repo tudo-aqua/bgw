@@ -29,10 +29,10 @@ import web.cssom.*
 
 internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
   position = Position.absolute
-  left = componentViewData.posX.em
-  top = componentViewData.posY.em
-  width = componentViewData.width.em
-  height = componentViewData.height.em
+  left = componentViewData.posX.bgw
+  top = componentViewData.posY.bgw
+  width = componentViewData.width.bgw
+  height = componentViewData.height.bgw
   zIndex = integer(componentViewData.zIndex)
   opacity = number(componentViewData.opacity)
   display = if (componentViewData.isVisible) Display.flex else None.none
@@ -122,7 +122,14 @@ internal fun PropertiesBuilder.alignmentBuilder(data: AppData) {
 internal fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
   fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
   fontWeight = integer(componentViewData.font!!.fontWeight)
-  fontSize = componentViewData.font!!.size.em
+  fontSize = componentViewData.font!!.size.bgw
+  fontFamily = cssFont(componentViewData.font!!.family)
+  color = componentViewData.font!!.color.unsafeCast<Color>()
+}
+
+internal fun PropertiesBuilder.simpleFontBuilder(componentViewData: UIComponentData) {
+  fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
+  fontWeight = integer(componentViewData.font!!.fontWeight)
   fontFamily = cssFont(componentViewData.font!!.family)
   color = componentViewData.font!!.color.unsafeCast<Color>()
 }

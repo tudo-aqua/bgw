@@ -59,6 +59,7 @@ internal class AppData : Data() {
   var action: ActionProp = ActionProp.DEFAULT
   var fadeTime: Int = 0
   var blurRadius: Double = 0.0
+  var forcedByAnimation: Boolean = false
 }
 
 @Serializable
@@ -79,6 +80,7 @@ internal abstract class AnimationData : Data() {
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
   var isStop: Boolean = false
+  var interpolation: String = "linear"
 }
 
 @Serializable
@@ -176,7 +178,9 @@ internal class CheckBoxData : LabeledUIComponentData() {
 internal class ComboBoxData : UIComponentData() {
   var prompt: String = ""
   var items: List<Pair<Int, String>> = emptyList()
+  var itemVisuals: List<VisualData> = emptyList()
   var selectedItem: Pair<Int, String>? = null
+  var disallowUnselect: Boolean = false
 }
 
 @Serializable internal class LabelData : LabeledUIComponentData() {}
@@ -203,7 +207,7 @@ internal class ColorPickerData : UIComponentData() {
 @Serializable
 internal class ProgressBarData : UIComponentData() {
   var progress: Double = 0.0
-  var barColor: String = "#000000"
+  var barVisual: VisualData? = null
 }
 
 @Serializable internal class TextAreaData : TextInputUIComponentData() {}
@@ -267,6 +271,9 @@ internal class CameraPaneData : ComponentViewData() {
   var panButton: String = "left_button"
   var limitBounds: Boolean = true
   var internalPanData: InternalCameraPanData = InternalCameraPanData()
+  var isVerticalLocked: Boolean = false
+  var isHorizontalLocked: Boolean = false
+  var isZoomLocked: Boolean = false
 }
 
 @Serializable internal class CoordinateData(val xCoord: Double = 0.0, val yCoord: Double = 0.0)

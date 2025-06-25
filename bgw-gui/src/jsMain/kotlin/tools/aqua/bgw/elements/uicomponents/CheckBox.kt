@@ -46,7 +46,7 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData)
   display = if (componentViewData.isVisible) Display.flex else None.none
   alignItems = AlignItems.center
   justifyItems = JustifyItems.flexStart
-  gap = 10.em
+  gap = 10.bgw
 }
 
 internal val CheckBox =
@@ -91,9 +91,9 @@ internal val CheckBox =
           }
 
           css {
-            width = 20.em
-            height = 20.em
-            maxWidth = 20.em
+            width = 20.bgw
+            height = 20.bgw
+            maxWidth = 20.bgw
             zIndex = integer(1)
           }
           onChange = {

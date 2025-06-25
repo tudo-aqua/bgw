@@ -29,6 +29,7 @@ import tools.aqua.bgw.TransformComponent
 import tools.aqua.bgw.TransformWrapper
 import tools.aqua.bgw.builder.LayoutNodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -46,19 +47,55 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CameraPaneDat
 }
 
 internal fun convertToRem(px: Double): Double {
-  val currentRem =
+  val containerBounds = document.getElementById("bgw-root")?.getBoundingClientRect()
+  val containerWidth = containerBounds?.width ?: 0.0
+  val containerHeight = containerBounds?.height ?: 0.0
+
+  val newRem =
       document.getElementById("bgw-root")?.let {
-        getComputedStyle(it).fontSize.replace("px", "").toDouble()
+        getComputedStyle(it).getPropertyValue("--bgwUnit")
       }
-  return px * currentRem!!
+
+  val isHeightRelative = newRem?.contains("cqh") ?: false
+  val isWidthRelative = newRem?.contains("cqw") ?: false
+  val numberValue = newRem?.replace("cqh", "")?.replace("cqw", "")?.toDoubleOrNull() ?: 1.0
+
+  val currentRem =
+      if (isHeightRelative) {
+        containerHeight * (numberValue / 100.0)
+      } else if (isWidthRelative) {
+        containerWidth * (numberValue / 100.0)
+      } else {
+        1.0
+      }
+
+  return px * currentRem
 }
 
 internal fun convertToPx(rem: Double): Double {
-  val currentRem =
+  val newRem =
       document.getElementById("bgw-root")?.let {
-        getComputedStyle(it).fontSize.replace("px", "").toDouble()
+        getComputedStyle(it).getPropertyValue("--bgwUnit")
       }
-  return rem / currentRem!!
+
+  val containerBounds = document.getElementById("bgw-root")?.getBoundingClientRect()
+  val containerWidth = containerBounds?.width ?: 0.0
+  val containerHeight = containerBounds?.height ?: 0.0
+
+  val isHeightRelative = newRem?.contains("cqh") ?: false
+  val isWidthRelative = newRem?.contains("cqw") ?: false
+  val numberValue = newRem?.replace("cqh", "")?.replace("cqw", "")?.toDoubleOrNull() ?: 1.0
+
+  val currentRem =
+      if (isHeightRelative) {
+        containerHeight * (numberValue / 100.0)
+      } else if (isWidthRelative) {
+        containerWidth * (numberValue / 100.0)
+      } else {
+        1.0
+      }
+
+  return rem / currentRem
 }
 
 internal val CameraPane =
@@ -213,7 +250,8 @@ internal val CameraPane =
       }
 
       TransformWrapper {
-        centerZoomedOut = props.data.limitBounds
+        centerZoomedOut =
+            props.data.limitBounds || props.data.isHorizontalLocked || props.data.isVerticalLocked
         disablePadding = true
         smooth = false
         limitToBounds = props.data.limitBounds
@@ -222,7 +260,7 @@ internal val CameraPane =
         maxScale = 4.0
         initialScale = if (props.data.limitBounds) initialZoom else 1.0
         wheel = jso {
-          disabled = !props.data.interactive
+          disabled = !props.data.interactive || props.data.isZoomLocked
           step = 0.1
         }
         panning = jso {
@@ -232,6 +270,8 @@ internal val CameraPane =
           allowLeftClickPan = props.data.panButton == "left_button"
           allowMiddleClickPan = props.data.panButton == "mouse_wheel"
           allowRightClickPan = props.data.panButton == "right_button"
+          lockAxisX = props.data.isHorizontalLocked
+          lockAxisY = props.data.isVerticalLocked
         }
         pinch = jso { disabled = true }
         doubleClick = jso { disabled = true }
@@ -250,6 +290,9 @@ internal val CameraPane =
         //        }
 
         onZoomStop = { ctx ->
+          //          if(props.data.isHorizontalLocked || props.data.isVerticalLocked) {
+          //            ctx.centerView(ctx.instance.transformState.scale, 0, "ease-out")
+          //          }
           val currentX = ctx.instance.transformState.positionX
           val currentY = ctx.instance.transformState.positionY
 
@@ -324,10 +367,10 @@ internal val CameraPane =
 
         TransformComponent {
           wrapperStyle = jso {
-            width = props.data.width.em
-            height = props.data.height.em
-            left = props.data.posX.em
-            top = props.data.posY.em
+            width = props.data.width.bgw
+            height = props.data.height.bgw
+            left = props.data.posX.bgw
+            top = props.data.posY.bgw
             position = Position.absolute
           }
 

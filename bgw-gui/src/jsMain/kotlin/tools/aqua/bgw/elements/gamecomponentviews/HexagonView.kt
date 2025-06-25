@@ -27,6 +27,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.event.applyCommonEventHandlers
@@ -77,11 +78,11 @@ internal val HexagonView =
         css {
           cssBuilderIntern(props.data)
           if (props.data.orientation == "pointy_top") {
-            width = (sqrt(3.0) * props.data.size).em
-            height = 2 * props.data.size.em
+            width = (sqrt(3.0) * props.data.size).bgw
+            height = 2 * props.data.size.bgw
           } else {
-            width = 2 * props.data.size.em
-            height = (sqrt(3.0) * props.data.size).em
+            width = 2 * props.data.size.bgw
+            height = (sqrt(3.0) * props.data.size).bgw
           }
           translate =
               "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<

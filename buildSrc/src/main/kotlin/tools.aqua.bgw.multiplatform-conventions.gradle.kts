@@ -21,23 +21,37 @@ import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.java
 import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.spotless
 import java.lang.ProcessHandle
 import java.nio.file.Files
+import kotlin.collections.forEach
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
+import tools.aqua.GlobalMavenMetadataExtension
+import tools.aqua.MavenMetadataExtension
 import tools.aqua.defaultFormat
+import tools.aqua.developer
+import tools.aqua.github
+import tools.aqua.license
 
 plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
-  application
-  `maven-publish`
+
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
+
+  application
+  `maven-publish`
+  `java-library`
+  signing
 }
 
 val propertyFile = "Config.kt"
@@ -93,7 +107,7 @@ artifacts { add(kdoc.name, kdocJar) }
 val javadocJar: TaskProvider<Jar> by
     tasks.registering(Jar::class) {
       archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
     }
 
 java {
@@ -149,6 +163,43 @@ kotlin {
     // val jsTest by getting
   }
 }
+
+val jvmJavadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      archiveAppendix.set("jvm")
+      from(tasks.named<DokkaTask>("dokkaHtmlJvm").flatMap { it.outputDirectory })
+    }
+
+val jsJavadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      archiveAppendix.set("js")
+      from(tasks.named<DokkaTask>("dokkaHtmlJs").flatMap { it.outputDirectory })
+    }
+
+val commonJavadocJar: TaskProvider<Jar> by
+    tasks.registering(Jar::class) {
+      archiveClassifier.set("javadoc")
+      archiveAppendix.set("kotlin")
+      from(tasks.named<DokkaTask>("dokkaHtmlCommon").flatMap { it.outputDirectory })
+    }
+
+val dokkaHtmlJvm by
+    tasks.creating(DokkaTask::class) {
+      outputDirectory.set(buildDir.resolve("dokka/jvm"))
+      dokkaSourceSets { named("jvmMain") }
+    }
+val dokkaHtmlJs by
+    tasks.creating(DokkaTask::class) {
+      outputDirectory.set(buildDir.resolve("dokka/js"))
+      dokkaSourceSets { named("jsMain") }
+    }
+val dokkaHtmlCommon by
+    tasks.creating(DokkaTask::class) {
+      outputDirectory.set(buildDir.resolve("dokka/common"))
+      dokkaSourceSets { named("commonMain") }
+    }
 
 application {
   mainClass.set("tools.aqua.bgw.main.MainKt")
@@ -208,21 +259,45 @@ fun killJcefHelperProcesses(pids: Set<Long>) {
 }
 // endregion
 
+val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
+
+publishing {
+  publications {
+    withType<MavenPublication> {
+      when (name) {
+        "jvm" -> artifact(jvmJavadocJar)
+        "js" -> artifact(jsJavadocJar)
+        else -> artifact(commonJavadocJar)
+      }
+      pom {
+        name.set(mavenMetadata.name)
+        description.set(mavenMetadata.description)
+
+        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+
+        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+
+        globalMetadata.githubProject.get().let {
+          github(it.organization, it.project, it.mainBranch)
+        }
+
+        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
+      }
+    }
+  }
+}
+
+signing {
+  setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
+  useGpgCmd()
+  sign(publishing.publications)
+}
+
 tasks.named("publish") {
   doFirst {
     println("=============================================================================")
     println("Published bgw-gui: ${rootProject.version}")
     println("=============================================================================")
-  }
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      groupId = "tools.aqua"
-      artifactId = "bgw-gui"
-      from(components["kotlin"])
-    }
   }
 }
 

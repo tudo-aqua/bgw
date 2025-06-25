@@ -22,8 +22,20 @@ import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 
-/** The connection startup screen. */
-class ConnectionScene : BoardGameScene(height = 800, width = 500, background = ColorVisual.WHITE) {
+/**
+ * The connection startup screen.
+ *
+ * @param serverAddress The address of the server to connect to.
+ * @param secret The secret to use for the connection.
+ * @param gameID The ID of the game to join or host.
+ * @param sessionID The session ID to use for the connection.
+ */
+class ConnectionScene(
+    serverAddress: String = "",
+    secret: String = "",
+    gameID: String = "",
+    sessionID: String = ""
+) : BoardGameScene(height = 800, width = 500, background = ColorVisual.WHITE) {
 
   /** [TextField] for the hostname or address and port. */
   val addressText: TextField =
@@ -32,13 +44,13 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
           posY = 50,
           height = 40,
           width = width - 100,
-          text = "",
+          text = serverAddress,
           prompt = "Server address")
 
   /** [TextField] for the network secret. */
   val secretText: TextField =
       TextField(
-          posX = 50, posY = 100, height = 40, width = width - 100, text = "", prompt = "Secret")
+          posX = 50, posY = 100, height = 40, width = width - 100, text = secret, prompt = "Secret")
 
   /** [TextField] for the network secret. */
   val gameIDText: TextField =
@@ -47,12 +59,18 @@ class ConnectionScene : BoardGameScene(height = 800, width = 500, background = C
           posY = 150,
           height = 40,
           width = width - 100,
-          text = "",
+          text = gameID,
           prompt = "Game ID (hosting only)")
 
   /** [TextField] for the session id. */
   val sessionIDText: TextField =
-      TextField(posX = 50, posY = 200, height = 40, width = width - 100, prompt = "sessionID")
+      TextField(
+          posX = 50,
+          posY = 200,
+          height = 40,
+          width = width - 100,
+          prompt = "sessionID",
+          text = sessionID)
 
   /** [Button] for joining a game. */
   val buttonJoin: Button =

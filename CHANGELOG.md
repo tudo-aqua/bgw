@@ -61,6 +61,7 @@ All notable changes to this project will be documented in this file.
 - Added `style`, `filters` and `flipped` properties to `SingleLayerVisual` to apply custom styling.
 - Added `rotation` as an initial parameter to `ImageVisual` and `TextVisual` to set the initial rotation of the visual.
 - Added `blurRadius` property to `MenuScene` constructor to define the initial blur radius of the menu scene background.
+- Added `itemVisuals` list to `ComboBox` to allow custom visuals for each item in the combo box.
 
 **Misc:**
 - Added `Ä`, `Ö`, `Ü` to `KeyCode` enum for German keyboard layout.
@@ -81,6 +82,13 @@ All notable changes to this project will be documented in this file.
 - Added `THIN`, `EXTRA_LIGHT`, `MEDIUM`, `EXTRA_BOLD`, `BLACK` font weights to `FontWeight` enum to support a wider range of fonts.
 - Added `inParentPosX` and `inParentPosY` properties to `ComponentView` to get the position of a component in its parent.
 - Added `stopAllAnimations()` function to `Scene` to immediately stop all animations currently running.
+- Added `disallowUnselect` property to `ComboBox` to prevent deselection of the currently selected item and hide prompt text.
+- Added `interpolation` property to `MovementAnimation`, `FadeAnimation`, `ScaleAnimation` and `RotationAnimation` to define the interpolation of the animation.
+- Added `isHorizontalLocked`, `isVerticalLocked` and `isZoomLocked` properties to `CameraPane` to lock panning and zooming in specific directions.
+- Added `scrollOffset` property to `WheelEvent` to get the scroll offset since the last event triggered.
+
+**Network:**
+- Added constructor arguments for `bgw-net-protocol-client` to configure the BGW-Net Protocol client in your project.
 
 ### Fixed
 
@@ -92,11 +100,13 @@ All notable changes to this project will be documented in this file.
 - Fixed first `Button` in a scene being focused by default.
 - Fixed window resizing leading to wrongly scaled game view.
 - Fixed `actualPosX` and `actualPosY` properties in `ComponentView` to return the correct absolute position of the component.
+- Fixed `onSceneShown` now triggering correctly when the scene is fully rendered.
 
 ### Changed
 
-- Reworked `CameraPane` to make it more intuitive.
+- Changed behavior of `CameraPane` to make it more intuitive.
 - Changed behavior of `LinearLayout` to layout components instead of the child components positioning themselves.
+- Changed default `ProgressBar` constructor to use a stylable `barVisual` instead of a simple `barColor`.
 
 ### Removed
 

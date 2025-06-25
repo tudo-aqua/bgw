@@ -20,6 +20,7 @@
 package tools.aqua.bgw.animation
 
 import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.util.Coordinate
@@ -38,6 +39,8 @@ import tools.aqua.bgw.util.Coordinate
  * @param fromY Initial Y position. Default: Current [ComponentView.posY].
  * @param toY Resulting Y position. Default: Current [ComponentView.posY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+ * [AnimationInterpolation.SMOOTH].
  *
  * @see ComponentAnimation
  * @see Animation
@@ -55,7 +58,15 @@ class MovementAnimation<T : ComponentView>(
     toX: Number = componentView.posX,
     fromY: Number = componentView.posY,
     toY: Number = componentView.posY,
-    duration: Int = DEFAULT_ANIMATION_SPEED
+    duration: Int = DEFAULT_ANIMATION_SPEED,
+    /**
+     * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
+     *
+     * @see AnimationInterpolation
+     *
+     * @since 0.10
+     */
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
 ) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
 
   /** Initial X position. */
@@ -77,6 +88,8 @@ class MovementAnimation<T : ComponentView>(
    * @param byX Relative X movement.
    * @param byY Relative Y movement.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
+   * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+   * [AnimationInterpolation.SMOOTH].
    *
    * @see ComponentAnimation
    * @see Animation
@@ -92,7 +105,8 @@ class MovementAnimation<T : ComponentView>(
       componentView: T,
       byX: Number = 0.0,
       byY: Number = 0.0,
-      duration: Int = 1000
+      duration: Int = 1000,
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
   ) : this(
       componentView = componentView,
       fromX = componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX,
@@ -101,7 +115,8 @@ class MovementAnimation<T : ComponentView>(
               ?: componentView.posX) + byX.toDouble(),
       toY = (componentView.parent?.getChildPosition(componentView)?.yCoord
               ?: componentView.posY) + byY.toDouble(),
-      duration = duration)
+      duration = duration,
+      interpolation = interpolation)
 
   companion object {
     /**
@@ -114,12 +129,15 @@ class MovementAnimation<T : ComponentView>(
      * component to.
      * @param scene The [Scene].
      * @param duration [Animation] duration in milliseconds. Default: 1 second
+     * @param interpolation [AnimationInterpolation] to use for the animation. Default:
+     * [AnimationInterpolation.SMOOTH].
      */
     fun <T : ComponentView> toComponentView(
         componentView: T,
         toComponentViewPosition: T,
         scene: Scene<*>,
-        duration: Int = 1000
+        duration: Int = 1000,
+        interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
     ): MovementAnimation<T> {
       // Find visual tree for components and drop root node
       val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
@@ -155,7 +173,8 @@ class MovementAnimation<T : ComponentView>(
           componentView = componentView,
           byX = vector.xCoord,
           byY = vector.yCoord,
-          duration = duration)
+          duration = duration,
+          interpolation = interpolation)
     }
   }
 }

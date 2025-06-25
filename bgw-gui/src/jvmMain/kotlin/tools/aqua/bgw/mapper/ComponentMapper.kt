@@ -52,8 +52,6 @@ internal object ComponentMapper {
       if (componentView.dropAcceptor != null) {
         isDroppable = true
       }
-      // layoutFromCenter
-      // isDraggable
       hasMouseEnteredEvent = componentView.onMouseEntered != null
       hasMouseExitedEvent = componentView.onMouseExited != null
     }
@@ -138,11 +136,9 @@ internal object ComponentMapper {
             internalPanData = componentView.panData
             panButton = componentView.panMouseButton.name.lowercase()
             limitBounds = componentView.limitBounds
-
-            // ! nightly - isVerticalLocked
-            // ! nightly - isHorizontalLocked
-            // ! nightly - isZoomLocked
-            // ! nightly - panMouseButton
+            isVerticalLocked = componentView.isVerticalLocked
+            isHorizontalLocked = componentView.isHorizontalLocked
+            isZoomLocked = componentView.isZoomLocked
           }
       is GameComponentView -> {
         when (componentView) {
@@ -201,8 +197,7 @@ internal object ComponentMapper {
       is ProgressBar ->
           (mapSpecific(componentView) as ProgressBarData).apply {
             progress = componentView.progress.coerceIn(0.0, 1.0)
-            barColor =
-                "rgba(${componentView.barColor.red}, ${componentView.barColor.green}, ${componentView.barColor.blue}, ${componentView.barColor.alpha})"
+            barVisual = VisualMapper.map(componentView.barVisual)
           }
 
       // TODO - StructuredDataView
@@ -257,6 +252,11 @@ internal object ComponentMapper {
               Pair(
                   comboBox.getSelectedIndex(),
                   comboBox.formatFunction?.invoke(selItem) ?: comboBox.selectedItem.toString())
+      disallowUnselect = comboBox.disallowUnselect
+      itemVisuals =
+          comboBox.items.mapIndexed { index, _ ->
+            VisualMapper.map(comboBox.itemVisuals.getOrElse(index) { comboBox.visual })
+          }
     }
   }
 }
@@ -586,6 +586,7 @@ internal object FontFaceMapper {
 internal object SceneMapper {
   private fun mapScene(scene: Scene<*>): SceneData {
     return SceneData().apply {
+      id = scene.id
       components = scene.components.map { RecursiveMapper.map(it) }
       locked = if (scene is BoardGameScene) scene.lockedProperty.value else false
       width = scene.width.toInt()

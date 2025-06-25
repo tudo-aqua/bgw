@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw.application
 
-import Base64
 import DialogButtonClickData
 import DialogData
 import ID
@@ -58,18 +57,12 @@ import org.cef.handler.*
 import org.cef.misc.BoolRef
 import org.cef.network.CefRequest
 import tools.aqua.bgw.builder.DialogBuilder
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.DynamicComponentView
-import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
 import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.*
-import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.*
-import tools.aqua.bgw.mapper.DialogMapper
-import tools.aqua.bgw.util.Coordinate
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
@@ -130,214 +123,6 @@ internal class JCEFApplication : Application {
     frame?.title = title
   }
 
-  override fun registerEventListeners(component: ComponentView) {
-    if (handlersMap.containsKey(component.id)) return
-    val handler: CefMessageRouterHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<EventData>(json)
-            if (eventData.id != component.id) return false
-            // println("Received: $eventData for ${eventData.id}")
-
-            try {
-              when (eventData) {
-                is FilesPickedEventData -> {
-                  if (Frontend.openedFileDialog != null &&
-                      eventData.id == Frontend.openedFileDialog?.id) {
-                    if (eventData.paths.isNotEmpty()) {
-                      Frontend.openedFileDialog?.onPathsSelected?.invoke(eventData.paths)
-                    } else {
-                      Frontend.openedFileDialog?.onSelectionCancelled?.invoke()
-                    }
-                    Frontend.openedFileDialog = null
-                  }
-                }
-                is MouseEnteredEventData -> {
-                  val (posX, posY) =
-                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-                  component.onMouseEntered?.invoke(
-                      MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
-                }
-                is MouseExitedEventData -> {
-                  val (posX, posY) =
-                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-                  component.onMouseExited?.invoke(
-                      MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
-                }
-                is MousePressedEventData -> {
-                  val (posX, posY) =
-                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-                  component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY))
-                }
-                is ScrollEventData -> {
-                  component.onMouseWheel?.invoke(
-                      WheelEvent(
-                          eventData.direction, eventData.ctrl, eventData.shift, eventData.alt))
-                }
-                is MouseReleasedEventData -> {
-                  val (posX, posY) =
-                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-                  component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY))
-                }
-                is MouseEventData -> {
-                  val (posX, posY) =
-                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-                  component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY))
-                }
-                is KeyEventData -> {
-                  val keyEvent =
-                      KeyEvent(
-                          eventData.keyCode,
-                          eventData.character,
-                          eventData.isControlDown,
-                          eventData.isShiftDown,
-                          eventData.isAltDown)
-                  when (eventData.action) {
-                    KeyEventAction.PRESS -> component.onKeyPressed?.invoke(keyEvent)
-                    KeyEventAction.RELEASE -> component.onKeyReleased?.invoke(keyEvent)
-                    KeyEventAction.TYPE -> component.onKeyTyped?.invoke(keyEvent)
-                  }
-                }
-                is SelectionChangedEventData -> {
-                  // println("Selection changed")
-                  if (component is ComboBox<*>) component.select(eventData.selectedItem)
-                }
-                is StructuredDataSelectEventData -> {
-                  if (component is StructuredDataView<*>) component.selectIndex(eventData.index)
-                }
-                is TextInputChangedEventData -> {
-                  if (component is TextInputUIComponent) {
-                    component.textProperty.setSilent(eventData.value)
-                    component.onTextChanged?.invoke(eventData.value)
-                  }
-                }
-                is ColorInputChangedEventData -> {
-                  // println("Text changed")
-                  if (component is ColorPicker) component.selectedColor = Color(eventData.value)
-                }
-                is CheckBoxChangedEventData -> {
-                  if (component is CheckBox) {
-                    if (component.isIndeterminateAllowedProperty.value) {
-                      if (eventData.value &&
-                          !component.isCheckedProperty.value &&
-                          !component.isIndeterminateProperty.value) {
-                        component.isIndeterminate = true
-                      } else if (eventData.value &&
-                          component.isIndeterminateProperty.value &&
-                          !component.isCheckedProperty.value) {
-                        component.isIndeterminate = false
-                        component.isChecked = true
-                      } else if (!eventData.value &&
-                          !component.isIndeterminateProperty.value &&
-                          component.isCheckedProperty.value) {
-                        component.isChecked = false
-                      }
-                    } else {
-                      component.isChecked = eventData.value
-                      if (component.isIndeterminateProperty.value) {
-                        component.isIndeterminate = false
-                      }
-                    }
-                  }
-                }
-                is RadioChangedEventData -> {
-                  if (component is BinaryStateButton) component.isSelected = eventData.value
-                }
-                is TransformChangedEventData -> {
-                  if (component is CameraPane<*>) {
-                    if (component.zoomProperty.value != eventData.zoomLevel) {
-                      component.onZoomed?.invoke(eventData.zoomLevel)
-                    }
-                    component.zoomProperty.setInternal(eventData.zoomLevel)
-                    component.panDataProperty.setInternal(InternalCameraPanData())
-                    component.anchorPointProperty.setInternal(
-                        Coordinate(eventData.anchor.first, eventData.anchor.second))
-                  }
-                }
-                is DragGestureStartedEventData -> {
-                  if (component is DynamicComponentView) {
-                    component.onDragGestureStarted?.invoke(DragEvent(component))
-                    component.isDragged = true
-                  }
-                }
-                is DragGestureMovedEventData -> {
-                  if (component is DynamicComponentView) {
-                    component.onDragGestureMoved?.invoke(DragEvent(component))
-                  }
-                }
-                is DragGestureEnteredEventData -> {
-                  if (component is DynamicComponentView &&
-                      eventData.target.isNotBlank() &&
-                      component.parent != null) {
-                    val root = component.getRootNode()
-                    val target = root.findComponent(eventData.target)
-                    if (target?.dropAcceptor != null) {
-                      target.onDragGestureEntered?.invoke(DragEvent(component))
-                    }
-                  }
-                }
-                is DragGestureEndedEventData -> {
-                  if (component is DynamicComponentView && component.parent != null) {
-                    if (eventData.droppedOn != null) {
-                      val root = component.getRootNode()
-                      val target = root.findComponent(eventData.droppedOn!!)
-                      if (target?.dropAcceptor != null) {
-                        component.onDragGestureEnded?.invoke(
-                            DropEvent(component, target),
-                            target.dropAcceptor?.invoke(DragEvent(component)) == true)
-                      }
-                    } else {
-                      component.onDragGestureEnded?.invoke(DropEvent(component, null), false)
-                    }
-                  }
-                }
-                is DragGestureExitedEventData -> {
-                  if (component is DynamicComponentView &&
-                      eventData.target.isNotBlank() &&
-                      component.parent != null) {
-                    val root = component.getRootNode()
-                    val target = root.findComponent(eventData.target)
-                    if (target?.dropAcceptor != null) {
-                      target.onDragGestureExited?.invoke(DragEvent(component))
-                    }
-                  }
-                }
-                is DragDroppedEventData -> {
-                  val root = component.getRootNode()
-                  val target = root.findComponent(eventData.target)
-                  val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
-                  if (dropped == true) {
-                    target.onDragDropped?.invoke(DragEvent(component))
-                    (component as DynamicComponentView).isDragged = false
-                  }
-                }
-              }
-            } catch (e: Exception) {
-              val mainFrame = this@JCEFApplication.frame
-              mainFrame?.openNewDialog(
-                  DialogMapper.map(
-                      Dialog(
-                          "Error",
-                          "Error",
-                          "An error occurred while handling an event: ${e.message}",
-                          exception = e)))
-              e.printStackTrace()
-            }
-            return true
-          }
-        }
-    handlersMap[component.id] = handler
-    frame?.msgRouter?.addHandler(handler, false)
-  }
-
   override fun openNewDialog(dialogData: DialogData) {
     frame?.openNewDialog(dialogData)
   }
@@ -347,7 +132,7 @@ internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
     isTransparent: Boolean = false,
-    loadCallback: (Any) -> Unit,
+    val loadCallback: (Any) -> Unit,
     debugLogging: Boolean = false
 ) : JFrame() {
   private var browserFocus = true
@@ -384,6 +169,9 @@ internal class MainFrame(
             ?: Files.createTempDirectory("bgw-").toString().also { File(it).deleteOnExit() }
 
     builder.cefSettings.root_cache_path = tmpDir
+    builder.cefSettings.cache_path = tmpDir
+    builder.cefSettings.log_file = "$tmpDir/bgw.log"
+    builder.jcefArgs.add("--disable-pinch")
 
     builder.setProgressHandler { enumProgress, fl ->
       if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
@@ -408,119 +196,6 @@ internal class MainFrame(
 
     client = cefApp.createClient()
     // endregion
-
-    // region - Component Update Message Router
-    val config = CefMessageRouterConfig()
-    config.jsQueryFunction = "cefQuery"
-    config.jsCancelFunction = "cefQueryCancel"
-    msgRouter = CefMessageRouter.create(config)
-    client.addMessageRouter(msgRouter)
-    val myHandler: CefMessageRouterHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<EventData>(json)
-            if (eventData is LoadEventData) {
-              loadCallback.invoke(Unit)
-              return true
-            }
-            return false
-          }
-        }
-    msgRouter?.addHandler(myHandler, true)
-    // endregion
-
-    // region - Global Event Message Router
-    val globalEventConfig = CefMessageRouterConfig()
-    globalEventConfig.jsQueryFunction = "cefSceneQuery"
-    globalEventConfig.jsCancelFunction = "cefSceneQueryCancel"
-    globalEventMsgRouter = CefMessageRouter.create(globalEventConfig)
-    client.addMessageRouter(globalEventMsgRouter)
-    val globalHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<KeyEventData>(json)
-
-            try {
-              val keyEvent =
-                  KeyEvent(
-                      eventData.keyCode,
-                      eventData.character,
-                      eventData.isControlDown,
-                      eventData.isShiftDown,
-                      eventData.isAltDown)
-              val menuScene = Frontend.menuScene
-              val boardGameScene = Frontend.boardGameScene
-
-              when (eventData.action) {
-                KeyEventAction.PRESS -> {
-                  menuScene?.onKeyPressed?.invoke(keyEvent)
-                  boardGameScene?.onKeyPressed?.invoke(keyEvent)
-                }
-                KeyEventAction.RELEASE -> {
-                  menuScene?.onKeyReleased?.invoke(keyEvent)
-                  boardGameScene?.onKeyReleased?.invoke(keyEvent)
-                }
-                KeyEventAction.TYPE -> {
-                  menuScene?.onKeyTyped?.invoke(keyEvent)
-                  boardGameScene?.onKeyTyped?.invoke(keyEvent)
-                }
-              }
-              return true
-            } catch (e: Exception) {}
-
-            return false
-          }
-        }
-    globalEventMsgRouter?.addHandler(globalHandler, true)
-    // endregion
-
-    // region - Animation Message Router
-    val animationConfig = CefMessageRouterConfig()
-    animationConfig.jsQueryFunction = "cefAnimationQuery"
-    animationConfig.jsCancelFunction = "cefAnimationQueryCancel"
-    animationMsgRouter = CefMessageRouter.create(animationConfig)
-    client.addMessageRouter(animationMsgRouter)
-    val animationHandler: CefMessageRouterHandler =
-        object : CefMessageRouterHandlerAdapter() {
-          override fun onQuery(
-              browser: CefBrowser,
-              frame: CefFrame,
-              query_id: Long,
-              request: String,
-              persistent: Boolean,
-              callback: CefQueryCallback
-          ): Boolean {
-            val json = Base64.decode(request)
-            val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(json)
-            if (eventData is AnimationFinishedEventData) {
-              val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-              val boardGameSceneAnimations =
-                  Frontend.boardGameScene?.animations?.toList() ?: listOf()
-              val animations = menuSceneAnimations + boardGameSceneAnimations
-              val animation = animations.find { it.id == eventData.id }
-              animation?.onFinished?.invoke(AnimationFinishedEvent())
-              return true
-            }
-            return false
-          }
-        }
-    animationMsgRouter?.addHandler(animationHandler, true)
 
     // Dialog Button Handler
     val dialogConfig = CefMessageRouterConfig()
