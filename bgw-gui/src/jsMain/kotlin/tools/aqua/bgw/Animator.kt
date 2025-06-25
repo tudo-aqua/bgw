@@ -23,7 +23,8 @@ import ID
 import data.animation.*
 import kotlinx.browser.document
 import org.w3c.dom.Node
-import react.dom.render
+import react.dom.client.Root
+import react.dom.client.createRoot
 import tools.aqua.bgw.builder.VisualBuilder
 import web.dom.Element
 import web.timers.Interval
@@ -104,7 +105,7 @@ internal object Animator {
   }
 
   private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
-    timeouts["${animation.id}-setup"] =
+    timeouts["${animation.id}-delay"] =
         setTimeout(
             {
               clearSingleTimeoutAndInterval(animation.id)
@@ -166,12 +167,16 @@ internal object Animator {
     cleanupResetFunctions.forEach { key -> resetFunctions.remove(key) }
   }
 
-  fun clearAllTimeoutsAndIntervals() {
+  fun clearAllTimeoutsAndIntervals(excludeDelay: Boolean = false) {
     for (i in 0 until intervals.size) {
       intervals.values.elementAt(i).let { clearInterval(it) }
     }
 
     for (i in 0 until timeouts.size) {
+      if (excludeDelay && timeouts.keys.elementAt(i).endsWith("-delay")) {
+        println("[S] Skipping delay timeout: ${timeouts.keys.elementAt(i)}")
+        continue
+      }
       timeouts.values.elementAt(i).let { clearTimeout(it) }
     }
 
@@ -329,11 +334,14 @@ internal object Animator {
     // Toggle old animation off
     element.classList.toggle("${componentId}--$type--props", false)
 
+    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    var visualRoot: Root? = null
+
     resetFunctions["${animation.id}-flip-cleanup"] = {
       val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
       if (visuals != null) {
         try {
-          render(VisualBuilder.build(animation.componentView?.visual), visuals)
+          visualRoot?.render(VisualBuilder.build(animation.componentView?.visual))
         } catch (e: Exception) {
           println("Error rendering dice side: ${e.message}")
         }
@@ -356,9 +364,9 @@ internal object Animator {
               element.classList.toggle("${componentId}--$type", true)
               animations["$componentId--$type"] = newElement
 
-              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(animation.fromVisual), oldVisuals)
+                visualRoot = createRoot(oldVisuals)
+                visualRoot.render(VisualBuilder.build(animation.fromVisual))
               }
 
               timeouts["${animation.id}-start"] =
@@ -367,7 +375,7 @@ internal object Animator {
                         val oldVisuals =
                             document.querySelector("#${componentId} > bgw_visuals") as Element?
                         if (oldVisuals != null) {
-                          render(VisualBuilder.build(animation.toVisual), oldVisuals)
+                          visualRoot?.render(VisualBuilder.build(animation.toVisual))
                         }
                       },
                       duration / 2)
@@ -383,9 +391,8 @@ internal object Animator {
                                 {
                                   if (oldVisuals != null) {
                                     // Render the old visual after the animation is done
-                                    render(
-                                        VisualBuilder.build(animation.componentView?.visual),
-                                        oldVisuals)
+                                    visualRoot?.render(
+                                        VisualBuilder.build(animation.componentView?.visual))
                                   }
                                 },
                                 CLEANUP_MS)
@@ -402,12 +409,18 @@ internal object Animator {
     val componentId = animation.componentView?.id.toString()
     val duration = animation.duration
 
+    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    var visualRoot: Root? = null
+
+    if (oldVisuals != null) {
+      visualRoot = createRoot(oldVisuals)
+    }
+
     intervals["${animation.id}-random"] =
         setInterval(
             {
-              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(animation.visuals.random()), oldVisuals)
+                visualRoot?.render(VisualBuilder.build(animation.visuals.random()))
               }
             },
             duration / animation.speed)
@@ -416,7 +429,7 @@ internal object Animator {
       val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
       if (visuals != null) {
         try {
-          render(VisualBuilder.build(animation.componentView?.visual), visuals)
+          visualRoot?.render(VisualBuilder.build(animation.componentView?.visual))
         } catch (e: Exception) {
           println("Error rendering dice side: ${e.message}")
         }
@@ -428,7 +441,7 @@ internal object Animator {
             {
               val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(animation.toVisual), oldVisuals)
+                visualRoot?.render(VisualBuilder.build(animation.toVisual))
               }
               callback.invoke(animation.id)
               timeouts["${animation.id}-random-cleanup"] =
@@ -436,7 +449,7 @@ internal object Animator {
                       {
                         if (oldVisuals != null) {
                           // Render the old visual after the animation is done
-                          render(VisualBuilder.build(animation.componentView?.visual), oldVisuals)
+                          visualRoot?.render(VisualBuilder.build(animation.componentView?.visual))
                         }
                       },
                       CLEANUP_MS)
@@ -452,12 +465,18 @@ internal object Animator {
     val dice = animation.componentView as? DiceViewData ?: return
     val duration = animation.duration
 
+    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    var visualRoot: Root? = null
+
+    if (oldVisuals != null) {
+      visualRoot = createRoot(oldVisuals)
+    }
+
     intervals["${animation.id}-dice"] =
         setInterval(
             {
-              val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(dice.visuals.random()), oldVisuals)
+                visualRoot?.render(VisualBuilder.build(dice.visuals.random()))
               }
             },
             duration / animation.speed)
@@ -466,7 +485,7 @@ internal object Animator {
       val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
       if (visuals != null) {
         try {
-          render(VisualBuilder.build(dice.visuals[dice.currentSide]), visuals)
+          visualRoot?.render(VisualBuilder.build(dice.visuals[dice.currentSide]))
         } catch (e: Exception) {
           println("Error rendering dice side: ${e.message}")
         }
@@ -478,7 +497,7 @@ internal object Animator {
             {
               val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
               if (oldVisuals != null) {
-                render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
+                visualRoot?.render(VisualBuilder.build(dice.visuals[animation.toSide]))
               }
               callback.invoke(animation.id)
               timeouts["${animation.id}-dice-cleanup"] =
@@ -486,7 +505,7 @@ internal object Animator {
                       {
                         if (oldVisuals != null) {
                           // Render the old visual after the animation is done
-                          render(VisualBuilder.build(dice.visuals[dice.currentSide]), oldVisuals)
+                          visualRoot?.render(VisualBuilder.build(dice.visuals[dice.currentSide]))
                         }
                       },
                       CLEANUP_MS)

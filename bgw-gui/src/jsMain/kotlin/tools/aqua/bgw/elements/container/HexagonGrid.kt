@@ -23,10 +23,6 @@ import emotion.react.css
 import kotlin.math.abs
 import kotlin.math.sqrt
 import react.*
-import react.dom.aria.ariaDescribedBy
-import react.dom.aria.ariaDisabled
-import react.dom.aria.ariaPressed
-import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DraggableOptions
