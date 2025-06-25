@@ -15,22 +15,8 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.dokkaHtml
-import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.publishing
-import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.signing
-import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.spotless
-import gradle.kotlin.dsl.accessors._80e3824d59a63a8b252270477f24e303.kotlin
-import java.lang.ProcessHandle
-import java.nio.file.Files
-import kotlin.collections.forEach
-import org.gradle.api.publish.maven.MavenPublication
+import gradle.kotlin.dsl.accessors._7bceb54c174f154aa7f0d632213e663d.spotless
 import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
-import org.gradle.api.tasks.Copy
-import org.gradle.api.tasks.JavaExec
-import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.*
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
@@ -41,6 +27,7 @@ import tools.aqua.defaultFormat
 import tools.aqua.developer
 import tools.aqua.github
 import tools.aqua.license
+import java.nio.file.Files
 
 plugins {
   kotlin("multiplatform")

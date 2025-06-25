@@ -17,6 +17,8 @@
 
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
+import kotlinx.coroutines.flow.merge
+import org.gradle.kotlin.dsl.*
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
 
@@ -63,6 +65,9 @@ spotless {
   }
 }
 
-koverMerged.enable()
+kover {
+  merge {
+  }
+}
 
 nexusPublishing { repositories { sonatype() } }
