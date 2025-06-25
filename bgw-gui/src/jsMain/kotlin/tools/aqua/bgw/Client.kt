@@ -41,8 +41,6 @@ import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
-import web.fs.FileSystemFileHandle
-import web.timers.setTimeout
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null

@@ -16,9 +16,10 @@
  */
 
 import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.dokkaHtml
-import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.dokkaJavadoc
-import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.java
+import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.publishing
+import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.signing
 import gradle.kotlin.dsl.accessors._cea3ad031612b62c062ef0a05a7badc1.spotless
+import gradle.kotlin.dsl.accessors._e5c704e643cec051b3e9f2f6b17b54d9.application
 import java.lang.ProcessHandle
 import java.nio.file.Files
 import kotlin.collections.forEach
