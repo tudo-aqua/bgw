@@ -17,10 +17,9 @@
 
 package tools.aqua.bgw.net.server.entity.tables
 
-import com.vladmihalcea.hibernate.type.json.JsonType
-import javax.persistence.*
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
+import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 /**
  * Table structure for game entries.
@@ -29,11 +28,10 @@ import org.hibernate.annotations.TypeDef
  * @property schema The schema for game action messages.
  */
 @Entity(name = "Game")
-@TypeDef(name = "json", typeClass = JsonType::class)
 class SchemasByGame(
     @Column(nullable = false, updatable = false) var gameID: String,
     //
-    @Type(type = "json")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(nullable = false, updatable = false, columnDefinition = "jsonb")
     var schema: String,
 ) {

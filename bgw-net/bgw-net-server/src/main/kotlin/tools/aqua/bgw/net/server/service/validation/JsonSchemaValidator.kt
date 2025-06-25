@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.networknt.schema.JsonSchema
 import com.networknt.schema.JsonSchemaFactory
 import com.networknt.schema.SpecVersion
+import jakarta.annotation.PostConstruct
 import java.io.FileNotFoundException
 import java.util.*
-import javax.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -67,13 +67,11 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
    *
    * @param message The [GameActionMessage] with the payload, that gets validated.
    * @param gameID The identifier for the [SchemasByGame] entities in the Database.
-   *
    * @return a [Optional] containing a [Map] of [String] to [List] of [String] representations of
-   * the validation errors that occurred during validation. The key of the map is the schema class
-   * name. The value is a list of validation errors that occurred during validation.
-   *
+   *   the validation errors that occurred during validation. The key of the map is the schema class
+   *   name. The value is a list of validation errors that occurred during validation.
    * @throws JsonSchemaNotFoundException whenever [gameID] did not resolve to any [SchemasByGame]
-   * entity.
+   *   entity.
    */
   override fun validate(
       message: GameActionMessage,
@@ -110,9 +108,8 @@ class JsonSchemaValidator(val schemasByGameRepository: SchemasByGameRepository) 
    *
    * @param reference The [reference] schema to validate [schemaNode] against.
    * @param schemaNode The schema to be validated against the [reference] schema.
-   *
    * @return a [List] of [String] representations of the validation errors that occurred during
-   * validation.
+   *   validation.
    */
   override fun validate(reference: JsonSchema, schemaNode: JsonNode): List<String> =
       reference.validate(schemaNode).map { it.message }

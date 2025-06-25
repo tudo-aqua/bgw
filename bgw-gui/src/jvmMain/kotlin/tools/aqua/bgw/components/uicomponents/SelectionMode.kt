@@ -23,7 +23,6 @@ package tools.aqua.bgw.components.uicomponents
  * @see StructuredDataView
  * @see ListView
  * @see TableView
- *
  * @since 0.6
  */
 enum class SelectionMode {

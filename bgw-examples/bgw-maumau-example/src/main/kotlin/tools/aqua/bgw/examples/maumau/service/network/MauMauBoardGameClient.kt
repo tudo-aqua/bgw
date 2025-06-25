@@ -102,6 +102,7 @@ class MauMauBoardGameClient(
   override fun onPlayerLeft(notification: PlayerLeftNotification) {
     BoardGameApplication.runOnGUIThread { logicController.view.onUserLeft(notification.sender) }
   }
+
   // endregion
 
   // region Game messages

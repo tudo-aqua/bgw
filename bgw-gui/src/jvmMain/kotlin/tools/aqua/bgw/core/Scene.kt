@@ -38,10 +38,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width [Scene] width in virtual coordinates.
  * @param height [Scene] height in virtual coordinates.
  * @param background [Scene] [background] [Visual].
- *
  * @see BoardGameScene
  * @see MenuScene
- *
  * @since 0.1
  */
 sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
@@ -227,9 +225,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * first component and the [rootNode] as last.
    *
    * @param node Child to find.
-   *
    * @return Path to child.
-   *
    * @throws IllegalStateException If child was not contained in this [Scene].
    */
   fun findPathToChild(node: ComponentView): List<ComponentView> {

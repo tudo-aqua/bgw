@@ -35,8 +35,6 @@ import tools.aqua.bgw.visual.Visual
  *
  * Whenever the user selects an item, the [selectedItem] gets updated.
  *
- * @constructor Creates a [ComboBox].
- *
  * @param T Generic [ComboBox] content.
  * @param posX Horizontal coordinate for this [ComboBox]. Default: 0.
  * @param posY Vertical coordinate for this [ComboBox]. Default: 0.
@@ -45,18 +43,17 @@ import tools.aqua.bgw.visual.Visual
  * @param font [Font] to be used for the options. Default: default [Font] constructor.
  * @param visual [Visual] that is used to represent this [ComboBox]. Default: empty [Visual].
  * @property prompt Prompt for this [ComboBox]. This gets displayed as a prompt to the user whenever
- * the [selectedItem] value is `null`. Default: empty string.
+ *   the [selectedItem] value is `null`. Default: empty string.
  * @param items The initial selection of items. Default: empty list.
  * @param formatFunction The formatFunction that is used to represent the items. Default: `null`.
  * @param disallowUnselect If `true`, the user is not allowed to unselect the currently selected
- * item. By default, the first item is selected.
+ *   item. By default, the first item is selected.
  * @param itemVisuals The [List] of [Visual]s that are used to represent each item in the [ComboBox]
- * .
- *
+ *   .
+ * @constructor Creates a [ComboBox].
  * @see Font
  * @see Visual
  * @see UIComponent
- *
  * @since 0.1
  */
 open class ComboBox<T>(
@@ -183,9 +180,7 @@ open class ComboBox<T>(
    * Get the index of the currently selected item.
    *
    * @return The index of the currently selected item.
-   *
    * @see selectedItem
-   *
    * @since 0.10
    */
   fun getSelectedIndex(): Int {
@@ -196,11 +191,8 @@ open class ComboBox<T>(
    * Manually trigger the [formatFunction] for a given item.
    *
    * @param item Item to format.
-   *
    * @return Formatted [String] representation of the item.
-   *
    * @see formatFunction
-   *
    * @since 0.10
    */
   fun formatItem(item: Any?): String {
@@ -212,7 +204,6 @@ open class ComboBox<T>(
    * Gets invoked whenever an item is selected.
    *
    * @see selectedItem
-   *
    * @since 0.10
    */
   var onItemSelected: ((T?) -> Unit)? = null

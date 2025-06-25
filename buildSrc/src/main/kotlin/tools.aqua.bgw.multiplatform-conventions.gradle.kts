@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
-import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.publishing
-import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.signing
+import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.dokkaHtml
+import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.java
+import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.publishing
+import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.signing
+import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.spotless
+import gradle.kotlin.dsl.accessors._0b6c55f57a59a05efc0f30976df635fb.application
+import gradle.kotlin.dsl.accessors._0b6c55f57a59a05efc0f30976df635fb.kotlin
 import java.lang.ProcessHandle
 import java.nio.file.Files
 import kotlin.collections.forEach
@@ -79,7 +81,8 @@ fun generateDefaultProperties(suffix: String = "") =
         val GENERATE_SAMPLES = false
         val BGW_VERSION = "${rootProject.version}"
     }
-""".trimIndent()
+"""
+        .trimIndent()
 
 if (!project.extra.has("useSockets")) {
   project.extra.set("useSockets", "true")
@@ -110,11 +113,6 @@ val javadocJar: TaskProvider<Jar> by
       archiveClassifier.set("javadoc")
       from(tasks.dokkaHtml.flatMap { it.outputDirectory })
     }
-
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
 
 repositories {
   jcenter()
@@ -261,6 +259,7 @@ gradle.buildFinished {
 fun killJcefHelperProcesses(pids: Set<Long>) {
   pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
 }
+
 // endregion
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")

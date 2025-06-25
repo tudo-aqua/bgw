@@ -28,8 +28,6 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [StructuredDataView] displaying its items with given format function.
  *
- * @constructor Creates a [StructuredDataView].
- *
  * @param T Generic [StructuredDataView] content.
  * @param posX Horizontal coordinate for this [StructuredDataView].
  * @param posY Vertical coordinate for this [StructuredDataView].
@@ -40,7 +38,7 @@ import tools.aqua.bgw.visual.Visual
  * @param visual Background [Visual].
  * @param selectionMode Selection mode to be used for this [StructuredDataView].
  * @param selectionBackground Background for selected items in this [StructuredDataView].
- *
+ * @constructor Creates a [StructuredDataView].
  * @see Font
  * @see Visual
  * @see SelectionMode
@@ -48,7 +46,6 @@ import tools.aqua.bgw.visual.Visual
  * @see ListView
  * @see TableView
  * @see UIComponent
- *
  * @since 0.6
  */
 sealed class StructuredDataView<T>(
@@ -218,7 +215,6 @@ sealed class StructuredDataView<T>(
    *
    * @throws IllegalStateException If selection mode is [SelectionMode.NONE].
    * @throws IllegalArgumentException If [index] is out of bounds.
-   *
    * @since 0.10
    */
   fun selectIndex(index: Int) {
@@ -306,7 +302,6 @@ sealed class StructuredDataView<T>(
    *
    * @throws IllegalStateException If selection mode is not set to [SelectionMode.MULTIPLE].
    * @throws IllegalArgumentException If [UIComponent] is empty.
-   *
    * @see clearSelection
    */
   fun selectAll() {
@@ -344,7 +339,6 @@ sealed class StructuredDataView<T>(
    * Gets invoked whenever items are selected or deselected.
    *
    * @see selectedItems
-   *
    * @since 0.10
    */
   var onSelectionChanged: ((List<T>) -> Unit)? = null

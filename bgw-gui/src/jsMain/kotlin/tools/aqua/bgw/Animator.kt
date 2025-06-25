@@ -272,7 +272,8 @@ internal object Animator {
             #${componentId} {
               scale: ${animation.fromScaleX} ${animation.fromScaleY};
             }
-          """.trimIndent()
+          """
+              .trimIndent()
 
       document.body?.appendChild(initStyleElement)
       animations["$componentId--$type--init"] = initStyleElement
@@ -523,7 +524,8 @@ internal object Animator {
 
     return """
             transition: ${transitions.filter { it.isNotEmpty() }.joinToString(", ")};
-        """.trimIndent()
+        """
+        .trimIndent()
   }
 
   private fun getAnimationCSS(
@@ -545,7 +547,8 @@ internal object Animator {
                 .${componentId}--${type} {
                     opacity: ${animationData.toOpacity};
                 }
-            """.trimIndent()
+            """
+              .trimIndent()
       is MovementAnimationData ->
           """
                 .${componentId}--${type}--props {
@@ -555,7 +558,8 @@ internal object Animator {
                 .${componentId}--${type} {
                     translate: calc(var(--bgwUnit) * ${animationData.byX}) calc(var(--bgwUnit) * ${animationData.byY});
                 }
-            """.trimIndent()
+            """
+              .trimIndent()
       is RotationAnimationData ->
           """
                 .${componentId}--${type}--props {
@@ -565,7 +569,8 @@ internal object Animator {
                 .${componentId}--${type} {
                     rotate: ${animationData.byAngle}deg;
                 }
-            """.trimIndent()
+            """
+              .trimIndent()
       is ScaleAnimationData ->
           """
                 .${componentId}--${type}--props {
@@ -575,7 +580,8 @@ internal object Animator {
                 .${componentId}--${type} {
                     scale: ${animationData.toScaleX} ${animationData.toScaleY} !important;
                 }
-            """.trimIndent()
+            """
+              .trimIndent()
       is FlipAnimationData ->
           """                
                 .${componentId}--${type}--props {
@@ -593,7 +599,8 @@ internal object Animator {
                         transform: rotateY(0deg);
                     }
                 }
-            """.trimIndent()
+            """
+              .trimIndent()
       else -> ""
     }
   }

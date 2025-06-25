@@ -24,6 +24,7 @@ import tools.aqua.GlobalMavenMetadataExtension.License
 
 /**
  * Add metadata for a GitHub project. This includes URL and SCM connection data.
+ *
  * @param organization the repository's organization.
  * @param project the project name.
  * @param mainBranch the main branch, used for URL generation. Defaults to `main`.
@@ -39,6 +40,7 @@ fun MavenPom.github(organization: String, project: String, mainBranch: String = 
 
 /**
  * Add a developer using a succinct notation.
+ *
  * @param developerName the developer's name.
  * @param mailAddress the email address.
  */
@@ -49,6 +51,7 @@ fun MavenPomDeveloperSpec.developer(developerName: String, mailAddress: String) 
 
 /**
  * Add a license using a succinct notation.
+ *
  * @param licenseName the license's name.
  * @param licenseUrl a URL for the license.
  */

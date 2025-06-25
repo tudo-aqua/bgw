@@ -20,10 +20,6 @@ plugins { `kotlin-dsl` }
 repositories {
   gradlePluginPortal()
   mavenCentral()
-  maven {
-    url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
-    name = "ktor-eap"
-  }
 }
 
 dependencies {
@@ -31,7 +27,6 @@ dependencies {
   implementation(libs.bundles.ktor.netty)
 
   implementation(libs.commons.compress)
-  implementation(libs.dockerClient)
 
   implementation(libs.gradle.bmVersions)
   implementation(libs.gradle.dependencyManagement)
@@ -45,9 +40,9 @@ dependencies {
   implementation(libs.gradle.vaadin)
 
   implementation(
-      "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.0.0")
+      "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.0.21")
   implementation(
-      "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.0.0")
+      "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.0.21")
 
   // black magic from https://github.com/gradle/gradle/issues/15383
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

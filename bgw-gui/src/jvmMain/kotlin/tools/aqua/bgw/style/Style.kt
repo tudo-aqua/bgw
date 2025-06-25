@@ -24,7 +24,6 @@ import tools.aqua.bgw.visual.SingleLayerVisual
  *
  * @see BorderRadius
  * @see Cursor
- *
  * @since 0.10
  */
 class Style : StylingDeclarationObservable() {
@@ -69,10 +68,8 @@ class BorderRadius : StylingDeclaration {
   /**
    * Creates a [BorderRadius] with the same roundness for all corners.
    *
-   * @constructor Creates a [BorderRadius] with the same roundness for all corners.
-   *
    * @param radius Roundness in pixels.
-   *
+   * @constructor Creates a [BorderRadius] with the same roundness for all corners.
    * @since 0.10
    */
   constructor(radius: Number) {
@@ -85,13 +82,11 @@ class BorderRadius : StylingDeclaration {
   /**
    * Creates a [BorderRadius] with different roundness for each corner.
    *
-   * @constructor Creates a [BorderRadius] with different roundness for each corner.
-   *
    * @param topLeft Roundness in pixels for the top left corner.
    * @param topRight Roundness in pixels for the top right corner.
    * @param bottomRight Roundness in pixels for the bottom right corner.
    * @param bottomLeft Roundness in pixels for the bottom left corner.
-   *
+   * @constructor Creates a [BorderRadius] with different roundness for each corner.
    * @since 0.10
    */
   constructor(topLeft: Number, topRight: Number, bottomRight: Number, bottomLeft: Number) {
@@ -104,10 +99,8 @@ class BorderRadius : StylingDeclaration {
   /**
    * Creates a [BorderRadius] with the same roundness for all corners.
    *
-   * @constructor Creates a [BorderRadius] with the same roundness for all corners.
-   *
    * @param radius Roundness.
-   *
+   * @constructor Creates a [BorderRadius] with the same roundness for all corners.
    * @since 0.10
    */
   constructor(radius: String) : this(radius, radius, radius, radius)
@@ -115,13 +108,11 @@ class BorderRadius : StylingDeclaration {
   /**
    * Creates a [BorderRadius] with different roundness for each corner.
    *
-   * @constructor Creates a [BorderRadius] with different roundness for each corner.
-   *
    * @param topLeft Roundness for the top left corner.
    * @param topRight Roundness for the top right corner.
    * @param bottomRight Roundness for the bottom right corner.
    * @param bottomLeft Roundness for the bottom left corner.
-   *
+   * @constructor Creates a [BorderRadius] with different roundness for each corner.
    * @since 0.10
    */
   constructor(topLeft: String, topRight: String, bottomRight: String, bottomLeft: String) {

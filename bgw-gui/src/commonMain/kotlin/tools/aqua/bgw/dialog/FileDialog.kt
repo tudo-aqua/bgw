@@ -22,14 +22,12 @@ package tools.aqua.bgw.dialog
 /**
  * A [FileDialog] such as a file chooser or save dialog, depending on [FileDialogMode].
  *
- * @constructor Creates a [FileDialog] with given [FileDialogMode].
- *
  * @property mode The [Dialog]'s mode.
  * @property title The [Dialog]'s title text.
  * @property initialFileName The initial file name in the file name text box.
  * @property initialDirectory The initial directory where to open the file chooser.
  * @property extensionFilters Extensions filters for this file chooser.
- *
+ * @constructor Creates a [FileDialog] with given [FileDialogMode].
  * @see FileDialogMode
  * @see ExtensionFilter
  */
@@ -52,7 +50,6 @@ class FileDialog(
    * If [mode] is [FileDialogMode.OPEN_MULTIPLE_FILES] it will contain multiple elements.
    *
    * @see FileDialogMode
-   *
    * @since 0.10
    */
   var onPathsSelected: ((List<String>) -> Unit)? = null
