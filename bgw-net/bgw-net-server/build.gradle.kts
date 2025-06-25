@@ -44,6 +44,9 @@ dependencies {
   // Integration testing
   testImplementation(libs.h2database.h2)
   testImplementation(libs.testcontainers.junit.jupiter)
+
+  implementation("org.apache.commons:commons-fileupload2-core:2.0.0-M4")
+  implementation("org.jetbrains.intellij.deps:intellij-coverage-reporter:1.0.766")
 }
 
 vaadin { productionMode = true }
