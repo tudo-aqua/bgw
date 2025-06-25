@@ -19,3 +19,8 @@ plugins {
   id("tools.aqua.bgw.base-conventions")
   id("tools.aqua.bgw.multiplatform-conventions")
 }
+
+mavenMetadata {
+  name.set("BoardGameWork GUI Library")
+  description.set("A framework for board game applications.")
+}
