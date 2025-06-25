@@ -15,13 +15,11 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.dokkaHtml
-import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.java
-import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.publishing
-import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.signing
-import gradle.kotlin.dsl.accessors._030cff392e5229ba1baf432d8edfc95d.spotless
-import gradle.kotlin.dsl.accessors._0b6c55f57a59a05efc0f30976df635fb.application
-import gradle.kotlin.dsl.accessors._0b6c55f57a59a05efc0f30976df635fb.kotlin
+import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.dokkaHtml
+import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.publishing
+import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.signing
+import gradle.kotlin.dsl.accessors._104a63c133d272f2156cf884f29ee792.spotless
+import gradle.kotlin.dsl.accessors._80e3824d59a63a8b252270477f24e303.kotlin
 import java.lang.ProcessHandle
 import java.nio.file.Files
 import kotlin.collections.forEach
@@ -34,6 +32,7 @@ import org.gradle.kotlin.dsl.*
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
@@ -51,9 +50,7 @@ plugins {
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
 
-  application
   `maven-publish`
-  `java-library`
   signing
 }
 
@@ -115,7 +112,6 @@ val javadocJar: TaskProvider<Jar> by
     }
 
 repositories {
-  jcenter()
   mavenCentral()
   maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
@@ -123,7 +119,31 @@ repositories {
 kotlin {
   jvmToolchain(11)
   jvm {
-    withJava()
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    binaries {
+      executable {
+        mainClass.set("tools.aqua.bgw.main.MainKt")
+        applicationDefaultJvmArgs =
+            listOf(
+                "--add-opens",
+                "java.desktop/sun.awt=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/java.awt.peer=ALL-UNNAMED")
+
+        if (System.getProperty("os.name").contains("Mac")) {
+          applicationDefaultJvmArgs =
+              listOf(
+                  "--add-opens",
+                  "java.desktop/sun.awt=ALL-UNNAMED",
+                  "--add-opens",
+                  "java.desktop/java.awt.peer=ALL-UNNAMED",
+                  "--add-opens",
+                  "java.desktop/sun.lwawt=ALL-UNNAMED",
+                  "--add-opens",
+                  "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+        }
+      }
+    }
     testRuns["test"].executionTask.configure { useJUnitPlatform() }
   }
   js(IR) {
@@ -200,29 +220,6 @@ val dokkaHtmlCommon by
       dokkaSourceSets { named("commonMain") }
     }
 
-application {
-  mainClass.set("tools.aqua.bgw.main.MainKt")
-  applicationDefaultJvmArgs =
-      listOf(
-          "--add-opens",
-          "java.desktop/sun.awt=ALL-UNNAMED",
-          "--add-opens",
-          "java.desktop/java.awt.peer=ALL-UNNAMED")
-
-  if (System.getProperty("os.name").contains("Mac")) {
-    applicationDefaultJvmArgs =
-        listOf(
-            "--add-opens",
-            "java.desktop/sun.awt=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/java.awt.peer=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/sun.lwawt=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
-  }
-}
-
 tasks.named<Copy>("jvmProcessResources") {
   val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
   from(jsBrowserDistribution)
@@ -231,7 +228,7 @@ tasks.named<Copy>("jvmProcessResources") {
 // region - Cleanup JCEF helper processes
 var globalTmpDir = ""
 
-tasks.named<JavaExec>("run") {
+tasks.named<JavaExec>("runJvm") {
   doFirst {
     val tmpDir = Files.createTempDirectory("bgw-")
     tmpDir.toFile().deleteOnExit()
