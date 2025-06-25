@@ -22,21 +22,17 @@ package tools.aqua.bgw.event
 /**
  * Event that gets raised for mouse wheel inputs.
  *
- * @constructor Creates a [WheelEvent].
- *
  * @property direction The scroll direction.
  * @property isControlDown Whether control key was pressed.
  * @property isShiftDown Whether shift key was pressed.
  * @property isAltDown Whether alt key was pressed.
- *
  * @param direction The scroll direction.
  * @param isControlDown Whether control key was pressed.
  * @param isShiftDown Whether shift key was pressed.
  * @param isAltDown Whether alt key was pressed.
  * @param scrollOffset The amount of scroll since last trigger.
- *
+ * @constructor Creates a [WheelEvent].
  * @see WheelDirection
- *
  * @since 0.7.1
  */
 class WheelEvent(
@@ -49,7 +45,6 @@ class WheelEvent(
      * positive, usage in combination with [direction] is recommended.
      *
      * @see direction
-     *
      * @since 0.10
      */
     val scrollOffset: Double = 0.0

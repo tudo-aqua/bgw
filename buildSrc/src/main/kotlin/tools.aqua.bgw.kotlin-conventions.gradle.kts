@@ -78,7 +78,7 @@ tasks.test {
 
 kotlin.target.compilations.all {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
     // allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }

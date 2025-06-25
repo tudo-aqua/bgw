@@ -17,7 +17,6 @@
 
 package tools.aqua.bgw
 
-import ActionProp
 import AnimationData
 import AppData
 import Data
@@ -37,12 +36,11 @@ import org.w3c.dom.WebSocket
 import react.*
 import react.dom.client.Root
 import react.dom.client.createRoot
-import react.dom.render
+import react.dom.client.hydrateRoot
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
-import web.timers.setTimeout
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
@@ -53,6 +51,8 @@ internal lateinit var dialogContainer: HTMLElement
 internal lateinit var root: Root
 internal lateinit var dialogRoot: Root
 internal val dialogMap = mutableMapOf<ID, DialogData>()
+
+internal var exampleRoots = mutableMapOf<ID, Root>()
 
 internal fun main() {
   if (Config.USE_SOCKETS) {
@@ -84,8 +84,10 @@ internal fun main() {
 
           val cont = document.getElementById(containerId)
           if (cont != null) {
-            container = cont as HTMLElement
-            handleReceivedData(receivedData!!)
+            if (!exampleRoots.containsKey(containerId)) {
+              exampleRoots[containerId] = createRoot(cont as Element)
+            }
+            handleReceivedData(receivedData!!, containerId)
           }
         })
   }
@@ -99,47 +101,30 @@ internal fun resetAnimations() {
   }
 }
 
+internal fun stopAnimationsWithoutCallbacks() {
+  println("Stopping animations without callbacks")
+  Animator.clearAllTimeoutsAndIntervals(excludeDelay = true)
+  resetAnimations()
+}
+
 internal fun stopAnimations() {
+  println("Stopping animations with callbacks")
   Animator.clearAllTimeoutsAndIntervals()
   resetAnimations()
 }
 
-internal fun handleReceivedData(receivedData: Data) {
+internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-root") {
   when (receivedData) {
+    // Handle app data sent from JVM to JS client
     is AppData -> {
-      if (receivedData.action == ActionProp.HIDE_MENU_SCENE) {
-        val element = document.querySelector("#menuScene") as HTMLElement
-        element.classList.toggle("scene--visible", false)
-        setTimeout(
-            {
-              if (!Config.USE_SOCKETS) {
-                renderApp(receivedData)
-              } else {
-                renderAppFast(receivedData)
-              }
-            },
-            300)
-      } else if (receivedData.action == ActionProp.SHOW_MENU_SCENE) {
-        if (!Config.USE_SOCKETS) {
-          renderApp(receivedData)
-        } else {
-          renderAppFast(receivedData)
-        }
-        val element = document.querySelector("#menuScene") as HTMLElement
-        setTimeout({ element.classList.toggle("scene--visible", true) }, 50)
+      Animator.cancelCleanupTimeouts()
+      if (!Config.USE_SOCKETS) {
+        renderSingleRoot(receivedData, containerId)
       } else {
-        // Cancel all pending animation timeouts before new render to prevent incorrect resets
-        Animator.cancelCleanupTimeouts()
-        if (!Config.USE_SOCKETS) {
-          renderApp(receivedData)
-        } else {
-          renderAppFast(receivedData)
-        }
-      }
-      if (!receivedData.forcedByAnimation) {
-        // stopAnimations()
+        renderAppFast(receivedData)
       }
     }
+    // Handle animations sent from JVM to JS client
     is AnimationData -> {
       if (receivedData.isStop) {
         stopAnimations()
@@ -149,6 +134,7 @@ internal fun handleReceivedData(receivedData: Data) {
         JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
       }
     }
+    // Handle dialogs sent from JVM to JS client
     is DialogData -> {
       dialogMap[receivedData.id] = receivedData
       renderDialogs()
@@ -157,15 +143,20 @@ internal fun handleReceivedData(receivedData: Data) {
   }
 }
 
-/** Renders the app with React 17 syntax to provide fallback for BGW Playground web app. */
-internal fun renderApp(appData: AppData) {
-  render(
-      App.create { data = appData },
-      container as Element,
-      callback = { JCEFEventDispatcher.dispatchEvent(LoadEventData()) })
+/** Renders single elements for BGW Playground web app. */
+internal fun renderSingleRoot(appData: AppData, containerId: String) {
+  if (exampleRoots.containsKey(containerId)) {
+    val localRoot = exampleRoots[containerId]
+    localRoot?.render(App.create { data = appData })
+  } else {
+    val cont = document.getElementById(containerId)
+    if (cont != null) {
+      exampleRoots[containerId] = hydrateRoot(cont as Element, App.create { data = appData })
+    }
+  }
 }
 
-/** Renders the app with React 18 syntax. */
+/** Renders the BGW interface. */
 internal fun renderAppFast(appData: AppData) {
   if (!::root.isInitialized) {
     root = createRoot(container as Element)

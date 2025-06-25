@@ -25,13 +25,11 @@ import IDGenerator
  * Visual baseclass.
  *
  * @constructor Creates a [Visual].
- *
  * @see SingleLayerVisual
  * @see CompoundVisual
  * @see TextVisual
  * @see ImageVisual
  * @see ColorVisual
- *
  * @since 0.1
  */
 abstract class Visual {

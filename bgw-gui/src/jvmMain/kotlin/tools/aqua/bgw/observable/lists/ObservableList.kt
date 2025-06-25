@@ -30,9 +30,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @param index Index of the element to replace.
    * @param element Element to be stored at the specified position.
-   *
    * @return The element previously at the specified position.
-   *
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   operator fun set(index: Int, element: T): T {
@@ -63,7 +61,6 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @param index Index at which the specified element is to be inserted.
    * @param element Element to be inserted.
-   *
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   fun add(index: Int, element: T) {
@@ -84,7 +81,6 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * changed as a result of the call).
    *
    * @param o Element to be removed from this list, if present.
-   *
    * @return `true` if this list contained the specified element.
    */
   fun remove(o: T): Boolean {
@@ -100,7 +96,6 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * Removes an element at the specified [index] from the list.
    *
    * @return The element that has been removed.
-   *
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   fun removeAt(index: Int): T {
@@ -169,11 +164,8 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * specified collection is this list, and this list is nonempty).
    *
    * @param elements [Collection] containing elements to be set as new contents of this list.
-   *
    * @return `true` if this list changed as a result of the call.
-   *
    * @throws NullPointerException If the specified collection is null.
-   *
    * @since 0.6
    */
   fun setAll(elements: Collection<T>): Boolean {
@@ -197,9 +189,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * specified collection is this list, and this list is nonempty).
    *
    * @param elements [Collection] containing elements to be added to this list.
-   *
    * @return `true` if this list changed as a result of the call.
-   *
    * @throws NullPointerException If the specified collection is null.
    */
   fun addAll(elements: Collection<T>): Boolean {
@@ -217,9 +207,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @param index Index at which to insert the first element from the specified collection.
    * @param elements [Collection] containing elements to be added to this list.
-   *
    * @return `true` if this list changed as a result of the call.
-   *
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   fun addAll(index: Int, elements: Collection<T>): Boolean {
@@ -233,14 +221,11 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * Removes from this list all of its elements that are contained in the specified collection.
    *
    * @param elements [Collection] containing elements to be removed from this list.
-   *
    * @return `true` if this list changed as a result of the call.
-   *
    * @throws ClassCastException If the class of an element of this list is incompatible with the
-   * specified collection.
+   *   specified collection.
    * @throws NullPointerException If this list contains a `null` element and the specified
-   * collection does not permit `null` elements.
-   *
+   *   collection does not permit `null` elements.
    * @see Collection.contains
    */
   fun removeAll(elements: Collection<*>): Boolean {
@@ -259,14 +244,11 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * specified collection.
    *
    * @param elements Collection containing elements to be retained in this list.
-   *
    * @return `true` if this list changed as a result of the call.
-   *
    * @throws ClassCastException If the class of an element of this list is incompatible with the
-   * specified collection.
+   *   specified collection.
    * @throws NullPointerException If this list contains a `null` element and the specified
-   * collection does not permit `null` elements.
-   *
+   *   collection does not permit `null` elements.
    * @see Collection.contains
    */
   fun retainAll(elements: Collection<*>): Boolean {
@@ -292,7 +274,6 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * instead of a whole list.
    *
    * For example, the following idiom removes a range of elements from a list:
-   *
    * <pre> list.subList(from, to).clear(); </pre>
    *
    * Similar idioms may be constructed for [.indexOf] and [.lastIndexOf], and all algorithms in the
@@ -305,7 +286,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @throws IndexOutOfBoundsException If any index exceeds the list's bounds.
    * @throws IllegalArgumentException If the endpoint indices are out of order (fromIndex >
-   * toIndex).
+   *   toIndex).
    */
   fun subList(fromIndex: Int, toIndex: Int): List<T> = list.subList(fromIndex, toIndex)
 
@@ -316,7 +297,6 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * caller.
    *
    * @param filter A predicate which returns `true` for elements to be removed.
-   *
    * @return `true` if elements were removed.
    * @throws NullPointerException If the specified filter is null
    */
@@ -332,7 +312,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * Sorts this list by given comparator.
    *
    * @param comparator [Comparator] to be applied. If the elements contained in this list implement
-   * the comparable interface, pass null.
+   *   the comparable interface, pass null.
    */
   fun sort(comparator: Comparator<in T>) {
     val snapshot = this.toList()
@@ -350,9 +330,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * removes [o] from the [ObservableList] silently.
    *
    * @param o Element to be removed from this list, if present.
-   *
    * @return `true` if this list contained the specified element.
-   *
    * @since 0.8
    */
   fun removeSilent(o: T): Boolean = list.remove(o)

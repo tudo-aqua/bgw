@@ -107,7 +107,6 @@ class MauMauViewController : BoardGameApplication(windowTitle = "MauMau") {
    * Calculates whether the dragged card may be played.
    *
    * @param event Drag event.
-   *
    * @return `true` if playing the dragged card is a valid move
    */
   private fun tryElementDropped(event: DragEvent): Boolean {

@@ -34,16 +34,14 @@ private typealias HexCoordinate = Pair<Int, Int>
  * @param height The height of the hexagon grid. It grows dynamically by the amount hexagons in it.
  * @param visual The visual representation of the hexagon grid. Default is an empty visual.
  * @param coordinateSystem The coordinate system to use for the grid. Default is
- * [CoordinateSystem.OFFSET].
+ *   [CoordinateSystem.OFFSET].
  * @param orientation The orientation of the hexagons in the grid. Default is
- * [HexOrientation.POINTY_TOP].
- *
+ *   [HexOrientation.POINTY_TOP].
  * @see CoordinateSystem
  * @see HexOrientation
  * @see HexagonView
  * @see Visual
  * @see GameComponentContainer
- *
  * @since 0.8
  */
 class HexagonGrid<T : HexagonView>(
@@ -58,6 +56,7 @@ class HexagonGrid<T : HexagonView>(
 
     /**
      * The orientation of the hexagons in the grid. Default is [HexOrientation.POINTY_TOP].
+     *
      * @since 0.10
      */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP
@@ -80,7 +79,6 @@ class HexagonGrid<T : HexagonView>(
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
    * @return The hexagon at the specified coordinates, or null if no hexagon is found.
-   *
    * @see components
    */
   operator fun get(columnIndex: Int, rowIndex: Int): T? = map[columnIndex to rowIndex]
@@ -91,7 +89,6 @@ class HexagonGrid<T : HexagonView>(
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
    * @param component The hexagon component to set.
-   *
    * @see components
    */
   operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
@@ -110,9 +107,7 @@ class HexagonGrid<T : HexagonView>(
    * Returns all hexagons in the grid as a map from [HexCoordinate] to [T].
    *
    * @return A map from [HexCoordinate] to [T] containing all hexagons in the grid.
-   *
    * @see components
-   *
    * @since 0.10
    */
   fun getCoordinateMap(): Map<HexCoordinate, T> {
@@ -124,9 +119,7 @@ class HexagonGrid<T : HexagonView>(
    *
    * @param columnIndex The column index of the hexagon.
    * @param rowIndex The row index of the hexagon.
-   *
    * @see components
-   *
    * @since 0.10
    */
   fun remove(columnIndex: Int, rowIndex: Int) {

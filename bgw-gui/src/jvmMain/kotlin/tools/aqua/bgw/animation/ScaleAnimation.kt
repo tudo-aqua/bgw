@@ -29,8 +29,6 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * Scales given [ComponentView] to given scalar.
  *
- * @constructor Creates a [ScaleAnimation] for the given [ComponentView].
- *
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate
  * @param fromScaleX Initial X position. Default: Current [ComponentView.posX].
@@ -39,12 +37,11 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @param toScaleY Resulting Y position. Default: Current [ComponentView.posY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  * @param interpolation [AnimationInterpolation] to use for the animation. Default:
- * [AnimationInterpolation.SMOOTH].
- *
+ *   [AnimationInterpolation.SMOOTH].
+ * @constructor Creates a [ScaleAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
  * @see ComponentView
- *
  * @since 0.3
  */
 class ScaleAnimation<T : ComponentView>(
@@ -58,7 +55,6 @@ class ScaleAnimation<T : ComponentView>(
      * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
      *
      * @see AnimationInterpolation
-     *
      * @since 0.10
      */
     val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
@@ -84,12 +80,10 @@ class ScaleAnimation<T : ComponentView>(
    * @param byScaleY Relative Y scale.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-   * [AnimationInterpolation.SMOOTH].
-   *
+   *   [AnimationInterpolation.SMOOTH].
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
-   *
    * @since 0.3
    */
   constructor(
@@ -112,12 +106,10 @@ class ScaleAnimation<T : ComponentView>(
    * @param byScale Relative scale.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-   * [AnimationInterpolation.SMOOTH].
-   *
+   *   [AnimationInterpolation.SMOOTH].
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
-   *
    * @since 0.3
    */
   constructor(

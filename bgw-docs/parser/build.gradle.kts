@@ -57,13 +57,13 @@ tasks.register("generateSamples") {
   this.group = "build"
   dependsOn("generateSamplesConfig")
   mustRunAfter(":bgw-gui:build")
-  finalizedBy(":bgw-gui:run")
+  finalizedBy(":bgw-gui:runJvm")
 }
 
 tasks.register("buildAndCopySamples") {
   this.group = "build"
   dependsOn("generateSamples")
-  mustRunAfter(":bgw-gui:run")
+  mustRunAfter(":bgw-gui:runJvm")
   doLast {
     val sourceDir = project(":bgw-gui").buildDir.resolve("examples/bgwSamples.json")
     val destinationDir = projectDir.resolve("../website/public/bgw")
@@ -171,5 +171,6 @@ fun generateProperties(suffix: String = ""): String {
         val GENERATE_SAMPLES = $generateSamples
         val BGW_VERSION = "${rootProject.version}"
     }
-""".trimIndent()
+"""
+      .trimIndent()
 }

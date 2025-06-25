@@ -26,7 +26,6 @@ import kotlin.reflect.KClass
  * is prohibited.
  *
  * @constructor Creates an [IllegalInheritanceException].
- *
  * @since 0.1
  */
 internal class IllegalInheritanceException(inheritance: Any, supertype: KClass<*>) :

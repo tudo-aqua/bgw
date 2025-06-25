@@ -25,7 +25,6 @@ import tools.aqua.bgw.visual.SingleLayerVisual
  * @see BlurFilter
  * @see SaturationFilter
  * @see SepiaFilter
- *
  * @since 0.10
  */
 class Filter : StylingDeclarationObservable() {
@@ -72,10 +71,8 @@ class Filter : StylingDeclarationObservable() {
 /**
  * Enum class representing the blur filter applied to a [SingleLayerVisual].
  *
- * @constructor Creates a [BlurFilter] with the given radius.
- *
  * @param radius Radius must be greater or equal to 0.
- *
+ * @constructor Creates a [BlurFilter] with the given radius.
  * @since 0.10
  */
 class BlurFilter(radius: Double) : StylingDeclaration {
@@ -104,10 +101,8 @@ class BlurFilter(radius: Double) : StylingDeclaration {
 /**
  * Enum class representing the saturation filter applied to a [SingleLayerVisual].
  *
- * @constructor Creates a [SaturationFilter] with the given saturation value.
- *
  * @param saturation Saturation value must be greater or equal to 0.
- *
+ * @constructor Creates a [SaturationFilter] with the given saturation value.
  * @since 0.10
  */
 class SaturationFilter(saturation: Double) : StylingDeclaration {
@@ -130,10 +125,8 @@ class SaturationFilter(saturation: Double) : StylingDeclaration {
 /**
  * Enum class representing the sepia filter applied to a [SingleLayerVisual].
  *
- * @constructor Creates a [SepiaFilter] with the given sepia value.
- *
  * @param sepia Sepia value must be between 0 and 1.
- *
+ * @constructor Creates a [SepiaFilter] with the given sepia value.
  * @since 0.10
  */
 class SepiaFilter(sepia: Double) : StylingDeclaration {

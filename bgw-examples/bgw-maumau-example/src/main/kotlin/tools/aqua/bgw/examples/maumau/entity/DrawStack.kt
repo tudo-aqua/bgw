@@ -27,7 +27,6 @@ class DrawStack : MauMauStack() {
    * communication.
    *
    * @param cards Cards to be shuffled.
-   *
    * @return New permutation of cards on the stack.
    */
   fun shuffleBack(cards: List<MauMauCard>): List<MauMauCard> {

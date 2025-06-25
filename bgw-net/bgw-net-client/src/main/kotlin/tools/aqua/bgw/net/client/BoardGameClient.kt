@@ -49,7 +49,7 @@ import tools.aqua.bgw.net.common.response.*
  * @property host The server ip or hostname.
  * @param secret The server secret.
  * @param networkLoggingBehavior The desired network logging verbosity. Default:
- * [NetworkLogging.NO_LOGGING].
+ *   [NetworkLogging.NO_LOGGING].
  */
 @Suppress("LeakingThis")
 open class BoardGameClient
@@ -123,7 +123,6 @@ protected constructor(
    * Connects to the remote server, blocking.
    *
    * @return Returns whether connection could be established.
-   *
    * @throws IllegalStateException If client is already connected to a host.
    */
   fun connect(): Boolean =
@@ -162,6 +161,7 @@ protected constructor(
       logger.error("Attempt to disconnect failed with an InterruptedException.", e)
     }
   }
+
   // endregion
 
   // region Create / Join / Leave game
@@ -171,7 +171,6 @@ protected constructor(
    * @param gameID ID of the current game to be used.
    * @param sessionID Unique id for the new session to be created on the server.
    * @param greetingMessage Greeting message to be broadcast to all players joining this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, sessionID: String, greetingMessage: String) {
@@ -192,7 +191,6 @@ protected constructor(
    *
    * @param gameID ID of the current game to be used.
    * @param greetingMessage Greeting message to be broadcast to all players joining this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, greetingMessage: String) {
@@ -210,7 +208,6 @@ protected constructor(
    *
    * @param sessionID Unique id for the existing session to join to.#
    * @param greetingMessage Greeting message to be broadcast to all other players in this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
@@ -227,7 +224,6 @@ protected constructor(
    *
    * @param sessionID Unique id for the existing session to join to.#
    * @param greetingMessage Greeting message to be broadcast to all other players in this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun spectateGame(sessionID: String, greetingMessage: String) {
@@ -242,7 +238,6 @@ protected constructor(
    * Leaves the current game session by sending a [LeaveGameMessage].
    *
    * @param goodbyeMessage Goodbye message to be broadcast to all other players in this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun leaveGame(goodbyeMessage: String) {
@@ -251,6 +246,7 @@ protected constructor(
     logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
+
   // endregion
 
   // region Game messages
@@ -258,7 +254,6 @@ protected constructor(
    * Sends a [GameActionMessage] to all connected players.
    *
    * @param payload The [GameActionMessage] payload.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun sendGameActionMessage(payload: GameAction) {
@@ -267,6 +262,7 @@ protected constructor(
     logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
   }
+
   // endregion
 
   // region Interface functions
@@ -369,6 +365,7 @@ protected constructor(
         "An incoming GameAction has been handled by the fallback function. Override onGameActionReceived or create" +
             " dedicated handler for message type ${message.javaClass.canonicalName}.")
   }
+
   // endregion
 
   // region Helper
@@ -438,7 +435,6 @@ protected constructor(
    * Checks for connected state.
    *
    * @param expectedState The expected connection state.
-   *
    * @throws IllegalStateException If BoardGameClient is not connected.
    */
   private fun checkConnected(expectedState: Boolean) {

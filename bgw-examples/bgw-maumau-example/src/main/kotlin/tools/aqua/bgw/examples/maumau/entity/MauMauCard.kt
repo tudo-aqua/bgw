@@ -20,10 +20,9 @@ package tools.aqua.bgw.examples.maumau.entity
 /**
  * Class representing a single card in the game.
  *
- * @constructor Creates a card with given [cardValue] and [cardSuit].
- *
  * @property cardValue Value of this card.
  * @property cardSuit Suit of this card.
+ * @constructor Creates a card with given [cardValue] and [cardSuit].
  */
 data class MauMauCard(val cardValue: CardValue, val cardSuit: CardSuit) {
 

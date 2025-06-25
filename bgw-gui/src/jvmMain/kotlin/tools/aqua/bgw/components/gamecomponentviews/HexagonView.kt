@@ -26,19 +26,16 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [HexagonView] represents a hexagonal shaped game component view.
  *
- * @constructor Creates a [HexagonView] with a given [Visual].
- *
  * @param posX Horizontal coordinate for this [HexagonView]. Default: 0.
  * @param posY Vertical coordinate for this [HexagonView]. Default: 0.
  * @param size Represents the distance to the outermost corner of the [HexagonView]. Default:
- * [DEFAULT_HEXAGON_SIZE].
+ *   [DEFAULT_HEXAGON_SIZE].
  * @param visual Visual for this [HexagonView].
  * @param orientation Orientation of the [HexagonView]. Default: [HexOrientation.POINTY_TOP].
- *
+ * @constructor Creates a [HexagonView] with a given [Visual].
  * @see HexOrientation
  * @see Visual
  * @see GameComponentView
- *
  * @since 0.8
  */
 open class HexagonView(
@@ -51,7 +48,6 @@ open class HexagonView(
      * Orientation of the [HexagonView].
      *
      * @see HexOrientation
-     *
      * @since 0.10
      */
     var orientation: HexOrientation = HexOrientation.POINTY_TOP

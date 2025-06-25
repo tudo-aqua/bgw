@@ -57,7 +57,7 @@ function Main() {
               Create your first board game with BoardGameWork
             </h2>
             <img
-              src="/bgw/guides/images/assets/doa.png"
+              src="/bgw/guides/images/assets/doa.jpg"
               className="absolute transition-all duration-500 aspect-video w-96 rounded-xl -left-12 -bottom-6 group-hover:rotate-3 group-hover:-left-9 max-2xl:hidden"
             />
             <Link

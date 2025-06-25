@@ -28,8 +28,6 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A basic [Label] displaying text.
  *
- * @constructor Creates a [Label].
- *
  * @param posX Horizontal coordinate for this [Label]. Default: 0.
  * @param posY Vertical coordinate for this [Label]. Default: 0.
  * @param width Width for this [Label]. Default: [DEFAULT_LABEL_WIDTH].
@@ -39,12 +37,11 @@ import tools.aqua.bgw.visual.Visual
  * @param alignment Alignment to be used for the [text] Default: [Alignment.CENTER].
  * @param isWrapText Defines if [text] should be wrapped. Default: `false`.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
- *
+ * @constructor Creates a [Label].
  * @see Font
  * @see Alignment
  * @see Visual
  * @see LabeledUIComponent
- *
  * @since 0.1
  */
 open class Label(

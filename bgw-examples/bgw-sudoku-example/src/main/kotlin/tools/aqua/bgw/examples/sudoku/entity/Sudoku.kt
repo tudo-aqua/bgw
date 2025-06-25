@@ -46,7 +46,6 @@ class Sudoku(
    * @param box Box index.
    * @param row Row index.
    * @param col Column index.
-   *
    * @return The cells value or `null` if the cell is empty
    */
   operator fun get(box: Int, row: Int, col: Int): Int? {

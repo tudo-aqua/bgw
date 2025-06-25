@@ -42,6 +42,7 @@ class Errors(items: Map<String, List<String>>) : LinkedHashMap<String, List<Stri
         """
             [$title]
             ${errors.joinToString(",\n") { "\"$it\"" }}
-            """.trimIndent()
+            """
+            .trimIndent()
       }
 }

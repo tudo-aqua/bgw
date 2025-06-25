@@ -314,13 +314,11 @@ internal val CameraPane =
             val targetWidth =
                 props.data.target?.width?.let {
                   convertToRem(it.toDouble()) * ctx.instance.transformState.scale
-                }
-                    ?: 0.0
+                } ?: 0.0
             val targetHeight =
                 props.data.target?.height?.let {
                   convertToRem(it.toDouble()) * ctx.instance.transformState.scale
-                }
-                    ?: 0.0
+                } ?: 0.0
 
             val paneWidth = convertToRem(props.data.width.toDouble())
             val paneHeight = convertToRem(props.data.height.toDouble())

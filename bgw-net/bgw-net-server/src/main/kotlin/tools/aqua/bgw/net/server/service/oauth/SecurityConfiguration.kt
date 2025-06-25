@@ -19,12 +19,12 @@ package tools.aqua.bgw.net.server.service.oauth
 
 import com.vaadin.flow.server.HandlerHelper
 import com.vaadin.flow.shared.ApplicationConstants
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.matcher.RequestMatcher
 import tools.aqua.bgw.net.common.SERVER_ENDPOINT
 import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
@@ -42,41 +42,41 @@ import tools.aqua.bgw.net.server.LOGOUT_SUCCESS_URL
 class SecurityConfiguration(
     /** Repository holding information about the oauth login accounts. */
     var accountRepository: AccountRepository
-) : WebSecurityConfigurerAdapter() {
+) {
   /** Restrict access to the application, allowing only logged-in users. */
-  override fun configure(http: HttpSecurity) {
-    http.httpBasic().disable()
+  @Bean
+  fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    http.httpBasic { it.disable() }
     // Not using Spring CSRF here to be able to use plain HTML for the login page
-    http.csrf().disable()
-    http.authorizeRequests().apply {
-      requestMatchers(RequestMatcher(::isFrameworkInternalRequest))
+    http.csrf { it.disable() }
+    http.authorizeHttpRequests { authorize ->
+      authorize
+          .requestMatchers(RequestMatcher(::isFrameworkInternalRequest))
+          .permitAll()
+          .requestMatchers(
+              "/$SERVER_ENDPOINT", // The server endpoint route
+              "/VAADIN/**", // Vaadin Flow static resources
+              "/favicon.ico", // the standard favicon URI
+              "/robots.txt", // the robots.txt exclusion standard
+              "/manifest.webmanifest",
+              "/sw.js",
+              "/offline-page.html", // web application manifest
+              "/icons/**",
+              "/images/**", // icons and images
+              "/frontend/**", // (development mode) static resources
+              "/webjars/**", // (development mode) webjars
+              "/h2-console/**", // (development mode) H2 debugging console
+              "/frontend-es5/**",
+              "/frontend-es6/**", // (production mode) static resources
+          )
           .permitAll()
           .anyRequest()
           .authenticated()
     }
     http.oauth2Login { it.successHandler(CustomSuccessHandler(accountRepository)) }
-    http.logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
-  }
+    http.logout { it.logoutSuccessUrl(LOGOUT_SUCCESS_URL) }
 
-  /** Allows access to static resources, bypassing Spring security. */
-  override fun configure(web: WebSecurity) {
-    web.ignoring()
-        .antMatchers(
-            "/$SERVER_ENDPOINT", // The server endpoint route
-            "/VAADIN/**", // Vaadin Flow static resources
-            "/favicon.ico", // the standard favicon URI
-            "/robots.txt", // the robots.txt exclusion standard
-            "/manifest.webmanifest",
-            "/sw.js",
-            "/offline-page.html", // web application manifest
-            "/icons/**",
-            "/images/**", // icons and images
-            "/frontend/**", // (development mode) static resources
-            "/webjars/**", // (development mode) webjars
-            "/h2-console/**", // (development mode) H2 debugging console
-            "/frontend-es5/**",
-            "/frontend-es6/**", // (production mode) static resources
-        )
+    return http.build()
   }
 
   /**

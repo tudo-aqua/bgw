@@ -24,9 +24,7 @@ package tools.aqua.bgw.core
  *
  * @property positionMultiplier Internal position multiplier.
  * @property pivotMultiplier Internal pivot multiplier.
- *
  * @see Alignment
- *
  * @since 0.1
  */
 enum class VerticalAlignment(

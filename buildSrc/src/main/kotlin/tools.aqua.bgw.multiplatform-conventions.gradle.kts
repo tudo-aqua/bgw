@@ -15,23 +15,11 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.dokkaHtml
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.java
-import gradle.kotlin.dsl.accessors._1d4b2bd2040b92c2213b59b79754c7b4.spotless
-import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.publishing
-import gradle.kotlin.dsl.accessors._8cdaa06de806db17ab4ca2e8ef5db1a8.signing
-import java.lang.ProcessHandle
+import gradle.kotlin.dsl.accessors._7bceb54c174f154aa7f0d632213e663d.spotless
 import java.nio.file.Files
-import kotlin.collections.forEach
-import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
-import org.gradle.api.tasks.Copy
-import org.gradle.api.tasks.JavaExec
-import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.*
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
@@ -49,14 +37,12 @@ plugins {
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
 
-  application
   `maven-publish`
-  `java-library`
   signing
 }
 
 val propertyFile = "Config.kt"
-val wrappersVersion = "-pre.831"
+val wrappersVersion = "2025.5.6"
 
 fun buildDefaultPropertyFile() {
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
@@ -79,7 +65,8 @@ fun generateDefaultProperties(suffix: String = "") =
         val GENERATE_SAMPLES = false
         val BGW_VERSION = "${rootProject.version}"
     }
-""".trimIndent()
+"""
+        .trimIndent()
 
 if (!project.extra.has("useSockets")) {
   project.extra.set("useSockets", "true")
@@ -111,13 +98,7 @@ val javadocJar: TaskProvider<Jar> by
       from(tasks.dokkaHtml.flatMap { it.outputDirectory })
     }
 
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
-
 repositories {
-  jcenter()
   mavenCentral()
   maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
@@ -125,21 +106,40 @@ repositories {
 kotlin {
   jvmToolchain(11)
   jvm {
-    withJava()
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    binaries {
+      executable {
+        mainClass.set("tools.aqua.bgw.main.MainKt")
+        applicationDefaultJvmArgs =
+            listOf(
+                "--add-opens",
+                "java.desktop/sun.awt=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/java.awt.peer=ALL-UNNAMED")
+
+        if (System.getProperty("os.name").contains("Mac")) {
+          applicationDefaultJvmArgs =
+              listOf(
+                  "--add-opens",
+                  "java.desktop/sun.awt=ALL-UNNAMED",
+                  "--add-opens",
+                  "java.desktop/java.awt.peer=ALL-UNNAMED",
+                  "--add-opens",
+                  "java.desktop/sun.lwawt=ALL-UNNAMED",
+                  "--add-opens",
+                  "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+        }
+      }
+    }
     testRuns["test"].executionTask.configure { useJUnitPlatform() }
   }
   js(IR) {
     binaries.executable()
-    browser {
-      commonWebpackConfig {
-        cssSupport { enabled.set(true) }
-        mode = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.Mode.DEVELOPMENT
-      }
-    }
+    browser { commonWebpackConfig { cssSupport { enabled.set(true) } } }
   }
   sourceSets {
     val commonMain by getting {
-      dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") }
+      dependencies { implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0") }
     }
     val commonTest by getting { dependencies { implementation(kotlin("test")) } }
     val jvmMain by getting {
@@ -156,10 +156,12 @@ kotlin {
     val jvmTest by getting
     val jsMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.3.1${wrappersVersion}")
-        implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.13.3${wrappersVersion}")
+        implementation(
+            "org.jetbrains.kotlin-wrappers:kotlin-emotion-react:${wrappersVersion}-11.14.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react:${wrappersVersion}-19.1.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-core:${wrappersVersion}-19.1.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:${wrappersVersion}-19.1.0")
+        implementation("org.jetbrains.kotlin-wrappers:kotlin-react-use:${wrappersVersion}")
         implementation(npm("@dnd-kit/core", "6.2.0"))
         implementation(npm("react-zoom-pan-pinch", "3.6.1"))
       }
@@ -205,29 +207,6 @@ val dokkaHtmlCommon by
       dokkaSourceSets { named("commonMain") }
     }
 
-application {
-  mainClass.set("tools.aqua.bgw.main.MainKt")
-  applicationDefaultJvmArgs =
-      listOf(
-          "--add-opens",
-          "java.desktop/sun.awt=ALL-UNNAMED",
-          "--add-opens",
-          "java.desktop/java.awt.peer=ALL-UNNAMED")
-
-  if (System.getProperty("os.name").contains("Mac")) {
-    applicationDefaultJvmArgs =
-        listOf(
-            "--add-opens",
-            "java.desktop/sun.awt=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/java.awt.peer=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/sun.lwawt=ALL-UNNAMED",
-            "--add-opens",
-            "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
-  }
-}
-
 tasks.named<Copy>("jvmProcessResources") {
   val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
   from(jsBrowserDistribution)
@@ -236,7 +215,7 @@ tasks.named<Copy>("jvmProcessResources") {
 // region - Cleanup JCEF helper processes
 var globalTmpDir = ""
 
-tasks.named<JavaExec>("run") {
+tasks.named<JavaExec>("runJvm") {
   doFirst {
     val tmpDir = Files.createTempDirectory("bgw-")
     tmpDir.toFile().deleteOnExit()
@@ -261,6 +240,7 @@ gradle.buildFinished {
 fun killJcefHelperProcesses(pids: Set<Long>) {
   pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
 }
+
 // endregion
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
