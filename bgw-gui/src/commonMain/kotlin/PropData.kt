@@ -60,6 +60,7 @@ internal class AppData : Data() {
   var fadeTime: Int = 0
   var blurRadius: Double = 0.0
   var forcedByAnimation: Boolean = false
+  var isHeadless: Boolean = false
 }
 
 @Serializable

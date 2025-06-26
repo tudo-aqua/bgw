@@ -608,6 +608,7 @@ internal object SceneMapper {
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
       this.fadeTime = Frontend.lastFadeTime.toInt()
       this.blurRadius = menuScene?.blurRadius ?: DEFAULT_BLUR_RADIUS
+      this.isHeadless = Frontend.application.headless
     }
   }
 }

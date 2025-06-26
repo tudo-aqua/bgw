@@ -94,7 +94,6 @@ import tools.aqua.bgw.util.Coordinate
 internal val componentChannel: Channel =
     Channel("/ws").apply {
       onClientConnected = {
-        Frontend.application
         val json =
             jsonMapper.encodeToString(
                 PropData(
@@ -199,7 +198,12 @@ internal fun eventListener(text: String) {
         }
       }
     }
-    Frontend.applicationEngine.frame?.loadCallback?.invoke(Unit)
+
+    if (Frontend.application.headless) {
+      Frontend.loadCallback.invoke()
+    } else {
+      Frontend.applicationEngine.frame?.loadCallback?.invoke(Unit)
+    }
   }
 
   val id = eventData.id

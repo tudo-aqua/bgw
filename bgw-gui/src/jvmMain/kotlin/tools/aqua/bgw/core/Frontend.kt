@@ -67,9 +67,11 @@ internal class Frontend {
             module = io.ktor.server.application.Application::module)
         .start(wait = false)
     if (headless) {
-      boardGameScene?.let { SceneBuilder.build(it) }
-      menuScene?.let { SceneBuilder.build(it) }
-      renderedDOM.value = true
+      loadCallback = {
+        boardGameScene?.let { SceneBuilder.build(it) }
+        menuScene?.let { SceneBuilder.build(it) }
+        renderedDOM.value = true
+      }
     } else {
       applicationEngine.start(onClose) {
         applicationEngine.clearAllEventListeners()
@@ -82,6 +84,8 @@ internal class Frontend {
 
   companion object {
     internal var applicationEngine: JCEFApplication = JCEFApplication()
+
+    internal var loadCallback: () -> Unit = {}
 
     internal var openedFileDialog: FileDialog? = null
 
@@ -159,6 +163,7 @@ internal class Frontend {
       if (menuScene == scene) {
         return
       }
+
       lastFadeTime = fadeTime
       menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
@@ -225,6 +230,7 @@ internal class Frontend {
       if (boardGameScene == scene) {
         return
       }
+
       boardGameScene?.isVisible = false
       boardGameScene?.onSceneHidden?.invoke()
       boardGameScene = scene
@@ -327,6 +333,9 @@ internal class Frontend {
 
     /** Starts the application. */
     internal fun show(headless: Boolean, onClose: () -> Unit) {
+      if (headless) {
+        backgroundProperty.value = Visual.EMPTY
+      }
       Frontend().start(headless, onClose)
     }
 
