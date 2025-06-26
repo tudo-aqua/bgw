@@ -22,10 +22,12 @@ package tools.aqua.bgw.core
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.KeyEvent
+import tools.aqua.bgw.observable.properties.IntegerProperty
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -63,6 +65,7 @@ open class BoardGameApplication(
     width: Number = DEFAULT_WINDOW_WIDTH,
     height: Number = DEFAULT_WINDOW_HEIGHT,
     windowMode: WindowMode? = null,
+    val headless: Boolean = false,
 ) {
 
   /** Window title displayed in the title bar. */
@@ -71,6 +74,19 @@ open class BoardGameApplication(
     set(value) {
       Frontend.titleProperty.value = value
     }
+
+  internal val headlessEnvironmentProperty: IntegerProperty =
+      IntegerProperty(if (headless) Constants.PORT else 0)
+
+  /**
+   * Returns the headless environment this [BoardGameApplication] is running in.
+   *
+   * The value is set to 0 if the application is not running in a headless environment.
+   *
+   * @since 0.11
+   */
+  val headlessEnvironment: Int
+    get() = headlessEnvironmentProperty.value
 
   /**
    * Window icon displayed in the title and task bar.
@@ -318,7 +334,7 @@ open class BoardGameApplication(
   /** Shows the [BoardGameApplication]. */
   fun show() {
     val latch = CountDownLatch(1)
-    Frontend.show { latch.countDown() }
+    Frontend.show(this.headless) { latch.countDown() }
     latch.await()
   }
 

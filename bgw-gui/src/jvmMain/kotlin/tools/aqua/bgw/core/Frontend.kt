@@ -59,18 +59,24 @@ import tools.aqua.bgw.visual.Visual
 internal class Frontend {
 
   /** Starts the application. */
-  fun start(onClose: () -> Unit) {
+  fun start(headless: Boolean, onClose: () -> Unit) {
     embeddedServer(
             Netty,
             port = Constants.PORT,
             host = "localhost",
             module = io.ktor.server.application.Application::module)
         .start(wait = false)
-    applicationEngine.start(onClose) {
-      applicationEngine.clearAllEventListeners()
+    if (headless) {
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
+    } else {
+      applicationEngine.start(onClose) {
+        applicationEngine.clearAllEventListeners()
+        boardGameScene?.let { SceneBuilder.build(it) }
+        menuScene?.let { SceneBuilder.build(it) }
+        renderedDOM.value = true
+      }
     }
   }
 
@@ -320,8 +326,8 @@ internal class Frontend {
     }
 
     /** Starts the application. */
-    internal fun show(onClose: () -> Unit) {
-      Frontend().start(onClose)
+    internal fun show(headless: Boolean, onClose: () -> Unit) {
+      Frontend().start(headless, onClose)
     }
 
     /** Stops the application. */
