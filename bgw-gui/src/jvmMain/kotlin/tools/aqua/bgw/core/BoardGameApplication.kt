@@ -338,6 +338,12 @@ open class BoardGameApplication(
     latch.await()
   }
 
+  internal fun showNonBlocking() {
+    if (!Frontend.renderedDOM.value) {
+      Frontend.show(this.headless) { /* No action needed */}
+    }
+  }
+
   /** Returns the [show] function, thus closing the application window. */
   fun exit() {
     Frontend.exit()
