@@ -20,6 +20,7 @@ package tools.aqua.bgw.frontend
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertTrue
+import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
@@ -38,6 +39,48 @@ val app = TestApplication()
 class LabelTest {
   init {
     app.showNonBlocking()
+  }
+
+  @Test
+  fun testLabelMovement() {
+    val scene = BoardGameScene(width = 1000, height = 1000)
+    val label =
+        Label(
+            posX = 50,
+            posY = 50,
+            width = 100,
+            text = "Hello, BGW!",
+            font = Font(size = 20),
+            visual = ColorVisual.LIGHT_GRAY)
+
+    scene.addComponents(label)
+    app.showGameScene(scene)
+
+    println("Label added to scene. Loading HTML content from port: ${app.headlessEnvironment}")
+
+    var animationFinished = false
+
+    val labelWeb = BGWTester.getWebComponent(port = app.headlessEnvironment, id = label.id)
+
+    println(labelWeb.location)
+
+    scene.playAnimation(
+        MovementAnimation(componentView = label, byX = 200, duration = 1000).apply {
+          onFinished = {
+            animationFinished = true
+            println(labelWeb.location)
+            println("Animation finished successfully.")
+          }
+        })
+
+    Thread.sleep(1500) // Wait for animation to complete
+    println(labelWeb.location)
+
+    println("Checking after animation... ${animationFinished}")
+
+    assertTrue(animationFinished, "Animation should have finished successfully")
+
+    println("✓ All assertions passed for animation label test")
   }
 
   @Test

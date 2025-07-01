@@ -161,4 +161,14 @@ object BGWTester {
 
     return driver.findElements(By.cssSelector("bgw_game_scene")).first()
   }
+
+  fun getWebComponent(port: Int, timeoutSeconds: Long = 15, id: String): WebElement {
+    val (html, driver) = loadHTMLWithDriver(port, timeoutSeconds)
+    requireNotNull(driver) { "WebDriver should not be null after loading HTML" }
+    requireNotNull(html) { "HTML content should not be null after loading" }
+
+    checkSizes(driver as ChromeDriver)
+
+    return driver.findElement(By.id(id))
+  }
 }
