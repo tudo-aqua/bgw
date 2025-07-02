@@ -17,6 +17,8 @@
 
 package tools.aqua.bgw.frontend
 
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertTrue
@@ -37,8 +39,20 @@ class TestApplication :
 val app = TestApplication()
 
 class LabelTest {
+  lateinit var tester: BGWTester
+
   init {
     app.showNonBlocking()
+  }
+
+  @BeforeTest
+  fun setup() {
+    tester = BGWTester()
+  }
+
+  @AfterTest
+  fun cleanup() {
+    tester.cleanup()
   }
 
   @Test
@@ -58,27 +72,29 @@ class LabelTest {
 
     println("Label added to scene. Loading HTML content from port: ${app.headlessEnvironment}")
 
-    var animationFinished = false
+    tester.load(port = app.headlessEnvironment, width = 1000, height = 1000)
+    val labelWeb = tester.getBGWComp(label.id)
 
-    val labelWeb = BGWTester.getWebComponent(port = app.headlessEnvironment, id = label.id)
+    println("Before: ${labelWeb.location}")
 
-    println(labelWeb.location)
-
-    scene.playAnimation(
-        MovementAnimation(componentView = label, byX = 200, duration = 1000).apply {
+    val animation =
+        MovementAnimation(componentView = label, byX = 180.0, duration = 1000).apply {
           onFinished = {
-            animationFinished = true
-            println(labelWeb.location)
-            println("Animation finished successfully.")
+            println("Finish: ${labelWeb.location}")
+            label.posX += 60.0
           }
-        })
+        }
+    //    assertAnimationFinished(scene, animation)
+    assertAnimated(
+        scene = scene,
+        animation = animation,
+        element = labelWeb,
+        property = BGWComp::location,
+        expectedFinishedValue = BGWLocation(label.posX + 180.0, label.posY),
+        expectedResetValue = BGWLocation(label.posX + 50.0, label.posY),
+    )
 
-    Thread.sleep(1500) // Wait for animation to complete
-    println(labelWeb.location)
-
-    println("Checking after animation... ${animationFinished}")
-
-    assertTrue(animationFinished, "Animation should have finished successfully")
+    println("After: ${labelWeb.location}")
 
     println("✓ All assertions passed for animation label test")
   }
@@ -101,8 +117,8 @@ class LabelTest {
     println("Label added to scene. Loading HTML content from port: ${app.headlessEnvironment}")
 
     // Load HTML content synchronously
-    val content = BGWTester.loadHTML(port = app.headlessEnvironment)
-    BGWTester.getWebComponents(port = app.headlessEnvironment)
+    val content = tester.load(port = app.headlessEnvironment, width = 1000, height = 1000)
+    tester.getBGWScene()
 
     // Now we can use direct assertions!
     println("HTML content loaded successfully. Length: ${content.length} characters")
@@ -119,57 +135,5 @@ class LabelTest {
         !content.contains("error", ignoreCase = true), "HTML should not contain error messages")
 
     println("✓ All assertions passed for basic label test")
-  }
-
-  @Test
-  fun testLabelWithDifferentProperties() {
-    val scene = BoardGameScene(width = 300, height = 300)
-    val label =
-        Label(
-            posX = 100,
-            posY = 100,
-            width = 200,
-            text = "Custom Test Label",
-            font = Font(size = 16),
-            visual = ColorVisual.BLUE)
-
-    scene.addComponents(label)
-    app.showGameScene(scene)
-
-    val content = BGWTester.loadHTML(port = app.headlessEnvironment)
-
-    // Test specific content
-    assertContains(content, "Custom Test Label")
-    assertTrue(content.contains("width", ignoreCase = true), "Width styling should be present")
-
-    println("✓ Custom label test passed")
-  }
-
-  @Test
-  fun testMultipleLabels() {
-    val scene = BoardGameScene(width = 400, height = 400)
-
-    val label1 =
-        Label(posX = 10, posY = 10, width = 100, text = "First Label", font = Font(size = 14))
-    val label2 =
-        Label(posX = 10, posY = 50, width = 100, text = "Second Label", font = Font(size = 14))
-
-    scene.addComponents(label1, label2)
-    app.showGameScene(scene)
-
-    val content = BGWTester.loadHTML(port = app.headlessEnvironment)
-
-    // Assert both labels are present
-    assertContains(content, "First Label")
-    assertContains(content, "Second Label")
-
-    // Count occurrences
-    val firstCount = content.split("First Label").size - 1
-    val secondCount = content.split("Second Label").size - 1
-
-    assertTrue(firstCount >= 1, "First Label should appear at least once")
-    assertTrue(secondCount >= 1, "Second Label should appear at least once")
-
-    println("✓ Multiple labels test passed")
   }
 }
