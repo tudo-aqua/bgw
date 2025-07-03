@@ -21,6 +21,7 @@ import io.github.bonigarcia.wdm.WebDriverManager
 import java.time.Duration
 import java.time.Instant
 import java.util.Date
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.openqa.selenium.By
@@ -33,6 +34,12 @@ import org.openqa.selenium.support.ui.WebDriverWait
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.ComponentAnimation
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.SingleLayerVisual
+import tools.aqua.bgw.visual.TextVisual
+import tools.aqua.bgw.visual.Visual
 
 class BGWTester {
   private var webDriver: WebDriver? = null
@@ -194,12 +201,108 @@ class BGWComp(
           }
         }
 
+  val visuals: List<SingleLayerVisual>
+    get() {
+      val parentElement = webElement.findElements(By.ByTagName("bgw_visuals")).firstOrNull()
+
+      if (parentElement == null) {
+        return emptyList()
+      }
+
+      val children: List<WebElement> = parentElement.findElements(By.cssSelector(":scope > *"))
+
+      return children.map { visual ->
+        when (visual.tagName) {
+          "bgw_color_visual" -> {
+            val color = visual.getCssValue("background-color")
+            val rgba = color.removePrefix("rgba(").removeSuffix(")").split(",")
+            val r = rgba[0].trim().toInt()
+            val g = rgba[1].trim().toInt()
+            val b = rgba[2].trim().toInt()
+            val a = rgba.getOrNull(3)?.trim()?.toDoubleOrNull() ?: 1.0
+            ColorVisual(r, g, b, a)
+                .apply { id = visual.getAttribute("id") }
+                .also { println("Color: rgba($r, $g, $b, $a)") }
+          }
+          "bgw_image_visual" -> {
+            val src =
+                visual
+                    .getCssValue("background-image")
+                    .removePrefix("url(\"")
+                    .removeSuffix("\")")
+                    .replace(Regex(".+/static/"), "")
+            ImageVisual(src)
+                .apply { id = visual.getAttribute("id") }
+                .also { println("Image source: $src") }
+          }
+          "bgw_text_visual" -> {
+            val text = visual.text
+            TextVisual(text)
+                .apply { id = visual.getAttribute("id") }
+                .also { println("Text: $text") }
+          }
+          else -> {
+            throw IllegalArgumentException("Unknown visual type: ${visual.tagName}")
+          }
+        }
+      }
+    }
+
   private val animationDuration: Long
     get() =
         webElement.getCssValue("transition-duration").let {
           val parts = it.split(" ")
           parts.find { it.contains("s") }?.removeSuffix("s")?.toLongOrNull() ?: 0L
         }
+}
+
+fun assertVisualsEqual(
+    visualProperty: Visual,
+    element: BGWComp,
+    message: String = "Visuals do not match"
+) {
+  if (visualProperty is CompoundVisual) {
+    assertVisualsEqual(visualProperty.children, element.visuals, message)
+  } else if (visualProperty is SingleLayerVisual) {
+    assertVisualsEqual(listOf(visualProperty), element.visuals, message)
+  } else {
+    throw IllegalArgumentException("Unsupported visual type: ${visualProperty::class}")
+  }
+}
+
+fun assertVisualsEqual(
+    expected: List<SingleLayerVisual>,
+    actual: List<SingleLayerVisual>,
+    message: String = "Visuals do not match"
+) {
+  assertEquals(expected.size, actual.size, "$message: Size mismatch")
+  assertContentEquals(expected.map { it.id }, actual.map { it.id }, "$message: Visual-ID mismatch")
+  for (i in expected.indices) {
+    val expectedVisual = expected[i]
+    val actualVisual = actual[i]
+    assertEquals(
+        expectedVisual::class, actualVisual::class, "$message: Visual type mismatch at index $i")
+    when (expectedVisual) {
+      is ColorVisual -> {
+        assertEquals(
+            expectedVisual.color,
+            (actualVisual as ColorVisual).color,
+            "$message: Color mismatch at index $i")
+      }
+      is ImageVisual -> {
+        assertEquals(
+            expectedVisual.path,
+            (actualVisual as ImageVisual).path,
+            "$message: Image path mismatch at index $i")
+      }
+      is TextVisual -> {
+        assertEquals(
+            expectedVisual.text,
+            (actualVisual as TextVisual).text,
+            "$message: Text mismatch at index $i")
+      }
+    }
+  }
 }
 
 fun assertAnimated(

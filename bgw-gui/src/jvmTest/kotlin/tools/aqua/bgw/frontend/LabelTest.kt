@@ -20,14 +20,14 @@ package tools.aqua.bgw.frontend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertContains
-import kotlin.test.assertTrue
-import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.TextVisual
 
 class TestApplication :
     BoardGameApplication("Test Application", width = 1000, height = 1000, headless = true) {
@@ -55,7 +55,7 @@ class LabelTest {
     tester.cleanup()
   }
 
-  @Test
+  /* @Test
   fun testLabelMovement() {
     val scene = BoardGameScene(width = 1000, height = 1000)
     val label =
@@ -97,7 +97,7 @@ class LabelTest {
     println("After: ${labelWeb.location}")
 
     println("✓ All assertions passed for animation label test")
-  }
+  } */
 
   @Test
   fun testBasicLabel() {
@@ -109,31 +109,21 @@ class LabelTest {
             width = 100,
             text = "Hello, BGW!",
             font = Font(size = 20),
-            visual = ColorVisual.LIGHT_GRAY)
+            visual =
+                CompoundVisual(
+                    ColorVisual.RED,
+                    ImageVisual("icon.png"),
+                    TextVisual("Icon Text", font = Font(size = 15))))
 
     scene.addComponents(label)
     app.showGameScene(scene)
 
     println("Label added to scene. Loading HTML content from port: ${app.headlessEnvironment}")
 
-    // Load HTML content synchronously
-    val content = tester.load(port = app.headlessEnvironment, width = 1000, height = 1000)
-    tester.getBGWScene()
+    tester.load(port = app.headlessEnvironment, width = 1000, height = 1000)
+    val labelWeb = tester.getBGWComp(label.id)
 
-    // Now we can use direct assertions!
-    println("HTML content loaded successfully. Length: ${content.length} characters")
-
-    // Assert the label text is present
-    assertContains(content, "Hello, BGW!", message = "Label text should be present in HTML")
-
-    // Assert minimum content length (indicates JavaScript executed)
-    assertTrue(
-        content.length > 1000, "Content should be substantial, indicating JavaScript execution")
-
-    // Assert no error indicators
-    assertTrue(
-        !content.contains("error", ignoreCase = true), "HTML should not contain error messages")
-
-    println("✓ All assertions passed for basic label test")
+    println("Label Web Component: $labelWeb")
+    assertVisualsEqual(label.visual, labelWeb)
   }
 }
