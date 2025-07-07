@@ -43,6 +43,7 @@ import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 import web.timers.setTimeout
+import kotlin.random.Random
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
@@ -52,13 +53,38 @@ internal lateinit var container: HTMLElement
 internal lateinit var dialogContainer: HTMLElement
 internal lateinit var root: Root
 internal lateinit var dialogRoot: Root
+internal lateinit var socketRoom: String
 internal val dialogMap = mutableMapOf<ID, DialogData>()
 
+/**
+ * Joins a specific room when connecting to the WebSocket.
+ * This should be called before main() to set the room ID.
+ */
+internal fun joinRoom(roomId: String) {
+  socketRoom = roomId
+}
+
 internal fun main() {
+  val rooms = listOf("lobby1", "lobby2")
+  joinRoom(Random.nextInt(rooms.size).let { rooms[it] })
+
   if (Config.USE_SOCKETS) {
     webSocket = WebSocket("ws://${document.location?.host}/ws")
-    webSocket?.onopen = {}
-    webSocket?.onmessage = { event ->
+    webSocket?.onopen = {
+      // Send room join message if room is specified
+      if (::socketRoom.isInitialized) {
+        webSocket?.send("JOIN_ROOM:$socketRoom")
+      }
+    }
+    webSocket?.onmessage = onMessage@{ event ->
+      val message = event.data.toString()
+
+      // Handle error messages
+      if (message.startsWith("ERROR:")) {
+        console.error("WebSocket error: $message")
+        return@onMessage ""
+      }
+
       val cont = document.getElementById("bgw-root")
       val dialog = document.getElementById("bgw-dialogs")
 
@@ -68,9 +94,15 @@ internal fun main() {
 
       if (cont != null) {
         container = cont as HTMLElement
-        val receivedData = jsonMapper.decodeFromString<PropData>(event.data.toString()).data
+        val receivedData = jsonMapper.decodeFromString<PropData>(message).data
         handleReceivedData(receivedData!!)
       }
+    }
+    webSocket?.onerror = { error ->
+      console.error("WebSocket error:", error)
+    }
+    webSocket?.onclose = { event ->
+      console.log("WebSocket closed")
     }
   } else {
     document.addEventListener(

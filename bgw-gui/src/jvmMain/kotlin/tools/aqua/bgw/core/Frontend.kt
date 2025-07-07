@@ -20,6 +20,7 @@
 package tools.aqua.bgw.core
 
 import ActionProp
+import ID
 import PropData
 import data.animation.DelayAnimationData
 import io.ktor.server.engine.*
@@ -97,6 +98,9 @@ internal class Frontend {
     /** [BoardGameApplication] instance. */
     internal lateinit var application: BoardGameApplication
 
+    /** Room-based applications storage. */
+    internal val roomApplications = mutableMapOf<String, BoardGameApplication>()
+
     // region Properties
     /** Property for the window title. */
     internal val titleProperty: StringProperty = StringProperty()
@@ -149,6 +153,156 @@ internal class Frontend {
     internal var menuScene: MenuScene? = null
 
     internal var loadedFonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
+
+    internal var boardGameScenes = mutableMapOf<ID, BoardGameScene>()
+
+    /** Room-based scenes storage. */
+    internal val roomBoardGameScenes = mutableMapOf<String, BoardGameScene?>()
+    internal val roomMenuScenes = mutableMapOf<String, MenuScene?>()
+    // endregion
+
+    // region Room Management Functions
+
+    /**
+     * Registers a room application.
+     */
+    internal fun registerRoomApplication(roomId: String, application: BoardGameApplication) {
+      synchronized(roomApplications) {
+        if (roomApplications.containsKey(roomId)) {
+          throw IllegalArgumentException("Room $roomId already exists")
+        }
+        roomApplications[roomId] = application
+        roomBoardGameScenes[roomId] = null
+        roomMenuScenes[roomId] = null
+      }
+    }
+
+    /**
+     * Initializes a room with specific dimensions and window mode.
+     */
+    internal fun initializeRoom(roomId: String, width: Double, height: Double, windowMode: WindowMode?) {
+      val application = roomApplications[roomId] ?: return
+      // Room-specific initialization can be added here if needed
+      // For now, we'll use the global properties but rooms are isolated by their application instances
+    }
+
+    /**
+     * Gets a room application by ID.
+     */
+    internal fun getRoomApplication(roomId: String): BoardGameApplication? {
+      return roomApplications[roomId]
+    }
+
+    /**
+     * Gets all room applications.
+     */
+    internal fun getAllRoomApplications(): Map<String, BoardGameApplication> {
+      return roomApplications.toMap()
+    }
+
+    /**
+     * Removes a room and its associated data.
+     */
+    internal fun removeRoom(roomId: String) {
+      synchronized(roomApplications) {
+        roomApplications.remove(roomId)
+        roomBoardGameScenes.remove(roomId)
+        roomMenuScenes.remove(roomId)
+      }
+
+      // Remove the room from RoomManager
+      kotlinx.coroutines.runBlocking {
+        tools.aqua.bgw.binding.RoomManager.removeRoom(roomId)
+      }
+    }
+
+    /**
+     * Shows a room (starts the room-based application).
+     */
+    internal fun showRoom(roomId: String, headless: Boolean) {
+      val roomApplication = roomApplications[roomId] ?: return
+
+      // Create the room in RoomManager
+      kotlinx.coroutines.runBlocking {
+        tools.aqua.bgw.binding.RoomManager.createRoom(roomId, roomApplication)
+      }
+
+      // Initialize the room's scenes if they exist
+      roomBoardGameScenes[roomId]?.let { SceneBuilder.build(it) }
+      roomMenuScenes[roomId]?.let { SceneBuilder.build(it) }
+
+      // Start the server if not already started
+      if (!::application.isInitialized) {
+        Frontend().start(headless) { }
+      }
+    }
+
+    /**
+     * Shows a menu scene for a specific room.
+     */
+    internal fun showRoomMenuScene(roomId: String, scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      val currentScene = roomMenuScenes[roomId]
+      if (currentScene == scene) {
+        return
+      }
+
+      currentScene?.isVisible = false
+      currentScene?.onSceneHidden?.invoke()
+      roomMenuScenes[roomId] = scene
+      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_MENU_SCENE)
+    }
+
+    /**
+     * Hides a menu scene for a specific room.
+     */
+    internal fun hideRoomMenuScene(roomId: String, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+      val currentScene = roomMenuScenes[roomId] ?: return
+
+      currentScene.isVisible = false
+      currentScene.onSceneHidden?.invoke()
+      roomMenuScenes[roomId] = null
+      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.HIDE_MENU_SCENE)
+    }
+
+    /**
+     * Shows a game scene for a specific room.
+     */
+    internal fun showRoomGameScene(roomId: String, scene: BoardGameScene) {
+      val currentScene = roomBoardGameScenes[roomId]
+      if (currentScene == scene) {
+        return
+      }
+
+      currentScene?.isVisible = false
+      currentScene?.onSceneHidden?.invoke()
+      roomBoardGameScenes[roomId] = scene
+      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_GAME_SCENE)
+    }
+
+    /**
+     * Sends an animation for a specific room.
+     */
+    internal fun sendRoomAnimation(roomId: String, animation: Animation) {
+      val animationData = AnimationMapper.map(animation)
+      runBlocking { tools.aqua.bgw.binding.forceRoomAnimationUpdate(roomId, animationData) }
+    }
+
+    /**
+     * Updates a scene for a specific room.
+     */
+    internal fun updateRoomScene(roomId: String) {
+      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_GAME_SCENE)
+    }
+
+    /**
+     * Gets a component by ID for a specific room.
+     */
+    internal fun getRoomComponentById(roomId: String, id: String): ComponentView? {
+      val boardGameScene = roomBoardGameScenes[roomId]
+      val menuScene = roomMenuScenes[roomId]
+      return boardGameScene?.findComponent(id) ?: menuScene?.findComponent(id)
+    }
+
     // endregion
 
     // region Internal functions
@@ -227,14 +381,29 @@ internal class Frontend {
      * @param scene [BoardGameScene] to show.
      */
     internal fun showGameScene(scene: BoardGameScene) {
-      if (boardGameScene == scene) {
-        return
-      }
+      if (!application.headless) {
+        if (boardGameScene == scene) {
+          return
+        }
 
-      boardGameScene?.isVisible = false
-      boardGameScene?.onSceneHidden?.invoke()
-      boardGameScene = scene
-      markDirty(ActionProp.SHOW_GAME_SCENE)
+        boardGameScene?.isVisible = false
+        boardGameScene?.onSceneHidden?.invoke()
+        boardGameScene = scene
+        markDirty(ActionProp.SHOW_GAME_SCENE)
+      } else {
+        if (boardGameScenes.containsKey(scene.id)) {
+          // If the scene is already loaded, just show it
+          boardGameScene = boardGameScenes[scene.id]
+          boardGameScene?.isVisible = true
+          markDirty(ActionProp.SHOW_GAME_SCENE)
+        } else {
+          // If the scene is not loaded yet, load it and then show it
+          boardGameScenes[scene.id] = scene
+          boardGameScene = scene
+          SceneBuilder.build(scene)
+          markDirty(ActionProp.SHOW_GAME_SCENE)
+        }
+      }
     }
 
     /**

@@ -91,6 +91,10 @@ import tools.aqua.bgw.event.WheelEvent
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
 
+internal val roomWebSocketChannel: RoomWebSocketChannel = RoomWebSocketChannel("/ws")
+
+// Deprecated: Use room-aware channels instead
+@Deprecated("Use room-aware channels instead")
 internal val componentChannel: Channel =
     Channel("/ws").apply {
       onClientConnected = {
@@ -425,6 +429,9 @@ internal fun Application.module() {
     maxFrameSize = Long.MAX_VALUE
     masking = false
   }
+  // Install room-aware WebSocket channel
+  roomWebSocketChannel.install(this)
+  // Keep legacy channel for backward compatibility
   componentChannel.install(this)
   internalChannel.install(this)
 }
@@ -435,27 +442,6 @@ internal fun Application.configureRouting() {
     static("/static") { resources() }
   }
 }
-
-internal fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: (suspend () -> Unit)) =
-    this.async {
-      if (repeatMillis > 0) {
-        while (isActive) {
-          action()
-          delay(repeatMillis)
-        }
-      } else {
-        action()
-      }
-    }
-
-internal fun gzip(content: String): String {
-  val bos = ByteArrayOutputStream()
-  GZIPOutputStream(bos).bufferedWriter(UTF_8).use { it.write(content) }
-  return Base64.getEncoder().encodeToString(bos.toByteArray())
-}
-
-internal fun ungzip(content: ByteArray): String =
-    GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
 private val updateStack = Collections.synchronizedList(Stack<AppData>())
 private val debounceTimeMillis = 5L // Adjust this value as needed
@@ -536,5 +522,68 @@ internal fun markDirty(prop: ActionProp) {
     val appData = collectAppData()
     // println("Collecting updates... Size: " + updateStack.size)
     enqueueUpdate(appData)
+  }
+}
+
+/**
+ * Room-aware update mechanism that sends updates only to sessions in the specified room.
+ */
+internal suspend fun enqueueRoomUpdate(roomId: String, data: AppData) {
+  val room = RoomManager.getRoom(roomId) ?: return
+
+  try {
+    val json = jsonMapper.encodeToString(PropData(data))
+    room.broadcast(json)
+  } catch (e: Exception) {
+    println("Error sending room update to room $roomId: $e")
+  }
+}
+
+/**
+ * Forces an animation update for a specific room.
+ */
+internal suspend fun forceRoomAnimationUpdate(roomId: String, animationData: AnimationData) {
+  val room = RoomManager.getRoom(roomId) ?: return
+
+  try {
+    val appData = collectRoomAppData(room).apply { forcedByAnimation = true }
+    val json = jsonMapper.encodeToString(PropData(appData))
+    room.broadcast(json)
+
+    val animationJson = jsonMapper.encodeToString(PropData(animationData))
+    room.broadcast(animationJson)
+  } catch (e: Exception) {
+    println("Error sending room animation update to room $roomId: $e")
+  }
+}
+
+/**
+ * Collects app data for a specific room.
+ */
+internal fun collectRoomAppData(room: Room): AppData {
+  val appData = SceneMapper.map(
+    menuScene = room.application.menuScene,
+    gameScene = room.application.boardGameScene
+  ).apply {
+    fonts = room.application.loadedFonts.map { (path, fontName, weight) ->
+      Triple(path, fontName, weight.toInt())
+    }
+  }
+  appData.action = ActionProp.UPDATE_COMPONENT
+  return appData
+}
+
+/**
+ * Marks a room as dirty and enqueues an update for it.
+ */
+internal fun markRoomDirty(roomId: String, prop: ActionProp) {
+  runCatching {
+    val room = RoomManager.getRoom(roomId) ?: return
+    val appData = collectRoomAppData(room)
+    appData.action = prop
+
+    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+      enqueueRoomUpdate(roomId, appData)
+    }
   }
 }

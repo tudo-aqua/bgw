@@ -52,7 +52,10 @@ import tools.aqua.bgw.visual.Visual
  * @param windowMode Initial window mode. Overrides [isMaximized] and [isFullScreen] if passed.
  * Refer to [WindowMode] docs for further information about the effects.
  *
- * @throws IllegalStateException If a second application is created.
+ * @param roomId Optional room ID for multi-room applications. If provided, this application
+ * will be isolated to the specified room for lobby-based web games.
+ *
+ * @throws IllegalStateException If a second application is created without room support.
  *
  * @see BoardGameScene
  * @see MenuScene
@@ -66,6 +69,7 @@ open class BoardGameApplication(
     height: Number = DEFAULT_WINDOW_HEIGHT,
     windowMode: WindowMode? = null,
     val headless: Boolean = false,
+    val roomId: String? = null,
 ) {
 
   /** Window title displayed in the title bar. */
@@ -219,17 +223,29 @@ open class BoardGameApplication(
 
   init {
     synchronized(this) {
-      check(!isInstantiated) { "Unable to create second application." }
-      isInstantiated = true
+      if (roomId == null) {
+        // Legacy single-application mode
+        check(!isInstantiated) { "Unable to create second application." }
+        isInstantiated = true
+        Frontend.application = this
+      } else {
+        // Room-based multi-application mode
+        Frontend.registerRoomApplication(roomId, this)
+      }
     }
 
     title = windowTitle
 
-    Frontend.application = this
-    Frontend.widthProperty.value = width.toDouble()
-    Frontend.heightProperty.value = height.toDouble()
-    if (windowMode != null) {
-      Frontend.setWindowMode(windowMode)
+    if (roomId == null) {
+      // Legacy initialization
+      Frontend.widthProperty.value = width.toDouble()
+      Frontend.heightProperty.value = height.toDouble()
+      if (windowMode != null) {
+        Frontend.setWindowMode(windowMode)
+      }
+    } else {
+      // Room-based initialization
+      Frontend.initializeRoom(roomId, width.toDouble(), height.toDouble(), windowMode)
     }
   }
 
@@ -267,7 +283,11 @@ open class BoardGameApplication(
    * @param fadeTime Time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
    */
   fun showMenuScene(scene: MenuScene, fadeTime: Number = DEFAULT_FADE_TIME) {
-    Frontend.showMenuScene(scene, fadeTime.toDouble())
+    if (roomId != null) {
+      Frontend.showRoomMenuScene(roomId, scene, fadeTime.toDouble())
+    } else {
+      Frontend.showMenuScene(scene, fadeTime.toDouble())
+    }
   }
 
   /**
@@ -276,7 +296,11 @@ open class BoardGameApplication(
    * @param fadeTime Time to fade out in milliseconds. Default: [DEFAULT_FADE_TIME].
    */
   fun hideMenuScene(fadeTime: Number = DEFAULT_FADE_TIME) {
-    Frontend.hideMenuScene(fadeTime.toDouble())
+    if (roomId != null) {
+      Frontend.hideRoomMenuScene(roomId, fadeTime.toDouble())
+    } else {
+      Frontend.hideMenuScene(fadeTime.toDouble())
+    }
   }
 
   /**
@@ -285,7 +309,11 @@ open class BoardGameApplication(
    * @param scene [BoardGameScene] to show.
    */
   fun showGameScene(scene: BoardGameScene) {
-    Frontend.showGameScene(scene)
+    if (roomId != null) {
+      Frontend.showRoomGameScene(roomId, scene)
+    } else {
+      Frontend.showGameScene(scene)
+    }
   }
 
   /**
@@ -333,9 +361,13 @@ open class BoardGameApplication(
 
   /** Shows the [BoardGameApplication]. */
   fun show() {
-    val latch = CountDownLatch(1)
-    Frontend.show(this.headless) { latch.countDown() }
-    latch.await()
+    if (roomId != null) {
+      Frontend.showRoom(roomId, this.headless)
+    } else {
+      val latch = CountDownLatch(1)
+      Frontend.show(this.headless) { latch.countDown() }
+      latch.await()
+    }
   }
 
   /** Returns the [show] function, thus closing the application window. */
@@ -387,5 +419,72 @@ open class BoardGameApplication(
     fun loadFont(path: String): Boolean =
         Frontend.loadFont(
             path, path.substringAfterLast('/').substringBeforeLast('.'), Font.FontWeight.NORMAL)
+
+    /**
+     * Creates a new room and returns a BoardGameApplication instance for that room.
+     * This allows multiple applications to run on the same server for lobby-based games.
+     *
+     * @param roomId Unique identifier for the room
+     * @param windowTitle Title for the room's application window
+     * @param width Room width
+     * @param height Room height
+     * @param windowMode Window mode for the room
+     * @param headless Whether the room should run in headless mode
+     * @return BoardGameApplication instance for the room
+     * @throws IllegalArgumentException If the room ID already exists
+     *
+     * @since 0.11
+     */
+    fun createRoom(
+        roomId: String,
+        windowTitle: String = DEFAULT_WINDOW_TITLE,
+        width: Number = DEFAULT_WINDOW_WIDTH,
+        height: Number = DEFAULT_WINDOW_HEIGHT,
+        windowMode: WindowMode? = null,
+        headless: Boolean = false
+    ): BoardGameApplication {
+      return BoardGameApplication(
+          windowTitle = windowTitle,
+          width = width,
+          height = height,
+          windowMode = windowMode,
+          headless = headless,
+          roomId = roomId
+      )
+    }
+
+    /**
+     * Gets an existing room application by room ID.
+     *
+     * @param roomId The room ID to look up
+     * @return The BoardGameApplication for the room, or null if not found
+     *
+     * @since 0.11
+     */
+    fun getRoom(roomId: String): BoardGameApplication? {
+      return Frontend.getRoomApplication(roomId)
+    }
+
+    /**
+     * Removes a room and its associated application.
+     *
+     * @param roomId The room ID to remove
+     *
+     * @since 0.11
+     */
+    fun removeRoom(roomId: String) {
+      Frontend.removeRoom(roomId)
+    }
+
+    /**
+     * Gets all active rooms.
+     *
+     * @return Map of room IDs to their applications
+     *
+     * @since 0.11
+     */
+    fun getAllRooms(): Map<String, BoardGameApplication> {
+      return Frontend.getAllRoomApplications()
+    }
   }
 }
