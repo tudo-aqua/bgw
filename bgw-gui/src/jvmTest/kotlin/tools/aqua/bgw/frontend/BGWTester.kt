@@ -33,6 +33,7 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.support.ui.WebDriverWait
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.ComponentAnimation
+import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
@@ -248,12 +249,45 @@ class BGWComp(
       }
     }
 
+    val components: List<BGWComp>
+    get() {
+      var parentElement = webElement.findElements(By.ByTagName("bgw_contents")).firstOrNull()
+      if (parentElement == null) {
+        return emptyList()
+      }
+
+      val isHexagon = parentElement.findElements(By.ByTagName("bgw_hexagon_content")).firstOrNull()
+        var selector = By.cssSelector(":scope > *")
+        if (isHexagon != null) {
+            selector = By.cssSelector(":scope > bgw_hexagon_content > *")
+        }
+
+      val children: List<WebElement> = parentElement.findElements(selector)
+      return children.map { child ->
+        BGWComp(
+            child.getAttribute("id"),
+            child,
+            sizeMult,
+            sceneXOffset,
+            sceneYOffset)
+      }
+    }
+
   private val animationDuration: Long
     get() =
         webElement.getCssValue("transition-duration").let {
           val parts = it.split(" ")
           parts.find { it.contains("s") }?.removeSuffix("s")?.toLongOrNull() ?: 0L
         }
+}
+
+fun assertComponentsEqual(
+    expected: List<ComponentView>,
+    actual: List<BGWComp>,
+    message: String = "Components do not match"
+) {
+  assertEquals(expected.size, actual.size, "$message: Size mismatch")
+  assertContentEquals(expected.map { it.id }, actual.map { it.id }, "$message: ID mismatch")
 }
 
 fun assertVisualsEqual(
