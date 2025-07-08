@@ -67,6 +67,7 @@ import tools.aqua.bgw.event.*
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
   const val DEBUG = false
+  val FRONTEND = Frontend()
 }
 
 internal class JCEFApplication : Application {
@@ -217,13 +218,13 @@ internal class MainFrame(
               val data = jsonMapper.decodeFromString<DialogButtonClickData>(request)
 
               // Find the dialog by ID and invoke the button callback
-              val dialog = Frontend.openedDialogs[data.dialogId]
+              val dialog = Constants.FRONTEND.openedDialogs[data.dialogId]
               val buttonType = dialog?.buttonTypes?.get(data.buttonIndex)
               if (dialog != null && buttonType != null) {
-                Frontend.openedDialogs.remove(data.dialogId)
+                Constants.FRONTEND.openedDialogs.remove(data.dialogId)
                 dialog.onButtonClicked?.invoke(buttonType)
               }
-              Frontend.openedDialogs.remove(data.dialogId)
+              Constants.FRONTEND.openedDialogs.remove(data.dialogId)
 
               callback.success("")
               return true
@@ -302,7 +303,7 @@ internal class MainFrame(
               }
             }
 
-            Frontend.application.onWindowShown?.invoke()
+            Constants.FRONTEND.roomApplications.values.forEach { it.onWindowShown?.invoke() }
           }
         })
     client.addContextMenuHandler(
@@ -321,9 +322,9 @@ internal class MainFrame(
         object : CefDisplayHandlerAdapter() {
           override fun onFullscreenModeChange(browser: CefBrowser?, fullscreen: Boolean) {
             if (fullscreen) {
-              Frontend.isFullScreenProperty.setInternal(true)
+              Constants.FRONTEND.isFullScreenProperty.setInternal(true)
             } else {
-              Frontend.isFullScreenProperty.setInternal(false)
+              Constants.FRONTEND.isFullScreenProperty.setInternal(false)
             }
           }
         })
@@ -334,11 +335,11 @@ internal class MainFrame(
     pack()
     setSize(1280, 750)
     isVisible = true
-    if (Frontend.isMaximizedProperty.value) {
+    if (Constants.FRONTEND.isMaximizedProperty.value) {
       extendedState = MAXIMIZED_BOTH
     }
 
-    if (Frontend.isFullScreenProperty.value) {
+    if (Constants.FRONTEND.isFullScreenProperty.value) {
       toggleFullscreen(true)
     } else {
       toggleFullscreen(false)
@@ -349,7 +350,7 @@ internal class MainFrame(
     addWindowListener(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
-            Frontend.application.onWindowClosed?.invoke()
+            Constants.FRONTEND.roomApplications.values.forEach { it.onWindowClosed?.invoke() }
             println("[BGW] BGW Runtime shutting down...")
             try {
               CefApp.getInstance().dispose()
@@ -390,9 +391,9 @@ internal class MainFrame(
 
     addWindowStateListener { e ->
       if (e.newState == MAXIMIZED_BOTH) {
-        Frontend.isMaximizedProperty.setInternal(true)
+        Constants.FRONTEND.isMaximizedProperty.setInternal(true)
       } else {
-        Frontend.isMaximizedProperty.setInternal(false)
+        Constants.FRONTEND.isMaximizedProperty.setInternal(false)
       }
     }
 
@@ -413,8 +414,8 @@ internal class MainFrame(
                       object : TimerTask() {
                         override fun run() {
                           // Call onSceneRescaled for both scenes when window size changes
-                          Frontend.menuScene?.onSceneRescaled?.invoke()
-                          Frontend.boardGameScene?.onSceneRescaled?.invoke()
+                          Constants.FRONTEND.menuScene?.onSceneRescaled?.invoke()
+                          Constants.FRONTEND.boardGameScene?.onSceneRescaled?.invoke()
                         }
                       },
                       resizeDelay)
@@ -424,7 +425,7 @@ internal class MainFrame(
   }
 
   internal fun gracefulShutdown() {
-    Frontend.application.onWindowClosed?.invoke()
+    Constants.FRONTEND.roomApplications.values.forEach { it.onWindowClosed?.invoke() }
     println("[BGW] BGW Runtime shutting down...")
     try {
       CefApp.getInstance().dispose()

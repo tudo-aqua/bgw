@@ -19,11 +19,11 @@
 
 package tools.aqua.bgw.builder
 
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
 import tools.aqua.bgw.components.layoutviews.Pane
-import tools.aqua.bgw.core.Frontend
 
 internal object LayoutViewBuilder {
   fun build(layoutView: LayoutView<out ComponentView>) {
@@ -34,14 +34,14 @@ internal object LayoutViewBuilder {
   }
 
   private fun buildGrid(gridPane: GridPane<*>) {
-    gridPane.updateGui = { Frontend.updateComponent(gridPane) }
+    gridPane.updateGui = { Constants.FRONTEND.updateComponent(gridPane) }
     gridPane
         .mapNotNull { it.component }
         .forEach { component -> ComponentViewBuilder.build(component) }
   }
 
   private fun buildPane(pane: Pane<*>) {
-    pane.observableComponents.guiListener = { _, _ -> Frontend.updateComponent(pane) }
+    pane.observableComponents.guiListener = { _, _ -> Constants.FRONTEND.updateComponent(pane) }
     pane.components.forEach { component -> ComponentViewBuilder.build(component) }
   }
 }

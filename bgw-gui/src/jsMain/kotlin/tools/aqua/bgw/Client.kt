@@ -28,6 +28,7 @@ import PropData
 import data.event.AnimationFinishedEventData
 import data.event.LoadEventData
 import jsonMapper
+import kotlin.random.Random
 import kotlinx.browser.document
 import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
@@ -43,7 +44,6 @@ import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 import web.timers.setTimeout
-import kotlin.random.Random
 
 internal var internalSocket: WebSocket? = null
 internal var webSocket: WebSocket? = null
@@ -57,8 +57,8 @@ internal lateinit var socketRoom: String
 internal val dialogMap = mutableMapOf<ID, DialogData>()
 
 /**
- * Joins a specific room when connecting to the WebSocket.
- * This should be called before main() to set the room ID.
+ * Joins a specific room when connecting to the WebSocket. This should be called before main() to
+ * set the room ID.
  */
 internal fun joinRoom(roomId: String) {
   socketRoom = roomId
@@ -76,34 +76,31 @@ internal fun main() {
         webSocket?.send("JOIN_ROOM:$socketRoom")
       }
     }
-    webSocket?.onmessage = onMessage@{ event ->
-      val message = event.data.toString()
+    webSocket?.onmessage =
+        onMessage@{ event ->
+          val message = event.data.toString()
 
-      // Handle error messages
-      if (message.startsWith("ERROR:")) {
-        console.error("WebSocket error: $message")
-        return@onMessage ""
-      }
+          // Handle error messages
+          if (message.startsWith("ERROR:")) {
+            console.error("WebSocket error: $message")
+            return@onMessage ""
+          }
 
-      val cont = document.getElementById("bgw-root")
-      val dialog = document.getElementById("bgw-dialogs")
+          val cont = document.getElementById("bgw-root")
+          val dialog = document.getElementById("bgw-dialogs")
 
-      if (cont != null) {
-        dialogContainer = dialog as HTMLElement
-      }
+          if (cont != null) {
+            dialogContainer = dialog as HTMLElement
+          }
 
-      if (cont != null) {
-        container = cont as HTMLElement
-        val receivedData = jsonMapper.decodeFromString<PropData>(message).data
-        handleReceivedData(receivedData!!)
-      }
-    }
-    webSocket?.onerror = { error ->
-      console.error("WebSocket error:", error)
-    }
-    webSocket?.onclose = { event ->
-      console.log("WebSocket closed")
-    }
+          if (cont != null) {
+            container = cont as HTMLElement
+            val receivedData = jsonMapper.decodeFromString<PropData>(message).data
+            handleReceivedData(receivedData!!)
+          }
+        }
+    webSocket?.onerror = { error -> console.error("WebSocket error:", error) }
+    webSocket?.onclose = { event -> console.log("WebSocket closed") }
   } else {
     document.addEventListener(
         "BGW_MSG",

@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.builder
 
-import tools.aqua.bgw.core.Frontend
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.visual.*
 
 internal object VisualBuilder {
@@ -33,15 +33,15 @@ internal object VisualBuilder {
   }
 
   private fun buildCompoundVisual(visual: CompoundVisual) {
-    visual.childrenProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.childrenProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
     visual.children.forEach { build(it) }
   }
 
   private fun buildSingleLayerVisual(visual: SingleLayerVisual) {
-    visual.transparencyProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-    visual.styleProperty.guiListener = { Frontend.updateVisual(visual) }
-    visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
-    visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.transparencyProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
+    visual.styleProperty.guiListener = { Constants.FRONTEND.updateVisual(visual) }
+    visual.filtersProperty.guiListener = { Constants.FRONTEND.updateVisual(visual) }
+    visual.flippedProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
     when (visual) {
       is ColorVisual -> buildColorVisual(visual)
       is ImageVisual -> buildImageVisual(visual)
@@ -50,18 +50,18 @@ internal object VisualBuilder {
   }
 
   private fun buildColorVisual(visual: ColorVisual) {
-    visual.colorProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.colorProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
   }
 
   private fun buildImageVisual(visual: ImageVisual) {
-    visual.pathProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.pathProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
   }
 
   private fun buildTextVisual(visual: TextVisual) {
-    visual.textProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-    visual.fontProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-    visual.alignmentProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-    visual.offsetXProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
-    visual.offsetYProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.textProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
+    visual.fontProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
+    visual.alignmentProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
+    visual.offsetXProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
+    visual.offsetYProperty.guiListener = { _, _ -> Constants.FRONTEND.updateVisual(visual) }
   }
 }

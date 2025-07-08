@@ -17,185 +17,184 @@
 
 package tools.aqua.bgw.binding
 
+import PropData
+import SceneMapper
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import jsonMapper
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.serialization.encodeToString
-import PropData
-import SceneMapper
-import jsonMapper
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.core.BoardGameApplication
 
-/**
- * Room-aware WebSocket channel that handles multiple game rooms.
- */
+/** Room-aware WebSocket channel that handles multiple game rooms. */
 internal class RoomWebSocketChannel(private val path: String) {
 
-    fun install(application: Application) {
-        application.routing {
-            webSocket(path) {
-                var currentRoom: Room? = null
+  fun install(application: Application) {
+    application.routing {
+      webSocket(path) {
+        var currentRoom: Room? = null
 
-                try {
-                    // Wait for room join message
-                    for (frame in incoming) {
-                        if (frame is Frame.Text) {
-                            val message = frame.readText()
+        try {
+          // Wait for room join message
+          for (frame in incoming) {
+            if (frame is Frame.Text) {
+              val message = frame.readText()
 
-                            // Handle room join message
-                            if (message.startsWith("JOIN_ROOM:")) {
-                                val roomId = message.substringAfter("JOIN_ROOM:")
-                                currentRoom = RoomManager.getRoom(roomId)
+              // Handle room join message
+              if (message.startsWith("JOIN_ROOM:")) {
+                val roomId = message.substringAfter("JOIN_ROOM:")
+                currentRoom = RoomManager.getRoom(roomId)
 
-                                if (currentRoom != null) {
-                                    RoomManager.joinRoom(roomId, this@webSocket)
+                if (currentRoom != null) {
+                  RoomManager.joinRoom(roomId, this@webSocket)
 
-                                    // Send initial room state
-                                    val appData = SceneMapper.map(
-                                        menuScene = currentRoom.application.menuScene,
-                                        gameScene = currentRoom.application.boardGameScene
-                                    ).apply {
-                                        fonts = currentRoom.application.loadedFonts.map { (path, fontName, weight) ->
-                                            Triple(path, fontName, weight.toInt())
-                                        }
-                                    }
-                                    val json = jsonMapper.encodeToString(PropData(appData))
-                                    currentRoom.sendToSession(this@webSocket, json)
-                                    break
-                                } else {
-                                    send("ERROR: Room $roomId not found")
-                                    close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Room not found"))
-                                    return@webSocket
+                  // Send initial room state
+                  val appData =
+                      SceneMapper.map(
+                              menuScene = currentRoom.application.menuScene,
+                              gameScene = currentRoom.application.boardGameScene)
+                          .apply {
+                            fonts =
+                                currentRoom.application.loadedFonts.map { (path, fontName, weight)
+                                  ->
+                                  Triple(path, fontName, weight.toInt())
                                 }
-                            }
-                        }
-                    }
-
-                    // Handle regular messages once joined to a room
-                    for (frame in incoming) {
-                        if (frame is Frame.Text) {
-                            val message = frame.readText()
-                            currentRoom?.let { room ->
-                                handleRoomMessage(room, this@webSocket, message)
-                            }
-                        }
-                    }
-
-                } catch (e: ClosedReceiveChannelException) {
-                    // Connection closed normally
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    // Clean up when connection closes
-                    currentRoom?.let {
-                        RoomManager.leaveRoom(this@webSocket)
-                    }
+                          }
+                  val json = jsonMapper.encodeToString(PropData(appData))
+                  currentRoom.sendToSession(this@webSocket, json)
+                  break
+                } else {
+                  send("ERROR: Room $roomId not found")
+                  close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "Room not found"))
+                  return@webSocket
                 }
+              }
             }
-        }
-    }
+          }
 
-    private suspend fun handleRoomMessage(room: Room, session: WebSocketSession, message: String) {
-        val type = message.substringBefore('|')
-        val content = message.substringAfter('|')
-
-        when (type) {
-            "bgwQuery" -> {
-                try {
-                    handleRoomEvent(room, content)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+          // Handle regular messages once joined to a room
+          for (frame in incoming) {
+            if (frame is Frame.Text) {
+              val message = frame.readText()
+              currentRoom?.let { room -> handleRoomMessage(room, this@webSocket, message) }
             }
-            "bgwAnimationQuery" -> {
-                try {
-                    handleRoomAnimation(room, content)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-            "bgwGlobalQuery" -> {
-                try {
-                    handleRoomGlobalEvent(room, content)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
-
-    private suspend fun handleRoomEvent(room: Room, content: String) {
-        // Use the room's application context for event handling
-        val originalApplication = tools.aqua.bgw.core.Frontend.application
-        val originalBoardGameScene = tools.aqua.bgw.core.Frontend.boardGameScene
-        val originalMenuScene = tools.aqua.bgw.core.Frontend.menuScene
-
-        try {
-            // Temporarily set the room's application context
-            tools.aqua.bgw.core.Frontend.application = room.application
-            tools.aqua.bgw.core.Frontend.boardGameScene = room.application.boardGameScene
-            tools.aqua.bgw.core.Frontend.menuScene = room.application.menuScene
-
-            // Handle the event with the room's context
-            eventListener(content)
-
+          }
+        } catch (e: ClosedReceiveChannelException) {
+          // Connection closed normally
+        } catch (e: Exception) {
+          e.printStackTrace()
         } finally {
-            // Restore the original context
-            tools.aqua.bgw.core.Frontend.application = originalApplication
-            tools.aqua.bgw.core.Frontend.boardGameScene = originalBoardGameScene
-            tools.aqua.bgw.core.Frontend.menuScene = originalMenuScene
+          // Clean up when connection closes
+          currentRoom?.let { RoomManager.leaveRoom(this@webSocket) }
         }
+      }
     }
+  }
 
-    private suspend fun handleRoomAnimation(room: Room, content: String) {
-        val originalApplication = tools.aqua.bgw.core.Frontend.application
-        val originalBoardGameScene = tools.aqua.bgw.core.Frontend.boardGameScene
-        val originalMenuScene = tools.aqua.bgw.core.Frontend.menuScene
+  private suspend fun handleRoomMessage(room: Room, session: WebSocketSession, message: String) {
+    val type = message.substringBefore('|')
+    val content = message.substringAfter('|')
 
+    when (type) {
+      "bgwQuery" -> {
         try {
-            tools.aqua.bgw.core.Frontend.application = room.application
-            tools.aqua.bgw.core.Frontend.boardGameScene = room.application.boardGameScene
-            tools.aqua.bgw.core.Frontend.menuScene = room.application.menuScene
-
-            animationListener(content)
-
-        } finally {
-            tools.aqua.bgw.core.Frontend.application = originalApplication
-            tools.aqua.bgw.core.Frontend.boardGameScene = originalBoardGameScene
-            tools.aqua.bgw.core.Frontend.menuScene = originalMenuScene
+          handleRoomEvent(room, content)
+        } catch (e: Exception) {
+          e.printStackTrace()
         }
-    }
-
-    private suspend fun handleRoomGlobalEvent(room: Room, content: String) {
-        val originalApplication = tools.aqua.bgw.core.Frontend.application
-        val originalBoardGameScene = tools.aqua.bgw.core.Frontend.boardGameScene
-        val originalMenuScene = tools.aqua.bgw.core.Frontend.menuScene
-
+      }
+      "bgwAnimationQuery" -> {
         try {
-            tools.aqua.bgw.core.Frontend.application = room.application
-            tools.aqua.bgw.core.Frontend.boardGameScene = room.application.boardGameScene
-            tools.aqua.bgw.core.Frontend.menuScene = room.application.menuScene
-
-            globalListener(content)
-
-        } finally {
-            tools.aqua.bgw.core.Frontend.application = originalApplication
-            tools.aqua.bgw.core.Frontend.boardGameScene = originalBoardGameScene
-            tools.aqua.bgw.core.Frontend.menuScene = originalMenuScene
+          handleRoomAnimation(room, content)
+        } catch (e: Exception) {
+          e.printStackTrace()
         }
+      }
+      "bgwGlobalQuery" -> {
+        try {
+          handleRoomGlobalEvent(room, content)
+        } catch (e: Exception) {
+          e.printStackTrace()
+        }
+      }
     }
+  }
+
+  private suspend fun handleRoomEvent(room: Room, content: String) {
+    // Use the room's application context for event handling
+    val originalApplication = Constants.FRONTEND.application
+    val originalBoardGameScene = Constants.FRONTEND.boardGameScene
+    val originalMenuScene = Constants.FRONTEND.menuScene
+
+    try {
+      // Temporarily set the room's application context
+      Constants.FRONTEND.application = room.application
+      Constants.FRONTEND.boardGameScene = room.application.boardGameScene
+      Constants.FRONTEND.menuScene = room.application.menuScene
+
+      // Handle the event with the room's context
+      eventListener(content)
+    } finally {
+      // Restore the original context
+      Constants.FRONTEND.application = originalApplication
+      Constants.FRONTEND.boardGameScene = originalBoardGameScene
+      Constants.FRONTEND.menuScene = originalMenuScene
+    }
+  }
+
+  private suspend fun handleRoomAnimation(room: Room, content: String) {
+    val originalApplication = Constants.FRONTEND.application
+    val originalBoardGameScene = Constants.FRONTEND.boardGameScene
+    val originalMenuScene = Constants.FRONTEND.menuScene
+
+    try {
+      Constants.FRONTEND.application = room.application
+      Constants.FRONTEND.boardGameScene = room.application.boardGameScene
+      Constants.FRONTEND.menuScene = room.application.menuScene
+
+      animationListener(content)
+    } finally {
+      Constants.FRONTEND.application = originalApplication
+      Constants.FRONTEND.boardGameScene = originalBoardGameScene
+      Constants.FRONTEND.menuScene = originalMenuScene
+    }
+  }
+
+  private suspend fun handleRoomGlobalEvent(room: Room, content: String) {
+    val originalApplication = Constants.FRONTEND.application
+    val originalBoardGameScene = Constants.FRONTEND.boardGameScene
+    val originalMenuScene = Constants.FRONTEND.menuScene
+
+    try {
+      Constants.FRONTEND.application = room.application
+      Constants.FRONTEND.boardGameScene = room.application.boardGameScene
+      Constants.FRONTEND.menuScene = room.application.menuScene
+
+      globalListener(content)
+    } finally {
+      Constants.FRONTEND.application = originalApplication
+      Constants.FRONTEND.boardGameScene = originalBoardGameScene
+      Constants.FRONTEND.menuScene = originalMenuScene
+    }
+  }
 }
 
 // Add extension properties to BoardGameApplication for room management
 internal var BoardGameApplication.boardGameScene: tools.aqua.bgw.core.BoardGameScene?
-    get() = tools.aqua.bgw.core.Frontend.boardGameScene
-    set(value) { tools.aqua.bgw.core.Frontend.boardGameScene = value }
+  get() = Constants.FRONTEND.boardGameScene
+  set(value) {
+    Constants.FRONTEND.boardGameScene = value
+  }
 
 internal var BoardGameApplication.menuScene: tools.aqua.bgw.core.MenuScene?
-    get() = tools.aqua.bgw.core.Frontend.menuScene
-    set(value) { tools.aqua.bgw.core.Frontend.menuScene = value }
+  get() = Constants.FRONTEND.menuScene
+  set(value) {
+    Constants.FRONTEND.menuScene = value
+  }
 
-internal val BoardGameApplication.loadedFonts: List<Triple<String, String, tools.aqua.bgw.util.Font.FontWeight>>
-    get() = tools.aqua.bgw.core.Frontend.loadedFonts
+internal val BoardGameApplication.loadedFonts:
+    List<Triple<String, String, tools.aqua.bgw.util.Font.FontWeight>>
+  get() = Constants.FRONTEND.loadedFonts

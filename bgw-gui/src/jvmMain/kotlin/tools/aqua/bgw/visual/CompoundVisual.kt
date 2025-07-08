@@ -19,7 +19,7 @@
 
 package tools.aqua.bgw.visual
 
-import tools.aqua.bgw.core.Frontend
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 
@@ -66,7 +66,7 @@ open class CompoundVisual(children: List<SingleLayerVisual>) : Visual() {
     }
 
   init {
-    childrenProperty.internalListener = { _, _ -> Frontend.updateVisual(this) }
+    childrenProperty.internalListener = { _, _ -> Constants.FRONTEND.updateVisual(this) }
   }
 
   /**

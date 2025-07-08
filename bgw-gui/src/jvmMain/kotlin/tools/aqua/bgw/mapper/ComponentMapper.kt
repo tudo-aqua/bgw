@@ -597,18 +597,18 @@ internal object SceneMapper {
 
   fun map(menuScene: MenuScene? = null, gameScene: BoardGameScene? = null): AppData {
     return AppData().apply {
-      this.width = Frontend.widthProperty.value.toInt()
-      this.height = Frontend.heightProperty.value.toInt()
-      this.background = VisualMapper.map(Frontend.backgroundProperty.value)
+      this.width = Constants.FRONTEND.widthProperty.value.toInt()
+      this.height = Constants.FRONTEND.heightProperty.value.toInt()
+      this.background = VisualMapper.map(Constants.FRONTEND.backgroundProperty.value)
       this.alignment =
           Pair(
-              Frontend.alignmentProperty.value.horizontalAlignment.name.lowercase(),
-              Frontend.alignmentProperty.value.verticalAlignment.name.lowercase())
+              Constants.FRONTEND.alignmentProperty.value.horizontalAlignment.name.lowercase(),
+              Constants.FRONTEND.alignmentProperty.value.verticalAlignment.name.lowercase())
       this.menuScene = if (menuScene != null) mapScene(menuScene) else null
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
-      this.fadeTime = Frontend.lastFadeTime.toInt()
+      this.fadeTime = Constants.FRONTEND.lastFadeTime.toInt()
       this.blurRadius = menuScene?.blurRadius ?: DEFAULT_BLUR_RADIUS
-      this.isHeadless = Frontend.application.headless
+      this.isHeadless = Constants.FRONTEND.roomApplications.values.any { it.headless }
     }
   }
 }

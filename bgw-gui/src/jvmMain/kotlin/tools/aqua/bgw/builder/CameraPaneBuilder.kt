@@ -19,25 +19,37 @@
 
 package tools.aqua.bgw.builder
 
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.layoutviews.LayoutView
-import tools.aqua.bgw.core.Frontend
 
 internal object CameraPaneBuilder {
   fun build(cameraPane: CameraPane<out LayoutView<*>>) {
-    cameraPane.zoomProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
-    cameraPane.interactiveProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
-    cameraPane.anchorPointProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
-    cameraPane.panDataProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
-    cameraPane.panMouseButtonProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
-    cameraPane.limitBoundsProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
+    cameraPane.zoomProperty.guiListener = { _, _ -> Constants.FRONTEND.updateComponent(cameraPane) }
+    cameraPane.interactiveProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(cameraPane)
+    }
+    cameraPane.anchorPointProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(cameraPane)
+    }
+    cameraPane.panDataProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(cameraPane)
+    }
+    cameraPane.panMouseButtonProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(cameraPane)
+    }
+    cameraPane.limitBoundsProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(cameraPane)
+    }
     cameraPane.isVerticalLockedProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(cameraPane)
+      Constants.FRONTEND.updateComponent(cameraPane)
     }
     cameraPane.isHorizontalLockedProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(cameraPane)
+      Constants.FRONTEND.updateComponent(cameraPane)
     }
-    cameraPane.isZoomLockedProperty.guiListener = { _, _ -> Frontend.updateComponent(cameraPane) }
+    cameraPane.isZoomLockedProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(cameraPane)
+    }
     ComponentViewBuilder.build(cameraPane.target)
   }
 }

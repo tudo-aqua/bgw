@@ -21,73 +21,72 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 
 /**
- * Legacy WebSocket channel implementation.
- * This is kept for backward compatibility but should be replaced with room-aware channels.
+ * Legacy WebSocket channel implementation. This is kept for backward compatibility but should be
+ * replaced with room-aware channels.
  */
 @Deprecated("Use RoomWebSocketChannel instead")
 internal class Channel(private val path: String) {
-    private val sessions = ConcurrentHashMap<WebSocketSession, Boolean>()
+  private val sessions = ConcurrentHashMap<WebSocketSession, Boolean>()
 
-    var onClientConnected: (suspend (WebSocketSession) -> Unit)? = null
-    var onClientMessage: (suspend (WebSocketSession, String) -> Unit)? = null
-    var onClientDisconnected: (suspend (WebSocketSession) -> Unit)? = null
+  var onClientConnected: (suspend (WebSocketSession) -> Unit)? = null
+  var onClientMessage: (suspend (WebSocketSession, String) -> Unit)? = null
+  var onClientDisconnected: (suspend (WebSocketSession) -> Unit)? = null
 
-    fun install(application: Application) {
-        application.routing {
-            webSocket(path) {
-                sessions[this] = true
+  fun install(application: Application) {
+    application.routing {
+      webSocket(path) {
+        sessions[this] = true
 
-                try {
-                    // Notify client connected
-                    onClientConnected?.invoke(this)
+        try {
+          // Notify client connected
+          onClientConnected?.invoke(this)
 
-                    // Handle incoming messages
-                    for (frame in incoming) {
-                        if (frame is Frame.Text) {
-                            val message = frame.readText()
-                            onClientMessage?.invoke(this, message)
-                        }
-                    }
-
-                } catch (e: ClosedReceiveChannelException) {
-                    // Connection closed normally
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    // Clean up when connection closes
-                    sessions.remove(this)
-                    onClientDisconnected?.invoke(this)
-                }
+          // Handle incoming messages
+          for (frame in incoming) {
+            if (frame is Frame.Text) {
+              val message = frame.readText()
+              onClientMessage?.invoke(this, message)
             }
+          }
+        } catch (e: ClosedReceiveChannelException) {
+          // Connection closed normally
+        } catch (e: Exception) {
+          e.printStackTrace()
+        } finally {
+          // Clean up when connection closes
+          sessions.remove(this)
+          onClientDisconnected?.invoke(this)
         }
+      }
     }
+  }
 
-    suspend fun sendToAllClients(message: String) {
-        val activeSessions = sessions.keys.toList()
-        activeSessions.forEach { session ->
-            try {
-                session.send(message)
-            } catch (e: Exception) {
-                // Session might be closed, remove it
-                sessions.remove(session)
-            }
-        }
+  suspend fun sendToAllClients(message: String) {
+    val activeSessions = sessions.keys.toList()
+    activeSessions.forEach { session ->
+      try {
+        session.send(message)
+      } catch (e: Exception) {
+        // Session might be closed, remove it
+        sessions.remove(session)
+      }
     }
+  }
 
-    suspend fun sendToClient(session: WebSocketSession, message: String) {
-        if (sessions.containsKey(session)) {
-            try {
-                session.send(message)
-            } catch (e: Exception) {
-                // Session might be closed, remove it
-                sessions.remove(session)
-            }
-        }
+  suspend fun sendToClient(session: WebSocketSession, message: String) {
+    if (sessions.containsKey(session)) {
+      try {
+        session.send(message)
+      } catch (e: Exception) {
+        // Session might be closed, remove it
+        sessions.remove(session)
+      }
     }
+  }
 
-    fun getActiveSessionCount(): Int = sessions.size
+  fun getActiveSessionCount(): Int = sessions.size
 }

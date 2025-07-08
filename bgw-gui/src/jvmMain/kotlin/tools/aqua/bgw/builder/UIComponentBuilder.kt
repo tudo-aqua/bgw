@@ -19,12 +19,14 @@
 
 package tools.aqua.bgw.builder
 
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.uicomponents.*
-import tools.aqua.bgw.core.Frontend
 
 internal object UIComponentBuilder {
   fun build(uiComponent: UIComponent) {
-    uiComponent.fontProperty.guiListener = { _, _ -> Frontend.updateComponent(uiComponent) }
+    uiComponent.fontProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(uiComponent)
+    }
     when (uiComponent) {
       is LabeledUIComponent -> buildLabeledUIComponent(uiComponent)
       is TextInputUIComponent -> buildTextInputUIComponent(uiComponent)
@@ -37,13 +39,13 @@ internal object UIComponentBuilder {
 
   private fun buildLabeledUIComponent(labeledUIComponent: LabeledUIComponent) {
     labeledUIComponent.isWrapTextProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(labeledUIComponent)
+      Constants.FRONTEND.updateComponent(labeledUIComponent)
     }
     labeledUIComponent.textProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(labeledUIComponent)
+      Constants.FRONTEND.updateComponent(labeledUIComponent)
     }
     labeledUIComponent.alignmentProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(labeledUIComponent)
+      Constants.FRONTEND.updateComponent(labeledUIComponent)
     }
     when (labeledUIComponent) {
       is Button -> buildButton(labeledUIComponent)
@@ -55,13 +57,13 @@ internal object UIComponentBuilder {
 
   private fun buildTextInputUIComponent(textInputUIComponent: TextInputUIComponent) {
     textInputUIComponent.textProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(textInputUIComponent)
+      Constants.FRONTEND.updateComponent(textInputUIComponent)
     }
     textInputUIComponent.promptProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(textInputUIComponent)
+      Constants.FRONTEND.updateComponent(textInputUIComponent)
     }
     textInputUIComponent.isReadonlyProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(textInputUIComponent)
+      Constants.FRONTEND.updateComponent(textInputUIComponent)
     }
     when (textInputUIComponent) {
       is TextArea -> buildTextArea(textInputUIComponent)
@@ -73,7 +75,7 @@ internal object UIComponentBuilder {
   private fun buildBinaryStateButton(binaryStateButton: BinaryStateButton) {
     // TODO: Add property for toggle group
     binaryStateButton.selectedProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(binaryStateButton)
+      Constants.FRONTEND.updateComponent(binaryStateButton)
     }
     when (binaryStateButton) {
       is ToggleButton -> buildToggleButton(binaryStateButton)
@@ -84,20 +86,32 @@ internal object UIComponentBuilder {
   private fun buildButton(button: Button) {}
 
   private fun buildCheckBox(checkBox: CheckBox) {
-    checkBox.isCheckedProperty.guiListener = { _, _ -> Frontend.updateComponent(checkBox) }
-    checkBox.isIndeterminateAllowedProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(checkBox)
+    checkBox.isCheckedProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(checkBox)
     }
-    checkBox.isIndeterminateProperty.guiListener = { _, _ -> Frontend.updateComponent(checkBox) }
+    checkBox.isIndeterminateAllowedProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(checkBox)
+    }
+    checkBox.isIndeterminateProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(checkBox)
+    }
   }
 
   private fun buildLabel(label: Label) {}
 
   private fun buildComboBox(comboBox: ComboBox<*>) {
-    comboBox.observableItemsList.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
-    comboBox.selectedItemProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
-    comboBox.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
-    comboBox.itemVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(comboBox) }
+    comboBox.observableItemsList.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(comboBox)
+    }
+    comboBox.selectedItemProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(comboBox)
+    }
+    comboBox.formatFunctionProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(comboBox)
+    }
+    comboBox.itemVisualProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(comboBox)
+    }
   }
 
   private fun buildTextArea(textArea: TextArea) {}
@@ -112,28 +126,34 @@ internal object UIComponentBuilder {
 
   private fun buildColorPicker(colorPicker: ColorPicker) {
     colorPicker.selectedColorProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(colorPicker)
+      Constants.FRONTEND.updateComponent(colorPicker)
     }
   }
 
   private fun buildProgressBar(progressBar: ProgressBar) {
-    progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
-    progressBar.barVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
+    progressBar.progressProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(progressBar)
+    }
+    progressBar.barVisualProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(progressBar)
+    }
   }
 
   private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {
-    structuredDataView.items.guiListener = { _, _ -> Frontend.updateComponent(structuredDataView) }
+    structuredDataView.items.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(structuredDataView)
+    }
     structuredDataView.selectionModeProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(structuredDataView)
+      Constants.FRONTEND.updateComponent(structuredDataView)
     }
     structuredDataView.selectionBackgroundProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(structuredDataView)
+      Constants.FRONTEND.updateComponent(structuredDataView)
     }
     structuredDataView.selectedItemsList.guiListener = { _, _ ->
-      Frontend.updateComponent(structuredDataView)
+      Constants.FRONTEND.updateComponent(structuredDataView)
     }
     structuredDataView.selectedIndicesList.guiListener = { _, _ ->
-      Frontend.updateComponent(structuredDataView)
+      Constants.FRONTEND.updateComponent(structuredDataView)
     }
   }
 }

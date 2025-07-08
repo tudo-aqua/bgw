@@ -19,8 +19,8 @@
 
 package tools.aqua.bgw.builder
 
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.gamecomponentviews.*
-import tools.aqua.bgw.core.Frontend
 
 internal object GameComponentViewBuilder {
   fun build(gameComponentView: GameComponentView) {
@@ -32,18 +32,20 @@ internal object GameComponentViewBuilder {
     }
 
     gameComponentView.isDraggableProperty.guiListener = { _, _ ->
-      Frontend.updateComponent(gameComponentView)
+      Constants.FRONTEND.updateComponent(gameComponentView)
     }
   }
 
   private fun buildCardView(cardView: CardView) {}
 
   private fun buildDiceView(diceView: DiceView) {
-    diceView.visuals.guiListener = { _, _ -> Frontend.updateComponent(diceView) }
+    diceView.visuals.guiListener = { _, _ -> Constants.FRONTEND.updateComponent(diceView) }
   }
 
   private fun buildHexagonView(hexagonView: HexagonView) {
-    hexagonView.sizeProperty.guiListener = { _, _ -> Frontend.updateComponent(hexagonView) }
+    hexagonView.sizeProperty.guiListener = { _, _ ->
+      Constants.FRONTEND.updateComponent(hexagonView)
+    }
   }
 
   private fun buildTokenView(tokenView: TokenView) {}

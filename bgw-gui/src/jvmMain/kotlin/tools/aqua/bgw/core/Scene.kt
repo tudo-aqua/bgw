@@ -22,6 +22,7 @@ package tools.aqua.bgw.core
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.ParallelAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
@@ -195,7 +196,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    */
   fun playAnimation(animation: Animation) {
     addAnimationRecursively(animation)
-    Frontend.sendAnimation(animation)
+    Constants.FRONTEND.sendAnimation(animation)
   }
 
   private fun addAnimationRecursively(animation: Animation) {
@@ -219,7 +220,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @see Animation
    */
   fun stopAllAnimations() {
-    Frontend.stopAnimations()
+    Constants.FRONTEND.stopAnimations()
   }
 
   /**

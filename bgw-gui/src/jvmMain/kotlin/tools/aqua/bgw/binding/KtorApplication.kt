@@ -55,19 +55,16 @@ import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import java.io.ByteArrayOutputStream
 import java.time.Duration
 import java.util.*
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
 import jsonMapper
 import kotlin.invoke
-import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
@@ -77,7 +74,6 @@ import tools.aqua.bgw.components.uicomponents.ComboBox
 import tools.aqua.bgw.components.uicomponents.StructuredDataView
 import tools.aqua.bgw.components.uicomponents.TextInputUIComponent
 import tools.aqua.bgw.core.Color
-import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
 import tools.aqua.bgw.dialog.Dialog
@@ -102,10 +98,11 @@ internal val componentChannel: Channel =
             jsonMapper.encodeToString(
                 PropData(
                     SceneMapper.map(
-                            menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene)
+                            menuScene = Constants.FRONTEND.menuScene,
+                            gameScene = Constants.FRONTEND.boardGameScene)
                         .apply {
                           fonts =
-                              Frontend.loadedFonts.map { (path, fontName, weight) ->
+                              Constants.FRONTEND.loadedFonts.map { (path, fontName, weight) ->
                                 Triple(path, fontName, weight.toInt())
                               }
                         }))
@@ -145,8 +142,9 @@ internal val componentChannel: Channel =
 internal fun animationListener(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
   if (eventData is AnimationFinishedEventData) {
-    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+    val menuSceneAnimations = Constants.FRONTEND.menuScene?.animations?.toList() ?: listOf()
+    val boardGameSceneAnimations =
+        Constants.FRONTEND.boardGameScene?.animations?.toList() ?: listOf()
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
     animation?.onFinished?.invoke(AnimationFinishedEvent())
@@ -164,8 +162,8 @@ internal fun globalListener(text: String) {
             eventData.isControlDown,
             eventData.isShiftDown,
             eventData.isAltDown)
-    val menuScene = Frontend.menuScene
-    val boardGameScene = Frontend.boardGameScene
+    val menuScene = Constants.FRONTEND.menuScene
+    val boardGameScene = Constants.FRONTEND.boardGameScene
 
     when (eventData.action) {
       KeyEventAction.PRESS -> {
@@ -192,52 +190,57 @@ internal fun eventListener(text: String) {
     eventData.id?.indexOf("bgw-scene-")?.let {
       if (it >= -1) {
         val sceneId = eventData.id ?: return
-        if (Frontend.boardGameScene?.id == sceneId && Frontend.boardGameScene?.isVisible != true) {
-          Frontend.boardGameScene?.isVisible = true
-          Frontend.boardGameScene?.onSceneShown?.invoke()
+        if (Constants.FRONTEND.boardGameScene?.id == sceneId &&
+            Constants.FRONTEND.boardGameScene?.isVisible != true) {
+          Constants.FRONTEND.boardGameScene?.isVisible = true
+          Constants.FRONTEND.boardGameScene?.onSceneShown?.invoke()
         }
-        if (Frontend.menuScene?.id == sceneId && Frontend.menuScene?.isVisible != true) {
-          Frontend.menuScene?.isVisible = true
-          Frontend.menuScene?.onSceneShown?.invoke()
+        if (Constants.FRONTEND.menuScene?.id == sceneId &&
+            Constants.FRONTEND.menuScene?.isVisible != true) {
+          Constants.FRONTEND.menuScene?.isVisible = true
+          Constants.FRONTEND.menuScene?.onSceneShown?.invoke()
         }
       }
     }
 
-    if (Frontend.application.headless) {
-      Frontend.loadCallback.invoke()
+    if (Constants.FRONTEND.roomApplications.values.any { it.headless }) {
+      Constants.FRONTEND.loadCallback.invoke()
     } else {
-      Frontend.applicationEngine.frame?.loadCallback?.invoke(Unit)
+      Constants.FRONTEND.applicationEngine.frame?.loadCallback?.invoke(Unit)
     }
   }
 
   val id = eventData.id
   if (id != null && id.isNotBlank()) {
-    val component = Frontend.getComponentById(id)
+    val component = Constants.FRONTEND.getComponentById(id)
     if (component != null) {
       try {
         when (eventData) {
           // Handle events for components
           is FilesPickedEventData -> {
-            if (Frontend.openedFileDialog != null &&
-                eventData.id == Frontend.openedFileDialog?.id) {
+            if (Constants.FRONTEND.openedFileDialog != null &&
+                eventData.id == Constants.FRONTEND.openedFileDialog?.id) {
               if (eventData.paths.isNotEmpty()) {
-                Frontend.openedFileDialog?.onPathsSelected?.invoke(eventData.paths)
+                Constants.FRONTEND.openedFileDialog?.onPathsSelected?.invoke(eventData.paths)
               } else {
-                Frontend.openedFileDialog?.onSelectionCancelled?.invoke()
+                Constants.FRONTEND.openedFileDialog?.onSelectionCancelled?.invoke()
               }
-              Frontend.openedFileDialog = null
+              Constants.FRONTEND.openedFileDialog = null
             }
           }
           is MouseEnteredEventData -> {
-            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val (posX, posY) =
+                Constants.FRONTEND.relativePositionsToAbsolute(eventData.posX, eventData.posY)
             component.onMouseEntered?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
           }
           is MouseExitedEventData -> {
-            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val (posX, posY) =
+                Constants.FRONTEND.relativePositionsToAbsolute(eventData.posX, eventData.posY)
             component.onMouseExited?.invoke(MouseEvent(MouseButtonType.UNSPECIFIED, posX, posY))
           }
           is MousePressedEventData -> {
-            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val (posX, posY) =
+                Constants.FRONTEND.relativePositionsToAbsolute(eventData.posX, eventData.posY)
             component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY))
           }
           is ScrollEventData -> {
@@ -250,11 +253,13 @@ internal fun eventListener(text: String) {
                     eventData.delta))
           }
           is MouseReleasedEventData -> {
-            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val (posX, posY) =
+                Constants.FRONTEND.relativePositionsToAbsolute(eventData.posX, eventData.posY)
             component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY))
           }
           is MouseEventData -> {
-            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val (posX, posY) =
+                Constants.FRONTEND.relativePositionsToAbsolute(eventData.posX, eventData.posY)
             component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY))
           }
           is KeyEventData -> {
@@ -386,7 +391,7 @@ internal fun eventListener(text: String) {
           }
         }
       } catch (e: Exception) {
-        val mainFrame = Frontend.applicationEngine.frame
+        val mainFrame = Constants.FRONTEND.applicationEngine.frame
         mainFrame?.openNewDialog(
             DialogMapper.map(
                 Dialog(
@@ -507,12 +512,15 @@ internal fun checkForMissingState() {
 
 internal fun collectAppData(): AppData {
   val appData =
-      SceneMapper.map(menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene).apply {
-        fonts =
-            Frontend.loadedFonts.map { (path, fontName, weight) ->
-              Triple(path, fontName, weight.toInt())
-            }
-      }
+      SceneMapper.map(
+              menuScene = Constants.FRONTEND.menuScene,
+              gameScene = Constants.FRONTEND.boardGameScene)
+          .apply {
+            fonts =
+                Constants.FRONTEND.loadedFonts.map { (path, fontName, weight) ->
+                  Triple(path, fontName, weight.toInt())
+                }
+          }
   appData.action = ActionProp.UPDATE_COMPONENT
   return appData
 }
@@ -525,9 +533,7 @@ internal fun markDirty(prop: ActionProp) {
   }
 }
 
-/**
- * Room-aware update mechanism that sends updates only to sessions in the specified room.
- */
+/** Room-aware update mechanism that sends updates only to sessions in the specified room. */
 internal suspend fun enqueueRoomUpdate(roomId: String, data: AppData) {
   val room = RoomManager.getRoom(roomId) ?: return
 
@@ -539,9 +545,7 @@ internal suspend fun enqueueRoomUpdate(roomId: String, data: AppData) {
   }
 }
 
-/**
- * Forces an animation update for a specific room.
- */
+/** Forces an animation update for a specific room. */
 internal suspend fun forceRoomAnimationUpdate(roomId: String, animationData: AnimationData) {
   val room = RoomManager.getRoom(roomId) ?: return
 
@@ -557,25 +561,22 @@ internal suspend fun forceRoomAnimationUpdate(roomId: String, animationData: Ani
   }
 }
 
-/**
- * Collects app data for a specific room.
- */
+/** Collects app data for a specific room. */
 internal fun collectRoomAppData(room: Room): AppData {
-  val appData = SceneMapper.map(
-    menuScene = room.application.menuScene,
-    gameScene = room.application.boardGameScene
-  ).apply {
-    fonts = room.application.loadedFonts.map { (path, fontName, weight) ->
-      Triple(path, fontName, weight.toInt())
-    }
-  }
+  val appData =
+      SceneMapper.map(
+              menuScene = room.application.menuScene, gameScene = room.application.boardGameScene)
+          .apply {
+            fonts =
+                room.application.loadedFonts.map { (path, fontName, weight) ->
+                  Triple(path, fontName, weight.toInt())
+                }
+          }
   appData.action = ActionProp.UPDATE_COMPONENT
   return appData
 }
 
-/**
- * Marks a room as dirty and enqueues an update for it.
- */
+/** Marks a room as dirty and enqueues an update for it. */
 internal fun markRoomDirty(roomId: String, prop: ActionProp) {
   runCatching {
     val room = RoomManager.getRoom(roomId) ?: return

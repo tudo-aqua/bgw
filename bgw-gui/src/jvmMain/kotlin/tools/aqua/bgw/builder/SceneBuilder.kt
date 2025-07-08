@@ -19,24 +19,24 @@
 
 package tools.aqua.bgw.builder
 
+import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.core.Frontend
 import tools.aqua.bgw.core.MenuScene
 
 internal object SceneBuilder {
   fun build(boardGameScene: BoardGameScene) {
-    boardGameScene.lockedProperty.guiListener = { _, _ -> Frontend.updateScene() }
-    boardGameScene.internalLockedProperty.guiListener = { _, _ -> Frontend.updateScene() }
-    boardGameScene.rootComponents.guiListener = { _, _ -> Frontend.updateScene() }
+    boardGameScene.lockedProperty.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
+    boardGameScene.internalLockedProperty.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
+    boardGameScene.rootComponents.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
     boardGameScene.components.forEach { ComponentViewBuilder.build(it) }
-    boardGameScene.backgroundProperty.guiListener = { _, _ -> Frontend.updateScene() }
-    boardGameScene.opacityProperty.guiListener = { _, _ -> Frontend.updateScene() }
+    boardGameScene.backgroundProperty.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
+    boardGameScene.opacityProperty.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
   }
 
   fun build(menuScene: MenuScene) {
-    menuScene.rootComponents.guiListener = { _, _ -> Frontend.updateScene() }
+    menuScene.rootComponents.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
     menuScene.components.forEach { ComponentViewBuilder.build(it) }
-    menuScene.backgroundProperty.guiListener = { _, _ -> Frontend.updateScene() }
-    menuScene.opacityProperty.guiListener = { _, _ -> Frontend.updateScene() }
+    menuScene.backgroundProperty.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
+    menuScene.opacityProperty.guiListener = { _, _ -> Constants.FRONTEND.updateScene() }
   }
 }

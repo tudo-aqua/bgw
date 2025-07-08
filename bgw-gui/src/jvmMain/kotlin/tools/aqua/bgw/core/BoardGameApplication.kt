@@ -52,8 +52,8 @@ import tools.aqua.bgw.visual.Visual
  * @param windowMode Initial window mode. Overrides [isMaximized] and [isFullScreen] if passed.
  * Refer to [WindowMode] docs for further information about the effects.
  *
- * @param roomId Optional room ID for multi-room applications. If provided, this application
- * will be isolated to the specified room for lobby-based web games.
+ * @param roomId Optional room ID for multi-room applications. If provided, this application will be
+ * isolated to the specified room for lobby-based web games.
  *
  * @throws IllegalStateException If a second application is created without room support.
  *
@@ -74,9 +74,9 @@ open class BoardGameApplication(
 
   /** Window title displayed in the title bar. */
   var title: String
-    get() = Frontend.titleProperty.value
+    get() = Constants.FRONTEND.titleProperty.value
     set(value) {
-      Frontend.titleProperty.value = value
+      Constants.FRONTEND.titleProperty.value = value
     }
 
   internal val headlessEnvironmentProperty: IntegerProperty =
@@ -99,9 +99,9 @@ open class BoardGameApplication(
    */
   var icon: ImageVisual?
     // TODO: Re-add support for setting the icon
-    get() = Frontend.iconProperty.value
+    get() = Constants.FRONTEND.iconProperty.value
     set(value) {
-      Frontend.iconProperty.value = value
+      Constants.FRONTEND.iconProperty.value = value
     }
 
   /**
@@ -117,10 +117,10 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var fullscreenExitCombination: KeyEvent?
-    get() = Frontend.fullscreenExitCombinationProperty.value
+    get() = Constants.FRONTEND.fullscreenExitCombinationProperty.value
     set(value) {
       TODO()
-      // Frontend.fullscreenExitCombinationProperty.value = value
+      // Constants.FRONTEND.fullscreenExitCombinationProperty.value = value
     }
 
   /**
@@ -136,10 +136,10 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var fullscreenExitCombinationHint: String?
-    get() = Frontend.fullscreenExitCombinationHintProperty.value
+    get() = Constants.FRONTEND.fullscreenExitCombinationHintProperty.value
     set(value) {
       TODO()
-      // Frontend.fullscreenExitCombinationHintProperty.value = value
+      // Constants.FRONTEND.fullscreenExitCombinationHintProperty.value = value
     }
 
   /**
@@ -147,11 +147,11 @@ open class BoardGameApplication(
    * windows.
    */
   var windowWidth: Number
-    get() = Frontend.widthProperty.value
+    get() = Constants.FRONTEND.widthProperty.value
     set(value) {
-      Frontend.widthProperty.value = value.toDouble()
+      Constants.FRONTEND.widthProperty.value = value.toDouble()
       if (!isFullScreen && !isMaximized) {
-        Frontend.applicationEngine.resize(value.toInt(), windowHeight.toInt())
+        Constants.FRONTEND.applicationEngine.resize(value.toInt(), windowHeight.toInt())
       }
     }
 
@@ -160,11 +160,11 @@ open class BoardGameApplication(
    * windows.
    */
   var windowHeight: Number
-    get() = Frontend.heightProperty.value
+    get() = Constants.FRONTEND.heightProperty.value
     set(value) {
-      Frontend.heightProperty.value = value.toDouble()
+      Constants.FRONTEND.heightProperty.value = value.toDouble()
       if (!isFullScreen && !isMaximized) {
-        Frontend.applicationEngine.resize(windowWidth.toInt(), value.toInt())
+        Constants.FRONTEND.applicationEngine.resize(windowWidth.toInt(), value.toInt())
       }
     }
 
@@ -174,10 +174,10 @@ open class BoardGameApplication(
    * `true` for maximized mode, `false` for default window size.
    */
   var isMaximized: Boolean
-    get() = Frontend.isMaximizedProperty.value
+    get() = Constants.FRONTEND.isMaximizedProperty.value
     set(value) {
-      Frontend.isMaximizedProperty.value = value
-      Frontend.applicationEngine.toggleMaximized(value)
+      Constants.FRONTEND.isMaximizedProperty.value = value
+      Constants.FRONTEND.applicationEngine.toggleMaximized(value)
     }
 
   /**
@@ -187,10 +187,10 @@ open class BoardGameApplication(
    * @since 0.6
    */
   var isFullScreen: Boolean
-    get() = Frontend.isFullScreenProperty.value
+    get() = Constants.FRONTEND.isFullScreenProperty.value
     set(value) {
-      Frontend.isFullScreenProperty.value = value
-      Frontend.applicationEngine.toggleFullscreen(value)
+      Constants.FRONTEND.isFullScreenProperty.value = value
+      Constants.FRONTEND.applicationEngine.toggleFullscreen(value)
     }
 
   /**
@@ -202,9 +202,9 @@ open class BoardGameApplication(
    * Do not mix up with the [Scene.background] [Visual].
    */
   var background: Visual
-    get() = Frontend.backgroundProperty.value
+    get() = Constants.FRONTEND.backgroundProperty.value
     set(value) {
-      Frontend.backgroundProperty.value = value
+      Constants.FRONTEND.backgroundProperty.value = value
     }
 
   /**
@@ -227,10 +227,10 @@ open class BoardGameApplication(
         // Legacy single-application mode
         check(!isInstantiated) { "Unable to create second application." }
         isInstantiated = true
-        Frontend.application = this
+        Constants.FRONTEND.application = this
       } else {
         // Room-based multi-application mode
-        Frontend.registerRoomApplication(roomId, this)
+        Constants.FRONTEND.registerRoomApplication(roomId, this)
       }
     }
 
@@ -238,14 +238,14 @@ open class BoardGameApplication(
 
     if (roomId == null) {
       // Legacy initialization
-      Frontend.widthProperty.value = width.toDouble()
-      Frontend.heightProperty.value = height.toDouble()
+      Constants.FRONTEND.widthProperty.value = width.toDouble()
+      Constants.FRONTEND.heightProperty.value = height.toDouble()
       if (windowMode != null) {
-        Frontend.setWindowMode(windowMode)
+        Constants.FRONTEND.setWindowMode(windowMode)
       }
     } else {
       // Room-based initialization
-      Frontend.initializeRoom(roomId, width.toDouble(), height.toDouble(), windowMode)
+      Constants.FRONTEND.initializeRoom(roomId, width.toDouble(), height.toDouble(), windowMode)
     }
   }
 
@@ -258,7 +258,7 @@ open class BoardGameApplication(
    */
   fun showDialogNonBlocking(dialog: Dialog): Unit {
     // TODO: Implement non-blocking dialogs
-    Frontend.showDialog(dialog)
+    Constants.FRONTEND.showDialog(dialog)
   }
 
   /**
@@ -266,14 +266,14 @@ open class BoardGameApplication(
    *
    * @param dialog The [Dialog] to show.
    */
-  fun showDialog(dialog: Dialog) = Frontend.showDialog(dialog)
+  fun showDialog(dialog: Dialog) = Constants.FRONTEND.showDialog(dialog)
 
   /**
    * Shows the given [FileDialog].
    *
    * @param dialog The [FileDialog] to be shown.
    */
-  fun showFileDialog(dialog: FileDialog) = Frontend.showFileDialog(dialog)
+  fun showFileDialog(dialog: FileDialog) = Constants.FRONTEND.showFileDialog(dialog)
 
   /**
    * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and
@@ -284,9 +284,9 @@ open class BoardGameApplication(
    */
   fun showMenuScene(scene: MenuScene, fadeTime: Number = DEFAULT_FADE_TIME) {
     if (roomId != null) {
-      Frontend.showRoomMenuScene(roomId, scene, fadeTime.toDouble())
+      Constants.FRONTEND.showRoomMenuScene(roomId, scene, fadeTime.toDouble())
     } else {
-      Frontend.showMenuScene(scene, fadeTime.toDouble())
+      Constants.FRONTEND.showMenuScene(scene, fadeTime.toDouble())
     }
   }
 
@@ -297,9 +297,9 @@ open class BoardGameApplication(
    */
   fun hideMenuScene(fadeTime: Number = DEFAULT_FADE_TIME) {
     if (roomId != null) {
-      Frontend.hideRoomMenuScene(roomId, fadeTime.toDouble())
+      Constants.FRONTEND.hideRoomMenuScene(roomId, fadeTime.toDouble())
     } else {
-      Frontend.hideMenuScene(fadeTime.toDouble())
+      Constants.FRONTEND.hideMenuScene(fadeTime.toDouble())
     }
   }
 
@@ -310,9 +310,9 @@ open class BoardGameApplication(
    */
   fun showGameScene(scene: BoardGameScene) {
     if (roomId != null) {
-      Frontend.showRoomGameScene(roomId, scene)
+      Constants.FRONTEND.showRoomGameScene(roomId, scene)
     } else {
-      Frontend.showGameScene(scene)
+      Constants.FRONTEND.showGameScene(scene)
     }
   }
 
@@ -332,7 +332,7 @@ open class BoardGameApplication(
    * @param newHorizontalAlignment New alignment to set.
    */
   fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
-    Frontend.setHorizontalSceneAlignment(newHorizontalAlignment)
+    Constants.FRONTEND.setHorizontalSceneAlignment(newHorizontalAlignment)
   }
 
   /**
@@ -341,7 +341,7 @@ open class BoardGameApplication(
    * @param newVerticalAlignment New alignment to set.
    */
   fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
-    Frontend.setVerticalSceneAlignment(newVerticalAlignment)
+    Constants.FRONTEND.setVerticalSceneAlignment(newVerticalAlignment)
   }
 
   /**
@@ -351,28 +351,28 @@ open class BoardGameApplication(
    */
   @Deprecated("ScaleMode is no longer supported as of BGW 0.10.")
   fun setScaleMode(newScaleMode: ScaleMode) {
-    Frontend.setScaleMode(newScaleMode)
+    Constants.FRONTEND.setScaleMode(newScaleMode)
   }
 
   /** Manually refreshes currently displayed [Scene]s. */
   fun repaint() {
-    Frontend.updateScene()
+    Constants.FRONTEND.updateScene()
   }
 
   /** Shows the [BoardGameApplication]. */
   fun show() {
     if (roomId != null) {
-      Frontend.showRoom(roomId, this.headless)
+      Constants.FRONTEND.showRoom(roomId, this.headless)
     } else {
       val latch = CountDownLatch(1)
-      Frontend.show(this.headless) { latch.countDown() }
+      Constants.FRONTEND.show(this.headless) { latch.countDown() }
       latch.await()
     }
   }
 
   /** Returns the [show] function, thus closing the application window. */
   fun exit() {
-    Frontend.exit()
+    Constants.FRONTEND.exit()
   }
 
   companion object {
@@ -403,7 +403,7 @@ open class BoardGameApplication(
      * @since 0.10
      */
     fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean =
-        Frontend.loadFont(path, fontName, weight)
+        Constants.FRONTEND.loadFont(path, fontName, weight)
 
     /**
      * Loads a font file and registers it in the GUI. The default font weight is
@@ -417,12 +417,12 @@ open class BoardGameApplication(
      * @since 0.9
      */
     fun loadFont(path: String): Boolean =
-        Frontend.loadFont(
+        Constants.FRONTEND.loadFont(
             path, path.substringAfterLast('/').substringBeforeLast('.'), Font.FontWeight.NORMAL)
 
     /**
-     * Creates a new room and returns a BoardGameApplication instance for that room.
-     * This allows multiple applications to run on the same server for lobby-based games.
+     * Creates a new room and returns a BoardGameApplication instance for that room. This allows
+     * multiple applications to run on the same server for lobby-based games.
      *
      * @param roomId Unique identifier for the room
      * @param windowTitle Title for the room's application window
@@ -449,8 +449,7 @@ open class BoardGameApplication(
           height = height,
           windowMode = windowMode,
           headless = headless,
-          roomId = roomId
-      )
+          roomId = roomId)
     }
 
     /**
@@ -462,7 +461,7 @@ open class BoardGameApplication(
      * @since 0.11
      */
     fun getRoom(roomId: String): BoardGameApplication? {
-      return Frontend.getRoomApplication(roomId)
+      return Constants.FRONTEND.getRoomApplication(roomId)
     }
 
     /**
@@ -473,7 +472,7 @@ open class BoardGameApplication(
      * @since 0.11
      */
     fun removeRoom(roomId: String) {
-      Frontend.removeRoom(roomId)
+      Constants.FRONTEND.removeRoom(roomId)
     }
 
     /**
@@ -484,7 +483,7 @@ open class BoardGameApplication(
      * @since 0.11
      */
     fun getAllRooms(): Map<String, BoardGameApplication> {
-      return Frontend.getAllRoomApplications()
+      return Constants.FRONTEND.getAllRoomApplications()
     }
   }
 }

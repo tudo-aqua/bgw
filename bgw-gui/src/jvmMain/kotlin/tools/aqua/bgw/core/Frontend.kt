@@ -81,456 +81,438 @@ internal class Frontend {
         renderedDOM.value = true
       }
     }
+    serverStarted.value = true
   }
 
-  companion object {
-    internal var applicationEngine: JCEFApplication = JCEFApplication()
+  internal var applicationEngine: JCEFApplication = JCEFApplication()
 
-    internal var loadCallback: () -> Unit = {}
+  internal var loadCallback: () -> Unit = {}
 
-    internal var openedFileDialog: FileDialog? = null
+  internal var openedFileDialog: FileDialog? = null
 
-    /** Current scene scale. */
-    internal var sceneScale: Double = 1.0
+  /** Current scene scale. */
+  internal var sceneScale: Double = 1.0
 
-    internal var renderedDOM: BooleanProperty = BooleanProperty(false)
+  internal var renderedDOM: BooleanProperty = BooleanProperty(false)
 
-    /** [BoardGameApplication] instance. */
-    internal lateinit var application: BoardGameApplication
+  internal val serverStarted = BooleanProperty(false)
 
-    /** Room-based applications storage. */
-    internal val roomApplications = mutableMapOf<String, BoardGameApplication>()
+  /** [BoardGameApplication] instance. */
+  internal lateinit var application: BoardGameApplication
 
-    // region Properties
-    /** Property for the window title. */
-    internal val titleProperty: StringProperty = StringProperty()
+  /** Room-based applications storage. */
+  internal val roomApplications = mutableMapOf<String, BoardGameApplication>()
 
-    /** Property for the window icon. */
-    internal val iconProperty: Property<ImageVisual?> = Property(null)
+  // region Properties
+  /** Property for the window title. */
+  internal val titleProperty: StringProperty = StringProperty()
 
-    /** Property for the fullscreen exit combination. */
-    internal val fullscreenExitCombinationProperty: Property<KeyEvent?> = Property(null)
+  /** Property for the window icon. */
+  internal val iconProperty: Property<ImageVisual?> = Property(null)
 
-    /** Property for the fullscreen exit combination hint. */
-    internal val fullscreenExitCombinationHintProperty: Property<String?> = Property(null)
+  /** Property for the fullscreen exit combination. */
+  internal val fullscreenExitCombinationProperty: Property<KeyEvent?> = Property(null)
 
-    /** Property whether application is currently maximized. */
-    internal val isMaximizedProperty = BooleanProperty(false)
+  /** Property for the fullscreen exit combination hint. */
+  internal val fullscreenExitCombinationHintProperty: Property<String?> = Property(null)
 
-    /** Property whether application is currently fullscreen. */
-    internal val isFullScreenProperty = BooleanProperty(false)
+  /** Property whether application is currently maximized. */
+  internal val isMaximizedProperty = BooleanProperty(false)
 
-    internal val alignmentProperty =
-        Property(Alignment.of(VerticalAlignment.CENTER, HorizontalAlignment.CENTER))
+  /** Property whether application is currently fullscreen. */
+  internal val isFullScreenProperty = BooleanProperty(false)
 
-    internal val openedDialogs = mutableMapOf<String, Dialog>()
+  internal val alignmentProperty =
+      Property(Alignment.of(VerticalAlignment.CENTER, HorizontalAlignment.CENTER))
 
-    internal var lastFadeTime: Double = 0.0
+  internal val openedDialogs = mutableMapOf<String, Dialog>()
 
-    /** Property for the current application width. */
-    internal val widthProperty =
-        LimitedDoubleProperty(
-            lowerBoundInclusive = 0,
-            upperBoundInclusive = Double.POSITIVE_INFINITY,
-            initialValue = 0)
+  internal var lastFadeTime: Double = 0.0
 
-    /** Property for the current application height. */
-    internal val heightProperty =
-        LimitedDoubleProperty(
-            lowerBoundInclusive = 0,
-            upperBoundInclusive = Double.POSITIVE_INFINITY,
-            initialValue = 0)
+  /** Property for the current application width. */
+  internal val widthProperty =
+      LimitedDoubleProperty(
+          lowerBoundInclusive = 0, upperBoundInclusive = Double.POSITIVE_INFINITY, initialValue = 0)
 
-    /** Property for the background [Visual]. */
-    internal val backgroundProperty: Property<Visual> = Property(ColorVisual(Color.BLACK))
-    // endregion
+  /** Property for the current application height. */
+  internal val heightProperty =
+      LimitedDoubleProperty(
+          lowerBoundInclusive = 0, upperBoundInclusive = Double.POSITIVE_INFINITY, initialValue = 0)
 
-    // region Private attributes
-    /** Current [BoardGameScene]. */
-    internal var boardGameScene: BoardGameScene? = null
+  /** Property for the background [Visual]. */
+  internal val backgroundProperty: Property<Visual> = Property(ColorVisual(Color.BLACK))
+  // endregion
 
-    /** Current [MenuScene]. */
-    internal var menuScene: MenuScene? = null
+  // region Private attributes
+  /** Current [BoardGameScene]. */
+  internal var boardGameScene: BoardGameScene? = null
 
-    internal var loadedFonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
+  /** Current [MenuScene]. */
+  internal var menuScene: MenuScene? = null
 
-    internal var boardGameScenes = mutableMapOf<ID, BoardGameScene>()
+  internal var loadedFonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
 
-    /** Room-based scenes storage. */
-    internal val roomBoardGameScenes = mutableMapOf<String, BoardGameScene?>()
-    internal val roomMenuScenes = mutableMapOf<String, MenuScene?>()
-    // endregion
+  internal var boardGameScenes = mutableMapOf<ID, BoardGameScene>()
 
-    // region Room Management Functions
+  /** Room-based scenes storage. */
+  internal val roomBoardGameScenes = mutableMapOf<String, BoardGameScene?>()
+  internal val roomMenuScenes = mutableMapOf<String, MenuScene?>()
+  // endregion
 
-    /**
-     * Registers a room application.
-     */
-    internal fun registerRoomApplication(roomId: String, application: BoardGameApplication) {
-      synchronized(roomApplications) {
-        if (roomApplications.containsKey(roomId)) {
-          throw IllegalArgumentException("Room $roomId already exists")
-        }
-        roomApplications[roomId] = application
-        roomBoardGameScenes[roomId] = null
-        roomMenuScenes[roomId] = null
+  // region Room Management Functions
+
+  /** Registers a room application. */
+  internal fun registerRoomApplication(roomId: String, application: BoardGameApplication) {
+    synchronized(roomApplications) {
+      if (roomApplications.containsKey(roomId)) {
+        throw IllegalArgumentException("Room $roomId already exists")
       }
-    }
-
-    /**
-     * Initializes a room with specific dimensions and window mode.
-     */
-    internal fun initializeRoom(roomId: String, width: Double, height: Double, windowMode: WindowMode?) {
-      val application = roomApplications[roomId] ?: return
-      // Room-specific initialization can be added here if needed
-      // For now, we'll use the global properties but rooms are isolated by their application instances
-    }
-
-    /**
-     * Gets a room application by ID.
-     */
-    internal fun getRoomApplication(roomId: String): BoardGameApplication? {
-      return roomApplications[roomId]
-    }
-
-    /**
-     * Gets all room applications.
-     */
-    internal fun getAllRoomApplications(): Map<String, BoardGameApplication> {
-      return roomApplications.toMap()
-    }
-
-    /**
-     * Removes a room and its associated data.
-     */
-    internal fun removeRoom(roomId: String) {
-      synchronized(roomApplications) {
-        roomApplications.remove(roomId)
-        roomBoardGameScenes.remove(roomId)
-        roomMenuScenes.remove(roomId)
-      }
-
-      // Remove the room from RoomManager
-      kotlinx.coroutines.runBlocking {
-        tools.aqua.bgw.binding.RoomManager.removeRoom(roomId)
-      }
-    }
-
-    /**
-     * Shows a room (starts the room-based application).
-     */
-    internal fun showRoom(roomId: String, headless: Boolean) {
-      val roomApplication = roomApplications[roomId] ?: return
-
-      // Create the room in RoomManager
-      kotlinx.coroutines.runBlocking {
-        tools.aqua.bgw.binding.RoomManager.createRoom(roomId, roomApplication)
-      }
-
-      // Initialize the room's scenes if they exist
-      roomBoardGameScenes[roomId]?.let { SceneBuilder.build(it) }
-      roomMenuScenes[roomId]?.let { SceneBuilder.build(it) }
-
-      // Start the server if not already started
-      if (!::application.isInitialized) {
-        Frontend().start(headless) { }
-      }
-    }
-
-    /**
-     * Shows a menu scene for a specific room.
-     */
-    internal fun showRoomMenuScene(roomId: String, scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
-      val currentScene = roomMenuScenes[roomId]
-      if (currentScene == scene) {
-        return
-      }
-
-      currentScene?.isVisible = false
-      currentScene?.onSceneHidden?.invoke()
-      roomMenuScenes[roomId] = scene
-      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_MENU_SCENE)
-    }
-
-    /**
-     * Hides a menu scene for a specific room.
-     */
-    internal fun hideRoomMenuScene(roomId: String, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
-      val currentScene = roomMenuScenes[roomId] ?: return
-
-      currentScene.isVisible = false
-      currentScene.onSceneHidden?.invoke()
+      roomApplications[roomId] = application
+      roomBoardGameScenes[roomId] = null
       roomMenuScenes[roomId] = null
-      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.HIDE_MENU_SCENE)
+    }
+  }
+
+  /** Initializes a room with specific dimensions and window mode. */
+  internal fun initializeRoom(
+      roomId: String,
+      width: Double,
+      height: Double,
+      windowMode: WindowMode?
+  ) {
+    val application = roomApplications[roomId] ?: return
+    // Room-specific initialization can be added here if needed
+    // For now, we'll use the global properties but rooms are isolated by their application
+    // instances
+  }
+
+  /** Gets a room application by ID. */
+  internal fun getRoomApplication(roomId: String): BoardGameApplication? {
+    return roomApplications[roomId]
+  }
+
+  /** Gets all room applications. */
+  internal fun getAllRoomApplications(): Map<String, BoardGameApplication> {
+    return roomApplications.toMap()
+  }
+
+  /** Removes a room and its associated data. */
+  internal fun removeRoom(roomId: String) {
+    synchronized(roomApplications) {
+      roomApplications.remove(roomId)
+      roomBoardGameScenes.remove(roomId)
+      roomMenuScenes.remove(roomId)
     }
 
-    /**
-     * Shows a game scene for a specific room.
-     */
-    internal fun showRoomGameScene(roomId: String, scene: BoardGameScene) {
-      val currentScene = roomBoardGameScenes[roomId]
-      if (currentScene == scene) {
+    // Remove the room from RoomManager
+    kotlinx.coroutines.runBlocking { tools.aqua.bgw.binding.RoomManager.removeRoom(roomId) }
+  }
+
+  /** Shows a room (starts the room-based application). */
+  internal fun showRoom(roomId: String, headless: Boolean) {
+    val roomApplication = roomApplications[roomId] ?: return
+
+    // Create the room in RoomManager
+    kotlinx.coroutines.runBlocking {
+      tools.aqua.bgw.binding.RoomManager.createRoom(roomId, roomApplication)
+    }
+
+    // Initialize the room's scenes if they exist
+    roomBoardGameScenes[roomId]?.let { SceneBuilder.build(it) }
+    roomMenuScenes[roomId]?.let { SceneBuilder.build(it) }
+
+    // Start the server if not already started
+    if (!serverStarted.value) {
+      println("Starting application $roomId in headless mode: $headless")
+      Frontend().start(headless) {}
+    }
+  }
+
+  /** Shows a menu scene for a specific room. */
+  internal fun showRoomMenuScene(
+      roomId: String,
+      scene: MenuScene,
+      fadeTime: Double = DEFAULT_FADE_TIME.toDouble()
+  ) {
+    val currentScene = roomMenuScenes[roomId]
+    if (currentScene == scene) {
+      return
+    }
+
+    currentScene?.isVisible = false
+    currentScene?.onSceneHidden?.invoke()
+    roomMenuScenes[roomId] = scene
+    tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_MENU_SCENE)
+  }
+
+  /** Hides a menu scene for a specific room. */
+  internal fun hideRoomMenuScene(roomId: String, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+    val currentScene = roomMenuScenes[roomId] ?: return
+
+    currentScene.isVisible = false
+    currentScene.onSceneHidden?.invoke()
+    roomMenuScenes[roomId] = null
+    tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.HIDE_MENU_SCENE)
+  }
+
+  /** Shows a game scene for a specific room. */
+  internal fun showRoomGameScene(roomId: String, scene: BoardGameScene) {
+    val currentScene = roomBoardGameScenes[roomId]
+    if (currentScene == scene) {
+      return
+    }
+
+    currentScene?.isVisible = false
+    currentScene?.onSceneHidden?.invoke()
+    roomBoardGameScenes[roomId] = scene
+    tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_GAME_SCENE)
+  }
+
+  /** Sends an animation for a specific room. */
+  internal fun sendRoomAnimation(roomId: String, animation: Animation) {
+    val animationData = AnimationMapper.map(animation)
+    runBlocking { tools.aqua.bgw.binding.forceRoomAnimationUpdate(roomId, animationData) }
+  }
+
+  /** Updates a scene for a specific room. */
+  internal fun updateRoomScene(roomId: String) {
+    tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_GAME_SCENE)
+  }
+
+  /** Gets a component by ID for a specific room. */
+  internal fun getRoomComponentById(roomId: String, id: String): ComponentView? {
+    val boardGameScene = roomBoardGameScenes[roomId]
+    val menuScene = roomMenuScenes[roomId]
+    return boardGameScene?.findComponent(id) ?: menuScene?.findComponent(id)
+  }
+
+  // endregion
+
+  // region Internal functions
+  /**
+   * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and
+   * blurred.
+   *
+   * @param scene menu scene to show.
+   * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
+   */
+  internal fun showMenuScene(scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+    if (menuScene == scene) {
+      return
+    }
+
+    lastFadeTime = fadeTime
+    menuScene?.isVisible = false
+    menuScene?.onSceneHidden?.invoke()
+    menuScene = scene
+    markDirty(ActionProp.SHOW_MENU_SCENE)
+  }
+
+  internal fun sendAnimation(animation: Animation) {
+    val animationData = AnimationMapper.map(animation)
+    runBlocking { forceAnimationUpdate(animationData) }
+  }
+
+  internal fun stopAnimations() {
+    val animationData =
+        DelayAnimationData().apply {
+          id = "stopAnimations"
+          isStop = true
+        }
+    runBlocking {
+      val animationJson = jsonMapper.encodeToString(PropData(animationData))
+      componentChannel.sendToAllClients(animationJson)
+    }
+  }
+
+  internal fun setWindowMode(windowMode: WindowMode) {
+    when (windowMode) {
+      WindowMode.NORMAL -> {
+        isMaximizedProperty.value = false
+        isFullScreenProperty.value = false
+      }
+      WindowMode.MAXIMIZED -> {
+        isMaximizedProperty.value = true
+        isFullScreenProperty.value = false
+      }
+      WindowMode.FULLSCREEN -> {
+        isMaximizedProperty.value = false
+        isFullScreenProperty.value = true
+      }
+    }
+  }
+
+  /**
+   * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
+   *
+   * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
+   */
+  internal fun hideMenuScene(fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
+    if (menuScene == null) {
+      return
+    }
+    lastFadeTime = fadeTime
+    menuScene?.isVisible = false
+    menuScene?.onSceneHidden?.invoke()
+    menuScene = null
+    markDirty(ActionProp.HIDE_MENU_SCENE)
+  }
+
+  /**
+   * Shows given [BoardGameScene].
+   *
+   * @param scene [BoardGameScene] to show.
+   */
+  internal fun showGameScene(scene: BoardGameScene) {
+    if (roomApplications.values.none { it.headless }) {
+      if (boardGameScene == scene) {
         return
       }
 
-      currentScene?.isVisible = false
-      currentScene?.onSceneHidden?.invoke()
-      roomBoardGameScenes[roomId] = scene
-      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_GAME_SCENE)
-    }
-
-    /**
-     * Sends an animation for a specific room.
-     */
-    internal fun sendRoomAnimation(roomId: String, animation: Animation) {
-      val animationData = AnimationMapper.map(animation)
-      runBlocking { tools.aqua.bgw.binding.forceRoomAnimationUpdate(roomId, animationData) }
-    }
-
-    /**
-     * Updates a scene for a specific room.
-     */
-    internal fun updateRoomScene(roomId: String) {
-      tools.aqua.bgw.binding.markRoomDirty(roomId, ActionProp.SHOW_GAME_SCENE)
-    }
-
-    /**
-     * Gets a component by ID for a specific room.
-     */
-    internal fun getRoomComponentById(roomId: String, id: String): ComponentView? {
-      val boardGameScene = roomBoardGameScenes[roomId]
-      val menuScene = roomMenuScenes[roomId]
-      return boardGameScene?.findComponent(id) ?: menuScene?.findComponent(id)
-    }
-
-    // endregion
-
-    // region Internal functions
-    /**
-     * Shows given [MenuScene]. If [BoardGameScene] is currently displayed, it gets deactivated and
-     * blurred.
-     *
-     * @param scene menu scene to show.
-     * @param fadeTime time to fade in, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
-     */
-    internal fun showMenuScene(scene: MenuScene, fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
-      if (menuScene == scene) {
-        return
-      }
-
-      lastFadeTime = fadeTime
-      menuScene?.isVisible = false
-      menuScene?.onSceneHidden?.invoke()
-      menuScene = scene
-      markDirty(ActionProp.SHOW_MENU_SCENE)
-    }
-
-    internal fun sendAnimation(animation: Animation) {
-      val animationData = AnimationMapper.map(animation)
-      runBlocking { forceAnimationUpdate(animationData) }
-    }
-
-    internal fun stopAnimations() {
-      val animationData =
-          DelayAnimationData().apply {
-            id = "stopAnimations"
-            isStop = true
-          }
-      runBlocking {
-        val animationJson = jsonMapper.encodeToString(PropData(animationData))
-        componentChannel.sendToAllClients(animationJson)
-      }
-    }
-
-    internal fun setWindowMode(windowMode: WindowMode) {
-      when (windowMode) {
-        WindowMode.NORMAL -> {
-          isMaximizedProperty.value = false
-          isFullScreenProperty.value = false
-        }
-        WindowMode.MAXIMIZED -> {
-          isMaximizedProperty.value = true
-          isFullScreenProperty.value = false
-        }
-        WindowMode.FULLSCREEN -> {
-          isMaximizedProperty.value = false
-          isFullScreenProperty.value = true
-        }
-      }
-    }
-
-    /**
-     * Hides currently shown [MenuScene]. Activates [BoardGameScene] if present.
-     *
-     * @param fadeTime time to fade out, specified in milliseconds. Default: [DEFAULT_FADE_TIME].
-     */
-    internal fun hideMenuScene(fadeTime: Double = DEFAULT_FADE_TIME.toDouble()) {
-      if (menuScene == null) {
-        return
-      }
-      lastFadeTime = fadeTime
-      menuScene?.isVisible = false
-      menuScene?.onSceneHidden?.invoke()
-      menuScene = null
-      markDirty(ActionProp.HIDE_MENU_SCENE)
-    }
-
-    /**
-     * Shows given [BoardGameScene].
-     *
-     * @param scene [BoardGameScene] to show.
-     */
-    internal fun showGameScene(scene: BoardGameScene) {
-      if (!application.headless) {
-        if (boardGameScene == scene) {
-          return
-        }
-
-        boardGameScene?.isVisible = false
-        boardGameScene?.onSceneHidden?.invoke()
-        boardGameScene = scene
+      boardGameScene?.isVisible = false
+      boardGameScene?.onSceneHidden?.invoke()
+      boardGameScene = scene
+      markDirty(ActionProp.SHOW_GAME_SCENE)
+    } else {
+      if (boardGameScenes.containsKey(scene.id)) {
+        // If the scene is already loaded, just show it
+        boardGameScene = boardGameScenes[scene.id]
+        boardGameScene?.isVisible = true
         markDirty(ActionProp.SHOW_GAME_SCENE)
       } else {
-        if (boardGameScenes.containsKey(scene.id)) {
-          // If the scene is already loaded, just show it
-          boardGameScene = boardGameScenes[scene.id]
-          boardGameScene?.isVisible = true
-          markDirty(ActionProp.SHOW_GAME_SCENE)
-        } else {
-          // If the scene is not loaded yet, load it and then show it
-          boardGameScenes[scene.id] = scene
-          boardGameScene = scene
-          SceneBuilder.build(scene)
-          markDirty(ActionProp.SHOW_GAME_SCENE)
-        }
+        // If the scene is not loaded yet, load it and then show it
+        boardGameScenes[scene.id] = scene
+        boardGameScene = scene
+        SceneBuilder.build(scene)
+        markDirty(ActionProp.SHOW_GAME_SCENE)
       }
     }
-
-    /**
-     * Sets [HorizontalAlignment] of all [Scene]s in this [BoardGameApplication].
-     *
-     * @param newHorizontalAlignment new alignment to set.
-     */
-    internal fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
-      alignmentProperty.value =
-          Alignment.of(alignmentProperty.value.verticalAlignment, newHorizontalAlignment)
-      markDirty(ActionProp.UPDATE_APP)
-    }
-
-    /**
-     * Sets [VerticalAlignment] of all [Scene]s in this [BoardGameApplication].
-     *
-     * @param newVerticalAlignment new alignment to set.
-     */
-    internal fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
-      alignmentProperty.value =
-          Alignment.of(newVerticalAlignment, alignmentProperty.value.horizontalAlignment)
-      markDirty(ActionProp.UPDATE_APP)
-    }
-
-    /**
-     * Sets [ScaleMode] of all [Scene]s in this [BoardGameApplication].
-     *
-     * @param newScaleMode new scale mode to set.
-     */
-    internal fun setScaleMode(newScaleMode: ScaleMode) {
-      TODO("Not yet implemented")
-    }
-
-    /** Manually refreshes currently displayed [Scene]s. */
-    internal fun updateScene() {
-      markDirty(ActionProp.SHOW_GAME_SCENE)
-    }
-
-    internal fun updateComponent(component: ComponentView) {
-      // println("Sending update for component ${component.id}")
-      markDirty(ActionProp.UPDATE_COMPONENT)
-      // val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
-      // runBlocking { sendToAllClients(json) }
-    }
-
-    internal fun updateVisual(visual: Visual) {
-      markDirty(ActionProp.UPDATE_VISUAL)
-      // val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
-      // runBlocking { sendToAllClients(json) }
-    }
-
-    /**
-     * Shows a dialog without blocking further thread execution.
-     *
-     * @param dialog the [Dialog] to show
-     */
-    internal fun showDialogNonBlocking(dialog: Dialog): Unit = TODO("Not yet implemented")
-
-    /**
-     * Shows a dialog and blocks further thread execution.
-     *
-     * @param dialog the [Dialog] to show
-     */
-    internal fun showDialog(dialog: Dialog) {
-      val dialogData = DialogMapper.map(dialog)
-      // val json = jsonMapper.encodeToString(PropData(dialogData))
-      // runBlocking { componentChannel.sendToAllClients(json) }
-      openedDialogs[dialog.id] = dialog
-      applicationEngine.openNewDialog(dialogData)
-    }
-
-    /**
-     * Shows the given [FileDialog].
-     *
-     * @param dialog the [FileDialog] to be shown.
-     */
-    internal fun showFileDialog(dialog: FileDialog) {
-      openedFileDialog = dialog
-      /* val dialogData = DialogMapper.map(dialog)
-      val json = jsonMapper.encodeToString(PropData(dialogData))
-      runBlocking { componentChannel.sendToAllClients(json) } */
-      applicationEngine.frame?.openNewFileDialog(dialog)
-    }
-
-    internal fun relativePositionsToAbsolute(
-        relativeX: Double,
-        relativeY: Double
-    ): Pair<Double, Double> {
-      val currentScene =
-          menuScene
-              ?: boardGameScene
-                  ?: throw IllegalStateException(
-                  "No scene is currently displayed. Cannot convert relative positions to absolute.")
-      return Pair(relativeX * currentScene.width, relativeY * currentScene.height)
-    }
-
-    /** Starts the application. */
-    internal fun show(headless: Boolean, onClose: () -> Unit) {
-      if (headless) {
-        backgroundProperty.value = Visual.EMPTY
-      }
-      Frontend().start(headless, onClose)
-    }
-
-    /** Stops the application. */
-    internal fun exit() {
-      applicationEngine.stop()
-    }
-
-    fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean {
-      if (loadedFonts.none { it.first == path }) {
-        loadedFonts.add(Triple(path, fontName, weight))
-        return true
-      }
-      return false
-    }
-
-    @Deprecated("This function is no longer needed as of BGW 0.10.")
-    fun runLater(task: Runnable) {
-      task.run()
-    }
-
-    internal fun getComponentById(id: String): ComponentView? {
-      return boardGameScene?.findComponent(id) ?: menuScene?.findComponent(id)
-    }
-    // endregion
   }
+
+  /**
+   * Sets [HorizontalAlignment] of all [Scene]s in this [BoardGameApplication].
+   *
+   * @param newHorizontalAlignment new alignment to set.
+   */
+  internal fun setHorizontalSceneAlignment(newHorizontalAlignment: HorizontalAlignment) {
+    alignmentProperty.value =
+        Alignment.of(alignmentProperty.value.verticalAlignment, newHorizontalAlignment)
+    markDirty(ActionProp.UPDATE_APP)
+  }
+
+  /**
+   * Sets [VerticalAlignment] of all [Scene]s in this [BoardGameApplication].
+   *
+   * @param newVerticalAlignment new alignment to set.
+   */
+  internal fun setVerticalSceneAlignment(newVerticalAlignment: VerticalAlignment) {
+    alignmentProperty.value =
+        Alignment.of(newVerticalAlignment, alignmentProperty.value.horizontalAlignment)
+    markDirty(ActionProp.UPDATE_APP)
+  }
+
+  /**
+   * Sets [ScaleMode] of all [Scene]s in this [BoardGameApplication].
+   *
+   * @param newScaleMode new scale mode to set.
+   */
+  internal fun setScaleMode(newScaleMode: ScaleMode) {
+    TODO("Not yet implemented")
+  }
+
+  /** Manually refreshes currently displayed [Scene]s. */
+  internal fun updateScene() {
+    markDirty(ActionProp.SHOW_GAME_SCENE)
+  }
+
+  internal fun updateComponent(component: ComponentView) {
+    // println("Sending update for component ${component.id}")
+    markDirty(ActionProp.UPDATE_COMPONENT)
+    // val json = jsonMapper.encodeToString(PropData(RecursiveMapper.map(component)))
+    // runBlocking { sendToAllClients(json) }
+  }
+
+  internal fun updateVisual(visual: Visual) {
+    markDirty(ActionProp.UPDATE_VISUAL)
+    // val json = jsonMapper.encodeToString(PropData(VisualMapper.map(visual)))
+    // runBlocking { sendToAllClients(json) }
+  }
+
+  /**
+   * Shows a dialog without blocking further thread execution.
+   *
+   * @param dialog the [Dialog] to show
+   */
+  internal fun showDialogNonBlocking(dialog: Dialog): Unit = TODO("Not yet implemented")
+
+  /**
+   * Shows a dialog and blocks further thread execution.
+   *
+   * @param dialog the [Dialog] to show
+   */
+  internal fun showDialog(dialog: Dialog) {
+    val dialogData = DialogMapper.map(dialog)
+    // val json = jsonMapper.encodeToString(PropData(dialogData))
+    // runBlocking { componentChannel.sendToAllClients(json) }
+    openedDialogs[dialog.id] = dialog
+    applicationEngine.openNewDialog(dialogData)
+  }
+
+  /**
+   * Shows the given [FileDialog].
+   *
+   * @param dialog the [FileDialog] to be shown.
+   */
+  internal fun showFileDialog(dialog: FileDialog) {
+    openedFileDialog = dialog
+    /* val dialogData = DialogMapper.map(dialog)
+    val json = jsonMapper.encodeToString(PropData(dialogData))
+    runBlocking { componentChannel.sendToAllClients(json) } */
+    applicationEngine.frame?.openNewFileDialog(dialog)
+  }
+
+  internal fun relativePositionsToAbsolute(
+      relativeX: Double,
+      relativeY: Double
+  ): Pair<Double, Double> {
+    val currentScene =
+        menuScene
+            ?: boardGameScene
+                ?: throw IllegalStateException(
+                "No scene is currently displayed. Cannot convert relative positions to absolute.")
+    return Pair(relativeX * currentScene.width, relativeY * currentScene.height)
+  }
+
+  /** Starts the application. */
+  internal fun show(headless: Boolean, onClose: () -> Unit) {
+    if (headless) {
+      backgroundProperty.value = Visual.EMPTY
+    }
+    Frontend().start(headless, onClose)
+  }
+
+  /** Stops the application. */
+  internal fun exit() {
+    applicationEngine.stop()
+  }
+
+  fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean {
+    if (loadedFonts.none { it.first == path }) {
+      loadedFonts.add(Triple(path, fontName, weight))
+      return true
+    }
+    return false
+  }
+
+  @Deprecated("This function is no longer needed as of BGW 0.10.")
+  fun runLater(task: Runnable) {
+    task.run()
+  }
+
+  internal fun getComponentById(id: String): ComponentView? {
+    return boardGameScene?.findComponent(id) ?: menuScene?.findComponent(id)
+  }
+  // endregion
 }
 
 internal fun Scene<*>.findComponent(id: String): ComponentView? {
