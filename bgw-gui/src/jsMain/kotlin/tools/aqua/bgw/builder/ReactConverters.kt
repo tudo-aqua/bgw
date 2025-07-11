@@ -58,6 +58,16 @@ internal object ReactConverters {
     }
   }
 
+  fun getBgwUserFromCookies(): String? {
+    val cookies = document.cookie.split("; ")
+    for (cookie in cookies) {
+      if (cookie.startsWith("bgwUser=")) {
+        return cookie.substring("bgwUser=".length)
+      }
+    }
+    return null
+  }
+
   fun mousePositionToScenePosition(clientX: Double, clientY: Double): Pair<Double, Double> {
     val (offset, size) = getSceneOffset()
     val absoluteX = (clientX - offset.first) / size.first
@@ -77,6 +87,7 @@ internal object ReactConverters {
 
   fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
+    val user = getBgwUserFromCookies()
     return MouseEventData(
             when (button as Int) {
               0 -> MouseButtonType.LEFT_BUTTON
@@ -87,12 +98,14 @@ internal object ReactConverters {
               else -> MouseButtonType.UNSPECIFIED
             },
             posX,
-            posY)
+            posY,
+            user)
         .apply { this.id = targetID }
   }
 
   fun ReactMouseEvent<*, *>.toMousePressedEventData(targetID: ID?): MousePressedEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
+    val user = getBgwUserFromCookies()
     return MousePressedEventData(
             when (button as Int) {
               0 -> MouseButtonType.LEFT_BUTTON
@@ -103,12 +116,14 @@ internal object ReactConverters {
               else -> MouseButtonType.UNSPECIFIED
             },
             posX,
-            posY)
+            posY,
+            user)
         .apply { this.id = targetID }
   }
 
   fun ReactMouseEvent<*, *>.toMouseReleasedEventData(targetID: ID?): MouseReleasedEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
+    val user = getBgwUserFromCookies()
     return MouseReleasedEventData(
             when (button as Int) {
               0 -> MouseButtonType.LEFT_BUTTON
@@ -119,7 +134,8 @@ internal object ReactConverters {
               else -> MouseButtonType.UNSPECIFIED
             },
             posX,
-            posY)
+            posY,
+            user)
         .apply { this.id = targetID }
   }
 

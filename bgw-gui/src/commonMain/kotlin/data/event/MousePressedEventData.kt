@@ -26,5 +26,6 @@ import tools.aqua.bgw.event.MouseButtonType
 internal class MousePressedEventData(
     private val pButton: MouseButtonType,
     private val pX: Double,
-    private val pY: Double
-) : MouseEventData(pButton, pX, pY)
+    private val pY: Double,
+    private val u: String? = null,
+) : MouseEventData(pButton, pX, pY, u)

@@ -27,4 +27,5 @@ internal open class MouseEventData(
     val button: MouseButtonType,
     val posX: Double,
     val posY: Double,
+    val user: String? = null,
 ) : InputEventData()

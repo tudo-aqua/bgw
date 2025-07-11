@@ -50,5 +50,8 @@ class MouseEvent(
      *
      * @since 0.8
      */
-    val posY: Number
+    val posY: Number,
+
+    /** The user who triggered this event. */
+    val user: String? = null,
 ) : InputEvent()

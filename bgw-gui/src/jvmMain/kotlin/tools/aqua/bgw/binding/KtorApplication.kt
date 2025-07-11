@@ -234,7 +234,7 @@ internal fun eventListener(text: String) {
           }
           is MousePressedEventData -> {
             val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-            component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY))
+            component.onMousePressed?.invoke(MouseEvent(eventData.button, posX, posY, eventData.user))
           }
           is ScrollEventData -> {
             component.onMouseWheel?.invoke(
@@ -247,11 +247,11 @@ internal fun eventListener(text: String) {
           }
           is MouseReleasedEventData -> {
             val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-            component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY))
+            component.onMouseReleased?.invoke(MouseEvent(eventData.button, posX, posY, eventData.user))
           }
           is MouseEventData -> {
             val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
-            component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY))
+            component.onMouseClicked?.invoke(MouseEvent(eventData.button, posX, posY, eventData.user))
           }
           is KeyEventData -> {
             val keyEvent =
