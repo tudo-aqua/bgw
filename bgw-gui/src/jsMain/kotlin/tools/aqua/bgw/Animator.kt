@@ -302,12 +302,10 @@ internal object Animator {
                         element.classList.toggle("${componentId}--$type--props", false)
                         clearSingleTimeoutAndInterval(animation.id)
                         callback.invoke(animation.id)
-                        if (parallelAnimation.isEmpty()) {
                           timeouts["${animation.id}-cleanup"] =
                               setTimeout(
                                   { clearComponentAnimations(componentId, listOf(type)) },
                                   CLEANUP_MS)
-                        }
                       },
                       duration)
             },
