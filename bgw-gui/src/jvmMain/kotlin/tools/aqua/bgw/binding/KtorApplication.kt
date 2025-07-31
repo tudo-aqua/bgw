@@ -62,7 +62,6 @@ import java.util.*
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import jsonMapper
-import kotlin.invoke
 import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -125,7 +124,7 @@ internal val componentChannel: Channel =
           }
           "bgwAnimationFinishQuery" -> {
             try {
-              animationFinishListener(content)
+              animationFinishedListener(content)
             } catch (e: Exception) {
               e.printStackTrace()
             }
@@ -148,13 +147,14 @@ internal val componentChannel: Channel =
       }
     }
 
-internal fun animationFinishListener(text: String) {
+internal fun animationFinishedListener(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
   if (eventData is AnimationFinishedEventData) {
     val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
     val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
+    animation?.isRunning = false
     animation?.onFinished?.invoke(AnimationFinishedEvent())
   }
 }
@@ -167,6 +167,7 @@ internal fun animationCleanedListener(text: String) {
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
     animation?.onCleaned?.invoke(AnimationCleanedEvent())
+    animation?.isRunning = false
   }
 }
 
