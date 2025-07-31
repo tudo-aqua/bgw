@@ -161,6 +161,7 @@ private val module = SerializersModule {
     subclass(DragDroppedEventData::class)
     subclass(CheckBoxChangedEventData::class)
     subclass(AnimationFinishedEventData::class)
+    subclass(AnimationCleanedEventData::class)
     subclass(StructuredDataSelectEventData::class)
     subclass(ScrollEventData::class)
     subclass(FilesPickedEventData::class)

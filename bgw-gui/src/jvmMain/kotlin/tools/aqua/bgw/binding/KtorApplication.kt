@@ -23,6 +23,7 @@ import AppData
 import PropData
 import SceneMapper
 import data.event.AnimationFinishedEventData
+import data.event.AnimationCleanedEventData
 import data.event.CheckBoxChangedEventData
 import data.event.ColorInputChangedEventData
 import data.event.DragDroppedEventData
@@ -82,6 +83,7 @@ import tools.aqua.bgw.core.findComponent
 import tools.aqua.bgw.core.getRootNode
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.event.AnimationFinishedEvent
+import tools.aqua.bgw.event.AnimationCleanedEvent
 import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.event.KeyEvent
@@ -121,9 +123,16 @@ internal val componentChannel: Channel =
               e.printStackTrace()
             }
           }
-          "bgwAnimationQuery" -> {
+          "bgwAnimationFinishQuery" -> {
             try {
-              animationListener(content)
+              animationFinishListener(content)
+            } catch (e: Exception) {
+              e.printStackTrace()
+            }
+          }
+          "bgwAnimationCleanedQuery" -> {
+            try {
+              animationCleanedListener(content)
             } catch (e: Exception) {
               e.printStackTrace()
             }
@@ -139,7 +148,7 @@ internal val componentChannel: Channel =
       }
     }
 
-internal fun animationListener(text: String) {
+internal fun animationFinishListener(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
   if (eventData is AnimationFinishedEventData) {
     val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
@@ -147,6 +156,17 @@ internal fun animationListener(text: String) {
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
     animation?.onFinished?.invoke(AnimationFinishedEvent())
+  }
+}
+
+internal fun animationCleanedListener(text: String) {
+  val eventData = jsonMapper.decodeFromString<AnimationCleanedEventData>(text)
+  if(eventData is AnimationCleanedEventData) {
+    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+    val animations = menuSceneAnimations + boardGameSceneAnimations
+    val animation = animations.find { it.id == eventData.id }
+    animation?.onCleaned?.invoke(AnimationCleanedEvent())
   }
 }
 

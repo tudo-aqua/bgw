@@ -15,14 +15,8 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.event
+package data.event
 
-import data.event.AnimationFinishedEventData
-import data.event.AnimationCleanedEventData
-import data.event.EventData
+import kotlinx.serialization.Serializable
 
-internal interface EventDispatcher {
-  fun dispatchEvent(event: AnimationFinishedEventData)
-  fun dispatchEvent(event: AnimationCleanedEventData)
-  fun dispatchEvent(event: EventData)
-}
+@Serializable internal class AnimationCleanedEventData : EventData()

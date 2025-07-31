@@ -21,6 +21,7 @@ package tools.aqua.bgw.animation
 
 import IDGenerator
 import tools.aqua.bgw.event.AnimationFinishedEvent
+import tools.aqua.bgw.event.AnimationCleanedEvent
 
 /**
  * [Animation] baseclass.
@@ -41,4 +42,7 @@ abstract class Animation(
 
   /** Gets invoked when [Animation] has finished. */
   var onFinished: ((AnimationFinishedEvent) -> Unit)? = null
+
+  /** Gets invoked when [Animation] has been cleaned up. An Animation is cleaned up [CLEANUP_MS](100ms) after onFinished is invoked. */
+  var onCleaned: ((AnimationCleanedEvent) -> Unit)? = null
 }

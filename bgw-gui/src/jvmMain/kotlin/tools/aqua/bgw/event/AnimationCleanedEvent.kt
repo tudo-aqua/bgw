@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2021-2025 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,17 @@
  * limitations under the License.
  */
 
+@file:Suppress("unused")
+
 package tools.aqua.bgw.event
 
-import data.event.AnimationFinishedEventData
-import data.event.AnimationCleanedEventData
-import data.event.EventData
+import tools.aqua.bgw.animation.Animation
 
-internal interface EventDispatcher {
-  fun dispatchEvent(event: AnimationFinishedEventData)
-  fun dispatchEvent(event: AnimationCleanedEventData)
-  fun dispatchEvent(event: EventData)
-}
+/**
+ * Gets raised when an [Animation] finished.
+ *
+ * @constructor Creates an [AnimationCleanedEvent].
+ *
+ * @since 0.1
+ */
+class AnimationCleanedEvent : Event()
