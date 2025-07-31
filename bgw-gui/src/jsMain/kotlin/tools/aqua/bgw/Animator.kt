@@ -40,7 +40,7 @@ internal object Animator {
   private val resetFunctions = mutableMapOf<String, () -> Unit>()
 
   const val DELTA_MS = 20
-  const val CLEANUP_MS = 100
+  const val CLEANUP_MS = 0
 
   fun startAnimation(
       animationData: AnimationData,
@@ -142,9 +142,10 @@ internal object Animator {
             setTimeout(
                 {
                   clearSingleTimeoutAndInterval(animation.id)
-                  callback.invoke(animation.id)
                   timeouts["${animation.id}-cleanup"] =
-                      setTimeout({ clearComponentAnimations(componentId) }, CLEANUP_MS)
+                      setTimeout({
+                          clearComponentAnimations(componentId)
+                          callback.invoke(animation.id)}, CLEANUP_MS)
                 },
                 totalDuration)
         timeouts["${animation.id}-callback"] = callbackTimeout
@@ -233,9 +234,10 @@ internal object Animator {
             setTimeout(
                 {
                   clearSingleTimeoutAndInterval(animation.id)
-                  callback.invoke(animation.id)
                   timeouts["${animation.id}-cleanup"] =
-                      setTimeout({ clearComponentAnimations(componentId) }, CLEANUP_MS)
+                      setTimeout({
+                          clearComponentAnimations(componentId)
+                          callback.invoke(animation.id)}, CLEANUP_MS)
                 },
                 maxDuration + DELTA_MS)
       }
@@ -301,11 +303,11 @@ internal object Animator {
                         // Toggle new animation off
                         element.classList.toggle("${componentId}--$type--props", false)
                         clearSingleTimeoutAndInterval(animation.id)
-                        callback.invoke(animation.id)
                           timeouts["${animation.id}-cleanup"] =
                               setTimeout(
-                                  { clearComponentAnimations(componentId, listOf(type)) },
-                                  CLEANUP_MS)
+                                  {
+                                      clearComponentAnimations(componentId, listOf(type))
+                                      callback.invoke(animation.id)}, CLEANUP_MS)
                       },
                       duration)
             },
@@ -375,7 +377,6 @@ internal object Animator {
                       {
                         // Toggle new animation off
                         element.classList.toggle("${componentId}--$type--props", false)
-                        callback.invoke(animation.id)
                         timeouts["${animation.id}-flip-cleanup"] =
                             setTimeout(
                                 {
@@ -385,6 +386,7 @@ internal object Animator {
                                         VisualBuilder.build(animation.componentView?.visual),
                                         oldVisuals)
                                   }
+                                  callback.invoke(animation.id)
                                 },
                                 CLEANUP_MS)
                         clearSingleTimeoutAndInterval(animation.id, true)
@@ -428,7 +430,6 @@ internal object Animator {
               if (oldVisuals != null) {
                 render(VisualBuilder.build(animation.toVisual), oldVisuals)
               }
-              callback.invoke(animation.id)
               timeouts["${animation.id}-random-cleanup"] =
                   setTimeout(
                       {
@@ -436,6 +437,7 @@ internal object Animator {
                           // Render the old visual after the animation is done
                           render(VisualBuilder.build(animation.componentView?.visual), oldVisuals)
                         }
+                        callback.invoke(animation.id)
                       },
                       CLEANUP_MS)
               clearSingleTimeoutAndInterval(animation.id, true)
@@ -478,7 +480,6 @@ internal object Animator {
               if (oldVisuals != null) {
                 render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
               }
-              callback.invoke(animation.id)
               timeouts["${animation.id}-dice-cleanup"] =
                   setTimeout(
                       {
@@ -486,6 +487,7 @@ internal object Animator {
                           // Render the old visual after the animation is done
                           render(VisualBuilder.build(dice.visuals[dice.currentSide]), oldVisuals)
                         }
+                          callback.invoke(animation.id)
                       },
                       CLEANUP_MS)
               clearSingleTimeoutAndInterval(animation.id, true)
