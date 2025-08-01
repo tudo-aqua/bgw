@@ -45,32 +45,32 @@ internal object Animator {
   fun startAnimation(
       animationData: AnimationData,
       parallelAnimations: List<AnimationData> = listOf(),
-      callback: (ID) -> Unit
+      finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit
   ) {
     when (animationData) {
       is ComponentAnimationData -> {
         when (animationData) {
           is FadeAnimationData ->
-              startComponentAnimation("fade", animationData, parallelAnimations, callback)
+              startComponentAnimation("fade", animationData, parallelAnimations, finishCallback, cleanedCallback)
           is MovementAnimationData ->
-              startComponentAnimation("move", animationData, parallelAnimations, callback)
+              startComponentAnimation("move", animationData, parallelAnimations, finishCallback, cleanedCallback)
           is RotationAnimationData ->
-              startComponentAnimation("rotate", animationData, parallelAnimations, callback)
+              startComponentAnimation("rotate", animationData, parallelAnimations, finishCallback, cleanedCallback)
           is ScaleAnimationData ->
-              startComponentAnimation("scale", animationData, parallelAnimations, callback)
-          is FlipAnimationData -> startFlipAnimation(animationData, callback)
+              startComponentAnimation("scale", animationData, parallelAnimations, finishCallback, cleanedCallback)
+          is FlipAnimationData -> startFlipAnimation(animationData, finishCallback, cleanedCallback)
           is SteppedComponentAnimationData -> {
             when (animationData) {
-              is RandomizeAnimationData -> startRandomizeAnimation(animationData, callback)
-              is DiceAnimationData -> startDiceAnimation(animationData, callback)
+              is RandomizeAnimationData -> startRandomizeAnimation(animationData, finishCallback, cleanedCallback)
+              is DiceAnimationData -> startDiceAnimation(animationData, finishCallback, cleanedCallback)
             }
           }
           else -> throw IllegalArgumentException("Unknown animation type")
         }
       }
-      is DelayAnimationData -> startDelayAnimation(animationData, callback)
-      is ParallelAnimationData -> startParallelAnimation(animationData, callback)
-      is SequentialAnimationData -> startSequentialAnimation(animationData, callback)
+      is DelayAnimationData -> startDelayAnimation(animationData, finishCallback, cleanedCallback)
+      is ParallelAnimationData -> startParallelAnimation(animationData, finishCallback, cleanedCallback)
+      is SequentialAnimationData -> startSequentialAnimation(animationData, finishCallback, cleanedCallback)
       else -> throw IllegalArgumentException("Unknown animation type")
     }
   }
@@ -103,17 +103,18 @@ internal object Animator {
     }
   }
 
-  private fun startDelayAnimation(animation: DelayAnimationData, callback: (ID) -> Unit) {
+  private fun startDelayAnimation(animation: DelayAnimationData, finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit) {
     timeouts["${animation.id}-setup"] =
         setTimeout(
             {
-              clearSingleTimeoutAndInterval(animation.id)
-              callback.invoke(animation.id)
+                finishCallback.invoke(animation.id)
+                clearSingleTimeoutAndInterval(animation.id)
+                cleanedCallback.invoke(animation.id)
             },
             animation.duration)
   }
 
-  private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID) -> Unit) {
+  private fun startSequentialAnimation(animation: SequentialAnimationData, finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit) {
     val animations = animation.animations
 
     animations.forEach {
@@ -122,7 +123,7 @@ internal object Animator {
           it is ParallelAnimationData ||
           it is SteppedComponentAnimationData)
           return@forEach
-      val component = it as? ComponentAnimationData ?: return
+      val component = it as? ComponentAnimationData ?: return@forEach
       val componentId = component.componentView?.id.toString()
 
       clearComponentAnimations(componentId)
@@ -130,26 +131,22 @@ internal object Animator {
 
     var currentDuration = 0
     for (anim in animations) {
-      val component = anim as? ComponentAnimationData ?: return
-      val componentId = component.componentView?.id.toString()
-
       timeouts["${anim.id}-all"] =
-          setTimeout({ startAnimation(anim, animations, callback = callback) }, currentDuration)
+          setTimeout({ startAnimation(anim, animations, finishCallback, cleanedCallback) }, currentDuration)
       currentDuration += anim.duration
-      if (anim == animations.last()) {
-        val totalDuration = currentDuration + DELTA_MS
-        val callbackTimeout =
-            setTimeout(
-                {
-                  clearSingleTimeoutAndInterval(animation.id)
-                  callback.invoke(animation.id)
-                  timeouts["${animation.id}-cleanup"] =
-                      setTimeout({ clearComponentAnimations(componentId) }, CLEANUP_MS)
-                },
-                totalDuration)
-        timeouts["${animation.id}-callback"] = callbackTimeout
-      }
     }
+    val totalDuration = currentDuration + DELTA_MS
+    val callbackTimeout =
+          setTimeout(
+              {
+                  finishCallback.invoke(animation.id)
+                  clearSingleTimeoutAndInterval(animation.id)
+                  timeouts["${animation.id}-cleanup"] =
+                      setTimeout({
+                          cleanedCallback.invoke(animation.id)}, CLEANUP_MS)
+              },
+              totalDuration)
+    timeouts["${animation.id}-callback"] = callbackTimeout
   }
 
   fun cancelCleanupTimeouts() {
@@ -207,7 +204,7 @@ internal object Animator {
     }
   }
 
-  private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID) -> Unit) {
+  private fun startParallelAnimation(animation: ParallelAnimationData, finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit) {
     val animations = animation.animations
 
     animations.forEach {
@@ -216,37 +213,33 @@ internal object Animator {
           it is ParallelAnimationData ||
           it is SteppedComponentAnimationData)
           return@forEach
-      val component = it as? ComponentAnimationData ?: return
+      val component = it as? ComponentAnimationData ?: return@forEach
       val componentId = component.componentView?.id.toString()
 
       clearComponentAnimations(componentId)
     }
 
     for (anim in animations) {
-      val component = anim as? ComponentAnimationData ?: return
-      val componentId = component.componentView?.id.toString()
-
-      startAnimation(anim, animations, callback)
-      if (anim == animations.last()) {
-        val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
-        timeouts["${animation.id}-callback"] =
-            setTimeout(
-                {
-                  clearSingleTimeoutAndInterval(animation.id)
-                  callback.invoke(animation.id)
-                  timeouts["${animation.id}-cleanup"] =
-                      setTimeout({ clearComponentAnimations(componentId) }, CLEANUP_MS)
-                },
-                maxDuration + DELTA_MS)
-      }
+        startAnimation(anim, animations, finishCallback, cleanedCallback)
     }
+    val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
+    timeouts["${animation.id}-callback"] =
+        setTimeout(
+            {
+              finishCallback.invoke(animation.id)
+              clearSingleTimeoutAndInterval(animation.id)
+              timeouts["${animation.id}-cleanup"] =
+                  setTimeout({
+                      cleanedCallback.invoke(animation.id)}, CLEANUP_MS)
+            },
+            maxDuration + DELTA_MS)
   }
 
   private fun startComponentAnimation(
       type: String,
       animation: ComponentAnimationData,
       parallelAnimation: List<AnimationData> = listOf(),
-      callback: (ID) -> Unit
+      finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit
   ) {
     // Get animation properties from data
     val componentId = animation.componentView?.id.toString()
@@ -300,21 +293,20 @@ internal object Animator {
                       {
                         // Toggle new animation off
                         element.classList.toggle("${componentId}--$type--props", false)
+                        finishCallback.invoke(animation.id)
                         clearSingleTimeoutAndInterval(animation.id)
-                        callback.invoke(animation.id)
-                        if (parallelAnimation.isEmpty()) {
                           timeouts["${animation.id}-cleanup"] =
                               setTimeout(
-                                  { clearComponentAnimations(componentId, listOf(type)) },
-                                  CLEANUP_MS)
-                        }
+                                  {
+                                      clearComponentAnimations(componentId, listOf(type))
+                                      cleanedCallback.invoke(animation.id)}, CLEANUP_MS)
                       },
                       duration)
             },
             50)
   }
 
-  private fun startFlipAnimation(animation: FlipAnimationData, callback: (ID) -> Unit) {
+  private fun startFlipAnimation(animation: FlipAnimationData, finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit) {
     val type = "flip"
     // Get animation properties from data
     val componentId = animation.componentView?.id.toString()
@@ -377,7 +369,7 @@ internal object Animator {
                       {
                         // Toggle new animation off
                         element.classList.toggle("${componentId}--$type--props", false)
-                        callback.invoke(animation.id)
+                        finishCallback.invoke(animation.id)
                         timeouts["${animation.id}-flip-cleanup"] =
                             setTimeout(
                                 {
@@ -387,6 +379,7 @@ internal object Animator {
                                         VisualBuilder.build(animation.componentView?.visual),
                                         oldVisuals)
                                   }
+                                    cleanedCallback.invoke(animation.id)
                                 },
                                 CLEANUP_MS)
                         clearSingleTimeoutAndInterval(animation.id, true)
@@ -396,7 +389,7 @@ internal object Animator {
             50)
   }
 
-  private fun startRandomizeAnimation(animation: RandomizeAnimationData, callback: (ID) -> Unit) {
+  private fun startRandomizeAnimation(animation: RandomizeAnimationData, finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit) {
     val type = "random"
     // Get animation properties from data
     val componentId = animation.componentView?.id.toString()
@@ -430,7 +423,7 @@ internal object Animator {
               if (oldVisuals != null) {
                 render(VisualBuilder.build(animation.toVisual), oldVisuals)
               }
-              callback.invoke(animation.id)
+              finishCallback.invoke(animation.id)
               timeouts["${animation.id}-random-cleanup"] =
                   setTimeout(
                       {
@@ -438,6 +431,7 @@ internal object Animator {
                           // Render the old visual after the animation is done
                           render(VisualBuilder.build(animation.componentView?.visual), oldVisuals)
                         }
+                        cleanedCallback.invoke(animation.id)
                       },
                       CLEANUP_MS)
               clearSingleTimeoutAndInterval(animation.id, true)
@@ -445,7 +439,7 @@ internal object Animator {
             duration)
   }
 
-  private fun startDiceAnimation(animation: DiceAnimationData, callback: (ID) -> Unit) {
+  private fun startDiceAnimation(animation: DiceAnimationData, finishCallback: (ID) -> Unit, cleanedCallback: (ID) -> Unit) {
     val type = "dice"
     // Get animation properties from data
     val componentId = animation.componentView?.id.toString()
@@ -480,7 +474,7 @@ internal object Animator {
               if (oldVisuals != null) {
                 render(VisualBuilder.build(dice.visuals[animation.toSide]), oldVisuals)
               }
-              callback.invoke(animation.id)
+              finishCallback.invoke(animation.id)
               timeouts["${animation.id}-dice-cleanup"] =
                   setTimeout(
                       {
@@ -488,6 +482,7 @@ internal object Animator {
                           // Render the old visual after the animation is done
                           render(VisualBuilder.build(dice.visuals[dice.currentSide]), oldVisuals)
                         }
+                          cleanedCallback.invoke(animation.id)
                       },
                       CLEANUP_MS)
               clearSingleTimeoutAndInterval(animation.id, true)

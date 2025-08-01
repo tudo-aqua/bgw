@@ -17,6 +17,7 @@
 
 package tools.aqua.bgw.event
 
+import data.event.AnimationCleanedEventData
 import data.event.AnimationFinishedEventData
 import data.event.EventData
 import data.event.KeyEventData
@@ -37,7 +38,16 @@ internal object JCEFEventDispatcher : EventDispatcher {
   override fun dispatchEvent(event: AnimationFinishedEventData) {
     try {
       val json = jsonMapper.encodeToString(event)
-      webSocket?.send("bgwAnimationQuery|$json")
+      webSocket?.send("bgwAnimationFinishQuery|$json")
+    } catch (e: Throwable) {
+      println("Error while dispatching event: $e")
+    }
+  }
+
+  override fun dispatchEvent(event: AnimationCleanedEventData) {
+    try {
+      val json = jsonMapper.encodeToString(event)
+      webSocket?.send("bgwAnimationCleanedQuery|$json")
     } catch (e: Throwable) {
       println("Error while dispatching event: $e")
     }

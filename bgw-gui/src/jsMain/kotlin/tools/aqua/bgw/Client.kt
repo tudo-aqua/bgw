@@ -26,6 +26,7 @@ import ID
 import JsonData
 import PropData
 import data.event.AnimationFinishedEventData
+import data.event.AnimationCleanedEventData
 import data.event.LoadEventData
 import jsonMapper
 import kotlinx.browser.document
@@ -145,9 +146,9 @@ internal fun handleReceivedData(receivedData: Data) {
         stopAnimations()
         return
       }
-      Animator.startAnimation(receivedData) {
-        JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
-      }
+      Animator.startAnimation(receivedData,listOf(),
+        finishCallback = {JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })},
+        cleanedCallback = {JCEFEventDispatcher.dispatchEvent(AnimationCleanedEventData().apply { id = it })})
     }
     is DialogData -> {
       dialogMap[receivedData.id] = receivedData
