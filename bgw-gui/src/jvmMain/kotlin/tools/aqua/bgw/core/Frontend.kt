@@ -163,6 +163,7 @@ internal class Frontend {
     internal fun sendAnimation(animation: Animation) {
       val animationData = AnimationMapper.map(animation)
       runBlocking { forceAnimationUpdate(animationData) }
+      animation.isRunning = true
     }
 
     internal fun stopAnimations() {

@@ -154,6 +154,7 @@ internal fun animationFinishedListener(text: String) {
     val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
+    animation?.isRunning = false
     animation?.onFinished?.invoke(AnimationFinishedEvent())
   }
 }
@@ -166,6 +167,7 @@ internal fun animationCleanedListener(text: String) {
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
     animation?.onCleaned?.invoke(AnimationCleanedEvent())
+    animation?.isRunning = false
   }
 }
 
