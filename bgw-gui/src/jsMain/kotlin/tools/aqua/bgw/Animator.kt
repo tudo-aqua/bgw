@@ -107,8 +107,8 @@ internal object Animator {
     timeouts["${animation.id}-setup"] =
         setTimeout(
             {
-              clearSingleTimeoutAndInterval(animation.id)
                 finishCallback.invoke(animation.id)
+                clearSingleTimeoutAndInterval(animation.id)
                 cleanedCallback.invoke(animation.id)
             },
             animation.duration)
@@ -123,7 +123,7 @@ internal object Animator {
           it is ParallelAnimationData ||
           it is SteppedComponentAnimationData)
           return@forEach
-      val component = it as? ComponentAnimationData ?: return
+      val component = it as? ComponentAnimationData ?: return@forEach
       val componentId = component.componentView?.id.toString()
 
       clearComponentAnimations(componentId)
@@ -131,28 +131,22 @@ internal object Animator {
 
     var currentDuration = 0
     for (anim in animations) {
-      val component = anim as? ComponentAnimationData ?: return
-      val componentId = component.componentView?.id.toString()
-
       timeouts["${anim.id}-all"] =
           setTimeout({ startAnimation(anim, animations, finishCallback, cleanedCallback) }, currentDuration)
       currentDuration += anim.duration
-      if (anim == animations.last()) {
-        val totalDuration = currentDuration + DELTA_MS
-        val callbackTimeout =
-            setTimeout(
-                {
-                  clearSingleTimeoutAndInterval(animation.id)
+    }
+    val totalDuration = currentDuration + DELTA_MS
+    val callbackTimeout =
+          setTimeout(
+              {
                   finishCallback.invoke(animation.id)
+                  clearSingleTimeoutAndInterval(animation.id)
                   timeouts["${animation.id}-cleanup"] =
                       setTimeout({
-                          clearComponentAnimations(componentId)
                           cleanedCallback.invoke(animation.id)}, CLEANUP_MS)
-                },
-                totalDuration)
-        timeouts["${animation.id}-callback"] = callbackTimeout
-      }
-    }
+              },
+              totalDuration)
+    timeouts["${animation.id}-callback"] = callbackTimeout
   }
 
   fun cancelCleanupTimeouts() {
@@ -219,32 +213,26 @@ internal object Animator {
           it is ParallelAnimationData ||
           it is SteppedComponentAnimationData)
           return@forEach
-      val component = it as? ComponentAnimationData ?: return
+      val component = it as? ComponentAnimationData ?: return@forEach
       val componentId = component.componentView?.id.toString()
 
       clearComponentAnimations(componentId)
     }
 
     for (anim in animations) {
-      val component = anim as? ComponentAnimationData ?: return
-      val componentId = component.componentView?.id.toString()
-
-      startAnimation(anim, animations, finishCallback, cleanedCallback)
-      if (anim == animations.last()) {
-        val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
-        timeouts["${animation.id}-callback"] =
-            setTimeout(
-                {
-                  clearSingleTimeoutAndInterval(animation.id)
-                  finishCallback.invoke(animation.id)
-                  timeouts["${animation.id}-cleanup"] =
-                      setTimeout({
-                          clearComponentAnimations(componentId)
-                          cleanedCallback.invoke(animation.id)}, CLEANUP_MS)
-                },
-                maxDuration + DELTA_MS)
-      }
+        startAnimation(anim, animations, finishCallback, cleanedCallback)
     }
+    val maxDuration = animations.maxOfOrNull { it.duration } ?: 0
+    timeouts["${animation.id}-callback"] =
+        setTimeout(
+            {
+              finishCallback.invoke(animation.id)
+              clearSingleTimeoutAndInterval(animation.id)
+              timeouts["${animation.id}-cleanup"] =
+                  setTimeout({
+                      cleanedCallback.invoke(animation.id)}, CLEANUP_MS)
+            },
+            maxDuration + DELTA_MS)
   }
 
   private fun startComponentAnimation(
@@ -305,8 +293,8 @@ internal object Animator {
                       {
                         // Toggle new animation off
                         element.classList.toggle("${componentId}--$type--props", false)
-                        clearSingleTimeoutAndInterval(animation.id)
                         finishCallback.invoke(animation.id)
+                        clearSingleTimeoutAndInterval(animation.id)
                           timeouts["${animation.id}-cleanup"] =
                               setTimeout(
                                   {
@@ -381,7 +369,7 @@ internal object Animator {
                       {
                         // Toggle new animation off
                         element.classList.toggle("${componentId}--$type--props", false)
-                        cleanedCallback.invoke(animation.id)
+                        finishCallback.invoke(animation.id)
                         timeouts["${animation.id}-flip-cleanup"] =
                             setTimeout(
                                 {
@@ -391,7 +379,7 @@ internal object Animator {
                                         VisualBuilder.build(animation.componentView?.visual),
                                         oldVisuals)
                                   }
-                                    finishCallback.invoke(animation.id)
+                                    cleanedCallback.invoke(animation.id)
                                 },
                                 CLEANUP_MS)
                         clearSingleTimeoutAndInterval(animation.id, true)
