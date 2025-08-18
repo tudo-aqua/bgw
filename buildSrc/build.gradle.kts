@@ -33,11 +33,13 @@ dependencies {
   implementation(libs.gradle.detekt)
   implementation(libs.gradle.gitVersioning)
   implementation(libs.gradle.kover)
-  implementation(libs.gradle.nexusPublish)
   implementation(libs.gradle.spotless)
   implementation(libs.gradle.spring.boot)
   implementation(libs.gradle.taskTree)
   implementation(libs.gradle.vaadin)
+
+  // Maven publish plugin - add as implementation dependency
+  implementation("com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin:0.34.0")
 
   implementation(
       "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.1.20")

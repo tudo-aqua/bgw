@@ -28,9 +28,10 @@ plugins {
   id("com.diffplug.spotless")
 
   // plugins that must be applied to the root project
-  id("io.github.gradle-nexus.publish-plugin")
   id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
+
+  signing
 }
 
 version = "0.0.0-SNAPSHOT"
@@ -67,4 +68,4 @@ spotless {
 
 kover { merge {} }
 
-nexusPublishing { repositories { sonatype() } }
+signing { useGpgCmd() }

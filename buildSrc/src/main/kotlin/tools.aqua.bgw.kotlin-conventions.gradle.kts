@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import gradle.kotlin.dsl.accessors._5a6c1efee45ac8f155ea8c040e45699d.dokka
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import tools.aqua.defaultFormat
@@ -36,37 +37,14 @@ detekt {
 
 spotless { kotlin { defaultFormat(rootProject) } }
 
-val kdocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("kdoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    }
+java {}
 
-val kdoc: Configuration by
-    configurations.creating {
-      isCanBeConsumed = true
-      isCanBeResolved = false
-    }
-
-artifacts { add(kdoc.name, kdocJar) }
-
-val javadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    }
-
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
+dokka {}
 
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-  dokkaGfmPlugin(libs.dokka.javadoc)
-
   testImplementation(platform(libs.junit.bom))
   testImplementation(libs.bundles.test)
 }

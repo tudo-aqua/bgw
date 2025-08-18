@@ -15,19 +15,13 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._7bceb54c174f154aa7f0d632213e663d.spotless
 import java.nio.file.Files
-import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
 import tools.aqua.defaultFormat
-import tools.aqua.developer
-import tools.aqua.github
-import tools.aqua.license
 
 plugins {
   kotlin("multiplatform")
@@ -36,9 +30,8 @@ plugins {
   id("io.gitlab.arturbosch.detekt")
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
-
-  `maven-publish`
-  signing
+  id("com.vanniktech.maven.publish")
+  id("com.diffplug.spotless")
 }
 
 val propertyFile = "Config.kt"
@@ -78,27 +71,8 @@ if (!project.extra.has("generateSamples")) {
 
 buildDefaultPropertyFile()
 
-val kdocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("kdoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    }
-
-val kdoc: Configuration by
-    configurations.creating {
-      isCanBeConsumed = true
-      isCanBeResolved = false
-    }
-
-artifacts { add(kdoc.name, kdocJar) }
-
-val javadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    }
-
 repositories {
+  gradlePluginPortal()
   mavenCentral()
   maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
@@ -170,43 +144,6 @@ kotlin {
   }
 }
 
-val jvmJavadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      archiveAppendix.set("jvm")
-      from(tasks.named<DokkaTask>("dokkaHtmlJvm").flatMap { it.outputDirectory })
-    }
-
-val jsJavadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      archiveAppendix.set("js")
-      from(tasks.named<DokkaTask>("dokkaHtmlJs").flatMap { it.outputDirectory })
-    }
-
-val commonJavadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      archiveAppendix.set("kotlin")
-      from(tasks.named<DokkaTask>("dokkaHtmlCommon").flatMap { it.outputDirectory })
-    }
-
-val dokkaHtmlJvm by
-    tasks.creating(DokkaTask::class) {
-      outputDirectory.set(buildDir.resolve("dokka/jvm"))
-      dokkaSourceSets { named("jvmMain") }
-    }
-val dokkaHtmlJs by
-    tasks.creating(DokkaTask::class) {
-      outputDirectory.set(buildDir.resolve("dokka/js"))
-      dokkaSourceSets { named("jsMain") }
-    }
-val dokkaHtmlCommon by
-    tasks.creating(DokkaTask::class) {
-      outputDirectory.set(buildDir.resolve("dokka/common"))
-      dokkaSourceSets { named("commonMain") }
-    }
-
 tasks.named<Copy>("jvmProcessResources") {
   val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
   from(jsBrowserDistribution)
@@ -245,43 +182,45 @@ fun killJcefHelperProcesses(pids: Set<Long>) {
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
-publishing {
-  publications {
-    withType<MavenPublication> {
-      when (name) {
-        "jvm" -> artifact(jvmJavadocJar)
-        "js" -> artifact(jsJavadocJar)
-        else -> artifact(commonJavadocJar)
-      }
-      pom {
-        name.set(mavenMetadata.name)
-        description.set(mavenMetadata.description)
+mavenPublishing {
+  publishToMavenCentral()
+  signAllPublications()
 
-        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+  pom {
+    name.set(mavenMetadata.name)
+    description.set(mavenMetadata.description)
 
-        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+    val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
 
-        globalMetadata.githubProject.get().let {
-          github(it.organization, it.project, it.mainBranch)
+    url.set(
+        "https://github.com/${globalMetadata.githubProject.get().organization}/${globalMetadata.githubProject.get().project}")
+
+    licenses {
+      globalMetadata.licenses.get().forEach { licenseData ->
+        license {
+          name.set(licenseData.name)
+          url.set(licenseData.url)
         }
-
-        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
       }
     }
-  }
-}
 
-signing {
-  setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
-  useGpgCmd()
-  sign(publishing.publications)
-}
+    developers {
+      globalMetadata.developers.get().forEach { dev ->
+        developer {
+          name.set(dev.name)
+          email.set(dev.email)
+        }
+      }
+    }
 
-tasks.named("publish") {
-  doFirst {
-    println("=============================================================================")
-    println("Published bgw-gui: ${rootProject.version}")
-    println("=============================================================================")
+    scm {
+      val github = globalMetadata.githubProject.get()
+      connection.set("scm:git:git://github.com/${github.organization}/${github.project}.git")
+      developerConnection.set(
+          "scm:git:ssh://git@github.com/${github.organization}/${github.project}.git")
+      url.set(
+          "https://github.com/${github.organization}/${github.project}/tree/${github.mainBranch}")
+    }
   }
 }
 

@@ -8,11 +8,15 @@ vaadin = "24.7.0"
 
 # Other
 
-jackson = "2.19.1"
+jackson = "2.15.3"
 junit = "5.13.1"
 ktor = "3.2.0"
 guava = "33.4.8-jre"
 testcontainers = "1.21.2"
+
+[plugins]
+
+mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
 
 [libraries]
 
@@ -70,7 +74,6 @@ gradle-dependencyManagement = { group = "io.spring.gradle", name = "dependency-m
 gradle-detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version = "1.23.8" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.3.0" }
 gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version = "0.9.1" }
-gradle-nexusPublish = { group = "io.github.gradle-nexus", name = "publish-plugin", version = "1.1.0" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "7.0.4" }
 gradle-spring-boot = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "spring" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "2.1.0" }
