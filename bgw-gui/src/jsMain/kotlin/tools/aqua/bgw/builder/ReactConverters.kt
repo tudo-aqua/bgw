@@ -65,6 +65,7 @@ internal object ReactConverters {
 
     return Pair(absoluteX, absoluteY)
   }
+
   fun ReactMouseEvent<*, *>.toMouseEnteredData(targetID: ID?): MouseEnteredEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MouseEnteredEventData(posX, posY).apply { this.id = targetID }

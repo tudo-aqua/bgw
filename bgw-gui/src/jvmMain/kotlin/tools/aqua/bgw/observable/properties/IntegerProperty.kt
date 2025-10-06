@@ -22,10 +22,8 @@ package tools.aqua.bgw.observable.properties
 /**
  * An IntegerProperty.
  *
- * @constructor Creates a [IntegerProperty] with given initial value.
- *
  * @param initialValue Initial Value. Default: 0.
- *
+ * @constructor Creates a [IntegerProperty] with given initial value.
  * @since 0.1
  */
 open class IntegerProperty(initialValue: Int = 0) : Property<Int>(initialValue)

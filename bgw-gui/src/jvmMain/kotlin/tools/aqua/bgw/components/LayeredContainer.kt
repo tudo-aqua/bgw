@@ -27,7 +27,6 @@ interface LayeredContainer<T : ComponentView> {
    * Puts the [component] to the front inside the [LayeredContainer].
    *
    * @param component Child that is moved to the front.
-   *
    * @since 0.8
    */
   fun toFront(component: T)
@@ -36,7 +35,6 @@ interface LayeredContainer<T : ComponentView> {
    * Puts the [component] to the back inside the [LayeredContainer].
    *
    * @param component Child that is moved to the back.
-   *
    * @since 0.8
    */
   fun toBack(component: T)
@@ -46,7 +44,6 @@ interface LayeredContainer<T : ComponentView> {
    *
    * @param component Child that is moved accordingly.
    * @param zIndex The value that is used to compare the order of components.
-   *
    * @since 0.8
    */
   fun setZIndex(component: T, zIndex: Int)

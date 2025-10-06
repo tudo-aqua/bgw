@@ -57,13 +57,13 @@ tasks.register("generateSamples") {
   this.group = "build"
   dependsOn("generateSamplesConfig")
   mustRunAfter(":bgw-gui:build")
-  finalizedBy(":bgw-gui:run")
+  finalizedBy(":bgw-gui:runJvm")
 }
 
 tasks.register("buildAndCopySamples") {
   this.group = "build"
   dependsOn("generateSamples")
-  mustRunAfter(":bgw-gui:run")
+  mustRunAfter(":bgw-gui:runJvm")
   doLast {
     val sourceDir = project(":bgw-gui").buildDir.resolve("examples/bgwSamples.json")
     val destinationDir = projectDir.resolve("../website/public/bgw")
@@ -77,12 +77,12 @@ tasks.register("buildAndCopySamples") {
 
 tasks.register("buildAndCopyDokkaHtml") {
   dependsOn(
-      rootProject.project(":bgw-gui").tasks.named("dokkaHtmlPartial"),
-      rootProject.project(":bgw-net:bgw-net-client").tasks.named("dokkaHtmlPartial"),
-      rootProject.project(":bgw-net:bgw-net-common").tasks.named("dokkaHtmlPartial"))
+      rootProject.project(":bgw-gui").tasks.named("dokkaGenerateModuleHtml"),
+      rootProject.project(":bgw-net:bgw-net-client").tasks.named("dokkaGenerateModuleHtml"),
+      rootProject.project(":bgw-net:bgw-net-common").tasks.named("dokkaGenerateModuleHtml"))
   this.group = "build"
   doLast {
-    val sourceDir = project(":bgw-gui").buildDir.resolve("dokka/htmlPartial")
+    val sourceDir = project(":bgw-gui").buildDir.resolve("dokka-module/html/module")
     val destinationDir = projectDir.resolve("example/htmlPartial")
     println("Copying files from $sourceDir to $destinationDir")
     copy {
@@ -91,7 +91,7 @@ tasks.register("buildAndCopyDokkaHtml") {
     }
 
     val sourceDir2 =
-        rootProject.project(":bgw-net:bgw-net-client").buildDir.resolve("dokka/htmlPartial")
+        rootProject.project(":bgw-net:bgw-net-client").buildDir.resolve("dokka-module/html/module")
     val destinationDir2 = projectDir.resolve("example/htmlPartial")
     println("Copying files from $sourceDir2 to $destinationDir2")
     copy {
@@ -101,7 +101,7 @@ tasks.register("buildAndCopyDokkaHtml") {
     }
 
     val sourceDir3 =
-        rootProject.project(":bgw-net:bgw-net-common").buildDir.resolve("dokka/htmlPartial")
+        rootProject.project(":bgw-net:bgw-net-common").buildDir.resolve("dokka-module/html/module")
     val destinationDir3 = projectDir.resolve("example/htmlPartial")
     println("Copying files from $sourceDir3 to $destinationDir3")
     copy {
@@ -171,5 +171,6 @@ fun generateProperties(suffix: String = ""): String {
         val GENERATE_SAMPLES = $generateSamples
         val BGW_VERSION = "${rootProject.version}"
     }
-""".trimIndent()
+"""
+      .trimIndent()
 }

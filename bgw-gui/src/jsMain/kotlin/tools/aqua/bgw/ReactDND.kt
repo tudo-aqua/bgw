@@ -27,7 +27,7 @@ import react.dom.events.KeyboardEvent
 import web.dom.Element
 import web.html.HTMLElement
 
-@JsName("DndContext") internal external val DndContext: ComponentClass<DndContextProps>
+@JsName("DndContext") internal external val DndContext: ComponentType<DndContextProps>
 
 internal external interface DndContextProps : PropsWithChildren {
   var onDragEnd: (DragEndEvent) -> Unit
@@ -85,7 +85,7 @@ internal external fun useDraggable(options: DraggableOptions): DraggableResult
 @JsName("useDroppable")
 internal external fun useDroppable(options: DroppableOptions): DroppableResult
 
-@JsName("DragOverlay") internal external val DragOverlay: ComponentClass<DragOverlayProps>
+@JsName("DragOverlay") internal external val DragOverlay: ComponentType<DragOverlayProps>
 
 internal external interface DragOverlayProps :
     PropsWithChildren, PropsWithClassName, PropsWithStyle {

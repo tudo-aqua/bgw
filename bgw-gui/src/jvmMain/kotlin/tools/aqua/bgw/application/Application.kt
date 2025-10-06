@@ -21,6 +21,7 @@ import DialogData
 
 internal interface Application {
   fun start(onClose: () -> Unit, callback: (Any) -> Unit)
+
   fun stop()
 
   fun clearAllEventListeners() {}

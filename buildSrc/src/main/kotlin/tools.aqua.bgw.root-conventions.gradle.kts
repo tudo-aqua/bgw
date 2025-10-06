@@ -17,6 +17,8 @@
 
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
+import kotlinx.coroutines.flow.merge
+import org.gradle.kotlin.dsl.*
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
 
@@ -26,9 +28,10 @@ plugins {
   id("com.diffplug.spotless")
 
   // plugins that must be applied to the root project
-  id("io.github.gradle-nexus.publish-plugin")
   id("me.qoomon.git-versioning")
   id("org.jetbrains.kotlinx.kover")
+
+  signing
 }
 
 version = "0.0.0-SNAPSHOT"
@@ -63,6 +66,6 @@ spotless {
   }
 }
 
-koverMerged.enable()
+kover { merge {} }
 
-nexusPublishing { repositories { sonatype() } }
+signing { useGpgCmd() }

@@ -87,6 +87,7 @@ internal class BGWWebSocketClient(
 
     send(mapper.writeValueAsString(msg))
   }
+
   // endregion
 
   // region Callbacks
@@ -119,8 +120,8 @@ internal class BGWWebSocketClient(
   }
 
   /**
-   * Called when an error occurred. If an error causes the websocket connection to fail
-   * #onClose(int, String?, boolean) will be called additionally. This method will be called
+   * Called when an error occurred. If an error causes the websocket connection to
+   * fail #onClose(int, String?, boolean) will be called additionally. This method will be called
    * primarily because of IO or protocol errors.
    *
    * @param ex The exception causing this error

@@ -29,17 +29,14 @@ import tools.aqua.bgw.visual.Visual
  * Sets background to given [fromVisual] than contracts background in half the given duration,
  * switches to [toVisual] and extends again in half the given duration.
  *
- * @constructor Creates a [FlipAnimation] for the given [GameComponentView].
- *
  * @param T Generic [GameComponentView].
  * @param gameComponentView [GameComponentView] to animate.
  * @param fromVisual Initial [Visual].
  * @param toVisual Resulting [Visual].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
- *
+ * @constructor Creates a [FlipAnimation] for the given [GameComponentView].
  * @see ComponentAnimation
  * @see GameComponentView
- *
  * @since 0.1
  */
 class FlipAnimation<T : GameComponentView>(

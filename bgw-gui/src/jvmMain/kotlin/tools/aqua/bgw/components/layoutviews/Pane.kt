@@ -29,19 +29,16 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [Pane] can be used to group [ComponentView]s for easier position management and layout.
  *
- * @constructor Creates a [Pane].
- *
  * @param T Generic [ComponentView].
  * @param posX Horizontal coordinate for this [Pane]. Default: 0.
  * @param posY Vertical coordinate for this [Pane]. Default: 0.
  * @param width Width for this [Pane].
  * @param height Height for this [Pane].
  * @param visual Visual for this [Pane]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates a [Pane].
  * @see ComponentView
  * @see Visual
  * @see LayoutView
- *
  * @since 0.1
  */
 open class Pane<T : ComponentView>(
@@ -63,7 +60,6 @@ open class Pane<T : ComponentView>(
    *
    * @see T
    * @see onRemove
-   *
    * @since 0.3
    */
   var onAdd: (T.() -> Unit)? = null
@@ -74,7 +70,6 @@ open class Pane<T : ComponentView>(
    *
    * @see T
    * @see onAdd
-   *
    * @since 0.3
    */
   var onRemove: (T.() -> Unit)? = null
@@ -112,7 +107,6 @@ open class Pane<T : ComponentView>(
    *
    * @param component Component to add.
    * @param index Index at which [component] will be added (Z-Height).
-   *
    * @throws IllegalArgumentException If [component] is already contained.
    * @throws IllegalArgumentException If [index] is out of bounds for [components].
    */
@@ -173,7 +167,6 @@ open class Pane<T : ComponentView>(
    * Removes the [ComponentView] specified by the parameter from this [Pane].
    *
    * @param component The [ComponentView] to remove.
-   *
    * @return `true` if the [Pane] was altered by the call, `false` otherwise.
    */
   @Synchronized
@@ -190,7 +183,6 @@ open class Pane<T : ComponentView>(
    * Removes all [ComponentView]s from this [Pane].
    *
    * @return List of all removed components.
-   *
    * @since 0.3
    */
   @Synchronized
@@ -204,7 +196,6 @@ open class Pane<T : ComponentView>(
    * Removes all [ComponentView]s contained in [collection] from this [Pane].
    *
    * @param collection The [ComponentView]s to remove.
-   *
    * @return `true` if the [Pane] was altered by the call, `false` otherwise.
    */
   @Synchronized
@@ -215,7 +206,6 @@ open class Pane<T : ComponentView>(
    * Removes all [ComponentView]s matching the [predicate] from this [Pane].
    *
    * @param predicate The predicate to evaluate.
-   *
    * @return `true` if the [Pane] was altered by the call, `false` otherwise.
    */
   @Synchronized
@@ -226,7 +216,6 @@ open class Pane<T : ComponentView>(
    * Returns the size of the components list.
    *
    * @return Number of children.
-   *
    * @see components
    */
   fun numberOfComponents(): Int = observableComponents.size
@@ -235,7 +224,6 @@ open class Pane<T : ComponentView>(
    * Returns whether the components list is empty.
    *
    * @return `true` if this list contains no components, `false` otherwise.
-   *
    * @see isNotEmpty
    * @see components
    */
@@ -245,7 +233,6 @@ open class Pane<T : ComponentView>(
    * Returns whether the components list is not empty.
    *
    * @return `true` if this list contains components, `false` otherwise.
-   *
    * @see isEmpty
    * @see components
    */
@@ -255,7 +242,6 @@ open class Pane<T : ComponentView>(
    * Returning a contained child's coordinates within this container.
    *
    * @param child Child to find.
-   *
    * @return Coordinate of given child in this container relative to containers anchor point.
    */
   override fun getChildPosition(child: ComponentView): Coordinate =
@@ -265,9 +251,7 @@ open class Pane<T : ComponentView>(
    * Returning a contained child's coordinates within this container with scale.
    *
    * @param child Child to find.
-   *
    * @return Coordinate of given child in this container relative to containers anchor point.
-   *
    * @since 0.3
    */
   override fun getActualChildPosition(child: ComponentView): Coordinate =
@@ -277,7 +261,6 @@ open class Pane<T : ComponentView>(
    * Removes [component] from container's children.
    *
    * @param component Child to be removed.
-   *
    * @throws IllegalArgumentException If the child's type is incompatible with container's type.
    */
   override fun removeChild(component: ComponentView) {
@@ -295,7 +278,6 @@ open class Pane<T : ComponentView>(
    * Puts the [component] to the front inside the [LayeredContainer].
    *
    * @param component Child that is moved to the front.
-   *
    * @since 0.8
    */
   override fun toFront(component: T) {
@@ -310,7 +292,6 @@ open class Pane<T : ComponentView>(
    * Puts the [component] to the back inside the [LayeredContainer].
    *
    * @param component Child that is moved to the back.
-   *
    * @since 0.8
    */
   override fun toBack(component: T) {

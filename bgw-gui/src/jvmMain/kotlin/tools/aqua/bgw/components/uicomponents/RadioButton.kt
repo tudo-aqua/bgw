@@ -44,8 +44,6 @@ import tools.aqua.bgw.visual.Visual
  *
  * Note: Field isWrapText inherited from [BinaryStateButton] has no effect on [RadioButton]s.
  *
- * @constructor Creates a [RadioButton].
- *
  * @param posX Horizontal coordinate for this [RadioButton]. Default: 0.
  * @param posY Vertical coordinate for this [RadioButton]. Default: 0.
  * @param width Width for this [RadioButton]. Default: [DEFAULT_RADIO_BUTTON_WIDTH].
@@ -56,13 +54,12 @@ import tools.aqua.bgw.visual.Visual
  * @param isSelected The initial state for this [RadioButton]. Default: `false`.
  * @param toggleGroup The ToggleGroup of this [RadioButton]. Default: empty group.
  * @param visual Background [Visual]. Default: [Visual.EMPTY]
- *
+ * @constructor Creates a [RadioButton].
  * @see Font
  * @see ToggleGroup
  * @see Visual
  * @see BinaryStateButton
  * @see ToggleButton
- *
  * @since 0.1
  */
 open class RadioButton(

@@ -35,8 +35,6 @@ import tools.aqua.bgw.visual.Visual
  * Note that the components [Font] property will be ignored. Use the font field for each
  * [TableColumn].
  *
- * @constructor Creates a [TableView].
- *
  * @param T Generic [TableView] content.
  * @param posX Horizontal coordinate for this [TableView]. Default: 0.
  * @param posY Vertical coordinate for this [TableView]. Default: 0.
@@ -46,16 +44,15 @@ import tools.aqua.bgw.visual.Visual
  * @param items Initial list of items for this [TableView]. Default: empty list.
  * @param visual Background [Visual]. Default: [ColorVisual.WHITE].
  * @param selectionMode Selection mode to be used for this [TableView]. Default:
- * [SelectionMode.SINGLE].
+ *   [SelectionMode.SINGLE].
  * @param selectionBackground Background for selected items in this [TableView]. Default:
- * [ColorVisual.BLUE].
- *
+ *   [ColorVisual.BLUE].
+ * @constructor Creates a [TableView].
  * @see TableColumn
  * @see Visual
  * @see SelectionMode
  * @see ColorVisual
  * @see StructuredDataView
- *
  * @since 0.1
  */
 open class TableView<T>(
@@ -83,6 +80,7 @@ open class TableView<T>(
    * An [ObservableList] that contains [TableColumn]s which specify how the data is represented in
    * that column. The first [TableColumn] in this [ObservableList] will be the leftmost column in
    * the rendered [TableView].
+   *
    * @see TableColumn
    */
   val columns: ObservableList<TableColumn<T>> = ObservableArrayList(columns)

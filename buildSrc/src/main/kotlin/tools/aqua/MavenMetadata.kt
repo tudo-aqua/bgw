@@ -36,12 +36,14 @@ import org.gradle.kotlin.dsl.property
 open class MavenMetadataExtension @Inject constructor(objects: ObjectFactory) {
   /**
    * The project name for the POM.
+   *
    * @see MavenPom.getName
    */
   @Input val name: Property<String> = objects.property()
 
   /**
    * The project description for the POM.
+   *
    * @see MavenPom.getDescription
    */
   @Input val description: Property<String> = objects.property()
@@ -57,6 +59,7 @@ open class MavenMetadataExtension @Inject constructor(objects: ObjectFactory) {
 open class GlobalMavenMetadataExtension @Inject constructor(objects: ObjectFactory) {
   /**
    * A developer's identity.
+   *
    * @param name the developer's name.
    * @param email the developer's preferred email address.
    */
@@ -64,6 +67,7 @@ open class GlobalMavenMetadataExtension @Inject constructor(objects: ObjectFacto
 
   /**
    * A GitHub project's coordinates.
+   *
    * @param organization the organisation / user the project resides in.
    * @param project the project name.
    * @param mainBranch the main branch (usually "main" or similar).
@@ -76,6 +80,7 @@ open class GlobalMavenMetadataExtension @Inject constructor(objects: ObjectFacto
 
   /**
    * A OSS license.
+   *
    * @param name the licenses full name.
    * @param url a URL with more information about the license.
    */
@@ -83,18 +88,21 @@ open class GlobalMavenMetadataExtension @Inject constructor(objects: ObjectFacto
 
   /**
    * The developers for the POM. Uses the root project's developers, if unset.
+   *
    * @see MavenPom.developers
    */
   @Input val developers: ListProperty<Developer> = objects.listProperty()
 
   /**
    * The developers for the POM. Uses the root project's developers, if unset.
+   *
    * @see MavenPom.developers
    */
   @Input val githubProject: Property<GithubProject> = objects.property()
 
   /**
    * The developers for the POM. Uses the root project's developers, if unset.
+   *
    * @see MavenPom.developers
    */
   @Input val licenses: ListProperty<License> = objects.listProperty()

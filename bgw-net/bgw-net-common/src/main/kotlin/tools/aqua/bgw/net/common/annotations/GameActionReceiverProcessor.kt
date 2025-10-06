@@ -31,9 +31,7 @@ object GameActionReceiverProcessor {
    *
    * @param target Target class to be searched.
    * @param classes All registered [GameAction]s.
-   *
    * @return Map from [GameActionClass]es to dedicated receiver functions.
-   *
    * @see GameActionClass
    * @see GameActionReceiver
    * @see GameActionReceiverProcessor

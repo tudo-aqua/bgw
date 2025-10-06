@@ -24,13 +24,10 @@ import tools.aqua.bgw.components.ComponentView
 /**
  * Event that gets raised for drag gestures.
  *
- * @constructor Creates a [DragEvent] containing [draggedComponent].
- *
  * @param draggedComponent Currently dragged [ComponentView].
  * @property draggedComponent Currently dragged [ComponentView].
- *
+ * @constructor Creates a [DragEvent] containing [draggedComponent].
  * @see DropEvent
- *
  * @since 0.1
  */
 class DragEvent(val draggedComponent: ComponentView) : Event()

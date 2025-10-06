@@ -23,7 +23,7 @@ package tools.aqua.bgw.net.common.response
  * @property status Status code.
  * @property sessionID Session ID for this game. ``null`` if joining was not successful.
  * @property opponents [List] of all opponents currently in this game. Sorted ascending by
- * connection time i.e. index 0 is the game's host.
+ *   connection time i.e. index 0 is the game's host.
  * @property message The Welcome message from the host.
  */
 class JoinGameResponse(

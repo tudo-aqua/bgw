@@ -21,7 +21,6 @@ package tools.aqua.bgw.core
  * Class representing the initial aspect ratio between the window sides.
  *
  * @property ratio Ratio as fraction.
- *
  * @since 0.3
  */
 @Deprecated(

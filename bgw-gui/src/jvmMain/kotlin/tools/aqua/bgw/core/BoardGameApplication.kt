@@ -37,24 +37,17 @@ import tools.aqua.bgw.visual.Visual
  * [Scene]s get shown by calling [showMenuScene] and [showGameScene]. Application starts by calling
  * [show].
  *
- * @constructor Creates the BoardGameApplication with optional title and given width / height. May
- * only be called once per execution.
- *
  * @param windowTitle Title for the application window. Gets displayed in the title bar. Default:
- * [DEFAULT_WINDOW_TITLE].
- *
+ *   [DEFAULT_WINDOW_TITLE].
  * @param width Initial window width. Default: [DEFAULT_WINDOW_WIDTH].
- *
  * @param height Initial window height. Default: [DEFAULT_WINDOW_HEIGHT].
- *
  * @param windowMode Initial window mode. Overrides [isMaximized] and [isFullScreen] if passed.
- * Refer to [WindowMode] docs for further information about the effects.
- *
+ *   Refer to [WindowMode] docs for further information about the effects.
+ * @constructor Creates the BoardGameApplication with optional title and given width / height. May
+ *   only be called once per execution.
  * @throws IllegalStateException If a second application is created.
- *
  * @see BoardGameScene
  * @see MenuScene
- *
  * @since 0.1
  */
 @Suppress("LeakingThis")
@@ -93,7 +86,6 @@ open class BoardGameApplication(
    *
    * @see isFullScreen
    * @see fullscreenExitCombinationHint
-   *
    * @since 0.6
    */
   var fullscreenExitCombination: KeyEvent?
@@ -112,7 +104,6 @@ open class BoardGameApplication(
    *
    * @see isFullScreen
    * @see fullscreenExitCombination
-   *
    * @since 0.6
    */
   var fullscreenExitCombinationHint: String?
@@ -221,7 +212,6 @@ open class BoardGameApplication(
    * Shows a dialog without blocking further thread execution.
    *
    * @param dialog The [Dialog] to show.
-   *
    * @since 0.7
    */
   fun showDialogNonBlocking(dialog: Dialog): Unit {
@@ -346,12 +336,12 @@ open class BoardGameApplication(
 
     /**
      * Loads a font file and registers it in the GUI.
+     *
      * @param path The font file path relative to resources and with file extension which is to be
-     * loaded
+     *   loaded
      * @param fontName The font name used to reference the font
      * @param weight The font weight used to reference the font
      * @return A boolean weather the file could be loaded or not
-     *
      * @since 0.10
      */
     fun loadFont(path: String, fontName: String, weight: Font.FontWeight): Boolean =
@@ -363,9 +353,8 @@ open class BoardGameApplication(
      * extension.
      *
      * @param path The font file path relative to resources and with file extension which is to be
-     * loaded
+     *   loaded
      * @return A boolean weather the file could be loaded or not
-     *
      * @since 0.9
      */
     fun loadFont(path: String): Boolean =

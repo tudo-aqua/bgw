@@ -98,7 +98,6 @@ abstract class Observable {
    * Removes a [listener].
    *
    * @param listener Listener to remove.
-   *
    * @return `true` if the listener has been successfully removed, `false` if it was not found.
    */
   fun removeListener(listener: Observer): Boolean = listeners.remove(listener)

@@ -66,7 +66,6 @@ class RefreshViewController(private val viewController: TetrisViewController) : 
    * Refreshes preview fields.
    *
    * @param preview Preview pieces. Must be size 3.
-   *
    * @throws IllegalArgumentException If array does not contain 3 pieces.
    */
   private fun refreshPreview(preview: Array<Piece>) {

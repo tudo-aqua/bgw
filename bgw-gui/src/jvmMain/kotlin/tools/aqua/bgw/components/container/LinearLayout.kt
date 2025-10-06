@@ -41,26 +41,23 @@ import tools.aqua.bgw.visual.Visual
  * gets used to space the components. Otherwise, the biggest possible spacing is used so that all
  * components are still withing bounds of the [LinearLayout].
  *
- * @constructor Creates a [LinearLayout].
- *
  * @param T Generic [GameComponentView].
  * @param posX horizontal coordinate for this [LinearLayout]. Default: 0.
  * @param posY vertical coordinate for this [LinearLayout]. Default: 0.
  * @param width width for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_WIDTH].
  * @param height height for this [LinearLayout]. Default: [DEFAULT_LINEAR_LAYOUT_HEIGHT].
  * @param spacing spacing between contained [GameComponentView]s. Default:
- * [DEFAULT_LINEAR_LAYOUT_SPACING].
+ *   [DEFAULT_LINEAR_LAYOUT_SPACING].
  * @param visual [Visual] to be used for this [LinearLayout].
  * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
  * @param alignment specifies how the contained [GameComponentView]s should be aligned. Default:
- * [Alignment.TOP_LEFT].
- *
+ *   [Alignment.TOP_LEFT].
+ * @constructor Creates a [LinearLayout].
  * @see GameComponentView
  * @see Orientation
  * @see Alignment
  * @see Visual
  * @see GameComponentContainer
- *
  * @since 0.1
  */
 open class LinearLayout<T : GameComponentView>(
@@ -147,15 +144,13 @@ open class LinearLayout<T : GameComponentView>(
    * @param visual [Visual] to be used for this [LinearLayout].
    * @param orientation orientation for this [LinearLayout]. Default: [Orientation.HORIZONTAL].
    * @param verticalAlignment specifies how the contained components should be aligned vertically.
-   * Default: [VerticalAlignment.TOP].
+   *   Default: [VerticalAlignment.TOP].
    * @param horizontalAlignment specifies how the contained components should be aligned
-   * horizontally. Default: [HorizontalAlignment.LEFT].
-   *
+   *   horizontally. Default: [HorizontalAlignment.LEFT].
    * @see VerticalAlignment
    * @see HorizontalAlignment
    * @see Orientation
    * @see Visual
-   *
    * @since 0.1
    */
   constructor(

@@ -37,19 +37,16 @@ import tools.aqua.bgw.visual.Visual
  * The [Visual] at the [currentSide] value is used to visualize the card. By default, the back side
  * is shown.
  *
- * @constructor Creates a [CardView] with given [Visual]s.
- *
  * @param posX Horizontal coordinate for this [CardView]. Default: 0.
  * @param posY Vertical coordinate for this [CardView]. Default: 0.
  * @param width Width for this [CardView]. Default: [DEFAULT_CARD_WIDTH].
  * @param height Height for this [CardView]. Default: [DEFAULT_CARD_HEIGHT].
  * @param front Visual to represent the front side of the card.
  * @param back Visual to represent the back side of the card. Default: same [Visual] as front.
- *
+ * @constructor Creates a [CardView] with given [Visual]s.
  * @see CardSide
  * @see Visual
  * @see GameComponentView
- *
  * @since 0.1
  */
 open class CardView(

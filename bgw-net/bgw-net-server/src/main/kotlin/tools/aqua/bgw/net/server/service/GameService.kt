@@ -139,7 +139,6 @@ class GameService(private val gameRepository: GameRepository) {
    * Returns [GameInstance] instance associated with [sessionID].
    *
    * @param sessionID Session ID to search.
-   *
    * @return [GameInstance] instance associated with [sessionID], 'null' if no game was found.
    */
   fun getBySessionID(sessionID: String): GameInstance? = gameRepository.getBySessionID(sessionID)

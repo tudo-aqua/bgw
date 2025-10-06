@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import gradle.kotlin.dsl.accessors._357b8ca9003504b71e2c9c6cf56313b6.dokka
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import tools.aqua.defaultFormat
@@ -36,37 +37,14 @@ detekt {
 
 spotless { kotlin { defaultFormat(rootProject) } }
 
-val kdocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("kdoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    }
+java {}
 
-val kdoc: Configuration by
-    configurations.creating {
-      isCanBeConsumed = true
-      isCanBeResolved = false
-    }
-
-artifacts { add(kdoc.name, kdocJar) }
-
-val javadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    }
-
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
+dokka {}
 
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-  dokkaGfmPlugin(libs.dokka.javadoc)
-
   testImplementation(platform(libs.junit.bom))
   testImplementation(libs.bundles.test)
 }
@@ -78,7 +56,7 @@ tasks.test {
 
 kotlin.target.compilations.all {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
     // allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }

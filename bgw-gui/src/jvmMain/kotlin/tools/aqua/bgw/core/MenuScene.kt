@@ -30,11 +30,9 @@ import tools.aqua.bgw.visual.Visual
  * @param height [Scene] [height] in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
  * @param background [BoardGameScene] [background] [Visual]. Default: [ColorVisual.WHITE].
  * @param blurRadius The radius of the blur effect applied to the background of this [MenuScene].
- * Default: [DEFAULT_BLUR_RADIUS].
- *
+ *   Default: [DEFAULT_BLUR_RADIUS].
  * @see Scene
  * @see BoardGameScene
- *
  * @since 0.1
  */
 open class MenuScene(

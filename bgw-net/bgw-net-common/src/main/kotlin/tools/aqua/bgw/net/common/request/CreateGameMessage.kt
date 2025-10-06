@@ -22,7 +22,7 @@ package tools.aqua.bgw.net.common.request
  *
  * @property gameID ID of the current game to be used.
  * @property sessionID Unique id for the new session to be created on the server or ``null`` for
- * auto.
+ *   auto.
  * @property greetingMessage Greeting message to be broadcast to all players joining this session.
  */
 data class CreateGameMessage(

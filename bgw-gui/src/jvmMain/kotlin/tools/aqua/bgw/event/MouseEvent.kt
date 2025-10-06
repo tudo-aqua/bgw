@@ -22,15 +22,13 @@ package tools.aqua.bgw.event
 /**
  * Event that gets raised for mouse inputs.
  *
- * @constructor Creates a [MouseEvent] with given [button].
- *
  * @property button Corresponding mouse button enum value.
  * @param button Corresponding mouse button enum value.
  * @param posX The absolute X-coordinate of the mouse event position in the active
- * [tools.aqua.bgw.core.Scene].
+ *   [tools.aqua.bgw.core.Scene].
  * @param posY The absolute Y-coordinate of the mouse event position in the active
- * [tools.aqua.bgw.core.Scene].
- *
+ *   [tools.aqua.bgw.core.Scene].
+ * @constructor Creates a [MouseEvent] with given [button].
  * @since 0.1
  */
 class MouseEvent(

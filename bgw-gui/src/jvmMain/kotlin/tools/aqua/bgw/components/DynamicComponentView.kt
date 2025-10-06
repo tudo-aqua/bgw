@@ -31,14 +31,12 @@ import tools.aqua.bgw.visual.Visual
  * Baseclass for all [ComponentView]s that can be draggable. Inheriting components can only be added
  * to [BoardGameScene]s.
  *
- * @constructor Creates a [DynamicComponentView].
- *
  * @param posX The X coordinate for this [DynamicComponentView] relative to its container.
  * @param posY The Y coordinate for this [DynamicComponentView] relative to its container.
  * @param width Width for this [DynamicComponentView].
  * @param height Height for this [DynamicComponentView].
  * @param visual Visual for this [DynamicComponentView].
- *
+ * @constructor Creates a [DynamicComponentView].
  * @see BoardGameScene
  */
 abstract class DynamicComponentView

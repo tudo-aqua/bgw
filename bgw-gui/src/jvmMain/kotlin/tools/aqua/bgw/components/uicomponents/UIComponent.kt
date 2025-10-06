@@ -36,7 +36,6 @@ import tools.aqua.bgw.visual.Visual
  * @param height Height for this [UIComponent].
  * @param font Font for this [UIComponent]. Usage depends on subclass.
  * @param visual Background [Visual].
- *
  * @see Font
  * @see Visual
  * @see StaticComponentView

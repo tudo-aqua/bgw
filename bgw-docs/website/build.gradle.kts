@@ -98,5 +98,6 @@ fun generateProperties(suffix: String = ""): String {
         val GENERATE_SAMPLES = $generateSamples
         val BGW_VERSION = "${rootProject.version}"
     }
-""".trimIndent()
+"""
+      .trimIndent()
 }

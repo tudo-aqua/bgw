@@ -27,9 +27,7 @@ import tools.aqua.bgw.components.ComponentView
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate.
  * @param duration Duration in milliseconds.
- *
  * @see Animation
- *
  * @since 0.1
  */
 sealed class ComponentAnimation<T : ComponentView>(

@@ -23,6 +23,7 @@ import org.gradle.api.Project
 
 /**
  * Apply the project default formatting and license header.
+ *
  * @param rootProject the root project; used to look up the license header.
  */
 fun KotlinExtension.defaultFormat(rootProject: Project) {
@@ -34,6 +35,7 @@ fun KotlinExtension.defaultFormat(rootProject: Project) {
 
 /**
  * Apply the project default formatting and license header.
+ *
  * @param rootProject the root project; used to look up the license header.
  */
 fun KotlinGradleExtension.defaultFormat(rootProject: Project) {

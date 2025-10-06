@@ -49,19 +49,16 @@ import tools.aqua.bgw.visual.Visual
  * state gets restored. The [GameComponentView] at the highest index in the components list
  * registers the next drag and drop gesture above this [Satchel].
  *
- * @constructor Creates a [Satchel].
- *
  * @param T Generic [GameComponentView].
  * @param posX horizontal coordinate for this [Satchel]. Default: 0.
  * @param posY vertical coordinate for this [Satchel]. Default: 0.
  * @param width width for this [Satchel]. Default: [DEFAULT_SATCHEL_WIDTH].
  * @param height height for this [Satchel]. Default: [DEFAULT_SATCHEL_HEIGHT].
  * @param visual visual for this [Satchel]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates a [Satchel].
  * @see GameComponentView
  * @see Visual
  * @see GameComponentContainer
- *
  * @since 0.1
  */
 open class Satchel<T : GameComponentView>(

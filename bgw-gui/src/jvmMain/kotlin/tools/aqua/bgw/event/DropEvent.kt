@@ -26,15 +26,12 @@ import tools.aqua.bgw.components.ComponentView
  *
  * Receiver is the dragged component.
  *
- * @constructor Creates a [DropEvent] containing [draggedComponent] and [dropTarget].
- *
  * @param draggedComponent Currently dragged [ComponentView].
  * @param dropTarget [ComponentView] that is a possible drop target below the currently dragged
- * component.
+ *   component.
  * @property draggedComponent Currently dragged [ComponentView].
- *
+ * @constructor Creates a [DropEvent] containing [draggedComponent] and [dropTarget].
  * @see DragEvent
- *
  * @since 0.1
  */
 class DropEvent(

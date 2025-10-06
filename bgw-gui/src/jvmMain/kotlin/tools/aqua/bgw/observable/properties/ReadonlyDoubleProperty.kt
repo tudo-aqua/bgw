@@ -22,10 +22,8 @@ package tools.aqua.bgw.observable.properties
 /**
  * A ReadonlyDoubleProperty.
  *
- * @constructor Creates a [ReadonlyDoubleProperty] with given initial value.
- *
  * @param initialValue Initial Value. Default: 0.0.
- *
+ * @constructor Creates a [ReadonlyDoubleProperty] with given initial value.
  * @since 0.3
  */
 open class ReadonlyDoubleProperty(initialValue: Number = 0.0) :

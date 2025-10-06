@@ -55,7 +55,6 @@ class MessageService(
    *
    * @param session Sender [WebSocketSession].
    * @param messageString The message.
-   *
    * @throws UnsupportedOperationException For unsupported message types.
    */
   @Throws(UnsupportedOperationException::class)
@@ -206,6 +205,7 @@ class MessageService(
       }
     }
   }
+
   // endregion
 
   // region Send messages

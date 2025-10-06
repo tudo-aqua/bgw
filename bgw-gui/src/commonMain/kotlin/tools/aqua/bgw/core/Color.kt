@@ -20,13 +20,11 @@ package tools.aqua.bgw.core
 /**
  * Represents a color with red, green, blue and alpha values.
  *
- * @constructor Creates a [Color] with given red, green, blue and alpha values.
- *
  * @property red Red value. Must be in range 0 until 255.
  * @property green Green value. Must be in range 0 until 255.
  * @property blue Blue value. Must be in range 0 until 255.
  * @property alpha Alpha value. Must be in range 0.0 until 1.0.
- *
+ * @constructor Creates a [Color] with given red, green, blue and alpha values.
  * @since 0.10
  */
 data class Color(val red: Int, val green: Int, val blue: Int, val alpha: Double) {

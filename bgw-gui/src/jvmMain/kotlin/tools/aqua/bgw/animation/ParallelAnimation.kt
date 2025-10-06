@@ -23,13 +23,10 @@ package tools.aqua.bgw.animation
  * An [Animation] consisting of multiple Animations that are played in parallel, when this
  * [ParallelAnimation] is played.
  *
- * @constructor Creates a new [ParallelAnimation].
- *
  * @param animations The [Animation]s that this [ParallelAnimation] should contain.
- *
+ * @constructor Creates a new [ParallelAnimation].
  * @see Animation
  * @see SequentialAnimation
- *
  * @since 0.5
  */
 data class ParallelAnimation(
@@ -42,10 +39,8 @@ data class ParallelAnimation(
    * the animations.
    *
    * @param animation The [Animation]s that this [ParallelAnimation] should contain.
-   *
    * @see Animation
    * @see SequentialAnimation
-   *
    * @since 0.5
    */
   constructor(vararg animation: Animation) : this(animation.toList())

@@ -32,10 +32,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width [Scene] [width] in virtual coordinates. Default: [DEFAULT_SCENE_WIDTH].
  * @param height [Scene] [height] in virtual coordinates. Default: [DEFAULT_SCENE_HEIGHT].
  * @param background [BoardGameScene] [background] [Visual]. Default: [ColorVisual.WHITE].
- *
  * @see Scene
  * @see MenuScene
- *
  * @since 0.1
  */
 open class BoardGameScene(
@@ -85,7 +83,6 @@ open class BoardGameScene(
    *
    * @see lock
    * @see unlock
-   *
    * @since 0.10
    */
   var onLockChanged: ((Boolean) -> Unit)? = null

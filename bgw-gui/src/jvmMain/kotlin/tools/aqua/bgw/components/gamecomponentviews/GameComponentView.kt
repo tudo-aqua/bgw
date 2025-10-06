@@ -33,7 +33,6 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [GameComponentView].
  * @param height Height for this [GameComponentView].
  * @param visual Visual for this [GameComponentView].
- *
  * @see DynamicComponentView
  * @see CardView
  * @see TokenView

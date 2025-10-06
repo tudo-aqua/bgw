@@ -41,12 +41,10 @@ class LogicController(val view: Refreshable) {
   /** Network service instance. */
   val networkService: NetworkService = NetworkService(this)
 
-  /**
-   */
+  /**  */
   var isHost: Boolean = false
 
-  /**
-   */
+  /**  */
   var isOnline: Boolean = false
 
   // region init
@@ -129,6 +127,7 @@ class LogicController(val view: Refreshable) {
     game.gameStack.cards.clear()
     game.gameStack.cards.add(message.gameStack.deserialize())
   }
+
   // endregion
 
   /** Current player draws a card from drawStack. Advances player. */

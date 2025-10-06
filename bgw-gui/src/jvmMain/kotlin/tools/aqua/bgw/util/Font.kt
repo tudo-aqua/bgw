@@ -28,23 +28,19 @@ import tools.aqua.bgw.util.Font.FontWeight
  * This class is used to represent a font. For more customization of fonts, the CSS feature can be
  * used.
  *
- * @constructor Creates a [Font].
- *
  * @property size Size of this Font in `px`. Default: 14.
  * @property color Color of this font. Default: [Color.BLACK].
  * @property family Font family as a String for this Font. Default: "Arial".
  * @property fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
  * @property fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
- *
  * @param size Size of this Font in `px`. Default: 14.
  * @param color Color of this font. Default: [Color.BLACK].
  * @param family Font family as a String for this Font. Default: "Arial".
  * @param fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
  * @param fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
- *
+ * @constructor Creates a [Font].
  * @see FontWeight
  * @see FontStyle
- *
  * @since 0.1
  */
 data class Font(
@@ -64,9 +60,7 @@ data class Font(
    * @param family Font family as a String for this Font. Default: "Arial".
    * @param fontWeight Font weight for this Font. Default: [FontWeight.NORMAL].
    * @param fontStyle Font style for this Font. Default: [FontStyle.NORMAL].
-   *
    * @see Color
-   *
    * @since 0.10
    */
   @Deprecated("Using java.awt.Color is no longer recommended as of BGW 0.10.", ReplaceWith("Color"))
@@ -87,7 +81,6 @@ data class Font(
    * Enum class for representing all available font weights for the Font class.
    *
    * @see Font
-   *
    * @since 0.1
    */
   enum class FontWeight {
@@ -153,7 +146,6 @@ data class Font(
    * Enum class for representing all available font styles for the Font class.
    *
    * @see Font
-   *
    * @since 0.1
    */
   enum class FontStyle {

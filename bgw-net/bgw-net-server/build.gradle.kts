@@ -26,6 +26,8 @@ dependencies {
   implementation(project(":bgw-net:bgw-net-common"))
 
   implementation(libs.kotlinx.serialization.json)
+
+  implementation(libs.spring.boot.logging)
   implementation(libs.spring.boot.devtools)
 
   // json kotlin schema
@@ -33,7 +35,6 @@ dependencies {
   implementation(libs.jsonSchemaValidator)
 
   implementation(libs.spring.boot.jpa)
-  implementation(libs.hibernateTypes)
   runtimeOnly(libs.postgreSQL.jdbc)
 
   implementation(libs.spring.boot.websocket)
@@ -43,6 +44,8 @@ dependencies {
   // Integration testing
   testImplementation(libs.h2database.h2)
   testImplementation(libs.testcontainers.junit.jupiter)
+
+  implementation("org.apache.commons:commons-fileupload2-core:2.0.0-M4")
 }
 
 vaadin { productionMode = true }

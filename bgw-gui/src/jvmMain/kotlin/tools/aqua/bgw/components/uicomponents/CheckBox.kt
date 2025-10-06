@@ -30,8 +30,6 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A simple [CheckBox] with a [text].
  *
- * @constructor Creates a [CheckBox].
- *
  * @param posX Horizontal coordinate for this [CheckBox]. Default: 0.
  * @param posY Vertical coordinate for this [CheckBox]. Default: 0.
  * @param width Width for this [CheckBox]. Default: [DEFAULT_CHECKBOX_WIDTH].
@@ -44,12 +42,11 @@ import tools.aqua.bgw.visual.Visual
  * @param isChecked The initial checked state. Default: `false`.
  * @param allowIndeterminate The initial [isIndeterminateAllowed] state. Default: `false`.
  * @param isIndeterminate The initial [isIndeterminate] state. Default: `false`.
- *
+ * @constructor Creates a [CheckBox].
  * @see Font
  * @see Alignment
  * @see Visual
  * @see LabeledUIComponent
- *
  * @since 0.1
  */
 open class CheckBox(
@@ -128,7 +125,6 @@ open class CheckBox(
    * Gets invoked whenever this [CheckBox] changes the checked state.
    *
    * @see isChecked
-   *
    * @since 0.10
    */
   var onCheckedChanged: ((Boolean) -> Unit)? = null
@@ -137,7 +133,6 @@ open class CheckBox(
    * Gets invoked whenever this [CheckBox] changes the indeterminate state.
    *
    * @see isIndeterminate
-   *
    * @since 0.10
    */
   var onIndeterminateChanged: ((Boolean) -> Unit)? = null

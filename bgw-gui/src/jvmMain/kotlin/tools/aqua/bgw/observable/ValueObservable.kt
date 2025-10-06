@@ -102,7 +102,6 @@ abstract class ValueObservable<T> {
    * Removes a [listener].
    *
    * @param listener listener to remove.
-   *
    * @return `true` if the listener has been successfully removed, `false` if it was not found.
    */
   fun removeListener(listener: ValueObserver<T>): Boolean = listeners.remove(listener)
@@ -119,7 +118,6 @@ abstract class ValueObservable<T> {
    *
    * @param initialValue Initial value to notify.
    * @param expectedValue Expected value to notify.
-   *
    * @since 0.10
    */
   fun once(initialValue: T, expectedValue: T, listener: ((T, T) -> Unit)) {

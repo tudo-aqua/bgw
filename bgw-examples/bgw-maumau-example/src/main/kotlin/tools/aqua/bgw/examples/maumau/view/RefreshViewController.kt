@@ -498,6 +498,7 @@ class RefreshViewController(private val viewController: MauMauViewController) : 
     onMouseEntered = null
     onMouseExited = null
   }
+
   // endregion
 
   // region helper functions

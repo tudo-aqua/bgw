@@ -32,12 +32,10 @@ import tools.aqua.bgw.visual.Visual
  * @param width Width for this [LayoutView].
  * @param height Height for this [LayoutView].
  * @param visual Initial visual for this [LayoutView].
- *
  * @see StaticComponentView
  * @see Pane
  * @see GridPane
  * @see Visual
- *
  * @since 0.1
  */
 sealed class LayoutView<T : ComponentView>(

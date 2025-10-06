@@ -28,10 +28,9 @@ import kotlinx.serialization.Serializable
  *
  * To generate e.g. "(*.png, *.jpg)" set [extensions] = ("png", "jpg").
  *
- * @constructor Creates an [ExtensionFilter].
- *
  * @property description File type description (not displayed in dialog).
  * @property extensions File extensions.
+ * @constructor Creates an [ExtensionFilter].
  */
 @Serializable
 data class ExtensionFilter

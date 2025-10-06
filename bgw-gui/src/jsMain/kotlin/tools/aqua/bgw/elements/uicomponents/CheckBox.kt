@@ -84,11 +84,11 @@ internal val CheckBox =
                   props.data.isChecked,
                   props.data.isIndeterminate,
                   props.data.allowIndeterminate)) {
-            document.getElementById(props.data.id + "--checkbox")?.let {
-              (it as HTMLInputElement).indeterminate =
-                  if (!props.data.isChecked) props.data.isIndeterminate else false
-            }
-          }
+                document.getElementById(props.data.id + "--checkbox")?.let {
+                  (it as HTMLInputElement).indeterminate =
+                      if (!props.data.isChecked) props.data.isIndeterminate else false
+                }
+              }
 
           css {
             width = 20.bgw

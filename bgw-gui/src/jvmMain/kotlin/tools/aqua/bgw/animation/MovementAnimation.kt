@@ -30,8 +30,6 @@ import tools.aqua.bgw.util.Coordinate
  *
  * Moves given [ComponentView] relative to parents anchor point.
  *
- * @constructor Creates a [MovementAnimation] for the given [ComponentView].
- *
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate
  * @param fromX Initial X position. Default: Current [ComponentView.posX].
@@ -40,11 +38,15 @@ import tools.aqua.bgw.util.Coordinate
  * @param toY Resulting Y position. Default: Current [ComponentView.posY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  * @param interpolation [AnimationInterpolation] to use for the animation. Default:
- * [AnimationInterpolation.SMOOTH].
- *
+ *   [AnimationInterpolation.SMOOTH].
+ * @constructor Creates a [MovementAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
  * @see ComponentView
+ *
+ * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.greenToken
+ * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationTo
+ * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playMovementAnimationTo
  *
  * @since 0.1
  */
@@ -59,7 +61,6 @@ class MovementAnimation<T : ComponentView>(
      * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
      *
      * @see AnimationInterpolation
-     *
      * @since 0.10
      */
     val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
@@ -85,11 +86,14 @@ class MovementAnimation<T : ComponentView>(
    * @param byY Relative Y movement.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-   * [AnimationInterpolation.SMOOTH].
-   *
+   *   [AnimationInterpolation.SMOOTH].
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
+   *
+   * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.blueToken
+   * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationBy
+   * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playMovementAnimationBy
    *
    * @since 0.1
    */
@@ -103,10 +107,12 @@ class MovementAnimation<T : ComponentView>(
       componentView = componentView,
       fromX = componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX,
       fromY = componentView.parent?.getChildPosition(componentView)?.yCoord ?: componentView.posY,
-      toX = (componentView.parent?.getChildPosition(componentView)?.xCoord
-              ?: componentView.posX) + byX.toDouble(),
-      toY = (componentView.parent?.getChildPosition(componentView)?.yCoord
-              ?: componentView.posY) + byY.toDouble(),
+      toX =
+          (componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX) +
+              byX.toDouble(),
+      toY =
+          (componentView.parent?.getChildPosition(componentView)?.yCoord ?: componentView.posY) +
+              byY.toDouble(),
       duration = duration,
       interpolation = interpolation)
 
@@ -118,11 +124,11 @@ class MovementAnimation<T : ComponentView>(
      * @param T Generic [ComponentView].
      * @param componentView [ComponentView] to animate
      * @param toComponentViewPosition Defines the destination [ComponentView] to move the given
-     * component to.
+     *   component to.
      * @param scene The [Scene].
      * @param duration [Animation] duration in milliseconds. Default: 1 second
      * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-     * [AnimationInterpolation.SMOOTH].
+     *   [AnimationInterpolation.SMOOTH].
      */
     fun <T : ComponentView> toComponentView(
         componentView: T,

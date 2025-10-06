@@ -126,7 +126,10 @@ internal object AnimationMapper {
             animationType = "dice"
           }
       is DelayAnimation ->
-          (mapSpecific(animation) as DelayAnimationData).apply { duration = animation.duration }
+          (mapSpecific(animation) as DelayAnimationData).apply {
+            duration = animation.duration
+            animationType = "delay"
+          }
       else ->
           throw IllegalArgumentException("Unknown animation type: ${animation::class.simpleName}")
     }

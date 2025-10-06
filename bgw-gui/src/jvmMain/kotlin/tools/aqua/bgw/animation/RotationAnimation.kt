@@ -29,18 +29,15 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
  *
  * Rotates [ComponentView] to given angle.
  *
- * @constructor Creates a [RotationAnimation] for the given [ComponentView].
- *
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate.
  * @param fromAngle Initial angle. Default: Current [ComponentView.rotation].
  * @param toAngle Resulting angle. Default: Current [ComponentView.rotation].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
- *
+ * @constructor Creates a [RotationAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
  * @see ComponentView
- *
  * @since 0.1
  */
 class RotationAnimation<T : ComponentView>(
@@ -50,11 +47,10 @@ class RotationAnimation<T : ComponentView>(
     duration: Int = DEFAULT_ANIMATION_DURATION,
     /**
      * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
+     *
      * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-     * [AnimationInterpolation.SMOOTH].
-     *
+     *   [AnimationInterpolation.SMOOTH].
      * @see AnimationInterpolation
-     *
      * @since 0.10
      */
     val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
@@ -73,12 +69,10 @@ class RotationAnimation<T : ComponentView>(
    * @param byAngle relative angle. Default: 0
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-   * [AnimationInterpolation.SMOOTH].
-   *
+   *   [AnimationInterpolation.SMOOTH].
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
-   *
    * @since 0.1
    */
   constructor(

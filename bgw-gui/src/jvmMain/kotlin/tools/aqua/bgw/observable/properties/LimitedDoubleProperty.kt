@@ -24,14 +24,11 @@ package tools.aqua.bgw.observable.properties
  * Therefore [upperBoundInclusive] must be greater or equal to [lowerBoundInclusive]. The Range is
  * constant and cannot be altered after object creation.
  *
- * @constructor Creates a [LimitedDoubleProperty] with given bounds and initial value.
- *
  * @param lowerBoundInclusive Lower bound inclusive. Default: -inf.
  * @param upperBoundInclusive Upper bound inclusive. Default: +inf.
  * @param initialValue Initial Value. Default: [lowerBoundInclusive].
- *
+ * @constructor Creates a [LimitedDoubleProperty] with given bounds and initial value.
  * @throws IllegalArgumentException If a value out of range is set as initialValue.
- *
  * @since 0.1
  */
 open class LimitedDoubleProperty(

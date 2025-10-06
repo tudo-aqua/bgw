@@ -107,6 +107,7 @@ internal class AdvancedSceneComponents :
     TERTIARY(Color(0xffc656), Color(0x0f141f));
 
     fun getBackground() = background
+
     fun getForeground() = foreground
   }
 

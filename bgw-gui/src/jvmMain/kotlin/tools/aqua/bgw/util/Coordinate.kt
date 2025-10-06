@@ -25,11 +25,9 @@ import tools.aqua.bgw.util.Trig.sinD
 /**
  * A Coordinate containing [xCoord] and [yCoord].
  *
- * @constructor Creates a [Coordinate] with given [xCoord] and [yCoord].
- *
  * @param xCoord The x coordinate.
  * @param yCoord The y coordinate.
- *
+ * @constructor Creates a [Coordinate] with given [xCoord] and [yCoord].
  * @since 0.1
  */
 open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
@@ -44,7 +42,6 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * Returns a new coordinate object containing added [xCoord] and [yCoord].
    *
    * @param other [Coordinate] to add.
-   *
    * @return New coordinate object containing added [xCoord] and [yCoord].
    */
   operator fun plus(other: Coordinate): Coordinate =
@@ -54,7 +51,6 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * Returns a new coordinate object containing subtracted [xCoord] and [yCoord].
    *
    * @param other [Coordinate] to subtract.
-   *
    * @return New coordinate object containing subtracted [xCoord] and [yCoord].
    */
   operator fun minus(other: Coordinate): Coordinate =
@@ -64,9 +60,7 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * Returns a new coordinate object containing multiplied [Coordinate] with [factor].
    *
    * @param factor factor to multiply with.
-   *
    * @return New coordinate object containing multiplied [Coordinate] with [factor].
-   *
    * @since 0.3
    */
   operator fun times(factor: Number): Coordinate =
@@ -76,11 +70,8 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * Returns a new coordinate object containing divided [Coordinate] by [denominator].
    *
    * @param denominator denominator to divide by.
-   *
    * @return New coordinate object containing divided [Coordinate] by [denominator].
-   *
    * @throws IllegalArgumentException If [denominator] is 0.
-   *
    * @since 0.3
    */
   operator fun div(denominator: Number): Coordinate {
@@ -109,7 +100,7 @@ open class Coordinate(xCoord: Number = 0, yCoord: Number = 0) {
    * Compares coordinate to another Object.
    *
    * @return `true` if other object is Coordinate and [xCoord] == other.xCoord && [yCoord] ==
-   * other.yCoord.
+   *   other.yCoord.
    */
   override fun equals(other: Any?): Boolean {
     if (other !is Coordinate) return false

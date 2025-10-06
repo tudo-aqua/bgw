@@ -26,7 +26,6 @@ import emotion.react.styles
 import kotlinx.browser.document
 import kotlinx.browser.window
 import react.*
-import react.dom.aria.ariaExpanded
 import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div

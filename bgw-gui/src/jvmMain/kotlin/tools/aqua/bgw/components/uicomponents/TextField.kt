@@ -29,24 +29,21 @@ import tools.aqua.bgw.visual.Visual
  *
  * Whenever user input occurs the [text] field gets updated.
  *
- * @constructor Creates a [TextField].
- *
  * @param posX Horizontal coordinate for this [TextField]. Default: 0.
  * @param posY Vertical coordinate for this [TextField]. Default: 0.
  * @param width Width for this [TextField]. Default: [DEFAULT_TEXT_FIELD_WIDTH].
  * @param height Height for this [TextField]. Default: [DEFAULT_TEXT_FIELD_HEIGHT].
  * @param text Initial text for this [TextField]. Default: empty String.
  * @param prompt Prompt for this [TextField]. This gets displayed as a prompt to the user whenever
- * the label is an empty string. Default: empty string.
+ *   the label is an empty string. Default: empty string.
  * @param font [Font] to be used to display [text].
  * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
- *
+ * @constructor Creates a [TextField].
  * @see Font
  * @see Visual
  * @see TextInputUIComponent
  * @see PasswordField
  * @see TextArea
- *
  * @since 0.1
  */
 open class TextField(

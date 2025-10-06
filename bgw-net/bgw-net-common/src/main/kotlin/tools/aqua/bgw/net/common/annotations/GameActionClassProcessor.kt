@@ -50,7 +50,6 @@ object GameActionClassProcessor {
    * Prints Error message if only one condition is met. Classes get ignored in this case.
    *
    * @return Set of all Classes annotated with [GameActionClass] and extending [GameAction].
-   *
    * @see GameActionClass
    * @see GameActionReceiver
    * @see GameActionClassProcessor

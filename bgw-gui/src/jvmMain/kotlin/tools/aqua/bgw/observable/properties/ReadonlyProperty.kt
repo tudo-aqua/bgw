@@ -24,17 +24,14 @@ import tools.aqua.bgw.observable.ValueObservable
 /**
  * Property baseclass providing observable fields.
  *
- * @constructor Creates a [ReadonlyProperty] with given initial value.
- *
  * @param T Type of boxed data.
  * @param initialValue Initial value of this property.
- *
+ * @constructor Creates a [ReadonlyProperty] with given initial value.
  * @see Property
  * @see ReadonlyBooleanProperty
  * @see ReadonlyDoubleProperty
  * @see ReadonlyIntegerProperty
  * @see ReadonlyStringProperty
- *
  * @since 0.3
  */
 open class ReadonlyProperty<T>(initialValue: T) : ValueObservable<T>() {
