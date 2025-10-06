@@ -38,7 +38,6 @@ dependencies {
   implementation(libs.gradle.taskTree)
   implementation(libs.gradle.vaadin)
 
-  // Maven publish plugin - add as implementation dependency
   implementation("com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin:0.34.0")
 
   implementation(
