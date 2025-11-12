@@ -138,6 +138,7 @@ kotlin {
         implementation("org.jetbrains.kotlin-wrappers:kotlin-react-use:${wrappersVersion}")
         implementation(npm("@dnd-kit/core", "6.2.0"))
         implementation(npm("react-zoom-pan-pinch", "3.6.1"))
+        implementation(npm("animejs", "4.2.2"))
       }
     }
     // val jsTest by getting

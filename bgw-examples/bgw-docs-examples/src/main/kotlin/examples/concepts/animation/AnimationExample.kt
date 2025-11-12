@@ -86,7 +86,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
   private val cardRotation: CardView =
       CardView(posX = 650, posY = 450, front = imageFront, back = imageBack)
   private val cardOpacity: CardView =
-      CardView(posX = 800, posY = 450, front = imageFront, back = imageBack)
+      CardView(posX = 800, posY = 450, front = imageFront, back = imageBack).apply { opacity = 0.5 }
   private val cardStretch: CardView =
       CardView(posX = 950, posY = 450, front = imageFront, back = imageBack)
   private val cardFlip: CardView =
@@ -109,7 +109,8 @@ class AnimationExample : BoardGameApplication("Animation example") {
     }
     buttonMovement.onMouseClicked = {
       gameScene.playAnimation(
-          MovementAnimation(componentView = cardMovement, byX = 0, byY = -50, duration = 1000))
+          SequentialAnimation(
+          MovementAnimation(componentView = cardMovement, byX = 0, byY = -50, duration = 2000), RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 2000)))
     }
     buttonRotation.onMouseClicked = {
       gameScene.playAnimation(
@@ -118,7 +119,8 @@ class AnimationExample : BoardGameApplication("Animation example") {
     buttonOpacity.onMouseClicked = {
       gameScene.playAnimation(
           FadeAnimation(
-              componentView = cardOpacity, fromOpacity = 1.0, toOpacity = 0.0, duration = 1000))
+                  componentView = cardOpacity, fromOpacity = 0.5, toOpacity = 0.0, duration = 1000)
+              .apply {})
     }
     buttonStretch.onMouseClicked = {
       gameScene.playAnimation(

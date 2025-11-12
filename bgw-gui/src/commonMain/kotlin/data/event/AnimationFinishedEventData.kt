@@ -17,6 +17,9 @@
 
 package data.event
 
+import ID
 import kotlinx.serialization.Serializable
 
-@Serializable internal class AnimationFinishedEventData : EventData()
+@Serializable internal class AnimationFinishedEventData : EventData() {
+    var componentId : ID? = null
+}

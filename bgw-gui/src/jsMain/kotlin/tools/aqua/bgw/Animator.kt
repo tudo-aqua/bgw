@@ -18,14 +18,25 @@
 package tools.aqua.bgw
 
 import AnimationData
+import ComponentViewData
 import DiceViewData
 import ID
 import data.animation.*
+import js.reflect.unsafeCast
+import kotlin.js.Date
+import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.Node
+import org.w3c.dom.pointerevents.PointerEvent
 import react.dom.client.Root
 import react.dom.client.createRoot
+import tools.aqua.bgw.AnimatorBackup.CLEANUP_MS
+import tools.aqua.bgw.AnimatorBackup.DELTA_MS
+import tools.aqua.bgw.AnimatorBackup.clearComponentAnimations
+import tools.aqua.bgw.AnimatorBackup.clearSingleTimeoutAndInterval
+import tools.aqua.bgw.AnimatorBackup.timeouts
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.bgwUnit
 import web.dom.Element
 import web.timers.Interval
 import web.timers.Timeout
@@ -33,8 +44,265 @@ import web.timers.clearInterval
 import web.timers.clearTimeout
 import web.timers.setInterval
 import web.timers.setTimeout
+import kotlin.collections.get
+
+/**
+ * Accepts:<br>
+ * - `Number` - Absolute position in milliseconds (e.g., `500` places element at exactly 500ms)<br>
+ * - `'+=Number'` - Addition: Position element X ms after the last element (e.g., `'+=100'`)<br>
+ * - `'-=Number'` - Subtraction: Position element X ms before the last element's end (e.g.,
+ *   `'-=100'`)<br>
+ * - `'*=Number'` - Multiplier: Position element at a fraction of the total duration (e.g., `'*=.5'`
+ *   for halfway)<br>
+ * - `'<'` - Previous end: Position element at the end position of the previous element<br>
+ * - `'<<'` - Previous start: Position element at the start position of the previous element<br>
+ * - `'<<+=Number'` - Combined: Position element relative to previous element's start (e.g.,
+ *   `'<<+=250'`)<br>
+ * - `'label'` - Label: Position element at a named label position (e.g., `'My Label'`)
+ */
+internal typealias TimelinePosition =
+    Any /* number | `+=${number}` | `-=${number}` | `*=${number}` | "<" | "<<" | `<<+=${number}` | `<<-=${number}` | string */
+
+/**
+ * Accepts:<br>
+ * - `Number` - Absolute position in milliseconds (e.g., `500` places animation at exactly
+ *   500ms)<br>
+ * - `'+=Number'` - Addition: Position animation X ms after the last animation (e.g., `'+=100'`)<br>
+ * - `'-=Number'` - Subtraction: Position animation X ms before the last animation's end (e.g.,
+ *   `'-=100'`)<br>
+ * - `'*=Number'` - Multiplier: Position animation at a fraction of the total duration (e.g.,
+ *   `'*=.5'` for halfway)<br>
+ * - `'<'` - Previous end: Position animation at the end position of the previous animation<br>
+ * - `'<<'` - Previous start: Position animation at the start position of the previous animation<br>
+ * - `'<<+=Number'` - Combined: Position animation relative to previous animation's start (e.g.,
+ *   `'<<+=250'`)<br>
+ * - `'label'` - Label: Position animation at a named label position (e.g., `'My Label'`)<br>
+ * - `stagger(String|Nummber)` - Stagger multi-elements animation positions (e.g., 10, 20, 30...)
+ */
+internal external interface TimelineOptions {
+  var defaults: DefaultsParams?
+  var playbackEase: String?
+}
+
+internal typealias Callback<T> = (self: T, e: PointerEvent) -> Unit
+
+internal class AnimationDetails() {
+  val animations = mutableListOf<Pair<AnimationData, JSAnimation>>()
+  val initialState: ComponentViewData? = null
+}
 
 internal object Animator {
+  private val animations = mutableMapOf<ID, AnimationDetails>()
+
+  fun startAnimation(
+      animationData: AnimationData,
+      parallelAnimations: List<AnimationData> = listOf(),
+      callback: (ID, ID?) -> Unit
+  ) {
+//    if (!animationData.isRunning && animationData is ComponentAnimationData) {
+//      revertSpecificAnimation(animationData)
+//      return
+//    }
+
+    when (animationData) {
+      is ComponentAnimationData -> {
+        when (animationData) {
+          is FadeAnimationData,
+          is MovementAnimationData,
+          is RotationAnimationData,
+          is ScaleAnimationData ->
+              startComponentAnimation(animationData, parallelAnimations, callback)
+          //                    is FlipAnimationData -> startFlipAnimation(animationData, callback)
+          //                    is SteppedComponentAnimationData -> {
+          //                        when (animationData) {
+          //                            is RandomizeAnimationData ->
+          // startRandomizeAnimation(animationData, callback)
+          //                            is DiceAnimationData -> startDiceAnimation(animationData,
+          // callback)
+          //                        }
+          //                    }
+          else -> throw IllegalArgumentException("Unknown animation type")
+        }
+      }
+      //            is DelayAnimationData -> startDelayAnimation(animationData, callback)
+      is ParallelAnimationData -> startParallelAnimation(animationData, callback)
+        is SequentialAnimationData -> startSequentialAnimation(animationData, callback)
+      else -> throw IllegalArgumentException("Unknown animation type")
+    }
+  }
+
+    private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID, ID?) -> Unit) {
+        val animations = animation.animations
+
+        var currentDuration = 0
+        for (anim in animations) {
+            val component = anim as? ComponentAnimationData ?: return
+            val componentId = component.componentView?.id.toString()
+                setTimeout({ startAnimation(anim, animations, callback = callback) }, currentDuration)
+                currentDuration += anim.duration
+            }
+    }
+
+private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID, ID?) -> Unit) {
+    val animations = animation.animations
+
+    for (anim in animations) {
+        val component = anim as? ComponentAnimationData ?: return
+        val componentId = component.componentView?.id.toString()
+
+        startAnimation(anim, animations, callback)
+    }
+}
+
+  fun startComponentAnimation(
+      animationData: ComponentAnimationData,
+      parallelAnimations: List<AnimationData>,
+      callback: (ID, ID?) -> Unit
+  ) {
+    val componentId = animationData.componentView?.id ?: return
+    if (animations[componentId] == null) animations[componentId] = AnimationDetails()
+
+    document.getElementById(componentId)?.let { comp ->
+      animations[componentId]?.apply {
+        when (animationData) {
+          is FadeAnimationData ->
+              this.animations.add(animationData to animateFade(comp, animationData, callback))
+          is MovementAnimationData ->
+              this.animations.add(animationData to animateMovement(comp, animationData, callback))
+          is RotationAnimationData ->
+              this.animations.add(animationData to animateRotation(comp, animationData, callback))
+            is ScaleAnimationData ->
+                this.animations.add(animationData to animateScale(comp, animationData, callback))
+        }
+      }
+    }
+  }
+
+  fun animateFade(
+      component: org.w3c.dom.Element,
+      animationData: FadeAnimationData,
+      callback: (ID, ID?) -> Unit
+  ): JSAnimation {
+    return animate(
+        component,
+        js("({})").unsafeCast<AnimationParams>().apply {
+          println("${animationData.fromOpacity} -> ${animationData.toOpacity}")
+          opacity =
+              js("({})").unsafeCast<TweenParams>().apply {
+                from = animationData.fromOpacity.toString()
+                to = animationData.toOpacity.toString()
+                duration = animationData.duration
+              }
+            onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
+        })
+  }
+
+  fun animateMovement(
+      component: org.w3c.dom.Element,
+      animationData: MovementAnimationData,
+      callback: (ID, ID?) -> Unit
+  ): JSAnimation {
+    return animate(
+        component,
+        js("({})").unsafeCast<AnimationParams>().apply {
+          translateX =
+              js("({})").unsafeCast<TweenParams>().apply {
+                  to = "calc(var(--bgwUnit) * ${animationData.byX})"
+                duration = animationData.duration
+              }
+          translateY =
+              js("({})").unsafeCast<TweenParams>().apply {
+                to = "calc(var(--bgwUnit) * ${animationData.byY})"
+                duration = animationData.duration
+              }
+          onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
+        })
+  }
+
+  fun animateRotation(
+      component: org.w3c.dom.Element,
+      animationData: RotationAnimationData,
+      callback: (ID, ID?) -> Unit
+  ): JSAnimation {
+    return animate(
+        component,
+        js("({})").unsafeCast<AnimationParams>().apply {
+          rotateZ =
+              js("({})").unsafeCast<TweenParams>().apply {
+                to = animationData.byAngle.toString()
+                duration = animationData.duration
+              }
+            onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
+        })
+  }
+
+    fun animateScale(
+        component: org.w3c.dom.Element,
+        animationData: ScaleAnimationData,
+        callback: (ID, ID?) -> Unit
+    ): JSAnimation {
+        return animate(
+            component,
+            js("({})").unsafeCast<AnimationParams>().apply {
+                scaleX =
+                    js("({})").unsafeCast<TweenParams>().apply {
+                        from = animationData.fromScaleX.toString()
+                        to = animationData.toScaleX.toString()
+                        duration = animationData.duration
+                    }
+                scaleY =
+                    js("({})").unsafeCast<TweenParams>().apply {
+                        from = animationData.fromScaleY.toString()
+                        to = animationData.toScaleY.toString()
+                        duration = animationData.duration
+                    }
+                onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
+            })
+    }
+
+  fun revertSpecificAnimation(animationData: ComponentAnimationData) {
+    animations[animationData.componentView?.id]
+        ?.animations
+        ?.first { anim -> anim.first.id == animationData.id }
+        ?.second
+        ?.revert()
+    animations[animationData.componentView?.id]?.animations?.removeAll { anim ->
+      anim.first.id == animationData.id
+    }
+  }
+
+    fun revertSpecificAnimations(anims : MutableMap<String, String?>) {
+        anims.forEach { (id, compId) ->
+            animations[compId]
+                ?.animations
+                ?.first { anim -> anim.first.id == id }
+                ?.second
+                ?.revert()
+            animations[compId]?.animations?.removeAll { anim ->
+                anim.first.id == id
+            }
+        }
+    }
+
+  fun revertAnimations(id: ID, clear: Boolean = false) {
+    animations[id]?.let {
+      it.animations.asReversed().forEach { anim ->
+        // Revert every animation that was played
+        anim.second.revert()
+        // Reset element to before the animation if special animations were played
+        // TODO
+      }
+    }
+    if (!clear) animations.remove(id)
+  }
+
+  fun stopAllAnimations() {
+    animations.forEach { revertAnimations(it.key, true) }
+    animations.clear()
+  }
+}
+
+internal object AnimatorBackup {
   private val animations = mutableMapOf<String, Node>()
   private val timeouts = mutableMapOf<String, Timeout>()
   private val intervals = mutableMapOf<String, Interval>()

@@ -20,6 +20,7 @@
 package tools.aqua.bgw.components
 
 import IDGenerator
+import tools.aqua.bgw.animation.AnimationState
 import kotlin.math.floor
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.layoutviews.*
@@ -416,6 +417,24 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
 
       opacityProperty.value = value
     }
+
+    /**
+     * [Property] for the [AnimationState] of this [ComponentView].
+     *
+     * @since 0.11
+     */
+    internal val animationStateProperty = Property(AnimationState.NONE)
+
+    /**
+     * [AnimationState] of this [ComponentView].
+     *
+     * @since 0.11
+     */
+    internal var animationState: AnimationState
+        get() = animationStateProperty.value
+        set(value) {
+            animationStateProperty.setInternal(value)
+        }
 
   /**
    * [Property] for the visibility of this [ComponentView].

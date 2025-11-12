@@ -27,6 +27,7 @@ internal object AnimationMapper {
     return this.apply {
       id = animation.id
       duration = animation.duration
+      isRunning = animation.isRunning
     }
   }
 
@@ -37,6 +38,7 @@ internal object AnimationMapper {
       id = componentAnimation.id
       componentView = RecursiveMapper.map(componentAnimation.componentView)
       duration = componentAnimation.duration
+      isRunning = componentAnimation.isRunning
     }
   }
 

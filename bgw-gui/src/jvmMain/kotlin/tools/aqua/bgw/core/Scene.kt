@@ -20,6 +20,8 @@
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.AnimationState
+import tools.aqua.bgw.animation.ComponentAnimation
 import tools.aqua.bgw.animation.ParallelAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.ComponentView
@@ -197,6 +199,10 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   private fun addAnimationRecursively(animation: Animation) {
+    animation.isRunning = true
+    if(animation is ComponentAnimation<*>) {
+        animation.componentView.animationState = AnimationState.RUNNING
+    }
     when (animation) {
       is SequentialAnimation -> {
         animation.animations.forEach { addAnimationRecursively(it) }

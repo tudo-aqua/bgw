@@ -22,6 +22,7 @@ import AnimationData
 import AppData
 import PropData
 import SceneMapper
+import data.animation.ComponentAnimationData
 import data.event.AnimationFinishedEventData
 import data.event.CheckBoxChangedEventData
 import data.event.ColorInputChangedEventData
@@ -68,6 +69,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
+import tools.aqua.bgw.animation.ComponentAnimation
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
@@ -88,6 +90,7 @@ import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.event.WheelEvent
+import tools.aqua.bgw.mapper.AnimationMapper
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
 
@@ -147,6 +150,18 @@ internal fun animationListener(text: String) {
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
     animation?.onFinished?.invoke(AnimationFinishedEvent())
+    animation?.isRunning = false
+
+    if(eventData.componentId != null) {
+      val compStillAnimating = animations.any { it is ComponentAnimation<*> && it.componentView.id == eventData.componentId && it.isRunning }
+      println("Still Animating: $compStillAnimating for ${eventData.componentId}")
+    }
+
+    // Send commit to revert animation state after onFinished
+//    animation?.let {
+//      val mapped = AnimationMapper.map(it)
+//      animationsFinishedStack.add(mapped)
+//    }
   }
 }
 
@@ -454,6 +469,7 @@ internal fun ungzip(content: ByteArray): String =
     GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
 private val updateStack = Collections.synchronizedList(Stack<AppData>())
+private val animationsFinishedStack = Collections.synchronizedList(Stack<AnimationData>())
 private val debounceTimeMillis = 5L // Adjust this value as needed
 private val debounceMutex = Mutex()
 private var debounceJob: Job? = null
@@ -488,10 +504,22 @@ private suspend fun processLastUpdate() {
   updateStack.clear()
   lastUpdate?.let {
     try {
-      val json = jsonMapper.encodeToString(PropData(lastUpdate))
+      val json = jsonMapper.encodeToString(PropData(lastUpdate.apply {
+//          animationsFinishedStack.forEach {
+//              endedAnimations[it.id] = if(it is ComponentAnimationData) it.componentView?.id else null
+//          }
+      }))
+        // animationsFinishedStack.clear()
+      val animationJsons = animationsFinishedStack.map { jsonMapper.encodeToString(PropData(it)) }
       finalUpdate = json
+      println("Sending last update with ${lastUpdate.endedAnimations.size} animations")
       // println("Processing update: $json")
       componentChannel.sendToAllClients(json)
+      if (animationsFinishedStack.isNotEmpty()) {
+        println("Sending finished on ${animationJsons.size} animations")
+        animationJsons.forEach { componentChannel.sendToAllClients(it) }
+        animationsFinishedStack.clear()
+      }
       refreshJob =
           CoroutineScope(Dispatchers.IO).launch {
             delay(50)

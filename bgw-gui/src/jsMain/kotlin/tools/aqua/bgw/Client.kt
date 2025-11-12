@@ -27,11 +27,10 @@ import PropData
 import data.event.AnimationFinishedEventData
 import data.event.LoadEventData
 import jsonMapper
+import kotlin.js.Date
 import kotlinx.browser.document
 import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLStyleElement
-import org.w3c.dom.NodeList
 import org.w3c.dom.WebSocket
 import react.*
 import react.dom.client.Root
@@ -93,45 +92,44 @@ internal fun main() {
   }
 }
 
-internal fun resetAnimations() {
-  val styles = document.body?.querySelectorAll("style") as NodeList
-  for (i in 0 until styles.length) {
-    val style = styles.item(i) as HTMLStyleElement
-    document.body?.removeChild(style)
-  }
-}
-
-internal fun stopAnimationsWithoutCallbacks() {
-  println("Stopping animations without callbacks")
-  Animator.clearAllTimeoutsAndIntervals(excludeDelay = true)
-  resetAnimations()
-}
-
-internal fun stopAnimations() {
-  println("Stopping animations with callbacks")
-  Animator.clearAllTimeoutsAndIntervals()
-  resetAnimations()
-}
+// internal fun resetAnimations() {
+//  val styles = document.body?.querySelectorAll("style") as NodeList
+//  for (i in 0 until styles.length) {
+//    val style = styles.item(i) as HTMLStyleElement
+//    document.body?.removeChild(style)
+//  }
+// }
+//
+// internal fun stopAnimations() {
+//  println("Stopping animations with callbacks")
+//  Animator.stopAllAnimations()
+//  resetAnimations()
+// }
 
 internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-root") {
   when (receivedData) {
     // Handle app data sent from JVM to JS client
     is AppData -> {
-      Animator.cancelCleanupTimeouts()
+      println("${Date.now()} - Received app")
       if (!Config.USE_SOCKETS) {
         renderSingleRoot(receivedData, containerId)
       } else {
         renderAppFast(receivedData)
       }
+        // Animator.revertSpecificAnimations(receivedData.endedAnimations)
     }
     // Handle animations sent from JVM to JS client
     is AnimationData -> {
-      if (receivedData.isStop) {
-        stopAnimations()
-        return
-      }
-      Animator.startAnimation(receivedData) {
-        JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply { id = it })
+      println("${Date.now()} - Received animation ${receivedData.isRunning}")
+      //      if (receivedData.isStop) {
+      //        stopAnimations()
+      //        return
+      //      }
+      Animator.startAnimation(receivedData) { animId, compId ->
+        JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply {
+            id = animId
+            componentId = compId
+        })
       }
     }
     // Handle dialogs sent from JVM to JS client
@@ -162,6 +160,7 @@ internal fun renderAppFast(appData: AppData) {
     root = createRoot(container as Element)
   }
   root.render(App.create { data = appData })
+  println("${Date.now()} - Rendered app")
   JCEFEventDispatcher.dispatchEvent(LoadEventData())
 }
 
