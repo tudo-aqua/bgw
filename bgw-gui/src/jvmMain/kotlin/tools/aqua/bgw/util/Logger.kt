@@ -1,0 +1,123 @@
+package tools.aqua.bgw.util
+
+import jdk.internal.joptsimple.internal.Messages.message
+import tools.aqua.bgw.application.Constants
+
+internal fun String.black() = "\u001B[30m$this\u001B[0m"
+internal fun String.red() = "\u001B[31m$this\u001B[0m"
+internal fun String.green() = "\u001B[32m$this\u001B[0m"
+internal fun String.yellow() = "\u001B[33m$this\u001B[0m"
+internal fun String.blue() = "\u001B[34m$this\u001B[0m"
+internal fun String.purple() = "\u001B[35m$this\u001B[0m"
+internal fun String.cyan() = "\u001B[36m$this\u001B[0m"
+internal fun String.white() = "\u001B[37m$this\u001B[0m"
+internal fun String.gray() = "\u001B[90m$this\u001B[0m"
+
+internal fun String.bold() = "\u001B[1m$this"
+
+internal fun String.colorize(color: Colors) = when (color) {
+    Colors.BLACK -> this.black()
+    Colors.RED -> this.red()
+    Colors.GREEN -> this.green()
+    Colors.YELLOW -> this.yellow()
+    Colors.BLUE -> this.blue()
+    Colors.PURPLE -> this.purple()
+    Colors.CYAN -> this.cyan()
+    Colors.WHITE -> this.white()
+    Colors.GRAY -> this.gray()
+}
+
+internal object Logger {
+    internal var LOGLEVEL = if(Constants.DEBUG) LogType.DEBUG else LogType.INFO
+
+    internal fun log(message: String, type: LogType = LogType.DEBUG) {
+        when (type) {
+            LogType.INFO -> {
+                if(LogType.INFO < LOGLEVEL) return
+                print("[BGW]".bold().purple())
+                println(" $message")
+            }
+            LogType.WARN -> {
+                if(LogType.WARN < LOGLEVEL) return
+                print("[BGW]".bold().yellow())
+                println(" $message".yellow())
+            }
+            LogType.ERROR -> {
+                if(LogType.ERROR < LOGLEVEL) return
+                print("[BGW]".bold().red())
+                println(" $message".red())
+            }
+            LogType.DEBUG -> {
+                if(LOGLEVEL != LogType.DEBUG) return
+                print("[BGW]".bold().gray())
+                println(" $message".gray())
+            }
+        }
+    }
+
+    internal fun logSingle(message: String, type: LogType = LogType.DEBUG) {
+        when (type) {
+            LogType.INFO -> {
+                if(LogType.INFO < LOGLEVEL) return
+                print("[BGW]".green())
+                print(" $message")
+            }
+            LogType.WARN -> {
+                if(LogType.WARN < LOGLEVEL) return
+                print("[BGW]".yellow())
+                print(" $message".yellow())
+            }
+            LogType.ERROR -> {
+                if(LogType.ERROR < LOGLEVEL) return
+                print("[BGW]".red())
+                print(" $message".red())
+            }
+            LogType.DEBUG -> {
+                if(LOGLEVEL != LogType.DEBUG) return
+                print("[BGW]".gray())
+                print(" $message".gray())
+            }
+        }
+    }
+
+    internal fun log(any: Any, type: LogType = LogType.DEBUG) {
+        log(any.toString(), type)
+    }
+
+    internal fun log(any: Any, color: Colors, type: String) {
+        print("[${type.uppercase()}]".colorize(color))
+        println(" $any")
+    }
+
+    internal fun error(message: Any) {
+        log(message.toString(), LogType.ERROR)
+    }
+
+    internal fun error(stackTrace: Array<StackTraceElement>) {
+        log(stackTrace.toString(), LogType.ERROR)
+    }
+
+    internal fun debug(message: Any) {
+        log(message.toString(), LogType.DEBUG)
+    }
+
+    internal fun info(message: Any) {
+        log(message.toString(), LogType.INFO)
+    }
+
+    internal fun warning(message: String) {
+        log(message, LogType.WARN)
+    }
+
+    internal fun warning(stackTrace: Array<StackTraceElement>) {
+        log(stackTrace.toString(), LogType.WARN)
+    }
+}
+
+internal enum class LogType {
+    DEBUG, INFO, WARN, ERROR
+}
+
+internal enum class Colors {
+    BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE, GRAY
+}

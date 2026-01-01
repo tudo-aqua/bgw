@@ -31,6 +31,7 @@ import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -198,18 +199,23 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
     Frontend.sendAnimation(animation)
   }
 
-  private fun addAnimationRecursively(animation: Animation) {
+  private fun addAnimationRecursively(animation: Animation, parent : Animation? = null) {
     animation.isRunning = true
+    animation.parentAnimation = parent
+
     if(animation is ComponentAnimation<*>) {
+        if(animation.componentView.animationState == AnimationState.RUNNING) {
+            Logger.warning("The ComponentView ${animation.componentView} is already animating. Please wait until the animation is over or chain animations together using ParallelAnimations or SequentialAnimations.")
+        }
         animation.componentView.animationState = AnimationState.RUNNING
     }
     when (animation) {
       is SequentialAnimation -> {
-        animation.animations.forEach { addAnimationRecursively(it) }
+        animation.animations.forEach { addAnimationRecursively(it, animation) }
         animations.add(animation)
       }
       is ParallelAnimation -> {
-        animation.animations.forEach { addAnimationRecursively(it) }
+        animation.animations.forEach { addAnimationRecursively(it, animation) }
         animations.add(animation)
       }
       else -> animations.add(animation)

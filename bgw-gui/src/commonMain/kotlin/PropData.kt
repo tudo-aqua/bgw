@@ -77,6 +77,8 @@ internal class SceneData : Data() {
 internal abstract class AnimationData : Data() {
   var id: ID = ""
   var duration: Int = 0
+  var initialDelay : Int = 0
+  var persist : Boolean = true
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""

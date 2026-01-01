@@ -69,6 +69,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
+import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.ComponentAnimation
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
@@ -93,6 +94,7 @@ import tools.aqua.bgw.event.WheelEvent
 import tools.aqua.bgw.mapper.AnimationMapper
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
+import tools.aqua.bgw.util.Logger
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -121,21 +123,21 @@ internal val componentChannel: Channel =
             try {
               eventListener(content)
             } catch (e: Exception) {
-              e.printStackTrace()
+                Logger.error(e.stackTrace)
             }
           }
           "bgwAnimationQuery" -> {
             try {
               animationListener(content)
             } catch (e: Exception) {
-              e.printStackTrace()
+                Logger.error(e.stackTrace)
             }
           }
           "bgwGlobalQuery" -> {
             try {
               globalListener(content)
             } catch (e: Exception) {
-              e.printStackTrace()
+                Logger.error(e.stackTrace)
             }
           }
         }
@@ -152,9 +154,13 @@ internal fun animationListener(text: String) {
     animation?.onFinished?.invoke(AnimationFinishedEvent())
     animation?.isRunning = false
 
+      if(animation != null) {
+          checkIfParentFinished(animation)
+      }
+
     if(eventData.componentId != null) {
       val compStillAnimating = animations.any { it is ComponentAnimation<*> && it.componentView.id == eventData.componentId && it.isRunning }
-      println("Still Animating: $compStillAnimating for ${eventData.componentId}")
+      Logger.debug("Still Animating: $compStillAnimating for ${eventData.componentId} (Parent: ${animation?.parentAnimation})")
     }
 
     // Send commit to revert animation state after onFinished
@@ -163,6 +169,22 @@ internal fun animationListener(text: String) {
 //      animationsFinishedStack.add(mapped)
 //    }
   }
+}
+
+internal fun checkIfParentFinished(animation : Animation) {
+    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+    val animations = menuSceneAnimations + boardGameSceneAnimations
+
+    val parent = animation.parentAnimation
+    if(parent != null) {
+        val finished = animations.filter { it.parentAnimation == parent }.all { !it.isRunning }
+        if(finished) {
+            parent.onFinished?.invoke(AnimationFinishedEvent())
+            parent.isRunning = false
+            checkIfParentFinished(parent)
+        }
+    }
 }
 
 internal fun globalListener(text: String) {

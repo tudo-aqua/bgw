@@ -87,6 +87,13 @@ internal val App =
             outline = None.none
           }
 
+          "bgw_card_view" {
+            set(CustomPropertyName("--tx"), 0)
+            set(CustomPropertyName("--ty"), 0)
+            set(CustomPropertyName("--rot"), 0)
+            transform = defaultTransform()
+          }
+
           // BLUE
           "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
             ".bgw-root, .bgw-dialogs" {
@@ -665,3 +672,7 @@ internal fun bgwUnit(value: Number): Length {
 
 internal inline val Number.bgw: Length
   get() = ("calc(var(--bgwUnit) * ${this})").unsafeCast<Length>()
+
+internal fun defaultTransform(): Transform {
+  return "translate(var(--tx), var(--ty)) rotate(var(--rot))".unsafeCast<Transform>()
+}

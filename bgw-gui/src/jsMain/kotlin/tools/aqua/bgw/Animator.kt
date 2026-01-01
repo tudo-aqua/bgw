@@ -22,21 +22,13 @@ import ComponentViewData
 import DiceViewData
 import ID
 import data.animation.*
-import js.reflect.unsafeCast
-import kotlin.js.Date
 import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.Node
 import org.w3c.dom.pointerevents.PointerEvent
 import react.dom.client.Root
 import react.dom.client.createRoot
-import tools.aqua.bgw.AnimatorBackup.CLEANUP_MS
-import tools.aqua.bgw.AnimatorBackup.DELTA_MS
-import tools.aqua.bgw.AnimatorBackup.clearComponentAnimations
-import tools.aqua.bgw.AnimatorBackup.clearSingleTimeoutAndInterval
-import tools.aqua.bgw.AnimatorBackup.timeouts
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.bgwUnit
 import web.dom.Element
 import web.timers.Interval
 import web.timers.Timeout
@@ -87,16 +79,118 @@ internal external interface TimelineOptions {
 internal typealias Callback<T> = (self: T, e: PointerEvent) -> Unit
 
 internal class AnimationDetails() {
-  val animations = mutableListOf<Pair<AnimationData, JSAnimation>>()
+  val timelines = mutableListOf<Pair<AnimationData, Timeline>>()
   val initialState: ComponentViewData? = null
 }
 
 internal object Animator {
   private val animations = mutableMapOf<ID, AnimationDetails>()
 
+  /**
+   * Flattens a potentially nested animation structure into a list of base animations
+   * (ComponentAnimationData or DelayAnimationData) with their initialDelay values calculated.
+   *
+   * @param animation The animation to flatten (can be Sequential, Parallel, Component, or Delay)
+   * @param baseDelay The base delay to add to all animations (used for recursive calls)
+   * @return A list of flattened animations with computed initialDelay values
+   */
+  fun flattenAnimation(animation: AnimationData, baseDelay: Int = 0): List<AnimationData> {
+    return when (animation) {
+      is SequentialAnimationData -> flattenSequentialAnimation(animation, baseDelay)
+      is ParallelAnimationData -> flattenParallelAnimation(animation, baseDelay)
+      is ComponentAnimationData, is DelayAnimationData -> {
+        animation.initialDelay = baseDelay
+        listOf(animation)
+      }
+      else -> emptyList()
+    }
+  }
+
+  /**
+   * Flattens a SequentialAnimation where each animation starts after the previous one completes.
+   *
+   * @param animation The sequential animation to flatten
+   * @param baseDelay The base delay to apply to all child animations
+   * @return A list of flattened animations with sequential delays
+   */
+  private fun flattenSequentialAnimation(
+      animation: SequentialAnimationData,
+      baseDelay: Int = 0
+  ): List<AnimationData> {
+    val flattenedAnimations = mutableListOf<AnimationData>()
+    var currentDelay = baseDelay
+
+    for (childAnimation in animation.animations) {
+      when (childAnimation) {
+        is SequentialAnimationData -> {
+          // Recursively flatten nested sequential animations
+          val flattened = flattenSequentialAnimation(childAnimation, currentDelay)
+          flattenedAnimations.addAll(flattened)
+          // Update delay to after the last animation in the sequence
+          if (flattened.isNotEmpty()) {
+            currentDelay = flattened.maxOf { it.initialDelay + it.duration }
+          }
+        }
+        is ParallelAnimationData -> {
+          // Recursively flatten nested parallel animations
+          val flattened = flattenParallelAnimation(childAnimation, currentDelay)
+          flattenedAnimations.addAll(flattened)
+          // Update delay to after the longest animation in the parallel group
+          if (flattened.isNotEmpty()) {
+            currentDelay = flattened.maxOf { it.initialDelay + it.duration }
+          }
+        }
+        is ComponentAnimationData, is DelayAnimationData -> {
+          // Base case: add the animation with current delay
+          childAnimation.initialDelay = currentDelay
+          flattenedAnimations.add(childAnimation)
+          currentDelay += childAnimation.duration
+        }
+      }
+    }
+
+    return flattenedAnimations
+  }
+
+  /**
+   * Flattens a ParallelAnimation where all animations start at the same time.
+   *
+   * @param animation The parallel animation to flatten
+   * @param baseDelay The base delay to apply to all child animations
+   * @return A list of flattened animations all starting at the same time
+   */
+  private fun flattenParallelAnimation(
+      animation: ParallelAnimationData,
+      baseDelay: Int = 0
+  ): List<AnimationData> {
+    val flattenedAnimations = mutableListOf<AnimationData>()
+
+    for (childAnimation in animation.animations) {
+      when (childAnimation) {
+        is SequentialAnimationData -> {
+          // Recursively flatten nested sequential animations
+          val flattened = flattenSequentialAnimation(childAnimation, baseDelay)
+          flattenedAnimations.addAll(flattened)
+        }
+        is ParallelAnimationData -> {
+          // Recursively flatten nested parallel animations
+          val flattened = flattenParallelAnimation(childAnimation, baseDelay)
+          flattenedAnimations.addAll(flattened)
+        }
+        is ComponentAnimationData, is DelayAnimationData -> {
+          // Base case: add the animation with base delay (all parallel animations start together)
+          childAnimation.initialDelay = baseDelay
+          flattenedAnimations.add(childAnimation)
+        }
+      }
+    }
+
+    return flattenedAnimations
+  }
+
   fun startAnimation(
-      animationData: AnimationData,
-      parallelAnimations: List<AnimationData> = listOf(),
+      animation: AnimationData,
+      existingTimeline : Timeline? = null,
       callback: (ID, ID?) -> Unit
   ) {
 //    if (!animationData.isRunning && animationData is ComponentAnimationData) {
@@ -104,59 +198,35 @@ internal object Animator {
 //      return
 //    }
 
-    when (animationData) {
-      is ComponentAnimationData -> {
-        when (animationData) {
-          is FadeAnimationData,
-          is MovementAnimationData,
-          is RotationAnimationData,
-          is ScaleAnimationData ->
-              startComponentAnimation(animationData, parallelAnimations, callback)
-          //                    is FlipAnimationData -> startFlipAnimation(animationData, callback)
-          //                    is SteppedComponentAnimationData -> {
-          //                        when (animationData) {
-          //                            is RandomizeAnimationData ->
-          // startRandomizeAnimation(animationData, callback)
-          //                            is DiceAnimationData -> startDiceAnimation(animationData,
-          // callback)
-          //                        }
-          //                    }
-          else -> throw IllegalArgumentException("Unknown animation type")
-        }
+      var timeline = createTimeline()
+      timeline.onComplete = { t, e -> t.revert() }
+
+      if(existingTimeline != null) timeline = existingTimeline
+
+      val flatAnimations = flattenAnimation(animation)
+
+      flatAnimations.forEach { animationData ->
+          when (animationData) {
+              is ComponentAnimationData -> {
+                  when (animationData) {
+                      is FadeAnimationData,
+                      is MovementAnimationData,
+                      is RotationAnimationData,
+                      is ScaleAnimationData ->
+                          startComponentAnimation(animationData, timeline, callback)
+
+                      else -> throw IllegalArgumentException("Unknown animation type")
+                  }
+              }
+              //            is DelayAnimationData -> startDelayAnimation(animationData, callback)
+              else -> throw IllegalArgumentException("Unknown animation type")
+          }
       }
-      //            is DelayAnimationData -> startDelayAnimation(animationData, callback)
-      is ParallelAnimationData -> startParallelAnimation(animationData, callback)
-        is SequentialAnimationData -> startSequentialAnimation(animationData, callback)
-      else -> throw IllegalArgumentException("Unknown animation type")
-    }
   }
-
-    private fun startSequentialAnimation(animation: SequentialAnimationData, callback: (ID, ID?) -> Unit) {
-        val animations = animation.animations
-
-        var currentDuration = 0
-        for (anim in animations) {
-            val component = anim as? ComponentAnimationData ?: return
-            val componentId = component.componentView?.id.toString()
-                setTimeout({ startAnimation(anim, animations, callback = callback) }, currentDuration)
-                currentDuration += anim.duration
-            }
-    }
-
-private fun startParallelAnimation(animation: ParallelAnimationData, callback: (ID, ID?) -> Unit) {
-    val animations = animation.animations
-
-    for (anim in animations) {
-        val component = anim as? ComponentAnimationData ?: return
-        val componentId = component.componentView?.id.toString()
-
-        startAnimation(anim, animations, callback)
-    }
-}
 
   fun startComponentAnimation(
       animationData: ComponentAnimationData,
-      parallelAnimations: List<AnimationData>,
+      timeline : Timeline,
       callback: (ID, ID?) -> Unit
   ) {
     val componentId = animationData.componentView?.id ?: return
@@ -166,13 +236,13 @@ private fun startParallelAnimation(animation: ParallelAnimationData, callback: (
       animations[componentId]?.apply {
         when (animationData) {
           is FadeAnimationData ->
-              this.animations.add(animationData to animateFade(comp, animationData, callback))
+            animateFade(comp, animationData, timeline, callback)
           is MovementAnimationData ->
-              this.animations.add(animationData to animateMovement(comp, animationData, callback))
+            animateMovement(comp, animationData, timeline, callback)
           is RotationAnimationData ->
-              this.animations.add(animationData to animateRotation(comp, animationData, callback))
-            is ScaleAnimationData ->
-                this.animations.add(animationData to animateScale(comp, animationData, callback))
+            animateRotation(comp, animationData, timeline, callback)
+          is ScaleAnimationData ->
+            animateScale(comp, animationData, timeline, callback)
         }
       }
     }
@@ -181,12 +251,12 @@ private fun startParallelAnimation(animation: ParallelAnimationData, callback: (
   fun animateFade(
       component: org.w3c.dom.Element,
       animationData: FadeAnimationData,
+      timeline : Timeline,
       callback: (ID, ID?) -> Unit
-  ): JSAnimation {
-    return animate(
+  ) {
+    timeline.add(
         component,
         js("({})").unsafeCast<AnimationParams>().apply {
-          println("${animationData.fromOpacity} -> ${animationData.toOpacity}")
           opacity =
               js("({})").unsafeCast<TweenParams>().apply {
                 from = animationData.fromOpacity.toString()
@@ -194,54 +264,57 @@ private fun startParallelAnimation(animation: ParallelAnimationData, callback: (
                 duration = animationData.duration
               }
             onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-        })
+        }, animationData.initialDelay)
   }
 
   fun animateMovement(
       component: org.w3c.dom.Element,
       animationData: MovementAnimationData,
+      timeline : Timeline,
       callback: (ID, ID?) -> Unit
-  ): JSAnimation {
-    return animate(
+  ) {
+      timeline.add(
         component,
         js("({})").unsafeCast<AnimationParams>().apply {
-          translateX =
+          `--tx` =
               js("({})").unsafeCast<TweenParams>().apply {
                   to = "calc(var(--bgwUnit) * ${animationData.byX})"
                 duration = animationData.duration
               }
-          translateY =
+          `--ty` =
               js("({})").unsafeCast<TweenParams>().apply {
                 to = "calc(var(--bgwUnit) * ${animationData.byY})"
                 duration = animationData.duration
               }
           onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-        })
+        }, animationData.initialDelay)
   }
 
   fun animateRotation(
       component: org.w3c.dom.Element,
       animationData: RotationAnimationData,
+      timeline : Timeline,
       callback: (ID, ID?) -> Unit
-  ): JSAnimation {
-    return animate(
+  ) {
+      timeline.add(
         component,
         js("({})").unsafeCast<AnimationParams>().apply {
-          rotateZ =
+          `--rot` =
               js("({})").unsafeCast<TweenParams>().apply {
-                to = animationData.byAngle.toString()
+                to = "${animationData.byAngle}deg"
                 duration = animationData.duration
               }
             onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-        })
+        }, animationData.initialDelay)
   }
 
     fun animateScale(
         component: org.w3c.dom.Element,
         animationData: ScaleAnimationData,
+        timeline : Timeline,
         callback: (ID, ID?) -> Unit
-    ): JSAnimation {
-        return animate(
+    ) {
+        timeline.add(
             component,
             js("({})").unsafeCast<AnimationParams>().apply {
                 scaleX =
@@ -257,16 +330,16 @@ private fun startParallelAnimation(animation: ParallelAnimationData, callback: (
                         duration = animationData.duration
                     }
                 onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-            })
+            }, animationData.initialDelay)
     }
 
   fun revertSpecificAnimation(animationData: ComponentAnimationData) {
     animations[animationData.componentView?.id]
-        ?.animations
+        ?.timelines
         ?.first { anim -> anim.first.id == animationData.id }
         ?.second
         ?.revert()
-    animations[animationData.componentView?.id]?.animations?.removeAll { anim ->
+    animations[animationData.componentView?.id]?.timelines?.removeAll { anim ->
       anim.first.id == animationData.id
     }
   }
@@ -274,11 +347,11 @@ private fun startParallelAnimation(animation: ParallelAnimationData, callback: (
     fun revertSpecificAnimations(anims : MutableMap<String, String?>) {
         anims.forEach { (id, compId) ->
             animations[compId]
-                ?.animations
+                ?.timelines
                 ?.first { anim -> anim.first.id == id }
                 ?.second
                 ?.revert()
-            animations[compId]?.animations?.removeAll { anim ->
+            animations[compId]?.timelines?.removeAll { anim ->
                 anim.first.id == id
             }
         }
@@ -286,7 +359,7 @@ private fun startParallelAnimation(animation: ParallelAnimationData, callback: (
 
   fun revertAnimations(id: ID, clear: Boolean = false) {
     animations[id]?.let {
-      it.animations.asReversed().forEach { anim ->
+      it.timelines.asReversed().forEach { anim ->
         // Revert every animation that was played
         anim.second.revert()
         // Reset element to before the animation if special animations were played

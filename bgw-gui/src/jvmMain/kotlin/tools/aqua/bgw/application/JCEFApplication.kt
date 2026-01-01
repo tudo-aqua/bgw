@@ -63,10 +63,63 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.*
+import tools.aqua.bgw.util.LogType
+import tools.aqua.bgw.util.Logger
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
   const val DEBUG = true
+}
+
+internal object StdErrFilter {
+    private val originalErr = System.err
+    private val originalOut = System.out
+    private val filters = mutableListOf<String>()
+
+    fun install(vararg suppressedSubstrings: String) {
+        filters.clear()
+        filters.addAll(suppressedSubstrings)
+
+        val filteringErrStream = object : java.io.PrintStream(originalErr) {
+            override fun println(x: String?) {
+                if (x != null && filters.any { x.contains(it) }) {
+                    return
+                }
+                super.println(x)
+            }
+
+            override fun print(s: String?) {
+                if (s != null && filters.any { s.contains(it) }) {
+                    return
+                }
+                super.print(s)
+            }
+        }
+
+        val filteringOutStream = object : java.io.PrintStream(originalOut) {
+            override fun println(x: String?) {
+                if (x != null && filters.any { x.contains(it) }) {
+                    return
+                }
+                super.println(x)
+            }
+
+            override fun print(s: String?) {
+                if (s != null && filters.any { s.contains(it) }) {
+                    return
+                }
+                super.print(s)
+            }
+        }
+
+        System.setErr(filteringErrStream)
+        System.setOut(filteringOutStream)
+    }
+
+    fun uninstall() {
+        System.setErr(originalErr)
+        System.setOut(originalOut)
+    }
 }
 
 internal class JCEFApplication : Application {
@@ -74,9 +127,15 @@ internal class JCEFApplication : Application {
 
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
+    init {
+        StdErrFilter.install(
+            "SLF4J", "initialize on Thread", "AppKit Thread", "google_apis"
+        )
+    }
+
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
-    if (Constants.DEBUG) println("[BGW] Starting BGW Runtime (http://localhost:${Constants.PORT})")
-    else println("[BGW] Starting BGW Runtime (${Constants.PORT})")
+    if (Constants.DEBUG) Logger.info("Starting BGW Runtime (http://localhost:${Constants.PORT})")
+    else Logger.info("Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
       frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
       JCEFApplication::class
@@ -175,10 +234,10 @@ internal class MainFrame(
 
     builder.setProgressHandler { enumProgress, fl ->
       if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
-        if (fl >= 0) print("[BGW] Downloading BGW Runtime... $fl%\r")
+        if (fl >= 0) Logger.logSingle("Downloading BGW Runtime... $fl%\r", LogType.INFO)
       } else if (enumProgress == EnumProgress.LOCATING || enumProgress == EnumProgress.INSTALL)
-          println("[BGW] Initializing BGW Runtime...")
-      else if (enumProgress == EnumProgress.INITIALIZING) println("[BGW] Loading BGW Runtime...")
+          Logger.debug("Initializing BGW Runtime...")
+      else if (enumProgress == EnumProgress.INITIALIZING) Logger.log("Loading BGW Runtime...")
     }
 
     val cefApp = builder.build()
@@ -188,11 +247,11 @@ internal class MainFrame(
     var pidsUnchanged = 0
 
     val platform = EnumPlatform.getCurrentPlatform()
-    println("[BGW] Platform: $platform")
+      Logger.debug("Platform: $platform")
     val buildInfo = CefBuildInfo.fromClasspath()
-    // println("[BGW] Build: ${buildInfo.jcefUrl} ${buildInfo.releaseUrl}")
+      Logger.debug("Build: ${buildInfo.jcefUrl} ${buildInfo.releaseUrl}")
     val cefVersion = cefApp.version
-    println("[BGW] Runtime Version: ${cefVersion.toString().replace(Regex("\n"), " ")}")
+      Logger.debug("Runtime Version: ${cefVersion.toString().replace(Regex("\n"), " ")}")
 
     client = cefApp.createClient()
     // endregion
@@ -228,7 +287,7 @@ internal class MainFrame(
               callback.success("")
               return true
             } catch (e: Exception) {
-              e.printStackTrace()
+                Logger.error(e.stackTrace)
             }
             return false
           }
@@ -350,7 +409,7 @@ internal class MainFrame(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
             Frontend.application.onWindowClosed?.invoke()
-            println("[BGW] BGW Runtime shutting down...")
+            Logger.info("BGW Runtime shutting down...")
             try {
               CefApp.getInstance().dispose()
             } catch (_: Exception) {} finally {
@@ -425,7 +484,7 @@ internal class MainFrame(
 
   internal fun gracefulShutdown() {
     Frontend.application.onWindowClosed?.invoke()
-    println("[BGW] BGW Runtime shutting down...")
+    Logger.info("BGW Runtime shutting down...")
     try {
       CefApp.getInstance().dispose()
     } catch (_: Exception) {} finally {
@@ -513,14 +572,12 @@ internal class MainFrame(
           FileDialogMode.OPEN_MULTIPLE_FILES ->
               CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_MULTIPLE
           FileDialogMode.SAVE_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_SAVE
-          // FileDialogMode.CHOOSE_DIRECTORY ->
-          // CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_FOLDER
-          FileDialogMode.CHOOSE_DIRECTORY -> TODO("This feature is currently not supported.")
+          FileDialogMode.CHOOSE_DIRECTORY -> CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_FOLDER
         }
 
     val defaultFile = fileDialog.initialFileName
     val extensions = fileDialog.extensionFilters.mapNotNull { it.getExtensionsString() }
-    println(extensions)
+    Logger.debug(extensions)
 
     activeBrowser.runFileDialog(
         type,

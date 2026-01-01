@@ -140,7 +140,10 @@ internal external abstract class AnimationParams :
   var scaleX: TweenParams? = definedExternally
   var scaleY: TweenParams? = definedExternally
   var opacity: TweenParams? = definedExternally
-    var `--translateX`: TweenParams? = definedExternally
+
+  var `--tx`: TweenParams? = definedExternally
+  var `--ty`: TweenParams? = definedExternally
+  var `--rot`: TweenParams? = definedExternally
 }
 
 internal external interface TweenParams {
@@ -439,7 +442,7 @@ internal open external class Timer {
   /** @type {Callback<this>} */
   var onPause: Callback<Unit /* this */>
   /** @type {Callback<this>} */
-  var onComplete: Callback<Unit /* this */>
+  var onComplete: Callback<Timer>?
   /** @type {Number} */
   var iterationDuration: Double
   /** @type {Number} */

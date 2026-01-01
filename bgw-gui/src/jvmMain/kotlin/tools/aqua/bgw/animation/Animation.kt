@@ -34,6 +34,8 @@ abstract class Animation(
 ) {
   internal val id = IDGenerator.generateAnimationID()
 
+  internal var parentAnimation : Animation? = null
+
   /** [Boolean] indicating whether the [Animation] is currently running. */
   var isRunning: Boolean = false
     internal set
