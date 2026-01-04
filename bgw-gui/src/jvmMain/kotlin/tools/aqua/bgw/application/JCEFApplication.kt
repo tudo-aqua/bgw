@@ -64,7 +64,6 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.*
-import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.util.LogType
 import tools.aqua.bgw.util.Logger
 
@@ -421,7 +420,7 @@ internal class MainFrame(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
             Frontend.application.onWindowClosed?.invoke()
-              Logger.info("[BGW] Closing BGW Runtime...")
+            Logger.info("[BGW] Closing BGW Runtime...")
             CefApp.getInstance().dispose()
             dispose()
           }
@@ -486,7 +485,7 @@ internal class MainFrame(
 
   internal fun gracefulShutdown() {
     Frontend.application.onWindowClosed?.invoke()
-      Logger.info("[BGW] Exiting BGW Runtime...")
+    Logger.info("[BGW] Exiting BGW Runtime...")
     CefApp.getInstance().dispose()
     dispose()
   }
