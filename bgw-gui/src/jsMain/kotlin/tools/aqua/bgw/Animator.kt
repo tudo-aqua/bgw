@@ -396,7 +396,7 @@ internal object Animator {
     if (jsAnim != null) {
       try {
         // Revert the animation - this will reset the element to its pre-animation state
-        // jsAnim.revert()
+        jsAnim.revert()
         console.log("Reverted $animationType animation for component $componentId")
 
         // Remove the JSAnimation from storage
