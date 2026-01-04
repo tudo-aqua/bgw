@@ -29,6 +29,7 @@ import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.AnimationPropertyCache
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.componentChannel
@@ -112,6 +113,15 @@ internal class Frontend {
     internal val openedDialogs = mutableMapOf<String, Dialog>()
 
     internal var lastFadeTime: Double = 0.0
+
+    /**
+     * Cache for component initial state when animations start.
+     * Maps component ID to the cached property values at the start of the animation tree.
+     * This ensures all animations in Sequential/Parallel use the same initial state.
+     * This prevents user updates from interfering with running animations.
+     */
+    internal val animationCache: MutableMap<String, AnimationPropertyCache> =
+        mutableMapOf()
 
     /** Property for the current application width. */
     internal val widthProperty =

@@ -79,6 +79,7 @@ internal abstract class AnimationData : Data() {
   var duration: Int = 0
   var initialDelay : Int = 0
   var persist : Boolean = true
+  var hasParent : Boolean = false
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""

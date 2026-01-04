@@ -16,6 +16,7 @@
  */
 
 import ComponentMapper.fillData
+import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
@@ -35,19 +36,63 @@ internal object ComponentMapper {
   fun ComponentViewData.fillData(componentView: ComponentView): ComponentViewData {
     return this.apply {
       id = componentView.id
-      posX = componentView.posX.toInt()
-      posY = componentView.posY.toInt()
+
+      // Get cached initial state (if component is animating)
+      val cachedState = Frontend.animationCache[componentView.id]
+      val animationTypes = componentView.animationTypes
+
+      // Use cached values ONLY if that animation type is still active
+      // Once all animations of a type finish, allow manual updates again
+      posX = if (AnimationType.MOVEMENT in animationTypes && cachedState?.posX != null) {
+        cachedState.posX
+      } else {
+        componentView.posX.toInt()
+      }
+
+      posY = if (AnimationType.MOVEMENT in animationTypes && cachedState?.posY != null) {
+        cachedState.posY
+      } else {
+        componentView.posY.toInt()
+      }
+
       width = componentView.width.toInt()
       height = componentView.height.toInt()
-      visual = VisualMapper.map(componentView.visual)
+
+      visual = if ((AnimationType.FLIP in animationTypes || AnimationType.STEPPED in animationTypes) && cachedState?.visual != null) {
+        VisualMapper.map(cachedState.visual)
+      } else {
+        VisualMapper.map(componentView.visual)
+      }
+
       zIndex = componentView.zIndex
-      opacity = componentView.opacity
+
+      opacity = if (AnimationType.FADE in animationTypes && cachedState?.opacity != null) {
+        cachedState.opacity
+      } else {
+        componentView.opacity
+      }
+
       isVisible = componentView.isVisible
       isDisabled = componentView.isDisabled
       // isFocusable
-      scaleX = componentView.scaleX
-      scaleY = componentView.scaleY
-      rotation = componentView.rotation
+
+      scaleX = if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {
+        cachedState.scaleX
+      } else {
+        componentView.scaleX
+      }
+
+      scaleY = if (AnimationType.SCALE in animationTypes && cachedState?.scaleY != null) {
+        cachedState.scaleY
+      } else {
+        componentView.scaleY
+      }
+
+      rotation = if (AnimationType.ROTATION in animationTypes && cachedState?.rotation != null) {
+        cachedState.rotation
+      } else {
+        componentView.rotation
+      }
 
       if (componentView.dropAcceptor != null) {
         isDroppable = true

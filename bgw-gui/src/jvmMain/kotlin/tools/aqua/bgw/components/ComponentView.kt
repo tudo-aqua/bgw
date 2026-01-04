@@ -20,12 +20,14 @@
 package tools.aqua.bgw.components
 
 import IDGenerator
-import tools.aqua.bgw.animation.AnimationState
+import tools.aqua.bgw.animation.AnimationType
 import kotlin.math.floor
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.layoutviews.*
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
+import tools.aqua.bgw.observable.lists.ObservableLinkedList
+import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.*
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
@@ -419,22 +421,46 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
     }
 
     /**
-     * [Property] for the [AnimationState] of this [ComponentView].
+     * [Property] for the [AnimationType] of this [ComponentView].
      *
      * @since 0.11
      */
-    internal val animationStateProperty = Property(AnimationState.NONE)
+    internal val animationTypesProperty : ObservableList<AnimationType> = ObservableLinkedList()
 
     /**
-     * [AnimationState] of this [ComponentView].
+     * [AnimationType] of this [ComponentView].
      *
      * @since 0.11
      */
-    internal var animationState: AnimationState
-        get() = animationStateProperty.value
-        set(value) {
-            animationStateProperty.setInternal(value)
-        }
+    internal var animationTypes: List<AnimationType> = animationTypesProperty.toList()
+      get() = animationTypesProperty.toList()
+      private set
+
+    internal fun removeAnimationType(type : AnimationType) {
+      animationTypesProperty.remove(type)
+    }
+
+    internal fun addAnimationType(type: AnimationType) {
+      animationTypesProperty.add(type)
+    }
+
+  /**
+   * [Property] for the animation state of this [ComponentView].
+   *
+   * @since 0.11
+   */
+  internal val componentAnimatingProperty = BooleanProperty(false)
+
+  /**
+   * Animation state of this [ComponentView].
+   *
+   * @since 0.11
+   */
+  internal var componentAnimating: Boolean
+    get() = componentAnimatingProperty.value
+    set(value) {
+      componentAnimatingProperty.setInternal(value)
+    }
 
   /**
    * [Property] for the visibility of this [ComponentView].

@@ -33,5 +33,12 @@ import tools.aqua.bgw.components.ComponentView
 sealed class ComponentAnimation<T : ComponentView>(
     /** [ComponentView] to animate. */
     val componentView: T,
-    duration: Int
+    duration: Int,
+    /**
+     * Whether the animation will be persisted and changed the [componentView]'s state.
+     * If set to `false`, it will reset on completion. Default: `true`.
+     *
+     * @since 0.11
+     */
+    val persist : Boolean = true
 ) : Animation(duration = duration)

@@ -70,7 +70,14 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.animation.ComponentAnimation
+import tools.aqua.bgw.animation.FadeAnimation
+import tools.aqua.bgw.animation.FlipAnimation
+import tools.aqua.bgw.animation.MovementAnimation
+import tools.aqua.bgw.animation.RotationAnimation
+import tools.aqua.bgw.animation.ScaleAnimation
+import tools.aqua.bgw.animation.SteppedComponentAnimation
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
@@ -151,8 +158,29 @@ internal fun animationListener(text: String) {
     val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
     val animations = menuSceneAnimations + boardGameSceneAnimations
     val animation = animations.find { it.id == eventData.id }
-    animation?.onFinished?.invoke(AnimationFinishedEvent())
+    
+    // Remove animation type and cache for ComponentAnimations
+    if (animation is ComponentAnimation<*>) {
+      val animationType = when(animation) {
+        is MovementAnimation<*> -> AnimationType.MOVEMENT
+        is ScaleAnimation<*> -> AnimationType.SCALE
+        is RotationAnimation<*> -> AnimationType.ROTATION
+        is FadeAnimation<*> -> AnimationType.FADE
+        is FlipAnimation<*> -> AnimationType.FLIP
+        is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+      }
+      animation.componentView.removeAnimationType(animationType)
+      
+      // Check if component has no more active animations
+      if (animation.componentView.animationTypes.isEmpty()) {
+        animation.componentView.componentAnimating = false
+        // Remove cached initial state when all animations finish
+        Frontend.animationCache.remove(animation.componentView.id)
+      }
+    }
+
     animation?.isRunning = false
+    animation?.onFinished?.invoke(AnimationFinishedEvent())
 
       if(animation != null) {
           checkIfParentFinished(animation)
