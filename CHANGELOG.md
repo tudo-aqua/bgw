@@ -22,7 +22,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.10] - 04.03.2025
+## [0.10] - 25.06.2025
 
 ### Breaking Changes
 

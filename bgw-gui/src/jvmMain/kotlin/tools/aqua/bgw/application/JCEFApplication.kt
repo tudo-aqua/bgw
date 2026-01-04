@@ -43,6 +43,7 @@ import me.friwi.jcefmaven.CefAppBuilder
 import me.friwi.jcefmaven.CefBuildInfo
 import me.friwi.jcefmaven.EnumPlatform
 import me.friwi.jcefmaven.EnumProgress
+import me.friwi.jcefmaven.MavenCefAppHandlerAdapter
 import org.cef.CefApp
 import org.cef.CefClient
 import org.cef.CefSettings
@@ -63,6 +64,7 @@ import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.event.*
+import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.util.LogType
 import tools.aqua.bgw.util.Logger
 
@@ -187,6 +189,14 @@ internal class JCEFApplication : Application {
   }
 }
 
+internal class BGWAppHandler() : MavenCefAppHandlerAdapter() {
+  override fun stateHasChanged(state: CefApp.CefAppState?) {
+    if (state == CefApp.CefAppState.TERMINATED) {
+      exitProcess(0)
+    }
+  }
+}
+
 internal class MainFrame(
     startURL: String = "http://localhost",
     useOSR: Boolean = false,
@@ -231,6 +241,8 @@ internal class MainFrame(
     builder.cefSettings.cache_path = tmpDir
     builder.cefSettings.log_file = "$tmpDir/bgw.log"
     builder.jcefArgs.add("--disable-pinch")
+
+    builder.setAppHandler(BGWAppHandler())
 
     builder.setProgressHandler { enumProgress, fl ->
       if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
@@ -409,12 +421,9 @@ internal class MainFrame(
         object : WindowAdapter() {
           override fun windowClosing(e: WindowEvent) {
             Frontend.application.onWindowClosed?.invoke()
-            Logger.info("BGW Runtime shutting down...")
-            try {
-              CefApp.getInstance().dispose()
-            } catch (_: Exception) {} finally {
-              dispose()
-            }
+              Logger.info("[BGW] Closing BGW Runtime...")
+            CefApp.getInstance().dispose()
+            dispose()
           }
 
           override fun windowOpened(e: WindowEvent?) {
@@ -439,13 +448,6 @@ internal class MainFrame(
     // endregion
 
     defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-    addWindowListener(
-        object : WindowAdapter() {
-          override fun windowClosing(e: WindowEvent) {
-            CefApp.getInstance().dispose()
-            dispose()
-          }
-        })
 
     addWindowStateListener { e ->
       if (e.newState == MAXIMIZED_BOTH) {
@@ -484,12 +486,9 @@ internal class MainFrame(
 
   internal fun gracefulShutdown() {
     Frontend.application.onWindowClosed?.invoke()
-    Logger.info("BGW Runtime shutting down...")
-    try {
-      CefApp.getInstance().dispose()
-    } catch (_: Exception) {} finally {
-      exitProcess(0)
-    }
+      Logger.info("[BGW] Exiting BGW Runtime...")
+    CefApp.getInstance().dispose()
+    dispose()
   }
 
   internal fun toggleFullscreen(boolean: Boolean) {
