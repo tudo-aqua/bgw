@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@
 import data.event.EventData
 import data.event.InternalCameraPanData
 import kotlinx.serialization.Serializable
+import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.dialog.DialogType
 
 internal typealias ID = String
@@ -77,9 +78,9 @@ internal class SceneData : Data() {
 internal abstract class AnimationData : Data() {
   var id: ID = ""
   var duration: Int = 0
-  var initialDelay : Int = 0
-  var persist : Boolean = true
-  var hasParent : Boolean = false
+  var initialDelay: Int = 0
+  var persist: Boolean = true
+  var hasParent: Boolean = false
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
@@ -138,6 +139,7 @@ internal abstract class ComponentViewData : Data() {
   var isDraggable: Boolean = false
   var isDragged: Boolean = false
   var isDroppable: Boolean = false
+  var finishedAnimations: MutableList<AnimationType> = mutableListOf()
 
   var hasMouseEnteredEvent: Boolean = false
   var hasMouseExitedEvent: Boolean = false

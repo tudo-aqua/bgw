@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -110,7 +110,16 @@ class AnimationExample : BoardGameApplication("Animation example") {
     buttonMovement.onMouseClicked = {
       gameScene.playAnimation(
           SequentialAnimation(
-          MovementAnimation(componentView = cardMovement, byX = 0, byY = -50, duration = 2000), RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 2000)))
+              SequentialAnimation(
+                      RotationAnimation(
+                              componentView = cardMovement, byAngle = 45.0, duration = 2000)
+                          .apply { onFinished = { cardMovement.rotation += 45 } },
+                      MovementAnimation(componentView = cardMovement, byY = -50, duration = 2000))
+                  .apply { onFinished = { cardMovement.posY -= 50 } },
+              ParallelAnimation(
+                  MovementAnimation(componentView = cardRotation, byX = -50, duration = 2000),
+                  RotationAnimation(componentView = cardRotation, byAngle = -45.0, duration = 2000),
+              )))
     }
     buttonRotation.onMouseClicked = {
       gameScene.playAnimation(
@@ -119,7 +128,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
     buttonOpacity.onMouseClicked = {
       gameScene.playAnimation(
           FadeAnimation(
-                  componentView = cardOpacity, fromOpacity = 0.5, toOpacity = 0.0, duration = 1000)
+                  componentView = cardRotation, fromOpacity = 0.5, toOpacity = 0.0, duration = 1000)
               .apply {})
     }
     buttonStretch.onMouseClicked = {

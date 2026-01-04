@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +22,11 @@ import csstype.PropertiesBuilder
 import emotion.react.css
 import react.*
 import react.dom.html.HTMLAttributes
-import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.cssom.*
 import web.dom.Element
@@ -41,6 +41,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TokenViewData
 
 internal val TokenView =
     FC<TokenViewProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val draggable =
           useDraggable(
               object : DraggableOptions {

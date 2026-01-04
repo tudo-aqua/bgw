@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.cssom.*
 import web.dom.Element
@@ -40,6 +41,13 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardViewData)
 
 internal val CardView =
     FC<CardViewProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
+      useEffect(props.data.finishedAnimations) {
+        println("Animation finished since last update ${props.data.finishedAnimations}")
+      }
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -56,9 +64,9 @@ internal val CardView =
 
       val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        translate =
-            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}"
-                .unsafeCast<Translate>()
+        set(CustomPropertyName("--tx"), draggable.transform?.x?.px ?: 0.px)
+        set(CustomPropertyName("--ty"), draggable.transform?.y?.px ?: 0.px)
+
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
       }
 

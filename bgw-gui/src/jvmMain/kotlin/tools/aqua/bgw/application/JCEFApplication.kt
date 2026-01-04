@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,58 +68,60 @@ import tools.aqua.bgw.util.Logger
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  const val DEBUG = true
+  const val DEBUG = false
 }
 
 internal object StdErrFilter {
-    private val originalErr = System.err
-    private val originalOut = System.out
-    private val filters = mutableListOf<String>()
+  private val originalErr = System.err
+  private val originalOut = System.out
+  private val filters = mutableListOf<String>()
 
-    fun install(vararg suppressedSubstrings: String) {
-        filters.clear()
-        filters.addAll(suppressedSubstrings)
+  fun install(vararg suppressedSubstrings: String) {
+    filters.clear()
+    filters.addAll(suppressedSubstrings)
 
-        val filteringErrStream = object : java.io.PrintStream(originalErr) {
-            override fun println(x: String?) {
-                if (x != null && filters.any { x.contains(it) }) {
-                    return
-                }
-                super.println(x)
+    val filteringErrStream =
+        object : java.io.PrintStream(originalErr) {
+          override fun println(x: String?) {
+            if (x != null && filters.any { x.contains(it) }) {
+              return
             }
+            super.println(x)
+          }
 
-            override fun print(s: String?) {
-                if (s != null && filters.any { s.contains(it) }) {
-                    return
-                }
-                super.print(s)
+          override fun print(s: String?) {
+            if (s != null && filters.any { s.contains(it) }) {
+              return
             }
+            super.print(s)
+          }
         }
 
-        val filteringOutStream = object : java.io.PrintStream(originalOut) {
-            override fun println(x: String?) {
-                if (x != null && filters.any { x.contains(it) }) {
-                    return
-                }
-                super.println(x)
+    val filteringOutStream =
+        object : java.io.PrintStream(originalOut) {
+          override fun println(x: String?) {
+            if (x != null && filters.any { x.contains(it) }) {
+              return
             }
+            super.println(x)
+          }
 
-            override fun print(s: String?) {
-                if (s != null && filters.any { s.contains(it) }) {
-                    return
-                }
-                super.print(s)
+          override fun print(s: String?) {
+            if (s != null && filters.any { s.contains(it) }) {
+              return
             }
+            super.print(s)
+          }
         }
 
-        System.setErr(filteringErrStream)
-        System.setOut(filteringOutStream)
-    }
+    System.setErr(filteringErrStream)
+    System.setOut(filteringOutStream)
+  }
 
-    fun uninstall() {
-        System.setErr(originalErr)
-        System.setOut(originalOut)
-    }
+  fun uninstall() {
+    System.setErr(originalErr)
+    System.setOut(originalOut)
+  }
 }
 
 internal class JCEFApplication : Application {
@@ -127,11 +129,9 @@ internal class JCEFApplication : Application {
 
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
-    init {
-        StdErrFilter.install(
-            "SLF4J", "initialize on Thread", "AppKit Thread", "google_apis"
-        )
-    }
+  init {
+    StdErrFilter.install("SLF4J", "initialize on Thread", "AppKit Thread", "google_apis")
+  }
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
     if (Constants.DEBUG) Logger.info("Starting BGW Runtime (http://localhost:${Constants.PORT})")
@@ -247,11 +247,11 @@ internal class MainFrame(
     var pidsUnchanged = 0
 
     val platform = EnumPlatform.getCurrentPlatform()
-      Logger.debug("Platform: $platform")
+    Logger.debug("Platform: $platform")
     val buildInfo = CefBuildInfo.fromClasspath()
-      Logger.debug("Build: ${buildInfo.jcefUrl} ${buildInfo.releaseUrl}")
+    Logger.debug("Build: ${buildInfo.jcefUrl} ${buildInfo.releaseUrl}")
     val cefVersion = cefApp.version
-      Logger.debug("Runtime Version: ${cefVersion.toString().replace(Regex("\n"), " ")}")
+    Logger.debug("Runtime Version: ${cefVersion.toString().replace(Regex("\n"), " ")}")
 
     client = cefApp.createClient()
     // endregion
@@ -287,7 +287,7 @@ internal class MainFrame(
               callback.success("")
               return true
             } catch (e: Exception) {
-                Logger.error(e.stackTrace)
+              Logger.error(e.stackTrace)
             }
             return false
           }

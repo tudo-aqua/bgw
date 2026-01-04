@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -141,9 +141,9 @@ internal external abstract class AnimationParams :
   var scaleY: TweenParams? = definedExternally
   var opacity: TweenParams? = definedExternally
 
-  var `--tx`: TweenParams? = definedExternally
-  var `--ty`: TweenParams? = definedExternally
-  var `--rot`: TweenParams? = definedExternally
+  var `--txAnim`: TweenParams? = definedExternally
+  var `--tyAnim`: TweenParams? = definedExternally
+  var `--rotAnim`: TweenParams? = definedExternally
 }
 
 internal external interface TweenParams {
@@ -397,6 +397,8 @@ internal external class Timeline : Timer {
    * @return {this}
    */
   fun remove(targets: Any, propertyName: String = definedExternally): Unit /* this */
+
+  fun remove(animation: JSAnimation)
 
   /** @return {this} */
   fun refresh(): Unit /* this */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,10 +35,10 @@ sealed class ComponentAnimation<T : ComponentView>(
     val componentView: T,
     duration: Int,
     /**
-     * Whether the animation will be persisted and changed the [componentView]'s state.
-     * If set to `false`, it will reset on completion. Default: `true`.
+     * Whether the animation will be persisted and changed the [componentView]'s state. If set to
+     * `false`, it will reset on completion. Default: `true`.
      *
      * @since 0.11
      */
-    val persist : Boolean = true
+    val persist: Boolean = true
 ) : Animation(duration = duration)

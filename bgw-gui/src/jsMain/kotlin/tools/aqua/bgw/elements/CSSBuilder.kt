@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,9 +37,24 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
   opacity = number(componentViewData.opacity)
   display = if (componentViewData.isVisible) Display.flex else None.none
   pointerEvents = if (!componentViewData.isDisabled) PointerEvents.all else None.none
-  rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
-  scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
+  // rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
+  // scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
+  translate =
+      "calc(var(--txAnim) * var(--bgwUnit)) calc(var(--tyAnim) * var(--bgwUnit))"
+          .unsafeCast<Translate>()
+  rotate = "var(--rotAnim)".unsafeCast<Rotate>()
+  scale = "var(--sxAnim) var(--syAnim)".unsafeCast<Scale>()
+
   transformOrigin = "center".unsafeCast<TransformOrigin>()
+  transform =
+      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) scale(var(sx), var(--sy))"
+          .unsafeCast<Transform>()
+
+  set(CustomPropertyName("--tx"), 0)
+  set(CustomPropertyName("--ty"), 0)
+  set(CustomPropertyName("--rot"), componentViewData.rotation.deg)
+  set(CustomPropertyName("--sx"), componentViewData.scaleX)
+  set(CustomPropertyName("--sy"), componentViewData.scaleY)
 }
 
 internal fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {

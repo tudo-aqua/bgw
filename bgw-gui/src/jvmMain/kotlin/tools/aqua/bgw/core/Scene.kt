@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -202,19 +202,23 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @param animation [Animation] to play.
    */
   fun playAnimation(animation: Animation) {
-    // Check if this is a top-level singular ComponentAnimation trying to animate an already animating component
+    // Check if this is a top-level singular ComponentAnimation trying to animate an already
+    // animating component
     if (animation is ComponentAnimation<*> && animation.componentView.componentAnimating) {
-      Logger.warning("The ComponentView ${animation.componentView} is already animating. Please wait until the animation is over or chain animations together using ParallelAnimations or SequentialAnimations.")
+      Logger.warning(
+          "The ComponentView ${animation.componentView} is already animating. Please wait until the animation is over or chain animations together using ParallelAnimations or SequentialAnimations.")
       return
     }
 
-    // For Sequential/Parallel animations, collect all components and check if any are already animating
+    // For Sequential/Parallel animations, collect all components and check if any are already
+    // animating
     if (animation is SequentialAnimation || animation is ParallelAnimation) {
       val allComponents = collectComponentsFromAnimation(animation)
       val alreadyAnimating = allComponents.filter { it.componentAnimating }
 
       if (alreadyAnimating.isNotEmpty()) {
-        Logger.warning("One or more components in the animation are already animating: ${alreadyAnimating.joinToString(", ")}. Please wait until the animations are over or chain animations together using ParallelAnimations or SequentialAnimations.")
+        Logger.warning(
+            "One or more components in the animation are already animating: ${alreadyAnimating.joinToString(", ")}. Please wait until the animations are over or chain animations together using ParallelAnimations or SequentialAnimations.")
         return
       }
     }
@@ -233,8 +237,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
-   * Recursively collects all ComponentViews from an animation tree.
-   * This is used to check if any components are already animating before starting a new animation.
+   * Recursively collects all ComponentViews from an animation tree. This is used to check if any
+   * components are already animating before starting a new animation.
    */
   private fun collectComponentsFromAnimation(animation: Animation): Set<ComponentView> {
     val components = mutableSetOf<ComponentView>()
@@ -253,41 +257,41 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
-   * Caches the initial state of a component when animations start.
-   * This ensures all animations (Sequential/Parallel) use the same initial state.
+   * Caches the initial state of a component when animations start. This ensures all animations
+   * (Sequential/Parallel) use the same initial state.
    */
   private fun cacheInitialComponentState(componentView: ComponentView) {
-    Frontend.animationCache[componentView.id] = AnimationPropertyCache(
-      posX = componentView.posX.toInt(),
-      posY = componentView.posY.toInt(),
-      scaleX = componentView.scaleX,
-      scaleY = componentView.scaleY,
-      rotation = componentView.rotation,
-      opacity = componentView.opacity,
-      visual = componentView.visual
-    )
+    Frontend.animationCache[componentView.id] =
+        AnimationPropertyCache(
+            posX = componentView.posX.toInt(),
+            posY = componentView.posY.toInt(),
+            scaleX = componentView.scaleX,
+            scaleY = componentView.scaleY,
+            rotation = componentView.rotation,
+            opacity = componentView.opacity,
+            visual = componentView.visual)
   }
 
-  private fun addAnimationRecursively(animation: Animation, parent : Animation? = null) {
+  private fun addAnimationRecursively(animation: Animation, parent: Animation? = null) {
     animation.parentAnimation = parent
 
-    if(animation is ComponentAnimation<*>) {
-        val animationType =
-          when(animation) {
+    if (animation is ComponentAnimation<*>) {
+      val animationType =
+          when (animation) {
             is MovementAnimation<*> -> AnimationType.MOVEMENT
             is ScaleAnimation<*> -> AnimationType.SCALE
             is RotationAnimation<*> -> AnimationType.ROTATION
-            is FadeAnimation<*>  -> AnimationType.FADE
+            is FadeAnimation<*> -> AnimationType.FADE
             is FlipAnimation<*> -> AnimationType.FLIP
-            is SteppedComponentAnimation<*>  -> AnimationType.STEPPED
+            is SteppedComponentAnimation<*> -> AnimationType.STEPPED
           }
 
-        animation.componentView.addAnimationType(animationType)
-        animation.componentView.componentAnimating = true
+      animation.componentView.animationTypes.add(animationType)
+      animation.componentView.componentAnimating = true
     }
-    
+
     animation.isRunning = true
-    
+
     when (animation) {
       is SequentialAnimation -> {
         animation.animations.forEach { addAnimationRecursively(it, animation) }
@@ -300,7 +304,6 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
       else -> animations.add(animation)
     }
   }
-
 
   /**
    * Stops all currently playing [Animation]s and resets visual state of all [ComponentView]s that

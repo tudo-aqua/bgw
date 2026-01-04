@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -115,13 +115,19 @@ internal class Frontend {
     internal var lastFadeTime: Double = 0.0
 
     /**
-     * Cache for component initial state when animations start.
-     * Maps component ID to the cached property values at the start of the animation tree.
-     * This ensures all animations in Sequential/Parallel use the same initial state.
-     * This prevents user updates from interfering with running animations.
+     * Cache for component initial state when animations start. Maps component ID to the cached
+     * property values at the start of the animation tree. This ensures all animations in
+     * Sequential/Parallel use the same initial state. This prevents user updates from interfering
+     * with running animations.
      */
-    internal val animationCache: MutableMap<String, AnimationPropertyCache> =
-        mutableMapOf()
+    internal val animationCache: MutableMap<String, AnimationPropertyCache> = mutableMapOf()
+
+    /**
+     * Set of components that have pending finished animations that need to be cleared after the
+     * update is sent to the frontend. This prevents loss of animation finish notifications when
+     * updates are queued.
+     */
+    internal val componentsWithFinishedAnimations: MutableSet<ComponentView> = mutableSetOf()
 
     /** Property for the current application width. */
     internal val widthProperty =

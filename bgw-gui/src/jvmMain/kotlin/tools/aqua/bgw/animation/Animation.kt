@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,7 @@ abstract class Animation(
 ) {
   internal val id = IDGenerator.generateAnimationID()
 
-  internal var parentAnimation : Animation? = null
+  internal var parentAnimation: Animation? = null
 
   /** [Boolean] indicating whether the [Animation] is currently running. */
   var isRunning: Boolean = false

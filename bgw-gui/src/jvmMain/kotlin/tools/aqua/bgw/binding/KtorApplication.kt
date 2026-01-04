@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,6 @@ import AnimationData
 import AppData
 import PropData
 import SceneMapper
-import data.animation.ComponentAnimationData
 import data.event.AnimationFinishedEventData
 import data.event.CheckBoxChangedEventData
 import data.event.ColorInputChangedEventData
@@ -98,7 +97,6 @@ import tools.aqua.bgw.event.KeyEvent
 import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.event.WheelEvent
-import tools.aqua.bgw.mapper.AnimationMapper
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.Logger
@@ -130,21 +128,21 @@ internal val componentChannel: Channel =
             try {
               eventListener(content)
             } catch (e: Exception) {
-                Logger.error(e.stackTrace)
+              Logger.error(e.stackTrace)
             }
           }
           "bgwAnimationQuery" -> {
             try {
               animationListener(content)
             } catch (e: Exception) {
-                Logger.error(e.stackTrace)
+              Logger.error(e.stackTrace)
             }
           }
           "bgwGlobalQuery" -> {
             try {
               globalListener(content)
             } catch (e: Exception) {
-                Logger.error(e.stackTrace)
+              Logger.error(e.stackTrace)
             }
           }
         }
@@ -153,66 +151,124 @@ internal val componentChannel: Channel =
 
 internal fun animationListener(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
-  if (eventData is AnimationFinishedEventData) {
-    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
-    val animations = menuSceneAnimations + boardGameSceneAnimations
-    val animation = animations.find { it.id == eventData.id }
-    
-    // Remove animation type and cache for ComponentAnimations
-    if (animation is ComponentAnimation<*>) {
-      val animationType = when(animation) {
-        is MovementAnimation<*> -> AnimationType.MOVEMENT
-        is ScaleAnimation<*> -> AnimationType.SCALE
-        is RotationAnimation<*> -> AnimationType.ROTATION
-        is FadeAnimation<*> -> AnimationType.FADE
-        is FlipAnimation<*> -> AnimationType.FLIP
-        is SteppedComponentAnimation<*> -> AnimationType.STEPPED
-      }
-      animation.componentView.removeAnimationType(animationType)
-      
-      // Check if component has no more active animations
-      if (animation.componentView.animationTypes.isEmpty()) {
-        animation.componentView.componentAnimating = false
-        // Remove cached initial state when all animations finish
-        Frontend.animationCache.remove(animation.componentView.id)
-      }
+
+  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+  val animations = menuSceneAnimations + boardGameSceneAnimations
+  val animation = animations.find { it.id == eventData.id }
+
+  // TODO: Maybe comment back in
+  //  // Apply final animation values to cache AND component properties if persist=true
+  //  if (animation is ComponentAnimation<*> && animation.persist) {
+  //    Logger.debug("Persisting animation values for ${animation.componentView.id}")
+  //    when (animation) {
+  //      is MovementAnimation<*> -> {
+  //        animation.componentView.posX = animation.toX
+  //        animation.componentView.posY = animation.toY
+  //        Logger.debug("Updated posX=${animation.toX}, posY=${animation.toY}")
+  //      }
+  //      is ScaleAnimation<*> -> {
+  //        animation.componentView.scaleX = animation.toScaleX
+  //        animation.componentView.scaleY = animation.toScaleY
+  //        Logger.debug("Updated scaleX=${animation.toScaleX}, scaleY=${animation.toScaleY}")
+  //      }
+  //      is RotationAnimation<*> -> {
+  //        animation.componentView.rotation = animation.toAngle
+  //        Logger.debug("Updated rotation=${animation.toAngle}")
+  //      }
+  //      is FadeAnimation<*> -> {
+  //        animation.componentView.opacity = animation.toOpacity
+  //        Logger.debug("Updated opacity=${animation.toOpacity}")
+  //      }
+  //      is FlipAnimation<*> -> {
+  //        animation.componentView.visual = animation.toVisual
+  //        Logger.debug("Updated visual to ${animation.toVisual}")
+  //      }
+  //      is RandomizeAnimation<*> -> {
+  //        animation.componentView.visual = animation.toVisual
+  //        Logger.debug("Updated visual to ${animation.toVisual}")
+  //      }
+  //      is DiceAnimation<*> -> {
+  //        val targetVisual = animation.componentView.visuals.getOrNull(animation.toSide)
+  //        if (targetVisual != null) {
+  //          animation.componentView.visual = targetVisual
+  //          Logger.debug("Updated dice visual to side ${animation.toSide}")
+  //        }
+  //      }
+  //    }
+  //  }
+
+  // Remove animation type and cache for ComponentAnimations
+  if (animation is ComponentAnimation<*>) {
+    val animationType =
+        when (animation) {
+          is MovementAnimation<*> -> AnimationType.MOVEMENT
+          is ScaleAnimation<*> -> AnimationType.SCALE
+          is RotationAnimation<*> -> AnimationType.ROTATION
+          is FadeAnimation<*> -> AnimationType.FADE
+          is FlipAnimation<*> -> AnimationType.FLIP
+          is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+        }
+    animation.componentView.animationTypes.remove(animationType)
+    if (animationType !in animation.componentView.animationTypes) {
+      animation.componentView.animationsFinishedSinceLastUpdate.add(animationType)
+      // Track this component so we can clear its finished animations after sending the update
+      Frontend.componentsWithFinishedAnimations.add(animation.componentView)
+      Frontend.updateScene()
     }
 
-    animation?.isRunning = false
-    animation?.onFinished?.invoke(AnimationFinishedEvent())
-
-      if(animation != null) {
-          checkIfParentFinished(animation)
-      }
-
-    if(eventData.componentId != null) {
-      val compStillAnimating = animations.any { it is ComponentAnimation<*> && it.componentView.id == eventData.componentId && it.isRunning }
-      Logger.debug("Still Animating: $compStillAnimating for ${eventData.componentId} (Parent: ${animation?.parentAnimation})")
+    // Check if component has no more active animations
+    if (animation.componentView.animationTypes.isEmpty()) {
+      animation.componentView.componentAnimating = false
+      Frontend.animationCache.remove(animation.componentView.id)
     }
-
-    // Send commit to revert animation state after onFinished
-//    animation?.let {
-//      val mapped = AnimationMapper.map(it)
-//      animationsFinishedStack.add(mapped)
-//    }
   }
+
+  animation?.isRunning = false
+  animation?.onFinished?.invoke(AnimationFinishedEvent())
+
+  // TODO: Maybe comment back in
+  //  // If animation was persisted, trigger scene update to send new state to frontend
+  //  if (animation is ComponentAnimation<*> && animation.persist) {
+  //    Frontend.updateComponent(animation.componentView)
+  //  }
+
+  if (animation != null) {
+    checkIfParentFinished(animation)
+  }
+
+  if (eventData.componentId != null) {
+    val compStillAnimating =
+        animations.any {
+          it is ComponentAnimation<*> &&
+              it.componentView.id == eventData.componentId &&
+              it.isRunning
+        }
+    Logger.debug(
+        "Still Animating: $compStillAnimating for ${eventData.componentId} (Parent: ${animation?.parentAnimation})")
+  }
+
+  // Send commit to revert animation state after onFinished
+  //    animation?.let {
+  //      val mapped = AnimationMapper.map(it)
+  //      animationsFinishedStack.add(mapped)
+  //    }
 }
 
-internal fun checkIfParentFinished(animation : Animation) {
-    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
-    val animations = menuSceneAnimations + boardGameSceneAnimations
+internal fun checkIfParentFinished(animation: Animation) {
+  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+  val animations = menuSceneAnimations + boardGameSceneAnimations
 
-    val parent = animation.parentAnimation
-    if(parent != null) {
-        val finished = animations.filter { it.parentAnimation == parent }.all { !it.isRunning }
-        if(finished) {
-            parent.onFinished?.invoke(AnimationFinishedEvent())
-            parent.isRunning = false
-            checkIfParentFinished(parent)
-        }
+  val parent = animation.parentAnimation
+  if (parent != null) {
+    val finished = animations.filter { it.parentAnimation == parent }.all { !it.isRunning }
+    if (finished) {
+      parent.onFinished?.invoke(AnimationFinishedEvent())
+      parent.isRunning = false
+      checkIfParentFinished(parent)
     }
+  }
 }
 
 internal fun globalListener(text: String) {
@@ -554,17 +610,26 @@ private suspend fun processLastUpdate() {
   updateStack.clear()
   lastUpdate?.let {
     try {
-      val json = jsonMapper.encodeToString(PropData(lastUpdate.apply {
-//          animationsFinishedStack.forEach {
-//              endedAnimations[it.id] = if(it is ComponentAnimationData) it.componentView?.id else null
-//          }
-      }))
-        // animationsFinishedStack.clear()
+      val json =
+          jsonMapper.encodeToString(
+              PropData(
+                  lastUpdate.apply {
+                    //          animationsFinishedStack.forEach {
+                    //              endedAnimations[it.id] = if(it is ComponentAnimationData)
+                    // it.componentView?.id else null
+                    //          }
+                  }))
+      // animationsFinishedStack.clear()
       val animationJsons = animationsFinishedStack.map { jsonMapper.encodeToString(PropData(it)) }
       finalUpdate = json
       println("Sending last update with ${lastUpdate.endedAnimations.size} animations")
       // println("Processing update: $json")
       componentChannel.sendToAllClients(json)
+
+      // Now that the update has been sent, clear the animationsFinishedSinceLastUpdate
+      // for all components to prevent them from being sent again
+      clearFinishedAnimationFlags()
+
       if (animationsFinishedStack.isNotEmpty()) {
         println("Sending finished on ${animationJsons.size} animations")
         animationJsons.forEach { componentChannel.sendToAllClients(it) }
@@ -579,6 +644,15 @@ private suspend fun processLastUpdate() {
       println("Error sending update: $e")
     }
   }
+}
+
+internal fun clearFinishedAnimationFlags() {
+  // Clear the animationsFinishedSinceLastUpdate for all tracked components
+  Frontend.componentsWithFinishedAnimations.forEach { component ->
+    component.animationsFinishedSinceLastUpdate.clear()
+  }
+  // Clear the tracking set
+  Frontend.componentsWithFinishedAnimations.clear()
 }
 
 internal fun checkForMissingState() {

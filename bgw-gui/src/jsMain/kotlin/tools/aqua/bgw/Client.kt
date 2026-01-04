@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -116,7 +116,7 @@ internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-r
       } else {
         renderAppFast(receivedData)
       }
-        // Animator.revertSpecificAnimations(receivedData.endedAnimations)
+      // Animator.revertSpecificAnimations(receivedData.endedAnimations)
     }
     // Handle animations sent from JVM to JS client
     is AnimationData -> {
@@ -126,10 +126,11 @@ internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-r
       //        return
       //      }
       Animator.startAnimation(receivedData) { animId, compId ->
-        JCEFEventDispatcher.dispatchEvent(AnimationFinishedEventData().apply {
-            id = animId
-            componentId = compId
-        })
+        JCEFEventDispatcher.dispatchEvent(
+            AnimationFinishedEventData().apply {
+              id = animId
+              componentId = compId
+            })
       }
     }
     // Handle dialogs sent from JVM to JS client

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +20,12 @@
 package tools.aqua.bgw.components
 
 import IDGenerator
-import tools.aqua.bgw.animation.AnimationType
 import kotlin.math.floor
+import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.components.container.*
 import tools.aqua.bgw.components.layoutviews.*
 import tools.aqua.bgw.core.Scene
 import tools.aqua.bgw.event.*
-import tools.aqua.bgw.observable.lists.ObservableLinkedList
-import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.*
 import tools.aqua.bgw.util.Coordinate
 import tools.aqua.bgw.util.CoordinatePlain
@@ -420,29 +418,19 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
       opacityProperty.value = value
     }
 
-    /**
-     * [Property] for the [AnimationType] of this [ComponentView].
-     *
-     * @since 0.11
-     */
-    internal val animationTypesProperty : ObservableList<AnimationType> = ObservableLinkedList()
+  /**
+   * [AnimationType] of this [ComponentView].
+   *
+   * @since 0.11
+   */
+  internal val animationTypes: MutableList<AnimationType> = mutableListOf()
 
-    /**
-     * [AnimationType] of this [ComponentView].
-     *
-     * @since 0.11
-     */
-    internal var animationTypes: List<AnimationType> = animationTypesProperty.toList()
-      get() = animationTypesProperty.toList()
-      private set
-
-    internal fun removeAnimationType(type : AnimationType) {
-      animationTypesProperty.remove(type)
-    }
-
-    internal fun addAnimationType(type: AnimationType) {
-      animationTypesProperty.add(type)
-    }
+  /**
+   * Set of all [AnimationType]s finished since last update was sent.
+   *
+   * @since 0.11
+   */
+  internal var animationsFinishedSinceLastUpdate: MutableSet<AnimationType> = mutableSetOf()
 
   /**
    * [Property] for the animation state of this [ComponentView].

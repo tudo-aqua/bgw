@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,7 @@ import tools.aqua.bgw.core.*
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.visual.*
 
 internal object ComponentMapper {
@@ -43,55 +44,71 @@ internal object ComponentMapper {
 
       // Use cached values ONLY if that animation type is still active
       // Once all animations of a type finish, allow manual updates again
-      posX = if (AnimationType.MOVEMENT in animationTypes && cachedState?.posX != null) {
-        cachedState.posX
-      } else {
-        componentView.posX.toInt()
-      }
+      posX =
+          if (AnimationType.MOVEMENT in animationTypes && cachedState?.posX != null) {
+            cachedState.posX
+          } else {
+            componentView.posX.toInt()
+          }
 
-      posY = if (AnimationType.MOVEMENT in animationTypes && cachedState?.posY != null) {
-        cachedState.posY
-      } else {
-        componentView.posY.toInt()
-      }
+      posY =
+          if (AnimationType.MOVEMENT in animationTypes && cachedState?.posY != null) {
+            cachedState.posY
+          } else {
+            componentView.posY.toInt()
+          }
 
       width = componentView.width.toInt()
       height = componentView.height.toInt()
 
-      visual = if ((AnimationType.FLIP in animationTypes || AnimationType.STEPPED in animationTypes) && cachedState?.visual != null) {
-        VisualMapper.map(cachedState.visual)
-      } else {
-        VisualMapper.map(componentView.visual)
-      }
+      visual =
+          if ((AnimationType.FLIP in animationTypes || AnimationType.STEPPED in animationTypes) &&
+              cachedState?.visual != null) {
+            VisualMapper.map(cachedState.visual)
+          } else {
+            VisualMapper.map(componentView.visual)
+          }
 
       zIndex = componentView.zIndex
 
-      opacity = if (AnimationType.FADE in animationTypes && cachedState?.opacity != null) {
-        cachedState.opacity
-      } else {
-        componentView.opacity
-      }
+      opacity =
+          if (AnimationType.FADE in animationTypes && cachedState?.opacity != null) {
+            cachedState.opacity
+          } else {
+            componentView.opacity
+          }
 
       isVisible = componentView.isVisible
       isDisabled = componentView.isDisabled
       // isFocusable
 
-      scaleX = if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {
-        cachedState.scaleX
-      } else {
-        componentView.scaleX
-      }
+      scaleX =
+          if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {
+            cachedState.scaleX
+          } else {
+            componentView.scaleX
+          }
 
-      scaleY = if (AnimationType.SCALE in animationTypes && cachedState?.scaleY != null) {
-        cachedState.scaleY
-      } else {
-        componentView.scaleY
-      }
+      scaleY =
+          if (AnimationType.SCALE in animationTypes && cachedState?.scaleY != null) {
+            cachedState.scaleY
+          } else {
+            componentView.scaleY
+          }
 
-      rotation = if (AnimationType.ROTATION in animationTypes && cachedState?.rotation != null) {
-        cachedState.rotation
-      } else {
-        componentView.rotation
+      rotation =
+          if (AnimationType.ROTATION in animationTypes && cachedState?.rotation != null) {
+            cachedState.rotation
+          } else {
+            componentView.rotation
+          }
+
+      // Set animation finished flag from component state
+      // NOTE: We copy but don't clear yet - clearing happens after successful send to frontend
+      // to prevent loss of data when updates are queued
+      finishedAnimations = componentView.animationsFinishedSinceLastUpdate.toMutableList()
+      if (finishedAnimations.isNotEmpty()) {
+        Logger.log(finishedAnimations)
       }
 
       if (componentView.dropAcceptor != null) {

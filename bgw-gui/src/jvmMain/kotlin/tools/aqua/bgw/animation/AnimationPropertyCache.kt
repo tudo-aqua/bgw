@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,8 @@ package tools.aqua.bgw.animation
 import tools.aqua.bgw.visual.Visual
 
 /**
- * Cache for component properties that are currently being animated.
- * This prevents user updates from interfering with running animations.
+ * Cache for component properties that are currently being animated. This prevents user updates from
+ * interfering with running animations.
  *
  * @since 0.11
  */
@@ -29,17 +29,17 @@ internal data class AnimationPropertyCache(
     // Movement properties
     var posX: Int,
     var posY: Int,
-    
+
     // Scale properties
     var scaleX: Double,
     var scaleY: Double,
-    
+
     // Rotation property
     var rotation: Double,
-    
+
     // Fade property
     var opacity: Double,
-    
+
     // Flip/Stepped properties
     var visual: Visual
 )
