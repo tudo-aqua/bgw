@@ -42,18 +42,21 @@ internal object ComponentMapper {
       val cachedState = Frontend.animationCache[componentView.id]
       val animationTypes = componentView.animationTypes
 
+      // TODO: Check if cache is actually needed
       // Use cached values ONLY if that animation type is still active
       // Once all animations of a type finish, allow manual updates again
       posX =
           if (AnimationType.MOVEMENT in animationTypes && cachedState?.posX != null) {
-            cachedState.posX
+            // cachedState.posX
+            componentView.posX.toInt()
           } else {
             componentView.posX.toInt()
           }
 
       posY =
           if (AnimationType.MOVEMENT in animationTypes && cachedState?.posY != null) {
-            cachedState.posY
+            // cachedState.posY
+            componentView.posY.toInt()
           } else {
             componentView.posY.toInt()
           }
@@ -64,7 +67,8 @@ internal object ComponentMapper {
       visual =
           if ((AnimationType.FLIP in animationTypes || AnimationType.STEPPED in animationTypes) &&
               cachedState?.visual != null) {
-            VisualMapper.map(cachedState.visual)
+            // VisualMapper.map(cachedState.visual)
+            VisualMapper.map(componentView.visual)
           } else {
             VisualMapper.map(componentView.visual)
           }
@@ -73,7 +77,8 @@ internal object ComponentMapper {
 
       opacity =
           if (AnimationType.FADE in animationTypes && cachedState?.opacity != null) {
-            cachedState.opacity
+            // cachedState.opacity
+            componentView.opacity
           } else {
             componentView.opacity
           }
@@ -84,21 +89,24 @@ internal object ComponentMapper {
 
       scaleX =
           if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {
-            cachedState.scaleX
+            // cachedState.scaleX
+            componentView.scaleX
           } else {
             componentView.scaleX
           }
 
       scaleY =
           if (AnimationType.SCALE in animationTypes && cachedState?.scaleY != null) {
-            cachedState.scaleY
+            // cachedState.scaleY
+            componentView.scaleY
           } else {
             componentView.scaleY
           }
 
       rotation =
           if (AnimationType.ROTATION in animationTypes && cachedState?.rotation != null) {
-            cachedState.rotation
+            // cachedState.rotation
+            componentView.rotation
           } else {
             componentView.rotation
           }

@@ -164,22 +164,22 @@ internal fun animationListener(text: String) {
     Logger.debug("Persisting animation values for ${animation.componentView.id}")
     when (animation) {
       is MovementAnimation<*> -> {
-        animation.componentView.posX = animation.toX
-        animation.componentView.posY = animation.toY
+        animation.componentView.posX += animation.toX - animation.fromX
+        animation.componentView.posY += animation.toY - animation.fromY
         Logger.warning(
             "Persisting position to (${animation.toX}, ${animation.toY}) for ${animation.componentView.id}")
       }
       is ScaleAnimation<*> -> {
-        animation.componentView.scaleX = animation.toScaleX
-        animation.componentView.scaleY = animation.toScaleY
+        animation.componentView.scaleX += animation.toScaleX - animation.fromScaleX
+        animation.componentView.scaleY += animation.toScaleY - animation.fromScaleY
       }
       is RotationAnimation<*> -> {
-        animation.componentView.rotation = animation.toAngle
+        animation.componentView.rotation += (animation.toAngle - animation.fromAngle).mod(360.0)
         Logger.warning(
-            "Persisting rotation to ${animation.toAngle} for ${animation.componentView.id}")
+            "Persisting rotation to ${animation.toAngle} (${animation.fromAngle} -> ${animation.toAngle}) for ${animation.componentView.id}")
       }
       is FadeAnimation<*> -> {
-        animation.componentView.opacity = animation.toOpacity
+        animation.componentView.opacity += animation.toOpacity - animation.fromOpacity
       }
       is FlipAnimation<*> -> {
         animation.componentView.visual = animation.toVisual

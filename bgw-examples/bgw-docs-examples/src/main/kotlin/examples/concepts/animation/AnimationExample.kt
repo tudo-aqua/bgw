@@ -107,17 +107,16 @@ class AnimationExample : BoardGameApplication("Animation example") {
             }
           })
     }
+
     buttonMovement.onMouseClicked = {
       gameScene.playAnimation(
           SequentialAnimation(
               SequentialAnimation(
-                      RotationAnimation(
-                              componentView = cardMovement, byAngle = 45.0, duration = 2000)
-                          .apply { onFinished = { cardMovement.rotation += 45 } },
-                      MovementAnimation(componentView = cardMovement, byY = -50, duration = 2000))
-                  .apply { onFinished = { cardMovement.posY -= 50 } },
+                  RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 2000),
+                  MovementAnimation(componentView = cardMovement, byY = -50, duration = 2000)),
               ParallelAnimation(
-                  MovementAnimation(componentView = cardRotation, byX = -50, duration = 2000),
+                  MovementAnimation(componentView = cardRotation, byX = -50, duration = 1000)
+                      .apply { onFinished = { cardRotation.rotation += 90.0 } },
                   RotationAnimation(componentView = cardRotation, byAngle = -45.0, duration = 2000),
               )))
     }
@@ -128,13 +127,13 @@ class AnimationExample : BoardGameApplication("Animation example") {
     buttonOpacity.onMouseClicked = {
       gameScene.playAnimation(
           FadeAnimation(
-                  componentView = cardRotation, fromOpacity = 0.5, toOpacity = 0.0, duration = 1000)
-              .apply {})
+              componentView = cardRotation, fromOpacity = 0.5, toOpacity = 0.0, duration = 1000))
     }
     buttonStretch.onMouseClicked = {
       gameScene.playAnimation(
           ScaleAnimation(componentView = cardStretch, byScale = 0.5, duration = 1000))
     }
+
     buttonFlip.onMouseClicked = {
       gameScene.playAnimation(
           FlipAnimation(
