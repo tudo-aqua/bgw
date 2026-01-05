@@ -34,6 +34,8 @@ import tools.aqua.bgw.visual.Visual
  * @param fromVisual Initial [Visual].
  * @param toVisual Resulting [Visual].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
  * @constructor Creates a [FlipAnimation] for the given [GameComponentView].
  * @see ComponentAnimation
  * @see GameComponentView
@@ -45,5 +47,8 @@ class FlipAnimation<T : GameComponentView>(
     val fromVisual: Visual = gameComponentView.visual,
     /** Resulting [Visual]. */
     val toVisual: Visual,
-    duration: Int = DEFAULT_ANIMATION_SPEED
-) : ComponentAnimation<T>(componentView = gameComponentView, duration = duration)
+    duration: Int = DEFAULT_ANIMATION_SPEED,
+    persist: Boolean = true
+) :
+    ComponentAnimation<T>(
+        componentView = gameComponentView, duration = duration, persist = persist)

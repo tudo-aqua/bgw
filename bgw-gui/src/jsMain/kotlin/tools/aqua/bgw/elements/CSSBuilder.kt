@@ -47,7 +47,7 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
 
   transformOrigin = "center".unsafeCast<TransformOrigin>()
   transform =
-      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) scale(var(sx), var(--sy))"
+      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) scale(var(--sx), var(--sy))"
           .unsafeCast<Transform>()
 
   set(CustomPropertyName("--tx"), 0)

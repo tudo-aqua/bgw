@@ -71,9 +71,11 @@ import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.animation.ComponentAnimation
+import tools.aqua.bgw.animation.DiceAnimation
 import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
+import tools.aqua.bgw.animation.RandomizeAnimation
 import tools.aqua.bgw.animation.RotationAnimation
 import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.animation.SteppedComponentAnimation
@@ -157,46 +159,42 @@ internal fun animationListener(text: String) {
   val animations = menuSceneAnimations + boardGameSceneAnimations
   val animation = animations.find { it.id == eventData.id }
 
-  // TODO: Maybe comment back in
-  //  // Apply final animation values to cache AND component properties if persist=true
-  //  if (animation is ComponentAnimation<*> && animation.persist) {
-  //    Logger.debug("Persisting animation values for ${animation.componentView.id}")
-  //    when (animation) {
-  //      is MovementAnimation<*> -> {
-  //        animation.componentView.posX = animation.toX
-  //        animation.componentView.posY = animation.toY
-  //        Logger.debug("Updated posX=${animation.toX}, posY=${animation.toY}")
-  //      }
-  //      is ScaleAnimation<*> -> {
-  //        animation.componentView.scaleX = animation.toScaleX
-  //        animation.componentView.scaleY = animation.toScaleY
-  //        Logger.debug("Updated scaleX=${animation.toScaleX}, scaleY=${animation.toScaleY}")
-  //      }
-  //      is RotationAnimation<*> -> {
-  //        animation.componentView.rotation = animation.toAngle
-  //        Logger.debug("Updated rotation=${animation.toAngle}")
-  //      }
-  //      is FadeAnimation<*> -> {
-  //        animation.componentView.opacity = animation.toOpacity
-  //        Logger.debug("Updated opacity=${animation.toOpacity}")
-  //      }
-  //      is FlipAnimation<*> -> {
-  //        animation.componentView.visual = animation.toVisual
-  //        Logger.debug("Updated visual to ${animation.toVisual}")
-  //      }
-  //      is RandomizeAnimation<*> -> {
-  //        animation.componentView.visual = animation.toVisual
-  //        Logger.debug("Updated visual to ${animation.toVisual}")
-  //      }
-  //      is DiceAnimation<*> -> {
-  //        val targetVisual = animation.componentView.visuals.getOrNull(animation.toSide)
-  //        if (targetVisual != null) {
-  //          animation.componentView.visual = targetVisual
-  //          Logger.debug("Updated dice visual to side ${animation.toSide}")
-  //        }
-  //      }
-  //    }
-  //  }
+  // Apply final animation values to cache AND component properties if persist=true
+  if (animation is ComponentAnimation<*> && animation.persist) {
+    Logger.debug("Persisting animation values for ${animation.componentView.id}")
+    when (animation) {
+      is MovementAnimation<*> -> {
+        animation.componentView.posX = animation.toX
+        animation.componentView.posY = animation.toY
+        Logger.warning(
+            "Persisting position to (${animation.toX}, ${animation.toY}) for ${animation.componentView.id}")
+      }
+      is ScaleAnimation<*> -> {
+        animation.componentView.scaleX = animation.toScaleX
+        animation.componentView.scaleY = animation.toScaleY
+      }
+      is RotationAnimation<*> -> {
+        animation.componentView.rotation = animation.toAngle
+        Logger.warning(
+            "Persisting rotation to ${animation.toAngle} for ${animation.componentView.id}")
+      }
+      is FadeAnimation<*> -> {
+        animation.componentView.opacity = animation.toOpacity
+      }
+      is FlipAnimation<*> -> {
+        animation.componentView.visual = animation.toVisual
+      }
+      is RandomizeAnimation<*> -> {
+        animation.componentView.visual = animation.toVisual
+      }
+      is DiceAnimation<*> -> {
+        val targetVisual = animation.componentView.visuals.getOrNull(animation.toSide)
+        if (targetVisual != null) {
+          animation.componentView.visual = targetVisual
+        }
+      }
+    }
+  }
 
   // Remove animation type and cache for ComponentAnimations
   if (animation is ComponentAnimation<*>) {
@@ -575,7 +573,6 @@ internal fun ungzip(content: ByteArray): String =
     GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
 private val updateStack = Collections.synchronizedList(Stack<AppData>())
-private val animationsFinishedStack = Collections.synchronizedList(Stack<AnimationData>())
 private val debounceTimeMillis = 5L // Adjust this value as needed
 private val debounceMutex = Mutex()
 private var debounceJob: Job? = null
@@ -610,19 +607,8 @@ private suspend fun processLastUpdate() {
   updateStack.clear()
   lastUpdate?.let {
     try {
-      val json =
-          jsonMapper.encodeToString(
-              PropData(
-                  lastUpdate.apply {
-                    //          animationsFinishedStack.forEach {
-                    //              endedAnimations[it.id] = if(it is ComponentAnimationData)
-                    // it.componentView?.id else null
-                    //          }
-                  }))
-      // animationsFinishedStack.clear()
-      val animationJsons = animationsFinishedStack.map { jsonMapper.encodeToString(PropData(it)) }
+      val json = jsonMapper.encodeToString(PropData(lastUpdate))
       finalUpdate = json
-      println("Sending last update with ${lastUpdate.endedAnimations.size} animations")
       // println("Processing update: $json")
       componentChannel.sendToAllClients(json)
 
@@ -630,11 +616,6 @@ private suspend fun processLastUpdate() {
       // for all components to prevent them from being sent again
       clearFinishedAnimationFlags()
 
-      if (animationsFinishedStack.isNotEmpty()) {
-        println("Sending finished on ${animationJsons.size} animations")
-        animationJsons.forEach { componentChannel.sendToAllClients(it) }
-        animationsFinishedStack.clear()
-      }
       refreshJob =
           CoroutineScope(Dispatchers.IO).launch {
             delay(50)

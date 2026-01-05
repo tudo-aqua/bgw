@@ -38,6 +38,8 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  * @param interpolation [AnimationInterpolation] to use for the animation. Default:
  *   [AnimationInterpolation.SMOOTH].
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
  * @constructor Creates a [ScaleAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
@@ -57,8 +59,9 @@ class ScaleAnimation<T : ComponentView>(
      * @see AnimationInterpolation
      * @since 0.10
      */
-    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
-) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+    persist: Boolean = true
+) : ComponentAnimation<T>(componentView = componentView, duration = duration, persist = persist) {
 
   /** Initial X scale. */
   val fromScaleX: Double = fromScaleX.toDouble()

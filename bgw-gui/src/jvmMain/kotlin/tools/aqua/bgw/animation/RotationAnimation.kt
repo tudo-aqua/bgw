@@ -33,7 +33,9 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
  * @param componentView [ComponentView] to animate.
  * @param fromAngle Initial angle. Default: Current [ComponentView.rotation].
  * @param toAngle Resulting angle. Default: Current [ComponentView.rotation].
- * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
+ * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].@param persist
+ *   Whether the animation will be persisted and changed the [componentView]'s state. If set to
+ *   `false`, it will reset on completion. Default: `true`.
  * @constructor Creates a [RotationAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
@@ -53,8 +55,9 @@ class RotationAnimation<T : ComponentView>(
      * @see AnimationInterpolation
      * @since 0.10
      */
-    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
-) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+    persist: Boolean = true
+) : ComponentAnimation<T>(componentView = componentView, duration = duration, persist = persist) {
 
   /** Initial angle. */
   val fromAngle: Double = fromAngle.toDouble()
@@ -70,6 +73,8 @@ class RotationAnimation<T : ComponentView>(
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
    *   [AnimationInterpolation.SMOOTH].
+   *     @param persist Whether the animation will be persisted and changed the [componentView]'s
+   *       state. If set to `false`, it will reset on completion. Default: `true`.
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
@@ -79,10 +84,12 @@ class RotationAnimation<T : ComponentView>(
       componentView: T,
       byAngle: Double = 0.0,
       duration: Int = 1000,
-      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+      persist: Boolean = true
   ) : this(
       componentView = componentView,
       toAngle = componentView.rotation + byAngle,
       duration = duration,
-      interpolation = interpolation)
+      interpolation = interpolation,
+      persist = persist)
 }

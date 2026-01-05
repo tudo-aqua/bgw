@@ -39,6 +39,8 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  * @param toSide Resulting side after roll.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of changes to be performed in [duration]. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
  * @constructor Creates a [DiceAnimation] for the given [DiceView].
  * @see SteppedComponentAnimation
  * @see ComponentAnimation
@@ -51,5 +53,8 @@ class DiceAnimation<T : DiceView>(
     /** Resulting side after roll. */
     val toSide: Int,
     duration: Int = DEFAULT_ANIMATION_DURATION,
-    speed: Int = DEFAULT_ANIMATION_SPEED
-) : SteppedComponentAnimation<T>(gameComponentView = dice, duration = duration, speed = speed)
+    speed: Int = DEFAULT_ANIMATION_SPEED,
+    persist: Boolean = true
+) :
+    SteppedComponentAnimation<T>(
+        gameComponentView = dice, duration = duration, speed = speed, persist = persist)

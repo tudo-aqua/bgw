@@ -41,6 +41,8 @@ import tools.aqua.bgw.visual.Visual
  * @param toVisual Resulting [Visual] after shuffle.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of changes to be performed in [duration]. Default: [DEFAULT_ANIMATION_SPEED].
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
  * @constructor Creates a [RandomizeAnimation] for the given [GameComponentView].
  * @see SteppedComponentAnimation
  * @see Animation
@@ -55,7 +57,11 @@ class RandomizeAnimation<T : GameComponentView>(
     /** Resulting [Visual] after shuffle. */
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_DURATION,
-    speed: Int = DEFAULT_ANIMATION_SPEED
+    speed: Int = DEFAULT_ANIMATION_SPEED,
+    persist: Boolean = true
 ) :
     SteppedComponentAnimation<T>(
-        gameComponentView = gameComponentView, duration = duration, speed = speed)
+        gameComponentView = gameComponentView,
+        duration = duration,
+        speed = speed,
+        persist = persist)
