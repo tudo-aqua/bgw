@@ -22,6 +22,7 @@ import ComponentViewData
 import ID
 import data.animation.*
 import kotlin.collections.get
+import kotlin.js.Date
 import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
@@ -397,7 +398,7 @@ internal object Animator {
       try {
         // Revert the animation - this will reset the element to its pre-animation state
         jsAnim.revert()
-        console.log("Reverted $animationType animation for component $componentId")
+        console.log("${Date.now()} - Reverted $animationType animation for component $componentId")
 
         // Remove the JSAnimation from storage
         jsAnimations[componentId]?.remove(animationType)

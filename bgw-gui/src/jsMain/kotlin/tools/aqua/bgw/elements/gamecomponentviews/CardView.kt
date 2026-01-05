@@ -44,10 +44,6 @@ internal val CardView =
       // Clean up animation CSS when animation finishes
       useAnimationCleanup(props.data)
 
-      useEffect(props.data.finishedAnimations) {
-        println("Animation finished since last update ${props.data.finishedAnimations}")
-      }
-
       val draggable =
           useDraggable(
               object : DraggableOptions {

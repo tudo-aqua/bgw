@@ -18,7 +18,7 @@
 package tools.aqua.bgw.elements
 
 import ComponentViewData
-import react.useEffect
+import react.useLayoutEffect
 import tools.aqua.bgw.Animator
 
 /**
@@ -27,7 +27,7 @@ import tools.aqua.bgw.Animator
  * is set.
  */
 internal fun useAnimationCleanup(componentData: ComponentViewData) {
-  useEffect(componentData.finishedAnimations) {
+  useLayoutEffect(componentData.finishedAnimations) {
     componentData.finishedAnimations.forEach {
       Animator.removeAnimationTypesFromTimeline(componentData.id, it)
     }

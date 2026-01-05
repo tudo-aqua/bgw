@@ -69,7 +69,7 @@ import tools.aqua.bgw.util.Logger
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  const val DEBUG = false
+  const val DEBUG = true
 }
 
 internal object StdErrFilter {
@@ -223,7 +223,8 @@ internal class MainFrame(
     if (!debugLogging) {
       builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
     } else {
-      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_INFO
+      // TODO: Switch back to INFO
+      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
       builder.cefSettings.remote_debugging_port = 2504
     }
 
