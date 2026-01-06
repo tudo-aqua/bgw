@@ -201,6 +201,8 @@ internal fun handleAnimationsStopped(text: String) {
       }
 
   Logger.debug("Stopped $runningCount animations without calling onFinished")
+
+  Frontend.updateScene()
 }
 
 internal fun handleAnimationFinished(text: String) {
@@ -239,34 +241,29 @@ internal fun handleAnimationFinished(text: String) {
             "Persisting opacity to ${animation.toOpacity} (${animation.fromOpacity} -> ${animation.toOpacity}) for ${animation.componentView.id}")
       }
       is FlipAnimation<*> -> {
-        if(animation.componentView is CardView) {
-          if(animation.toVisual == animation.componentView.backVisual) {
+        if (animation.componentView is CardView) {
+          if (animation.toVisual == animation.componentView.backVisual) {
             animation.componentView.showBack()
             Logger.warning("Persisting old back for ${animation.componentView.id}")
-          }
-          else if(animation.toVisual == animation.componentView.frontVisual) {
+          } else if (animation.toVisual == animation.componentView.frontVisual) {
             animation.componentView.showFront()
             Logger.warning("Persisting old front for ${animation.componentView.id}")
-          }
-          else if(animation.componentView.currentSide == CardView.CardSide.BACK) {
-            animation.componentView.backVisual = animation.toVisual
-            animation.componentView.showBack()
-            Logger.warning("Persisting new back for ${animation.componentView.id}")
-          }else if(animation.componentView.currentSide == CardView.CardSide.FRONT) {
+          } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
             animation.componentView.frontVisual = animation.toVisual
             animation.componentView.showFront()
             Logger.warning("Persisting new front for ${animation.componentView.id}")
+          } else if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
+            animation.componentView.backVisual = animation.toVisual
+            animation.componentView.showBack()
+            Logger.warning("Persisting new back for ${animation.componentView.id}")
           }
         }
       }
       is RandomizeAnimation<*> -> {
-        animation.componentView.visual = animation.toVisual
+        // animation.componentView.visual = animation.toVisual
       }
       is DiceAnimation<*> -> {
-        val targetVisual = animation.componentView.visuals.getOrNull(animation.toSide)
-        if (targetVisual != null) {
-          animation.componentView.visual = targetVisual
-        }
+        // animation.componentView.currentSide = animation.toSide
       }
     }
   }

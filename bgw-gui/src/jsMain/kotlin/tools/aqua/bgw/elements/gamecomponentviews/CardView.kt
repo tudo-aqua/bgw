@@ -44,6 +44,9 @@ internal val CardView =
       // Clean up animation CSS when animation finishes
       useAnimationCleanup(props.data)
 
+      // Track visual state for flip animations
+      val (currentVisual, setCurrentVisual) = useState(props.data.currentVisual)
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -68,6 +71,31 @@ internal val CardView =
 
       val elementRef = useRef<Element>(null)
 
+      // Listen for visual updates from Animator
+      useEffectWithCleanup(props.data.id) {
+        val element = elementRef.current
+        if (element != null) {
+          val handler: (Any) -> Unit = { _ ->
+            val animatorVisual = Animator.getCurrentVisual(props.data.id)
+            if (animatorVisual != null) {
+              setCurrentVisual(animatorVisual)
+            } else {
+              setCurrentVisual(props.data.currentVisual)
+            }
+          }
+          element.asDynamic().addEventListener("bgw-visual-update", handler)
+          onCleanup { element.asDynamic().removeEventListener("bgw-visual-update", handler) }
+        }
+      }
+
+      // Update visual when props change (for non-animation updates)
+      useEffect(props.data.currentVisual) {
+        val animatorVisual = Animator.getCurrentVisual(props.data.id)
+        if (animatorVisual == null) {
+          setCurrentVisual(props.data.currentVisual)
+        }
+      }
+
       bgwCardView {
         id = props.data.id
         className = ClassName("cardView")
@@ -82,7 +110,7 @@ internal val CardView =
 
         bgwVisuals {
           className = ClassName("visuals")
-          +VisualBuilder.build(props.data.currentVisual)
+          +VisualBuilder.build(currentVisual)
         }
 
         if (props.data.isDraggable) {

@@ -110,10 +110,12 @@ kotlin {
   }
   js(IR) {
     binaries.executable()
-    browser { commonWebpackConfig {
-      cssSupport { enabled.set(true) }
-      mode = KotlinWebpackConfig.Mode.DEVELOPMENT
-    } }
+    browser {
+      commonWebpackConfig {
+        cssSupport { enabled.set(true) }
+        mode = KotlinWebpackConfig.Mode.DEVELOPMENT
+      }
+    }
   }
   sourceSets {
     val commonMain by getting {

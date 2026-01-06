@@ -19,6 +19,7 @@ package tools.aqua.bgw
 
 import AnimationData
 import ComponentViewData
+import DiceViewData
 import ID
 import VisualData
 import data.animation.*
@@ -28,15 +29,10 @@ import kotlin.collections.get
 import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
-import react.dom.client.Root
-import react.dom.client.createRoot
 import tools.aqua.bgw.animation.AnimationType
-import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.builder.VisualProps
 import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.elements.jsObject
 import tools.aqua.bgw.event.JCEFEventDispatcher
-import web.dom.Element
 
 /**
  * Accepts:<br>
@@ -90,6 +86,15 @@ internal object Animator {
   private val componentAnimationTypes = mutableMapOf<ID, MutableSet<AnimationType>>()
   // Stores individual JSAnimation objects per component and animation type for reverting
   private val jsAnimations = mutableMapOf<ID, MutableMap<AnimationType, JSAnimation>>()
+
+  // Stores current visual state for components undergoing flip/stepped animations
+  private val visualStates = mutableMapOf<ID, VisualData?>()
+
+  /**
+   * Gets the current visual for a component, considering any active flip/stepped animations. If no
+   * animation is active, returns null and the component should use its default visual.
+   */
+  fun getCurrentVisual(componentId: ID): VisualData? = visualStates[componentId]
 
   /**
    * Flattens a potentially nested animation structure into a list of base animations
@@ -222,6 +227,8 @@ internal object Animator {
                 is RotationAnimationData -> AnimationType.ROTATION
                 is ScaleAnimationData -> AnimationType.SCALE
                 is FlipAnimationData -> AnimationType.FLIP
+                is RandomizeAnimationData,
+                is DiceAnimationData -> AnimationType.STEPPED
                 else -> AnimationType.STEPPED
               }
 
@@ -238,7 +245,9 @@ internal object Animator {
             is MovementAnimationData,
             is RotationAnimationData,
             is ScaleAnimationData,
-            is FlipAnimationData -> startComponentAnimation(animationData, timeline, callback)
+            is FlipAnimationData,
+            is RandomizeAnimationData,
+            is DiceAnimationData -> startComponentAnimation(animationData, timeline, callback)
 
             else -> throw IllegalArgumentException("Unknown animation type")
           }
@@ -265,6 +274,8 @@ internal object Animator {
           is RotationAnimationData -> animateRotation(comp, animationData, timeline, callback)
           is ScaleAnimationData -> animateScale(comp, animationData, timeline, callback)
           is FlipAnimationData -> animateFlip(comp, animationData, timeline, callback)
+          is RandomizeAnimationData -> animateRandomize(comp, animationData, timeline, callback)
+          is DiceAnimationData -> animateDice(comp, animationData, timeline, callback)
         }
       }
     }
@@ -279,9 +290,9 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-          jsObject {
+            jsObject {
               `--opaAnim` =
-                jsObject<TweenParams> {
+                  jsObject<TweenParams> {
                     from = animationData.fromOpacity.toString()
                     to = animationData.toOpacity.toString()
                     duration = animationData.duration
@@ -309,15 +320,15 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-          jsObject {
+            jsObject {
               `--txAnim` =
-                jsObject<TweenParams> {
+                  jsObject<TweenParams> {
                     to = "${animationData.byX}"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
                   }
               `--tyAnim` =
-                jsObject<TweenParams> {
+                  jsObject<TweenParams> {
                     to = "${animationData.byY}"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
@@ -346,7 +357,7 @@ internal object Animator {
             component,
             jsObject {
               `--rotAnim` =
-                jsObject<TweenParams> {
+                  jsObject<TweenParams> {
                     to = "${animationData.byAngle}deg"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
@@ -373,16 +384,16 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-          jsObject {
+            jsObject {
               `--sxAnim` =
-                jsObject<TweenParams> {
+                  jsObject<TweenParams> {
                     from = animationData.fromScaleX.toString()
                     to = animationData.toScaleX.toString()
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
                   }
               `--syAnim` =
-                jsObject<TweenParams> {
+                  jsObject<TweenParams> {
                     from = animationData.fromScaleY.toString()
                     to = animationData.toScaleY.toString()
                     duration = animationData.duration
@@ -402,49 +413,56 @@ internal object Animator {
   }
 
   fun animateFlip(
-    component: org.w3c.dom.Element,
-    animationData: FlipAnimationData,
-    timeline: Timeline,
-    callback: (ID, ID?) -> Unit
+      component: org.w3c.dom.Element,
+      animationData: FlipAnimationData,
+      timeline: Timeline,
+      callback: (ID, ID?) -> Unit
   ) {
     var imageSwitched = false
     val halfDuration = animationData.duration / 2
-    println("Duration: ${animationData.duration}, Delay: ${animationData.initialDelay}, Half Duration: ${halfDuration}")
+    val componentId = animationData.componentView?.id!!
+    println(
+        "Duration: ${animationData.duration}, Delay: ${animationData.initialDelay}, Half Duration: ${halfDuration}")
 
-    replaceVisual(animationData.componentView?.id!!, animationData.fromVisual!!)
+    // Set initial visual
+    updateVisual(componentId, animationData.fromVisual!!)
 
     // Create a native JavaScript array for keyframes
-    val keyframes = jsArrayOf<TweenParams>(
-      jsObject {
-        from = "0deg"
-        to = "90deg"
-        duration = halfDuration
-        ease = "linear"
-      },
-      jsObject {
-        to = "0deg"
-        duration = halfDuration
-        ease = "linear"
-      }
-    )
+    val keyframes =
+        jsArrayOf<TweenParams>(
+            jsObject {
+              from = "0deg"
+              to = "90deg"
+              duration = halfDuration
+              ease = "linear"
+            },
+            jsObject {
+              to = "0deg"
+              duration = halfDuration
+              ease = "linear"
+            })
 
     val jsAnim =
-      animate(
-        component,
-        jsObject {
-          `--flipAnim` = keyframes
-          onBeforeUpdate = { anim, e ->
-            if(anim.currentTime >= halfDuration && !imageSwitched) {
-              imageSwitched = true
-              replaceVisual(animationData.componentView?.id!!, animationData.toVisual!!)
-            }
-          }
-          onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-          autoplay = false
-        })
+        animate(
+            component,
+            jsObject {
+              `--flipAnim` = keyframes
+              onBeforeUpdate = { anim, e ->
+                if (anim.currentTime >= halfDuration && !imageSwitched) {
+                  imageSwitched = true
+                  // Update to target visual at midpoint
+                  updateVisual(componentId, animationData.toVisual!!)
+                }
+              }
+              onComplete = { anim, e ->
+                // Clear visual state when animation completes
+                visualStates.remove(componentId)
+                callback.invoke(animationData.id, component.id)
+              }
+              autoplay = false
+            })
 
     // Store the JSAnimation for later reverting
-    val componentId = animationData.componentView?.id
     if (componentId != null) {
       jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.FLIP] = jsAnim
     }
@@ -452,21 +470,145 @@ internal object Animator {
     timeline.sync(jsAnim, animationData.initialDelay)
   }
 
-  private fun replaceVisual(componentId: String, visual : VisualData)  {
-    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-    var visualRoot: Root? = null
+  fun animateRandomize(
+      component: org.w3c.dom.Element,
+      animationData: RandomizeAnimationData,
+      timeline: Timeline,
+      callback: (ID, ID?) -> Unit
+  ) {
+    val componentId = animationData.componentView?.id!!
+    val visuals = animationData.visuals
+    val toVisual = animationData.toVisual!!
+    val stepDuration = animationData.duration / animationData.speed
+    var currentStep = 0
+    val totalSteps = animationData.speed
 
-    if (oldVisuals != null) {
-      visualRoot = createRoot(oldVisuals)
+    // Use animate with a dummy property to trigger updates at intervals
+    val jsAnim =
+        animate(
+            component,
+            jsObject {
+              `--steppedAnim` =
+                  jsArrayOf(
+                      jsObject<TweenParams> {
+                        from = "0"
+                        to = "$totalSteps"
+                        duration = animationData.duration
+                        ease = "linear"
+                      })
+              onUpdate = { anim, _ ->
+                val newStep = (anim.currentTime / stepDuration).toInt()
+                if (newStep != currentStep && newStep < totalSteps - 1) {
+                  currentStep = newStep
+                  // Randomly pick a visual (except the last frame)
+                  val randomIndex = kotlin.random.Random.nextInt(visuals.size)
+                  updateVisual(componentId, visuals[randomIndex])
+                } else if (newStep >= totalSteps - 1) {
+                  // Show target visual in last step
+                  updateVisual(componentId, toVisual)
+                }
+              }
+              onComplete = { _, _ ->
+                // Ensure final visual is set and clear state
+                visualStates.remove(componentId)
+                callback.invoke(animationData.id, component.id)
+              }
+              autoplay = false
+            })
+
+    // Store the JSAnimation for later reverting
+    jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.STEPPED] = jsAnim
+
+    timeline.sync(jsAnim, animationData.initialDelay)
+  }
+
+  fun animateDice(
+      component: org.w3c.dom.Element,
+      animationData: DiceAnimationData,
+      timeline: Timeline,
+      callback: (ID, ID?) -> Unit
+  ) {
+    val componentId = animationData.componentView?.id!!
+    val diceData = animationData.componentView as? DiceViewData
+
+    if (diceData == null) {
+      println("DiceAnimation requires DiceView component")
+      callback.invoke(animationData.id, component.id)
+      return
     }
 
-    val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
-    if (visuals != null) {
-      try {
-        visualRoot?.render(VisualBuilder.build(visual))
-      } catch (e: Exception) {
-        println("Error replacing visual: ${e.message}")
-      }
+    val visuals = diceData.visuals
+    val toSide = animationData.toSide
+    val toVisual = visuals.getOrNull(toSide)
+
+    if (toVisual == null) {
+      println("Invalid toSide: $toSide for DiceView with ${visuals.size} sides")
+      callback.invoke(animationData.id, component.id)
+      return
+    }
+
+    val stepDuration = animationData.duration / animationData.speed
+    var currentStep = 0
+    val totalSteps = animationData.speed
+
+    // Use animate with a dummy property to trigger updates at intervals
+    val jsAnim =
+        animate(
+            component,
+            jsObject {
+              `--steppedAnim` =
+                  jsArrayOf(
+                      jsObject<TweenParams> {
+                        from = "0"
+                        to = "$totalSteps"
+                        duration = animationData.duration
+                        ease = "linear"
+                      })
+              onUpdate = { anim, _ ->
+                val newStep = (anim.currentTime / stepDuration).toInt()
+                if (newStep != currentStep && newStep < totalSteps - 1) {
+                  currentStep = newStep
+                  // Randomly pick a side (except the last frame)
+                  val randomSide = kotlin.random.Random.nextInt(visuals.size)
+                  updateVisual(componentId, visuals[randomSide])
+                } else if (newStep >= totalSteps - 1) {
+                  // Show target side in last step
+                  updateVisual(componentId, toVisual)
+                }
+              }
+              onComplete = { _, _ ->
+                // Ensure final visual is set and clear state
+                visualStates.remove(componentId)
+                callback.invoke(animationData.id, component.id)
+              }
+              autoplay = false
+            })
+
+    // Store the JSAnimation for later reverting
+    jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.STEPPED] = jsAnim
+
+    timeline.sync(jsAnim, animationData.initialDelay)
+  }
+
+  /**
+   * Updates the visual state for a component and triggers a React re-render. This is used by flip
+   * and stepped animations to change visuals.
+   */
+  private fun updateVisual(componentId: ID, visual: VisualData?) {
+    visualStates[componentId] = visual
+
+    // Force a re-render by dispatching a custom event that React components can listen to
+    val element = document.getElementById(componentId)
+    if (element != null) {
+      val detail = js("{}")
+      detail.componentId = componentId
+      detail.visual = visual
+      val eventInit = js("{}")
+      eventInit.detail = detail
+      val event =
+          js("new CustomEvent('bgw-visual-update', eventInit)")
+              .unsafeCast<org.w3c.dom.events.Event>()
+      element.dispatchEvent(event)
     }
   }
 
@@ -505,6 +647,10 @@ internal object Animator {
           style.removeProperty("--flipAnim")
           console.log("Removed flip styles for component $componentId")
         }
+        AnimationType.STEPPED -> {
+          style.removeProperty("--steppedAnim")
+          console.log("Removed stepped styles for component $componentId")
+        }
         else -> {}
       }
     }
@@ -537,6 +683,7 @@ internal object Animator {
       componentAnimationTypes.remove(componentId)
       timelines.remove(componentId)
       jsAnimations.remove(componentId)
+      visualStates.remove(componentId)
     }
   }
 
@@ -576,6 +723,7 @@ internal object Animator {
     timelines.clear()
     componentAnimationTypes.clear()
     jsAnimations.clear()
+    visualStates.clear()
   }
 
   internal fun easeForInterpolationType(animationData: ComponentAnimationData): Any {
