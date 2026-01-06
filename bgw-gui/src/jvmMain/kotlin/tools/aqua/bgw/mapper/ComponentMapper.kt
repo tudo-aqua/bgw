@@ -112,8 +112,6 @@ internal object ComponentMapper {
           }
 
       // Set animation finished flag from component state
-      // NOTE: We copy but don't clear yet - clearing happens after successful send to frontend
-      // to prevent loss of data when updates are queued
       finishedAnimations = componentView.animationsFinishedSinceLastUpdate.toMutableList()
       if (finishedAnimations.isNotEmpty()) {
         Logger.log(finishedAnimations)

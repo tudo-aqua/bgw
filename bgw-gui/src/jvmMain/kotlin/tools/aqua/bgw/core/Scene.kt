@@ -191,23 +191,19 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /**
    * Plays given [Animation] non-blocking. This means that any subsequent updates may be executed
-   * before the [Animation] actually starts playing. [ComponentView]s that are part of the
-   * [Animation] will reset their state immediately to the state before the [Animation] was played,
-   * once the [Animation] is finished.
-   *
-   * The [Animation] only animates the [ComponentView] visually and does not update its state. The
-   * Component will reset its visual state after the animation finished if the state is not manually
-   * set in onFinished, which is the suggested way of usage.
+   * before the [Animation] actually starts playing.
    *
    * @param animation [Animation] to play.
+   * @return Boolean whether the animation successfully started playing.
    */
-  fun playAnimation(animation: Animation) {
+  fun playAnimation(animation: Animation): Boolean {
     // Check if this is a top-level singular ComponentAnimation trying to animate an already
     // animating component
     if (animation is ComponentAnimation<*> && animation.componentView.componentAnimating) {
       Logger.warning(
-          "The ComponentView ${animation.componentView} is already animating. Please wait until the animation is over or chain animations together using ParallelAnimations or SequentialAnimations.")
-      return
+          "The ComponentView ${animation.componentView} is already animating. " +
+              "Please wait until the animation is over or chain animations together using ParallelAnimations or SequentialAnimations.")
+      return false
     }
 
     // For Sequential/Parallel animations, collect all components and check if any are already
@@ -218,8 +214,9 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
       if (alreadyAnimating.isNotEmpty()) {
         Logger.warning(
-            "One or more components in the animation are already animating: ${alreadyAnimating.joinToString(", ")}. Please wait until the animations are over or chain animations together using ParallelAnimations or SequentialAnimations.")
-        return
+            "One or more components in the animation are already animating: ${alreadyAnimating.joinToString(", ")}. " +
+                "Please wait until the animations are over or chain animations together using ParallelAnimations or SequentialAnimations.")
+        return false
       }
     }
 
@@ -234,6 +231,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
     addAnimationRecursively(animation)
     Frontend.sendAnimation(animation)
+    return true
   }
 
   /**

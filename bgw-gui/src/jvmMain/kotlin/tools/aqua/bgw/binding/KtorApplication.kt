@@ -161,30 +161,29 @@ internal fun animationListener(text: String) {
 
   // Apply final animation values to cache AND component properties if persist=true
   if (animation is ComponentAnimation<*> && animation.persist) {
-    Logger.debug("Persisting animation values for ${animation.componentView.id}")
     when (animation) {
       is MovementAnimation<*> -> {
         animation.componentView.posX += animation.toX - animation.fromX
         animation.componentView.posY += animation.toY - animation.fromY
-        Logger.warning(
+        Logger.debug(
             "Persisting position to (${animation.toX}, ${animation.toY}) for ${animation.componentView.id}")
       }
       is ScaleAnimation<*> -> {
         animation.componentView.scaleX += animation.toScaleX - animation.fromScaleX
         animation.componentView.scaleY += animation.toScaleY - animation.fromScaleY
-        Logger.warning(
+        Logger.debug(
             "Persisting scaleX to ${animation.toScaleX} (${animation.fromScaleX} -> ${animation.toScaleX}) for ${animation.componentView.id}")
-        Logger.warning(
+        Logger.debug(
             "Persisting scaleY to ${animation.toScaleY} (${animation.fromScaleY} -> ${animation.toScaleY}) for ${animation.componentView.id}")
       }
       is RotationAnimation<*> -> {
         animation.componentView.rotation += (animation.toAngle - animation.fromAngle).mod(360.0)
-        Logger.warning(
+        Logger.debug(
             "Persisting rotation to ${animation.toAngle} (${animation.fromAngle} -> ${animation.toAngle}) for ${animation.componentView.id}")
       }
       is FadeAnimation<*> -> {
         animation.componentView.opacity = animation.toOpacity
-        Logger.warning(
+        Logger.debug(
             "Persisting opacity to ${animation.toOpacity} (${animation.fromOpacity} -> ${animation.toOpacity}) for ${animation.componentView.id}")
       }
       is FlipAnimation<*> -> {

@@ -17,7 +17,7 @@
 
 package tools.aqua.bgw.util
 
-import jdk.internal.joptsimple.internal.Messages.message
+import kotlin.math.max
 import tools.aqua.bgw.application.Constants
 
 internal fun String.black() = "\u001B[30m$this\u001B[0m"
@@ -57,50 +57,68 @@ internal object Logger {
   internal var LOGLEVEL = if (Constants.DEBUG) LogType.DEBUG else LogType.INFO
 
   internal fun log(message: String, type: LogType = LogType.DEBUG) {
+    val e = Throwable()
+    val clazzFull = Class.forName(e.stackTrace[3].className).name.split(".").last()
+    val clazz = if (clazzFull.length > 20) clazzFull.take(19) + "…" else clazzFull
+    val emptySpaces = " ".repeat(max(0, 20 - clazz.length))
+
     when (type) {
       LogType.INFO -> {
         if (LogType.INFO < LOGLEVEL) return
         print("[BGW]".bold().purple())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".purple())
         println(" $message")
       }
       LogType.WARN -> {
         if (LogType.WARN < LOGLEVEL) return
         print("[BGW]".bold().yellow())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".yellow())
         println(" $message".yellow())
       }
       LogType.ERROR -> {
         if (LogType.ERROR < LOGLEVEL) return
         print("[BGW]".bold().red())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".red())
         println(" $message".red())
       }
       LogType.DEBUG -> {
         if (LOGLEVEL != LogType.DEBUG) return
         print("[BGW]".bold().gray())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".gray())
         println(" $message".gray())
       }
     }
   }
 
   internal fun logSingle(message: String, type: LogType = LogType.DEBUG) {
+    val e = Throwable()
+    val clazzFull = Class.forName(e.stackTrace[3].className).name.split(".").last()
+    val clazz = if (clazzFull.length > 20) clazzFull.take(19) + "…" else clazzFull
+    val emptySpaces = " ".repeat(max(0, 20 - clazz.length))
+
     when (type) {
       LogType.INFO -> {
         if (LogType.INFO < LOGLEVEL) return
         print("[BGW]".green())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".green())
         print(" $message")
       }
       LogType.WARN -> {
         if (LogType.WARN < LOGLEVEL) return
         print("[BGW]".yellow())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".yellow())
         print(" $message".yellow())
       }
       LogType.ERROR -> {
         if (LogType.ERROR < LOGLEVEL) return
         print("[BGW]".red())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".red())
         print(" $message".red())
       }
       LogType.DEBUG -> {
         if (LOGLEVEL != LogType.DEBUG) return
         print("[BGW]".gray())
+        if (Constants.DEBUG) print(" $clazz $emptySpaces".gray())
         print(" $message".gray())
       }
     }
