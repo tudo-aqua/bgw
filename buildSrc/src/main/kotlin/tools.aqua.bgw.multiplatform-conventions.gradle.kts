@@ -17,6 +17,7 @@
 
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
@@ -109,7 +110,10 @@ kotlin {
   }
   js(IR) {
     binaries.executable()
-    browser { commonWebpackConfig { cssSupport { enabled.set(true) } } }
+    browser { commonWebpackConfig {
+      cssSupport { enabled.set(true) }
+      mode = KotlinWebpackConfig.Mode.DEVELOPMENT
+    } }
   }
   sourceSets {
     val commonMain by getting {

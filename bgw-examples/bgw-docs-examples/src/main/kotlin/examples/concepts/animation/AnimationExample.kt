@@ -139,7 +139,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
           FlipAnimation(
               gameComponentView = cardFlip,
               fromVisual = cardFlip.backVisual,
-              toVisual = cardFlip.frontVisual,
+              toVisual = ColorVisual.RED,
               duration = 1000))
     }
     buttonRandomize.onMouseClicked = {

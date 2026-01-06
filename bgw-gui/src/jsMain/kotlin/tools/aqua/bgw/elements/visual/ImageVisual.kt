@@ -73,25 +73,28 @@ internal val ImageVisual =
             useEffect {
               val img = document.createElement("img") as HTMLImageElement
               img.src = props.data.path
-
               img.addEventListener(
                   "load",
                   {
-                    val canvas = document.getElementById(props.data.id) as HTMLCanvasElement
-                    val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
+                      document.getElementById(props.data.id)?.let {
+                          val canvas = it as HTMLCanvasElement
+                          val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
 
-                    ctx.clearRect(
-                        0.0, 0.0, props.data.width.toDouble(), props.data.height.toDouble())
-                    ctx.drawImage(
-                        img,
-                        props.data.offsetX.toDouble(),
-                        props.data.offsetY.toDouble(),
-                        props.data.width.toDouble(),
-                        props.data.height.toDouble(),
-                        0.0,
-                        0.0,
-                        props.data.width.toDouble(),
-                        props.data.height.toDouble())
+                          ctx.clearRect(
+                              0.0, 0.0, props.data.width.toDouble(), props.data.height.toDouble()
+                          )
+                          ctx.drawImage(
+                              img,
+                              props.data.offsetX.toDouble(),
+                              props.data.offsetY.toDouble(),
+                              props.data.width.toDouble(),
+                              props.data.height.toDouble(),
+                              0.0,
+                              0.0,
+                              props.data.width.toDouble(),
+                              props.data.height.toDouble()
+                          )
+                      }
                   })
             }
           }

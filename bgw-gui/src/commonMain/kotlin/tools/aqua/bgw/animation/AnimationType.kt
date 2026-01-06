@@ -23,5 +23,6 @@ internal enum class AnimationType {
   SCALE,
   FADE,
   FLIP,
-  STEPPED
+  STEPPED,
+  DELAY
 }

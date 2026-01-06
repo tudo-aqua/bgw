@@ -20,6 +20,7 @@
 
 package tools.aqua.bgw
 
+import js.array.ArrayLike
 import js.objects.Record
 import kotlin.js.Promise
 import org.w3c.dom.Element
@@ -147,12 +148,14 @@ internal external abstract class AnimationParams :
   var `--sxAnim`: TweenParams? = definedExternally
   var `--syAnim`: TweenParams? = definedExternally
   var `--opaAnim`: TweenParams? = definedExternally
+  var `--flipAnim`: Array<out TweenParams>
 }
 
 internal external interface TweenParams {
   var from: String?
   var to: String
   var duration: Int
+  var delay : Int
   var ease: Any
   var modifier: ((v: Number) -> Any?)?
 }

@@ -46,7 +46,7 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
 
   transformOrigin = "center".unsafeCast<TransformOrigin>()
   transform =
-      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) scale(var(--sxAnim, var(--sx)), var(--syAnim, var(--sy)))"
+      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) rotateY(var(--flipAnim, 0)) scale(var(--sxAnim, var(--sx)), var(--syAnim, var(--sy)))"
           .unsafeCast<Transform>()
 
   opacity = "var(--opaAnim, var(--opa))".unsafeCast<Opacity>()

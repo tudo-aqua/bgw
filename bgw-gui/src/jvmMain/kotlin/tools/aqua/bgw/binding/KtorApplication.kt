@@ -81,6 +81,7 @@ import tools.aqua.bgw.animation.RotationAnimation
 import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.animation.SteppedComponentAnimation
 import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
 import tools.aqua.bgw.components.uicomponents.CheckBox
@@ -238,7 +239,25 @@ internal fun handleAnimationFinished(text: String) {
             "Persisting opacity to ${animation.toOpacity} (${animation.fromOpacity} -> ${animation.toOpacity}) for ${animation.componentView.id}")
       }
       is FlipAnimation<*> -> {
-        animation.componentView.visual = animation.toVisual
+        if(animation.componentView is CardView) {
+          if(animation.toVisual == animation.componentView.backVisual) {
+            animation.componentView.showBack()
+            Logger.warning("Persisting old back for ${animation.componentView.id}")
+          }
+          else if(animation.toVisual == animation.componentView.frontVisual) {
+            animation.componentView.showFront()
+            Logger.warning("Persisting old front for ${animation.componentView.id}")
+          }
+          else if(animation.componentView.currentSide == CardView.CardSide.BACK) {
+            animation.componentView.backVisual = animation.toVisual
+            animation.componentView.showBack()
+            Logger.warning("Persisting new back for ${animation.componentView.id}")
+          }else if(animation.componentView.currentSide == CardView.CardSide.FRONT) {
+            animation.componentView.frontVisual = animation.toVisual
+            animation.componentView.showFront()
+            Logger.warning("Persisting new front for ${animation.componentView.id}")
+          }
+        }
       }
       is RandomizeAnimation<*> -> {
         animation.componentView.visual = animation.toVisual

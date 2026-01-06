@@ -20,14 +20,21 @@ package tools.aqua.bgw
 import AnimationData
 import ComponentViewData
 import ID
+import VisualData
 import data.animation.*
 import data.event.AnimationsStoppedEventData
+import js.array.jsArrayOf
 import kotlin.collections.get
 import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
+import react.dom.client.Root
+import react.dom.client.createRoot
 import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.builder.VisualProps
 import tools.aqua.bgw.core.AnimationInterpolation
+import tools.aqua.bgw.elements.jsObject
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 
@@ -194,13 +201,7 @@ internal object Animator {
       existingTimeline: Timeline? = null,
       callback: (ID, ID?) -> Unit
   ) {
-    //    if (!animationData.isRunning && animationData is ComponentAnimationData) {
-    //      revertSpecificAnimation(animationData)
-    //      return
-    //    }
-
     var timeline = createTimeline()
-    // timeline.onComplete = { t, e -> t.revert() }
 
     if (existingTimeline != null) timeline = existingTimeline
 
@@ -236,7 +237,8 @@ internal object Animator {
             is FadeAnimationData,
             is MovementAnimationData,
             is RotationAnimationData,
-            is ScaleAnimationData -> startComponentAnimation(animationData, timeline, callback)
+            is ScaleAnimationData,
+            is FlipAnimationData -> startComponentAnimation(animationData, timeline, callback)
 
             else -> throw IllegalArgumentException("Unknown animation type")
           }
@@ -262,6 +264,7 @@ internal object Animator {
           is MovementAnimationData -> animateMovement(comp, animationData, timeline, callback)
           is RotationAnimationData -> animateRotation(comp, animationData, timeline, callback)
           is ScaleAnimationData -> animateScale(comp, animationData, timeline, callback)
+          is FlipAnimationData -> animateFlip(comp, animationData, timeline, callback)
         }
       }
     }
@@ -276,9 +279,9 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-            js("({})").unsafeCast<AnimationParams>().apply {
+          jsObject {
               `--opaAnim` =
-                  js("({})").unsafeCast<TweenParams>().apply {
+                jsObject<TweenParams> {
                     from = animationData.fromOpacity.toString()
                     to = animationData.toOpacity.toString()
                     duration = animationData.duration
@@ -306,15 +309,15 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-            js("({})").unsafeCast<AnimationParams>().apply {
+          jsObject {
               `--txAnim` =
-                  js("({})").unsafeCast<TweenParams>().apply {
+                jsObject<TweenParams> {
                     to = "${animationData.byX}"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
                   }
               `--tyAnim` =
-                  js("({})").unsafeCast<TweenParams>().apply {
+                jsObject<TweenParams> {
                     to = "${animationData.byY}"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
@@ -341,9 +344,9 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-            js("({})").unsafeCast<AnimationParams>().apply {
+            jsObject {
               `--rotAnim` =
-                  js("({})").unsafeCast<TweenParams>().apply {
+                jsObject<TweenParams> {
                     to = "${animationData.byAngle}deg"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
@@ -370,16 +373,16 @@ internal object Animator {
     val jsAnim =
         animate(
             component,
-            js("({})").unsafeCast<AnimationParams>().apply {
+          jsObject {
               `--sxAnim` =
-                  js("({})").unsafeCast<TweenParams>().apply {
+                jsObject<TweenParams> {
                     from = animationData.fromScaleX.toString()
                     to = animationData.toScaleX.toString()
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
                   }
               `--syAnim` =
-                  js("({})").unsafeCast<TweenParams>().apply {
+                jsObject<TweenParams> {
                     from = animationData.fromScaleY.toString()
                     to = animationData.toScaleY.toString()
                     duration = animationData.duration
@@ -396,6 +399,75 @@ internal object Animator {
     }
 
     timeline.sync(jsAnim, animationData.initialDelay)
+  }
+
+  fun animateFlip(
+    component: org.w3c.dom.Element,
+    animationData: FlipAnimationData,
+    timeline: Timeline,
+    callback: (ID, ID?) -> Unit
+  ) {
+    var imageSwitched = false
+    val halfDuration = animationData.duration / 2
+    println("Duration: ${animationData.duration}, Delay: ${animationData.initialDelay}, Half Duration: ${halfDuration}")
+
+    replaceVisual(animationData.componentView?.id!!, animationData.fromVisual!!)
+
+    // Create a native JavaScript array for keyframes
+    val keyframes = jsArrayOf<TweenParams>(
+      jsObject {
+        from = "0deg"
+        to = "90deg"
+        duration = halfDuration
+        ease = "linear"
+      },
+      jsObject {
+        to = "0deg"
+        duration = halfDuration
+        ease = "linear"
+      }
+    )
+
+    val jsAnim =
+      animate(
+        component,
+        jsObject {
+          `--flipAnim` = keyframes
+          onBeforeUpdate = { anim, e ->
+            if(anim.currentTime >= halfDuration && !imageSwitched) {
+              imageSwitched = true
+              replaceVisual(animationData.componentView?.id!!, animationData.toVisual!!)
+            }
+          }
+          onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
+          autoplay = false
+        })
+
+    // Store the JSAnimation for later reverting
+    val componentId = animationData.componentView?.id
+    if (componentId != null) {
+      jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.FLIP] = jsAnim
+    }
+
+    timeline.sync(jsAnim, animationData.initialDelay)
+  }
+
+  private fun replaceVisual(componentId: String, visual : VisualData)  {
+    val oldVisuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    var visualRoot: Root? = null
+
+    if (oldVisuals != null) {
+      visualRoot = createRoot(oldVisuals)
+    }
+
+    val visuals = document.querySelector("#${componentId} > bgw_visuals") as Element?
+    if (visuals != null) {
+      try {
+        visualRoot?.render(VisualBuilder.build(visual))
+      } catch (e: Exception) {
+        println("Error replacing visual: ${e.message}")
+      }
+    }
   }
 
   /**
@@ -430,12 +502,10 @@ internal object Animator {
           console.log("Removed scale styles for component $componentId")
         }
         AnimationType.FLIP -> {
-          // Flip animations change visuals, not CSS properties
-          console.log("FLIP animation cleanup - no CSS properties to remove")
+          style.removeProperty("--flipAnim")
+          console.log("Removed flip styles for component $componentId")
         }
-        AnimationType.STEPPED -> {
-          console.log("STEPPED animation cleanup - no specific CSS properties to remove")
-        }
+        else -> {}
       }
     }
   }
