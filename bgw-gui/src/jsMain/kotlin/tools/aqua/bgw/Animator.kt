@@ -78,6 +78,7 @@ internal class AnimationDetails() {
   val initialState: ComponentViewData? = null
 }
 
+// TODO: Implement DelayAnimations
 internal object Animator {
   private val animations = mutableMapOf<ID, AnimationDetails>()
   // Stores timelines per component ID

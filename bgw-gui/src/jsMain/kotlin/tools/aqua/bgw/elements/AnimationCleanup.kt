@@ -27,6 +27,7 @@ import tools.aqua.bgw.Animator
  * is set.
  */
 internal fun useAnimationCleanup(componentData: ComponentViewData) {
+  // TODO: Add to all animatable components
   useLayoutEffect(componentData.finishedAnimations) {
     componentData.finishedAnimations.forEach {
       Animator.removeAnimationTypesFromTimeline(componentData.id, it)

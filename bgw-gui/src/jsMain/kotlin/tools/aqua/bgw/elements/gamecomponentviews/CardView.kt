@@ -61,6 +61,8 @@ internal val CardView =
                 override var disabled = !props.data.isDroppable
               })
 
+      // TODO: Test drag'n-drop (including rotated parents)
+      // TODO: Reimplement new translate for all draggable components
       val style: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         set(CustomPropertyName("--tx"), draggable.transform?.x?.px ?: 0.px)
