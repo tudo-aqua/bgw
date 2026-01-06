@@ -121,10 +121,10 @@ internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-r
     // Handle animations sent from JVM to JS client
     is AnimationData -> {
       println("${Date.now()} - Received animation ${receivedData.isRunning}")
-      //      if (receivedData.isStop) {
-      //        stopAnimations()
-      //        return
-      //      }
+      if (receivedData.isStop) {
+        Animator.stopAllAnimations()
+        return
+      }
       Animator.startAnimation(receivedData) { animId, compId ->
         JCEFEventDispatcher.dispatchEvent(
             AnimationFinishedEventData().apply {

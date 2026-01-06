@@ -23,8 +23,6 @@ import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.dialog.Dialog
-import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -97,15 +95,17 @@ class AnimationExample : BoardGameApplication("Animation example") {
 
   init {
     buttonDelay.onMouseClicked = {
-      gameScene.lock()
-      gameScene.playAnimation(
-          DelayAnimation(duration = 2000).apply {
-            onFinished = {
-              println("Delay finished!")
-              gameScene.unlock()
-              showDialog(Dialog(DialogType.NONE, "", "", ""))
-            }
-          })
+      gameScene.stopAllAnimations()
+
+      //      gameScene.lock()
+      //      gameScene.playAnimation(
+      //          DelayAnimation(duration = 2000).apply {
+      //            onFinished = {
+      //              println("Delay finished!")
+      //              gameScene.unlock()
+      //              showDialog(Dialog(DialogType.NONE, "", "", ""))
+      //            }
+      //          })
     }
 
     buttonMovement.onMouseClicked = {

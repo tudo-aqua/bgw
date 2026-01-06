@@ -304,8 +304,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
-   * Stops all currently playing [Animation]s and resets visual state of all [ComponentView]s that
-   * were currently animating immediately.
+   * Stops all currently playing [Animation]s. This will NOT revert persisted animations that
+   * already finished. It will however cancel so that onFinished callbacks do not get invoked.
    *
    * @see Animation
    */

@@ -23,6 +23,7 @@ import AppData
 import PropData
 import SceneMapper
 import data.event.AnimationFinishedEventData
+import data.event.AnimationsStoppedEventData
 import data.event.CheckBoxChangedEventData
 import data.event.ColorInputChangedEventData
 import data.event.DragDroppedEventData
@@ -135,7 +136,14 @@ internal val componentChannel: Channel =
           }
           "bgwAnimationQuery" -> {
             try {
-              animationListener(content)
+              handleAnimationFinished(content)
+            } catch (e: Exception) {
+              Logger.error(e.stackTraceToString())
+            }
+          }
+          "bgwAnimationStopQuery" -> {
+            try {
+              handleAnimationsStopped(content)
             } catch (e: Exception) {
               Logger.error(e.stackTraceToString())
             }
@@ -151,7 +159,50 @@ internal val componentChannel: Channel =
       }
     }
 
-internal fun animationListener(text: String) {
+internal fun handleAnimationsStopped(text: String) {
+  val eventData = jsonMapper.decodeFromString<AnimationsStoppedEventData>(text)
+
+  // Get all animations from both scenes
+  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+  val animations = menuSceneAnimations + boardGameSceneAnimations
+
+  // Count running animations before stopping them
+  val runningCount = animations.count { it.isRunning }
+
+  // For each running animation, clean up WITHOUT triggering onFinished or persist
+  animations
+      .filter { it.isRunning }
+      .forEach { animation ->
+        // Set isRunning to false
+        animation.isRunning = false
+
+        // Remove animation types from components but don't persist or call onFinished
+        if (animation is ComponentAnimation<*>) {
+          val animationType =
+              when (animation) {
+                is MovementAnimation<*> -> AnimationType.MOVEMENT
+                is ScaleAnimation<*> -> AnimationType.SCALE
+                is RotationAnimation<*> -> AnimationType.ROTATION
+                is FadeAnimation<*> -> AnimationType.FADE
+                is FlipAnimation<*> -> AnimationType.FLIP
+                is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+              }
+
+          animation.componentView.animationTypes.remove(animationType)
+
+          // Check if component has no more active animations
+          if (animation.componentView.animationTypes.isEmpty()) {
+            animation.componentView.componentAnimating = false
+            Frontend.animationCache.remove(animation.componentView.id)
+          }
+        }
+      }
+
+  Logger.debug("Stopped $runningCount animations without calling onFinished")
+}
+
+internal fun handleAnimationFinished(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
 
   val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()

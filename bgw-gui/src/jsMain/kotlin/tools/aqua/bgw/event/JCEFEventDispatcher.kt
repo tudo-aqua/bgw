@@ -18,13 +18,13 @@
 package tools.aqua.bgw.event
 
 import data.event.AnimationFinishedEventData
+import data.event.AnimationsStoppedEventData
 import data.event.EventData
 import data.event.KeyEventData
 import jsonMapper
-import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.webSocket
 
-internal object JCEFEventDispatcher : EventDispatcher {
+internal object JCEFEventDispatcher {
   fun dispatchGlobalEvent(event: KeyEventData) {
     try {
       val json = jsonMapper.encodeToString(event)
@@ -34,7 +34,7 @@ internal object JCEFEventDispatcher : EventDispatcher {
     }
   }
 
-  override fun dispatchEvent(event: AnimationFinishedEventData) {
+  fun dispatchEvent(event: AnimationFinishedEventData) {
     try {
       val json = jsonMapper.encodeToString(event)
       webSocket?.send("bgwAnimationQuery|$json")
@@ -43,7 +43,16 @@ internal object JCEFEventDispatcher : EventDispatcher {
     }
   }
 
-  override fun dispatchEvent(event: EventData) {
+  fun dispatchEvent(event: AnimationsStoppedEventData) {
+    try {
+      val json = jsonMapper.encodeToString(event)
+      webSocket?.send("bgwAnimationStopQuery|$json")
+    } catch (e: Throwable) {
+      println("Error while dispatching event: $e")
+    }
+  }
+
+  fun dispatchEvent(event: EventData) {
     try {
       val json = jsonMapper.encodeToString(event)
       webSocket?.send("bgwQuery|$json")

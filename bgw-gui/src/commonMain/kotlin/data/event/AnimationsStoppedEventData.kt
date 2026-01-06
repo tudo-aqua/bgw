@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2026 The BoardGameWork Authors
+ * Copyright 2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.event
+package data.event
 
-import data.event.AnimationFinishedEventData
-import data.event.EventData
+import kotlinx.serialization.Serializable
 
-internal interface EventDispatcher {
-  fun dispatchEvent(event: AnimationFinishedEventData)
-
-  fun dispatchEvent(event: EventData)
-}
+/**
+ * Event data sent when all animations are forcibly stopped without completing naturally. This is
+ * used when animations are canceled and should not trigger onFinished callbacks.
+ */
+@Serializable internal class AnimationsStoppedEventData : EventData()

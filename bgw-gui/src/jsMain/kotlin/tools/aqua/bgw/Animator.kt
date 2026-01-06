@@ -21,11 +21,13 @@ import AnimationData
 import ComponentViewData
 import ID
 import data.animation.*
+import data.event.AnimationsStoppedEventData
 import kotlin.collections.get
 import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
 import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 
 /**
@@ -389,23 +391,16 @@ internal object Animator {
     timeline.sync(jsAnim, animationData.initialDelay)
   }
 
-  fun removeAnimationTypesFromTimeline(componentId: String, animationType: AnimationType) {
-    // Get the stored JSAnimation for this component and animation type
-    val jsAnim = jsAnimations[componentId]?.get(animationType)
-
-    if (jsAnim != null) {
-      try {
-        // Remove the JSAnimation from storage
-        jsAnimations[componentId]?.remove(animationType)
-      } catch (e: Exception) {
-        console.log(
-            "Failed to revert $animationType animation for component $componentId: ${e.message}")
-      }
-    } else {
-      console.log("No JSAnimation found for $animationType on component $componentId")
-    }
-
-    // Remove CSS properties that the animation was controlling
+  /**
+   * Removes CSS properties for a specific animation type from a component.
+   *
+   * @param componentId The ID of the component
+   * @param animationType The type of animation whose CSS properties should be removed
+   */
+  private fun removeCssPropertiesForAnimationType(
+      componentId: String,
+      animationType: AnimationType
+  ) {
     document.getElementById(componentId)?.let { element ->
       val style = element.asDynamic().style
       when (animationType) {
@@ -436,6 +431,26 @@ internal object Animator {
         }
       }
     }
+  }
+
+  fun removeAnimationTypesFromTimeline(componentId: String, animationType: AnimationType) {
+    // Get the stored JSAnimation for this component and animation type
+    val jsAnim = jsAnimations[componentId]?.get(animationType)
+
+    if (jsAnim != null) {
+      try {
+        // Remove the JSAnimation from storage
+        jsAnimations[componentId]?.remove(animationType)
+      } catch (e: Exception) {
+        console.log(
+            "Failed to revert $animationType animation for component $componentId: ${e.message}")
+      }
+    } else {
+      console.log("No JSAnimation found for $animationType on component $componentId")
+    }
+
+    // Remove CSS properties using the extracted method
+    removeCssPropertiesForAnimationType(componentId, animationType)
 
     // Remove the animation type from tracking
     componentAnimationTypes[componentId]?.remove(animationType)
@@ -446,5 +461,43 @@ internal object Animator {
       timelines.remove(componentId)
       jsAnimations.remove(componentId)
     }
+  }
+
+  /**
+   * Stops all currently running animations immediately without calling their onComplete hooks.
+   * Cancels all timelines, removes all CSS animation properties, notifies the backend to cleanup
+   * animation states (isRunning = false, remove animation types from components) WITHOUT triggering
+   * onFinished callbacks or persist logic, and cleans up all tracking data.
+   */
+  fun stopAllAnimations() {
+    // Cancel all timelines (this prevents onComplete callbacks from being called)
+    timelines.values.forEach { timeline ->
+      try {
+        timeline.cancel()
+      } catch (e: Exception) {
+        console.log("Failed to cancel timeline: ${e.message}")
+      }
+    }
+
+    // Remove all CSS properties for all active animations using the extracted method
+    componentAnimationTypes.forEach { (componentId, animationTypes) ->
+      animationTypes.forEach { animationType ->
+        removeCssPropertiesForAnimationType(componentId, animationType)
+      }
+    }
+
+    // Send a single event to notify backend that all animations were stopped
+    // The backend will handle cleanup without triggering onFinished or persist logic
+    try {
+      JCEFEventDispatcher.dispatchEvent(AnimationsStoppedEventData())
+    } catch (e: Exception) {
+      console.log("Failed to dispatch animations stopped event: ${e.message}")
+    }
+
+    // Clear all tracking data structures
+    animations.clear()
+    timelines.clear()
+    componentAnimationTypes.clear()
+    jsAnimations.clear()
   }
 }
