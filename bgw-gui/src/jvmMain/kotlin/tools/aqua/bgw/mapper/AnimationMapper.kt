@@ -79,20 +79,20 @@ internal object AnimationMapper {
             fromOpacity = animation.fromOpacity
             toOpacity = animation.toOpacity
             animationType = "fade"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is MovementAnimation<*> ->
           (mapSpecific(animation) as MovementAnimationData).apply {
             byX = (animation.toX - animation.fromX).toInt()
             byY = (animation.toY - animation.fromY).toInt()
             animationType = "move"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is RotationAnimation<*> ->
           (mapSpecific(animation) as RotationAnimationData).apply {
             byAngle = animation.toAngle - animation.fromAngle
             animationType = "rotate"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is ScaleAnimation<*> ->
           (mapSpecific(animation) as ScaleAnimationData).apply {
@@ -101,7 +101,7 @@ internal object AnimationMapper {
             toScaleX = animation.toScaleX
             toScaleY = animation.toScaleY
             animationType = "scale"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is FlipAnimation<*> ->
           (mapSpecific(animation) as FlipAnimationData).apply {

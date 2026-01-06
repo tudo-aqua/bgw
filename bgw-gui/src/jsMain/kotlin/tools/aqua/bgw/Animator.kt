@@ -27,6 +27,7 @@ import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
 import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.dom.Element
 
@@ -281,6 +282,7 @@ internal object Animator {
                     from = animationData.fromOpacity.toString()
                     to = animationData.toOpacity.toString()
                     duration = animationData.duration
+                    ease = easeForInterpolationType(animationData)
                   }
               onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
               autoplay = false
@@ -309,11 +311,13 @@ internal object Animator {
                   js("({})").unsafeCast<TweenParams>().apply {
                     to = "${animationData.byX}"
                     duration = animationData.duration
+                    ease = easeForInterpolationType(animationData)
                   }
               `--tyAnim` =
                   js("({})").unsafeCast<TweenParams>().apply {
                     to = "${animationData.byY}"
                     duration = animationData.duration
+                    ease = easeForInterpolationType(animationData)
                   }
               onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
               autoplay = false
@@ -342,6 +346,7 @@ internal object Animator {
                   js("({})").unsafeCast<TweenParams>().apply {
                     to = "${animationData.byAngle}deg"
                     duration = animationData.duration
+                    ease = easeForInterpolationType(animationData)
                   }
               onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
               autoplay = false
@@ -371,12 +376,14 @@ internal object Animator {
                     from = animationData.fromScaleX.toString()
                     to = animationData.toScaleX.toString()
                     duration = animationData.duration
+                    ease = easeForInterpolationType(animationData)
                   }
               `--syAnim` =
                   js("({})").unsafeCast<TweenParams>().apply {
                     from = animationData.fromScaleY.toString()
                     to = animationData.toScaleY.toString()
                     duration = animationData.duration
+                    ease = easeForInterpolationType(animationData)
                   }
               onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
               autoplay = false
@@ -449,7 +456,7 @@ internal object Animator {
       console.log("No JSAnimation found for $animationType on component $componentId")
     }
 
-    // Remove CSS properties using the extracted method
+    // Remove CSS properties
     removeCssPropertiesForAnimationType(componentId, animationType)
 
     // Remove the animation type from tracking
@@ -465,7 +472,7 @@ internal object Animator {
 
   /**
    * Stops all currently running animations immediately without calling their onComplete hooks.
-   * Cancels all timelines, removes all CSS animation properties, notifies the backend to cleanup
+   * Cancels all timelines, removes all CSS animation properties, notifies the backend to clean up
    * animation states (isRunning = false, remove animation types from components) WITHOUT triggering
    * onFinished callbacks or persist logic, and cleans up all tracking data.
    */
@@ -479,7 +486,7 @@ internal object Animator {
       }
     }
 
-    // Remove all CSS properties for all active animations using the extracted method
+    // Remove all CSS properties for all active animations
     componentAnimationTypes.forEach { (componentId, animationTypes) ->
       animationTypes.forEach { animationType ->
         removeCssPropertiesForAnimationType(componentId, animationType)
@@ -499,5 +506,14 @@ internal object Animator {
     timelines.clear()
     componentAnimationTypes.clear()
     jsAnimations.clear()
+  }
+
+  internal fun easeForInterpolationType(animationData: ComponentAnimationData): Any {
+    return when (animationData.interpolation) {
+      AnimationInterpolation.SMOOTH -> "inOut"
+      AnimationInterpolation.LINEAR -> "linear"
+      AnimationInterpolation.SPRING -> "outElastic(1.05,0.34)"
+      AnimationInterpolation.STEPS -> steps(10)
+    }
   }
 }

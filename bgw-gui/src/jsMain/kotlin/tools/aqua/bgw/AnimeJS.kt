@@ -153,8 +153,11 @@ internal external interface TweenParams {
   var from: String?
   var to: String
   var duration: Int
+  var ease: Any
   var modifier: ((v: Number) -> Any?)?
 }
+
+internal external interface Spring
 
 internal external interface Animatable {
   /**
@@ -631,3 +634,7 @@ internal external class JSAnimation : Timer {
 }
 
 internal external fun animate(targets: Element, parameters: AnimationParams): JSAnimation
+
+internal external fun spring(params: SpringParams): Spring
+
+internal external fun steps(steps: Int): Any = definedExternally

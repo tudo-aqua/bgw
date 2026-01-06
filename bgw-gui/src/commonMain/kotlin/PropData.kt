@@ -21,6 +21,7 @@ import data.event.EventData
 import data.event.InternalCameraPanData
 import kotlinx.serialization.Serializable
 import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.dialog.DialogType
 
 internal typealias ID = String
@@ -85,7 +86,7 @@ internal abstract class AnimationData : Data() {
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
   var isStop: Boolean = false
-  var interpolation: String = "linear"
+  var interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
 }
 
 @Serializable
