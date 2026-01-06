@@ -97,8 +97,8 @@ class ScaleAnimation<T : ComponentView>(
       interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
   ) : this(
       componentView = componentView,
-      toScaleX = componentView.scaleX * byScaleX.toDouble(),
-      toScaleY = componentView.scaleY * byScaleY.toDouble(),
+      toScaleX = componentView.scaleX * if (byScaleX == 0.0) 1.0 else byScaleX.toDouble(),
+      toScaleY = componentView.scaleY * if (byScaleY == 0.0) 1.0 else byScaleY.toDouble(),
       duration = duration,
       interpolation = interpolation)
 
@@ -122,8 +122,8 @@ class ScaleAnimation<T : ComponentView>(
       interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
   ) : this(
       componentView = componentView,
-      toScaleX = componentView.scaleX * byScale.toDouble(),
-      toScaleY = componentView.scaleY * byScale.toDouble(),
+      toScaleX = componentView.scaleX * if (byScale == 0.0) 1.0 else byScale.toDouble(),
+      toScaleY = componentView.scaleY * if (byScale == 0.0) 1.0 else byScale.toDouble(),
       duration = duration,
       interpolation = interpolation)
 }

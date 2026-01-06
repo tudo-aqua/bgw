@@ -144,6 +144,9 @@ internal external abstract class AnimationParams :
   var `--txAnim`: TweenParams? = definedExternally
   var `--tyAnim`: TweenParams? = definedExternally
   var `--rotAnim`: TweenParams? = definedExternally
+  var `--sxAnim`: TweenParams? = definedExternally
+  var `--syAnim`: TweenParams? = definedExternally
+  var `--opaAnim`: TweenParams? = definedExternally
 }
 
 internal external interface TweenParams {

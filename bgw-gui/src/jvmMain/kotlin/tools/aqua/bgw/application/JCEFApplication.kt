@@ -299,7 +299,7 @@ internal class MainFrame(
               callback.success("")
               return true
             } catch (e: Exception) {
-              Logger.error(e.stackTrace)
+              Logger.error(e.stackTraceToString())
             }
             return false
           }
@@ -374,6 +374,9 @@ internal class MainFrame(
             }
 
             Frontend.application.onWindowShown?.invoke()
+            if (debugLogging) {
+              browserArg.openDevTools()
+            }
           }
         })
     client.addContextMenuHandler(

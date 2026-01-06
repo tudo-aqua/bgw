@@ -22,7 +22,6 @@ import ComponentViewData
 import ID
 import data.animation.*
 import kotlin.collections.get
-import kotlin.js.Date
 import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
@@ -275,7 +274,7 @@ internal object Animator {
         animate(
             component,
             js("({})").unsafeCast<AnimationParams>().apply {
-              opacity =
+              `--opaAnim` =
                   js("({})").unsafeCast<TweenParams>().apply {
                     from = animationData.fromOpacity.toString()
                     to = animationData.toOpacity.toString()
@@ -365,13 +364,13 @@ internal object Animator {
         animate(
             component,
             js("({})").unsafeCast<AnimationParams>().apply {
-              scaleX =
+              `--sxAnim` =
                   js("({})").unsafeCast<TweenParams>().apply {
                     from = animationData.fromScaleX.toString()
                     to = animationData.toScaleX.toString()
                     duration = animationData.duration
                   }
-              scaleY =
+              `--syAnim` =
                   js("({})").unsafeCast<TweenParams>().apply {
                     from = animationData.fromScaleY.toString()
                     to = animationData.toScaleY.toString()
@@ -396,10 +395,6 @@ internal object Animator {
 
     if (jsAnim != null) {
       try {
-        // Revert the animation - this will reset the element to its pre-animation state
-        jsAnim.revert()
-        console.log("${Date.now()} - Reverted $animationType animation for component $componentId")
-
         // Remove the JSAnimation from storage
         jsAnimations[componentId]?.remove(animationType)
       } catch (e: Exception) {
@@ -410,40 +405,37 @@ internal object Animator {
       console.log("No JSAnimation found for $animationType on component $componentId")
     }
 
-    // Fallback: Manually remove CSS properties that the animation was controlling
-    // This ensures properties are reset even if React re-renders override the revert
-    //    document.getElementById(componentId)?.let { element ->
-    //      val style = element.asDynamic().style
-    //      when (animationType) {
-    //        AnimationType.FADE -> {
-    //          style.removeProperty("opacity")
-    //          console.log("Removed opacity style for component $componentId")
-    //        }
-    //        AnimationType.MOVEMENT -> {
-    //          style.setProperty("--txAnim", 0)
-    //          style.setProperty("--tyAnim", 0)
-    //          console.log("Removed --tx and --ty styles for component $componentId")
-    //        }
-    //        AnimationType.ROTATION -> {
-    //          style.setProperty("--rotAnim", 0)
-    //          console.log("Removed --rot style for component $componentId")
-    //        }
-    //        AnimationType.SCALE -> {
-    //          style.removeProperty("scale-x")
-    //          style.removeProperty("scale-y")
-    //          style.removeProperty("scaleX")
-    //          style.removeProperty("scaleY")
-    //          console.log("Removed scale styles for component $componentId")
-    //        }
-    //        AnimationType.FLIP -> {
-    //          // Flip animations change visuals, not CSS properties
-    //          console.log("FLIP animation cleanup - no CSS properties to remove")
-    //        }
-    //        AnimationType.STEPPED -> {
-    //          console.log("STEPPED animation cleanup - no specific CSS properties to remove")
-    //        }
-    //      }
-    //    }
+    // Remove CSS properties that the animation was controlling
+    document.getElementById(componentId)?.let { element ->
+      val style = element.asDynamic().style
+      when (animationType) {
+        AnimationType.FADE -> {
+          style.removeProperty("--opaAnim")
+          console.log("Removed opacity style for component $componentId")
+        }
+        AnimationType.MOVEMENT -> {
+          style.removeProperty("--txAnim")
+          style.removeProperty("--tyAnim")
+          console.log("Removed --tx and --ty styles for component $componentId")
+        }
+        AnimationType.ROTATION -> {
+          style.removeProperty("--rotAnim")
+          console.log("Removed --rot style for component $componentId")
+        }
+        AnimationType.SCALE -> {
+          style.removeProperty("--sxAnim")
+          style.removeProperty("--syAnim")
+          console.log("Removed scale styles for component $componentId")
+        }
+        AnimationType.FLIP -> {
+          // Flip animations change visuals, not CSS properties
+          console.log("FLIP animation cleanup - no CSS properties to remove")
+        }
+        AnimationType.STEPPED -> {
+          console.log("STEPPED animation cleanup - no specific CSS properties to remove")
+        }
+      }
+    }
 
     // Remove the animation type from tracking
     componentAnimationTypes[componentId]?.remove(animationType)

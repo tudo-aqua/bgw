@@ -34,7 +34,6 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
   width = componentViewData.width.bgw
   height = componentViewData.height.bgw
   zIndex = integer(componentViewData.zIndex)
-  opacity = number(componentViewData.opacity)
   display = if (componentViewData.isVisible) Display.flex else None.none
   pointerEvents = if (!componentViewData.isDisabled) PointerEvents.all else None.none
   // rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
@@ -43,18 +42,21 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
       "calc(var(--txAnim) * var(--bgwUnit)) calc(var(--tyAnim) * var(--bgwUnit))"
           .unsafeCast<Translate>()
   rotate = "var(--rotAnim)".unsafeCast<Rotate>()
-  scale = "var(--sxAnim) var(--syAnim)".unsafeCast<Scale>()
+  // scale = "var(--sxAnim) var(--syAnim)".unsafeCast<Scale>()
 
   transformOrigin = "center".unsafeCast<TransformOrigin>()
   transform =
-      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) scale(var(--sx), var(--sy))"
+      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) scale(var(--sxAnim, var(--sx)), var(--syAnim, var(--sy)))"
           .unsafeCast<Transform>()
+
+  opacity = "var(--opaAnim, var(--opa))".unsafeCast<Opacity>()
 
   set(CustomPropertyName("--tx"), 0)
   set(CustomPropertyName("--ty"), 0)
   set(CustomPropertyName("--rot"), componentViewData.rotation.deg)
   set(CustomPropertyName("--sx"), componentViewData.scaleX)
   set(CustomPropertyName("--sy"), componentViewData.scaleY)
+  set(CustomPropertyName("--opa"), componentViewData.opacity)
 }
 
 internal fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {

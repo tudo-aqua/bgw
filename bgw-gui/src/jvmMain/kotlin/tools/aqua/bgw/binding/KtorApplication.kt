@@ -130,21 +130,21 @@ internal val componentChannel: Channel =
             try {
               eventListener(content)
             } catch (e: Exception) {
-              Logger.error(e.stackTrace)
+              Logger.error(e.stackTraceToString())
             }
           }
           "bgwAnimationQuery" -> {
             try {
               animationListener(content)
             } catch (e: Exception) {
-              Logger.error(e.stackTrace)
+              Logger.error(e.stackTraceToString())
             }
           }
           "bgwGlobalQuery" -> {
             try {
               globalListener(content)
             } catch (e: Exception) {
-              Logger.error(e.stackTrace)
+              Logger.error(e.stackTraceToString())
             }
           }
         }
@@ -172,6 +172,10 @@ internal fun animationListener(text: String) {
       is ScaleAnimation<*> -> {
         animation.componentView.scaleX += animation.toScaleX - animation.fromScaleX
         animation.componentView.scaleY += animation.toScaleY - animation.fromScaleY
+        Logger.warning(
+            "Persisting scaleX to ${animation.toScaleX} (${animation.fromScaleX} -> ${animation.toScaleX}) for ${animation.componentView.id}")
+        Logger.warning(
+            "Persisting scaleY to ${animation.toScaleY} (${animation.fromScaleY} -> ${animation.toScaleY}) for ${animation.componentView.id}")
       }
       is RotationAnimation<*> -> {
         animation.componentView.rotation += (animation.toAngle - animation.fromAngle).mod(360.0)
@@ -179,7 +183,9 @@ internal fun animationListener(text: String) {
             "Persisting rotation to ${animation.toAngle} (${animation.fromAngle} -> ${animation.toAngle}) for ${animation.componentView.id}")
       }
       is FadeAnimation<*> -> {
-        animation.componentView.opacity += animation.toOpacity - animation.fromOpacity
+        animation.componentView.opacity = animation.toOpacity
+        Logger.warning(
+            "Persisting opacity to ${animation.toOpacity} (${animation.fromOpacity} -> ${animation.toOpacity}) for ${animation.componentView.id}")
       }
       is FlipAnimation<*> -> {
         animation.componentView.visual = animation.toVisual

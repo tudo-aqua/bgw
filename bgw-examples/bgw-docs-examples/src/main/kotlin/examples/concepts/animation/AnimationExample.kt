@@ -88,7 +88,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
   private val cardOpacity: CardView =
       CardView(posX = 800, posY = 450, front = imageFront, back = imageBack).apply { opacity = 0.5 }
   private val cardStretch: CardView =
-      CardView(posX = 950, posY = 450, front = imageFront, back = imageBack)
+      CardView(posX = 950, posY = 450, front = imageFront, back = imageBack).apply { scaleY = 0.5 }
   private val cardFlip: CardView =
       CardView(posX = 1100, posY = 450, front = imageFront, back = imageBack)
   private val cardRandomize: CardView =

@@ -120,7 +120,7 @@ internal object Logger {
   }
 
   internal fun error(stackTrace: Array<StackTraceElement>) {
-    log(stackTrace.joinToString { "\n" }, LogType.ERROR)
+    log(stackTrace.map { it.toString() }.joinToString { "\n" }, LogType.ERROR)
   }
 
   internal fun debug(message: Any) {
@@ -136,7 +136,7 @@ internal object Logger {
   }
 
   internal fun warning(stackTrace: Array<StackTraceElement>) {
-    log(stackTrace.joinToString { "\n" }, LogType.WARN)
+    log(stackTrace.map { it.toString() }.joinToString { "\n" }, LogType.WARN)
   }
 }
 
