@@ -62,7 +62,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @see isDragged
    */
-  internal val isDraggedProperty: ReadonlyBooleanProperty = ReadonlyBooleanProperty(false)
+  internal val isDraggedProperty: BooleanProperty = BooleanProperty(false)
 
   /** Reflects whether component is currently dragged or not. */
   var isDragged: Boolean

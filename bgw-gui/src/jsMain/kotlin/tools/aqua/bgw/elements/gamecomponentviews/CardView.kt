@@ -65,6 +65,8 @@ internal val CardView =
       val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
+        // TODO: Maybe do it using useDndContext and check active id for less latency
+        visibility = if(props.data.isDragged) Visibility.hidden else null
       }
 
       val elementRef = useRef<Element>(null)
@@ -105,7 +107,7 @@ internal val CardView =
         }
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable)
+        // style = applyDraggableTransform(draggable)
 
         bgwVisuals {
           className = ClassName("visuals")

@@ -18,6 +18,11 @@
 package tools.aqua.bgw.elements
 
 import AppData
+import CameraPaneData
+import ComponentViewData
+import GameComponentContainerData
+import GridPaneData
+import PaneData
 import data.event.DragGestureExitedEventData
 import data.event.KeyEventAction
 import emotion.react.Global
@@ -30,6 +35,8 @@ import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
+import tools.aqua.bgw.builder.NodeBuilder
+import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
@@ -357,6 +364,18 @@ internal val App =
 
           "bgw_scroll::-webkit-scrollbar" { display = None.none }
 
+          // DragOverlay specific styles to ensure visibility
+          ".bgw-drag-overlay" {
+            zIndex = important(integer(99999998))
+          }
+
+          ".bgw-drag-overlay > *" {
+            position = important(Position.fixed)
+            top = important(0.px)
+            left = important(0.px)
+            zIndex = important(integer(99999998))
+          }
+
           "select, ::picker(select)" {
             appearance = important(baseSelect())
             border = None.none
@@ -419,6 +438,7 @@ internal val App =
 
       val (lastDraggedOver, setLastDraggedOver) = useState<String?>(null)
       val draggedElementRef = useRef<org.w3c.dom.Element>(null)
+      val (draggedComponentData, setDraggedComponentData) = useState<ComponentViewData?>(null)
 
       val pointerSensor =
           useSensor(
@@ -447,11 +467,26 @@ internal val App =
 
       DndContext {
         sensors = allSensors
-        // measuring = measuringConfig
+        measuring = measuringConfig
 
         onDragStart = { event ->
           val element = event.active?.id?.let { document.getElementById(it) }
           draggedElementRef.current = element
+
+          // Find the component data for the dragged element
+          event.active?.id?.let { componentId ->
+            val gameScene = props.data.gameScene
+            val menuScene = props.data.menuScene
+
+            val foundComponent = when {
+              gameScene != undefined -> findComponentDataById(componentId, gameScene.components)
+              menuScene != undefined -> findComponentDataById(componentId, menuScene.components)
+              else -> null
+            }
+
+            setDraggedComponentData(foundComponent)
+          }
+
           JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
         }
 
@@ -465,6 +500,7 @@ internal val App =
                 DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
           }
           setLastDraggedOver(null)
+          setDraggedComponentData(null)
         }
 
         onDragMove = { event -> JCEFEventDispatcher.dispatchEvent(event.toDragMoveEventData()) }
@@ -481,7 +517,7 @@ internal val App =
         }
 
         fun globalKeyDown(e: KeyboardEvent<*>) {
-          JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.PRESS))
+          // F9 to toggle freeze mode for debugging
           JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.TYPE))
         }
 
@@ -504,6 +540,24 @@ internal val App =
           }
         }
 
+        val menuScene = props.data.menuScene
+        val (isMenuVisible, setMenuVisible) = useState(menuScene != undefined)
+        var timeoutId: Int? = null
+
+        // Effect to handle visibility changes when menuScene changes
+        useEffectWithCleanup(menuScene) {
+          if (menuScene != undefined) {
+            setMenuVisible(true)
+          } else {
+            // Start a timer to remove the component after transition completes
+            window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
+          }
+
+          onCleanup { window.clearTimeout(timeoutId ?: 0) }
+        }
+
+        val gameScene = props.data.gameScene
+
         bgwScenes {
           css {
             width = 100.pct
@@ -515,22 +569,6 @@ internal val App =
           bgwVisuals {
             className = ClassName("visuals")
             +VisualBuilder.build(props.data.background)
-          }
-
-          val menuScene = props.data.menuScene
-          val (isMenuVisible, setMenuVisible) = useState(menuScene != undefined)
-          var timeoutId: Int? = null
-
-          // Effect to handle visibility changes when menuScene changes
-          useEffectWithCleanup(menuScene) {
-            if (menuScene != undefined) {
-              setMenuVisible(true)
-            } else {
-              // Start a timer to remove the component after transition completes
-              window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
-            }
-
-            onCleanup { window.clearTimeout(timeoutId ?: 0) }
           }
 
           bgwMenuScene {
@@ -576,7 +614,6 @@ internal val App =
             }
           }
 
-          val gameScene = props.data.gameScene
           if (gameScene != undefined) {
             bgwLock {
               css {
@@ -601,7 +638,22 @@ internal val App =
           }
         }
 
-        DragOverlay { className = ClassName("bgw_drag_overlay") }
+        // TODO: Fix or set dropAnimation to null
+        DragOverlay {
+          className = ClassName("bgw-drag-overlay")
+
+          draggedComponentData?.let {
+            +NodeBuilder.build(it)
+
+            div {
+              css {
+                width = 200.px
+                height = 200.px
+                backgroundColor = rgb(255, 0, 0, 0.7)
+              }
+            }
+          }
+        }
       }
     }
 
@@ -668,4 +720,54 @@ internal inline val Number.bgw: Length
 
 internal fun defaultTransform(): Transform {
   return "translate(var(--tx), var(--ty)) rotate(var(--rot))".unsafeCast<Transform>()
+}
+
+// Helper function to recursively find component data by ID
+internal fun findComponentDataById(id: String, components: List<ComponentViewData>, depth: Int = 0): ComponentViewData? {
+  val indent = "  ".repeat(depth)
+  console.log("${indent}Searching ${components.size} components at depth $depth")
+
+  for (component in components) {
+    console.log("${indent}Checking component: ${component.id}, type: ${component::class.simpleName}")
+
+    if (component.id == id) {
+      console.log("${indent}FOUND!")
+      return component
+    }
+
+    // Check for PaneData or GameComponentContainerData (Area, CardStack, etc.)
+    if (component is PaneData) {
+      console.log("${indent}  -> PaneData with ${component.components.size} components")
+      val found = findComponentDataById(id, component.components, depth + 1)
+      if (found != null) return found
+    }
+
+    if (component is GameComponentContainerData) {
+      console.log("${indent}  -> GameComponentContainerData with ${component.components.size} components")
+      val found = findComponentDataById(id, component.components, depth + 1)
+      if (found != null) return found
+    }
+
+    // Check for GridPaneData
+    if (component is GridPaneData) {
+      console.log("${indent}  -> GridPaneData with ${component.grid.size} grid elements")
+      for (gridElement in component.grid) {
+        gridElement.component?.let { gridComponent ->
+          val found = findComponentDataById(id, listOf(gridComponent), depth + 1)
+          if (found != null) return found
+        }
+      }
+    }
+
+    // Check for CameraPaneData
+    if (component is CameraPaneData) {
+      component.target?.let { target ->
+        console.log("${indent}  -> CameraPaneData with target")
+        val found = findComponentDataById(id, listOf(target), depth + 1)
+        if (found != null) return found
+      }
+    }
+  }
+  console.log("${indent}Not found at depth $depth")
+  return null
 }

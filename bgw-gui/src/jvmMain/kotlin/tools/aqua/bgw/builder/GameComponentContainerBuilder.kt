@@ -43,6 +43,9 @@ internal object GameComponentContainerBuilder {
     gameComponentContainer.isDraggableProperty.guiListener = { _, _ ->
       Frontend.updateComponent(gameComponentContainer)
     }
+    gameComponentContainer.isDraggedProperty.guiListener = { _, _ ->
+      Frontend.updateComponent(gameComponentContainer)
+    }
   }
 
   private fun buildArea(area: Area<out GameComponentView>) {}
