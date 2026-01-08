@@ -82,6 +82,7 @@ import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.animation.SteppedComponentAnimation
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
 import tools.aqua.bgw.components.uicomponents.CheckBox
@@ -219,51 +220,51 @@ internal fun handleAnimationFinished(text: String) {
       is MovementAnimation<*> -> {
         animation.componentView.posX += animation.toX - animation.fromX
         animation.componentView.posY += animation.toY - animation.fromY
-        Logger.debug(
-            "Persisting position to (${animation.toX}, ${animation.toY}) for ${animation.componentView.id}")
       }
       is ScaleAnimation<*> -> {
-        animation.componentView.scaleX += animation.toScaleX - animation.fromScaleX
-        animation.componentView.scaleY += animation.toScaleY - animation.fromScaleY
-        Logger.debug(
-            "Persisting scaleX to ${animation.toScaleX} (${animation.fromScaleX} -> ${animation.toScaleX}) for ${animation.componentView.id}")
-        Logger.debug(
-            "Persisting scaleY to ${animation.toScaleY} (${animation.fromScaleY} -> ${animation.toScaleY}) for ${animation.componentView.id}")
+        animation.componentView.scaleX *= animation.toScaleX / animation.fromScaleX
+        animation.componentView.scaleY *= animation.toScaleY / animation.fromScaleY
       }
       is RotationAnimation<*> -> {
-        animation.componentView.rotation += (animation.toAngle - animation.fromAngle).mod(360.0)
-        Logger.debug(
-            "Persisting rotation to ${animation.toAngle} (${animation.fromAngle} -> ${animation.toAngle}) for ${animation.componentView.id}")
+        animation.componentView.rotation += animation.toAngle - animation.fromAngle
       }
       is FadeAnimation<*> -> {
         animation.componentView.opacity = animation.toOpacity
-        Logger.debug(
-            "Persisting opacity to ${animation.toOpacity} (${animation.fromOpacity} -> ${animation.toOpacity}) for ${animation.componentView.id}")
       }
       is FlipAnimation<*> -> {
         if (animation.componentView is CardView) {
           if (animation.toVisual == animation.componentView.backVisual) {
             animation.componentView.showBack()
-            Logger.warning("Persisting old back for ${animation.componentView.id}")
           } else if (animation.toVisual == animation.componentView.frontVisual) {
             animation.componentView.showFront()
-            Logger.warning("Persisting old front for ${animation.componentView.id}")
           } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
             animation.componentView.frontVisual = animation.toVisual
             animation.componentView.showFront()
-            Logger.warning("Persisting new front for ${animation.componentView.id}")
           } else if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
             animation.componentView.backVisual = animation.toVisual
             animation.componentView.showBack()
-            Logger.warning("Persisting new back for ${animation.componentView.id}")
           }
+        } else if (animation.componentView is DiceView) {
+          animation.componentView.visuals[animation.componentView.currentSide] = animation.toVisual
+        } else {
+          animation.componentView.visual = animation.toVisual
         }
       }
       is RandomizeAnimation<*> -> {
-        // animation.componentView.visual = animation.toVisual
+        if (animation.componentView is CardView) {
+          if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
+            animation.componentView.frontVisual = animation.toVisual
+          } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
+            animation.componentView.backVisual = animation.toVisual
+          }
+        } else if (animation.componentView is DiceView) {
+          animation.componentView.visuals[animation.componentView.currentSide] = animation.toVisual
+        } else {
+          animation.componentView.visual = animation.toVisual
+        }
       }
       is DiceAnimation<*> -> {
-        // animation.componentView.currentSide = animation.toSide
+        animation.componentView.currentSide = animation.toSide
       }
     }
   }
@@ -297,32 +298,9 @@ internal fun handleAnimationFinished(text: String) {
   animation?.isRunning = false
   animation?.onFinished?.invoke(AnimationFinishedEvent())
 
-  // TODO: Maybe comment back in
-  //  // If animation was persisted, trigger scene update to send new state to frontend
-  //  if (animation is ComponentAnimation<*> && animation.persist) {
-  //    Frontend.updateComponent(animation.componentView)
-  //  }
-
   if (animation != null) {
     checkIfParentFinished(animation)
   }
-
-  if (eventData.componentId != null) {
-    val compStillAnimating =
-        animations.any {
-          it is ComponentAnimation<*> &&
-              it.componentView.id == eventData.componentId &&
-              it.isRunning
-        }
-    Logger.debug(
-        "Still Animating: $compStillAnimating for ${eventData.componentId} (Parent: ${animation?.parentAnimation})")
-  }
-
-  // Send commit to revert animation state after onFinished
-  //    animation?.let {
-  //      val mapped = AnimationMapper.map(it)
-  //      animationsFinishedStack.add(mapped)
-  //    }
 }
 
 internal fun checkIfParentFinished(animation: Animation) {

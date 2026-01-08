@@ -193,6 +193,7 @@ internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String>) {
   filter = cssFilter(filterList)
 }
 
+// TODO: Test visual flip still working
 internal fun PropertiesBuilder.flipBuilder(flipped: String, rotation: Double) {
   transform = flipAndRotationBuilder(flipped, rotation).unsafeCast<Transform>()
 }

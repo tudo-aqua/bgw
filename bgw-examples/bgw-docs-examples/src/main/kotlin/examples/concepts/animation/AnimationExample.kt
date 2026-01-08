@@ -122,7 +122,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
     }
     buttonRotation.onMouseClicked = {
       gameScene.playAnimation(
-          RotationAnimation(componentView = cardRotation, byAngle = 180.0, duration = 1000))
+          RotationAnimation(componentView = cardRotation, byAngle = 420.0, duration = 1000))
     }
     buttonOpacity.onMouseClicked = {
       gameScene.playAnimation(
@@ -131,16 +131,27 @@ class AnimationExample : BoardGameApplication("Animation example") {
     }
     buttonStretch.onMouseClicked = {
       gameScene.playAnimation(
-          ScaleAnimation(componentView = cardStretch, byScale = 0.5, duration = 1000))
+          ParallelAnimation(
+              RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 500)
+                  .apply { onFinished = { cardStretch.scaleY = 1.0 } },
+              ScaleAnimation(componentView = cardStretch, byScaleY = 0.5, duration = 1000)))
     }
 
     buttonFlip.onMouseClicked = {
       gameScene.playAnimation(
           FlipAnimation(
-              gameComponentView = cardFlip,
-              fromVisual = cardFlip.backVisual,
-              toVisual = ColorVisual.RED,
-              duration = 1000))
+                  gameComponentView = cardFlip,
+                  fromVisual =
+                      if (cardFlip.currentSide == CardView.CardSide.FRONT) cardFlip.frontVisual
+                      else cardFlip.backVisual,
+                  toVisual = ColorVisual.RED,
+                  duration = 1000)
+              .apply {
+                onFinished = {
+                  println(
+                      "Cardside ${cardFlip.currentSide} (${cardFlip.frontVisual} | ${cardFlip.backVisual})")
+                }
+              })
     }
     buttonRandomize.onMouseClicked = {
       gameScene.playAnimation(
