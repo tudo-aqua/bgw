@@ -24,7 +24,10 @@ import ComponentViewData
 import LabeledUIComponentData
 import TextInputUIComponentData
 import UIComponentData
+import csstype.Properties
 import csstype.PropertiesBuilder
+import kotlin.js.asDynamic
+import tools.aqua.bgw.DraggableResult
 import web.cssom.*
 
 internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
@@ -193,7 +196,6 @@ internal fun PropertiesBuilder.filterBuilder(filters: Map<String, String>) {
   filter = cssFilter(filterList)
 }
 
-// TODO: Test visual flip still working
 internal fun PropertiesBuilder.flipBuilder(flipped: String, rotation: Double) {
   transform = flipAndRotationBuilder(flipped, rotation).unsafeCast<Transform>()
 }
@@ -214,4 +216,12 @@ internal fun cssFont(value: String): FontFamily = "'$value'".unsafeCast<FontFami
 internal fun cssFilter(values: List<String>): FilterFunction {
   if (values.isEmpty()) return "none".unsafeCast<FilterFunction>()
   return values.joinToString(" ").unsafeCast<FilterFunction>()
+}
+
+internal fun applyDraggableTransform(draggable: DraggableResult): Properties {
+  return jsObject {
+    val styleObj = asDynamic()
+    styleObj.`--tx` = (draggable.transform?.x?.px ?: 0.px).toString()
+    styleObj.`--ty` = (draggable.transform?.y?.px ?: 0.px).toString()
+  }
 }

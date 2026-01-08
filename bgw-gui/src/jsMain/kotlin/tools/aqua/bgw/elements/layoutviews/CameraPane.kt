@@ -32,6 +32,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.cssom.*
 import web.dom.Element
@@ -100,6 +101,9 @@ internal fun convertToPx(rem: Double): Double {
 
 internal val CameraPane =
     FC<CameraPaneProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val cameraPaneRef = useRef<ReactZoomPanPinchContentRef>(null)
 
       val targetWidth = props.data.target?.width?.toDouble() ?: 0.0

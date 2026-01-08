@@ -230,8 +230,6 @@ internal object ComponentMapper {
 
   fun map(componentView: ComponentView): ComponentViewData {
     return when (componentView) {
-
-      // TODO - LabeledUIComponent
       is Button -> (mapSpecific(componentView) as ButtonData)
       is CheckBox ->
           (mapSpecific(componentView) as CheckBoxData).apply {
@@ -251,12 +249,10 @@ internal object ComponentMapper {
             group = componentView.toggleGroup.id
           }
 
-      // TODO - TextInputUIComponent
       is PasswordField -> (mapSpecific(componentView) as PasswordFieldData)
       is TextField -> (mapSpecific(componentView) as TextFieldData)
       is TextArea -> (mapSpecific(componentView) as TextAreaData)
 
-      // TODO - UIComponent
       is ComboBox<*> -> mapComboBox(componentView)
       is ColorPicker ->
           (mapSpecific(componentView) as ColorPickerData).apply {
@@ -268,7 +264,6 @@ internal object ComponentMapper {
             barVisual = VisualMapper.map(componentView.barVisual)
           }
 
-      // TODO - StructuredDataView
       is ListView<*> ->
           (mapSpecific(componentView) as ListViewData).apply {
             orientation = componentView.orientation.name.lowercase()
@@ -278,10 +273,8 @@ internal object ComponentMapper {
             // columns (as TableColumnData)
           }
 
-      // TODO - ComponentView
       is CameraPane<*> -> (mapSpecific(componentView) as CameraPaneData)
 
-      // TODO - GameComponentView
       is CardView ->
           (mapSpecific(componentView) as CardViewData).apply {
             front = VisualMapper.map(componentView.frontVisual)

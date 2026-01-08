@@ -42,6 +42,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ListViewData)
 
 internal val ListView =
     FC<ListViewProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

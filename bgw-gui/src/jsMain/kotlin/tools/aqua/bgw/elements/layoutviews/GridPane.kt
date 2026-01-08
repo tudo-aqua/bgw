@@ -51,6 +51,9 @@ internal inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
 
 internal val ReactGridPane =
     FC<GridPaneProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

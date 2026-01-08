@@ -42,6 +42,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TableViewData
 
 internal val TableView =
     FC<TableViewProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

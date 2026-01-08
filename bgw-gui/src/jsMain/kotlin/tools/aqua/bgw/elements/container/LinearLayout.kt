@@ -20,20 +20,20 @@ package tools.aqua.bgw.elements.container
 import LinearLayoutData
 import csstype.PropertiesBuilder
 import emotion.react.css
-import org.w3c.dom.get
 import react.*
-import react.dom.aria.*
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.fit
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDraggable
 import tools.aqua.bgw.useDroppable
@@ -50,6 +50,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: LinearLayoutD
 
 internal val LinearLayout =
     FC<LinearLayoutProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -64,11 +67,8 @@ internal val LinearLayout =
                 override var disabled = !props.data.isDroppable
               })
 
-      val style: PropertiesBuilder.() -> Unit = {
+      val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        translate =
-            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}"
-                .unsafeCast<Translate>()
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
       }
 
@@ -78,7 +78,8 @@ internal val LinearLayout =
         id = props.data.id
         className = ClassName("linearLayout")
 
-        css(style)
+        css(cssStyle)
+        style = applyDraggableTransform(draggable)
 
         ariaDetails = props.data.orientation
 

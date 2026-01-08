@@ -44,6 +44,9 @@ internal fun PropertiesBuilder.cssTextBuilderIntern(componentViewData: LabelData
 
 internal val Label =
     FC<LabelProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

@@ -30,6 +30,7 @@ import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.gamecomponentviews.cssBuilderIntern
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDroppable
 import web.cssom.*
@@ -45,6 +46,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: PaneData) {
 
 internal val Pane =
     FC<PaneProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

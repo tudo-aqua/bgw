@@ -27,9 +27,11 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.cssom.*
 import web.dom.Element
@@ -46,6 +48,12 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewDa
 
 internal val HexagonView =
     FC<HexagonViewProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
+      // Track visual state for flip/stepped animations
+      val (currentVisual, setCurrentVisual) = useState(props.data.visual)
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -61,6 +69,31 @@ internal val HexagonView =
               })
 
       val elementRef = useRef<Element>(null)
+
+      // Listen for visual updates from Animator
+      useEffectWithCleanup(props.data.id) {
+        val element = elementRef.current
+        if (element != null) {
+          val handler: (Any) -> Unit = { _ ->
+            val animatorVisual = Animator.getCurrentVisual(props.data.id)
+            if (animatorVisual != null) {
+              setCurrentVisual(animatorVisual)
+            } else {
+              setCurrentVisual(props.data.visual)
+            }
+          }
+          element.asDynamic().addEventListener("bgw-visual-update", handler)
+          onCleanup { element.asDynamic().removeEventListener("bgw-visual-update", handler) }
+        }
+      }
+
+      // Update visual when props change (for non-animation updates)
+      useEffect(props.data.visual) {
+        val animatorVisual = Animator.getCurrentVisual(props.data.id)
+        if (animatorVisual == null) {
+          setCurrentVisual(props.data.visual)
+        }
+      }
 
       bgwHexagonView {
         tabIndex = 0
@@ -84,15 +117,13 @@ internal val HexagonView =
             width = 2 * props.data.size.bgw
             height = (sqrt(3.0) * props.data.size).bgw
           }
-          translate =
-              "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}"
-                  .unsafeCast<Translate>()
           cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
         }
+        style = applyDraggableTransform(draggable)
 
         bgwVisuals {
           className = ClassName("visuals")
-          +VisualBuilder.build(props.data.visual)
+          +VisualBuilder.build(currentVisual)
         }
 
         if (props.data.isDraggable) {

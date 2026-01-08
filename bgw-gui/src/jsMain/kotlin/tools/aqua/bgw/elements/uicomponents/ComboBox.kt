@@ -46,6 +46,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ComboBoxData)
 
 internal val ComboBox =
     FC<ComboBoxProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

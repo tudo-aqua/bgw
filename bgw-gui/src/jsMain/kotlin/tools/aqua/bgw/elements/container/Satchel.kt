@@ -26,9 +26,11 @@ import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDraggable
 import tools.aqua.bgw.useDroppable
@@ -45,6 +47,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: SatchelData) 
 
 internal val Satchel =
     FC<SatchelProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -59,11 +64,8 @@ internal val Satchel =
                 override var disabled = !props.data.isDroppable
               })
 
-      val style: PropertiesBuilder.() -> Unit = {
+      val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        translate =
-            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}"
-                .unsafeCast<Translate>()
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
       }
 
@@ -73,7 +75,8 @@ internal val Satchel =
         id = props.data.id
         className = ClassName("satchel")
 
-        css(style)
+        css(cssStyle)
+        style = applyDraggableTransform(draggable)
 
         ref = elementRef
         useEffect {

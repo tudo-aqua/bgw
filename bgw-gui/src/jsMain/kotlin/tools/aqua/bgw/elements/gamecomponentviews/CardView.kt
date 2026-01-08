@@ -24,6 +24,7 @@ import react.*
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
+import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.useAnimationCleanup
@@ -61,13 +62,8 @@ internal val CardView =
                 override var disabled = !props.data.isDroppable
               })
 
-      // TODO: Test drag'n-drop (including rotated parents)
-      // TODO: Reimplement new translate for all draggable components
-      val style: PropertiesBuilder.() -> Unit = {
+      val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        set(CustomPropertyName("--tx"), draggable.transform?.x?.px ?: 0.px)
-        set(CustomPropertyName("--ty"), draggable.transform?.y?.px ?: 0.px)
-
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
       }
 
@@ -108,7 +104,8 @@ internal val CardView =
           elementRef.current?.let { droppable.setNodeRef(it) }
         }
 
-        css(style)
+        css(cssStyle)
+        style = applyDraggableTransform(draggable)
 
         bgwVisuals {
           className = ClassName("visuals")

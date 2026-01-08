@@ -51,6 +51,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ToggleButtonD
 
 internal val ToggleButton =
     FC<ToggleButtonProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

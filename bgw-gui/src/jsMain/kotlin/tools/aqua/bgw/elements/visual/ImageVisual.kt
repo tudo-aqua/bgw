@@ -67,7 +67,6 @@ internal val ImageVisual =
               height = 100.pct
 
               opacity = number(props.data.transparency)
-              // TODO...
             }
 
             useEffect {
@@ -116,7 +115,6 @@ internal val ImageVisual =
             top = props.data.offsetY.bgw
 
             opacity = number(props.data.transparency)
-            // TODO...
           }
         }
       }

@@ -47,6 +47,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: PasswordField
 
 internal val PasswordField =
     FC<PasswordFieldProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

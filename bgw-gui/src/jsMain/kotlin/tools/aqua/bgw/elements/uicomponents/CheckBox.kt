@@ -51,6 +51,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData)
 
 internal val CheckBox =
     FC<CheckBoxProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

@@ -18,8 +18,10 @@
 package examples.concepts.animation
 
 import tools.aqua.bgw.animation.*
+import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.DiceView
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
@@ -81,8 +83,14 @@ class AnimationExample : BoardGameApplication("Animation example") {
   private val buttonDie: Button =
       Button(posX = 1400, posY = 700, text = "Roll").apply { visual = ColorVisual.WHITE }
 
+  private val area =
+      Area<GameComponentView>(
+          posX = 500, posY = 450, width = 300, height = 200, visual = ColorVisual.BLUE)
+
   private val cardMovement: CardView =
-      CardView(posX = 500, posY = 450, front = imageFront, back = imageBack)
+      CardView(posX = 50, posY = 0, front = imageBack, back = imageFront).apply {
+        isDraggable = true
+      }
   private val cardRotation: CardView =
       CardView(posX = 650, posY = 450, front = imageFront, back = imageBack)
   private val cardOpacity: CardView =
@@ -167,6 +175,9 @@ class AnimationExample : BoardGameApplication("Animation example") {
           })
     }
 
+    area.add(cardMovement)
+    area.rotation = 180.0
+
     gameScene.addComponents(
         buttonDelay,
         buttonMovement,
@@ -176,7 +187,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
         buttonFlip,
         buttonRandomize,
         buttonDie,
-        cardMovement,
+        area,
         cardRotation,
         cardOpacity,
         cardStretch,

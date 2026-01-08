@@ -47,6 +47,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: ColorPickerDa
 
 internal val ColorPicker =
     FC<ColorPickerProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {

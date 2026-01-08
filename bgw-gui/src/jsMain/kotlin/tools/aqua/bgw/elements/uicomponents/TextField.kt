@@ -46,6 +46,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: TextFieldData
 
 internal val TextField =
     FC<TextFieldProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {
