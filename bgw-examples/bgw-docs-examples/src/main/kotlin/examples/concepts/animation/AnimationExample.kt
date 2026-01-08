@@ -23,6 +23,8 @@ import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.Visual
@@ -95,17 +97,14 @@ class AnimationExample : BoardGameApplication("Animation example") {
 
   init {
     buttonDelay.onMouseClicked = {
-      gameScene.stopAllAnimations()
-
-      //      gameScene.lock()
-      //      gameScene.playAnimation(
-      //          DelayAnimation(duration = 2000).apply {
-      //            onFinished = {
-      //              println("Delay finished!")
-      //              gameScene.unlock()
-      //              showDialog(Dialog(DialogType.NONE, "", "", ""))
-      //            }
-      //          })
+      gameScene.lock()
+      gameScene.playAnimation(
+          DelayAnimation(duration = 2000).apply {
+            onFinished = {
+              gameScene.unlock()
+              showDialog(Dialog(DialogType.NONE, "", "", ""))
+            }
+          })
     }
 
     buttonMovement.onMouseClicked = {
@@ -115,8 +114,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
                   RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 2000),
                   MovementAnimation(componentView = cardMovement, byY = -50, duration = 2000)),
               ParallelAnimation(
-                  MovementAnimation(componentView = cardRotation, byX = -50, duration = 1000)
-                      .apply { onFinished = { cardRotation.rotation += 90.0 } },
+                  MovementAnimation(componentView = cardRotation, byX = -50, duration = 1000),
                   RotationAnimation(componentView = cardRotation, byAngle = -45.0, duration = 2000),
               )))
     }

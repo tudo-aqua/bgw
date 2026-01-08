@@ -93,6 +93,7 @@ internal external interface RenderableCallbacks<T : Any?> {
 
 internal external interface TimerOptions {
   var id: (Any /* number | string */)?
+  var duration: Int?
   var loopDelay: Double?
   var reversed: Boolean?
   var alternate: Boolean?

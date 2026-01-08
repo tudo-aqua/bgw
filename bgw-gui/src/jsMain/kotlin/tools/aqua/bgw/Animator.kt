@@ -78,7 +78,6 @@ internal class AnimationDetails() {
   val initialState: ComponentViewData? = null
 }
 
-// TODO: Implement DelayAnimations
 internal object Animator {
   private val animations = mutableMapOf<ID, AnimationDetails>()
   // Stores timelines per component ID
@@ -87,6 +86,8 @@ internal object Animator {
   private val componentAnimationTypes = mutableMapOf<ID, MutableSet<AnimationType>>()
   // Stores individual JSAnimation objects per component and animation type for reverting
   private val jsAnimations = mutableMapOf<ID, MutableMap<AnimationType, JSAnimation>>()
+  // Stores Timer objects for delay animations
+  private val delayTimers = mutableMapOf<ID, Timer>()
 
   // Stores current visual state for components undergoing flip/stepped animations
   private val visualStates = mutableMapOf<ID, VisualData?>()
@@ -253,7 +254,7 @@ internal object Animator {
             else -> throw IllegalArgumentException("Unknown animation type")
           }
         }
-        //            is DelayAnimationData -> startDelayAnimation(animationData, callback)
+        is DelayAnimationData -> startDelayAnimation(animationData, timeline, callback)
         else -> throw IllegalArgumentException("Unknown animation type")
       }
     }
@@ -592,6 +593,35 @@ internal object Animator {
   }
 
   /**
+   * Starts a delay animation by creating a Timer and syncing it to the timeline. The timer simply
+   * waits for the specified duration and then triggers the callback.
+   *
+   * @param animationData The delay animation data containing duration and ID
+   * @param timeline The timeline to sync the delay timer with
+   * @param callback The callback to invoke when the delay completes
+   */
+  fun startDelayAnimation(
+      animationData: DelayAnimationData,
+      timeline: Timeline,
+      callback: (ID, ID?) -> Unit
+  ) {
+    // Create a Timer that just waits for the duration
+    val timer =
+        Timer(
+            jsObject<TimerParams> {
+              duration = animationData.duration
+              onComplete = { _, _ -> callback.invoke(animationData.id, null) }
+              autoplay = false
+            })
+
+    // Store the timer for potential cleanup
+    delayTimers[animationData.id] = timer
+
+    // Sync the timer with the timeline at the specified position
+    timeline.sync(timer, animationData.initialDelay)
+  }
+
+  /**
    * Updates the visual state for a component and triggers a React re-render. This is used by flip
    * and stepped animations to change visuals.
    */
@@ -725,6 +755,7 @@ internal object Animator {
     componentAnimationTypes.clear()
     jsAnimations.clear()
     visualStates.clear()
+    delayTimers.clear()
   }
 
   internal fun easeForInterpolationType(animationData: ComponentAnimationData): Any {
