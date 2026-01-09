@@ -18,10 +18,8 @@
 package examples.concepts.animation
 
 import tools.aqua.bgw.animation.*
-import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.DiceView
-import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
@@ -83,20 +81,14 @@ class AnimationExample : BoardGameApplication("Animation example") {
   private val buttonDie: Button =
       Button(posX = 1400, posY = 700, text = "Roll").apply { visual = ColorVisual.WHITE }
 
-  private val area =
-      Area<GameComponentView>(
-          posX = 500, posY = 450, width = 300, height = 200, visual = ColorVisual.BLUE)
-
   private val cardMovement: CardView =
-      CardView(posX = 50, posY = 0, front = imageBack, back = imageFront).apply {
-        isDraggable = true
-      }
+      CardView(posX = 500, posY = 450, front = imageFront, back = imageBack)
   private val cardRotation: CardView =
       CardView(posX = 650, posY = 450, front = imageFront, back = imageBack)
   private val cardOpacity: CardView =
-      CardView(posX = 800, posY = 450, front = imageFront, back = imageBack).apply { opacity = 0.5 }
+      CardView(posX = 800, posY = 450, front = imageFront, back = imageBack)
   private val cardStretch: CardView =
-      CardView(posX = 950, posY = 450, front = imageFront, back = imageBack).apply { scaleY = 0.5 }
+      CardView(posX = 950, posY = 450, front = imageFront, back = imageBack)
   private val cardFlip: CardView =
       CardView(posX = 1100, posY = 450, front = imageFront, back = imageBack)
   private val cardRandomize: CardView =
@@ -109,55 +101,36 @@ class AnimationExample : BoardGameApplication("Animation example") {
       gameScene.playAnimation(
           DelayAnimation(duration = 2000).apply {
             onFinished = {
+              println("Delay finished!")
               gameScene.unlock()
               showDialog(Dialog(DialogType.NONE, "", "", ""))
             }
           })
     }
-
     buttonMovement.onMouseClicked = {
       gameScene.playAnimation(
-          SequentialAnimation(
-              SequentialAnimation(
-                  RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 2000),
-                  MovementAnimation(componentView = cardMovement, byY = -50, duration = 2000)),
-              ParallelAnimation(
-                  MovementAnimation(componentView = cardRotation, byX = -50, duration = 1000),
-                  RotationAnimation(componentView = cardRotation, byAngle = -45.0, duration = 2000),
-              )))
+          MovementAnimation(componentView = cardMovement, byX = 0, byY = -50, duration = 1000))
     }
     buttonRotation.onMouseClicked = {
       gameScene.playAnimation(
-          RotationAnimation(componentView = cardRotation, byAngle = 420.0, duration = 1000))
+          RotationAnimation(componentView = cardRotation, byAngle = 180.0, duration = 1000))
     }
     buttonOpacity.onMouseClicked = {
       gameScene.playAnimation(
           FadeAnimation(
-              componentView = cardRotation, fromOpacity = 0.5, toOpacity = 0.0, duration = 1000))
+              componentView = cardOpacity, fromOpacity = 1.0, toOpacity = 0.0, duration = 1000))
     }
     buttonStretch.onMouseClicked = {
       gameScene.playAnimation(
-          ParallelAnimation(
-              RotationAnimation(componentView = cardMovement, byAngle = 45.0, duration = 500)
-                  .apply { onFinished = { cardStretch.scaleY = 1.0 } },
-              ScaleAnimation(componentView = cardStretch, byScaleY = 0.5, duration = 1000)))
+          ScaleAnimation(componentView = cardStretch, byScale = 0.5, duration = 1000))
     }
-
     buttonFlip.onMouseClicked = {
       gameScene.playAnimation(
           FlipAnimation(
-                  gameComponentView = cardFlip,
-                  fromVisual =
-                      if (cardFlip.currentSide == CardView.CardSide.FRONT) cardFlip.frontVisual
-                      else cardFlip.backVisual,
-                  toVisual = ColorVisual.RED,
-                  duration = 1000)
-              .apply {
-                onFinished = {
-                  println(
-                      "Cardside ${cardFlip.currentSide} (${cardFlip.frontVisual} | ${cardFlip.backVisual})")
-                }
-              })
+              gameComponentView = cardFlip,
+              fromVisual = cardFlip.backVisual,
+              toVisual = cardFlip.frontVisual,
+              duration = 1000))
     }
     buttonRandomize.onMouseClicked = {
       gameScene.playAnimation(
@@ -169,17 +142,8 @@ class AnimationExample : BoardGameApplication("Animation example") {
               speed = 50))
     }
     buttonDie.onMouseClicked = {
-      gameScene.playAnimation(
-          DiceAnimation(dice = die, toSide = 3, duration = 1000, speed = 50).apply {
-            onFinished = { die.currentSide = 3 }
-          })
+      gameScene.playAnimation(DiceAnimation(dice = die, toSide = 3, duration = 1000, speed = 50))
     }
-
-    area.add(cardMovement.apply { rotation = 45.0 })
-    area.rotation = 70.0
-    cardMovement.onDragGestureStarted = { cardMovement.backVisual = ColorVisual.RED }
-    area.isDraggable = true
-    area.scale(0.5)
 
     gameScene.addComponents(
         buttonDelay,
@@ -190,7 +154,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
         buttonFlip,
         buttonRandomize,
         buttonDie,
-        area,
+        cardMovement,
         cardRotation,
         cardOpacity,
         cardStretch,
