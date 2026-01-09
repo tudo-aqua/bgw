@@ -224,11 +224,37 @@ internal fun cssFilter(values: List<String>): FilterFunction {
   return values.joinToString(" ").unsafeCast<FilterFunction>()
 }
 
-internal fun applyDraggableTransform(draggable: DraggableResult): Properties {
+internal fun applyDraggableTransform(
+    draggable: DraggableResult,
+    componentData: ComponentViewData
+): Properties {
+  // Get the drag delta in screen coordinates
+  val screenX = draggable.transform?.x ?: 0.0
+  val screenY = draggable.transform?.y ?: 0.0
+
+  // Calculate parent's combined scale (excluding this component's own scale)
+  val parentScaleX = componentData.propagatedScaleX / componentData.scaleX
+  val parentScaleY = componentData.propagatedScaleY / componentData.scaleY
+
+  // Counter-rotate the drag delta by the negative of parent's propagated rotation
+  // to convert from screen coordinates to the local coordinate system
+  val parentRotation = componentData.propagatedRotation - componentData.rotation
+  val angleRad = -parentRotation * kotlin.math.PI / 180.0
+  val cosAngle = kotlin.math.cos(angleRad)
+  val sinAngle = kotlin.math.sin(angleRad)
+
+  // Apply rotation matrix to transform coordinates
+  val rotatedX = screenX * cosAngle - screenY * sinAngle
+  val rotatedY = screenX * sinAngle + screenY * cosAngle
+
+  // Divide by parent scale to compensate for parent container scaling
+  val localX = rotatedX / parentScaleX
+  val localY = rotatedY / parentScaleY
+
   return jsObject {
     val styleObj = asDynamic()
-    styleObj.`--tx` = (draggable.transform?.x?.px ?: 0.px).toString()
-    styleObj.`--ty` = (draggable.transform?.y?.px ?: 0.px).toString()
+    styleObj.`--tx` = "${localX}px"
+    styleObj.`--ty` = "${localY}px"
   }
 }
 

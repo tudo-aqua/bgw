@@ -25,6 +25,7 @@ import react.*
 import react.dom.aria.AriaAttributes
 import react.dom.events.KeyboardEvent
 import web.dom.Element
+import web.dom.Node
 import web.html.HTMLElement
 
 @JsName("DndContext") internal external val DndContext: ComponentType<DndContextProps>
@@ -125,6 +126,7 @@ internal external interface DraggableTransform {
 
 internal external interface DragStartEvent {
   val active: DragEventActive?
+  val activeNode: Node?
 }
 
 internal external interface PublicContextDescriptor {

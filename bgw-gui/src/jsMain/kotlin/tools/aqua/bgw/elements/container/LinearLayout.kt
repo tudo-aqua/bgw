@@ -79,7 +79,7 @@ internal val LinearLayout =
         className = ClassName("linearLayout")
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable)
+        style = applyDraggableTransform(draggable, props.data)
 
         ariaDetails = props.data.orientation
 

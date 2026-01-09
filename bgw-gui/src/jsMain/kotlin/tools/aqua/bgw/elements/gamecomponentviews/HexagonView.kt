@@ -119,7 +119,7 @@ internal val HexagonView =
           }
           cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
         }
-        style = applyDraggableTransform(draggable)
+        style = applyDraggableTransform(draggable, props.data)
 
         bgwVisuals {
           className = ClassName("visuals")

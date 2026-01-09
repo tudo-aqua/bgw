@@ -223,6 +223,21 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
       return posY + inParentPosYProperty.value
     }
 
+  internal val propagatedRotation: Double
+    get() {
+      return rotation + (parent?.propagatedRotation ?: 0.0)
+    }
+
+  internal val propagatedScaleX: Double
+    get() {
+      return scaleX * (parent?.propagatedScaleX ?: 1.0)
+    }
+
+  internal val propagatedScaleY: Double
+    get() {
+      return scaleY * (parent?.propagatedScaleY ?: 1.0)
+    }
+
   /**
    * [Property] for the [width] of this [ComponentView].
    *

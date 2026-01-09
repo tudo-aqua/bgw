@@ -491,7 +491,6 @@ internal fun eventListener(text: String) {
           is DragGestureStartedEventData -> {
             if (component is DynamicComponentView) {
               component.onDragGestureStarted?.invoke(DragEvent(component))
-              println("Drag started")
               component.isDragged = true
             }
           }

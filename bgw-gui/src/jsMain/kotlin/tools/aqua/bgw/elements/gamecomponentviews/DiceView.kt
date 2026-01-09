@@ -105,7 +105,7 @@ internal val DiceView =
         }
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable)
+        style = applyDraggableTransform(draggable, props.data)
 
         bgwVisuals {
           className = ClassName("visuals")

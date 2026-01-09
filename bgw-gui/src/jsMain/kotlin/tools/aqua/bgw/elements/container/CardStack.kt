@@ -78,7 +78,7 @@ internal val CardStack =
         id = props.data.id
         className = ClassName("cardStack")
         css(cssStyle)
-        style = applyDraggableTransform(draggable)
+        style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
         useEffect {

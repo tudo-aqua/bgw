@@ -111,6 +111,10 @@ internal object ComponentMapper {
             componentView.rotation
           }
 
+      propagatedRotation = componentView.propagatedRotation
+      propagatedScaleX = componentView.propagatedScaleX
+      propagatedScaleY = componentView.propagatedScaleY
+
       // Set animation finished flag from component state
       finishedAnimations = componentView.animationsFinishedSinceLastUpdate.toMutableList()
       if (finishedAnimations.isNotEmpty()) {

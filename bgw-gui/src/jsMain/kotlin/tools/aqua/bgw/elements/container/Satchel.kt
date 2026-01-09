@@ -76,7 +76,7 @@ internal val Satchel =
         className = ClassName("satchel")
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable)
+        style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
         useEffect {

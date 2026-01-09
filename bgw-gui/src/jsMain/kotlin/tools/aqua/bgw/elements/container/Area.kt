@@ -78,7 +78,7 @@ internal val Area =
         className = ClassName("area")
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable)
+        style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
         useEffect {

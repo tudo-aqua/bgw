@@ -177,6 +177,9 @@ class AnimationExample : BoardGameApplication("Animation example") {
 
     area.add(cardMovement.apply { rotation = 45.0 })
     area.rotation = 70.0
+    cardMovement.onDragGestureStarted = { cardMovement.backVisual = ColorVisual.RED }
+    area.isDraggable = true
+    area.scale(0.5)
 
     gameScene.addComponents(
         buttonDelay,

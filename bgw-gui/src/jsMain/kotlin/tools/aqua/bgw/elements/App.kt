@@ -35,7 +35,6 @@ import react.dom.events.KeyboardEvent
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
-import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
@@ -347,13 +346,13 @@ internal val App =
           }
 
           ".bgw-root *[aria-roledescription='draggable'][aria-pressed='true']" {
-            // position = important(Position.fixed)
+            position = important(Position.fixed)
             opacity = important(number(1.0))
-            // zIndex = important(integer(1000000))
+            zIndex = important(integer(1000000))
           }
 
           ".bgw-root *:has(*[aria-roledescription='draggable'][aria-pressed='true'])" {
-            // zIndex = important(integer(1000000))
+            zIndex = important(integer(1000000))
           }
 
           "bgw_satchel bgw_contents *[aria-roledescription='draggable']:not([aria-pressed='true'])" {
@@ -635,10 +634,12 @@ internal val App =
           }
         }
 
-        DragOverlay {
-          className = ClassName("bgw-drag-overlay")
-          draggedComponentData?.let { +NodeBuilder.buildOverlay(it) }
-        }
+        //        DragOverlay {
+        //          className = ClassName("bgw-drag-overlay")
+        //          draggedComponentData?.let {
+        //            +NodeBuilder.buildOverlay(draggedComponentData)
+        //          }
+        //        }
       }
     }
 

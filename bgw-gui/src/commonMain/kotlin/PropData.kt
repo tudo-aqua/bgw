@@ -143,6 +143,9 @@ internal abstract class ComponentViewData : Data() {
   var isDroppable: Boolean = false
   var finishedAnimations: MutableList<AnimationType> = mutableListOf()
 
+  var propagatedRotation: Double = 0.0
+  var propagatedScaleX: Double = 1.0
+  var propagatedScaleY: Double = 1.0
   var hasMouseEnteredEvent: Boolean = false
   var hasMouseExitedEvent: Boolean = false
 }
