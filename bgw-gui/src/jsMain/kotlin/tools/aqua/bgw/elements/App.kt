@@ -349,11 +349,11 @@ internal val App =
           ".bgw-root *[aria-roledescription='draggable'][aria-pressed='true']" {
             // position = important(Position.fixed)
             opacity = important(number(1.0))
-            zIndex = important(integer(1000000))
+            // zIndex = important(integer(1000000))
           }
 
           ".bgw-root *:has(*[aria-roledescription='draggable'][aria-pressed='true'])" {
-            zIndex = important(integer(1000000))
+            // zIndex = important(integer(1000000))
           }
 
           "bgw_satchel bgw_contents *[aria-roledescription='draggable']:not([aria-pressed='true'])" {
@@ -475,16 +475,14 @@ internal val App =
           // Find the component data for the dragged element
           event.active?.id?.let { componentId ->
             val gameScene = props.data.gameScene
-            val menuScene = props.data.menuScene
 
             val foundComponent =
                 when {
                   gameScene != undefined -> findComponentDataById(componentId, gameScene.components)
-                  menuScene != undefined -> findComponentDataById(componentId, menuScene.components)
                   else -> null
                 }
 
-            setDraggedComponentData(foundComponent.apply { this?.isDraggedInternal = true })
+            setDraggedComponentData(foundComponent)
           }
 
           JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
@@ -517,7 +515,6 @@ internal val App =
         }
 
         fun globalKeyDown(e: KeyboardEvent<*>) {
-          // F9 to toggle freeze mode for debugging
           JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.TYPE))
         }
 
@@ -638,10 +635,8 @@ internal val App =
           }
         }
 
-        // TODO: Fix or set dropAnimation to null
         DragOverlay {
           className = ClassName("bgw-drag-overlay")
-
           draggedComponentData?.let { +NodeBuilder.buildOverlay(it) }
         }
       }
