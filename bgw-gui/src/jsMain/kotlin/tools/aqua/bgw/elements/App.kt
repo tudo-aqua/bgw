@@ -37,7 +37,6 @@ import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
-import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragMoveEventData
@@ -367,13 +366,13 @@ internal val App =
           // DragOverlay specific styles to ensure visibility
           ".bgw-drag-overlay" {
             zIndex = important(integer(99999998))
+            pointerEvents = important(None.none)
           }
 
           ".bgw-drag-overlay > *" {
-            position = important(Position.fixed)
-            top = important(0.px)
-            left = important(0.px)
             zIndex = important(integer(99999998))
+            pointerEvents = important(None.none)
+            transform = important(None.none)
           }
 
           "select, ::picker(select)" {
@@ -478,13 +477,14 @@ internal val App =
             val gameScene = props.data.gameScene
             val menuScene = props.data.menuScene
 
-            val foundComponent = when {
-              gameScene != undefined -> findComponentDataById(componentId, gameScene.components)
-              menuScene != undefined -> findComponentDataById(componentId, menuScene.components)
-              else -> null
-            }
+            val foundComponent =
+                when {
+                  gameScene != undefined -> findComponentDataById(componentId, gameScene.components)
+                  menuScene != undefined -> findComponentDataById(componentId, menuScene.components)
+                  else -> null
+                }
 
-            setDraggedComponentData(foundComponent)
+            setDraggedComponentData(foundComponent.apply { this?.isDraggedInternal = true })
           }
 
           JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
@@ -642,17 +642,7 @@ internal val App =
         DragOverlay {
           className = ClassName("bgw-drag-overlay")
 
-          draggedComponentData?.let {
-            +NodeBuilder.build(it)
-
-            div {
-              css {
-                width = 200.px
-                height = 200.px
-                backgroundColor = rgb(255, 0, 0, 0.7)
-              }
-            }
-          }
+          draggedComponentData?.let { +NodeBuilder.buildOverlay(it) }
         }
       }
     }
@@ -723,34 +713,29 @@ internal fun defaultTransform(): Transform {
 }
 
 // Helper function to recursively find component data by ID
-internal fun findComponentDataById(id: String, components: List<ComponentViewData>, depth: Int = 0): ComponentViewData? {
-  val indent = "  ".repeat(depth)
-  console.log("${indent}Searching ${components.size} components at depth $depth")
-
+internal fun findComponentDataById(
+    id: String,
+    components: List<ComponentViewData>,
+    depth: Int = 0
+): ComponentViewData? {
   for (component in components) {
-    console.log("${indent}Checking component: ${component.id}, type: ${component::class.simpleName}")
-
     if (component.id == id) {
-      console.log("${indent}FOUND!")
       return component
     }
 
     // Check for PaneData or GameComponentContainerData (Area, CardStack, etc.)
     if (component is PaneData) {
-      console.log("${indent}  -> PaneData with ${component.components.size} components")
       val found = findComponentDataById(id, component.components, depth + 1)
       if (found != null) return found
     }
 
     if (component is GameComponentContainerData) {
-      console.log("${indent}  -> GameComponentContainerData with ${component.components.size} components")
       val found = findComponentDataById(id, component.components, depth + 1)
       if (found != null) return found
     }
 
     // Check for GridPaneData
     if (component is GridPaneData) {
-      console.log("${indent}  -> GridPaneData with ${component.grid.size} grid elements")
       for (gridElement in component.grid) {
         gridElement.component?.let { gridComponent ->
           val found = findComponentDataById(id, listOf(gridComponent), depth + 1)
@@ -762,12 +747,10 @@ internal fun findComponentDataById(id: String, components: List<ComponentViewDat
     // Check for CameraPaneData
     if (component is CameraPaneData) {
       component.target?.let { target ->
-        console.log("${indent}  -> CameraPaneData with target")
         val found = findComponentDataById(id, listOf(target), depth + 1)
         if (found != null) return found
       }
     }
   }
-  console.log("${indent}Not found at depth $depth")
   return null
 }

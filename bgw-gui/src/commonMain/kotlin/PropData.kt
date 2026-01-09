@@ -139,6 +139,7 @@ internal abstract class ComponentViewData : Data() {
   var layoutFromCenter: Boolean = false
   var isDraggable: Boolean = false
   var isDragged: Boolean = false
+  var isDraggedInternal: Boolean = false
   var isDroppable: Boolean = false
   var finishedAnimations: MutableList<AnimationType> = mutableListOf()
 

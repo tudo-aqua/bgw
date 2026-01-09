@@ -175,8 +175,8 @@ class AnimationExample : BoardGameApplication("Animation example") {
           })
     }
 
-    area.add(cardMovement)
-    area.rotation = 180.0
+    area.add(cardMovement.apply { rotation = 45.0 })
+    area.rotation = 70.0
 
     gameScene.addComponents(
         buttonDelay,

@@ -44,6 +44,7 @@ import react.ReactElement
 import react.create
 import tools.aqua.bgw.elements.container.HexagonGrid as ReactHexagonGrid
 import tools.aqua.bgw.elements.gamecomponentviews.CardView as ReactCardView
+import tools.aqua.bgw.elements.gamecomponentviews.CardViewOverlay as ReactCardViewOverlay
 import tools.aqua.bgw.elements.gamecomponentviews.DiceView as ReactDiceView
 import tools.aqua.bgw.elements.gamecomponentviews.HexagonView as ReactHexagonView
 import tools.aqua.bgw.elements.gamecomponentviews.TokenView as ReactTokenView
@@ -84,6 +85,19 @@ internal object NodeBuilder {
       is ListViewData -> ReactListView.create { data = componentViewData }
       is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
       is CardViewData -> ReactCardView.create { data = componentViewData }
+      is DiceViewData -> ReactDiceView.create { data = componentViewData }
+      is HexagonViewData -> ReactHexagonView.create { data = componentViewData }
+      is TokenViewData -> ReactTokenView.create { data = componentViewData }
+      else ->
+          throw IllegalArgumentException(
+              "Unknown component type: ${componentViewData::class.simpleName}")
+    }
+  }
+
+  fun buildOverlay(componentViewData: ComponentViewData): ReactElement<*> {
+    return when (componentViewData) {
+      is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
+      is CardViewData -> ReactCardViewOverlay.create { data = componentViewData }
       is DiceViewData -> ReactDiceView.create { data = componentViewData }
       is HexagonViewData -> ReactHexagonView.create { data = componentViewData }
       is TokenViewData -> ReactTokenView.create { data = componentViewData }

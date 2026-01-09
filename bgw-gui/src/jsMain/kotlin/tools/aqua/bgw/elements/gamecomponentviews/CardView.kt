@@ -22,10 +22,11 @@ import csstype.PropertiesBuilder
 import emotion.react.css
 import react.*
 import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgwVisuals
+import tools.aqua.bgw.elements.cssBackupTransformBuilder
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
@@ -48,6 +49,9 @@ internal val CardView =
       // Track visual state for flip animations
       val (currentVisual, setCurrentVisual) = useState(props.data.currentVisual)
 
+      val dndContext = useDndContext()
+      val isDragged = dndContext.active != null && dndContext.active?.id == props.data.id
+
       val draggable =
           useDraggable(
               object : DraggableOptions {
@@ -65,8 +69,7 @@ internal val CardView =
       val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
-        // TODO: Maybe do it using useDndContext and check active id for less latency
-        visibility = if(props.data.isDragged) Visibility.hidden else null
+        visibility = if (isDragged) Visibility.hidden else null
       }
 
       val elementRef = useRef<Element>(null)
@@ -107,7 +110,6 @@ internal val CardView =
         }
 
         css(cssStyle)
-        // style = applyDraggableTransform(draggable)
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -124,6 +126,28 @@ internal val CardView =
         ariaDisabled = draggable.attributes.ariaDisabled
         ariaPressed = draggable.attributes.ariaPressed
         ariaRoleDescription = draggable.attributes.ariaRoleDescription
+      }
+    }
+
+internal val CardViewOverlay =
+    FC<CardViewProps> { props ->
+      val cssStyle: PropertiesBuilder.() -> Unit = {
+        cssBuilderIntern(props.data)
+        cssBackupTransformBuilder(props.data)
+
+        cursor = Cursor.grabbing
+      }
+
+      bgwCardView {
+        id = props.data.id
+        className = ClassName("cardView")
+
+        css(cssStyle)
+
+        bgwVisuals {
+          className = ClassName("visuals")
+          +VisualBuilder.build(props.data.currentVisual)
+        }
       }
     }
 

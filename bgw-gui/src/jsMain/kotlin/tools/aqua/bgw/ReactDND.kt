@@ -85,6 +85,8 @@ internal external fun useDraggable(options: DraggableOptions): DraggableResult
 @JsName("useDroppable")
 internal external fun useDroppable(options: DroppableOptions): DroppableResult
 
+@JsName("useDndContext") internal external fun useDndContext(): PublicContextDescriptor
+
 @JsName("DragOverlay") internal external val DragOverlay: ComponentType<DragOverlayProps>
 
 internal external interface DragOverlayProps :
@@ -122,6 +124,10 @@ internal external interface DraggableTransform {
 }
 
 internal external interface DragStartEvent {
+  val active: DragEventActive?
+}
+
+internal external interface PublicContextDescriptor {
   val active: DragEventActive?
 }
 

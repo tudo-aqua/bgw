@@ -62,6 +62,12 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
   set(CustomPropertyName("--opa"), componentViewData.opacity)
 }
 
+internal fun PropertiesBuilder.cssBackupTransformBuilder(componentViewData: ComponentViewData) {
+  rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
+  scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
+  transformOrigin = "center".unsafeCast<TransformOrigin>()
+}
+
 internal fun PropertiesBuilder.cssBuilder(componentViewData: UIComponentData) {
   cssBuilder(componentViewData as ComponentViewData)
 }
@@ -223,5 +229,12 @@ internal fun applyDraggableTransform(draggable: DraggableResult): Properties {
     val styleObj = asDynamic()
     styleObj.`--tx` = (draggable.transform?.x?.px ?: 0.px).toString()
     styleObj.`--ty` = (draggable.transform?.y?.px ?: 0.px).toString()
+  }
+}
+
+internal fun resetDraggableTransform(): Properties {
+  return jsObject {
+    val styleObj = asDynamic()
+    styleObj.transform = "none"
   }
 }
