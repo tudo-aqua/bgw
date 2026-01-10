@@ -65,25 +65,25 @@ internal object Logger {
     when (type) {
       LogType.INFO -> {
         if (LogType.INFO < LOGLEVEL) return
-        print("[BGW]".bold().purple())
+        print("[⁘ bgw-gui]".bold().purple())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".purple())
         println(" $message")
       }
       LogType.WARN -> {
         if (LogType.WARN < LOGLEVEL) return
-        print("[BGW]".bold().yellow())
+        print("[⁘ bgw-gui]".bold().yellow())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".yellow())
         println(" $message".yellow())
       }
       LogType.ERROR -> {
         if (LogType.ERROR < LOGLEVEL) return
-        print("[BGW]".bold().red())
+        print("[⁘ bgw-gui]".bold().red())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".red())
         println(" $message".red())
       }
       LogType.DEBUG -> {
         if (LOGLEVEL != LogType.DEBUG) return
-        print("[BGW]".bold().gray())
+        print("[⁘ bgw-gui]".bold().gray())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".gray())
         println(" $message".gray())
       }
@@ -99,25 +99,25 @@ internal object Logger {
     when (type) {
       LogType.INFO -> {
         if (LogType.INFO < LOGLEVEL) return
-        print("[BGW]".green())
+        print("[⁘ bgw-gui]".green())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".green())
         print(" $message")
       }
       LogType.WARN -> {
         if (LogType.WARN < LOGLEVEL) return
-        print("[BGW]".yellow())
+        print("[⁘ bgw-gui]".yellow())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".yellow())
         print(" $message".yellow())
       }
       LogType.ERROR -> {
         if (LogType.ERROR < LOGLEVEL) return
-        print("[BGW]".red())
+        print("[⁘ bgw-gui]".red())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".red())
         print(" $message".red())
       }
       LogType.DEBUG -> {
         if (LOGLEVEL != LogType.DEBUG) return
-        print("[BGW]".gray())
+        print("[⁘ bgw-gui]".gray())
         if (Constants.DEBUG) print(" $clazz $emptySpaces".gray())
         print(" $message".gray())
       }

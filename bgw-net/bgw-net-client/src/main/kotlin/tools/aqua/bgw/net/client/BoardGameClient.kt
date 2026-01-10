@@ -81,25 +81,29 @@ protected constructor(
   /** Mutex for [msgQueue] modifications. */
   private val latch: Any = Any()
 
-  /** NetworkLogger instance for traffic logging. */
-  private val logger: NetworkLogger = NetworkLogger(networkLoggingBehavior)
-
   /** Returns the current state of connection. */
   val isOpen: Boolean
     get() = wsClient.isOpen
 
   init {
-    logger.info("Initializing BoardGameClient on host $host.")
+    Logger.LOGLEVEL =
+        when (networkLoggingBehavior) {
+          NetworkLogging.NO_LOGGING -> LogType.SILENT
+          NetworkLogging.ERRORS -> LogType.WARN
+          NetworkLogging.INFO -> LogType.INFO
+          NetworkLogging.VERBOSE -> LogType.DEBUG
+        }
+
+    Logger.info("Initializing BoardGameClient on host $host.")
 
     wsClient =
         BGWWebSocketClient(
             uri = URI.create("ws://$host"),
             playerName = playerName,
             secret = secret,
-            callback = this,
-            logger = logger)
+            callback = this)
 
-    logger.debug("Initializing annotated receiver functions.")
+    Logger.debug("Initializing annotated receiver functions.")
 
     initializationJob =
         wsClient.scope.launch {
@@ -110,11 +114,11 @@ protected constructor(
           gameActionClasses = annotatedClasses
           gameActionReceivers = annotatedFunctions
 
-          logger.debug("Found the following GameActionClasses:")
-          annotatedClasses.forEach { logger.debug(it.name) }
+          Logger.debug("Found the following GameActionClasses:")
+          annotatedClasses.forEach { Logger.debug(it.name) }
 
-          logger.debug("Found the following GameActionReceivers:")
-          annotatedFunctions.forEach { logger.debug(it.value.name) }
+          Logger.debug("Found the following GameActionReceivers:")
+          annotatedFunctions.forEach { Logger.debug(it.value.name) }
         }
   }
 
@@ -129,16 +133,16 @@ protected constructor(
       try {
         checkConnected(false)
 
-        logger.info("Connecting to ${wsClient.uri}.")
+        Logger.info("Connecting to ${wsClient.uri}.")
 
         val result = wsClient.connectBlocking()
 
-        logger.debug(
+        Logger.debug(
             "Connection call succeeded without interruption ${if(result) "and" else "but"} returned $result.")
 
         result
       } catch (e: InterruptedException) {
-        logger.error(
+        Logger.error(
             "Attempt to connect to ${wsClient.uri} failed with an InterruptedException.", e)
         false
       }
@@ -152,13 +156,13 @@ protected constructor(
     try {
       checkConnected(true)
 
-      logger.info("Disconnecting.")
+      Logger.info("Disconnecting.")
 
       wsClient.closeBlocking()
 
-      logger.debug("Disconnection call succeeded without interruption.")
+      Logger.debug("Disconnection call succeeded without interruption.")
     } catch (e: InterruptedException) {
-      logger.error("Attempt to disconnect failed with an InterruptedException.", e)
+      Logger.error("Attempt to disconnect failed with an InterruptedException.", e)
     }
   }
 
@@ -178,7 +182,7 @@ protected constructor(
 
     require(sessionID.isNotBlank()) { "Session ID was blank, did not create game." }
 
-    logger.info(
+    Logger.info(
         "Requesting creation of new game with ID \"$gameID\", " +
             "sessionID \"$sessionID\" and greeting message \"$greetingMessage\".")
 
@@ -196,7 +200,7 @@ protected constructor(
   fun createGame(gameID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info(
+    Logger.info(
         "Requesting creation of new game with ID \"$gameID\", " +
             "auto sessionID and greeting message \"$greetingMessage\".")
 
@@ -213,7 +217,7 @@ protected constructor(
   fun joinGame(sessionID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info(
+    Logger.info(
         "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
     wsClient.sendRequest(JoinGameMessage(sessionID, greetingMessage))
   }
@@ -229,7 +233,7 @@ protected constructor(
   fun spectateGame(sessionID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info(
+    Logger.info(
         "Requesting joining to sessionID $sessionID as spectator. Greeting message is: $greetingMessage.")
     wsClient.sendRequest(SpectatorJoinGameMessage(sessionID, greetingMessage))
   }
@@ -243,7 +247,7 @@ protected constructor(
   fun leaveGame(goodbyeMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
+    Logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
 
@@ -259,7 +263,7 @@ protected constructor(
   fun sendGameActionMessage(payload: GameAction) {
     checkConnected(expectedState = true)
 
-    logger.info("Sending GameActionMessage ${payload.javaClass.name}")
+    Logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
   }
 
@@ -285,7 +289,7 @@ protected constructor(
    * @throws Throwable Throws [throwable].
    */
   open fun onError(throwable: Throwable) {
-    throw throwable
+    Logger.error(throwable)
   }
 
   /**
@@ -361,7 +365,7 @@ protected constructor(
    * @param sender The opponents identification.
    */
   open fun onGameActionReceived(message: GameAction, sender: String) {
-    logger.err(
+    Logger.error(
         "An incoming GameAction has been handled by the fallback function. Override onGameActionReceived or create" +
             " dedicated handler for message type ${message.javaClass.canonicalName}.")
   }
@@ -379,7 +383,7 @@ protected constructor(
 
     wsClient.scope.launch {
       if (!initializationJob.isCompleted) {
-        logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
+        Logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
         initializationJob.join()
       }
 
@@ -406,7 +410,7 @@ protected constructor(
         } catch (_: JsonMappingException) {}
       }
 
-      logger.err(
+      Logger.error(
           "Received GameActionMessage $message but no target class was Found. " +
               "Create class annotated @GameActionClass extending GameAction in your classpath.")
 

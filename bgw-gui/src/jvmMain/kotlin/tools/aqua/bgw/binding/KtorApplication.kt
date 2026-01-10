@@ -556,7 +556,7 @@ internal fun eventListener(text: String) {
                     "Error",
                     "An error occurred while handling an event: ${e.message}",
                     exception = e)))
-        e.printStackTrace()
+        Logger.error(e.stackTraceToString())
       }
     }
   }
