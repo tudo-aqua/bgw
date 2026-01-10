@@ -107,6 +107,10 @@ open class GridPane<T : ComponentView>(
       parent = null
     }
 
+    require(component?.parent == null) {
+      "Component $component is already contained in another container."
+    }
+
     grid[columnIndex, rowIndex] =
         component?.apply {
           widthProperty.internalListener = { _, _ -> updateGui?.invoke() }
@@ -114,22 +118,35 @@ open class GridPane<T : ComponentView>(
           parent = this@GridPane
         }
 
-    setColumnWidth(columnIndex, maxOf(getColumnWidth(columnIndex), component?.actualWidth ?: 0.0))
-    setRowHeight(rowIndex, maxOf(getRowHeight(rowIndex), component?.actualHeight ?: 0.0))
-
     layout()
 
+    updateGui?.invoke()
+  }
+
+  /**
+   * Clears the entire grid.
+   *
+   * @since 0.11
+   */
+  fun clear() {
+    for (i in 0 until grid.rows) {
+      for (j in 0 until grid.columns) {
+        grid[j, i]?.let {
+          it.widthProperty.internalListener = null
+          it.heightProperty.internalListener = null
+          it.parent = null
+        }
+      }
+    }
+
+    grid.clear()
+    layout()
     updateGui?.invoke()
   }
 
   internal fun layout() {
     grid.forEach { cell ->
       val component = cell.component
-      val columnIndex = cell.columnIndex
-      val rowIndex = cell.rowIndex
-
-      setColumnWidth(columnIndex, maxOf(getColumnWidth(columnIndex), component?.actualWidth ?: 0.0))
-      setRowHeight(rowIndex, maxOf(getRowHeight(rowIndex), component?.actualHeight ?: 0.0))
 
       component?.let {
         val pos = getActualChildPosition(it)
@@ -160,7 +177,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setCellCenterMode(columnIndex: Int, rowIndex: Int, value: Alignment) {
     grid.setCellCenterMode(columnIndex = columnIndex, rowIndex = rowIndex, alignment = value)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -172,7 +189,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnCenterMode(columnIndex: Int, value: Alignment) {
     grid.setColumnCenterMode(columnIndex = columnIndex, alignment = value)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -184,7 +201,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowCenterMode(rowIndex: Int, value: Alignment) {
     grid.setRowCenterMode(rowIndex = rowIndex, alignment = value)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -195,7 +212,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setCenterMode(value: Alignment) {
     grid.setCenterMode(alignment = value)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -215,7 +232,7 @@ open class GridPane<T : ComponentView>(
    *
    * @param columnIndex Target column.
    * @param columnWidth New column width. Use [COLUMN_WIDTH_AUTO] to restore automatic resizing
-   *   behaviour.
+   *   behavior.
    * @throws IllegalArgumentException If value was negative.
    * @see setColumnWidths
    * @see setAutoColumnWidth
@@ -223,7 +240,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnWidth(columnIndex: Int, columnWidth: Number) {
     grid.setColumnWidth(columnIndex = columnIndex, columnWidth = columnWidth.toDouble())
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -231,7 +248,7 @@ open class GridPane<T : ComponentView>(
    * this column.
    *
    * @param columnWidth New column width for all columns. Use [COLUMN_WIDTH_AUTO] to restore
-   *   automatic resizing behaviour.
+   *   automatic resizing behavior.
    * @throws IllegalArgumentException If value is negative.
    * @see setColumnWidth
    * @see setAutoColumnWidth
@@ -239,7 +256,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnWidths(columnWidth: Number) {
     grid.setColumnWidths(columnWidth = columnWidth.toDouble())
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -247,7 +264,7 @@ open class GridPane<T : ComponentView>(
    * this column.
    *
    * @param columnWidths New column widths. Array index 0 get applied for the first column etc. Use
-   *   [COLUMN_WIDTH_AUTO] to restore automatic resizing behaviour.
+   *   [COLUMN_WIDTH_AUTO] to restore automatic resizing behavior.
    * @throws IllegalArgumentException If Array size does not match column count or values were
    *   negative.
    * @see setColumnWidth
@@ -256,7 +273,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setColumnWidths(columnWidths: DoubleArray) {
     grid.setColumnWidths(columnWidths = columnWidths)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -269,7 +286,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoColumnWidth(columnIndex: Int) {
     grid.setColumnWidth(columnIndex = columnIndex, columnWidth = COLUMN_WIDTH_AUTO)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -281,7 +298,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoColumnWidths() {
     grid.setColumnWidths(columnWidths = DoubleArray(columns) { COLUMN_WIDTH_AUTO })
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -300,7 +317,7 @@ open class GridPane<T : ComponentView>(
    * row.
    *
    * @param rowIndex Target row.
-   * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
+   * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behavior.
    * @throws IllegalArgumentException If value was negative.
    * @see setRowHeights
    * @see setAutoColumnWidth
@@ -308,14 +325,14 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeight(rowIndex: Int, rowHeight: Number) {
     grid.setRowHeight(rowIndex = rowIndex, rowHeight = rowHeight.toDouble())
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
    * Manually set row height of all rows. Overrides automatic resizing based on content from this
    * row.
    *
-   * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
+   * @param rowHeight New row height. Use [ROW_HEIGHT_AUTO] to restore automatic resizing behavior.
    * @throws IllegalArgumentException If Array size does not match row count or values were
    *   negative.
    * @see setRowHeight
@@ -324,7 +341,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeights(rowHeight: Number) {
     grid.setRowHeights(rowHeight = rowHeight.toDouble())
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -332,7 +349,7 @@ open class GridPane<T : ComponentView>(
    * row.
    *
    * @param rowHeights New row heights. Array index 0 get applied for the first row etc. Use
-   *   [ROW_HEIGHT_AUTO] to restore automatic resizing behaviour.
+   *   [ROW_HEIGHT_AUTO] to restore automatic resizing behavior.
    * @throws IllegalArgumentException If Array size does not match row count or values were
    *   negative.
    * @see setRowHeight
@@ -341,7 +358,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setRowHeights(rowHeights: DoubleArray) {
     grid.setRowHeights(rowHeights = rowHeights)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -354,7 +371,7 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoRowHeight(rowIndex: Int) {
     grid.setRowHeight(rowIndex = rowIndex, rowHeight = ROW_HEIGHT_AUTO)
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
@@ -366,13 +383,13 @@ open class GridPane<T : ComponentView>(
    */
   fun setAutoRowHeights() {
     grid.setRowHeights(rowHeights = DoubleArray(rows) { ROW_HEIGHT_AUTO })
-    // updateGui?.invoke()
+    updateGui?.invoke()
   }
 
   /**
    * Grows grid by specified dimensions, filling new cells with `null` values.
    *
-   * New rows and columns get automatic resizing behaviour, specified as [COLUMN_WIDTH_AUTO] and
+   * New rows and columns get automatic resizing behavior, specified as [COLUMN_WIDTH_AUTO] and
    * [ROW_HEIGHT_AUTO]. Therefore, new empty rows and columns get rendered with height and width 0.0
    * e.g. invisible if not specified otherwise.
    *

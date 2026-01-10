@@ -146,6 +146,7 @@ internal abstract class ComponentViewData : Data() {
   var propagatedRotation: Double = 0.0
   var propagatedScaleX: Double = 1.0
   var propagatedScaleY: Double = 1.0
+  var isGridCell: Boolean = false
   var hasMouseEnteredEvent: Boolean = false
   var hasMouseExitedEvent: Boolean = false
 }
@@ -265,12 +266,16 @@ internal class GridPaneData : LayoutViewData() {
   var rows: Int = 0
   var spacing: Int = 0
   var grid: List<GridElementData> = emptyList()
+  var columnWidths: List<Double> = emptyList()
+  var rowHeights: List<Double> = emptyList()
 }
 
 @Serializable
 internal class GridElementData(
     var column: Int,
     var row: Int,
+    var width: Double,
+    var height: Double,
     var component: ComponentViewData?,
     var alignment: Pair<String, String>
 )

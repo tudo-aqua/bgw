@@ -363,19 +363,19 @@ internal object LayoutMapper {
           }
       is GridPane<*> ->
           (GridPaneData().fillData(layout) as GridPaneData).apply {
-            val grid =
-                layout.grid.clone().apply {
-                  removeEmptyColumns()
-                  removeEmptyRows()
-                }
+            val grid = layout.grid.clone()
             columns = grid.columns
             rows = grid.rows
             this.grid =
                 grid.map {
                   val alignment = layout.getCellCenterMode(it.columnIndex, it.rowIndex)
+                  val w = layout.getColumnWidth(it.columnIndex)
+                  val h = layout.getRowHeight(it.rowIndex)
                   GridElementData(
                       it.columnIndex,
                       it.rowIndex,
+                      w,
+                      h,
                       if (it.component != null) RecursiveMapper.map(it.component) else null,
                       alignment =
                           alignment.horizontalAlignment.name.lowercase() to
@@ -383,6 +383,8 @@ internal object LayoutMapper {
                 }
             spacing = layout.spacing.toInt()
             layoutFromCenter = layout.isLayoutFromCenter
+            columnWidths = grid.getColumnWidths().toList()
+            rowHeights = grid.getRowHeights().toList()
             if (layout.dropAcceptor != null) {
               isDroppable = true
             }

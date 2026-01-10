@@ -24,6 +24,10 @@
 
 package tools.aqua.bgw.util
 
+import kotlin.collections.get
+import kotlin.collections.set
+import kotlin.dec
+import kotlin.text.get
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.layoutviews.GridPane.Companion.COLUMN_WIDTH_AUTO
 import tools.aqua.bgw.components.layoutviews.GridPane.Companion.ROW_HEIGHT_AUTO
@@ -93,6 +97,14 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
     checkColumnIndex(columnIndex)
 
     grid[columnIndex][rowIndex] = value
+  }
+
+  internal fun clear() {
+    for (i in 0 until grid.size) {
+      for (j in 0 until grid[i].size) {
+        grid[i][j] = null
+      }
+    }
   }
 
   // endregion
@@ -531,6 +543,15 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   fun removeColumn(columnIndex: Int) {
     require(columnIndex in 0 until columns) { "Column index out of grid range." }
 
+    // Clean up components in the removed column
+    for (y in 0 until rows) {
+      grid[columnIndex][y]?.let { component ->
+        component.widthProperty.internalListener = null
+        component.heightProperty.internalListener = null
+        component.parent = null
+      }
+    }
+
     if (columns == 1) {
       initEmpty()
       return
@@ -569,6 +590,19 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   /** Removes all empty columns. */
   fun removeEmptyColumns() {
     val columnIndices = grid.indices.filter { grid[it].any { e -> e != null } }.toIntArray()
+
+    // Clean up components in removed columns
+    for (x in grid.indices) {
+      if (x !in columnIndices) {
+        for (y in 0 until rows) {
+          grid[x][y]?.let { component ->
+            component.widthProperty.internalListener = null
+            component.heightProperty.internalListener = null
+            component.parent = null
+          }
+        }
+      }
+    }
 
     if (columnIndices.isEmpty()) {
       initEmpty()
@@ -630,6 +664,15 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   fun removeRow(rowIndex: Int) {
     require(rowIndex in 0 until rows) { "Row index out of grid range." }
 
+    // Clean up components in the removed row
+    for (x in 0 until columns) {
+      grid[x][rowIndex]?.let { component ->
+        component.widthProperty.internalListener = null
+        component.heightProperty.internalListener = null
+        component.parent = null
+      }
+    }
+
     if (rows == 1) {
       initEmpty()
       return
@@ -671,6 +714,19 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
         (0 until rows)
             .filter { j -> (0 until columns).any { i -> grid[i][j] != null } }
             .toIntArray()
+
+    // Clean up components in removed rows
+    for (y in 0 until rows) {
+      if (y !in rowIndices) {
+        for (x in 0 until columns) {
+          grid[x][y]?.let { component ->
+            component.widthProperty.internalListener = null
+            component.heightProperty.internalListener = null
+            component.parent = null
+          }
+        }
+      }
+    }
 
     if (rowIndices.isEmpty()) {
       initEmpty()

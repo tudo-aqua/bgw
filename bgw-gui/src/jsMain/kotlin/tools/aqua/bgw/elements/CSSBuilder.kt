@@ -36,6 +36,10 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
   top = componentViewData.posY.bgw
   width = componentViewData.width.bgw
   height = componentViewData.height.bgw
+
+  if (componentViewData.isGridCell) minWidth = componentViewData.width.bgw
+  if (componentViewData.isGridCell) minHeight = componentViewData.height.bgw
+
   zIndex = integer(componentViewData.zIndex)
   display = if (componentViewData.isVisible) Display.flex else None.none
   pointerEvents = if (!componentViewData.isDisabled) PointerEvents.all else None.none
