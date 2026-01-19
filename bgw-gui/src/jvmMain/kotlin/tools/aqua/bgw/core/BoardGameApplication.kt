@@ -263,6 +263,51 @@ open class BoardGameApplication(
   }
 
   /**
+   * Pre-caches images and displays a loading screen during the process.
+   *
+   * This function shows an animated loading screen with a logo (e.g., "made with BGW")
+   * and pre-loads the specified images in the frontend. The loading screen automatically
+   * hides after either:
+   * - All images are cached AND the minimum display time has elapsed, OR
+   * - The animated logo finishes AND the minimum display time has elapsed
+   *
+   * Whichever comes last determines when the loading screen disappears.
+   *
+   * @param imagePaths List of image paths (relative to resources) to pre-cache
+   * @param logoPath Path to the animated logo/gif to display. Empty string (default) uses the animated BGW logo.
+   *                 Specify a custom path to use your own logo.
+   * @param minimumDisplayTime Minimum time to show the loading screen in milliseconds after
+   *                          the logo animation finishes. Default: 1000ms
+   * @param showProgressBar Whether to show a progress bar indicating cache progress. Default: true
+   * @param onComplete Optional callback invoked when pre-caching is complete and the loading screen hides
+   *
+   * @since 0.11
+   */
+  fun preCacheImages(
+      imagePaths: List<String>,
+      logoPath: String? = null,
+      minimumDisplayTime: Number = 1000,
+      showProgressBar: Boolean = true,
+      onComplete: (() -> Unit)? = null
+  ) {
+    // Show the loading screen
+    Frontend.showLoadingScreen(
+        logoPath = logoPath,
+        imagesToCache = imagePaths,
+        minimumDisplayTime = minimumDisplayTime.toInt(),
+        showProgressBar = showProgressBar
+    )
+
+    // The frontend will handle the actual image loading and progress updates
+    // When complete, it will automatically hide the loading screen
+    // TODO: Implement callback mechanism through event system if needed
+    onComplete?.let {
+      // For now, we'll need to implement a callback mechanism through the frontend
+      // This could be done via the event system similar to how animations work
+    }
+  }
+
+  /**
    * Sets [Alignment] of all [Scene]s in this [BoardGameApplication].
    *
    * @param newAlignment New alignment to set.

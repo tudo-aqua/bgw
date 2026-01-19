@@ -145,6 +145,15 @@ internal class Frontend {
 
     /** Property for the background [Visual]. */
     internal val backgroundProperty: Property<Visual> = Property(ColorVisual(Color.BLACK))
+
+    // Loading screen properties
+    internal var loadingScreenVisible: Boolean = false
+    internal var loadingScreenLogoPath: String? = null
+    internal var loadingScreenImagePaths: List<String> = emptyList()
+    internal var loadingScreenTotalImages: Int = 0
+    internal var loadingScreenLoadedImages: Int = 0
+    internal var loadingScreenMinimumDisplayTime: Int = 0
+    internal var loadingScreenShowProgressBar: Boolean = true
     // endregion
 
     // region Private attributes
@@ -240,6 +249,48 @@ internal class Frontend {
       boardGameScene?.onSceneHidden?.invoke()
       boardGameScene = scene
       markDirty(ActionProp.SHOW_GAME_SCENE)
+    }
+
+    /**
+     * Shows the loading screen with the specified configuration.
+     *
+     * @param logoPath Path to the animated logo/gif to display
+     * @param imagesToCache List of image paths to pre-cache
+     * @param minimumDisplayTime Minimum time to show the loading screen in milliseconds (default: 1000ms after gif finishes)
+     * @param showProgressBar Whether to show a progress bar below the logo
+     */
+    internal fun showLoadingScreen(
+        logoPath: String? = null,
+        imagesToCache: List<String>,
+        minimumDisplayTime: Int = 1000,
+        showProgressBar: Boolean = true
+    ) {
+      loadingScreenVisible = true
+      loadingScreenLogoPath = logoPath
+      loadingScreenImagePaths = imagesToCache
+      loadingScreenTotalImages = imagesToCache.size
+      loadingScreenLoadedImages = 0
+      loadingScreenMinimumDisplayTime = minimumDisplayTime
+      loadingScreenShowProgressBar = showProgressBar
+      markDirty(ActionProp.SHOW_LOADING_SCREEN)
+    }
+
+    /**
+     * Updates the loading progress.
+     *
+     * @param loadedCount Number of images that have been loaded so far
+     */
+    internal fun updateLoadingProgress(loadedCount: Int) {
+      loadingScreenLoadedImages = loadedCount
+      markDirty(ActionProp.UPDATE_LOADING_PROGRESS)
+    }
+
+    /**
+     * Hides the loading screen.
+     */
+    internal fun hideLoadingScreen() {
+      loadingScreenVisible = false
+      markDirty(ActionProp.HIDE_LOADING_SCREEN)
     }
 
     /**

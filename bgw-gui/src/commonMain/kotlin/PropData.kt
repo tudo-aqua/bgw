@@ -41,6 +41,9 @@ internal enum class ActionProp {
   DRAG_START,
   DRAG_END,
   DRAG_DROP,
+  SHOW_LOADING_SCREEN,
+  HIDE_LOADING_SCREEN,
+  UPDATE_LOADING_PROGRESS,
 }
 
 @Serializable internal class JsonData(var container: String = "bgw-root", var props: PropData)
@@ -63,6 +66,19 @@ internal class AppData : Data() {
   var blurRadius: Double = 0.0
   var forcedByAnimation: Boolean = false
   var endedAnimations: MutableMap<String, String?> = mutableMapOf()
+  var loadingScreen: LoadingScreenData? = null
+}
+
+@Serializable
+internal class LoadingScreenData : Data() {
+  var visible: Boolean = false
+  var logoPath: String? = null
+  var imagePaths: List<String> = emptyList()
+  var totalImages: Int = 0
+  var loadedImages: Int = 0
+  var bgwVersion: String = ""
+  var minimumDisplayTime: Int = 0
+  var showProgressBar: Boolean = true
 }
 
 @Serializable

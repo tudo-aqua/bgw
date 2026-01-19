@@ -16,7 +16,9 @@
  */
 
 import ComponentMapper.fillData
+import LoadingScreenData
 import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.application.Config
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
@@ -662,6 +664,14 @@ internal object SceneMapper {
     }
   }
 
+  // Helper function to check if path is relative
+  private fun isRelativeFilePath(path: String? = null): Boolean? {
+    if(path == null) return null
+    return !path.startsWith("http://") &&
+        !path.startsWith("https://") &&
+        !path.startsWith("data:image/png;base64,")
+  }
+
   fun map(menuScene: MenuScene? = null, gameScene: BoardGameScene? = null): AppData {
     return AppData().apply {
       this.width = Frontend.widthProperty.value.toInt()
@@ -675,6 +685,26 @@ internal object SceneMapper {
       this.gameScene = if (gameScene != null) mapScene(gameScene) else null
       this.fadeTime = Frontend.lastFadeTime.toInt()
       this.blurRadius = menuScene?.blurRadius ?: DEFAULT_BLUR_RADIUS
+      this.loadingScreen = if (Frontend.loadingScreenVisible) {
+        LoadingScreenData().apply {
+          visible = Frontend.loadingScreenVisible
+          logoPath = if (isRelativeFilePath(Frontend.loadingScreenLogoPath) == true)
+              "http://localhost:${Constants.PORT}/static/${Frontend.loadingScreenLogoPath}"
+            else if(isRelativeFilePath(Frontend.loadingScreenLogoPath) == false)
+              Frontend.loadingScreenLogoPath
+            else null
+          imagePaths = Frontend.loadingScreenImagePaths.map { path ->
+            if (isRelativeFilePath(path) == true)
+                "http://localhost:${Constants.PORT}/static/${path}"
+            else path
+          }
+          bgwVersion = Config.BGW_VERSION
+          totalImages = Frontend.loadingScreenTotalImages
+          loadedImages = Frontend.loadingScreenLoadedImages
+          minimumDisplayTime = Frontend.loadingScreenMinimumDisplayTime
+          showProgressBar = Frontend.loadingScreenShowProgressBar
+        }
+      } else null
     }
   }
 }
