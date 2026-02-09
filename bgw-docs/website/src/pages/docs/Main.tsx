@@ -17,7 +17,7 @@ function Main() {
     Object.keys(layoutMap)
       .sort(() => 0.5 - Math.random())
       .slice(0, 3)
-      .sort()
+      .sort(),
   );
 
   return (
@@ -250,7 +250,8 @@ function Main() {
         <div className="mt-10">
           <h2 className={`font-bold text-2xl mb-2`}>About BoardGameWork</h2>
           <p className="text-base text-muted-foreground">
-            BoardGameWork is a project by the AQUA research group at TU Dortmund.
+            BoardGameWork is a project by the AQUA research group at TU
+            Dortmund.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-6 mt-6 mb-16 max-2xl:grid-cols-1">
@@ -261,10 +262,7 @@ function Main() {
             <h2 className="font-bold text-xl mb-6 pl-0.5">
               Imprint and Legal Notice
             </h2>
-            <Link
-                to="https://aqua.cs.tu-dortmund.de/imprint/"
-                className="relative z-10"
-            >
+            <Link to="/imprint" className="relative z-10">
               <Button variant="interface" className="flex gap-2">
                 <p>Imprint</p>
                 <i className="text-base material-symbols-rounded">
@@ -280,10 +278,7 @@ function Main() {
             <h2 className="font-bold text-xl mb-6 pl-0.5">
               Contact us by sending an E-Mail
             </h2>
-            <Link
-                to="mailto:"
-                className="relative z-10"
-            >
+            <Link to="mailto:" className="relative z-10">
               <Button variant="interface" className="flex gap-2">
                 <p>Contact</p>
                 <i className="text-base material-symbols-rounded">
