@@ -374,6 +374,8 @@ internal val CameraPane =
             left = props.data.posX.bgw
             top = props.data.posY.bgw
             position = Position.absolute
+            zIndex = integer(props.data.zIndex)
+            pointerEvents = if (props.data.isDisabled) None.none else Globals.inherit
           }
 
           if (props.data.target != null) {
