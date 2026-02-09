@@ -148,7 +148,28 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see add
    */
   fun addAll(vararg items: Pair<T, R>): Boolean {
-    val nonDuplicates = items.filter { !contains(it) }.toList()
+    return addAll(items.asList())
+  }
+
+  /**
+   * Adds all relations A -> B. If any of the given elements already exist, it gets ignored. If any
+   * element contains a key or value that already exists, the map remains unchanged.
+   *
+   * Using the example map of [(A -> B), (C -> D)]:
+   *
+   * addAll[(E -> F), (G -> H)] results in [(A -> B), (C -> D), (E -> F), (G -> H)] : true.
+   *
+   * addAll[(A -> B), (E -> F)] results in [(A -> B), (C -> D), (E -> F)] : true.
+   *
+   * addAll[(A -> C), (E -> F)] results in [(A -> B), (C -> D)] : false.
+   *
+   * @return `true` if all elements were added to the map or were already contained, `false`
+   *   otherwise.
+   * @see add
+   * @see addAll
+   */
+  fun addAll(elements: Collection<Pair<T, R>>): Boolean {
+    val nonDuplicates = elements.filter { !contains(it) }.toList()
     val keys = nonDuplicates.map { it.first }.distinct()
     val values = nonDuplicates.map { it.second }.distinct()
 
@@ -337,5 +358,15 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    */
   fun putAll(bidirectionalMap: BidirectionalMap<T, R>) {
     bidirectionalMap.entries.forEach { entry -> put(entry.first, entry.second) }
+  }
+
+  /**
+   * Set the given entries. Overwrites existing values in domain and co-domain.
+   *
+   * @param elements Entries to set.
+   * @since 0.11
+   */
+  fun putAll(elements: Collection<Pair<T, R>>) {
+    elements.forEach { put(it.first, it.second) }
   }
 }

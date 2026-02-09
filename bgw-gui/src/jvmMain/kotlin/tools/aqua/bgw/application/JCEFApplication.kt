@@ -240,7 +240,7 @@ internal class MainFrame(
     builder.cefSettings.root_cache_path = tmpDir
     builder.cefSettings.cache_path = tmpDir
     builder.cefSettings.log_file = "$tmpDir/bgw.log"
-    builder.jcefArgs.add("--disable-pinch")
+    builder.addJcefArgs("--disable-pinch", "--use-client-dialogs")
 
     builder.setAppHandler(BGWAppHandler())
 
