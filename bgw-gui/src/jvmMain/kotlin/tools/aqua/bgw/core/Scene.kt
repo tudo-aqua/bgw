@@ -175,12 +175,36 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
+   * Adds all given [ComponentView]s to the root node and [rootComponents] list.
+   *
+   * @param components Components to add.
+   * @since 0.11
+   */
+  fun addComponents(elements: Collection<T>) {
+    rootComponents.addAll(
+        elements.onEach {
+          check(it.parent == null) { "Component $it is already contained in another container." }
+          it.parent = rootNode
+        })
+  }
+
+  /**
    * Removes all given [ComponentView]s from the root node and [rootComponents] list.
    *
    * @param components Components to remove.
    */
   fun removeComponents(vararg components: T) {
     rootComponents.removeAll(components.toList().onEach { it.parent = null })
+  }
+
+  /**
+   * Removes all given [ComponentView]s from the root node and [rootComponents] list.
+   *
+   * @param components Components to remove.
+   * @since 0.11
+   */
+  fun removeComponents(elements: Collection<T>) {
+    rootComponents.removeAll(elements.onEach { it.parent = null })
   }
 
   /** Removes all [ComponentView]s from the root node and [rootComponents] list. */

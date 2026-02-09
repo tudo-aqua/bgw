@@ -167,6 +167,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *   otherwise.
    * @see add
    * @see addAll
+   * @since 0.11
    */
   fun addAll(elements: Collection<Pair<T, R>>): Boolean {
     val nonDuplicates = elements.filter { !contains(it) }.toList()
