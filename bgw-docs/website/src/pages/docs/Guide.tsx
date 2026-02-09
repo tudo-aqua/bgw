@@ -85,12 +85,12 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
     } else {
       document
         .querySelectorAll(
-          "#comp-scroll-area div[data-radix-scroll-area-viewport]"
+          "#comp-scroll-area div[data-radix-scroll-area-viewport]",
         )[0]
         ?.scrollTo(0, 0);
       document
         .querySelectorAll(
-          "#sidebar-scroll-area div[data-radix-scroll-area-viewport]"
+          "#sidebar-scroll-area div[data-radix-scroll-area-viewport]",
         )[0]
         ?.scrollTo(0, 0);
     }
@@ -99,12 +99,12 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
   function scrollToTop() {
     document
       .querySelectorAll(
-        "#comp-scroll-area div[data-radix-scroll-area-viewport]"
+        "#comp-scroll-area div[data-radix-scroll-area-viewport]",
       )[0]
       ?.scrollTo(0, 0);
     document
       .querySelectorAll(
-        "#sidebar-scroll-area div[data-radix-scroll-area-viewport]"
+        "#sidebar-scroll-area div[data-radix-scroll-area-viewport]",
       )[0]
       ?.scrollTo(0, 0);
   }
@@ -266,7 +266,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
 
     // Replace patterns like "-x" with uppercase "X"
     let converted = str.replace(/-[a-z]/g, (match) =>
-      match.charAt(1).toUpperCase()
+      match.charAt(1).toUpperCase(),
     );
 
     // Remove any remaining dashes
@@ -394,7 +394,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
         <img
           src={`${location.pathname.replace(
             "/guides/",
-            "/bgw/guides/images/"
+            "/bgw/guides/images/",
           )}/${props.src}`}
           className="w-full h-auto rounded-xl"
         />
@@ -474,7 +474,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 return child.props["group-key"];
             });
             let filteredChildren = children.filter(
-              (child) => child.props && child.props["group-key"]
+              (child) => child.props && child.props["group-key"],
             );
             let setValues = new Set(values);
             return (
@@ -509,7 +509,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 className="relative cursor-pointer group"
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `${window.location.origin}${window.location.pathname}#${id}`
+                    `${window.location.origin}${window.location.pathname}#${id}`,
                   );
                 }}
               >
@@ -547,7 +547,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 className="relative cursor-pointer group"
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `${window.location.origin}${window.location.pathname}#${id}`
+                    `${window.location.origin}${window.location.pathname}#${id}`,
                   );
                 }}
               >
@@ -569,7 +569,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 className="relative cursor-pointer group"
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `${window.location.origin}${window.location.pathname}#${id}`
+                    `${window.location.origin}${window.location.pathname}#${id}`,
                   );
                 }}
               >
@@ -613,6 +613,21 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 data={{
                   sample: props.children,
                   codepoint: [props.node.properties.key],
+                  doc: null,
+                }}
+                info={allSamples}
+                reformat={false}
+                sideBySide={true}
+                width={445}
+              />
+            );
+          },
+          previews: (props) => {
+            return (
+              <PreviewTab
+                data={{
+                  sample: props.children,
+                  codepoint: [...props.node.properties.codepoints.split(",")],
                   doc: null,
                 }}
                 info={allSamples}

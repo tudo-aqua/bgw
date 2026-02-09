@@ -247,6 +247,52 @@ function Main() {
             </Link>
           </fieldset>
         </div>
+        <div className="mt-10">
+          <h2 className={`font-bold text-2xl mb-2`}>About BoardGameWork</h2>
+          <p className="text-base text-muted-foreground">
+            BoardGameWork is a project by the AQUA research group at TU Dortmund.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-6 mt-6 mb-16 max-2xl:grid-cols-1">
+          <fieldset className="relative px-8 py-8 overflow-hidden border-none bg-muted/50 rounded-xl">
+            <i className="material-symbols-rounded text-[16rem] absolute -right-20 -top-10 rotate-12 opacity-[3%]">
+              contract
+            </i>
+            <h2 className="font-bold text-xl mb-6 pl-0.5">
+              Imprint and Legal Notice
+            </h2>
+            <Link
+                to="https://aqua.cs.tu-dortmund.de/imprint/"
+                className="relative z-10"
+            >
+              <Button variant="interface" className="flex gap-2">
+                <p>Imprint</p>
+                <i className="text-base material-symbols-rounded">
+                  arrow_forward
+                </i>
+              </Button>
+            </Link>
+          </fieldset>
+          <fieldset className="relative px-8 py-8 overflow-hidden border-none bg-muted/50 rounded-xl">
+            <i className="material-symbols-rounded text-[16rem] absolute -right-28 -top-10 rotate-12 opacity-[3%]">
+              mail
+            </i>
+            <h2 className="font-bold text-xl mb-6 pl-0.5">
+              Contact us by sending an E-Mail
+            </h2>
+            <Link
+                to="mailto:"
+                className="relative z-10"
+            >
+              <Button variant="interface" className="flex gap-2">
+                <p>Contact</p>
+                <i className="text-base material-symbols-rounded">
+                  arrow_forward
+                </i>
+              </Button>
+            </Link>
+          </fieldset>
+        </div>
       </div>
     </div>
   );

@@ -501,10 +501,6 @@ async function initializeApp() {
           },
         ],
       },
-      // {
-      //   path: "/tests",
-      //   Component: Test,
-      // },
       {
         path: "/",
         Component: BGWDocsLayout,
@@ -514,6 +510,11 @@ async function initializeApp() {
             path: "*",
           },
         ],
+      },
+      {
+        path: "/imprint",
+        Component: BGWDocsLayout,
+        loader: docsLoader,
       },
     ],
     {
