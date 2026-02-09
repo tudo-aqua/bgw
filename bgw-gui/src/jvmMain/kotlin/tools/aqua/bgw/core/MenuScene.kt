@@ -50,6 +50,6 @@ open class MenuScene(
         width = width, height = height, background = background) {
 
   init {
-    opacity = DEFAULT_MENU_SCENE_OPACITY
+    backgroundOpacity = DEFAULT_MENU_SCENE_BACKGROUND_OPACITY
   }
 }

@@ -51,6 +51,7 @@ internal val Scene =
 
         bgwVisuals {
           className = ClassName("visuals")
+          css { opacity = number(props.data.backgroundOpacity) }
           +VisualBuilder.build(props.data.background)
         }
 

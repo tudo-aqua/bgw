@@ -36,6 +36,7 @@ import tools.aqua.bgw.binding.componentChannel
 import tools.aqua.bgw.binding.forceAnimationUpdate
 import tools.aqua.bgw.binding.markDirty
 import tools.aqua.bgw.binding.module
+import tools.aqua.bgw.builder.ApplicationBuilder
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
@@ -69,6 +70,7 @@ internal class Frontend {
         .start(wait = false)
     applicationEngine.start(onClose) {
       applicationEngine.clearAllEventListeners()
+      ApplicationBuilder.build()
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
@@ -354,7 +356,6 @@ internal class Frontend {
       return false
     }
 
-    @Deprecated("This function is no longer needed as of BGW 0.10.")
     fun runLater(task: Runnable) {
       task.run()
     }

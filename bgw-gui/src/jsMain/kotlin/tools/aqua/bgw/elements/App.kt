@@ -43,7 +43,7 @@ import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_OPACITY
+import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_BACKGROUND_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.cssom.*
 import web.dom.Element
@@ -210,7 +210,7 @@ internal val App =
             overflow = Overflow.hidden
           }
           "bgw_menu_scene > bgw_scene > bgw_visuals" {
-            opacity = number(DEFAULT_MENU_SCENE_OPACITY)
+            opacity = number(DEFAULT_MENU_SCENE_BACKGROUND_OPACITY)
           }
           "bgw_menu_scene > bgw_scene" {
             opacity = number(0.0)
@@ -462,6 +462,15 @@ internal val App =
                   measure = { node -> getClientRect(node, jsObject { ignoreTransform = false }) }
                 }
           }
+
+      bgwVisuals {
+        css {
+          width = 100.pct
+          height = 100.pct
+          position = Position.absolute
+        }
+        +VisualBuilder.build(props.data.background)
+      }
 
       DndContext {
         sensors = allSensors

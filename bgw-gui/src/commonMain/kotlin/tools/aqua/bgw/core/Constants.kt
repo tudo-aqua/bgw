@@ -80,7 +80,7 @@ const val DEFAULT_FADE_TIME: Int = 250
  *
  * @since 0.2
  */
-const val DEFAULT_MENU_SCENE_OPACITY: Double = 0.75
+const val DEFAULT_MENU_SCENE_BACKGROUND_OPACITY: Double = 0.75
 // endregion
 
 // region Animation

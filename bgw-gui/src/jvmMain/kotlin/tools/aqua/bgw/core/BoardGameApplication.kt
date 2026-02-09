@@ -21,7 +21,6 @@ package tools.aqua.bgw.core
 
 import java.util.*
 import java.util.concurrent.CountDownLatch
-import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.dialog.Dialog
 import tools.aqua.bgw.dialog.FileDialog
@@ -323,13 +322,11 @@ open class BoardGameApplication(
 
     /**
      * Executes given [task] on the UI thread. Use this method to update properties of
-     * [ComponentView]s from asynchronous environments like [Animation.onFinished] events. If no
-     * Application has yet been started, the [task] is executed on the calling Thread. This function
-     * is Thread safe.
+     * [ComponentView]s from asynchronous environments like network callbacks. If no Application has
+     * yet been started, the [task] is executed on the calling Thread. This function is Thread safe.
      *
      * @since 0.5
      */
-    @Deprecated("This function is no longer needed as of BGW 0.10.")
     fun runOnGUIThread(task: Runnable) {
       task.run()
     }

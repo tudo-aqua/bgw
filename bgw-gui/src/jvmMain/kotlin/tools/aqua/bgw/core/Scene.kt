@@ -112,7 +112,18 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   internal val opacityProperty = DoubleProperty(1.0)
 
   /** Opacity of the [background] of this [Scene]. */
+  @Deprecated(
+      "The property has been renamed as of BGW 0.11.", ReplaceWith("this.backgroundOpacity"))
   var opacity: Double
+    get() = opacityProperty.value
+    set(value) {
+      require(value in 0.0..1.0) { "Value must be between 0 and 1 inclusive." }
+
+      opacityProperty.value = value
+    }
+
+  /** Opacity of the [background] of this [Scene]. */
+  var backgroundOpacity: Double
     get() = opacityProperty.value
     set(value) {
       require(value in 0.0..1.0) { "Value must be between 0 and 1 inclusive." }

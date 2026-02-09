@@ -659,6 +659,7 @@ internal object SceneMapper {
       width = scene.width.toInt()
       height = scene.height.toInt()
       background = VisualMapper.map(scene.background)
+      backgroundOpacity = scene.opacityProperty.value
     }
   }
 

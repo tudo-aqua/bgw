@@ -72,6 +72,7 @@ internal class SceneData : Data() {
   var width: Int = 0
   var height: Int = 0
   var background: VisualData? = null
+  var backgroundOpacity: Double = 1.0
   var components: List<ComponentViewData> = emptyList()
 }
 
