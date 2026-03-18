@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Changed `ComponentAnimation`s to now persist their final state by default.
+- Changed default font-family to be sans-serif when no `Font` was specified, or it was not found.
 
 ### Fixed
 - Fixed flickering when updating `ComponentView`s in `onFinished` of `Animation`s.

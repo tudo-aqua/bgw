@@ -221,7 +221,7 @@ internal fun flipAndRotationBuilder(flipped: String, rotation: Double): String {
 
 internal fun cssBorderRadius(value: String): LengthProperty = value.unsafeCast<LengthProperty>()
 
-internal fun cssFont(value: String): FontFamily = "'$value'".unsafeCast<FontFamily>()
+internal fun cssFont(value: String): FontFamily = "'$value', sans-serif".unsafeCast<FontFamily>()
 
 internal fun cssFilter(values: List<String>): FilterFunction {
   if (values.isEmpty()) return "none".unsafeCast<FilterFunction>()

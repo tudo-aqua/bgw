@@ -69,7 +69,7 @@ import tools.aqua.bgw.util.Logger
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
-  const val DEBUG = true
+  const val DEBUG = false
 }
 
 internal object StdErrFilter {
