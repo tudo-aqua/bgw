@@ -129,7 +129,7 @@ kotlin {
         implementation("io.ktor:ktor-server-websockets:2.3.11")
         implementation("io.ktor:ktor-server-html-builder-jvm:2.3.11")
         implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
-        implementation("me.friwi:jcefmaven:141.0.10")
+        implementation("me.friwi:jcefmaven:143.0.14")
         implementation("dev.dirs:directories:26")
       }
     }
