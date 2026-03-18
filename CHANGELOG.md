@@ -1,3 +1,4 @@
+[0.11]: https://github.com/tudo-aqua/bgw/releases/tag/v0.11
 [0.10]: https://github.com/tudo-aqua/bgw/releases/tag/v0.10
 [0.9]: https://github.com/tudo-aqua/bgw/releases/tag/v0.9
 [0.8.1]: https://github.com/tudo-aqua/bgw/releases/tag/v0.8.1
@@ -21,6 +22,42 @@
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [0.11] - TBD
+
+### Breaking Changes
+- The library now needs Java 17 to run (previously was Java 11).
+- Reworked Animation System to be easier to understand while still providing all options.
+- Animations can no longer be started on `ComponentView`s already animating without using `SequentialAnimation` or `ParallelAnimation`.
+- `ComponentAnimation`s now persist their state by default after the animation finished.  
+
+### Added
+- Added `persist` property to `ComponentAnimation`s to automatically persist the state without the need of `onFinished`.
+- Added `clear()` function to `GridPane` to more easily clear the entire pane.
+- Added `addAll()` and `putAll()` functions to `BidirectionalMap` to directly add collections of tuples.
+- Added `addComponents()` and `removeComponents()` functions to `Scene` to manipulate components without the need for varargs.
+- Added better logging to `bgw-gui` and `bgw-net` modules.
+
+### Changed
+- Changed `ComponentAnimation`s to now persist their final state by default.
+
+### Fixed
+- Fixed flickering when updating `ComponentView`s in `onFinished` of `Animation`s.
+- Fixed `isRunning` property of `Animation`s not having the correct state.
+- Fixed `isDragged` property of `ComponentView`s not having the correct state.
+- Fixed `ComponentView`s dragging in the direction of rotated parent.
+- Fixed `ComponentView`s dragging behind if parent was scaled.
+- Fixed `width` and `height` of `GridCell` not working.
+- Fixed identical `ImageVisual` being unable to render twice.
+- Fixed exiting the `Appication` on Linux.
+- Fixed `FileDialogMode.CHOOSE_DIRECTORY` of `FileDialog` not working.
+- Fixed `background` of `BoardGameApplication` not working.
+- Fixed `opacity` of `BoardGameScene` and `MenuScene` not working.
+- Fixed `zIndex` of `CameraPane` not moving the component to the front/back.
+- Fixed `isDisabled` property of `CameraPane` not allowing click-through to lower components.
+
+### Deprecated
+- Deprecated `opacity` of `BoardGameScene` in favor of `backgroundOpacity`.
 
 ## [0.10] - 25.06.2025
 

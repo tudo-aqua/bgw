@@ -186,7 +186,7 @@ function BGWDocsLayout() {
                       <img src="/bgw/logo.svg" className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v0.10</span>
+                      <span className="font-semibold">BGW - v0.11</span>
                       <span className="">Documentation</span>
                     </div>
                   </a>
@@ -196,7 +196,7 @@ function BGWDocsLayout() {
                       <i className="text-lg material-symbols-rounded">topic</i>
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v0.10</span>
+                      <span className="font-semibold">BGW - v0.11</span>
                       <span className="">Reference</span>
                     </div>
                   </a>
@@ -206,7 +206,7 @@ function BGWDocsLayout() {
                       <i className="text-lg material-symbols-rounded">book_2</i>
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v0.10</span>
+                      <span className="font-semibold">BGW - v0.11</span>
                       <span className="">Guides</span>
                     </div>
                   </a>

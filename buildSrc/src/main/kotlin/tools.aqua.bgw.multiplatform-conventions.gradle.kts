@@ -90,20 +90,18 @@ kotlin {
                 "--add-opens",
                 "java.desktop/sun.awt=ALL-UNNAMED",
                 "--add-opens",
-                "java.desktop/java.awt.peer=ALL-UNNAMED")
-
-        if (System.getProperty("os.name").contains("Mac")) {
-          applicationDefaultJvmArgs =
-              listOf(
-                  "--add-opens",
-                  "java.desktop/sun.awt=ALL-UNNAMED",
-                  "--add-opens",
-                  "java.desktop/java.awt.peer=ALL-UNNAMED",
-                  "--add-opens",
-                  "java.desktop/sun.lwawt=ALL-UNNAMED",
-                  "--add-opens",
-                  "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
-        }
+                "java.desktop/java.awt.peer=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/sun.lwawt=ALL-UNNAMED",
+                "--add-opens",
+                "java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+                "--enable-native-access",
+                "ALL-UNNAMED",
+                "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+                "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
+                "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+                "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+                "--enable-native-access=ALL-UNNAMED")
       }
     }
     testRuns["test"].executionTask.configure { useJUnitPlatform() }

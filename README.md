@@ -29,7 +29,7 @@ Visit the [Playground](https://tudo-aqua.github.io/bgw/playground) to see BGW in
 ### Prerequisites
 
 Before you can start using BGW, you will need a Java Development Kit (JDK) installed on your system. BGW requires at least
-Java 11 to run. You can download a compatible version of [Azul Zulu OpenJDK][AzulZuluOpenJDK] from the official website.
+Java 17 to run. You can download a compatible version of [Azul Zulu OpenJDK][AzulZuluOpenJDK] from the official website.
 
 ### Setup
 
@@ -37,7 +37,7 @@ Start by adding the latest version of BGW as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
+implementation(group = "tools.aqua", name = "bgw-gui", version = "0.11")
 ```
 
 #### Maven
@@ -45,20 +45,21 @@ implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
 <dependency>
     <groupId>tools.aqua</groupId>
     <artifactId>bgw-gui</artifactId>
-    <version>0.10</version>
+    <version>0.11</version>
 </dependency>
 ``` 
 
-When running on JDK 16 or later, you need to add the following JVM arguments to your run configuration:
+When running on macOS, you need to add the following JVM arguments to your run configuration:
 
 #### Gradle
 ```gradle
 application {
     applicationDefaultJvmArgs = listOf(
-        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED"
+        "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+        "--enable-native-access=ALL-UNNAMED"
     )
 }
 ```
@@ -71,23 +72,24 @@ application {
         --add-opens java.desktop/java.awt.peer=ALL-UNNAMED
         --add-opens java.desktop/sun.lwawt=ALL-UNNAMED
         --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED
+        --enable-native-access ALL-UNNAMED
     </jvmArguments>
 </configuration>
 ```
 
-It is therefore recommended to explicitly specify the correct JVM target (e.g. 11 in this case) in your build system:
+It is also recommended to explicitly specify the correct JVM target (e.g. 17 in this case) in your build system:
 
 #### Gradle
 ```gradle
 compileKotlin {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = "17"
 }
 ```
 
 #### Maven
 ```xml
 <configuration>
-    <jvmTarget>11</jvmTarget>
+    <jvmTarget>17</jvmTarget>
 </configuration>
 ```
 
