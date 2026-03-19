@@ -21,5 +21,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal class RotationAnimationData : ComponentAnimationData() {
-  var byAngle = 0.0
+  var fromAngle = 0.0
+  var toAngle = 0.0
 }

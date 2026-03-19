@@ -90,7 +90,8 @@ internal object AnimationMapper {
           }
       is RotationAnimation<*> ->
           (mapSpecific(animation) as RotationAnimationData).apply {
-            byAngle = animation.toAngle - animation.fromAngle
+            fromAngle = animation.fromAngle
+            toAngle = animation.toAngle
             animationType = "rotate"
             interpolation = animation.interpolation
           }

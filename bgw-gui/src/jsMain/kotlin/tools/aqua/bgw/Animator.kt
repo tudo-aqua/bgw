@@ -358,9 +358,10 @@ internal object Animator {
         animate(
             component,
             jsObject {
-              `--rotAnim` =
+              `--rot` =
                   jsObject<TweenParams> {
-                    to = "${animationData.byAngle}deg"
+                    from = "${animationData.fromAngle}deg"
+                    to = "${animationData.toAngle}deg"
                     duration = animationData.duration
                     ease = easeForInterpolationType(animationData)
                   }
@@ -666,7 +667,7 @@ internal object Animator {
           console.log("Removed --tx and --ty styles for component $componentId")
         }
         AnimationType.ROTATION -> {
-          style.removeProperty("--rotAnim")
+          style.removeProperty("--rot")
           console.log("Removed --rot style for component $componentId")
         }
         AnimationType.SCALE -> {
