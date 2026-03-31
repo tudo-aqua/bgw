@@ -27,3 +27,14 @@ dependencies {
   implementation(project(":bgw-net:bgw-net-client"))
   implementation(project(":bgw-net:bgw-net-common"))
 }
+
+application {
+  applicationDefaultJvmArgs =
+      listOf(
+          "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+          "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
+          "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+          "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+          "--enable-native-access=ALL-UNNAMED")
+  mainClass = "examples.components.container.ContainerExampleKt"
+}

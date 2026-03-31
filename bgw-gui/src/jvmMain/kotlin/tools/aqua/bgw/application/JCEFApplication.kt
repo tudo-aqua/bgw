@@ -131,7 +131,13 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   init {
-    StdErrFilter.install("SLF4J", "initialize on Thread", "AppKit Thread", "google_apis")
+    StdErrFilter.install(
+        "SLF4J",
+        "initialize on Thread",
+        "Exception in thread",
+        "AppKit Thread",
+        "google_apis",
+        "stack smashing")
   }
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {

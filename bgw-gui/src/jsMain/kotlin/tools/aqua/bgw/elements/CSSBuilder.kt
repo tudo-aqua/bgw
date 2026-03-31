@@ -28,6 +28,7 @@ import csstype.Properties
 import csstype.PropertiesBuilder
 import kotlin.js.asDynamic
 import tools.aqua.bgw.DraggableResult
+import tools.aqua.bgw.elements.layoutviews.convertToRem
 import web.cssom.*
 
 internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
@@ -233,8 +234,14 @@ internal fun applyDraggableTransform(
     componentData: ComponentViewData
 ): Properties {
   // Get the drag delta in screen coordinates
-  val screenX = draggable.transform?.x ?: 0.0
-  val screenY = draggable.transform?.y ?: 0.0
+  val screenX =
+      if (draggable.transform?.x != null)
+          draggable.transform!!.x + convertToRem(componentData.propagatedPosX)
+      else 0.0
+  val screenY =
+      if (draggable.transform?.y != null)
+          draggable.transform!!.y + convertToRem(componentData.propagatedPosY)
+      else 0.0
 
   // Calculate parent's combined scale (excluding this component's own scale)
   val parentScaleX = componentData.propagatedScaleX / componentData.scaleX

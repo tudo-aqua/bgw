@@ -147,6 +147,8 @@ internal abstract class ComponentViewData : Data() {
   var propagatedRotation: Double = 0.0
   var propagatedScaleX: Double = 1.0
   var propagatedScaleY: Double = 1.0
+  var propagatedPosX: Double = 0.0
+  var propagatedPosY: Double = 0.0
   var isGridCell: Boolean = false
   var hasMouseEnteredEvent: Boolean = false
   var hasMouseExitedEvent: Boolean = false
