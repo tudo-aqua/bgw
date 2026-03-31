@@ -18,6 +18,7 @@
 import gradle.kotlin.dsl.accessors._357b8ca9003504b71e2c9c6cf56313b6.dokka
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import tools.aqua.defaultFormat
 
 plugins {
@@ -54,9 +55,10 @@ tasks.test {
   testLogging { events(FAILED, PASSED, SKIPPED) }
 }
 
-kotlin.target.compilations.all {
-  kotlinOptions {
-    jvmTarget = "17"
+kotlin {
+  jvmToolchain(11)
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_11
     // allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }

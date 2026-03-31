@@ -16,6 +16,7 @@
  */
 
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import tools.aqua.vaadinAddons
 
 plugins {
@@ -42,6 +43,15 @@ dependencyManagement {
   imports {
     mavenBom(
         "${vaadinBom.module.group}:${vaadinBom.module.name}:${vaadinBom.versionConstraint.requiredVersion}")
+  }
+}
+
+kotlin {
+  jvmToolchain(17)
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_17
+    // allWarningsAsErrors = true
+    freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }
 }
 
