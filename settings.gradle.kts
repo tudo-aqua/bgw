@@ -31,3 +31,7 @@ include(
     "bgw-net:bgw-net-server",
     "bgw-net:bgw-net-protocol-client",
 )
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention").version("0.10.0")
+}
