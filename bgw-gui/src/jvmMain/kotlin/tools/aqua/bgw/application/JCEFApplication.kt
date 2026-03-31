@@ -137,21 +137,23 @@ internal class JCEFApplication : Application {
         )
     }
 
-    companion object {
+    internal companion object {
         const val WAYLAND_SESSION_TYPE = "wayland"
-    }
 
-    /**
-     * Checks if the application is running on Linux with Wayland
-     */
-    private fun checkIfLinuxWayland(): Boolean {
-        return when (EnumPlatform.getCurrentPlatform()) {
-            EnumPlatform.LINUX_AMD64,
-            EnumPlatform.LINUX_ARM64,
-            EnumPlatform.LINUX_ARM -> System.getenv("XDG_SESSION_TYPE") == WAYLAND_SESSION_TYPE
-            else -> false
+        /**
+         * Checks if the application is running on Linux with Wayland
+         */
+        internal fun checkIfLinuxWayland(): Boolean {
+            return when (EnumPlatform.getCurrentPlatform()) {
+                EnumPlatform.LINUX_AMD64,
+                EnumPlatform.LINUX_ARM64,
+                EnumPlatform.LINUX_ARM -> System.getenv("XDG_SESSION_TYPE") == WAYLAND_SESSION_TYPE
+                else -> false
+            }
         }
     }
+
+
 
     override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
         if (Constants.DEBUG) Logger.info("Starting BGW Runtime (http://localhost:${Constants.PORT})")
@@ -566,7 +568,7 @@ internal class MainFrame(
     }
 
     internal fun openNewDialog(dialogData: DialogData) {
-        val dialogFrame = client.createBrowser("about:blank", false, false)
+        val dialogFrame = client.createBrowser("about:blank", JCEFApplication.checkIfLinuxWayland(), false)
         val dialogUI = dialogFrame.uiComponent
 
         dialogMap[dialogFrame] = dialogData
