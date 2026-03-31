@@ -65,7 +65,7 @@ open class ImageVisual(
 
     require(path.isNotEmpty() && path.isNotBlank()) { "ImageVisual path must not be empty." }
 
-    require(this::class.java.classLoader.getResourceAsStream(path) != null) {
+    require(path.startsWith("data:image/png;base64,") || this::class.java.classLoader.getResourceAsStream(path) != null) {
       "ImageVisual path '$path' was not found in resources (on Linux and MacOS, file names are case-sensitive)."
     }
   }
