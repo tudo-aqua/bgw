@@ -36,9 +36,12 @@ internal external interface DndContextProps : PropsWithChildren {
   var onDragMove: (DragMultiEvent) -> Unit
   var onDragOver: (DragMultiEvent) -> Unit
   var measuring: MeasuringConfiguration
+  var collisionDetection: dynamic
 
   var sensors: Array<dynamic>
 }
+
+@JsName("pointerWithin") internal external val pointerWithin: dynamic
 
 internal external interface Measuring {
   var measure: (element: HTMLElement) -> LayoutRect
@@ -92,7 +95,7 @@ internal external fun useDroppable(options: DroppableOptions): DroppableResult
 
 internal external interface DragOverlayProps :
     PropsWithChildren, PropsWithClassName, PropsWithStyle {
-  var dropAnimation: Boolean
+  var dropAnimation: Boolean?
 }
 
 internal external interface DraggableOptions {

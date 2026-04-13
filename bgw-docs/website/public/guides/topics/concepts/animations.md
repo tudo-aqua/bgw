@@ -208,6 +208,8 @@ playAnimation(
 )
 </previews>
 
+---
+
 #### Interpolation
 
 [MovementAnimation][MovementAnimationKDoc], [RotationAnimation][RotationAnimationKDoc] and [FadeAnimation][FadeAnimationKDoc] all have an additional property `interpolation` that can be used to control the interpolation of the animation. Interpolation defines how the animation progresses over time, by default this is set to `AnimationInterpolation.SMOOTH`, which means that the animation will start and end slowly and be faster in the middle. If a different interpolation is desired, it can be set to one of the following values:

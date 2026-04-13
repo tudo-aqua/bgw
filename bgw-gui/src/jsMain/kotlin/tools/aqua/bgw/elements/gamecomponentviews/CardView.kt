@@ -25,7 +25,6 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
 import tools.aqua.bgw.elements.useAnimationCleanup
@@ -106,7 +105,7 @@ internal val CardView =
         }
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable, props.data)
+        // style = applyDraggableTransform(draggable, props.data)
 
         bgwVisuals {
           className = ClassName("visuals")

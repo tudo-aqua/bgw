@@ -28,7 +28,6 @@ import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
@@ -82,7 +81,7 @@ internal val HexagonGrid =
         className = ClassName("hexagonGrid")
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable, props.data)
+        // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
         useEffect {

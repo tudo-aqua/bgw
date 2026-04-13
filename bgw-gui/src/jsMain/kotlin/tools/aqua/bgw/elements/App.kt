@@ -45,8 +45,12 @@ import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_BACKGROUND_OPACITY
 import tools.aqua.bgw.event.JCEFEventDispatcher
+import web.canvas.CanvasRenderingContext2D
 import web.cssom.*
 import web.dom.Element
+import web.dom.Node
+import web.html.HTMLCanvasElement
+import web.html.HTMLDivElement
 
 internal external interface AppProps : Props {
   var data: AppData
@@ -345,15 +349,7 @@ internal val App =
             overflow = Overflow.hidden
           }
 
-          ".bgw-root *[aria-roledescription='draggable'][aria-pressed='true']" {
-            position = important(Position.fixed)
-            opacity = important(number(1.0))
-            zIndex = important(integer(1000000))
-          }
-
-          ".bgw-root *:has(*[aria-roledescription='draggable'][aria-pressed='true'])" {
-            zIndex = important(integer(1000000))
-          }
+          ".bgw-root *[data-bgw-drag-source='true']" { visibility = important(Visibility.hidden) }
 
           "bgw_satchel bgw_contents *[aria-roledescription='draggable']:not([aria-pressed='true'])" {
             width = important(100.pct)
@@ -371,7 +367,6 @@ internal val App =
           ".bgw-drag-overlay > *" {
             zIndex = important(integer(99999998))
             pointerEvents = important(None.none)
-            transform = important(None.none)
           }
 
           "select, ::picker(select)" {
@@ -435,8 +430,63 @@ internal val App =
       } */
 
       val (lastDraggedOver, setLastDraggedOver) = useState<String?>(null)
-      val draggedElementRef = useRef<org.w3c.dom.Element>(null)
-      val (draggedComponentData, setDraggedComponentData) = useState<ComponentViewData?>(null)
+      val draggedElementRef = useRef<Element>(null)
+      val overlayContainerRef = useRef<HTMLDivElement>(null)
+      val (activeDragId, setActiveDragId) = useState<String?>(null)
+
+      fun syncDragOverlayClone() {
+        val source = draggedElementRef.current ?: return
+        val overlayContainer = overlayContainerRef.current ?: return
+
+        val clone = source.cloneNode(true).unsafeCast<Element>()
+        clone.removeAttribute("id")
+        clone.removeAttribute("data-bgw-drag-source")
+        clone.setAttribute("aria-hidden", "true")
+
+        // DragOverlay itself handles pointer-based translation. Reset source
+        // positioning/translation
+        // so the cloned root starts at the overlay origin and does not accumulate offsets.
+        val cloneStyle = clone.asDynamic().style
+        cloneStyle.position = "relative"
+        cloneStyle.left = "0px"
+        cloneStyle.top = "0px"
+        cloneStyle.setProperty("--tx", "0px")
+        cloneStyle.setProperty("--ty", "0px")
+
+        // cloneNode does not copy canvas pixels; copy them explicitly so cropped ImageVisuals stay
+        // visible.
+        val sourceCanvases = source.asDynamic().querySelectorAll("canvas")
+        val cloneCanvases = clone.asDynamic().querySelectorAll("canvas")
+        val canvasCount = kotlin.math.min(sourceCanvases.length as Int, cloneCanvases.length as Int)
+        for (i in 0 until canvasCount) {
+          val sourceCanvas = sourceCanvases[i].unsafeCast<HTMLCanvasElement>()
+          val cloneCanvas = cloneCanvases[i].unsafeCast<HTMLCanvasElement>()
+
+          cloneCanvas.width = sourceCanvas.width
+          cloneCanvas.height = sourceCanvas.height
+
+          val cloneContext =
+              cloneCanvas
+                  .getContext(CanvasRenderingContext2D.ID)
+                  ?.unsafeCast<CanvasRenderingContext2D>()
+          cloneContext?.drawImage(sourceCanvas.unsafeCast<web.canvas.CanvasImageSource>(), 0.0, 0.0)
+        }
+
+        overlayContainer.innerHTML = ""
+        overlayContainer.appendChild(clone.unsafeCast<Node>())
+      }
+
+      useEffectWithCleanup(activeDragId) {
+        if (activeDragId == null) {
+          onCleanup {}
+          return@useEffectWithCleanup
+        }
+
+        syncDragOverlayClone()
+        val intervalId = window.setInterval({ syncDragOverlayClone() }, 10)
+
+        onCleanup { window.clearInterval(intervalId) }
+      }
 
       val pointerSensor =
           useSensor(
@@ -475,23 +525,14 @@ internal val App =
       DndContext {
         sensors = allSensors
         measuring = measuringConfig
+        collisionDetection = pointerWithin
 
         onDragStart = { event ->
-          val element = event.active?.id?.let { document.getElementById(it) }
+          draggedElementRef.current?.removeAttribute("data-bgw-drag-source")
+          val element = event.active?.id?.let { document.getElementById(it)?.unsafeCast<Element>() }
+          element?.setAttribute("data-bgw-drag-source", "true")
           draggedElementRef.current = element
-
-          // Find the component data for the dragged element
-          event.active?.id?.let { componentId ->
-            val gameScene = props.data.gameScene
-
-            val foundComponent =
-                when {
-                  gameScene != undefined -> findComponentDataById(componentId, gameScene.components)
-                  else -> null
-                }
-
-            setDraggedComponentData(foundComponent)
-          }
+          setActiveDragId(event.active?.id)
 
           JCEFEventDispatcher.dispatchEvent(event.toDragStartedEventData())
         }
@@ -505,8 +546,11 @@ internal val App =
             JCEFEventDispatcher.dispatchEvent(
                 DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
           }
+          draggedElementRef.current?.removeAttribute("data-bgw-drag-source")
+          draggedElementRef.current = null
+          overlayContainerRef.current?.innerHTML = ""
           setLastDraggedOver(null)
-          setDraggedComponentData(null)
+          setActiveDragId(null)
         }
 
         onDragMove = { event -> JCEFEventDispatcher.dispatchEvent(event.toDragMoveEventData()) }
@@ -643,12 +687,12 @@ internal val App =
           }
         }
 
-        //        DragOverlay {
-        //          className = ClassName("bgw-drag-overlay")
-        //          draggedComponentData?.let {
-        //            +NodeBuilder.buildOverlay(draggedComponentData)
-        //          }
-        //        }
+        DragOverlay {
+          className = ClassName("bgw-drag-overlay")
+          dropAnimation = null
+
+          div { ref = overlayContainerRef }
+        }
       }
     }
 

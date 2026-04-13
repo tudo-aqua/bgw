@@ -27,7 +27,6 @@ import tools.aqua.bgw.DraggableOptions
 import tools.aqua.bgw.DroppableOptions
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
@@ -78,7 +77,7 @@ internal val Area =
         className = ClassName("area")
 
         css(cssStyle)
-        style = applyDraggableTransform(draggable, props.data)
+        // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
         useEffect {

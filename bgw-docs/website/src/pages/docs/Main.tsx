@@ -9,7 +9,7 @@ const quickstartCode = `
 implementation(
   group = "tools.aqua", 
   name = "bgw-gui", 
-  version = "0.10"
+  version = "0.11"
 )`;
 
 function Main() {

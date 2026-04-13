@@ -27,7 +27,6 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.VisualBuilder
-import tools.aqua.bgw.elements.applyDraggableTransform
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
@@ -119,7 +118,7 @@ internal val HexagonView =
           }
           cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
         }
-        style = applyDraggableTransform(draggable, props.data)
+        // style = applyDraggableTransform(draggable, props.data)
 
         bgwVisuals {
           className = ClassName("visuals")
