@@ -20,7 +20,6 @@ package tools.aqua.bgw.application
 import DialogButtonClickData
 import DialogData
 import ID
-import data.event.*
 import dev.dirs.ProjectDirectories
 import java.awt.*
 import java.awt.event.ComponentEvent
@@ -58,12 +57,9 @@ import org.cef.handler.*
 import org.cef.misc.BoolRef
 import org.cef.network.CefRequest
 import tools.aqua.bgw.builder.DialogBuilder
-import tools.aqua.bgw.components.uicomponents.*
 import tools.aqua.bgw.core.*
-import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.FileDialog
-import tools.aqua.bgw.event.*
 import tools.aqua.bgw.util.LogType
 import tools.aqua.bgw.util.Logger
 
@@ -131,14 +127,38 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   init {
-    StdErrFilter.install("SLF4J", "initialize on Thread", "AppKit Thread", "google_apis")
+    StdErrFilter.install(
+        "SLF4J",
+        "initialize on Thread",
+        "Exception in thread",
+        "AppKit Thread",
+        "google_apis",
+        "stack smashing")
+  }
+
+  internal companion object {
+    const val WAYLAND_SESSION_TYPE = "wayland"
+
+    /** Checks if the application is running on Linux with Wayland */
+    internal fun checkIfLinuxWayland(): Boolean {
+      return when (EnumPlatform.getCurrentPlatform()) {
+        EnumPlatform.LINUX_AMD64,
+        EnumPlatform.LINUX_ARM64,
+        EnumPlatform.LINUX_ARM -> System.getenv("XDG_SESSION_TYPE") == WAYLAND_SESSION_TYPE
+        else -> false
+      }
+    }
   }
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
     if (Constants.DEBUG) Logger.info("Starting BGW Runtime (http://localhost:${Constants.PORT})")
     else Logger.info("Starting BGW Runtime (${Constants.PORT})")
     EventQueue.invokeLater {
-      frame = MainFrame(loadCallback = callback, debugLogging = Constants.DEBUG)
+      frame =
+          MainFrame(
+              loadCallback = callback,
+              debugLogging = Constants.DEBUG,
+              useOSR = checkIfLinuxWayland())
       JCEFApplication::class
           .java
           .getResource("/icon.png")
@@ -148,6 +168,7 @@ internal class JCEFApplication : Application {
 
       frame?.defaultCloseOperation = EXIT_ON_CLOSE
       frame?.isVisible = true
+      frame?.repaint()
     }
 
     // Call the onClose callback when the application is closed
@@ -545,7 +566,8 @@ internal class MainFrame(
   }
 
   internal fun openNewDialog(dialogData: DialogData) {
-    val dialogFrame = client.createBrowser("about:blank", false, false)
+    val dialogFrame =
+        client.createBrowser("about:blank", JCEFApplication.checkIfLinuxWayland(), false)
     val dialogUI = dialogFrame.uiComponent
 
     dialogMap[dialogFrame] = dialogData
@@ -573,6 +595,7 @@ internal class MainFrame(
           FileDialogMode.OPEN_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN
           FileDialogMode.OPEN_MULTIPLE_FILES ->
               CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_MULTIPLE
+
           FileDialogMode.SAVE_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_SAVE
           FileDialogMode.CHOOSE_DIRECTORY -> CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN_FOLDER
         }
