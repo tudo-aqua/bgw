@@ -26,7 +26,6 @@ All notable changes to this project will be documented in this file.
 ## [0.11] - TBD
 
 ### Breaking Changes
-- The library now needs Java 17 to run (previously was Java 11).
 - Reworked Animation System to be easier to understand while still providing all options.
 - Animations can no longer be started on `ComponentView`s already animating without using `SequentialAnimation` or `ParallelAnimation`.
 - `ComponentAnimation`s now persist their state by default after the animation finished.  

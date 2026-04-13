@@ -29,7 +29,7 @@ Visit the [Playground](https://tudo-aqua.github.io/bgw/playground) to see BGW in
 ### Prerequisites
 
 Before you can start using BGW, you will need a Java Development Kit (JDK) installed on your system. BGW requires at least
-Java 17 to run. You can download a compatible version of [Azul Zulu OpenJDK][AzulZuluOpenJDK] from the official website.
+Java 11 to run. You can download a compatible version of [Azul Zulu OpenJDK][AzulZuluOpenJDK] from the official website.
 
 ### Setup
 
@@ -49,7 +49,7 @@ implementation(group = "tools.aqua", name = "bgw-gui", version = "0.11")
 </dependency>
 ``` 
 
-When running on macOS, you need to add the following JVM arguments to your run configuration:
+When running on JDK 16 or later, you need to add the following JVM arguments to your run configuration:
 
 #### Gradle
 ```gradle
@@ -77,19 +77,19 @@ application {
 </configuration>
 ```
 
-It is also recommended to explicitly specify the correct JVM target (e.g. 17 in this case) in your build system:
+It is therefore recommended to explicitly specify the correct JVM target (e.g. 11 in this case) in your build system:
 
 #### Gradle
 ```gradle
 compileKotlin {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "11"
 }
 ```
 
 #### Maven
 ```xml
 <configuration>
-    <jvmTarget>17</jvmTarget>
+    <jvmTarget>11</jvmTarget>
 </configuration>
 ```
 
