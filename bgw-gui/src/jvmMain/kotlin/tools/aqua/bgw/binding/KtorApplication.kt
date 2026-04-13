@@ -490,13 +490,17 @@ internal fun eventListener(text: String) {
           }
           is DragGestureStartedEventData -> {
             if (component is DynamicComponentView) {
-              component.onDragGestureStarted?.invoke(DragEvent(component))
+              val (posX, posY) =
+                  Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+              component.onDragGestureStarted?.invoke(DragEvent(component, posX, posY))
               component.isDragged = true
             }
           }
           is DragGestureMovedEventData -> {
             if (component is DynamicComponentView) {
-              component.onDragGestureMoved?.invoke(DragEvent(component))
+              val (posX, posY) =
+                  Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+              component.onDragGestureMoved?.invoke(DragEvent(component, posX, posY))
             }
           }
           is DragGestureEnteredEventData -> {
@@ -506,7 +510,9 @@ internal fun eventListener(text: String) {
               val root = component.getRootNode()
               val target = root.findComponent(eventData.target)
               if (target?.dropAcceptor != null) {
-                target.onDragGestureEntered?.invoke(DragEvent(component))
+                val (posX, posY) =
+                    Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                target.onDragGestureEntered?.invoke(DragEvent(component, posX, posY))
               }
             }
           }
@@ -516,9 +522,11 @@ internal fun eventListener(text: String) {
                 val root = component.getRootNode()
                 val target = root.findComponent(eventData.droppedOn!!)
                 if (target?.dropAcceptor != null) {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
                   component.onDragGestureEnded?.invoke(
                       DropEvent(component, target),
-                      target.dropAcceptor?.invoke(DragEvent(component)) == true)
+                      target.dropAcceptor?.invoke(DragEvent(component, posX, posY)) == true)
                 }
               } else {
                 component.onDragGestureEnded?.invoke(DropEvent(component, null), false)
@@ -533,16 +541,19 @@ internal fun eventListener(text: String) {
               val root = component.getRootNode()
               val target = root.findComponent(eventData.target)
               if (target?.dropAcceptor != null) {
-                target.onDragGestureExited?.invoke(DragEvent(component))
+                val (posX, posY) =
+                    Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                target.onDragGestureExited?.invoke(DragEvent(component, posX, posY))
               }
             }
           }
           is DragDroppedEventData -> {
             val root = component.getRootNode()
             val target = root.findComponent(eventData.target)
-            val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
+            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val dropped = target?.dropAcceptor?.invoke(DragEvent(component, posX, posY))
             if (dropped == true) {
-              target.onDragDropped?.invoke(DragEvent(component))
+              target.onDragDropped?.invoke(DragEvent(component, posX, posY))
               (component as DynamicComponentView).isDragged = false
             }
           }

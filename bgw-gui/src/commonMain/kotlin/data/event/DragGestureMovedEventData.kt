@@ -19,4 +19,8 @@ package data.event
 
 import kotlinx.serialization.Serializable
 
-@Serializable internal class DragGestureMovedEventData : EventData()
+@Serializable
+internal class DragGestureMovedEventData(
+    val posX: Double = 0.0,
+    val posY: Double = 0.0,
+) : EventData()

@@ -32,16 +32,19 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import react.*
 import react.dom.events.KeyboardEvent
+import react.dom.events.PointerEvent
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.*
 import tools.aqua.bgw.builder.NodeBuilder
+import tools.aqua.bgw.builder.ReactConverters.currentDragPosition
 import tools.aqua.bgw.builder.ReactConverters.toDragEndedEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEnteredEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragMoveEventData
 import tools.aqua.bgw.builder.ReactConverters.toDragStartedEventData
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
+import tools.aqua.bgw.builder.ReactConverters.updateLastPointerClientPosition
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.core.DEFAULT_MENU_SCENE_BACKGROUND_OPACITY
@@ -487,8 +490,11 @@ internal val App =
           }
           JCEFEventDispatcher.dispatchEvent(event.toDragEndedEventData())
           if (lastDraggedOver != null) {
+            val (posX, posY) = currentDragPosition()
             JCEFEventDispatcher.dispatchEvent(
-                DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
+                DragGestureExitedEventData(lastDraggedOver, posX, posY).apply {
+                  this.id = event.active?.id
+                })
           }
           draggedElementRef.current?.removeAttribute("data-bgw-drag-source")
           draggedElementRef.current = null
@@ -502,11 +508,18 @@ internal val App =
           JCEFEventDispatcher.dispatchEvent(event.toDragEnteredEventData())
           if (lastDraggedOver != event.over?.id) {
             if (lastDraggedOver != null) {
+              val (posX, posY) = currentDragPosition()
               JCEFEventDispatcher.dispatchEvent(
-                  DragGestureExitedEventData(lastDraggedOver).apply { this.id = event.active?.id })
+                  DragGestureExitedEventData(lastDraggedOver, posX, posY).apply {
+                    this.id = event.active?.id
+                  })
             }
             setLastDraggedOver(event.over?.id)
           }
+        }
+
+        fun updatePointerPosition(e: PointerEvent<*>) {
+          updateLastPointerClientPosition(e.clientX, e.clientY)
         }
 
         fun globalKeyDown(e: KeyboardEvent<*>) {
@@ -529,6 +542,27 @@ internal val App =
 
             document.removeEventListener(
                 "keyup", { globalKeyUp(it.unsafeCast<KeyboardEvent<*>>()) })
+          }
+        }
+
+        useEffectWithCleanup(activeDragId) {
+          if (activeDragId == null) {
+            onCleanup {}
+            return@useEffectWithCleanup
+          }
+
+          document.addEventListener(
+              "pointermove", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
+
+          document.addEventListener(
+              "pointerdown", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
+
+          onCleanup {
+            document.removeEventListener(
+                "pointermove", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
+
+            document.removeEventListener(
+                "pointerdown", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
           }
         }
 

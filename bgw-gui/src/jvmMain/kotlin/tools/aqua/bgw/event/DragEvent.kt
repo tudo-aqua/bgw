@@ -25,9 +25,27 @@ import tools.aqua.bgw.components.ComponentView
  * Event that gets raised for drag gestures.
  *
  * @param draggedComponent Currently dragged [ComponentView].
+ * @param posX Absolute x coordinate.
+ * @param posY Absolute y coordinate.
  * @property draggedComponent Currently dragged [ComponentView].
  * @constructor Creates a [DragEvent] containing [draggedComponent].
  * @see DropEvent
  * @since 0.1
  */
-class DragEvent(val draggedComponent: ComponentView) : Event()
+class DragEvent(
+    val draggedComponent: ComponentView,
+    /**
+     * Absolute x coordinate of the mouse during the event. Can be negative or larger than the
+     * scene.
+     *
+     * @since 0.11
+     */
+    val posX: Double = 0.0,
+    /**
+     * Absolute y coordinate of the mouse during the event. Can be negative or larger than the
+     * scene.
+     *
+     * @since 0.11
+     */
+    val posY: Double = 0.0,
+) : Event()

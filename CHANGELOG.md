@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - Added `clear()` function to `GridPane` to more easily clear the entire pane.
 - Added `addAll()` and `putAll()` functions to `BidirectionalMap` to directly add collections of tuples.
 - Added `addComponents()` and `removeComponents()` functions to `Scene` to manipulate components without the need for varargs.
+- Added `posX` and `posY` to `DragEvent` to easily get the mouse position during the events.
 - Added better logging to `bgw-gui` and `bgw-net` modules.
 
 ### Changed

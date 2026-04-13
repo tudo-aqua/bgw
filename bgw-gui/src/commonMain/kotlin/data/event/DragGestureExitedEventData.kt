@@ -20,4 +20,9 @@ package data.event
 import ID
 import kotlinx.serialization.Serializable
 
-@Serializable internal class DragGestureExitedEventData(var target: ID) : EventData()
+@Serializable
+internal class DragGestureExitedEventData(
+    var target: ID,
+    val posX: Double = 0.0,
+    val posY: Double = 0.0,
+) : EventData()
