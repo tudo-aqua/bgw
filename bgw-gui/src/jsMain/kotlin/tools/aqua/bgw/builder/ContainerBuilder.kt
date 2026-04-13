@@ -30,12 +30,31 @@ import tools.aqua.bgw.elements.container.LinearLayout as ReactLinearLayout
 import tools.aqua.bgw.elements.container.Satchel as ReactSatchel
 
 internal object ContainerBuilder {
-  fun build(containerViewData: GameComponentContainerData): ReactElement<*> {
+  fun build(
+      containerViewData: GameComponentContainerData,
+      isOverlayPreview: Boolean = false
+  ): ReactElement<*> {
     return when (containerViewData) {
-      is AreaData -> ReactArea.create { data = containerViewData }
-      is LinearLayoutData -> ReactLinearLayout.create { data = containerViewData }
-      is CardStackData -> ReactCardStack.create { data = containerViewData }
-      is SatchelData -> ReactSatchel.create { data = containerViewData }
+      is AreaData ->
+          ReactArea.create {
+            data = containerViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
+      is LinearLayoutData ->
+          ReactLinearLayout.create {
+            data = containerViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
+      is CardStackData ->
+          ReactCardStack.create {
+            data = containerViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
+      is SatchelData ->
+          ReactSatchel.create {
+            data = containerViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
       else ->
           throw IllegalArgumentException(
               "Unknown component type: ${containerViewData::class.simpleName}")

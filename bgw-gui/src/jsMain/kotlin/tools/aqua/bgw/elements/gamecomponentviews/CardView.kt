@@ -34,6 +34,7 @@ import web.dom.Element
 
 internal external interface CardViewProps : Props {
   var data: CardViewData
+  var isOverlayPreview: Boolean?
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardViewData) {
@@ -42,6 +43,7 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardViewData)
 
 internal val CardView =
     FC<CardViewProps> { props ->
+      val isOverlayPreview = props.isOverlayPreview == true
       // Clean up animation CSS when animation finishes
       useAnimationCleanup(props.data)
 
@@ -49,22 +51,31 @@ internal val CardView =
       val (currentVisual, setCurrentVisual) = useState(props.data.currentVisual)
 
       val draggable =
-          useDraggable(
-              object : DraggableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDraggable
-              })
+          if (!isOverlayPreview)
+              useDraggable(
+                  object : DraggableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDraggable
+                  })
+          else null
 
       val droppable =
-          useDroppable(
-              object : DroppableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
-              })
+          if (!isOverlayPreview)
+              useDroppable(
+                  object : DroppableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDroppable
+                  })
+          else null
 
       val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
+        if (isOverlayPreview) {
+          position = Position.absolute
+          left = 0.px
+          top = 0.px
+        }
       }
 
       val elementRef = useRef<Element>(null)
@@ -95,13 +106,15 @@ internal val CardView =
       }
 
       bgwCardView {
-        id = props.data.id
+        if (!isOverlayPreview) id = props.data.id
         className = ClassName("cardView")
 
         ref = elementRef
         useEffect {
-          elementRef.current?.let { draggable.setNodeRef(it) }
-          elementRef.current?.let { droppable.setNodeRef(it) }
+          if (!isOverlayPreview) {
+            elementRef.current?.let { draggable?.setNodeRef(it) }
+            elementRef.current?.let { droppable?.setNodeRef(it) }
+          }
         }
 
         css(cssStyle)
@@ -112,16 +125,18 @@ internal val CardView =
           +VisualBuilder.build(currentVisual)
         }
 
-        if (props.data.isDraggable) {
-          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
+        if (props.data.isDraggable && !isOverlayPreview) {
+          onPointerDown = { draggable?.listeners?.onPointerDown?.invoke(it, props.data.id) }
         }
 
         applyCommonEventHandlers(props.data)
 
-        ariaDescribedBy = draggable.attributes.ariaDescribedBy
-        ariaDisabled = draggable.attributes.ariaDisabled
-        ariaPressed = draggable.attributes.ariaPressed
-        ariaRoleDescription = draggable.attributes.ariaRoleDescription
+        if (!isOverlayPreview) {
+          ariaDescribedBy = draggable?.attributes?.ariaDescribedBy
+          ariaDisabled = draggable?.attributes?.ariaDisabled
+          ariaPressed = draggable?.attributes?.ariaPressed
+          ariaRoleDescription = draggable?.attributes?.ariaRoleDescription
+        }
       }
     }
 

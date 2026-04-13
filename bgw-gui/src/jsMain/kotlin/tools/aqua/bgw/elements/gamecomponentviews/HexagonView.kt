@@ -37,6 +37,7 @@ import web.dom.Element
 
 internal external interface HexagonViewProps : Props {
   var data: HexagonViewData
+  var isOverlayPreview: Boolean?
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
@@ -47,6 +48,7 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewDa
 
 internal val HexagonView =
     FC<HexagonViewProps> { props ->
+      val isOverlayPreview = props.isOverlayPreview == true
       // Clean up animation CSS when animation finishes
       useAnimationCleanup(props.data)
 
@@ -54,18 +56,22 @@ internal val HexagonView =
       val (currentVisual, setCurrentVisual) = useState(props.data.visual)
 
       val draggable =
-          useDraggable(
-              object : DraggableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDraggable
-              })
+          if (!isOverlayPreview)
+              useDraggable(
+                  object : DraggableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDraggable
+                  })
+          else null
 
       val droppable =
-          useDroppable(
-              object : DroppableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
-              })
+          if (!isOverlayPreview)
+              useDroppable(
+                  object : DroppableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDroppable
+                  })
+          else null
 
       val elementRef = useRef<Element>(null)
 
@@ -96,15 +102,17 @@ internal val HexagonView =
 
       bgwHexagonView {
         tabIndex = 0
-        id = props.data.id
+        if (!isOverlayPreview) id = props.data.id
         className = ClassName("hexagonView")
 
         ariaDetails = "hex-${props.data.orientation}"
 
         ref = elementRef
         useEffect {
-          elementRef.current?.let { draggable.setNodeRef(it) }
-          elementRef.current?.let { droppable.setNodeRef(it) }
+          if (!isOverlayPreview) {
+            elementRef.current?.let { draggable?.setNodeRef(it) }
+            elementRef.current?.let { droppable?.setNodeRef(it) }
+          }
         }
 
         css {
@@ -125,16 +133,18 @@ internal val HexagonView =
           +VisualBuilder.build(currentVisual)
         }
 
-        if (props.data.isDraggable) {
-          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
+        if (props.data.isDraggable && !isOverlayPreview) {
+          onPointerDown = { draggable?.listeners?.onPointerDown?.invoke(it, props.data.id) }
         }
 
         applyCommonEventHandlers(props.data)
 
-        ariaDescribedBy = draggable.attributes.ariaDescribedBy
-        ariaDisabled = draggable.attributes.ariaDisabled
-        ariaPressed = draggable.attributes.ariaPressed
-        ariaRoleDescription = draggable.attributes.ariaRoleDescription
+        if (!isOverlayPreview) {
+          ariaDescribedBy = draggable?.attributes?.ariaDescribedBy
+          ariaDisabled = draggable?.attributes?.ariaDisabled
+          ariaPressed = draggable?.attributes?.ariaPressed
+          ariaRoleDescription = draggable?.attributes?.ariaRoleDescription
+        }
       }
     }
 

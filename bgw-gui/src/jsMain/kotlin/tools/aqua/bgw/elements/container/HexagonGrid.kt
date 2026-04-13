@@ -41,6 +41,7 @@ import web.dom.Element
 
 internal external interface HexagonGridProps : Props {
   var data: HexagonGridData
+  var isOverlayPreview: Boolean?
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridData) {
@@ -51,33 +52,43 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonGridDa
 
 internal val HexagonGrid =
     FC<HexagonGridProps> { props ->
+      val isOverlayPreview = props.isOverlayPreview == true
       // Clean up animation CSS when animation finishes
       useAnimationCleanup(props.data)
 
       val draggable =
-          useDraggable(
-              object : DraggableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDraggable
-              })
+          if (!isOverlayPreview)
+              useDraggable(
+                  object : DraggableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDraggable
+                  })
+          else null
 
       val droppable =
-          useDroppable(
-              object : DroppableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
-              })
+          if (!isOverlayPreview)
+              useDroppable(
+                  object : DroppableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDroppable
+                  })
+          else null
 
       val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
+        if (isOverlayPreview) {
+          position = Position.absolute
+          left = 0.px
+          top = 0.px
+        }
       }
 
       val elementRef = useRef<Element>(null)
 
       bgwHexagonGrid {
         tabIndex = 0
-        id = props.data.id
+        if (!isOverlayPreview) id = props.data.id
         className = ClassName("hexagonGrid")
 
         css(cssStyle)
@@ -85,8 +96,10 @@ internal val HexagonGrid =
 
         ref = elementRef
         useEffect {
-          elementRef.current?.let { draggable.setNodeRef(it) }
-          elementRef.current?.let { droppable.setNodeRef(it) }
+          if (!isOverlayPreview) {
+            elementRef.current?.let { draggable?.setNodeRef(it) }
+            elementRef.current?.let { droppable?.setNodeRef(it) }
+          }
         }
 
         bgwVisuals {
@@ -94,8 +107,8 @@ internal val HexagonGrid =
           +VisualBuilder.build(props.data.visual)
         }
 
-        if (props.data.isDraggable) {
-          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
+        if (props.data.isDraggable && !isOverlayPreview) {
+          onPointerDown = { draggable?.listeners?.onPointerDown?.invoke(it, props.data.id) }
         }
 
         bgwContents {
@@ -132,7 +145,7 @@ internal val HexagonGrid =
                     left = x.bgw + it.value.posX.bgw
                     top = y.bgw + it.value.posY.bgw
                   }
-                  +NodeBuilder.build(it.value)
+                  +NodeBuilder.build(it.value, isOverlayPreview)
                 }
               } else {
                 bgwHexagonContent {
@@ -160,7 +173,7 @@ internal val HexagonGrid =
                     left = x.bgw + it.value.posX.bgw
                     top = y.bgw + it.value.posY.bgw
                   }
-                  +NodeBuilder.build(it.value)
+                  +NodeBuilder.build(it.value, isOverlayPreview)
                 }
               }
             } else {
@@ -188,7 +201,7 @@ internal val HexagonGrid =
                     left = x.bgw + it.value.posX.bgw
                     top = y.bgw + it.value.posY.bgw
                   }
-                  +NodeBuilder.build(it.value)
+                  +NodeBuilder.build(it.value, isOverlayPreview)
                 }
               } else {
                 bgwHexagonContent {
@@ -216,7 +229,7 @@ internal val HexagonGrid =
                     left = x.bgw + it.value.posX.bgw
                     top = y.bgw + it.value.posY.bgw
                   }
-                  +NodeBuilder.build(it.value)
+                  +NodeBuilder.build(it.value, isOverlayPreview)
                 }
               }
             }
@@ -232,10 +245,12 @@ internal val HexagonGrid =
 
         applyCommonEventHandlers(props.data)
 
-        ariaDescribedBy = draggable.attributes.ariaDescribedBy
-        ariaDisabled = draggable.attributes.ariaDisabled
-        ariaPressed = draggable.attributes.ariaPressed
-        ariaRoleDescription = draggable.attributes.ariaRoleDescription
+        if (!isOverlayPreview) {
+          ariaDescribedBy = draggable?.attributes?.ariaDescribedBy
+          ariaDisabled = draggable?.attributes?.ariaDisabled
+          ariaPressed = draggable?.attributes?.ariaPressed
+          ariaRoleDescription = draggable?.attributes?.ariaRoleDescription
+        }
       }
     }
 
