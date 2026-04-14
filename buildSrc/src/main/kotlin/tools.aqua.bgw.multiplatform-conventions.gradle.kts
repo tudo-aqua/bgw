@@ -28,7 +28,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
 
-  id("io.gitlab.arturbosch.detekt")
+  id("dev.detekt")
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
   id("com.vanniktech.maven.publish")

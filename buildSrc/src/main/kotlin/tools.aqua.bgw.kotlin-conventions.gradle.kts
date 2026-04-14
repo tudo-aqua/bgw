@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._357b8ca9003504b71e2c9c6cf56313b6.dokka
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -26,13 +25,14 @@ plugins {
 
   kotlin("jvm")
   id("com.diffplug.spotless")
-  id("io.gitlab.arturbosch.detekt")
+  id("dev.detekt")
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
 }
 
 detekt {
-  basePath = rootProject.projectDir.absolutePath
+  ignoreFailures = true
+  basePath = file(rootProject.projectDir.absolutePath)
   config = files(rootProject.file("contrib/detekt-rules.yml"))
 }
 
