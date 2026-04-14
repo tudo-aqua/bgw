@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,7 +50,6 @@ object GameActionClassProcessor {
    * Prints Error message if only one condition is met. Classes get ignored in this case.
    *
    * @return Set of all Classes annotated with [GameActionClass] and extending [GameAction].
-   *
    * @see GameActionClass
    * @see GameActionReceiver
    * @see GameActionClassProcessor

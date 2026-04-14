@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,9 +31,7 @@ object GameActionReceiverProcessor {
    *
    * @param target Target class to be searched.
    * @param classes All registered [GameAction]s.
-   *
    * @return Map from [GameActionClass]es to dedicated receiver functions.
-   *
    * @see GameActionClass
    * @see GameActionReceiver
    * @see GameActionReceiverProcessor

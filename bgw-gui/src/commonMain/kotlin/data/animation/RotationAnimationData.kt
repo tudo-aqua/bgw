@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,5 +21,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal class RotationAnimationData : ComponentAnimationData() {
-  var byAngle = 0.0
+  var fromAngle = 0.0
+  var toAngle = 0.0
 }

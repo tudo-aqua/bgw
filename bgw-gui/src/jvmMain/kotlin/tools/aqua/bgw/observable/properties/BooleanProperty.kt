@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,8 @@ package tools.aqua.bgw.observable.properties
 /**
  * A BooleanProperty.
  *
- * @constructor Creates a [BooleanProperty] with given initial value.
- *
  * @param initialValue Initial Value. Default: `false`.
- *
+ * @constructor Creates a [BooleanProperty] with given initial value.
  * @since 0.1
  */
 open class BooleanProperty(initialValue: Boolean = false) : Property<Boolean>(initialValue)

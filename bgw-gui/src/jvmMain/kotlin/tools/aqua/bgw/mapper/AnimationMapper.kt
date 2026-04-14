@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,8 @@ internal object AnimationMapper {
     return this.apply {
       id = animation.id
       duration = animation.duration
+      isRunning = animation.isRunning
+      hasParent = animation.parentAnimation != null
     }
   }
 
@@ -37,6 +39,9 @@ internal object AnimationMapper {
       id = componentAnimation.id
       componentView = RecursiveMapper.map(componentAnimation.componentView)
       duration = componentAnimation.duration
+      isRunning = componentAnimation.isRunning
+      hasParent = componentAnimation.parentAnimation != null
+      persist = componentAnimation.persist
     }
   }
 
@@ -74,20 +79,21 @@ internal object AnimationMapper {
             fromOpacity = animation.fromOpacity
             toOpacity = animation.toOpacity
             animationType = "fade"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is MovementAnimation<*> ->
           (mapSpecific(animation) as MovementAnimationData).apply {
             byX = (animation.toX - animation.fromX).toInt()
             byY = (animation.toY - animation.fromY).toInt()
             animationType = "move"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is RotationAnimation<*> ->
           (mapSpecific(animation) as RotationAnimationData).apply {
-            byAngle = animation.toAngle - animation.fromAngle
+            fromAngle = animation.fromAngle
+            toAngle = animation.toAngle
             animationType = "rotate"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is ScaleAnimation<*> ->
           (mapSpecific(animation) as ScaleAnimationData).apply {
@@ -96,7 +102,7 @@ internal object AnimationMapper {
             toScaleX = animation.toScaleX
             toScaleY = animation.toScaleY
             animationType = "scale"
-            interpolation = animation.interpolation.name.lowercase()
+            interpolation = animation.interpolation
           }
       is FlipAnimation<*> ->
           (mapSpecific(animation) as FlipAnimationData).apply {
@@ -126,7 +132,10 @@ internal object AnimationMapper {
             animationType = "dice"
           }
       is DelayAnimation ->
-          (mapSpecific(animation) as DelayAnimationData).apply { duration = animation.duration }
+          (mapSpecific(animation) as DelayAnimationData).apply {
+            duration = animation.duration
+            animationType = "delay"
+          }
       else ->
           throw IllegalArgumentException("Unknown animation type: ${animation::class.simpleName}")
     }

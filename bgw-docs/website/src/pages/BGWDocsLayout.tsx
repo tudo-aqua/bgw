@@ -39,6 +39,7 @@ import Packages from "./docs/Packages";
 import { guideStructure, layoutMap } from "@/lib/utils";
 import { set } from "date-fns";
 import Main from "./docs/Main";
+import Imprint from "./docs/Imprint";
 import { Button } from "@/components/ui/button";
 import SearchField from "@/components/SearchField";
 
@@ -71,6 +72,8 @@ function BGWDocsLayout() {
 
     if (location.pathname === "/" || location.pathname.trim() === "") {
       setCurrentPage("main");
+    } else if (location.pathname === "/imprint") {
+      setCurrentPage("imprint");
     } else if (location.pathname.startsWith("/docs")) {
       let path = location.pathname.replace("/docs/", "");
 
@@ -177,13 +180,13 @@ function BGWDocsLayout() {
                 asChild
                 className="pointer-events-none"
               >
-                {currentPage === "main" ? (
+                {currentPage === "main" || currentPage === "imprint" ? (
                   <a href="#" className="flex items-center gap-4">
                     <div className="flex items-center justify-center rounded-lg aspect-square size-8 bg-sidebar-accent text-sidebar-accent-foreground">
                       <img src="/bgw/logo.svg" className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v0.10</span>
+                      <span className="font-semibold">BGW - v0.11</span>
                       <span className="">Documentation</span>
                     </div>
                   </a>
@@ -193,7 +196,7 @@ function BGWDocsLayout() {
                       <i className="text-lg material-symbols-rounded">topic</i>
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v0.10</span>
+                      <span className="font-semibold">BGW - v0.11</span>
                       <span className="">Reference</span>
                     </div>
                   </a>
@@ -203,7 +206,7 @@ function BGWDocsLayout() {
                       <i className="text-lg material-symbols-rounded">book_2</i>
                     </div>
                     <div className="flex flex-col gap-1 leading-none">
-                      <span className="font-semibold">BGW - v0.10</span>
+                      <span className="font-semibold">BGW - v0.11</span>
                       <span className="">Guides</span>
                     </div>
                   </a>
@@ -217,7 +220,7 @@ function BGWDocsLayout() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <Link to="/">
-                  {currentPage === "main" ? (
+                  {currentPage === "main" || currentPage === "imprint" ? (
                     <SidebarMenuButton className="h-9 indent-1 text-sidebar-accent-foreground bg-sidebar-accent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                       <i className="text-base material-symbols-rounded">home</i>
                       <span className="pl-1 font-medium">Home</span>
@@ -668,7 +671,7 @@ function BGWDocsLayout() {
                 collapsible="none"
                 className="w-full bg-background max-2xl:hidden"
               >
-                {(currentPage === "docs" || currentPage === "main") &&
+                {(currentPage === "docs" || currentPage === "main" || currentPage === "imprint") &&
                   buildCurrentSidebar(location)}
                 {currentPage === "guides" && buildGuidesSidebar()}
               </Sidebar>
@@ -679,7 +682,7 @@ function BGWDocsLayout() {
                 open={sidebarOpen}
                 onOpenChange={(isOpen) => setSidebarOpen(!sidebarOpen)}
               >
-                {(currentPage === "docs" || currentPage === "main") &&
+                {(currentPage === "docs" || currentPage === "main" || currentPage === "imprint") &&
                   buildCurrentSidebar(location)}
                 {currentPage === "guides" && buildGuidesSidebar()}
               </Sidebar>
@@ -690,6 +693,7 @@ function BGWDocsLayout() {
               ref={scrollRef}
             >
               {currentPage === "main" && <Main></Main>}
+              {currentPage === "imprint" && <Imprint></Imprint>}
               {currentPage === "docs" && currentComponent !== null && (
                 <Component location={location} allSamples={allSamples} />
               )}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,17 @@ import tools.aqua.bgw.event.MouseButtonType
 import tools.aqua.bgw.event.WheelDirection
 
 internal object ReactConverters {
+  private var lastPointerClientPosition: Pair<Double, Double>? = null
+
+  fun updateLastPointerClientPosition(clientX: Double, clientY: Double) {
+    lastPointerClientPosition = Pair(clientX, clientY)
+  }
+
+  fun currentDragPosition(): Pair<Double, Double> {
+    val (clientX, clientY) = lastPointerClientPosition ?: Pair(0.0, 0.0)
+    return mousePositionToScenePosition(clientX, clientY)
+  }
+
   fun getSceneOffset(): Pair<Pair<Double, Double>, Pair<Double, Double>> {
     val menuScene = document.getElementById("menuScene")
     val gameScene = document.getElementById("boardGameScene")
@@ -65,6 +76,7 @@ internal object ReactConverters {
 
     return Pair(absoluteX, absoluteY)
   }
+
   fun ReactMouseEvent<*, *>.toMouseEnteredData(targetID: ID?): MouseEnteredEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MouseEnteredEventData(posX, posY).apply { this.id = targetID }
@@ -150,31 +162,36 @@ internal object ReactConverters {
   fun DragEndEvent.toDragEventData(): EventData {
     val droppedOn = over?.id
     val elementDragged = active?.id
+    val (posX, posY) = currentDragPosition()
 
-    return DragDroppedEventData(droppedOn ?: "").apply { this.id = elementDragged }
+    return DragDroppedEventData(droppedOn ?: "", posX, posY).apply { this.id = elementDragged }
   }
 
   fun DragEndEvent.toDragEndedEventData(): EventData {
     val elementDragged = active?.id
-    return DragGestureEndedEventData(over?.id).apply { this.id = elementDragged }
+    val (posX, posY) = currentDragPosition()
+    return DragGestureEndedEventData(over?.id, posX, posY).apply { this.id = elementDragged }
   }
 
   fun DragStartEvent.toDragStartedEventData(): EventData {
     val element = active?.id
-    return DragGestureStartedEventData().apply { this.id = element }
+    val (posX, posY) = currentDragPosition()
+    return DragGestureStartedEventData(posX, posY).apply { this.id = element }
   }
 
   fun DragMultiEvent.toDragMoveEventData(): EventData {
-    return DragGestureMovedEventData().apply { this.id = active?.id }
+    val (posX, posY) = currentDragPosition()
+    return DragGestureMovedEventData(posX, posY).apply { this.id = active?.id }
   }
 
   fun DragMultiEvent.toDragEnteredEventData(): EventData {
+    val (posX, posY) = currentDragPosition()
     val element = over?.id
     if (element != null) {
-      return DragGestureEnteredEventData(element).apply { this.id = active?.id }
+      return DragGestureEnteredEventData(element, posX, posY).apply { this.id = active?.id }
     }
 
-    return DragGestureEnteredEventData("").apply { this.id = active?.id }
+    return DragGestureEnteredEventData("", posX, posY).apply { this.id = active?.id }
   }
 
   fun WheelEvent<*>.toScrollEventData(targetID: ID?, delta: Double): ScrollEventData {

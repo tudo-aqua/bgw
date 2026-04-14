@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package tools.aqua.bgw.event
+package tools.aqua.bgw.builder
 
-import data.event.AnimationFinishedEventData
-import data.event.EventData
+import tools.aqua.bgw.core.Frontend
 
-internal interface EventDispatcher {
-  fun dispatchEvent(event: AnimationFinishedEventData)
-  fun dispatchEvent(event: EventData)
+internal object ApplicationBuilder {
+  fun build() {
+    Frontend.backgroundProperty.guiListener = { _, _ -> Frontend.updateScene() }
+  }
 }

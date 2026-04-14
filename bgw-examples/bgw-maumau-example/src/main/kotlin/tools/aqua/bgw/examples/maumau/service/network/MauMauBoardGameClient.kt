@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -102,6 +102,7 @@ class MauMauBoardGameClient(
   override fun onPlayerLeft(notification: PlayerLeftNotification) {
     BoardGameApplication.runOnGUIThread { logicController.view.onUserLeft(notification.sender) }
   }
+
   // endregion
 
   // region Game messages

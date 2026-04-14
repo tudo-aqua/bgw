@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -110,6 +110,7 @@ class NetworkService(private val logicController: LogicController) {
       false
     }
   }
+
   // endregion
 
   // region Send actions

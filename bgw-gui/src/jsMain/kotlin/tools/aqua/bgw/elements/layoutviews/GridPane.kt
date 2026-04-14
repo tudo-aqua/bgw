@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,6 +51,9 @@ internal inline val bgwGridElement: IntrinsicType<HTMLAttributes<Element>>
 
 internal val ReactGridPane =
     FC<GridPaneProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {
@@ -103,8 +106,16 @@ internal val ReactGridPane =
         bgwContents {
           className = ClassName("components")
           css {
-            gridTemplateColumns = repeat(props.data.columns, minContent())
-            gridTemplateRows = repeat(props.data.rows, minContent())
+            //            gridTemplateColumns = repeat(props.data.columns, minContent())
+            //            gridTemplateRows = repeat(props.data.rows, minContent())
+            gridTemplateColumns =
+                props.data.columnWidths
+                    .joinToString(" ") { if (it == -1.0) "min-content" else it.bgw.toString() }
+                    .unsafeCast<GridTemplateColumns>()
+            gridTemplateRows =
+                props.data.rowHeights
+                    .joinToString(" ") { if (it == -1.0) "min-content" else it.bgw.toString() }
+                    .unsafeCast<GridTemplateRows>()
             display = Display.grid
             width = fit()
             height = fit()
@@ -116,6 +127,21 @@ internal val ReactGridPane =
               css {
                 gridColumn = integer(gridElementData.column + 1)
                 gridRow = integer(gridElementData.row + 1)
+                display = Display.flex
+                justifyContent =
+                    when (gridElementData.alignment.first) {
+                      "left" -> JustifyContent.flexStart
+                      "center" -> JustifyContent.center
+                      "right" -> JustifyContent.flexEnd
+                      else -> JustifyContent.center
+                    }
+                alignItems =
+                    when (gridElementData.alignment.second) {
+                      "top" -> AlignItems.flexStart
+                      "center" -> AlignItems.center
+                      "bottom" -> AlignItems.flexEnd
+                      else -> AlignItems.center
+                    }
                 justifySelf =
                     when (gridElementData.alignment.first) {
                       "left" -> JustifySelf.flexStart
@@ -131,11 +157,14 @@ internal val ReactGridPane =
                       else -> AlignSelf.center
                     }
                 position = Position.relative
-                left = gridElementData.component?.posX?.bgw
-                top = gridElementData.component?.posY?.bgw
+                width = if (gridElementData.width == -1.0) fit() else gridElementData.width.bgw
+                height = if (gridElementData.height == -1.0) fit() else gridElementData.height.bgw
+                maxWidth = if (gridElementData.width == -1.0) fit() else gridElementData.width.bgw
+                maxHeight =
+                    if (gridElementData.height == -1.0) fit() else gridElementData.height.bgw
               }
 
-              gridElementData.component?.let { +build(it) }
+              gridElementData.component?.let { +build(it.apply { isGridCell = true }) }
             }
           }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,18 +29,15 @@ import tools.aqua.bgw.visual.Visual
  *
  * Only StaticViews are allowed in [MenuScene]s.
  *
- * @constructor Creates a [StaticComponentView].
- *
  * @param T Generic [ComponentView].
  * @param posX The X coordinate for this [StaticComponentView] relative to its container.
  * @param posY The Y coordinate for this [StaticComponentView] relative to its container.
  * @param width Width for this [StaticComponentView].
  * @param height Height for this [StaticComponentView].
  * @param visual Visual for this [StaticComponentView].
- *
+ * @constructor Creates a [StaticComponentView].
  * @see BoardGameScene
  * @see MenuScene
- *
  * @since 0.1
  */
 abstract class StaticComponentView<T : ComponentView>

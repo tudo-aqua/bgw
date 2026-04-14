@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,8 +99,7 @@ class LogicController(private val view: Refreshable) {
    * Navigates current piece in given direction if possible.
    *
    * @param keyCode Pressed key. Has to be an Arrow key or an [IllegalArgumentException] will be
-   * thrown.
-   *
+   *   thrown.
    * @throws IllegalArgumentException If [keyCode] is not an arrow key.
    */
   fun navigate(keyCode: KeyCode) {

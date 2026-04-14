@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,23 +34,19 @@ import tools.aqua.bgw.observable.properties.StringProperty
  * the sub-image size. If width or height is passed as -1, the remaining image from offsetX/offsetY
  * will be loaded.
  *
- * @constructor Loads an [ImageVisual] from a path in resources.
- *
  * @param path Location of image file relative to "resources".
  * @property width Width of sub-image. Pass -1 to use full width. Default: -1.
  * @property height Height of sub-image. Pass -1 to use full height. Default: -1.
  * @property offsetX Left bound of sub-image. Default: 0.
  * @property offsetY Top bound of sub-image. Default: 0.
  * @param rotation Rotation of the image in degrees. Default: 0.
- *
+ * @constructor Loads an [ImageVisual] from a path in resources.
  * @throws IllegalArgumentException If [path] is not a valid path or empty or if [path] was not
- * found in resources.
- *
+ *   found in resources.
  * @see SingleLayerVisual
  * @see CompoundVisual
  * @see TextVisual
  * @see ColorVisual
- *
  * @since 0.10
  */
 open class ImageVisual(
@@ -69,9 +65,11 @@ open class ImageVisual(
 
     require(path.isNotEmpty() && path.isNotBlank()) { "ImageVisual path must not be empty." }
 
-    require(this::class.java.classLoader.getResourceAsStream(path) != null) {
-      "ImageVisual path '$path' was not found in resources (on Linux and MacOS, file names are case-sensitive)."
-    }
+    require(
+        path.startsWith("data:image/png;base64,") ||
+            this::class.java.classLoader.getResourceAsStream(path) != null) {
+          "ImageVisual path '$path' was not found in resources (on Linux and MacOS, file names are case-sensitive)."
+        }
   }
 
   internal val pathProperty = StringProperty(path)
@@ -95,7 +93,6 @@ open class ImageVisual(
    * @see CompoundVisual
    * @see TextVisual
    * @see ColorVisual
-   *
    * @since 0.1
    */
   @Deprecated(

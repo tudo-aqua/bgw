@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,17 +31,14 @@ import tools.aqua.bgw.visual.Visual
  *
  * The Visual at the [currentSide] value is used to visualize the dice.
  *
- * @constructor Creates a [DiceView] with given [Visual]s.
- *
  * @param posX Horizontal coordinate for this [DiceView]. Default: 0.
  * @param posY Vertical coordinate for this [DiceView]. Default: 0.
  * @param width Width for this [DiceView]. Default: [DEFAULT_DICE_WIDTH].
  * @param height Height for this [DiceView]. Default: [DEFAULT_DICE_HEIGHT].
  * @param visuals List of visuals to represent the sides of the die.
- *
+ * @constructor Creates a [DiceView] with given [Visual]s.
  * @see Visual
  * @see GameComponentView
- *
  * @since 0.1
  */
 open class DiceView(
@@ -62,7 +59,7 @@ open class DiceView(
    * Current side that is displayed, 0-based.
    *
    * @throws IllegalArgumentException If index is greater than the amount of visuals stored in
-   * [visuals] or negative.
+   *   [visuals] or negative.
    */
   var currentSide: Int = 0
     set(value) {

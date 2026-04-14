@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +49,7 @@ import tools.aqua.bgw.net.common.response.*
  * @property host The server ip or hostname.
  * @param secret The server secret.
  * @param networkLoggingBehavior The desired network logging verbosity. Default:
- * [NetworkLogging.NO_LOGGING].
+ *   [NetworkLogging.NO_LOGGING].
  */
 @Suppress("LeakingThis")
 open class BoardGameClient
@@ -81,25 +81,29 @@ protected constructor(
   /** Mutex for [msgQueue] modifications. */
   private val latch: Any = Any()
 
-  /** NetworkLogger instance for traffic logging. */
-  private val logger: NetworkLogger = NetworkLogger(networkLoggingBehavior)
-
   /** Returns the current state of connection. */
   val isOpen: Boolean
     get() = wsClient.isOpen
 
   init {
-    logger.info("Initializing BoardGameClient on host $host.")
+    Logger.LOGLEVEL =
+        when (networkLoggingBehavior) {
+          NetworkLogging.NO_LOGGING -> LogType.SILENT
+          NetworkLogging.ERRORS -> LogType.WARN
+          NetworkLogging.INFO -> LogType.INFO
+          NetworkLogging.VERBOSE -> LogType.DEBUG
+        }
+
+    Logger.info("Initializing BoardGameClient on host $host.")
 
     wsClient =
         BGWWebSocketClient(
             uri = URI.create("ws://$host"),
             playerName = playerName,
             secret = secret,
-            callback = this,
-            logger = logger)
+            callback = this)
 
-    logger.debug("Initializing annotated receiver functions.")
+    Logger.debug("Initializing annotated receiver functions.")
 
     initializationJob =
         wsClient.scope.launch {
@@ -110,11 +114,11 @@ protected constructor(
           gameActionClasses = annotatedClasses
           gameActionReceivers = annotatedFunctions
 
-          logger.debug("Found the following GameActionClasses:")
-          annotatedClasses.forEach { logger.debug(it.name) }
+          Logger.debug("Found the following GameActionClasses:")
+          annotatedClasses.forEach { Logger.debug(it.name) }
 
-          logger.debug("Found the following GameActionReceivers:")
-          annotatedFunctions.forEach { logger.debug(it.value.name) }
+          Logger.debug("Found the following GameActionReceivers:")
+          annotatedFunctions.forEach { Logger.debug(it.value.name) }
         }
   }
 
@@ -123,23 +127,22 @@ protected constructor(
    * Connects to the remote server, blocking.
    *
    * @return Returns whether connection could be established.
-   *
    * @throws IllegalStateException If client is already connected to a host.
    */
   fun connect(): Boolean =
       try {
         checkConnected(false)
 
-        logger.info("Connecting to ${wsClient.uri}.")
+        Logger.info("Connecting to ${wsClient.uri}.")
 
         val result = wsClient.connectBlocking()
 
-        logger.debug(
+        Logger.debug(
             "Connection call succeeded without interruption ${if(result) "and" else "but"} returned $result.")
 
         result
       } catch (e: InterruptedException) {
-        logger.error(
+        Logger.error(
             "Attempt to connect to ${wsClient.uri} failed with an InterruptedException.", e)
         false
       }
@@ -153,15 +156,16 @@ protected constructor(
     try {
       checkConnected(true)
 
-      logger.info("Disconnecting.")
+      Logger.info("Disconnecting.")
 
       wsClient.closeBlocking()
 
-      logger.debug("Disconnection call succeeded without interruption.")
+      Logger.debug("Disconnection call succeeded without interruption.")
     } catch (e: InterruptedException) {
-      logger.error("Attempt to disconnect failed with an InterruptedException.", e)
+      Logger.error("Attempt to disconnect failed with an InterruptedException.", e)
     }
   }
+
   // endregion
 
   // region Create / Join / Leave game
@@ -171,7 +175,6 @@ protected constructor(
    * @param gameID ID of the current game to be used.
    * @param sessionID Unique id for the new session to be created on the server.
    * @param greetingMessage Greeting message to be broadcast to all players joining this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, sessionID: String, greetingMessage: String) {
@@ -179,7 +182,7 @@ protected constructor(
 
     require(sessionID.isNotBlank()) { "Session ID was blank, did not create game." }
 
-    logger.info(
+    Logger.info(
         "Requesting creation of new game with ID \"$gameID\", " +
             "sessionID \"$sessionID\" and greeting message \"$greetingMessage\".")
 
@@ -192,13 +195,12 @@ protected constructor(
    *
    * @param gameID ID of the current game to be used.
    * @param greetingMessage Greeting message to be broadcast to all players joining this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun createGame(gameID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info(
+    Logger.info(
         "Requesting creation of new game with ID \"$gameID\", " +
             "auto sessionID and greeting message \"$greetingMessage\".")
 
@@ -210,13 +212,12 @@ protected constructor(
    *
    * @param sessionID Unique id for the existing session to join to.#
    * @param greetingMessage Greeting message to be broadcast to all other players in this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun joinGame(sessionID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info(
+    Logger.info(
         "Requesting joining to sessionID $sessionID. Greeting message is: $greetingMessage.")
     wsClient.sendRequest(JoinGameMessage(sessionID, greetingMessage))
   }
@@ -227,13 +228,12 @@ protected constructor(
    *
    * @param sessionID Unique id for the existing session to join to.#
    * @param greetingMessage Greeting message to be broadcast to all other players in this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun spectateGame(sessionID: String, greetingMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info(
+    Logger.info(
         "Requesting joining to sessionID $sessionID as spectator. Greeting message is: $greetingMessage.")
     wsClient.sendRequest(SpectatorJoinGameMessage(sessionID, greetingMessage))
   }
@@ -242,15 +242,15 @@ protected constructor(
    * Leaves the current game session by sending a [LeaveGameMessage].
    *
    * @param goodbyeMessage Goodbye message to be broadcast to all other players in this session.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun leaveGame(goodbyeMessage: String) {
     checkConnected(expectedState = true)
 
-    logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
+    Logger.info("Leaving game. Goodbye message is: $goodbyeMessage.")
     wsClient.sendRequest(LeaveGameMessage(goodbyeMessage))
   }
+
   // endregion
 
   // region Game messages
@@ -258,15 +258,15 @@ protected constructor(
    * Sends a [GameActionMessage] to all connected players.
    *
    * @param payload The [GameActionMessage] payload.
-   *
    * @throws IllegalStateException If client is not connected to a host.
    */
   fun sendGameActionMessage(payload: GameAction) {
     checkConnected(expectedState = true)
 
-    logger.info("Sending GameActionMessage ${payload.javaClass.name}")
+    Logger.info("Sending GameActionMessage ${payload.javaClass.name}")
     wsClient.sendGameActionMessage(payload)
   }
+
   // endregion
 
   // region Interface functions
@@ -289,7 +289,7 @@ protected constructor(
    * @throws Throwable Throws [throwable].
    */
   open fun onError(throwable: Throwable) {
-    throw throwable
+    Logger.error(throwable)
   }
 
   /**
@@ -365,10 +365,11 @@ protected constructor(
    * @param sender The opponents identification.
    */
   open fun onGameActionReceived(message: GameAction, sender: String) {
-    logger.err(
+    Logger.error(
         "An incoming GameAction has been handled by the fallback function. Override onGameActionReceived or create" +
             " dedicated handler for message type ${message.javaClass.canonicalName}.")
   }
+
   // endregion
 
   // region Helper
@@ -382,7 +383,7 @@ protected constructor(
 
     wsClient.scope.launch {
       if (!initializationJob.isCompleted) {
-        logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
+        Logger.debug("Initialization of annotated receivers has not finished yet. Joining thread.")
         initializationJob.join()
       }
 
@@ -409,7 +410,7 @@ protected constructor(
         } catch (_: JsonMappingException) {}
       }
 
-      logger.err(
+      Logger.error(
           "Received GameActionMessage $message but no target class was Found. " +
               "Create class annotated @GameActionClass extending GameAction in your classpath.")
 
@@ -438,7 +439,6 @@ protected constructor(
    * Checks for connected state.
    *
    * @param expectedState The expected connection state.
-   *
    * @throws IllegalStateException If BoardGameClient is not connected.
    */
   private fun checkConnected(expectedState: Boolean) {

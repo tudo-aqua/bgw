@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,55 +15,62 @@
  * limitations under the License.
  */
 
-import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
-import tools.aqua.developer
-import tools.aqua.github
-import tools.aqua.license
 
 plugins {
   id("tools.aqua.bgw.base-conventions")
-
-  `maven-publish`
-  signing
+  id("com.vanniktech.maven.publish")
 }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      from(components["java"])
+mavenPublishing {
+  publishToMavenCentral()
+  signAllPublications()
 
-      pom {
-        name.set(mavenMetadata.name)
-        description.set(mavenMetadata.description)
+  pom {
+    name.set(mavenMetadata.name)
+    description.set(mavenMetadata.description)
 
-        val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
+    val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
 
-        developers { globalMetadata.developers.get().forEach { developer(it.name, it.email) } }
+    url.set(
+        "https://github.com/${globalMetadata.githubProject.get().organization}/${globalMetadata.githubProject.get().project}")
 
-        globalMetadata.githubProject.get().let {
-          github(it.organization, it.project, it.mainBranch)
+    licenses {
+      globalMetadata.licenses.get().forEach { licenseData ->
+        license {
+          name.set(licenseData.name)
+          url.set(licenseData.url)
         }
-
-        licenses { globalMetadata.licenses.get().forEach { license(it.name, it.url) } }
       }
     }
-  }
-}
 
-signing {
-  setRequired { gradle.taskGraph.allTasks.any { it.group == PUBLISH_TASK_GROUP } }
-  useGpgCmd()
-  sign(publishing.publications["maven"])
+    developers {
+      globalMetadata.developers.get().forEach { dev ->
+        developer {
+          name.set(dev.name)
+          email.set(dev.email)
+        }
+      }
+    }
+
+    scm {
+      val github = globalMetadata.githubProject.get()
+      connection.set("scm:git:git://github.com/${github.organization}/${github.project}.git")
+      developerConnection.set(
+          "scm:git:ssh://git@github.com/${github.organization}/${github.project}.git")
+      url.set(
+          "https://github.com/${github.organization}/${github.project}/tree/${github.mainBranch}")
+    }
+  }
 }
 
 tasks.named("publish") {
   doFirst {
     println("=============================================================================")
-    println("Published bgw: ${rootProject.version}")
+    println("Published ${project.name}: ${rootProject.version}")
     println("=============================================================================")
   }
 }

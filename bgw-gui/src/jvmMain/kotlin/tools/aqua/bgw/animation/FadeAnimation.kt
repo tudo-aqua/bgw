@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,20 +28,19 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * Fades given [ComponentView]'s opacity i.e. alpha channel.
  *
- * @constructor Creates a [FadeAnimation] for the given [ComponentView].
- *
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate.
  * @param fromOpacity Initial opacity. Default: Current [ComponentView.opacity].
  * @param toOpacity Resulting opacity. Default: Current [ComponentView.opacity].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  * @param interpolation [AnimationInterpolation] to use for the animation. Default:
- * [AnimationInterpolation.SMOOTH].
- *
+ *   [AnimationInterpolation.SMOOTH].
+ *     @param persist Whether the animation will be persisted and changed the [componentView]'s
+ *       state. If set to `false`, it will reset on completion. Default: `true`.
+ * @constructor Creates a [FadeAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
  * @see ComponentView
- *
  * @since 0.3
  */
 class FadeAnimation<T : ComponentView>(
@@ -53,11 +52,11 @@ class FadeAnimation<T : ComponentView>(
      * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
      *
      * @see AnimationInterpolation
-     *
      * @since 0.10
      */
-    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
-) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+    persist: Boolean = true
+) : ComponentAnimation<T>(componentView = componentView, duration = duration, persist = persist) {
   /** Initial opacity. */
   val fromOpacity: Double = fromOpacity.toDouble()
 

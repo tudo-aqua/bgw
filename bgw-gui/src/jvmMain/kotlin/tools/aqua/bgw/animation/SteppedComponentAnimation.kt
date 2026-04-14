@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,16 +28,19 @@ import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
  * @param gameComponentView [GameComponentView] to animate.
  * @param duration Duration in milliseconds.
  * @param speed Count of changes to be performed in [duration].
- *
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
  * @see ComponentAnimation
  * @see Animation
  * @see GameComponentView
- *
  * @since 0.2
  */
 sealed class SteppedComponentAnimation<T : GameComponentView>(
     gameComponentView: T,
     duration: Int,
     /** Count of changes to be performed in [duration]. */
-    val speed: Int
-) : ComponentAnimation<T>(componentView = gameComponentView, duration = duration)
+    val speed: Int,
+    persist: Boolean = true
+) :
+    ComponentAnimation<T>(
+        componentView = gameComponentView, duration = duration, persist = persist)

@@ -1041,9 +1041,10 @@ function Component({
       inheritedFunc.details.forEach((d: any) => {
         if (d.info.signature === func.signature && d.parameters) {
           d.parameters.forEach((p: any) => {
-            parameters.find((param) => {
+            let t = parameters.find((param) => {
               return param.name === p.name;
-            }).doc = p.doc;
+            })
+            if(t && t.doc) t.doc = p.doc;
           });
         }
       });

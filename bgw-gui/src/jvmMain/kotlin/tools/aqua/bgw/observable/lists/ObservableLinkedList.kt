@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,14 +20,11 @@ package tools.aqua.bgw.observable.lists
 /**
  * An observable [MutableList].
  *
- * @constructor Creates an [ObservableLinkedList] with given initial elements.
- *
  * @param T Type of [List] elements.
  * @param elements Initial elements in this [ObservableList].
- *
+ * @constructor Creates an [ObservableLinkedList] with given initial elements.
  * @see ObservableList
  * @see ObservableArrayList
- *
  * @since 0.1
  */
 open class ObservableLinkedList<T>(elements: Collection<T> = emptyList()) : ObservableList<T>() {

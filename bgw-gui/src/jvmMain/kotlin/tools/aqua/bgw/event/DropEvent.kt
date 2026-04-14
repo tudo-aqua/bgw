@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,15 +26,12 @@ import tools.aqua.bgw.components.ComponentView
  *
  * Receiver is the dragged component.
  *
- * @constructor Creates a [DropEvent] containing [draggedComponent] and [dropTarget].
- *
  * @param draggedComponent Currently dragged [ComponentView].
  * @param dropTarget [ComponentView] that is a possible drop target below the currently dragged
- * component.
+ *   component.
  * @property draggedComponent Currently dragged [ComponentView].
- *
+ * @constructor Creates a [DropEvent] containing [draggedComponent] and [dropTarget].
  * @see DragEvent
- *
  * @since 0.1
  */
 class DropEvent(

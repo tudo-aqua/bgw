@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,17 @@
 package tools.aqua.bgw.core
 
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.AnimationPropertyCache
+import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.animation.ComponentAnimation
+import tools.aqua.bgw.animation.FadeAnimation
+import tools.aqua.bgw.animation.FlipAnimation
+import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.animation.ParallelAnimation
+import tools.aqua.bgw.animation.RotationAnimation
+import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
+import tools.aqua.bgw.animation.SteppedComponentAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
@@ -29,6 +38,7 @@ import tools.aqua.bgw.observable.lists.ObservableArrayList
 import tools.aqua.bgw.observable.lists.ObservableList
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -38,10 +48,8 @@ import tools.aqua.bgw.visual.Visual
  * @param width [Scene] width in virtual coordinates.
  * @param height [Scene] height in virtual coordinates.
  * @param background [Scene] [background] [Visual].
- *
  * @see BoardGameScene
  * @see MenuScene
- *
  * @since 0.1
  */
 sealed class Scene<T : ComponentView>(width: Number, height: Number, background: Visual) {
@@ -104,7 +112,18 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   internal val opacityProperty = DoubleProperty(1.0)
 
   /** Opacity of the [background] of this [Scene]. */
+  @Deprecated(
+      "The property has been renamed as of BGW 0.11.", ReplaceWith("this.backgroundOpacity"))
   var opacity: Double
+    get() = opacityProperty.value
+    set(value) {
+      require(value in 0.0..1.0) { "Value must be between 0 and 1 inclusive." }
+
+      opacityProperty.value = value
+    }
+
+  /** Opacity of the [background] of this [Scene]. */
+  var backgroundOpacity: Double
     get() = opacityProperty.value
     set(value) {
       require(value in 0.0..1.0) { "Value must be between 0 and 1 inclusive." }
@@ -167,12 +186,36 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
+   * Adds all given [ComponentView]s to the root node and [rootComponents] list.
+   *
+   * @param components Components to add.
+   * @since 0.11
+   */
+  fun addComponents(elements: Collection<T>) {
+    rootComponents.addAll(
+        elements.onEach {
+          check(it.parent == null) { "Component $it is already contained in another container." }
+          it.parent = rootNode
+        })
+  }
+
+  /**
    * Removes all given [ComponentView]s from the root node and [rootComponents] list.
    *
    * @param components Components to remove.
    */
   fun removeComponents(vararg components: T) {
     rootComponents.removeAll(components.toList().onEach { it.parent = null })
+  }
+
+  /**
+   * Removes all given [ComponentView]s from the root node and [rootComponents] list.
+   *
+   * @param components Components to remove.
+   * @since 0.11
+   */
+  fun removeComponents(elements: Collection<T>) {
+    rootComponents.removeAll(elements.onEach { it.parent = null })
   }
 
   /** Removes all [ComponentView]s from the root node and [rootComponents] list. */
@@ -183,29 +226,112 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
   /**
    * Plays given [Animation] non-blocking. This means that any subsequent updates may be executed
-   * before the [Animation] actually starts playing. [ComponentView]s that are part of the
-   * [Animation] will reset their state immediately to the state before the [Animation] was played,
-   * once the [Animation] is finished.
-   *
-   * The [Animation] only animates the [ComponentView] visually and does not update its state. The
-   * Component will reset its visual state on next refresh if the state is not set in onFinished,
-   * which is the suggested way of usage.
+   * before the [Animation] actually starts playing.
    *
    * @param animation [Animation] to play.
+   * @return Boolean whether the animation successfully started playing.
    */
-  fun playAnimation(animation: Animation) {
+  fun playAnimation(animation: Animation): Boolean {
+    // Check if this is a top-level singular ComponentAnimation trying to animate an already
+    // animating component
+    if (animation is ComponentAnimation<*> && animation.componentView.componentAnimating) {
+      Logger.warning(
+          "The ComponentView ${animation.componentView} is already animating. " +
+              "Please wait until the animation is over or chain animations together using ParallelAnimations or SequentialAnimations.")
+      return false
+    }
+
+    // For Sequential/Parallel animations, collect all components and check if any are already
+    // animating
+    if (animation is SequentialAnimation || animation is ParallelAnimation) {
+      val allComponents = collectComponentsFromAnimation(animation)
+      val alreadyAnimating = allComponents.filter { it.componentAnimating }
+
+      if (alreadyAnimating.isNotEmpty()) {
+        Logger.warning(
+            "One or more components in the animation are already animating: ${alreadyAnimating.joinToString(", ")}. " +
+                "Please wait until the animations are over or chain animations together using ParallelAnimations or SequentialAnimations.")
+        return false
+      }
+    }
+
+    // Cache initial state for ALL components in this animation tree BEFORE starting any animations
+    val allComponents = collectComponentsFromAnimation(animation)
+    for (component in allComponents) {
+      // Only cache if not already cached (first animation on this component)
+      if (!Frontend.animationCache.containsKey(component.id)) {
+        cacheInitialComponentState(component)
+      }
+    }
+
     addAnimationRecursively(animation)
     Frontend.sendAnimation(animation)
+    return true
   }
 
-  private fun addAnimationRecursively(animation: Animation) {
+  /**
+   * Recursively collects all ComponentViews from an animation tree. This is used to check if any
+   * components are already animating before starting a new animation.
+   */
+  private fun collectComponentsFromAnimation(animation: Animation): Set<ComponentView> {
+    val components = mutableSetOf<ComponentView>()
+
+    when (animation) {
+      is ComponentAnimation<*> -> components.add(animation.componentView)
+      is SequentialAnimation -> {
+        animation.animations.forEach { components.addAll(collectComponentsFromAnimation(it)) }
+      }
+      is ParallelAnimation -> {
+        animation.animations.forEach { components.addAll(collectComponentsFromAnimation(it)) }
+      }
+    }
+
+    return components
+  }
+
+  /**
+   * Caches the initial state of a component when animations start. This ensures all animations
+   * (Sequential/Parallel) use the same initial state.
+   */
+  private fun cacheInitialComponentState(componentView: ComponentView) {
+    Frontend.animationCache[componentView.id] =
+        AnimationPropertyCache(
+            posX = componentView.posX.toInt(),
+            posY = componentView.posY.toInt(),
+            scaleX = componentView.scaleX,
+            scaleY = componentView.scaleY,
+            rotation = componentView.rotation,
+            opacity = componentView.opacity,
+            visual = componentView.visual)
+  }
+
+  private fun addAnimationRecursively(animation: Animation, parent: Animation? = null) {
+    animation.parentAnimation = parent
+
+    if (animation is ComponentAnimation<*>) {
+      val animationType =
+          when (animation) {
+            is MovementAnimation<*> -> AnimationType.MOVEMENT
+            is ScaleAnimation<*> -> AnimationType.SCALE
+            is RotationAnimation<*> -> AnimationType.ROTATION
+            is FadeAnimation<*> -> AnimationType.FADE
+            is FlipAnimation<*> -> AnimationType.FLIP
+            is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+          }
+
+      animation.componentView.animationTypes.add(animationType)
+      animation.componentView.componentAnimating = true
+    }
+
+    animation.isRunning = true
+
     when (animation) {
       is SequentialAnimation -> {
-        animation.animations.forEach { addAnimationRecursively(it) }
+        animation.animations.forEach { addAnimationRecursively(it, animation) }
         animations.add(animation)
       }
       is ParallelAnimation -> {
-        animation.animations.forEach { addAnimationRecursively(it) }
+        animation.animations.forEach { addAnimationRecursively(it, animation) }
         animations.add(animation)
       }
       else -> animations.add(animation)
@@ -213,8 +339,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   }
 
   /**
-   * Stops all currently playing [Animation]s and resets visual state of all [ComponentView]s that
-   * were currently animating immediately.
+   * Stops all currently playing [Animation]s. This will NOT revert persisted animations that
+   * already finished. It will however cancel so that onFinished callbacks do not get invoked.
    *
    * @see Animation
    */
@@ -227,9 +353,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * first component and the [rootNode] as last.
    *
    * @param node Child to find.
-   *
    * @return Path to child.
-   *
    * @throws IllegalStateException If child was not contained in this [Scene].
    */
   fun findPathToChild(node: ComponentView): List<ComponentView> {

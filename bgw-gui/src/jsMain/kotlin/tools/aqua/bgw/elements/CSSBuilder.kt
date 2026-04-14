@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,11 @@ import ComponentViewData
 import LabeledUIComponentData
 import TextInputUIComponentData
 import UIComponentData
+import csstype.Properties
 import csstype.PropertiesBuilder
+import kotlin.js.asDynamic
+import tools.aqua.bgw.DraggableResult
+import tools.aqua.bgw.elements.layoutviews.convertToRem
 import web.cssom.*
 
 internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) {
@@ -33,10 +37,37 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
   top = componentViewData.posY.bgw
   width = componentViewData.width.bgw
   height = componentViewData.height.bgw
+
+  if (componentViewData.isGridCell) minWidth = componentViewData.width.bgw
+  if (componentViewData.isGridCell) minHeight = componentViewData.height.bgw
+
   zIndex = integer(componentViewData.zIndex)
-  opacity = number(componentViewData.opacity)
   display = if (componentViewData.isVisible) Display.flex else None.none
-  pointerEvents = if (!componentViewData.isDisabled) PointerEvents.all else None.none
+  pointerEvents = if (!componentViewData.isDisabled) Globals.inherit else None.none
+  // rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
+  // scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
+  translate =
+      "calc(var(--txAnim) * var(--bgwUnit)) calc(var(--tyAnim) * var(--bgwUnit))"
+          .unsafeCast<Translate>()
+  rotate = "var(--rotAnim)".unsafeCast<Rotate>()
+  // scale = "var(--sxAnim) var(--syAnim)".unsafeCast<Scale>()
+
+  transformOrigin = "center".unsafeCast<TransformOrigin>()
+  transform =
+      "translate(var(--tx), var(--ty)) rotateZ(var(--rot)) rotateY(var(--flipAnim, 0)) scale(var(--sxAnim, var(--sx)), var(--syAnim, var(--sy)))"
+          .unsafeCast<Transform>()
+
+  opacity = "var(--opaAnim, var(--opa))".unsafeCast<Opacity>()
+
+  set(CustomPropertyName("--tx"), 0)
+  set(CustomPropertyName("--ty"), 0)
+  set(CustomPropertyName("--rot"), componentViewData.rotation.deg)
+  set(CustomPropertyName("--sx"), componentViewData.scaleX)
+  set(CustomPropertyName("--sy"), componentViewData.scaleY)
+  set(CustomPropertyName("--opa"), componentViewData.opacity)
+}
+
+internal fun PropertiesBuilder.cssBackupTransformBuilder(componentViewData: ComponentViewData) {
   rotate = componentViewData.rotation.deg.unsafeCast<Rotate>()
   scale = "${componentViewData.scaleX} ${componentViewData.scaleY} 1".unsafeCast<Scale>()
   transformOrigin = "center".unsafeCast<TransformOrigin>()
@@ -191,9 +222,56 @@ internal fun flipAndRotationBuilder(flipped: String, rotation: Double): String {
 
 internal fun cssBorderRadius(value: String): LengthProperty = value.unsafeCast<LengthProperty>()
 
-internal fun cssFont(value: String): FontFamily = "'$value'".unsafeCast<FontFamily>()
+internal fun cssFont(value: String): FontFamily = "'$value', sans-serif".unsafeCast<FontFamily>()
 
 internal fun cssFilter(values: List<String>): FilterFunction {
   if (values.isEmpty()) return "none".unsafeCast<FilterFunction>()
   return values.joinToString(" ").unsafeCast<FilterFunction>()
+}
+
+internal fun applyDraggableTransform(
+    draggable: DraggableResult,
+    componentData: ComponentViewData
+): Properties {
+  // Get the drag delta in screen coordinates
+  val screenX =
+      if (draggable.transform?.x != null)
+          draggable.transform!!.x + convertToRem(componentData.propagatedPosX)
+      else 0.0
+  val screenY =
+      if (draggable.transform?.y != null)
+          draggable.transform!!.y + convertToRem(componentData.propagatedPosY)
+      else 0.0
+
+  // Calculate parent's combined scale (excluding this component's own scale)
+  val parentScaleX = componentData.propagatedScaleX / componentData.scaleX
+  val parentScaleY = componentData.propagatedScaleY / componentData.scaleY
+
+  // Counter-rotate the drag delta by the negative of parent's propagated rotation
+  // to convert from screen coordinates to the local coordinate system
+  val parentRotation = componentData.propagatedRotation - componentData.rotation
+  val angleRad = -parentRotation * kotlin.math.PI / 180.0
+  val cosAngle = kotlin.math.cos(angleRad)
+  val sinAngle = kotlin.math.sin(angleRad)
+
+  // Apply rotation matrix to transform coordinates
+  val rotatedX = screenX * cosAngle - screenY * sinAngle
+  val rotatedY = screenX * sinAngle + screenY * cosAngle
+
+  // Divide by parent scale to compensate for parent container scaling
+  val localX = rotatedX / parentScaleX
+  val localY = rotatedY / parentScaleY
+
+  return jsObject {
+    val styleObj = asDynamic()
+    styleObj.`--tx` = "${localX}px"
+    styleObj.`--ty` = "${localY}px"
+  }
+}
+
+internal fun resetDraggableTransform(): Properties {
+  return jsObject {
+    val styleObj = asDynamic()
+    styleObj.transform = "none"
+  }
 }

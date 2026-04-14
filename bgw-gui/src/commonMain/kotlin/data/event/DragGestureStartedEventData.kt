@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,4 +19,8 @@ package data.event
 
 import kotlinx.serialization.Serializable
 
-@Serializable internal class DragGestureStartedEventData : EventData()
+@Serializable
+internal class DragGestureStartedEventData(
+    val posX: Double = 0.0,
+    val posY: Double = 0.0,
+) : EventData()

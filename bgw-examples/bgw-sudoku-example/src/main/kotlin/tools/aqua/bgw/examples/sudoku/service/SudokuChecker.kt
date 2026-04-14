@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,6 @@ object SudokuChecker {
    * Checks given sudoku for errors and returns them.
    *
    * @param sudoku Sudoku to check.
-   *
    * @return Set of errors in given sudoku.
    */
   fun checkSudoku(sudoku: Sudoku): Set<SudokuTuple> =
@@ -36,7 +35,6 @@ object SudokuChecker {
    * Checks given sudoku for errors in boxes and returns them.
    *
    * @param sudoku Sudoku to check.
-   *
    * @return Set of errors in given sudoku.
    */
   private fun checkBoxes(sudoku: Sudoku): Set<SudokuTuple> {
@@ -59,7 +57,6 @@ object SudokuChecker {
    * Checks given sudoku for errors in rows and returns them.
    *
    * @param sudoku Sudoku to check.
-   *
    * @return Set of errors in given sudoku.
    */
   private fun checkRows(sudoku: Sudoku): Set<SudokuTuple> {
@@ -86,7 +83,6 @@ object SudokuChecker {
    * Checks given sudoku for errors in columns and returns them.
    *
    * @param sudoku Sudoku to check.
-   *
    * @return Set of errors in given sudoku.
    */
   private fun checkCols(sudoku: Sudoku): Set<SudokuTuple> {
@@ -113,7 +109,6 @@ object SudokuChecker {
    * Checks for duplicate digits in list and returns them.
    *
    * @param digits List of digits.
-   *
    * @return Set of duplicate digits in given list.
    */
   private fun checkDuplicates(digits: List<SudokuTuple>): Set<SudokuTuple> {

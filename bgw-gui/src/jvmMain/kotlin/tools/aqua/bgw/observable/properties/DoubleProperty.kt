@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,8 @@ package tools.aqua.bgw.observable.properties
 /**
  * A DoubleProperty.
  *
- * @constructor Creates a [DoubleProperty] with given initial value.
- *
  * @param initialValue Initial Value. Default: 0.0.
- *
+ * @constructor Creates a [DoubleProperty] with given initial value.
  * @since 0.1
  */
 open class DoubleProperty(initialValue: Number = 0.0) : Property<Double>(initialValue.toDouble())

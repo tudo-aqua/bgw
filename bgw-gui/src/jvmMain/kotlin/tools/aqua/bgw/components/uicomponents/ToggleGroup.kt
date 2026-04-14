@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,11 +32,9 @@ import IDGenerator
  * selected gets added to the [ToggleGroup].
  *
  * @constructor Creates a [ToggleGroup].
- *
  * @see ToggleButton
  * @see RadioButton
  * @see BinaryStateButton
- *
  * @since 0.1
  */
 open class ToggleGroup {
@@ -68,7 +66,6 @@ open class ToggleGroup {
    * Gets called when a [ToggleButton] or [RadioButton] gets selected.
    *
    * @see onDeselected
-   *
    * @since 0.10
    */
   var onSelected: ((BinaryStateButton) -> Unit)? = null
@@ -77,7 +74,6 @@ open class ToggleGroup {
    * Gets called when a [ToggleButton] or [RadioButton] gets deselected.
    *
    * @see onSelected
-   *
    * @since 0.10
    */
   var onDeselected: ((BinaryStateButton) -> Unit)? = null

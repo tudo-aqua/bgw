@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,13 +25,11 @@ import IDGenerator
  * Visual baseclass.
  *
  * @constructor Creates a [Visual].
- *
  * @see SingleLayerVisual
  * @see CompoundVisual
  * @see TextVisual
  * @see ImageVisual
  * @see ColorVisual
- *
  * @since 0.1
  */
 abstract class Visual {

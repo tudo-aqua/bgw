@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ package tools.aqua.bgw.net.common.response
  * @property status Status code.
  * @property sessionID Session ID for this game. ``null`` if joining was not successful.
  * @property players [List] of all non-spectator players currently in this game. Sorted ascending by
- * connection time i.e. index 0 is the game's host.
+ *   connection time i.e. index 0 is the game's host.
  * @property message The Welcome message from the host.
  */
 class SpectatorJoinGameResponse(

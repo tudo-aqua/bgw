@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,7 +80,7 @@ const val DEFAULT_FADE_TIME: Int = 250
  *
  * @since 0.2
  */
-const val DEFAULT_MENU_SCENE_OPACITY: Double = 0.75
+const val DEFAULT_MENU_SCENE_BACKGROUND_OPACITY: Double = 0.75
 // endregion
 
 // region Animation

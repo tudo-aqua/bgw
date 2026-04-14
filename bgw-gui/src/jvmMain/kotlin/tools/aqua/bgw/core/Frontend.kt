@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,12 +29,14 @@ import jsonMapper
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.AnimationPropertyCache
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.application.JCEFApplication
 import tools.aqua.bgw.binding.componentChannel
 import tools.aqua.bgw.binding.forceAnimationUpdate
 import tools.aqua.bgw.binding.markDirty
 import tools.aqua.bgw.binding.module
+import tools.aqua.bgw.builder.ApplicationBuilder
 import tools.aqua.bgw.builder.SceneBuilder
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
@@ -68,6 +70,7 @@ internal class Frontend {
         .start(wait = false)
     applicationEngine.start(onClose) {
       applicationEngine.clearAllEventListeners()
+      ApplicationBuilder.build()
       boardGameScene?.let { SceneBuilder.build(it) }
       menuScene?.let { SceneBuilder.build(it) }
       renderedDOM.value = true
@@ -113,6 +116,21 @@ internal class Frontend {
 
     internal var lastFadeTime: Double = 0.0
 
+    /**
+     * Cache for component initial state when animations start. Maps component ID to the cached
+     * property values at the start of the animation tree. This ensures all animations in
+     * Sequential/Parallel use the same initial state. This prevents user updates from interfering
+     * with running animations.
+     */
+    internal val animationCache: MutableMap<String, AnimationPropertyCache> = mutableMapOf()
+
+    /**
+     * Set of components that have pending finished animations that need to be cleared after the
+     * update is sent to the frontend. This prevents loss of animation finish notifications when
+     * updates are queued.
+     */
+    internal val componentsWithFinishedAnimations: MutableSet<ComponentView> = mutableSetOf()
+
     /** Property for the current application width. */
     internal val widthProperty =
         LimitedDoubleProperty(
@@ -139,6 +157,7 @@ internal class Frontend {
     internal var menuScene: MenuScene? = null
 
     internal var loadedFonts = mutableListOf<Triple<String, String, Font.FontWeight>>()
+
     // endregion
 
     // region Internal functions
@@ -314,7 +333,7 @@ internal class Frontend {
       val currentScene =
           menuScene
               ?: boardGameScene
-                  ?: throw IllegalStateException(
+              ?: throw IllegalStateException(
                   "No scene is currently displayed. Cannot convert relative positions to absolute.")
       return Pair(relativeX * currentScene.width, relativeY * currentScene.height)
     }
@@ -337,7 +356,6 @@ internal class Frontend {
       return false
     }
 
-    @Deprecated("This function is no longer needed as of BGW 0.10.")
     fun runLater(task: Runnable) {
       task.run()
     }

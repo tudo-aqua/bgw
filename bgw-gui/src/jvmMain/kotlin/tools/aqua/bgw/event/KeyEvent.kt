@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,24 +22,20 @@ package tools.aqua.bgw.event
 /**
  * [Event] that gets raised for key inputs.
  *
- * @constructor Creates a [KeyEvent].
- *
  * @property keyCode Corresponding key code enum value. [keyCode] is [KeyCode.UNDEFINED] in any
- * ``onKeyTyped``. Only used for ``onKeyPressed`` and ``onKeyReleased``.
+ *   ``onKeyTyped``. Only used for ``onKeyPressed`` and ``onKeyReleased``.
  * @property character Corresponding character string.
  * @property isControlDown Whether control key was pressed.
  * @property isShiftDown Whether shift key was pressed.
  * @property isAltDown Whether alt key was pressed.
- *
  * @param keyCode Corresponding key code enum value. [keyCode] is [KeyCode.UNDEFINED] in any
- * ``onKeyTyped``. Only used for ``onKeyPressed`` and ``onKeyReleased``.
+ *   ``onKeyTyped``. Only used for ``onKeyPressed`` and ``onKeyReleased``.
  * @param character Corresponding character string.
  * @param isControlDown Whether control key was pressed.
  * @param isShiftDown Whether shift key was pressed.
  * @param isAltDown Whether alt key was pressed.
- *
+ * @constructor Creates a [KeyEvent].
  * @see KeyCode
- *
  * @since 0.1
  */
 class KeyEvent(

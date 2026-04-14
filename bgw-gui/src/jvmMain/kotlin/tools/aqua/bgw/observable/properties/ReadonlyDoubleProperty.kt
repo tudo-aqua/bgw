@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,8 @@ package tools.aqua.bgw.observable.properties
 /**
  * A ReadonlyDoubleProperty.
  *
- * @constructor Creates a [ReadonlyDoubleProperty] with given initial value.
- *
  * @param initialValue Initial Value. Default: 0.0.
- *
+ * @constructor Creates a [ReadonlyDoubleProperty] with given initial value.
  * @since 0.3
  */
 open class ReadonlyDoubleProperty(initialValue: Number = 0.0) :

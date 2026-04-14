@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,12 +24,9 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_DURATION
 /**
  * An asynchronous delay that fires [onFinished] after given duration.
  *
- * @constructor Creates a [DelayAnimation] with given [duration].
- *
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
- *
+ * @constructor Creates a [DelayAnimation] with given [duration].
  * @see Animation
- *
  * @since 0.1
  */
 class DelayAnimation(duration: Int = DEFAULT_ANIMATION_DURATION) : Animation(duration = duration)

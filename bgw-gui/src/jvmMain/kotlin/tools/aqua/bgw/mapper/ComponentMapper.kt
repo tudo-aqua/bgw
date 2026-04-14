@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
  */
 
 import ComponentMapper.fillData
+import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.*
@@ -29,25 +30,98 @@ import tools.aqua.bgw.core.*
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.visual.*
 
 internal object ComponentMapper {
   fun ComponentViewData.fillData(componentView: ComponentView): ComponentViewData {
     return this.apply {
       id = componentView.id
-      posX = componentView.posX.toInt()
-      posY = componentView.posY.toInt()
+
+      // Get cached initial state (if component is animating)
+      val cachedState = Frontend.animationCache[componentView.id]
+      val animationTypes = componentView.animationTypes
+
+      // TODO: Check if cache is actually needed
+      // Use cached values ONLY if that animation type is still active
+      // Once all animations of a type finish, allow manual updates again
+      posX =
+          if (AnimationType.MOVEMENT in animationTypes && cachedState?.posX != null) {
+            // cachedState.posX
+            componentView.posX.toInt()
+          } else {
+            componentView.posX.toInt()
+          }
+
+      posY =
+          if (AnimationType.MOVEMENT in animationTypes && cachedState?.posY != null) {
+            // cachedState.posY
+            componentView.posY.toInt()
+          } else {
+            componentView.posY.toInt()
+          }
+
       width = componentView.width.toInt()
       height = componentView.height.toInt()
-      visual = VisualMapper.map(componentView.visual)
+
+      visual =
+          if ((AnimationType.FLIP in animationTypes || AnimationType.STEPPED in animationTypes) &&
+              cachedState?.visual != null) {
+            // VisualMapper.map(cachedState.visual)
+            VisualMapper.map(componentView.visual)
+          } else {
+            VisualMapper.map(componentView.visual)
+          }
+
       zIndex = componentView.zIndex
-      opacity = componentView.opacity
+
+      opacity =
+          if (AnimationType.FADE in animationTypes && cachedState?.opacity != null) {
+            // cachedState.opacity
+            componentView.opacity
+          } else {
+            componentView.opacity
+          }
+
       isVisible = componentView.isVisible
       isDisabled = componentView.isDisabled
       // isFocusable
-      scaleX = componentView.scaleX
-      scaleY = componentView.scaleY
-      rotation = componentView.rotation
+
+      scaleX =
+          if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {
+            // cachedState.scaleX
+            componentView.scaleX
+          } else {
+            componentView.scaleX
+          }
+
+      scaleY =
+          if (AnimationType.SCALE in animationTypes && cachedState?.scaleY != null) {
+            // cachedState.scaleY
+            componentView.scaleY
+          } else {
+            componentView.scaleY
+          }
+
+      rotation =
+          if (AnimationType.ROTATION in animationTypes && cachedState?.rotation != null) {
+            // cachedState.rotation
+            componentView.rotation
+          } else {
+            componentView.rotation
+          }
+
+      propagatedRotation = componentView.propagatedRotation
+      propagatedScaleX = componentView.propagatedScaleX
+      propagatedScaleY = componentView.propagatedScaleY
+      propagatedPosX = componentView.inParentPosX // - componentView.posX
+      propagatedPosY = componentView.inParentPosY // - componentView.posY
+
+      // Set animation finished flag from component state
+      finishedAnimations = componentView.animationsFinishedSinceLastUpdate.toMutableList()
+      if (finishedAnimations.isNotEmpty()) {
+        Logger.log(finishedAnimations)
+      }
 
       if (componentView.dropAcceptor != null) {
         isDroppable = true
@@ -162,8 +236,6 @@ internal object ComponentMapper {
 
   fun map(componentView: ComponentView): ComponentViewData {
     return when (componentView) {
-
-      // TODO - LabeledUIComponent
       is Button -> (mapSpecific(componentView) as ButtonData)
       is CheckBox ->
           (mapSpecific(componentView) as CheckBoxData).apply {
@@ -183,12 +255,10 @@ internal object ComponentMapper {
             group = componentView.toggleGroup.id
           }
 
-      // TODO - TextInputUIComponent
       is PasswordField -> (mapSpecific(componentView) as PasswordFieldData)
       is TextField -> (mapSpecific(componentView) as TextFieldData)
       is TextArea -> (mapSpecific(componentView) as TextAreaData)
 
-      // TODO - UIComponent
       is ComboBox<*> -> mapComboBox(componentView)
       is ColorPicker ->
           (mapSpecific(componentView) as ColorPickerData).apply {
@@ -200,7 +270,6 @@ internal object ComponentMapper {
             barVisual = VisualMapper.map(componentView.barVisual)
           }
 
-      // TODO - StructuredDataView
       is ListView<*> ->
           (mapSpecific(componentView) as ListViewData).apply {
             orientation = componentView.orientation.name.lowercase()
@@ -210,10 +279,8 @@ internal object ComponentMapper {
             // columns (as TableColumnData)
           }
 
-      // TODO - ComponentView
       is CameraPane<*> -> (mapSpecific(componentView) as CameraPaneData)
 
-      // TODO - GameComponentView
       is CardView ->
           (mapSpecific(componentView) as CardViewData).apply {
             front = VisualMapper.map(componentView.frontVisual)
@@ -298,19 +365,19 @@ internal object LayoutMapper {
           }
       is GridPane<*> ->
           (GridPaneData().fillData(layout) as GridPaneData).apply {
-            val grid =
-                layout.grid.clone().apply {
-                  removeEmptyColumns()
-                  removeEmptyRows()
-                }
+            val grid = layout.grid.clone()
             columns = grid.columns
             rows = grid.rows
             this.grid =
                 grid.map {
                   val alignment = layout.getCellCenterMode(it.columnIndex, it.rowIndex)
+                  val w = layout.getColumnWidth(it.columnIndex)
+                  val h = layout.getRowHeight(it.rowIndex)
                   GridElementData(
                       it.columnIndex,
                       it.rowIndex,
+                      w,
+                      h,
                       if (it.component != null) RecursiveMapper.map(it.component) else null,
                       alignment =
                           alignment.horizontalAlignment.name.lowercase() to
@@ -318,6 +385,8 @@ internal object LayoutMapper {
                 }
             spacing = layout.spacing.toInt()
             layoutFromCenter = layout.isLayoutFromCenter
+            columnWidths = grid.getColumnWidths().toList()
+            rowHeights = grid.getRowHeights().toList()
             if (layout.dropAcceptor != null) {
               isDroppable = true
             }
@@ -592,6 +661,7 @@ internal object SceneMapper {
       width = scene.width.toInt()
       height = scene.height.toInt()
       background = VisualMapper.map(scene.background)
+      backgroundOpacity = scene.opacityProperty.value
     }
   }
 

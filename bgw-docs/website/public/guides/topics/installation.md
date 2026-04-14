@@ -22,7 +22,7 @@ Start by adding the latest version of BGW as a dependency to your project.
 <tabs group="gradleMaven">
     <tab title="Gradle" group-key="gradle">
         <code-block lang="apache"> 
-        implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
+        implementation(group = "tools.aqua", name = "bgw-gui", version = "0.11")
         </code-block>
     </tab>
     <tab title="Maven" group-key="maven">
@@ -30,7 +30,7 @@ Start by adding the latest version of BGW as a dependency to your project.
             &lt;dependency&gt;
     &lt;groupId&gt;tools.aqua&lt;/groupId&gt;
     &lt;artifactId&gt;bgw-gui&lt;/artifactId&gt;
-    &lt;version&gt;0.10&lt;/version&gt;
+    &lt;version&gt;0.11&lt;/version&gt;
 &lt;/dependency&gt;
         </code-block>
     </tab>
@@ -43,10 +43,11 @@ When running on JDK 16 or later, you need to add the following JVM arguments to 
         <code-block lang="apache">
             application {
     applicationDefaultJvmArgs = listOf(
-        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+        "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+        "--enable-native-access=ALL-UNNAMED"
 }
         </code-block>
     </tab>
@@ -54,10 +55,11 @@ When running on JDK 16 or later, you need to add the following JVM arguments to 
         <code-block lang="xml">
             &lt;configuration&gt;
     &lt;jvmArguments&gt;
-        --add-opens java.desktop/sun.awt=ALL-UNNAMED 
-        --add-opens java.desktop/java.awt.peer=ALL-UNNAMED 
-        --add-opens java.desktop/sun.lwawt=ALL-UNNAMED 
+        --add-opens java.desktop/sun.awt=ALL-UNNAMED
+        --add-opens java.desktop/java.awt.peer=ALL-UNNAMED
+        --add-opens java.desktop/sun.lwawt=ALL-UNNAMED
         --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED
+        --enable-native-access ALL-UNNAMED
     &lt;/jvmArguments&gt;
 &lt;/configuration&gt;
         </code-block>

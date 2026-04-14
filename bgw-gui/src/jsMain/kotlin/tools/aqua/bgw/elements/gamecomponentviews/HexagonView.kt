@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,12 +30,14 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import web.cssom.*
 import web.dom.Element
 
 internal external interface HexagonViewProps : Props {
   var data: HexagonViewData
+  var isOverlayPreview: Boolean?
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewData) {
@@ -46,33 +48,71 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: HexagonViewDa
 
 internal val HexagonView =
     FC<HexagonViewProps> { props ->
+      val isOverlayPreview = props.isOverlayPreview == true
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
+      // Track visual state for flip/stepped animations
+      val (currentVisual, setCurrentVisual) = useState(props.data.visual)
+
       val draggable =
-          useDraggable(
-              object : DraggableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDraggable
-              })
+          if (!isOverlayPreview)
+              useDraggable(
+                  object : DraggableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDraggable
+                  })
+          else null
 
       val droppable =
-          useDroppable(
-              object : DroppableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
-              })
+          if (!isOverlayPreview)
+              useDroppable(
+                  object : DroppableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDroppable
+                  })
+          else null
 
       val elementRef = useRef<Element>(null)
 
+      // Listen for visual updates from Animator
+      useEffectWithCleanup(props.data.id) {
+        val element = elementRef.current
+        if (element != null) {
+          val handler: (Any) -> Unit = { _ ->
+            val animatorVisual = Animator.getCurrentVisual(props.data.id)
+            if (animatorVisual != null) {
+              setCurrentVisual(animatorVisual)
+            } else {
+              setCurrentVisual(props.data.visual)
+            }
+          }
+          element.asDynamic().addEventListener("bgw-visual-update", handler)
+          onCleanup { element.asDynamic().removeEventListener("bgw-visual-update", handler) }
+        }
+      }
+
+      // Update visual when props change (for non-animation updates)
+      useEffect(props.data.visual) {
+        val animatorVisual = Animator.getCurrentVisual(props.data.id)
+        if (animatorVisual == null) {
+          setCurrentVisual(props.data.visual)
+        }
+      }
+
       bgwHexagonView {
         tabIndex = 0
-        id = props.data.id
+        if (!isOverlayPreview) id = props.data.id
         className = ClassName("hexagonView")
 
         ariaDetails = "hex-${props.data.orientation}"
 
         ref = elementRef
         useEffect {
-          elementRef.current?.let { draggable.setNodeRef(it) }
-          elementRef.current?.let { droppable.setNodeRef(it) }
+          if (!isOverlayPreview) {
+            elementRef.current?.let { draggable?.setNodeRef(it) }
+            elementRef.current?.let { droppable?.setNodeRef(it) }
+          }
         }
 
         css {
@@ -84,27 +124,27 @@ internal val HexagonView =
             width = 2 * props.data.size.bgw
             height = (sqrt(3.0) * props.data.size).bgw
           }
-          translate =
-              "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<
-                  Translate>()
           cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
         }
+        // style = applyDraggableTransform(draggable, props.data)
 
         bgwVisuals {
           className = ClassName("visuals")
-          +VisualBuilder.build(props.data.visual)
+          +VisualBuilder.build(currentVisual)
         }
 
-        if (props.data.isDraggable) {
-          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
+        if (props.data.isDraggable && !isOverlayPreview) {
+          onPointerDown = { draggable?.listeners?.onPointerDown?.invoke(it, props.data.id) }
         }
 
         applyCommonEventHandlers(props.data)
 
-        ariaDescribedBy = draggable.attributes.ariaDescribedBy
-        ariaDisabled = draggable.attributes.ariaDisabled
-        ariaPressed = draggable.attributes.ariaPressed
-        ariaRoleDescription = draggable.attributes.ariaRoleDescription
+        if (!isOverlayPreview) {
+          ariaDescribedBy = draggable?.attributes?.ariaDescribedBy
+          ariaDisabled = draggable?.attributes?.ariaDisabled
+          ariaPressed = draggable?.attributes?.ariaPressed
+          ariaRoleDescription = draggable?.attributes?.ariaRoleDescription
+        }
       }
     }
 

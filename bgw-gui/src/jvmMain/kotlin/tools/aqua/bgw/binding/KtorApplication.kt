@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import AppData
 import PropData
 import SceneMapper
 import data.event.AnimationFinishedEventData
+import data.event.AnimationsStoppedEventData
 import data.event.CheckBoxChangedEventData
 import data.event.ColorInputChangedEventData
 import data.event.DragDroppedEventData
@@ -68,7 +69,20 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
+import tools.aqua.bgw.animation.Animation
+import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.animation.ComponentAnimation
+import tools.aqua.bgw.animation.DiceAnimation
+import tools.aqua.bgw.animation.FadeAnimation
+import tools.aqua.bgw.animation.FlipAnimation
+import tools.aqua.bgw.animation.MovementAnimation
+import tools.aqua.bgw.animation.RandomizeAnimation
+import tools.aqua.bgw.animation.RotationAnimation
+import tools.aqua.bgw.animation.ScaleAnimation
+import tools.aqua.bgw.animation.SteppedComponentAnimation
 import tools.aqua.bgw.components.DynamicComponentView
+import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.layoutviews.CameraPane
 import tools.aqua.bgw.components.uicomponents.BinaryStateButton
 import tools.aqua.bgw.components.uicomponents.CheckBox
@@ -90,6 +104,7 @@ import tools.aqua.bgw.event.MouseEvent
 import tools.aqua.bgw.event.WheelEvent
 import tools.aqua.bgw.mapper.DialogMapper
 import tools.aqua.bgw.util.Coordinate
+import tools.aqua.bgw.util.Logger
 
 internal val componentChannel: Channel =
     Channel("/ws").apply {
@@ -118,35 +133,189 @@ internal val componentChannel: Channel =
             try {
               eventListener(content)
             } catch (e: Exception) {
-              e.printStackTrace()
+              Logger.error(e.stackTraceToString())
             }
           }
           "bgwAnimationQuery" -> {
             try {
-              animationListener(content)
+              handleAnimationFinished(content)
             } catch (e: Exception) {
-              e.printStackTrace()
+              Logger.error(e.stackTraceToString())
+            }
+          }
+          "bgwAnimationStopQuery" -> {
+            try {
+              handleAnimationsStopped(content)
+            } catch (e: Exception) {
+              Logger.error(e.stackTraceToString())
             }
           }
           "bgwGlobalQuery" -> {
             try {
               globalListener(content)
             } catch (e: Exception) {
-              e.printStackTrace()
+              Logger.error(e.stackTraceToString())
             }
           }
         }
       }
     }
 
-internal fun animationListener(text: String) {
+internal fun handleAnimationsStopped(text: String) {
+  val eventData = jsonMapper.decodeFromString<AnimationsStoppedEventData>(text)
+
+  // Get all animations from both scenes
+  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+  val animations = menuSceneAnimations + boardGameSceneAnimations
+
+  // Count running animations before stopping them
+  val runningCount = animations.count { it.isRunning }
+
+  // For each running animation, clean up WITHOUT triggering onFinished or persist
+  animations
+      .filter { it.isRunning }
+      .forEach { animation ->
+        // Set isRunning to false
+        animation.isRunning = false
+
+        // Remove animation types from components but don't persist or call onFinished
+        if (animation is ComponentAnimation<*>) {
+          val animationType =
+              when (animation) {
+                is MovementAnimation<*> -> AnimationType.MOVEMENT
+                is ScaleAnimation<*> -> AnimationType.SCALE
+                is RotationAnimation<*> -> AnimationType.ROTATION
+                is FadeAnimation<*> -> AnimationType.FADE
+                is FlipAnimation<*> -> AnimationType.FLIP
+                is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+              }
+
+          animation.componentView.animationTypes.remove(animationType)
+
+          // Check if component has no more active animations
+          if (animation.componentView.animationTypes.isEmpty()) {
+            animation.componentView.componentAnimating = false
+            Frontend.animationCache.remove(animation.componentView.id)
+          }
+        }
+      }
+
+  Logger.debug("Stopped $runningCount animations without calling onFinished")
+
+  Frontend.updateScene()
+}
+
+internal fun handleAnimationFinished(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
-  if (eventData is AnimationFinishedEventData) {
-    val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-    val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
-    val animations = menuSceneAnimations + boardGameSceneAnimations
-    val animation = animations.find { it.id == eventData.id }
-    animation?.onFinished?.invoke(AnimationFinishedEvent())
+
+  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+  val animations = menuSceneAnimations + boardGameSceneAnimations
+  val animation = animations.find { it.id == eventData.id }
+
+  // Apply final animation values to cache AND component properties if persist=true
+  if (animation is ComponentAnimation<*> && animation.persist) {
+    when (animation) {
+      is MovementAnimation<*> -> {
+        animation.componentView.posX += animation.toX - animation.fromX
+        animation.componentView.posY += animation.toY - animation.fromY
+      }
+      is ScaleAnimation<*> -> {
+        animation.componentView.scaleX *= animation.toScaleX / animation.fromScaleX
+        animation.componentView.scaleY *= animation.toScaleY / animation.fromScaleY
+      }
+      is RotationAnimation<*> -> {
+        animation.componentView.rotation += animation.toAngle - animation.fromAngle
+      }
+      is FadeAnimation<*> -> {
+        animation.componentView.opacity = animation.toOpacity
+      }
+      is FlipAnimation<*> -> {
+        if (animation.componentView is CardView) {
+          if (animation.toVisual == animation.componentView.backVisual) {
+            animation.componentView.showBack()
+          } else if (animation.toVisual == animation.componentView.frontVisual) {
+            animation.componentView.showFront()
+          } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
+            animation.componentView.frontVisual = animation.toVisual
+            animation.componentView.showFront()
+          } else if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
+            animation.componentView.backVisual = animation.toVisual
+            animation.componentView.showBack()
+          }
+        } else if (animation.componentView is DiceView) {
+          animation.componentView.visuals[animation.componentView.currentSide] = animation.toVisual
+        } else {
+          animation.componentView.visual = animation.toVisual
+        }
+      }
+      is RandomizeAnimation<*> -> {
+        if (animation.componentView is CardView) {
+          if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
+            animation.componentView.frontVisual = animation.toVisual
+          } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
+            animation.componentView.backVisual = animation.toVisual
+          }
+        } else if (animation.componentView is DiceView) {
+          animation.componentView.visuals[animation.componentView.currentSide] = animation.toVisual
+        } else {
+          animation.componentView.visual = animation.toVisual
+        }
+      }
+      is DiceAnimation<*> -> {
+        animation.componentView.currentSide = animation.toSide
+      }
+    }
+  }
+
+  // Remove animation type and cache for ComponentAnimations
+  if (animation is ComponentAnimation<*>) {
+    val animationType =
+        when (animation) {
+          is MovementAnimation<*> -> AnimationType.MOVEMENT
+          is ScaleAnimation<*> -> AnimationType.SCALE
+          is RotationAnimation<*> -> AnimationType.ROTATION
+          is FadeAnimation<*> -> AnimationType.FADE
+          is FlipAnimation<*> -> AnimationType.FLIP
+          is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+        }
+    animation.componentView.animationTypes.remove(animationType)
+    if (animationType !in animation.componentView.animationTypes) {
+      animation.componentView.animationsFinishedSinceLastUpdate.add(animationType)
+      // Track this component so we can clear its finished animations after sending the update
+      Frontend.componentsWithFinishedAnimations.add(animation.componentView)
+      Frontend.updateScene()
+    }
+
+    // Check if component has no more active animations
+    if (animation.componentView.animationTypes.isEmpty()) {
+      animation.componentView.componentAnimating = false
+      Frontend.animationCache.remove(animation.componentView.id)
+    }
+  }
+
+  animation?.isRunning = false
+  animation?.onFinished?.invoke(AnimationFinishedEvent())
+
+  if (animation != null) {
+    checkIfParentFinished(animation)
+  }
+}
+
+internal fun checkIfParentFinished(animation: Animation) {
+  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
+  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
+  val animations = menuSceneAnimations + boardGameSceneAnimations
+
+  val parent = animation.parentAnimation
+  if (parent != null) {
+    val finished = animations.filter { it.parentAnimation == parent }.all { !it.isRunning }
+    if (finished) {
+      parent.onFinished?.invoke(AnimationFinishedEvent())
+      parent.isRunning = false
+      checkIfParentFinished(parent)
+    }
   }
 }
 
@@ -321,13 +490,17 @@ internal fun eventListener(text: String) {
           }
           is DragGestureStartedEventData -> {
             if (component is DynamicComponentView) {
-              component.onDragGestureStarted?.invoke(DragEvent(component))
+              val (posX, posY) =
+                  Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+              component.onDragGestureStarted?.invoke(DragEvent(component, posX, posY))
               component.isDragged = true
             }
           }
           is DragGestureMovedEventData -> {
             if (component is DynamicComponentView) {
-              component.onDragGestureMoved?.invoke(DragEvent(component))
+              val (posX, posY) =
+                  Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+              component.onDragGestureMoved?.invoke(DragEvent(component, posX, posY))
             }
           }
           is DragGestureEnteredEventData -> {
@@ -337,7 +510,9 @@ internal fun eventListener(text: String) {
               val root = component.getRootNode()
               val target = root.findComponent(eventData.target)
               if (target?.dropAcceptor != null) {
-                target.onDragGestureEntered?.invoke(DragEvent(component))
+                val (posX, posY) =
+                    Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                target.onDragGestureEntered?.invoke(DragEvent(component, posX, posY))
               }
             }
           }
@@ -347,13 +522,16 @@ internal fun eventListener(text: String) {
                 val root = component.getRootNode()
                 val target = root.findComponent(eventData.droppedOn!!)
                 if (target?.dropAcceptor != null) {
+                  val (posX, posY) =
+                      Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
                   component.onDragGestureEnded?.invoke(
                       DropEvent(component, target),
-                      target.dropAcceptor?.invoke(DragEvent(component)) == true)
+                      target.dropAcceptor?.invoke(DragEvent(component, posX, posY)) == true)
                 }
               } else {
                 component.onDragGestureEnded?.invoke(DropEvent(component, null), false)
               }
+              component.isDragged = false
             }
           }
           is DragGestureExitedEventData -> {
@@ -363,16 +541,19 @@ internal fun eventListener(text: String) {
               val root = component.getRootNode()
               val target = root.findComponent(eventData.target)
               if (target?.dropAcceptor != null) {
-                target.onDragGestureExited?.invoke(DragEvent(component))
+                val (posX, posY) =
+                    Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+                target.onDragGestureExited?.invoke(DragEvent(component, posX, posY))
               }
             }
           }
           is DragDroppedEventData -> {
             val root = component.getRootNode()
             val target = root.findComponent(eventData.target)
-            val dropped = target?.dropAcceptor?.invoke(DragEvent(component))
+            val (posX, posY) = Frontend.relativePositionsToAbsolute(eventData.posX, eventData.posY)
+            val dropped = target?.dropAcceptor?.invoke(DragEvent(component, posX, posY))
             if (dropped == true) {
-              target.onDragDropped?.invoke(DragEvent(component))
+              target.onDragDropped?.invoke(DragEvent(component, posX, posY))
               (component as DynamicComponentView).isDragged = false
             }
           }
@@ -386,7 +567,7 @@ internal fun eventListener(text: String) {
                     "Error",
                     "An error occurred while handling an event: ${e.message}",
                     exception = e)))
-        e.printStackTrace()
+        Logger.error(e.stackTraceToString())
       }
     }
   }
@@ -492,6 +673,11 @@ private suspend fun processLastUpdate() {
       finalUpdate = json
       // println("Processing update: $json")
       componentChannel.sendToAllClients(json)
+
+      // Now that the update has been sent, clear the animationsFinishedSinceLastUpdate
+      // for all components to prevent them from being sent again
+      clearFinishedAnimationFlags()
+
       refreshJob =
           CoroutineScope(Dispatchers.IO).launch {
             delay(50)
@@ -501,6 +687,15 @@ private suspend fun processLastUpdate() {
       println("Error sending update: $e")
     }
   }
+}
+
+internal fun clearFinishedAnimationFlags() {
+  // Clear the animationsFinishedSinceLastUpdate for all tracked components
+  Frontend.componentsWithFinishedAnimations.forEach { component ->
+    component.animationsFinishedSinceLastUpdate.clear()
+  }
+  // Clear the tracking set
+  Frontend.componentsWithFinishedAnimations.clear()
 }
 
 internal fun checkForMissingState() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,11 +37,11 @@ mavenMetadata {
   licenses.addAll(APACHE_2)
 }
 
-koverMerged {
-  filters {
-    projects {
-      excludes +=
-          listOf(":bgw-docs", ":bgw-docs:parser", ":bgw-docs:website", ":bgw-examples", ":bgw-net")
+kover {
+  merge {
+    subprojects {
+      it.name !in
+          listOf("bgw-docs", "bgw-docs:parser", "bgw-docs:website", "bgw-examples", "bgw-net")
     }
   }
 }

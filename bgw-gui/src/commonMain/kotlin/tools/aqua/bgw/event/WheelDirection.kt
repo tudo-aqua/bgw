@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,6 @@ enum class WheelDirection {
    * Multiplies [scalar] by 1 ([UP]) or -1 ([DOWN]).
    *
    * @param scalar Scalar to be multiplied.
-   *
    * @since 0.7.1
    */
   operator fun times(scalar: Number): Double = scalar.toDouble() * (if (this == UP) 1 else -1)

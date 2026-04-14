@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,11 +38,9 @@ import tools.aqua.bgw.visual.Visual
  * @param prompt Prompt for this [TextInputUIComponent].
  * @param font Font to be used for the [text].
  * @param visual [Visual] to be used as a background. Defaults to a Light-gray [ColorVisual].
- *
  * @see Font
  * @see Visual
  * @see UIComponent
- *
  * @since 0.2
  */
 sealed class TextInputUIComponent(

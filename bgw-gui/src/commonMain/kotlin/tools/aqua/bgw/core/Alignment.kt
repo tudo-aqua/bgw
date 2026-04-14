@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,10 +29,8 @@ import tools.aqua.bgw.core.VerticalAlignment.TOP
  *
  * @property verticalAlignment Vertical alignment component.
  * @property horizontalAlignment Horizontal alignment component.
- *
  * @see VerticalAlignment
  * @see HorizontalAlignment
- *
  * @since 0.1
  */
 enum class Alignment(
@@ -72,10 +70,8 @@ enum class Alignment(
      *
      * @param v Vertical component of [Alignment].
      * @param h Horizontal component [Alignment].
-     *
      * @see VerticalAlignment
      * @see HorizontalAlignment
-     *
      * @since 0.1
      */
     fun of(v: VerticalAlignment, h: HorizontalAlignment): Alignment =

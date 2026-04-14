@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,6 @@ import CardStackData
 import csstype.PropertiesBuilder
 import emotion.react.css
 import react.*
-import react.dom.aria.ariaDescribedBy
-import react.dom.aria.ariaDisabled
-import react.dom.aria.ariaPressed
-import react.dom.aria.ariaRoleDescription
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import tools.aqua.bgw.DraggableOptions
@@ -36,6 +32,7 @@ import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwContents
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.applyCommonEventHandlers
 import tools.aqua.bgw.useDraggable
 import tools.aqua.bgw.useDroppable
@@ -44,6 +41,7 @@ import web.dom.Element
 
 internal external interface CardStackProps : Props {
   var data: CardStackData
+  var isOverlayPreview: Boolean?
 }
 
 internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData) {
@@ -52,39 +50,52 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CardStackData
 
 internal val CardStack =
     FC<CardStackProps> { props ->
+      val isOverlayPreview = props.isOverlayPreview == true
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val draggable =
-          useDraggable(
-              object : DraggableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDraggable
-              })
+          if (!isOverlayPreview)
+              useDraggable(
+                  object : DraggableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDraggable
+                  })
+          else null
 
       val droppable =
-          useDroppable(
-              object : DroppableOptions {
-                override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
-              })
+          if (!isOverlayPreview)
+              useDroppable(
+                  object : DroppableOptions {
+                    override var id: String = props.data.id
+                    override var disabled = !props.data.isDroppable
+                  })
+          else null
 
-      val style: PropertiesBuilder.() -> Unit = {
+      val cssStyle: PropertiesBuilder.() -> Unit = {
         cssBuilderIntern(props.data)
-        translate =
-            "${draggable.transform?.x?.px ?: 0.px} ${draggable.transform?.y?.px ?: 0.px}".unsafeCast<
-                Translate>()
         cursor = if (props.data.isDraggable) Cursor.pointer else Cursor.default
+        if (isOverlayPreview) {
+          position = Position.absolute
+          left = 0.px
+          top = 0.px
+        }
       }
 
       val elementRef = useRef<Element>(null)
 
       bgwCardStack {
-        id = props.data.id
+        if (!isOverlayPreview) id = props.data.id
         className = ClassName("cardStack")
-        css(style)
+        css(cssStyle)
+        // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
         useEffect {
-          elementRef.current?.let { draggable.setNodeRef(it) }
-          elementRef.current?.let { droppable.setNodeRef(it) }
+          if (!isOverlayPreview) {
+            elementRef.current?.let { draggable?.setNodeRef(it) }
+            elementRef.current?.let { droppable?.setNodeRef(it) }
+          }
         }
 
         bgwVisuals {
@@ -92,8 +103,8 @@ internal val CardStack =
           +VisualBuilder.build(props.data.visual)
         }
 
-        if (props.data.isDraggable) {
-          onPointerDown = { draggable.listeners.onPointerDown.invoke(it, props.data.id) }
+        if (props.data.isDraggable && !isOverlayPreview) {
+          onPointerDown = { draggable?.listeners?.onPointerDown?.invoke(it, props.data.id) }
         }
 
         bgwContents {
@@ -113,7 +124,7 @@ internal val CardStack =
                   width = component.width.bgw
                   height = component.height.bgw
                 }
-                +NodeBuilder.build(component)
+                +NodeBuilder.build(component, isOverlayPreview)
               }
             }
           }
@@ -121,10 +132,12 @@ internal val CardStack =
 
         applyCommonEventHandlers(props.data)
 
-        ariaDescribedBy = draggable.attributes.ariaDescribedBy
-        ariaDisabled = draggable.attributes.ariaDisabled
-        ariaPressed = draggable.attributes.ariaPressed
-        ariaRoleDescription = draggable.attributes.ariaRoleDescription
+        if (!isOverlayPreview) {
+          ariaDescribedBy = draggable?.attributes?.ariaDescribedBy
+          ariaDisabled = draggable?.attributes?.ariaDisabled
+          ariaPressed = draggable?.attributes?.ariaPressed
+          ariaRoleDescription = draggable?.attributes?.ariaRoleDescription
+        }
       }
     }
 

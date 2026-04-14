@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -139,7 +139,6 @@ class GameService(private val gameRepository: GameRepository) {
    * Returns [GameInstance] instance associated with [sessionID].
    *
    * @param sessionID Session ID to search.
-   *
    * @return [GameInstance] instance associated with [sessionID], 'null' if no game was found.
    */
   fun getBySessionID(sessionID: String): GameInstance? = gameRepository.getBySessionID(sessionID)

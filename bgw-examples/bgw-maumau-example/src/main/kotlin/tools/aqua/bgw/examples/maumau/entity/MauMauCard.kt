@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,9 @@ package tools.aqua.bgw.examples.maumau.entity
 /**
  * Class representing a single card in the game.
  *
- * @constructor Creates a card with given [cardValue] and [cardSuit].
- *
  * @property cardValue Value of this card.
  * @property cardSuit Suit of this card.
+ * @constructor Creates a card with given [cardValue] and [cardSuit].
  */
 data class MauMauCard(val cardValue: CardValue, val cardSuit: CardSuit) {
 

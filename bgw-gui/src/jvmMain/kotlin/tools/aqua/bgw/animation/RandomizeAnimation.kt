@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,20 +35,19 @@ import tools.aqua.bgw.visual.Visual
  * An animation with [duration] = 1s and [speed] = 50 will change the visual 50 times within the
  * [duration] of one second.
  *
- * @constructor Creates a [RandomizeAnimation] for the given [GameComponentView].
- *
  * @param T Generic [GameComponentView].
  * @param gameComponentView [GameComponentView] to animate.
  * @param visuals [List] of [Visual]s to shuffle through.
  * @param toVisual Resulting [Visual] after shuffle.
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_DURATION].
  * @param speed Count of changes to be performed in [duration]. Default: [DEFAULT_ANIMATION_SPEED].
- *
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
+ * @constructor Creates a [RandomizeAnimation] for the given [GameComponentView].
  * @see SteppedComponentAnimation
  * @see Animation
  * @see GameComponentView
  * @see Visual
- *
  * @since 0.1
  */
 class RandomizeAnimation<T : GameComponentView>(
@@ -58,7 +57,11 @@ class RandomizeAnimation<T : GameComponentView>(
     /** Resulting [Visual] after shuffle. */
     val toVisual: Visual,
     duration: Int = DEFAULT_ANIMATION_DURATION,
-    speed: Int = DEFAULT_ANIMATION_SPEED
+    speed: Int = DEFAULT_ANIMATION_SPEED,
+    persist: Boolean = true
 ) :
     SteppedComponentAnimation<T>(
-        gameComponentView = gameComponentView, duration = duration, speed = speed)
+        gameComponentView = gameComponentView,
+        duration = duration,
+        speed = speed,
+        persist = persist)

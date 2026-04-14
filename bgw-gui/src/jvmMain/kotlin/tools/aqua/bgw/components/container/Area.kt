@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,19 +36,16 @@ import tools.aqua.bgw.visual.Visual
  *
  * Components that are out of bounds for this [Area] will still get rendered.
  *
- * @constructor Creates an [Area].
- *
  * @param T Generic [GameComponentView].
  * @param posX Horizontal coordinate for this [Area]. Default: 0.
  * @param posY Vertical coordinate for this [Area]. Default: 0.
  * @param width Width for this [Area]. Default: [DEFAULT_AREA_WIDTH].
  * @param height Height for this [Area]. Default: [DEFAULT_AREA_HEIGHT].
  * @param visual Visual for this [Area]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates an [Area].
  * @see GameComponentView
  * @see Visual
  * @see GameComponentContainer
- *
  * @since 0.1
  */
 open class Area<T : GameComponentView>(

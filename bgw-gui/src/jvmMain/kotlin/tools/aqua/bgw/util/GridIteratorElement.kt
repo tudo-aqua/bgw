@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,17 +22,14 @@ import tools.aqua.bgw.util.ComponentViewGrid.GridIterator
 /**
  * Data class containing meta info about current grid element returned by its [GridIterator].
  *
- * @constructor Creates a [GridIteratorElement].
- *
  * @param T Type of boxed [component].
  * @param columnIndex Current column index.
  * @param rowIndex Current row index.
  * @param component Current component or `null` if there is no component present in this cell.
- *
  * @property columnIndex Current column index.
  * @property rowIndex Current row index.
  * @property component Current component or `null` if there is no component present in this cell.
- *
+ * @constructor Creates a [GridIteratorElement].
  * @since 0.1
  */
 data class GridIteratorElement<T>(val columnIndex: Int, val rowIndex: Int, val component: T?)

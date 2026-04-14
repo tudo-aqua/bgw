@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,15 +26,16 @@ import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.canvas
-import react.dom.html.ReactHTML.img
 import react.useEffect
+import react.useRef
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
+import web.canvas.CanvasRenderingContext2D
 import web.cssom.*
-import web.cssom.atrule.width
 import web.dom.Element
+import web.html.HTMLCanvasElement
 
 internal external interface ImageVisualProps : Props {
   var data: ImageVisualData
@@ -45,6 +46,8 @@ internal external interface ImageVisualProps : Props {
 internal val ImageVisual =
     FC<ImageVisualProps> { props ->
       if (props.data.width != -1 && props.data.height != -1) {
+        val canvasRef = useRef<HTMLCanvasElement>(null)
+
         bgwImageVisual {
           css {
             styleBuilder(props.data.style)
@@ -57,6 +60,7 @@ internal val ImageVisual =
           }
 
           canvas {
+            ref = canvasRef
             id = props.data.id
             width = props.data.width.toDouble()
             height = props.data.height.toDouble()
@@ -67,31 +71,31 @@ internal val ImageVisual =
               height = 100.pct
 
               opacity = number(props.data.transparency)
-              // TODO...
             }
 
             useEffect {
               val img = document.createElement("img") as HTMLImageElement
               img.src = props.data.path
-
               img.addEventListener(
                   "load",
                   {
-                    val canvas = document.getElementById(props.data.id) as HTMLCanvasElement
-                    val ctx = canvas.getContext("2d") as CanvasRenderingContext2D
+                    canvasRef.current?.let { canvas ->
+                      val ctx =
+                          canvas.getContext(CanvasRenderingContext2D.ID) as CanvasRenderingContext2D
 
-                    ctx.clearRect(
-                        0.0, 0.0, props.data.width.toDouble(), props.data.height.toDouble())
-                    ctx.drawImage(
-                        img,
-                        props.data.offsetX.toDouble(),
-                        props.data.offsetY.toDouble(),
-                        props.data.width.toDouble(),
-                        props.data.height.toDouble(),
-                        0.0,
-                        0.0,
-                        props.data.width.toDouble(),
-                        props.data.height.toDouble())
+                      ctx.clearRect(
+                          0.0, 0.0, props.data.width.toDouble(), props.data.height.toDouble())
+                      ctx.drawImage(
+                          img.unsafeCast<web.canvas.CanvasImageSource>(),
+                          props.data.offsetX.toDouble(),
+                          props.data.offsetY.toDouble(),
+                          props.data.width.toDouble(),
+                          props.data.height.toDouble(),
+                          0.0,
+                          0.0,
+                          props.data.width.toDouble(),
+                          props.data.height.toDouble())
+                    }
                   })
             }
           }
@@ -115,7 +119,6 @@ internal val ImageVisual =
             top = props.data.offsetY.bgw
 
             opacity = number(props.data.transparency)
-            // TODO...
           }
         }
       }

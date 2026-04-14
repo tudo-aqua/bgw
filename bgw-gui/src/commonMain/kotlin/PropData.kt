@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,8 @@
 import data.event.EventData
 import data.event.InternalCameraPanData
 import kotlinx.serialization.Serializable
+import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.dialog.DialogType
 
 internal typealias ID = String
@@ -60,6 +62,7 @@ internal class AppData : Data() {
   var fadeTime: Int = 0
   var blurRadius: Double = 0.0
   var forcedByAnimation: Boolean = false
+  var endedAnimations: MutableMap<String, String?> = mutableMapOf()
 }
 
 @Serializable
@@ -69,6 +72,7 @@ internal class SceneData : Data() {
   var width: Int = 0
   var height: Int = 0
   var background: VisualData? = null
+  var backgroundOpacity: Double = 1.0
   var components: List<ComponentViewData> = emptyList()
 }
 
@@ -76,11 +80,14 @@ internal class SceneData : Data() {
 internal abstract class AnimationData : Data() {
   var id: ID = ""
   var duration: Int = 0
+  var initialDelay: Int = 0
+  var persist: Boolean = true
+  var hasParent: Boolean = false
   var isRunning: Boolean = false
   var onFinished: ((EventData) -> Unit)? = null
   var animationType: String = ""
   var isStop: Boolean = false
-  var interpolation: String = "linear"
+  var interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
 }
 
 @Serializable
@@ -133,8 +140,16 @@ internal abstract class ComponentViewData : Data() {
   var layoutFromCenter: Boolean = false
   var isDraggable: Boolean = false
   var isDragged: Boolean = false
+  var isDraggedInternal: Boolean = false
   var isDroppable: Boolean = false
+  var finishedAnimations: MutableList<AnimationType> = mutableListOf()
 
+  var propagatedRotation: Double = 0.0
+  var propagatedScaleX: Double = 1.0
+  var propagatedScaleY: Double = 1.0
+  var propagatedPosX: Double = 0.0
+  var propagatedPosY: Double = 0.0
+  var isGridCell: Boolean = false
   var hasMouseEnteredEvent: Boolean = false
   var hasMouseExitedEvent: Boolean = false
 }
@@ -254,12 +269,16 @@ internal class GridPaneData : LayoutViewData() {
   var rows: Int = 0
   var spacing: Int = 0
   var grid: List<GridElementData> = emptyList()
+  var columnWidths: List<Double> = emptyList()
+  var rowHeights: List<Double> = emptyList()
 }
 
 @Serializable
 internal class GridElementData(
     var column: Int,
     var row: Int,
+    var width: Double,
+    var height: Double,
     var component: ComponentViewData?,
     var alignment: Pair<String, String>
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,3 +31,5 @@ include(
     "bgw-net:bgw-net-server",
     "bgw-net:bgw-net-protocol-client",
 )
+
+plugins { id("org.gradle.toolchains.foojay-resolver-convention").version("0.10.0") }

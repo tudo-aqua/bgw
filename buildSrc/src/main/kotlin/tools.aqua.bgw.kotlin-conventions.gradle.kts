@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,10 @@
  * limitations under the License.
  */
 
+import gradle.kotlin.dsl.accessors._357b8ca9003504b71e2c9c6cf56313b6.dokka
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import tools.aqua.defaultFormat
 
 plugins {
@@ -36,37 +38,14 @@ detekt {
 
 spotless { kotlin { defaultFormat(rootProject) } }
 
-val kdocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("kdoc")
-      from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    }
+java {}
 
-val kdoc: Configuration by
-    configurations.creating {
-      isCanBeConsumed = true
-      isCanBeResolved = false
-    }
-
-artifacts { add(kdoc.name, kdocJar) }
-
-val javadocJar: TaskProvider<Jar> by
-    tasks.registering(Jar::class) {
-      archiveClassifier.set("javadoc")
-      from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    }
-
-java {
-  withSourcesJar()
-  withJavadocJar()
-}
+dokka {}
 
 // black magic from https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-  dokkaGfmPlugin(libs.dokka.javadoc)
-
   testImplementation(platform(libs.junit.bom))
   testImplementation(libs.bundles.test)
 }
@@ -76,9 +55,10 @@ tasks.test {
   testLogging { events(FAILED, PASSED, SKIPPED) }
 }
 
-kotlin.target.compilations.all {
-  kotlinOptions {
-    jvmTarget = "11"
+kotlin {
+  jvmToolchain(11)
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_11
     // allWarningsAsErrors = true
     freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=all")
   }

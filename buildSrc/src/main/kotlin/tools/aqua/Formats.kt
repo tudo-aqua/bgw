@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import org.gradle.api.Project
 
 /**
  * Apply the project default formatting and license header.
+ *
  * @param rootProject the root project; used to look up the license header.
  */
 fun KotlinExtension.defaultFormat(rootProject: Project) {
@@ -34,6 +35,7 @@ fun KotlinExtension.defaultFormat(rootProject: Project) {
 
 /**
  * Apply the project default formatting and license header.
+ *
  * @param rootProject the root project; used to look up the license header.
  */
 fun KotlinGradleExtension.defaultFormat(rootProject: Project) {

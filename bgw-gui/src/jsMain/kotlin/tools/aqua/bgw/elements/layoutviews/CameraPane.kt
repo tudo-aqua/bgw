@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@ import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
 import tools.aqua.bgw.elements.cssBuilder
+import tools.aqua.bgw.elements.useAnimationCleanup
 import tools.aqua.bgw.event.JCEFEventDispatcher
 import web.cssom.*
 import web.dom.Element
@@ -100,6 +101,9 @@ internal fun convertToPx(rem: Double): Double {
 
 internal val CameraPane =
     FC<CameraPaneProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val cameraPaneRef = useRef<ReactZoomPanPinchContentRef>(null)
 
       val targetWidth = props.data.target?.width?.toDouble() ?: 0.0
@@ -314,13 +318,11 @@ internal val CameraPane =
             val targetWidth =
                 props.data.target?.width?.let {
                   convertToRem(it.toDouble()) * ctx.instance.transformState.scale
-                }
-                    ?: 0.0
+                } ?: 0.0
             val targetHeight =
                 props.data.target?.height?.let {
                   convertToRem(it.toDouble()) * ctx.instance.transformState.scale
-                }
-                    ?: 0.0
+                } ?: 0.0
 
             val paneWidth = convertToRem(props.data.width.toDouble())
             val paneHeight = convertToRem(props.data.height.toDouble())
@@ -372,6 +374,8 @@ internal val CameraPane =
             left = props.data.posX.bgw
             top = props.data.posY.bgw
             position = Position.absolute
+            zIndex = integer(props.data.zIndex)
+            pointerEvents = if (props.data.isDisabled) None.none else Globals.inherit
           }
 
           if (props.data.target != null) {

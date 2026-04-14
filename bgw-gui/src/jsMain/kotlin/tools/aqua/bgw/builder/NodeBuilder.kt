@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,14 +64,21 @@ import tools.aqua.bgw.elements.uicomponents.ToggleButton as ReactToggleButton
 import web.cssom.*
 
 internal object NodeBuilder {
-  fun build(componentViewData: ComponentViewData): ReactElement<*> {
+  fun build(
+      componentViewData: ComponentViewData,
+      isOverlayPreview: Boolean = false
+  ): ReactElement<*> {
     return when (componentViewData) {
-      is LayoutViewData -> LayoutNodeBuilder.build(componentViewData)
+      is LayoutViewData -> LayoutNodeBuilder.build(componentViewData, isOverlayPreview)
       is LabelData -> ReactLabel.create { data = componentViewData }
       is ButtonData -> ReactButton.create { data = componentViewData }
       is TextFieldData -> ReactTextField.create { data = componentViewData }
       is ComboBoxData -> ReactComboBox.create { data = componentViewData }
-      is HexagonGridData -> ReactHexagonGrid.create { data = componentViewData }
+      is HexagonGridData ->
+          ReactHexagonGrid.create {
+            data = componentViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
       is CameraPaneData -> ReactCameraPane.create { data = componentViewData }
       is ProgressBarData -> ReactProgressBar.create { data = componentViewData }
       is CheckBoxData -> ReactCheckBox.create { data = componentViewData }
@@ -82,11 +89,27 @@ internal object NodeBuilder {
       is TextAreaData -> ReactTextArea.create { data = componentViewData }
       is TableViewData -> ReactTableView.create { data = componentViewData }
       is ListViewData -> ReactListView.create { data = componentViewData }
-      is GameComponentContainerData -> ContainerBuilder.build(componentViewData)
-      is CardViewData -> ReactCardView.create { data = componentViewData }
-      is DiceViewData -> ReactDiceView.create { data = componentViewData }
-      is HexagonViewData -> ReactHexagonView.create { data = componentViewData }
-      is TokenViewData -> ReactTokenView.create { data = componentViewData }
+      is GameComponentContainerData -> ContainerBuilder.build(componentViewData, isOverlayPreview)
+      is CardViewData ->
+          ReactCardView.create {
+            data = componentViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
+      is DiceViewData ->
+          ReactDiceView.create {
+            data = componentViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
+      is HexagonViewData ->
+          ReactHexagonView.create {
+            data = componentViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
+      is TokenViewData ->
+          ReactTokenView.create {
+            data = componentViewData
+            this.isOverlayPreview = isOverlayPreview
+          }
       else ->
           throw IllegalArgumentException(
               "Unknown component type: ${componentViewData::class.simpleName}")

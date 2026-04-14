@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,7 +55,6 @@ class MessageService(
    *
    * @param session Sender [WebSocketSession].
    * @param messageString The message.
-   *
    * @throws UnsupportedOperationException For unsupported message types.
    */
   @Throws(UnsupportedOperationException::class)
@@ -206,6 +205,7 @@ class MessageService(
       }
     }
   }
+
   // endregion
 
   // region Send messages

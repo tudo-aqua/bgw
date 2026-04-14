@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,7 +66,6 @@ class RefreshViewController(private val viewController: TetrisViewController) : 
    * Refreshes preview fields.
    *
    * @param preview Preview pieces. Must be size 3.
-   *
    * @throws IllegalArgumentException If array does not contain 3 pieces.
    */
   private fun refreshPreview(preview: Array<Piece>) {

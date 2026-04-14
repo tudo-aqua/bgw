@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,4 +20,9 @@ package data.event
 import ID
 import kotlinx.serialization.Serializable
 
-@Serializable internal class DragGestureEndedEventData(var droppedOn: ID?) : EventData()
+@Serializable
+internal class DragGestureEndedEventData(
+    var droppedOn: ID?,
+    val posX: Double = 0.0,
+    val posY: Double = 0.0,
+) : EventData()

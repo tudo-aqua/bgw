@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,19 +29,16 @@ import tools.aqua.bgw.visual.Visual
 /**
  * A [ColorPicker] that allows to choose a [Color].
  *
- * @constructor Creates a [ColorPicker].
- *
  * @param posX Horizontal coordinate for this [ColorPicker]. Default: 0.
  * @param posY Vertical coordinate for this [ColorPicker]. Default: 0.
  * @param width Width for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_WIDTH].
  * @param height Height for this [ColorPicker]. Default: [DEFAULT_COLOR_PICKER_HEIGHT].
  * @param initialColor The [Color] that is initially selected. Default: [Color.WHITE].
  * @param visual [Visual] for this [ColorPicker]. Default: [Visual.EMPTY].
- *
+ * @constructor Creates a [ColorPicker].
  * @see Color
  * @see Visual
  * @see UIComponent
- *
  * @since 0.1
  */
 open class ColorPicker(
@@ -76,7 +73,6 @@ open class ColorPicker(
    * Gets invoked whenever the selected [Color] changes.
    *
    * @see selectedColor
-   *
    * @since 0.10
    */
   var onColorSelected: ((Color) -> Unit)? = null

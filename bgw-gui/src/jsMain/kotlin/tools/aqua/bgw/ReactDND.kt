@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +25,10 @@ import react.*
 import react.dom.aria.AriaAttributes
 import react.dom.events.KeyboardEvent
 import web.dom.Element
+import web.dom.Node
 import web.html.HTMLElement
 
-@JsName("DndContext") internal external val DndContext: ComponentClass<DndContextProps>
+@JsName("DndContext") internal external val DndContext: ComponentType<DndContextProps>
 
 internal external interface DndContextProps : PropsWithChildren {
   var onDragEnd: (DragEndEvent) -> Unit
@@ -35,9 +36,12 @@ internal external interface DndContextProps : PropsWithChildren {
   var onDragMove: (DragMultiEvent) -> Unit
   var onDragOver: (DragMultiEvent) -> Unit
   var measuring: MeasuringConfiguration
+  var collisionDetection: dynamic
 
   var sensors: Array<dynamic>
 }
+
+@JsName("pointerWithin") internal external val pointerWithin: dynamic
 
 internal external interface Measuring {
   var measure: (element: HTMLElement) -> LayoutRect
@@ -85,11 +89,13 @@ internal external fun useDraggable(options: DraggableOptions): DraggableResult
 @JsName("useDroppable")
 internal external fun useDroppable(options: DroppableOptions): DroppableResult
 
-@JsName("DragOverlay") internal external val DragOverlay: ComponentClass<DragOverlayProps>
+@JsName("useDndContext") internal external fun useDndContext(): PublicContextDescriptor
+
+@JsName("DragOverlay") internal external val DragOverlay: ComponentType<DragOverlayProps>
 
 internal external interface DragOverlayProps :
     PropsWithChildren, PropsWithClassName, PropsWithStyle {
-  var dropAnimation: Boolean
+  var dropAnimation: Boolean?
 }
 
 internal external interface DraggableOptions {
@@ -122,6 +128,11 @@ internal external interface DraggableTransform {
 }
 
 internal external interface DragStartEvent {
+  val active: DragEventActive?
+  val activeNode: Node?
+}
+
+internal external interface PublicContextDescriptor {
   val active: DragEventActive?
 }
 

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const AsyncPlayground = asyncComponent(
-  () => import("@/components/ReactKotlinPlayground")
+  () => import("@/components/ReactKotlinPlayground"),
 );
 
 function PreviewTab({
@@ -40,11 +40,21 @@ function PreviewTab({
   let doc = data.doc;
 
   let isAnimation = data.codepoint.length > 1;
+  console.log("PreviewTab", { data, msg, doc, code, isAnimation });
 
   const replaceImageVisualPathsRecursively = (obj, path) => {
     if (typeof obj === "object") {
       for (let key in obj) {
-        if (["currentVisual", "visual", "front", "back"].includes(key)) {
+        if (
+          [
+            "currentVisual",
+            "visual",
+            "front",
+            "back",
+            "toVisual",
+            "fromVisual",
+          ].includes(key)
+        ) {
           if (obj[key].children && obj[key].children.length > 0) {
             obj[key].children.forEach((child, index) => {
               if (child.type === "ImageVisualData") {
@@ -84,6 +94,7 @@ function PreviewTab({
   if (data.codepoint.length > 1) {
     anim = JSON.parse(info[data.codepoint[1]]);
     anim.data.componentView = msg.props.data.gameScene.components[0];
+    replaceImageVisualPathsRecursively(anim.data, `/bgw`);
     anim = { container: `bgw-root-${randomId}`, props: anim };
 
     /* let randomContainerId = Math.random().toString(36).substring(7);
@@ -109,21 +120,21 @@ function PreviewTab({
   };
 
   function resetAnimation() {
-    document
-      .getElementById(
-        msg.props.data.gameScene.components[0].id +
-          "--" +
-          anim.props.data.animationType
-      )
-      .remove();
+    msg.props.data.gameScene.components.forEach((component) => {
+      document.getElementById(component.id).style = "";
+      resetAnimationRecursively(component);
+    });
+    console.log(msg);
     sendJsonMessage(msg);
-    // document
-    //   .getElementById(msg.props.data.gameScene.components[0].id)
-    //   .classList.remove(
-    //     msg.props.data.gameScene.components[0].id +
-    //       "--" +
-    //       anim.props.data.animationType
-    //   );
+  }
+
+  function resetAnimationRecursively(obj) {
+    if (typeof obj === "object" && obj.components) {
+      obj.components.forEach((component) => {
+        document.getElementById(component.id).style = "";
+        resetAnimationRecursively(component);
+      });
+    }
   }
 
   const handleCopyCode = () => {
@@ -136,24 +147,24 @@ function PreviewTab({
         <div className="flex-shrink-0 w-[calc((100%-1rem)/5*2)] min-w-2/5 max-xl:w-full">
           <div className="relative">
             {isAnimation && (
-              <div className="absolute top-0 right-0 z-10 inline-flex items-center justify-center h-10 gap-2 rounded-xl text-muted-foreground">
+              <div className="absolute z-10 inline-flex items-center justify-center h-[24px] gap-6 top-4 right-6 rounded-xl text-muted-foreground">
                 <Button
-                  className="inline-flex items-center justify-center h-10 gap-2 transition-all rounded-lg whitespace-nowrap bg-muted/50 hover:text-white text-muted-foreground hover:bg-muted/80 aspect-square"
+                  className="inline-flex items-center justify-center h-[24px] gap-2 transition-all bg-transparent rounded-lg whitespace-nowrap hover:text-white text-muted-foreground px-0 hover:bg-transparent"
                   onClick={() => resetAnimation()}
                 >
-                  <i className="text-xl material-symbols-rounded">
+                  <i className="text-sm material-symbols-rounded">
                     rotate_left
                   </i>
                   Reset
                 </Button>
                 <Button
-                  className="inline-flex items-center justify-center h-10 gap-2 transition-all rounded-lg whitespace-nowrap bg-muted/50 hover:text-white text-muted-foreground hover:bg-muted/80 aspect-square"
+                  className="inline-flex items-center justify-center h-[24px] gap-2 transition-all bg-transparent rounded-lg whitespace-nowrap hover:text-white text-muted-foreground px-0 hover:bg-transparent"
                   onClick={() => {
                     sendJsonMessage(anim);
                   }}
                 >
-                  <i className="text-xl material-symbols-rounded">
-                    slow_motion_video
+                  <i className="text-base material-symbols-rounded">
+                    play_arrow
                   </i>
                   Animate
                 </Button>
@@ -168,9 +179,9 @@ function PreviewTab({
             <Tooltip delayDuration={700} align="start" sideOffset={5}>
               <TooltipTrigger asChild>
                 <img
-                  src="/bgw/logo.svg"
+                  src="/bgw/logo_muted.svg"
                   alt="Preview"
-                  className="absolute w-6 bottom-3 left-4 opacity-20 hover:opacity-100 cursor-help"
+                  className="absolute w-6 transition-all bottom-3 left-4 opacity-40 hover:opacity-100 cursor-help"
                 />
               </TooltipTrigger>
               <TooltipContent>

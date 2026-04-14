@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,7 +50,6 @@ class GameInstance(
    * Removes given player from this game and updates orphaned status.
    *
    * @param player Player to be removed from this game
-   *
    * @return 'true' iff the [player] was in the players list and was successfully removed.
    */
   fun remove(player: Player): Boolean =
@@ -60,7 +59,6 @@ class GameInstance(
    * Adds given player to this game and updates orphaned status.
    *
    * @param player Player to be added to this game
-   *
    * @return 'true' iff the [player] was successfully added.
    */
   fun add(player: Player): Boolean = mutablePlayers.add(player).also { updateOrphanedStatus() }

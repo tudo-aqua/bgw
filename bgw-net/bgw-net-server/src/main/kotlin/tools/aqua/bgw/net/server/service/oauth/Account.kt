@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,8 @@
 
 package tools.aqua.bgw.net.server.service.oauth
 
+import jakarta.persistence.*
 import java.io.Serializable
-import javax.persistence.*
 
 /** Represents a user account login in with an oauth provider. */
 @Entity

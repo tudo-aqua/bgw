@@ -42,7 +42,7 @@ For easy access to the components contained in a container, the `components` pro
 
 <signature>
 <code-block lang="kotlin" copy="false">
-components : List&lt;T&gt;
+components: List&lt;T&gt;
 </code-block>
 
 This property holds all components that are currently contained in the container.

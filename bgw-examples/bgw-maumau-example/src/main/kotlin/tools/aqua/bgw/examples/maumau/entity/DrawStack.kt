@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,6 @@ class DrawStack : MauMauStack() {
    * communication.
    *
    * @param cards Cards to be shuffled.
-   *
    * @return New permutation of cards on the stack.
    */
   fun shuffleBack(cards: List<MauMauCard>): List<MauMauCard> {

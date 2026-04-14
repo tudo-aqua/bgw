@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@
 package tools.aqua.bgw.main
 
 import java.io.File
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tools.aqua.bgw.application.Config
 import tools.aqua.bgw.main.examples.ExampleApplication

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,8 +30,6 @@ import tools.aqua.bgw.util.Coordinate
  *
  * Moves given [ComponentView] relative to parents anchor point.
  *
- * @constructor Creates a [MovementAnimation] for the given [ComponentView].
- *
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate
  * @param fromX Initial X position. Default: Current [ComponentView.posX].
@@ -40,11 +38,17 @@ import tools.aqua.bgw.util.Coordinate
  * @param toY Resulting Y position. Default: Current [ComponentView.posY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  * @param interpolation [AnimationInterpolation] to use for the animation. Default:
- * [AnimationInterpolation.SMOOTH].
- *
+ *   [AnimationInterpolation.SMOOTH].
+ *     @param persist Whether the animation will be persisted and changed the [componentView]'s
+ *       state. If set to `false`, it will reset on completion. Default: `true`.
+ * @constructor Creates a [MovementAnimation] for the given [ComponentView].
  * @see ComponentAnimation
  * @see Animation
  * @see ComponentView
+ *
+ * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.greenToken
+ * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationTo
+ * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playMovementAnimationTo
  *
  * @since 0.1
  */
@@ -59,11 +63,11 @@ class MovementAnimation<T : ComponentView>(
      * Interpolation to use for the animation. Default: [AnimationInterpolation.SMOOTH].
      *
      * @see AnimationInterpolation
-     *
      * @since 0.10
      */
-    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
-) : ComponentAnimation<T>(componentView = componentView, duration = duration) {
+    val interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+    persist: Boolean = true
+) : ComponentAnimation<T>(componentView = componentView, duration = duration, persist = persist) {
 
   /** Initial X position. */
   val fromX: Double = fromX.toDouble()
@@ -85,11 +89,16 @@ class MovementAnimation<T : ComponentView>(
    * @param byY Relative Y movement.
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-   * [AnimationInterpolation.SMOOTH].
-   *
+   *   [AnimationInterpolation.SMOOTH].
+   *     @param persist Whether the animation will be persisted and changed the [componentView]'s
+   *       state. If set to `false`, it will reset on completion. Default: `true`.
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
+   *
+   * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.blueToken
+   * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationBy
+   * // * @sample tools.aqua.bgw.main.examples.ExampleAnimationScene.playMovementAnimationBy
    *
    * @since 0.1
    */
@@ -98,17 +107,21 @@ class MovementAnimation<T : ComponentView>(
       byX: Number = 0.0,
       byY: Number = 0.0,
       duration: Int = 1000,
-      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+      persist: Boolean = true
   ) : this(
       componentView = componentView,
       fromX = componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX,
       fromY = componentView.parent?.getChildPosition(componentView)?.yCoord ?: componentView.posY,
-      toX = (componentView.parent?.getChildPosition(componentView)?.xCoord
-              ?: componentView.posX) + byX.toDouble(),
-      toY = (componentView.parent?.getChildPosition(componentView)?.yCoord
-              ?: componentView.posY) + byY.toDouble(),
+      toX =
+          (componentView.parent?.getChildPosition(componentView)?.xCoord ?: componentView.posX) +
+              byX.toDouble(),
+      toY =
+          (componentView.parent?.getChildPosition(componentView)?.yCoord ?: componentView.posY) +
+              byY.toDouble(),
       duration = duration,
-      interpolation = interpolation)
+      interpolation = interpolation,
+      persist = persist)
 
   companion object {
     /**
@@ -118,18 +131,21 @@ class MovementAnimation<T : ComponentView>(
      * @param T Generic [ComponentView].
      * @param componentView [ComponentView] to animate
      * @param toComponentViewPosition Defines the destination [ComponentView] to move the given
-     * component to.
+     *   component to.
      * @param scene The [Scene].
      * @param duration [Animation] duration in milliseconds. Default: 1 second
      * @param interpolation [AnimationInterpolation] to use for the animation. Default:
-     * [AnimationInterpolation.SMOOTH].
+     *   [AnimationInterpolation.SMOOTH].
+     *     @param persist Whether the animation will be persisted and changed the [componentView]'s
+     *       state. If set to `false`, it will reset on completion. Default: `true`.
      */
     fun <T : ComponentView> toComponentView(
         componentView: T,
         toComponentViewPosition: T,
         scene: Scene<*>,
         duration: Int = 1000,
-        interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
+        interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+        persist: Boolean = true
     ): MovementAnimation<T> {
       // Find visual tree for components and drop root node
       val pathToComponent = scene.findPathToChild(componentView).dropLast(1)
@@ -166,7 +182,8 @@ class MovementAnimation<T : ComponentView>(
           byX = vector.xCoord,
           byY = vector.yCoord,
           duration = duration,
-          interpolation = interpolation)
+          interpolation = interpolation,
+          persist = persist)
     }
   }
 }

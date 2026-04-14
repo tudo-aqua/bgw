@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,17 +29,16 @@ import tools.aqua.bgw.visual.Visual
  * Sets background to given [fromVisual] than contracts background in half the given duration,
  * switches to [toVisual] and extends again in half the given duration.
  *
- * @constructor Creates a [FlipAnimation] for the given [GameComponentView].
- *
  * @param T Generic [GameComponentView].
  * @param gameComponentView [GameComponentView] to animate.
  * @param fromVisual Initial [Visual].
  * @param toVisual Resulting [Visual].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
- *
+ * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+ *   If set to `false`, it will reset on completion. Default: `true`.
+ * @constructor Creates a [FlipAnimation] for the given [GameComponentView].
  * @see ComponentAnimation
  * @see GameComponentView
- *
  * @since 0.1
  */
 class FlipAnimation<T : GameComponentView>(
@@ -48,5 +47,8 @@ class FlipAnimation<T : GameComponentView>(
     val fromVisual: Visual = gameComponentView.visual,
     /** Resulting [Visual]. */
     val toVisual: Visual,
-    duration: Int = DEFAULT_ANIMATION_SPEED
-) : ComponentAnimation<T>(componentView = gameComponentView, duration = duration)
+    duration: Int = DEFAULT_ANIMATION_SPEED,
+    persist: Boolean = true
+) :
+    ComponentAnimation<T>(
+        componentView = gameComponentView, duration = duration, persist = persist)

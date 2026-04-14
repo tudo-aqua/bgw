@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -161,6 +161,7 @@ private val module = SerializersModule {
     subclass(DragDroppedEventData::class)
     subclass(CheckBoxChangedEventData::class)
     subclass(AnimationFinishedEventData::class)
+    subclass(AnimationsStoppedEventData::class)
     subclass(StructuredDataSelectEventData::class)
     subclass(ScrollEventData::class)
     subclass(FilesPickedEventData::class)

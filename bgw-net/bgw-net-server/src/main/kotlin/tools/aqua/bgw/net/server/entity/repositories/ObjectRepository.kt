@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,6 @@ sealed class ObjectRepository<T> {
    * Adds the given object to the [objectSet].
    *
    * @param obj object to add.
-   *
    * @return 'true' iff [obj] was successfully added to [objectSet].
    */
   fun add(obj: T): Boolean = objectSet.add(obj)
@@ -38,7 +37,6 @@ sealed class ObjectRepository<T> {
    * Removes the given object from the [objectSet].
    *
    * @param obj object to remove.
-   *
    * @return 'true' iff [obj] was successfully removed from [objectSet].
    */
   fun remove(obj: T): Boolean = objectSet.remove(obj)

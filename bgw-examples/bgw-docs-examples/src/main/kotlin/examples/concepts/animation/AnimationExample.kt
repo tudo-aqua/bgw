@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -142,10 +142,7 @@ class AnimationExample : BoardGameApplication("Animation example") {
               speed = 50))
     }
     buttonDie.onMouseClicked = {
-      gameScene.playAnimation(
-          DiceAnimation(dice = die, toSide = 3, duration = 1000, speed = 50).apply {
-            onFinished = { die.currentSide = 3 }
-          })
+      gameScene.playAnimation(DiceAnimation(dice = die, toSide = 3, duration = 1000, speed = 50))
     }
 
     gameScene.addComponents(

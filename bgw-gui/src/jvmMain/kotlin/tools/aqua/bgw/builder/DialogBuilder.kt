@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -139,7 +139,8 @@ internal object DialogBuilder {
         .line { color: #9ca3af; font-family: monospace; }
         .elem { color: #ea7afc; font-family: monospace; }
         .msg { color: #9ca3af; font-style: italic; font-family: monospace; }
-    """.trimIndent()
+    """
+          .trimIndent()
 
   internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
     browser.executeJavaScript(
@@ -197,7 +198,8 @@ internal object DialogBuilder {
                     </div>
                 </body>
             </html>`);
-        """.trimIndent(),
+        """
+            .trimIndent(),
         browser.url,
         0)
   }
@@ -256,7 +258,8 @@ internal object DialogBuilder {
                     </div>
                 </body>
             </html>`);
-        """.trimIndent(),
+        """
+            .trimIndent(),
         browser.url,
         0)
   }

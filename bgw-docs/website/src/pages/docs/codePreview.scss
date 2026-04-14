@@ -12,6 +12,12 @@
       display: none;
     }
   }
+
+  .bgw-root {
+    & > bgw_visuals {
+      display: none;
+    }
+  }
 }
 
 .code-tabs {

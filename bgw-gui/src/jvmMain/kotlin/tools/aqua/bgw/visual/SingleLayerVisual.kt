@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,6 @@ import tools.aqua.bgw.style.Style
  * @see TextVisual
  * @see ImageVisual
  * @see ColorVisual
- *
  * @since 0.1
  */
 sealed class SingleLayerVisual(rot: Double) : Visual() {
@@ -112,7 +111,6 @@ sealed class SingleLayerVisual(rot: Double) : Visual() {
    * The [flipped] state of this [Visual].
    *
    * @see Flip
-   *
    * @since 0.10
    */
   var flipped: Flip

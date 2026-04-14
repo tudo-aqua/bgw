@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,21 +24,18 @@ import tools.aqua.bgw.event.DragEvent
 import tools.aqua.bgw.event.DropEvent
 import tools.aqua.bgw.observable.properties.BooleanProperty
 import tools.aqua.bgw.observable.properties.Property
-import tools.aqua.bgw.observable.properties.ReadonlyBooleanProperty
 import tools.aqua.bgw.visual.Visual
 
 /**
  * Baseclass for all [ComponentView]s that can be draggable. Inheriting components can only be added
  * to [BoardGameScene]s.
  *
- * @constructor Creates a [DynamicComponentView].
- *
  * @param posX The X coordinate for this [DynamicComponentView] relative to its container.
  * @param posY The Y coordinate for this [DynamicComponentView] relative to its container.
  * @param width Width for this [DynamicComponentView].
  * @param height Height for this [DynamicComponentView].
  * @param visual Visual for this [DynamicComponentView].
- *
+ * @constructor Creates a [DynamicComponentView].
  * @see BoardGameScene
  */
 abstract class DynamicComponentView
@@ -64,7 +61,7 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @see isDragged
    */
-  internal val isDraggedProperty: ReadonlyBooleanProperty = ReadonlyBooleanProperty(false)
+  internal val isDraggedProperty: BooleanProperty = BooleanProperty(false)
 
   /** Reflects whether component is currently dragged or not. */
   var isDragged: Boolean

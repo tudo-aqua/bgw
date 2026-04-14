@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 The BoardGameWork Authors
+ * Copyright 2024-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,6 @@ import tools.aqua.bgw.components.gamecomponentviews.HexagonView
  *
  * @see HexagonView
  * @see HexagonGrid
- *
  * @since 0.10
  */
 enum class HexOrientation {

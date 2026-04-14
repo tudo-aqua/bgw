@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@ package tools.aqua.bgw.components.uicomponents
  * @see StructuredDataView
  * @see ListView
  * @see TableView
- *
  * @since 0.6
  */
 enum class SelectionMode {

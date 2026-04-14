@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,6 +51,9 @@ internal fun PropertiesBuilder.cssBuilderIntern(componentViewData: CheckBoxData)
 
 internal val CheckBox =
     FC<CheckBoxProps> { props ->
+      // Clean up animation CSS when animation finishes
+      useAnimationCleanup(props.data)
+
       val droppable =
           useDroppable(
               object : DroppableOptions {
@@ -84,11 +87,11 @@ internal val CheckBox =
                   props.data.isChecked,
                   props.data.isIndeterminate,
                   props.data.allowIndeterminate)) {
-            document.getElementById(props.data.id + "--checkbox")?.let {
-              (it as HTMLInputElement).indeterminate =
-                  if (!props.data.isChecked) props.data.isIndeterminate else false
-            }
-          }
+                document.getElementById(props.data.id + "--checkbox")?.let {
+                  (it as HTMLInputElement).indeterminate =
+                      if (!props.data.isChecked) props.data.isIndeterminate else false
+                }
+              }
 
           css {
             width = 20.bgw

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,6 +86,7 @@ interface Refreshable {
   // region Network join handshake
   /**
    * Show dialog waiting for opponents.
+   *
    * @param sessionID Session ID for this game. ``null`` if creation was not successful.
    */
   fun onCreateGameSuccess(sessionID: String?)
@@ -98,6 +99,7 @@ interface Refreshable {
 
   /** Refresh on user left. */
   fun onUserLeft(sender: String)
+
   // endregion
 
   // region Network errors

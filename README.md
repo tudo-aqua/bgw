@@ -37,7 +37,7 @@ Start by adding the latest version of BGW as a dependency to your project.
 
 #### Gradle
 ```gradle
-implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
+implementation(group = "tools.aqua", name = "bgw-gui", version = "0.11")
 ```
 
 #### Maven
@@ -45,7 +45,7 @@ implementation(group = "tools.aqua", name = "bgw-gui", version = "0.10")
 <dependency>
     <groupId>tools.aqua</groupId>
     <artifactId>bgw-gui</artifactId>
-    <version>0.10</version>
+    <version>0.11</version>
 </dependency>
 ``` 
 
@@ -55,10 +55,11 @@ When running on JDK 16 or later, you need to add the following JVM arguments to 
 ```gradle
 application {
     applicationDefaultJvmArgs = listOf(
-        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/java.awt.peer=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.lwawt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/sun.lwawt.macosx=ALL-UNNAMED"
+        "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+        "--enable-native-access=ALL-UNNAMED"
     )
 }
 ```
@@ -71,6 +72,7 @@ application {
         --add-opens java.desktop/java.awt.peer=ALL-UNNAMED
         --add-opens java.desktop/sun.lwawt=ALL-UNNAMED
         --add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED
+        --enable-native-access ALL-UNNAMED
     </jvmArguments>
 </configuration>
 ```

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,66 +19,159 @@
 
 package tools.aqua.bgw.net.client
 
-/**
- * Network logger. Prints debug info to the console according to verbosity.
- *
- * @property networkLoggingBehavior Verbosity of output.
- */
-internal class NetworkLogger(private val networkLoggingBehavior: NetworkLogging) {
+internal fun String.black() = "\u001B[30m$this\u001B[0m"
 
-  /**
-   * Prints [msg] to the error stream ignoring [networkLoggingBehavior].
-   *
-   * @param msg Message to be printed.
-   */
-  fun err(msg: String) {
-    System.err.println(msg)
-  }
+internal fun String.red() = "\u001B[31m$this\u001B[0m"
 
-  /**
-   * Prints [msg] to the out stream ignoring [networkLoggingBehavior].
-   *
-   * @param msg Message to be printed.
-   */
-  fun println(msg: String) {
-    kotlin.io.println(msg)
-  }
+internal fun String.green() = "\u001B[32m$this\u001B[0m"
 
-  /**
-   * Prints an error to the console if verbosity is not [NetworkLogging.NO_LOGGING].
-   *
-   * @param msg Message to be printed.
-   * @param throwable Error that was thrown.
-   */
-  fun error(msg: String, throwable: Throwable? = null) {
-    if (networkLoggingBehavior != NetworkLogging.NO_LOGGING) {
-      println("[ERROR] $msg")
-      throwable?.printStackTrace()
+internal fun String.yellow() = "\u001B[33m$this\u001B[0m"
+
+internal fun String.blue() = "\u001B[34m$this\u001B[0m"
+
+internal fun String.purple() = "\u001B[35m$this\u001B[0m"
+
+internal fun String.cyan() = "\u001B[36m$this\u001B[0m"
+
+internal fun String.white() = "\u001B[37m$this\u001B[0m"
+
+internal fun String.gray() = "\u001B[90m$this\u001B[0m"
+
+internal fun String.bold() = "\u001B[1m$this"
+
+internal fun String.colorize(color: Colors) =
+    when (color) {
+      Colors.BLACK -> this.black()
+      Colors.RED -> this.red()
+      Colors.GREEN -> this.green()
+      Colors.YELLOW -> this.yellow()
+      Colors.BLUE -> this.blue()
+      Colors.PURPLE -> this.purple()
+      Colors.CYAN -> this.cyan()
+      Colors.WHITE -> this.white()
+      Colors.GRAY -> this.gray()
+    }
+
+internal object Logger {
+  internal var LOGLEVEL = LogType.DEBUG
+
+  internal fun log(message: String, type: LogType = LogType.DEBUG) {
+    if (LOGLEVEL == LogType.SILENT) return
+    when (type) {
+      LogType.INFO -> {
+        if (LogType.INFO < LOGLEVEL) return
+        print("[⁙ bgw-net]".bold().cyan())
+        println(" $message")
+      }
+      LogType.WARN -> {
+        if (LogType.WARN < LOGLEVEL) return
+        print("[⁙ bgw-net]".bold().yellow())
+        println(" $message".yellow())
+      }
+      LogType.ERROR -> {
+        if (LogType.ERROR < LOGLEVEL) return
+        print("[⁙ bgw-net]".bold().red())
+        println(" $message".red())
+      }
+      LogType.DEBUG -> {
+        if (LOGLEVEL != LogType.DEBUG) return
+        print("[⁙ bgw-net]".bold().gray())
+        println(" $message".gray())
+      }
+      else -> {}
     }
   }
 
-  /**
-   * Prints simple debug information to the console if verbosity is set to [NetworkLogging.INFO] or
-   * [NetworkLogging.VERBOSE].
-   *
-   * @param msg Message to be printed.
-   */
-  fun info(msg: String) {
-    if (networkLoggingBehavior == NetworkLogging.INFO ||
-        networkLoggingBehavior == NetworkLogging.VERBOSE) {
-      println("[INFO] $msg")
+  internal fun logSingle(message: String, type: LogType = LogType.DEBUG) {
+    if (LOGLEVEL == LogType.SILENT) return
+    when (type) {
+      LogType.INFO -> {
+        if (LogType.INFO < LOGLEVEL) return
+        print("[⁙ bgw-net]".cyan())
+        print(" $message")
+      }
+      LogType.WARN -> {
+        if (LogType.WARN < LOGLEVEL) return
+        print("[⁙ bgw-net]".yellow())
+        print(" $message".yellow())
+      }
+      LogType.ERROR -> {
+        if (LogType.ERROR < LOGLEVEL) return
+        print("[⁙ bgw-net]".red())
+        print(" $message".red())
+      }
+      LogType.DEBUG -> {
+        if (LOGLEVEL != LogType.DEBUG) return
+        print("[⁙ bgw-net]".gray())
+        print(" $message".gray())
+      }
+      else -> {}
     }
   }
 
-  /**
-   * Prints verbose debug information to the console if verbosity is set to [NetworkLogging.VERBOSE]
-   * .
-   *
-   * @param msg Message to be printed.
-   */
-  fun debug(msg: String) {
-    if (networkLoggingBehavior == NetworkLogging.VERBOSE) {
-      println("[DEBUG] $msg")
+  internal fun log(any: Any, type: LogType = LogType.DEBUG) {
+    log(any.toString(), type)
+  }
+
+  internal fun log(any: Any, color: Colors, type: String) {
+    print("[${type.uppercase()}]".colorize(color))
+    println(" $any")
+  }
+
+  internal fun error(message: Any) {
+    log(message.toString(), LogType.ERROR)
+  }
+
+  internal fun error(stackTrace: Array<StackTraceElement>) {
+    log(stackTrace.map { it.toString() }.joinToString { "\n" }, LogType.ERROR)
+  }
+
+  internal fun error(throwable: Throwable) {
+    log(throwable.stackTraceToString(), LogType.ERROR)
+  }
+
+  internal fun error(msg: String, throwable: Throwable? = null) {
+    if (throwable != null) {
+      val printable = throwable.stackTraceToString()
+      log("$msg: $printable", LogType.ERROR)
+    } else {
+      log(msg, LogType.ERROR)
     }
   }
+
+  internal fun debug(message: Any) {
+    log(message.toString(), LogType.DEBUG)
+  }
+
+  internal fun info(message: Any) {
+    log(message.toString(), LogType.INFO)
+  }
+
+  internal fun warning(message: String) {
+    log(message, LogType.WARN)
+  }
+
+  internal fun warning(stackTrace: Array<StackTraceElement>) {
+    log(stackTrace.map { it.toString() }.joinToString { "\n" }, LogType.WARN)
+  }
+}
+
+internal enum class LogType {
+  DEBUG,
+  INFO,
+  WARN,
+  ERROR,
+  SILENT
+}
+
+internal enum class Colors {
+  BLACK,
+  RED,
+  GREEN,
+  YELLOW,
+  BLUE,
+  PURPLE,
+  CYAN,
+  WHITE,
+  GRAY
 }

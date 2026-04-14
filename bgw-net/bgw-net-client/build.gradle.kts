@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,6 @@ mavenMetadata {
   name.set("BoardGameWork Network Client Library")
   description.set("A framework for board game applications.")
 }
-
-val jacksonVersion = "2.13.1"
 
 dependencies {
   implementation(project(":bgw-net:bgw-net-common"))

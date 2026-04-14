@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,12 +38,10 @@ package tools.aqua.bgw.util
  *
  * is valid because A is only contained once in the domain and in the coDomain.
  *
- * @constructor Creates a map with the given set of elements mapping `pair.first` -> `pair.second`.
- *
  * @param T Type of domain elements.
  * @param R Type of co-domain elements.
  * @param elements Elements to be initialized in the map.
- *
+ * @constructor Creates a map with the given set of elements mapping `pair.first` -> `pair.second`.
  * @since 0.1
  */
 open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
@@ -62,7 +60,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Represents the domain keys of this map as a set.
    *
    * @return The domain keys of this map as a set.
-   *
    * @since 0.9
    */
   val keysForward: Set<T>
@@ -72,7 +69,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Represents the co-domain keys of this map as a set.
    *
    * @return The co-domain keys of this map as a set.
-   *
    * @since 0.9
    */
   val keysBackward: Set<R>
@@ -82,7 +78,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Represents the entries of this map as a set.
    *
    * @return The entries of this map as a set.
-   *
    * @since 0.9
    */
   val entries: Set<Pair<T, R>>
@@ -92,11 +87,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Get the value for a given domain key.
    *
    * @param it Domain key.
-   *
    * @return Value (from the co-domain) for given domain key.
-   *
    * @throws NoSuchElementException If no such element in the domain is found.
-   *
    * @since 0.9
    */
   operator fun get(it: T): R {
@@ -109,7 +101,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @param it Key (from the domain) to set the value for.
    * @param value Value (from the co-domain) to set for given domain key.
-   *
    * @since 0.9
    */
   operator fun set(it: T, value: R) {
@@ -121,7 +112,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * `false` if the relation could not be added.
    *
    * @return `true` if the element was added to the map, `false` otherwise.
-   *
    * @see addAll
    */
   fun add(entity: T, value: R): Boolean {
@@ -137,7 +127,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * `false` if the relation could not be added.
    *
    * @return `true` if the element was added to the map or already existed, `false` otherwise.
-   *
    * @see addAll
    */
   fun add(element: Pair<T, R>): Boolean = add(element.first, element.second)
@@ -155,12 +144,33 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * addAll[(A -> C), (E -> F)] results in [(A -> B), (C -> D)] : false.
    *
    * @return `true` if all elements were added to the map or were already contained, `false`
-   * otherwise.
-   *
+   *   otherwise.
    * @see add
    */
   fun addAll(vararg items: Pair<T, R>): Boolean {
-    val nonDuplicates = items.filter { !contains(it) }.toList()
+    return addAll(items.asList())
+  }
+
+  /**
+   * Adds all relations A -> B. If any of the given elements already exist, it gets ignored. If any
+   * element contains a key or value that already exists, the map remains unchanged.
+   *
+   * Using the example map of [(A -> B), (C -> D)]:
+   *
+   * addAll[(E -> F), (G -> H)] results in [(A -> B), (C -> D), (E -> F), (G -> H)] : true.
+   *
+   * addAll[(A -> B), (E -> F)] results in [(A -> B), (C -> D), (E -> F)] : true.
+   *
+   * addAll[(A -> C), (E -> F)] results in [(A -> B), (C -> D)] : false.
+   *
+   * @return `true` if all elements were added to the map or were already contained, `false`
+   *   otherwise.
+   * @see add
+   * @see addAll
+   * @since 0.11
+   */
+  fun addAll(elements: Collection<Pair<T, R>>): Boolean {
+    val nonDuplicates = elements.filter { !contains(it) }.toList()
     val keys = nonDuplicates.map { it.first }.distinct()
     val values = nonDuplicates.map { it.second }.distinct()
 
@@ -179,9 +189,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Forward lookup for entry.
    *
    * @param entity Relation key.
-   *
    * @return B for query A if relation A -> B exists.
-   *
    * @throws NoSuchElementException If no such element is found.
    */
   fun forward(entity: T): R = map.first { t -> t.first == entity }.second
@@ -190,7 +198,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Forward lookup for entry.
    *
    * @param entity Relation key.
-   *
    * @return B for query A if relation A -> B exists. `null` otherwise.
    */
   fun forwardOrNull(entity: T): R? = map.firstOrNull { t -> t.first == entity }?.second
@@ -199,9 +206,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Backward lookup for entry.
    *
    * @param value Relation value.
-   *
    * @return A for query B if relation A -> B exists.
-   *
    * @throws NoSuchElementException Ff no such element is found.
    */
   fun backward(value: R): T = map.first { t -> t.second == value }.first
@@ -210,7 +215,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Backward lookup for entry.
    *
    * @param value Relation value.
-   *
    * @return A for query B if relation A -> B exists. `null` otherwise.
    */
   fun backwardOrNull(value: R): T? = map.firstOrNull { t -> t.second == value }?.first
@@ -220,9 +224,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @param entity Relation key A.
    * @param value Relation value B.
-   *
    * @return `true` if the element was removed, `false` if the element was not found.
-   *
    * @see removeForward
    * @see removeBackward
    */
@@ -232,9 +234,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Removes relation A -> B if it exists.
    *
    * @param element Pair (Relation key A, Relation value B)
-   *
    * @return `true` if the element was removed, `false` if the element was not found.
-   *
    * @see removeForward
    * @see removeBackward
    */
@@ -244,9 +244,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Removes by forward lookup. Removes relation A -> * if it exists.
    *
    * @param entity Relation key A.
-   *
    * @return `true` if the element was removed, `false` if the element was not found.
-   *
    * @see remove
    * @see removeBackward
    */
@@ -256,9 +254,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Removes by backward lookup. Removes relation * -> B.
    *
    * @param value Relation value B.
-   *
    * @return `true` if the element was removed, `false` if the element was not found.
-   *
    * @see remove
    * @see removeForward
    */
@@ -269,9 +265,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @param entity Relation key A.
    * @param value Relation value B.
-   *
    * @return `true` if the relation exists in this map, `false` otherwise.
-   *
    * @see containsForward
    * @see containsBackward
    */
@@ -281,9 +275,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Returns whether relation A -> B exists in this map.
    *
    * @param pair Relation pair A -> B.
-   *
    * @return `true` if the relation exists in this map, `false` otherwise.
-   *
    * @see containsForward
    * @see containsBackward
    */
@@ -293,9 +285,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Returns whether a relation A -> * exists.
    *
    * @param entity Relation key A.
-   *
    * @return `true` if the relation exists in this map, `false` otherwise.
-   *
    * @see contains
    * @see containsBackward
    */
@@ -305,9 +295,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Returns whether a relation * -> B exists.
    *
    * @param value Relation value B.
-   *
    * @return `true` if the relation exists in this map, `false` otherwise.
-   *
    * @see contains
    * @see containsForward
    */
@@ -338,10 +326,8 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    *
    * @param key Key (from the domain) to set the value for.
    * @param value Value (from the co-domain) to set for given domain key.
-   *
    * @return Pair of overwritten pairs. First element is the pair that was overwritten in the domain
-   * (or null), second element is the pair that was overwritten in the co-domain (or null).
-   *
+   *   (or null), second element is the pair that was overwritten in the co-domain (or null).
    * @since 0.9
    */
   fun put(key: T, value: R): Pair<Pair<T, R>?, Pair<T, R>?> {
@@ -359,7 +345,6 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Set the given entries. Overwrites existing values in domain and co-domain.
    *
    * @param items Entries to set.
-   *
    * @since 0.9
    */
   fun putAll(vararg items: Pair<T, R>) {
@@ -370,10 +355,19 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * Set the given entries. Overwrites existing values in domain and co-domain.
    *
    * @param bidirectionalMap Entries to set from another [BidirectionalMap].
-   *
    * @since 0.9
    */
   fun putAll(bidirectionalMap: BidirectionalMap<T, R>) {
     bidirectionalMap.entries.forEach { entry -> put(entry.first, entry.second) }
+  }
+
+  /**
+   * Set the given entries. Overwrites existing values in domain and co-domain.
+   *
+   * @param elements Entries to set.
+   * @since 0.11
+   */
+  fun putAll(elements: Collection<Pair<T, R>>) {
+    elements.forEach { put(it.first, it.second) }
   }
 }

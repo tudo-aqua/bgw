@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 The BoardGameWork Authors
+ * Copyright 2022-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,14 +42,12 @@ import tools.aqua.bgw.net.common.response.*
  * @property playerName The player name.
  * @property secret The server secret.
  * @property callback Callback to the [BoardGameClient] for message marshalling.
- * @property logger Network logger instance.
  */
 internal class BGWWebSocketClient(
     private val uri: URI,
     private val playerName: String,
     private val secret: String,
-    private val callback: BoardGameClient,
-    private val logger: NetworkLogger
+    private val callback: BoardGameClient
 ) : WebSocketClient(uri) {
 
   /** Object mapper instance for JSON serialization. */
@@ -83,10 +81,11 @@ internal class BGWWebSocketClient(
     val clazz = payload.javaClass.name
     val msg = GameActionMessage(clazz, payloadJson, payload.toString(), playerName)
 
-    logger.debug("Sending GameAction as JSON: $payloadJson")
+    Logger.debug("Sending GameAction as JSON: $payloadJson")
 
     send(mapper.writeValueAsString(msg))
   }
+
   // endregion
 
   // region Callbacks
@@ -97,7 +96,7 @@ internal class BGWWebSocketClient(
    * @param handshakedata The handshake of the websocket instance
    */
   override fun onOpen(handshakedata: ServerHandshake?) {
-    logger.info("Connection is now open.")
+    Logger.info("Connection is now open.")
 
     scope.launch { callback.onOpen() }
   }
@@ -110,8 +109,8 @@ internal class BGWWebSocketClient(
    * @param remote Returns whether the closing of the connection was initiated by the remote host.
    */
   override fun onClose(code: Int, reason: String?, remote: Boolean) {
-    logger.info("Connection is now closed.")
-    logger.debug(
+    Logger.info("Connection is now closed.")
+    Logger.debug(
         "Status code is: $code. The connection was closed with the following reason: $reason. " +
             "The closing was initiated by the ${ if(remote) "remote" else "local"} host.")
 
@@ -119,14 +118,14 @@ internal class BGWWebSocketClient(
   }
 
   /**
-   * Called when an error occurred. If an error causes the websocket connection to fail
-   * #onClose(int, String?, boolean) will be called additionally. This method will be called
+   * Called when an error occurred. If an error causes the websocket connection to
+   * fail #onClose(int, String?, boolean) will be called additionally. This method will be called
    * primarily because of IO or protocol errors.
    *
    * @param ex The exception causing this error
    */
   override fun onError(ex: Exception?) {
-    logger.error("An uncaught error occurred.", ex)
+    Logger.error("An uncaught error occurred.", ex)
 
     scope.launch {
       callback.onError(throwable = ex ?: NullPointerException("Exception itself is null."))
@@ -139,11 +138,11 @@ internal class BGWWebSocketClient(
    * @param message The message that was received.
    */
   override fun onMessage(message: String?) {
-    logger.info("Received message: $message")
+    Logger.info("Received message: $message")
     try {
       val msg = mapper.readValue(message, Message::class.java)
 
-      logger.debug("Received message of type $msg")
+      Logger.debug("Received message of type $msg")
 
       scope.launch { messageMapping(msg) }
     } catch (ise: IllegalArgumentException) {
@@ -159,41 +158,41 @@ internal class BGWWebSocketClient(
 
     when (message) {
       is GameActionMessage -> {
-        logger.debug("Received GameActionMessage. Invoking annotated receiver function.")
+        Logger.debug("Received GameActionMessage. Invoking annotated receiver function.")
         callback.invokeAnnotatedReceiver(message)
       }
       is GameActionResponse -> {
-        logger.debug("Received GameActionResponse. Invoking handler for onGameActionResponse.")
+        Logger.debug("Received GameActionResponse. Invoking handler for onGameActionResponse.")
         callback.onGameActionResponse(message)
       }
       is CreateGameResponse -> {
-        logger.debug("Received CreateGameResponse. Invoking handler for onCreateGameResponse.")
+        Logger.debug("Received CreateGameResponse. Invoking handler for onCreateGameResponse.")
         callback.onCreateGameResponse(message)
       }
       is JoinGameResponse -> {
-        logger.debug("Received JoinGameResponse. Invoking handler for onJoinGameResponse.")
+        Logger.debug("Received JoinGameResponse. Invoking handler for onJoinGameResponse.")
         callback.onJoinGameResponse(message)
       }
       is SpectatorJoinGameResponse -> {
-        logger.debug(
+        Logger.debug(
             "Received SpectatorJoinGameResponse. Invoking handler for onSpectatorJoinGameResponse.")
         callback.onSpectatorJoinGameResponse(message)
       }
       is LeaveGameResponse -> {
-        logger.debug("Received LeaveGameResponse. Invoking handler for onLeaveGameResponse.")
+        Logger.debug("Received LeaveGameResponse. Invoking handler for onLeaveGameResponse.")
         callback.onLeaveGameResponse(message)
       }
       is PlayerJoinedNotification -> {
-        logger.debug("Received PlayerJoinedNotification. Invoking handler for onPlayerJoined.")
+        Logger.debug("Received PlayerJoinedNotification. Invoking handler for onPlayerJoined.")
         callback.onPlayerJoined(message)
       }
       is SpectatorJoinedNotification -> {
-        logger.debug(
+        Logger.debug(
             "Received SpectatorJoinedNotification. Invoking handler for onSpectatorJoined.")
         callback.onSpectatorJoined(message)
       }
       is PlayerLeftNotification -> {
-        logger.debug("Received PlayerLeftNotification. Invoking handler for onPlayerLeft.")
+        Logger.debug("Received PlayerLeftNotification. Invoking handler for onPlayerLeft.")
         callback.onPlayerLeft(message)
       }
     }

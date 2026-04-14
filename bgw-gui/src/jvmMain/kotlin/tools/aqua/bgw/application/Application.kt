@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import DialogData
 
 internal interface Application {
   fun start(onClose: () -> Unit, callback: (Any) -> Unit)
+
   fun stop()
 
   fun clearAllEventListeners() {}

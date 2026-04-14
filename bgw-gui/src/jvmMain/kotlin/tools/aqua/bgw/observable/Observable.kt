@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,7 +98,6 @@ abstract class Observable {
    * Removes a [listener].
    *
    * @param listener Listener to remove.
-   *
    * @return `true` if the listener has been successfully removed, `false` if it was not found.
    */
   fun removeListener(listener: Observer): Boolean = listeners.remove(listener)

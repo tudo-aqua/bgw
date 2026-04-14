@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2025 The BoardGameWork Authors
+ * Copyright 2021-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,6 @@ import kotlin.reflect.KClass
  * is prohibited.
  *
  * @constructor Creates an [IllegalInheritanceException].
- *
  * @since 0.1
  */
 internal class IllegalInheritanceException(inheritance: Any, supertype: KClass<*>) :
