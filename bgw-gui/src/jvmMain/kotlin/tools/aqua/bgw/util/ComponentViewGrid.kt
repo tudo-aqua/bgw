@@ -231,6 +231,9 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   fun getColumnWidth(columnIndex: Int): Double {
     checkColumnIndex(columnIndex)
 
+    if (columnWidths[columnIndex] == -1.0)
+        return getColumn(columnIndex).maxOf { it?.actualWidth ?: 0.0 }
+
     return columnWidths[columnIndex]
   }
 
@@ -292,6 +295,8 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   fun getRowHeight(rowIndex: Int): Double {
     checkRowIndex(rowIndex)
 
+    if (rowHeights[rowIndex] == -1.0) return getColumn(rowIndex).maxOf { it?.actualHeight ?: 0.0 }
+
     return rowHeights[rowIndex]
   }
 
@@ -347,14 +352,15 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
    *
    * @return Preferred column widths.
    */
-  fun getColumnWidths(): DoubleArray = columnWidths
+  fun getColumnWidths(): DoubleArray =
+      List(getColumns().size) { i -> getColumnWidth(i) }.toDoubleArray()
 
   /**
    * Returns preferred row heights ([ROW_HEIGHT_AUTO] for auto).
    *
    * @return Preferred row heights.
    */
-  fun getRowHeights(): DoubleArray = rowHeights
+  fun getRowHeights(): DoubleArray = List(getRows().size) { i -> getRowHeight(i) }.toDoubleArray()
 
   // endregion
 
