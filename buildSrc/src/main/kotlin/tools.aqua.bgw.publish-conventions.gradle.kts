@@ -21,9 +21,12 @@ import tools.aqua.MavenMetadataExtension
 plugins {
   id("tools.aqua.bgw.base-conventions")
   id("com.vanniktech.maven.publish")
+  signing
 }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
+
+signing { useGpgCmd() }
 
 mavenPublishing {
   publishToMavenCentral()
