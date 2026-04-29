@@ -33,6 +33,7 @@ plugins {
   id("org.jetbrains.kotlinx.kover")
   id("com.vanniktech.maven.publish")
   id("com.diffplug.spotless")
+  signing
 }
 
 val propertyFile = "Config.kt"
@@ -228,6 +229,8 @@ mavenPublishing {
     }
   }
 }
+
+signing { useGpgCmd() }
 
 spotless {
   kotlin {
