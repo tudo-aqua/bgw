@@ -25,8 +25,30 @@ plugins {
 }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
+val stagingToken = providers.gradleProperty("stagingToken").get()
+val stagingServer = providers.gradleProperty("stagingServer").get()
 
 signing { useGpgCmd() }
+
+publishing {
+  repositories {
+    maven {
+      name = "staging"
+      setUrl(stagingServer)
+      credentials(HttpHeaderCredentials::class) {
+        name = "Private-Token"
+        value = stagingToken
+      }
+      authentication { create<HttpHeaderAuthentication>("header") }
+    }
+  }
+
+}
+
+tasks.publish {
+  dependsOn(project.tasks.named("publishAllPublicationsToStagingRepository"))
+}
+
 
 mavenPublishing {
   publishToMavenCentral()

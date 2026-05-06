@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import gradle.kotlin.dsl.accessors._e6d6b7590b198cd1142dd34cafa85fef.publishing
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
@@ -38,6 +39,24 @@ plugins {
 
 val propertyFile = "Config.kt"
 val wrappersVersion = "2025.5.6"
+val stagingToken = providers.gradleProperty("stagingToken").get()
+val stagingServer = providers.gradleProperty("stagingServer").get()
+
+publishing {
+  repositories {
+    maven {
+      name = "staging"
+      setUrl(stagingServer)
+      credentials(HttpHeaderCredentials::class) {
+        name = "Private-Token"
+        value = stagingToken
+      }
+      authentication { create<HttpHeaderAuthentication>("header") }
+    }
+  }
+
+}
+
 
 fun buildDefaultPropertyFile() {
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
