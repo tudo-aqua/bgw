@@ -23,7 +23,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.11] - TBD
+## [0.11] - 06.05.2026
 
 ### Breaking Changes
 - Reworked Animation System to be easier to understand while still providing all options.
