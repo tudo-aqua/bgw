@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed animation on `LayoutView` and `GameComponentContainer` propagating down to their children causing twice the wanted change.
+- Fixed `ImageVisual`s rarely not updating if image was cached and `offsetX`/`offsetY` were the only changing attributes.
 
 ## [0.11] - 06.05.2026
 
