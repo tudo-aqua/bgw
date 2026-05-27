@@ -65,6 +65,13 @@ internal fun PropertiesBuilder.cssBuilder(componentViewData: ComponentViewData) 
   set(CustomPropertyName("--sx"), componentViewData.scaleX)
   set(CustomPropertyName("--sy"), componentViewData.scaleY)
   set(CustomPropertyName("--opa"), componentViewData.opacity)
+
+  set(CustomPropertyName("--txAnim"), Globals.initial)
+  set(CustomPropertyName("--tyAnim"), Globals.initial)
+  set(CustomPropertyName("--rotAnim"), Globals.initial)
+  set(CustomPropertyName("--sxAnim"), Globals.initial)
+  set(CustomPropertyName("--syAnim"), Globals.initial)
+  set(CustomPropertyName("--opaAnim"), Globals.initial)
 }
 
 internal fun PropertiesBuilder.cssBackupTransformBuilder(componentViewData: ComponentViewData) {

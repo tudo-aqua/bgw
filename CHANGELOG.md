@@ -23,6 +23,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - TBD
+
+### Fixed
+- Fixed animation on `LayoutView` and `GameComponentContainer` propagating down to their children causing twice the wanted change.
+
 ## [0.11] - 06.05.2026
 
 ### Breaking Changes
