@@ -20,18 +20,20 @@ package tools.aqua.bgw.elements.visual
 import ImageVisualData
 import emotion.react.css
 import kotlinx.browser.document
-import org.w3c.dom.*
+import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.events.Event
 import react.FC
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.canvas
-import react.useEffect
+import react.useEffectWithCleanup
 import react.useRef
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
+import web.canvas.CanvasImageSource
 import web.canvas.CanvasRenderingContext2D
 import web.cssom.*
 import web.dom.Element
@@ -45,9 +47,59 @@ internal external interface ImageVisualProps : Props {
 
 internal val ImageVisual =
     FC<ImageVisualProps> { props ->
-      if (props.data.width != -1 && props.data.height != -1) {
-        val canvasRef = useRef<HTMLCanvasElement>(null)
+      val canvasRef = useRef<HTMLCanvasElement>(null)
+      val imgRef = useRef<HTMLImageElement>(null)
 
+      useEffectWithCleanup(
+          props.data.path,
+          props.data.offsetX,
+          props.data.offsetY,
+          props.data.width,
+          props.data.height,
+      ) {
+        if (props.data.width == -1 || props.data.height == -1) {
+          return@useEffectWithCleanup
+        }
+
+        val img =
+            imgRef.current
+                ?: (document.createElement("img") as HTMLImageElement).also { imgRef.current = it }
+
+        fun draw() {
+          val canvas = canvasRef.current ?: return
+          val ctx =
+              canvas.getContext(CanvasRenderingContext2D.ID) as? CanvasRenderingContext2D ?: return
+
+          val width = props.data.width.toDouble()
+          val height = props.data.height.toDouble()
+
+          ctx.clearRect(0.0, 0.0, width, height)
+          ctx.drawImage(
+              img.unsafeCast<CanvasImageSource>(),
+              props.data.offsetX.toDouble(),
+              props.data.offsetY.toDouble(),
+              width,
+              height,
+              0.0,
+              0.0,
+              width,
+              height)
+        }
+
+        val handler: (Event) -> Unit = { draw() }
+
+        img.addEventListener("load", handler)
+
+        if (img.getAttribute("src") != props.data.path) {
+          img.setAttribute("src", props.data.path)
+        } else if (img.complete) {
+          draw()
+        }
+
+        onCleanup { img.removeEventListener("load", handler) }
+      }
+
+      if (props.data.width != -1 && props.data.height != -1) {
         bgwImageVisual {
           css {
             styleBuilder(props.data.style)
@@ -69,34 +121,7 @@ internal val ImageVisual =
               position = Position.absolute
               width = 100.pct
               height = 100.pct
-
               opacity = number(props.data.transparency)
-            }
-
-            useEffect {
-              val img = document.createElement("img") as HTMLImageElement
-              img.src = props.data.path
-              img.addEventListener(
-                  "load",
-                  {
-                    canvasRef.current?.let { canvas ->
-                      val ctx =
-                          canvas.getContext(CanvasRenderingContext2D.ID) as CanvasRenderingContext2D
-
-                      ctx.clearRect(
-                          0.0, 0.0, props.data.width.toDouble(), props.data.height.toDouble())
-                      ctx.drawImage(
-                          img.unsafeCast<web.canvas.CanvasImageSource>(),
-                          props.data.offsetX.toDouble(),
-                          props.data.offsetY.toDouble(),
-                          props.data.width.toDouble(),
-                          props.data.height.toDouble(),
-                          0.0,
-                          0.0,
-                          props.data.width.toDouble(),
-                          props.data.height.toDouble())
-                    }
-                  })
             }
           }
         }
