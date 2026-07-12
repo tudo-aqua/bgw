@@ -244,145 +244,156 @@ internal val CameraPane =
         }
       }
 
-      bgwCameraTarget {
+      bgwCameraPane {
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
+        id = props.data.id
+        className = ClassName("cameraPane")
+
         css { cssBuilderIntern(props.data) }
 
-        bgwVisuals {
-          className = ClassName("visuals")
-          +VisualBuilder.build(props.data.visual)
-        }
-      }
-
-      TransformWrapper {
-        centerZoomedOut =
-            props.data.limitBounds || props.data.isHorizontalLocked || props.data.isVerticalLocked
-        disablePadding = true
-        smooth = false
-        limitToBounds = props.data.limitBounds
-        centerOnInit = true
-        minScale = if (props.data.limitBounds) minZoom else 0.1
-        maxScale = 4.0
-        initialScale = if (props.data.limitBounds) initialZoom else 1.0
-        wheel = jso {
-          disabled = !props.data.interactive || props.data.isZoomLocked
-          step = 0.1
-        }
-        panning = jso {
-          disabled = !props.data.interactive
-          wheelPanning = false
-          velocityDisabled = true
-          allowLeftClickPan = props.data.panButton == "left_button"
-          allowMiddleClickPan = props.data.panButton == "mouse_wheel"
-          allowRightClickPan = props.data.panButton == "right_button"
-          lockAxisX = props.data.isHorizontalLocked
-          lockAxisY = props.data.isVerticalLocked
-        }
-        pinch = jso { disabled = true }
-        doubleClick = jso { disabled = true }
-
-        //        onTransformed = { ctx, state ->
-        //            val currentX = state.positionX
-        //            val currentY = state.positionY
-        //
-        //            val actualXOffset = convertToPx(currentX)
-        //            val actualYOffset = convertToPx(currentY)
-        //
-        //            JCEFEventDispatcher.dispatchEvent(TransformChangedEventData(
-        //                zoomLevel = state.scale,
-        //                anchor = Pair(actualXOffset, actualYOffset)
-        //            ).apply { id = props.data.id })
-        //        }
-
-        onZoomStop = { ctx ->
-          //          if(props.data.isHorizontalLocked || props.data.isVerticalLocked) {
-          //            ctx.centerView(ctx.instance.transformState.scale, 0, "ease-out")
-          //          }
-          val currentX = ctx.instance.transformState.positionX
-          val currentY = ctx.instance.transformState.positionY
-
-          val actualXOffset = convertToPx(currentX)
-          val actualYOffset = convertToPx(currentY)
-
-          JCEFEventDispatcher.dispatchEvent(
-              TransformChangedEventData(
-                      zoomLevel = ctx.instance.transformState.scale,
-                      anchor = Pair(actualXOffset, actualYOffset))
-                  .apply { id = props.data.id })
+        bgwCameraTarget {
+          css {
+            width = props.data.width.bgw
+            height = props.data.height.bgw
+            display = Display.flex
+          }
+          bgwVisuals {
+            className = ClassName("visuals")
+            +VisualBuilder.build(props.data.visual)
+          }
         }
 
-        onPanningStop = { ctx ->
-          if (!props.data.limitBounds) {
+        TransformWrapper {
+          centerZoomedOut =
+              props.data.limitBounds || props.data.isHorizontalLocked || props.data.isVerticalLocked
+          disablePadding = true
+          smooth = false
+          limitToBounds = props.data.limitBounds
+          centerOnInit = true
+          minScale = if (props.data.limitBounds) minZoom else 0.1
+          maxScale = 4.0
+          initialScale = if (props.data.limitBounds) initialZoom else 1.0
+          wheel = jso {
+            disabled = !props.data.interactive || props.data.isZoomLocked
+            step = 0.1
+          }
+          panning = jso {
+            disabled = !props.data.interactive
+            wheelPanning = false
+            velocityDisabled = true
+            allowLeftClickPan = props.data.panButton == "left_button"
+            allowMiddleClickPan = props.data.panButton == "mouse_wheel"
+            allowRightClickPan = props.data.panButton == "right_button"
+            lockAxisX = props.data.isHorizontalLocked
+            lockAxisY = props.data.isVerticalLocked
+          }
+          pinch = jso { disabled = true }
+          doubleClick = jso { disabled = true }
+
+          //        onTransformed = { ctx, state ->
+          //            val currentX = state.positionX
+          //            val currentY = state.positionY
+          //
+          //            val actualXOffset = convertToPx(currentX)
+          //            val actualYOffset = convertToPx(currentY)
+          //
+          //            JCEFEventDispatcher.dispatchEvent(TransformChangedEventData(
+          //                zoomLevel = state.scale,
+          //                anchor = Pair(actualXOffset, actualYOffset)
+          //            ).apply { id = props.data.id })
+          //        }
+
+          onZoomStop = { ctx ->
+            //          if(props.data.isHorizontalLocked || props.data.isVerticalLocked) {
+            //            ctx.centerView(ctx.instance.transformState.scale, 0, "ease-out")
+            //          }
             val currentX = ctx.instance.transformState.positionX
             val currentY = ctx.instance.transformState.positionY
 
-            val targetWidth =
-                props.data.target?.width?.let {
-                  convertToRem(it.toDouble()) * ctx.instance.transformState.scale
-                } ?: 0.0
-            val targetHeight =
-                props.data.target?.height?.let {
-                  convertToRem(it.toDouble()) * ctx.instance.transformState.scale
-                } ?: 0.0
+            val actualXOffset = convertToPx(currentX)
+            val actualYOffset = convertToPx(currentY)
 
-            val paneWidth = convertToRem(props.data.width.toDouble())
-            val paneHeight = convertToRem(props.data.height.toDouble())
+            JCEFEventDispatcher.dispatchEvent(
+                TransformChangedEventData(
+                        zoomLevel = ctx.instance.transformState.scale,
+                        anchor = Pair(actualXOffset, actualYOffset))
+                    .apply { id = props.data.id })
+          }
 
-            val minX = -targetWidth + convertToRem(50.0)
-            val minY = -targetHeight + convertToRem(50.0)
-            val maxX = paneWidth - convertToRem(50.0)
-            val maxY = paneHeight - convertToRem(50.0)
+          onPanningStop = { ctx ->
+            if (!props.data.limitBounds) {
+              val currentX = ctx.instance.transformState.positionX
+              val currentY = ctx.instance.transformState.positionY
 
-            if (currentX < minX && currentY < minY) {
-              ctx.setTransform(minX, minY, ctx.instance.transformState.scale, 300)
-            } else if (currentX > maxX && currentY > maxY) {
-              ctx.setTransform(maxX, maxY, ctx.instance.transformState.scale, 300)
-            } else if (currentX < minX && currentY > maxY) {
-              ctx.setTransform(minX, maxY, ctx.instance.transformState.scale, 300)
-            } else if (currentX > maxX && currentY < minY) {
-              ctx.setTransform(maxX, minY, ctx.instance.transformState.scale, 300)
-            } else {
-              if (currentX < minX) {
-                ctx.setTransform(minX, currentY, ctx.instance.transformState.scale, 300)
-              } else if (currentX > maxX) {
-                ctx.setTransform(maxX, currentY, ctx.instance.transformState.scale, 300)
-              }
+              val targetWidth =
+                  props.data.target?.width?.let {
+                    convertToRem(it.toDouble()) * ctx.instance.transformState.scale
+                  } ?: 0.0
+              val targetHeight =
+                  props.data.target?.height?.let {
+                    convertToRem(it.toDouble()) * ctx.instance.transformState.scale
+                  } ?: 0.0
 
-              if (currentY < minY) {
-                ctx.setTransform(currentX, minY, ctx.instance.transformState.scale, 300)
-              } else if (currentY > maxY) {
-                ctx.setTransform(currentX, maxY, ctx.instance.transformState.scale, 300)
+              val paneWidth = convertToRem(props.data.width.toDouble())
+              val paneHeight = convertToRem(props.data.height.toDouble())
+
+              val minX = -targetWidth + convertToRem(50.0)
+              val minY = -targetHeight + convertToRem(50.0)
+              val maxX = paneWidth - convertToRem(50.0)
+              val maxY = paneHeight - convertToRem(50.0)
+
+              if (currentX < minX && currentY < minY) {
+                ctx.setTransform(minX, minY, ctx.instance.transformState.scale, 300)
+              } else if (currentX > maxX && currentY > maxY) {
+                ctx.setTransform(maxX, maxY, ctx.instance.transformState.scale, 300)
+              } else if (currentX < minX && currentY > maxY) {
+                ctx.setTransform(minX, maxY, ctx.instance.transformState.scale, 300)
+              } else if (currentX > maxX && currentY < minY) {
+                ctx.setTransform(maxX, minY, ctx.instance.transformState.scale, 300)
+              } else {
+                if (currentX < minX) {
+                  ctx.setTransform(minX, currentY, ctx.instance.transformState.scale, 300)
+                } else if (currentX > maxX) {
+                  ctx.setTransform(maxX, currentY, ctx.instance.transformState.scale, 300)
+                }
+
+                if (currentY < minY) {
+                  ctx.setTransform(currentX, minY, ctx.instance.transformState.scale, 300)
+                } else if (currentY > maxY) {
+                  ctx.setTransform(currentX, maxY, ctx.instance.transformState.scale, 300)
+                }
               }
             }
+
+            JCEFEventDispatcher.dispatchEvent(
+                TransformChangedEventData(
+                        zoomLevel = ctx.instance.transformState.scale,
+                        anchor =
+                            Pair(
+                                convertToPx(ctx.instance.transformState.positionX),
+                                convertToPx(ctx.instance.transformState.positionY)))
+                    .apply { id = props.data.id })
           }
 
-          JCEFEventDispatcher.dispatchEvent(
-              TransformChangedEventData(
-                      zoomLevel = ctx.instance.transformState.scale,
-                      anchor =
-                          Pair(
-                              convertToPx(ctx.instance.transformState.positionX),
-                              convertToPx(ctx.instance.transformState.positionY)))
-                  .apply { id = props.data.id })
-        }
+          ref = cameraPaneRef
 
-        ref = cameraPaneRef
+          TransformComponent {
+            wrapperStyle = jso {
+              width = props.data.width.bgw
+              height = props.data.height.bgw
+              // left = props.data.posX.bgw
+              // top = props.data.posY.bgw
+              position = Position.absolute
+              zIndex = integer(props.data.zIndex)
+              pointerEvents = if (props.data.isDisabled) None.none else Globals.inherit
+            }
 
-        TransformComponent {
-          wrapperStyle = jso {
-            width = props.data.width.bgw
-            height = props.data.height.bgw
-            left = props.data.posX.bgw
-            top = props.data.posY.bgw
-            position = Position.absolute
-            zIndex = integer(props.data.zIndex)
-            pointerEvents = if (props.data.isDisabled) None.none else Globals.inherit
-          }
-
-          if (props.data.target != null) {
-            bgwCameraTarget {
-              id = props.data.target?.id + "Target"
-              className = ClassName("target")
-              +props.data.target?.let { LayoutNodeBuilder.build(it) }
+            if (props.data.target != null) {
+              bgwCameraTarget {
+                id = props.data.target?.id + "Target"
+                className = ClassName("target")
+                +props.data.target?.let { LayoutNodeBuilder.build(it) }
+              }
             }
           }
         }
@@ -391,3 +402,6 @@ internal val CameraPane =
 
 internal inline val bgwCameraTarget: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_camera_target".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+
+internal inline val bgwCameraPane: IntrinsicType<HTMLAttributes<Element>>
+  get() = "bgw_camera_pane".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

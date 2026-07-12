@@ -21,15 +21,21 @@ import io.github.bonigarcia.wdm.WebDriverManager
 import java.time.Duration
 import java.time.Instant
 import java.util.Date
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.min
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.NoSuchElementException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.ComponentAnimation
@@ -42,7 +48,10 @@ import tools.aqua.bgw.visual.SingleLayerVisual
 import tools.aqua.bgw.visual.TextVisual
 import tools.aqua.bgw.visual.Visual
 
-class BGWTester {
+class BGWTester(
+    private val headless: Boolean = System.getProperty("bgw.test.headless", "true").toBoolean(),
+    private val defaultTimeout: Duration = Duration.ofSeconds(15),
+) : AutoCloseable {
   private var webDriver: WebDriver? = null
   private var htmlContent: String? = null
   private var sizeMult = 1.0
@@ -50,25 +59,32 @@ class BGWTester {
   private var sceneYOffset = 0.0
 
   init {
-    WebDriverManager.chromedriver().setup()
+    if (System.getProperty("webdriver.chrome.driver").isNullOrBlank()) {
+      WebDriverManager.chromedriver().setup()
+    }
   }
 
   /**
    * Load HTML with access to WebDriver for interactions Returns pair of (HTML content, WebDriver) -
    * remember to call cleanup() after use
    */
-  fun load(port: Int, timeoutSeconds: Long = 15, width: Number, height: Number): String {
+  fun load(
+      port: Int,
+      timeoutSeconds: Long = defaultTimeout.seconds,
+      width: Number,
+      height: Number
+  ): String {
     val url = "http://localhost:$port"
 
     try {
       val options =
           ChromeOptions().apply {
-            addArguments("--headless")
+            if (headless) addArguments("--headless=new")
             addArguments("--no-sandbox")
             addArguments("--disable-extensions")
             addArguments("--disable-dev-shm-usage")
             addArguments("--disable-gpu")
-            addArguments("--window-size=1000,1000")
+            addArguments("--window-size=${width.toInt()},${height.toInt()}")
             addArguments("--disable-logging")
             addArguments("--disable-dev-shm-usage")
             addArguments("--log-level=3") // Suppress INFO, WARNING, and ERROR
@@ -80,13 +96,12 @@ class BGWTester {
       val driver = webDriver!!
 
       driver.get(url)
-      driver.manage().window().fullscreen()
-
       val wait = WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds))
       wait.until {
         (driver as JavascriptExecutor).executeScript("return document.readyState") == "complete"
       }
-      Thread.sleep(2000) // Wait for React components
+      wait.until(ExpectedConditions.presenceOfElementLocated(By.className("bgw-root")))
+      wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("bgw_game_scene")))
 
       checkSizes(width, height)
 
@@ -104,22 +119,60 @@ class BGWTester {
     webDriver = null
   }
 
+  override fun close() = cleanup()
+
+  /** Waits until [condition] becomes true and reports the last DOM on timeout. */
+  fun await(
+      message: String,
+      timeout: Duration = defaultTimeout,
+      condition: BGWTester.() -> Boolean,
+  ) {
+    val driver = requireDriver()
+    try {
+      WebDriverWait(driver, timeout).until { condition() }
+    } catch (exception: Exception) {
+      throw AssertionError("Timed out waiting for $message. DOM: ${driver.pageSource}", exception)
+    }
+  }
+
+  /** Returns a component when it exists, or `null` while React is still reconciling. */
+  fun findBGWComp(id: String): BGWComp? =
+      try {
+        getBGWComp(id)
+      } catch (_: NoSuchElementException) {
+        null
+      }
+
+  fun awaitBGWComp(id: String, timeout: Duration = defaultTimeout): BGWComp {
+    await("BGW component '$id'", timeout) { findBGWComp(id) != null }
+    return getBGWComp(id)
+  }
+
+  fun awaitMissing(id: String, timeout: Duration = defaultTimeout) {
+    await("BGW component '$id' to disappear", timeout) { findBGWComp(id) == null }
+  }
+
+  internal fun requireDriver(): WebDriver =
+      requireNotNull(webDriver) { "Call load() before interacting with BGWTester." }
+
   fun checkSizes(originalWidth: Number, originalHeight: Number) {
     val driver = webDriver
     requireNotNull(driver) { "WebDriver should not be null after loading HTML" }
 
-    val size = driver.manage().window().size
     val rootSize = driver.findElement(By.ByClassName("bgw-root")).size
     val sceneSize = driver.findElement(By.ByTagName("bgw_game_scene")).size
     val sceneLocation = driver.findElement(By.ByTagName("bgw_game_scene")).location
 
-    println("Window size: $size, Root size: $rootSize, Scene size: $sceneSize")
-
-    if (size != rootSize || size.height != sceneSize.height) {
-      throw RuntimeException("Scene size mismatch: window=$size, root=$rootSize, scene=$sceneSize")
+    check(sceneSize.width <= rootSize.width && sceneSize.height <= rootSize.height) {
+      "Scene exceeds root bounds: root=$rootSize, scene=$sceneSize"
     }
 
-    sizeMult = size.height.toDouble() / originalHeight.toDouble()
+    val widthScale = sceneSize.width.toDouble() / originalWidth.toDouble()
+    val heightScale = sceneSize.height.toDouble() / originalHeight.toDouble()
+    check(abs(widthScale - heightScale) < 0.02) {
+      "Scene is scaled non-uniformly: widthScale=$widthScale, heightScale=$heightScale"
+    }
+    sizeMult = min(widthScale, heightScale)
     sceneXOffset = sceneLocation.x.toDouble()
     sceneYOffset = sceneLocation.y.toDouble()
   }
@@ -132,9 +185,7 @@ class BGWTester {
   }
 
   fun getBGWComp(id: String): BGWComp {
-    val driver = webDriver
-    requireNotNull(driver) { "WebDriver should not be null after loading HTML" }
-
+    val driver = requireDriver()
     val element = driver.findElement(By.id(id))
     requireNotNull(element) { "Element with id '$id' not found in the loaded HTML" }
 
@@ -156,6 +207,24 @@ class BGWComp(
     private var sceneYOffset: Double
 ) {
 
+  val tagName: String
+    get() = webElement.tagName
+
+  val text: String
+    get() = webElement.text
+
+  val isDisplayed: Boolean
+    get() = webElement.isDisplayed
+
+  val isEnabled: Boolean
+    get() = webElement.isEnabled
+
+  fun click() = webElement.click()
+
+  fun css(name: String): String = webElement.getCssValue(name)
+
+  fun attribute(name: String): String? = webElement.getAttribute(name)
+
   val size: BGWScale
     get() = webElement.size.let { BGWScale(it.width / sizeMult, it.height / sizeMult) }
 
@@ -164,6 +233,14 @@ class BGWComp(
         webElement.location.let {
           BGWLocation((it.x - sceneXOffset) / sizeMult, (it.y - sceneYOffset) / sizeMult)
         }
+
+  /** Untransformed BGW coordinates, useful when scale or rotation changes the rendered bounds. */
+  val logicalLocation: BGWLocation
+    get() = BGWLocation(cssPixels("left") / sizeMult, cssPixels("top") / sizeMult)
+
+  /** Untransformed BGW size, useful when scale or rotation changes the rendered bounds. */
+  val logicalSize: BGWScale
+    get() = BGWScale(cssPixels("width") / sizeMult, cssPixels("height") / sizeMult)
 
   val bounds: Pair<BGWLocation, BGWScale>
     get() =
@@ -194,14 +271,28 @@ class BGWComp(
 
   val rotation: Double
     get() =
-        webElement.getCssValue("rotate").let {
-          val parts = it.split(" ").map { part -> part.removeSuffix("deg") }
-          when (parts.size) {
-            1 -> parts[0].toDoubleOrNull() ?: 0.0
-            2 -> parts[0].toDoubleOrNull() ?: 0.0 // Assuming second part is the rotation
-            else -> 0.0 // Default rotation if not specified
-          }
-        }
+        webElement
+            .getCssValue("rotate")
+            .takeUnless { it == "none" }
+            ?.let {
+              val parts = it.split(" ").map { part -> part.removeSuffix("deg") }
+              when (parts.size) {
+                1 -> parts[0].toDoubleOrNull() ?: 0.0
+                2 -> parts[0].toDoubleOrNull() ?: 0.0 // Assuming second part is the rotation
+                else -> 0.0 // Default rotation if not specified
+              }
+            } ?: rotationFromTransform()
+
+  private fun rotationFromTransform(): Double {
+    val transform = webElement.getCssValue("transform")
+    if (!transform.startsWith("matrix(")) return 0.0
+    val values =
+        transform.substringAfter('(').substringBefore(')').split(',').map { it.trim().toDouble() }
+    return atan2(values[1], values[0]) * 180.0 / PI
+  }
+
+  private fun cssPixels(property: String): Double =
+      webElement.getCssValue(property).removeSuffix("px").toDoubleOrNull() ?: 0.0
 
   val visuals: List<SingleLayerVisual>
     get() {
@@ -217,7 +308,7 @@ class BGWComp(
         when (visual.tagName) {
           "bgw_color_visual" -> {
             val color = visual.getCssValue("background-color")
-            val rgba = color.removePrefix("rgba(").removeSuffix(")").split(",")
+            val rgba = color.substringAfter('(').substringBeforeLast(')').split(",")
             val r = rgba[0].trim().toInt()
             val g = rgba[1].trim().toInt()
             val b = rgba[2].trim().toInt()
@@ -361,16 +452,32 @@ fun assertAnimated(
 
   Thread.sleep((animation.duration + 500).toLong())
 
-  assertEquals(
+  assertRenderedEquals(
       expectedFinishedValue,
       finishValue,
       "Expected value $expectedFinishedValue but got $finishValue after animation finished")
 
   val afterValue = property(element)
-  assertEquals(
+  assertRenderedEquals(
       expectedResetValue,
       afterValue,
       "Expected value $expectedResetValue but got $afterValue after animation reset")
+}
+
+/** Compares browser measurements with tolerance for integer CSS pixel rounding. */
+fun assertRenderedEquals(expected: Any?, actual: Any?, message: String = "Rendered values differ") {
+  when {
+    expected is BGWLocation && actual is BGWLocation -> {
+      assertAround(expected.x, actual.x, 1.0, "$message (x)")
+      assertAround(expected.y, actual.y, 1.0, "$message (y)")
+    }
+    expected is BGWScale && actual is BGWScale -> {
+      assertAround(expected.width, actual.width, 1.0, "$message (width)")
+      assertAround(expected.height, actual.height, 1.0, "$message (height)")
+    }
+    expected is Double && actual is Double -> assertAround(expected, actual, 0.02, message)
+    else -> assertEquals(expected, actual, message)
+  }
 }
 
 fun assertAnimationFinished(scene: BoardGameScene, animation: Animation, gracePeriod: Int = 500) {
@@ -416,4 +523,20 @@ fun assertInRange(
     message: String = "Value $actualValue is not in range [$min, $max]"
 ) {
   assertTrue(actualValue in min..max, message)
+}
+
+fun assertLocationEquals(
+    expectedValue: BGWLocation,
+    actualValue: BGWLocation,
+) {
+  assertInRange(
+      actualValue.x,
+      expectedValue.x - 1.0,
+      expectedValue.x + 1.0,
+      "Expected position $expectedValue but got $actualValue")
+  assertInRange(
+      actualValue.y,
+      expectedValue.y - 1.0,
+      expectedValue.y + 1.0,
+      "Expected position $expectedValue but got $actualValue")
 }

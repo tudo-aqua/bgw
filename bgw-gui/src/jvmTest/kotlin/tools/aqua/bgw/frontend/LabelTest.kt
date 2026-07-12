@@ -160,5 +160,6 @@ class LabelTest {
 
     println("Pane Web Component: $paneWeb")
     assertComponentsEqual(pane.components, paneWeb.components)
+    assertLocationEquals(BGWLocation(100.0, 100.0), paneWeb.location)
   }
 }
