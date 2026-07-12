@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,6 +52,7 @@ class BGWTester {
   init {
     WebDriverManager.chromedriver().setup()
   }
+
   /**
    * Load HTML with access to WebDriver for interactions Returns pair of (HTML content, WebDriver) -
    * remember to call cleanup() after use
@@ -90,7 +91,7 @@ class BGWTester {
       checkSizes(width, height)
 
       htmlContent = driver.pageSource
-      return driver.pageSource
+      return driver.pageSource ?: ""
     } catch (e: Exception) {
       webDriver?.quit()
       webDriver = null
@@ -222,7 +223,7 @@ class BGWComp(
             val b = rgba[2].trim().toInt()
             val a = rgba.getOrNull(3)?.trim()?.toDoubleOrNull() ?: 1.0
             ColorVisual(r, g, b, a)
-                .apply { id = visual.getAttribute("id") }
+                .apply { id = visual.getAttribute("id") ?: "" }
                 .also { println("Color: rgba($r, $g, $b, $a)") }
           }
           "bgw_image_visual" -> {
@@ -233,13 +234,13 @@ class BGWComp(
                     .removeSuffix("\")")
                     .replace(Regex(".+/static/"), "")
             ImageVisual(src)
-                .apply { id = visual.getAttribute("id") }
+                .apply { id = visual.getAttribute("id") ?: "" }
                 .also { println("Image source: $src") }
           }
           "bgw_text_visual" -> {
             val text = visual.text
             TextVisual(text)
-                .apply { id = visual.getAttribute("id") }
+                .apply { id = visual.getAttribute("id") ?: "" }
                 .also { println("Text: $text") }
           }
           else -> {
@@ -249,7 +250,7 @@ class BGWComp(
       }
     }
 
-    val components: List<BGWComp>
+  val components: List<BGWComp>
     get() {
       var parentElement = webElement.findElements(By.ByTagName("bgw_contents")).firstOrNull()
       if (parentElement == null) {
@@ -257,19 +258,14 @@ class BGWComp(
       }
 
       val isHexagon = parentElement.findElements(By.ByTagName("bgw_hexagon_content")).firstOrNull()
-        var selector = By.cssSelector(":scope > *")
-        if (isHexagon != null) {
-            selector = By.cssSelector(":scope > bgw_hexagon_content > *")
-        }
+      var selector = By.cssSelector(":scope > *")
+      if (isHexagon != null) {
+        selector = By.cssSelector(":scope > bgw_hexagon_content > *")
+      }
 
       val children: List<WebElement> = parentElement.findElements(selector)
       return children.map { child ->
-        BGWComp(
-            child.getAttribute("id"),
-            child,
-            sizeMult,
-            sceneXOffset,
-            sceneYOffset)
+        BGWComp(child.getAttribute("id") ?: "", child, sizeMult, sceneXOffset, sceneYOffset)
       }
     }
 

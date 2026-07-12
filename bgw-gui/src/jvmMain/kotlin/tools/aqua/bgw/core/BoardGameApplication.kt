@@ -326,7 +326,7 @@ open class BoardGameApplication(
 
   internal fun showNonBlocking() {
     if (!Frontend.renderedDOM.value) {
-      Frontend.show(this.headless) { /* No action needed */}
+      Frontend.show(this.headless) { /* No action needed */ }
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,12 @@
 
 package tools.aqua.bgw.frontend
 
-import tools.aqua.bgw.components.ComponentView
-import tools.aqua.bgw.components.container.HexagonGrid
-import tools.aqua.bgw.components.gamecomponentviews.HexagonView
-import tools.aqua.bgw.components.layoutviews.Pane
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import tools.aqua.bgw.animation.MovementAnimation
+import tools.aqua.bgw.components.container.HexagonGrid
+import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
@@ -59,7 +58,7 @@ class LabelTest {
     tester.cleanup()
   }
 
-  /* @Test
+  @Test
   fun testLabelMovement() {
     val scene = BoardGameScene(width = 1000, height = 1000)
     val label =
@@ -82,12 +81,13 @@ class LabelTest {
     println("Before: ${labelWeb.location}")
 
     val animation =
-        MovementAnimation(componentView = label, byX = 180.0, duration = 1000).apply {
-          onFinished = {
-            println("Finish: ${labelWeb.location}")
-            label.posX += 60.0
-          }
-        }
+        MovementAnimation(componentView = label, byX = 180.0, duration = 1000, persist = false)
+            .apply {
+              onFinished = {
+                println("Finish: ${labelWeb.location}")
+                label.posX += 50.0
+              }
+            }
     //    assertAnimationFinished(scene, animation)
     assertAnimated(
         scene = scene,
@@ -101,9 +101,9 @@ class LabelTest {
     println("After: ${labelWeb.location}")
 
     println("✓ All assertions passed for animation label test")
-  } */
+  }
 
-  /*@Test
+  @Test
   fun testBasicLabel() {
     val scene = BoardGameScene(width = 1000, height = 1000)
     val label =
@@ -129,41 +129,36 @@ class LabelTest {
 
     println("Label Web Component: $labelWeb")
     assertVisualsEqual(label.visual, labelWeb)
-  } */
+  }
 
-    @Test
-    fun testPane() {
-        val scene = BoardGameScene(width = 1000, height = 1000)
-        val pane = HexagonGrid<HexagonView>(
-            width = 500,
-            height = 500,
-            posX = 100,
-            posY = 100,
-            visual = ColorVisual.LIGHT_GRAY
-        )
-        val label =
-            HexagonView(
-                posX = 50,
-                posY = 50,
-                size = 100,
-                visual =
-                    CompoundVisual(
-                        ColorVisual.RED,
-                        ImageVisual("icon.png"),
-                        TextVisual("Icon Text", font = Font(size = 15))
-                    )
-            )
-        pane[0, 0] = label
+  @Test
+  fun testPane() {
+    val scene = BoardGameScene(width = 1000, height = 1000)
+    val pane =
+        HexagonGrid<HexagonView>(
+            width = 500, height = 500, posX = 100, posY = 100, visual = ColorVisual.LIGHT_GRAY)
+    val label =
+        HexagonView(
+            posX = 50,
+            posY = 50,
+            size = 100,
+            visual =
+                CompoundVisual(
+                    ColorVisual.RED,
+                    ImageVisual("icon.png"),
+                    TextVisual("Icon Text", font = Font(size = 15))))
+    pane[0, 0] = label
 
-        scene.addComponents(pane)
-        app.showGameScene(scene)
+    scene.addComponents(pane)
+    app.showGameScene(scene)
 
-        println("Label added to pane. Pane added to scene. Loading HTML content from port: ${app.headlessEnvironment}")
+    println(
+        "Label added to pane. Pane added to scene. Loading HTML content from port: ${app.headlessEnvironment}")
 
-        tester.load(port = app.headlessEnvironment, width = 1000, height = 1000)
-        val paneWeb = tester.getBGWComp(pane.id)
+    tester.load(port = app.headlessEnvironment, width = 1000, height = 1000)
+    val paneWeb = tester.getBGWComp(pane.id)
 
-        println("Pane Web Component: $paneWeb")
-        assertComponentsEqual(pane.components, paneWeb.components)
-    }
+    println("Pane Web Component: $paneWeb")
+    assertComponentsEqual(pane.components, paneWeb.components)
+  }
 }
