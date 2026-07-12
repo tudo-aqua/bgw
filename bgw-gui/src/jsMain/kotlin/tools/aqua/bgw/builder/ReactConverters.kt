@@ -33,6 +33,11 @@ import tools.aqua.bgw.event.WheelDirection
 
 internal object ReactConverters {
   private var lastPointerClientPosition: Pair<Double, Double>? = null
+  private val keyCodesByValue: Map<String, KeyCode> = buildMap {
+    KeyCode.entries.forEach { keyCode ->
+      keyCode.keyCodes.forEach { value -> put(value, get(value) ?: keyCode) }
+    }
+  }
 
   fun updateLastPointerClientPosition(clientX: Double, clientY: Double) {
     lastPointerClientPosition = Pair(clientX, clientY)
@@ -71,6 +76,8 @@ internal object ReactConverters {
 
   fun mousePositionToScenePosition(clientX: Double, clientY: Double): Pair<Double, Double> {
     val (offset, size) = getSceneOffset()
+    if (size.first <= 0.0 || size.second <= 0.0) return Pair(0.0, 0.0)
+
     val absoluteX = (clientX - offset.first) / size.first
     val absoluteY = (clientY - offset.second) / size.second
 
@@ -90,7 +97,7 @@ internal object ReactConverters {
   fun ReactMouseEvent<*, *>.toMouseEventData(targetID: ID?): MouseEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MouseEventData(
-            when (button as Int) {
+            when (button.unsafeCast<Int>()) {
               0 -> MouseButtonType.LEFT_BUTTON
               1 -> MouseButtonType.MOUSE_WHEEL
               2 -> MouseButtonType.RIGHT_BUTTON
@@ -106,7 +113,7 @@ internal object ReactConverters {
   fun ReactMouseEvent<*, *>.toMousePressedEventData(targetID: ID?): MousePressedEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MousePressedEventData(
-            when (button as Int) {
+            when (button.unsafeCast<Int>()) {
               0 -> MouseButtonType.LEFT_BUTTON
               1 -> MouseButtonType.MOUSE_WHEEL
               2 -> MouseButtonType.RIGHT_BUTTON
@@ -122,7 +129,7 @@ internal object ReactConverters {
   fun ReactMouseEvent<*, *>.toMouseReleasedEventData(targetID: ID?): MouseReleasedEventData {
     val (posX, posY) = mousePositionToScenePosition(clientX, clientY)
     return MouseReleasedEventData(
-            when (button as Int) {
+            when (button.unsafeCast<Int>()) {
               0 -> MouseButtonType.LEFT_BUTTON
               1 -> MouseButtonType.MOUSE_WHEEL
               2 -> MouseButtonType.RIGHT_BUTTON
@@ -142,8 +149,7 @@ internal object ReactConverters {
   }
 
   private fun ReactKeyEvent<*>.toKeyCode(): KeyCode {
-    KeyCode.entries.forEach { if (it.keyCodes.contains(this.key)) return it }
-    return KeyCode.UNDEFINED
+    return keyCodesByValue[key] ?: KeyCode.UNDEFINED
   }
 
   fun ReactDragEvent<*>.toDragEventData(targetID: ID?, action: DragEventAction): EventData {
@@ -196,11 +202,11 @@ internal object ReactConverters {
 
   fun WheelEvent<*>.toScrollEventData(targetID: ID?, delta: Double): ScrollEventData {
     return ScrollEventData(
-            direction = if (this.deltaY > 0) WheelDirection.DOWN else WheelDirection.UP,
+            direction = if (delta > 0) WheelDirection.DOWN else WheelDirection.UP,
             shift = this.shiftKey,
             alt = this.altKey,
             ctrl = this.ctrlKey,
-            delta = delta)
+            delta = kotlin.math.abs(delta))
         .apply { this.id = targetID }
   }
 }

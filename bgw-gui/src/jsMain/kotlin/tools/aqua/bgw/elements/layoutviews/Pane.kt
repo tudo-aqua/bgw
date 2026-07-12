@@ -53,19 +53,19 @@ internal val Pane =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
 
       bgwPane {
-        tabIndex = 0
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
         id = props.data.id
         className = ClassName("pane")
         css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -74,7 +74,12 @@ internal val Pane =
 
         bgwContents {
           className = ClassName("components")
-          props.data.components.forEach { +NodeBuilder.build(it) }
+          props.data.components.forEach { component ->
+            Fragment {
+              key = component.id
+              +NodeBuilder.build(component)
+            }
+          }
         }
 
         applyCommonEventHandlers(props.data)

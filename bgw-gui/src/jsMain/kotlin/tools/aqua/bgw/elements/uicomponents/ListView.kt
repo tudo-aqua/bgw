@@ -49,18 +49,19 @@ internal val ListView =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
 
       bgwListView {
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
         id = props.data.id
         className = ClassName("listView")
         css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -100,11 +101,11 @@ internal val ListView =
                   paddingInline = 10.bgw
                   paddingBlock = 5.bgw
                   width = 100.pct
-                  fontStyle = props.data.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
-                  fontWeight = integer(props.data.font!!.fontWeight)
-                  fontSize = props.data.font!!.size.bgw
-                  fontFamily = cssFont(props.data.font!!.family)
-                  color = props.data.font!!.color.unsafeCast<Color>()
+                  fontStyle = props.data.font.fontStyle.unsafeCast<FontStyle>()
+                  fontWeight = integer(props.data.font.fontWeight)
+                  fontSize = props.data.font.size.bgw
+                  fontFamily = cssFont(props.data.font.family)
+                  color = props.data.font.color.unsafeCast<Color>()
                   minWidth = fit()
 
                   if (props.data.selectedItems.contains(index)) {

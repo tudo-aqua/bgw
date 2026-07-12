@@ -34,14 +34,25 @@ internal object LayoutViewBuilder {
   }
 
   private fun buildGrid(gridPane: GridPane<*>) {
-    gridPane.updateGui = { Frontend.updateComponent(gridPane) }
-    gridPane
-        .mapNotNull { it.component }
-        .forEach { component -> ComponentViewBuilder.build(component) }
+    val builtComponents = mutableSetOf<ComponentView>()
+    fun buildNewComponents() {
+      gridPane
+          .mapNotNull { it.component }
+          .filter { builtComponents.add(it) }
+          .forEach { ComponentViewBuilder.build(it) }
+    }
+    gridPane.updateGui = {
+      buildNewComponents()
+      Frontend.updateComponent(gridPane)
+    }
+    buildNewComponents()
   }
 
   private fun buildPane(pane: Pane<*>) {
-    pane.observableComponents.guiListener = { _, _ -> Frontend.updateComponent(pane) }
+    pane.observableComponents.guiListener = { oldComponents, newComponents ->
+      newComponents.filter { it !in oldComponents }.forEach { ComponentViewBuilder.build(it) }
+      Frontend.updateComponent(pane)
+    }
     pane.components.forEach { component -> ComponentViewBuilder.build(component) }
   }
 }

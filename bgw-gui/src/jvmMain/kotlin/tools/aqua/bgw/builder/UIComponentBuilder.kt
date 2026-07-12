@@ -135,5 +135,40 @@ internal object UIComponentBuilder {
     structuredDataView.selectedIndicesList.guiListener = { _, _ ->
       Frontend.updateComponent(structuredDataView)
     }
+
+    when (structuredDataView) {
+      is ListView<*> -> buildListView(structuredDataView)
+      is TableView<*> -> buildTableView(structuredDataView)
+    }
+  }
+
+  private fun buildListView(listView: ListView<*>) {
+    listView.orientationProperty.guiListener = { _, _ -> Frontend.updateComponent(listView) }
+    listView.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateComponent(listView) }
+  }
+
+  private fun buildTableView(tableView: TableView<*>) {
+    fun buildColumns(columns: List<TableColumn<*>>) {
+      columns.forEach { column ->
+        column.titleProperty.guiListener = { _, _ -> Frontend.updateComponent(tableView) }
+        column.widthProperty.guiListener = { _, _ -> Frontend.updateComponent(tableView) }
+        column.fontProperty.guiListener = { _, _ -> Frontend.updateComponent(tableView) }
+        column.formatFunctionProperty.guiListener = { _, _ -> Frontend.updateComponent(tableView) }
+      }
+    }
+
+    buildColumns(tableView.columns.toList())
+    tableView.columns.guiListener = { oldColumns, newColumns ->
+      oldColumns
+          .filter { it !in newColumns }
+          .forEach { column ->
+            column.titleProperty.guiListener = null
+            column.widthProperty.guiListener = null
+            column.fontProperty.guiListener = null
+            column.formatFunctionProperty.guiListener = null
+          }
+      buildColumns(newColumns)
+      Frontend.updateComponent(tableView)
+    }
   }
 }

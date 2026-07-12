@@ -176,7 +176,7 @@ sealed class StructuredDataView<T>(
 
   /** Internal event handler for selection. */
   internal var onSelectionEvent: ((Int) -> Unit)? = {
-    if (this.items.isNotEmpty()) {
+    if (it in this.items.indices && selectionMode != SelectionMode.NONE) {
       if (selectedIndicesList.contains(it)) {
         selectedItemsList.remove(this.items[it])
         selectedIndicesList.remove(it)
@@ -191,13 +191,8 @@ sealed class StructuredDataView<T>(
 
   /** Internal event handler for selection. */
   internal var onSelectAllEvent: (() -> Unit)? = {
-    selectedItemsList.clear()
-    selectedIndicesList.clear()
-
-    this.items.indices.forEach {
-      selectedItemsList.add(this.items[it])
-      selectedIndicesList.add(it)
-    }
+    selectedItemsList.setAll(this.items.toList())
+    selectedIndicesList.setAll(this.items.indices.toList())
 
     onSelectionChanged?.invoke(selectedItemsList.toList())
   }
@@ -208,6 +203,34 @@ sealed class StructuredDataView<T>(
     selectedIndicesList.clear()
 
     if (it) onSelectionChanged?.invoke(selectedItemsList.toList())
+  }
+
+  init {
+    selectionModeProperty.internalListener = { oldMode, newMode ->
+      when {
+        oldMode == newMode -> Unit
+        oldMode == SelectionMode.NONE || newMode == SelectionMode.NONE -> clearSelectionInternal()
+        oldMode == SelectionMode.MULTIPLE && newMode == SelectionMode.SINGLE -> {
+          val lastSelectedIndex = selectedIndicesList.toList().lastOrNull()
+          if (lastSelectedIndex == null) {
+            clearSelectionInternal()
+          } else {
+            selectedItemsList.setAll(listOf(this.items[lastSelectedIndex]))
+            selectedIndicesList.setAll(listOf(lastSelectedIndex))
+            onSelectionChanged?.invoke(selectedItemsList.toList())
+          }
+        }
+      }
+    }
+
+    this.items.internalListener = { _, _ -> clearSelectionInternal() }
+  }
+
+  private fun clearSelectionInternal() {
+    if (selectedIndicesList.isEmpty() && selectedItemsList.isEmpty()) return
+    selectedItemsList.clear()
+    selectedIndicesList.clear()
+    onSelectionChanged?.invoke(emptyList())
   }
 
   /**

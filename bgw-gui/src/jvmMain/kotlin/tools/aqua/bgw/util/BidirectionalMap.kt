@@ -269,7 +269,7 @@ open class BidirectionalMap<T : Any, R : Any>(vararg elements: Pair<T, R>) {
    * @see containsForward
    * @see containsBackward
    */
-  fun contains(entity: T, value: R): Boolean = containsForward(entity) && containsBackward(value)
+  fun contains(entity: T, value: R): Boolean = map.any { it.first == entity && it.second == value }
 
   /**
    * Returns whether relation A -> B exists in this map.

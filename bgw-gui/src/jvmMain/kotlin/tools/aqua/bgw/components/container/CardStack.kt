@@ -81,17 +81,15 @@ open class CardStack<T : CardView>(
         it.layoutY()
       }
     }
+    widthProperty.addListener { _, _ -> observableComponents.forEach { it.layoutX() } }
+    heightProperty.addListener { _, _ -> observableComponents.forEach { it.layoutY() } }
   }
 
   /**
    * Pops the topmost [CardView] from this [CardStack] and returns it, or null, if the stack is
    * empty. Removes it from the [CardStack].
    */
-  fun popOrNull(): T? =
-      observableComponents.removeLastOrNull()?.apply {
-        removePosListeners()
-        parent = null
-      }
+  fun popOrNull(): T? = observableComponents.lastOrNull()?.also { remove(it) }
 
   /**
    * Pops the topmost [CardView] from this [CardStack] and returns it. Removes it from the
@@ -116,9 +114,7 @@ open class CardStack<T : CardView>(
 
   /** Adds a [CardView] on top of this [CardStack]. */
   fun push(cardView: T) {
-    observableComponents.add(cardView)
-    cardView.parent = this
-    cardView.addPosListeners()
+    add(cardView)
   }
 
   override fun T.onAdd() {
@@ -134,11 +130,15 @@ open class CardStack<T : CardView>(
   private fun T.addPosListeners() {
     posXProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutX() }
     posYProperty.setInternalListenerAndInvoke(0.0) { _, _ -> layoutY() }
+    widthProperty.internalListener = { _, _ -> layoutX() }
+    heightProperty.internalListener = { _, _ -> layoutY() }
   }
 
   private fun T.removePosListeners() {
     posXProperty.internalListener = null
     posYProperty.internalListener = null
+    widthProperty.internalListener = null
+    heightProperty.internalListener = null
   }
 
   private fun T.layoutX() {

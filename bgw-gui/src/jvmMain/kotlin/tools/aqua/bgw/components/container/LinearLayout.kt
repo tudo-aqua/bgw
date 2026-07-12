@@ -131,6 +131,8 @@ open class LinearLayout<T : GameComponentView>(
     spacingProperty.internalListener = { _, _ -> layout() }
     orientationProperty.internalListener = { _, _ -> layout() }
     alignmentProperty.internalListener = { _, _ -> layout() }
+    widthProperty.addListener { _, _ -> layout() }
+    heightProperty.addListener { _, _ -> layout() }
   }
 
   /**
@@ -181,12 +183,16 @@ open class LinearLayout<T : GameComponentView>(
     posYProperty.internalListener = { _, _ ->
       observableComponents.internalListener?.invoke(emptyList(), emptyList())
     }
+    widthProperty.internalListener = { _, _ -> layout() }
+    heightProperty.internalListener = { _, _ -> layout() }
   }
 
   override fun T.onRemove() {
     // remove pos listeners
     posXProperty.internalListener = null
     posYProperty.internalListener = null
+    widthProperty.internalListener = null
+    heightProperty.internalListener = null
   }
 
   private fun layout() {
@@ -198,10 +204,14 @@ open class LinearLayout<T : GameComponentView>(
 
   @Suppress("DuplicatedCode")
   private fun layoutHorizontal() {
+    if (observableComponents.isEmpty()) return
+
     val totalContentWidth: Double = observableComponents.sumOf { it.width }
     val totalContentWidthWithSpacing = totalContentWidth + (observableComponents.size - 1) * spacing
     val newSpacing: Double =
-        if (totalContentWidthWithSpacing > width) {
+        if (observableComponents.size == 1) {
+          0.0
+        } else if (totalContentWidthWithSpacing > width) {
           -minOf(
               (totalContentWidth - width) / (observableComponents.size - 1),
               totalContentWidth / observableComponents.size) // ignore user defined spacing
@@ -229,11 +239,15 @@ open class LinearLayout<T : GameComponentView>(
 
   @Suppress("DuplicatedCode")
   private fun layoutVertical() {
+    if (observableComponents.isEmpty()) return
+
     val totalContentHeight: Double = observableComponents.sumOf { it.height }
     val totalContentHeightWithSpacing =
         totalContentHeight + (observableComponents.size - 1) * spacing
     val newSpacing: Double =
-        if (totalContentHeightWithSpacing > height) {
+        if (observableComponents.size == 1) {
+          0.0
+        } else if (totalContentHeightWithSpacing > height) {
           -minOf(
               (totalContentHeight - height) / (observableComponents.size - 1),
               totalContentHeight / observableComponents.size) // ignore user defined spacing

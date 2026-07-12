@@ -58,7 +58,7 @@ internal val CheckBox =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
@@ -70,7 +70,7 @@ internal val CheckBox =
 
         ref = elementRef
 
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -81,6 +81,8 @@ internal val CheckBox =
           type = InputType.checkbox
           id = props.data.id + "--checkbox"
           checked = props.data.isChecked
+          disabled = props.data.isDisabled
+          tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
 
           useEffect(
               listOf(

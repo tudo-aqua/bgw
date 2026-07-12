@@ -54,10 +54,15 @@ internal val ColorPicker =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
+      val debounceTimeout = useRef<Timeout>(null)
+
+      useEffectWithCleanup(props.data.id) {
+        onCleanup { debounceTimeout.current?.let { clearTimeout(it) } }
+      }
 
       bgwColorPicker {
         id = props.data.id
@@ -65,7 +70,7 @@ internal val ColorPicker =
         css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -74,6 +79,8 @@ internal val ColorPicker =
 
         input {
           type = InputType.color
+          disabled = props.data.isDisabled
+          tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
           defaultValue = props.data.selectedColor
           value = props.data.selectedColor
           css {
@@ -94,12 +101,10 @@ internal val ColorPicker =
             backgroundColor = rgb(0, 0, 0, 0.0)
           }
 
-          var debounceTimeout: Timeout? = null
-
           onChange = {
             val value = it.target.value
-            debounceTimeout?.let { clearTimeout(it) }
-            debounceTimeout =
+            debounceTimeout.current?.let { timeout -> clearTimeout(timeout) }
+            debounceTimeout.current =
                 setTimeout(
                     {
                       JCEFEventDispatcher.dispatchEvent(

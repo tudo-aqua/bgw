@@ -35,6 +35,7 @@ abstract class Observable {
   /** Used by renderer to listen on important properties for visualization. */
   internal var guiListener: (() -> Unit)? = null
     set(value) {
+      field = value
       guiListenerHandler = if (value == null) null else Observer(value)
     }
 
@@ -52,6 +53,7 @@ abstract class Observable {
    */
   internal var internalListener: (() -> Unit)? = null
     set(value) {
+      field = value
       internalListenerHandler = if (value == null) null else Observer(value)
     }
 
@@ -119,7 +121,7 @@ abstract class Observable {
 
   /** Notifies all [listeners] by calling [Observer.update]. */
   fun notifyChange() {
-    listeners.forEach { it.update() }
+    listeners.toList().forEach { it.update() }
     internalListenerHandler?.update()
     guiListenerHandler?.update()
   }

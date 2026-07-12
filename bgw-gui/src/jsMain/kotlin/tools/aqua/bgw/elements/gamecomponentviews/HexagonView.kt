@@ -60,7 +60,7 @@ internal val HexagonView =
               useDraggable(
                   object : DraggableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDraggable
+                    override var disabled = !props.data.isDraggable || props.data.isDisabled
                   })
           else null
 
@@ -69,7 +69,7 @@ internal val HexagonView =
               useDroppable(
                   object : DroppableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDroppable
+                    override var disabled = !props.data.isDroppable || props.data.isDisabled
                   })
           else null
 
@@ -101,14 +101,14 @@ internal val HexagonView =
       }
 
       bgwHexagonView {
-        tabIndex = 0
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
         if (!isOverlayPreview) id = props.data.id
         className = ClassName("hexagonView")
 
         ariaDetails = "hex-${props.data.orientation}"
 
         ref = elementRef
-        useEffect {
+        useEffect(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }

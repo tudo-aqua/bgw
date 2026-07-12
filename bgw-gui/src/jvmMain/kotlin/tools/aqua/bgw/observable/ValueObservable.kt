@@ -35,6 +35,7 @@ abstract class ValueObservable<T> {
   /** Used by renderer to listen on important properties for visualization. */
   internal var guiListener: ((T, T) -> Unit)? = null
     set(value) {
+      field = value
       guiListenerHandler = if (value == null) null else ValueObserver(value)
     }
 
@@ -52,6 +53,7 @@ abstract class ValueObservable<T> {
    */
   internal var internalListener: ((T, T) -> Unit)? = null
     set(value) {
+      field = value
       internalListenerHandler = if (value == null) null else ValueObserver(value)
     }
 
@@ -161,7 +163,7 @@ abstract class ValueObservable<T> {
    * @param newValue New value to notify.
    */
   internal fun notifyChange(oldValue: T, newValue: T) {
-    listeners.forEach { it.update(oldValue, newValue) }
+    listeners.toList().forEach { it.update(oldValue, newValue) }
     internalListenerHandler?.update(oldValue, newValue)
     guiListenerHandler?.update(oldValue, newValue)
   }

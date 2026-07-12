@@ -53,7 +53,7 @@ internal val ComboBox =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
@@ -66,7 +66,7 @@ internal val ComboBox =
         css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -75,6 +75,8 @@ internal val ComboBox =
         }
 
         select {
+          disabled = props.data.isDisabled
+          tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
           css {
             comboBoxBuilder(props.data)
             fontBuilder(props.data)

@@ -93,7 +93,7 @@ open class ProgressBar(
    *
    * @see progress
    */
-  internal val progressProperty: DoubleProperty = DoubleProperty(progress)
+  internal val progressProperty: DoubleProperty = DoubleProperty(progress.coerceProgress())
 
   /**
    * Progress state of this [ProgressBar].
@@ -107,7 +107,7 @@ open class ProgressBar(
   var progress: Double
     get() = progressProperty.value
     set(value) {
-      progressProperty.value = value
+      progressProperty.value = value.coerceProgress()
     }
 
   /**
@@ -123,6 +123,7 @@ open class ProgressBar(
     get() = barVisualProperty.value.color
     set(value) {
       barVisualProperty.value.color = value
+      barVisualProperty.notifyUnchanged()
     }
 
   /**
@@ -148,4 +149,8 @@ open class ProgressBar(
    * @since 0.10
    */
   var onProgressed: ((Double) -> Unit)? = null
+
+  private companion object {
+    fun Double.coerceProgress(): Double = if (isNaN()) 0.0 else coerceIn(0.0, 1.0)
+  }
 }

@@ -58,18 +58,18 @@ internal val ReactGridPane =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
 
       bgwGridPane {
-        tabIndex = 0
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
         id = props.data.id
         className = ClassName("gridPane")
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         css {
           cssBuilderIntern(props.data)
@@ -124,6 +124,7 @@ internal val ReactGridPane =
 
           props.data.grid.forEach { gridElementData ->
             bgwGridElement {
+              key = "${gridElementData.column}/${gridElementData.row}"
               css {
                 gridColumn = integer(gridElementData.column + 1)
                 gridRow = integer(gridElementData.row + 1)

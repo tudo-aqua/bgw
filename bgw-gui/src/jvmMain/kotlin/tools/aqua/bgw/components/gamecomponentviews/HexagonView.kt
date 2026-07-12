@@ -50,7 +50,7 @@ open class HexagonView(
      * @see HexOrientation
      * @since 0.10
      */
-    var orientation: HexOrientation = HexOrientation.POINTY_TOP
+    orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentView(
         posX = posX,
@@ -62,6 +62,16 @@ open class HexagonView(
   /** [Property] for the size of the [HexagonView]. */
   internal val sizeProperty: DoubleProperty = DoubleProperty(size.toDouble())
 
+  /** Property for this hexagon's orientation. */
+  internal val orientationProperty: Property<HexOrientation> = Property(orientation)
+
+  /** Orientation of this hexagon. */
+  var orientation: HexOrientation
+    get() = orientationProperty.value
+    set(value) {
+      orientationProperty.value = value
+    }
+
   /**
    * Size of the [HexagonView]. For [HexOrientation.POINTY_TOP] this is the distance from the center
    * to the top or bottom corner representing half the height of the container. For
@@ -72,5 +82,7 @@ open class HexagonView(
     get() = sizeProperty.value
     set(value) {
       sizeProperty.value = value
+      widthProperty.value = 2 * value
+      heightProperty.value = 2 * value
     }
 }

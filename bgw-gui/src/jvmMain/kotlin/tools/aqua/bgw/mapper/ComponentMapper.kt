@@ -85,7 +85,7 @@ internal object ComponentMapper {
 
       isVisible = componentView.isVisible
       isDisabled = componentView.isDisabled
-      // isFocusable
+      isFocusable = componentView.isFocusable
 
       scaleX =
           if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {

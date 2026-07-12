@@ -54,7 +54,7 @@ internal val PasswordField =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
@@ -65,6 +65,10 @@ internal val PasswordField =
       val lastHandledText = useRef(props.data.text) // Track last handled text from JVM
       val propChangeCount = useRef(0) // Count prop changes to detect repeats
       val lastUserInput = useRef(props.data.text) // Track last user input
+
+      useEffectWithCleanup(props.data.id) {
+        onCleanup { typingTimeout.current?.let { clearTimeout(it) } }
+      }
 
       useEffect(listOf(props.data.text)) {
         // Increment prop change counter to track distinct prop updates
@@ -122,7 +126,7 @@ internal val PasswordField =
 
         ref = elementRef
 
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -147,6 +151,8 @@ internal val PasswordField =
             placeholder { placeholderFontBuilder(props.data) }
           }
           readOnly = props.data.isReadonly
+          disabled = props.data.isDisabled
+          tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
           onChange = {
             isTyping.current = true
 

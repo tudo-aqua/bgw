@@ -178,11 +178,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @param components Components to add.
    */
   fun addComponents(vararg components: T) {
-    rootComponents.addAll(
-        components.toList().onEach {
-          check(it.parent == null) { "Component $it is already contained in another container." }
-          it.parent = rootNode
-        })
+    addComponents(components.toList())
   }
 
   /**
@@ -192,11 +188,16 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @since 0.11
    */
   fun addComponents(elements: Collection<T>) {
-    rootComponents.addAll(
-        elements.onEach {
-          check(it.parent == null) { "Component $it is already contained in another container." }
-          it.parent = rootNode
-        })
+    val components = elements.toList()
+    check(components.distinct().size == components.size) {
+      "Cannot add the same component to a scene more than once."
+    }
+    components.forEach {
+      check(it.parent == null) { "Component $it is already contained in another container." }
+    }
+
+    components.forEach { it.parent = rootNode }
+    rootComponents.addAll(components)
   }
 
   /**
@@ -205,7 +206,7 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @param components Components to remove.
    */
   fun removeComponents(vararg components: T) {
-    rootComponents.removeAll(components.toList().onEach { it.parent = null })
+    removeComponents(components.toList())
   }
 
   /**
@@ -215,7 +216,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @since 0.11
    */
   fun removeComponents(elements: Collection<T>) {
-    rootComponents.removeAll(elements.onEach { it.parent = null })
+    val contained = elements.filter { it.parent === rootNode && rootComponents.contains(it) }
+    if (rootComponents.removeAll(contained)) contained.forEach { it.parent = null }
   }
 
   /** Removes all [ComponentView]s from the root node and [rootComponents] list. */
@@ -232,6 +234,16 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
    * @return Boolean whether the animation successfully started playing.
    */
   fun playAnimation(animation: Animation): Boolean {
+    val animationTree = collectAnimations(animation)
+    if (animationTree.any { it.isRunning }) {
+      Logger.warning("The animation or one of its children is already running.")
+      return false
+    }
+    if (animationTree.map { it.id }.distinct().size != animationTree.size) {
+      Logger.warning("The same Animation instance occurs more than once in the animation tree.")
+      return false
+    }
+
     // Check if this is a top-level singular ComponentAnimation trying to animate an already
     // animating component
     if (animation is ComponentAnimation<*> && animation.componentView.componentAnimating) {
@@ -288,6 +300,14 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
 
     return components
   }
+
+  private fun collectAnimations(animation: Animation): List<Animation> =
+      listOf(animation) +
+          when (animation) {
+            is SequentialAnimation -> animation.animations.flatMap(::collectAnimations)
+            is ParallelAnimation -> animation.animations.flatMap(::collectAnimations)
+            else -> emptyList()
+          }
 
   /**
    * Caches the initial state of a component when animations start. This ensures all animations

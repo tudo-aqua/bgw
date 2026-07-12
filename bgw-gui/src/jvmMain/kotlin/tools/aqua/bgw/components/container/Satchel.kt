@@ -23,6 +23,7 @@ import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.core.DEFAULT_SATCHEL_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_SATCHEL_WIDTH
+import tools.aqua.bgw.observable.ValueObserver
 import tools.aqua.bgw.visual.Visual
 
 /**
@@ -73,19 +74,33 @@ open class Satchel<T : GameComponentView>(
     Iterable<T> {
 
   private val initialStates: HashMap<ComponentView, InitialState> = HashMap()
+  private val positionListeners:
+      HashMap<ComponentView, Pair<ValueObserver<Double>, ValueObserver<Double>>> =
+      HashMap()
+
+  init {
+    widthProperty.addListener { _, newWidth ->
+      observableComponents.forEach { it.widthProperty.setSilent(newWidth) }
+    }
+    heightProperty.addListener { _, newHeight ->
+      observableComponents.forEach { it.heightProperty.setSilent(newHeight) }
+    }
+  }
 
   override fun T.onAdd() {
     val initialState =
         InitialState(
             isDraggable = this.isDraggable,
             opacity = this.opacity,
+            posX = this.posX,
+            posY = this.posY,
             width = this.width,
             height = this.height)
 
     // initialize satchel component
-    // opacityProperty.setSilent(0.0)
-    // widthProperty.setSilent(this@Satchel.width)
-    // heightProperty.setSilent(this@Satchel.height)
+    opacityProperty.setSilent(0.0)
+    widthProperty.setSilent(this@Satchel.width)
+    heightProperty.setSilent(this@Satchel.height)
     isDraggableProperty.setSilent(true)
 
     // add internal listeners
@@ -110,37 +125,45 @@ open class Satchel<T : GameComponentView>(
     }
 
     // add pos listeners
-    this.posXProperty.addListenerAndInvoke(0.0) { _, _ -> posXProperty.setSilent(0.0) }
-    this.posYProperty.addListenerAndInvoke(0.0) { _, _ -> posYProperty.setSilent(0.0) }
+    val xListener = ValueObserver<Double> { _, _ -> posXProperty.setSilent(0.0) }
+    val yListener = ValueObserver<Double> { _, _ -> posYProperty.setSilent(0.0) }
+    posXProperty.addListener(xListener)
+    posYProperty.addListener(yListener)
+    xListener.update(0.0, 0.0)
+    yListener.update(0.0, 0.0)
+    positionListeners[this] = xListener to yListener
 
     initialStates[this] = initialState
   }
 
   override fun T.onRemove() {
+    val initialState = initialStates.remove(this) ?: return
+
     // remove internal listeners
     isDraggableProperty.internalListener = null
     opacityProperty.internalListener = null
     widthProperty.internalListener = null
     heightProperty.internalListener = null
 
-    val initialState = initialStates[this] ?: return
+    positionListeners.remove(this)?.let { (xListener, yListener) ->
+      posXProperty.removeListener(xListener)
+      posYProperty.removeListener(yListener)
+    }
 
     // restore initial behaviour
+    posXProperty.setSilent(initialState.posX)
+    posYProperty.setSilent(initialState.posY)
     widthProperty.setSilent(initialState.width)
     heightProperty.setSilent(initialState.height)
     isDraggableProperty.setSilent(initialState.isDraggable)
     opacityProperty.setSilent(initialState.opacity)
-
-    // remove pos listeners
-    posXProperty.internalListener = null
-    posYProperty.internalListener = null
-
-    initialStates.remove(this)
   }
 
   private class InitialState(
       var isDraggable: Boolean,
       var opacity: Double,
+      var posX: Double,
+      var posY: Double,
       var width: Double,
       var height: Double
   )

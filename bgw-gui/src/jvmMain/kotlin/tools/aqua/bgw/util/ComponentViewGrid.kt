@@ -41,6 +41,11 @@ import tools.aqua.bgw.core.Alignment
 internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var columns: Int) :
     Iterable<GridIteratorElement<T>> {
 
+  init {
+    require(rows >= 0) { "Row count must not be negative." }
+    require(columns >= 0) { "Column count must not be negative." }
+  }
+
   /*  // region Attributes
    */
   /** Current number of rows. */
@@ -295,7 +300,7 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   fun getRowHeight(rowIndex: Int): Double {
     checkRowIndex(rowIndex)
 
-    if (rowHeights[rowIndex] == -1.0) return getColumn(rowIndex).maxOf { it?.actualHeight ?: 0.0 }
+    if (rowHeights[rowIndex] == -1.0) return getRow(rowIndex).maxOf { it?.actualHeight ?: 0.0 }
 
     return rowHeights[rowIndex]
   }
@@ -413,7 +418,11 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
    *
    * @return `true` if the grid has been changes by this operation, `false` otherwise.
    */
-  fun trim(): Boolean = trimColumns() || trimRows()
+  fun trim(): Boolean {
+    val columnsTrimmed = trimColumns()
+    val rowsTrimmed = trimRows()
+    return columnsTrimmed || rowsTrimmed
+  }
 
   /**
    * Removes all empty outer columns.
@@ -434,10 +443,7 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
 
     // Check if array contained only null entries
     if (firstColumn == -1) {
-      columns = 0
-      rows = 0
-      grid = Array(columns) { Array(rows) { null } }
-      centeringModes = Array(columns) { Array(rows) { Alignment.CENTER } }
+      initEmpty()
     } else {
       for (index in columns - 1 downTo firstColumn) {
         if (getColumn(index).any { it != null }) {
@@ -475,10 +481,7 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
 
     // Check if array contained only null entries
     if (firstRow == -1) {
-      columns = 0
-      rows = 0
-      grid = Array(columns) { Array(rows) { null } }
-      centeringModes = Array(columns) { Array(rows) { Alignment.CENTER } }
+      initEmpty()
     } else {
 
       for (index in rows - 1 downTo firstRow) {
@@ -834,7 +837,7 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
 
     /** Returns the next element in the iteration. */
     override fun next(): GridIteratorElement<T> {
-      if (currCol >= grid.size) throw NoSuchElementException()
+      if (!hasNext()) throw NoSuchElementException()
 
       val res = GridIteratorElement(currCol, currRow, grid[currCol][currRow] as? T)
 

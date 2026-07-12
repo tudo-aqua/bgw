@@ -59,7 +59,7 @@ internal val LinearLayout =
               useDraggable(
                   object : DraggableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDraggable
+                    override var disabled = !props.data.isDraggable || props.data.isDisabled
                   })
           else null
 
@@ -68,7 +68,7 @@ internal val LinearLayout =
               useDroppable(
                   object : DroppableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDroppable
+                    override var disabled = !props.data.isDroppable || props.data.isDisabled
                   })
           else null
 
@@ -94,7 +94,7 @@ internal val LinearLayout =
         ariaDetails = props.data.orientation
 
         ref = elementRef
-        useEffect {
+        useEffect(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }
@@ -116,32 +116,23 @@ internal val LinearLayout =
             }
         val spaceOccupiedWithGaps =
             spaceOccupied + (props.data.components.size - 1) * props.data.spacing
+        val availableSpace =
+            if (props.data.orientation == "horizontal") props.data.width else props.data.height
+        val canAdjustLayoutWithGaps = availableSpace >= spaceOccupiedWithGaps
         var possibleGapPerComponent =
-            if (props.data.orientation == "horizontal")
-                (props.data.width - spaceOccupied) / (props.data.components.size - 1)
-            else (props.data.height - spaceOccupied) / (props.data.components.size - 1)
-
-        val canAdjustLayout =
-            if (props.data.orientation == "horizontal" && props.data.width >= spaceOccupied) true
-            else props.data.height >= spaceOccupied
-
-        val canAdjustLayoutWithGaps =
-            if (props.data.orientation == "horizontal" && props.data.width >= spaceOccupiedWithGaps)
-                true
-            else props.data.height >= spaceOccupiedWithGaps
+            if (props.data.components.size <= 1) 0
+            else (availableSpace - spaceOccupied) / (props.data.components.size - 1)
 
         if (props.data.spacing <= 0 && canAdjustLayoutWithGaps) {
           possibleGapPerComponent = props.data.spacing
         } else if (props.data.spacing <= 0 && !canAdjustLayoutWithGaps) {
           possibleGapPerComponent =
-              if (props.data.orientation == "horizontal")
-                  (props.data.width - spaceOccupied) / (props.data.components.size - 1)
-              else (props.data.height - spaceOccupied) / (props.data.components.size - 1)
+              if (props.data.components.size <= 1) 0
+              else (availableSpace - spaceOccupied) / (props.data.components.size - 1)
         } else {
           possibleGapPerComponent =
-              if (props.data.orientation == "horizontal")
-                  (props.data.width - spaceOccupied) / (props.data.components.size - 1)
-              else (props.data.height - spaceOccupied) / (props.data.components.size - 1)
+              if (props.data.components.size <= 1) 0
+              else (availableSpace - spaceOccupied) / (props.data.components.size - 1)
         }
 
         bgwContents {
@@ -218,45 +209,49 @@ internal val LinearLayout =
           }
 
           props.data.components.forEachIndexed { index, it ->
-            if ((props.data.orientation == "horizontal" && props.data.width >= spaceOccupied ||
-                props.data.orientation == "vertical" && props.data.height >= spaceOccupied) &&
-                props.data.spacing > 0) {
-              +NodeBuilder.build(it, isOverlayPreview)
-            } else {
-              div {
-                css {
-                  position = Position.relative
-                  flex = Flex(number(1.0), number(1.0), Auto.auto)
-                  width = fit()
-                  height = fit()
-                  maxWidth = fit()
-                  maxHeight = fit()
-                  marginBlock =
-                      if (props.data.orientation == "horizontal") Globals.unset
-                      else (possibleGapPerComponent / 2).bgw
-                  marginInline =
-                      if (props.data.orientation == "horizontal") (possibleGapPerComponent / 2).bgw
-                      else Globals.unset
-                  display = Display.flex
-                  alignItems = AlignItems.center
-                  justifyContent = JustifyContent.center
+            Fragment {
+              key = it.id
+              if ((props.data.orientation == "horizontal" && props.data.width >= spaceOccupied ||
+                  props.data.orientation == "vertical" && props.data.height >= spaceOccupied) &&
+                  props.data.spacing > 0) {
+                +NodeBuilder.build(it, isOverlayPreview)
+              } else {
+                div {
+                  css {
+                    position = Position.relative
+                    flex = Flex(number(1.0), number(1.0), Auto.auto)
+                    width = fit()
+                    height = fit()
+                    maxWidth = fit()
+                    maxHeight = fit()
+                    marginBlock =
+                        if (props.data.orientation == "horizontal") Globals.unset
+                        else (possibleGapPerComponent / 2).bgw
+                    marginInline =
+                        if (props.data.orientation == "horizontal")
+                            (possibleGapPerComponent / 2).bgw
+                        else Globals.unset
+                    display = Display.flex
+                    alignItems = AlignItems.center
+                    justifyContent = JustifyContent.center
 
-                  if (props.data.orientation == "horizontal") {
-                    if (index == 0) {
-                      marginLeft = 0.bgw
-                    } else if (index == props.data.components.size - 1) {
-                      marginRight = 0.bgw
-                    }
-                  } else {
-                    if (index == 0) {
-                      marginTop = 0.bgw
-                    } else if (index == props.data.components.size - 1) {
-                      marginBottom = 0.bgw
+                    if (props.data.orientation == "horizontal") {
+                      if (index == 0) {
+                        marginLeft = 0.bgw
+                      } else if (index == props.data.components.size - 1) {
+                        marginRight = 0.bgw
+                      }
+                    } else {
+                      if (index == 0) {
+                        marginTop = 0.bgw
+                      } else if (index == props.data.components.size - 1) {
+                        marginBottom = 0.bgw
+                      }
                     }
                   }
-                }
 
-                +NodeBuilder.build(it, isOverlayPreview)
+                  +NodeBuilder.build(it, isOverlayPreview)
+                }
               }
             }
           }

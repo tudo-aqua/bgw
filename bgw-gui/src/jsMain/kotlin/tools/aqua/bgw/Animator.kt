@@ -466,9 +466,7 @@ internal object Animator {
             })
 
     // Store the JSAnimation for later reverting
-    if (componentId != null) {
-      jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.FLIP] = jsAnim
-    }
+    jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.FLIP] = jsAnim
 
     timeline.sync(jsAnim, animationData.initialDelay)
   }
@@ -611,7 +609,10 @@ internal object Animator {
         Timer(
             jsObject<TimerParams> {
               duration = animationData.duration
-              onComplete = { _, _ -> callback.invoke(animationData.id, null) }
+              onComplete = { _, _ ->
+                delayTimers.remove(animationData.id)
+                callback.invoke(animationData.id, null)
+              }
               autoplay = false
             })
 
@@ -659,29 +660,23 @@ internal object Animator {
       when (animationType) {
         AnimationType.FADE -> {
           style.removeProperty("--opaAnim")
-          console.log("Removed opacity style for component $componentId")
         }
         AnimationType.MOVEMENT -> {
           style.removeProperty("--txAnim")
           style.removeProperty("--tyAnim")
-          console.log("Removed --tx and --ty styles for component $componentId")
         }
         AnimationType.ROTATION -> {
           style.removeProperty("--rot")
-          console.log("Removed --rot style for component $componentId")
         }
         AnimationType.SCALE -> {
           style.removeProperty("--sxAnim")
           style.removeProperty("--syAnim")
-          console.log("Removed scale styles for component $componentId")
         }
         AnimationType.FLIP -> {
           style.removeProperty("--flipAnim")
-          console.log("Removed flip styles for component $componentId")
         }
         AnimationType.STEPPED -> {
           style.removeProperty("--steppedAnim")
-          console.log("Removed stepped styles for component $componentId")
         }
         else -> {}
       }
@@ -716,6 +711,7 @@ internal object Animator {
       timelines.remove(componentId)
       jsAnimations.remove(componentId)
       visualStates.remove(componentId)
+      animations.remove(componentId)
     }
   }
 
@@ -727,11 +723,19 @@ internal object Animator {
    */
   fun stopAllAnimations() {
     // Cancel all timelines (this prevents onComplete callbacks from being called)
-    timelines.values.forEach { timeline ->
+    timelines.values.toSet().forEach { timeline ->
       try {
         timeline.cancel()
       } catch (e: Exception) {
         console.log("Failed to cancel timeline: ${e.message}")
+      }
+    }
+
+    delayTimers.values.forEach { timer ->
+      try {
+        timer.cancel()
+      } catch (e: Exception) {
+        console.log("Failed to cancel delay timer: ${e.message}")
       }
     }
 

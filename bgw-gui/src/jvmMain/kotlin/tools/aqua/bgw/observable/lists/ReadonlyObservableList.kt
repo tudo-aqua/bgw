@@ -103,7 +103,7 @@ abstract class ReadonlyObservableList<T> : ValueObservable<List<T>>(), Iterable<
    *   list's bounds.
    */
   fun getOrNull(index: Int): T? {
-    return if (index >= 0 && index <= list.size) get(index) else null
+    return if (index in list.indices) get(index) else null
   }
 
   /**

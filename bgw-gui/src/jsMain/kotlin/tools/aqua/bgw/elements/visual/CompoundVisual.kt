@@ -26,4 +26,11 @@ internal external interface CompoundVisualProps : Props {
 }
 
 internal val CompoundVisual =
-    FC<CompoundVisualProps> { props -> props.data.children.forEach { +VisualBuilder.build(it) } }
+    FC<CompoundVisualProps> { props ->
+      props.data.children.forEachIndexed { index, visual ->
+        Fragment {
+          key = visual.id.ifEmpty { index.toString() }
+          +VisualBuilder.build(visual)
+        }
+      }
+    }

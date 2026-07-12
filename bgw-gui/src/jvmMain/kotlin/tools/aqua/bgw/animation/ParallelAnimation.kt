@@ -32,7 +32,10 @@ package tools.aqua.bgw.animation
 data class ParallelAnimation(
     /** The [Animation]s that this [ParallelAnimation] should contain. */
     val animations: List<Animation>
-) : Animation(animations.maxOf(Animation::duration)) {
+) : Animation(animations.maxOfOrNull(Animation::duration) ?: 0) {
+  init {
+    require(animations.isNotEmpty()) { "A ParallelAnimation must contain at least one animation." }
+  }
 
   /**
    * Creates a new [ParallelAnimation]. Additional constructor that enables the use of varargs for

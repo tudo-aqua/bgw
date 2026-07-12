@@ -21,6 +21,7 @@ import kotlin.math.sqrt
 import tools.aqua.bgw.components.container.HexagonGrid.CoordinateSystem
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
 import tools.aqua.bgw.core.HexOrientation
+import tools.aqua.bgw.observable.properties.Property
 import tools.aqua.bgw.visual.Visual
 
 private typealias HexCoordinate = Pair<Int, Int>
@@ -59,7 +60,7 @@ class HexagonGrid<T : HexagonView>(
      *
      * @since 0.10
      */
-    var orientation: HexOrientation = HexOrientation.POINTY_TOP
+    orientation: HexOrientation = HexOrientation.POINTY_TOP
 ) :
     GameComponentContainer<T>(
         posX = posX, posY = posY, width = width, height = height, visual = visual) {
@@ -67,10 +68,21 @@ class HexagonGrid<T : HexagonView>(
   /** A mutable map that stores the hexagons in the grid. */
   internal val map: MutableMap<HexCoordinate, T> = mutableMapOf()
 
+  /** Property for the orientation of all hexagons in this grid. */
+  internal val orientationProperty: Property<HexOrientation> = Property(orientation)
+
+  /** Orientation of all hexagons in this grid. */
+  var orientation: HexOrientation
+    get() = orientationProperty.value
+    set(value) {
+      orientationProperty.value = value
+    }
+
   init {
     observableComponents.setInternalListenerAndInvoke(emptyList()) { _, _ ->
       layout(coordinateSystem)
     }
+    orientationProperty.internalListener = { _, _ -> layout(coordinateSystem) }
   }
 
   /**
@@ -92,13 +104,18 @@ class HexagonGrid<T : HexagonView>(
    * @see components
    */
   operator fun set(columnIndex: Int, rowIndex: Int, component: T) {
-    map[columnIndex to rowIndex]?.run {
-      observableComponents.remove(this)
-      onRemove?.invoke(this)
+    val coordinate = columnIndex to rowIndex
+    val previous = map[coordinate]
+    if (previous === component) return
+
+    require(component.parent == null) {
+      "Component $component is already contained in another container."
     }
+
+    previous?.let { remove(it) }
     component.orientation = orientation
-    component.parent = this
-    map[columnIndex to rowIndex] = component
+    map[coordinate] = component
+    component.onAdd()
     observableComponents.add(component)
     onAdd?.invoke(component)
   }
@@ -111,7 +128,7 @@ class HexagonGrid<T : HexagonView>(
    * @since 0.10
    */
   fun getCoordinateMap(): Map<HexCoordinate, T> {
-    return map
+    return map.toMap()
   }
 
   /**
@@ -123,10 +140,7 @@ class HexagonGrid<T : HexagonView>(
    * @since 0.10
    */
   fun remove(columnIndex: Int, rowIndex: Int) {
-    map[columnIndex to rowIndex]?.run {
-      observableComponents.remove(this)
-      onRemove?.invoke(this)
-    }
+    map[columnIndex to rowIndex]?.let { remove(it) }
   }
 
   /**
@@ -135,11 +149,17 @@ class HexagonGrid<T : HexagonView>(
    * @param coordinateSystem The coordinate system to use for the layout.
    */
   private fun layout(coordinateSystem: CoordinateSystem) {
+    if (map.isEmpty()) {
+      widthProperty.setSilent(0.0)
+      heightProperty.setSilent(0.0)
+      return
+    }
+
     var minX = Double.MAX_VALUE
     var minY = Double.MAX_VALUE
 
-    var maxX = Double.MIN_VALUE
-    var maxY = Double.MIN_VALUE
+    var maxX = Double.NEGATIVE_INFINITY
+    var maxY = Double.NEGATIVE_INFINITY
 
     map.forEach { (coords, hexagon) ->
       val (x, y) = coords
@@ -192,16 +212,16 @@ class HexagonGrid<T : HexagonView>(
   }
 
   override fun T.onRemove() {
-    map.forEach { (coords, hexagon) ->
-      if (hexagon == this) {
-        map.remove(coords)
-        return
-      }
-    }
+    widthProperty.internalListener = null
+    heightProperty.internalListener = null
+    map.entries.firstOrNull { it.value === this }?.key?.let { map.remove(it) }
+    layout(coordinateSystem)
   }
 
   override fun T.onAdd() {
     this.parent = this@HexagonGrid
+    widthProperty.internalListener = { _, _ -> layout(coordinateSystem) }
+    heightProperty.internalListener = { _, _ -> layout(coordinateSystem) }
   }
 
   /** Enumeration class representing the coordinate system options for the hexagon grid. */

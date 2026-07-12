@@ -90,8 +90,7 @@ open class BoardGameApplication(
   var fullscreenExitCombination: KeyEvent?
     get() = Frontend.fullscreenExitCombinationProperty.value
     set(value) {
-      TODO()
-      // Frontend.fullscreenExitCombinationProperty.value = value
+      Frontend.fullscreenExitCombinationProperty.value = value
     }
 
   /**
@@ -108,8 +107,7 @@ open class BoardGameApplication(
   var fullscreenExitCombinationHint: String?
     get() = Frontend.fullscreenExitCombinationHintProperty.value
     set(value) {
-      TODO()
-      // Frontend.fullscreenExitCombinationHintProperty.value = value
+      Frontend.fullscreenExitCombinationHintProperty.value = value
     }
 
   /**
@@ -214,8 +212,7 @@ open class BoardGameApplication(
    * @since 0.7
    */
   fun showDialogNonBlocking(dialog: Dialog): Unit {
-    // TODO: Implement non-blocking dialogs
-    Frontend.showDialog(dialog)
+    Frontend.showDialogNonBlocking(dialog)
   }
 
   /**

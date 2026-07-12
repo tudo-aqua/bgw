@@ -58,7 +58,7 @@ internal val Area =
               useDraggable(
                   object : DraggableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDraggable
+                    override var disabled = !props.data.isDraggable || props.data.isDisabled
                   })
           else null
 
@@ -67,7 +67,7 @@ internal val Area =
               useDroppable(
                   object : DroppableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDroppable
+                    override var disabled = !props.data.isDroppable || props.data.isDisabled
                   })
           else null
 
@@ -91,7 +91,7 @@ internal val Area =
         // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
-        useEffect {
+        useEffect(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }
@@ -109,7 +109,12 @@ internal val Area =
 
         bgwContents {
           className = ClassName("components")
-          props.data.components.forEach { +NodeBuilder.build(it, isOverlayPreview) }
+          props.data.components.forEach { component ->
+            Fragment {
+              key = component.id
+              +NodeBuilder.build(component, isOverlayPreview)
+            }
+          }
         }
 
         applyCommonEventHandlers(props.data)

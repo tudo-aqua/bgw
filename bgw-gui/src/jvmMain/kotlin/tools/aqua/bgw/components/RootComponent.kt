@@ -56,9 +56,10 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @since 0.8
    */
   override fun toFront(component: T) {
-    zIndexProperty.value = this.scene.rootComponents.last().zIndex
-    if (this.scene.rootComponents.last() != component &&
-        this.scene.rootComponents.contains(component)) {
+    if (!this.scene.rootComponents.contains(component)) return
+
+    component.zIndexProperty.value = this.scene.rootComponents.last().zIndex
+    if (this.scene.rootComponents.last() != component) {
       this.scene.rootComponents.removeSilent(component)
       this.scene.rootComponents.add(component)
     }
@@ -72,9 +73,10 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @since 0.8
    */
   override fun toBack(component: T) {
-    zIndexProperty.value = this.scene.rootComponents.first().zIndex
-    if (this.scene.rootComponents.first() != component &&
-        this.scene.rootComponents.contains(component)) {
+    if (!this.scene.rootComponents.contains(component)) return
+
+    component.zIndexProperty.value = this.scene.rootComponents.first().zIndex
+    if (this.scene.rootComponents.first() != component) {
       this.scene.rootComponents.removeSilent(component)
       this.scene.rootComponents.add(0, component)
     }
@@ -89,8 +91,9 @@ class RootComponent<T : ComponentView> internal constructor(val scene: Scene<T>)
    * @since 0.8
    */
   override fun setZIndex(component: T, zIndex: Int) {
+    if (!this.scene.rootComponents.contains(component)) return
+
     component.zIndexProperty.value = zIndex
-    // TODO: Does not modify the list
-    this.scene.rootComponents.sortedBy { it.zIndex }
+    this.scene.rootComponents.setAll(this.scene.rootComponents.sortedBy { it.zIndex })
   }
 }

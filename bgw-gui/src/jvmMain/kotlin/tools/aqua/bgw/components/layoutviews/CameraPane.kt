@@ -185,6 +185,7 @@ open class CameraPane<T : LayoutView<*>>(
     }
 
   init {
+    require(target.parent == null) { "Camera target is already contained in another component." }
     target.parent = this
   }
 
@@ -295,13 +296,10 @@ open class CameraPane<T : LayoutView<*>>(
    * @see limitBounds
    */
   private fun zoom(zoom: Double) {
-    if (panData.panTo != null) {
-      pan(panData.panTo!!.first, panData.panTo!!.second, zoom, panData.panSmooth)
-    } else if (panData.panBy) {
-      panBy(panData.panTo!!.first, panData.panTo!!.second, zoom, panData.panSmooth)
-    } else {
-      panData = InternalCameraPanData(zoom = zoom, zoomOnly = true)
-    }
+    require(zoom.isFinite() && zoom > 0.0) { "Zoom must be a finite positive number." }
+    panData =
+        if (panData.panTo != null) panData.copy(zoom = zoom)
+        else InternalCameraPanData(zoom = zoom, zoomOnly = true)
   }
 
   override fun removeChild(component: ComponentView) {

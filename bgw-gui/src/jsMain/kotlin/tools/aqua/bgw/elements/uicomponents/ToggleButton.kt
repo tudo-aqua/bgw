@@ -58,7 +58,7 @@ internal val ToggleButton =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
@@ -72,7 +72,7 @@ internal val ToggleButton =
         }
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -84,6 +84,8 @@ internal val ToggleButton =
           id = props.data.id + "--toggle"
           checked = props.data.isSelected
           name = props.data.group
+          disabled = props.data.isDisabled
+          tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
 
           css {
             width = 20.bgw

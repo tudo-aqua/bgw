@@ -44,6 +44,7 @@ internal object GameComponentViewBuilder {
 
   private fun buildHexagonView(hexagonView: HexagonView) {
     hexagonView.sizeProperty.guiListener = { _, _ -> Frontend.updateComponent(hexagonView) }
+    hexagonView.orientationProperty.guiListener = { _, _ -> Frontend.updateComponent(hexagonView) }
   }
 
   private fun buildTokenView(tokenView: TokenView) {}

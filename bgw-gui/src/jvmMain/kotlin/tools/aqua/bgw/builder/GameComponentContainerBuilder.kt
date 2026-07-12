@@ -28,7 +28,8 @@ import tools.aqua.bgw.core.Frontend
 
 internal object GameComponentContainerBuilder {
   fun build(gameComponentContainer: GameComponentContainer<out DynamicComponentView>) {
-    gameComponentContainer.observableComponents.guiListener = { _, _ ->
+    gameComponentContainer.observableComponents.guiListener = { oldComponents, newComponents ->
+      newComponents.filter { it !in oldComponents }.forEach { ComponentViewBuilder.build(it) }
       Frontend.updateComponent(gameComponentContainer)
     }
     when (gameComponentContainer) {
@@ -51,7 +52,9 @@ internal object GameComponentContainerBuilder {
     cardStack.alignmentProperty.guiListener = { _, _ -> Frontend.updateComponent(cardStack) }
   }
 
-  private fun buildHexagonGrid(hexagonGrid: HexagonGrid<out HexagonView>) {}
+  private fun buildHexagonGrid(hexagonGrid: HexagonGrid<out HexagonView>) {
+    hexagonGrid.orientationProperty.guiListener = { _, _ -> Frontend.updateComponent(hexagonGrid) }
+  }
 
   private fun buildLinearLayout(linearLayout: LinearLayout<out GameComponentView>) {
     linearLayout.spacingProperty.guiListener = { _, _ -> Frontend.updateComponent(linearLayout) }

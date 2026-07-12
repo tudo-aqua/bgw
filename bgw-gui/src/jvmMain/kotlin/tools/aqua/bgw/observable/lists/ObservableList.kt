@@ -34,8 +34,9 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   operator fun set(index: Int, element: T): T {
-    val snapshot = this.toList()
     val oldValue: T = list[index]
+    if (oldValue === element) return oldValue
+    val snapshot = this.toList()
     list[index] = element
     notifyChange(oldValue = snapshot, newValue = this.toList())
     return oldValue
@@ -110,12 +111,11 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * this list is empty.
    */
   fun removeFirstOrNull(): T? {
+    if (list.isEmpty()) return null
     val snapshot = this.toList()
-    val isRemoved = list.removeFirstOrNull()
-
-    if (isRemoved != null) notifyChange(oldValue = snapshot, newValue = this.toList())
-
-    return isRemoved
+    val removed = list.removeAt(0)
+    notifyChange(oldValue = snapshot, newValue = this.toList())
+    return removed
   }
 
   /**
@@ -123,19 +123,21 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @throws NoSuchElementException If the list was empty.
    */
-  fun removeFirst(): T = removeFirstOrNull() ?: throw NoSuchElementException("List is empty")
+  fun removeFirst(): T {
+    if (list.isEmpty()) throw NoSuchElementException("List is empty")
+    return removeAt(0)
+  }
 
   /**
    * Removes the last element from this list and returns that removed element, or returns `null` if
    * this list is empty.
    */
   fun removeLastOrNull(): T? {
+    if (list.isEmpty()) return null
     val snapshot = this.toList()
-    val isRemoved = list.removeLastOrNull()
-
-    if (isRemoved != null) notifyChange(oldValue = snapshot, newValue = this.toList())
-
-    return isRemoved
+    val removed = list.removeAt(list.lastIndex)
+    notifyChange(oldValue = snapshot, newValue = this.toList())
+    return removed
   }
 
   /**
@@ -143,7 +145,10 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    *
    * @throws NoSuchElementException If the list was empty.
    */
-  fun removeLast(): T = removeLastOrNull() ?: throw NoSuchElementException("List is empty")
+  fun removeLast(): T {
+    if (list.isEmpty()) throw NoSuchElementException("List is empty")
+    return removeAt(list.lastIndex)
+  }
 
   /** Removes all elements from this list. The list will be empty after this call returns. */
   fun clear() {
@@ -174,10 +179,10 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
     if (list.size == elements.size && list.zip(elements).all { (t1, t2) -> t1 === t2 }) return false
 
     list.clear()
-    val isAdded = list.addAll(elements)
+    list.addAll(elements)
     notifyChange(oldValue = snapshot, newValue = this.toList())
 
-    return isAdded
+    return true
   }
 
   /**
@@ -193,6 +198,8 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * @throws NullPointerException If the specified collection is null.
    */
   fun addAll(elements: Collection<T>): Boolean {
+    if (elements.isEmpty()) return false
+
     val snapshot = this.toList()
     val isAdded = list.addAll(elements)
     notifyChange(oldValue = snapshot, newValue = this.toList())
@@ -211,6 +218,11 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
    * @throws IndexOutOfBoundsException If the index exceeds the list's bounds.
    */
   fun addAll(index: Int, elements: Collection<T>): Boolean {
+    if (elements.isEmpty()) {
+      if (index !in 0..list.size) throw IndexOutOfBoundsException("Index $index is out of range.")
+      return false
+    }
+
     val snapshot = this.toList()
     val isAdded = list.addAll(index, elements)
     notifyChange(oldValue = snapshot, newValue = this.toList())
@@ -254,7 +266,7 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
   fun retainAll(elements: Collection<*>): Boolean {
     val snapshot = this.toList()
     val isRetained = list.retainAll(elements.toSet())
-    notifyChange(oldValue = snapshot, newValue = this.toList())
+    if (isRetained) notifyChange(oldValue = snapshot, newValue = this.toList())
     return isRetained
   }
 
@@ -317,7 +329,10 @@ abstract class ObservableList<T> : ReadonlyObservableList<T>() {
   fun sort(comparator: Comparator<in T>) {
     val snapshot = this.toList()
     list.sortWith(comparator)
-    notifyChange(oldValue = snapshot, newValue = this.toList())
+    val sorted = this.toList()
+    if (snapshot.indices.any { snapshot[it] !== sorted[it] }) {
+      notifyChange(oldValue = snapshot, newValue = sorted)
+    }
   }
 
   /** Sets [list] silently. */

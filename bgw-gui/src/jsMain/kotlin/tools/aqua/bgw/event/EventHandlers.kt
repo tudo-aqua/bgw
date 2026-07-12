@@ -19,7 +19,6 @@ package tools.aqua.bgw.event
 
 import ComponentViewData
 import data.event.KeyEventAction
-import kotlin.math.abs
 import kotlin.math.sign
 import react.dom.html.HTMLAttributes
 import react.useEffect
@@ -37,6 +36,8 @@ import web.timers.clearTimeout
 import web.timers.setTimeout
 
 internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentViewData) {
+  if (props.isDisabled) return
+
   /*onContextMenu = {
     it.preventDefault()
     JCEFEventDispatcher.dispatchEvent(it.toMouseEventData(props.id))
@@ -56,11 +57,11 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
   // onWheel = { JCEFEventDispatcher.dispatchEvent(it.toScrollEventData(props.id)) }
 
   if (props.hasMouseEnteredEvent) {
-    onMouseOver = { JCEFEventDispatcher.dispatchEvent(it.toMouseEnteredData(props.id)) }
+    onMouseEnter = { JCEFEventDispatcher.dispatchEvent(it.toMouseEnteredData(props.id)) }
   }
 
   if (props.hasMouseExitedEvent) {
-    onMouseOut = { JCEFEventDispatcher.dispatchEvent(it.toMouseExitedData(props.id)) }
+    onMouseLeave = { JCEFEventDispatcher.dispatchEvent(it.toMouseExitedData(props.id)) }
   }
 
   var debounceTimeout: Timeout? = null
@@ -68,20 +69,28 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
   var combinedDelta = 0.0
 
   onWheel = {
-    val currentDirection = it.deltaY.sign
-    combinedDelta += if (it.deltaY != 0.0) it.deltaY else it.deltaX
-    if (debounceTimeout == null || currentDirection != lastScrollDirection) {
-      debounceTimeout?.let { clearTimeout(it) }
+    val event = it
+    val delta = if (event.deltaY != 0.0) event.deltaY else event.deltaX
+    if (delta != 0.0) {
+      val currentDirection = delta.sign
+      if (lastScrollDirection != null && currentDirection != lastScrollDirection) {
+        debounceTimeout?.let { timeout -> clearTimeout(timeout) }
+        JCEFEventDispatcher.dispatchEvent(event.toScrollEventData(props.id, combinedDelta))
+        combinedDelta = 0.0
+      }
+
+      combinedDelta += delta
+      lastScrollDirection = currentDirection
+      debounceTimeout?.let { timeout -> clearTimeout(timeout) }
       debounceTimeout =
           setTimeout(
               {
-                JCEFEventDispatcher.dispatchEvent(
-                    it.toScrollEventData(props.id, abs(combinedDelta)))
+                JCEFEventDispatcher.dispatchEvent(event.toScrollEventData(props.id, combinedDelta))
                 debounceTimeout = null
                 combinedDelta = 0.0
+                lastScrollDirection = null
               },
               50)
-      lastScrollDirection = currentDirection
     }
   }
 }

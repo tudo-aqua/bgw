@@ -61,7 +61,7 @@ internal fun main() {
       val cont = document.getElementById("bgw-root")
       val dialog = document.getElementById("bgw-dialogs")
 
-      if (cont != null) {
+      if (dialog != null) {
         dialogContainer = dialog as HTMLElement
       }
 
@@ -84,7 +84,7 @@ internal fun main() {
           val cont = document.getElementById(containerId)
           if (cont != null) {
             if (!exampleRoots.containsKey(containerId)) {
-              exampleRoots[containerId] = createRoot(cont as Element)
+              exampleRoots[containerId] = createRoot(cont.unsafeCast<Element>())
             }
             handleReceivedData(receivedData!!, containerId)
           }
@@ -150,7 +150,8 @@ internal fun renderSingleRoot(appData: AppData, containerId: String) {
   } else {
     val cont = document.getElementById(containerId)
     if (cont != null) {
-      exampleRoots[containerId] = hydrateRoot(cont as Element, App.create { data = appData })
+      exampleRoots[containerId] =
+          hydrateRoot(cont.unsafeCast<Element>(), App.create { data = appData })
     }
   }
 }
@@ -158,7 +159,7 @@ internal fun renderSingleRoot(appData: AppData, containerId: String) {
 /** Renders the BGW interface. */
 internal fun renderAppFast(appData: AppData) {
   if (!::root.isInitialized) {
-    root = createRoot(container as Element)
+    root = createRoot(container.unsafeCast<Element>())
   }
   root.render(App.create { data = appData })
   println("${Date.now()} - Rendered app")
@@ -167,8 +168,12 @@ internal fun renderAppFast(appData: AppData) {
 
 internal fun renderDialogs() {
   println("Rendering Dialogs $dialogMap")
+  if (!::dialogContainer.isInitialized) {
+    val dialog = document.getElementById("bgw-dialogs") ?: return
+    dialogContainer = dialog as HTMLElement
+  }
   if (!::dialogRoot.isInitialized) {
-    dialogRoot = createRoot(dialogContainer as Element)
+    dialogRoot = createRoot(dialogContainer.unsafeCast<Element>())
   }
   dialogRoot.render(Dialog.create { data = dialogMap.values.toList() })
 }

@@ -24,6 +24,7 @@ import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.elements.bgw
+import tools.aqua.bgw.elements.cssFont
 import tools.aqua.bgw.elements.filterBuilder
 import tools.aqua.bgw.elements.flipBuilder
 import tools.aqua.bgw.elements.styleBuilder
@@ -42,11 +43,11 @@ internal val TextVisual =
           styleBuilder(props.data.style)
           flipBuilder(props.data.flipped, props.data.rotation)
           filterBuilder(props.data.filters)
-          fontFamily = (props.data.font?.family ?: "Arial") as FontFamily?
-          fontWeight = (props.data.font?.fontWeight ?: "normal") as FontWeight?
-          fontStyle = (props.data.font?.fontStyle ?: "normal") as FontStyle?
-          fontSize = props.data.font?.size?.bgw
-          color = Color(props.data.font?.color ?: "black")
+          fontFamily = cssFont(props.data.font.family)
+          fontWeight = integer(props.data.font.fontWeight)
+          fontStyle = props.data.font.fontStyle.unsafeCast<FontStyle>()
+          fontSize = props.data.font.size.bgw
+          color = Color(props.data.font.color)
           justifyContent =
               when (props.data.alignment.first) {
                 "left" -> JustifyContent.flexStart

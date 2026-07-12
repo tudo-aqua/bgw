@@ -212,7 +212,9 @@ internal fun handleAnimationFinished(text: String) {
   val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
   val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
   val animations = menuSceneAnimations + boardGameSceneAnimations
-  val animation = animations.find { it.id == eventData.id }
+  val animation = animations.find { it.id == eventData.id } ?: return
+  if (!animation.isRunning) return
+  animation.isRunning = false
 
   // Apply final animation values to cache AND component properties if persist=true
   if (animation is ComponentAnimation<*> && animation.persist) {
@@ -222,8 +224,12 @@ internal fun handleAnimationFinished(text: String) {
         animation.componentView.posY += animation.toY - animation.fromY
       }
       is ScaleAnimation<*> -> {
-        animation.componentView.scaleX *= animation.toScaleX / animation.fromScaleX
-        animation.componentView.scaleY *= animation.toScaleY / animation.fromScaleY
+        animation.componentView.scaleX =
+            if (animation.fromScaleX == 0.0) animation.toScaleX
+            else animation.componentView.scaleX * animation.toScaleX / animation.fromScaleX
+        animation.componentView.scaleY =
+            if (animation.fromScaleY == 0.0) animation.toScaleY
+            else animation.componentView.scaleY * animation.toScaleY / animation.fromScaleY
       }
       is RotationAnimation<*> -> {
         animation.componentView.rotation += animation.toAngle - animation.fromAngle
@@ -280,8 +286,23 @@ internal fun handleAnimationFinished(text: String) {
           is FlipAnimation<*> -> AnimationType.FLIP
           is SteppedComponentAnimation<*> -> AnimationType.STEPPED
         }
-    animation.componentView.animationTypes.remove(animationType)
-    if (animationType !in animation.componentView.animationTypes) {
+    val sameTypeStillRunning =
+        animations.any {
+          it !== animation &&
+              it.isRunning &&
+              it is ComponentAnimation<*> &&
+              it.componentView === animation.componentView &&
+              when (it) {
+                is MovementAnimation<*> -> AnimationType.MOVEMENT
+                is ScaleAnimation<*> -> AnimationType.SCALE
+                is RotationAnimation<*> -> AnimationType.ROTATION
+                is FadeAnimation<*> -> AnimationType.FADE
+                is FlipAnimation<*> -> AnimationType.FLIP
+                is SteppedComponentAnimation<*> -> AnimationType.STEPPED
+              } == animationType
+        }
+    if (!sameTypeStillRunning) {
+      animation.componentView.animationTypes.remove(animationType)
       animation.componentView.animationsFinishedSinceLastUpdate.add(animationType)
       // Track this component so we can clear its finished animations after sending the update
       Frontend.componentsWithFinishedAnimations.add(animation.componentView)
@@ -289,18 +310,21 @@ internal fun handleAnimationFinished(text: String) {
     }
 
     // Check if component has no more active animations
-    if (animation.componentView.animationTypes.isEmpty()) {
+    val componentStillAnimating =
+        animations.any {
+          it !== animation &&
+              it.isRunning &&
+              it is ComponentAnimation<*> &&
+              it.componentView === animation.componentView
+        }
+    if (!componentStillAnimating) {
       animation.componentView.componentAnimating = false
       Frontend.animationCache.remove(animation.componentView.id)
     }
   }
 
-  animation?.isRunning = false
-  animation?.onFinished?.invoke(AnimationFinishedEvent())
-
-  if (animation != null) {
-    checkIfParentFinished(animation)
-  }
+  animation.onFinished?.invoke(AnimationFinishedEvent())
+  checkIfParentFinished(animation)
 }
 
 internal fun checkIfParentFinished(animation: Animation) {
@@ -356,7 +380,7 @@ internal fun eventListener(text: String) {
   // Handle events for the application
   if (eventData is LoadEventData) {
     eventData.id?.indexOf("bgw-scene-")?.let {
-      if (it >= -1) {
+      if (it >= 0) {
         val sceneId = eventData.id ?: return
         if (Frontend.boardGameScene?.id == sceneId && Frontend.boardGameScene?.isVisible != true) {
           Frontend.boardGameScene?.isVisible = true

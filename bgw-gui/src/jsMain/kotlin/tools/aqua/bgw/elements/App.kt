@@ -58,7 +58,7 @@ internal external interface AppProps : Props {
 
 internal val App =
     FC<AppProps> { props ->
-      useEffect { webSocket?.send("Hello from Client!") }
+      useEffect(listOf(webSocket)) { webSocket?.send("Hello from Client!") }
 
       props.data.fonts.forEach { font ->
         Global {
@@ -431,7 +431,7 @@ internal val App =
           } */
       } */
 
-      val (lastDraggedOver, setLastDraggedOver) = useState<String?>(null)
+      val lastDraggedOver = useRef<String>(null)
       val draggedElementRef = useRef<Element>(null)
       val (activeDragId, setActiveDragId) = useState<String?>(null)
 
@@ -489,32 +489,52 @@ internal val App =
             JCEFEventDispatcher.dispatchEvent(event.toDragEventData())
           }
           JCEFEventDispatcher.dispatchEvent(event.toDragEndedEventData())
-          if (lastDraggedOver != null) {
+          val previousDropTarget = lastDraggedOver.current
+          if (previousDropTarget != null) {
             val (posX, posY) = currentDragPosition()
             JCEFEventDispatcher.dispatchEvent(
-                DragGestureExitedEventData(lastDraggedOver, posX, posY).apply {
+                DragGestureExitedEventData(previousDropTarget, posX, posY).apply {
                   this.id = event.active?.id
                 })
           }
           draggedElementRef.current?.removeAttribute("data-bgw-drag-source")
           draggedElementRef.current = null
-          setLastDraggedOver(null)
+          lastDraggedOver.current = null
+          setActiveDragId(null)
+        }
+
+        onDragCancel = { event ->
+          val previousDropTarget = lastDraggedOver.current
+          if (previousDropTarget != null) {
+            val (posX, posY) = currentDragPosition()
+            JCEFEventDispatcher.dispatchEvent(
+                DragGestureExitedEventData(previousDropTarget, posX, posY).apply {
+                  this.id = event.active?.id
+                })
+          }
+          JCEFEventDispatcher.dispatchEvent(event.toDragEndedEventData())
+          draggedElementRef.current?.removeAttribute("data-bgw-drag-source")
+          draggedElementRef.current = null
+          lastDraggedOver.current = null
           setActiveDragId(null)
         }
 
         onDragMove = { event -> JCEFEventDispatcher.dispatchEvent(event.toDragMoveEventData()) }
 
         onDragOver = { event ->
-          JCEFEventDispatcher.dispatchEvent(event.toDragEnteredEventData())
-          if (lastDraggedOver != event.over?.id) {
-            if (lastDraggedOver != null) {
+          if (lastDraggedOver.current != event.over?.id) {
+            val previousDropTarget = lastDraggedOver.current
+            if (previousDropTarget != null) {
               val (posX, posY) = currentDragPosition()
               JCEFEventDispatcher.dispatchEvent(
-                  DragGestureExitedEventData(lastDraggedOver, posX, posY).apply {
+                  DragGestureExitedEventData(previousDropTarget, posX, posY).apply {
                     this.id = event.active?.id
                   })
             }
-            setLastDraggedOver(event.over?.id)
+            if (event.over != null) {
+              JCEFEventDispatcher.dispatchEvent(event.toDragEnteredEventData())
+            }
+            lastDraggedOver.current = event.over?.id
           }
         }
 
@@ -523,6 +543,7 @@ internal val App =
         }
 
         fun globalKeyDown(e: KeyboardEvent<*>) {
+          JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.PRESS))
           JCEFEventDispatcher.dispatchGlobalEvent(e.toKeyEventData("global", KeyEventAction.TYPE))
         }
 
@@ -532,16 +553,24 @@ internal val App =
         }
 
         useEffectWithCleanup {
-          document.addEventListener("keydown", { globalKeyDown(it.unsafeCast<KeyboardEvent<*>>()) })
+          val keyDownListener = { event: org.w3c.dom.events.Event ->
+            globalKeyDown(event.unsafeCast<KeyboardEvent<*>>())
+          }
+          val keyUpListener = { event: org.w3c.dom.events.Event ->
+            globalKeyUp(event.unsafeCast<KeyboardEvent<*>>())
+          }
+          val pointerDownListener = { event: org.w3c.dom.events.Event ->
+            updatePointerPosition(event.unsafeCast<PointerEvent<*>>())
+          }
 
-          document.addEventListener("keyup", { globalKeyUp(it.unsafeCast<KeyboardEvent<*>>()) })
+          document.addEventListener("keydown", keyDownListener)
+          document.addEventListener("keyup", keyUpListener)
+          document.addEventListener("pointerdown", pointerDownListener)
 
           onCleanup {
-            document.removeEventListener(
-                "keydown", { globalKeyDown(it.unsafeCast<KeyboardEvent<*>>()) })
-
-            document.removeEventListener(
-                "keyup", { globalKeyUp(it.unsafeCast<KeyboardEvent<*>>()) })
+            document.removeEventListener("keydown", keyDownListener)
+            document.removeEventListener("keyup", keyUpListener)
+            document.removeEventListener("pointerdown", pointerDownListener)
           }
         }
 
@@ -551,19 +580,13 @@ internal val App =
             return@useEffectWithCleanup
           }
 
-          document.addEventListener(
-              "pointermove", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
-
-          document.addEventListener(
-              "pointerdown", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
-
-          onCleanup {
-            document.removeEventListener(
-                "pointermove", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
-
-            document.removeEventListener(
-                "pointerdown", { updatePointerPosition(it.unsafeCast<PointerEvent<*>>()) })
+          val pointerMoveListener = { event: org.w3c.dom.events.Event ->
+            updatePointerPosition(event.unsafeCast<PointerEvent<*>>())
           }
+
+          document.addEventListener("pointermove", pointerMoveListener)
+
+          onCleanup { document.removeEventListener("pointermove", pointerMoveListener) }
         }
 
         val menuScene = props.data.menuScene
@@ -576,7 +599,7 @@ internal val App =
             setMenuVisible(true)
           } else {
             // Start a timer to remove the component after transition completes
-            window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
+            timeoutId = window.setTimeout({ setMenuVisible(false) }, props.data.fadeTime)
           }
 
           onCleanup { window.clearTimeout(timeoutId ?: 0) }
@@ -584,9 +607,10 @@ internal val App =
 
         val gameScene = props.data.gameScene
         val activeDragComponent =
-            if (gameScene != undefined && activeDragId != null)
-                findComponentDataById(activeDragId, gameScene.components)
-            else null
+            if (activeDragId == null) null
+            else
+                menuScene?.let { findComponentDataById(activeDragId, it.components) }
+                    ?: gameScene?.let { findComponentDataById(activeDragId, it.components) }
 
         bgwScenes {
           css {

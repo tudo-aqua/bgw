@@ -31,6 +31,7 @@ import web.html.HTMLElement
 @JsName("DndContext") internal external val DndContext: ComponentType<DndContextProps>
 
 internal external interface DndContextProps : PropsWithChildren {
+  var onDragCancel: (DragEndEvent) -> Unit
   var onDragEnd: (DragEndEvent) -> Unit
   var onDragStart: (DragStartEvent) -> Unit
   var onDragMove: (DragMultiEvent) -> Unit

@@ -121,11 +121,9 @@ open class Pane<T : ComponentView>(
     }
     require(index in 0..observableComponents.size) { "Index $index is out of list range." }
 
+    component.parent = this
     observableComponents.add(index, component)
-    component.apply {
-      parent = this@Pane
-      onAdd?.invoke(this)
-    }
+    onAdd?.invoke(component)
   }
 
   /**
@@ -156,11 +154,17 @@ open class Pane<T : ComponentView>(
    */
   @Synchronized
   fun addAll(collection: Collection<T>) {
-    try {
-      collection.forEach { add(it) }
-    } catch (e: IllegalArgumentException) {
-      throw IllegalArgumentException(e.message)
+    val additions = collection.toList()
+    require(additions.distinct().size == additions.size) {
+      "Collection contains the same component more than once."
     }
+    require(additions.none { observableComponents.contains(it) }) {
+      "At least one component is already contained in this pane."
+    }
+    require(additions.none { it.parent != null }) {
+      "At least one component is already contained in another container."
+    }
+    additions.forEach { add(it) }
   }
 
   /**
@@ -281,8 +285,10 @@ open class Pane<T : ComponentView>(
    * @since 0.8
    */
   override fun toFront(component: T) {
+    if (!observableComponents.contains(component)) return
+
     component.zIndexProperty.value = observableComponents.last().zIndex
-    if (observableComponents.last() != component && observableComponents.contains(component)) {
+    if (observableComponents.last() != component) {
       observableComponents.removeSilent(component)
       observableComponents.add(component)
     }
@@ -295,8 +301,10 @@ open class Pane<T : ComponentView>(
    * @since 0.8
    */
   override fun toBack(component: T) {
+    if (!observableComponents.contains(component)) return
+
     component.zIndexProperty.value = observableComponents.first().zIndex
-    if (observableComponents.first() != component && observableComponents.contains(component)) {
+    if (observableComponents.first() != component) {
       observableComponents.removeSilent(component)
       observableComponents.add(0, component)
     }
@@ -310,9 +318,9 @@ open class Pane<T : ComponentView>(
    * @param zIndex The value that is used to compare the order of [observableComponents].
    */
   override fun setZIndex(component: T, zIndex: Int) {
+    if (!observableComponents.contains(component)) return
+
     component.zIndexProperty.value = zIndex
-    // TODO: Does not modify the list
-    observableComponents.sortedBy { it.zIndex }
-    // observableComponents.sort(Comparator.comparingInt { it.zIndex })
+    observableComponents.setAll(observableComponents.sortedBy { it.zIndex })
   }
 }

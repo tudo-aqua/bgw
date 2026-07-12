@@ -158,22 +158,22 @@ internal fun PropertiesBuilder.alignmentBuilder(data: AppData) {
 }
 
 internal fun PropertiesBuilder.fontBuilder(componentViewData: UIComponentData) {
-  fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
-  fontWeight = integer(componentViewData.font!!.fontWeight)
-  fontSize = componentViewData.font!!.size.bgw
-  fontFamily = cssFont(componentViewData.font!!.family)
-  color = componentViewData.font!!.color.unsafeCast<Color>()
+  fontStyle = componentViewData.font.fontStyle.unsafeCast<FontStyle>()
+  fontWeight = integer(componentViewData.font.fontWeight)
+  fontSize = componentViewData.font.size.bgw
+  fontFamily = cssFont(componentViewData.font.family)
+  color = componentViewData.font.color.unsafeCast<Color>()
 }
 
 internal fun PropertiesBuilder.simpleFontBuilder(componentViewData: UIComponentData) {
-  fontStyle = componentViewData.font!!.fontStyle.let { it.unsafeCast<FontStyle>() }
-  fontWeight = integer(componentViewData.font!!.fontWeight)
-  fontFamily = cssFont(componentViewData.font!!.family)
-  color = componentViewData.font!!.color.unsafeCast<Color>()
+  fontStyle = componentViewData.font.fontStyle.unsafeCast<FontStyle>()
+  fontWeight = integer(componentViewData.font.fontWeight)
+  fontFamily = cssFont(componentViewData.font.family)
+  color = componentViewData.font.color.unsafeCast<Color>()
 }
 
 internal fun PropertiesBuilder.placeholderFontBuilder(componentViewData: UIComponentData) {
-  color = componentViewData.font!!.color.unsafeCast<Color>()
+  color = componentViewData.font.color.unsafeCast<Color>()
   opacity = number(0.65)
 }
 

@@ -80,9 +80,10 @@ open class ComboBox<T>(
         posX = posX, posY = posY, width = width, height = height, font = font, visual = visual) {
 
   internal fun select(selectedItem: Int) {
-    if (selectedItem < 0 || selectedItem >= observableItemsList.size)
-        selectedItemProperty.value = null
-    else selectedItemProperty.value = observableItemsList[selectedItem]
+    if (selectedItem !in observableItemsList.indices) {
+      if (disallowUnselect) return
+      selectedItemProperty.value = null
+    } else selectedItemProperty.value = observableItemsList[selectedItem]
 
     onItemSelected?.invoke(selectedItemProperty.value)
   }
@@ -98,8 +99,14 @@ open class ComboBox<T>(
   var items: List<T>
     get() = observableItemsList.toList()
     set(value) {
-      observableItemsList.clear()
-      observableItemsList.addAll(value)
+      require(!disallowUnselect || value.isNotEmpty()) {
+        "Items must not be empty while disallowUnselect is true."
+      }
+
+      observableItemsList.setAll(value)
+      if (selectedItem !in value) {
+        selectedItemProperty.value = if (disallowUnselect) value.first() else null
+      }
     }
 
   internal val itemVisualProperty: Property<List<Visual>> = Property(itemVisuals)
@@ -135,6 +142,12 @@ open class ComboBox<T>(
   var selectedItem: T?
     get() = selectedItemProperty.value
     set(value) {
+      require(value != null || !disallowUnselect) {
+        "Selected item must not be null while disallowUnselect is true."
+      }
+      require(value == null || observableItemsList.contains(value)) {
+        "Items list does not contain element to select."
+      }
       selectedItemProperty.value = value
     }
 
@@ -160,7 +173,7 @@ open class ComboBox<T>(
     }
 
   init {
-    observableItemsList.addAll(items)
+    observableItemsList.setAll(items)
 
     if (disallowUnselect && items.isNotEmpty()) {
       selectedItemProperty.value = items.first()

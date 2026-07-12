@@ -25,9 +25,57 @@ All notable changes to this project will be documented in this file.
 
 ## [0.11.1] - TBD
 
+### Changed
+- Improved rendering performance by reducing unnecessary updates when components, lists and drag and drop states did not change.
+- Improved runtime updates for components that are added to scenes, panes and containers after they were first shown.
+- Invalid animation durations, animation speeds and empty animation groups are now rejected immediately.
+
 ### Fixed
 - Fixed animation on `LayoutView` and `GameComponentContainer` propagating down to their children causing twice the wanted change.
 - Fixed `ImageVisual`s rarely not updating if image was cached and `offsetX`/`offsetY` were the only changing attributes.
+- Fixed animations on the same `ComponentView` finishing too early when used in `SequentialAnimation` or `ParallelAnimation`.
+- Fixed finished animations being applied more than once and invalid animation combinations leaving components in an animating state.
+- Fixed persistent `ScaleAnimation`s producing invalid scale values when starting at zero.
+- Fixed stopped and completed animations retaining stale state and resources.
+- Fixed drag and drop gestures occasionally remaining active after cancellation or leaving components in an incorrect dragged state.
+- Fixed drag enter, drag exit and drop events using the wrong target or position in some situations.
+- Fixed disabled and non-focusable components still accepting focus or drag and drop interactions.
+- Fixed mouse, wheel and keyboard events reporting incorrect buttons, modifiers, characters or scroll offsets.
+- Fixed event handlers and timers remaining registered after components were removed or rerendered.
+- Fixed reconnecting the frontend occasionally using stale application or scene data.
+- Fixed consecutive menu scene transitions being interrupted by an older transition.
+- Fixed fullscreen state changes not being applied when changed at runtime.
+- Fixed non-blocking dialogs not being shown through the correct application window.
+- Fixed scene and container operations being able to leave components assigned to the wrong parent after an invalid operation.
+- Fixed adding multiple components partially changing a scene, `Pane` or `GameComponentContainer` when one component could not be added.
+- Fixed components added at runtime not reacting to later property changes.
+- Fixed `toFront`, `toBack` and `setZIndex` not consistently updating the actual component order.
+- Fixed `GridPane` calculating row heights from the wrong cells and not fully trimming empty rows and columns.
+- Fixed `GridPane` positions not updating after changing spacing, alignment, cell sizes, row sizes, column sizes or component sizes.
+- Fixed `GridPane` losing an existing component when a replacement component could not be added.
+- Fixed `LinearLayout` producing incorrect positions for empty or single-component layouts.
+- Fixed `LinearLayout` and `CardStack` not updating their layout after their own size or a contained component's size changed.
+- Fixed `HexagonGrid` producing invalid bounds when empty or when using negative coordinates.
+- Fixed `HexagonGrid` not updating positions and dimensions after changing orientation, hexagon size or contained hexagons.
+- Fixed replacing and removing hexagons occasionally leaving stale parent or coordinate information.
+- Fixed `HexagonView` size and orientation changes not updating its dimensions and visual representation.
+- Fixed `Satchel` not initially hiding and fitting contained components to its size.
+- Fixed `Satchel` not restoring component positions and retaining listeners after components were removed.
+- Fixed `CardStack.push()` and `CardStack.pop()` bypassing parent checks and add/remove events.
+- Fixed `CameraPane` losing or reversing pan coordinates when zooming and panning at the same time.
+- Fixed `CameraPane` accepting invalid zoom values or a target already contained elsewhere.
+- Fixed `ComboBox` allowing invalid selections while `disallowUnselect` was enabled.
+- Fixed changes to `ListView` formatting and orientation not updating the displayed list.
+- Fixed changes to `TableView` columns, column titles, widths, fonts and formatting not updating the displayed table.
+- Fixed `ListView` and `TableView` retaining invalid selections after their items or selection mode changed.
+- Fixed `ToggleGroup` invoking selection events incorrectly and allowing the same button to be registered multiple times.
+- Fixed `ProgressBar` not limiting progress to the supported range and not updating after changing `barColor`.
+- Fixed `DiceView` retaining supplied `Visual` instances instead of copying them and reporting incorrect visual changes.
+- Fixed observable listeners being skipped when another listener removed itself during an update.
+- Fixed observable lists reporting changes for unchanged bulk operations and reporting no change when cleared through `setAll()`.
+- Fixed observable lists failing to remove or notify about nullable first and last elements.
+- Fixed `ReadonlyObservableList.getOrNull()` throwing at the upper list boundary.
+- Fixed `BidirectionalMap.contains()` returning `true` for a key and value belonging to different entries.
 
 ## [0.11] - 06.05.2026
 

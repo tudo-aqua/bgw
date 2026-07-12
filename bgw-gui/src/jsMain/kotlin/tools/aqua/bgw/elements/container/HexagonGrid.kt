@@ -61,7 +61,7 @@ internal val HexagonGrid =
               useDraggable(
                   object : DraggableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDraggable
+                    override var disabled = !props.data.isDraggable || props.data.isDisabled
                   })
           else null
 
@@ -70,7 +70,7 @@ internal val HexagonGrid =
               useDroppable(
                   object : DroppableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDroppable
+                    override var disabled = !props.data.isDroppable || props.data.isDisabled
                   })
           else null
 
@@ -87,7 +87,7 @@ internal val HexagonGrid =
       val elementRef = useRef<Element>(null)
 
       bgwHexagonGrid {
-        tabIndex = 0
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
         if (!isOverlayPreview) id = props.data.id
         className = ClassName("hexagonGrid")
 
@@ -95,7 +95,7 @@ internal val HexagonGrid =
         // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
-        useEffect {
+        useEffect(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }
@@ -123,6 +123,7 @@ internal val HexagonGrid =
             if (props.data.orientation == "pointy_top") {
               if (props.data.coordinateSystem == "offset") {
                 bgwHexagonContent {
+                  key = it.key
                   val size = it.value.size
                   val w = size * sqrt(3.0)
                   val h = 2 * size
@@ -149,6 +150,7 @@ internal val HexagonGrid =
                 }
               } else {
                 bgwHexagonContent {
+                  key = it.key
                   val size = it.value.size
                   val w = size * sqrt(3.0)
                   val h = 2 * size
@@ -179,6 +181,7 @@ internal val HexagonGrid =
             } else {
               if (props.data.coordinateSystem == "offset") {
                 bgwHexagonContent {
+                  key = it.key
                   val size = it.value.size
                   val w = 2 * size
                   val h = size * sqrt(3.0)
@@ -205,6 +208,7 @@ internal val HexagonGrid =
                 }
               } else {
                 bgwHexagonContent {
+                  key = it.key
                   val size = it.value.size
                   val w = 2 * size
                   val h = size * sqrt(3.0)

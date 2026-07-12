@@ -32,6 +32,10 @@ abstract class Animation(
     /** Duration in milliseconds. */
     val duration: Int
 ) {
+  init {
+    require(duration > 0) { "Animation duration must be longer than 0ms." }
+  }
+
   internal val id = IDGenerator.generateAnimationID()
 
   internal var parentAnimation: Animation? = null

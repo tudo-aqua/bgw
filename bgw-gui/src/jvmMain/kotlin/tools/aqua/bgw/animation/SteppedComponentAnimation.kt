@@ -43,4 +43,8 @@ sealed class SteppedComponentAnimation<T : GameComponentView>(
     persist: Boolean = true
 ) :
     ComponentAnimation<T>(
-        componentView = gameComponentView, duration = duration, persist = persist)
+        componentView = gameComponentView, duration = duration, persist = persist) {
+  init {
+    require(speed > 0) { "Animation speed must be greater than zero." }
+  }
+}

@@ -18,6 +18,7 @@
 package tools.aqua.bgw.util.bidirectionalmap
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -25,6 +26,13 @@ import org.junit.jupiter.api.assertThrows
 
 /** Test lookup function in BidirectionalMap. */
 class LookupTest : BidirectionalMapTestBase() {
+
+  /** A key and value that occur in different entries do not form a contained pair. */
+  @Test
+  fun testContainsRequiresMatchingPair() {
+    assertFalse(map.contains(0, 3))
+    assertFalse(map.contains(2, 1))
+  }
 
   /** Test forward lookup on existing element. */
   @Test

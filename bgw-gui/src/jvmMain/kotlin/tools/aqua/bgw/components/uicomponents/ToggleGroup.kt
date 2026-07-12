@@ -43,7 +43,7 @@ open class ToggleGroup {
   internal val buttons: MutableList<BinaryStateButton> = mutableListOf()
 
   internal fun addButton(button: BinaryStateButton) {
-    buttons.add(button)
+    if (button !in buttons) buttons.add(button)
   }
 
   internal fun removeButton(button: BinaryStateButton) {
@@ -51,15 +51,12 @@ open class ToggleGroup {
   }
 
   internal fun buttonSelectedStateChanged(button: BinaryStateButton) {
-    if (button.isSelected)
-        buttons.forEach {
-          if (it != button) {
-            it.isSelected = false
-            onDeselected?.invoke(it)
-          } else {
-            onSelected?.invoke(it)
-          }
-        }
+    if (button.isSelected) {
+      buttons.filter { it !== button && it.isSelected }.forEach { it.isSelected = false }
+      onSelected?.invoke(button)
+    } else {
+      onDeselected?.invoke(button)
+    }
   }
 
   /**

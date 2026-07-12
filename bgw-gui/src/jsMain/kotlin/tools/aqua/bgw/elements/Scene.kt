@@ -21,6 +21,7 @@ import SceneData
 import data.event.LoadEventData
 import emotion.react.css
 import react.FC
+import react.Fragment
 import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
@@ -64,7 +65,12 @@ internal val Scene =
             left = 0.px
             top = 0.px
           }
-          props.data.components.forEach { +NodeBuilder.build(it) }
+          props.data.components.forEach { component ->
+            Fragment {
+              key = component.id
+              +NodeBuilder.build(component)
+            }
+          }
         }
       }
     }

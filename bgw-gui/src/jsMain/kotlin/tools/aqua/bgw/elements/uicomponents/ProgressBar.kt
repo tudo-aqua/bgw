@@ -49,7 +49,7 @@ internal val ProgressBar =
           useDroppable(
               object : DroppableOptions {
                 override var id: String = props.data.id
-                override var disabled = !props.data.isDroppable
+                override var disabled = !props.data.isDroppable || props.data.isDisabled
               })
 
       val elementRef = useRef<Element>(null)
@@ -57,13 +57,13 @@ internal val ProgressBar =
           (props.data.barVisual as CompoundVisualData).children.first() as ColorVisualData
 
       bgwProgress {
-        tabIndex = 0
+        tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
         id = props.data.id
         className = ClassName("progress")
         css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")

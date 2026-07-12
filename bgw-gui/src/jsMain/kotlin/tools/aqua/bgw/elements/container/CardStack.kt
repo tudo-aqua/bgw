@@ -59,7 +59,7 @@ internal val CardStack =
               useDraggable(
                   object : DraggableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDraggable
+                    override var disabled = !props.data.isDraggable || props.data.isDisabled
                   })
           else null
 
@@ -68,7 +68,7 @@ internal val CardStack =
               useDroppable(
                   object : DroppableOptions {
                     override var id: String = props.data.id
-                    override var disabled = !props.data.isDroppable
+                    override var disabled = !props.data.isDroppable || props.data.isDisabled
                   })
           else null
 
@@ -91,7 +91,7 @@ internal val CardStack =
         // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
-        useEffect {
+        useEffect(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }
@@ -118,7 +118,7 @@ internal val CardStack =
 
           props.data.components.forEachIndexed { index, component ->
             Fragment {
-              key = component.id + index
+              key = component.id
               div {
                 css {
                   width = component.width.bgw

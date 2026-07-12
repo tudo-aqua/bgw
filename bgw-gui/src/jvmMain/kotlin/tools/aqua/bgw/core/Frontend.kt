@@ -271,9 +271,7 @@ internal class Frontend {
      *
      * @param newScaleMode new scale mode to set.
      */
-    internal fun setScaleMode(newScaleMode: ScaleMode) {
-      TODO("Not yet implemented")
-    }
+    @Suppress("UNUSED_PARAMETER") internal fun setScaleMode(newScaleMode: ScaleMode): Unit = Unit
 
     /** Manually refreshes currently displayed [Scene]s. */
     internal fun updateScene() {
@@ -298,7 +296,7 @@ internal class Frontend {
      *
      * @param dialog the [Dialog] to show
      */
-    internal fun showDialogNonBlocking(dialog: Dialog): Unit = TODO("Not yet implemented")
+    internal fun showDialogNonBlocking(dialog: Dialog): Unit = showDialog(dialog)
 
     /**
      * Shows a dialog and blocks further thread execution.

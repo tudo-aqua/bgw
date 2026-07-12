@@ -37,6 +37,11 @@ data class SequentialAnimation(
      */
     val animations: List<Animation>
 ) : Animation(animations.sumOf(Animation::duration)) {
+  init {
+    require(animations.isNotEmpty()) {
+      "A SequentialAnimation must contain at least one animation."
+    }
+  }
 
   /**
    * Creates a new [SequentialAnimation] Additional constructor that enables the use of varargs for
