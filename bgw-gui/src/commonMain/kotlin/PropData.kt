@@ -63,6 +63,7 @@ internal class AppData : Data() {
   var blurRadius: Double = 0.0
   var forcedByAnimation: Boolean = false
   var endedAnimations: MutableMap<String, String?> = mutableMapOf()
+  var isHeadless: Boolean = false
 }
 
 @Serializable

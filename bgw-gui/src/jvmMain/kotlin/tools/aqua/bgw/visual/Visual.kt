@@ -33,7 +33,7 @@ import IDGenerator
  * @since 0.1
  */
 abstract class Visual {
-  internal val id = IDGenerator.generateVisualID()
+  internal var id = IDGenerator.generateVisualID()
 
   /** Copies this [Visual] to a new object. */
   abstract fun copy(): Visual

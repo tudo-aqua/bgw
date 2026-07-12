@@ -181,7 +181,12 @@ internal val App =
           }
 
           ".bgw-root" {
-            backgroundColor = rgb(0, 0, 0, 1.0)
+            backgroundColor =
+                if (props.data.isHeadless) {
+                  rgb(0, 0, 0, 0.0)
+                } else {
+                  rgb(0, 0, 0, 1.0)
+                }
             color = rgb(0, 0, 0)
             margin = 0.px
           }
@@ -347,7 +352,12 @@ internal val App =
             display = Display.flex
             justifyContent = JustifyContent.center
             alignItems = AlignItems.center
-            backgroundColor = rgb(0, 0, 0, 1.0)
+            backgroundColor =
+                if (props.data.isHeadless) {
+                  rgb(0, 0, 0, 0.0)
+                } else {
+                  rgb(0, 0, 0, 1.0)
+                }
             overflow = Overflow.hidden
           }
 

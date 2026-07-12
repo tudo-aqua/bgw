@@ -61,24 +61,34 @@ import tools.aqua.bgw.visual.Visual
 internal class Frontend {
 
   /** Starts the application. */
-  fun start(onClose: () -> Unit) {
+  fun start(headless: Boolean, onClose: () -> Unit) {
     embeddedServer(
             Netty,
             port = Constants.PORT,
             host = "localhost",
             module = io.ktor.server.application.Application::module)
         .start(wait = false)
-    applicationEngine.start(onClose) {
-      applicationEngine.clearAllEventListeners()
-      ApplicationBuilder.build()
-      boardGameScene?.let { SceneBuilder.build(it) }
-      menuScene?.let { SceneBuilder.build(it) }
-      renderedDOM.value = true
+    if (headless) {
+      loadCallback = {
+        boardGameScene?.let { SceneBuilder.build(it) }
+        menuScene?.let { SceneBuilder.build(it) }
+        renderedDOM.value = true
+      }
+    } else {
+      applicationEngine.start(onClose) {
+        applicationEngine.clearAllEventListeners()
+        ApplicationBuilder.build()
+        boardGameScene?.let { SceneBuilder.build(it) }
+        menuScene?.let { SceneBuilder.build(it) }
+        renderedDOM.value = true
+      }
     }
   }
 
   companion object {
     internal var applicationEngine: JCEFApplication = JCEFApplication()
+
+    internal var loadCallback: () -> Unit = {}
 
     internal var openedFileDialog: FileDialog? = null
 
@@ -172,6 +182,7 @@ internal class Frontend {
       if (menuScene == scene) {
         return
       }
+
       lastFadeTime = fadeTime
       menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
@@ -238,6 +249,7 @@ internal class Frontend {
       if (boardGameScene == scene) {
         return
       }
+
       boardGameScene?.isVisible = false
       boardGameScene?.onSceneHidden?.invoke()
       boardGameScene = scene
@@ -337,8 +349,11 @@ internal class Frontend {
     }
 
     /** Starts the application. */
-    internal fun show(onClose: () -> Unit) {
-      Frontend().start(onClose)
+    internal fun show(headless: Boolean, onClose: () -> Unit) {
+      if (headless) {
+        backgroundProperty.value = Visual.EMPTY
+      }
+      Frontend().start(headless, onClose)
     }
 
     /** Stops the application. */

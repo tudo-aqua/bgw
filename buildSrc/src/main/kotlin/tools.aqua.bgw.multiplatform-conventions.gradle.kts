@@ -151,7 +151,15 @@ kotlin {
         implementation("dev.dirs:directories:26")
       }
     }
-    val jvmTest by getting
+    val jvmTest by getting {
+      dependencies {
+        implementation("com.mohamedrejeb.ksoup:ksoup-html:0.4.1")
+        implementation("org.seleniumhq.selenium:selenium-api:4.34.0")
+        implementation("org.seleniumhq.selenium:selenium-java:4.34.0")
+        implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.34.0")
+        implementation("io.github.bonigarcia:webdrivermanager:6.1.0")
+      }
+    }
     val jsMain by getting {
       dependencies {
         implementation(
@@ -165,7 +173,6 @@ kotlin {
         implementation(npm("animejs", "4.2.2"))
       }
     }
-    // val jsTest by getting
   }
 }
 
