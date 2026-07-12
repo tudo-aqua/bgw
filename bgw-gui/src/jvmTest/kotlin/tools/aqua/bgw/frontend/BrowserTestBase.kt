@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2026 The BoardGameWork Authors
+ * Copyright 2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,22 +15,31 @@
  * limitations under the License.
  */
 
-rootProject.name = "bgw"
+package tools.aqua.bgw.frontend
 
-include(
-    "bgw-gui",
-    "bgw-docs",
-    "bgw-docs:parser",
-    "bgw-docs:website",
-    "bgw-examples:bgw-docs-examples",
-    "bgw-examples:bgw-playground-examples",
-    "bgw-examples:bgw-maumau-example",
-    "bgw-examples:bgw-sudoku-example",
-    "bgw-examples:bgw-tetris-example",
-    "bgw-net:bgw-net-client",
-    "bgw-net:bgw-net-common",
-    "bgw-net:bgw-net-server",
-    "bgw-net:bgw-net-protocol-client",
-)
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import tools.aqua.bgw.core.BoardGameScene
 
-plugins { id("org.gradle.toolchains.foojay-resolver-convention").version("0.10.0") }
+abstract class BrowserTestBase {
+  protected lateinit var tester: BGWTester
+
+  init {
+    app.showNonBlocking()
+  }
+
+  @BeforeTest
+  fun createBrowser() {
+    tester = BGWTester()
+  }
+
+  @AfterTest
+  fun closeBrowser() {
+    tester.close()
+  }
+
+  protected fun show(scene: BoardGameScene) {
+    app.showGameScene(scene)
+    tester.load(app.headlessEnvironment, width = scene.width, height = scene.height)
+  }
+}

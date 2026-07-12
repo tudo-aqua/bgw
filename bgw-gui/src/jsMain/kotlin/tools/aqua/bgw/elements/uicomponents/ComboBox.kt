@@ -75,6 +75,7 @@ internal val ComboBox =
         }
 
         select {
+          value = selectedIndex.toString()
           disabled = props.data.isDisabled
           tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
           css {

@@ -25,12 +25,14 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.min
+import kotlin.math.sqrt
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.NoSuchElementException
+import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
@@ -129,7 +131,10 @@ class BGWTester(
   ) {
     val driver = requireDriver()
     try {
-      WebDriverWait(driver, timeout).until { condition() }
+      WebDriverWait(driver, timeout)
+          .ignoring(StaleElementReferenceException::class.java)
+          .ignoring(NoSuchElementException::class.java)
+          .until { condition() }
     } catch (exception: Exception) {
       throw AssertionError("Timed out waiting for $message. DOM: ${driver.pageSource}", exception)
     }
@@ -225,6 +230,12 @@ class BGWComp(
 
   fun attribute(name: String): String? = webElement.getAttribute(name)
 
+  fun descendant(cssSelector: String): WebElement =
+      webElement.findElement(By.cssSelector(cssSelector))
+
+  fun descendants(cssSelector: String): List<WebElement> =
+      webElement.findElements(By.cssSelector(cssSelector))
+
   val size: BGWScale
     get() = webElement.size.let { BGWScale(it.width / sizeMult, it.height / sizeMult) }
 
@@ -251,20 +262,32 @@ class BGWComp(
 
   val scale: Pair<Double, Double>
     get() =
-        webElement.getCssValue("scale").let {
-          val parts = it.split(" ")
-          when (parts.size) {
-            2 -> {
-              Pair(parts[0].toDouble(), parts[1].toDouble())
-            }
-            1 -> {
-              Pair(parts[0].toDouble(), parts[0].toDouble())
-            }
-            else -> {
-              Pair(1.0, 1.0) // Default scale if not specified
-            }
-          }
-        }
+        webElement
+            .getCssValue("scale")
+            .takeUnless { it == "none" }
+            ?.let {
+              val parts = it.split(" ")
+              when (parts.size) {
+                2 -> {
+                  Pair(parts[0].toDouble(), parts[1].toDouble())
+                }
+                1 -> {
+                  Pair(parts[0].toDouble(), parts[0].toDouble())
+                }
+                else -> {
+                  Pair(1.0, 1.0) // Default scale if not specified
+                }
+              }
+            } ?: scaleFromTransform()
+
+  private fun scaleFromTransform(): Pair<Double, Double> {
+    val transform = webElement.getCssValue("transform")
+    if (!transform.startsWith("matrix(")) return 1.0 to 1.0
+    val values =
+        transform.substringAfter('(').substringBefore(')').split(',').map { it.trim().toDouble() }
+    return sqrt(values[0] * values[0] + values[1] * values[1]) to
+        sqrt(values[2] * values[2] + values[3] * values[3])
+  }
 
   val opacity: Double
     get() = webElement.getCssValue("opacity").toDoubleOrNull() ?: 1.0
@@ -356,7 +379,18 @@ class BGWComp(
 
       val children: List<WebElement> = parentElement.findElements(selector)
       return children.map { child ->
-        BGWComp(child.getAttribute("id") ?: "", child, sizeMult, sceneXOffset, sceneYOffset)
+        val componentElement =
+            if (child.getAttribute("id").isNullOrEmpty()) {
+              child.findElements(By.cssSelector(":scope > [id]")).firstOrNull() ?: child
+            } else {
+              child
+            }
+        BGWComp(
+            componentElement.getAttribute("id") ?: "",
+            componentElement,
+            sizeMult,
+            sceneXOffset,
+            sceneYOffset)
       }
     }
 
