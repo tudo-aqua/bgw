@@ -24,11 +24,17 @@ internal object ExampleApplication : BoardGameApplication(width = 622, height = 
   private val exampleAnimationScene = ExampleAnimationScene()
   private val exampleDocsScene = ExampleDocsScene()
   private val advancedSceneComponents = AdvancedSceneComponents()
+  private val exampleDiscoverScene = ExampleDiscoverScene()
+  private val exampleVisualScene = ExampleVisualScene()
+  private val exampleInteractionScene = ExampleInteractionScene()
 
   fun getMap(): Map<String, String> {
     return exampleUIScene.map +
         exampleAnimationScene.map +
         exampleDocsScene.map +
-        advancedSceneComponents.map
+        advancedSceneComponents.map +
+        exampleDiscoverScene.map +
+        exampleVisualScene.map +
+        exampleInteractionScene.map
   }
 }

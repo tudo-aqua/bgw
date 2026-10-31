@@ -13,10 +13,15 @@
 [unlockKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/unlock.html
 [BoardGameSceneKDoc]: /docs/tools.aqua.bgw.core/-board-game-scene/
 [runOnGUIThreadKDoc]: /docs/tools.aqua.bgw.core/-board-game-application/-companion/run-on-g-u-i-thread.html
-[VisualDoc]: /guides/visual/visual
-[DelayAnimationDoc]: concepts/animations/Animations#delayanimation
+[VisualDoc]: /guides/concepts/visual
+[DelayAnimationDoc]: /guides/concepts/animations#delayanimation
 [Animations]: /docs/tools.aqua.bgw.animation
 [ComponentViewDoc]: /guides/components/componentview
+[ScaleAnimationKDoc]: /docs/tools.aqua.bgw.animation/-scale-animation/
+[DiceViewKDoc]: /docs/tools.aqua.bgw.components.gamecomponentviews/-dice-view/
+[AnimationInterpolationKDoc]: /docs/tools.aqua.bgw.core/-animation-interpolation/
+[DragDropDoc]: /guides/concepts/drag-and-drop
+[HandlingEvents]: /guides/handling-events
 
 # Animations
 
@@ -31,11 +36,17 @@ Additionally, the [DelayAnimation][DelayAnimationDoc] can be used to delay code 
 
 Animations can be played using the `playAnimation()` method, which is available in all classes that inherit from [BoardGameScene][BoardGameSceneKDoc]. This method takes an [Animation][AnimationKDoc] as a parameter and plays it asynchronously. This means that the code after the `playAnimation()` call will be executed immediately and not wait for the animation to finish. To execute code after the animation has finished, it has to be passed in the `onFinished` listener of the animation, which is explained in more detail in the [Listeners](#listeners) section.
 
-The `playAnimation()` method returns a boolean value indicating whether the animation was successfully started. If the method returns `false`, it means that the animation could not be started, for example because a component already has a running animation that conflicts with the new one. In this case, the animation will not be played and the state of the component will not be changed.
+The `playAnimation()` method returns a boolean value indicating whether the animation was successfully started. If the method returns `false`, the animation is not played and no component is changed. This happens when
+
+- The animation, or one of its children, is already running,
+- The same animation instance is contained more than once in a compound animation, or
+- A component of the animation is already animating. Wait for its `onFinished` or chain the animations with a [SequentialAnimation][SequentialKDoc] or [ParallelAnimation][ParallelKDoc].
+
+Animations are also validated when they are created: durations and `speed` must be greater than zero and compound animations must not be empty.
 
 ## Stopping Animations
 
-To stop all running animations, the method `stopAllAnimations()` may be used. This will immediately stop all running animations and revert all animated properties of the components to their latest state.
+To stop all running animations, the method `stopAllAnimations()` may be used. It immediately stops everything that is playing and **does not** invoke any `onFinished` handler. Animations that already finished and persisted their result are not reverted.
 
 ---
 
@@ -113,35 +124,35 @@ The following additional event handler is available for every [Animation][Animat
 
 <signature>
 <code-block lang="kotlin" copy="false">
-onFinished : ((AnimationFinishedEvent) -> Unit)?
+onFinished : ((AnimationFinishedEvent) -&gt; Unit)?
 </code-block>
 
 This listener gets invoked when the animation finishes. It should be used to trigger code that should be executed after the animation has finished. For example, if a [DelayAnimation][DelayAnimationKDoc] is used to delay code execution, the code that should be executed after the delay can be passed in this listener.
 
 > Note that playing animations is asynchronous, so the code after the `playAnimation` call will be executed immediately and not wait for the animation to finish. To execute code after the animation has finished, it has to be passed in the `onFinished` listener.
 > {style="note"}
-> </signature>
 
 </signature>
 
 <br>
 
+---
+
 # ComponentAnimations
 
 <tldr>Animations that affect a ComponentView</tldr>
 
-ComponentAnimations are animations that affect a [ComponentView][ComponentViewDoc] in some way. They can be used to move, rotate or flip a component, to randomly switch between visuals or to animate a dice.
+ComponentAnimations are animations that affect a [ComponentView][ComponentViewDoc] in some way. They can be used to move, rotate, scale or fade a component, to flip it, to randomly switch between visuals or to animate a dice.
 
-> The following examples are accurate representations of BGW components and animations based on the provided code snippets.
-> All animations provided in this guide are purely illustrative and persist the final state until reset, for ease of understanding.
+> The following examples are accurate representations of BGW components and animations based on the provided code snippets. Press **Animate** to play them and **Reset** to start over. The previews show the animation and its result, the code that follows `playAnimation` in a real application is identical.
 > {style="warning"}
 
-## [MovementAnimation][MovementAnimationKDoc]
+## MovementAnimation
 
-<tldr>Animate the movement of a component</tldr>
+Animate the movement of a component.
 
 A [MovementAnimation][MovementAnimationKDoc] moves a [ComponentView][ComponentViewDoc].
-The movement can be passed as `fromX`/`toX`, `fromY`/`toY` or relative to the current position with `byX`/`byY`.
+The movement can be passed as `fromX`/`toX` and `fromY`/`toY`, or relative to the current position with `byX`/`byY`. Positions are relative to the parent of the component, like `posX` and `posY`.
 
 <previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationTo" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.greenToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.movementAnimationTo">
 val greenToken = TokenView(
@@ -159,14 +170,28 @@ playAnimation(
 )
 </previews>
 
+To move a component to the position of **another** component, even if they have different parents, use `MovementAnimation.toComponentView()`. It calculates the required offset for you, taking rotation and scaling of the parents into account. Both components have to be part of the scene.
+
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.area" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.area,tools.aqua.bgw.main.examples.ExampleAnimationScene.moveToComponentAnimation">
+// token1 and token4 are both inside the same Area
+playAnimation(
+    MovementAnimation.toComponentView(
+        componentView = token1,
+        toComponentViewPosition = token4,
+        scene = this,
+        duration = 1500
+    )
+)
+</previews>
+
 ---
 
-## [RotationAnimation][RotationAnimationKDoc]
+## RotationAnimation
 
-<tldr>Animate the rotation of a component</tldr>
+Animate the rotation of a component.
 
 A [RotationAnimation][RotationAnimationKDoc] rotates a [ComponentView][ComponentViewDoc].
-The rotation can be passed as `fromAngle`/`toAngle` or relative to the current rotation with `byAngle`.
+The rotation can be passed as `fromAngle`/`toAngle` or relative to the current rotation with `byAngle`. Angles are given in degrees.
 
 <previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.rotateAnimationBy" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.blueToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.rotateAnimationBy">
 val blueToken = TokenView(
@@ -186,9 +211,36 @@ playAnimation(
 
 ---
 
-## [FadeAnimation][FadeAnimationKDoc]
+## ScaleAnimation
 
-<tldr>Animate the opacity of a component</tldr>
+Animate the size of a component.
+
+A [ScaleAnimation][ScaleAnimationKDoc] scales a [ComponentView][ComponentViewDoc] without changing its `width` and `height`. The scale can be passed as `fromScaleX`/`toScaleX` and `fromScaleY`/`toScaleY`, or as factor relative to the current scale: `byScale` scales both axes, `byScaleX` and `byScaleY` one axis each.
+
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.scaleAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.orangeToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.scaleAnimation">
+val orangeToken = TokenView(
+    width = 100,
+    height = 100,
+    visual = ColorVisual(Color(0xfa6c56))
+)
+&nbsp;
+playAnimation(
+    ScaleAnimation(
+        componentView = orangeToken,
+        byScale = 1.5,
+        duration = 1000
+    )
+)
+</previews>
+
+> `byScale = 1.5` multiplies the current scale by 1.5. A value of `0` means "no change".
+> {style="note"}
+
+---
+
+## FadeAnimation
+
+Animate the opacity of a component.
 
 A [FadeAnimation][FadeAnimationKDoc] changes the opacity of a [ComponentView][ComponentViewDoc] to create a fading effect. The animation can be passed as `fromOpacity`/`toOpacity`.
 
@@ -210,14 +262,16 @@ playAnimation(
 
 ---
 
-#### Interpolation
+## Interpolation
 
-[MovementAnimation][MovementAnimationKDoc], [RotationAnimation][RotationAnimationKDoc] and [FadeAnimation][FadeAnimationKDoc] all have an additional property `interpolation` that can be used to control the interpolation of the animation. Interpolation defines how the animation progresses over time, by default this is set to `AnimationInterpolation.SMOOTH`, which means that the animation will start and end slowly and be faster in the middle. If a different interpolation is desired, it can be set to one of the following values:
+[MovementAnimation][MovementAnimationKDoc], [RotationAnimation][RotationAnimationKDoc], [ScaleAnimation][ScaleAnimationKDoc] and [FadeAnimation][FadeAnimationKDoc] all have an additional property `interpolation` that can be used to control the interpolation of the animation. Interpolation defines how the animation progresses over time, by default this is set to `AnimationInterpolation.SMOOTH`. If a different [interpolation][AnimationInterpolationKDoc] is desired, it can be set to one of the following values:
 
 - `LINEAR`: The animation progresses at a constant speed from start to finish.
-- `SMOOTH`: The animation starts slowly and then accelerates towards the end.
+- `SMOOTH`: The animation starts slowly, is fastest in the middle and slows down again at the end (ease in and out). This is the default.
 - `SPRING`: The animation overshoots the target value and then bounces back to it, creating a spring-like effect.
 - `STEPS`: The animation progresses in 10 discrete steps rather than smoothly.
+
+The following preview rotates four tokens at the same time, from left to right with `LINEAR`, `SMOOTH`, `SPRING` and `STEPS`:
 
 <previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.parallelInterpolationAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.area,tools.aqua.bgw.main.examples.ExampleAnimationScene.parallelInterpolationAnimation">
 val greenToken = TokenView(
@@ -244,49 +298,49 @@ val orangeToken = TokenView(
     visual = ColorVisual(Color(0xfa6c56))
 )
 &nbsp;
-val linearAnimation = playAnimation(
-    RotationAnimation(
-        componentView = greenToken,
-        byAngle = 225.0,
-        duration = 1000,
-        interpolation = AnimationInterpolation.LINEAR
-    )
-)
-&nbsp;
-val smoothAnimation = playAnimation(
-    RotationAnimation(
-        componentView = blueToken,
-        byAngle = 225.0,
-        duration = 1000,
-        interpolation = AnimationInterpolation.SMOOTH
-    )
-)
-&nbsp;
-val springAnimation = playAnimation(
-    RotationAnimation(
-        componentView = purpleToken,
-        byAngle = 225.0,
-        duration = 1000,
-        interpolation = AnimationInterpolation.SPRING
-    )
-)
-&nbsp;
-val stepsAnimation = playAnimation(
-    RotationAnimation(
-        componentView = orangeToken,
-        byAngle = 225.0,
-        duration = 1000,
-        interpolation = AnimationInterpolation.STEPS
+playAnimation(
+    ParallelAnimation(
+        RotationAnimation(
+            componentView = greenToken,
+            byAngle = 225.0,
+            duration = 1000,
+            interpolation =
+                AnimationInterpolation.LINEAR
+        ),
+        RotationAnimation(
+            componentView = blueToken,
+            byAngle = 225.0,
+            duration = 1000,
+            interpolation =
+                AnimationInterpolation.SMOOTH
+        ),
+        RotationAnimation(
+            componentView = purpleToken,
+            byAngle = 225.0,
+            duration = 1000,
+            interpolation =
+                AnimationInterpolation.SPRING
+        ),
+        RotationAnimation(
+            componentView = orangeToken,
+            byAngle = 225.0,
+            duration = 1000,
+            interpolation =
+                AnimationInterpolation.STEPS
+        )
     )
 )
 </previews>
 
 ---
 
-### [FlipAnimation][FlipAnimationKDoc]
+## FlipAnimation
 
-A [FlipAnimation][FlipAnimationKDoc] switches between two visuals in a flipping-like animation. The animation sets the
-`fromVisual` and then switches to the `toVisual`. When using `persist = true` on a `CardView` and `toVisual` is one side of the card, the card will be flipped to this side after the animation finished.
+Flip a game component to another visual.
+
+A [FlipAnimation][FlipAnimationKDoc] works on a [GameComponentView][GameComponentViewKDoc]. It shows the `fromVisual`, contracts the component in the first half of the duration, switches to the `toVisual` and expands it again in the second half. `fromVisual` defaults to the current visual of the component.
+
+When using `persist = true` on a `CardView` and `toVisual` is one side of the card, the card will be flipped to this side after the animation finished.
 
 <previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.flipAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.card,tools.aqua.bgw.main.examples.ExampleAnimationScene.flipAnimation">
 val card = CardView(
@@ -306,47 +360,146 @@ playAnimation(
 )
 </previews>
 
-### [RandomizeAnimation][RandomizeAnimationKDoc]
+---
 
-A [RandomizeAnimation][RandomizeAnimationKDoc] randomly switches between the given visuals. The time each visual is visible can be set by
-passing `steps`, which is calculated like the following: _steps: time = duration / steps_. The animation sets the
-`toVisual` as the last step in order to control what the resulting visual of this animation is.
+## SteppedComponentAnimations
 
-```kotlin
+The [RandomizeAnimation][RandomizeAnimationKDoc] and the [DiceAnimation][DiceAnimationKDoc] change the visual of a [GameComponentView][GameComponentViewKDoc] in many small steps to create a shuffling effect. In total `speed` changes happen within the `duration`, so each visual is visible for _duration / speed_ milliseconds. The last step is always the visual that you chose, which gives you full control over the outcome.
+
+### RandomizeAnimation
+A [RandomizeAnimation][RandomizeAnimationKDoc] randomly switches between the given `visuals` and ends with `toVisual`.
+
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.randomizeAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.randomizeToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.randomizeAnimation">
+val visuals = listOf(
+    ColorVisual(Color(0xc6ff6e)),
+    ColorVisual(Color(0xffc656)),
+    ColorVisual(Color(0xfa6c56)),
+    ColorVisual(Color(0xef4444)),
+    ColorVisual(Color(0xbb6dff)),
+    ColorVisual(Color(0x6dbeff))
+)
+&nbsp;
+val token = TokenView(
+    width = 100,
+    height = 100,
+    visual = visuals.first()
+)
+&nbsp;
 playAnimation(
     RandomizeAnimation(
-        gameComponentView = card,
-        visual = allCardFaces,
-        toVisual = allCardFaces[3],
-        duration = 1000
+        gameComponentView = token,
+        visuals = visuals,
+        toVisual = visuals[3],
+        duration = 1500,
+        speed = 20
     )
 )
-```
+</previews>
 
-### [DiceAnimation][DiceAnimationKDoc]
+### DiceAnimation
+A [DiceAnimation][DiceAnimationKDoc] is a RandomizeAnimation made for a [DiceView][DiceViewKDoc]. As the visuals were already passed when the dice was created, only the resulting side as zero-based index is needed. After a persisted DiceAnimation, the `currentSide` of the dice is `toSide`.
 
-A [DiceAnimation][DiceAnimationKDoc] behaves like a [RandomizeAnimation][RandomizeAnimationKDoc] specifically for
-dices. As the visuals got passed as parameter on Dice creation only the resulting side as zero-based index needs to be
-passed. The animation sets the `toSide` as the last step in order to control what the resulting visual of this
-animation is.
-
-```kotlin
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.diceAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.diceCustomSide,tools.aqua.bgw.main.examples.ExampleAnimationScene.diceAnimation">
+val dice = DiceView(
+    width = 100,
+    height = 100,
+    visuals = listOf(
+        ColorVisual(Color(0xc6ff6e)),
+        ColorVisual(Color(0xffc656)),
+        ColorVisual(Color(0xfa6c56)),
+        ColorVisual(Color(0xef4444)),
+        ColorVisual(Color(0xbb6dff)),
+        ColorVisual(Color(0x6dbeff))
+    )
+)
+&nbsp;
 playAnimation(
     DiceAnimation(
         dice = dice,
         toSide = 3,
+        speed = 20,
         duration = 1000
     )
 )
-```
+</previews>
+
+---
+
+## Persisting the result
+
+By default, a ComponentAnimation **persists** its result: after it finished, the component keeps the animated state. A token that was moved by 100 units stays 100 units further right, and the `posX` property reflects this. Set `persist = false` to let the component return to its previous state instead.
+
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.persistAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.orangeToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.persistAnimation">
+playAnimation(
+    MovementAnimation(
+        componentView = orangeToken,
+        byX = 100,
+        duration = 1000,
+        persist = false
+    )
+)
+</previews>
+
+> The previews in this guide always show the final state until you press **Reset**. With `persist = false`, the token jumps back right after the animation, because nothing changed in the component itself.
+> {style="note"}
+
+---
 
 ## CompoundAnimations
 
-### [SequentialAnimation][SequentialKDoc]
+Compound animations combine other animations. They are animations themselves, so they can be played, stopped and listened to like any other animation. They are the **only** way to animate one component with several animations at the same time or one after another: playing a second animation on a component that is already animating is rejected.
 
-A SequentialAnimation is an [Animation][AnimationKDoc] that consists of multiple animations, that get played in sequence.
-This is useful to combine multiple animations into a single one.
-An example on how to create and play a SequentialAnimation can be found below:
+### SequentialAnimation
+A SequentialAnimation plays its animations one after another. Its `duration` is the sum of all durations. This is useful to build complex movements out of simple parts. The token below first moves, then rotates and finally fades:
+
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.sequentialAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.sequentialToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.sequentialAnimation">
+playAnimation(
+    SequentialAnimation(
+        MovementAnimation(
+            componentView = token,
+            byX = 150,
+            duration = 800
+        ),
+        RotationAnimation(
+            componentView = token,
+            byAngle = 180.0,
+            duration = 800
+        ),
+        FadeAnimation(
+            componentView = token,
+            toOpacity = 0.25,
+            duration = 800
+        )
+    )
+)
+</previews>
+
+### ParallelAnimation
+A ParallelAnimation plays all its animations at the same time. Its `duration` is the longest of the contained durations. Each animation uses its own duration, so they do not have to end together:
+
+<previews key="tools.aqua.bgw.main.examples.ExampleAnimationScene.parallelAnimation" codepoints="tools.aqua.bgw.main.examples.ExampleAnimationScene.parallelToken,tools.aqua.bgw.main.examples.ExampleAnimationScene.parallelAnimation">
+playAnimation(
+    ParallelAnimation(
+        MovementAnimation(
+            componentView = token,
+            byX = 150,
+            duration = 1500
+        ),
+        RotationAnimation(
+            componentView = token,
+            byAngle = 180.0,
+            duration = 1000
+        ),
+        FadeAnimation(
+            componentView = token,
+            toOpacity = 0.25,
+            duration = 500
+        )
+    )
+)
+</previews>
+
+Both compound animations can be nested into each other. Every contained animation has its own `onFinished` handler, in addition to the one of the compound animation:
 
 ```kotlin
 playAnimation(
@@ -356,46 +509,22 @@ playAnimation(
         },
         DelayAnimation(duration = 2000).apply {
             onFinished = { println("Second DelayAnimation finished!") }
-        },
+        }
     ).apply {
         onFinished = { println("SequentialAnimation finished!") }
     }
 )
 ```
 
-The resulting SequentialAnimation will play for 3000ms and print some information on which Animations have finished playing.
+The resulting SequentialAnimation plays for 3000 ms. Replace it with a ParallelAnimation and it plays for 2000 ms.
 
-### [ParallelAnimation][ParallelKDoc]
+---
 
-A ParallelAnimation is an [Animation][AnimationKDoc] that consists of multiple animations, that get played in parallel.
-This is useful to combine multiple animations into a single one.
-An example on how to create and play a ParallelAnimation can be found below:
+## DelayAnimation
 
-```kotlin
-playAnimation(
-    ParallelAnimation(
-        DelayAnimation(duration = 1000).apply {
-            onFinished = { println("First DelayAnimation finished!") }
-        },
-        DelayAnimation(duration = 2000).apply {
-            onFinished = { println("Second DelayAnimation finished!") }
-        },
-    ).apply {
-        onFinished = { println("ParallelAnimation finished!") }
-    }
-)
-```
+A [DelayAnimation][DelayAnimationKDoc] does nothing visible. It calls `onFinished` after the given `duration`, which makes it a timer that runs alongside the application. It is useful to give the player time to see what happened before the game continues, for example before the opponent makes a move.
 
-The resulting ParallelAnimation will play for 2000 milliseconds and print some information on which animations have finished playing.
-
-## [DelayAnimation][DelayAnimationKDoc]
-
-A DelayAnimation does nothing in the application window besides calling `onFinished` after the given amount of time
-(duration parameter). This timer runs asynchronously, so it can run while the player is playing. To add a delay between
-moves in which the user should not be able to interact with the scene, the method [BoardGameScene#lock][lockKDoc]
-has to be called before playing the animation and the method [BoardGameScene#unlock][unlockKDoc]
-in `onFinished`.
-An example for this locking mechanism can be found below:
+To block the player from interacting during the delay, [lock()][lockKDoc] the scene before playing the animation and [unlock()][unlockKDoc] it in `onFinished`:
 
 ```kotlin
 lock()
@@ -406,3 +535,14 @@ playAnimation(DelayAnimation(duration = 2000).apply {
     }
 })
 ```
+
+> A DelayAnimation can also be part of a SequentialAnimation or ParallelAnimation. For example, a delay in front of a MovementAnimation makes it start later.
+> {style="note"}
+
+---
+
+## Reacting to animations
+
+The `onFinished` handler is the central tool to run code at the right moment. The [Handling Events][HandlingEvents] guide uses it to update the score of Dice Duel after the dice have stopped. As playing animations is asynchronous, never read properties that an animation is about to change directly after `playAnimation()`: use `onFinished`.
+
+Combine animations with [Drag and Drop][DragDropDoc] to let a component slide into place after it was released.

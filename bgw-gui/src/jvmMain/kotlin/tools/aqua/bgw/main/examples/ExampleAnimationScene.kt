@@ -27,7 +27,10 @@ import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.animation.ParallelAnimation
+import tools.aqua.bgw.animation.RandomizeAnimation
 import tools.aqua.bgw.animation.RotationAnimation
+import tools.aqua.bgw.animation.ScaleAnimation
+import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.container.Area
 import tools.aqua.bgw.components.gamecomponentviews.CardView
@@ -159,6 +162,60 @@ internal class ExampleAnimationScene : BoardGameScene(width = 445, height = 300)
    */
   val diceAnimation = DiceAnimation(dice = diceCustomSide, toSide = 3, speed = 20, duration = 1000)
 
+  val orangeToken =
+      TokenView(
+          posX = 172.5,
+          posY = 100,
+          width = 100,
+          height = 100,
+          visual = ColorVisual(Color(0xfa6c56)))
+
+  val scaleAnimation = ScaleAnimation(componentView = orangeToken, byScale = 1.5, duration = 1000)
+
+  val persistAnimation =
+      MovementAnimation(componentView = orangeToken, byX = 100, duration = 1000, persist = false)
+
+  val randomizeVisuals =
+      listOf(
+          ColorVisual(Color(0xc6ff6e)),
+          ColorVisual(Color(0xffc656)),
+          ColorVisual(Color(0xfa6c56)),
+          ColorVisual(Color(0xef4444)),
+          ColorVisual(Color(0xbb6dff)),
+          ColorVisual(Color(0x6dbeff)))
+
+  val randomizeToken =
+      TokenView(
+          posX = 172.5, posY = 100, width = 100, height = 100, visual = randomizeVisuals.first())
+
+  val randomizeAnimation =
+      RandomizeAnimation(
+          gameComponentView = randomizeToken,
+          visuals = randomizeVisuals,
+          toVisual = randomizeVisuals[3],
+          duration = 1500,
+          speed = 20)
+
+  val sequentialToken =
+      TokenView(
+          posX = 100, posY = 100, width = 100, height = 100, visual = ColorVisual(Color(0xffc656)))
+
+  val sequentialAnimation =
+      SequentialAnimation(
+          MovementAnimation(componentView = sequentialToken, byX = 150, duration = 800),
+          RotationAnimation(componentView = sequentialToken, byAngle = 180.0, duration = 800),
+          FadeAnimation(componentView = sequentialToken, toOpacity = 0.25, duration = 800))
+
+  val parallelToken =
+      TokenView(
+          posX = 100, posY = 100, width = 100, height = 100, visual = ColorVisual(Color(0x6dbeff)))
+
+  val parallelAnimation =
+      ParallelAnimation(
+          MovementAnimation(componentView = parallelToken, byX = 150, duration = 1500),
+          RotationAnimation(componentView = parallelToken, byAngle = 180.0, duration = 1000),
+          FadeAnimation(componentView = parallelToken, toOpacity = 0.25, duration = 500))
+
   init {
     setComponentAndSerialize(::greenToken)
     setComponentAndSerialize(::blueToken)
@@ -174,6 +231,30 @@ internal class ExampleAnimationScene : BoardGameScene(width = 445, height = 300)
 
     setComponentAndSerialize(::area)
     playAnimationAndSerialize(::parallelInterpolationAnimation, ::area)
+
+    setComponentAndSerialize(::orangeToken)
+    playAnimationAndSerialize(::scaleAnimation, ::orangeToken)
+    playAnimationAndSerialize(::persistAnimation, ::orangeToken)
+
+    setComponentAndSerialize(::randomizeToken)
+    playAnimationAndSerialize(::randomizeAnimation, ::randomizeToken)
+
+    setComponentAndSerialize(::sequentialToken)
+    playAnimationAndSerialize(::sequentialAnimation, ::sequentialToken)
+
+    setComponentAndSerialize(::parallelToken)
+    playAnimationAndSerialize(::parallelAnimation, ::parallelToken)
+
+    // The destination has to be part of the scene, so this animation is created afterwards.
+    clearComponents()
+    addComponents(area)
+    val moveToComponentAnimation =
+        ParallelAnimation(
+            MovementAnimation.toComponentView(
+                componentView = t1, toComponentViewPosition = t4, scene = this, duration = 1500))
+    map["${this::class.qualifiedName}.moveToComponentAnimation"] =
+        jsonMapper.encodeToString(PropData(AnimationMapper.map(moveToComponentAnimation)))
+    clearComponents()
   }
 
   private fun <T : ComponentView> playAnimationAndSerialize(

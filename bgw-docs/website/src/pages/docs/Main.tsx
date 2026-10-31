@@ -94,7 +94,7 @@ function Main() {
               draw_abstract
             </i>
             <h2 className="font-bold text-lg mb-8 pl-0.5">
-              Prototype scenes and components in the BoardGameWork Playground
+              Prototype scenes and animations in the BoardGameWork Playground
             </h2>
             <Link to="/playground" className="relative z-10">
               <Button variant="property" className="flex gap-2">
@@ -104,12 +104,6 @@ function Main() {
                 </i>
               </Button>
             </Link>
-            <Badge
-              variant="property"
-              className="absolute text-xs font-semibold right-8 top-9 max-xl:hidden"
-            >
-              Alpha
-            </Badge>
           </fieldset>
         </div>
         <div className="mt-10">

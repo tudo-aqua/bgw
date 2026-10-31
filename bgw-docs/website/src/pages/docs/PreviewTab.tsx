@@ -26,12 +26,16 @@ function PreviewTab({
   reformat = true,
   sideBySide = false,
   width = 622,
+  fit = false,
+  hideCode = false,
 }: {
   data;
   info;
   reformat?: boolean;
   sideBySide?: boolean;
   width?: number;
+  fit?: boolean;
+  hideCode?: boolean;
 }) {
   let code = data.sample; //.replace(/\n/g, "").replace(/\s+/g, " ");
   if (reformat) code = createKotlinCodeLinebreaks(code, 0);
@@ -76,6 +80,17 @@ function PreviewTab({
   if (msg.props.data.type === "AppData") {
     msg.props.data.width = width;
     msg.props.data.height = 300;
+
+    // Scenes larger than the preview (e.g. the default 1920x1080) are scaled down to fit,
+    // like a window with the same aspect ratio would do. The BGW styles are global, so all
+    // previews of one page must use the same scene size when using this.
+    if (fit) {
+      const scene = msg.props.data.gameScene ?? msg.props.data.menuScene;
+      if (scene) {
+        msg.props.data.width = scene.width;
+        msg.props.data.height = scene.height;
+      }
+    }
 
     replaceImageVisualPathsRecursively(msg.props.data.gameScene, `/bgw`);
   }
@@ -144,10 +159,14 @@ function PreviewTab({
   if (sideBySide) {
     return (
       <div className="flex gap-4 preview-tabs max-xl:flex-col max-xl:w-[calc(100vw-3.5rem)]">
-        <div className="flex-shrink-0 w-[calc((100%-1rem)/5*2)] min-w-2/5 max-xl:w-full">
+        <div
+          className={`flex-shrink-0 min-w-2/5 max-xl:w-full ${
+            hideCode ? "w-full" : "w-[calc((100%-1rem)/5*2)]"
+          }`}
+        >
           <div className="relative">
             {isAnimation && (
-              <div className="absolute z-10 inline-flex items-center justify-center h-[24px] gap-6 top-4 right-6 rounded-xl text-muted-foreground">
+              <div className="absolute z-[2000] inline-flex items-center justify-center h-[24px] gap-6 top-4 right-6 rounded-xl text-muted-foreground">
                 <Button
                   className="inline-flex items-center justify-center h-[24px] gap-2 transition-all bg-transparent rounded-lg whitespace-nowrap hover:text-white text-muted-foreground px-0 hover:bg-transparent"
                   onClick={() => resetAnimation()}
@@ -172,7 +191,7 @@ function PreviewTab({
             )}
             <div className="bgw-root-container flex !h-[300px] justify-center items-center !relative">
               <div
-                className="w-full h-full rounded-xl bgw-root border !bg-[#161d29] border-none"
+                className={`w-full h-full rounded-xl bgw-root border !bg-[#161d29] border-none${fit ? " keep-scene-background" : ""}`}
                 id={`bgw-root-${randomId}`}
               ></div>
             </div>
@@ -181,10 +200,10 @@ function PreviewTab({
                 <img
                   src="/bgw/logo_muted.svg"
                   alt="Preview"
-                  className="absolute w-6 transition-all bottom-3 left-4 opacity-40 hover:opacity-100 cursor-help"
+                  className="absolute z-[2000] w-6 transition-all bottom-3 left-4 opacity-40 hover:opacity-100 cursor-help"
                 />
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="z-[3000]">
                 <p>BGW Live-Preview</p>
               </TooltipContent>
             </Tooltip>
@@ -195,6 +214,7 @@ function PreviewTab({
             </fieldset>
           )}
         </div>
+        {!hideCode && (
         <div className="w-[calc((100%-1rem)/5*3)] relative h-[300px] max-xl:w-full">
           <Button
             className="absolute z-10 w-8 h-8 p-0 right-5 top-4 hover:bg-muted/80 text-muted-foreground hover:text-white max-md:hidden"
@@ -219,6 +239,7 @@ function PreviewTab({
             <ScrollBar orientation="vertical"></ScrollBar>
           </ScrollArea>
         </div>
+        )}
       </div>
     );
   }
@@ -267,7 +288,7 @@ function PreviewTab({
         <TabsContent value="preview">
           <div className="bgw-root-container flex !h-[300px] justify-center items-center !relative">
             <div
-              className="w-full h-full rounded-xl bgw-root border !bg-[#161d29] border-none"
+              className={`w-full h-full rounded-xl bgw-root border !bg-[#161d29] border-none${fit ? " keep-scene-background" : ""}`}
               id={`bgw-root-${randomId}`}
             ></div>
           </div>

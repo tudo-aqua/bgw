@@ -594,6 +594,7 @@ export const guideStructure = {
     icon: "lightbulb",
     items: [
       { title: "Animations", url: "/guides/concepts/animations" },
+      { title: "Application", url: "/guides/concepts/application" },
       {
         title: "Drag and Drop",
         url: "/guides/concepts/drag-and-drop",

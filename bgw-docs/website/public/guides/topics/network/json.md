@@ -2,22 +2,33 @@
 [tutorialspoint]: https://www.tutorialspoint.com/json/json_schema.htm
 [types]: https://json-schema.org/understanding-json-schema/reference/type.html
 
-> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
-> {style="danger"}
+<!-- GH-Pages Doc -->
+
+[CommunicationDoc]: /guides/network/communication
 
 # JSON
 
-This section deals with the integration of json schema to validate GameActionClasses on the server side and how to
-generate a json schema from a given KClass.
+<tldr>Validate your messages with JSON schemas</tldr>
+
+## Introduction
+
+Every message that a client sends through the BGW server is a `GameAction` serialized as JSON, see [Network communication][CommunicationDoc]. The server does not know your classes, but it can reject malformed messages before they reach the other players. For this it uses **JSON schemas**: a description of how a valid message looks.
+
+For every game that is registered on the server, you provide one schema per message class. When a message arrives, the server looks for the schema with the same `@class` as the message. If it finds none, the message is checked against all schemas of the game and accepted if **at least one** matches. A message that matches no schema is rejected and the sender receives a `GameActionResponse` with the status `INVALID_JSON`.
+
+> Schemas are uploaded together with a game ID in the _Games and Schemas_ view of the BGW server's web interface (administrators only). The view checks every uploaded schema against the BGW meta schema, which is described [below](#bgw-meta-schema).
+> {style="note"}
 
 ## External resources
 
-A documentation for json schema can be found [here][json-schema].<br>
-A quick-start-guide can be found [here][tutorialspoint].
+A documentation for JSON schema can be found [here][json-schema].<br>
+A quick start guide can be found [here][tutorialspoint].
+
+---
 
 ## JSON data types
 
-The following [data types][types] may be used in json schema:
+The following [data types][types] can be used in a JSON schema:
 
 | Type    | Values allowed     | Values not allowed |
 | ------- | ------------------ | ------------------ |
@@ -29,29 +40,29 @@ The following [data types][types] may be used in json schema:
 | boolean | true; false        | "true"; 1          |
 | null    | null               | ""                 |
 
-## Converting a simple DataClass into a json schema
+---
 
-Let's consider the following data class:
+## A simple message
+
+Consider the following message class:
 
 ```kotlin
 @GameActionClass
-data class MauMauEndGameAction(
-  val winner: String
+data class GameOverGameAction(
+    val winner: String
 ) : GameAction() {
-
-  override fun toString(): String =
-    "$winner has won the game!"
+    override fun formatMessage(): String = "$winner has won the game!"
 }
 ```
 
-The json schema contains all attributes declared in the class. In this instance there is only one field `winner` of
-type `string`. The resulting json schema looks as follows.
+Its schema contains all properties of the class. Here there is only the field `winner` of type `string`:
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
-  "title": "MauMau End Game Schema",
+  "@class": "com.example.diceduel.GameOverGameAction",
+  "title": "Game Over Schema",
 
   "required": ["winner"],
 
@@ -63,34 +74,41 @@ type `string`. The resulting json schema looks as follows.
 }
 ```
 
-The first block defines meta information: The json meta schema `draft-07`, the type `object` and the title of this
-schema.
+| Field | Meaning |
+| --- | --- |
+| `$schema` | The JSON schema version. BGW uses `draft-07`. |
+| `type` | A message is always an `object`. |
+| `@class` | The **fully qualified name** of the Kotlin class. The server uses it to find the schema of a message. |
+| `title` | A readable name of the schema. It is shown in error messages. |
+| `required` | All fields that must be present. For a Kotlin class that is every property without a default value. |
+| `properties` | The type of every field. |
+| `additionalProperties` | `false` forbids all fields that are not listed. |
 
-The `required` field contains a list of all attributes of the KClass. In this case the field `winner`.
+### BGW meta schema
 
-For each field you have to define `properties`. This includes the data type for the field as one of those listed
-[above](#JSON data types). Here the property `winner` gets annotated with type `string`.
+On top of the standard JSON schema rules, a schema that is uploaded to a BGW server must contain the two fields `title` and `@class`, both of type `string`. A schema without them is rejected when it is uploaded.
 
-Additionally `"additionalProperties": false` forbids the usage of additional attributes.
+---
 
 ## Lists and arrays
 
-For lists and arrays the data type is set to `array`. Additionally, the data type for the elements in that array has
-to be specified. The attribute
+For lists and arrays the type is `array`. The type of the elements is declared with `items`.
 
 ```kotlin
-data class Example(
-  val playerNames: list<String>
-)
+@GameActionClass
+data class PlayersGameAction(
+    val playerNames: List<String>
+) : GameAction() {
+    override fun formatMessage(): String? = null
+}
 ```
-
-gets translated to
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
-  "title": "Example Schema",
+  "@class": "com.example.diceduel.PlayersGameAction",
+  "title": "Players Schema",
 
   "required": ["playerNames"],
 
@@ -105,37 +123,42 @@ gets translated to
 }
 ```
 
-## Restricting values, Enums and Nullability
+---
 
-Values of a field can be restricted by `minimum`/`maximum` for integers or by regular expression `patterns`.
+## Restricting values, enums and nullability
 
-Enums can be used by restricting the values of a string to the enum constants
+Numbers can be restricted with `minimum` and `maximum`, strings with a regular expression in `pattern`. An **enum** becomes a string that is limited to the names of its constants:
 
 ```kotlin
-enum class Direction {
-  LEFT,
-  RIGHT
+enum class Direction { LEFT, RIGHT }
+
+@GameActionClass
+data class MoveGameAction(
+    val direction: Direction,
+    val steps: Int
+) : GameAction() {
+    override fun formatMessage(): String? = null
 }
-
-data class Example(
-  val direction: Direction
-)
 ```
-
-gets translated to
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
-  "title": "Example Schema",
+  "@class": "com.example.diceduel.MoveGameAction",
+  "title": "Move Schema",
 
-  "required": ["direction"],
+  "required": ["direction", "steps"],
 
   "properties": {
-    "playerNames": {
+    "direction": {
       "type": "string",
       "enum": ["LEFT", "RIGHT"]
+    },
+    "steps": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6
     }
   },
 
@@ -143,83 +166,45 @@ gets translated to
 }
 ```
 
-Nullability can be expressed by using `oneOf`.
+A field that can be `null` is declared with `oneOf`. Nullable fields should still be listed in `required`, because they are always part of the serialized message:
 
 ```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "type": "object",
-  "title": "Example Schema",
-
-  "required": ["direction"],
-
-  "properties": {
-    "playerNames": {
-      "oneOf": [
-        { "type": "null" },
-        { "type": "string", "enum": ["LEFT", "RIGHT"] }
-      ]
-    }
-  },
-
-  "additionalProperties": false
+"direction": {
+  "oneOf": [
+    { "type": "null" },
+    { "type": "string", "enum": ["LEFT", "RIGHT"] }
+  ]
 }
 ```
 
-## Schema nesting
+---
 
-For attributes of object types, these objects need to be defined by a schema as well. Consider the following example:
+## Nesting schemas
+
+Fields with object types need a schema for the object as well. Reusable parts are put into `definitions` and referenced with `$ref`:
 
 ```kotlin
-enum class CardColor {
-  RED,
-  BLACK
-}
+enum class CardColor { RED, BLACK }
 
 data class PlayingCard(
-  val cardColor: CardColor,
-  val cardValue: Int
+    val cardColor: CardColor,
+    val cardValue: Int
 )
 
-data class CardStack(
-  val cards: List<PlayingCard>
-)
-```
-
-The class `CardStack` uses the class `PlayingCard`. Therefor the schema for `PlayingCard` has to be nested into
-the schema for `CardStack`.
-
-The sub-schema for `PlayingCard` looks as follows:
-
-```json
-{
-  "type": "object",
-
-  "required": ["cardColor", "cardValue"],
-
-  "properties": {
-    "cardColor": {
-      "type": "string",
-      "enum": ["RED", "BLACK"]
-    },
-    "cardValue": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 12
-    }
-  },
-
-  "additionalProperties": false
+@GameActionClass
+data class PlayCardsGameAction(
+    val cards: List<PlayingCard>
+) : GameAction() {
+    override fun formatMessage(): String? = null
 }
 ```
-
-The schema for `CardStack` referencing the nested schema looks as follows:
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "type": "object",
-  "title": "Playing Card",
+  "@class": "com.example.diceduel.PlayCardsGameAction",
+  "title": "Play Cards Schema",
 
   "required": ["cards"],
 
@@ -248,8 +233,13 @@ The schema for `CardStack` referencing the nested schema looks as follows:
           "minimum": 0,
           "maximum": 12
         }
-      }
+      },
+
+      "additionalProperties": false
     }
   }
 }
 ```
+
+> The BGW server repository contains the complete schemas of the MauMau example in `bgw-net-server/src/main/resources/maumauschemas`. They are a good starting point for your own game.
+> {style="note"}

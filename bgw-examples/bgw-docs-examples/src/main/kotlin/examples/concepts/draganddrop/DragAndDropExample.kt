@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2026 The BoardGameWork Authors
+ * Copyright 2025-2026 The BoardGameWork Authors
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,12 @@
 package examples.concepts.draganddrop
 
 import tools.aqua.bgw.components.container.Area
+import tools.aqua.bgw.components.gamecomponentviews.GameComponentView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.visual.ColorVisual
 
 fun main() {
@@ -28,56 +31,68 @@ fun main() {
 }
 
 class DragAndDropExample : BoardGameApplication("Drag and drop example") {
-  private val gameScene: BoardGameScene = BoardGameScene(background = ColorVisual.LIGHT_GRAY)
+  init {
+    showGameScene(DragAndDropScene())
+    show()
+  }
+}
 
-  private val redToken: TokenView = TokenView(posX = 20, posY = 20, visual = ColorVisual.RED)
-  private val greenToken: TokenView = TokenView(posX = 20, posY = 200, visual = ColorVisual.GREEN)
+class DragAndDropScene :
+    BoardGameScene(width = 445, height = 300, background = ColorVisual(Color(0x0F141F))) {
 
-  private val redArea: Area<TokenView> =
-      Area(height = 50, width = 50, posX = 200, posY = 20, visual = ColorVisual(255, 0, 0, 100))
+  private val redToken =
+      TokenView(
+          posX = 40,
+          posY = 40,
+          width = 70,
+          height = 70,
+          visual = ColorVisual(Color(0xEF4444)).apply { style.borderRadius = BorderRadius.FULL })
 
-  private val greenArea: Area<TokenView> =
-      Area(height = 50, width = 50, posX = 200, posY = 200, visual = ColorVisual(0, 255, 0, 100))
+  private val greenToken =
+      TokenView(
+          posX = 40,
+          posY = 190,
+          width = 70,
+          height = 70,
+          visual = ColorVisual(Color(0xC6FF6E)).apply { style.borderRadius = BorderRadius.FULL })
+
+  private val redArea =
+      Area<GameComponentView>(
+          posX = 310,
+          posY = 25,
+          width = 100,
+          height = 100,
+          visual = ColorVisual(Color(0xEF4444)).apply { transparency = 0.3 })
+
+  private val greenArea =
+      Area<GameComponentView>(
+          posX = 310,
+          posY = 175,
+          width = 100,
+          height = 100,
+          visual = ColorVisual(Color(0xC6FF6E)).apply { transparency = 0.3 })
 
   init {
-    redToken.isDraggable = true
-    redToken.onDragGestureEnded = { _, success ->
+    connect(redToken, redArea)
+    connect(greenToken, greenArea)
+    addComponents(redToken, greenToken, redArea, greenArea)
+  }
+
+  private fun connect(token: TokenView, area: Area<GameComponentView>) {
+    token.isDraggable = true
+    token.onDragGestureStarted = { token.scale(1.2) }
+    token.onDragGestureEnded = { _, success ->
+      token.scale(1.0)
       if (success) {
-        redToken.isDraggable = false
+        token.isDraggable = false
       }
     }
 
-    greenToken.isDraggable = true
-    greenToken.onDragGestureEnded = { _, success ->
-      if (success) {
-        greenToken.isDraggable = false
-      }
+    area.dropAcceptor = { event -> event.draggedComponent == token }
+    area.onDragDropped = {
+      token.removeFromParent()
+      token.reposition(15, 15)
+      area.add(token)
     }
-
-    redArea.dropAcceptor = { dragEvent ->
-      when (dragEvent.draggedComponent) {
-        is TokenView -> dragEvent.draggedComponent == redToken
-        else -> false
-      }
-    }
-    redArea.onDragDropped = { dragEvent ->
-      dragEvent.draggedComponent.removeFromParent()
-      redArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-    }
-
-    greenArea.dropAcceptor = { dragEvent ->
-      when (dragEvent.draggedComponent) {
-        is TokenView -> dragEvent.draggedComponent == greenToken
-        else -> false
-      }
-    }
-    greenArea.onDragDropped = { dragEvent ->
-      dragEvent.draggedComponent.removeFromParent()
-      greenArea.add((dragEvent.draggedComponent as TokenView).apply { reposition(0, 0) })
-    }
-
-    gameScene.addComponents(redToken, greenToken, redArea, greenArea)
-    showGameScene(gameScene)
-    show()
   }
 }

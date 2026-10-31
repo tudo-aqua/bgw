@@ -79,8 +79,23 @@
       @apply flex w-full;
     }
 
+    th {
+      flex: 1 1 0;
+      min-width: 0;
+
+      &:first-child {
+        flex: 0 0 25%;
+      }
+    }
+
     td {
-      @apply flex items-center w-full flex-initial;
+      @apply block self-center;
+      flex: 1 1 0;
+      min-width: 0;
+
+      &:first-child {
+        flex: 0 0 25%;
+      }
     }
 
     tbody td > code {
@@ -110,6 +125,20 @@
     td > i {
       @apply text-sm pr-3;
     }
+  }
+
+  table td code,
+  table th code {
+    color: hsl(var(--primary)) !important;
+    font-size: 0.95em !important;
+    margin-inline: 0.1em;
+  }
+
+  // First column acts as the header of a row
+  table td:first-child code {
+    color: inherit !important;
+    font-size: 1.08em !important;
+    margin-inline: 0;
   }
 
   a {
@@ -200,7 +229,7 @@
     @apply text-muted-foreground mt-3 py-1 px-2 text-base;
   }
 
-  bgw_scene > bgw_visuals > bgw_color_visual {
+  .bgw-root:not(.keep-scene-background) bgw_scene > bgw_visuals > bgw_color_visual {
     @apply bg-[#161d29];
     // @apply bg-red-500;
   }
@@ -261,7 +290,7 @@
     }
   }
 
-  bgw_scene > bgw_visuals > bgw_color_visual {
+  .bgw-root:not(.keep-scene-background) bgw_scene > bgw_visuals > bgw_color_visual {
     @apply bg-[#161d29];
   }
 }

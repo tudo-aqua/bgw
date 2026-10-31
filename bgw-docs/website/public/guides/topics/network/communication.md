@@ -1,265 +1,309 @@
-[BoardGameClientKDoc]: /guides/bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-board-game-client/index.html
-[NetworkLoggingKDoc]: /guides/bgw-net-client-kdoc/bgw-net-client/tools.aqua.bgw.net.client/-network-logging/index.html
+[BoardGameClientKDoc]: /docs/tools.aqua.bgw.net.client/-board-game-client/index.html
+[NetworkLoggingKDoc]: /docs/tools.aqua.bgw.net.client/-network-logging/index.html
+[GameActionKDoc]: /docs/tools.aqua.bgw.net.common/-game-action/index.html
 
-> This guide is currently being rewritten. Content may be incomplete, incorrect or subject to change.
-> {style="danger"}
+<!-- GH-Pages Doc -->
+
+[JsonDoc]: /guides/network/json
+[ApplicationDoc]: /guides/concepts/application
+[ObservableDoc]: /guides/concepts/observable
 
 # Network communication
 
-This section deals with the integration of network communication to establish multiplayer modes over the internet.
+<tldr>Add online multiplayer with bgw-net</tldr>
+
+## Introduction
+
+The **bgw-net** modules connect your game to a BGW server, so players on different computers can play with and against each other. The server only forwards messages between the players of a game session and validates them, **your game logic stays in your application**: every client sends what a player did, and every other client applies it.
+
+| Part | Role |
+| --- | --- |
+| Server | Hosts game sessions, authenticates clients with a secret and forwards messages. It validates messages against JSON schemas. |
+| Client | The `BoardGameClient` in your application. It connects to the server, creates or joins sessions and sends and receives messages. |
+| Messages | Classes that you declare, one per kind of action in your game. They extend `GameAction`. |
+
+---
 
 ## Prerequisites
 
-In order to use network integration you first have to integrate bgw-net components into your buildscript, e.g. gradle
-etc. For client use both artifacts _bgw-net-common_ and _bgw-net-client_ are required. You can obtain the dependencies
-from maven central:
+Add the client artifacts to your build. Both are required for client applications:
 
-### Gradle Kotlin DSL
+<tabs group="gradleMaven">
+    <tab title="Gradle" group-key="gradle">
+        <code-block lang="apache">
+dependencies {
+    implementation("tools.aqua:bgw-net-common:0.11")
+    implementation("tools.aqua:bgw-net-client:0.11")
+}
+        </code-block>
+    </tab>
+    <tab title="Maven" group-key="maven">
+        <code-block lang="xml">
+            &lt;dependency&gt;
+    &lt;groupId&gt;tools.aqua&lt;/groupId&gt;
+    &lt;artifactId&gt;bgw-net-common&lt;/artifactId&gt;
+    &lt;version&gt;0.11&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;tools.aqua&lt;/groupId&gt;
+    &lt;artifactId&gt;bgw-net-client&lt;/artifactId&gt;
+    &lt;version&gt;0.11&lt;/version&gt;
+&lt;/dependency&gt;
+        </code-block>
+    </tab>
+</tabs>
 
-```kotlin
-implementation("tools.aqua:bgw-net-common:latest")
-implementation("tools.aqua:bgw-net-client:latest")
-```
+---
 
-### Gradle Groovy DSL
+## Creating a client
 
-```groovy
-implementation 'tools.aqua:bgw-net-common:latest'
-implementation 'tools.aqua:bgw-net-client:latest'
-```
-
-### Maven
-
-```xml
-<dependency>
-	<groupId>tools.aqua</groupId>
-	<artifactId>bgw-net-common</artifactId>
-	<version>latest</version>
-</dependency>
-```
-
-```xml
-<dependency>
-	<groupId>tools.aqua</groupId>
-	<artifactId>bgw-net-client</artifactId>
-	<version>latest</version>
-</dependency>
-```
-
-## Getting started
-
-On the client side, the central communication interface is the [BoardGameClient][BoardGameClientKDoc]. Create your own
-communication class inheriting from this class.
+The [BoardGameClient][BoardGameClientKDoc] is the central class on the client side. Its constructor is `protected`, so you create **your own subclass**. It is the place to react to everything that the server tells you.
 
 ```kotlin
-class MauMauBoardGameClient(
-	playerName: String,
-	host: String,
-	secret: String,
+class DiceDuelClient(
+    playerName: String,
+    host: String,
+    secret: String
 ) : BoardGameClient(
-	playerName = playerName,
-	host = host,
-	secret = secret,
-	networkLoggingBehavior = NetworkLogging.VERBOSE)
+    playerName = playerName,
+    host = host,
+    secret = secret,
+    networkLoggingBehavior = NetworkLogging.INFO
+)
 ```
 
-Upon creation the server address, port and secret has to be passed and cannot be changed later on. Additionally,
-[BoardGameClient][BoardGameClientKDoc] takes the player's name for identification purposes.
-[BoardGameClient][BoardGameClientKDoc] implements dedicated network logging to the standard console which can be turned
-on and controlled via the `netwokLoggingBehaviour` parameter. The following options are available (see
-[NetworkLogging][NetworkLoggingKDoc]):
+<signature>
+<code-block lang="kotlin" copy="false">
+BoardGameClient(
+    playerName: String,
+    host: String,
+    secret: String,
+    networkLoggingBehavior: NetworkLogging = NetworkLogging.NO_LOGGING
+)
+</code-block>
 
-- VERBOSE: Verbose logging printing each step to the console including serialized Json.
-- INFO: Log incoming and outgoing messages in human-readable format to keep track of network traffic.
-- ERRORS: Only log errors during communication.
-- NO_LOGGING: Completely deactivate logging.
+`playerName` identifies the player and must be unique within a session. `host` is the address of the server **including port and path**, without protocol, for example `"127.0.0.1:8080/connect"`. The client connects using a WebSocket (`ws://`), and the endpoint of a BGW server is called `connect`. `secret` is the network secret that the server expects. None of them can be changed later on.
 
-_The default value is NO_LOGGING._
+</signature>
 
-## Establishing a connection
+The [NetworkLogging][NetworkLoggingKDoc] defines how verbose the client logs to the console:
 
-Once set up you may call `connect` on the [BoardGameClient][BoardGameClientKDoc] in order to start a connection. This
-method will block the current thread until a connection was established or the request timed out. You may want to think
-about multithreading in this situation. The function will return `true` iff the connection was established
-successfully.
+<table orientation="horizontal">
+    <tr>
+        <td width="22%"><code>VERBOSE</code></td>
+        <td>Every step including the serialized JSON.</td>
+    </tr>
+    <tr>
+        <td><code>INFO</code></td>
+        <td>Incoming and outgoing messages as one-liners.</td>
+    </tr>
+    <tr>
+        <td><code>ERRORS</code></td>
+        <td>Only errors.</td>
+    </tr>
+    <tr>
+        <td><code>NO_LOGGING</code></td>
+        <td>Nothing. This is the default.</td>
+    </tr>
+</table>
 
-A connection may be closed safely by calling `disconnnect`.
+---
 
-The connection state may be checked via `isOpen` property.
+## Connecting
 
-## Hosting and Joining game sessions.
+Open and close the connection to the server.
 
-A game session may be started by calling `createGame`. Each session gets identified by a unique `sessionID` that
-has to be passed to the function. Calling `createGame` automatically adds this client to the newly created game on the
-server side. Additionally, the gameID must match the registered gameID
-on the server in order to identify the
-correct set of message schemas for this game. `greetingMessage` will be sent to all players upon joining this session.
+<signature>
+<code-block lang="kotlin" copy="false">
+connect(): Boolean
+disconnect()
+isOpen: Boolean
+</code-block>
+
+`connect()` opens the connection and **blocks** until it was established or timed out. It returns `true` on success and throws an `IllegalStateException` if the client is already connected. `disconnect()` closes the connection and `isOpen` tells the current state.
+
+</signature>
+
+Because `connect()` blocks, call it from a place where a short wait is acceptable. If you call it from an event handler of a component, the window freezes until the connection attempt is over.
 
 ```kotlin
-val client = MauMauBoardGameClient(playerName = "Alice", host = "localhost",  secret = "SECRET")
+val client = DiceDuelClient(
+    playerName = "Alice",
+    host = "127.0.0.1:8080/connect",
+    secret = "SECRET"
+)
 
-if(client.connect())
-  client.createGame(gameID = "MauMau", sessionID = "Alice vs. Bob", greetingMessage = "Welcome to MauMau!")
+if (!client.connect()) {
+    println("Could not connect to the server")
+}
 ```
 
-To join an existing session, you may call `joinGame` passing the sessionID to join to. The `greetingMessage` will be
-broadcast to all players in this session.
+<signature>
+<code-block lang="kotlin" copy="false">
+open fun onOpen()
+open fun onClose(code: Int, reason: String, remote: Boolean)
+open fun onError(throwable: Throwable)
+</code-block>
+
+Override these functions to react to the connection state. `onError` only logs by default.
+
+</signature>
+
+---
+
+## Hosting and joining sessions
+
+Players meet in **sessions**. One player creates a session and others join it by its ID.
+
+<signature>
+<code-block lang="kotlin" copy="false">
+createGame(gameID: String, sessionID: String, greetingMessage: String)
+createGame(gameID: String, greetingMessage: String)
+</code-block>
+
+Creates a session and adds this client to it. The `gameID` must be registered on the server, because it selects the message schemas of your game, see [JSON][JsonDoc]. The first variant picks the session ID yourself. In the second, the server creates one and returns it in the response. The `greetingMessage` is sent to everybody who joins.
+
+<br>
+
+<code-block lang="kotlin" copy="false">
+joinGame(sessionID: String, greetingMessage: String)
+spectateGame(sessionID: String, greetingMessage: String)
+leaveGame(goodbyeMessage: String)
+</code-block>
+
+Joins an existing session as player or as spectator, who can see but not send messages, or leaves the current session. The messages are broadcast to the other participants.
+
+</signature>
 
 ```kotlin
-val client = MauMauBoardGameClient(playerName = "Bob", host = "localhost",  secret = "SECRET")
+// Alice hosts
+client.createGame(gameID = "DiceDuel", sessionID = "Alice vs. Bob", greetingMessage = "Welcome!")
 
-if(client.connect())
-  client.joinGame(sessionID = "Alice vs. Bob", greetingMessage = "Hi, I am Bob!")
+// Bob joins
+client.joinGame(sessionID = "Alice vs. Bob", greetingMessage = "Hi, I am Bob!")
 ```
 
-After creating or joining to a game, the server will respond with dedicated Responses which will invoke
-`onCreateGameResponse` and `onJoinGameResponse`. Override these methods to react to the different status codes:
+### Responses and notifications
+
+The server answers every request. Override the matching function in your client to react. `status` tells whether the request worked:
 
 ```kotlin
 override fun onCreateGameResponse(response: CreateGameResponse) {
-  when (response.status) {
-    CreateGameResponseStatus.SUCCESS ->
-        prinln("Successfully created game.")
-
-    CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
-        error("Leave current game first.")
-
-    CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS ->
-        error("Session id already exists.")
-
-    CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST ->
-        error("GameID does not exist.")
-
-    CreateGameResponseStatus.SERVER_ERROR ->
-        error(response)
-  }
-}
-```
-
-```kotlin
-override fun onJoinGameResponse(response: JoinGameResponse) {
-  when (response.status) {
-    JoinGameResponseStatus.SUCCESS -> {
-        prinln("Successfully joined game.")
-        println("The host's greeting is \"${response.message}\".")
+    when (response.status) {
+        CreateGameResponseStatus.SUCCESS ->
+            println("Created session ${response.sessionID}")
+        CreateGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
+            error("Leave the current game first.")
+        CreateGameResponseStatus.SESSION_WITH_ID_ALREADY_EXISTS ->
+            error("This session ID is taken.")
+        CreateGameResponseStatus.GAME_ID_DOES_NOT_EXIST ->
+            error("The server does not know this game.")
+        CreateGameResponseStatus.SERVER_ERROR ->
+            error("Something went wrong on the server.")
     }
-    JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
-        error("You are already in a game.")
+}
 
-    JoinGameResponseStatus.INVALID_SESSION_ID ->
-        error("SessionID invalid.")
-
-    JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN ->
-        error("Player name already exists.")
-
-    JoinGameResponseStatus.SERVER_ERROR ->
-        error(response)
-  }
+override fun onJoinGameResponse(response: JoinGameResponse) {
+    when (response.status) {
+        JoinGameResponseStatus.SUCCESS -> {
+            println("Joined. Opponents: ${response.opponents}")
+            println("Greeting: ${response.message}")
+        }
+        JoinGameResponseStatus.ALREADY_ASSOCIATED_WITH_GAME ->
+            error("You are already in a game.")
+        JoinGameResponseStatus.INVALID_SESSION_ID ->
+            error("This session does not exist.")
+        JoinGameResponseStatus.PLAYER_NAME_ALREADY_TAKEN ->
+            error("Choose another player name.")
+        JoinGameResponseStatus.SERVER_ERROR ->
+            error("Something went wrong on the server.")
+    }
 }
 ```
 
-All connected players will get notified when a player joins or leaves the session via `onPlayerJoined` and
-`onPlayerLeft`.
+| Function | Invoked when |
+| --- | --- |
+| `onCreateGameResponse` | The server answered `createGame`. |
+| `onJoinGameResponse`, `onSpectatorJoinGameResponse` | The server answered `joinGame` or `spectateGame`. |
+| `onLeaveGameResponse` | The server answered `leaveGame`. |
+| `onGameActionResponse` | The server answered a sent message. `status` is e.g. `INVALID_JSON` if the message did not match its schema. |
+| `onPlayerJoined`, `onSpectatorJoined`, `onPlayerLeft` | Somebody else joined or left the session. The `notification` contains the `sender` and the greeting or goodbye `message`. |
 
-**Please note** that all response functions and event handlers get called asynchronously. It is therefore necessary to
-call `BoardGameApplication.runOnGUIThread{ ... }` to resync to the GUI thread when performing view changes.
+> **All callbacks are invoked asynchronously**, not in the context of your user interface. Changes to components must therefore be wrapped in `BoardGameApplication.runOnGUIThread { ... }`, see [Application][ApplicationDoc].
+> {style="warning"}
+
+---
 
 ## Sending messages
 
-Once registered in a game session you may now send messages to your opponents. The server does not implement any form of
-keeping track whose turn it is at the moment.
+The server does not know the rules of your game, and it does not keep track of whose turn it is. It forwards every message to all other participants of the session, and you decide what a message means.
 
-The function `sendGameActionMessage` takes a `GameAction` instance and sends it to all connected opponents. For each type of game action that you want to
-communicate you have to declare a separate (data) class inheriting from `GameAction`. For our MauMau example let's
-assume that there are four types of game actions:
-
-- _MauMauInitGameAction_ - First initialization containing the card stacks and hand cards.
-- _MauMauEndGameAction_ - You played your last card and won the game.
-- _MauMauShuffleStackGameAction_ - The draw stack was empty and had to be shuffled.
-- _MauMauGameAction_ - You have played or taken a card from the stack.
-
-As mentioned all game action classes have to inherit from `GameAction`. In addition to that they have to be annotated
-with `@GameActionClass`. For our four sample classes this looks like this:
+For each kind of message, declare a class that extends [GameAction][GameActionKDoc] and is annotated with `@GameActionClass`. A `data class` is ideal, because the fields are serialized as JSON and `toString()` is generated. Dice Duel needs two messages:
 
 ```kotlin
 @GameActionClass
-data class MauMauInitGameAction(
-    val hostCards: List<MauMauGameCard>,
-    val yourCards: List<MauMauGameCard>,
-    val drawStack: List<MauMauGameCard>,
-    val gameStack: MauMauGameCard,
-) : GameAction()
+data class RollGameAction(
+    val playerSide: Int,
+    val opponentSide: Int
+) : GameAction() {
+    override fun formatMessage(): String? = null
+}
+
+@GameActionClass
+data class GameOverGameAction(
+    val winner: String
+) : GameAction() {
+    override fun formatMessage(): String = "$winner has won the game!"
+}
 ```
+
+`formatMessage()` returns a human readable description for logs and debugging, or `null` to fall back to `toString()`. Send a message with `sendGameActionMessage`:
 
 ```kotlin
-@GameActionClass
-data class MauMauEndGameAction(
-    val winner: String,
-) : GameAction()
+client.sendGameActionMessage(RollGameAction(playerSide = 5, opponentSide = 2))
 ```
 
-```kotlin
-@GameActionClass
-data class MauMauShuffleStackGameAction(
-    val drawStack: List<MauMauGameCard>,
-    val gameStack: MauMauGameCard,
-) : GameAction()
-```
+The server answers each message in `onGameActionResponse`.
 
-```kotlin
-@GameActionClass
-data class MauMauGameAction(
-    val action: String, //Restricted by Enum values
-    val card: MauMauGameCard? = null
-) : GameAction()
-```
+> A spectator can not send messages. The response status of such an attempt is `SPECTATOR_ONLY`.
+> {style="note"}
 
-After sending a game action, the server will respond in `onGameActionResponse`.
+---
 
 ## Receiving messages
 
-Received messages get propagated through `onGameActionReceived` by default. Consider this method as a fallback
-solution as it gets a parameter of type `GameAction`. It would therefore be necessary to cast the object down by
-instanceof-switching.
-
-Instead, bgw-net allows you to declare dedicated functions for each object type that may get
-received. These functions have to be declared inside your `BoardGameClient` implementation or further down the
-inheritance hierarchy. The function must declare two formal parameters
-
-- A `GameAction` instance
-- A `String` for the sending player's identification
-
-Additionally, each receiver function must be annotated with `@GameActionReceiver`. For our example these functions may
-look as follows:
+For every incoming message, BGW looks for a function in your client that takes the matching `GameAction` class. Annotate such functions with `@GameActionReceiver`. They take two parameters: the message and the name of the sending player.
 
 ```kotlin
-@GameActionReceiver
-private fun onInitGameReceived(message: MauMauInitGameAction, sender: String) {
-    //Init game received
-}
+class DiceDuelClient(/* ... */) : BoardGameClient(/* ... */) {
 
-@GameActionReceiver
-private fun onEndGameReceived(message: MauMauEndGameAction, sender: String) {
-    //End game received
-}
+    @GameActionReceiver
+    private fun onRoll(message: RollGameAction, sender: String) {
+        BoardGameApplication.runOnGUIThread {
+            // apply the roll to the game scene
+        }
+    }
 
-@GameActionReceiver
-private fun onShuffleStackReceived(message: MauMauShuffleStackGameAction, sender: String) {
-    //Stack shuffled received
-}
-
-@GameActionReceiver
-private fun onGameActionReceived(message: MauMauGameAction, sender: String) {
-    //Game Action received
+    @GameActionReceiver
+    private fun onGameOver(message: GameOverGameAction, sender: String) {
+        BoardGameApplication.runOnGUIThread {
+            // show the winner
+        }
+    }
 }
 ```
 
-The name of the function and parameters are free to choose as well as the visibility modifier. Although when two
-functions with the same parameter types get detected, only the first will be used, and you will get a warning printed to
-console. **Note** that the order of scanning and therefor the distinction which of these redundant declarations will be
-used is not stable and may vary between execution cycles due to compiler optimizations. It is therefore highly
-recommended, to declare exactly one receiver function for each `GameAction` instance.
+The names of the functions and parameters as well as their visibility are up to you. Declare **exactly one** receiver per class: if two functions accept the same class, only one of them is used, and which one is not stable.
 
-**Please note** that all connected players have to declare the exact same classes in order to ensure correct
-serialization and deserialization. Implement `toString()` method in all GameActionClasses in order to ensure good
-debugging of the network traffic.
+If no dedicated receiver exists for a message, it ends up in the fallback function `onGameActionReceived(message: GameAction, sender: String)`, which you can override:
+
+```kotlin
+override fun onGameActionReceived(message: GameAction, sender: String) {
+    println("Unhandled message from $sender: ${message.formatMessageSafe()}")
+}
+```
+
+Messages are delivered **in the order they were received**, even though their receivers are resolved asynchronously.
+
+> All players must declare the **exact same** message classes, with the same package and name, so that the messages can be serialized and read by every client. Moreover, every message class needs a matching [JSON schema][JsonDoc] on the server.
+> {style="warning"}

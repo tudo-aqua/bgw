@@ -619,6 +619,8 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 reformat={false}
                 sideBySide={true}
                 width={445}
+                fit={props.node.properties.fit !== undefined}
+                hideCode={props.node.properties.nocode !== undefined}
               />
             );
           },
@@ -634,6 +636,8 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
                 reformat={false}
                 sideBySide={true}
                 width={445}
+                fit={props.node.properties.fit !== undefined}
+                hideCode={props.node.properties.nocode !== undefined}
               />
             );
           },
@@ -641,6 +645,48 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
       ></Markdown>
     );
   }, [text, location.pathname]);
+
+  const buildPagination = () => {
+    const pages = Object.values(guideStructure).flatMap((section: any) =>
+      section.items.map((item: any) => ({ title: item.title, url: item.url })),
+    );
+    let current = location.pathname.replace(/\/$/, "").toLowerCase();
+    if (current === "/guides") current = "/guides/installation";
+    const index = pages.findIndex((page) => page.url === current);
+    if (index < 0) return null;
+
+    const previous = pages[index - 1];
+    const next = pages[index + 1];
+    const linkClass =
+      "link__none flex flex-col gap-1 px-5 py-3 rounded-xl bg-muted/50 hover:bg-muted/80 transition-colors no-underline";
+
+    return (
+      <div className="flex justify-between gap-4 mt-16 max-sm:flex-col">
+        {previous ? (
+          <Link to={previous.url} className={linkClass}>
+            <span className="text-sm text-muted-foreground">Previous</span>
+            <span className="flex items-center gap-2 font-bold">
+              <i className="text-xl material-symbols-rounded">arrow_back</i>
+              {previous.title}
+            </span>
+          </Link>
+        ) : (
+          <span />
+        )}
+        {next ? (
+          <Link to={next.url} className={`${linkClass} items-end text-right`}>
+            <span className="text-sm text-muted-foreground">Next</span>
+            <span className="flex items-center gap-2 font-bold">
+              {next.title}
+              <i className="text-xl material-symbols-rounded">arrow_forward</i>
+            </span>
+          </Link>
+        ) : (
+          <span />
+        )}
+      </div>
+    );
+  };
 
   if (isLoading) return <div></div>;
   if (error) return <div>Error: {error}</div>;
@@ -650,6 +696,7 @@ const Guide = React.memo(({ allSamples }: { allSamples: any }) => {
       <div className="px-10 2xl:max-w-[1200px] pt-5 mb-10 xl:w-full max-xl:px-7">
         {buildBreadcrumbs(location.pathname.replace("/", ""))}
         {renderMarkdown}
+        {buildPagination()}
       </div>
     </div>
   );
