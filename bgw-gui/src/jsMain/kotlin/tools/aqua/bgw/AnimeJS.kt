@@ -128,8 +128,17 @@ internal open external class Timer {
 
   var id: Any
   var currentTime: Double
+  var duration: Double
+  var paused: Boolean
+  var completed: Boolean
 
   fun cancel(): Unit
+
+  fun pause(): Timer
+
+  fun play(): Timer
+
+  fun seek(time: Number): Timer
 }
 
 internal external class JSAnimation : Timer

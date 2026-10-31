@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { downloadUrl } from "@/lib/sceneImage";
 
 type Rect = { x: number; y: number; w: number; h: number };
@@ -21,14 +23,17 @@ const EXIT_SIZE = { w: 380, h: 90 };
 const CLEARANCE = 36; // distance arrows keep from scenes
 const SLOT = 40; // spacing between arrows that share a side
 const CORNER = 18;
+const ARROW_WIDTH = 4;
 const BEND_COST = 180;
 const MIN_SCALE = 0.08;
 const MAX_SCALE = 2;
 const AUTOSCROLL_EDGE = 56;
-const FONT = "'JetBrains Mono', ui-monospace, Consolas, monospace";
+// Same stack as the playground UI, so titles and labels read like the rest of the page.
+const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 const MANAGED_PARENTS = ["LinearLayoutData", "CardStackData", "SatchelData", "GridElementData", "HexagonGridElementData"];
 
-const DARK: Palette = { background: null, text: "#e2e8f0", muted: "#94a3b8", arrow: "#a78bfa", card: "#475569", cardActive: "#8b5cf6", pill: "#1e293b", placeholder: "#1e293b" };
+// Mirrors the playground theme tokens (--foreground, --muted-foreground, --secondary, --bgw-green).
+const DARK: Palette = { background: null, text: "#f8fafc", muted: "#9ca3af", arrow: "#c4ff6b", card: "#2b3544", cardActive: "#c4ff6b", pill: "#1a222d", placeholder: "#1a222d" };
 const LIGHT: Palette = { background: "#ffffff", text: "#0f172a", muted: "#64748b", arrow: "#0f172a", card: "#0f172a", cardActive: "#0f172a", pill: "#eef0f2", placeholder: "#e5e7eb" };
 
 const number = (value: any, fallback = 0) => {
@@ -186,7 +191,7 @@ function roundedPath(points: Point[]) {
   return `${d} L ${last.x} ${last.y}`;
 }
 
-type Arrow = { key: string; d: string; label: Point; text: string; rect: Rect; card: Card };
+type Arrow = { key: string; d: string; label: Point; text: string };
 
 function computeArrows(cards: Card[], exit: Rect, hasExit: boolean, view: Rect): Arrow[] {
   const rects = new Map<string, Rect>(cards.map(card => [card.id, { x: card.x, y: card.y, w: card.w, h: card.h }]));
@@ -232,7 +237,7 @@ function computeArrows(cards: Card[], exit: Rect, hasExit: boolean, view: Rect):
       const length = Math.hypot(points[index].x - points[index - 1].x, points[index].y - points[index - 1].y);
       if (length > longest) { longest = length; label = { x: (points[index].x + points[index - 1].x) / 2, y: (points[index].y + points[index - 1].y) / 2 }; }
     }
-    return { key: draft.key, d: roundedPath(points), label, text: draft.link.label, rect: draft.link.rect, card: draft.card };
+    return { key: draft.key, d: roundedPath(points), label, text: draft.link.label };
   });
 }
 
@@ -262,8 +267,9 @@ function Board({ cards, exit, view, palette, currentId, interactive, onDragStart
       style={pixelsPerUnit ? { width: view.w * pixelsPerUnit, height: view.h * pixelsPerUnit } : undefined}
     >
       <defs>
-        <marker id="storyboard-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
-          <path d="M 2 1 L 10 6 L 2 11" fill="none" stroke={palette.arrow} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        {/* User-space units keep the tip as thick as the line instead of scaling it by the stroke width. */}
+        <marker id="storyboard-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+          <path d="M 2 1 L 10 6 L 2 11" fill="none" stroke={palette.arrow} strokeWidth={ARROW_WIDTH / 2} strokeLinecap="round" strokeLinejoin="round" />
         </marker>
         {cards.map(card => <clipPath key={card.id} id={`storyboard-clip-${card.id}`}><rect x={card.x} y={card.y} width={card.w} height={card.h} rx="10" /></clipPath>)}
       </defs>
@@ -278,12 +284,12 @@ function Board({ cards, exit, view, palette, currentId, interactive, onDragStart
             onPointerDown={interactive ? event => onDragStart?.(card.id, event) : undefined}
             onDoubleClick={interactive ? () => onOpen?.(card.id) : undefined}
           >
-            <text x={card.x} y={card.y - 16} fontSize="26" fontWeight="700" fill={palette.text}>{card.name}</text>
+            <text x={card.x} y={card.y - 16} fontSize="24" fontWeight="600" fill={active ? palette.cardActive : palette.text}>{card.name}</text>
             <rect x={card.x} y={card.y} width={card.w} height={card.h} rx="10" fill={card.thumbnail ? card.background : palette.placeholder} />
             {card.thumbnail
               ? <image href={card.thumbnail} x={card.x} y={card.y} width={card.w} height={card.h} preserveAspectRatio="none" clipPath={`url(#storyboard-clip-${card.id})`} />
               : <text x={card.x + card.w / 2} y={card.y + card.h / 2} textAnchor="middle" fontSize="22" fill={palette.muted}>Rendering preview…</text>}
-            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx="10" fill="none" stroke={active ? palette.cardActive : palette.card} strokeWidth={active ? 6 : 5} strokeDasharray={active ? "14 8" : undefined} />
+            <rect x={card.x} y={card.y} width={card.w} height={card.h} rx="10" fill="none" stroke={active ? palette.cardActive : palette.card} strokeWidth={active ? 5 : 3} />
             {interactive && (
               <g
                 className="playground-storyboard-hide"
@@ -302,24 +308,13 @@ function Board({ cards, exit, view, palette, currentId, interactive, onDragStart
       {showsExit && (
         <g data-card={EXIT} style={interactive ? { cursor: "grab" } : undefined} onPointerDown={interactive ? event => onDragStart?.(EXIT, event) : undefined}>
           <rect x={exit.x} y={exit.y} width={exit.w} height={exit.h} rx="14" fill={palette.pill} />
-          <text x={exit.x + exit.w / 2} y={exit.y + exit.h / 2 + 8} textAnchor="middle" fontSize="26" fontWeight="700" fill={palette.text}>Program ends</text>
+          <text x={exit.x + exit.w / 2} y={exit.y + exit.h / 2 + 8} textAnchor="middle" fontSize="24" fontWeight="600" fill={palette.text}>Program ends</text>
         </g>
       )}
       {arrows.map(arrow => (
         <g key={arrow.key}>
-          <rect
-            x={arrow.card.x + arrow.rect.x * arrow.card.scale}
-            y={arrow.card.y + arrow.rect.y * arrow.card.scale}
-            width={arrow.rect.w * arrow.card.scale}
-            height={arrow.rect.h * arrow.card.scale}
-            fill={palette.arrow}
-            fillOpacity="0.18"
-            stroke={palette.arrow}
-            strokeWidth="2"
-            strokeDasharray="6 4"
-          />
-          <path d={arrow.d} fill="none" stroke={palette.arrow} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#storyboard-arrow)" />
-          <text x={arrow.label.x} y={arrow.label.y - 14} textAnchor="middle" fontSize="26" fontWeight="700" fill={palette.text} stroke={palette.background ?? "#0f172a"} strokeWidth="8" paintOrder="stroke" strokeLinejoin="round">{arrow.text}</text>
+          <path d={arrow.d} fill="none" stroke={palette.arrow} strokeWidth={ARROW_WIDTH} strokeLinecap="round" strokeLinejoin="round" markerEnd="url(#storyboard-arrow)" />
+          <text x={arrow.label.x} y={arrow.label.y - 14} textAnchor="middle" fontSize="24" fontWeight="600" fill={palette.text} stroke={palette.background ?? "#0f141f"} strokeWidth="8" paintOrder="stroke" strokeLinejoin="round">{arrow.text}</text>
         </g>
       ))}
     </svg>
@@ -356,7 +351,6 @@ export default function PlaygroundStoryboard({ workspaces, currentId, refreshing
   const [moved, setMoved] = useState<Record<string, Point>>({});
   const [exitPosition, setExitPosition] = useState<Point | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
-  const [hiddenOpen, setHiddenOpen] = useState(false);
   // Pixels per board unit. It only changes through zooming, never because the content grows.
   const [pixelsPerUnit, setPixelsPerUnit] = useState<number | null>(null);
   const [frameWidth, setFrameWidth] = useState(0);
@@ -538,35 +532,26 @@ export default function PlaygroundStoryboard({ workspaces, currentId, refreshing
 
   const toolbar = (
     <>
-      <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon-sm" aria-label="Zoom out" onClick={() => zoomTo(scale / 1.25)}><i className="text-xl material-symbols-rounded" aria-hidden="true">remove</i></Button>
-        <button type="button" className="w-14 text-sm tabular-nums text-center text-muted-foreground hover:text-foreground" title="Fit to window" onClick={() => zoomTo(fitScale(liveView))}>{Math.round(scale * 100)}%</button>
-        <Button variant="ghost" size="icon-sm" aria-label="Zoom in" onClick={() => zoomTo(scale * 1.25)}><i className="text-xl material-symbols-rounded" aria-hidden="true">add</i></Button>
-      </div>
       {hiddenScenes.length > 0 && (
-        <div className="relative">
-          <Button variant="ghost" size="sm" aria-expanded={hiddenOpen} onClick={() => setHiddenOpen(open => !open)}>
-            <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">visibility_off</i>Hidden ({hiddenScenes.length})
-          </Button>
-          {hiddenOpen && (
-            <ul className="playground-storyboard-hidden">
-              {hiddenScenes.map(record => (
-                <li key={record.id}>
-                  <button type="button" onClick={() => { onToggleHidden(record.id, false); if (hiddenScenes.length === 1) setHiddenOpen(false); }}>
-                    <i className="text-lg material-symbols-rounded" aria-hidden="true">visibility</i>
-                    <span>{record.name}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm">
+              <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">visibility_off</i>Hidden ({hiddenScenes.length})
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-[220px] max-h-[50vh] overflow-auto">
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Show again</DropdownMenuLabel>
+            {hiddenScenes.map(record => (
+              <DropdownMenuItem key={record.id} onSelect={() => onToggleHidden(record.id, false)}>
+                <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">visibility</i>
+                <span className="truncate">{record.name}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
       <Button variant="ghost" size="icon-sm" disabled={refreshing} aria-label="Refresh previews" title={refreshing ? "Rendering previews…" : "Refresh previews"} onClick={onRefresh}>
         <i className={`text-xl material-symbols-rounded ${refreshing ? "animate-spin" : ""}`} aria-hidden="true">refresh</i>
-      </Button>
-      <Button variant="secondary" size="sm" disabled={refreshing || !cards.length} onClick={exportPng}>
-        <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">image</i>PNG
       </Button>
     </>
   );
@@ -574,25 +559,41 @@ export default function PlaygroundStoryboard({ workspaces, currentId, refreshing
   return (
     <div className="playground-storyboard" role="region" aria-label="Storyboard">
       {toolbarHost && createPortal(toolbar, toolbarHost)}
-      <div ref={boardRef} className="playground-storyboard-board" onPointerDown={startPan}>
-        <Board
-          cards={cards}
-          exit={exit}
-          hasExit={hasExit}
-          view={view}
-          palette={DARK}
-          currentId={currentId}
-          interactive
-          pixelsPerUnit={scale}
-          onDragStart={startDrag}
-          onOpen={onOpenScene}
-          onHide={id => onToggleHidden(id, true)}
-        />
+      <div className="playground-storyboard-frame">
+        <div ref={boardRef} className="playground-storyboard-board" onPointerDown={startPan}>
+          <Board
+            cards={cards}
+            exit={exit}
+            hasExit={hasExit}
+            view={view}
+            palette={DARK}
+            currentId={currentId}
+            interactive
+            pixelsPerUnit={scale}
+            onDragStart={startDrag}
+            onOpen={onOpenScene}
+            onHide={id => onToggleHidden(id, true)}
+          />
+        </div>
+        <Badge variant="muted" className="absolute z-10 left-3 top-3">
+          {cards.length} scene{cards.length === 1 ? "" : "s"}
+        </Badge>
         {!anyLinks && (
           <p className="playground-storyboard-hint">
             Select a button or any component and choose a scene under “Click leads to”. Its arrow shows up here.
           </p>
         )}
+        {/* Floating controls, placed like the ones on the scene preview. */}
+        <div className="absolute z-10 flex items-center gap-2 right-3 bottom-3">
+          <div className="flex items-center rounded-md bg-secondary">
+            <Button variant="secondary" size="icon" aria-label="Zoom out" title="Zoom out" onClick={() => zoomTo(scale / 1.25)}><i className="text-lg material-symbols-rounded" aria-hidden="true">remove</i></Button>
+            <button type="button" className="h-10 text-sm text-center w-14 tabular-nums text-muted-foreground hover:text-foreground" title="Fit to window" onClick={() => zoomTo(fitScale(liveView))}>{Math.round(scale * 100)}%</button>
+            <Button variant="secondary" size="icon" aria-label="Zoom in" title="Zoom in" onClick={() => zoomTo(scale * 1.25)}><i className="text-lg material-symbols-rounded" aria-hidden="true">add</i></Button>
+          </div>
+          <Button variant="secondary" size="icon" aria-label="Download storyboard as PNG" title="Download storyboard as PNG" disabled={refreshing || !cards.length} onClick={exportPng}>
+            <i className="text-lg material-symbols-rounded" aria-hidden="true">image</i>
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -33,10 +33,12 @@ import PlaygroundExport from "@/components/PlaygroundExport";
 import { buildPlaygroundSnapshot, createPreviewMessage } from "@/lib/playground";
 import { docsLinkFor, sceneDocsLink } from "@/lib/docsLinks";
 import PlaygroundCanvas, { CanvasApi } from "@/components/PlaygroundCanvas";
-import { sceneClassName } from "@/lib/exporter";
+import { exportScene, sceneClassName } from "@/lib/exporter";
 import { captureScene, downloadUrl, waitForRender } from "@/lib/sceneImage";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlaygroundStoryboard from "@/components/PlaygroundStoryboard";
+import { AnimationInspector, AnimationTimeline, AnimationToolbar, Target, useAnimationPlayer } from "@/components/PlaygroundAnimations";
+import { AnimationClip } from "@/lib/animations";
 import PlaygroundTemplates from "@/components/PlaygroundTemplates";
 import { buildTemplate, PlaygroundTemplate } from "@/lib/templates";
 
@@ -81,14 +83,15 @@ function BGWPlayground() {
     });
 
     workspaces.forEach(workspace => {
-      extrasRef.current[workspace.id] = { thumbnail: workspace.thumbnail, board: workspace.board, hidden: workspace.hidden, ...extrasRef.current[workspace.id] };
+      extrasRef.current[workspace.id] = { thumbnail: workspace.thumbnail, board: workspace.board, hidden: workspace.hidden, animations: workspace.animations, ...extrasRef.current[workspace.id] };
     });
     setAllWorkspaces(workspaces);
   };
 
-  // Storyboard data (preview thumbnails and card positions) lives next to a scene but is not part of its editable state.
-  const extrasRef = useRef<Record<string, { thumbnail?: string; board?: { x: number; y: number }; hidden?: boolean }>>({});
-  const patchExtras = async (id: string, patch: { thumbnail?: string; board?: { x: number; y: number }; hidden?: boolean }) => {
+  // Storyboard data (preview thumbnails and card positions) and animations live next to a scene but are not part of its editable state.
+  type Extras = { thumbnail?: string; board?: { x: number; y: number }; hidden?: boolean; animations?: AnimationClip[] };
+  const extrasRef = useRef<Record<string, Extras>>({});
+  const patchExtras = async (id: string, patch: Extras) => {
     extrasRef.current[id] = { ...extrasRef.current[id], ...patch };
     const record = await loadWorkspace(id);
     if (record) await saveWorkspace({ ...record, ...patch });
@@ -160,6 +163,10 @@ function BGWPlayground() {
         setSceneBackground(saved.sceneBackground ?? "#ffffff");
         setSceneName(saved.name ?? "Default");
         setCurrentWorkspace(workspaceId);
+        extrasRef.current[workspaceId] = { ...extrasRef.current[workspaceId], animations: saved.animations };
+        setClips(saved.animations ?? []);
+        setClipId(saved.animations?.[0]?.id ?? "");
+        setNodeId(saved.animations?.[0]?.root.id ?? "");
         try { localStorage.setItem(LAST_WORKSPACE_KEY, workspaceId); } catch { /* storage unavailable */ }
 
         setOutputDirty((prev) => prev + 1);
@@ -212,7 +219,7 @@ function BGWPlayground() {
   }, [notice]);
 
   const exportSceneFile = () => {
-    const data = { format: "bgw-playground", version: 1, ...takeSnapshot() };
+    const data = { format: "bgw-playground", version: 1, ...takeSnapshot(), ...(clips.length ? { animations: clips } : {}) };
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -235,6 +242,7 @@ function BGWPlayground() {
         sceneWidth: data.sceneWidth ?? 1920,
         sceneHeight: data.sceneHeight ?? 1080,
         sceneBackground: data.sceneBackground ?? "#ffffff",
+        ...(Array.isArray(data.animations) ? { animations: data.animations } : {}),
       };
       await createWorkspace(workspace);
       await listWorkspaces();
@@ -313,6 +321,14 @@ function BGWPlayground() {
   const canRedo = historyVersion >= 0 && historyRef.current.index < historyRef.current.stack.length - 1;
 
   const [storyboardOpen, setStoryboardOpen] = useState(false);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [clips, setClips] = useState<AnimationClip[]>([]);
+  const [clipId, setClipId] = useState("");
+  const [nodeId, setNodeId] = useState("");
+  const updateClips = (next: AnimationClip[]) => {
+    setClips(next);
+    if (currentWorkspace) patchExtras(currentWorkspace, { animations: next });
+  };
   const [toolbarHost, setToolbarHost] = useState<HTMLElement | null>(null);
   const [refreshingStoryboard, setRefreshingStoryboard] = useState(false);
 
@@ -371,6 +387,12 @@ function BGWPlayground() {
   const closeStoryboard = () => {
     cancelRefreshRef.current = true;
     setStoryboardOpen(false);
+  };
+  const changeMode = (mode: string) => {
+    if (mode === "storyboard") { setComposerOpen(false); openStoryboard(); return; }
+    if (storyboardOpen) closeStoryboard();
+    if (mode === "animations") setComposerOpen(true);
+    else if (composerOpen) { player.reset(); setComposerOpen(false); }
   };
 
   const [advancedMode, setAdvancedMode] = useState(false);
@@ -3051,6 +3073,29 @@ function BGWPlayground() {
     return null;
   };
 
+  const outputSnapshot = getOutputElementsFromTree(true);
+  const animationClip = clips.find(item => item.id === clipId) ?? clips[0];
+  const player = useAnimationPlayer(animationClip, outputSnapshot.allComponentsCopy, sendOutputElements);
+  const animationTargets: Target[] = (() => {
+    const depthOf = (id: string): number => { const parent = treeData.find(node => node.id === id)?.parent; return parent ? depthOf(String(parent)) + 1 : 0; };
+    return treeData.flatMap(node => {
+      const data = outputSnapshot.allComponentsCopy[node.id];
+      return data && data.type !== "ToggleGroupData" && data.type !== "GridElementData" && data.type !== "HexagonGridElementData" ? [{ id: node.id, name: data.name || data.type.replace(/Data$/, ""), type: data.type, depth: depthOf(node.id) }] : [];
+    });
+  })();
+  const composerProps = {
+    clips, onChange: updateClips, clipId: animationClip?.id ?? "", onClipChange: setClipId, nodeId, onNodeChange: setNodeId,
+    snapshot: outputSnapshot.allComponentsCopy, targets: animationTargets, selectedComponentId, player,
+  };
+  const animationKotlin = (() => {
+    try {
+      if (Object.keys(outputSnapshot.errors).length) return { error: Object.values(outputSnapshot.errors)[0] };
+      return { code: exportScene(outputSnapshot.components, sceneWidth, sceneHeight, sceneBackground, sceneName, Object.fromEntries(allWorkspaces.map(workspace => [workspace.id, sceneClassName(workspace.name)])), { clips, snapshot: outputSnapshot.allComponentsCopy }) };
+    } catch (cause) {
+      return { error: cause instanceof Error ? cause.message : "Could not generate the export." };
+    }
+  })();
+
   const ELEMENT_MAP: { [key: string]: JSX.Element } = {
     "left-sidebar": (
       <div
@@ -3254,7 +3299,7 @@ function BGWPlayground() {
           ></div>
 
         </div>
-        <PlaygroundCanvas sceneWidth={sceneWidth} sceneHeight={sceneHeight} selectedId={selectedComponentId} api={canvasApi} resetKey={currentWorkspace} />
+        <PlaygroundCanvas sceneWidth={sceneWidth} sceneHeight={sceneHeight} selectedId={composerOpen ? "" : selectedComponentId} api={canvasApi} resetKey={currentWorkspace} />
         {currentGuide !== null && currentGuide.id !== selectedComponentId ? (
           <div
             className="guide"
@@ -3284,7 +3329,8 @@ function BGWPlayground() {
 
   ELEMENT_MAP.output = (
     <PlaygroundExport
-      snapshot={getOutputElementsFromTree(true)}
+      snapshot={outputSnapshot}
+      animations={clips}
       selectedId={selectedComponentId}
       width={sceneWidth}
       height={sceneHeight}
@@ -3293,6 +3339,15 @@ function BGWPlayground() {
       sceneNames={Object.fromEntries(allWorkspaces.map(workspace => [workspace.id, sceneClassName(workspace.name)]))}
     />
   );
+
+  if (composerOpen) {
+    ELEMENT_MAP["right-sidebar"] = (
+      <div className="relative w-full h-full pt-4 pb-4 overflow-x-hidden overflow-y-auto" id="data__inputs__sidebar">
+        <AnimationInspector {...composerProps} />
+      </div>
+    );
+    ELEMENT_MAP.output = <AnimationTimeline {...composerProps} />;
+  }
 
   return (
     <div className="bgw-playground">
@@ -3306,13 +3361,14 @@ function BGWPlayground() {
             <h1 className="text-xl font-semibold">BoardGameWork</h1>
           </Link>
         </div>
-        <Tabs value={storyboardOpen ? "storyboard" : "playground"} onValueChange={value => (value === "storyboard" ? openStoryboard() : closeStoryboard())}>
+        <Tabs value={storyboardOpen ? "storyboard" : composerOpen ? "animations" : "playground"} onValueChange={changeMode}>
           <TabsList aria-label="Mode">
             <TabsTrigger value="playground" className="gap-2"><i className="text-base material-symbols-rounded" aria-hidden="true">draw_abstract</i>Playground</TabsTrigger>
             <TabsTrigger value="storyboard" className="gap-2"><i className="text-base material-symbols-rounded" aria-hidden="true">account_tree</i>Storyboard</TabsTrigger>
+            <TabsTrigger value="animations" className="gap-2"><i className="text-base material-symbols-rounded" aria-hidden="true">animation</i>Animations</TabsTrigger>
           </TabsList>
         </Tabs>
-        {storyboardOpen ? <div ref={setToolbarHost} className="playground-header-actions flex items-center justify-end gap-2" /> : (
+        {storyboardOpen || composerOpen ? <div ref={setToolbarHost} className="playground-header-actions flex items-center justify-end gap-2" /> : (
         <div className="playground-header-actions flex items-center justify-end gap-2">
           {notice && <span className="hidden text-sm md:block text-muted-foreground" role="status">{notice}</span>}
           <Button variant="ghost" size="icon-sm" aria-label="Undo (Ctrl+Z)" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo}>
@@ -3344,7 +3400,8 @@ function BGWPlayground() {
       </header>
       <PlaygroundTemplates open={templatesOpen} onOpenChange={setTemplatesOpen} onSelect={createWorkspaceFromTemplate} />
       <main className="playground-workspace">
-        <PlaygroundLayout elements={ELEMENT_MAP} onLayoutChange={sendOutputElements} />
+        <PlaygroundLayout elements={ELEMENT_MAP} onLayoutChange={sendOutputElements} labels={composerOpen ? { "right-sidebar": "Animation", output: "Timeline" } : undefined} />
+        {composerOpen && <AnimationToolbar host={toolbarHost} player={player} clips={clips} snapshot={outputSnapshot.allComponentsCopy} kotlin={animationKotlin} sceneName={sceneName} />}
         {storyboardOpen && (
           <PlaygroundStoryboard
             workspaces={allWorkspaces}

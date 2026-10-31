@@ -9,9 +9,11 @@ const panels = [
   { id: "output", label: "Code" },
 ] as const;
 
-export default function PlaygroundLayout({ elements, onLayoutChange }: {
+export default function PlaygroundLayout({ elements, onLayoutChange, labels = {} }: {
   elements: Record<string, ReactNode>;
   onLayoutChange: () => void;
+  /** Replaces panel titles while a mode shows something else in a panel. */
+  labels?: Partial<Record<string, string>>;
 }) {
   const [active, setActive] = useState<string>("preview");
   const refresh = useRef(onLayoutChange);
@@ -40,7 +42,7 @@ export default function PlaygroundLayout({ elements, onLayoutChange }: {
       <nav className="playground-navigation" aria-label="Playground panels">
         {panels.map(panel => (
           <button key={panel.id} type="button" aria-pressed={active === panel.id} aria-controls={`playground-panel-${panel.id}`} onClick={() => setActive(panel.id)}>
-            {panel.label}
+            {labels[panel.id] ?? panel.label}
           </button>
         ))}
       </nav>
@@ -50,7 +52,7 @@ export default function PlaygroundLayout({ elements, onLayoutChange }: {
           value={layout}
           onChange={value => value && setLayout(value)}
           renderTile={id => (
-            <section id={`playground-panel-${id}`} className="playground-panel" data-playground-panel={id} aria-label={panels.find(panel => panel.id === id)?.label}>
+            <section id={`playground-panel-${id}`} className="playground-panel" data-playground-panel={id} aria-label={labels[id] ?? panels.find(panel => panel.id === id)?.label}>
               {elements[id]}
             </section>
           )}

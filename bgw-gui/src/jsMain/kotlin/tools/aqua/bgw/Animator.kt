@@ -203,11 +203,27 @@ internal object Animator {
     return flattenedAnimations
   }
 
+  /**
+   * Exposes playback controls as `window.bgwAnimator` so the BGW playground can pause, resume and
+   * scrub the animations that are currently running.
+   */
+  private fun exposeControls() {
+    val controls = js("{}")
+    controls.pause = { timelines.values.toSet().forEach { it.pause() } }
+    controls.resume = { timelines.values.toSet().forEach { it.play() } }
+    controls.seek = { time: Double -> timelines.values.toSet().forEach { it.seek(time) } }
+    controls.time = { timelines.values.firstOrNull()?.currentTime ?: 0.0 }
+    controls.paused = { timelines.values.any { it.paused } }
+    controls.active = { timelines.values.any { !it.completed } }
+    kotlinx.browser.window.asDynamic().bgwAnimator = controls
+  }
+
   fun startAnimation(
       animation: AnimationData,
       existingTimeline: Timeline? = null,
       callback: (ID, ID?) -> Unit
   ) {
+    exposeControls()
     var timeline = createTimeline()
 
     if (existingTimeline != null) timeline = existingTimeline
@@ -236,6 +252,9 @@ internal object Animator {
 
           componentAnimationTypes.getOrPut(componentId) { mutableSetOf() }.add(animationType)
         }
+      } else if (animationData is DelayAnimationData) {
+        // Delays are tracked too, so stopping or pausing also covers delay-only animations.
+        timelines[animationData.id] = timeline
       }
     }
 
@@ -424,11 +443,17 @@ internal object Animator {
     var imageSwitched = false
     val halfDuration = animationData.duration / 2
     val componentId = animationData.componentView?.id!!
-    println(
-        "Duration: ${animationData.duration}, Delay: ${animationData.initialDelay}, Half Duration: ${halfDuration}")
+    val fromVisual = animationData.fromVisual
+    val toVisual = animationData.toVisual
+
+    if (fromVisual == null || toVisual == null) {
+      println("FlipAnimation requires fromVisual and toVisual")
+      callback.invoke(animationData.id, component.id)
+      return
+    }
 
     // Set initial visual
-    updateVisual(componentId, animationData.fromVisual!!)
+    updateVisual(componentId, fromVisual)
 
     // Create a native JavaScript array for keyframes
     val keyframes =
@@ -454,7 +479,7 @@ internal object Animator {
                 if (anim.currentTime >= halfDuration && !imageSwitched) {
                   imageSwitched = true
                   // Update to target visual at midpoint
-                  updateVisual(componentId, animationData.toVisual!!)
+                  updateVisual(componentId, toVisual)
                 }
               }
               onComplete = { anim, e ->
@@ -479,10 +504,17 @@ internal object Animator {
   ) {
     val componentId = animationData.componentView?.id!!
     val visuals = animationData.visuals
-    val toVisual = animationData.toVisual!!
-    val stepDuration = animationData.duration / animationData.speed
+    val toVisual = animationData.toVisual
+
+    if (toVisual == null || visuals.isEmpty()) {
+      println("RandomizeAnimation requires toVisual and at least one visual")
+      callback.invoke(animationData.id, component.id)
+      return
+    }
+
+    val totalSteps = maxOf(1, animationData.speed)
+    val stepDuration = maxOf(1, animationData.duration / totalSteps)
     var currentStep = 0
-    val totalSteps = animationData.speed
 
     // Use animate with a dummy property to trigger updates at intervals
     val jsAnim =
@@ -548,9 +580,9 @@ internal object Animator {
       return
     }
 
-    val stepDuration = animationData.duration / animationData.speed
+    val totalSteps = maxOf(1, animationData.speed)
+    val stepDuration = maxOf(1, animationData.duration / totalSteps)
     var currentStep = 0
-    val totalSteps = animationData.speed
 
     // Use animate with a dummy property to trigger updates at intervals
     val jsAnim =
@@ -629,7 +661,11 @@ internal object Animator {
    */
   private fun updateVisual(componentId: ID, visual: VisualData?) {
     visualStates[componentId] = visual
+    notifyVisualUpdate(componentId, visual)
+  }
 
+  /** Tells the component to re-read its visual, which is the animated one while one is set. */
+  private fun notifyVisualUpdate(componentId: ID, visual: VisualData?) {
     // Force a re-render by dispatching a custom event that React components can listen to
     val element = document.getElementById(componentId)
     if (element != null) {
@@ -759,7 +795,10 @@ internal object Animator {
     timelines.clear()
     componentAnimationTypes.clear()
     jsAnimations.clear()
+    // Components that showed an animated visual fall back to their own again.
+    val animatedVisuals = visualStates.keys.toList()
     visualStates.clear()
+    animatedVisuals.forEach { notifyVisualUpdate(it, null) }
     delayTimers.clear()
   }
 

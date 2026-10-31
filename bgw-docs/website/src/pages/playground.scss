@@ -108,33 +108,75 @@
   .playground-drop-target { position: absolute; box-sizing: border-box; border: 2px solid #8b5cf6; background: rgb(139 92 246 / .16); border-radius: 6px; box-shadow: 0 0 0 4px rgb(139 92 246 / .2); }
 }
 
+// Covers the panels with the same workspace backdrop and shows the board as one panel tile.
 .playground-storyboard {
   position: absolute;
   inset: 0;
   z-index: 50;
   display: flex;
   flex-direction: column;
-  background: hsl(var(--background));
-}
-.playground-storyboard-board {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
   padding: 16px;
+  background: linear-gradient(hsl(var(--muted) / .3), hsl(var(--muted) / .3)), hsl(var(--background));
+  @media (max-width: 1279px) { padding: 8px; }
+}
+.playground-storyboard-frame { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: 8px; background: hsl(var(--background)); }
+.playground-storyboard-board {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 48px 16px 64px;
+  scrollbar-width: thin;
   background-image: radial-gradient(hsl(var(--muted-foreground) / .22) 1px, transparent 1px);
   background-size: 22px 22px;
   // Overflow stays visible so a scene dragged past the current bounds keeps showing until the board resizes on drop.
   svg { display: block; max-width: none; user-select: none; overflow: visible; }
 }
-.playground-storyboard-hidden {
-  position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; min-width: 220px; max-height: 50vh; overflow: auto; padding: 4px; list-style: none;
-  border-radius: 8px; background: hsl(var(--popover)); border: 1px solid hsl(var(--border)); box-shadow: 0 8px 24px rgb(0 0 0 / .35);
-  button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border-radius: 6px; text-align: left; font-size: 14px; }
-  button:hover { background: hsl(var(--secondary)); }
-}
 .playground-storyboard-hint {
-  position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
-  max-width: min(90%, 520px); padding: 10px 16px; border-radius: 8px; text-align: center; font-size: 14px;
-  color: hsl(var(--muted-foreground)); background: hsl(var(--secondary)); pointer-events: none;
+  position: absolute; left: 50%; bottom: 20px; z-index: 5; transform: translateX(-50%);
+  width: max-content; max-width: min(calc(100% - 200px), 520px); padding: 0 16px; text-align: center; font-size: 14px;
+  color: hsl(var(--muted-foreground)); pointer-events: none;
+  @media (max-width: 599px) { bottom: 64px; max-width: calc(100% - 32px); }
 }
+
+// The composer uses the playground's accent (bgw-green) and its panel/list conventions.
+.bgw-playground {
+  --composer-accent: hsl(var(--bgw-green));
+  .playground-composer { display: flex; flex-direction: column; height: 100%; min-height: 0; min-width: 0; background: hsl(var(--background)); --composer-label: 260px; }
+  .playground-composer-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid hsl(var(--border)); }
+  .playground-composer-rows { position: relative; flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; }
+  .composer-rows-inner { position: relative; min-height: 100%; padding: 4px 0; }
+  .composer-scrub, .composer-row { display: grid; grid-template-columns: var(--composer-label) minmax(160px, 1fr); align-items: center; }
+  .composer-scrub { height: 44px; padding: 0 8px; border-bottom: 1px solid hsl(var(--border)); }
+  .composer-scrub .composer-row-label { padding-left: 12px; font-size: 13px; }
+  .composer-scrub .composer-row-track { height: 100%; margin: 0 4px 0 12px; }
+  // Time ruler: click or drag anywhere to scrub.
+  .composer-ruler { position: absolute; inset: 0; cursor: ew-resize; touch-action: none; user-select: none; border-radius: 4px; outline-offset: 2px; }
+  .composer-ruler:hover:not([data-disabled="true"]) { background: hsl(var(--secondary) / .5); }
+  .composer-ruler[data-disabled="true"] { cursor: default; opacity: .6; }
+  .composer-ruler-minor, .composer-ruler-major { position: absolute; bottom: 0; width: 1px; pointer-events: none; }
+  .composer-ruler-minor { height: 5px; background: hsl(var(--muted-foreground) / .35); }
+  .composer-ruler-major { height: 10px; background: hsl(var(--muted-foreground) / .7); }
+  .composer-ruler-major > span { position: absolute; bottom: 14px; left: 0; transform: translateX(-50%); font-size: 11px; white-space: nowrap; color: hsl(var(--muted-foreground)); }
+  .composer-ruler-major[data-start] > span { transform: none; }
+  .composer-ruler-head { position: absolute; bottom: 0; z-index: 1; width: 13px; height: 16px; margin-left: -6.5px; pointer-events: none; background: var(--composer-accent); clip-path: polygon(0 0, 100% 0, 100% 62%, 50% 100%, 0 62%); border-radius: 2px; }
+  .composer-playhead-area.composer-grid-area { z-index: 0; }
+  .composer-grid-line { position: absolute; top: 0; bottom: 0; width: 1px; background: hsl(var(--border)); }
+  // Rows look like the items of the scene tree: rounded, tinted on hover, accent text when selected.
+  .composer-row { position: relative; z-index: 1; height: 36px; margin: 0 8px; cursor: pointer; border-radius: 6px; outline-offset: -2px; color: hsl(var(--foreground) / .7); }
+  // `--kind` is the row's animation color (set inline from its category).
+  .composer-row:hover { background: hsl(var(--kind) / .05); }
+  .composer-row[data-selected="true"] { background: hsl(var(--kind) / .1); color: hsl(var(--kind)); }
+  .composer-row-label { display: flex; align-items: center; gap: 8px; min-width: 0; padding-right: 8px; font-size: 14px; font-weight: 500; }
+  .composer-row-track { position: relative; height: 100%; margin: 0 4px 0 12px; }
+  .composer-bar { position: absolute; top: 8px; bottom: 8px; display: flex; align-items: center; justify-content: center; min-width: 4px; border-radius: 4px; background: var(--composer-accent); color: hsl(var(--background)); font-size: 11px; font-weight: 600; overflow: hidden; }
+  .composer-bar[data-group="true"] { top: 15px; bottom: 15px; }
+  .composer-bar[data-problem="true"] { background: repeating-linear-gradient(45deg, hsl(var(--bgw-yellow) / .45) 0 6px, hsl(var(--bgw-yellow) / .15) 6px 12px); color: hsl(var(--foreground)); }
+  .composer-playhead-area { position: absolute; top: 0; bottom: 0; left: calc(var(--composer-label) + 8px); right: 8px; margin: 0 4px 0 12px; pointer-events: none; z-index: 2; }
+  .composer-playhead { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--composer-accent); }
+  .composer-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center; }
+  .composer-empty p { max-width: 340px; }
+  .composer-empty-inline { margin: 8px 16px; padding: 12px 16px; border-radius: 8px; border: 1px dashed hsl(var(--border)); }
+  .playground-composer-inspector { display: flex; flex-direction: column; gap: 12px; }
+  @media (max-width: 760px) { .playground-composer { --composer-label: 150px; } }
+}
+.composer-export { max-height: 55vh; overflow: auto; border-radius: 8px; background: hsl(var(--muted) / .4); font-size: 13px; line-height: 1.7; .starry-night-container { padding: 16px; } code { font: inherit; } }

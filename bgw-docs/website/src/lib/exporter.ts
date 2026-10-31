@@ -1,4 +1,5 @@
 import { PlaygroundData } from "./playground";
+import { AnimationClip, animationImports, clipsToKotlin, Snapshot } from "./animations";
 
 // Public primary constructors in bgw-gui/src/jvmMain. Dokka presentation
 // signatures also contain secondary constructors and are unsuitable for export.
@@ -81,6 +82,7 @@ function createExporter(hoist = false, sceneNames: Record<string, string> = {}) 
   const groups = new Map<string, string>();
   const members: string[] = [];
   const used = new Set<string>();
+  const names: Record<string, string> = {};
   // Hoisting turns every nested component into a named property of the exported class.
   function ref(data: PlaygroundData): string {
     const code = expression(data);
@@ -88,6 +90,7 @@ function createExporter(hoist = false, sceneNames: Record<string, string> = {}) 
     let name = base;
     for (let index = 2; used.has(name); index++) name = `${base}${index}`;
     used.add(name);
+    if (data.id) names[data.id] = name;
     members.push(`val ${name} = ${code}`);
     return name;
   }
@@ -173,7 +176,7 @@ function createExporter(hoist = false, sceneNames: Record<string, string> = {}) 
     for (const [coordinate, item] of Object.entries(data.map ?? {})) apply.push(`this[${coordinate.split("/").join(", ")}] = ${child(item as PlaygroundData)}`);
     return apply.length ? `${code}.apply {\n${indent(apply.join("\n"))}\n}` : code;
   }
-  return { expression, ref, members: () => members, declarations: () => [...groups.values()].map(name => `val ${name} = ToggleGroup()`).join("\n") };
+  return { expression, ref, names, members: () => members, declarations: () => [...groups.values()].map(name => `val ${name} = ToggleGroup()`).join("\n") };
 }
 
 const imports = [
@@ -204,13 +207,14 @@ export function sceneClassName(name: string) {
   const result = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join("");
   return !result ? "PlaygroundScene" : /^\d/.test(result) ? `Scene${result}` : result;
 }
-export function exportScene(components: PlaygroundData[], width: number, height: number, background: string, sceneName = "", sceneNames: Record<string, string> = {}) {
+export function exportScene(components: PlaygroundData[], width: number, height: number, background: string, sceneName = "", sceneNames: Record<string, string> = {}, animations?: { clips: AnimationClip[]; snapshot: Snapshot }) {
   const exporter = createExporter(true, sceneNames);
   const refs = components.map(component => exporter.ref(component));
-  const members = [exporter.declarations(), ...exporter.members()].filter(Boolean);
+  const clipMembers = animations ? clipsToKotlin(animations.clips, animations.snapshot, exporter.names, name => propertyName(name, "Animation")) : [];
+  const members = [exporter.declarations(), ...exporter.members(), ...clipMembers].filter(Boolean);
   const init = refs.length ? `init {\n${indent(call("addComponents", refs))}\n}` : "";
   const body = [members.join("\n"), init].filter(Boolean).map(indent).join("\n\n");
   const settings = `width = ${width},\nheight = ${height},\nbackground = ColorVisual(${color(background)})`;
   const header = `class ${sceneClassName(sceneName)} : BoardGameScene(\n${indent(settings)}\n)`;
-  return [imports, body ? `${header} {\n${body}\n}` : header].join("\n\n");
+  return [clipMembers.length ? `${imports}\n${animationImports}` : imports, body ? `${header} {\n${body}\n}` : header].join("\n\n");
 }

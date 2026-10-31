@@ -4,8 +4,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import CodeExport from "./CodeExport";
 import { exportComponent, exportScene, sceneClassName } from "@/lib/exporter";
 import { PlaygroundData } from "@/lib/playground";
+import { AnimationClip } from "@/lib/animations";
 
-export default function PlaygroundExport({ snapshot, selectedId, width, height, background, sceneName, sceneNames }: {
+export default function PlaygroundExport({ snapshot, selectedId, width, height, background, sceneName, sceneNames, animations }: {
   snapshot: { components: PlaygroundData[]; allComponentsCopy: Record<string, PlaygroundData>; errors: Record<string, string> };
   selectedId: string;
   width: number;
@@ -13,6 +14,7 @@ export default function PlaygroundExport({ snapshot, selectedId, width, height, 
   background: string;
   sceneName: string;
   sceneNames: Record<string, string>;
+  animations?: AnimationClip[];
 }) {
   const [scope, setScope] = useState("scene");
   const [wrap, setWrap] = useState(false);
@@ -24,7 +26,7 @@ export default function PlaygroundExport({ snapshot, selectedId, width, height, 
     const issue = scope === "scene" ? Object.values(snapshot.errors)[0] : snapshot.errors[selectedId];
     if (issue) error = issue;
     else if (scope === "selected" && !selected) error = "Select a component to export.";
-    else code = scope === "selected" ? exportComponent(selected) : exportScene(snapshot.components, width, height, background, sceneName, sceneNames);
+    else code = scope === "selected" ? exportComponent(selected) : exportScene(snapshot.components, width, height, background, sceneName, sceneNames, animations?.length ? { clips: animations, snapshot: snapshot.allComponentsCopy } : undefined);
   } catch (cause) {
     error = cause instanceof Error ? cause.message : "Could not generate the export.";
   }
