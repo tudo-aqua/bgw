@@ -36,6 +36,7 @@ private val module = SerializersModule {
     subclass(TextFieldData::class)
     subclass(TextAreaData::class)
     subclass(ProgressBarData::class)
+    subclass(SliderData::class)
     subclass(ColorPickerData::class)
     subclass(ToggleButtonData::class)
     subclass(RadioButtonData::class)
@@ -92,6 +93,7 @@ private val module = SerializersModule {
     subclass(TextFieldData::class)
     subclass(TextAreaData::class)
     subclass(ProgressBarData::class)
+    subclass(SliderData::class)
     subclass(ColorPickerData::class)
     subclass(ToggleButtonData::class)
     subclass(RadioButtonData::class)
@@ -163,6 +165,7 @@ private val module = SerializersModule {
     subclass(AnimationFinishedEventData::class)
     subclass(AnimationsStoppedEventData::class)
     subclass(StructuredDataSelectEventData::class)
+    subclass(SliderChangedEventData::class)
     subclass(ScrollEventData::class)
     subclass(FilesPickedEventData::class)
   }

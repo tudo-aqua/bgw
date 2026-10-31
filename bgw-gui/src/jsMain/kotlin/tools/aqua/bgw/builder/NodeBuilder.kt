@@ -34,6 +34,7 @@ import ListViewData
 import PasswordFieldData
 import ProgressBarData
 import RadioButtonData
+import SliderData
 import TableViewData
 import TextAreaData
 import TextFieldData
@@ -57,6 +58,7 @@ import tools.aqua.bgw.elements.uicomponents.ListView as ReactListView
 import tools.aqua.bgw.elements.uicomponents.PasswordField as ReactPasswordField
 import tools.aqua.bgw.elements.uicomponents.ProgressBar as ReactProgressBar
 import tools.aqua.bgw.elements.uicomponents.RadioButton as ReactRadioButton
+import tools.aqua.bgw.elements.uicomponents.Slider as ReactSlider
 import tools.aqua.bgw.elements.uicomponents.TableView as ReactTableView
 import tools.aqua.bgw.elements.uicomponents.TextArea as ReactTextArea
 import tools.aqua.bgw.elements.uicomponents.TextField as ReactTextField
@@ -83,6 +85,7 @@ internal object NodeBuilder {
       is ProgressBarData -> ReactProgressBar.create { data = componentViewData }
       is CheckBoxData -> ReactCheckBox.create { data = componentViewData }
       is RadioButtonData -> ReactRadioButton.create { data = componentViewData }
+      is SliderData -> ReactSlider.create { data = componentViewData }
       is PasswordFieldData -> ReactPasswordField.create { data = componentViewData }
       is ToggleButtonData -> ReactToggleButton.create { data = componentViewData }
       is ColorPickerData -> ReactColorPicker.create { data = componentViewData }

@@ -198,6 +198,7 @@ internal object ComponentMapper {
           is ComboBox<*> -> ComboBoxData().fillData(componentView) as ComboBoxData
           is ColorPicker -> ColorPickerData().fillData(componentView) as ColorPickerData
           is ProgressBar -> ProgressBarData().fillData(componentView) as ProgressBarData
+          is Slider -> SliderData().fillData(componentView) as SliderData
           else ->
               throw IllegalArgumentException(
                   "Unknown component type: ${componentView::class.simpleName}")
@@ -268,6 +269,14 @@ internal object ComponentMapper {
           (mapSpecific(componentView) as ProgressBarData).apply {
             progress = componentView.progress.coerceIn(0.0, 1.0)
             barVisual = VisualMapper.map(componentView.barVisual)
+          }
+      is Slider ->
+          (mapSpecific(componentView) as SliderData).apply {
+            value = componentView.value
+            minValue = componentView.minValue
+            maxValue = componentView.maxValue
+            step = componentView.step
+            orientation = componentView.orientation.name.lowercase()
           }
 
       is ListView<*> ->

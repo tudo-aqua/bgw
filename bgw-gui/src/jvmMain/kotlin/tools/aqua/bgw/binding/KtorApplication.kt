@@ -46,6 +46,7 @@ import data.event.MouseReleasedEventData
 import data.event.RadioChangedEventData
 import data.event.ScrollEventData
 import data.event.SelectionChangedEventData
+import data.event.SliderChangedEventData
 import data.event.StructuredDataSelectEventData
 import data.event.TextInputChangedEventData
 import data.event.TransformChangedEventData
@@ -88,6 +89,7 @@ import tools.aqua.bgw.components.uicomponents.BinaryStateButton
 import tools.aqua.bgw.components.uicomponents.CheckBox
 import tools.aqua.bgw.components.uicomponents.ColorPicker
 import tools.aqua.bgw.components.uicomponents.ComboBox
+import tools.aqua.bgw.components.uicomponents.Slider
 import tools.aqua.bgw.components.uicomponents.StructuredDataView
 import tools.aqua.bgw.components.uicomponents.TextInputUIComponent
 import tools.aqua.bgw.core.Color
@@ -476,6 +478,9 @@ internal fun eventListener(text: String) {
           is ColorInputChangedEventData -> {
             // println("Text changed")
             if (component is ColorPicker) component.selectedColor = Color(eventData.value)
+          }
+          is SliderChangedEventData -> {
+            if (component is Slider) component.value = eventData.value
           }
           is CheckBoxChangedEventData -> {
             if (component is CheckBox) {

@@ -226,6 +226,15 @@ internal class ProgressBarData : UIComponentData() {
   var barVisual: VisualData? = null
 }
 
+@Serializable
+internal class SliderData : UIComponentData() {
+  var value: Double = 0.0
+  var minValue: Double = 0.0
+  var maxValue: Double = 100.0
+  var step: Double = 1.0
+  var orientation: String = "horizontal"
+}
+
 @Serializable internal class TextAreaData : TextInputUIComponentData() {}
 
 @Serializable internal class TextFieldData : TextInputUIComponentData() {}

@@ -31,6 +31,7 @@ internal object UIComponentBuilder {
       is ComboBox<*> -> buildComboBox(uiComponent)
       is ColorPicker -> buildColorPicker(uiComponent)
       is ProgressBar -> buildProgressBar(uiComponent)
+      is Slider -> buildSlider(uiComponent)
       is StructuredDataView<*> -> buildStructuredDataView(uiComponent)
     }
   }
@@ -119,6 +120,14 @@ internal object UIComponentBuilder {
   private fun buildProgressBar(progressBar: ProgressBar) {
     progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
     progressBar.barVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
+  }
+
+  private fun buildSlider(slider: Slider) {
+    slider.valueProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
+    slider.minValueProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
+    slider.maxValueProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
+    slider.stepProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
+    slider.orientationProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
   }
 
   private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {
