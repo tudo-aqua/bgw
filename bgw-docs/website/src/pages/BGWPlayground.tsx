@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Components from "@/lib/components.ts";
 import { BooleanValue, ChoiceValue, ColorValue, ColorVisualData, CompoundVisualData, DataClass, DiceViewData, Droppable, generateId, ImageVisualData, NumberValue, PropertyValue, SingleLayerVisualData, StringValue, TextVisualData } from "@/lib/components.ts";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
@@ -31,8 +31,22 @@ import { EyeDropperPicker } from "@/components/ui/background-picker";
 import PlaygroundLayout from "@/components/PlaygroundLayout";
 import PlaygroundExport from "@/components/PlaygroundExport";
 import { buildPlaygroundSnapshot, createPreviewMessage } from "@/lib/playground";
+import { docsLinkFor, sceneDocsLink } from "@/lib/docsLinks";
+import PlaygroundCanvas, { CanvasApi } from "@/components/PlaygroundCanvas";
+import { sceneClassName } from "@/lib/exporter";
+import { captureScene, downloadUrl, waitForRender } from "@/lib/sceneImage";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PlaygroundStoryboard from "@/components/PlaygroundStoryboard";
+import PlaygroundTemplates from "@/components/PlaygroundTemplates";
+import { buildTemplate, PlaygroundTemplate } from "@/lib/templates";
 
 import "./playground.scss";
+
+const LAST_WORKSPACE_KEY = "bgw-playground-last-scene";
+
+function readLastWorkspace() {
+  try { return localStorage.getItem(LAST_WORKSPACE_KEY) || "default"; } catch { return "default"; }
+}
 
 function BGWPlayground() {
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
@@ -42,7 +56,7 @@ function BGWPlayground() {
       .then(async () => {
         await createDefaultWorkspace();
         await listWorkspaces();
-        await loadSavedWorkspace("default");
+        await loadSavedWorkspace(readLastWorkspace());
       })
       .catch((err) => console.error("IndexedDB initialization failed:", err));
   }, []);
@@ -66,7 +80,18 @@ function BGWPlayground() {
       return a.name.localeCompare(b.name);
     });
 
+    workspaces.forEach(workspace => {
+      extrasRef.current[workspace.id] = { thumbnail: workspace.thumbnail, board: workspace.board, hidden: workspace.hidden, ...extrasRef.current[workspace.id] };
+    });
     setAllWorkspaces(workspaces);
+  };
+
+  // Storyboard data (preview thumbnails and card positions) lives next to a scene but is not part of its editable state.
+  const extrasRef = useRef<Record<string, { thumbnail?: string; board?: { x: number; y: number }; hidden?: boolean }>>({});
+  const patchExtras = async (id: string, patch: { thumbnail?: string; board?: { x: number; y: number }; hidden?: boolean }) => {
+    extrasRef.current[id] = { ...extrasRef.current[id], ...patch };
+    const record = await loadWorkspace(id);
+    if (record) await saveWorkspace({ ...record, ...patch });
   };
 
   const deleteWorkspaceById = async (id: string) => {
@@ -104,6 +129,7 @@ function BGWPlayground() {
       sceneWidth,
       sceneHeight,
       sceneBackground,
+      ...extrasRef.current[workspaceId],
     };
 
     saveWorkspace(workspace)
@@ -114,7 +140,9 @@ function BGWPlayground() {
   const loadSavedWorkspace = async (workspaceId: string = "default") => {
     try {
       const saved = await loadWorkspace(workspaceId);
+      if (!saved && workspaceId !== "default") return loadSavedWorkspace("default");
       if (saved) {
+        resetHistoryRef.current = true;
         setSelectedClass(null);
         setSelectedComponentId("");
         setSceneSelected(true);
@@ -132,6 +160,7 @@ function BGWPlayground() {
         setSceneBackground(saved.sceneBackground ?? "#ffffff");
         setSceneName(saved.name ?? "Default");
         setCurrentWorkspace(workspaceId);
+        try { localStorage.setItem(LAST_WORKSPACE_KEY, workspaceId); } catch { /* storage unavailable */ }
 
         setOutputDirty((prev) => prev + 1);
       }
@@ -155,8 +184,196 @@ function BGWPlayground() {
     await createWorkspace(workspace);
   };
 
+  const createWorkspaceFromTemplate = async (template: PlaygroundTemplate) => {
+    const { components, treeData: nodes } = buildTemplate(template);
+    const workspace = {
+      id: generateId(),
+      name: template.name,
+      components,
+      treeData: nodes,
+      sceneWidth: template.width,
+      sceneHeight: template.height,
+      sceneBackground: template.background,
+    };
+    await createWorkspace(workspace);
+    await listWorkspaces();
+    await loadSavedWorkspace(workspace.id);
+    setTemplatesOpen(false);
+  };
+
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), 4000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
+  const exportSceneFile = () => {
+    const data = { format: "bgw-playground", version: 1, ...takeSnapshot() };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${(sceneName || "scene").replace(/[^\w-]+/g, "_")}.bgw.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importSceneFile = async (file: File) => {
+    try {
+      const data = JSON.parse(await file.text());
+      if (data.format !== "bgw-playground" || !Array.isArray(data.components) || !Array.isArray(data.treeData)) {
+        throw new Error("not a playground scene");
+      }
+      const workspace = {
+        id: generateId(),
+        name: data.name ?? file.name.replace(/(\.bgw)?\.json$/, ""),
+        components: data.components,
+        treeData: data.treeData,
+        sceneWidth: data.sceneWidth ?? 1920,
+        sceneHeight: data.sceneHeight ?? 1080,
+        sceneBackground: data.sceneBackground ?? "#ffffff",
+      };
+      await createWorkspace(workspace);
+      await listWorkspaces();
+      await loadSavedWorkspace(workspace.id);
+      setNotice(`Imported "${workspace.name}"`);
+    } catch {
+      setNotice("Could not import: this is not a playground scene file.");
+    }
+  };
+
+  // Undo / redo: snapshots of the whole editable state, committed once edits settle.
+  type Snapshot = { components: any[]; treeData: any[]; sceneWidth: number; sceneHeight: number; sceneBackground: string; name: string };
+  const historyRef = useRef<{ stack: Snapshot[]; index: number; signature: string }>({ stack: [], index: -1, signature: "" });
+  const resetHistoryRef = useRef(false);
+  const [historyVersion, setHistoryVersion] = useState(0);
+
+  const takeSnapshot = (): Snapshot => structuredClone({
+    components: [...allComponents.values()],
+    treeData: treeData.map(({ info, ...node }: any) => node),
+    sceneWidth,
+    sceneHeight,
+    sceneBackground,
+    name: sceneName,
+  });
+
+  const commitHistory = () => {
+    if (!currentWorkspace) return;
+    const history = historyRef.current;
+    const snapshot = takeSnapshot();
+    const signature = JSON.stringify(snapshot);
+    if (resetHistoryRef.current || history.index < 0) {
+      resetHistoryRef.current = false;
+      history.stack = [snapshot];
+      history.index = 0;
+    } else if (signature !== history.signature) {
+      history.stack = [...history.stack.slice(0, history.index + 1), snapshot].slice(-100);
+      history.index = history.stack.length - 1;
+    } else return;
+    history.signature = signature;
+    setHistoryVersion(version => version + 1);
+  };
+
+  const restoreSnapshot = (snapshot: Snapshot) => {
+    const copy = structuredClone(snapshot);
+    historyRef.current.signature = JSON.stringify(snapshot);
+    setSelectedClass(null);
+    setSelectedComponentId("");
+    setCurrentGuide(null);
+    allComponents.clear();
+    copy.components.forEach(component => allComponents.set(component.id, reconstructProperties(component)));
+    setTreeData(copy.treeData);
+    setSceneWidth(copy.sceneWidth);
+    setSceneHeight(copy.sceneHeight);
+    setSceneBackground(copy.sceneBackground);
+    setSceneName(copy.name);
+    setOutputDirty(previous => previous + 1);
+    setHistoryVersion(version => version + 1);
+  };
+
+  const undo = () => {
+    commitHistory();
+    const history = historyRef.current;
+    if (history.index <= 0) return;
+    history.index--;
+    restoreSnapshot(history.stack[history.index]);
+  };
+
+  const redo = () => {
+    const history = historyRef.current;
+    if (history.index >= history.stack.length - 1) return;
+    history.index++;
+    restoreSnapshot(history.stack[history.index]);
+  };
+
+  const canUndo = historyVersion >= 0 && historyRef.current.index > 0;
+  const canRedo = historyVersion >= 0 && historyRef.current.index < historyRef.current.stack.length - 1;
+
+  const [storyboardOpen, setStoryboardOpen] = useState(false);
+  const [toolbarHost, setToolbarHost] = useState<HTMLElement | null>(null);
+  const [refreshingStoryboard, setRefreshingStoryboard] = useState(false);
+
+  const exportScenePng = async () => {
+    try {
+      downloadUrl(await captureScene(sceneWidth), `${(sceneName || "scene").replace(/[^\w-]+/g, "_")}.png`);
+    } catch {
+      setNotice("Could not render the scene to an image.");
+    }
+  };
+
+  // Renders every scene once through the live preview to cache its thumbnail for the storyboard.
+  const refreshThumbnails = async () => {
+    if (refreshingStoryboard) return;
+    setRefreshingStoryboard(true);
+    try {
+      for (const record of await getAllWorkspaces()) {
+        // Leaving the storyboard stops the loop so the playground does not step through every scene.
+        if (cancelRefreshRef.current) break;
+        if (record.hidden) continue;
+        try {
+          const live = record.id === currentWorkspace;
+          let components;
+          if (live) components = getOutputElementsFromTree();
+          else {
+            const map = new Map();
+            record.components.forEach(component => map.set(component.id, reconstructProperties(structuredClone(component))));
+            components = buildPlaygroundSnapshot(map, record.treeData).components;
+          }
+          const width = live ? sceneWidth : record.sceneWidth ?? 1920;
+          const height = live ? sceneHeight : record.sceneHeight ?? 1080;
+          const background = live ? sceneBackground : record.sceneBackground ?? "#ffffff";
+          sendJsonMessage(createPreviewMessage(components, width, height, background));
+          await waitForRender();
+          if (cancelRefreshRef.current) break;
+          await patchExtras(record.id, { thumbnail: await captureScene(800, "jpeg") });
+        } catch (error) {
+          console.warn(`Could not render a preview of "${record.name}"`, error);
+        }
+      }
+    } finally {
+      // After a cancel the current scene may have changed, so let the regular effect resend the right one.
+      if (cancelRefreshRef.current) setOutputDirty(previous => previous + 1);
+      else sendOutputElements();
+      await listWorkspaces();
+      setRefreshingStoryboard(false);
+    }
+  };
+
+  const cancelRefreshRef = useRef(false);
+  const openStoryboard = () => {
+    cancelRefreshRef.current = false;
+    setStoryboardOpen(true);
+    refreshThumbnails();
+  };
+  const closeStoryboard = () => {
+    cancelRefreshRef.current = true;
+    setStoryboardOpen(false);
+  };
+
   const [advancedMode, setAdvancedMode] = useState(false);
-  const [showPermanentGuides, setShowPermanentGuides] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
 
   const [compileError, setCompileError] = useState(null);
@@ -371,14 +588,8 @@ function BGWPlayground() {
   }, [selectedClass, treeData]);
 
   useEffect(() => {
-    if (currentGuide != null && !showPermanentGuides) {
-      hideElementGuides();
-    } else if (currentGuide != null) {
-      showElementGuides(currentGuide.id);
-    } else if (showPermanentGuides && selectedComponentId != "") {
-      showElementGuides(selectedComponentId);
-    }
-  }, [showPermanentGuides, fullScreen]);
+    if (currentGuide != null) hideElementGuides();
+  }, [fullScreen]);
 
   useEffect(() => {
     setCompileError(null);
@@ -396,6 +607,43 @@ function BGWPlayground() {
     selectedClass,
     sceneName,
   ]);
+
+  useEffect(() => {
+    const timer = setTimeout(commitHistory, 350);
+    return () => clearTimeout(timer);
+  }, [allComponents, treeData, sceneWidth, sceneHeight, sceneBackground, sceneName, selectedClass, currentWorkspace]);
+
+  const shortcutsRef = useRef<Record<string, () => void>>({});
+  shortcutsRef.current = {
+    undo,
+    redo,
+    duplicate: () => { if (selectedComponentId) duplicateComponent(selectedComponentId); },
+    remove: () => { if (selectedComponentId) deleteComponent(selectedComponentId); },
+    deselect: () => {
+      setSelectedComponentId("");
+      setSelectedClass(null);
+      hideElementGuides();
+    },
+  };
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable=true], [role=combobox], [role=listbox], [role=dialog], [role=menu]"))) return;
+      const mod = e.ctrlKey || e.metaKey;
+      const key = e.key.toLowerCase();
+      let action: string | null = null;
+      if (mod && key === "z") action = e.shiftKey ? "redo" : "undo";
+      else if (mod && key === "y") action = "redo";
+      else if (mod && key === "d") action = "duplicate";
+      else if (!mod && (key === "delete" || key === "backspace")) action = "remove";
+      else if (!mod && key === "escape") action = "deselect";
+      if (!action) return;
+      e.preventDefault();
+      shortcutsRef.current[action]();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
     if (attr === "barVisual") return (
@@ -539,7 +787,7 @@ function BGWPlayground() {
   const getSceneInputs = () => {
     return (
       <>
-        <SettingsField title={`Scene (${sceneName})`} icon={"slideshow"}>
+        <SettingsField title={`Scene (${sceneName})`} icon={"slideshow"} docsHref={sceneDocsLink}>
           <div className="flex flex-row items-center justify-between w-full gap-4">
             <Label
               className="shrink-0 w-[43%] text-white/70"
@@ -1535,6 +1783,68 @@ function BGWPlayground() {
     return allComponents.get(id) ?? null;
   };
 
+  // Bridge between the preview's direct-manipulation layer and the editor state.
+  const MANAGED_PARENTS = ["LinearLayoutData", "CardStackData", "SatchelData", "GridElementData", "HexagonGridElementData"];
+  const FREE_PARENTS = ["PaneData", "AreaData"];
+  const canvasApi: CanvasApi = {
+    targetIds: (id) => {
+      const excluded = new Set<string>([id]);
+      const collect = (parent: string) => getAllChildren(parent).forEach(child => { excluded.add(child.id); collect(child.id); });
+      collect(id);
+      return treeData.filter(node => !excluded.has(node.id)).map(node => node.id);
+    },
+    getBounds: (id) => {
+      const component = allComponents.get(id);
+      if (!component?.posX || !component.posY) return null;
+      return {
+        posX: Number(component.posX.value),
+        posY: Number(component.posY.value),
+        width: Number(component.width?.value ?? 0),
+        height: Number(component.height?.value ?? 0),
+      };
+    },
+    canMove: (id) => {
+      const component = allComponents.get(id);
+      const parent = tryGetParent(component ?? null);
+      return !!component?.posX && !component.posX.disabled && !(parent && MANAGED_PARENTS.includes(parent.type));
+    },
+    canResize: (id) => {
+      const component = allComponents.get(id);
+      return !!component?.width && !component.width.disabled && component.type !== "HexagonViewData";
+    },
+    canDrop: (id, targetId) => {
+      const source = treeData.find(node => node.id === id);
+      const target = treeData.find(node => node.id === targetId);
+      return !!source && !!target && checkDrop(source, targetId, target);
+    },
+    parentOf: (id) => treeData.find(node => node.id === id)?.parent ?? 0,
+    select: (id) => {
+      const component = allComponents.get(id);
+      if (!component) return;
+      setSelectedClass(component);
+      setSelectedComponentId(component.id);
+      setSceneSelected(false);
+      showElementGuides(component.id);
+    },
+    changeBounds: (id, bounds) => {
+      const current = allComponents.get(id);
+      if (!current) return;
+      const next = { ...current };
+      for (const [key, value] of Object.entries(bounds)) next[key] = new NumberValue(key, value, current[key].name);
+      allComponents.set(id, next);
+      setSelectedClass(previous => previous?.id === id ? next : previous);
+      setOutputDirty(previous => previous + 1);
+    },
+    reparent: (id, targetId, position) => {
+      setTreeData(previous => previous.map(node => node.id === id ? { ...node, parent: targetId } : node));
+      const target = targetId === 0 ? null : allComponents.get(targetId as string);
+      // Free containers keep the dropped position, layouts that arrange their children reset it.
+      if (target === null || FREE_PARENTS.includes(target?.type)) canvasApi.changeBounds(id, position);
+      else if (MANAGED_PARENTS.includes(target.type)) canvasApi.changeBounds(id, { posX: 0, posY: 0 });
+      setOutputDirty(previous => previous + 1);
+    },
+  };
+
   const getAllChildren = (id) => {
     const children = [];
     treeData.forEach((node) => {
@@ -1702,12 +2012,7 @@ function BGWPlayground() {
           showElementGuides(elem.id, data.color);
         }}
         onMouseLeave={() => {
-          if (!selected) hideElementGuides();
-          if (showPermanentGuides) {
-            showElementGuides(selectedComponentId, data.color);
-          } else {
-            hideElementGuides();
-          }
+          hideElementGuides();
         }}
         className={`flex items-center gap-3 mt-1 mb-1 justify-start cursor-pointer relative main__toggle`}
         style={{
@@ -2327,6 +2632,7 @@ function BGWPlayground() {
         {getPositionInputs(elementClass)}
         {getSizeInputs(elementClass)}
         {getVisualsInputs(elementClass)}
+        {getNavigationInputs(elementClass)}
         {advancedMode && getDisplayInputs(elementClass)}
         {advancedMode && getTransformInputs(elementClass)}
         {elementClass.font &&
@@ -2381,6 +2687,7 @@ function BGWPlayground() {
       <SettingsField
         title={getInstantiableByData(elementClass.type).name}
         icon={getInstantiableByData(elementClass.type).icon}
+        docsHref={docsLinkFor(elementClass.type, elementClass.objectType)}
       >
         {getDistinctInputElement(elementClass, "name")}
         <div className="flex items-center justify-between w-full gap-4">
@@ -2578,6 +2885,43 @@ function BGWPlayground() {
     }
   };
 
+  // Storyboard link: which scene a click on this component leads to.
+  const getNavigationInputs = (elementClass: DataClass) => {
+    const target = elementClass.navigateTo || "none";
+    const scenes = allWorkspaces.filter(workspace => workspace.id !== currentWorkspace);
+    const known = target === "none" || target === "exit" || scenes.some(workspace => workspace.id === target);
+    return (
+      <SettingsField title="Click leads to" icon="account_tree" hideRightIcon={true}>
+        <div className="flex flex-row items-center justify-between w-full gap-4">
+          <Label className="shrink-0 w-[43%] text-white/70">Scene</Label>
+          <Select
+            value={known ? target : "none"}
+            onValueChange={value => setSelectedClass((previous: DataClass) => ({ ...previous, navigateTo: value === "none" ? "" : value }))}
+          >
+            <SelectTrigger className="min-w-0 [&>span]:truncate"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Nothing</SelectItem>
+              <SelectItem value="exit">Exit program</SelectItem>
+              {scenes.map(workspace => <SelectItem key={workspace.id} value={workspace.id}>{workspace.name}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        {known && target !== "none" && (
+          <div className="flex flex-row items-center justify-between w-full gap-4">
+            <Label className="shrink-0 w-[43%] text-white/70" htmlFor="navigateLabel">Arrow label</Label>
+            <Input
+              id="navigateLabel"
+              type="text"
+              placeholder={elementClass.text?.value ? `[${elementClass.text.value}]` : "[Click]"}
+              value={elementClass.navigateLabel ?? ""}
+              onChange={event => setSelectedClass((previous: DataClass) => ({ ...previous, navigateLabel: event.target.value }))}
+            />
+          </div>
+        )}
+      </SettingsField>
+    );
+  };
+
   const getDisplayInputs = (elementClass: DataClass) => {
     return (
       <SettingsField title="Display">
@@ -2764,6 +3108,19 @@ function BGWPlayground() {
           </Dialog>
         </div>
         <div className="relative flex flex-col flex-1 min-h-0 gap-3 p-4 overflow-hidden rounded-lg bg-background">
+          {treeData.length === 0 && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 p-6 text-center playground-empty">
+              <i className="text-4xl material-symbols-rounded text-bgw-green" aria-hidden="true">playing_cards</i>
+              <p className="font-semibold">Your table is empty</p>
+              <p className="text-sm text-muted-foreground">Add a component or start from a board or card game.</p>
+              <Button variant="secondary" size="sm" className="w-full max-w-[200px] text-bgw-green bg-bgw-green/5 hover:bg-bgw-green/10" onClick={() => setTemplatesOpen(true)}>
+                <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">auto_awesome</i>Browse templates
+              </Button>
+              <Button variant="ghost" size="sm" className="w-full max-w-[200px]" onClick={() => setAddDialogOpen(true)}>
+                <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">add</i>Add component
+              </Button>
+            </div>
+          )}
           <ScrollArea className="flex-1 min-h-0 component__scroll">
             <DndProvider backend={MultiBackend} options={getBackendOptions()}>
               <div className="pb-[4rem] -mt-4">
@@ -2832,6 +3189,15 @@ function BGWPlayground() {
         </Button>
         <Button
           variant="secondary"
+          className="absolute z-40 right-14 bottom-3"
+          aria-label="Download scene as PNG"
+          title="Download scene as PNG"
+          onClick={exportScenePng}
+        >
+          <i className="text-lg material-symbols-rounded">image</i>
+        </Button>
+        <Button
+          variant="secondary"
           className="absolute z-40 right-3 bottom-3"
           aria-label={fullScreen ? "Exit fullscreen" : "Fullscreen preview"}
           onClick={() => setFullScreen(!fullScreen)}
@@ -2840,6 +3206,11 @@ function BGWPlayground() {
             {fullScreen ? "fullscreen_exit" : "fullscreen"}
           </i>
         </Button>
+        {treeData.length === 0 && (
+          <p className="absolute z-10 px-4 text-sm text-center -translate-x-1/2 pointer-events-none left-1/2 bottom-5 text-muted-foreground">
+            Empty scene. Components you add appear here live.
+          </p>
+        )}
         <Badge variant="muted" className="absolute z-10 mr-2 left-3 top-3">
           {sceneWidth}x{sceneHeight}
         </Badge>
@@ -2883,7 +3254,8 @@ function BGWPlayground() {
           ></div>
 
         </div>
-        {currentGuide !== null ? (
+        <PlaygroundCanvas sceneWidth={sceneWidth} sceneHeight={sceneHeight} selectedId={selectedComponentId} api={canvasApi} resetKey={currentWorkspace} />
+        {currentGuide !== null && currentGuide.id !== selectedComponentId ? (
           <div
             className="guide"
             style={{
@@ -2905,12 +3277,6 @@ function BGWPlayground() {
       >
         <div className="flex flex-col items-start w-full gap-3 data__inputs">
           {getDataInputs(selectedClass)}
-          {selectedClass && (
-            <div className="playground-component-actions flex gap-3 w-full px-5">
-              <Button variant="secondary" onClick={() => duplicateComponent(selectedComponentId, treeData.find(node => node.id === selectedComponentId)?.parent ?? 0)}>Duplicate</Button>
-              <Button variant="ghost" onClick={() => deleteComponent(selectedComponentId)}>Delete</Button>
-            </div>
-          )}
         </div>
       </div>
     ),
@@ -2923,12 +3289,14 @@ function BGWPlayground() {
       width={sceneWidth}
       height={sceneHeight}
       background={sceneBackground}
+      sceneName={sceneName}
+      sceneNames={Object.fromEntries(allWorkspaces.map(workspace => [workspace.id, sceneClassName(workspace.name)]))}
     />
   );
 
   return (
     <div className="bgw-playground">
-      <header className="playground-header sticky top-0 z-10 flex h-[57px] items-center gap-1 bg-background px-4 justify-between">
+      <header className="playground-header sticky top-0 z-10 grid h-[57px] grid-cols-[1fr_auto_1fr] items-center gap-3 bg-background px-4">
         <div className="playground-brand flex items-center gap-4">
           <Link to="/" className="flex items-center h-full" aria-label="Back to documentation">
             <i className="text-xl material-symbols-rounded">arrow_back</i>
@@ -2937,24 +3305,58 @@ function BGWPlayground() {
             <img src="/bgw/logo.svg" alt="" className="w-8 h-8" />
             <h1 className="text-xl font-semibold">BoardGameWork</h1>
           </Link>
-          <Badge variant="property" className="gap-2 rounded-sm py-1.5 px-3">
-            <i className="text-xs material-symbols-rounded">draw_abstract</i>
-            <p>Playground (Alpha)</p>
-          </Badge>
         </div>
-        <div className="playground-header-actions flex gap-3">
-          <Toggle variant="default" size="sm" pressed={showPermanentGuides} onPressedChange={setShowPermanentGuides}
-            className="w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green">
-            Permanent Guides
-          </Toggle>
+        <Tabs value={storyboardOpen ? "storyboard" : "playground"} onValueChange={value => (value === "storyboard" ? openStoryboard() : closeStoryboard())}>
+          <TabsList aria-label="Mode">
+            <TabsTrigger value="playground" className="gap-2"><i className="text-base material-symbols-rounded" aria-hidden="true">draw_abstract</i>Playground</TabsTrigger>
+            <TabsTrigger value="storyboard" className="gap-2"><i className="text-base material-symbols-rounded" aria-hidden="true">account_tree</i>Storyboard</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        {storyboardOpen ? <div ref={setToolbarHost} className="playground-header-actions flex items-center justify-end gap-2" /> : (
+        <div className="playground-header-actions flex items-center justify-end gap-2">
+          {notice && <span className="hidden text-sm md:block text-muted-foreground" role="status">{notice}</span>}
+          <Button variant="ghost" size="icon-sm" aria-label="Undo (Ctrl+Z)" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo}>
+            <i className="text-lg material-symbols-rounded" aria-hidden="true">undo</i>
+          </Button>
+          <Button variant="ghost" size="icon-sm" aria-label="Redo (Ctrl+Shift+Z)" title="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo}>
+            <i className="text-lg material-symbols-rounded" aria-hidden="true">redo</i>
+          </Button>
+          <Button variant="secondary" size="sm" className="text-bgw-green bg-bgw-green/5 hover:bg-bgw-green/10" onClick={() => setTemplatesOpen(true)}>
+            <i className="mr-2 text-lg material-symbols-rounded" aria-hidden="true">auto_awesome</i>Templates
+          </Button>
+          <Button variant="ghost" size="icon-sm" aria-label="Import scene file" title="Import scene file" onClick={() => importInputRef.current?.click()}>
+            <i className="text-lg material-symbols-rounded" aria-hidden="true">upload_file</i>
+          </Button>
+          <Button variant="ghost" size="icon-sm" aria-label="Export scene file" title="Export scene file" onClick={exportSceneFile}>
+            <i className="text-lg material-symbols-rounded" aria-hidden="true">save</i>
+          </Button>
+          <input ref={importInputRef} type="file" accept=".json,application/json" className="sr-only" tabIndex={-1} onChange={event => {
+            const file = event.target.files?.[0];
+            event.target.value = "";
+            if (file) importSceneFile(file);
+          }} />
           <Toggle variant="default" size="sm" pressed={advancedMode} onPressedChange={setAdvancedMode}
             className="w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green">
             Expert Mode
           </Toggle>
         </div>
+        )}
       </header>
+      <PlaygroundTemplates open={templatesOpen} onOpenChange={setTemplatesOpen} onSelect={createWorkspaceFromTemplate} />
       <main className="playground-workspace">
         <PlaygroundLayout elements={ELEMENT_MAP} onLayoutChange={sendOutputElements} />
+        {storyboardOpen && (
+          <PlaygroundStoryboard
+            workspaces={allWorkspaces}
+            currentId={currentWorkspace}
+            refreshing={refreshingStoryboard}
+            onRefresh={refreshThumbnails}
+            onOpenScene={id => { closeStoryboard(); if (id !== currentWorkspace) loadSavedWorkspace(id); }}
+            onMove={async (id, board) => { await patchExtras(id, { board }); await listWorkspaces(); }}
+            onToggleHidden={async (id, hidden) => { await patchExtras(id, { hidden }); await listWorkspaces(); }}
+            toolbarHost={toolbarHost}
+          />
+        )}
       </main>
     </div>
   );

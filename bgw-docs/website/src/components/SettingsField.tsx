@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import { Link } from "react-router-dom";
 import {
   Collapsible,
   CollapsibleContent,
@@ -10,6 +11,7 @@ type SettingsFieldProps = {
   children: React.ReactNode;
   icon?: string;
   hideRightIcon?: boolean;
+  docsHref?: string;
 };
 
 function SettingsField({
@@ -17,6 +19,7 @@ function SettingsField({
   icon,
   children,
   hideRightIcon,
+  docsHref,
 }: SettingsFieldProps) {
   return (
     <div className="flex flex-col w-full max-w-full min-w-full gap-4 p-5 px-5 overflow-hidden rounded-lg bg-background">
@@ -33,11 +36,23 @@ function SettingsField({
             </div>
             {/* {!icon &&
                             <i className="material-symbols-rounded text-white/70 text-lg -mt-0.5 cursor-pointer hover:text-white transition-colors">question_mark</i>} */}
-            {icon && !hideRightIcon && (
-              <i className="text-lg transition-colors cursor-pointer material-symbols-rounded text-white/70 hover:text-white">
-                book_2
-              </i>
-            )}
+            {icon && !hideRightIcon && (docsHref ? (
+              <Link
+                to={docsHref}
+                target="_blank"
+                rel="noreferrer"
+                title="Open documentation"
+                aria-label={`Open documentation for ${title}`}
+                onClick={(event) => event.stopPropagation()}
+                className="flex items-center"
+              >
+                <i className="text-lg transition-colors cursor-pointer material-symbols-rounded text-white/70 hover:text-white">
+                  book_2
+                </i>
+              </Link>
+            ) : (
+              <i className="text-lg material-symbols-rounded text-white/30">book_2</i>
+            ))}
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex flex-col gap-4">

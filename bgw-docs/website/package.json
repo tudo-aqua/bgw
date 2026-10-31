@@ -53,6 +53,7 @@
     "dnd-kit-sortable-tree": "^0.1.73",
     "embla-carousel-react": "^8.1.7",
     "gh-pages": "^6.3.0",
+    "html-to-image": "1.11.11",
     "input-otp": "^1.2.4",
     "kotlin-playground": "^1.30.0",
     "lucide-react": "^0.417.0",

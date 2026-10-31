@@ -46,7 +46,9 @@
   }
 
   @media (max-width: 760px) {
-    .playground-header { height: auto; min-height: 57px; flex-wrap: wrap; gap: 8px; padding-block: 8px; }
+    .playground-header { height: auto; min-height: 57px; grid-template-columns: 1fr; gap: 8px; padding-block: 8px; }
+    .playground-header [role="tablist"] { width: 100%; }
+    .playground-header [role="tablist"] > * { flex: 1; }
     .playground-brand { gap: 12px; }
     .playground-header-actions { width: 100%; }
     .playground-header-actions button { flex: 1; min-height: 44px; }
@@ -56,6 +58,19 @@
     input, select { font-size: 16px; }
   }
 }
+
+.bgw-playground {
+  .playground-header { border-bottom: 1px solid hsl(var(--border)); }
+  #bgw-preview {
+    background-image: radial-gradient(hsl(var(--muted-foreground) / .22) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .bgw-root { box-shadow: 0 12px 40px -12px rgb(0 0 0 / .6); }
+}
+
+.playground-template { animation: playground-pop .18s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .playground-template { animation: none; } }
+@keyframes playground-pop { from { opacity: 0; transform: translateY(4px); } }
 
 .bgw-playground .playground-export {
   display: flex;
@@ -79,4 +94,47 @@
     .playground-export-toolbar { gap: 4px; padding: 8px; }
     .playground-export-actions { width: 100%; justify-content: flex-end; }
   }
+}
+
+.bgw-playground {
+  .playground-canvas { position: absolute; inset: 0; z-index: 20; pointer-events: none; overflow: hidden; }
+  .playground-selection { position: absolute; box-sizing: border-box; border: 2px dashed #6d28d9; background: rgb(109 40 217 / .12); }
+  .playground-selection[data-dragging="true"] { background: rgb(109 40 217 / .2); }
+  .playground-handle { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; background: #6d28d9; border-radius: 50%; pointer-events: auto; touch-action: none; transition: transform .1s; }
+  .playground-handle:hover { transform: scale(1.3); background: #8b5cf6; }
+  .playground-snap { position: absolute; background: #a78bfa; }
+  .playground-snap-x { top: 0; bottom: 0; width: 1px; }
+  .playground-snap-y { left: 0; right: 0; height: 1px; }
+  .playground-drop-target { position: absolute; box-sizing: border-box; border: 2px solid #8b5cf6; background: rgb(139 92 246 / .16); border-radius: 6px; box-shadow: 0 0 0 4px rgb(139 92 246 / .2); }
+}
+
+.playground-storyboard {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background: hsl(var(--background));
+}
+.playground-storyboard-board {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px;
+  background-image: radial-gradient(hsl(var(--muted-foreground) / .22) 1px, transparent 1px);
+  background-size: 22px 22px;
+  // Overflow stays visible so a scene dragged past the current bounds keeps showing until the board resizes on drop.
+  svg { display: block; max-width: none; user-select: none; overflow: visible; }
+}
+.playground-storyboard-hidden {
+  position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; min-width: 220px; max-height: 50vh; overflow: auto; padding: 4px; list-style: none;
+  border-radius: 8px; background: hsl(var(--popover)); border: 1px solid hsl(var(--border)); box-shadow: 0 8px 24px rgb(0 0 0 / .35);
+  button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; border-radius: 6px; text-align: left; font-size: 14px; }
+  button:hover { background: hsl(var(--secondary)); }
+}
+.playground-storyboard-hint {
+  position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%);
+  max-width: min(90%, 520px); padding: 10px 16px; border-radius: 8px; text-align: center; font-size: 14px;
+  color: hsl(var(--muted-foreground)); background: hsl(var(--secondary)); pointer-events: none;
 }

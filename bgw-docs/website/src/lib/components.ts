@@ -280,6 +280,10 @@ export class ComponentViewData extends PropData {
     "Draggable"
   );
 
+  /** Storyboard link: id of the scene a click leads to ("" = none, "exit" = program ends). Editor only, never rendered. */
+  navigateTo: string = "";
+  navigateLabel: string = "";
+
   constructor() {
     super();
     this.objectType.push("ComponentViewData");
