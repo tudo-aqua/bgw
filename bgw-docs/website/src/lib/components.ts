@@ -1,4 +1,4 @@
-﻿/*
+/*
  *   Todo:
  *    # Fix alignment for buttons (vertical + horizontal)
  *    # Fix horizontal alignment for text visuals (horizontal?)
@@ -335,6 +335,7 @@ export class LabeledUIComponentData extends UIComponentData {
 
 /* 🟨 Done */
 class TextInputUIComponentData extends UIComponentData {
+  isReadonly = new BooleanValue("isReadonly", false, "Read only");
   /* ✅ Done */ text: StringValue = new StringValue("text", "", "Text");
   /* ✅ Done */ prompt: StringValue = new StringValue("prompt", "", "Prompt");
 
@@ -420,6 +421,8 @@ class CheckBoxData extends LabeledUIComponentData {
 // Can only display strings but use all classes
 // -> Only allow adding strings to items array
 class ComboBoxData extends UIComponentData {
+  disallowUnselect = new BooleanValue("disallowUnselect", false, "Require selection");
+  itemVisuals: VisualData[] = [];
   /* ✅ Done */ prompt: StringValue = new StringValue("prompt", "", "Prompt");
   /* ✅ Done */ items: {
     first: number;
@@ -548,16 +551,13 @@ class ProgressBarData extends UIComponentData {
     0.0,
     "Progress"
   );
-  /* ✅ Done */ barColor: ColorValue = new ColorValue(
-    "barColor",
-    "#00FFFF",
-    "Bar Color"
-  );
+  barVisual: ColorVisualData = new ColorVisualData();
 
   constructor() {
     super();
     this.objectType.push("ProgressBarData");
     this.type = "ProgressBarData";
+    this.barVisual.color = "#00FFFF";
     this.width.value = 250;
     this.height.value = 20;
 
@@ -569,6 +569,22 @@ class ProgressBarData extends UIComponentData {
 }
 
 /* 🟨 Done */
+class SliderData extends UIComponentData {
+  value = new NumberValue("value", 50, "Value");
+  minValue = new NumberValue("minValue", 0, "Minimum");
+  maxValue = new NumberValue("maxValue", 100, "Maximum");
+  step = new NumberValue("step", 1, "Step");
+  orientation = new ChoiceValue("orientation", "Horizontal", ["Horizontal", "Vertical"], "Orientation");
+
+  constructor() {
+    super();
+    this.objectType.push("SliderData");
+    this.type = "SliderData";
+    this.width.value = 250;
+    this.height.value = 20;
+  }
+}
+
 class TextAreaData extends TextInputUIComponentData {
   constructor() {
     super();
@@ -683,22 +699,21 @@ class LayoutViewData extends ComponentViewData {
 /* 🟨 Done */
 class CameraPaneData extends ComponentViewData {
   /* ✅ Done */ target: LayoutViewData = null;
-  /* ✅ Done */ zoom: NumberValue = new NumberValue("zoom", 1.0, "Zoom");
   /* ✅ Done */ interactive: BooleanValue = new BooleanValue(
     "interactive",
     false,
     "Interactive"
   );
-  /* ✅ Done */ scroll: { xCoord: number; yCoord: number } = {
-    xCoord: 0.0,
-    yCoord: 0.0,
-  };
+  limitBounds = new BooleanValue("limitBounds", true, "Limit bounds");
+  isVerticalLocked = new BooleanValue("isVerticalLocked", false, "Lock vertical movement");
+  isHorizontalLocked = new BooleanValue("isHorizontalLocked", false, "Lock horizontal movement");
+  isZoomLocked = new BooleanValue("isZoomLocked", false, "Lock zoom");
+  panButton = new ChoiceValue("panButton", "Left Button", ["Left Button", "Mouse Wheel", "Right Button"], "Pan button");
 
   constructor() {
     super();
     this.objectType.push("CameraPaneData");
     this.type = "CameraPaneData";
-    this.zoom.disabled = true;
 
     this.visual = new CompoundVisualData();
     this.visual.children = [new ColorVisualData()];
@@ -1039,6 +1054,7 @@ class VisualData extends Data {
 
 /* 🆘 Todo */
 export class SingleLayerVisualData extends VisualData {
+  rotation = new NumberValue("rotation", 0, "Rotation");
   /* ✅ Done */ transparency: NumberValue = new NumberValue(
     "transparency",
     1.0,
@@ -1187,6 +1203,7 @@ export const DataClasses = {
   LabelData: LabelData,
   PasswordFieldData: PasswordFieldData,
   ProgressBarData: ProgressBarData,
+  SliderData: SliderData,
   RadioButtonData: RadioButtonData,
   ToggleGroupData: ToggleGroupData,
   TextAreaData: TextAreaData,
@@ -1219,6 +1236,7 @@ export type DataClass =
   | LabelData
   | PasswordFieldData
   | ProgressBarData
+  | SliderData
   | RadioButtonData
   | ToggleGroupData
   | TextAreaData
@@ -1298,6 +1316,14 @@ export const Instantiable = {
       icon: "sliders",
       color: "#FFFFFFB3",
       description: "A progress bar displays a progress percentage.",
+      disabled: false,
+    },
+    Slider: {
+      cls: "SliderData",
+      name: "Slider",
+      icon: "tune",
+      color: "#FFFFFFB3",
+      description: "A slider selects a value within a numeric range.",
       disabled: false,
     },
     RadioButton: {
@@ -1498,7 +1524,7 @@ export const Droppable = {
     whitelist: ["ComponentViewData"],
   },
   AreaData: {
-    whitelist: ["GameComponentViewData", "GameComponentContainerData"],
+    whitelist: ["GameComponentViewData"],
   },
   CardStackData: {
     whitelist: ["CardViewData"],

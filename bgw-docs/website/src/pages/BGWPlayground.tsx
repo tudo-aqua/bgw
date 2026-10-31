@@ -1,104 +1,37 @@
-﻿import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import React, { useEffect, useState } from "react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useEffect, useState } from "react";
 import * as Components from "@/lib/components.ts";
-import {
-  BooleanValue,
-  ChoiceValue,
-  ColorValue,
-  ColorVisualData,
-  ComponentViewData,
-  CompoundVisualData,
-  DataClass,
-  DiceViewData,
-  Droppable,
-  generateId,
-  ImageVisualData,
-  NumberValue,
-  PropertyValue,
-  SingleLayerVisualData,
-  StringValue,
-  TextVisualData,
-} from "@/lib/components.ts";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area.tsx";
+import { BooleanValue, ChoiceValue, ColorValue, ColorVisualData, CompoundVisualData, DataClass, DiceViewData, Droppable, generateId, ImageVisualData, NumberValue, PropertyValue, SingleLayerVisualData, StringValue, TextVisualData } from "@/lib/components.ts";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
 import { ColorPicker } from "@/components/ui/color-picker.tsx";
-import { useLocalStorage, useMap } from "@uidotdev/usehooks";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useMap } from "@uidotdev/usehooks";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Toggle } from "@/components/ui/toggle.tsx";
-import {
-  DndProvider,
-  getBackendOptions,
-  MultiBackend,
-  Tree,
-} from "@minoru/react-dnd-treeview";
+import { DndProvider, getBackendOptions, MultiBackend, Tree } from "@minoru/react-dnd-treeview";
 import { ImagePicker } from "@/components/ui/image-picker.tsx";
 import { SimpleColorPicker } from "@/components/ui/gradient-picker.tsx";
 import { TextPicker } from "@/components/ui/text-picker.tsx";
-import {
-  ContextMenu,
-  ContextMenuCheckboxItem,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu.tsx";
-import Parser from "@/pages/Parser.tsx";
-import ImageViewer from "@/pages/ImageViewer.tsx";
-import setupIndexedDB, { useIndexedDBStore } from "use-indexeddb";
-import {
-  createKotlinCodeLinebreaks,
-  idbConfig,
-  reconstructProperties,
-} from "@/lib/utils.ts";
-import { ConstructorAPIImportInfo, Guides } from "@/lib/types.ts";
-import SettingsField from "@/components/SettingsField.tsx";
-import { exportComponent } from "@/lib/exporter.ts";
-import Playground from "@/pages/Playground.tsx";
-import { Link, useLoaderData } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
-import CodeTab from "./docs/CodeTab";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
-import LiveCodeTab from "./docs/LiveCodeTab";
-import { EyeDropperPicker } from "@/components/ui/background-picker";
-import { Mosaic } from "react-mosaic-component";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu.tsx";
 
-import "react-mosaic-component/react-mosaic-component.css";
+import setupIndexedDB, { useIndexedDBStore } from "use-indexeddb";
+import { idbConfig, reconstructProperties } from "@/lib/utils.ts";
+import { Guides } from "@/lib/types.ts";
+import SettingsField from "@/components/SettingsField.tsx";
+
+import { Link } from "react-router-dom";
+
+import { EyeDropperPicker } from "@/components/ui/background-picker";
+import PlaygroundLayout from "@/components/PlaygroundLayout";
+import PlaygroundExport from "@/components/PlaygroundExport";
+import { buildPlaygroundSnapshot, createPreviewMessage } from "@/lib/playground";
+
 import "./playground.scss";
 
 function BGWPlayground() {
@@ -106,10 +39,10 @@ function BGWPlayground() {
 
   useEffect(() => {
     setupIndexedDB(idbConfig)
-      .then(() => {
-        createDefaultWorkspace();
-        listWorkspaces();
-        loadSavedWorkspace("default");
+      .then(async () => {
+        await createDefaultWorkspace();
+        await listWorkspaces();
+        await loadSavedWorkspace("default");
       })
       .catch((err) => console.error("IndexedDB initialization failed:", err));
   }, []);
@@ -136,28 +69,17 @@ function BGWPlayground() {
     setAllWorkspaces(workspaces);
   };
 
-  const deleteWorkspaceById = (id: string) => {
+  const deleteWorkspaceById = async (id: string) => {
     if (!id) return;
     if (id === "default") return;
 
-    deleteWorkspace(id)
-      .then()
-      .catch((err) => console.error("Failed to delete workspace:", err));
-
-    if (currentWorkspace === id) {
-      loadSavedWorkspace("default");
-    }
-
-    listWorkspaces();
+    await deleteWorkspace(id);
+    if (currentWorkspace === id) await loadSavedWorkspace("default");
+    await listWorkspaces();
   };
-
-  const createEmptyWorkspace = () => {
+  const createEmptyWorkspace = async () => {
     const workspace = {
-      id: "abcdefghijklmnopqrstuvwxyz"
-        .split("")
-        .sort(() => 0.5 - Math.random())
-        .join("")
-        .slice(0, 10),
+      id: generateId(),
       name: `${new Date().toISOString().split(".")[0].replace(/[:.]/g, "-")}`,
       components: [],
       treeData: [],
@@ -166,13 +88,9 @@ function BGWPlayground() {
       sceneBackground: "#ffffff",
     };
 
-    createWorkspace(workspace)
-      .then()
-      .catch((err) => console.error("Failed to create workspace:", err));
-
-    listWorkspaces();
-
-    loadSavedWorkspace(workspace.id);
+    await createWorkspace(workspace);
+    await listWorkspaces();
+    await loadSavedWorkspace(workspace.id);
   };
 
   const saveCurrentWorkspace = (workspaceId: string) => {
@@ -189,16 +107,18 @@ function BGWPlayground() {
     };
 
     saveWorkspace(workspace)
-      .then()
+      .then(listWorkspaces)
       .catch((err) => console.error("Failed to save workspace:", err));
-
-    listWorkspaces();
   };
 
   const loadSavedWorkspace = async (workspaceId: string = "default") => {
     try {
       const saved = await loadWorkspace(workspaceId);
       if (saved) {
+        setSelectedClass(null);
+        setSelectedComponentId("");
+        setSceneSelected(true);
+        setCurrentGuide(null);
         // Restore components
         allComponents.clear();
         saved.components.forEach((c) =>
@@ -213,7 +133,6 @@ function BGWPlayground() {
         setSceneName(saved.name ?? "Default");
         setCurrentWorkspace(workspaceId);
 
-        sendOutputElements();
         setOutputDirty((prev) => prev + 1);
       }
     } catch (err) {
@@ -221,7 +140,8 @@ function BGWPlayground() {
     }
   };
 
-  const createDefaultWorkspace = () => {
+  const createDefaultWorkspace = async () => {
+    if (await loadWorkspace("default")) return;
     const workspace = {
       id: "default",
       name: "Default",
@@ -232,18 +152,11 @@ function BGWPlayground() {
       sceneBackground: "#ffffff",
     };
 
-    createWorkspace(workspace)
-      .then()
-      .catch((err) =>
-        console.error("Failed to create default workspace:", err)
-      );
-
-    listWorkspaces();
+    await createWorkspace(workspace);
   };
 
   const [advancedMode, setAdvancedMode] = useState(false);
   const [showPermanentGuides, setShowPermanentGuides] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [fullScreen, setFullScreen] = useState(false);
 
   const [compileError, setCompileError] = useState(null);
@@ -269,14 +182,8 @@ function BGWPlayground() {
     };
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
-
   const captureKeyEvent = (e) => {
-    if (selectedClass == null) return;
+    if (e.defaultPrevented || selectedClass == null || (e.target instanceof Element && e.target.closest("input, textarea, select, [contenteditable=true], [role=combobox], [role=listbox], [role=dialog], [role=menu]"))) return;
     let delta = e.shiftKey ? 10 : 1;
     let bounds = e.altKey;
 
@@ -289,7 +196,7 @@ function BGWPlayground() {
             ...prev,
             posX: new NumberValue(
               "posX",
-              prev.posX.value + delta,
+              Number(prev.posX.value) + delta,
               "Position X"
             ),
           };
@@ -328,7 +235,7 @@ function BGWPlayground() {
             ...prev,
             posY: new NumberValue(
               "posY",
-              prev.posY.value + delta,
+              Number(prev.posY.value) + delta,
               "Position Y"
             ),
           };
@@ -341,7 +248,7 @@ function BGWPlayground() {
         setSelectedClass((prev: object) => {
           return {
             ...prev,
-            width: new NumberValue("width", prev.width.value + delta, "Width"),
+            width: new NumberValue("width", Number(prev.width.value) + delta, "Width"),
           };
         });
       } else if (e.key === "ArrowLeft") {
@@ -374,41 +281,13 @@ function BGWPlayground() {
             ...prev,
             height: new NumberValue(
               "height",
-              prev.height.value + delta,
+              Number(prev.height.value) + delta,
               "Height"
             ),
           };
         });
       }
     }
-  };
-
-  const modifyElementPosition = (elementId, x: number, y: number) => {
-    let preview = document.getElementById("bgw-root");
-    let bounds = preview.getBoundingClientRect();
-
-    let scenes = document.getElementById("bgw-root").children[0];
-    let sceneBounds = scenes.getBoundingClientRect();
-
-    const scaleX = sceneWidth / sceneBounds.width;
-    const scaleY = sceneHeight / sceneBounds.height;
-
-    let yDiff = sceneBounds.top - bounds.top;
-    let xDiff = sceneBounds.left - bounds.left;
-
-    let actualX = x - xDiff;
-    let actualY = y - yDiff;
-
-    const translatedX = actualX * scaleX;
-    const translatedY = actualY * scaleY;
-
-    setSelectedClass((prev: object) => {
-      return {
-        ...prev,
-        posX: new NumberValue("posX", Math.round(translatedX), "Position X"),
-        posY: new NumberValue("posY", Math.round(translatedY), "Position Y"),
-      };
-    });
   };
 
   const sendJsonMessage = (message) => {
@@ -420,9 +299,8 @@ function BGWPlayground() {
   };
 
   const [selectedComponentType, setSelectedComponentType] = useState("");
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
-
-  const [parsedCodeObjects, setParsedCodeObjects] = useState(null);
 
   const [selectedComponentId, setSelectedComponentId] = useState("");
   const allComponents = useMap([]);
@@ -437,12 +315,13 @@ function BGWPlayground() {
   const checkDrop = (source, targetId, target) => {
     if (targetId === 0) return true;
 
+    if (!source || !target) return false;
     let sourceElem = getElementFromId(source.id);
     let targetElem = getElementFromId(target.id);
 
     if (sourceElem == null || targetElem == null) return false;
 
-    if (!Droppable[targetElem.type]) return true;
+    if (!Droppable[targetElem.type]) return false;
     let droppable = Droppable[targetElem.type].whitelist;
     let allowed = false;
     droppable.forEach((type) => {
@@ -462,7 +341,7 @@ function BGWPlayground() {
   };
 
   const getType = (value: PropertyValue | null) => {
-    if (value === null) {
+    if (value == null) {
       return "null";
     }
 
@@ -474,21 +353,6 @@ function BGWPlayground() {
   };
 
   const [outputDirty, setOutputDirty] = useState(0);
-
-  const [imageGallery, setImageGallery] = useState([]);
-  const { getAll, getOneByKey } = useIndexedDBStore("images");
-
-  useEffect(() => {
-    getAll().then((images) => {
-      setImageGallery(images);
-    });
-  }, []);
-
-  const refreshImages = () => {
-    getAll().then((images) => {
-      setImageGallery(images);
-    });
-  };
 
   useEffect(() => {
     if (selectedClass === null) return;
@@ -534,6 +398,9 @@ function BGWPlayground() {
   ]);
 
   const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
+    if (attr === "barVisual") return (
+      <ColorPicker className="w-full" color={elementClass.barVisual.color} setColor={color => setSelectedClass(prev => ({ ...prev, barVisual: { ...prev.barVisual, color } }))} />
+    );
     if (attr === "visual") return getVisualInputs(elementClass);
     if (attr.startsWith("vis_")) return getVisualInputs(elementClass, attr);
     if (attr === "front") return getVisualInputs(elementClass, "front");
@@ -567,67 +434,16 @@ function BGWPlayground() {
           type="number"
           placeholder={entry[1].value}
           value={entry[1].value}
-          onChange={(e) => {
-            setSelectedClass((prev: object) => {
-              return {
-                ...prev,
-                [entry[0]]: new NumberValue(
-                  entry[1].property,
-                  e.target.value,
-                  entry[1].name
-                ),
-              };
-            });
-
-            const currentVisuals = Object.keys(elementClass).filter((k) =>
-              k.startsWith("vis_")
-            );
-
-            if (currentVisuals.length < parseInt(e.target.value)) {
-              for (
-                let i = currentVisuals.length;
-                i < parseInt(e.target.value);
-                i++
-              ) {
-                if (elementClass[`vis_${i}`]) continue;
-                setSelectedClass((prev: object) => {
-                  return {
-                    ...prev,
-                    [`vis_${i}`]: new CompoundVisualData(),
-                  };
-                });
-              }
-            } else if (currentVisuals.length > parseInt(e.target.value)) {
-              for (
-                let i = currentVisuals.length - 1;
-                i >= parseInt(e.target.value);
-                i--
-              ) {
-                if (elementClass[`vis_${i}`]) {
-                  setSelectedClass((prev: object) => {
-                    const newData = { ...prev };
-                    delete newData[`vis_${i}`];
-                    return newData;
-                  });
-                }
-              }
-            }
-
-            setSelectedClass((prev: object) => {
-              return {
-                ...prev,
-                currentSide: new ChoiceValue(
-                  "currentSide",
-                  prev.currentSide.value >= e.target.value
-                    ? e.target.value
-                    : prev.currentSide.value,
-                  Array.from(
-                    { length: parseInt(e.target.value) },
-                    (_, i) => i + 1
-                  ).map((i) => i.toString()),
-                  "Current Side"
-                ),
-              };
+          min={1}
+          step={1}
+          onChange={event => {
+            const count = Math.max(1, Math.trunc(Number(event.target.value) || 1));
+            setSelectedClass(previous => {
+              const next = { ...previous, sideCount: new NumberValue("sideCount", count, "Side Count") };
+              Object.keys(next).filter(key => key.startsWith("vis_") && Number(key.slice(4)) >= count).forEach(key => delete next[key]);
+              for (let side = 0; side < count; side++) next[`vis_${side}`] ??= new CompoundVisualData();
+              next.currentSide = new ChoiceValue("currentSide", String(Math.min(count, Math.max(1, Number(previous.currentSide.value)))), Array.from({ length: count }, (_, index) => String(index + 1)), "Current Side");
+              return next;
             });
           }}
         />
@@ -710,7 +526,7 @@ function BGWPlayground() {
         <div className="flex gap-3">
           {getDistinctInheritedInputElement("family", "font")}
         </div>
-        <div className="flex gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {getDistinctInheritedInputElement("color", "font")}
           {getDistinctInheritedInputElement("size", "font")}
           {getDistinctInheritedInputElement("fontStyle", "font")}
@@ -764,7 +580,7 @@ function BGWPlayground() {
               placeholder={"1920"}
               value={sceneWidth}
               onChange={(e) => {
-                setSceneWidth(e.target.value);
+                setSceneWidth(Math.max(1, Math.round(Number(e.target.value) || 1)));
               }}
             />
           </div>
@@ -781,7 +597,7 @@ function BGWPlayground() {
               placeholder={"1080"}
               value={sceneHeight}
               onChange={(e) => {
-                setSceneHeight(e.target.value);
+                setSceneHeight(Math.max(1, Math.round(Number(e.target.value) || 1)));
               }}
             />
           </div>
@@ -877,6 +693,8 @@ function BGWPlayground() {
                       "transparency",
                       visAttr
                     )}
+                    {getDistinctVisualInputElement(child, "flipped", visAttr)}
+                    {getDistinctVisualInputElement(child, "rotation", visAttr)}
                   </ColorPicker>
                   <Button
                     variant="secondary"
@@ -895,22 +713,7 @@ function BGWPlayground() {
                     className="w-full"
                     image={child.path}
                     setImage={(value) => {
-                      if (value.startsWith("http")) {
-                        changeValueOfVisual(child, "path", value, visAttr);
-                      } else {
-                        getOneByKey("name", value).then((image) => {
-                          if (image) {
-                            changeValueOfVisual(
-                              child,
-                              "path",
-                              image.src,
-                              visAttr
-                            );
-                          } else {
-                            alert("Image not found");
-                          }
-                        });
-                      }
+                      changeValueOfVisual(child, "path", value, visAttr);
                     }}
                   >
                     {getDistinctVisualInputElement(
@@ -919,6 +722,7 @@ function BGWPlayground() {
                       visAttr
                     )}
                     {getDistinctVisualInputElement(child, "flipped", visAttr)}
+                    {getDistinctVisualInputElement(child, "rotation", visAttr)}
                     <div className="flex gap-3">
                       {getDistinctVisualInputElement(child, "width", visAttr)}
                       {getDistinctVisualInputElement(child, "height", visAttr)}
@@ -955,40 +759,15 @@ function BGWPlayground() {
                         visAttr
                       )}
                       {getDistinctVisualInputElement(child, "flipped", visAttr)}
+                    {getDistinctVisualInputElement(child, "rotation", visAttr)}
                     </div>
                     <div className="grid w-full gap-3">
-                      <div className="flex gap-3">
-                        <div className="flex gap-3 w-[45%]">
-                          {getDistinctVisualFontInputElement(
-                            child,
-                            "family",
-                            visAttr
-                          )}
-                          {getDistinctVisualFontInputElement(
-                            child,
-                            "color",
-                            visAttr
-                          )}
-                        </div>
-                        <div className="flex gap-3 w-[15%]">
-                          {getDistinctVisualFontInputElement(
-                            child,
-                            "size",
-                            visAttr
-                          )}
-                        </div>
-                        <div className="flex gap-3 w-[40%]">
-                          {getDistinctVisualFontInputElement(
-                            child,
-                            "fontStyle",
-                            visAttr
-                          )}
-                          {getDistinctVisualFontInputElement(
-                            child,
-                            "fontWeight",
-                            visAttr
-                          )}
-                        </div>
+                      {getDistinctVisualFontInputElement(child, "family", visAttr)}
+                      <div className="grid grid-cols-2 gap-3 min-w-0">
+                        {getDistinctVisualFontInputElement(child, "color", visAttr)}
+                        {getDistinctVisualFontInputElement(child, "size", visAttr)}
+                        {getDistinctVisualFontInputElement(child, "fontStyle", visAttr)}
+                        {getDistinctVisualFontInputElement(child, "fontWeight", visAttr)}
                       </div>
                     </div>
                     <div className="flex gap-3">
@@ -1021,11 +800,11 @@ function BGWPlayground() {
             }
           })}
         </div>
-        <div className="flex w-full gap-3">
+        <div className="flex flex-wrap w-full gap-3">
           <Button
             variant="secondary"
             size="sm"
-            className="w-full"
+            className="flex-1 basis-[96px]"
             onClick={() => {
               setSelectedClass((prev: DataClass) => {
                 return {
@@ -1046,7 +825,7 @@ function BGWPlayground() {
           <Button
             variant="secondary"
             size="sm"
-            className="w-full"
+            className="flex-1 basis-[96px]"
             onClick={() => {
               setSelectedClass((prev: DataClass) => {
                 return {
@@ -1067,7 +846,7 @@ function BGWPlayground() {
           <Button
             variant="secondary"
             size="sm"
-            className="w-full"
+            className="flex-1 basis-[96px]"
             onClick={() => {
               setSelectedClass((prev: DataClass) => {
                 return {
@@ -1135,7 +914,7 @@ function BGWPlayground() {
     child: SingleLayerVisualData,
     visAttr: string = "visual"
   ) => {
-    if (entry[0] === "id") return null;
+    if (!entry || entry[0] === "id") return null;
 
     const type = getType(entry[1]);
     if (type === "null") return null;
@@ -1200,8 +979,7 @@ function BGWPlayground() {
           </Label>
           <Switch
             id={entry[0]}
-            defaultChecked={entry[1].value}
-            checked={entry[1].value}
+              checked={entry[1].value}
             onCheckedChange={(e) => {
               changeValueOfVisual(
                 child,
@@ -1267,7 +1045,7 @@ function BGWPlayground() {
     child: TextVisualData,
     visAttr: string = "visual"
   ) => {
-    if (entry[0] === "id") return null;
+    if (!entry || entry[0] === "id") return null;
 
     const type = getType(entry[1]);
     if (type === "null") return null;
@@ -1332,8 +1110,7 @@ function BGWPlayground() {
           </Label>
           <Switch
             id={entry[0]}
-            defaultChecked={entry[1].value}
-            checked={entry[1].value}
+              checked={entry[1].value}
             onCheckedChange={(e) => {
               changeValueOfVisualFont(
                 child,
@@ -1418,7 +1195,7 @@ function BGWPlayground() {
     entry: [string, PropertyValue],
     childAttr: string = "font"
   ) => {
-    if (entry[0] === "id") return null;
+    if (!entry || entry[0] === "id") return null;
 
     const type = getType(entry[1]);
     if (type === "null") return null;
@@ -1481,8 +1258,7 @@ function BGWPlayground() {
           </Label>
           <Switch
             id={entry[0]}
-            defaultChecked={entry[1].value}
-            checked={entry[1].value}
+              checked={entry[1].value}
             onCheckedChange={(e) => {
               changeValueOfInherited(
                 entry[1].property,
@@ -1564,7 +1340,7 @@ function BGWPlayground() {
     entry: [string, PropertyValue],
     id: string
   ) => {
-    if (entry[0] === "id") return null;
+    if (!entry || entry[0] === "id") return null;
     const type = getType(entry[1]);
     if (type === "null") return null;
     if (entry[1].disabled) return null;
@@ -1598,7 +1374,7 @@ function BGWPlayground() {
   };
 
   const getInputElement = (entry: [string, PropertyValue]) => {
-    if (entry[0] === "id") return null;
+    if (!entry || entry[0] === "id") return null;
     const type = getType(entry[1]);
     if (type === "null") return null;
     if (entry[1].disabled) return null;
@@ -1663,8 +1439,7 @@ function BGWPlayground() {
           </Label>
           <Switch
             id={entry[0]}
-            defaultChecked={entry[1].value}
-            checked={entry[1].value}
+              checked={entry[1].value}
             onCheckedChange={(e) => {
               setSelectedClass((prev: object) => {
                 return {
@@ -1828,8 +1603,6 @@ function BGWPlayground() {
       </TooltipProvider>
     );
   };
-
-  const [exportOpened, setExportOpened] = useState(false);
 
   const renderTreeNode = (
     node,
@@ -2033,82 +1806,50 @@ function BGWPlayground() {
     setCurrentGuide(guide);
   };
 
-  const setGuidePosition = (guidePos: any) => {
-    if (currentGuide == null) return;
-    setCurrentGuide({
-      ...currentGuide,
-      x: guidePos.x,
-      y: guidePos.y,
-    });
-  };
-
   const hideElementGuides = () => {
     setCurrentGuide(null);
   };
 
-  const duplicateComponent = (id: string, parentId: string | number = 0) => {
-    const elem = allComponents.get(id);
-    const node = treeData.find((n) => n.id === id);
-    const children = getAllChildren(id);
-
-    const newId = generateId();
-    const newElem = { ...elem, id: newId };
-    newElem.name = new StringValue(
-      "name",
-      `${
-        elem.name.value.trim() == ""
-          ? getInstantiableByData(elem.type).name
-          : elem.name.value
-      } (Copy)`,
-      "Name"
-    );
-    allComponents.set(newId, newElem);
-
-    if (children.length > 0) {
-      children.forEach((child) => {
-        duplicateComponent(child.id, newId);
-      });
+  const duplicateComponent = (id: string, parentId = treeData.find(node => node.id === id)?.parent ?? 0) => {
+    const additions = [];
+    function copy(sourceId: string, parent: string | number) {
+      const original = allComponents.get(sourceId);
+      const component = reconstructProperties(structuredClone(original));
+      const reidentify = (value) => {
+        if (!value || typeof value !== "object") return;
+        if ("id" in value) value.id = generateId();
+        Object.values(value).forEach(reidentify);
+      };
+      reidentify(component);
+      component.name = new StringValue("name", `${original.name.value || getInstantiableByData(original.type).name} (Copy)`, "Name");
+      allComponents.set(component.id, component);
+      additions.push({ ...treeData.find(node => node.id === sourceId), id: component.id, parent, text: component.name.value });
+      getAllChildren(sourceId).forEach(child => copy(child.id, component.id));
+      return component;
     }
-
-    setSelectedClass(newElem);
-    treeData.push({
-      id: newElem.id,
-      parent: parentId,
-      droppable:
-        newElem.objectType.includes("TableViewData") ||
-        newElem.objectType.includes("LayoutViewData") ||
-        newElem.objectType.includes("ToggleGroupData") ||
-        newElem.objectType.includes("GameComponentContainerData") ||
-        newElem.objectType.includes("GridElementData") ||
-        newElem.objectType.includes("CameraPaneData") ||
-        newElem.objectType.includes("HexagonGridElementData"),
-      text: newElem.name.value,
-    });
-
-    setSelectedComponentId(newElem.id);
-    showElementGuides(newElem.id);
-    setOutputDirty(outputDirty + 1);
+    const component = copy(id, parentId);
+    setTreeData(previous => [...previous, ...additions]);
+    setSelectedClass(component);
+    setSelectedComponentId(component.id);
+    setSceneSelected(false);
+    setOutputDirty(previous => previous + 1);
   };
 
   const deleteComponent = (id: string) => {
-    const children = getAllChildren(id);
-
-    if (children.length > 0) {
-      children.forEach((child) => {
-        deleteComponent(child.id);
-      });
+    const removed = new Set<string>();
+    function collect(componentId: string) {
+      if (removed.has(componentId)) return;
+      removed.add(componentId);
+      getAllChildren(componentId).forEach(child => collect(child.id));
+      allComponents.delete(componentId);
     }
-
-    allComponents.delete(id);
-    setTreeData(treeData.filter((n) => n.id !== id));
-
+    collect(id);
+    setTreeData(previous => previous.filter(node => !removed.has(node.id)));
     setSelectedClass(null);
-    setSelectedComponentId(null);
-    setOutputDirty(outputDirty + 1);
-
-    saveCurrentWorkspace(currentWorkspace);
+    setSelectedComponentId("");
+    setCurrentGuide(null);
+    setOutputDirty(previous => previous + 1);
   };
-
   const checkPossibleErrors = (node) => {
     let own = getElementFromId(node.id);
     if (own == null) return null;
@@ -2137,7 +1878,7 @@ function BGWPlayground() {
           });
         }
 
-        if (col >= columns || row >= rows) {
+        if (col < 0 || row < 0 || col >= columns || row >= rows) {
           return (node.info = {
             type: "error",
             message: "GridElement has out of bounds row or column",
@@ -2343,238 +2084,35 @@ function BGWPlayground() {
   };
 
   const getOutputElementsFromTree = (isExport: boolean = false) => {
-    const components: DataClass[] = [];
-    const allComponentsCopy = {};
-
-    Array.from(allComponents.keys()).map((key) => {
-      let elem = allComponents.get(key);
-      if (elem == null) return;
-
-      allComponentsCopy[elem.id] = JSON.parse(JSON.stringify(elem));
-
-      //if(elem.type === "GridElementData") return
-
-      if (elem.type === "ProgressBarData") {
-        allComponentsCopy[elem.id].progress = Math.min(
-          1,
-          Math.max(0, parseFloat(allComponentsCopy[elem.id].progress))
-        );
-      } else if (elem.type === "CardViewData") {
-        allComponentsCopy[elem.id].currentVisual =
-          allComponentsCopy[elem.id].current === "front"
-            ? allComponentsCopy[elem.id].front
-            : allComponentsCopy[elem.id].back;
-      } else if (
-        elem.type === "HexagonViewData" ||
-        elem.type === "HexagonGridData"
-      ) {
-        allComponentsCopy[elem.id].orientation = allComponentsCopy[
-          elem.id
-        ].orientation
-          .replace(" ", "_")
-          .toLowerCase();
-      } else if (elem.type === "DiceViewData") {
-        let listToDel = [];
-        allComponentsCopy[elem.id].visuals = Object.entries(
-          allComponentsCopy[elem.id]
-        )
-          .filter((entry) => entry[0].startsWith("vis_"))
-          .map((entry) => {
-            listToDel.push(entry[0]);
-            return entry[1];
-          });
-
-        listToDel.forEach((key) => {
-          delete allComponentsCopy[elem.id][key];
-        });
-
-        allComponentsCopy[elem.id].currentSide =
-          parseInt(allComponentsCopy[elem.id].currentSide) - 1;
-      }
-
-      if (elem.alignment) {
-        allComponentsCopy[elem.id].alignment = {
-          first: allComponentsCopy[elem.id].horizontalAlignment,
-          second: allComponentsCopy[elem.id].verticalAlignment,
-        };
-      }
-
-      Object.entries(allComponentsCopy[elem.id]).forEach((entry) => {
-        if (!entry[1]) return;
-
-        if (entry[1].type === "CompoundVisualData") {
-          entry[1].children = entry[1].children.map((child) => {
-            if (child.type === "TextVisualData") {
-              child.alignment = {
-                first: child.horizontalAlignment,
-                second: child.verticalAlignment,
-              };
-            }
-
-            return child;
-          });
-        }
-      });
-
-      delete allComponentsCopy[elem.id].horizontalAlignment;
-      delete allComponentsCopy[elem.id].verticalAlignment;
+    const excluded = new Set<string>();
+    const errors: Record<string, string> = {};
+    let error = null;
+    let warning = null;
+    treeData.forEach(node => {
+      const issue = checkPossibleErrors(node);
+      if (issue?.type === "error") {
+        excluded.add(node.id);
+        errors[node.id] = issue.message;
+        error = issue.message;
+      } else if (issue?.type === "warning") warning = issue.message;
     });
-
     if (!isExport) {
-      setProjectError(null);
-      setProjectWarning(null);
+      setProjectError(error);
+      setProjectWarning(warning);
     }
-
-    treeData.forEach((node) => {
-      let possErrors = checkPossibleErrors(node);
-      if (!isExport) {
-        if (possErrors && possErrors.type === "error") {
-          setProjectError(possErrors.message);
-        } else if (possErrors && possErrors.type === "warning") {
-          setProjectWarning(possErrors.message);
-        }
-      }
-
-      let elem = allComponentsCopy[node.id];
-      if (elem == null) return;
-      if (node.info && node.info.type == "error") return;
-
-      if (elem.type === "ToggleGroupData") return;
-
-      if (node.parent === 0) {
-        components.push(elem);
-        return;
-      }
-
-      let parent = allComponentsCopy[node.parent];
-      let parentNode = treeData.find((n) => n.id === node.parent);
-      if (parent == null) return;
-
-      if (parentNode && parentNode.info && parentNode.info.type == "error")
-        return;
-
-      if (
-        parent.type === "ToggleGroupData" &&
-        elem.objectType.includes("BinaryStateButtonData")
-      ) {
-        elem.group = parent.group;
-      }
-
-      if (parent.type === "CameraPaneData") {
-        parent.target = elem;
-      } else if (
-        (parent.objectType.includes("LayoutViewData") ||
-          parent.objectType.includes("GameComponentContainerData")) &&
-        parent.type !== "GridPaneData" &&
-        parent.type !== "HexagonGridData"
-      ) {
-        parent.components.push(elem);
-      } else if (parent.objectType.includes("GridElementData")) {
-        parent.component = elem;
-      } else if (parent.objectType.includes("HexagonGridElementData")) {
-        parent.hexagon = elem;
-        const nextParent = allComponentsCopy[parentNode.parent];
-        parent.hexagon.orientation = nextParent.orientation;
-        if (nextParent && nextParent.objectType.includes("HexagonGridData")) {
-          nextParent.map[parent.column + "/" + parent.row] = elem;
-        }
-      } else if (parent.type === "HexagonGridData") {
-        parent.map[elem.column + "/" + elem.row] = elem.hexagon;
-      } else if (parent.type === "GridPaneData") {
-        parent.grid.push(elem);
-      } else if (
-        parent.type === "TableViewData" &&
-        elem.type === "TableColumnData"
-      ) {
-        parent.columns.push(elem);
-      } else {
-        components.push(elem);
-      }
-    });
-
-    if (isExport) {
-      return { components, allComponentsCopy };
-    }
-    return components;
+    const snapshot = buildPlaygroundSnapshot(allComponents, treeData, isExport ? new Set<string>() : excluded);
+    return isExport ? { ...snapshot, errors } : snapshot.components;
   };
 
   const sendOutputElements = () => {
-    if (allComponents.size === 0) {
-      sendJsonMessage({
-        container: "bgw-root",
-        props: {
-          data: {
-            type: "AppData",
-            gameScene: {
-              width: sceneWidth,
-              height: sceneHeight,
-              background: {
-                type: "CompoundVisualData",
-                id: "bgw-vis-0",
-                children: [
-                  {
-                    type: "ColorVisualData",
-                    id: "bgw-vis-0",
-                    transparency: 1.0,
-                    flipped: "none",
-                    color: sceneBackground,
-                  },
-                ],
-              },
-              components: [],
-            },
-            width: sceneWidth,
-            height: sceneHeight,
-          },
-        },
-      });
-      return;
-    }
-
-    // const components : DataClass[] = []
-    // allComponents.forEach((value, key) => {
-    //     components.push(value)
-    // })
-
     const components = getOutputElementsFromTree();
-
-    const comps = JSON.parse(JSON.stringify(components));
-
     setCompileError(null);
-
-    sendJsonMessage({
-      container: "bgw-root",
-      props: {
-        data: {
-          type: "AppData",
-          gameScene: {
-            width: sceneWidth,
-            height: sceneHeight,
-            background: {
-              type: "CompoundVisualData",
-              id: "bgw-vis-0",
-              children: [
-                {
-                  type: "ColorVisualData",
-                  id: "bgw-vis-0",
-                  transparency: 1.0,
-                  flipped: "none",
-                  color: sceneBackground,
-                },
-              ],
-            },
-            components: comps,
-          },
-          width: sceneWidth,
-          height: sceneHeight,
-        },
-      },
-    });
+    sendJsonMessage(createPreviewMessage(components, sceneWidth, sceneHeight, sceneBackground));
   };
-
   const getAddComponentSelect = () => {
     return (
       <Select
+        value={selectedComponentType}
         onValueChange={(value) => {
           setSelectedComponentType(value);
         }}
@@ -2593,7 +2131,7 @@ function BGWPlayground() {
             {Object.entries(Components.Instantiable.UIElements).map((entry) => {
               return (
                 <SelectItem
-                  value={entry[1]["cls"]}
+                  value={entry[1]["cls"]} textValue={entry[0]}
                   disabled={entry[1].disabled}
                 >
                   <div className="flex items-center gap-5 text-muted-foreground">
@@ -2629,7 +2167,7 @@ function BGWPlayground() {
               (entry) => {
                 return (
                   <SelectItem
-                    value={entry[1]["cls"]}
+                    value={entry[1]["cls"]} textValue={entry[0]}
                     disabled={entry[1].disabled}
                   >
                     <div className="flex items-center gap-5 text-muted-foreground">
@@ -2664,7 +2202,7 @@ function BGWPlayground() {
               (entry) => {
                 return (
                   <SelectItem
-                    value={entry[1]["cls"]}
+                    value={entry[1]["cls"]} textValue={entry[0]}
                     disabled={entry[1].disabled}
                   >
                     <div className="flex items-center gap-5 text-muted-foreground">
@@ -2701,7 +2239,7 @@ function BGWPlayground() {
               (entry) => {
                 return (
                   <SelectItem
-                    value={entry[1]["cls"]}
+                    value={entry[1]["cls"]} textValue={entry[0]}
                     disabled={entry[1].disabled}
                   >
                     <div className="flex items-center gap-5 text-muted-foreground">
@@ -2736,7 +2274,7 @@ function BGWPlayground() {
               (entry) => {
                 return (
                   <SelectItem
-                    value={entry[1]["cls"]}
+                    value={entry[1]["cls"]} textValue={entry[0]}
                     disabled={entry[1].disabled}
                   >
                     <div className="flex items-center gap-5 text-muted-foreground">
@@ -2776,6 +2314,7 @@ function BGWPlayground() {
         {elementClass.type === "TableColumnData"
           ? getFontsInputs(elementClass)
           : null}
+        {elementClass.barVisual && <SettingsField title="Progress bar">{getDistinctInputElement(elementClass, "barVisual")}</SettingsField>}
         {getRestSettingsInputs(elementClass)}
       </>
     );
@@ -2795,8 +2334,9 @@ function BGWPlayground() {
         elementClass.type !== "ColorPickerData"
           ? getFontsInputs(elementClass)
           : null}
+        {elementClass.barVisual && <SettingsField title="Progress bar">{getDistinctInputElement(elementClass, "barVisual")}</SettingsField>}
         {getRestSettingsInputs(elementClass)}
-        {getCodeExport()}
+
       </>
     );
   };
@@ -2806,7 +2346,7 @@ function BGWPlayground() {
       <Toggle
         pressed={sceneSelected}
         defaultPressed={false}
-        className={`flex items-center gap-3 justify-start cursor-pointer relative main__toggle w-full rounded-lg ${
+        className={`flex items-center gap-3 justify-start cursor-pointer relative main__toggle flex-1 min-w-0 rounded-lg ${
           sceneSelected ? "!bg-bgw-green/10" : ""
         } hover:bg-bgw-green/10 bg-bgw-green/5`}
         title={sceneName}
@@ -2831,28 +2371,36 @@ function BGWPlayground() {
     );
   };
 
-  const getCodeExport = () => {
-    try {
-      return (
-        <div className="flex flex-col w-full gap-4">
-          <LiveCodeTab
-            getOutputElements={getOutputElementsFromTree}
-            selectedComponentId={selectedComponentId}
-          />
-        </div>
-      );
-    } catch (error) {
-      return null;
-    }
-  };
-
   const getNameInputs = (elementClass: DataClass) => {
+    const node = treeData.find(item => item.id === elementClass.id);
+    const descendants = new Set([elementClass.id]);
+    const collect = (id: string) => getAllChildren(id).forEach(child => { descendants.add(child.id); collect(child.id); });
+    collect(elementClass.id);
+    const parents = treeData.filter(candidate => candidate.droppable && !descendants.has(candidate.id) && checkDrop(node, candidate.id, candidate));
     return (
       <SettingsField
         title={getInstantiableByData(elementClass.type).name}
         icon={getInstantiableByData(elementClass.type).icon}
       >
         {getDistinctInputElement(elementClass, "name")}
+        <div className="flex items-center justify-between w-full gap-4">
+          <Label htmlFor="component-parent" className="shrink-0 w-[43%] text-white/70">Parent</Label>
+          <Select value={String(node?.parent ?? 0)} onValueChange={value => {
+            const parent = value === "0" ? 0 : value;
+            setTreeData(previous => previous.map(item => item.id === elementClass.id ? { ...item, parent } : item));
+          }}>
+            <SelectTrigger id="component-parent" className="min-w-0 [&>span]:truncate">
+              <SelectValue placeholder="Scene" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">Scene</SelectItem>
+              {parents.map(parent => {
+                const component = allComponents.get(parent.id);
+                return <SelectItem key={parent.id} value={parent.id}>{component.name.value || getInstantiableByData(component.type).name}</SelectItem>;
+              })}
+            </SelectContent>
+          </Select>
+        </div>
       </SettingsField>
     );
   };
@@ -2860,9 +2408,7 @@ function BGWPlayground() {
   const tryGetParent = (elementClass: DataClass) => {
     if (elementClass === null) return null;
     const ownNode = treeData.find((node) => node.id === elementClass.id);
-    if (ownNode.parent === 0) return null;
-    const parentNode = treeData.find((node) => node.id === ownNode.parent);
-    return getElementFromId(parentNode.id);
+    return ownNode ? getElementFromId(ownNode.parent) : null;
   };
 
   const getBoundsInputs = (elementClass: DataClass) => {
@@ -3036,10 +2582,10 @@ function BGWPlayground() {
     return (
       <SettingsField title="Display">
         {getDistinctInputElement(elementClass, "opacity")}
-        {/* getDistinctInputElement(elementClass, "zIndex") */}
+        {getDistinctInputElement(elementClass, "zIndex")}
         {getDistinctInputElement(elementClass, "isVisible")}
         {getDistinctInputElement(elementClass, "isDisabled")}
-        {/* getDistinctInputElement(elementClass, "isFocusable") */}
+        {getDistinctInputElement(elementClass, "isFocusable")}
       </SettingsField>
     );
   };
@@ -3161,41 +2707,29 @@ function BGWPlayground() {
     return null;
   };
 
-  const [draggingGuide, setDraggingGuide] = useState(false);
-  const [draggingBounds, setDraggingBounds] = useState({
-    x: 0,
-    y: 0,
-  });
-  const [draggingGuidesStart, setDraggingGuidesStart] = useState({
-    x: 0,
-    y: 0,
-  });
-
   const ELEMENT_MAP: { [key: string]: JSX.Element } = {
     "left-sidebar": (
       <div
-        className="relative shrink-0 max-h-[calc(100vh-57px)] h-full flex flex-col gap-3"
+        className="playground-scene-panel relative min-h-0 h-full flex flex-col gap-3"
         x-chunk="dashboard-03-chunk-0"
       >
         <div className="flex flex-row gap-3 rounded-lg h-fit">
           {getSceneDisplay()}
-          <Dialog>
+          <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="secondary"
-                className="items-center w-10 h-10 rounded-lg hover:bg-bgw-green/10 bg-bgw-green/5"
+                aria-label="Add component" className="items-center w-10 h-10 shrink-0 rounded-lg hover:bg-bgw-green/10 bg-bgw-green/5"
               >
                 <i className="text-lg material-symbols-rounded text-bgw-green">
                   add
                 </i>
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="w-[calc(100%_-_24px)] max-w-lg max-h-[90dvh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add Component</DialogTitle>
-                <DialogDescription>
-                  This action will add an element to the scene.
-                </DialogDescription>
+                <DialogDescription>This action will add an element to the scene.</DialogDescription>
               </DialogHeader>
               <div className="grid gap-3 component__select">
                 {getAddComponentSelect()}
@@ -3204,28 +2738,22 @@ function BGWPlayground() {
                 <DialogClose asChild>
                   <Button
                     variant="secondary"
+                    disabled={!selectedComponentType}
                     onClick={() => {
-                      let newObj = new Components.DataClasses[
-                        selectedComponentType
-                      ]();
-                      setSelectedClass(newObj);
-                      treeData.push({
-                        id: newObj.id,
+                      const Component = Components.DataClasses[selectedComponentType];
+                      if (!Component) return;
+                      const component = new Component();
+                      allComponents.set(component.id, component);
+                      setTreeData(previous => [...previous, {
+                        id: component.id,
                         parent: 0,
-                        droppable:
-                          newObj.objectType.includes("TableViewData") ||
-                          newObj.objectType.includes("LayoutViewData") ||
-                          newObj.objectType.includes("ToggleGroupData") ||
-                          newObj.objectType.includes(
-                            "GameComponentContainerData"
-                          ) ||
-                          newObj.objectType.includes("GridElementData") ||
-                          newObj.objectType.includes("CameraPaneData") ||
-                          newObj.objectType.includes("HexagonGridElementData"),
-                        text: newObj.name.value,
-                      });
-                      setSelectedComponentId(newObj.id);
-                      showElementGuides(newObj.id);
+                        droppable: component.type in Droppable,
+                        text: component.name.value,
+                      }]);
+                      setSelectedClass(component);
+                      setSelectedComponentId(component.id);
+                      setSceneSelected(false);
+                      setOutputDirty(previous => previous + 1);
                     }}
                   >
                     Add
@@ -3235,8 +2763,8 @@ function BGWPlayground() {
             </DialogContent>
           </Dialog>
         </div>
-        <div className="relative grid h-full max-h-full gap-3 p-4 overflow-hidden rounded-lg bg-background">
-          <ScrollArea className="h-full max-h-full component__scroll">
+        <div className="relative flex flex-col flex-1 min-h-0 gap-3 p-4 overflow-hidden rounded-lg bg-background">
+          <ScrollArea className="flex-1 min-h-0 component__scroll">
             <DndProvider backend={MultiBackend} options={getBackendOptions()}>
               <div className="pb-[4rem] -mt-4">
                 <Tree
@@ -3272,77 +2800,22 @@ function BGWPlayground() {
     ),
     preview: (
       <div
-        className={`relative flex h-full min-h-[50vh] w-full flex-col overflow-hidden bg-background ${
+        className={`relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-background ${
           fullScreen ? "preview--fullscreen" : ""
         }`}
         id={"bgw-preview"}
-        onMouseMove={(e) => {
-          if (draggingGuide) {
-            let shift = e.shiftKey;
-            let ctrl = e.ctrlKey;
-            let x = e.clientX - draggingBounds.x;
-            let y = e.clientY - draggingBounds.y;
-
-            setGuidePosition({
-              x: draggingGuidesStart.x + x,
-              y: draggingGuidesStart.y + y,
-            });
-            // setDraggingBounds({x: x, y: y})
-            //modifyElementPosition(selectedComponentId, currentGuide.x + x, currentGuide.y + y)
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (draggingGuide) {
-            setDraggingGuide(false);
-            let shift = e.shiftKey;
-            let ctrl = e.ctrlKey;
-            let x = e.clientX - draggingBounds.x;
-            let y = e.clientY - draggingBounds.y;
-
-            setGuidePosition({
-              x: draggingGuidesStart.x + x,
-              y: draggingGuidesStart.y + y,
-            });
-            modifyElementPosition(
-              selectedComponentId,
-              draggingGuidesStart.x + x,
-              draggingGuidesStart.y + y
-            );
-            setDraggingBounds({ x: 0, y: 0 });
-          }
-        }}
-        onMouseUp={(e) => {
-          if (draggingGuide) {
-            setDraggingGuide(false);
-            let shift = e.shiftKey;
-            let ctrl = e.ctrlKey;
-            let x = e.clientX - draggingBounds.x;
-            let y = e.clientY - draggingBounds.y;
-
-            setGuidePosition({
-              x: draggingGuidesStart.x + x,
-              y: draggingGuidesStart.y + y,
-            });
-            modifyElementPosition(
-              selectedComponentId,
-              draggingGuidesStart.x + x,
-              draggingGuidesStart.y + y
-            );
-            setDraggingBounds({ x: 0, y: 0 });
-          }
-        }}
       >
         <Button
           variant="error"
           className={`absolute left-3 bottom-3 z-40 ${
             compileError != null || projectError != null ? "flex" : "hidden"
           }`}
-          title={compileError}
+          title={compileError ?? projectError}
         >
           <i className="mr-3 text-lg material-symbols-rounded">
             emergency_home
           </i>
-          <p>Scene errors detected. Preview may be inaccurate.</p>
+          <p>{projectError ?? "Could not render this scene."}</p>
         </Button>
         <Button
           variant="warning"
@@ -3360,6 +2833,7 @@ function BGWPlayground() {
         <Button
           variant="secondary"
           className="absolute z-40 right-3 bottom-3"
+          aria-label={fullScreen ? "Exit fullscreen" : "Fullscreen preview"}
           onClick={() => setFullScreen(!fullScreen)}
         >
           <i className="text-lg material-symbols-rounded">
@@ -3384,28 +2858,34 @@ function BGWPlayground() {
         <div
           className="flex items-center justify-center flex-1 bgw-root-container"
           id="bgw-root-container"
+          onClick={event => {
+            let target = event.target as HTMLElement;
+            while (target && target !== event.currentTarget) {
+              const component = allComponents.get(target.id);
+              if (component) {
+                setSelectedClass(component);
+                setSelectedComponentId(component.id);
+                setSceneSelected(false);
+                showElementGuides(component.id);
+                return;
+              }
+              target = target.parentElement;
+            }
+            setSceneSelected(true);
+            setSelectedClass(null);
+            setSelectedComponentId("");
+            hideElementGuides();
+          }}
         >
           <div
             className="w-full h-full rounded-xl bgw-root"
             id="bgw-root"
           ></div>
-          {/*{*/}
-          {/*    selectedClass !== null ? drawOutputElement(selectedClass) : null*/}
-          {/*}*/}
+
         </div>
         {currentGuide !== null ? (
           <div
             className="guide"
-            onMouseDown={(e) => {
-              return;
-              setDraggingGuide(true);
-              setDraggingBounds({ x: e.clientX, y: e.clientY });
-              setDraggingGuidesStart({
-                x: currentGuide.x,
-                y: currentGuide.y,
-              });
-            }}
-            draggable={true}
             style={{
               left: currentGuide.x,
               top: currentGuide.y,
@@ -3421,159 +2901,62 @@ function BGWPlayground() {
         className="relative w-full h-full pt-4 pb-4 overflow-x-hidden overflow-y-auto"
         x-chunk="dashboard-03-chunk-0"
         id="data__inputs__sidebar"
-        orientation="vertical"
-        style={{
-          visibility:
-            selectedClass == null && !sceneSelected ? "hidden" : "visible",
-        }}
+
       >
         <div className="flex flex-col items-start w-full gap-3 data__inputs">
           {getDataInputs(selectedClass)}
+          {selectedClass && (
+            <div className="playground-component-actions flex gap-3 w-full px-5">
+              <Button variant="secondary" onClick={() => duplicateComponent(selectedComponentId, treeData.find(node => node.id === selectedComponentId)?.parent ?? 0)}>Duplicate</Button>
+              <Button variant="ghost" onClick={() => deleteComponent(selectedComponentId)}>Delete</Button>
+            </div>
+          )}
         </div>
       </div>
     ),
   };
 
-  const [mosaicState, setMosaicState] = useState({
-    direction: "row",
-    first: {
-      direction: "row",
-      first: "left-sidebar",
-      second: "preview",
-      splitPercentage: 20,
-    },
-    second: "right-sidebar",
-    splitPercentage: 80,
-  });
+  ELEMENT_MAP.output = (
+    <PlaygroundExport
+      snapshot={getOutputElementsFromTree(true)}
+      selectedId={selectedComponentId}
+      width={sceneWidth}
+      height={sceneHeight}
+      background={sceneBackground}
+    />
+  );
 
   return (
-    <>
-      {/* {loading ? (
-        <div className="fixed w-full h-full bg-muted left-0 top-0 right-0 bottom-0 z-[900000] flex items-center justify-center">
-          <img src={"bgw_animated.svg"} className="w-[150px] mt-[136px]" />
+    <div className="bgw-playground">
+      <header className="playground-header sticky top-0 z-10 flex h-[57px] items-center gap-1 bg-background px-4 justify-between">
+        <div className="playground-brand flex items-center gap-4">
+          <Link to="/" className="flex items-center h-full" aria-label="Back to documentation">
+            <i className="text-xl material-symbols-rounded">arrow_back</i>
+          </Link>
+          <Link to="/" className="flex items-center gap-4">
+            <img src="/bgw/logo.svg" alt="" className="w-8 h-8" />
+            <h1 className="text-xl font-semibold">BoardGameWork</h1>
+          </Link>
+          <Badge variant="property" className="gap-2 rounded-sm py-1.5 px-3">
+            <i className="text-xs material-symbols-rounded">draw_abstract</i>
+            <p>Playground (Alpha)</p>
+          </Badge>
         </div>
-      ) : null} */}
-      <div className="fixed w-screen h-screen bg-muted inset-0 z-[900000] hidden items-center justify-center max-2xl:flex max-2xl:flex-col">
-        <img src={"logo.svg"} className="w-40 mb-0" />
-        <Badge variant="property" className="gap-2 rounded-sm py-1.5 px-3 mb-5">
-          <i className="text-xs material-symbols-rounded">draw_abstract</i>
-          <p>Playground (Alpha)</p>
-        </Badge>
-        <h1 className="font-semibold text-center w-[70%]">
-          BGW Playground is not yet available on mobile.
-        </h1>
-        <Link to="/">
-          <Button
-            variant="property"
-            size="sm"
-            className="absolute items-center h-10 gap-2 bottom-3 left-4 right-4"
-          >
-            <i className="text-lg material-symbols-rounded">arrow_back</i>
-            <p>Go back</p>
-          </Button>
-        </Link>
-      </div>
-      <div className="grid w-full h-screen max-2xl:overflow-hidden">
-        <div className="flex flex-col">
-          <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 bg-background px-4 justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/" className="flex items-center h-full">
-                <i className="text-xl material-symbols-rounded">arrow_back</i>
-              </Link>
-              <Link to="/" className="flex items-center gap-4">
-                <img src="/bgw/logo.svg" className="w-8 h-8" />
-                <h1 className="text-xl font-semibold">BoardGameWork</h1>
-              </Link>
-              <Badge
-                variant="property"
-                className="gap-2 rounded-sm py-1.5 px-3"
-              >
-                <i className="text-xs material-symbols-rounded">
-                  draw_abstract
-                </i>
-                <p>Playground (Alpha)</p>
-              </Badge>
-            </div>
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button variant="secondary" size="icon" className="md:hidden">
-                  <i className="text-xl material-symbols-rounded">settings</i>
-                  <span className="sr-only">Settings</span>
-                </Button>
-              </DrawerTrigger>
-            </Drawer>
-            <div className="flex gap-3">
-              <Toggle
-                variant={"default"}
-                className="w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green"
-                size={"sm"}
-                onPressedChange={() => {
-                  setShowPermanentGuides(!showPermanentGuides);
-                }}
-                defaultPressed={showPermanentGuides}
-              >
-                Permanent Guides
-              </Toggle>
-              <Toggle
-                variant={"default"}
-                className={`w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green`}
-                size={"sm"}
-                onPressedChange={() => {
-                  setAdvancedMode(!advancedMode);
-                }}
-              >
-                Expert Mode
-              </Toggle>
-              {/* <Dialog>
-                <DialogTrigger className="w-full" asChild>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="gap-3 ml-auto text-sm w-fit"
-                  >
-                    <i className="text-lg material-symbols-rounded">
-                      perm_media
-                    </i>
-                    Images
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-[800px]" forceMount={true}>
-                  <DialogHeader>
-                    <DialogTitle>Saved Images</DialogTitle>
-                    <DialogDescription>
-                      This is a list of all images currently saved in the
-                      project.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <ImageViewer
-                    onAddImage={refreshImages}
-                    images={imageGallery}
-                  />
-                </DialogContent>
-              </Dialog> */}
-              {/* <Button
-                variant="secondary"
-                size="sm"
-                className="gap-3 ml-auto text-sm"
-              >
-                <i className="text-lg material-symbols-rounded">publish</i>
-                Share
-              </Button> */}
-            </div>
-          </header>
-          <main className="flex items-center flex-1 h-full max-h-[calc(100vh-57px)] relative bg-muted/30 ">
-            <Mosaic<string>
-              renderTile={(id, path) => {
-                return ELEMENT_MAP[id];
-              }}
-              className="flex w-full h-full"
-              value={mosaicState}
-              onChange={setMosaicState}
-            ></Mosaic>
-          </main>
+        <div className="playground-header-actions flex gap-3">
+          <Toggle variant="default" size="sm" pressed={showPermanentGuides} onPressedChange={setShowPermanentGuides}
+            className="w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green">
+            Permanent Guides
+          </Toggle>
+          <Toggle variant="default" size="sm" pressed={advancedMode} onPressedChange={setAdvancedMode}
+            className="w-fit shrink-0 data-[state=on]:bg-bgw-green/5 data-[state=on]:hover:bg-bgw-green/10 data-[state=on]:text-bgw-green">
+            Expert Mode
+          </Toggle>
         </div>
-      </div>
-    </>
+      </header>
+      <main className="playground-workspace">
+        <PlaygroundLayout elements={ELEMENT_MAP} onLayoutChange={sendOutputElements} />
+      </main>
+    </div>
   );
 }
 

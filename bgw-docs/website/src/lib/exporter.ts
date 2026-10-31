@@ -1,492 +1,168 @@
-﻿import {
-  ComponentViewData,
-  Droppable,
-  Instantiable,
-  NonPrimitiveDataClasses,
-} from "@/lib/components.ts";
-// import constructors from "@/bgw/constructors.json";
-import { ConstructorAPIImportInfo } from "@/lib/types.ts";
-import * as Components from "@/lib/components.ts";
-// import { constructors } from "@/lib/constructors.ts";
-import { dirs } from "@/main";
-import { getParamsFromSignature } from "./utils";
+import { PlaygroundData } from "./playground";
 
-const applyBlacklist = [
-  "id",
-  "type",
-  "name",
-  "components",
-  "alignment",
-  "visual",
-  "selectedColor",
-  "font",
-  "selectedItems",
-  "selectedItem",
-  "style",
-  "filters",
-  "flipped",
-  "scroll",
-];
-const applyBlacklistNonPrimitive = [
-  "id",
-  "type",
-  "name",
-  "components",
-  "visual",
-  "alignment",
-  "color",
-  "filters",
-  "style",
-  "selectedColor",
-  "font",
-  "selectedItems",
-  "selectedItem",
-];
-
-const mappingNames = {
-  front: "frontVisual",
-  back: "backVisual",
-  layoutFromCenter: "isLayoutFromCenter",
-  allowIndeterminate: "isIndeterminateAllowed",
-  initialColor: "selectedColor",
+// Public primary constructors in bgw-gui/src/jvmMain. Dokka presentation
+// signatures also contain secondary constructors and are unsuitable for export.
+const bounds = "posX posY width height";
+const labeled = `${bounds} text font alignment isWrapText visual`;
+const input = `${bounds} text prompt font visual`;
+const constructors: Record<string, string> = {
+  Button: labeled, Label: labeled,
+  CheckBox: `${labeled} isChecked allowIndeterminate isIndeterminate`,
+  ToggleButton: `${labeled} isSelected toggleGroup`,
+  RadioButton: `${bounds} text font alignment isSelected toggleGroup visual`,
+  TextField: input, TextArea: input, PasswordField: input,
+  ColorPicker: `${bounds} initialColor visual`, ProgressBar: `${bounds} visual progress barVisual`,
+  Slider: `${bounds} visual minValue maxValue value step orientation`,
+  ComboBox: `${bounds} font visual prompt items disallowUnselect itemVisuals`,
+  ListView: `${bounds} items font visual orientation selectionMode selectionBackground`,
+  TableView: `${bounds} columns items visual selectionMode selectionBackground`,
+  TableColumn: "title width font formatFunction",
+  Pane: `${bounds} visual`, GridPane: "posX posY columns rows spacing layoutFromCenter visual",
+  CameraPane: `${bounds} visual limitBounds target`,
+  CardView: `${bounds} front back`, DiceView: `${bounds} visuals`,
+  HexagonView: "posX posY size visual orientation", TokenView: `${bounds} visual`,
+  Area: `${bounds} visual`, CardStack: `${bounds} alignment visual`,
+  HexagonGrid: `${bounds} visual coordinateSystem orientation`,
+  LinearLayout: `${bounds} spacing visual orientation alignment`, Satchel: `${bounds} visual`,
+  ColorVisual: "color", ImageVisual: "path width height offsetX offsetY rotation",
+  TextVisual: "text font alignment offsetX offsetY rotation",
+  Font: "size color family fontWeight fontStyle",
 };
+const writable = "posX posY width height zIndex opacity isVisible isDisabled isFocusable scaleX scaleY rotation layoutFromCenter isDraggable text font alignment isWrapText isSelected isChecked allowIndeterminate isIndeterminate isReadonly selectedColor progress barVisual orientation spacing interactive limitBounds isVerticalLocked isHorizontalLocked isZoomLocked panButton currentSide transparency flipped".split(" ");
+const doubles = new Set("posX posY width height opacity scaleX scaleY rotation progress transparency spacing".split(" "));
+const propertyNames: Record<string, string> = { layoutFromCenter: "isLayoutFromCenter", allowIndeterminate: "isIndeterminateAllowed", panButton: "panMouseButton" };
+const sourceNames: Record<string, string> = { initialColor: "selectedColor", toggleGroup: "group" };
+const enums: Record<string, string> = { orientation: "Orientation", coordinateSystem: "HexagonGrid.CoordinateSystem", selectionMode: "SelectionMode", flipped: "Flip", fontStyle: "Font.FontStyle", panButton: "MouseButtonType" };
+const genericTypes: Record<string, string> = { Pane: "ComponentView", GridPane: "ComponentView", Area: "GameComponentView", CardStack: "CardView", LinearLayout: "GameComponentView", Satchel: "GameComponentView", HexagonGrid: "HexagonView", ComboBox: "String", ListView: "String", TableView: "Int", TableColumn: "Int" };
+const indent = (text: string) => text.split("\n").map(line => `    ${line}`).join("\n");
+const quote = (value: any) => '"' + String(value).replace(/[\\"$\u0000-\u001f\u2028\u2029]/g, character => {
+  const escapes: Record<string, string> = { "\\": "\\\\", '"': '\\"', "$": "\\$", "\n": "\\n", "\r": "\\r", "\t": "\\t" };
+  return escapes[character] ?? `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`;
+}) + '"';
+const number = (value: number, double = false) => Number.isInteger(value) && double ? `${value}.0` : String(value);
 
-const getInstantiableByData = (data: string) => {
-  const flat = Object.entries(Components.Instantiable).flatMap((e) =>
-    Object.entries(e[1])
-  );
-  return flat.find((e) => e[1].cls === data)[1];
-};
-
-const getNonPrimitiveByType = (type: string) => {
-  return Object.entries(Components.NonPrimitiveDataClasses).find(
-    (e) => e[0] === type
-  )[1];
-};
-
-const isInstantiable = (type: string) => {
-  return Object.keys(Components.Instantiable).some((e) => e === type);
-};
-
-const isNonPrimitive = (type: string) => {
-  return Object.keys(Components.NonPrimitiveDataClasses).some(
-    (e) => e === type
-  );
-};
-
-export function exportComponent(component: any = null, all: any, id: string) {
-  let compName = component.type.replace("Data", "");
-  let { index, comp, mainConstructor, mainConstructorParams, properties } =
-    getConstructorAndProperties(compName);
-  if (!index || !comp || !mainConstructorParams || !properties)
-    return `// No constructor found for ${compName}`;
-
-  // Take Instatiable class from components.ts
-  let referenceClass = getInstantiableByData(component.type).cls;
-  let reference = new Components.DataClasses[referenceClass]();
-  let referenceProperties = Object.entries(reference)
-    .map((e) => e[0])
-    .filter((e) => properties.find((prop) => prop.name === e));
-
-  // Process component name to include no special characters or spaces
-  let name =
-    component.name.trim() === ""
-      ? compName.charAt(0).toLowerCase() + compName.slice(1)
-      : component.name.charAt(0).toLowerCase() + component.name.slice(1);
-  if (name.indexOf(" ") > -1) name = name.split(" ").join("_");
-  name = name.replace(/[^a-zA-Z0-9_]/g, "");
-
-  let code = `val ${name} = ${compName}(`;
-  if (mainConstructor.parameters.length !== mainConstructorParams.length) {
-    let genericType = "ComponentView";
-    try {
-      genericType = index.details.info.signature
-        .split("(")[0]
-        .split("<")[1]
-        .split(">")[0]
-        .split(":")[1]
-        .trim();
-    } catch (_) {
-      /* empty */
-    }
-    if (component.objectType.includes("StructuredDataViewData")) {
-      genericType = "Int";
-    }
-    if (component.objectType.includes("ComboBoxData")) {
-      genericType = "String";
-    }
-    code = `val ${name} = ${compName}<${genericType}>(`;
+function color(value: string): string {
+  const hex = /^#([\da-f]{6})([\da-f]{2})?$/i.exec(value);
+  if (hex) return hex[2]
+    ? `Color(${parseInt(hex[1].slice(0, 2), 16)}, ${parseInt(hex[1].slice(2, 4), 16)}, ${parseInt(hex[1].slice(4, 6), 16)}, ${parseInt(hex[2], 16)})`
+    : `Color(${quote(value)})`;
+  const rgba = /^rgba?\(([^)]+)\)$/.exec(value);
+  if (rgba) {
+    const parts = rgba[1].split(",").map(Number);
+    return `Color(${parts.slice(0, 3).join(", ")}${parts.length === 4 ? `, ${number(parts[3], true)}` : ""})`;
   }
-
-  let computedParams = [];
-  let computedApply = [];
-
-  for (let param of mainConstructorParams) {
-    let pName = param.name;
-    let newName = param.propertyName;
-
-    let actualName = newName;
-
-    if (component[newName] === undefined && component[pName] === undefined)
-      continue;
-
-    if (component[newName] === undefined) {
-      actualName = pName;
-    } else if (component[pName] === undefined) {
-      actualName = newName;
-    }
-
-    if (
-      ["String", "Number", "Boolean", "Double", "Int", "Float"].includes(
-        param.type
-      )
-    ) {
-      if (param.type === "String")
-        computedParams.push(`${pName} = "${component[actualName]}"`);
-      else if (param.type === "Double")
-        computedParams.push(
-          `${pName} = ${
-            parseFloat(component[actualName]) ===
-            parseInt(component[actualName])
-              ? parseFloat(component[actualName]).toFixed(1)
-              : parseFloat(component[actualName])
-          }`
-        );
-      else computedParams.push(`${pName} = ${component[actualName]}`);
-    } else {
-      if (actualName === "target") {
-        computedParams.push(`${pName} = Pane() // Replace with your target`);
-        continue;
-      }
-      let exp = exportNonPrimitive(
-        component[actualName],
-        param.type,
-        actualName
-      );
-
-      if (!exp) continue;
-      if (exp.trim() === "") continue;
-      computedParams.push(`${pName} = ${exp}`);
-    }
-  }
-
-  for (let prop of referenceProperties) {
-    if (component[prop] === undefined) continue;
-    if (applyBlacklist.includes(prop)) continue;
-    if (mainConstructorParams.find((param) => param.name === prop)) continue;
-    if (component[prop] === reference[prop].value) continue;
-
-    computedApply.push(`${prop} = ${component[prop]}`);
-  }
-
-  if (computedApply.length === 0) {
-    return `${code}${computedParams.join(", ")})`;
-  }
-
-  return `${code}${computedParams.join(", ")}).apply {\n${computedApply.join(
-    ",\n"
-  )}\n}`;
+  throw new Error(`Unsupported color: ${value}`);
+}
+function alignment(value: { first: string; second: string }) {
+  return `Alignment.${value.first === "center" && value.second === "center" ? "CENTER" : `${value.second}_${value.first}`.toUpperCase()}`;
+}
+function call(name: string, args: string[]) {
+  return args.length ? `${name}(\n${indent(args.join(",\n"))}\n)` : `${name}()`;
 }
 
-function exportNonPrimitive(data: any, type: string = "", name: string = "") {
-  if (data === undefined) return "";
-  let actualType = type.replace("Data", "");
-  let code = "";
-
-  if (type === "List<Visual>") {
-    return `listOf(
-      ${data
-        .map((child) => {
-          return exportNonPrimitive(child);
-        })
-        .join(",\n")}
-      )`;
-  } else if (type === "ObservableList<T>" && name === "items") {
-    return `listOf(
-      ${data.join(", ")}
-      )`;
-  } else if (type === "List<T>" && name === "items") {
-    return `listOf(
-      ${data
-        .map((child) => {
-          return '"' + child.second + '"';
-        })
-        .join(", ")}
-      )`;
-  } else if (type === "Color") {
-    return `Color(0x${data.replace("#", "").toUpperCase()})`;
-  } else if (type === "ColorVisual" && name === "selectionBackground") {
-    return `ColorVisual(Color(0x${data.replace("#", "").toUpperCase()}))`;
-  } else if (type === "Alignment") {
-    if (data.first === "center" && data.second === "center") {
-      return "Alignment.CENTER";
-    } else {
-      const found = Object.keys(getFolderForComponent("Alignment")).find(
-        (e) => e.toLowerCase() === `${data.second}_${data.first}`.toLowerCase()
-      );
-      if (!found) return `Alignment.CENTER`;
-
-      return `Alignment.${data.second.toUpperCase()}_${data.first.toUpperCase()}`;
+function createExporter() {
+  const groups = new Map<string, string>();
+  function value(data: any, key = "", owner = ""): string {
+    if (data === null) return "null";
+    if (key === "toggleGroup") {
+      if (!groups.has(data)) groups.set(data, `toggleGroup${groups.size + 1}`);
+      return groups.get(data)!;
     }
-  } else if (type === "Orientation") {
-    const found = Object.keys(getFolderForComponent("Orientation")).find(
-      (e) => e.toLowerCase() === data.toLowerCase()
-    );
-    if (!found) return `Orientation.VERTICAL`;
-
-    return `Orientation.${data.toUpperCase()}`;
-  } else if (type === "HexOrientation") {
-    const found = Object.keys(getFolderForComponent("HexOrientation")).find(
-      (e) => e.toLowerCase() === data.toLowerCase()
-    );
-    if (!found) return `HexOrientation.POINTY_TOP`;
-
-    return `HexOrientation.${data.toUpperCase()}`;
-  } else if (type === "HexagonGrid.CoordinateSystem") {
-    const folder = getFolderForComponent("HexagonGrid");
-    if (!folder) return `HexagonGrid.CoordinateSystem.OFFSET`;
-
-    const found = Object.keys(folder["CoordinateSystem"]).find(
-      (e) => e.toLowerCase() === data.toLowerCase()
-    );
-    if (!found) return `HexagonGrid.CoordinateSystem.OFFSET`;
-
-    return `HexagonGrid.CoordinateSystem.${data.toUpperCase()}`;
-  } else if (type === "SelectionMode") {
-    const found = Object.keys(getFolderForComponent("SelectionMode")).find(
-      (e) => e.toLowerCase() === data.toLowerCase()
-    );
-    if (!found) return `SelectionMode.SINGLE`;
-
-    return `SelectionMode.${data.toUpperCase()}`;
-  } else if (type === "Font.FontStyle") {
-    const folder = getFolderForComponent("Font");
-    if (!folder) return `Font.FontStyle.NORMAL`;
-
-    const found = Object.keys(folder["FontStyle"]).find(
-      (e) => e.toLowerCase() === data.toLowerCase()
-    );
-
-    if (!found) return `Font.FontStyle.NORMAL`;
-    return `Font.FontStyle.${data.toUpperCase()}`;
-  } else if (type === "Font.FontWeight") {
-    const folder = getFolderForComponent("Font");
-    if (!folder) return `Font.FontWeight.NORMAL`;
-
-    const valueToIndex = (parseInt(data) - 100) / 100;
-    const possible = [
-      "thin",
-      "extra_light",
-      "light",
-      "normal",
-      "medium",
-      "semi_bold",
-      "bold",
-      "extra_bold",
-      "black",
-    ];
-
-    if (valueToIndex >= 0 && valueToIndex < possible.length) {
-      return `Font.FontWeight.${possible[valueToIndex].toUpperCase()}`;
+    if (["color", "initialColor", "selectedColor"].includes(key)) return color(data);
+    if (key === "selectionBackground") return `ColorVisual(${color(data)})`;
+    if (key === "alignment") return alignment(data);
+    if (key === "fontWeight") {
+      const names = ["THIN", "EXTRA_LIGHT", "LIGHT", "NORMAL", "MEDIUM", "SEMI_BOLD", "BOLD", "EXTRA_BOLD", "BLACK"];
+      return `Font.FontWeight.${names[Number(data) / 100 - 1]}`;
     }
-
-    return `Font.FontWeight.NORMAL`;
-  } else if (type === "Flip") {
-    const folder = getFolderForComponent("Flip");
-    if (!folder) return `Flip.NONE`;
-
-    const found = Object.keys(folder).find(
-      (e) => e.toLowerCase() === data.toLowerCase()
-    );
-    if (!found) return `Flip.NONE`;
-
-    return `Flip.${data.toUpperCase()}`;
-  } else if (data.type) {
-    if (data.type === "CompoundVisualData") {
-      if (data.children.length === 1) {
-        return exportNonPrimitive(data.children[0], data.children[0].type);
-      } else {
-        return `CompoundVisual(
-                  ${data.children
-                    .map((child) => {
-                      return exportNonPrimitive(child, child.type);
-                    })
-                    .join(",\n")}
-                )`;
-      }
+    if (key in enums) {
+      const type = key === "orientation" && ["HexagonView", "HexagonGrid"].includes(owner) ? "HexOrientation" : enums[key];
+      return `${type}.${String(data).toUpperCase().replaceAll(" ", "_")}`;
     }
-    // else if (data.type === "ColorVisualData") {
-    //   let code = `ColorVisual(Color(0x${data.color
-    //     .replace("#", "")
-    //     .toUpperCase()}))`;
-
-    //   return code;
-    // }
-    else {
-      const {
-        index,
-        comp,
-        mainConstructor,
-        mainConstructorParams,
-        properties,
-      } = getConstructorAndProperties(data.type.replace("Data", ""));
-      if (!index || !comp || !mainConstructorParams || !properties)
-        return `NON`;
-
-      let code = `${actualType}(`;
-      if (mainConstructor.parameters.length !== mainConstructorParams.length) {
-        let genericType = "ComponentView";
-        try {
-          genericType = index.details.info.signature
-            .split("(")[0]
-            .split("<")[1]
-            .split(">")[0]
-            .split(":")[1]
-            .trim();
-        } catch (_) {
-          /* empty */
-        }
-        code = `${actualType}<${genericType}>(`;
-      }
-
-      let computedParams = [];
-      let computedApply = [];
-
-      for (let param of mainConstructorParams) {
-        let pName = param.name;
-
-        if (
-          ["String", "Number", "Boolean", "Double", "Int", "Float"].includes(
-            param.type
-          )
-        ) {
-          if (param.type === "String")
-            computedParams.push(`${pName} = "${data[pName]}"`);
-          else if (param.type === "Double")
-            computedParams.push(`${pName} = ${parseFloat(data[pName])}`);
-          else computedParams.push(`${pName} = ${data[pName]}`);
-        } else {
-          let exp = exportNonPrimitive(data[pName], param.type, pName);
-
-          if (exp.trim() === "") continue;
-          computedParams.push(`${pName} = ${exp}`);
-        }
-      }
-
-      if (isNonPrimitive(type)) {
-        let reference = new Components.NonPrimitiveDataClasses[type]();
-        let referenceProperties = Object.entries(reference)
-          .map((e) => e[0])
-          .filter((e) => properties.find((prop) => prop.name === e));
-
-        for (let prop of referenceProperties) {
-          if (data[prop] === undefined) continue;
-          if (applyBlacklist.includes(prop)) continue;
-          if (mainConstructorParams.find((param) => param.name === prop))
-            continue;
-          if (data[prop] === reference[prop].value) continue;
-
-          computedApply.push(`${prop} = ${data[prop]}`);
-        }
-      }
-
-      if (computedApply.length === 0) {
-        return `${code}${computedParams.join(", ")})`;
-      }
-
-      return `${code}${computedParams.join(
-        ", "
-      )}).apply {\n${computedApply.join(",\n")}\n}`;
+    if (Array.isArray(data)) {
+      if (key === "items" && owner === "ComboBox") return call("listOf", data.map(item => quote(item.second)));
+      if (key === "items" && owner === "TableView") return call("listOf", data.map((_, i) => String(i)));
+      return call("listOf", data.map(item => value(item)));
     }
-  }
-}
-
-function getFolderForComponent(compName: string) {
-  let matchingPkg = Object.keys(dirs).filter((e) => {
-    let pkg = dirs[e];
-    return pkg[compName] !== undefined;
-  });
-
-  if (!matchingPkg || matchingPkg.length === 0) return null;
-
-  let element = dirs[matchingPkg[0]][compName];
-  if (!element) return null;
-
-  return element;
-}
-
-function getConstructorAndProperties(compName: string): {
-  index: any;
-  comp: any;
-  mainConstructor: any;
-  mainConstructorParams: any;
-  properties: any;
-} {
-  let matchingPkg = Object.keys(dirs).filter((e) => {
-    let pkg = dirs[e];
-    return pkg[compName] !== undefined;
-  });
-
-  if (!matchingPkg || matchingPkg.length === 0) return null;
-
-  let element = dirs[matchingPkg[0]][compName];
-  if (!element) return null;
-
-  let index = element["_index"];
-  let comp = element[compName];
-  if (!comp || !index) return null;
-
-  let constructors = comp.details;
-  let properties = index.members.properties.map((prop) => {
-    return {
-      name: prop.name,
-      type: prop.signature.split(":")[1].trim().replace("?", ""),
-    };
-  });
-
-  // Get main constructor from API-Reference
-  constructors.forEach((c: any) => {
-    let own = getParamsFromSignature(c.info.signature);
-    let global = getParamsFromSignature(index.details.info.signature);
-
-    if (own.length === global.length) {
-      c.primary = own.every(
-        (param, i) =>
-          param.name === global[i].name && param.type === global[i].type
-      );
-    }
-  });
-
-  let mainConstructor = constructors.find((c: any) => c.primary);
-  if (!mainConstructor) {
-    mainConstructor = constructors.fromRight(0);
+    if (typeof data === "string") return quote(data);
+    if (typeof data === "boolean") return String(data);
+    if (typeof data === "number") return number(data);
+    if (data?.type) return expression(data);
+    throw new Error(`Cannot export ${owner}.${key}`);
   }
 
-  let extractedTypes = getParamsFromSignature(mainConstructor.info.signature);
-
-  let mainConstructorParams = mainConstructor.parameters
-    .filter((param) => param.name.length > 1)
-    .map((param) => {
-      let newName = param.name;
-      if (!properties.find((prop) => prop.name === param.name)) {
-        newName = mappingNames[param.name] || param.name;
-      }
-
-      let type1 = extractedTypes.find((e) => e.name === param.name);
-      let type2 = properties.find((e) => e.name === newName);
-
-      return {
-        name: param.name,
-        propertyName: newName,
-        type: type1 ? type1.type : type2 ? type2.type : "String",
-      };
+  function expression(data: PlaygroundData): string {
+    const type = data.type.replace(/Data$/, "");
+    if (type === "CompoundVisual") return data.children.length ? call("CompoundVisual", data.children.map((child: PlaygroundData) => expression(child))) : "Visual.EMPTY";
+    if (type === "ToggleGroup") {
+      value(data.group, "toggleGroup");
+      return groups.get(data.group)!;
+    }
+    if (type === "GridElement" || type === "HexagonGridElement") {
+      const child = data.component ?? data.hexagon;
+      if (!child) throw new Error("Add a component to the grid cell before exporting it.");
+      return expression(child);
+    }
+    const signature = constructors[type];
+    if (signature === undefined) throw new Error(`No Kotlin exporter for ${type}.`);
+    if (type === "ImageVisual" && /^https?:\/\//i.test(data.path)) throw new Error("Use a resource path or PNG data URI for Kotlin image export.");
+    const params = signature.split(" ");
+    const args = params.flatMap(key => {
+      if (key === "formatFunction") return [`formatFunction = { row -> ${call("listOf", data.items.map(quote))}[row] }`];
+      const source = sourceNames[key] ?? key;
+      if (data[source] === undefined) return [];
+      if (key === "target" && !data.target) throw new Error("Add a layout to the camera pane before exporting it.");
+      const double = key === "progress" || (type === "Slider" && ["minValue", "maxValue", "value", "step"].includes(key));
+      return [`${key} = ${double ? number(data[source], true) : value(data[source], key, type)}`];
     });
+    const generic = genericTypes[type] ? `<${genericTypes[type]}>` : "";
+    const code = call(type + generic, args);
+    const apply: string[] = [];
+    for (const key of writable) {
+      if (data[key] === undefined || params.includes(key) || params.some(param => sourceNames[param] === key)) continue;
+      if (key === "currentSide" && type !== "DiceView") continue;
+      if (key === "isDraggable" && !data.objectType?.includes("GameComponentViewData") && !data.objectType?.includes("GameComponentContainerData")) continue;
+      if (key === "spacing" && type === "HexagonGrid") continue;
+      const rendered = typeof data[key] === "number" ? number(data[key], doubles.has(key)) : value(data[key], key, type);
+      apply.push(`${propertyNames[key] ?? key} = ${rendered}`);
+    }
+    if (type === "CardView") apply.push(data.current === "back" ? "showBack()" : "showFront()");
+    if (type === "ComboBox") apply.push(`selectedItem = ${data.selectedItem ? quote(data.selectedItem.second) : "null"}`);
+    if (["ListView", "TableView"].includes(type) && data.selectionMode !== "none") {
+      for (const index of data.selectedItems ?? []) apply.push(`selectIndex(${index})`);
+    }
+    for (const child of data.components ?? []) apply.push(`add(${expression(child)})`);
+    for (const cell of data.grid ?? []) {
+      if (!cell.component) continue;
+      apply.push(`this[${cell.column}, ${cell.row}] = ${expression(cell.component)}`);
+      apply.push(`setCellCenterMode(${cell.column}, ${cell.row}, ${alignment(cell.alignment)})`);
+    }
+    for (const [coordinate, child] of Object.entries(data.map ?? {})) apply.push(`this[${coordinate.split("/").join(", ")}] = ${expression(child as PlaygroundData)}`);
+    return apply.length ? `${code}.apply {\n${indent(apply.join("\n"))}\n}` : code;
+  }
+  return { expression, declarations: () => [...groups.values()].map(name => `val ${name} = ToggleGroup()`).join("\n") };
+}
 
-  return {
-    index,
-    comp,
-    mainConstructor,
-    mainConstructorParams,
-    properties,
-  };
+const imports = [
+  "tools.aqua.bgw.core.*", "tools.aqua.bgw.components.ComponentView",
+  "tools.aqua.bgw.components.container.*", "tools.aqua.bgw.components.gamecomponentviews.*",
+  "tools.aqua.bgw.components.layoutviews.*", "tools.aqua.bgw.components.uicomponents.*",
+  "tools.aqua.bgw.util.Font", "tools.aqua.bgw.visual.*", "tools.aqua.bgw.style.Flip", "tools.aqua.bgw.event.MouseButtonType",
+].map(pkg => `import ${pkg}`).join("\n");
+function identifier(name: string, type: string) {
+  let result = name.trim().replace(/[^a-zA-Z0-9_]/g, "_") || type.replace(/Data$/, "");
+  result = result.charAt(0).toLowerCase() + result.slice(1);
+  if (/^\d/.test(result)) result = `component_${result}`;
+  return `\`${result}\``;
+}
+export function exportComponent(component: PlaygroundData): string {
+  const exporter = createExporter();
+  const code = `val ${identifier(component.name ?? "", component.type)} = ${exporter.expression(component)}`;
+  return [imports, exporter.declarations(), code].filter(Boolean).join("\n\n");
+}
+export function exportScene(components: PlaygroundData[], width: number, height: number, background: string) {
+  const exporter = createExporter();
+  const children = components.map(component => exporter.expression(component));
+  const scene = `val scene = object : BoardGameScene(\n${indent(`width = ${width},\nheight = ${height},\nbackground = ColorVisual(${color(background)})`)}\n) {\n${indent(`init {${children.length ? `\n${indent(call("addComponents", children))}\n` : ""}}`)}\n}`;
+  return [imports, exporter.declarations(), scene].filter(Boolean).join("\n\n");
 }

@@ -1,4 +1,4 @@
-﻿import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '../../lib/utils'
 import {HexColorPicker} from "react-colorful";
@@ -30,7 +30,7 @@ export function ColorPicker({
                 <Button
                     variant={'secondary'}
                     className={cn(
-                        'w-[647px] justify-start text-left font-normal',
+                        'w-full min-w-0 justify-start text-left font-normal',
                         !color && 'text-muted-foreground',
                         className
                     )}
@@ -51,15 +51,15 @@ export function ColorPicker({
                     </div>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="w-[647px] max-w-full">
+            <DialogContent className="w-[calc(100%_-_24px)] max-w-[647px] max-h-[90dvh] overflow-y-auto">
                 <DialogHeader className="pb-4">
                     <DialogTitle>Adjust ColorVisual</DialogTitle>
                     <DialogDescription>
                         Here you can individually adjust attributes of the visual.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="flex flex-row gap-4">
-                    <div className="min-w-[250px]">
+                <div className="flex flex-col sm:flex-row gap-4 min-w-0">
+                    <div className="w-full sm:w-[250px] shrink-0 min-w-0">
                         <HexColorPicker color={color} onChange={setColor} />
                         <Input
                             id="custom"
@@ -68,8 +68,8 @@ export function ColorPicker({
                             onChange={(e) => setColor(e.currentTarget.value)}
                         />
                     </div>
-                    <Separator orientation={"vertical"} className="h-[250px]" />
-                    <div className="flex flex-col gap-6 w-full">
+                    <Separator orientation={"vertical"} className="hidden sm:block h-[250px]" />
+                    <div className="flex flex-col gap-6 w-full min-w-0">
                         {children}
                     </div>
                 </div>

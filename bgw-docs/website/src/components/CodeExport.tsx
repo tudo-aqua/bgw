@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { common, createStarryNight } from "@wooorm/starry-night";
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
-import kotlinGrammar from "../lib/source.kotlin.js"; // Import your custom Kotlin grammar
+import kotlinGrammar from "../lib/source.kotlin.js";
 
 import "./codeExport.scss";
+
+const highlighter = createStarryNight([...common, kotlinGrammar]);
 
 async function highlight(language: string, code: string) {
   // Initialize starry-night with common grammars plus your custom Kotlin grammar
   // The custom grammar will override the built-in one with the same name
-  const starryNight = await createStarryNight([...common, kotlinGrammar]);
+  const starryNight = await highlighter;
 
   // Get grammar for the specified language
   const scope = starryNight.flagToScope(language) || "kotlin";
@@ -24,18 +26,21 @@ async function highlight(language: string, code: string) {
 }
 
 const CodeExport = ({ code, language }: { code: string; language: string }) => {
-  const [highlighted, setHighlighted] = useState("");
+  const [highlighted, setHighlighted] = useState<React.ReactNode>(code);
 
   useEffect(() => {
-    highlight(language, code).then((reactNode) => {
-      setHighlighted(reactNode);
-    });
+    let cancelled = false;
+    setHighlighted(code);
+    highlight(language, code).then(reactNode => {
+      if (!cancelled) setHighlighted(reactNode);
+    }).catch(() => { if (!cancelled) setHighlighted(code); });
+    return () => { cancelled = true; };
   }, [code, language]);
 
   return (
-    <div className="starry-night-container" style={{ whiteSpace: "pre" }}>
+    <span className="starry-night-container" style={{ whiteSpace: "inherit", display: "block" }}>
       {highlighted}
-    </div>
+    </span>
   );
 };
 

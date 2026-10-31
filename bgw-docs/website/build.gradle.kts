@@ -36,32 +36,29 @@ import io.ktor.http.*
 
 plugins { id("tools.aqua.bgw.base-conventions") }
 
-tasks.register("generateRuntime") {
-  this.group = "build"
-  doFirst {
-    println("Generated runtime with sockets disabled.")
+val configureRuntime by tasks.registering {
+  group = "build"
+  doLast {
     project.extra["useSockets"] = "false"
+    buildPropertyFile()
+    println("Configured playground runtime with sockets disabled.")
   }
-  doLast { buildPropertyFile() }
-  finalizedBy(
-      ":bgw-gui:compileProductionExecutableKotlinJs",
-      ":bgw-gui:compileTestDevelopmentExecutableKotlinJs",
-      ":bgw-gui:build")
 }
 
-tasks.register("buildAndCopyRuntime") {
-  dependsOn("generateRuntime")
-  this.group = "build"
-  mustRunAfter(":bgw-gui:build")
-  doLast {
-    val sourceDir = project(":bgw-gui").buildDir.resolve("dist/js/productionExecutable/bgw-gui.js")
-    val destinationDir = projectDir.resolve("public/bgw")
-    println("Copying files from $sourceDir to $destinationDir")
-    copy {
-      from(sourceDir)
-      into(destinationDir)
-    }
-  }
+project(":bgw-gui").tasks.matching { it.name == "compileKotlinJs" }.configureEach {
+  mustRunAfter(configureRuntime)
+}
+
+val generateRuntime by tasks.registering {
+  group = "build"
+  dependsOn(configureRuntime, ":bgw-gui:jsBrowserDistribution")
+}
+
+tasks.register<Copy>("buildAndCopyRuntime") {
+  group = "build"
+  dependsOn(generateRuntime)
+  from(project(":bgw-gui").layout.buildDirectory.file("dist/js/productionExecutable/bgw-gui.js"))
+  into(layout.projectDirectory.dir("public/bgw"))
 }
 
 tasks.register<GradleBuild>("buildAndCopyRuntimeTask") {
