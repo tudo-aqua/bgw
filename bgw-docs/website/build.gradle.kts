@@ -36,23 +36,26 @@ import io.ktor.http.*
 
 plugins { id("tools.aqua.bgw.base-conventions") }
 
-val configureRuntime by tasks.registering {
-  group = "build"
-  doLast {
-    project.extra["useSockets"] = "false"
-    buildPropertyFile()
-    println("Configured playground runtime with sockets disabled.")
-  }
-}
+val configureRuntime by
+    tasks.registering {
+      group = "build"
+      doLast {
+        project.extra["useSockets"] = "false"
+        buildPropertyFile()
+        println("Configured playground runtime with sockets disabled.")
+      }
+    }
 
-project(":bgw-gui").tasks.matching { it.name == "compileKotlinJs" }.configureEach {
-  mustRunAfter(configureRuntime)
-}
+project(":bgw-gui")
+    .tasks
+    .matching { it.name == "compileKotlinJs" }
+    .configureEach { mustRunAfter(configureRuntime) }
 
-val generateRuntime by tasks.registering {
-  group = "build"
-  dependsOn(configureRuntime, ":bgw-gui:jsBrowserDistribution")
-}
+val generateRuntime by
+    tasks.registering {
+      group = "build"
+      dependsOn(configureRuntime, ":bgw-gui:jsBrowserDistribution")
+    }
 
 tasks.register<Copy>("buildAndCopyRuntime") {
   group = "build"
