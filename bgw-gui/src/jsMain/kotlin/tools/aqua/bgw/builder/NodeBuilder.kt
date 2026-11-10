@@ -65,8 +65,55 @@ import tools.aqua.bgw.elements.uicomponents.TextField as ReactTextField
 import tools.aqua.bgw.elements.uicomponents.ToggleButton as ReactToggleButton
 import web.cssom.*
 
+internal external interface NodeProps : Props {
+  var data: ComponentViewData
+  var isOverlayPreview: Boolean
+}
+
+/**
+ * Structural equality of two decoded data objects. Every update from the JVM contains the whole
+ * scene as freshly decoded objects, so reference equality never holds even for unchanged
+ * components. Comparing the (small, tree shaped) data is much cheaper than re-rendering.
+ */
+internal val dataEquals: (Any?, Any?) -> Boolean =
+    js(
+        """
+        (function deepEqual(a, b) {
+          if (a === b) return true;
+          if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
+          if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
+          var keysA = Object.keys(a);
+          if (keysA.length !== Object.keys(b).length) return false;
+          for (var i = 0; i < keysA.length; i++) {
+            var key = keysA[i];
+            if (!deepEqual(a[key], b[key])) return false;
+          }
+          return true;
+        })
+        """)
+
+/**
+ * Renders a component and skips re-rendering it (and its whole subtree) if its data did not change.
+ * Components still re-render on their own state changes, e.g. animated visuals or drag state.
+ */
+private val MemoNode: FC<NodeProps> =
+    memo(
+        FC<NodeProps> { props -> +NodeBuilder.buildNode(props.data, props.isOverlayPreview) },
+        { previous, next ->
+          previous.isOverlayPreview == next.isOverlayPreview && dataEquals(previous.data, next.data)
+        })
+
 internal object NodeBuilder {
   fun build(
+      componentViewData: ComponentViewData,
+      isOverlayPreview: Boolean = false
+  ): ReactElement<*> =
+      MemoNode.create {
+        data = componentViewData
+        this.isOverlayPreview = isOverlayPreview
+      }
+
+  internal fun buildNode(
       componentViewData: ComponentViewData,
       isOverlayPreview: Boolean = false
   ): ReactElement<*> {

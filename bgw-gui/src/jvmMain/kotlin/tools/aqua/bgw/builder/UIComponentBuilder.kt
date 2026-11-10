@@ -119,7 +119,11 @@ internal object UIComponentBuilder {
 
   private fun buildProgressBar(progressBar: ProgressBar) {
     progressBar.progressProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
-    progressBar.barVisualProperty.guiListener = { _, _ -> Frontend.updateComponent(progressBar) }
+    progressBar.barVisualProperty.guiListener = { _, newVisual ->
+      VisualBuilder.build(newVisual)
+      Frontend.updateComponent(progressBar)
+    }
+    VisualBuilder.build(progressBar.barVisual)
   }
 
   private fun buildSlider(slider: Slider) {

@@ -26,7 +26,7 @@ import react.IntrinsicType
 import react.Props
 import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
-import react.useEffect
+import react.useEffectWithCleanup
 import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -40,7 +40,7 @@ internal external interface SceneProps : Props {
 internal val Scene =
     FC<SceneProps> { props ->
       bgwScene {
-        useEffect(listOf(props.data.id)) {
+        useEffectWithCleanup(props.data.id) {
           JCEFEventDispatcher.dispatchEvent(LoadEventData().apply { id = props.data.id })
         }
 

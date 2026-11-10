@@ -26,14 +26,16 @@ internal object VisualBuilder {
   fun build(visual: Visual) {
     when (visual) {
       is CompoundVisual -> buildCompoundVisual(visual)
-      is ColorVisual -> buildColorVisual(visual)
-      is ImageVisual -> buildImageVisual(visual)
-      is TextVisual -> buildTextVisual(visual)
+      // Transparency, style, filters and flipping were never observed before.
+      is SingleLayerVisual -> buildSingleLayerVisual(visual)
     }
   }
 
   private fun buildCompoundVisual(visual: CompoundVisual) {
-    visual.childrenProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.childrenProperty.guiListener = { _, newChildren ->
+      newChildren.forEach { build(it) }
+      Frontend.updateVisual(visual)
+    }
     visual.children.forEach { build(it) }
   }
 
@@ -42,6 +44,7 @@ internal object VisualBuilder {
     visual.styleProperty.guiListener = { Frontend.updateVisual(visual) }
     visual.filtersProperty.guiListener = { Frontend.updateVisual(visual) }
     visual.flippedProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
+    visual.rotationProperty.guiListener = { _, _ -> Frontend.updateVisual(visual) }
     when (visual) {
       is ColorVisual -> buildColorVisual(visual)
       is ImageVisual -> buildImageVisual(visual)

@@ -98,7 +98,7 @@ internal val CardView =
       }
 
       // Update visual when props change (for non-animation updates)
-      useEffect(props.data.currentVisual) {
+      useEffectWithCleanup(props.data.currentVisual) {
         val animatorVisual = Animator.getCurrentVisual(props.data.id)
         if (animatorVisual == null) {
           setCurrentVisual(props.data.currentVisual)
@@ -110,7 +110,7 @@ internal val CardView =
         className = ClassName("cardView")
 
         ref = elementRef
-        useEffect(props.data.id, isOverlayPreview) {
+        useEffectWithCleanup(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }

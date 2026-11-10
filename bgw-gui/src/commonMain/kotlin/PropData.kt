@@ -125,10 +125,10 @@ internal class DialogButtonClickData(val dialogId: String, val buttonIndex: Int)
 @Serializable
 internal abstract class ComponentViewData : Data() {
   var id: ID = ""
-  var posX: Int = 0
-  var posY: Int = 0
-  var width: Int = 0
-  var height: Int = 0
+  var posX: Double = 0.0
+  var posY: Double = 0.0
+  var width: Double = 0.0
+  var height: Double = 0.0
   var visual: VisualData? = null
   var zIndex: Int = 0
   var opacity: Double = 1.0

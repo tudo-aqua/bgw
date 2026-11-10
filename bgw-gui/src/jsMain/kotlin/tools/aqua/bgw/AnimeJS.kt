@@ -145,4 +145,7 @@ internal external class JSAnimation : Timer
 
 internal external fun animate(targets: Element, parameters: AnimationParams): JSAnimation
 
+/** Animates arbitrary targets, e.g. plain progress objects, with untyped [parameters]. */
+@JsName("animate") internal external fun animateTarget(targets: Any, parameters: Any): JSAnimation
+
 internal external fun steps(steps: Int): Any = definedExternally

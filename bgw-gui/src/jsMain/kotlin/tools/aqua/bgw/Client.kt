@@ -27,7 +27,6 @@ import PropData
 import data.event.AnimationFinishedEventData
 import data.event.LoadEventData
 import jsonMapper
-import kotlin.js.Date
 import kotlinx.browser.document
 import org.w3c.dom.CustomEvent
 import org.w3c.dom.HTMLElement
@@ -36,6 +35,7 @@ import react.*
 import react.dom.client.Root
 import react.dom.client.createRoot
 import react.dom.client.hydrateRoot
+import react.dom.flushSync
 import tools.aqua.bgw.elements.App
 import tools.aqua.bgw.elements.Dialog
 import tools.aqua.bgw.event.JCEFEventDispatcher
@@ -110,7 +110,6 @@ internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-r
   when (receivedData) {
     // Handle app data sent from JVM to JS client
     is AppData -> {
-      println("${Date.now()} - Received app")
       if (!Config.USE_SOCKETS) {
         renderSingleRoot(receivedData, containerId)
       } else {
@@ -120,7 +119,6 @@ internal fun handleReceivedData(receivedData: Data, containerId: String = "bgw-r
     }
     // Handle animations sent from JVM to JS client
     is AnimationData -> {
-      println("${Date.now()} - Received animation ${receivedData.isRunning}")
       if (receivedData.isStop) {
         Animator.stopAllAnimations()
         return
@@ -156,14 +154,23 @@ internal fun renderSingleRoot(appData: AppData, containerId: String) {
   }
 }
 
+private var reportedLoad = false
+
 /** Renders the BGW interface. */
 internal fun renderAppFast(appData: AppData) {
   if (!::root.isInitialized) {
     root = createRoot(container.unsafeCast<Element>())
   }
-  root.render(App.create { data = appData })
-  println("${Date.now()} - Rendered app")
-  JCEFEventDispatcher.dispatchEvent(LoadEventData())
+  // Render synchronously so the state is on screen (and animations sent right after it find their
+  // components) before the next message is handled.
+  flushSync { root.render(App.create { data = appData }) }
+  // Tell the JVM the state is rendered. It does not send a new state before, so a game that
+  // changes its state faster than it can be rendered does not build up a backlog of updates.
+  webSocket?.send("bgwRendered|")
+  if (!reportedLoad) {
+    reportedLoad = true
+    JCEFEventDispatcher.dispatchEvent(LoadEventData())
+  }
 }
 
 internal fun renderDialogs() {

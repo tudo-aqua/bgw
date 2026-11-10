@@ -18,15 +18,11 @@
 package tools.aqua.bgw
 
 import AnimationData
-import ComponentViewData
 import DiceViewData
 import ID
 import VisualData
 import data.animation.*
 import data.event.AnimationsStoppedEventData
-import js.array.jsArrayOf
-import kotlin.collections.get
-import kotlin.js.js
 import kotlinx.browser.document
 import org.w3c.dom.pointerevents.PointerEvent
 import tools.aqua.bgw.animation.AnimationType
@@ -74,23 +70,56 @@ internal external interface TimelineOptions {
 
 internal typealias Callback<T> = (self: T, e: PointerEvent) -> Unit
 
-internal class AnimationDetails() {
-  val initialState: ComponentViewData? = null
-}
-
+/**
+ * Plays BGW animations in the browser.
+ *
+ * Every component animation drives its own progress object (`{ p: 0..1 }`) instead of tweening a
+ * CSS variable of the component directly. All animations of one kind on one component form a
+ * [Track], and the track composes the CSS value from the progress of all of its segments. This
+ * avoids two problems of tweening the CSS variables directly:
+ * - anime.js' default `replace` composition cancels overlapping tweens on the same variable, so
+ *   e.g. two movements of the same component in a parallel or sequential animation interfered.
+ * - start values were read when the animations were created, so a second animation of the same kind
+ *   in a sequence started from the original instead of from where the first one ended.
+ *
+ * Within one animation tree, consecutive animations of the same kind on the same component
+ * therefore continue from where the previous one ended, matching how the JVM persists them.
+ */
 internal object Animator {
-  private val animations = mutableMapOf<ID, AnimationDetails>()
-  // Stores timelines per component ID
+  // Stores timelines per component ID (and per delay animation ID)
   private val timelines = mutableMapOf<ID, Timeline>()
-  // Tracks which animation types are active in each component's timeline
-  private val componentAnimationTypes = mutableMapOf<ID, MutableSet<AnimationType>>()
-  // Stores individual JSAnimation objects per component and animation type for reverting
-  private val jsAnimations = mutableMapOf<ID, MutableMap<AnimationType, JSAnimation>>()
   // Stores Timer objects for delay animations
   private val delayTimers = mutableMapOf<ID, Timer>()
+  // Active animation tracks per component and animation type
+  private val tracks = mutableMapOf<ID, MutableMap<AnimationType, Track>>()
 
   // Stores current visual state for components undergoing flip/stepped animations
   private val visualStates = mutableMapOf<ID, VisualData?>()
+
+  /** A single component animation inside a [Track]. */
+  private class Segment(val data: ComponentAnimationData) {
+    /** Plain object animated by anime.js. Its `p` property runs from 0 to 1 (eased). */
+    val progress: dynamic = js("({ p: 0 })")
+    var completed: Boolean = false
+
+    /** Last step and visual picked by stepped animations. */
+    var lastStep: Int = -1
+    var steppedVisual: VisualData? = null
+
+    val p: Double
+      get() = (progress.p as Number).toDouble()
+
+    val started: Boolean
+      get() = completed || p != 0.0
+  }
+
+  /** All animations of one [type] on one component, ordered by their start time. */
+  private class Track(val componentId: ID, val type: AnimationType) {
+    val segments = mutableListOf<Segment>()
+
+    val isFinished: Boolean
+      get() = segments.all { it.completed }
+  }
 
   /**
    * Gets the current visual for a component, considering any active flip/stepped animations. If no
@@ -211,12 +240,25 @@ internal object Animator {
     val controls = js("{}")
     controls.pause = { timelines.values.toSet().forEach { it.pause() } }
     controls.resume = { timelines.values.toSet().forEach { it.play() } }
-    controls.seek = { time: Double -> timelines.values.toSet().forEach { it.seek(time) } }
+    controls.seek = { time: Double ->
+      timelines.values.toSet().forEach { it.seek(time) }
+      renderAllTracks()
+    }
     controls.time = { timelines.values.firstOrNull()?.currentTime ?: 0.0 }
     controls.paused = { timelines.values.any { it.paused } }
     controls.active = { timelines.values.any { !it.completed } }
     kotlinx.browser.window.asDynamic().bgwAnimator = controls
   }
+
+  private fun animationTypeOf(animationData: ComponentAnimationData): AnimationType =
+      when (animationData) {
+        is FadeAnimationData -> AnimationType.FADE
+        is MovementAnimationData -> AnimationType.MOVEMENT
+        is RotationAnimationData -> AnimationType.ROTATION
+        is ScaleAnimationData -> AnimationType.SCALE
+        is FlipAnimationData -> AnimationType.FLIP
+        else -> AnimationType.STEPPED
+      }
 
   fun startAnimation(
       animation: AnimationData,
@@ -224,403 +266,211 @@ internal object Animator {
       callback: (ID, ID?) -> Unit
   ) {
     exposeControls()
-    var timeline = createTimeline()
+    // Child callbacks are not reliably invoked when a paused timeline is seeked (e.g. scrubbing
+    // backwards in the playground), so the timeline renders all tracks on each of its updates.
+    val timeline =
+        existingTimeline
+            ?: createTimeline(jsObject<TimelineParams> { onUpdate = { _, _ -> renderAllTracks() } })
 
-    if (existingTimeline != null) timeline = existingTimeline
+    // Stable sort keeps the declaration order for animations that start at the same time.
+    val flatAnimations = flattenAnimation(animation).sortedBy { it.initialDelay }
 
-    val flatAnimations = flattenAnimation(animation)
-
-    // Store timeline for each component and track animation types
-    flatAnimations.forEach { animationData ->
-      if (animationData is ComponentAnimationData) {
-        val componentId = animationData.componentView?.id
-        if (componentId != null) {
-          timelines[componentId] = timeline
-
-          // Track animation type for this component
-          val animationType =
-              when (animationData) {
-                is FadeAnimationData -> AnimationType.FADE
-                is MovementAnimationData -> AnimationType.MOVEMENT
-                is RotationAnimationData -> AnimationType.ROTATION
-                is ScaleAnimationData -> AnimationType.SCALE
-                is FlipAnimationData -> AnimationType.FLIP
-                is RandomizeAnimationData,
-                is DiceAnimationData -> AnimationType.STEPPED
-                else -> AnimationType.STEPPED
-              }
-
-          componentAnimationTypes.getOrPut(componentId) { mutableSetOf() }.add(animationType)
-        }
-      } else if (animationData is DelayAnimationData) {
-        // Delays are tracked too, so stopping or pausing also covers delay-only animations.
-        timelines[animationData.id] = timeline
-      }
-    }
+    // Tracks created by this animation tree. Finished tracks of an earlier tree that were not
+    // cleaned up yet are replaced, so their offsets do not leak into the new animation.
+    val newTracks = mutableMapOf<Pair<ID, AnimationType>, Track>()
 
     flatAnimations.forEach { animationData ->
       when (animationData) {
         is ComponentAnimationData -> {
-          when (animationData) {
-            is FadeAnimationData,
-            is MovementAnimationData,
-            is RotationAnimationData,
-            is ScaleAnimationData,
-            is FlipAnimationData,
-            is RandomizeAnimationData,
-            is DiceAnimationData -> startComponentAnimation(animationData, timeline, callback)
-
-            else -> throw IllegalArgumentException("Unknown animation type")
-          }
+          val componentId = animationData.componentView?.id ?: return@forEach
+          val type = animationTypeOf(animationData)
+          val track =
+              newTracks.getOrPut(componentId to type) {
+                val componentTracks = tracks.getOrPut(componentId) { mutableMapOf() }
+                val existing = componentTracks[type]
+                if (existing != null && !existing.isFinished) existing
+                else Track(componentId, type).also { componentTracks[type] = it }
+              }
+          timelines[componentId] = timeline
+          startComponentAnimation(animationData, track, timeline, callback)
         }
-        is DelayAnimationData -> startDelayAnimation(animationData, timeline, callback)
+        is DelayAnimationData -> {
+          // Delays are tracked too, so stopping or pausing also covers delay-only animations.
+          timelines[animationData.id] = timeline
+          startDelayAnimation(animationData, timeline, callback)
+        }
         else -> throw IllegalArgumentException("Unknown animation type")
       }
     }
   }
 
-  fun startComponentAnimation(
+  private fun startComponentAnimation(
       animationData: ComponentAnimationData,
+      track: Track,
       timeline: Timeline,
       callback: (ID, ID?) -> Unit
   ) {
-    val componentId = animationData.componentView?.id ?: return
-    if (animations[componentId] == null) animations[componentId] = AnimationDetails()
+    val segment = Segment(animationData)
+    track.segments.add(segment)
 
-    document.getElementById(componentId)?.let { comp ->
-      animations[componentId]?.apply {
+    if (!isPlayable(animationData)) {
+      // Nothing to show, but the JVM still has to learn that the animation is over.
+      segment.completed = true
+      callback.invoke(animationData.id, track.componentId)
+      return
+    }
+
+    val tween = js("{}")
+    tween.from = 0
+    tween.to = 1
+    tween.duration = animationData.duration
+    tween.ease =
         when (animationData) {
-          is FadeAnimationData -> animateFade(comp, animationData, timeline, callback)
-          is MovementAnimationData -> animateMovement(comp, animationData, timeline, callback)
-          is RotationAnimationData -> animateRotation(comp, animationData, timeline, callback)
-          is ScaleAnimationData -> animateScale(comp, animationData, timeline, callback)
-          is FlipAnimationData -> animateFlip(comp, animationData, timeline, callback)
-          is RandomizeAnimationData -> animateRandomize(comp, animationData, timeline, callback)
-          is DiceAnimationData -> animateDice(comp, animationData, timeline, callback)
+          is FlipAnimationData,
+          is SteppedComponentAnimationData -> "linear"
+          else -> easeForInterpolationType(animationData)
         }
+
+    val parameters = js("{}")
+    parameters.p = tween
+    parameters.autoplay = false
+    parameters.composition = "none"
+    parameters.onUpdate = { _: dynamic, _: dynamic -> render(track) }
+    parameters.onComplete = { _: dynamic, _: dynamic ->
+      segment.completed = true
+      render(track)
+      callback.invoke(animationData.id, track.componentId)
+    }
+
+    timeline.sync(
+        animateTarget(segment.progress.unsafeCast<Any>(), parameters.unsafeCast<Any>()),
+        animationData.initialDelay)
+  }
+
+  private fun isPlayable(animationData: ComponentAnimationData): Boolean =
+      when (animationData) {
+        is FlipAnimationData -> {
+          val playable = animationData.fromVisual != null && animationData.toVisual != null
+          if (!playable) println("FlipAnimation requires fromVisual and toVisual")
+          playable
+        }
+        is RandomizeAnimationData -> {
+          val playable = animationData.toVisual != null && animationData.visuals.isNotEmpty()
+          if (!playable) println("RandomizeAnimation requires toVisual and at least one visual")
+          playable
+        }
+        is DiceAnimationData -> {
+          val dice = animationData.componentView as? DiceViewData
+          val playable = dice?.visuals?.getOrNull(animationData.toSide) != null
+          if (!playable) println("DiceAnimation requires a DiceView with a visual for the side")
+          playable
+        }
+        else -> true
       }
+
+  private fun renderAllTracks() {
+    tracks.values.toList().forEach { componentTracks -> componentTracks.values.forEach(::render) }
+  }
+
+  /** Writes the value the [track] currently composes to its component. */
+  private fun render(track: Track) {
+    val segments = track.segments
+    if (segments.isEmpty()) return
+    val style = document.getElementById(track.componentId)?.asDynamic()?.style
+
+    when (track.type) {
+      AnimationType.MOVEMENT -> {
+        var x = 0.0
+        var y = 0.0
+        segments.forEach {
+          val data = it.data as MovementAnimationData
+          x += data.byX * it.p
+          y += data.byY * it.p
+        }
+        style?.setProperty("--txAnim", "$x")
+        style?.setProperty("--tyAnim", "$y")
+      }
+      AnimationType.ROTATION -> {
+        var angle = (segments.first().data as RotationAnimationData).fromAngle
+        segments.forEach {
+          val data = it.data as RotationAnimationData
+          angle += (data.toAngle - data.fromAngle) * it.p
+        }
+        style?.setProperty("--rot", "${angle}deg")
+      }
+      AnimationType.SCALE -> {
+        val first = segments.first().data as ScaleAnimationData
+        var scaleX = first.fromScaleX
+        var scaleY = first.fromScaleY
+        segments.forEach {
+          val data = it.data as ScaleAnimationData
+          scaleX = chainScale(scaleX, data.fromScaleX, data.toScaleX, it.p)
+          scaleY = chainScale(scaleY, data.fromScaleY, data.toScaleY, it.p)
+        }
+        style?.setProperty("--sxAnim", "$scaleX")
+        style?.setProperty("--syAnim", "$scaleY")
+      }
+      AnimationType.FADE -> {
+        var opacity = (segments.first().data as FadeAnimationData).fromOpacity
+        segments.forEach {
+          val data = it.data as FadeAnimationData
+          opacity += (data.toOpacity - opacity) * it.p
+        }
+        style?.setProperty("--opaAnim", "$opacity")
+      }
+      AnimationType.FLIP -> {
+        var angle = 0.0
+        segments.forEach { angle += 90.0 * (1.0 - kotlin.math.abs(1.0 - 2.0 * it.p)) }
+        style?.setProperty("--flipAnim", "${angle}deg")
+
+        // The most recently started flip decides the visual: its front half shows the visual
+        // it flips from, the back half the visual it flips to.
+        segments
+            .lastOrNull { it.started }
+            ?.let {
+              val data = it.data as FlipAnimationData
+              updateVisual(track.componentId, if (it.p < 0.5) data.fromVisual else data.toVisual)
+            }
+      }
+      AnimationType.STEPPED -> {
+        segments.lastOrNull { it.started }?.let { renderStepped(track.componentId, it) }
+      }
+      else -> {}
     }
   }
 
-  fun animateFade(
-      component: org.w3c.dom.Element,
-      animationData: FadeAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--opaAnim` =
-                  jsObject<TweenParams> {
-                    from = animationData.fromOpacity.toString()
-                    to = animationData.toOpacity.toString()
-                    duration = animationData.duration
-                    ease = easeForInterpolationType(animationData)
-                  }
-              onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-              autoplay = false
-            })
+  /**
+   * Chains a scale animation onto the [current] scale. Scales are relative to their start value
+   * (like the JVM persists them), absolute if the animation starts at zero.
+   */
+  private fun chainScale(current: Double, from: Double, to: Double, progress: Double): Double =
+      if (from == 0.0) current + (to - current) * progress
+      else current * (1.0 + (to / from - 1.0) * progress)
 
-    // Store the JSAnimation for later reverting
-    val componentId = animationData.componentView?.id
-    if (componentId != null) {
-      jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.FADE] = jsAnim
+  private fun renderStepped(componentId: ID, segment: Segment) {
+    val data = segment.data
+    val (visuals, toVisual) =
+        when (data) {
+          is DiceAnimationData -> {
+            val diceVisuals = (data.componentView as DiceViewData).visuals
+            diceVisuals to diceVisuals[data.toSide]
+          }
+          is RandomizeAnimationData -> data.visuals to data.toVisual
+          else -> return
+        }
+    val totalSteps = maxOf(1, (data as SteppedComponentAnimationData).speed)
+    val step = minOf(totalSteps - 1, (segment.p * totalSteps).toInt())
+
+    // The last step always shows the target visual, all others a random one.
+    if (segment.completed || step >= totalSteps - 1) {
+      updateVisual(componentId, toVisual)
+    } else {
+      if (step != segment.lastStep || segment.steppedVisual == null) {
+        segment.lastStep = step
+        segment.steppedVisual = visuals[kotlin.random.Random.nextInt(visuals.size)]
+      }
+      updateVisual(componentId, segment.steppedVisual)
     }
-
-    timeline.sync(jsAnim, animationData.initialDelay)
-  }
-
-  fun animateMovement(
-      component: org.w3c.dom.Element,
-      animationData: MovementAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--txAnim` =
-                  jsObject<TweenParams> {
-                    to = "${animationData.byX}"
-                    duration = animationData.duration
-                    ease = easeForInterpolationType(animationData)
-                  }
-              `--tyAnim` =
-                  jsObject<TweenParams> {
-                    to = "${animationData.byY}"
-                    duration = animationData.duration
-                    ease = easeForInterpolationType(animationData)
-                  }
-              onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-              autoplay = false
-            })
-
-    // Store the JSAnimation for later reverting
-    val componentId = animationData.componentView?.id
-    if (componentId != null) {
-      jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.MOVEMENT] = jsAnim
-    }
-
-    timeline.sync(jsAnim, animationData.initialDelay)
-  }
-
-  fun animateRotation(
-      component: org.w3c.dom.Element,
-      animationData: RotationAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--rot` =
-                  jsObject<TweenParams> {
-                    from = "${animationData.fromAngle}deg"
-                    to = "${animationData.toAngle}deg"
-                    duration = animationData.duration
-                    ease = easeForInterpolationType(animationData)
-                  }
-              onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-              autoplay = false
-            })
-
-    // Store the JSAnimation for later reverting
-    val componentId = animationData.componentView?.id
-    if (componentId != null) {
-      jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.ROTATION] = jsAnim
-    }
-
-    timeline.sync(jsAnim, animationData.initialDelay)
-  }
-
-  fun animateScale(
-      component: org.w3c.dom.Element,
-      animationData: ScaleAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--sxAnim` =
-                  jsObject<TweenParams> {
-                    from = animationData.fromScaleX.toString()
-                    to = animationData.toScaleX.toString()
-                    duration = animationData.duration
-                    ease = easeForInterpolationType(animationData)
-                  }
-              `--syAnim` =
-                  jsObject<TweenParams> {
-                    from = animationData.fromScaleY.toString()
-                    to = animationData.toScaleY.toString()
-                    duration = animationData.duration
-                    ease = easeForInterpolationType(animationData)
-                  }
-              onComplete = { anim, e -> callback.invoke(animationData.id, component.id) }
-              autoplay = false
-            })
-
-    // Store the JSAnimation for later reverting
-    val componentId = animationData.componentView?.id
-    if (componentId != null) {
-      jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.SCALE] = jsAnim
-    }
-
-    timeline.sync(jsAnim, animationData.initialDelay)
-  }
-
-  fun animateFlip(
-      component: org.w3c.dom.Element,
-      animationData: FlipAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    var imageSwitched = false
-    val halfDuration = animationData.duration / 2
-    val componentId = animationData.componentView?.id!!
-    val fromVisual = animationData.fromVisual
-    val toVisual = animationData.toVisual
-
-    if (fromVisual == null || toVisual == null) {
-      println("FlipAnimation requires fromVisual and toVisual")
-      callback.invoke(animationData.id, component.id)
-      return
-    }
-
-    // Set initial visual
-    updateVisual(componentId, fromVisual)
-
-    // Create a native JavaScript array for keyframes
-    val keyframes =
-        jsArrayOf<TweenParams>(
-            jsObject {
-              from = "0deg"
-              to = "90deg"
-              duration = halfDuration
-              ease = "linear"
-            },
-            jsObject {
-              to = "0deg"
-              duration = halfDuration
-              ease = "linear"
-            })
-
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--flipAnim` = keyframes
-              onBeforeUpdate = { anim, e ->
-                if (anim.currentTime >= halfDuration && !imageSwitched) {
-                  imageSwitched = true
-                  // Update to target visual at midpoint
-                  updateVisual(componentId, toVisual)
-                }
-              }
-              onComplete = { anim, e ->
-                // Clear visual state when animation completes
-                visualStates.remove(componentId)
-                callback.invoke(animationData.id, component.id)
-              }
-              autoplay = false
-            })
-
-    // Store the JSAnimation for later reverting
-    jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.FLIP] = jsAnim
-
-    timeline.sync(jsAnim, animationData.initialDelay)
-  }
-
-  fun animateRandomize(
-      component: org.w3c.dom.Element,
-      animationData: RandomizeAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    val componentId = animationData.componentView?.id!!
-    val visuals = animationData.visuals
-    val toVisual = animationData.toVisual
-
-    if (toVisual == null || visuals.isEmpty()) {
-      println("RandomizeAnimation requires toVisual and at least one visual")
-      callback.invoke(animationData.id, component.id)
-      return
-    }
-
-    val totalSteps = maxOf(1, animationData.speed)
-    val stepDuration = maxOf(1, animationData.duration / totalSteps)
-    var currentStep = 0
-
-    // Use animate with a dummy property to trigger updates at intervals
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--steppedAnim` =
-                  jsArrayOf(
-                      jsObject<TweenParams> {
-                        from = "0"
-                        to = "$totalSteps"
-                        duration = animationData.duration
-                        ease = "linear"
-                      })
-              onUpdate = { anim, _ ->
-                val newStep = (anim.currentTime / stepDuration).toInt()
-                if (newStep != currentStep && newStep < totalSteps - 1) {
-                  currentStep = newStep
-                  // Randomly pick a visual (except the last frame)
-                  val randomIndex = kotlin.random.Random.nextInt(visuals.size)
-                  updateVisual(componentId, visuals[randomIndex])
-                } else if (newStep >= totalSteps - 1) {
-                  // Show target visual in last step
-                  updateVisual(componentId, toVisual)
-                }
-              }
-              onComplete = { _, _ ->
-                // Ensure final visual is set and clear state
-                visualStates.remove(componentId)
-                callback.invoke(animationData.id, component.id)
-              }
-              autoplay = false
-            })
-
-    // Store the JSAnimation for later reverting
-    jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.STEPPED] = jsAnim
-
-    timeline.sync(jsAnim, animationData.initialDelay)
-  }
-
-  fun animateDice(
-      component: org.w3c.dom.Element,
-      animationData: DiceAnimationData,
-      timeline: Timeline,
-      callback: (ID, ID?) -> Unit
-  ) {
-    val componentId = animationData.componentView?.id!!
-    val diceData = animationData.componentView as? DiceViewData
-
-    if (diceData == null) {
-      println("DiceAnimation requires DiceView component")
-      callback.invoke(animationData.id, component.id)
-      return
-    }
-
-    val visuals = diceData.visuals
-    val toSide = animationData.toSide
-    val toVisual = visuals.getOrNull(toSide)
-
-    if (toVisual == null) {
-      println("Invalid toSide: $toSide for DiceView with ${visuals.size} sides")
-      callback.invoke(animationData.id, component.id)
-      return
-    }
-
-    val totalSteps = maxOf(1, animationData.speed)
-    val stepDuration = maxOf(1, animationData.duration / totalSteps)
-    var currentStep = 0
-
-    // Use animate with a dummy property to trigger updates at intervals
-    val jsAnim =
-        animate(
-            component,
-            jsObject {
-              `--steppedAnim` =
-                  jsArrayOf(
-                      jsObject<TweenParams> {
-                        from = "0"
-                        to = "$totalSteps"
-                        duration = animationData.duration
-                        ease = "linear"
-                      })
-              onUpdate = { anim, _ ->
-                val newStep = (anim.currentTime / stepDuration).toInt()
-                if (newStep != currentStep && newStep < totalSteps - 1) {
-                  currentStep = newStep
-                  // Randomly pick a side (except the last frame)
-                  val randomSide = kotlin.random.Random.nextInt(visuals.size)
-                  updateVisual(componentId, visuals[randomSide])
-                } else if (newStep >= totalSteps - 1) {
-                  // Show target side in last step
-                  updateVisual(componentId, toVisual)
-                }
-              }
-              onComplete = { _, _ ->
-                // Ensure final visual is set and clear state
-                visualStates.remove(componentId)
-                callback.invoke(animationData.id, component.id)
-              }
-              autoplay = false
-            })
-
-    // Store the JSAnimation for later reverting
-    jsAnimations.getOrPut(componentId) { mutableMapOf() }[AnimationType.STEPPED] = jsAnim
-
-    timeline.sync(jsAnim, animationData.initialDelay)
   }
 
   /**
@@ -660,6 +510,7 @@ internal object Animator {
    * and stepped animations to change visuals.
    */
   private fun updateVisual(componentId: ID, visual: VisualData?) {
+    if (visualStates.containsKey(componentId) && visualStates[componentId] === visual) return
     visualStates[componentId] = visual
     notifyVisualUpdate(componentId, visual)
   }
@@ -719,35 +570,34 @@ internal object Animator {
     }
   }
 
+  /**
+   * Reverts the animated CSS values of the given [animationType] once the JVM reported that all
+   * animations of that type on the component finished. The JVM state sent alongside already
+   * contains the (persisted) final values.
+   */
   fun removeAnimationTypesFromTimeline(componentId: String, animationType: AnimationType) {
-    // Get the stored JSAnimation for this component and animation type
-    val jsAnim = jsAnimations[componentId]?.get(animationType)
+    val componentTracks = tracks[componentId]
+    val track = componentTracks?.get(animationType)
 
-    if (jsAnim != null) {
-      try {
-        // Remove the JSAnimation from storage
-        jsAnimations[componentId]?.remove(animationType)
-      } catch (e: Exception) {
-        console.log(
-            "Failed to revert $animationType animation for component $componentId: ${e.message}")
-      }
-    } else {
-      console.log("No JSAnimation found for $animationType on component $componentId")
-    }
+    // A newer animation of this type already runs on the component (e.g. one started from an
+    // onFinished callback). The finish notification belongs to the previous one, so keep it.
+    if (track != null && !track.isFinished) return
 
-    // Remove CSS properties
+    componentTracks?.remove(animationType)
     removeCssPropertiesForAnimationType(componentId, animationType)
 
-    // Remove the animation type from tracking
-    componentAnimationTypes[componentId]?.remove(animationType)
+    if (animationType == AnimationType.FLIP || animationType == AnimationType.STEPPED) {
+      val otherVisualTrack =
+          componentTracks?.keys?.any { it == AnimationType.FLIP || it == AnimationType.STEPPED }
+      if (otherVisualTrack != true && visualStates.containsKey(componentId)) {
+        visualStates.remove(componentId)
+        notifyVisualUpdate(componentId, null)
+      }
+    }
 
-    // If no more animation types are active for this component, clean up
-    if (componentAnimationTypes[componentId]?.isEmpty() == true) {
-      componentAnimationTypes.remove(componentId)
+    if (componentTracks != null && componentTracks.isEmpty()) {
+      tracks.remove(componentId)
       timelines.remove(componentId)
-      jsAnimations.remove(componentId)
-      visualStates.remove(componentId)
-      animations.remove(componentId)
     }
   }
 
@@ -776,10 +626,8 @@ internal object Animator {
     }
 
     // Remove all CSS properties for all active animations
-    componentAnimationTypes.forEach { (componentId, animationTypes) ->
-      animationTypes.forEach { animationType ->
-        removeCssPropertiesForAnimationType(componentId, animationType)
-      }
+    tracks.forEach { (componentId, componentTracks) ->
+      componentTracks.keys.forEach { removeCssPropertiesForAnimationType(componentId, it) }
     }
 
     // Send a single event to notify backend that all animations were stopped
@@ -791,10 +639,8 @@ internal object Animator {
     }
 
     // Clear all tracking data structures
-    animations.clear()
     timelines.clear()
-    componentAnimationTypes.clear()
-    jsAnimations.clear()
+    tracks.clear()
     // Components that showed an animated visual fall back to their own again.
     val animatedVisuals = visualStates.keys.toList()
     visualStates.clear()

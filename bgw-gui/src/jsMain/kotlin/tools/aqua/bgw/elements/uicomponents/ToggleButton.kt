@@ -72,7 +72,7 @@ internal val ToggleButton =
         }
 
         ref = elementRef
-        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffectWithCleanup(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")

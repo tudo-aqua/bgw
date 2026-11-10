@@ -58,352 +58,13 @@ internal external interface AppProps : Props {
 
 internal val App =
     FC<AppProps> { props ->
-      useEffect(listOf(webSocket)) { webSocket?.send("Hello from Client!") }
+      useEffectWithCleanup(webSocket) { webSocket?.send("Hello from Client!") }
 
-      props.data.fonts.forEach { font ->
-        Global {
-          styles {
-            fontFace {
-              fontFamily = font.second
-              fontStyle = FontStyle.normal
-              fontWeight = integer(font.third)
-              src = "url(static/${font.first})"
-            }
-          }
-        }
-      }
-
-      Global {
-        styles {
-          ".bgw-root-container" {
-            width = 100.pct
-            height = 100.pct
-            position = Position.absolute
-            left = 0.px
-            top = 0.px
-            display = Display.flex
-            justifyContent = JustifyContent.center
-            alignItems = AlignItems.center
-            backgroundColor = rgb(0, 0, 0, 0.0)
-            overflow = Overflow.hidden
-            containerName = bgwContainer()
-            containerType = ContainerType.size
-          }
-
-          ".bgw-root *" {
-            // transformOrigin = TransformOrigin(GeometryPosition.center, GeometryPosition.center)
-            border = None.none
-            outline = None.none
-          }
-
-          // BLUE
-          "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-            ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.height).cqh)
-              width = 100.cqw
-              height = 100.cqh
-              margin = 0.px
-              overflow = Overflow.hidden
-              userSelect = None.none
-            }
-
-            "bgw_scenes" {
-              height = 100.cqh
-              width = (100.0 / props.data.height * props.data.width).cqh
-              position = Position.relative
-              backgroundColor = rgb(0, 0, 0, 0.0)
-              overflow = Overflow.hidden
-              display = Display.block
-            }
-          }
-
-          // RED
-          "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: landscape)" {
-            ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.width).cqw)
-              width = 100.cqw
-              height = 100.cqh
-              margin = 0.px
-              overflow = Overflow.hidden
-              userSelect = None.none
-            }
-
-            "bgw_scenes" {
-              width = 100.cqw
-              height = (100.0 / props.data.width * props.data.height).cqw
-              position = Position.relative
-              backgroundColor = rgb(0, 0, 0, 0.0)
-              overflow = Overflow.hidden
-              display = Display.block
-            }
-          }
-
-          // GREEN
-          "@container bgwContainer (min-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-            ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.height).cqh)
-              width = 100.cqw
-              height = 100.cqh
-              margin = 0.px
-              overflow = Overflow.hidden
-              userSelect = None.none
-            }
-
-            "bgw_scenes" {
-              height = 100.cqh
-              width = (100.0 / props.data.height * props.data.width).cqh
-              position = Position.relative
-              backgroundColor = rgb(0, 0, 0, 0.0)
-              overflow = Overflow.hidden
-              display = Display.block
-            }
-          }
-
-          // YELLOW
-          "@container bgwContainer (max-aspect-ratio: ${props.data.width}/${props.data.height}) and (orientation: portrait)" {
-            ".bgw-root, .bgw-dialogs" {
-              set(CustomPropertyName("--bgwUnit"), (100.0 / props.data.width).cqw)
-              width = 100.cqw
-              height = 100.cqh
-              margin = 0.px
-              overflow = Overflow.hidden
-              userSelect = None.none
-            }
-
-            "bgw_scenes" {
-              width = 100.cqw
-              height = (100.0 / props.data.width * props.data.height).cqw
-              position = Position.relative
-              backgroundColor = rgb(0, 0, 0, 0.0)
-              overflow = Overflow.hidden
-              display = Display.block
-            }
-          }
-
-          ".bgw-root" {
-            backgroundColor =
-                if (props.data.isHeadless) {
-                  rgb(0, 0, 0, 0.0)
-                } else {
-                  rgb(0, 0, 0, 1.0)
-                }
-            color = rgb(0, 0, 0)
-            margin = 0.px
-          }
-
-          ".visuals" {
-            width = 100.pct
-            height = 100.pct
-            position = Position.absolute
-            left = 0.px
-            top = 0.px
-            overflow = Overflow.hidden
-          }
-
-          "bgw_color_visual, bgw_image_visual, bgw_text_visual" {
-            width = 100.pct
-            height = 100.pct
-            position = Position.absolute
-            left = 0.px
-            top = 0.px
-            display = Display.flex
-          }
-
-          "bgw_scene" {
-            height = 100.pct
-            width = 100.pct
-            inset = 0.px
-            position = Position.absolute
-            display = Display.flex
-            backgroundColor = rgb(0, 0, 0, 0.0)
-            overflow = Overflow.hidden
-          }
-          "bgw_menu_scene > bgw_scene > bgw_visuals" {
-            opacity = number(DEFAULT_MENU_SCENE_BACKGROUND_OPACITY)
-          }
-          "bgw_menu_scene > bgw_scene" {
-            opacity = number(0.0)
-            backdropFilter = blur(0.px)
-            zIndex = integer(1000)
-          }
-
-          /* "bgw_menu_scene[aria-expanded='true']:after" {
-            content = Content("")
-            position = Position.absolute
-            width = 100.pct
-            height = 100.pct
-            inset = 0.px
-            backgroundColor = rgb(0, 0, 0, 0.0)
-            zIndex = integer(999)
-            backdropFilter = blur(bgwUnit(DEFAULT_BLUR_RADIUS))
-          } */
-
-          "bgw_hexagon_view[aria-details='hex-pointy_top']" {
-            clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
-          }
-
-          "bgw_hexagon_view[aria-details='hex-flat_top']" {
-            clipPath = polygonPath("25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%")
-          }
-
-          "bgw_menu_scene[aria-expanded='true'] > bgw_scene" { opacity = number(1.0) }
-
-          "bgw_camera_pane" { overflow = Overflow.hidden }
-
-          "bgw_camera_target" {
-            width = fit()
-            height = fit()
-          }
-
-          "bgw_camera_target > *" { position = important(Position.relative) }
-
-          "bgw_grid_element > *" {
-            position = important(Position.relative)
-            left = important(0.px)
-            top = important(0.px)
-          }
-
-          ".text, .components" { position = Position.absolute }
-
-          "bgw_linear_layout > bgw_contents > div > *, bgw_linear_layout > bgw_contents > *" {
-            position = important(Position.relative)
-            // left = important(Globals.unset)
-            // top = important(Globals.unset)
-            flexGrow = number(0.0)
-            flexShrink = number(0.0)
-          }
-
-          "bgw_card_stack > bgw_contents > *" {
-            position = important(Position.absolute)
-            left = important(Globals.unset)
-            top = important(Globals.unset)
-            flexGrow = number(0.0)
-            flexShrink = number(0.0)
-          }
-
-          "bgw_hexagon_grid > bgw_contents > bgw_hexagon_content > *" {
-            position = important(Position.relative)
-            left = important(Globals.unset)
-            top = important(Globals.unset)
-            flexGrow = number(0.0)
-            flexShrink = number(0.0)
-          }
-
-          "textarea::-webkit-scrollbar" { display = None.none }
-
-          "input[type='color']::-webkit-color-swatch" {
-            borderRadius = bgwUnit(3)
-            border = None.none
-          }
-
-          "bgw_togglebutton" {
-            position = Position.relative
-            display = Display.inlineFlex
-            width = bgwUnit(30)
-            height = bgwUnit(18)
-          }
-
-          "bgw_togglebutton > input[type='checkbox']" {
-            opacity = number(0.0)
-            position = Position.relative
-            width = bgwUnit(36)
-            minWidth = bgwUnit(36)
-            height = 100.pct
-          }
-
-          "bgw_satchel > bgw_contents > *" { opacity = important(number(0.0)) }
-
-          ".toggle" {
-            position = Position.absolute
-            left = 4.bgw
-            width = 30.bgw
-            height = 18.bgw
-            backgroundColor = rgb(145, 145, 145)
-            transition = transition(300, "background-color")
-            borderRadius = 3.bgw
-          }
-
-          ".toggle::before" {
-            content = Content("")
-            position = Position.absolute
-            width = 12.bgw
-            height = 12.bgw
-            left = 3.bgw
-            top = 3.bgw
-            backgroundColor = rgb(255, 255, 255)
-            transition = transition(300, "transform")
-            borderRadius = 3.bgw
-          }
-
-          "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
-            backgroundColor = rgb(0, 117, 255)
-          }
-
-          "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
-            transform = translatex(12.bgw)
-          }
-
-          ".bgw-root" {
-            width = 100.pct
-            height = 100.pct
-            position = Position.absolute
-            left = 0.px
-            top = 0.px
-            display = Display.flex
-            justifyContent = JustifyContent.center
-            alignItems = AlignItems.center
-            backgroundColor =
-                if (props.data.isHeadless) {
-                  rgb(0, 0, 0, 0.0)
-                } else {
-                  rgb(0, 0, 0, 1.0)
-                }
-            overflow = Overflow.hidden
-          }
-
-          ".bgw-root *[data-bgw-drag-source='true']" { visibility = important(Visibility.hidden) }
-
-          "bgw_satchel bgw_contents *[aria-roledescription='draggable']:not([aria-pressed='true'])" {
-            width = important(100.pct)
-            height = important(100.pct)
-          }
-
-          "bgw_scroll::-webkit-scrollbar" { display = None.none }
-
-          // DragOverlay specific styles to ensure visibility
-          ".bgw-drag-overlay" {
-            zIndex = important(integer(99999998))
-            pointerEvents = important(None.none)
-          }
-
-          ".bgw-drag-overlay > *" {
-            zIndex = important(integer(99999998))
-            pointerEvents = important(None.none)
-          }
-
-          "select, ::picker(select)" {
-            appearance = important(baseSelect())
-            border = None.none
-            backgroundColor = rgb(0, 0, 0, 0.0)
-          }
-
-          "option::checkmark, ::picker-icon" { display = None.none }
-
-          "option" {
-            minInlineSize = fit()
-            minBlockSize = fit()
-            paddingBlock = 0.5.bgw
-            paddingInline = 0.bgw
-          }
-
-          "select" {
-            border = None.none
-            paddingBlock = 0.bgw
-            paddingInline = 0.bgw
-            minInlineSize = fit()
-            minBlockSize = fit()
-          }
-        }
+      BgwGlobalStyles {
+        width = props.data.width
+        height = props.data.height
+        isHeadless = props.data.isHeadless
+        fonts = props.data.fonts
       }
 
       /* div {
@@ -424,7 +85,7 @@ internal val App =
               src = "logo_animated.svg"
           }
 
-          /* useEffect {
+          /* useEffectWithCleanup {
               val loadingSVG = document.createElement("svg")
               loadingSVG.id = "eRjslcmEZrC1"
               loadingSVG.setAttribute("xmlns", "http://www.w3.org/2000/svg")
@@ -709,6 +370,376 @@ internal val App =
         }
       }
     }
+
+internal external interface GlobalStylesProps : Props {
+  var width: Int
+  var height: Int
+  var isHeadless: Boolean
+  var fonts: List<Triple<String, String, Int>>
+}
+
+/**
+ * Global styles of the BGW root. They only depend on the scene size, the headless mode and the
+ * loaded fonts, so they are only rebuilt when one of these changes and not on every update.
+ */
+internal val BgwGlobalStyles: FC<GlobalStylesProps> =
+    memo(
+        FC<GlobalStylesProps> { props ->
+          props.fonts.forEach { font ->
+            Global {
+              styles {
+                fontFace {
+                  fontFamily = font.second
+                  fontStyle = FontStyle.normal
+                  fontWeight = integer(font.third)
+                  src = "url(static/${font.first})"
+                }
+              }
+            }
+          }
+
+          Global {
+            styles {
+              ".bgw-root-container" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                alignItems = AlignItems.center
+                backgroundColor = rgb(0, 0, 0, 0.0)
+                overflow = Overflow.hidden
+                containerName = bgwContainer()
+                containerType = ContainerType.size
+              }
+
+              ".bgw-root *" {
+                // transformOrigin = TransformOrigin(GeometryPosition.center,
+                // GeometryPosition.center)
+                border = None.none
+                outline = None.none
+              }
+
+              // BLUE
+              "@container bgwContainer (min-aspect-ratio: ${props.width}/${props.height}) and (orientation: landscape)" {
+                ".bgw-root, .bgw-dialogs" {
+                  set(CustomPropertyName("--bgwUnit"), (100.0 / props.height).cqh)
+                  width = 100.cqw
+                  height = 100.cqh
+                  margin = 0.px
+                  overflow = Overflow.hidden
+                  userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                  height = 100.cqh
+                  width = (100.0 / props.height * props.width).cqh
+                  position = Position.relative
+                  backgroundColor = rgb(0, 0, 0, 0.0)
+                  overflow = Overflow.hidden
+                  display = Display.block
+                }
+              }
+
+              // RED
+              "@container bgwContainer (max-aspect-ratio: ${props.width}/${props.height}) and (orientation: landscape)" {
+                ".bgw-root, .bgw-dialogs" {
+                  set(CustomPropertyName("--bgwUnit"), (100.0 / props.width).cqw)
+                  width = 100.cqw
+                  height = 100.cqh
+                  margin = 0.px
+                  overflow = Overflow.hidden
+                  userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                  width = 100.cqw
+                  height = (100.0 / props.width * props.height).cqw
+                  position = Position.relative
+                  backgroundColor = rgb(0, 0, 0, 0.0)
+                  overflow = Overflow.hidden
+                  display = Display.block
+                }
+              }
+
+              // GREEN
+              "@container bgwContainer (min-aspect-ratio: ${props.width}/${props.height}) and (orientation: portrait)" {
+                ".bgw-root, .bgw-dialogs" {
+                  set(CustomPropertyName("--bgwUnit"), (100.0 / props.height).cqh)
+                  width = 100.cqw
+                  height = 100.cqh
+                  margin = 0.px
+                  overflow = Overflow.hidden
+                  userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                  height = 100.cqh
+                  width = (100.0 / props.height * props.width).cqh
+                  position = Position.relative
+                  backgroundColor = rgb(0, 0, 0, 0.0)
+                  overflow = Overflow.hidden
+                  display = Display.block
+                }
+              }
+
+              // YELLOW
+              "@container bgwContainer (max-aspect-ratio: ${props.width}/${props.height}) and (orientation: portrait)" {
+                ".bgw-root, .bgw-dialogs" {
+                  set(CustomPropertyName("--bgwUnit"), (100.0 / props.width).cqw)
+                  width = 100.cqw
+                  height = 100.cqh
+                  margin = 0.px
+                  overflow = Overflow.hidden
+                  userSelect = None.none
+                }
+
+                "bgw_scenes" {
+                  width = 100.cqw
+                  height = (100.0 / props.width * props.height).cqw
+                  position = Position.relative
+                  backgroundColor = rgb(0, 0, 0, 0.0)
+                  overflow = Overflow.hidden
+                  display = Display.block
+                }
+              }
+
+              ".bgw-root" {
+                backgroundColor =
+                    if (props.isHeadless) {
+                      rgb(0, 0, 0, 0.0)
+                    } else {
+                      rgb(0, 0, 0, 1.0)
+                    }
+                color = rgb(0, 0, 0)
+                margin = 0.px
+              }
+
+              ".visuals" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+                overflow = Overflow.hidden
+              }
+
+              "bgw_color_visual, bgw_image_visual, bgw_text_visual" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+                display = Display.flex
+              }
+
+              "bgw_scene" {
+                height = 100.pct
+                width = 100.pct
+                inset = 0.px
+                position = Position.absolute
+                display = Display.flex
+                backgroundColor = rgb(0, 0, 0, 0.0)
+                overflow = Overflow.hidden
+              }
+              "bgw_menu_scene > bgw_scene > bgw_visuals" {
+                opacity = number(DEFAULT_MENU_SCENE_BACKGROUND_OPACITY)
+              }
+              "bgw_menu_scene > bgw_scene" {
+                opacity = number(0.0)
+                backdropFilter = blur(0.px)
+                zIndex = integer(1000)
+              }
+
+              /* "bgw_menu_scene[aria-expanded='true']:after" {
+                content = Content("")
+                position = Position.absolute
+                width = 100.pct
+                height = 100.pct
+                inset = 0.px
+                backgroundColor = rgb(0, 0, 0, 0.0)
+                zIndex = integer(999)
+                backdropFilter = blur(bgwUnit(DEFAULT_BLUR_RADIUS))
+              } */
+
+              "bgw_hexagon_view[aria-details='hex-pointy_top']" {
+                clipPath = polygonPath("0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%")
+              }
+
+              "bgw_hexagon_view[aria-details='hex-flat_top']" {
+                clipPath = polygonPath("25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%")
+              }
+
+              "bgw_menu_scene[aria-expanded='true'] > bgw_scene" { opacity = number(1.0) }
+
+              "bgw_camera_pane" { overflow = Overflow.hidden }
+
+              "bgw_camera_target" {
+                width = fit()
+                height = fit()
+              }
+
+              "bgw_camera_target > *" { position = important(Position.relative) }
+
+              "bgw_grid_element > *" {
+                position = important(Position.relative)
+                left = important(0.px)
+                top = important(0.px)
+              }
+
+              ".text, .components" { position = Position.absolute }
+
+              "bgw_linear_layout > bgw_contents > div > *, bgw_linear_layout > bgw_contents > *" {
+                position = important(Position.relative)
+                // left = important(Globals.unset)
+                // top = important(Globals.unset)
+                flexGrow = number(0.0)
+                flexShrink = number(0.0)
+              }
+
+              "bgw_card_stack > bgw_contents > *" {
+                position = important(Position.absolute)
+                left = important(Globals.unset)
+                top = important(Globals.unset)
+                flexGrow = number(0.0)
+                flexShrink = number(0.0)
+              }
+
+              "bgw_hexagon_grid > bgw_contents > bgw_hexagon_content > *" {
+                position = important(Position.relative)
+                left = important(Globals.unset)
+                top = important(Globals.unset)
+                flexGrow = number(0.0)
+                flexShrink = number(0.0)
+              }
+
+              "textarea::-webkit-scrollbar" { display = None.none }
+
+              "input[type='color']::-webkit-color-swatch" {
+                borderRadius = bgwUnit(3)
+                border = None.none
+              }
+
+              "bgw_togglebutton" {
+                position = Position.relative
+                display = Display.inlineFlex
+                width = bgwUnit(30)
+                height = bgwUnit(18)
+              }
+
+              "bgw_togglebutton > input[type='checkbox']" {
+                opacity = number(0.0)
+                position = Position.relative
+                width = bgwUnit(36)
+                minWidth = bgwUnit(36)
+                height = 100.pct
+              }
+
+              "bgw_satchel > bgw_contents > *" { opacity = important(number(0.0)) }
+
+              ".toggle" {
+                position = Position.absolute
+                left = 4.bgw
+                width = 30.bgw
+                height = 18.bgw
+                backgroundColor = rgb(145, 145, 145)
+                transition = transition(300, "background-color")
+                borderRadius = 3.bgw
+              }
+
+              ".toggle::before" {
+                content = Content("")
+                position = Position.absolute
+                width = 12.bgw
+                height = 12.bgw
+                left = 3.bgw
+                top = 3.bgw
+                backgroundColor = rgb(255, 255, 255)
+                transition = transition(300, "transform")
+                borderRadius = 3.bgw
+              }
+
+              "bgw_togglebutton > input[type='checkbox']:checked + .toggle" {
+                backgroundColor = rgb(0, 117, 255)
+              }
+
+              "bgw_togglebutton > input[type='checkbox']:checked + .toggle::before" {
+                transform = translatex(12.bgw)
+              }
+
+              ".bgw-root" {
+                width = 100.pct
+                height = 100.pct
+                position = Position.absolute
+                left = 0.px
+                top = 0.px
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                alignItems = AlignItems.center
+                backgroundColor =
+                    if (props.isHeadless) {
+                      rgb(0, 0, 0, 0.0)
+                    } else {
+                      rgb(0, 0, 0, 1.0)
+                    }
+                overflow = Overflow.hidden
+              }
+
+              ".bgw-root *[data-bgw-drag-source='true']" {
+                visibility = important(Visibility.hidden)
+              }
+
+              "bgw_satchel bgw_contents *[aria-roledescription='draggable']:not([aria-pressed='true'])" {
+                width = important(100.pct)
+                height = important(100.pct)
+              }
+
+              "bgw_scroll::-webkit-scrollbar" { display = None.none }
+
+              // DragOverlay specific styles to ensure visibility
+              ".bgw-drag-overlay" {
+                zIndex = important(integer(99999998))
+                pointerEvents = important(None.none)
+              }
+
+              ".bgw-drag-overlay > *" {
+                zIndex = important(integer(99999998))
+                pointerEvents = important(None.none)
+              }
+
+              "select, ::picker(select)" {
+                appearance = important(baseSelect())
+                border = None.none
+                backgroundColor = rgb(0, 0, 0, 0.0)
+              }
+
+              "option::checkmark, ::picker-icon" { display = None.none }
+
+              "option" {
+                minInlineSize = fit()
+                minBlockSize = fit()
+                paddingBlock = 0.5.bgw
+                paddingInline = 0.bgw
+              }
+
+              "select" {
+                border = None.none
+                paddingBlock = 0.bgw
+                paddingInline = 0.bgw
+                minInlineSize = fit()
+                minBlockSize = fit()
+              }
+            }
+          }
+        },
+        { previous, next ->
+          previous.width == next.width &&
+              previous.height == next.height &&
+              previous.isHeadless == next.isHeadless &&
+              previous.fonts == next.fonts
+        })
 
 internal inline val bgwScenes: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_scenes".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

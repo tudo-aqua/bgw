@@ -50,7 +50,7 @@ internal object LayoutViewBuilder {
 
   private fun buildPane(pane: Pane<*>) {
     pane.observableComponents.guiListener = { oldComponents, newComponents ->
-      newComponents.filter { it !in oldComponents }.forEach { ComponentViewBuilder.build(it) }
+      ComponentViewBuilder.buildAdded(oldComponents, newComponents)
       Frontend.updateComponent(pane)
     }
     pane.components.forEach { component -> ComponentViewBuilder.build(component) }

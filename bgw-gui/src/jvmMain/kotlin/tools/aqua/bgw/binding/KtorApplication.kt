@@ -66,21 +66,21 @@ import jsonMapper
 import kotlin.invoke
 import kotlin.text.Charsets.UTF_8
 import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.html.*
 import kotlinx.serialization.encodeToString
 import tools.aqua.bgw.animation.Animation
-import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.animation.AnimationRegistry
 import tools.aqua.bgw.animation.ComponentAnimation
 import tools.aqua.bgw.animation.DiceAnimation
 import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.FlipAnimation
 import tools.aqua.bgw.animation.MovementAnimation
+import tools.aqua.bgw.animation.ParallelAnimation
 import tools.aqua.bgw.animation.RandomizeAnimation
 import tools.aqua.bgw.animation.RotationAnimation
 import tools.aqua.bgw.animation.ScaleAnimation
-import tools.aqua.bgw.animation.SteppedComponentAnimation
+import tools.aqua.bgw.animation.SequentialAnimation
+import tools.aqua.bgw.animation.animationType
 import tools.aqua.bgw.components.DynamicComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.DiceView
@@ -122,87 +122,52 @@ internal val componentChannel: Channel =
                                 Triple(path, fontName, weight.toInt())
                               }
                         }))
+        UpdateScheduler.onClientConnected(json)
         it.send(json)
-        // if (!uiJob.isActive) uiJob.start()
       }
 
-      onClientMessage = { session, text ->
+      onClientMessage = { _, text ->
         val type = text.substringBefore('|')
         val content = text.substringAfter('|')
-        when (type) {
-          "bgwQuery" -> {
-            try {
-              eventListener(content)
-            } catch (e: Exception) {
-              Logger.error(e.stackTraceToString())
+        // Changes made by handlers are sent as one update once the handler returned.
+        UpdateScheduler.batch {
+          try {
+            when (type) {
+              "bgwQuery" -> eventListener(content)
+              "bgwAnimationQuery" -> handleAnimationFinished(content)
+              "bgwAnimationStopQuery" -> handleAnimationsStopped(content)
+              "bgwGlobalQuery" -> globalListener(content)
+              "bgwRendered" -> UpdateScheduler.onRendered()
             }
-          }
-          "bgwAnimationQuery" -> {
-            try {
-              handleAnimationFinished(content)
-            } catch (e: Exception) {
-              Logger.error(e.stackTraceToString())
-            }
-          }
-          "bgwAnimationStopQuery" -> {
-            try {
-              handleAnimationsStopped(content)
-            } catch (e: Exception) {
-              Logger.error(e.stackTraceToString())
-            }
-          }
-          "bgwGlobalQuery" -> {
-            try {
-              globalListener(content)
-            } catch (e: Exception) {
-              Logger.error(e.stackTraceToString())
-            }
+          } catch (e: Exception) {
+            Logger.error(e.stackTraceToString())
           }
         }
       }
     }
 
 internal fun handleAnimationsStopped(text: String) {
-  val eventData = jsonMapper.decodeFromString<AnimationsStoppedEventData>(text)
-
-  // Get all animations from both scenes
-  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
-  val animations = menuSceneAnimations + boardGameSceneAnimations
-
-  // Count running animations before stopping them
-  val runningCount = animations.count { it.isRunning }
+  jsonMapper.decodeFromString<AnimationsStoppedEventData>(text)
 
   // For each running animation, clean up WITHOUT triggering onFinished or persist
-  animations
-      .filter { it.isRunning }
-      .forEach { animation ->
-        // Set isRunning to false
-        animation.isRunning = false
+  val running = AnimationRegistry.all().filter { it.isRunning }
+  running.forEach { animation ->
+    animation.isRunning = false
+    AnimationRegistry.unregister(animation)
+    Frontend.menuScene?.animations?.remove(animation)
+    Frontend.boardGameScene?.animations?.remove(animation)
 
-        // Remove animation types from components but don't persist or call onFinished
-        if (animation is ComponentAnimation<*>) {
-          val animationType =
-              when (animation) {
-                is MovementAnimation<*> -> AnimationType.MOVEMENT
-                is ScaleAnimation<*> -> AnimationType.SCALE
-                is RotationAnimation<*> -> AnimationType.ROTATION
-                is FadeAnimation<*> -> AnimationType.FADE
-                is FlipAnimation<*> -> AnimationType.FLIP
-                is SteppedComponentAnimation<*> -> AnimationType.STEPPED
-              }
-
-          animation.componentView.animationTypes.remove(animationType)
-
-          // Check if component has no more active animations
-          if (animation.componentView.animationTypes.isEmpty()) {
-            animation.componentView.componentAnimating = false
-            Frontend.animationCache.remove(animation.componentView.id)
-          }
-        }
+    if (animation is ComponentAnimation<*>) {
+      val component = animation.componentView
+      component.animationTypes.remove(animation.animationType)
+      if (component.animationTypes.isEmpty()) {
+        component.componentAnimating = false
+        Frontend.animationCache.remove(component.id)
       }
+    }
+  }
 
-  Logger.debug("Stopped $runningCount animations without calling onFinished")
+  Logger.debug("Stopped ${running.size} animations without calling onFinished")
 
   Frontend.updateScene()
 }
@@ -210,135 +175,124 @@ internal fun handleAnimationsStopped(text: String) {
 internal fun handleAnimationFinished(text: String) {
   val eventData = jsonMapper.decodeFromString<AnimationFinishedEventData>(text)
 
-  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
-  val animations = menuSceneAnimations + boardGameSceneAnimations
-  val animation = animations.find { it.id == eventData.id } ?: return
+  val animation = AnimationRegistry[eventData.id ?: return] ?: return
   if (!animation.isRunning) return
   animation.isRunning = false
+  AnimationRegistry.unregister(animation)
+  Frontend.menuScene?.animations?.remove(animation)
+  Frontend.boardGameScene?.animations?.remove(animation)
 
-  // Apply final animation values to cache AND component properties if persist=true
-  if (animation is ComponentAnimation<*> && animation.persist) {
-    when (animation) {
-      is MovementAnimation<*> -> {
-        animation.componentView.posX += animation.toX - animation.fromX
-        animation.componentView.posY += animation.toY - animation.fromY
-      }
-      is ScaleAnimation<*> -> {
-        animation.componentView.scaleX =
-            if (animation.fromScaleX == 0.0) animation.toScaleX
-            else animation.componentView.scaleX * animation.toScaleX / animation.fromScaleX
-        animation.componentView.scaleY =
-            if (animation.fromScaleY == 0.0) animation.toScaleY
-            else animation.componentView.scaleY * animation.toScaleY / animation.fromScaleY
-      }
-      is RotationAnimation<*> -> {
-        animation.componentView.rotation += animation.toAngle - animation.fromAngle
-      }
-      is FadeAnimation<*> -> {
-        animation.componentView.opacity = animation.toOpacity
-      }
-      is FlipAnimation<*> -> {
-        if (animation.componentView is CardView) {
-          if (animation.toVisual == animation.componentView.backVisual) {
-            animation.componentView.showBack()
-          } else if (animation.toVisual == animation.componentView.frontVisual) {
-            animation.componentView.showFront()
-          } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
-            animation.componentView.frontVisual = animation.toVisual
-            animation.componentView.showFront()
-          } else if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
-            animation.componentView.backVisual = animation.toVisual
-            animation.componentView.showBack()
-          }
-        } else if (animation.componentView is DiceView) {
-          animation.componentView.visuals[animation.componentView.currentSide] = animation.toVisual
-        } else {
-          animation.componentView.visual = animation.toVisual
-        }
-      }
-      is RandomizeAnimation<*> -> {
-        if (animation.componentView is CardView) {
-          if (animation.componentView.currentSide == CardView.CardSide.FRONT) {
-            animation.componentView.frontVisual = animation.toVisual
-          } else if (animation.componentView.currentSide == CardView.CardSide.BACK) {
-            animation.componentView.backVisual = animation.toVisual
-          }
-        } else if (animation.componentView is DiceView) {
-          animation.componentView.visuals[animation.componentView.currentSide] = animation.toVisual
-        } else {
-          animation.componentView.visual = animation.toVisual
-        }
-      }
-      is DiceAnimation<*> -> {
-        animation.componentView.currentSide = animation.toSide
-      }
-    }
-  }
+  // Apply final animation values to component properties if persist=true
+  if (animation is ComponentAnimation<*> && animation.persist) persistAnimation(animation)
 
   // Remove animation type and cache for ComponentAnimations
   if (animation is ComponentAnimation<*>) {
-    val animationType =
-        when (animation) {
-          is MovementAnimation<*> -> AnimationType.MOVEMENT
-          is ScaleAnimation<*> -> AnimationType.SCALE
-          is RotationAnimation<*> -> AnimationType.ROTATION
-          is FadeAnimation<*> -> AnimationType.FADE
-          is FlipAnimation<*> -> AnimationType.FLIP
-          is SteppedComponentAnimation<*> -> AnimationType.STEPPED
-        }
-    val sameTypeStillRunning =
-        animations.any {
-          it !== animation &&
-              it.isRunning &&
-              it is ComponentAnimation<*> &&
-              it.componentView === animation.componentView &&
-              when (it) {
-                is MovementAnimation<*> -> AnimationType.MOVEMENT
-                is ScaleAnimation<*> -> AnimationType.SCALE
-                is RotationAnimation<*> -> AnimationType.ROTATION
-                is FadeAnimation<*> -> AnimationType.FADE
-                is FlipAnimation<*> -> AnimationType.FLIP
-                is SteppedComponentAnimation<*> -> AnimationType.STEPPED
-              } == animationType
-        }
-    if (!sameTypeStillRunning) {
-      animation.componentView.animationTypes.remove(animationType)
-      animation.componentView.animationsFinishedSinceLastUpdate.add(animationType)
-      // Track this component so we can clear its finished animations after sending the update
-      Frontend.componentsWithFinishedAnimations.add(animation.componentView)
-      Frontend.updateScene()
+    val component = animation.componentView
+    val animationType = animation.animationType
+
+    // The browser keeps showing the animated values until all animations of this type on the
+    // component finished, so only then the type is reported as finished.
+    if (!AnimationRegistry.isTypeRunningOn(component, animationType, except = animation)) {
+      component.animationTypes.remove(animationType)
+      UpdateScheduler.reportFinishedAnimation(component, animationType)
     }
 
     // Check if component has no more active animations
-    val componentStillAnimating =
-        animations.any {
-          it !== animation &&
-              it.isRunning &&
-              it is ComponentAnimation<*> &&
-              it.componentView === animation.componentView
-        }
-    if (!componentStillAnimating) {
-      animation.componentView.componentAnimating = false
-      Frontend.animationCache.remove(animation.componentView.id)
+    if (!AnimationRegistry.isTypeRunningOn(component, null, except = animation)) {
+      component.componentAnimating = false
+      Frontend.animationCache.remove(component.id)
     }
   }
 
-  animation.onFinished?.invoke(AnimationFinishedEvent())
-  checkIfParentFinished(animation)
+  try {
+    animation.onFinished?.invoke(AnimationFinishedEvent())
+  } catch (e: Exception) {
+    reportHandlerException(e)
+  } finally {
+    // Without this, an exception in onFinished kept the parent animation running forever.
+    checkIfParentFinished(animation)
+  }
+}
+
+private fun persistAnimation(animation: ComponentAnimation<*>) {
+  when (animation) {
+    is MovementAnimation<*> -> {
+      animation.componentView.posX += animation.toX - animation.fromX
+      animation.componentView.posY += animation.toY - animation.fromY
+    }
+    is ScaleAnimation<*> -> {
+      animation.componentView.scaleX =
+          if (animation.fromScaleX == 0.0) animation.toScaleX
+          else animation.componentView.scaleX * animation.toScaleX / animation.fromScaleX
+      animation.componentView.scaleY =
+          if (animation.fromScaleY == 0.0) animation.toScaleY
+          else animation.componentView.scaleY * animation.toScaleY / animation.fromScaleY
+    }
+    is RotationAnimation<*> -> {
+      animation.componentView.rotation += animation.toAngle - animation.fromAngle
+    }
+    is FadeAnimation<*> -> {
+      animation.componentView.opacity = animation.toOpacity
+    }
+    is FlipAnimation<*> -> {
+      val component = animation.componentView
+      when (component) {
+        is CardView ->
+            when {
+              animation.toVisual == component.backVisual -> component.showBack()
+              animation.toVisual == component.frontVisual -> component.showFront()
+              component.currentSide == CardView.CardSide.BACK -> {
+                component.frontVisual = animation.toVisual
+                component.showFront()
+              }
+              else -> {
+                component.backVisual = animation.toVisual
+                component.showBack()
+              }
+            }
+        is DiceView -> component.setCurrentSideVisual(animation.toVisual)
+        else -> component.visual = animation.toVisual
+      }
+    }
+    is RandomizeAnimation<*> -> {
+      val component = animation.componentView
+      when (component) {
+        is CardView ->
+            if (component.currentSide == CardView.CardSide.FRONT) {
+              component.frontVisual = animation.toVisual
+            } else {
+              component.backVisual = animation.toVisual
+            }
+        is DiceView -> component.setCurrentSideVisual(animation.toVisual)
+        else -> component.visual = animation.toVisual
+      }
+    }
+    is DiceAnimation<*> -> {
+      animation.componentView.currentSide = animation.toSide
+    }
+  }
 }
 
 internal fun checkIfParentFinished(animation: Animation) {
-  val menuSceneAnimations = Frontend.menuScene?.animations?.toList() ?: listOf()
-  val boardGameSceneAnimations = Frontend.boardGameScene?.animations?.toList() ?: listOf()
-  val animations = menuSceneAnimations + boardGameSceneAnimations
+  val parent = animation.parentAnimation ?: return
+  if (!parent.isRunning) return
 
-  val parent = animation.parentAnimation
-  if (parent != null) {
-    val finished = animations.filter { it.parentAnimation == parent }.all { !it.isRunning }
-    if (finished) {
+  val children =
+      when (parent) {
+        is SequentialAnimation -> parent.animations
+        is ParallelAnimation -> parent.animations
+        else -> emptyList()
+      }
+  if (children.all { !it.isRunning }) {
+    parent.isRunning = false
+    AnimationRegistry.unregister(parent)
+    Frontend.menuScene?.animations?.remove(parent)
+    Frontend.boardGameScene?.animations?.remove(parent)
+    try {
       parent.onFinished?.invoke(AnimationFinishedEvent())
-      parent.isRunning = false
+    } catch (e: Exception) {
+      reportHandlerException(e)
+    } finally {
       checkIfParentFinished(parent)
     }
   }
@@ -372,7 +326,22 @@ internal fun globalListener(text: String) {
         boardGameScene?.onKeyTyped?.invoke(keyEvent)
       }
     }
-  } catch (e: Exception) {}
+  } catch (e: Exception) {
+    // Exceptions thrown by the application's key handlers were silently swallowed before.
+    reportHandlerException(e)
+  }
+}
+
+/** Logs an exception thrown by an application event handler and shows it in an error dialog. */
+internal fun reportHandlerException(e: Throwable) {
+  Logger.error(e.stackTraceToString())
+  Frontend.applicationEngine.frame?.openNewDialog(
+      DialogMapper.map(
+          Dialog(
+              "Error",
+              "Error",
+              "An error occurred while handling an event: ${e.message}",
+              exception = e)))
 }
 
 internal fun eventListener(text: String) {
@@ -592,15 +561,7 @@ internal fun eventListener(text: String) {
           }
         }
       } catch (e: Exception) {
-        val mainFrame = Frontend.applicationEngine.frame
-        mainFrame?.openNewDialog(
-            DialogMapper.map(
-                Dialog(
-                    "Error",
-                    "Error",
-                    "An error occurred while handling an event: ${e.message}",
-                    exception = e)))
-        Logger.error(e.stackTraceToString())
+        reportHandlerException(e)
       }
     }
   }
@@ -667,80 +628,8 @@ internal fun gzip(content: String): String {
 internal fun ungzip(content: ByteArray): String =
     GZIPInputStream(content.inputStream()).bufferedReader(UTF_8).use { it.readText() }
 
-private val updateStack = Collections.synchronizedList(Stack<AppData>())
-private val debounceTimeMillis = 5L // Adjust this value as needed
-private val debounceMutex = Mutex()
-private var debounceJob: Job? = null
-
-private var refreshJob: Job? = null
-
-private var finalUpdate: String = ""
-
-internal fun enqueueUpdate(data: AppData) {
-  updateStack.add(data)
-  refreshJob?.cancel()
-  debounceJob?.cancel()
-  debounceJob =
-      CoroutineScope(Dispatchers.IO).launch {
-        delay(debounceTimeMillis)
-        debounceMutex.withLock { processLastUpdate() }
-      }
-}
-
-internal suspend fun forceAnimationUpdate(animationData: AnimationData) {
-  debounceJob?.cancel()
-  updateStack.clear()
-  val json =
-      jsonMapper.encodeToString(PropData(collectAppData().apply { forcedByAnimation = true }))
-  componentChannel.sendToAllClients(json)
-  val animationJson = jsonMapper.encodeToString(PropData(animationData))
-  componentChannel.sendToAllClients(animationJson)
-}
-
-private suspend fun processLastUpdate() {
-  val lastUpdate = updateStack.lastOrNull()
-  updateStack.clear()
-  lastUpdate?.let {
-    try {
-      val json = jsonMapper.encodeToString(PropData(lastUpdate))
-      finalUpdate = json
-      // println("Processing update: $json")
-      componentChannel.sendToAllClients(json)
-
-      // Now that the update has been sent, clear the animationsFinishedSinceLastUpdate
-      // for all components to prevent them from being sent again
-      clearFinishedAnimationFlags()
-
-      refreshJob =
-          CoroutineScope(Dispatchers.IO).launch {
-            delay(50)
-            checkForMissingState()
-          }
-    } catch (e: Exception) {
-      println("Error sending update: $e")
-    }
-  }
-}
-
-internal fun clearFinishedAnimationFlags() {
-  // Clear the animationsFinishedSinceLastUpdate for all tracked components
-  Frontend.componentsWithFinishedAnimations.forEach { component ->
-    component.animationsFinishedSinceLastUpdate.clear()
-  }
-  // Clear the tracking set
-  Frontend.componentsWithFinishedAnimations.clear()
-}
-
-internal fun checkForMissingState() {
-  val appData = collectAppData()
-  val json = jsonMapper.encodeToString(PropData(appData))
-  if (json != finalUpdate) {
-    // println("Missing state detected. Sending update...")
-    enqueueUpdate(appData)
-  }
-  finalUpdate = ""
-
-  refreshJob?.cancel()
+internal fun forceAnimationUpdate(animationData: AnimationData) {
+  UpdateScheduler.sendStateWithAnimation(animationData)
 }
 
 internal fun collectAppData(): AppData {
@@ -755,10 +644,7 @@ internal fun collectAppData(): AppData {
   return appData
 }
 
+@Suppress("UNUSED_PARAMETER")
 internal fun markDirty(prop: ActionProp) {
-  runCatching {
-    val appData = collectAppData()
-    // println("Collecting updates... Size: " + updateStack.size)
-    enqueueUpdate(appData)
-  }
+  UpdateScheduler.markDirty()
 }

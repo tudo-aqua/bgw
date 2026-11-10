@@ -69,7 +69,7 @@ internal val TextArea =
         onCleanup { typingTimeout.current?.let { clearTimeout(it) } }
       }
 
-      useEffect(listOf(props.data.text)) {
+      useEffectWithCleanup(props.data.text) {
         // Increment prop change counter to track distinct prop updates
         propChangeCount.current = propChangeCount.current?.plus(1)
 
@@ -124,7 +124,7 @@ internal val TextArea =
         css { cssBuilderIntern(props.data) }
 
         ref = elementRef
-        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffectWithCleanup(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")

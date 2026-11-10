@@ -34,7 +34,6 @@ import java.util.stream.Collectors
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.WindowConstants
-import javax.swing.WindowConstants.EXIT_ON_CLOSE
 import jsonMapper
 import kotlin.concurrent.timer
 import kotlin.system.exitProcess
@@ -62,6 +61,10 @@ import tools.aqua.bgw.dialog.*
 import tools.aqua.bgw.dialog.FileDialog
 import tools.aqua.bgw.util.LogType
 import tools.aqua.bgw.util.Logger
+import tools.aqua.bgw.visual.ImageVisual
+
+private const val MIN_WIDTH = 200
+private const val MIN_HEIGHT = 150
 
 internal object Constants {
   val PORT = ServerSocket(0).use { it.localPort }
@@ -127,68 +130,166 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   init {
-    StdErrFilter.install(
-        "SLF4J",
-        "initialize on Thread",
-        "Exception in thread",
-        "AppKit Thread",
-        "google_apis",
-        "stack smashing")
+    // Only filter known harmless noise. "Exception in thread ..." lines are no longer filtered:
+    // they name the thread an uncaught exception happened on, which is essential for debugging
+    // (the stack trace itself was never filtered, only this header line).
+    StdErrFilter.install("SLF4J", "initialize on Thread", "google_apis")
   }
 
   internal companion object {
     const val WAYLAND_SESSION_TYPE = "wayland"
 
-    /** Checks if the application is running on Linux with Wayland */
+    /** System property (or `BGW_RENDER_MODE` environment variable) to force a render mode. */
+    const val RENDER_MODE_PROPERTY = "bgw.renderMode"
+
+    private val isLinux: Boolean
+      get() =
+          when (EnumPlatform.getCurrentPlatform()) {
+            EnumPlatform.LINUX_AMD64,
+            EnumPlatform.LINUX_ARM64,
+            EnumPlatform.LINUX_ARM -> true
+            else -> false
+          }
+
+    /**
+     * Checks if the application is running on Linux with Wayland (through XWayland).
+     *
+     * `XDG_SESSION_TYPE` alone is not reliable: compositors started from a TTY (common for e.g.
+     * Hyprland or sway) often leave it at `tty`, so the Wayland display and compositor specific
+     * variables are checked as well.
+     */
     internal fun checkIfLinuxWayland(): Boolean {
-      return when (EnumPlatform.getCurrentPlatform()) {
-        EnumPlatform.LINUX_AMD64,
-        EnumPlatform.LINUX_ARM64,
-        EnumPlatform.LINUX_ARM -> System.getenv("XDG_SESSION_TYPE") == WAYLAND_SESSION_TYPE
-        else -> false
+      if (!isLinux) return false
+      return System.getenv("XDG_SESSION_TYPE").equals(WAYLAND_SESSION_TYPE, ignoreCase = true) ||
+          !System.getenv("WAYLAND_DISPLAY").isNullOrBlank() ||
+          !System.getenv("HYPRLAND_INSTANCE_SIGNATURE").isNullOrBlank() ||
+          !System.getenv("SWAYSOCK").isNullOrBlank()
+    }
+
+    /**
+     * Whether the browser is rendered off-screen (into a Swing component) instead of into a native
+     * child window. Off-screen rendering is required under Wayland, where native child windows of
+     * XWayland clients are not positioned reliably. Can be forced with `-Dbgw.renderMode=osr` or
+     * `-Dbgw.renderMode=windowed` (or the `BGW_RENDER_MODE` environment variable).
+     */
+    internal fun useOffscreenRendering(): Boolean =
+        when ((System.getProperty(RENDER_MODE_PROPERTY) ?: System.getenv("BGW_RENDER_MODE"))
+            ?.lowercase()) {
+          "osr",
+          "offscreen" -> true
+          "windowed",
+          "native" -> false
+          else -> checkIfLinuxWayland()
+        }
+
+    private val nonReparentingDesktops =
+        listOf(
+            "hyprland", "sway", "i3", "bspwm", "dwm", "qtile", "niri", "river", "awesome", "xmonad")
+
+    /**
+     * Java's AWT assumes a reparenting window manager unless told otherwise. Under tiling
+     * compositors (Hyprland, sway, ...) this offsets the window content, so the browser is drawn
+     * partly outside of the window or the window stays blank. The only fix is an environment
+     * variable that has to be set before the JVM starts.
+     */
+    internal fun warnAboutNonReparentingWindowManager() {
+      if (!isLinux || !System.getenv("_JAVA_AWT_WM_NONREPARENTING").isNullOrBlank()) return
+      val desktop =
+          listOfNotNull(System.getenv("XDG_CURRENT_DESKTOP"), System.getenv("DESKTOP_SESSION"))
+              .joinToString(":")
+              .lowercase()
+      val tiling =
+          nonReparentingDesktops.any { desktop.contains(it) } ||
+              !System.getenv("HYPRLAND_INSTANCE_SIGNATURE").isNullOrBlank() ||
+              !System.getenv("SWAYSOCK").isNullOrBlank()
+      if (tiling) {
+        Logger.warning(
+            "Detected a non-reparenting window manager (${desktop.ifBlank { "tiling" }}). If the " +
+                "window content is offset or blank, set the environment variable " +
+                "_JAVA_AWT_WM_NONREPARENTING=1 before starting the application.")
       }
+    }
+
+    /** Runs [block] on the AWT event dispatch thread. Swing and JCEF must only be used there. */
+    internal fun onEdt(block: () -> Unit) {
+      if (EventQueue.isDispatchThread()) block() else EventQueue.invokeLater(block)
     }
   }
 
   override fun start(onClose: () -> Unit, callback: (Any) -> Unit) {
     if (Constants.DEBUG) Logger.info("Starting BGW Runtime (http://localhost:${Constants.PORT})")
     else Logger.info("Starting BGW Runtime (${Constants.PORT})")
-    EventQueue.invokeLater {
-      frame =
-          MainFrame(
-              loadCallback = callback,
-              debugLogging = Constants.DEBUG,
-              useOSR = checkIfLinuxWayland())
-      JCEFApplication::class
-          .java
-          .getResource("/icon.png")
-          .let { ImageIO.read(it) }
-          .let { frame?.iconImage = it }
-      frame?.title = DEFAULT_WINDOW_TITLE
 
-      frame?.defaultCloseOperation = EXIT_ON_CLOSE
-      frame?.isVisible = true
-      frame?.repaint()
+    val useOSR = useOffscreenRendering()
+    warnAboutNonReparentingWindowManager()
+
+    // CEF has to be started before AWT initializes (CefApp.startup must run at the very beginning):
+    // on Linux it enables Xlib multithreading, on macOS it loads the CEF framework before AppKit
+    // is set up. Creating it inside EventQueue.invokeLater, as before, was too late, because using
+    // the event queue already initializes the AWT toolkit.
+    val cef = CefRuntime.create(useOSR = useOSR, debugLogging = Constants.DEBUG)
+
+    EventQueue.invokeLater {
+      val mainFrame =
+          MainFrame(
+              cef = cef, loadCallback = callback, debugLogging = Constants.DEBUG, useOSR = useOSR)
+      frame = mainFrame
+
+      mainFrame.iconImage =
+          loadIcon(Frontend.iconProperty.value)
+              ?: JCEFApplication::class.java.getResource("/icon.png")?.let { ImageIO.read(it) }
+      // The title passed to BoardGameApplication was never applied before.
+      mainFrame.title = Frontend.titleProperty.value.ifEmpty { DEFAULT_WINDOW_TITLE }
+      mainFrame.isVisible = true
+      mainFrame.repaint()
+    }
+
+    // Window properties changed by the application are applied on the event dispatch thread.
+    Frontend.titleProperty.internalListener = { _, title ->
+      onEdt { frame?.title = title.ifEmpty { DEFAULT_WINDOW_TITLE } }
+    }
+    Frontend.iconProperty.internalListener = { _, icon ->
+      onEdt { loadIcon(icon)?.let { frame?.iconImage = it } }
     }
 
     // Call the onClose callback when the application is closed
     Runtime.getRuntime().addShutdownHook(Thread { onClose() })
   }
 
+  /** Loads the image of an [ImageVisual] used as window icon, `null` if it cannot be loaded. */
+  private fun loadIcon(icon: ImageVisual?): Image? {
+    val path = icon?.path ?: return null
+    return try {
+      when {
+        path.startsWith("http://") || path.startsWith("https://") ->
+            ImageIO.read(java.net.URI(path).toURL())
+        path.startsWith("data:image") ->
+            ImageIO.read(Base64.getDecoder().decode(path.substringAfter(",")).inputStream())
+        else ->
+            JCEFApplication::class.java.getResource("/${path.removePrefix("/")}")?.let {
+              ImageIO.read(it)
+            } ?: File(path).takeIf { it.exists() }?.let { ImageIO.read(it) }
+      }
+    } catch (e: Exception) {
+      Logger.warning("Could not load window icon $path: ${e.message}")
+      null
+    }
+  }
+
   override fun stop() {
-    frame?.gracefulShutdown()
+    onEdt { frame?.gracefulShutdown() }
   }
 
   override fun toggleFullscreen(boolean: Boolean) {
-    frame?.toggleFullscreen(boolean)
+    onEdt { frame?.toggleFullscreen(boolean) }
   }
 
   override fun toggleMaximized(boolean: Boolean) {
-    frame?.extendedState = if (boolean) JFrame.MAXIMIZED_BOTH else JFrame.NORMAL
+    onEdt { frame?.extendedState = if (boolean) JFrame.MAXIMIZED_BOTH else JFrame.NORMAL }
   }
 
   override fun resize(width: Int, height: Int) {
-    frame?.setSize(width, height)
+    onEdt { frame?.setSize(width, height) }
   }
 
   override fun clearAllEventListeners() {
@@ -201,7 +302,7 @@ internal class JCEFApplication : Application {
   }
 
   fun setTitle(title: String) {
-    frame?.title = title
+    onEdt { frame?.title = title }
   }
 
   override fun openNewDialog(dialogData: DialogData) {
@@ -215,11 +316,86 @@ internal class BGWAppHandler() : MavenCefAppHandlerAdapter() {
       exitProcess(0)
     }
   }
+
+  companion object {
+    /**
+     * Shuts CEF down and exits once it terminated (see [stateHasChanged]). Exiting right away, as
+     * `EXIT_ON_CLOSE` did, kills CEF while it is still shutting down, which crashes natively
+     * (especially on macOS). If CEF does not terminate in time, the process exits anyway.
+     */
+    fun shutdown(window: JFrame) {
+      Thread {
+            Thread.sleep(SHUTDOWN_TIMEOUT_MILLIS)
+            exitProcess(0)
+          }
+          .apply {
+            isDaemon = true
+            name = "BGW Shutdown Watchdog"
+          }
+          .start()
+      CefApp.getInstance().dispose()
+      window.dispose()
+    }
+
+    private const val SHUTDOWN_TIMEOUT_MILLIS = 5000L
+  }
+}
+
+/** The CEF runtime and the temporary directory it uses. Created before AWT is initialized. */
+internal class CefRuntime(val app: CefApp, val tmpDir: String) {
+  companion object {
+    fun create(useOSR: Boolean, debugLogging: Boolean): CefRuntime {
+      val builder = CefAppBuilder()
+      builder.cefSettings.windowless_rendering_enabled = useOSR
+
+      if (!debugLogging) {
+        builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+      } else {
+        // TODO: Switch back to INFO
+        builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
+        builder.cefSettings.remote_debugging_port = 2504
+      }
+
+      val bgwAppName = "bgw-runtime_${Config.BGW_VERSION}"
+      val defaultDirs = ProjectDirectories.from("bgw-gui", "tools.aqua", bgwAppName)
+      val installDir = Paths.get(defaultDirs.cacheDir).toFile()
+      builder.setInstallDir(installDir)
+
+      val tmpDir: String =
+          System.getProperty("tmpDir")?.takeIf { it.isNotEmpty() && File(it).exists() }
+              ?: Files.createTempDirectory("bgw-").toString().also { File(it).deleteOnExit() }
+
+      builder.cefSettings.root_cache_path = tmpDir
+      builder.cefSettings.cache_path = tmpDir
+      builder.cefSettings.log_file = "$tmpDir/bgw.log"
+      builder.addJcefArgs("--disable-pinch", "--use-client-dialogs")
+
+      builder.setAppHandler(BGWAppHandler())
+
+      builder.setProgressHandler { enumProgress, fl ->
+        if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
+          if (fl >= 0) Logger.logSingle("Downloading BGW Runtime... $fl%\r", LogType.INFO)
+        } else if (enumProgress == EnumProgress.LOCATING || enumProgress == EnumProgress.INSTALL)
+            Logger.debug("Initializing BGW Runtime...")
+        else if (enumProgress == EnumProgress.INITIALIZING) Logger.log("Loading BGW Runtime...")
+      }
+
+      val cefApp = builder.build()
+      cefApp.setSettings(builder.cefSettings)
+
+      Logger.debug("Platform: ${EnumPlatform.getCurrentPlatform()}")
+      val buildInfo = CefBuildInfo.fromClasspath()
+      Logger.debug("Build: ${buildInfo.jcefUrl} ${buildInfo.releaseUrl}")
+      Logger.debug("Runtime Version: ${cefApp.version.toString().replace(Regex("\n"), " ")}")
+      return CefRuntime(cefApp, tmpDir)
+    }
+  }
 }
 
 internal class MainFrame(
+    cef: CefRuntime,
     startURL: String = "http://localhost",
-    useOSR: Boolean = false,
+    private val useOSR: Boolean = false,
     isTransparent: Boolean = false,
     val loadCallback: (Any) -> Unit,
     debugLogging: Boolean = false
@@ -238,53 +414,11 @@ internal class MainFrame(
 
   init {
     // region - CEF Initialization / Settings
-    val builder = CefAppBuilder()
-    builder.cefSettings.windowless_rendering_enabled = useOSR
-
-    if (!debugLogging) {
-      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
-    } else {
-      // TODO: Switch back to INFO
-      builder.cefSettings.log_severity = CefSettings.LogSeverity.LOGSEVERITY_DISABLE
-      builder.cefSettings.remote_debugging_port = 2504
-    }
-
-    val BGWAppName = "bgw-runtime_${Config.BGW_VERSION}"
-    val defaultDirs = ProjectDirectories.from("bgw-gui", "tools.aqua", BGWAppName)
-    val installDir = Paths.get(defaultDirs.cacheDir).toFile()
-    builder.setInstallDir(installDir)
-
-    val tmpDir: String =
-        System.getProperty("tmpDir")?.takeIf { it.isNotEmpty() && File(it).exists() }
-            ?: Files.createTempDirectory("bgw-").toString().also { File(it).deleteOnExit() }
-
-    builder.cefSettings.root_cache_path = tmpDir
-    builder.cefSettings.cache_path = tmpDir
-    builder.cefSettings.log_file = "$tmpDir/bgw.log"
-    builder.addJcefArgs("--disable-pinch", "--use-client-dialogs")
-
-    builder.setAppHandler(BGWAppHandler())
-
-    builder.setProgressHandler { enumProgress, fl ->
-      if (enumProgress == EnumProgress.DOWNLOADING || enumProgress == EnumProgress.EXTRACTING) {
-        if (fl >= 0) Logger.logSingle("Downloading BGW Runtime... $fl%\r", LogType.INFO)
-      } else if (enumProgress == EnumProgress.LOCATING || enumProgress == EnumProgress.INSTALL)
-          Logger.debug("Initializing BGW Runtime...")
-      else if (enumProgress == EnumProgress.INITIALIZING) Logger.log("Loading BGW Runtime...")
-    }
-
-    val cefApp = builder.build()
-    cefApp.setSettings(builder.cefSettings)
+    val cefApp = cef.app
+    val tmpDir = cef.tmpDir
 
     val pids = mutableSetOf<Long>()
     var pidsUnchanged = 0
-
-    val platform = EnumPlatform.getCurrentPlatform()
-    Logger.debug("Platform: $platform")
-    val buildInfo = CefBuildInfo.fromClasspath()
-    Logger.debug("Build: ${buildInfo.jcefUrl} ${buildInfo.releaseUrl}")
-    val cefVersion = cefApp.version
-    Logger.debug("Runtime Version: ${cefVersion.toString().replace(Regex("\n"), " ")}")
 
     client = cefApp.createClient()
     // endregion
@@ -427,7 +561,8 @@ internal class MainFrame(
     // region - Frame Settings
     contentPane.add(browserUI, BorderLayout.CENTER)
     pack()
-    setSize(1280, 750)
+    // The size passed to BoardGameApplication was never applied before.
+    size = initialWindowSize()
     isVisible = true
     if (Frontend.isMaximizedProperty.value) {
       extendedState = MAXIMIZED_BOTH
@@ -446,8 +581,7 @@ internal class MainFrame(
           override fun windowClosing(e: WindowEvent) {
             Frontend.application.onWindowClosed?.invoke()
             Logger.info("[BGW] Closing BGW Runtime...")
-            CefApp.getInstance().dispose()
-            dispose()
+            BGWAppHandler.shutdown(this@MainFrame)
           }
 
           override fun windowOpened(e: WindowEvent?) {
@@ -471,7 +605,8 @@ internal class MainFrame(
         })
     // endregion
 
-    defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+    // Closing is handled by the window listener above, which shuts CEF down before exiting.
+    defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
 
     addWindowStateListener { e ->
       if (e.newState == MAXIMIZED_BOTH) {
@@ -511,8 +646,29 @@ internal class MainFrame(
   internal fun gracefulShutdown() {
     Frontend.application.onWindowClosed?.invoke()
     Logger.info("[BGW] Exiting BGW Runtime...")
-    CefApp.getInstance().dispose()
-    dispose()
+    BGWAppHandler.shutdown(this)
+  }
+
+  /**
+   * The window size requested by the application, limited to the usable screen area. Applications
+   * that keep the default size get the previous default window size.
+   */
+  private fun initialWindowSize(): Dimension {
+    val requestedWidth = Frontend.widthProperty.value.toInt()
+    val requestedHeight = Frontend.heightProperty.value.toInt()
+    if (requestedWidth == DEFAULT_WINDOW_WIDTH.toInt() &&
+        requestedHeight == DEFAULT_WINDOW_HEIGHT.toInt()) {
+      return Dimension(1280, 750)
+    }
+    val screen =
+        try {
+          GraphicsEnvironment.getLocalGraphicsEnvironment().maximumWindowBounds
+        } catch (_: Exception) {
+          Rectangle(0, 0, requestedWidth, requestedHeight)
+        }
+    return Dimension(
+        requestedWidth.coerceIn(MIN_WIDTH, maxOf(MIN_WIDTH, screen.width)),
+        requestedHeight.coerceIn(MIN_HEIGHT, maxOf(MIN_HEIGHT, screen.height)))
   }
 
   internal fun toggleFullscreen(boolean: Boolean) {
@@ -566,8 +722,13 @@ internal class MainFrame(
   }
 
   internal fun openNewDialog(dialogData: DialogData) {
-    val dialogFrame =
-        client.createBrowser("about:blank", JCEFApplication.checkIfLinuxWayland(), false)
+    // Called from event handlers, i.e. from the websocket or application threads. Creating
+    // windows off the event dispatch thread breaks AppKit on macOS.
+    if (!EventQueue.isDispatchThread()) {
+      EventQueue.invokeLater { openNewDialog(dialogData) }
+      return
+    }
+    val dialogFrame = client.createBrowser("about:blank", useOSR, false)
     val dialogUI = dialogFrame.uiComponent
 
     dialogMap[dialogFrame] = dialogData
@@ -590,6 +751,10 @@ internal class MainFrame(
   }
 
   internal fun openNewFileDialog(fileDialog: FileDialog) {
+    if (!EventQueue.isDispatchThread()) {
+      EventQueue.invokeLater { openNewFileDialog(fileDialog) }
+      return
+    }
     val type =
         when (fileDialog.mode) {
           FileDialogMode.OPEN_FILE -> CefDialogHandler.FileDialogMode.FILE_DIALOG_OPEN

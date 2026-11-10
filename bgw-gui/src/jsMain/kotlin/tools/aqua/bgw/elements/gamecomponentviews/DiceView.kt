@@ -97,7 +97,7 @@ internal val DiceView =
       }
 
       // Update visual when props change (for non-animation updates)
-      useEffect(props.data.visual) {
+      useEffectWithCleanup(props.data.visual) {
         val animatorVisual = Animator.getCurrentVisual(props.data.id)
         if (animatorVisual == null) {
           setCurrentVisual(props.data.visual)
@@ -109,7 +109,7 @@ internal val DiceView =
         className = ClassName("diceView")
 
         ref = elementRef
-        useEffect(props.data.id, isOverlayPreview) {
+        useEffectWithCleanup(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }

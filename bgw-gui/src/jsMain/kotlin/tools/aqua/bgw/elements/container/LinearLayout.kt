@@ -94,7 +94,7 @@ internal val LinearLayout =
         ariaDetails = props.data.orientation
 
         ref = elementRef
-        useEffect(props.data.id, isOverlayPreview) {
+        useEffectWithCleanup(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }
@@ -120,18 +120,18 @@ internal val LinearLayout =
             if (props.data.orientation == "horizontal") props.data.width else props.data.height
         val canAdjustLayoutWithGaps = availableSpace >= spaceOccupiedWithGaps
         var possibleGapPerComponent =
-            if (props.data.components.size <= 1) 0
+            if (props.data.components.size <= 1) 0.0
             else (availableSpace - spaceOccupied) / (props.data.components.size - 1)
 
         if (props.data.spacing <= 0 && canAdjustLayoutWithGaps) {
-          possibleGapPerComponent = props.data.spacing
+          possibleGapPerComponent = props.data.spacing.toDouble()
         } else if (props.data.spacing <= 0 && !canAdjustLayoutWithGaps) {
           possibleGapPerComponent =
-              if (props.data.components.size <= 1) 0
+              if (props.data.components.size <= 1) 0.0
               else (availableSpace - spaceOccupied) / (props.data.components.size - 1)
         } else {
           possibleGapPerComponent =
-              if (props.data.components.size <= 1) 0
+              if (props.data.components.size <= 1) 0.0
               else (availableSpace - spaceOccupied) / (props.data.components.size - 1)
         }
 

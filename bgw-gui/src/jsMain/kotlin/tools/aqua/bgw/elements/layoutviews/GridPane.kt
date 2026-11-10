@@ -69,7 +69,7 @@ internal val ReactGridPane =
         className = ClassName("gridPane")
 
         ref = elementRef
-        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffectWithCleanup(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         css {
           cssBuilderIntern(props.data)
@@ -77,7 +77,7 @@ internal val ReactGridPane =
           height = fit()
 
           if (props.data.layoutFromCenter) {
-            useLayoutEffect(listOf(props.data)) {
+            useLayoutEffectWithCleanup(props.data) {
               document.getElementById(props.data.id)?.let {
                 val element = it
                 val width = convertToPx(element.offsetWidth.toDouble())
@@ -89,7 +89,7 @@ internal val ReactGridPane =
               }
             }
           } else {
-            useLayoutEffect(listOf(props.data)) {
+            useLayoutEffectWithCleanup(props.data) {
               document.getElementById(props.data.id)?.let {
                 it.style.left = props.data.posX.bgw.toString()
                 it.style.top = props.data.posY.bgw.toString()

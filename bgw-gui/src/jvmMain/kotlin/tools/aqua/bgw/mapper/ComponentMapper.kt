@@ -30,7 +30,6 @@ import tools.aqua.bgw.core.*
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.visual.*
 
 internal object ComponentMapper {
@@ -38,78 +37,32 @@ internal object ComponentMapper {
     return this.apply {
       id = componentView.id
 
-      // Get cached initial state (if component is animating)
+      // While movement animations run, the browser offsets the component relative to the position
+      // it had when the animation started. Persisting an intermediate movement (e.g. the first of
+      // two movements in a SequentialAnimation) must therefore not move that base position, or the
+      // component would visibly jump. Rotation, scale and opacity are overridden by the animated
+      // CSS values in the browser, so their live values can be sent at any time.
       val cachedState = Frontend.animationCache[componentView.id]
-      val animationTypes = componentView.animationTypes
+      val isMoving = AnimationType.MOVEMENT in componentView.animationTypes && cachedState != null
 
-      // TODO: Check if cache is actually needed
-      // Use cached values ONLY if that animation type is still active
-      // Once all animations of a type finish, allow manual updates again
-      posX =
-          if (AnimationType.MOVEMENT in animationTypes && cachedState?.posX != null) {
-            // cachedState.posX
-            componentView.posX.toInt()
-          } else {
-            componentView.posX.toInt()
-          }
+      posX = if (isMoving) cachedState!!.posX else componentView.posX
+      posY = if (isMoving) cachedState!!.posY else componentView.posY
 
-      posY =
-          if (AnimationType.MOVEMENT in animationTypes && cachedState?.posY != null) {
-            // cachedState.posY
-            componentView.posY.toInt()
-          } else {
-            componentView.posY.toInt()
-          }
+      width = componentView.width
+      height = componentView.height
 
-      width = componentView.width.toInt()
-      height = componentView.height.toInt()
-
-      visual =
-          if ((AnimationType.FLIP in animationTypes || AnimationType.STEPPED in animationTypes) &&
-              cachedState?.visual != null) {
-            // VisualMapper.map(cachedState.visual)
-            VisualMapper.map(componentView.visual)
-          } else {
-            VisualMapper.map(componentView.visual)
-          }
+      visual = VisualMapper.map(componentView.visual)
 
       zIndex = componentView.zIndex
-
-      opacity =
-          if (AnimationType.FADE in animationTypes && cachedState?.opacity != null) {
-            // cachedState.opacity
-            componentView.opacity
-          } else {
-            componentView.opacity
-          }
+      opacity = componentView.opacity
 
       isVisible = componentView.isVisible
       isDisabled = componentView.isDisabled
       isFocusable = componentView.isFocusable
 
-      scaleX =
-          if (AnimationType.SCALE in animationTypes && cachedState?.scaleX != null) {
-            // cachedState.scaleX
-            componentView.scaleX
-          } else {
-            componentView.scaleX
-          }
-
-      scaleY =
-          if (AnimationType.SCALE in animationTypes && cachedState?.scaleY != null) {
-            // cachedState.scaleY
-            componentView.scaleY
-          } else {
-            componentView.scaleY
-          }
-
-      rotation =
-          if (AnimationType.ROTATION in animationTypes && cachedState?.rotation != null) {
-            // cachedState.rotation
-            componentView.rotation
-          } else {
-            componentView.rotation
-          }
+      scaleX = componentView.scaleX
+      scaleY = componentView.scaleY
+      rotation = componentView.rotation
 
       propagatedRotation = componentView.propagatedRotation
       propagatedScaleX = componentView.propagatedScaleX
@@ -119,9 +72,6 @@ internal object ComponentMapper {
 
       // Set animation finished flag from component state
       finishedAnimations = componentView.animationsFinishedSinceLastUpdate.toMutableList()
-      if (finishedAnimations.isNotEmpty()) {
-        Logger.log(finishedAnimations)
-      }
 
       if (componentView.dropAcceptor != null) {
         isDroppable = true
@@ -453,8 +403,8 @@ internal object ContainerMapper {
           tempMap["${key.first}/${key.second}"] =
               (HexagonViewData().fillData(value) as HexagonViewData).apply {
                 id = value.id
-                posX = value.posX.toInt()
-                posY = value.posY.toInt()
+                posX = value.posX
+                posY = value.posY
                 visual = VisualMapper.map(value.visual)
                 size = value.size.toInt()
                 orientation = container.orientation.name.lowercase()

@@ -21,7 +21,7 @@ import ComponentViewData
 import data.event.KeyEventAction
 import kotlin.math.sign
 import react.dom.html.HTMLAttributes
-import react.useEffect
+import react.useEffectWithCleanup
 import react.useRef
 import tools.aqua.bgw.builder.ReactConverters.toKeyEventData
 import tools.aqua.bgw.builder.ReactConverters.toMouseEnteredData
@@ -99,7 +99,7 @@ fun <T> useDebouncedCallback(callback: (T) -> Unit, delay: Int): (T) -> Unit {
   val callbackRef = useRef(callback)
   val timeoutRef = useRef<Timeout>(null)
 
-  useEffect(listOf(callback)) { callbackRef.current = callback }
+  useEffectWithCleanup(callback) { callbackRef.current = callback }
 
   return { value: T ->
     timeoutRef.current?.let { clearTimeout(it) }

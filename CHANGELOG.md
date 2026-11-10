@@ -29,6 +29,13 @@ All notable changes to this project will be documented in this file.
 - Improved rendering performance by reducing unnecessary updates when components, lists and drag and drop states did not change.
 - Improved runtime updates for components that are added to scenes, panes and containers after they were first shown.
 - Invalid animation durations, animation speeds and empty animation groups are now rejected immediately.
+- Greatly improved update performance (about 6-10x faster on large scenes): property changes only mark the state as changed and are sent once per burst from a background thread, unchanged components are not re-rendered, and the browser acknowledges each rendered state so updates can no longer pile up when the state changes faster than it can be rendered.
+- Event handlers are batched: all changes made by one handler are sent as a single, consistent update.
+- The browser runtime is now built in production mode (smaller bundle and React's production build).
+- Positions and sizes are no longer rounded down to whole numbers when rendered.
+- The window title, initial window size and window icon set on `BoardGameApplication` are now applied.
+- Window, dialog and file dialog operations are always executed on the AWT event dispatch thread.
+- Added the `bgw.renderMode` system property (`osr` or `windowed`) to force the browser render mode.
 
 ### Fixed
 - Fixed animation on `LayoutView` and `GameComponentContainer` propagating down to their children causing twice the wanted change.
@@ -76,6 +83,21 @@ All notable changes to this project will be documented in this file.
 - Fixed observable lists failing to remove or notify about nullable first and last elements.
 - Fixed `ReadonlyObservableList.getOrNull()` throwing at the upper list boundary.
 - Fixed `BidirectionalMap.contains()` returning `true` for a key and value belonging to different entries.
+- Fixed multiple animations of the same kind on the same component in a `SequentialAnimation` or `ParallelAnimation` cancelling each other, restarting from the initial value or jumping at the end. Consecutive animations of the same kind now continue from where the previous one ended.
+- Fixed components jumping when an intermediate `MovementAnimation` of a `SequentialAnimation` was persisted.
+- Fixed `FlipAnimation`s in a `SequentialAnimation` switching the visual before they started.
+- Fixed animations of components that are not rendered never finishing, which kept the component in an animating state forever.
+- Fixed animations whose scene was replaced while they were running never finishing.
+- Fixed an exception in `onFinished` preventing the enclosing `SequentialAnimation` or `ParallelAnimation` from finishing.
+- Fixed persisted `FlipAnimation`s and `RandomizeAnimation`s on a `DiceView` not updating the shown visual.
+- Fixed `ScaleAnimation`'s relative constructors ignoring `persist` and scaling to zero when passing `0` as an `Int`.
+- Fixed changes to `transparency`, `style`, `filters` and `flipped` of visuals and changes to replaced visuals not being rendered.
+- Fixed exceptions in scene key event handlers being silently ignored.
+- Fixed dialogs with backslashes, backticks or `${` in their text staying blank, and stack traces losing constructor frames (`<init>`).
+- Fixed closing the window exiting the JVM while the browser runtime was still shutting down, which caused native crashes, especially on macOS.
+- Fixed the browser runtime being initialized after AWT, which caused threading issues on Linux and macOS.
+- Fixed Wayland not being detected for compositors that do not set `XDG_SESSION_TYPE` (e.g. Hyprland started from a TTY). A warning explains how to fix offset or blank windows under non-reparenting window managers.
+- Fixed the build requiring publishing credentials.
 
 ## [0.11] - 06.05.2026
 

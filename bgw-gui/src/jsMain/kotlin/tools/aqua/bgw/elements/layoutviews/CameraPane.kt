@@ -27,7 +27,7 @@ import react.dom.html.HTMLAttributes
 import tools.aqua.bgw.ReactZoomPanPinchContentRef
 import tools.aqua.bgw.TransformComponent
 import tools.aqua.bgw.TransformWrapper
-import tools.aqua.bgw.builder.LayoutNodeBuilder
+import tools.aqua.bgw.builder.NodeBuilder
 import tools.aqua.bgw.builder.VisualBuilder
 import tools.aqua.bgw.elements.bgw
 import tools.aqua.bgw.elements.bgwVisuals
@@ -135,7 +135,7 @@ internal val CameraPane =
 
       val initialZoom = maxOf(minZoom, 1.0)
 
-      useEffect {
+      useEffectWithCleanup {
         val panSmooth = props.data.internalPanData.panSmooth
         val panTime = if (panSmooth) 300 else 0
         val panBy = props.data.internalPanData.panBy
@@ -392,7 +392,7 @@ internal val CameraPane =
               bgwCameraTarget {
                 id = props.data.target?.id + "Target"
                 className = ClassName("target")
-                +props.data.target?.let { LayoutNodeBuilder.build(it) }
+                +props.data.target?.let { NodeBuilder.build(it) }
               }
             }
           }

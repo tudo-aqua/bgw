@@ -44,6 +44,12 @@ internal object ComponentViewBuilder {
     VisualBuilder.build(componentView.visual)
   }
 
+  /** Builds all components in [newComponents] that were not contained in [oldComponents]. */
+  fun buildAdded(oldComponents: List<ComponentView>, newComponents: List<ComponentView>) {
+    val old = oldComponents.toHashSet()
+    newComponents.forEach { if (it !in old) build(it) }
+  }
+
   @Suppress("DuplicatedCode")
   private fun registerObservers(componentView: ComponentView) {
     with(componentView) {
@@ -59,7 +65,11 @@ internal object ComponentViewBuilder {
       isVisibleProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       isDisabledProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       isFocusableProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
-      visualProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
+      visualProperty.guiListener = { _, newVisual ->
+        // A replaced visual has to be observed as well, or changes to it would not be shown.
+        VisualBuilder.build(newVisual)
+        Frontend.updateComponent(componentView)
+      }
 
       dropAcceptorProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       onMouseEnteredProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }

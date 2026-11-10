@@ -85,6 +85,16 @@ open class DiceView(
    * Sets all visuals for this DiceView. Clears old visuals. All [visuals] get copied before being
    * added. If [currentSide] is out of range, a [Visual.EMPTY] will be shown.
    */
+  /**
+   * Replaces the visual of the [currentSide] and shows it. Used when flip or randomize animations
+   * persist their final visual; changing [visuals] alone would not update the shown [visual].
+   */
+  internal fun setCurrentSideVisual(visual: Visual) {
+    if (currentSide !in visuals.indices) return
+    visuals[currentSide] = visual
+    visualProperty.value = visual
+  }
+
   fun setVisuals(visuals: List<Visual>) {
     this.visuals.setAll(visuals.map { it.copy() })
     visualProperty.value = this.visuals.getOrNull(currentSide) ?: Visual.EMPTY

@@ -445,7 +445,8 @@ internal constructor(posX: Number, posY: Number, width: Number, height: Number, 
    *
    * @since 0.11
    */
-  internal var animationsFinishedSinceLastUpdate: MutableSet<AnimationType> = mutableSetOf()
+  internal val animationsFinishedSinceLastUpdate: MutableSet<AnimationType> =
+      java.util.concurrent.ConcurrentHashMap.newKeySet()
 
   /**
    * [Property] for the animation state of this [ComponentView].

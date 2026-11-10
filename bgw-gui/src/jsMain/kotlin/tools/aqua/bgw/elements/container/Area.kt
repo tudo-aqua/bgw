@@ -91,7 +91,7 @@ internal val Area =
         // style = applyDraggableTransform(draggable, props.data)
 
         ref = elementRef
-        useEffect(props.data.id, isOverlayPreview) {
+        useEffectWithCleanup(props.data.id, isOverlayPreview) {
           if (!isOverlayPreview) {
             elementRef.current?.let { draggable?.setNodeRef(it) }
             elementRef.current?.let { droppable?.setNodeRef(it) }

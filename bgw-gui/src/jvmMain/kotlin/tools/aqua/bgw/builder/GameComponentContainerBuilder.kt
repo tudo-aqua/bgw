@@ -29,7 +29,7 @@ import tools.aqua.bgw.core.Frontend
 internal object GameComponentContainerBuilder {
   fun build(gameComponentContainer: GameComponentContainer<out DynamicComponentView>) {
     gameComponentContainer.observableComponents.guiListener = { oldComponents, newComponents ->
-      newComponents.filter { it !in oldComponents }.forEach { ComponentViewBuilder.build(it) }
+      ComponentViewBuilder.buildAdded(oldComponents, newComponents)
       Frontend.updateComponent(gameComponentContainer)
     }
     when (gameComponentContainer) {

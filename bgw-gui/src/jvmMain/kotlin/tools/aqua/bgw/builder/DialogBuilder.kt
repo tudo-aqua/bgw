@@ -18,6 +18,7 @@
 package tools.aqua.bgw.builder
 
 import DialogData
+import kotlinx.serialization.builtins.serializer
 import org.cef.browser.CefBrowser
 import tools.aqua.bgw.dialog.DialogType
 
@@ -142,16 +143,17 @@ internal object DialogBuilder {
     """
           .trimIndent()
 
-  internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) {
-    browser.executeJavaScript(
-        """
-        document.write(`
+  internal fun setDialogContent(browser: CefBrowser, dialogData: DialogData) =
+      writeDocument(browser, dialogHtml(dialogData))
+
+  internal fun dialogHtml(dialogData: DialogData): String =
+      """
             <html>
                 <head>
                     <script>
                       function buttonClicked(buttonIndex) {
                           const data = {
-                              dialogId: "${dialogData.id}",
+                              dialogId: ${jsonString(dialogData.id)},
                               buttonIndex: buttonIndex
                           };
                           const encodedData = JSON.stringify(data);
@@ -197,23 +199,21 @@ internal object DialogBuilder {
                         }
                     </div>
                 </body>
-            </html>`);
+            </html>
         """
-            .trimIndent(),
-        browser.url,
-        0)
-  }
+          .trimIndent()
 
-  internal fun setExceptionDialogContent(browser: CefBrowser, dialogData: DialogData) {
-    browser.executeJavaScript(
-        """
-        document.write(`
+  internal fun setExceptionDialogContent(browser: CefBrowser, dialogData: DialogData) =
+      writeDocument(browser, exceptionDialogHtml(dialogData))
+
+  internal fun exceptionDialogHtml(dialogData: DialogData): String =
+      """
             <html>
                 <head>       
                     <script>
                       function buttonClicked(buttonIndex) {
                           const data = {
-                              dialogId: "${dialogData.id}",
+                              dialogId: ${jsonString(dialogData.id)},
                               buttonIndex: buttonIndex
                           };
                           const encodedData = JSON.stringify(data);
@@ -233,7 +233,7 @@ internal object DialogBuilder {
                         $css
                         
                         ${dialogData.buttons.mapIndexed { index, button ->
-                            ".button-${index} { background-color: ${button.backgroundColor}15; color: ${button.foregroundColor}; } .button-${index}:hover { background-color: ${button.backgroundColor}20; }"
+                            ".button-${index} { background-color: ${escapeHtml(button.backgroundColor)}15; color: ${escapeHtml(button.foregroundColor)}; } .button-${index}:hover { background-color: ${escapeHtml(button.backgroundColor)}20; }"
                         }.joinToString("\n")}
                     </style>
                 </head>
@@ -241,7 +241,7 @@ internal object DialogBuilder {
                     <div class="header">
                         ${getIcon(dialogData.dialogType, 36)}
                         <div class="header-content">
-                            <h1>${extractExceptionType(dialogData.exception)}</h1>
+                            <h1>${escapeHtml(extractExceptionType(dialogData.exception))}</h1>
                             <div class="message">${escapeHtml(dialogData.message)}</div>
                         </div>
                     </div>
@@ -257,12 +257,9 @@ internal object DialogBuilder {
                         <button onClick="buttonClicked(0)">Dismiss</button>
                     </div>
                 </body>
-            </html>`);
+            </html>
         """
-            .trimIndent(),
-        browser.url,
-        0)
-  }
+          .trimIndent()
 
   private fun getIcon(dialogType: DialogType, size: Int = 24, fill: String = "#ffffff"): String {
     var svg =
@@ -297,7 +294,8 @@ internal object DialogBuilder {
   private fun syntaxHighlightStackTrace(trace: String?): String {
     if (trace == null) return ""
 
-    return trace
+    // Escape first, the highlighting below only adds markup around the escaped text.
+    return escapeHtml(trace)
         .replace(Regex("\\\$(\\d+|\\w+)"), "")
         // Match package.Class@hexIdentifier patterns
         .replace(Regex("(\\w+(?:\\.\\w+)+)@([0-9a-f]+)"), "<span class=\"elem\">$1@$2</span>")
@@ -320,6 +318,20 @@ internal object DialogBuilder {
   }
 
   private fun escapeHtml(text: String): String {
-    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return text
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+        .replace("'", "&#39;")
+  }
+
+  private fun jsonString(text: String): String =
+      kotlinx.serialization.json.Json.encodeToString(String.serializer(), text)
+
+  /** Replaces the page of [browser] with [html]. */
+  private fun writeDocument(browser: CefBrowser, html: String) {
+    browser.executeJavaScript(
+        "document.open(); document.write(${jsonString(html)}); document.close();", browser.url, 0)
   }
 }

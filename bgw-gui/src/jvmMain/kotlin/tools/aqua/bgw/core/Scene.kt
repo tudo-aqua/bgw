@@ -21,16 +21,11 @@ package tools.aqua.bgw.core
 
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.AnimationPropertyCache
-import tools.aqua.bgw.animation.AnimationType
+import tools.aqua.bgw.animation.AnimationRegistry
 import tools.aqua.bgw.animation.ComponentAnimation
-import tools.aqua.bgw.animation.FadeAnimation
-import tools.aqua.bgw.animation.FlipAnimation
-import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.animation.ParallelAnimation
-import tools.aqua.bgw.animation.RotationAnimation
-import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
-import tools.aqua.bgw.animation.SteppedComponentAnimation
+import tools.aqua.bgw.animation.animationType
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.RootComponent
 import tools.aqua.bgw.event.KeyEvent
@@ -316,8 +311,8 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
   private fun cacheInitialComponentState(componentView: ComponentView) {
     Frontend.animationCache[componentView.id] =
         AnimationPropertyCache(
-            posX = componentView.posX.toInt(),
-            posY = componentView.posY.toInt(),
+            posX = componentView.posX,
+            posY = componentView.posY,
             scaleX = componentView.scaleX,
             scaleY = componentView.scaleY,
             rotation = componentView.rotation,
@@ -329,21 +324,15 @@ sealed class Scene<T : ComponentView>(width: Number, height: Number, background:
     animation.parentAnimation = parent
 
     if (animation is ComponentAnimation<*>) {
-      val animationType =
-          when (animation) {
-            is MovementAnimation<*> -> AnimationType.MOVEMENT
-            is ScaleAnimation<*> -> AnimationType.SCALE
-            is RotationAnimation<*> -> AnimationType.ROTATION
-            is FadeAnimation<*> -> AnimationType.FADE
-            is FlipAnimation<*> -> AnimationType.FLIP
-            is SteppedComponentAnimation<*> -> AnimationType.STEPPED
-          }
-
-      animation.componentView.animationTypes.add(animationType)
+      val animationType = animation.animationType
+      if (animationType !in animation.componentView.animationTypes) {
+        animation.componentView.animationTypes.add(animationType)
+      }
       animation.componentView.componentAnimating = true
     }
 
     animation.isRunning = true
+    AnimationRegistry.register(animation)
 
     when (animation) {
       is SequentialAnimation -> {

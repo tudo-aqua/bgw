@@ -122,7 +122,8 @@ internal class Frontend {
     internal val alignmentProperty =
         Property(Alignment.of(VerticalAlignment.CENTER, HorizontalAlignment.CENTER))
 
-    internal val openedDialogs = mutableMapOf<String, Dialog>()
+    internal val openedDialogs: MutableMap<String, Dialog> =
+        java.util.concurrent.ConcurrentHashMap()
 
     internal var lastFadeTime: Double = 0.0
 
@@ -132,14 +133,16 @@ internal class Frontend {
      * Sequential/Parallel use the same initial state. This prevents user updates from interfering
      * with running animations.
      */
-    internal val animationCache: MutableMap<String, AnimationPropertyCache> = mutableMapOf()
+    internal val animationCache: MutableMap<String, AnimationPropertyCache> =
+        java.util.concurrent.ConcurrentHashMap()
 
     /**
      * Set of components that have pending finished animations that need to be cleared after the
      * update is sent to the frontend. This prevents loss of animation finish notifications when
      * updates are queued.
      */
-    internal val componentsWithFinishedAnimations: MutableSet<ComponentView> = mutableSetOf()
+    internal val componentsWithFinishedAnimations: MutableSet<ComponentView> =
+        java.util.concurrent.ConcurrentHashMap.newKeySet()
 
     /** Property for the current application width. */
     internal val widthProperty =
@@ -187,12 +190,15 @@ internal class Frontend {
       menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
       menuScene = scene
+      // Observe the scene right away. Waiting for the browser to report the scene as loaded would
+      // miss changes made in the meantime.
+      if (renderedDOM.value) SceneBuilder.build(scene)
       markDirty(ActionProp.SHOW_MENU_SCENE)
     }
 
     internal fun sendAnimation(animation: Animation) {
       val animationData = AnimationMapper.map(animation)
-      runBlocking { forceAnimationUpdate(animationData) }
+      forceAnimationUpdate(animationData)
     }
 
     internal fun stopAnimations() {
@@ -253,6 +259,7 @@ internal class Frontend {
       boardGameScene?.isVisible = false
       boardGameScene?.onSceneHidden?.invoke()
       boardGameScene = scene
+      if (renderedDOM.value) SceneBuilder.build(scene)
       markDirty(ActionProp.SHOW_GAME_SCENE)
     }
 

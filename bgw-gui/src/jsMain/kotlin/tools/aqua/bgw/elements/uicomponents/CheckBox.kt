@@ -70,7 +70,7 @@ internal val CheckBox =
 
         ref = elementRef
 
-        useEffect(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
+        useEffectWithCleanup(props.data.id) { elementRef.current?.let { droppable.setNodeRef(it) } }
 
         bgwVisuals {
           className = ClassName("visuals")
@@ -84,11 +84,8 @@ internal val CheckBox =
           disabled = props.data.isDisabled
           tabIndex = if (props.data.isFocusable && !props.data.isDisabled) 0 else -1
 
-          useEffect(
-              listOf(
-                  props.data.isChecked,
-                  props.data.isIndeterminate,
-                  props.data.allowIndeterminate)) {
+          useEffectWithCleanup(
+              props.data.isChecked, props.data.isIndeterminate, props.data.allowIndeterminate) {
                 document.getElementById(props.data.id + "--checkbox")?.let {
                   (it as HTMLInputElement).indeterminate =
                       if (!props.data.isChecked) props.data.isIndeterminate else false

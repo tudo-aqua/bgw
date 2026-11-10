@@ -31,10 +31,10 @@ import tools.aqua.bgw.core.DEFAULT_ANIMATION_SPEED
  *
  * @param T Generic [ComponentView].
  * @param componentView [ComponentView] to animate
- * @param fromScaleX Initial X position. Default: Current [ComponentView.posX].
- * @param toScaleX Resulting X position. Default: Current [ComponentView.posX].
- * @param fromScaleY Initial Y position. Default: Current [ComponentView.posY].
- * @param toScaleY Resulting Y position. Default: Current [ComponentView.posY].
+ * @param fromScaleX Initial X scale. Default: Current [ComponentView.scaleX].
+ * @param toScaleX Resulting X scale. Default: Current [ComponentView.scaleX].
+ * @param fromScaleY Initial Y scale. Default: Current [ComponentView.scaleY].
+ * @param toScaleY Resulting Y scale. Default: Current [ComponentView.scaleY].
  * @param duration Duration in milliseconds. Default: [DEFAULT_ANIMATION_SPEED].
  * @param interpolation [AnimationInterpolation] to use for the animation. Default:
  *   [AnimationInterpolation.SMOOTH].
@@ -84,6 +84,8 @@ class ScaleAnimation<T : ComponentView>(
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
    *   [AnimationInterpolation.SMOOTH].
+   * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+   *   If set to `false`, it will reset on completion. Default: `true`.
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
@@ -94,13 +96,15 @@ class ScaleAnimation<T : ComponentView>(
       byScaleX: Number = 0.0,
       byScaleY: Number = 0.0,
       duration: Int = 1000,
-      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+      persist: Boolean = true
   ) : this(
       componentView = componentView,
-      toScaleX = componentView.scaleX * if (byScaleX == 0.0) 1.0 else byScaleX.toDouble(),
-      toScaleY = componentView.scaleY * if (byScaleY == 0.0) 1.0 else byScaleY.toDouble(),
+      toScaleX = componentView.scaleX * relativeScale(byScaleX),
+      toScaleY = componentView.scaleY * relativeScale(byScaleY),
       duration = duration,
-      interpolation = interpolation)
+      interpolation = interpolation,
+      persist = persist)
 
   /**
    * A scale animation. Scales given [ComponentView] by given scalar.
@@ -110,6 +114,8 @@ class ScaleAnimation<T : ComponentView>(
    * @param duration [Animation] duration in milliseconds. Default: 1 second
    * @param interpolation [AnimationInterpolation] to use for the animation. Default:
    *   [AnimationInterpolation.SMOOTH].
+   * @param persist Whether the animation will be persisted and changed the [componentView]'s state.
+   *   If set to `false`, it will reset on completion. Default: `true`.
    * @see ComponentAnimation
    * @see Animation
    * @see ComponentView
@@ -119,11 +125,18 @@ class ScaleAnimation<T : ComponentView>(
       componentView: T,
       byScale: Number = 0.0,
       duration: Int = 1000,
-      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH
+      interpolation: AnimationInterpolation = AnimationInterpolation.SMOOTH,
+      persist: Boolean = true
   ) : this(
       componentView = componentView,
-      toScaleX = componentView.scaleX * if (byScale == 0.0) 1.0 else byScale.toDouble(),
-      toScaleY = componentView.scaleY * if (byScale == 0.0) 1.0 else byScale.toDouble(),
+      toScaleX = componentView.scaleX * relativeScale(byScale),
+      toScaleY = componentView.scaleY * relativeScale(byScale),
       duration = duration,
-      interpolation = interpolation)
+      interpolation = interpolation,
+      persist = persist)
+
+  private companion object {
+    /** A relative scale of `0` (the default) means "unchanged", for any [Number] type. */
+    fun relativeScale(by: Number): Double = by.toDouble().let { if (it == 0.0) 1.0 else it }
+  }
 }

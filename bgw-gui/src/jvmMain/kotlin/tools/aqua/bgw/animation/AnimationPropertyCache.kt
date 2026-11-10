@@ -27,8 +27,8 @@ import tools.aqua.bgw.visual.Visual
  */
 internal data class AnimationPropertyCache(
     // Movement properties
-    var posX: Int,
-    var posY: Int,
+    var posX: Double,
+    var posY: Double,
 
     // Scale properties
     var scaleX: Double,
