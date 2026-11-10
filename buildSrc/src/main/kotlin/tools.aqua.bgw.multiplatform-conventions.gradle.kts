@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
+import tools.aqua.announcePublications
 import tools.aqua.defaultFormat
 import tools.aqua.isSigningRequired
 
@@ -229,6 +230,9 @@ fun killJcefHelperProcesses(pids: Set<Long>) {
 // endregion
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
+
+// Log the coordinates of everything that is published, locally and remotely.
+announcePublications()
 
 mavenPublishing {
   publishToMavenCentral()

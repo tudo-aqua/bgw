@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.merge
 import org.gradle.kotlin.dsl.*
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.defaultFormat
+import tools.aqua.gitCliVersion
+import tools.aqua.isUnresolvedVersion
 
 plugins {
   id("tools.aqua.bgw.base-conventions")
@@ -50,6 +52,19 @@ gitVersioning.apply {
     branch("main") {
       version = "\${describe.tag.version}-\${describe.distance}-\${commit.short}-SNAPSHOT"
     }
+  }
+}
+
+// The plugin reads git with JGit, which does not support linked git worktrees and leaves the
+// version
+// unresolved (e.g. "${describe.tag.version}-branch-0-0000000-SNAPSHOT"). Use the git CLI instead.
+if (isUnresolvedVersion(version.toString())) {
+  val fallback = gitCliVersion()
+  if (fallback != null) {
+    logger.info("git-versioning could not read the repository, using git CLI version $fallback")
+    allprojects { version = fallback }
+  } else {
+    logger.warn("The project version could not be determined from git: $version")
   }
 }
 

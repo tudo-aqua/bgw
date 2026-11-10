@@ -17,6 +17,7 @@
 
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
+import tools.aqua.announcePublications
 import tools.aqua.isSigningRequired
 
 plugins {
@@ -26,6 +27,10 @@ plugins {
 }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
+
+// Log the coordinates of everything that is published, locally and remotely.
+announcePublications()
+
 // Staging credentials are only needed for publishing. Do not require them for regular builds, so
 // contributors without credentials can still compile and test the project.
 val stagingToken: String? = providers.gradleProperty("stagingToken").orNull
