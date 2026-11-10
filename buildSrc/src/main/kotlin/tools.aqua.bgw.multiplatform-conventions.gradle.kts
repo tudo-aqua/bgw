@@ -23,8 +23,8 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
-import tools.aqua.isSigningRequired
 import tools.aqua.defaultFormat
+import tools.aqua.isSigningRequired
 
 plugins {
   kotlin("multiplatform")
@@ -60,7 +60,6 @@ if (stagingToken != null && stagingServer != null) {
     }
   }
 }
-
 
 fun buildDefaultPropertyFile() {
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {

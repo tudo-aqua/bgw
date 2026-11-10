@@ -50,11 +50,8 @@ if (stagingToken != null && stagingServer != null) {
 }
 
 if (stagingToken != null && stagingServer != null) {
-  tasks.publish {
-    dependsOn(project.tasks.named("publishAllPublicationsToStagingRepository"))
-  }
+  tasks.publish { dependsOn(project.tasks.named("publishAllPublicationsToStagingRepository")) }
 }
-
 
 mavenPublishing {
   publishToMavenCentral()
