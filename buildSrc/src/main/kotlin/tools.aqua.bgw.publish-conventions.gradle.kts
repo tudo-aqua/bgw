@@ -25,28 +25,33 @@ plugins {
 }
 
 val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
-val stagingToken = providers.gradleProperty("stagingToken").get()
-val stagingServer = providers.gradleProperty("stagingServer").get()
+// Staging credentials are only needed for publishing. Do not require them for regular builds, so
+// contributors without credentials can still compile and test the project.
+val stagingToken: String? = providers.gradleProperty("stagingToken").orNull
+val stagingServer: String? = providers.gradleProperty("stagingServer").orNull
 
 signing { useGpgCmd() }
 
-publishing {
-  repositories {
-    maven {
-      name = "staging"
-      setUrl(stagingServer)
-      credentials(HttpHeaderCredentials::class) {
-        name = "Private-Token"
-        value = stagingToken
+if (stagingToken != null && stagingServer != null) {
+  publishing {
+    repositories {
+      maven {
+        name = "staging"
+        setUrl(stagingServer)
+        credentials(HttpHeaderCredentials::class) {
+          name = "Private-Token"
+          value = stagingToken
+        }
+        authentication { create<HttpHeaderAuthentication>("header") }
       }
-      authentication { create<HttpHeaderAuthentication>("header") }
     }
   }
-
 }
 
-tasks.publish {
-  dependsOn(project.tasks.named("publishAllPublicationsToStagingRepository"))
+if (stagingToken != null && stagingServer != null) {
+  tasks.publish {
+    dependsOn(project.tasks.named("publishAllPublicationsToStagingRepository"))
+  }
 }
 
 

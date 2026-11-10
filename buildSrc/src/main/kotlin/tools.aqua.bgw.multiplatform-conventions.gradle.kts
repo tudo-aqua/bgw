@@ -39,22 +39,25 @@ plugins {
 
 val propertyFile = "Config.kt"
 val wrappersVersion = "2025.5.6"
-val stagingToken = providers.gradleProperty("stagingToken").get()
-val stagingServer = providers.gradleProperty("stagingServer").get()
+// Staging credentials are only needed for publishing. Do not require them for regular builds, so
+// contributors without credentials can still compile and test the project.
+val stagingToken: String? = providers.gradleProperty("stagingToken").orNull
+val stagingServer: String? = providers.gradleProperty("stagingServer").orNull
 
-publishing {
-  repositories {
-    maven {
-      name = "staging"
-      setUrl(stagingServer)
-      credentials(HttpHeaderCredentials::class) {
-        name = "Private-Token"
-        value = stagingToken
+if (stagingToken != null && stagingServer != null) {
+  publishing {
+    repositories {
+      maven {
+        name = "staging"
+        setUrl(stagingServer)
+        credentials(HttpHeaderCredentials::class) {
+          name = "Private-Token"
+          value = stagingToken
+        }
+        authentication { create<HttpHeaderAuthentication>("header") }
       }
-      authentication { create<HttpHeaderAuthentication>("header") }
     }
   }
-
 }
 
 
@@ -70,6 +73,13 @@ fun buildDefaultPropertyFile() {
   }
 }
 
+/**
+ * The project version escaped for use inside a Kotlin string literal. Unresolved version templates
+ * (e.g. when git metadata is unavailable) would otherwise be interpreted as string templates.
+ */
+fun escapedVersion(): String =
+    rootProject.version.toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
+
 fun generateDefaultProperties(suffix: String = "") =
     """
     package tools.aqua.bgw${if (suffix.isNotEmpty()) ".$suffix" else ""}
@@ -77,7 +87,7 @@ fun generateDefaultProperties(suffix: String = "") =
     internal object Config {
         val USE_SOCKETS = true
         val GENERATE_SAMPLES = false
-        val BGW_VERSION = "${rootProject.version}"
+        val BGW_VERSION = "${escapedVersion()}"
     }
 """
         .trimIndent()
@@ -131,7 +141,13 @@ kotlin {
     browser {
       commonWebpackConfig {
         cssSupport { enabled.set(true) }
-        mode = KotlinWebpackConfig.Mode.DEVELOPMENT
+        // The production bundle (used by the JCEF runtime and the docs) uses webpack's production
+        // mode: minified code and React's production build. The development build of React alone
+        // made rendering several times slower. Set -PbgwDevBundle=true to debug the frontend.
+        mode =
+            if (providers.gradleProperty("bgwDevBundle").orNull.toBoolean())
+                KotlinWebpackConfig.Mode.DEVELOPMENT
+            else KotlinWebpackConfig.Mode.PRODUCTION
       }
     }
   }

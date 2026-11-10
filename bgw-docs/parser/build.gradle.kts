@@ -169,7 +169,7 @@ fun generateProperties(suffix: String = ""): String {
     internal object Config {
         val USE_SOCKETS = $useSockets
         val GENERATE_SAMPLES = $generateSamples
-        val BGW_VERSION = "${rootProject.version}"
+        val BGW_VERSION = "${rootProject.version.toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")}"
     }
 """
       .trimIndent()
