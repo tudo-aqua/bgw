@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
+import tools.aqua.isSigningRequired
 import tools.aqua.defaultFormat
 
 plugins {
@@ -232,7 +233,8 @@ val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 
 mavenPublishing {
   publishToMavenCentral()
-  signAllPublications()
+  // Only sign when publishing remotely, so publishToMavenLocal works without GPG.
+  if (isSigningRequired()) signAllPublications()
 
   pom {
     name.set(mavenMetadata.name)

@@ -54,8 +54,10 @@ mavenMetadata {
 }
 ```
 
-The extension also enforces signing as soon as a publication task (including `publishToMavenLocal`) is included in the
-build process. Each developer *must* generate a GPG key for signing and register the ID in their Gradle system
+Publications are signed as soon as a task publishing to a remote repository (e.g. `publish` or
+`publishToMavenCentral`) is included in the build process. Publishing locally via `publishToMavenLocal` does not sign
+and therefore does not require GPG. Signing can be forced on or off with `-PbgwSign=true` or `-PbgwSign=false`. Each
+developer publishing remotely *must* generate a GPG key for signing and register the ID in their Gradle system
 properties file. See the [Gradle documentation](https://docs.gradle.org/current/userguide/signing_plugin.html) for
 details.
 

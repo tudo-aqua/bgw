@@ -17,6 +17,7 @@
 
 import tools.aqua.GlobalMavenMetadataExtension
 import tools.aqua.MavenMetadataExtension
+import tools.aqua.isSigningRequired
 
 plugins {
   id("tools.aqua.bgw.base-conventions")
@@ -57,7 +58,8 @@ if (stagingToken != null && stagingServer != null) {
 
 mavenPublishing {
   publishToMavenCentral()
-  signAllPublications()
+  // Only sign when publishing remotely, so publishToMavenLocal works without GPG.
+  if (isSigningRequired()) signAllPublications()
 
   pom {
     name.set(mavenMetadata.name)
