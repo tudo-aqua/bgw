@@ -44,6 +44,8 @@ internal external interface TransformWrapperProps :
   var minScale: Double
   var maxScale: Double
   var initialScale: Double
+  var initialPositionX: Double
+  var initialPositionY: Double
   var onTransformed: (ref: ReactZoomPanPinchContentRef, state: ReactZoomPanPinchState) -> Unit
   var onZoomStop: (ref: ReactZoomPanPinchContentRef) -> Unit
   var onPanningStart: (ref: ReactZoomPanPinchContentRef) -> Unit

@@ -121,8 +121,12 @@ internal val CameraPane =
       val isTargetWide = targetAspect >= 1.0
       val isPaneWide = paneAspect >= 1.0
 
-      val minZoom =
+      // Smallest zoom at which the target covers the pane.
+      val coverZoom =
           when {
+            // A target without size cannot be fitted into the pane.
+            targetWidth <= 0.0 || targetHeight <= 0.0 || paneWidth <= 0.0 || paneHeight <= 0.0 ->
+                1.0
             isTargetWide && isPaneWide -> {
               if (targetAspect >= paneAspect) snapPaneHeight else snapPaneWidth
             }
@@ -133,115 +137,84 @@ internal val CameraPane =
             }
           }
 
-      val initialZoom = maxOf(minZoom, 1.0)
+      // Bounds limit how far the user can zoom out. A zoom set by the application is kept, so a
+      // target smaller than the pane is not enlarged when the user cannot zoom.
+      val userZoomable = props.data.interactive && !props.data.isZoomLocked
+      val minZoom = if (userZoomable) coverZoom else minOf(coverZoom, props.data.zoom)
+
+      val initialZoom =
+          if (props.data.limitBounds) maxOf(minZoom, props.data.zoom) else props.data.zoom
+
+      // Last pan or zoom command applied by this instance, starting with the one the browser had
+      // applied when it last reported the transform. Each command is applied once, even if the
+      // component renders again before the JVM acknowledged it.
+      val appliedSequence = useRef(props.data.anchorSequence.toDouble())
+      val appliedPanByTotalX = useRef(props.data.anchorPanByTotalX)
+      val appliedPanByTotalY = useRef(props.data.anchorPanByTotalY)
+
+      fun reportTransform(zoomLevel: Double, x: Double, y: Double) {
+        JCEFEventDispatcher.dispatchEvent(
+            TransformChangedEventData(
+                    zoomLevel = zoomLevel,
+                    anchor = Pair(convertToPx(x), convertToPx(y)),
+                    sequence = (appliedSequence.current ?: 0.0).toLong(),
+                    panByTotalX = appliedPanByTotalX.current ?: 0.0,
+                    panByTotalY = appliedPanByTotalY.current ?: 0.0)
+                .apply { id = props.data.id })
+      }
 
       useEffectWithCleanup {
-        val panSmooth = props.data.internalPanData.panSmooth
-        val panTime = if (panSmooth) 300 else 0
-        val panBy = props.data.internalPanData.panBy
+        val panData = props.data.internalPanData
+        val ctx = cameraPaneRef.current
+        val sequence = panData.sequence.toDouble()
+        if (ctx == null || sequence == 0.0 || sequence == appliedSequence.current)
+            return@useEffectWithCleanup
+        if (!panData.zoomOnly && panData.panTo == null) return@useEffectWithCleanup
 
-        if (cameraPaneRef.current != null && props.data.internalPanData.zoomOnly) {
-          val ctx = cameraPaneRef.current!!
-          val currentX = ctx.instance.transformState.positionX
-          val currentY = ctx.instance.transformState.positionY
+        val panTime = if (panData.panSmooth) 300 else 0
+        val state = ctx.instance.transformState
 
-          var panZoom = props.data.internalPanData.zoom ?: ctx.instance.transformState.scale
-          if (panZoom < minZoom && props.data.limitBounds) panZoom = minZoom
+        var panZoom = panData.zoom ?: state.scale
+        if (panZoom < minZoom && props.data.limitBounds) panZoom = minZoom
 
-          // Calculate bounds
-          val containerWidth = props.data.width.toDouble()
-          val containerHeight = props.data.height.toDouble()
-          val targetWidthInternal = targetWidth * panZoom
-          val targetHeightInternal = targetHeight * panZoom
+        // Bounds of the target at the new zoom
+        val minX = convertToRem(props.data.width.toDouble() - targetWidth * panZoom)
+        val minY = convertToRem(props.data.height.toDouble() - targetHeight * panZoom)
 
-          val minX = convertToRem(containerWidth - targetWidthInternal)
-          val minY = convertToRem(containerHeight - targetHeightInternal)
-          val maxX = 0.0
-          val maxY = 0.0
-
-          if (props.data.limitBounds) {
-            ctx.setTransform(
-                currentX.coerceIn(minX, maxX), currentY.coerceIn(minY, maxY), panZoom, panTime)
-          } else {
-            ctx.setTransform(currentX, currentY, panZoom, panTime)
+        var newX: Double
+        var newY: Double
+        val panTo = panData.panTo
+        when {
+          panData.zoomOnly || panTo == null -> {
+            newX = state.positionX
+            newY = state.positionY
           }
-
-          val actualXOffset =
-              if (props.data.limitBounds) convertToPx(currentX.coerceIn(minX, maxX))
-              else convertToPx(currentX)
-          val actualYOffset =
-              if (props.data.limitBounds) convertToPx(currentY.coerceIn(minY, maxY))
-              else convertToPx(currentY)
-
-          JCEFEventDispatcher.dispatchEvent(
-              TransformChangedEventData(
-                      zoomLevel = ctx.instance.transformState.scale,
-                      anchor = Pair(actualXOffset, actualYOffset))
-                  .apply { id = props.data.id })
-        } else if (cameraPaneRef.current != null && props.data.internalPanData.panTo != null) {
-          val ctx = cameraPaneRef.current!!
-          val currentScale = ctx.instance.transformState.scale
-
-          var panZoom = props.data.internalPanData.zoom ?: currentScale
-          if (panZoom < minZoom && props.data.limitBounds) panZoom = minZoom
-
-          // Calculate bounds
-          val containerWidth = props.data.width.toDouble()
-          val containerHeight = props.data.height.toDouble()
-          val targetWidthInternal = targetWidth * panZoom
-          val targetHeightInternal = targetHeight * panZoom
-
-          val minX = convertToRem(containerWidth - targetWidthInternal)
-          val minY = convertToRem(containerHeight - targetHeightInternal)
-          val maxX = 0.0
-          val maxY = 0.0
-
-          if (panBy) {
-            val panByX = (convertToRem(props.data.internalPanData.panTo!!.first) * panZoom)
-            val panByY = (convertToRem(props.data.internalPanData.panTo!!.second) * panZoom)
-
-            // Calculate new positions with bounds
-            if (props.data.limitBounds) {
-              val newX = (ctx.instance.transformState.positionX + panByX).coerceIn(minX, maxX)
-              val newY = (ctx.instance.transformState.positionY + panByY).coerceIn(minY, maxY)
-
-              ctx.setTransform(newX, newY, panZoom, panTime)
-            } else {
-              val newX = ctx.instance.transformState.positionX + panByX
-              val newY = ctx.instance.transformState.positionY + panByY
-
-              ctx.setTransform(newX, newY, panZoom, panTime)
-            }
-          } else {
-            var panToX = convertToRem(props.data.internalPanData.panTo!!.first) * panZoom
-            var panToY = convertToRem(props.data.internalPanData.panTo!!.second) * panZoom
-
-            panToX += convertToRem(props.data.width / 2.0)
-            panToY += convertToRem(props.data.height / 2.0)
-
-            if (props.data.limitBounds) {
-              val clampedX = panToX.coerceIn(minX, maxX)
-              val clampedY = panToY.coerceIn(minY, maxY)
-
-              ctx.setTransform(clampedX, clampedY, panZoom, panTime)
-            } else {
-              ctx.setTransform(panToX, panToY, panZoom, panTime)
-            }
+          panData.panBy -> {
+            // All relative pans this instance did not apply yet.
+            val offsetX = panData.panByTotalX - (appliedPanByTotalX.current ?: 0.0)
+            val offsetY = panData.panByTotalY - (appliedPanByTotalY.current ?: 0.0)
+            newX = state.positionX + convertToRem(offsetX) * panZoom
+            newY = state.positionY + convertToRem(offsetY) * panZoom
           }
-
-          // Optionally log the actual positions
-          val currentX = ctx.instance.transformState.positionX
-          val currentY = ctx.instance.transformState.positionY
-
-          val actualXOffset = convertToPx(currentX)
-          val actualYOffset = convertToPx(currentY)
-
-          JCEFEventDispatcher.dispatchEvent(
-              TransformChangedEventData(
-                      zoomLevel = ctx.instance.transformState.scale,
-                      anchor = Pair(actualXOffset, actualYOffset))
-                  .apply { id = props.data.id })
+          else -> {
+            newX = convertToRem(panTo.first) * panZoom + convertToRem(props.data.width / 2.0)
+            newY = convertToRem(panTo.second) * panZoom + convertToRem(props.data.height / 2.0)
+          }
         }
+
+        if (props.data.limitBounds) {
+          // A target smaller than the pane has a positive minimum, which keeps it fully visible.
+          newX = newX.coerceIn(minOf(minX, 0.0), maxOf(minX, 0.0))
+          newY = newY.coerceIn(minOf(minY, 0.0), maxOf(minY, 0.0))
+        }
+
+        ctx.setTransform(newX, newY, panZoom, panTime)
+        appliedSequence.current = sequence
+        appliedPanByTotalX.current = panData.panByTotalX
+        appliedPanByTotalY.current = panData.panByTotalY
+
+        // Report the target transform. The current state may still be animating towards it.
+        reportTransform(panZoom, newX, newY)
       }
 
       bgwCameraPane {
@@ -269,10 +242,14 @@ internal val CameraPane =
           disablePadding = true
           smooth = false
           limitToBounds = props.data.limitBounds
-          centerOnInit = true
+          centerOnInit = !props.data.hasAnchor
           minScale = if (props.data.limitBounds) minZoom else 0.1
           maxScale = 4.0
-          initialScale = if (props.data.limitBounds) initialZoom else 1.0
+          initialScale = initialZoom
+          if (props.data.hasAnchor) {
+            initialPositionX = convertToRem(props.data.anchorX)
+            initialPositionY = convertToRem(props.data.anchorY)
+          }
           wheel = jso {
             disabled = !props.data.interactive || props.data.isZoomLocked
             step = 0.1
@@ -307,17 +284,8 @@ internal val CameraPane =
             //          if(props.data.isHorizontalLocked || props.data.isVerticalLocked) {
             //            ctx.centerView(ctx.instance.transformState.scale, 0, "ease-out")
             //          }
-            val currentX = ctx.instance.transformState.positionX
-            val currentY = ctx.instance.transformState.positionY
-
-            val actualXOffset = convertToPx(currentX)
-            val actualYOffset = convertToPx(currentY)
-
-            JCEFEventDispatcher.dispatchEvent(
-                TransformChangedEventData(
-                        zoomLevel = ctx.instance.transformState.scale,
-                        anchor = Pair(actualXOffset, actualYOffset))
-                    .apply { id = props.data.id })
+            val state = ctx.instance.transformState
+            reportTransform(state.scale, state.positionX, state.positionY)
           }
 
           onPanningStop = { ctx ->
@@ -365,14 +333,8 @@ internal val CameraPane =
               }
             }
 
-            JCEFEventDispatcher.dispatchEvent(
-                TransformChangedEventData(
-                        zoomLevel = ctx.instance.transformState.scale,
-                        anchor =
-                            Pair(
-                                convertToPx(ctx.instance.transformState.positionX),
-                                convertToPx(ctx.instance.transformState.positionY)))
-                    .apply { id = props.data.id })
+            val state = ctx.instance.transformState
+            reportTransform(state.scale, state.positionX, state.positionY)
           }
 
           ref = cameraPaneRef

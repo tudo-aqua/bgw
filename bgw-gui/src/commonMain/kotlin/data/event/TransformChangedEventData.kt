@@ -19,8 +19,20 @@ package data.event
 
 import kotlinx.serialization.Serializable
 
+/**
+ * Reports the transform of a camera pane after a pan or zoom.
+ *
+ * @property sequence [InternalCameraPanData.sequence] of the last command the browser applied.
+ * @property panByTotalX [InternalCameraPanData.panByTotalX] of the last command the browser
+ *   applied.
+ * @property panByTotalY [InternalCameraPanData.panByTotalY] of the last command the browser
+ *   applied.
+ */
 @Serializable
 internal class TransformChangedEventData(
     val zoomLevel: Double = 1.0,
-    val anchor: Pair<Double, Double> = Pair(0.0, 0.0)
+    val anchor: Pair<Double, Double> = Pair(0.0, 0.0),
+    val sequence: Long = 0,
+    val panByTotalX: Double = 0.0,
+    val panByTotalY: Double = 0.0
 ) : EventData()

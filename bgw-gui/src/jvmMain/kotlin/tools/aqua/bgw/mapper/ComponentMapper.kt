@@ -177,6 +177,13 @@ internal object ComponentMapper {
             target = LayoutMapper.map(componentView.target)
             interactive = componentView.interactive
             internalPanData = componentView.panData
+            zoom = componentView.pendingPanData?.zoom ?: componentView.zoom
+            hasAnchor = componentView.hasReportedTransform
+            anchorX = componentView.anchorPoint.xCoord
+            anchorY = componentView.anchorPoint.yCoord
+            anchorSequence = componentView.reportedPanData.sequence
+            anchorPanByTotalX = componentView.reportedPanData.panByTotalX
+            anchorPanByTotalY = componentView.reportedPanData.panByTotalY
             panButton = componentView.panMouseButton.name.lowercase()
             limitBounds = componentView.limitBounds
             isVerticalLocked = componentView.isVerticalLocked

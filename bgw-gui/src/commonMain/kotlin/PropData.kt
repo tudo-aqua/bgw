@@ -300,6 +300,16 @@ internal class CameraPaneData : ComponentViewData() {
   var panButton: String = "left_button"
   var limitBounds: Boolean = true
   var internalPanData: InternalCameraPanData = InternalCameraPanData()
+  /** Current zoom, used when the camera pane is (re-)created in the browser. */
+  var zoom: FiniteDouble = 1.0
+  /** Whether [anchorX] and [anchorY] hold the last position reported by the browser. */
+  var hasAnchor: Boolean = false
+  var anchorX: FiniteDouble = 0.0
+  var anchorY: FiniteDouble = 0.0
+  /** State of the pan commands the browser had applied when it reported the anchor. */
+  var anchorSequence: Long = 0
+  var anchorPanByTotalX: FiniteDouble = 0.0
+  var anchorPanByTotalY: FiniteDouble = 0.0
   var isVerticalLocked: Boolean = false
   var isHorizontalLocked: Boolean = false
   var isZoomLocked: Boolean = false

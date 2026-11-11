@@ -17,13 +17,27 @@
 
 package data.event
 
+import FiniteDouble
 import kotlinx.serialization.Serializable
 
+/**
+ * A pan or zoom command for a camera pane.
+ *
+ * @property sequence Distinguishes consecutive identical commands (e.g. scrolling twice by the same
+ *   offset), which would otherwise result in an unchanged state that is not sent again.
+ * @property panByTotalX Sum of the x offsets of all relative pans issued so far. The browser
+ *   applies the difference to the sum it applied last, so relative pans are neither lost when
+ *   several are sent as one state nor applied twice when a state is rendered again.
+ * @property panByTotalY Like [panByTotalX] for the y offsets.
+ */
 @Serializable
 internal data class InternalCameraPanData(
     val panTo: Pair<Double, Double>? = null,
     val panSmooth: Boolean = true,
     val panBy: Boolean = false,
     val zoom: Double? = null,
-    val zoomOnly: Boolean = false
+    val zoomOnly: Boolean = false,
+    val sequence: Long = 0,
+    val panByTotalX: FiniteDouble = 0.0,
+    val panByTotalY: FiniteDouble = 0.0
 ) : EventData()

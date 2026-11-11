@@ -490,10 +490,17 @@ internal fun eventListener(text: String) {
               if (component.zoomProperty.value != eventData.zoomLevel) {
                 component.onZoomed?.invoke(eventData.zoomLevel)
               }
-              component.zoomProperty.setInternal(eventData.zoomLevel)
-              component.panDataProperty.setInternal(InternalCameraPanData())
-              component.anchorPointProperty.setInternal(
+              // The browser already shows this transform. It is only needed when the camera pane
+              // is created again, so it does not cause an update on its own.
+              component.zoomProperty.setSilent(eventData.zoomLevel)
+              component.anchorPointProperty.setSilent(
                   Coordinate(eventData.anchor.first, eventData.anchor.second))
+              component.reportedPanData =
+                  InternalCameraPanData(
+                      sequence = eventData.sequence,
+                      panByTotalX = eventData.panByTotalX,
+                      panByTotalY = eventData.panByTotalY)
+              component.hasReportedTransform = true
             }
           }
           is DragGestureStartedEventData -> {

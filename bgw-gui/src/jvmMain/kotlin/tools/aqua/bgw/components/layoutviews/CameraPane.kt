@@ -88,6 +88,10 @@ open class CameraPane<T : LayoutView<*>>(
    * Determines if the target layout view should be limited to the bounds of the camera pane. This
    * will also affect the panning of the camera pane with [pan] and [panBy] as well as zooming.
    *
+   * If the user can zoom (see [interactive] and [isZoomLocked]), they cannot zoom out further than
+   * the target covering the camera pane. Otherwise, the [zoom] is kept, and a target smaller than
+   * the camera pane stays fully visible.
+   *
    * @since 0.10
    */
   var limitBounds: Boolean
@@ -113,10 +117,28 @@ open class CameraPane<T : LayoutView<*>>(
 
   internal val panDataProperty: Property<InternalCameraPanData> = Property(InternalCameraPanData())
 
+  /** Whether the browser reported the camera position stored in [anchorPoint]. */
+  internal var hasReportedTransform = false
+
+  /** Number of pan and zoom commands issued, see [InternalCameraPanData.sequence]. */
+  private var panSequence = 0L
+
+  /** Sums of all relative pan offsets, see [InternalCameraPanData.panByTotalX]. */
+  private var panByTotalX = 0.0
+  private var panByTotalY = 0.0
+
+  /** Command state of the transform last reported by the browser. */
+  internal var reportedPanData = InternalCameraPanData()
+
+  /** The last command, as long as the browser did not report that it applied it. */
+  internal val pendingPanData: InternalCameraPanData?
+    get() = panData.takeIf { it.sequence > reportedPanData.sequence }
+
   internal var panData: InternalCameraPanData
     get() = panDataProperty.value
     set(value) {
-      panDataProperty.value = value
+      panDataProperty.value =
+          value.copy(sequence = ++panSequence, panByTotalX = panByTotalX, panByTotalY = panByTotalY)
     }
 
   internal val isHorizontalLockedProperty: BooleanProperty = BooleanProperty()
@@ -233,13 +255,13 @@ open class CameraPane<T : LayoutView<*>>(
    * @see panBy
    */
   fun pan(x: Number, y: Number, smooth: Boolean = true) {
-    if (panData.zoomOnly) {
-      pan(x, y, zoom = panData.zoom!!, smooth = smooth)
-    } else {
-      panData =
-          InternalCameraPanData(
-              panSmooth = smooth, panBy = false, panTo = Pair(-x.toDouble(), -y.toDouble()))
-    }
+    // Keep a zoom that was requested but not yet applied by the browser.
+    panData =
+        InternalCameraPanData(
+            panSmooth = smooth,
+            panBy = false,
+            panTo = Pair(-x.toDouble(), -y.toDouble()),
+            zoom = pendingPanData?.zoom)
   }
 
   /**
@@ -257,12 +279,7 @@ open class CameraPane<T : LayoutView<*>>(
    * @since 0.10
    */
   fun panBy(xOffset: Number, yOffset: Number, zoom: Double, smooth: Boolean = true) {
-    panData =
-        InternalCameraPanData(
-            panSmooth = smooth,
-            panBy = true,
-            panTo = Pair(-xOffset.toDouble(), -yOffset.toDouble()),
-            zoom = zoom)
+    relativePan(xOffset.toDouble(), yOffset.toDouble(), zoom, smooth)
   }
 
   /**
@@ -277,15 +294,27 @@ open class CameraPane<T : LayoutView<*>>(
    * @see panBy
    */
   fun panBy(xOffset: Number, yOffset: Number, smooth: Boolean = true) {
-    if (panData.zoomOnly) {
-      panBy(xOffset, yOffset, zoom = panData.zoom!!, smooth = smooth)
-    } else {
-      panData =
-          InternalCameraPanData(
+    // Keep a zoom that was requested but not yet applied by the browser.
+    relativePan(xOffset.toDouble(), yOffset.toDouble(), pendingPanData?.zoom, smooth)
+  }
+
+  private fun relativePan(xOffset: Double, yOffset: Double, zoom: Double?, smooth: Boolean) {
+    panByTotalX -= xOffset
+    panByTotalY -= yOffset
+    val pending = pendingPanData
+    val pendingTarget = pending?.panTo
+    panData =
+        if (pending != null && !pending.panBy && pendingTarget != null) {
+          // The browser did not pan to the requested position yet, so it pans to the moved position
+          // instead. Should it already have panned there, panning there again does no harm.
+          pending.copy(
               panSmooth = smooth,
-              panBy = true,
-              panTo = Pair(-xOffset.toDouble(), -yOffset.toDouble()))
-    }
+              panTo = Pair(pendingTarget.first - xOffset, pendingTarget.second - yOffset),
+              zoom = zoom ?: pending.zoom)
+        } else {
+          InternalCameraPanData(
+              panSmooth = smooth, panBy = true, panTo = Pair(-xOffset, -yOffset), zoom = zoom)
+        }
   }
 
   /**
@@ -297,9 +326,9 @@ open class CameraPane<T : LayoutView<*>>(
    */
   private fun zoom(zoom: Double) {
     require(zoom.isFinite() && zoom > 0.0) { "Zoom must be a finite positive number." }
+    // Zoom together with a pan that was requested but not yet applied by the browser.
     panData =
-        if (panData.panTo != null) panData.copy(zoom = zoom)
-        else InternalCameraPanData(zoom = zoom, zoomOnly = true)
+        pendingPanData?.copy(zoom = zoom) ?: InternalCameraPanData(zoom = zoom, zoomOnly = true)
   }
 
   override fun removeChild(component: ComponentView) {
