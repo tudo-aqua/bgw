@@ -21,6 +21,7 @@ import AnimationData
 import PropData
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -65,7 +66,11 @@ internal object UpdateScheduler {
       }
 
   private val dirty = AtomicBoolean(false)
-  private val scheduled = AtomicBoolean(false)
+
+  /** Guards [pending] and [pendingAt]. */
+  private val scheduleLock = Any()
+  private var pending: ScheduledFuture<*>? = null
+  private var pendingAt = Long.MAX_VALUE
   private val batchDepth = AtomicInteger(0)
   @Volatile private var batchStart = 0L
 
@@ -87,9 +92,17 @@ internal object UpdateScheduler {
     schedule(DEBOUNCE_MILLIS)
   }
 
+  /**
+   * Makes sure [flush] runs within [delayMillis]. A flush that is already pending for a later time
+   * (e.g. waiting for a render acknowledgement that just arrived) is brought forward.
+   */
   private fun schedule(delayMillis: Long) {
-    if (scheduled.compareAndSet(false, true)) {
-      executor.schedule(::flush, delayMillis, TimeUnit.MILLISECONDS)
+    val at = System.currentTimeMillis() + delayMillis
+    synchronized(scheduleLock) {
+      if (pending != null && pendingAt <= at) return
+      pending?.cancel(false)
+      pendingAt = at
+      pending = executor.schedule(::flush, delayMillis, TimeUnit.MILLISECONDS)
     }
   }
 
@@ -116,7 +129,10 @@ internal object UpdateScheduler {
   }
 
   private fun flush() {
-    scheduled.set(false)
+    synchronized(scheduleLock) {
+      pending = null
+      pendingAt = Long.MAX_VALUE
+    }
     if (!dirty.get()) return
 
     val now = System.currentTimeMillis()

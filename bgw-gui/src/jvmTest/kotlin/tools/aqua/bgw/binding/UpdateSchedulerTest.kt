@@ -108,4 +108,24 @@ class UpdateSchedulerTest {
         UpdateScheduler.sentUpdates > beforeTransparency,
         "Transparency change of a replaced visual not sent")
   }
+
+  @Test
+  fun acknowledgementSendsWaitingChangesImmediately() {
+    val (_, tokens) = sceneWithTokens(1)
+    // A state was sent and the browser did not acknowledge it yet.
+    UpdateScheduler.onClientConnected("")
+    val before = UpdateScheduler.sentUpdates
+    tokens.first().posX = 42.0
+    Thread.sleep(100)
+    assertTrue(UpdateScheduler.sentUpdates == before, "Sent before the acknowledgement")
+
+    val acknowledged = System.currentTimeMillis()
+    UpdateScheduler.onRendered()
+    while (UpdateScheduler.sentUpdates == before &&
+        System.currentTimeMillis() - acknowledged < 2000) {
+      Thread.sleep(5)
+    }
+    val waited = System.currentTimeMillis() - acknowledged
+    assertTrue(waited < 300, "Waiting change was sent $waited ms after the acknowledgement")
+  }
 }
