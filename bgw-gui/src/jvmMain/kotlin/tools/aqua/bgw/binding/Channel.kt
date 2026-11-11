@@ -23,6 +23,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlinx.coroutines.channels.ClosedSendChannelException
+import tools.aqua.bgw.util.Logger
 
 internal class Channel(val path: String = "/ws") {
   val activeSessions = CopyOnWriteArrayList<WebSocketSession>()
@@ -47,8 +48,13 @@ internal class Channel(val path: String = "/ws") {
       routing {
         webSocket(path) {
           activeSessions.add(this)
-          onClientConnected(this)
           try {
+            try {
+              onClientConnected(this)
+            } catch (e: Exception) {
+              Logger.error("Failed to send the application state to the browser:")
+              Logger.error(e.stackTraceToString())
+            }
             for (frame in incoming) {
               if (frame is Frame.Text) {
                 val text = frame.readText()

@@ -51,6 +51,14 @@ internal object UpdateScheduler {
   private const val MAX_BATCH_MILLIS = 50L
   private const val ACK_TIMEOUT_MILLIS = 1000L
 
+  /**
+   * Failed updates usually stem from the state being modified concurrently while it was mapped
+   * (e.g. by a long-running event handler) and are retried quietly. Only if updates keep failing
+   * for this long while no event handler runs, the failure is reported as an error.
+   */
+  private const val REPORT_FAILURES_AFTER_MILLIS = 1000L
+  private const val FAILED_RETRY_MILLIS = 250L
+
   private val executor: ScheduledExecutorService =
       Executors.newSingleThreadScheduledExecutor { runnable ->
         Thread(runnable, "BGW Update Thread").apply { isDaemon = true }
@@ -65,6 +73,8 @@ internal object UpdateScheduler {
   private val sendLock = Any()
   @Volatile private var awaitingRenderSince = 0L
   @Volatile private var lastSentJson: String? = null
+  private var failingSince = 0L
+  private var lastReportedFailure: String? = null
 
   /** Number of state updates sent to the browser, for diagnostics and tests. */
   @Volatile
@@ -124,12 +134,28 @@ internal object UpdateScheduler {
     dirty.set(false)
     try {
       sendState()
+      failingSince = 0L
+      lastReportedFailure = null
     } catch (e: Exception) {
-      // The state was modified concurrently while it was mapped (e.g. a list changed during
-      // iteration). The modification marked the state as dirty again, otherwise retry anyway.
-      Logger.debug("Retrying state update after ${e::class.simpleName}: ${e.message}")
+      // Usually the state was modified concurrently while it was mapped (e.g. a list changed
+      // during iteration), which a retry resolves. A state that keeps failing (e.g. an invalid
+      // component) is reported once and retried less often until it can be sent again.
       dirty.set(true)
-      schedule(DEBOUNCE_MILLIS)
+      if (failingSince == 0L) failingSince = now
+      val handlerRunning = batchDepth.get() > 0
+      if (handlerRunning || now - failingSince < REPORT_FAILURES_AFTER_MILLIS) {
+        Logger.debug("Retrying state update after ${e::class.simpleName}: ${e.message}")
+        val quickRetry = !handlerRunning && now - failingSince < MAX_BATCH_MILLIS
+        schedule(if (quickRetry) DEBOUNCE_MILLIS else MAX_BATCH_MILLIS)
+      } else {
+        val failure = e.stackTraceToString()
+        if (failure != lastReportedFailure) {
+          lastReportedFailure = failure
+          Logger.error("Failed to send the application state to the browser:")
+          Logger.error(failure)
+        }
+        schedule(FAILED_RETRY_MILLIS)
+      }
     }
   }
 

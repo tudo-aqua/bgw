@@ -112,16 +112,22 @@ internal val componentChannel: Channel =
     Channel("/ws").apply {
       onClientConnected = {
         val json =
-            jsonMapper.encodeToString(
-                PropData(
-                    SceneMapper.map(
-                            menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene)
-                        .apply {
-                          fonts =
-                              Frontend.loadedFonts.map { (path, fontName, weight) ->
-                                Triple(path, fontName, weight.toInt())
-                              }
-                        }))
+            try {
+              jsonMapper.encodeToString(
+                  PropData(
+                      SceneMapper.map(
+                              menuScene = Frontend.menuScene, gameScene = Frontend.boardGameScene)
+                          .apply {
+                            fonts =
+                                Frontend.loadedFonts.map { (path, fontName, weight) ->
+                                  Triple(path, fontName, weight.toInt())
+                                }
+                          }))
+            } catch (e: Exception) {
+              // Let the update scheduler deliver the state as soon as it can be mapped.
+              UpdateScheduler.markDirty()
+              throw e
+            }
         UpdateScheduler.onClientConnected(json)
         it.send(json)
       }
