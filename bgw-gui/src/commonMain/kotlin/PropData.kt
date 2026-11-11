@@ -60,7 +60,7 @@ internal class AppData : Data() {
   var alignment: Pair<String, String> = Pair("", "")
   var action: ActionProp = ActionProp.DEFAULT
   var fadeTime: Int = 0
-  var blurRadius: Double = 0.0
+  var blurRadius: FiniteDouble = 0.0
   var forcedByAnimation: Boolean = false
   var endedAnimations: MutableMap<String, String?> = mutableMapOf()
   var isHeadless: Boolean = false
@@ -73,7 +73,7 @@ internal class SceneData : Data() {
   var width: Int = 0
   var height: Int = 0
   var background: VisualData? = null
-  var backgroundOpacity: Double = 1.0
+  var backgroundOpacity: FiniteDouble = 1.0
   var components: List<ComponentViewData> = emptyList()
 }
 
@@ -125,19 +125,19 @@ internal class DialogButtonClickData(val dialogId: String, val buttonIndex: Int)
 @Serializable
 internal abstract class ComponentViewData : Data() {
   var id: ID = ""
-  var posX: Double = 0.0
-  var posY: Double = 0.0
-  var width: Double = 0.0
-  var height: Double = 0.0
+  var posX: FiniteDouble = 0.0
+  var posY: FiniteDouble = 0.0
+  var width: FiniteDouble = 0.0
+  var height: FiniteDouble = 0.0
   var visual: VisualData? = null
   var zIndex: Int = 0
-  var opacity: Double = 1.0
+  var opacity: FiniteDouble = 1.0
   var isVisible: Boolean = true
   var isDisabled: Boolean = false
   var isFocusable: Boolean = true
-  var scaleX: Double = 1.0
-  var scaleY: Double = 1.0
-  var rotation: Double = 0.0
+  var scaleX: FiniteDouble = 1.0
+  var scaleY: FiniteDouble = 1.0
+  var rotation: FiniteDouble = 0.0
   var layoutFromCenter: Boolean = false
   var isDraggable: Boolean = false
   var isDragged: Boolean = false
@@ -145,11 +145,11 @@ internal abstract class ComponentViewData : Data() {
   var isDroppable: Boolean = false
   var finishedAnimations: MutableList<AnimationType> = mutableListOf()
 
-  var propagatedRotation: Double = 0.0
-  var propagatedScaleX: Double = 1.0
-  var propagatedScaleY: Double = 1.0
-  var propagatedPosX: Double = 0.0
-  var propagatedPosY: Double = 0.0
+  var propagatedRotation: FiniteDouble = 0.0
+  var propagatedScaleX: FiniteDouble = 1.0
+  var propagatedScaleY: FiniteDouble = 1.0
+  var propagatedPosX: FiniteDouble = 0.0
+  var propagatedPosY: FiniteDouble = 0.0
   var isGridCell: Boolean = false
   var hasMouseEnteredEvent: Boolean = false
   var hasMouseExitedEvent: Boolean = false
@@ -222,16 +222,16 @@ internal class ColorPickerData : UIComponentData() {
 
 @Serializable
 internal class ProgressBarData : UIComponentData() {
-  var progress: Double = 0.0
+  var progress: FiniteDouble = 0.0
   var barVisual: VisualData? = null
 }
 
 @Serializable
 internal class SliderData : UIComponentData() {
-  var value: Double = 0.0
-  var minValue: Double = 0.0
-  var maxValue: Double = 100.0
-  var step: Double = 1.0
+  var value: FiniteDouble = 0.0
+  var minValue: FiniteDouble = 0.0
+  var maxValue: FiniteDouble = 100.0
+  var step: FiniteDouble = 1.0
   var orientation: String = "horizontal"
 }
 
@@ -279,16 +279,16 @@ internal class GridPaneData : LayoutViewData() {
   var rows: Int = 0
   var spacing: Int = 0
   var grid: List<GridElementData> = emptyList()
-  var columnWidths: List<Double> = emptyList()
-  var rowHeights: List<Double> = emptyList()
+  var columnWidths: List<FiniteDouble> = emptyList()
+  var rowHeights: List<FiniteDouble> = emptyList()
 }
 
 @Serializable
 internal class GridElementData(
     var column: Int,
     var row: Int,
-    var width: Double,
-    var height: Double,
+    var width: FiniteDouble,
+    var height: FiniteDouble,
     var component: ComponentViewData?,
     var alignment: Pair<String, String>
 )
@@ -305,7 +305,8 @@ internal class CameraPaneData : ComponentViewData() {
   var isZoomLocked: Boolean = false
 }
 
-@Serializable internal class CoordinateData(val xCoord: Double = 0.0, val yCoord: Double = 0.0)
+@Serializable
+internal class CoordinateData(val xCoord: FiniteDouble = 0.0, val yCoord: FiniteDouble = 0.0)
 
 // GAME COMPONENT VIEWS
 @Serializable internal abstract class GameComponentViewData : ComponentViewData() {}
@@ -366,11 +367,11 @@ internal class LinearLayoutData : GameComponentContainerData() {
 
 @Serializable
 internal sealed class SingleLayerVisualData(
-    var transparency: Double = 0.0,
+    var transparency: FiniteDouble = 0.0,
     var style: Map<String, String> = emptyMap(),
     var filters: Map<String, String> = emptyMap(),
     var flipped: String = "",
-    var rotation: Double = 0.0
+    var rotation: FiniteDouble = 0.0
 ) : VisualData()
 
 @Serializable internal data class ColorVisualData(var color: String = "") : SingleLayerVisualData()

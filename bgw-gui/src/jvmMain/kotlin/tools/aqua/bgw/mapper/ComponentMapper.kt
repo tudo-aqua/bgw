@@ -16,6 +16,7 @@
  */
 
 import ComponentMapper.fillData
+import java.util.concurrent.ConcurrentHashMap
 import tools.aqua.bgw.animation.AnimationType
 import tools.aqua.bgw.application.Constants
 import tools.aqua.bgw.components.ComponentView
@@ -30,9 +31,22 @@ import tools.aqua.bgw.core.*
 import tools.aqua.bgw.style.Filter
 import tools.aqua.bgw.style.Style
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.util.Logger
 import tools.aqua.bgw.visual.*
 
 internal object ComponentMapper {
+  /** Component properties a non-finite value was already reported for, to warn only once. */
+  private val reportedNonFiniteValues = ConcurrentHashMap.newKeySet<String>()
+
+  /** Warns once if [value] of [property] is not finite. It is rendered as `0` in that case. */
+  private fun ComponentView.checkFinite(property: String, value: Double): Double {
+    if (!value.isFinite() && reportedNonFiniteValues.add("$id.$property")) {
+      Logger.warning(
+          "$property of ${this::class.simpleName} '$id' is $value. It is rendered as 0 instead.")
+    }
+    return value
+  }
+
   fun ComponentViewData.fillData(componentView: ComponentView): ComponentViewData {
     return this.apply {
       id = componentView.id
@@ -45,24 +59,28 @@ internal object ComponentMapper {
       val cachedState = Frontend.animationCache[componentView.id]
       val isMoving = AnimationType.MOVEMENT in componentView.animationTypes && cachedState != null
 
-      posX = if (isMoving) cachedState!!.posX else componentView.posX
-      posY = if (isMoving) cachedState!!.posY else componentView.posY
+      posX =
+          componentView.checkFinite(
+              "posX", if (isMoving) cachedState!!.posX else componentView.posX)
+      posY =
+          componentView.checkFinite(
+              "posY", if (isMoving) cachedState!!.posY else componentView.posY)
 
-      width = componentView.width
-      height = componentView.height
+      width = componentView.checkFinite("width", componentView.width)
+      height = componentView.checkFinite("height", componentView.height)
 
       visual = VisualMapper.map(componentView.visual)
 
       zIndex = componentView.zIndex
-      opacity = componentView.opacity
+      opacity = componentView.checkFinite("opacity", componentView.opacity)
 
       isVisible = componentView.isVisible
       isDisabled = componentView.isDisabled
       isFocusable = componentView.isFocusable
 
-      scaleX = componentView.scaleX
-      scaleY = componentView.scaleY
-      rotation = componentView.rotation
+      scaleX = componentView.checkFinite("scaleX", componentView.scaleX)
+      scaleY = componentView.checkFinite("scaleY", componentView.scaleY)
+      rotation = componentView.checkFinite("rotation", componentView.rotation)
 
       propagatedRotation = componentView.propagatedRotation
       propagatedScaleX = componentView.propagatedScaleX

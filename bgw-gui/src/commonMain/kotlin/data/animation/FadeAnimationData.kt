@@ -17,10 +17,11 @@
 
 package data.animation
 
+import FiniteDouble
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal class FadeAnimationData : ComponentAnimationData() {
-  var fromOpacity: Double = componentView?.opacity ?: 0.0
-  var toOpacity: Double = componentView?.opacity ?: 1.0
+  var fromOpacity: FiniteDouble = componentView?.opacity ?: 0.0
+  var toOpacity: FiniteDouble = componentView?.opacity ?: 1.0
 }
