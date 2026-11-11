@@ -130,9 +130,6 @@ internal class JCEFApplication : Application {
   private val handlersMap = mutableMapOf<ID, CefMessageRouterHandler>()
 
   init {
-    // Only filter known harmless noise. "Exception in thread ..." lines are no longer filtered:
-    // they name the thread an uncaught exception happened on, which is essential for debugging
-    // (the stack trace itself was never filtered, only this header line).
     StdErrFilter.install("SLF4J", "initialize on Thread", "google_apis")
   }
 
@@ -154,9 +151,7 @@ internal class JCEFApplication : Application {
     /**
      * Checks if the application is running on Linux with Wayland (through XWayland).
      *
-     * `XDG_SESSION_TYPE` alone is not reliable: compositors started from a TTY (common for e.g.
-     * Hyprland or sway) often leave it at `tty`, so the Wayland display and compositor specific
-     * variables are checked as well.
+     * Besides `XDG_SESSION_TYPE`, the Wayland display and compositor variables are checked.
      */
     internal fun checkIfLinuxWayland(): Boolean {
       if (!isLinux) return false
@@ -168,9 +163,9 @@ internal class JCEFApplication : Application {
 
     /**
      * Whether the browser is rendered off-screen (into a Swing component) instead of into a native
-     * child window. Off-screen rendering is required under Wayland, where native child windows of
-     * XWayland clients are not positioned reliably. Can be forced with `-Dbgw.renderMode=osr` or
-     * `-Dbgw.renderMode=windowed` (or the `BGW_RENDER_MODE` environment variable).
+     * child window. This is the case under Wayland, unless forced otherwise with
+     * `-Dbgw.renderMode=osr` or `-Dbgw.renderMode=windowed` (or the `BGW_RENDER_MODE` environment
+     * variable).
      */
     internal fun useOffscreenRendering(): Boolean =
         when ((System.getProperty(RENDER_MODE_PROPERTY) ?: System.getenv("BGW_RENDER_MODE"))
@@ -187,10 +182,8 @@ internal class JCEFApplication : Application {
             "hyprland", "sway", "i3", "bspwm", "dwm", "qtile", "niri", "river", "awesome", "xmonad")
 
     /**
-     * Java's AWT assumes a reparenting window manager unless told otherwise. Under tiling
-     * compositors (Hyprland, sway, ...) this offsets the window content, so the browser is drawn
-     * partly outside of the window or the window stays blank. The only fix is an environment
-     * variable that has to be set before the JVM starts.
+     * Warns if the application runs under a non-reparenting window manager (e.g. Hyprland or sway)
+     * and `_JAVA_AWT_WM_NONREPARENTING` is not set.
      */
     internal fun warnAboutNonReparentingWindowManager() {
       if (!isLinux || !System.getenv("_JAVA_AWT_WM_NONREPARENTING").isNullOrBlank()) return
@@ -210,7 +203,7 @@ internal class JCEFApplication : Application {
       }
     }
 
-    /** Runs [block] on the AWT event dispatch thread. Swing and JCEF must only be used there. */
+    /** Runs [block] on the AWT event dispatch thread. */
     internal fun onEdt(block: () -> Unit) {
       if (EventQueue.isDispatchThread()) block() else EventQueue.invokeLater(block)
     }
@@ -223,10 +216,6 @@ internal class JCEFApplication : Application {
     val useOSR = useOffscreenRendering()
     warnAboutNonReparentingWindowManager()
 
-    // CEF has to be started before AWT initializes (CefApp.startup must run at the very beginning):
-    // on Linux it enables Xlib multithreading, on macOS it loads the CEF framework before AppKit
-    // is set up. Creating it inside EventQueue.invokeLater, as before, was too late, because using
-    // the event queue already initializes the AWT toolkit.
     val cef = CefRuntime.create(useOSR = useOSR, debugLogging = Constants.DEBUG)
 
     EventQueue.invokeLater {
@@ -238,7 +227,6 @@ internal class JCEFApplication : Application {
       mainFrame.iconImage =
           loadIcon(Frontend.iconProperty.value)
               ?: JCEFApplication::class.java.getResource("/icon.png")?.let { ImageIO.read(it) }
-      // The title passed to BoardGameApplication was never applied before.
       mainFrame.title = Frontend.titleProperty.value.ifEmpty { DEFAULT_WINDOW_TITLE }
       mainFrame.isVisible = true
       mainFrame.repaint()
@@ -319,9 +307,8 @@ internal class BGWAppHandler() : MavenCefAppHandlerAdapter() {
 
   companion object {
     /**
-     * Shuts CEF down and exits once it terminated (see [stateHasChanged]). Exiting right away, as
-     * `EXIT_ON_CLOSE` did, kills CEF while it is still shutting down, which crashes natively
-     * (especially on macOS). If CEF does not terminate in time, the process exits anyway.
+     * Shuts CEF down and exits once it terminated (see [stateHasChanged]). If CEF does not
+     * terminate in time, the process exits anyway.
      */
     fun shutdown(window: JFrame) {
       Thread {
@@ -561,7 +548,6 @@ internal class MainFrame(
     // region - Frame Settings
     contentPane.add(browserUI, BorderLayout.CENTER)
     pack()
-    // The size passed to BoardGameApplication was never applied before.
     size = initialWindowSize()
     isVisible = true
     if (Frontend.isMaximizedProperty.value) {
@@ -651,7 +637,7 @@ internal class MainFrame(
 
   /**
    * The window size requested by the application, limited to the usable screen area. Applications
-   * that keep the default size get the previous default window size.
+   * that keep the default size get a window of 1280 x 750.
    */
   private fun initialWindowSize(): Dimension {
     val requestedWidth = Frontend.widthProperty.value.toInt()
@@ -722,8 +708,6 @@ internal class MainFrame(
   }
 
   internal fun openNewDialog(dialogData: DialogData) {
-    // Called from event handlers, i.e. from the websocket or application threads. Creating
-    // windows off the event dispatch thread breaks AppKit on macOS.
     if (!EventQueue.isDispatchThread()) {
       EventQueue.invokeLater { openNewDialog(dialogData) }
       return

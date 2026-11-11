@@ -23,12 +23,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-/**
- * Serializes [Double]s, writing `NaN` and infinite values as `0.0`.
- *
- * JSON cannot represent non-finite numbers. Without this, a single non-finite value anywhere in the
- * application state (e.g. a width computed as `0.0 / 0.0`) would make the whole state unsendable.
- */
+/** Serializes [Double]s, writing `NaN` and infinite values as `0.0`. */
 internal object FiniteDoubleSerializer : KSerializer<Double> {
   override val descriptor: SerialDescriptor =
       PrimitiveSerialDescriptor("tools.aqua.bgw.FiniteDouble", PrimitiveKind.DOUBLE)

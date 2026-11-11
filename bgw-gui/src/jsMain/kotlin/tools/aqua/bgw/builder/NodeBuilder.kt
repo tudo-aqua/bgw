@@ -70,11 +70,7 @@ internal external interface NodeProps : Props {
   var isOverlayPreview: Boolean
 }
 
-/**
- * Structural equality of two decoded data objects. Every update from the JVM contains the whole
- * scene as freshly decoded objects, so reference equality never holds even for unchanged
- * components. Comparing the (small, tree shaped) data is much cheaper than re-rendering.
- */
+/** Structural equality of two decoded data objects. */
 internal val dataEquals: (Any?, Any?) -> Boolean =
     js(
         """

@@ -40,11 +40,9 @@ import tools.aqua.bgw.util.Logger
  * snapshots and sends the whole state at most once per burst of changes:
  * - Changes within [DEBOUNCE_MILLIS] are coalesced into one update.
  * - While an event handler runs (see [batch]), updates are held back and sent once the handler
- *   returned, so a click produces one consistent update. Long-running handlers are still flushed
- *   every [MAX_BATCH_MILLIS] so intermediate states stay visible.
+ *   returned. Long-running handlers are still flushed every [MAX_BATCH_MILLIS].
  * - The browser acknowledges each rendered state ([onRendered]). Until then, no new state is sent;
- *   changes made in the meantime are sent as one update afterwards. This keeps the browser from
- *   falling behind when the game changes state faster than it can be rendered.
+ *   changes made in the meantime are sent as one update afterwards.
  * - A state identical to the last sent one is not sent again.
  */
 internal object UpdateScheduler {
@@ -53,9 +51,8 @@ internal object UpdateScheduler {
   private const val ACK_TIMEOUT_MILLIS = 1000L
 
   /**
-   * Failed updates usually stem from the state being modified concurrently while it was mapped
-   * (e.g. by a long-running event handler) and are retried quietly. Only if updates keep failing
-   * for this long while no event handler runs, the failure is reported as an error.
+   * Failed updates are retried quietly. Only if updates keep failing for this long while no event
+   * handler runs, the failure is reported as an error.
    */
   private const val REPORT_FAILURES_AFTER_MILLIS = 1000L
   private const val FAILED_RETRY_MILLIS = 250L
@@ -86,7 +83,7 @@ internal object UpdateScheduler {
   internal var sentUpdates = 0L
     private set
 
-  /** Marks the application state as changed. Cheap, can be called for every property change. */
+  /** Marks the application state as changed. */
   fun markDirty() {
     dirty.set(true)
     schedule(DEBOUNCE_MILLIS)
@@ -94,7 +91,7 @@ internal object UpdateScheduler {
 
   /**
    * Makes sure [flush] runs within [delayMillis]. A flush that is already pending for a later time
-   * (e.g. waiting for a render acknowledgement that just arrived) is brought forward.
+   * is brought forward.
    */
   private fun schedule(delayMillis: Long) {
     val at = System.currentTimeMillis() + delayMillis
@@ -153,9 +150,7 @@ internal object UpdateScheduler {
       failingSince = 0L
       lastReportedFailure = null
     } catch (e: Exception) {
-      // Usually the state was modified concurrently while it was mapped (e.g. a list changed
-      // during iteration), which a retry resolves. A state that keeps failing (e.g. an invalid
-      // component) is reported once and retried less often until it can be sent again.
+      // A state that keeps failing is reported once and retried less often.
       dirty.set(true)
       if (failingSince == 0L) failingSince = now
       val handlerRunning = batchDepth.get() > 0
@@ -184,19 +179,12 @@ internal object UpdateScheduler {
     }
   }
 
-  /**
-   * Sends the current state immediately followed by [animationData]. Used when an animation starts,
-   * so it starts on exactly the state it was created for.
-   */
+  /** Sends the current state immediately followed by [animationData]. */
   fun sendStateWithAnimation(animationData: AnimationData) {
     synchronized(sendLock) {
       dirty.set(false)
       val (json, sentFlags) = snapshot(forcedByAnimation = true)
-      // If the browser already has this state (e.g. several animations started by one handler),
-      // the animation can start on it right away.
       if (json != lastSentJson) send(json)
-      // The flags were part of this state. Clear them, otherwise a later update would report them
-      // again and the browser would revert the animation started now.
       clearFinishedAnimationFlags(sentFlags)
       runBlocking {
         componentChannel.sendToAllClients(jsonMapper.encodeToString(PropData(animationData)))
@@ -207,8 +195,6 @@ internal object UpdateScheduler {
   private fun snapshot(
       forcedByAnimation: Boolean = false
   ): Pair<String, Map<ComponentView, Set<AnimationType>>> {
-    // Take the flags before mapping. Flags added while mapping may or may not be part of this
-    // state, so they are kept and sent again with the next state (which is harmless).
     val flags =
         synchronized(Frontend.componentsWithFinishedAnimations) {
           Frontend.componentsWithFinishedAnimations.associateWith {

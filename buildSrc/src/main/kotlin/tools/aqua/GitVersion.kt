@@ -30,9 +30,7 @@ fun isUnresolvedVersion(version: String): Boolean =
  * - `<tag>-<distance>-<commit>-SNAPSHOT` on `main` or a detached HEAD,
  * - `<tag>-<branch>-<distance>-<commit>-SNAPSHOT` on other branches.
  *
- * The plugin reads the repository with JGit, which does not support linked git worktrees: it finds
- * the branch but neither tags nor commits, leaving the version template unresolved. Returns `null`
- * if git is not available or no `v*` tag is reachable.
+ * Returns `null` if git is not available or no `v*` tag is reachable.
  */
 fun Project.gitCliVersion(): String? {
   fun git(vararg args: String): String? =

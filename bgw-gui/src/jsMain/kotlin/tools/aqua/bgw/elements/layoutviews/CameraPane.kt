@@ -124,7 +124,6 @@ internal val CameraPane =
       // Smallest zoom at which the target covers the pane.
       val coverZoom =
           when {
-            // A target without size cannot be fitted into the pane.
             targetWidth <= 0.0 || targetHeight <= 0.0 || paneWidth <= 0.0 || paneHeight <= 0.0 ->
                 1.0
             isTargetWide && isPaneWide -> {
@@ -137,8 +136,7 @@ internal val CameraPane =
             }
           }
 
-      // Bounds limit how far the user can zoom out. A zoom set by the application is kept, so a
-      // target smaller than the pane is not enlarged when the user cannot zoom.
+      // The user cannot zoom out further than the cover zoom. Smaller application zooms are kept.
       val userZoomable = props.data.interactive && !props.data.isZoomLocked
       val minZoom = if (userZoomable) coverZoom else minOf(coverZoom, props.data.zoom)
 
@@ -146,8 +144,7 @@ internal val CameraPane =
           if (props.data.limitBounds) maxOf(minZoom, props.data.zoom) else props.data.zoom
 
       // Last pan or zoom command applied by this instance, starting with the one the browser had
-      // applied when it last reported the transform. Each command is applied once, even if the
-      // component renders again before the JVM acknowledged it.
+      // applied when it last reported the transform.
       val appliedSequence = useRef(props.data.anchorSequence.toDouble())
       val appliedPanByTotalX = useRef(props.data.anchorPanByTotalX)
       val appliedPanByTotalY = useRef(props.data.anchorPanByTotalY)
@@ -203,7 +200,6 @@ internal val CameraPane =
         }
 
         if (props.data.limitBounds) {
-          // A target smaller than the pane has a positive minimum, which keeps it fully visible.
           newX = newX.coerceIn(minOf(minX, 0.0), maxOf(minX, 0.0))
           newY = newY.coerceIn(minOf(minY, 0.0), maxOf(minY, 0.0))
         }

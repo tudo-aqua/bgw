@@ -73,17 +73,10 @@ internal typealias Callback<T> = (self: T, e: PointerEvent) -> Unit
 /**
  * Plays BGW animations in the browser.
  *
- * Every component animation drives its own progress object (`{ p: 0..1 }`) instead of tweening a
- * CSS variable of the component directly. All animations of one kind on one component form a
- * [Track], and the track composes the CSS value from the progress of all of its segments. This
- * avoids two problems of tweening the CSS variables directly:
- * - anime.js' default `replace` composition cancels overlapping tweens on the same variable, so
- *   e.g. two movements of the same component in a parallel or sequential animation interfered.
- * - start values were read when the animations were created, so a second animation of the same kind
- *   in a sequence started from the original instead of from where the first one ended.
- *
- * Within one animation tree, consecutive animations of the same kind on the same component
- * therefore continue from where the previous one ended, matching how the JVM persists them.
+ * Every component animation drives its own progress object (`{ p: 0..1 }`). All animations of one
+ * kind on one component form a [Track], and the track composes the CSS value from the progress of
+ * all of its segments. Overlapping animations of the same kind add up, and consecutive ones
+ * continue from where the previous one ended.
  */
 internal object Animator {
   // Stores timelines per component ID (and per delay animation ID)
@@ -266,17 +259,13 @@ internal object Animator {
       callback: (ID, ID?) -> Unit
   ) {
     exposeControls()
-    // Child callbacks are not reliably invoked when a paused timeline is seeked (e.g. scrubbing
-    // backwards in the playground), so the timeline renders all tracks on each of its updates.
     val timeline =
         existingTimeline
             ?: createTimeline(jsObject<TimelineParams> { onUpdate = { _, _ -> renderAllTracks() } })
 
-    // Stable sort keeps the declaration order for animations that start at the same time.
     val flatAnimations = flattenAnimation(animation).sortedBy { it.initialDelay }
 
-    // Tracks created by this animation tree. Finished tracks of an earlier tree that were not
-    // cleaned up yet are replaced, so their offsets do not leak into the new animation.
+    // Tracks created by this animation tree. They replace finished tracks of earlier trees.
     val newTracks = mutableMapOf<Pair<ID, AnimationType>, Track>()
 
     flatAnimations.forEach { animationData ->
@@ -295,7 +284,6 @@ internal object Animator {
           startComponentAnimation(animationData, track, timeline, callback)
         }
         is DelayAnimationData -> {
-          // Delays are tracked too, so stopping or pausing also covers delay-only animations.
           timelines[animationData.id] = timeline
           startDelayAnimation(animationData, timeline, callback)
         }
@@ -314,7 +302,6 @@ internal object Animator {
     track.segments.add(segment)
 
     if (!isPlayable(animationData)) {
-      // Nothing to show, but the JVM still has to learn that the animation is over.
       segment.completed = true
       callback.invoke(animationData.id, track.componentId)
       return
@@ -572,15 +559,13 @@ internal object Animator {
 
   /**
    * Reverts the animated CSS values of the given [animationType] once the JVM reported that all
-   * animations of that type on the component finished. The JVM state sent alongside already
-   * contains the (persisted) final values.
+   * animations of that type on the component finished.
    */
   fun removeAnimationTypesFromTimeline(componentId: String, animationType: AnimationType) {
     val componentTracks = tracks[componentId]
     val track = componentTracks?.get(animationType)
 
-    // A newer animation of this type already runs on the component (e.g. one started from an
-    // onFinished callback). The finish notification belongs to the previous one, so keep it.
+    // Keep the values if a newer animation of this type already runs on the component.
     if (track != null && !track.isFinished) return
 
     componentTracks?.remove(animationType)

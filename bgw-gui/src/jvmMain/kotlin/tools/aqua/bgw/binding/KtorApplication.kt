@@ -196,8 +196,7 @@ internal fun handleAnimationFinished(text: String) {
     val component = animation.componentView
     val animationType = animation.animationType
 
-    // The browser keeps showing the animated values until all animations of this type on the
-    // component finished, so only then the type is reported as finished.
+    // Reported as finished once all animations of this type on the component finished.
     if (!AnimationRegistry.isTypeRunningOn(component, animationType, except = animation)) {
       component.animationTypes.remove(animationType)
       UpdateScheduler.reportFinishedAnimation(component, animationType)
@@ -215,7 +214,6 @@ internal fun handleAnimationFinished(text: String) {
   } catch (e: Exception) {
     reportHandlerException(e)
   } finally {
-    // Without this, an exception in onFinished kept the parent animation running forever.
     checkIfParentFinished(animation)
   }
 }
@@ -333,7 +331,6 @@ internal fun globalListener(text: String) {
       }
     }
   } catch (e: Exception) {
-    // Exceptions thrown by the application's key handlers were silently swallowed before.
     reportHandlerException(e)
   }
 }
@@ -490,8 +487,6 @@ internal fun eventListener(text: String) {
               if (component.zoomProperty.value != eventData.zoomLevel) {
                 component.onZoomed?.invoke(eventData.zoomLevel)
               }
-              // The browser already shows this transform. It is only needed when the camera pane
-              // is created again, so it does not cause an update on its own.
               component.zoomProperty.setSilent(eventData.zoomLevel)
               component.anchorPointProperty.setSilent(
                   Coordinate(eventData.anchor.first, eventData.anchor.second))

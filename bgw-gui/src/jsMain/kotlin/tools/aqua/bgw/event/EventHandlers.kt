@@ -76,7 +76,7 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
  *
  * The first wheel input of a component is sent immediately. Further input is summed up and sent
  * every [INTERVAL_MILLIS] while the wheel keeps turning, and immediately when the direction
- * changes. So continuous scrolling makes steady progress, and no scrolled distance is lost.
+ * changes.
  */
 private object WheelThrottle {
   private const val INTERVAL_MILLIS = 50

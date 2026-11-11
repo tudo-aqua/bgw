@@ -66,7 +66,6 @@ internal object ComponentViewBuilder {
       isDisabledProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       isFocusableProperty.guiListener = { _, _ -> Frontend.updateComponent(componentView) }
       visualProperty.guiListener = { _, newVisual ->
-        // A replaced visual has to be observed as well, or changes to it would not be shown.
         VisualBuilder.build(newVisual)
         Frontend.updateComponent(componentView)
       }

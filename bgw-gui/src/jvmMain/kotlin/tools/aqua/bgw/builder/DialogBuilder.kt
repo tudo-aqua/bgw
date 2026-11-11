@@ -294,7 +294,6 @@ internal object DialogBuilder {
   private fun syntaxHighlightStackTrace(trace: String?): String {
     if (trace == null) return ""
 
-    // Escape first, the highlighting below only adds markup around the escaped text.
     return escapeHtml(trace)
         .replace(Regex("\\\$(\\d+|\\w+)"), "")
         // Match package.Class@hexIdentifier patterns

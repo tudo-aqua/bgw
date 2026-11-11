@@ -41,8 +41,6 @@ plugins {
 
 val propertyFile = "Config.kt"
 val wrappersVersion = "2025.5.6"
-// Staging credentials are only needed for publishing. Do not require them for regular builds, so
-// contributors without credentials can still compile and test the project.
 val stagingToken: String? = providers.gradleProperty("stagingToken").orNull
 val stagingServer: String? = providers.gradleProperty("stagingServer").orNull
 
@@ -75,8 +73,7 @@ fun buildDefaultPropertyFile() {
 }
 
 /**
- * The project version escaped for use inside a Kotlin string literal. Unresolved version templates
- * (e.g. when git metadata is unavailable) would otherwise be interpreted as string templates.
+ * The project version escaped for use inside a Kotlin string literal.
  */
 fun escapedVersion(): String =
     rootProject.version.toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
@@ -142,9 +139,6 @@ kotlin {
     browser {
       commonWebpackConfig {
         cssSupport { enabled.set(true) }
-        // The production bundle (used by the JCEF runtime and the docs) uses webpack's production
-        // mode: minified code and React's production build. The development build of React alone
-        // made rendering several times slower. Set -PbgwDevBundle=true to debug the frontend.
         mode =
             if (providers.gradleProperty("bgwDevBundle").orNull.toBoolean())
                 KotlinWebpackConfig.Mode.DEVELOPMENT
@@ -236,7 +230,7 @@ announcePublications()
 
 mavenPublishing {
   publishToMavenCentral()
-  // Only sign when publishing remotely, so publishToMavenLocal works without GPG.
+  // Only sign when publishing to a remote repository.
   if (isSigningRequired()) signAllPublications()
 
   pom {

@@ -379,8 +379,8 @@ internal external interface GlobalStylesProps : Props {
 }
 
 /**
- * Global styles of the BGW root. They only depend on the scene size, the headless mode and the
- * loaded fonts, so they are only rebuilt when one of these changes and not on every update.
+ * Global styles of the BGW root. They are rebuilt when the scene size, the headless mode or the
+ * loaded fonts change.
  */
 internal val BgwGlobalStyles: FC<GlobalStylesProps> =
     memo(

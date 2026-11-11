@@ -55,9 +55,6 @@ gitVersioning.apply {
   }
 }
 
-// The plugin reads git with JGit, which does not support linked git worktrees and leaves the
-// version
-// unresolved (e.g. "${describe.tag.version}-branch-0-0000000-SNAPSHOT"). Use the git CLI instead.
 if (isUnresolvedVersion(version.toString())) {
   val fallback = gitCliVersion()
   if (fallback != null) {

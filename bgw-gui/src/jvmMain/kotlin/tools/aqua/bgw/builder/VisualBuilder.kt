@@ -26,7 +26,6 @@ internal object VisualBuilder {
   fun build(visual: Visual) {
     when (visual) {
       is CompoundVisual -> buildCompoundVisual(visual)
-      // Transparency, style, filters and flipping were never observed before.
       is SingleLayerVisual -> buildSingleLayerVisual(visual)
     }
   }

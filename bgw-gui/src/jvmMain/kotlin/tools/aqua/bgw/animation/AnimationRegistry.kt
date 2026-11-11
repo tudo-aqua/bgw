@@ -34,10 +34,8 @@ internal val ComponentAnimation<*>.animationType: AnimationType
 /**
  * All animations that were started and did not finish yet, by ID.
  *
- * Finish notifications from the browser are resolved here instead of searching the animation lists
- * of the currently shown scenes. This keeps the lookup constant-time and also resolves animations
- * whose scene was replaced while they were running, which previously left their components marked
- * as animating forever.
+ * Finish notifications from the browser are resolved here, including those of animations whose
+ * scene was replaced while they were running.
  */
 internal object AnimationRegistry {
   private val running = ConcurrentHashMap<String, Animation>()

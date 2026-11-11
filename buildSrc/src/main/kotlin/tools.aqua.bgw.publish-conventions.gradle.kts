@@ -31,8 +31,6 @@ val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
 // Log the coordinates of everything that is published, locally and remotely.
 announcePublications()
 
-// Staging credentials are only needed for publishing. Do not require them for regular builds, so
-// contributors without credentials can still compile and test the project.
 val stagingToken: String? = providers.gradleProperty("stagingToken").orNull
 val stagingServer: String? = providers.gradleProperty("stagingServer").orNull
 
@@ -60,7 +58,7 @@ if (stagingToken != null && stagingServer != null) {
 
 mavenPublishing {
   publishToMavenCentral()
-  // Only sign when publishing remotely, so publishToMavenLocal works without GPG.
+  // Only sign when publishing to a remote repository.
   if (isSigningRequired()) signAllPublications()
 
   pom {

@@ -305,8 +305,7 @@ open class CameraPane<T : LayoutView<*>>(
     val pendingTarget = pending?.panTo
     panData =
         if (pending != null && !pending.panBy && pendingTarget != null) {
-          // The browser did not pan to the requested position yet, so it pans to the moved position
-          // instead. Should it already have panned there, panning there again does no harm.
+          // Move the target of an absolute pan the browser did not apply yet.
           pending.copy(
               panSmooth = smooth,
               panTo = Pair(pendingTarget.first - xOffset, pendingTarget.second - yOffset),

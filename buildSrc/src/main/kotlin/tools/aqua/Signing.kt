@@ -25,9 +25,9 @@ const val SIGNING_PROPERTY = "bgwSign"
 /**
  * Whether publications have to be signed in this build.
  *
- * Signing (and therefore a GPG installation) is only required when publishing to a remote
- * repository, e.g. Maven Central or the staging repository. Local publications via
- * `publishToMavenLocal` stay unsigned. Use `-PbgwSign=true` or `-PbgwSign=false` to override.
+ * Publications are signed when publishing to a remote repository, e.g. Maven Central or the
+ * staging repository, but not via `publishToMavenLocal`. Use `-PbgwSign=true` or
+ * `-PbgwSign=false` to override.
  */
 fun Project.isSigningRequired(): Boolean {
   providers.gradleProperty(SIGNING_PROPERTY).orNull?.let {

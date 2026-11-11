@@ -36,7 +36,6 @@ class DialogBuilderTest {
         DialogBuilder.exceptionDialogHtml(
             DialogMapper.map(Dialog("Error", "Error", exception.message!!, exception)))
 
-    // Constructor frames ("<init>") were parsed as HTML tags and disappeared.
     assertTrue(html.contains("&lt;init&gt;"), "Constructor frame is not escaped")
     assertFalse(html.contains("<init>"), "Constructor frame is not escaped")
     assertFalse(html.contains("<b>"), "Message is not escaped")

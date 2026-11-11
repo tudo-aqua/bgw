@@ -23,11 +23,9 @@ import kotlinx.serialization.Serializable
 /**
  * A pan or zoom command for a camera pane.
  *
- * @property sequence Distinguishes consecutive identical commands (e.g. scrolling twice by the same
- *   offset), which would otherwise result in an unchanged state that is not sent again.
+ * @property sequence Number of the command, increasing with every command.
  * @property panByTotalX Sum of the x offsets of all relative pans issued so far. The browser
- *   applies the difference to the sum it applied last, so relative pans are neither lost when
- *   several are sent as one state nor applied twice when a state is rendered again.
+ *   applies the difference to the sum it applied last.
  * @property panByTotalY Like [panByTotalX] for the y offsets.
  */
 @Serializable

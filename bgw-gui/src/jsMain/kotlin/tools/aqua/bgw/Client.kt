@@ -161,14 +161,9 @@ internal fun renderAppFast(appData: AppData) {
   if (!::root.isInitialized) {
     root = createRoot(container.unsafeCast<Element>())
   }
-  // Render synchronously so the state is on screen (and animations sent right after it find their
-  // components) before the next message is handled.
   try {
     flushSync { root.render(App.create { data = appData }) }
   } finally {
-    // Tell the JVM the state is rendered. It does not send a new state before, so a game that
-    // changes its state faster than it can be rendered does not build up a backlog of updates.
-    // Also sent if rendering failed, otherwise all following updates would wait for a timeout.
     webSocket?.send("bgwRendered|")
   }
   if (!reportedLoad) {

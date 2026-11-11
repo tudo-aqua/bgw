@@ -34,10 +34,8 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 
 /**
- * Samples the rendered state of a component on every frame while an animation plays. Unlike the
- * final-state checks in [AnimationBrowserTest], these tests catch animations that jump, restart
- * from their initial value or cancel each other, which happened when an animation tree contained
- * several animations of the same kind on the same component.
+ * Samples the rendered state of a component on every frame while an animation plays, to check that
+ * animations neither jump, restart from their initial value nor cancel each other.
  */
 class AnimationContinuityBrowserTest : BrowserTestBase() {
 

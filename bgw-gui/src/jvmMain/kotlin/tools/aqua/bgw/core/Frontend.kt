@@ -190,8 +190,6 @@ internal class Frontend {
       menuScene?.isVisible = false
       menuScene?.onSceneHidden?.invoke()
       menuScene = scene
-      // Observe the scene right away. Waiting for the browser to report the scene as loaded would
-      // miss changes made in the meantime.
       if (renderedDOM.value) SceneBuilder.build(scene)
       markDirty(ActionProp.SHOW_MENU_SCENE)
     }

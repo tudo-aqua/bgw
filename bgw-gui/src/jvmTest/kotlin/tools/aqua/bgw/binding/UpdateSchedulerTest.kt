@@ -27,10 +27,7 @@ import tools.aqua.bgw.visual.ColorVisual
 
 class UpdateSchedulerTest {
 
-  /**
-   * Waits until no further update is sent. Longer than the time the scheduler waits for a render
-   * acknowledgement, which a browser left over from other tests in this JVM may never send.
-   */
+  /** Waits until no further update is sent. */
   private fun awaitIdle() {
     var last = UpdateScheduler.sentUpdates
     var stableSince = System.currentTimeMillis()

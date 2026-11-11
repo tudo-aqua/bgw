@@ -51,11 +51,7 @@ internal object ComponentMapper {
     return this.apply {
       id = componentView.id
 
-      // While movement animations run, the browser offsets the component relative to the position
-      // it had when the animation started. Persisting an intermediate movement (e.g. the first of
-      // two movements in a SequentialAnimation) must therefore not move that base position, or the
-      // component would visibly jump. Rotation, scale and opacity are overridden by the animated
-      // CSS values in the browser, so their live values can be sent at any time.
+      // While a movement animation runs, the position it started from is sent.
       val cachedState = Frontend.animationCache[componentView.id]
       val isMoving = AnimationType.MOVEMENT in componentView.animationTypes && cachedState != null
 
