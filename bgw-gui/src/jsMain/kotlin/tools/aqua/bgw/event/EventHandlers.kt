@@ -20,6 +20,7 @@ package tools.aqua.bgw.event
 import ComponentViewData
 import data.event.KeyEventAction
 import kotlin.math.sign
+import react.dom.events.WheelEvent
 import react.dom.html.HTMLAttributes
 import react.useEffectWithCleanup
 import react.useRef
@@ -64,34 +65,62 @@ internal fun HTMLAttributes<Element>.applyCommonEventHandlers(props: ComponentVi
     onMouseLeave = { JCEFEventDispatcher.dispatchEvent(it.toMouseExitedData(props.id)) }
   }
 
-  var debounceTimeout: Timeout? = null
-  var lastScrollDirection: Double? = null
-  var combinedDelta = 0.0
-
   onWheel = {
-    val event = it
-    val delta = if (event.deltaY != 0.0) event.deltaY else event.deltaX
-    if (delta != 0.0) {
-      val currentDirection = delta.sign
-      if (lastScrollDirection != null && currentDirection != lastScrollDirection) {
-        debounceTimeout?.let { timeout -> clearTimeout(timeout) }
-        JCEFEventDispatcher.dispatchEvent(event.toScrollEventData(props.id, combinedDelta))
-        combinedDelta = 0.0
-      }
+    val delta = if (it.deltaY != 0.0) it.deltaY else it.deltaX
+    if (delta != 0.0) WheelThrottle.onWheel(props.id, it, delta)
+  }
+}
 
-      combinedDelta += delta
-      lastScrollDirection = currentDirection
-      debounceTimeout?.let { timeout -> clearTimeout(timeout) }
-      debounceTimeout =
-          setTimeout(
-              {
-                JCEFEventDispatcher.dispatchEvent(event.toScrollEventData(props.id, combinedDelta))
-                debounceTimeout = null
-                combinedDelta = 0.0
-                lastScrollDirection = null
-              },
-              50)
+/**
+ * Limits the scroll events sent to the JVM while the wheel turns quickly.
+ *
+ * The first wheel input of a component is sent immediately. Further input is summed up and sent
+ * every [INTERVAL_MILLIS] while the wheel keeps turning, and immediately when the direction
+ * changes. So continuous scrolling makes steady progress, and no scrolled distance is lost.
+ */
+private object WheelThrottle {
+  private const val INTERVAL_MILLIS = 50
+
+  private class State {
+    var timeout: Timeout? = null
+    var pendingDelta = 0.0
+    var lastEvent: WheelEvent<*>? = null
+  }
+
+  /** States of the components currently scrolled, by component id. */
+  private val states = mutableMapOf<String, State>()
+
+  fun onWheel(id: String, event: WheelEvent<*>, delta: Double) {
+    val state = states.getOrPut(id) { State() }
+    if (state.timeout == null) {
+      send(id, event, delta)
+      state.timeout = setTimeout({ flush(id) }, INTERVAL_MILLIS)
+      return
     }
+    val previous = state.lastEvent
+    if (state.pendingDelta != 0.0 && state.pendingDelta.sign != delta.sign && previous != null) {
+      send(id, previous, state.pendingDelta)
+      state.pendingDelta = 0.0
+    }
+    state.pendingDelta += delta
+    state.lastEvent = event
+  }
+
+  private fun flush(id: String) {
+    val state = states[id] ?: return
+    val event = state.lastEvent
+    if (state.pendingDelta == 0.0 || event == null) {
+      states.remove(id)
+      return
+    }
+    send(id, event, state.pendingDelta)
+    state.pendingDelta = 0.0
+    state.lastEvent = null
+    state.timeout = setTimeout({ flush(id) }, INTERVAL_MILLIS)
+  }
+
+  private fun send(id: String, event: WheelEvent<*>, delta: Double) {
+    JCEFEventDispatcher.dispatchEvent(event.toScrollEventData(id, delta))
   }
 }
 
