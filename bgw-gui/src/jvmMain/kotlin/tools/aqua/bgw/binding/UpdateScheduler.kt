@@ -192,7 +192,9 @@ internal object UpdateScheduler {
     synchronized(sendLock) {
       dirty.set(false)
       val (json, sentFlags) = snapshot(forcedByAnimation = true)
-      send(json)
+      // If the browser already has this state (e.g. several animations started by one handler),
+      // the animation can start on it right away.
+      if (json != lastSentJson) send(json)
       // The flags were part of this state. Clear them, otherwise a later update would report them
       // again and the browser would revert the animation started now.
       clearFinishedAnimationFlags(sentFlags)
