@@ -237,7 +237,7 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
     checkColumnIndex(columnIndex)
 
     if (columnWidths[columnIndex] == -1.0)
-        return getColumn(columnIndex).maxOf { it?.actualWidth ?: 0.0 }
+        return getColumn(columnIndex).maxOfOrNull { it?.actualWidth ?: 0.0 } ?: 0.0
 
     return columnWidths[columnIndex]
   }
@@ -300,7 +300,8 @@ internal data class ComponentViewGrid<T : ComponentView>(var rows: Int, var colu
   fun getRowHeight(rowIndex: Int): Double {
     checkRowIndex(rowIndex)
 
-    if (rowHeights[rowIndex] == -1.0) return getRow(rowIndex).maxOf { it?.actualHeight ?: 0.0 }
+    if (rowHeights[rowIndex] == -1.0)
+        return getRow(rowIndex).maxOfOrNull { it?.actualHeight ?: 0.0 } ?: 0.0
 
     return rowHeights[rowIndex]
   }
