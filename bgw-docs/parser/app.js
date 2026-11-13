@@ -957,8 +957,64 @@ function removeNullValues(obj) {
 
 const cleanedStructure = removeNullValues(traverseTree(directoryStructure));
 
-// Save the JSON to a file in ./output
+/** Removes the Markdown links that processTypeLinks adds, e.g. `[Number](...)` becomes `Number`. */
+function plainType(type) {
+  return (type || "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").trim();
+}
+
+/**
+ * Collects the classes of the documented API with their constructors and properties. The website
+ * uses it to link playground components to their API documentation.
+ */
+function collectConstructors(tree, result = []) {
+  if (!tree || typeof tree !== "object") return result;
+
+  const index = tree._index;
+  const kind = index && index.type === "global" ? index.details?.info?.tags?.type : null;
+  const breadcrumbs = index?.breadcrumbs ?? [];
+  const shortName = breadcrumbs[breadcrumbs.length - 1];
+  // Package pages have a single breadcrumb, enum entries have no declaration kind, and companion
+  // objects are no types of their own.
+  if (
+    breadcrumbs.length > 1 &&
+    ["class", "interface", "object", "enum"].includes(kind) &&
+    shortName !== "Companion"
+  ) {
+    const members = index.members || {};
+
+    result.push({
+      importName: breadcrumbs.join("."),
+      shortName,
+      fullName: breadcrumbs.slice(1).join("."),
+      returnType: shortName,
+      parameters: [],
+      constructors: (members.constructors || []).map((constructor) =>
+        Object.fromEntries(
+          (constructor.parameters || []).map((parameter) => [
+            parameter.name,
+            plainType(parameter.type),
+          ])
+        )
+      ),
+      properties: (members.properties || [])
+        .map((property) => ({ first: property.name, second: plainType(property.type) }))
+        .sort((a, b) => a.first.localeCompare(b.first)),
+      icon: kind === "enum" ? "enum" : "class",
+    });
+  }
+
+  for (const key in tree) {
+    if (key !== "_index") collectConstructors(tree[key], result);
+  }
+  return result;
+}
+
+// Save the JSON files to ./output
 fs.writeFileSync(
   "./output/cleanedStructure.json",
   JSON.stringify(cleanedStructure)
+);
+fs.writeFileSync(
+  "./output/constructors.json",
+  JSON.stringify(collectConstructors(cleanedStructure))
 );

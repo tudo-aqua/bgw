@@ -61,18 +61,12 @@ tasks.register("dokkaJson", YarnTask::class) {
   args.set(listOf("run", "build"))
 }
 
-tasks.register("buildAndCopyDokkaJson") {
+tasks.register<Copy>("buildAndCopyDokkaJson") {
   dependsOn("dokkaJson")
-  this.group = "build"
-  doLast {
-    val sourceDir = projectDir.resolve("output/cleanedStructure.json")
-    val destinationDir = projectDir.resolve("../website/public/bgw")
-    println("Copying files from $sourceDir to $destinationDir")
-    copy {
-      from(sourceDir)
-      into(destinationDir)
-    }
-  }
+  group = "build"
+  from(layout.projectDirectory.file("output/cleanedStructure.json"))
+  from(layout.projectDirectory.file("output/constructors.json"))
+  into(layout.projectDirectory.dir("../website/public/bgw"))
 }
 
 tasks.register<GradleBuild>("buildAndCopySamplesTask") {

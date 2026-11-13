@@ -241,4 +241,5 @@ bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/Config.kt
 bgw-docs/website/public/bgw/bgw-gui.js
 bgw-docs/website/public/bgw/bgwSamples.json
 bgw-docs/website/public/bgw/cleanedStructure.json
+bgw-docs/website/public/bgw/constructors.json
 bgw-docs/build/

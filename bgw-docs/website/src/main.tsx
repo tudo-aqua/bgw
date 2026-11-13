@@ -13,7 +13,6 @@ import { ThemeProvider } from "@/components/theme-provider.tsx";
 import BGWPlayground from "@/pages/BGWPlayground.tsx";
 import BGWDocsLayout from "./pages/BGWDocsLayout";
 import { convertMarkdownToHtml, guideStructure } from "./lib/utils";
-import Test from "./pages/Test";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -443,18 +442,6 @@ async function exportLoader() {
 
   return {
     constructors: constructors,
-  };
-}
-
-async function playgroundLoader() {
-  const [constructorsResponse] = await Promise.all([
-    fetch("/bgw/bgw/constructors.json"),
-  ]);
-
-  const constructors = await constructorsResponse.json();
-
-  return {
-    constructors,
   };
 }
 
