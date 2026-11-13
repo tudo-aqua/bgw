@@ -211,7 +211,7 @@ class DragAndDropScene : BoardGameScene(
 
 Once a token has been dropped into its area, it can not be dragged anymore. Dropping it into the wrong area is rejected and the token returns.
 
-> The runnable version of this example is part of the [bgw-docs-examples](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt) module.
+> The runnable version of this example is part of the [documentation examples](https://github.com/tudo-aqua/bgw/tree/main/bgw-docs/examples/src/main/kotlin/examples/concepts/draganddrop/DragAndDropExample.kt) module.
 > {style="note"}
 
 ---

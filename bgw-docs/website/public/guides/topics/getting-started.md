@@ -100,5 +100,5 @@ The game is built in three steps:
 2. **[Using Components][UsingComponents]**: fill the scenes with labels, buttons and dice.
 3. **[Handling Events][HandlingEvents]**: make the buttons do something and play the game.
 
-> The complete source code of Dice Duel is available in the [bgw-docs-examples](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/discover/DiceDuelExample.kt) module.
+> The complete source code of Dice Duel is available in the [documentation examples](https://github.com/tudo-aqua/bgw/tree/main/bgw-docs/examples/src/main/kotlin/examples/discover/DiceDuelExample.kt) module.
 > {style="note"}

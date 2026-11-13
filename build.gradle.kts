@@ -37,11 +37,4 @@ mavenMetadata {
   licenses.addAll(APACHE_2)
 }
 
-kover {
-  merge {
-    subprojects {
-      it.name !in
-          listOf("bgw-docs", "bgw-docs:parser", "bgw-docs:website", "bgw-examples", "bgw-net")
-    }
-  }
-}
+kover { merge { subprojects { it.path != ":bgw-net" && !it.path.startsWith(":bgw-docs") } } }

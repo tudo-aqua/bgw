@@ -203,7 +203,7 @@ Run the application. The menu is displayed above the blurred game board. _Start 
 
 <preview key="tools.aqua.bgw.main.examples.ExampleDiscoverScene.menuOverGameScene" fit nocode></preview>
 
-> The full source code of the game is available in the [bgw-docs-examples](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-docs-examples/src/main/kotlin/examples/discover/DiceDuelExample.kt) module.
+> The full source code of the game is available in the [documentation examples](https://github.com/tudo-aqua/bgw/tree/main/bgw-docs/examples/src/main/kotlin/examples/discover/DiceDuelExample.kt) module.
 > {style="note"}
 
 ---
