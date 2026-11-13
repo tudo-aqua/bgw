@@ -220,13 +220,6 @@ $RECYCLE.BIN/
 webpack.generated.js
 generated-flow-imports.js
 /.run/
-/bgw-gui/jcef-bundle/
-
-# Yekyll generated assets
-_site/
-
-# Ruby Gemfile lock
-Gemfile.lock
 
 bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/Config.kt
 bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/Config.kt

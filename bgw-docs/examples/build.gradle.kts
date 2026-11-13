@@ -17,24 +17,6 @@
 
 plugins { id("tools.aqua.bgw.executable-conventions") }
 
-mavenMetadata {
-  name.set("BoardGameWork Docs Examples")
-  description.set("The BGW documentation examples.")
-}
+dependencies { implementation(project(":bgw-gui", configuration = "jvmRuntimeElements")) }
 
-dependencies {
-  implementation(project(":bgw-gui", configuration = "jvmRuntimeElements"))
-  implementation(project(":bgw-net:bgw-net-client"))
-  implementation(project(":bgw-net:bgw-net-common"))
-}
-
-application {
-  applicationDefaultJvmArgs =
-      listOf(
-          "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
-          "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
-          "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-          "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
-          "--enable-native-access=ALL-UNNAMED")
-  mainClass = "examples.components.container.ContainerExampleKt"
-}
+application { mainClass = "examples.components.container.ContainerExampleKt" }

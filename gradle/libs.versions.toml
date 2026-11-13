@@ -10,21 +10,14 @@ vaadin = "24.7.0"
 
 jackson = "2.15.3"
 junit = "5.13.1"
-ktor = "3.2.0"
 guava = "33.4.8-jre"
 testcontainers = "1.21.2"
-
-[plugins]
-
-mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
 
 [libraries]
 
 # Regular Libraries
 
 assertj = { group = "org.assertj", name = "assertj-core", version = "3.23.1" }
-
-commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.27.1" }
 
 jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
@@ -41,9 +34,6 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.4" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.3.3" }
-
-ktor-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
-ktor-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 
 postgreSQL-jdbc = { group = "org.postgresql", name = "postgresql", version = "42.7.7" }
 
@@ -68,24 +58,21 @@ gradle-dokka = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", ve
 gradle-kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 gradle-kotlin-allopen = { group = "org.jetbrains.kotlin", name = "kotlin-allopen", version.ref = "kotlin" }
 gradle-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin" }
+gradle-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
 
 gradle-bmVersions = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.42.0" }
 gradle-dependencyManagement = { group = "io.spring.gradle", name = "dependency-management-plugin", version = "1.0.13.RELEASE" }
 gradle-detekt = { group = "dev.detekt", name = "dev.detekt.gradle.plugin", version = "2.0.0-alpha.2" }
 gradle-gitVersioning = { group = "me.qoomon", name = "gradle-git-versioning-plugin", version = "6.3.0" }
 gradle-kover = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version = "0.9.1" }
+gradle-mavenPublish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version = "0.34.0" }
 gradle-spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version = "7.0.4" }
 gradle-spring-boot = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "spring" }
 gradle-taskTree = { group = "com.dorongold.plugins", name = "task-tree", version = "2.1.0" }
 gradle-vaadin = { group = "com.vaadin", name = "vaadin-gradle-plugin", version.ref = "vaadin" }
 
-# Other
-
-dokka-javadoc = { group = "org.jetbrains.dokka", name = "kotlin-as-java-plugin", version.ref = "kotlin" }
-
 [bundles]
 
-ktor-netty = ["ktor-core", "ktor-netty"]
 test = ["assertj", "junit-jupiter"]
 
-gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin", "gradle-kotlin-allopen", "gradle-kotlin-noarg"]
+gradle-kotlin-full = ["gradle-dokka", "gradle-kotlin", "gradle-kotlin-allopen", "gradle-kotlin-noarg", "gradle-kotlin-serialization"]

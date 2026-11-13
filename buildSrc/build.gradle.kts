@@ -24,26 +24,17 @@ repositories {
 
 dependencies {
   implementation(libs.bundles.gradle.kotlin.full)
-  implementation(libs.bundles.ktor.netty)
-
-  implementation(libs.commons.compress)
 
   implementation(libs.gradle.bmVersions)
   implementation(libs.gradle.dependencyManagement)
   implementation(libs.gradle.detekt)
   implementation(libs.gradle.gitVersioning)
   implementation(libs.gradle.kover)
+  implementation(libs.gradle.mavenPublish)
   implementation(libs.gradle.spotless)
   implementation(libs.gradle.spring.boot)
   implementation(libs.gradle.taskTree)
   implementation(libs.gradle.vaadin)
-
-  implementation("com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin:0.34.0")
-
-  implementation(
-      "org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.1.20")
-  implementation(
-      "org.jetbrains.kotlin.plugin.serialization:org.jetbrains.kotlin.plugin.serialization.gradle.plugin:2.1.20")
 
   // black magic from https://github.com/gradle/gradle/issues/15383
   implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))

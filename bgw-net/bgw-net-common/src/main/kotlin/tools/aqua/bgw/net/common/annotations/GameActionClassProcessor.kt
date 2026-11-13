@@ -32,8 +32,6 @@ object GameActionClassProcessor {
           "META-INF",
           "kotlin",
           "javax",
-          "javafx",
-          "com.jfoenix",
           "tools.aqua.bgw",
           "com.sun",
           "com.google",

@@ -63,22 +63,3 @@ dependencies {
 
   testImplementation(libs.spring.boot.test)
 }
-
-/*
- tasks.bootBuildImage {
-   val baseName = "tudo-aqua/${project.name}"
-   val projectVersion = project.version.toString()
-   imageName = "$baseName:$projectVersion"
-   if (projectVersion.endsWith("-SNAPSHOT")) {
-     tags.add("$baseName:latest")
-   } else {
-     projectVersion.genericVersions.forEach { if (it != projectVersion) tags.add("$baseName:$it") }
-     tags.add("$baseName:release")
-   }
-   environment =
-       mapOf(
-           "BP_JVM_VERSION" to
-               "${project.kotlin.target.compilations.first().kotlinOptions.jvmTarget}.*")
-   isPublish = true
- }
- */

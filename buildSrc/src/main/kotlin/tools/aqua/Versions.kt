@@ -27,7 +27,7 @@ private val regex = "^[0-9,.v-]+(-r)?$".toRegex()
 
 /** Checks if this string appears to represent a stable version. */
 val String.isStable: Boolean
-  get() = stableKeyword.any { toUpperCase().contains(it) } || regex.matches(this)
+  get() = stableKeyword.any { uppercase().contains(it) } || regex.matches(this)
 
 /** Checks if this string does not appear to represent a stable version. */
 val String.isUnstable: Boolean
@@ -40,13 +40,3 @@ val String.isUnstable: Boolean
 val destabilizesVersion = ComponentFilter {
   candidate.version.isUnstable && currentVersion.isStable
 }
-
-/**
- * Split a dotted version into more generic fragments. E.g., `1.2.3` is split into `[1, 1.2,
- * 1.2.3]`.
- */
-val String.genericVersions: List<String>
-  get() {
-    val versionFragments = split('.')
-    return (1..versionFragments.size).map { versionFragments.take(it).joinToString(".") }
-  }

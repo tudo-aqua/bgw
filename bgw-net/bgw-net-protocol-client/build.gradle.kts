@@ -15,7 +15,10 @@
  * limitations under the License.
  */
 
-plugins { id("tools.aqua.bgw.executable-conventions") }
+plugins {
+  id("tools.aqua.bgw.executable-conventions")
+  id("tools.aqua.bgw.publish-conventions")
+}
 
 mavenMetadata {
   name.set("BoardGameWork Network Protocol Client")

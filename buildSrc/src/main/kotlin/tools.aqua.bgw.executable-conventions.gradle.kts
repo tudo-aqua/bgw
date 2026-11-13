@@ -19,7 +19,32 @@ import org.gradle.kotlin.dsl.application
 
 plugins {
   id("tools.aqua.bgw.kotlin-conventions")
-  id("tools.aqua.bgw.publish-conventions")
 
   application
 }
+
+// The JVM arguments required by the browser runtime of bgw-gui. sun.lwawt only exists on macOS and
+// Java 11 does not accept --enable-native-access.
+val addOpens =
+    listOf(
+        "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt.peer=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt=ALL-UNNAMED")
+val addOpensMacOs =
+    listOf(
+        "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
+        "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+val isMacOs = System.getProperty("os.name").lowercase().startsWith("mac")
+
+tasks.withType<JavaExec>().configureEach {
+  val javaVersion = javaLauncher.map { it.metadata.languageVersion.asInt() }
+  jvmArgumentProviders.add(
+      CommandLineArgumentProvider {
+        addOpens +
+            (if (isMacOs) addOpensMacOs else emptyList()) +
+            (if (javaVersion.get() >= 17) listOf("--enable-native-access=ALL-UNNAMED")
+            else emptyList())
+      })
+}
+
+tasks.startScripts { defaultJvmOpts = addOpens + addOpensMacOs }
