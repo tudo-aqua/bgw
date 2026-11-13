@@ -17,9 +17,22 @@
 
 package tools.aqua
 
+import com.diffplug.gradle.spotless.JavaExtension
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.KotlinGradleExtension
 import org.gradle.api.Project
+
+/**
+ * Apply the project default formatting and license header.
+ *
+ * @param rootProject the root project; used to look up the license header.
+ */
+fun JavaExtension.defaultFormat(rootProject: Project) {
+  licenseHeaderFile(rootProject.file("contrib/license-header.template.kt")).also {
+    it.updateYearWithLatest(true)
+  }
+  googleJavaFormat()
+}
 
 /**
  * Apply the project default formatting and license header.

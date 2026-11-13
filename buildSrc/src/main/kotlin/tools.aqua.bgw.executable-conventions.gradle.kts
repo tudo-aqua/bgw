@@ -23,8 +23,9 @@ plugins {
   application
 }
 
-// The JVM arguments required by the browser runtime of bgw-gui. sun.lwawt only exists on macOS and
-// Java 11 does not accept --enable-native-access.
+// The JVM arguments required by the browser runtime of bgw-gui, chosen like in the
+// bgw-gradle-plugin: sun.lwawt only exists on macOS and Java 11 does not accept
+// --enable-native-access.
 val addOpens =
     listOf(
         "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",

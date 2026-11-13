@@ -26,14 +26,13 @@ The **bgw-net** modules connect your game to a BGW server, so players on differe
 
 ## Prerequisites
 
-Add the client artifacts to your build. Both are required for client applications:
+Add the client artifacts to your build. Both are required for client applications. With the BGW Gradle plugin, enable `network` in the `bgw` block and the plugin adds both in the same version as `bgw-gui`:
 
 <tabs group="gradleMaven">
     <tab title="Gradle" group-key="gradle">
         <code-block lang="apache">
-dependencies {
-    implementation("tools.aqua:bgw-net-common:0.11")
-    implementation("tools.aqua:bgw-net-client:0.11")
+bgw {
+    network = true
 }
         </code-block>
     </tab>
@@ -42,12 +41,12 @@ dependencies {
             &lt;dependency&gt;
     &lt;groupId&gt;tools.aqua&lt;/groupId&gt;
     &lt;artifactId&gt;bgw-net-common&lt;/artifactId&gt;
-    &lt;version&gt;0.11&lt;/version&gt;
+    &lt;version&gt;0.11.1&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;tools.aqua&lt;/groupId&gt;
     &lt;artifactId&gt;bgw-net-client&lt;/artifactId&gt;
-    &lt;version&gt;0.11&lt;/version&gt;
+    &lt;version&gt;0.11.1&lt;/version&gt;
 &lt;/dependency&gt;
         </code-block>
     </tab>

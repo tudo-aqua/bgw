@@ -60,7 +60,10 @@ fun main() {
 }
 ```
 
-Run `main` and a window titled _Dice Duel_ opens. Without a scene to show, it stays empty.
+Start the application with `./gradlew run` and a window titled _Dice Duel_ opens. Without a scene to show, it stays empty.
+
+> The `run` task works out of the box because the BGW Gradle plugin passes the JVM arguments that BGW needs. If you run `main` from your IDE instead, add these arguments to the run configuration as described in [Installation][Installation].
+> {style="note"}
 
 > The constructor takes more parameters like `width`, `height` and `windowMode`. They are covered in [Application][ApplicationDoc].
 > {style="note"}

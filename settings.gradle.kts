@@ -23,6 +23,7 @@ include(
     "bgw-docs:parser",
     "bgw-docs:website",
     "bgw-docs:examples",
+    "bgw-gradle-plugin",
     "bgw-net:bgw-net-client",
     "bgw-net:bgw-net-common",
     "bgw-net:bgw-net-server",

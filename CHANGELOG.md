@@ -25,6 +25,9 @@ All notable changes to this project will be documented in this file.
 
 ## [0.11.1] - TBD
 
+### Added
+- Added the `tools.aqua.bgw` Gradle plugin. It adds the BGW dependencies and passes the JVM arguments required by the browser runtime to `run`, tests and start scripts, depending on the Java version and operating system.
+
 ### Changed
 - Improved rendering performance by reducing unnecessary updates when components, lists and drag and drop states did not change.
 - Improved runtime updates for components that are added to scenes, panes and containers after they were first shown.
