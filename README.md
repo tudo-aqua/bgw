@@ -18,7 +18,7 @@
 
 Start with BGW using the dedicated [Getting Started](https://tudo-aqua.github.io/bgw/guides/getting-started) guide, take a look at the complete [API Reference](https://tudo-aqua.github.io/bgw/docs/) or learn more concepts in the [Advanced Usage](https://tudo-aqua.github.io/bgw/guides/concepts/advanced-usage) section.
 
-Additionally, three examples are available for [MauMau](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-maumau-example), [Sudoku](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-sudoku-example) and [Tetris](https://github.com/tudo-aqua/bgw/tree/main/bgw-examples/bgw-tetris-example).
+Complete example games, such as [Collapsi](https://github.com/tudo-aqua/bgw-example-collapsi), are maintained in [separate repositories](https://github.com/orgs/tudo-aqua/repositories?q=bgw-example).
 
 Visit the [Playground](https://tudo-aqua.github.io/bgw/playground) to see BGW in action and try out some of its features.
 

@@ -191,7 +191,7 @@ function Main() {
               Checkout additional example projects
             </h2>
             <Link
-              to="https://github.com/tudo-aqua/bgw/tree/main/bgw-examples"
+              to="https://github.com/orgs/tudo-aqua/repositories?q=bgw-example"
               className="relative z-10"
             >
               <Button variant="interface" className="flex gap-2">

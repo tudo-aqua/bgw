@@ -99,6 +99,9 @@ All notable changes to this project will be documented in this file.
 - Fixed Wayland not being detected for compositors that do not set `XDG_SESSION_TYPE` (e.g. Hyprland started from a TTY). A warning explains how to fix offset or blank windows under non-reparenting window managers.
 - Fixed the build requiring publishing credentials.
 
+### Removed
+- Removed the MauMau, Sudoku and Tetris examples. Example games are now maintained in separate repositories, e.g. [Collapsi](https://github.com/tudo-aqua/bgw-example-collapsi).
+
 ## [0.11] - 06.05.2026
 
 ### Breaking Changes
