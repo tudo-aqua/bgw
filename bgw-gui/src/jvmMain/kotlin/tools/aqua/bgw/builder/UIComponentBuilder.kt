@@ -132,6 +132,11 @@ internal object UIComponentBuilder {
     slider.maxValueProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
     slider.stepProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
     slider.orientationProperty.guiListener = { _, _ -> Frontend.updateComponent(slider) }
+    slider.thumbVisualProperty.guiListener = { _, newVisual ->
+      VisualBuilder.build(newVisual)
+      Frontend.updateComponent(slider)
+    }
+    VisualBuilder.build(slider.thumbVisual)
   }
 
   private fun buildStructuredDataView(structuredDataView: StructuredDataView<*>) {

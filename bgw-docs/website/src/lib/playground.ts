@@ -105,7 +105,7 @@ const fields: Record<string, string> = {
   TextFieldData: inputFields, TextAreaData: inputFields, PasswordFieldData: inputFields,
   ComboBoxData: "prompt items itemVisuals selectedItem disallowUnselect", ColorPickerData: "selectedColor",
   ProgressBarData: "progress barVisual", ListViewData: `${structuredFields} orientation`,
-  SliderData: "value minValue maxValue step orientation",
+  SliderData: "value minValue maxValue step orientation thumbVisual",
   TableViewData: `${structuredFields} columns`, PaneData: "components",
   GridPaneData: "columns rows spacing grid columnWidths rowHeights",
   CameraPaneData: "target interactive panButton limitBounds isVerticalLocked isHorizontalLocked isZoomLocked",

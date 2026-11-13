@@ -19,15 +19,22 @@
 
 package tools.aqua.bgw.components.uicomponents
 
+import tools.aqua.bgw.core.Color
 import tools.aqua.bgw.core.DEFAULT_SLIDER_HEIGHT
 import tools.aqua.bgw.core.DEFAULT_SLIDER_WIDTH
 import tools.aqua.bgw.observable.properties.DoubleProperty
 import tools.aqua.bgw.observable.properties.Property
+import tools.aqua.bgw.style.BorderRadius
 import tools.aqua.bgw.util.Font
+import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.Visual
 
 /**
  * A numeric [Slider] for selecting a value from a bounded range.
+ *
+ * The [visual] is the track of the [Slider] and fills the whole component. The [thumbVisual] marks
+ * the selected [value] on the track. It is a square whose side is the [height] of a horizontal and
+ * the [width] of a vertical [Slider].
  *
  * User interaction updates [value] and invokes [onValueChanged]. All numeric values must be finite,
  * [minValue] must not be greater than [maxValue], and [step] must be greater than zero. Values
@@ -37,7 +44,9 @@ import tools.aqua.bgw.visual.Visual
  * @param posY Vertical coordinate for this [Slider]. Default: 0.
  * @param width Width for this [Slider]. Default: [DEFAULT_SLIDER_WIDTH].
  * @param height Height for this [Slider]. Default: [DEFAULT_SLIDER_HEIGHT].
- * @param visual [Visual] that is used to represent this [Slider]. Default: empty [Visual].
+ * @param visual [Visual] of the track of this [Slider]. Default: a light gray [ColorVisual].
+ * @param thumbVisual [Visual] of the thumb of this [Slider]. Default: a dark gray, round
+ *   [ColorVisual].
  * @param minValue Initial lower bound. Default: 0.
  * @param maxValue Initial upper bound. Default: 100.
  * @param value Initial selected value. Default: [minValue].
@@ -46,14 +55,16 @@ import tools.aqua.bgw.visual.Visual
  * @constructor Creates a [Slider].
  * @see Visual
  * @see UIComponent
- * @since 0.11
+ * @since 0.11.1
  */
 open class Slider(
     posX: Number = 0,
     posY: Number = 0,
     width: Number = DEFAULT_SLIDER_WIDTH,
     height: Number = DEFAULT_SLIDER_HEIGHT,
-    visual: Visual = Visual.EMPTY,
+    visual: Visual = ColorVisual(Color.LIGHT_GRAY).apply { style.borderRadius = BorderRadius.XXXL },
+    thumbVisual: Visual =
+        ColorVisual(Color.DARK_GRAY).apply { style.borderRadius = BorderRadius.FULL },
     minValue: Double = 0.0,
     maxValue: Double = 100.0,
     value: Double = minValue,
@@ -119,6 +130,16 @@ open class Slider(
       stepProperty.value = value
     }
 
+  /** [Property] for the [thumbVisual] of this [Slider]. */
+  internal val thumbVisualProperty: Property<Visual> = Property(thumbVisual)
+
+  /** [Visual] of the thumb that marks the selected [value]. */
+  var thumbVisual: Visual
+    get() = thumbVisualProperty.value
+    set(value) {
+      thumbVisualProperty.value = value
+    }
+
   /** [Property] for the [Orientation] of this [Slider]. */
   internal val orientationProperty: Property<Orientation> = Property(orientation)
 
@@ -136,7 +157,7 @@ open class Slider(
   /**
    * Gets invoked whenever the selected [value] changes.
    *
-   * @since 0.11
+   * @since 0.11.1
    */
   var onValueChanged: ((Double) -> Unit)? = null
 

@@ -13,7 +13,7 @@ const constructors: Record<string, string> = {
   RadioButton: `${bounds} text font alignment isSelected toggleGroup visual`,
   TextField: input, TextArea: input, PasswordField: input,
   ColorPicker: `${bounds} initialColor visual`, ProgressBar: `${bounds} visual progress barVisual`,
-  Slider: `${bounds} visual minValue maxValue value step orientation`,
+  Slider: `${bounds} visual thumbVisual minValue maxValue value step orientation`,
   ComboBox: `${bounds} font visual prompt items disallowUnselect itemVisuals`,
   ListView: `${bounds} items font visual orientation selectionMode selectionBackground`,
   TableView: `${bounds} columns items visual selectionMode selectionBackground`,

@@ -248,6 +248,7 @@ internal object ComponentMapper {
             maxValue = componentView.maxValue
             step = componentView.step
             orientation = componentView.orientation.name.lowercase()
+            thumbVisual = VisualMapper.map(componentView.thumbVisual)
           }
 
       is ListView<*> ->

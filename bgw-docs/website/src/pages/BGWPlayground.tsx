@@ -668,8 +668,8 @@ function BGWPlayground() {
   }, []);
 
   const getDistinctInputElement = (elementClass: DataClass, attr: string) => {
-    if (attr === "barVisual") return (
-      <ColorPicker className="w-full" color={elementClass.barVisual.color} setColor={color => setSelectedClass(prev => ({ ...prev, barVisual: { ...prev.barVisual, color } }))} />
+    if (attr === "barVisual" || attr === "thumbVisual") return (
+      <ColorPicker className="w-full" color={elementClass[attr].color} setColor={color => setSelectedClass(prev => ({ ...prev, [attr]: { ...prev[attr], color } }))} />
     );
     if (attr === "visual") return getVisualInputs(elementClass);
     if (attr.startsWith("vis_")) return getVisualInputs(elementClass, attr);
@@ -2642,6 +2642,7 @@ function BGWPlayground() {
           ? getFontsInputs(elementClass)
           : null}
         {elementClass.barVisual && <SettingsField title="Progress bar">{getDistinctInputElement(elementClass, "barVisual")}</SettingsField>}
+        {elementClass.thumbVisual && <SettingsField title="Slider thumb">{getDistinctInputElement(elementClass, "thumbVisual")}</SettingsField>}
         {getRestSettingsInputs(elementClass)}
       </>
     );
@@ -2663,6 +2664,7 @@ function BGWPlayground() {
           ? getFontsInputs(elementClass)
           : null}
         {elementClass.barVisual && <SettingsField title="Progress bar">{getDistinctInputElement(elementClass, "barVisual")}</SettingsField>}
+        {elementClass.thumbVisual && <SettingsField title="Slider thumb">{getDistinctInputElement(elementClass, "thumbVisual")}</SettingsField>}
         {getRestSettingsInputs(elementClass)}
 
       </>

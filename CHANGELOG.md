@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 ## [0.11.1] - TBD
 
 ### Added
+- Added the `Slider` component for selecting a number from a range. Its `visual` is the track and its `thumbVisual` marks the selected `value`, which is limited by `minValue`, `maxValue` and `step`. It can be horizontal or vertical and reports changes through `onValueChanged`.
 - Added the `tools.aqua.bgw` Gradle plugin. It adds the BGW dependencies and passes the JVM arguments required by the browser runtime to `run`, tests and start scripts, depending on the Java version and operating system.
 
 ### Changed

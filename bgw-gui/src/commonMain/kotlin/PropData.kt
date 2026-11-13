@@ -233,6 +233,7 @@ internal class SliderData : UIComponentData() {
   var maxValue: FiniteDouble = 100.0
   var step: FiniteDouble = 1.0
   var orientation: String = "horizontal"
+  var thumbVisual: VisualData? = null
 }
 
 @Serializable internal class TextAreaData : TextInputUIComponentData() {}

@@ -158,6 +158,20 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
           visual = ColorVisual(Color(0x0f141f)),
           barColor = Color(0xef4444))
 
+  val slider =
+      Slider(
+          posX = centerX(300),
+          posY = centerY(30),
+          width = 300,
+          height = 30,
+          minValue = 0.0,
+          maxValue = 10.0,
+          value = 4.0,
+          step = 1.0,
+          visual = ColorVisual(Color(0x0f141f)).apply { style.borderRadius = BorderRadius.XXXL },
+          thumbVisual =
+              ColorVisual(Color(0xc6ff6e)).apply { style.borderRadius = BorderRadius.FULL })
+
   val toggleGroup = ToggleGroup()
 
   val toggleButton =
@@ -482,6 +496,7 @@ internal class ExampleDocsScene : BoardGameScene(width = 445, height = 300) {
     setUIComponentsAndSerialize("colorPickerExample", ::colorPicker)
     setUIComponentsAndSerialize("comboBoxExample", ::comboBox)
     setUIComponentsAndSerialize("progressBarExample", ::progressBar)
+    setUIComponentsAndSerialize("sliderExample", ::slider)
     setUIComponentsAndSerialize("binaryButtonExample", ::toggleButton, ::radioButton)
     setUIComponentsAndSerialize("textExample", ::textArea, ::textField, ::passwordField)
     setUIComponentsAndSerialize("listViewExample", ::listView)

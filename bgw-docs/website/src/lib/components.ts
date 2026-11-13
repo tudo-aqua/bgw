@@ -579,6 +579,7 @@ class SliderData extends UIComponentData {
   maxValue = new NumberValue("maxValue", 100, "Maximum");
   step = new NumberValue("step", 1, "Step");
   orientation = new ChoiceValue("orientation", "Horizontal", ["Horizontal", "Vertical"], "Orientation");
+  thumbVisual: ColorVisualData = new ColorVisualData();
 
   constructor() {
     super();
@@ -586,6 +587,11 @@ class SliderData extends UIComponentData {
     this.type = "SliderData";
     this.width.value = 250;
     this.height.value = 20;
+    this.thumbVisual.color = "#404040";
+
+    this.visual = new CompoundVisualData();
+    this.visual.children = [new ColorVisualData()];
+    (this.visual.children[0] as ColorVisualData).color = "#c0c0c0";
   }
 }
 

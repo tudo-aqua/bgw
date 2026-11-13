@@ -68,6 +68,39 @@ internal val Slider =
           +VisualBuilder.build(props.data.visual)
         }
 
+        // The thumb is a square on the track. Its side is the extent across the track.
+        val vertical = props.data.orientation == "vertical"
+        val thumbSize = if (vertical) props.data.width else props.data.height
+        val range = props.data.maxValue - props.data.minValue
+        val fraction =
+            if (range > 0.0) ((props.data.value - props.data.minValue) / range).coerceIn(0.0, 1.0)
+            else 0.0
+
+        bgwSliderThumb {
+          className = ClassName("slider-thumb")
+          css {
+            position = Position.absolute
+            width = thumbSize.bgw
+            height = thumbSize.bgw
+            if (vertical) {
+              left = 0.px
+              top = ((1.0 - fraction) * (props.data.height - thumbSize)).bgw
+            } else {
+              top = 0.px
+              left = (fraction * (props.data.width - thumbSize)).bgw
+            }
+            pointerEvents = None.none
+          }
+          props.data.thumbVisual?.let {
+            bgwVisuals {
+              className = ClassName("visuals")
+              +VisualBuilder.build(it)
+            }
+          }
+        }
+
+        // The native input only handles the interaction. It is invisible, and its thumb has the
+        // size of the rendered thumb, so pointer positions map to the same values.
         input {
           type = InputType.range
           value = props.data.value
@@ -85,11 +118,19 @@ internal val Slider =
             height = 100.pct
             margin = 0.px
             padding = 0.px
-            backgroundColor = rgb(0, 0, 0, 0.0)
+            opacity = number(0.0)
+            appearance = None.none
+            cursor = Cursor.pointer
 
-            if (props.data.orientation == "vertical") {
+            if (vertical) {
               writingMode = WritingMode.verticalLr
               direction = Direction.rtl
+            }
+
+            "&::-webkit-slider-thumb" {
+              appearance = None.none
+              width = thumbSize.bgw
+              height = thumbSize.bgw
             }
           }
 
@@ -107,3 +148,6 @@ internal val Slider =
 
 internal inline val bgwSlider: IntrinsicType<HTMLAttributes<Element>>
   get() = "bgw_slider".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()
+
+internal inline val bgwSliderThumb: IntrinsicType<HTMLAttributes<Element>>
+  get() = "bgw_slider_thumb".unsafeCast<IntrinsicType<HTMLAttributes<Element>>>()

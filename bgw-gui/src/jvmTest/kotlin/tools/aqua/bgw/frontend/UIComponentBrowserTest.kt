@@ -22,6 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import org.openqa.selenium.Keys
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.Select
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.CheckBox
@@ -33,6 +34,7 @@ import tools.aqua.bgw.components.uicomponents.PasswordField
 import tools.aqua.bgw.components.uicomponents.ProgressBar
 import tools.aqua.bgw.components.uicomponents.RadioButton
 import tools.aqua.bgw.components.uicomponents.SelectionMode
+import tools.aqua.bgw.components.uicomponents.Slider
 import tools.aqua.bgw.components.uicomponents.TableColumn
 import tools.aqua.bgw.components.uicomponents.TableView
 import tools.aqua.bgw.components.uicomponents.TextArea
@@ -41,6 +43,7 @@ import tools.aqua.bgw.components.uicomponents.ToggleButton
 import tools.aqua.bgw.components.uicomponents.ToggleGroup
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.Color
+import tools.aqua.bgw.visual.ColorVisual
 
 class UIComponentBrowserTest : BrowserTestBase() {
 
@@ -239,6 +242,51 @@ class UIComponentBrowserTest : BrowserTestBase() {
       bar.css("width").removeSuffix("px").toDouble() /
           component.css("width").removeSuffix("px").toDouble() in 0.74..0.76
     }
+  }
+
+  @Test
+  fun sliderRendersTrackAndThumbAndSynchronizesValue() {
+    val slider =
+        Slider(
+            width = 400,
+            height = 40,
+            value = 25.0,
+            visual = ColorVisual(Color.ORANGE),
+            thumbVisual = ColorVisual(Color.BLUE))
+    show(BoardGameScene(width = 800, height = 600).apply { addComponents(slider) })
+    tester.awaitBGWComp(slider.id)
+
+    fun thumbFraction(): Double {
+      val component = tester.getBGWComp(slider.id)
+      val thumb = component.descendant("bgw_slider_thumb")
+      val width = component.css("width").removeSuffix("px").toDouble()
+      val thumbWidth = thumb.getCssValue("width").removeSuffix("px").toDouble()
+      return thumb.getCssValue("left").removeSuffix("px").toDouble() / (width - thumbWidth)
+    }
+
+    tester.await("track and thumb visuals") {
+      val component = getBGWComp(slider.id)
+      component.descendants(":scope > .visuals > bgw_color_visual").size == 1 &&
+          component.descendants("bgw_slider_thumb > .visuals > bgw_color_visual").size == 1
+    }
+    tester.await("initial thumb position") { thumbFraction() in 0.24..0.26 }
+
+    slider.value = 75.0
+    tester.await("updated thumb position") { thumbFraction() in 0.74..0.76 }
+
+    val input = tester.getBGWComp(slider.id).descendant("input")
+    assertEquals("0", input.getCssValue("opacity"))
+    val component = tester.getBGWComp(slider.id)
+    val width = component.css("width").removeSuffix("px").toDouble()
+    val thumbWidth =
+        component.descendant("bgw_slider_thumb").getCssValue("width").removeSuffix("px").toDouble()
+    // Clicking a position moves the center of the thumb there.
+    Actions(tester.requireDriver())
+        .moveToElement(input, (thumbWidth / 2 + 0.1 * (width - thumbWidth) - width / 2).toInt(), 0)
+        .click()
+        .perform()
+    tester.await("value from click") { slider.value in 8.0..12.0 }
+    tester.await("thumb follows the click") { thumbFraction() in 0.08..0.12 }
   }
 
   @Test

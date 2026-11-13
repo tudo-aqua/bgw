@@ -382,14 +382,14 @@ const val DEFAULT_PROGRESSBAR_WIDTH: Int = 250
 /**
  * Default [Slider] height.
  *
- * @since 0.11
+ * @since 0.11.1
  */
 const val DEFAULT_SLIDER_HEIGHT: Int = 20
 
 /**
  * Default [Slider] width.
  *
- * @since 0.11
+ * @since 0.11.1
  */
 const val DEFAULT_SLIDER_WIDTH: Int = 250
 

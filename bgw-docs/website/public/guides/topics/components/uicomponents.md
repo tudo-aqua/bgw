@@ -5,6 +5,7 @@
 [PasswordFieldKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-password-field/index.html
 [ComboBoxKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-combo-box/index.html
 [ProgressBarKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-progress-bar/index.html
+[SliderKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-slider/index.html
 [ToggleButtonKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-toggle-button/index.html
 [RadioButtonKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-radio-button/index.html
 [ToggleGroupKDoc]: /docs/tools.aqua.bgw.components.uicomponents/-toggle-group/index.html
@@ -355,6 +356,53 @@ onProgressed: ((Double) -> Unit)? = null
 </code-block>
 
 This listener gets invoked when the progress changes. It receives the new progress value as a `Double`.
+
+</signature>
+
+---
+
+## Slider
+
+<tldr>Component for selecting a number from a range</tldr>
+
+A [Slider][SliderKDoc] lets the player select a number from a range by dragging its thumb or clicking on its track. The range is set by `minValue` and `maxValue`, and `step` is the interval between the selectable values. The selected number is available as `value`, which can also be set from code. Values outside the range are clamped to the closest bound.
+
+<preview key="tools.aqua.bgw.main.examples.ExampleDocsScene.sliderExample">
+val slider = Slider(
+    posX = 0,
+    posY = 0,
+    width = 300,
+    height = 30,
+    minValue = 0.0,
+    maxValue = 10.0,
+    value = 4.0,
+    step = 1.0,
+    visual = ColorVisual(Color(0x0f141f)).apply {
+        style.borderRadius = BorderRadius.XXXL
+    },
+    thumbVisual = ColorVisual(Color(0xc6ff6e)).apply {
+        style.borderRadius = BorderRadius.FULL
+    }
+)
+&#13;
+slider.onValueChanged = { value ->
+    println("Selected $value")
+}
+</preview>
+
+The `visual` is the track and fills the whole component. The `thumbVisual` marks the selected value on the track. It is a square whose side is the height of a horizontal slider. Set `orientation` to `Orientation.VERTICAL` for a vertical slider, whose thumb is as wide as the slider and moves from the bottom (`minValue`) to the top (`maxValue`).
+
+> Both visuals can be any `Visual`, for example an `ImageVisual` of a custom thumb.
+> {style="note"}
+
+##### Listeners
+
+<signature>
+<code-block lang="kotlin" copy="false">
+onValueChanged: ((Double) -> Unit)? = null
+</code-block>
+
+This listener gets invoked when the selected value changes, both by the player and from code. It receives the new value as a `Double`.
 
 </signature>
 
