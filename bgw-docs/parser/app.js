@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const cheerio = require("cheerio");
-const { deprecate } = require("util");
 const {
   normalizeType,
   processTypeLinks,
@@ -114,6 +113,44 @@ function extractLinksFromSignature($, signature, breadcrumbs = []) {
   return links;
 }
 
+/**
+ * Restores the space between a leading annotation and the following keyword, which is lost in the
+ * text of Dokka signatures, e.g. `@Synchronizedfun` becomes `@Synchronized fun`.
+ */
+function normalizeSignature(text) {
+  return text
+    .trim()
+    .replace(/^(@\w+\((?:[^()]|\([^()]*\))*\))(?=\S)/, "$1 ")
+    .replace(
+      /^(@[A-Z]\w*?)(fun|val|var|open|override|abstract|suspend|inline|operator|const|class|annotation|data|enum|sealed|object|interface)\b/,
+      "$1 $2"
+    );
+}
+
+/**
+ * Splits a Kotlin parameter list at the commas that are not nested in brackets, so default values
+ * like `Color(0, 0, 0)` stay intact. The arrow of function types is not a closing bracket.
+ */
+function splitTopLevelParams(paramsStr) {
+  const result = [];
+  let current = "";
+  let depth = 0;
+
+  for (let i = 0; i < paramsStr.length; i++) {
+    const char = paramsStr[i];
+    if ("(<[{".includes(char)) depth++;
+    else if (")]}".includes(char) || (char === ">" && paramsStr[i - 1] !== "-")) depth--;
+    else if (char === "," && depth === 0) {
+      result.push(current.trim());
+      current = "";
+      continue;
+    }
+    current += char;
+  }
+  if (current.trim()) result.push(current.trim());
+  return result;
+}
+
 // ---
 
 function parseConstructor($, el, tree) {
@@ -131,7 +168,7 @@ function parseConstructor($, el, tree) {
     : constructorText;
 
   function findConstructorParams($, param) {
-    let result = "";
+    let result = null;
     $(".platform-hinted.with-platform-tabs").each((i, el) => {
       $(el)
         .find(".table")
@@ -151,10 +188,9 @@ function parseConstructor($, el, tree) {
 
   const paramMatch = constructor.match(/\((.*)\)/);
   if (paramMatch && paramMatch[1]) {
-    params = paramMatch[1].split(",").map((param) => {
-      const paramEl = $(el).find(`*:contains("${param.trim()}")`).first();
-      const parts = param.trim().split(":");
-      const nameAndModifier = parts[0].trim();
+    params = splitTopLevelParams(paramMatch[1]).map((param) => {
+      const separator = param.indexOf(":");
+      const nameAndModifier = (separator < 0 ? param : param.slice(0, separator)).trim();
 
       // For secondary constructors, we don't expect val/var modifiers
       const isVal =
@@ -163,21 +199,19 @@ function parseConstructor($, el, tree) {
         !isSecondaryConstructor && nameAndModifier.startsWith("var ");
       const modifier = isVal ? "val" : isVar ? "var" : "";
 
-      const name = nameAndModifier.replace(/^(val|var)\s+/, "");
+      const name = nameAndModifier.replace(/^(val|var|vararg)\s+/, "");
 
-      let brief = findConstructorParams($, name);
-      let processedBrief = processTypeLinks(
-        $,
-        brief,
-        brief.text().trim(),
-        tree.breadcrumbs
-      );
+      // Parameters without documentation have no description element.
+      const brief = findConstructorParams($, name);
+      const processedBrief = brief
+        ? processTypeLinks($, brief, brief.text().trim(), tree.breadcrumbs)
+        : "";
 
-      let type = parts[1] ? parts[1].trim() : "";
+      let type = separator < 0 ? "" : param.slice(separator + 1).trim();
       let defaultValue = "";
 
       if (type) {
-        type = processTypeLinks($, paramEl, type, tree.breadcrumbs);
+        type = processTypeLinks($, $(el), type, tree.breadcrumbs);
       }
 
       const defaultMatch = type.match(/\s*=\s*(.+)$/);
@@ -232,7 +266,7 @@ function parseProperty($, el, tree) {
       return null;
     }
 
-    const property = $(el).text().trim();
+    const property = normalizeSignature($(el).text());
     const briefElement = $(el).closest(".table-row").find(".brief");
     const link = $(el).find("a").first().attr("href");
     const parsedLink = pathToPackage(
@@ -243,7 +277,7 @@ function parseProperty($, el, tree) {
 
     // Extract modifier (val/var), name and type (including possible default value)
     const match = property.match(
-      /^(?:(?:abstract|override|open|private|protected|public|internal|const)\s+)*(val|var)?\s*(\w+):\s*(.+)$/
+      /^(?:(?:abstract|override|open|private|protected|public|internal|const|expect|actual|lateinit)\s+)*(val|var)?\s*(?:[\w.?<>]+\.)?(\w+):\s*(.+)$/
     );
     if (!match) {
       console.warn(`Could not parse Kotlin property: ${property}`);
@@ -287,7 +321,7 @@ function parseFunction($, el, tree) {
       return null;
     }
 
-    const func = $(el).text().trim();
+    const func = normalizeSignature($(el).text());
     const briefElement = $(el).next(".brief");
     const link = $(el).find("a").first().attr("href");
     const parsedLink = pathToPackage(
@@ -296,22 +330,15 @@ function parseFunction($, el, tree) {
     );
     const brief = briefElement.length ? briefElement.text().trim() : "";
 
-    // const functionPattern =
-    //   /^(?:(?:suspend|private|protected|public|internal|inline|open|abstract|override|operator)\s+)*fun\s+(?:[\w<>]+\.)?(\w+)\s*(?:<[^>]+>)?\s*\((.*?)\)(?:\s*:\s*(.+))?$/s;
+    // Modifiers, optional type parameters (one level of nesting) and an optional receiver precede
+    // the name.
     const functionPattern =
-      /^(?:(?:suspend|private|protected|public|internal|inline|abstract|override|operator|open)\s+)*fun\s+(\w+)\s*(?:<[^>]+>)?\s*\((.*?)\)(?:\s*:\s*(.+))?$/s;
-    const match = func.replace(/^@Synchronized/, "").match(functionPattern);
+      /^(?:(?:suspend|private|protected|public|internal|inline|abstract|override|operator|open|expect|actual|infix|tailrec|external)\s+)*fun\s+(?:<(?:[^<>]|<[^<>]*>)*>\s*)?(?:[\w.?<>]+\.)?(\w+)\s*\((.*?)\)(?:\s*:\s*(.+))?$/s;
+    const match = func
+      .replace(/^(?:@\w+(?:\([^)]*\))?\s+)+/, "")
+      .match(functionPattern);
 
     if (!match) {
-      console.warn(`Could not parse Kotlin function: ${func}`);
-      return null;
-    }
-
-    if (
-      func.includes("toFront") ||
-      func.includes("toBack") ||
-      func.includes("setZIndex")
-    ) {
       console.warn(`Could not parse Kotlin function: ${func}`);
       return null;
     }
@@ -330,26 +357,6 @@ function parseFunction($, el, tree) {
           : "Unit",
         doc: processTypeLinks($, briefElement, brief, tree.breadcrumbs),
       };
-    }
-
-    // Enhanced Kotlin parameter parsing
-    function splitTopLevelParams(paramsStr) {
-      const result = [];
-      let current = "";
-      let depth = 0;
-
-      for (let char of paramsStr) {
-        if (char === "(" || char === "<") depth++;
-        else if (char === ")" || char === ">") depth--;
-        else if (char === "," && depth === 0) {
-          result.push(current.trim());
-          current = "";
-          continue;
-        }
-        current += char;
-      }
-      if (current.trim()) result.push(current.trim());
-      return result;
     }
 
     const parameters = splitTopLevelParams(params)
@@ -419,57 +426,42 @@ function parseFunction($, el, tree) {
 
 // ----
 
+/**
+ * Whether a member signature belongs to a source set of the JVM API. Members that only exist in
+ * the browser runtime (jsMain) are not part of the documented API.
+ */
+function isJvmApi($, el) {
+  const sourceSet = $(el).closest("[data-togglable]").attr("data-togglable") || "";
+  return !sourceSet.endsWith("/jsMain");
+}
+
 function extractMembers(content, type, tree) {
   const $ = cheerio.load(content);
-  const members = {
-    constructors: [],
-    types: [],
-    properties: [],
-    functions: [],
-  };
+  const kinds = [
+    ["constructors", "CONSTRUCTOR", parseConstructor],
+    ["types", "TYPE", parseType],
+    ["properties", "PROPERTY", parseProperty],
+    ["functions", "FUNCTION", parseFunction],
+  ];
+  const members = {};
 
-  try {
-    $('div[data-togglable="CONSTRUCTOR"] .symbol.monospace').each((i, el) => {
-      const constructor = parseConstructor($, el, tree);
-      if (constructor) members.constructors.push(constructor);
+  for (const [key, togglable, parse] of kinds) {
+    const elements = $(`div[data-togglable="${togglable}"] .symbol.monospace`);
+    if (elements.length == 0) continue;
+
+    members[key] = [];
+    elements.each((i, el) => {
+      if (!isJvmApi($, el)) return;
+      try {
+        const member = parse($, el, tree);
+        if (member) members[key].push(member);
+      } catch (error) {
+        console.warn(
+          `Could not parse ${togglable.toLowerCase()} of ${tree.package}: ${$(el).text().trim()}`,
+          error.message
+        );
+      }
     });
-  } catch (error) {}
-
-  if ($('div[data-togglable="CONSTRUCTOR"] .symbol.monospace').length == 0) {
-    delete members.constructors;
-  }
-
-  try {
-    $('div[data-togglable="TYPE"] .symbol.monospace').each((i, el) => {
-      const type = parseType($, el, tree);
-      if (type) members.types.push(type);
-    });
-  } catch (error) {}
-
-  if ($('div[data-togglable="TYPE"] .symbol.monospace').length == 0) {
-    delete members.types;
-  }
-
-  try {
-    $('div[data-togglable="PROPERTY"] .symbol.monospace').each((i, el) => {
-      const property = parseProperty($, el, tree);
-      if (property) members.properties.push(property);
-    });
-  } catch (error) {}
-
-  if ($('div[data-togglable="PROPERTY"] .symbol.monospace').length == 0) {
-    delete members.properties;
-  }
-
-  try {
-    $('div[data-togglable="FUNCTION"] .symbol.monospace').each((i, el) => {
-      const func = parseFunction($, el, tree);
-      if (func) members.functions.push(func);
-    });
-  } catch (error) {}
-
-  if ($('div[data-togglable="FUNCTION"] .symbol.monospace').length == 0) {
-    delete members.functions;
   }
 
   return members;
@@ -566,12 +558,13 @@ function getKDocSince($, start, tree) {
 
 function getClassDetails($, tree) {
   let name = $("h1.cover").text().trim();
-  let signature = $(".content.sourceset-dependent-content")
-    .find(".symbol.monospace")
-    .first()
-    .text()
-    .replace("@Serializable", "")
-    .trim();
+  let signature = normalizeSignature(
+    $(".content.sourceset-dependent-content")
+      .find(".symbol.monospace")
+      .first()
+      .text()
+      .replace("@Serializable", "")
+  );
 
   let docElements = $(".content.sourceset-dependent-content > .paragraph");
   let docArray = [];
@@ -728,11 +721,9 @@ function getExtraDetails($, tree) {
     const loaded = cheerio.load(el);
 
     let name = $("h1.cover").text().trim();
-    let signature = loaded("body")
-      .find(".symbol.monospace")
-      .first()
-      .text()
-      .trim();
+    let signature = normalizeSignature(
+      loaded("body").find(".symbol.monospace").first().text()
+    );
 
     let wholeSignature = loaded("body").find(".symbol.monospace").first();
     let signatureLinks = extractLinksFromSignature(

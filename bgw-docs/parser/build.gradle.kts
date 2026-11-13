@@ -34,39 +34,22 @@ tasks.register<Copy>("buildAndCopySamples") {
   into(projectDir.resolve("../website/public/bgw"))
 }
 
-tasks.register("buildAndCopyDokkaHtml") {
-  dependsOn(
-      rootProject.project(":bgw-gui").tasks.named("dokkaGenerateModuleHtml"),
-      rootProject.project(":bgw-net:bgw-net-client").tasks.named("dokkaGenerateModuleHtml"),
-      rootProject.project(":bgw-net:bgw-net-common").tasks.named("dokkaGenerateModuleHtml"))
-  this.group = "build"
-  doLast {
-    val sourceDir = project(":bgw-gui").buildDir.resolve("dokka-module/html/module")
-    val destinationDir = projectDir.resolve("example/htmlPartial")
-    println("Copying files from $sourceDir to $destinationDir")
-    copy {
-      from(sourceDir)
-      into(destinationDir)
-    }
+val documentedModules =
+    mapOf(
+        ":bgw-gui" to "package-list",
+        ":bgw-net:bgw-net-client" to "package-list-client",
+        ":bgw-net:bgw-net-common" to "package-list-common")
 
-    val sourceDir2 =
-        rootProject.project(":bgw-net:bgw-net-client").buildDir.resolve("dokka-module/html/module")
-    val destinationDir2 = projectDir.resolve("example/htmlPartial")
-    println("Copying files from $sourceDir2 to $destinationDir2")
-    copy {
-      from(sourceDir2)
-      into(destinationDir2)
-      rename("package-list", "package-list-client")
-    }
-
-    val sourceDir3 =
-        rootProject.project(":bgw-net:bgw-net-common").buildDir.resolve("dokka-module/html/module")
-    val destinationDir3 = projectDir.resolve("example/htmlPartial")
-    println("Copying files from $sourceDir3 to $destinationDir3")
-    copy {
-      from(sourceDir3)
-      into(destinationDir3)
-      rename("package-list", "package-list-common")
+// Mirrors the current Dokka output, so pages of removed declarations do not remain in the docs.
+tasks.register<Sync>("buildAndCopyDokkaHtml") {
+  group = "build"
+  into(layout.projectDirectory.dir("example/htmlPartial"))
+  // The modules share the files of the page frame (index.html, scripts, styles). The last one wins.
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+  documentedModules.forEach { (path, packageList) ->
+    dependsOn("$path:dokkaGenerateModuleHtml")
+    from(project(path).layout.buildDirectory.dir("dokka-module/html/module")) {
+      rename("package-list", packageList)
     }
   }
 }
