@@ -63,18 +63,30 @@ details.
 
 ### `executable-conventions`
 
-The executable conventions should be applied to every module that contains a main class. They enable the Kotlin and
-publishing configurations as well as the
-[application plugin](https://docs.gradle.org/current/userguide/application_plugin.html). Each module using these
-conventions must set an appropriate main class. See the `bgw-examples` modules for examples.
+The executable conventions should be applied to every module that contains a main class. They enable the Kotlin
+configuration as well as the [application plugin](https://docs.gradle.org/current/userguide/application_plugin.html)
+and pass the JVM arguments required by the JCEF browser runtime of `bgw-gui`. Each module using these conventions must
+set an appropriate main class. They do not publish the module; combine them with the publish conventions to do so. See
+the `bgw-docs/examples` module for an unpublished and the `bgw-net/bgw-net-protocol-client` module for a published
+example.
 
 ### `library-conventions`
 
-The library conventions should be applied to every module that is intended to be reused. They enable the Kotlin and
+The library conventions should be applied to every JVM module that is intended to be reused. They enable the Kotlin and
 publishing configurations as well as the
 [Java library plugin](https://docs.gradle.org/current/userguide/java_library_plugin.html). Each module using this
-convention must take care to differentiate `api` and `implementation` dependencies. This convention can be combined with
-the executable convention for programs with a defined API. See the `bgw-gui` module for an example.
+convention must take care to differentiate `api` and `implementation` dependencies. See the `bgw-net/bgw-net-client`
+module for an example.
+
+### `multiplatform-conventions`
+
+The multiplatform conventions set up the Kotlin Multiplatform build of `bgw-gui`: the JVM library, the browser runtime
+compiled to JavaScript and bundled into the JVM resources, the generated `Config.kt` files, and the publishing
+configuration.
+
+The scenes previewed in the documentation are located in `bgw-gui/src/jvmSamples`. They are compiled against the
+internal API of `bgw-gui` but are not part of the published library. The `generateDocsSamples` task serializes them
+for the documentation website.
 
 ### `spring-vaadin-conventions`
 
@@ -98,29 +110,26 @@ correctly. The versioning rules are:
   specified, as a `SNAPSHOT`.
 - Otherwise, the version of last resort is `0.0.0-SNAPSHOT` and a warning is emitted.
 
-### `jekyll-conventions`
+## Gradle Plugin
 
-The Jekyll conventions are designed for generated documentation sites and mostly emulate the build process provided by
-GitHub Pages. They provide the configuration `includedKDoc` for KDoc JARs that are to be included in the generated page.
-For example, the dependency
+`bgw-gradle-plugin` contains the `tools.aqua.bgw` Gradle plugin for projects that use BGW. It is written in Java, so it
+does not depend on the Kotlin version embedded in the Gradle version of its users. Its default BGW version is the
+version it was built with. The JVM arguments it adds should be kept in sync with the `executable-conventions`.
 
-```kotlin
-includedKDoc(project(":bgw-thing", "kdoc"))
-```
+## Documentation
 
-will take the artifact associated with the configuration `kdoc` from the project `bgw-thing` and unpack it in the
-directory `bgw-thing` relative to the site root. The `kdoc` configuration is provided by every project using
-the `kotlin-conventions`.
+The documentation website is located in `bgw-docs`. `bgw-docs/website` contains the website itself, `bgw-docs/parser`
+converts the Dokka output into the API reference, and `bgw-docs/examples` contains runnable examples that are linked
+from the guides. The `:bgw-docs:docsBuild` task builds the complete website and `:bgw-docs:docsServe` serves it locally.
 
-The Jekyll support is custom developed and uses a Jekyll Docker container. If Docker is not running, the `jekyllBuild`
-task defined by this convention will fail. Additionally, a pure-Java server is provided to test the generated site
-locally. See `bgw-docs` for an example.
+Complete example games are maintained in separate repositories.
 
 ## Custom Extensions, Tasks and Shorthands
 
 Some custom build code is provided in `buildSrc/src/main/kotlin/tools/aqua`. This includes some shorthand notation used
-inside the conventions, the `MavenMetadata` extension, and the Jekyll-related tasks. They contain explanatory KDoc
-comments. Note that all code provided there is visible from *all* build scripts, both in `buildSrc` and regular modules.
+inside the conventions, the `MavenMetadata` extension, and the versioning, publishing and signing helpers. They contain
+explanatory KDoc comments. Note that all code provided there is visible from *all* build scripts, both in `buildSrc`
+and regular modules.
 
 ## Declarative Dependencies
 
@@ -129,7 +138,7 @@ BGW projects should be defined there and included into projects using Gradle's t
 project or convention for examples.
 
 The file uses some shared version declarations in the `[versions]` block. These are required for versions shared by
-multiple dependencies (e.g., Kotlin) and versions of non-Java-dependencies (i.e., the Jekyll Docker image). Depencencies
+multiple dependencies (e.g., Kotlin). Dependencies
 themselves are declared in the `[libraries]` block. Since Gradle plugins are applies via `buildSrc` and are therefore *
 regular* dependencies of that project, they are declared here. Their aliases are prefixed by `gradle-`. Bundles are used
 to group some common dependencies, while plugin aliases cannot be used in combination with `buildSrc`-applied plugins.
@@ -141,10 +150,9 @@ information on catalogs and the TOML syntax.
 
 As mentioned above, consistent styling is enforced via [Spotless](https://github.com/diffplug/spotless). A consistent
 style can therefore be enforced by executing the `spotlessApply` task on the project. Note that Spotless is somewhat
-memory-hungry, Gradle is therefore configured to use up to 1GiB of heap memory to avoid crashes. Since the Kotlin style
+memory-hungry, Gradle is therefore configured to use up to 2GiB of heap memory to avoid crashes. Since the Kotlin style
 is applied using [Ktfmt](https://github.com/facebookincubator/ktfmt), developers may want to configure their IDEs to use
 that style, but should still reformat their code.
 
 Additionally, [Detekt](https://detekt.dev/) is used to flag code smells. Developers should consult the reports (and CLI
-output) created by `detekt` and attempt to rectify the issues. Finally, the Kotlin compiler is instructed to treat
-warnings as errors.
+output) created by `detekt` and attempt to rectify the issues.
