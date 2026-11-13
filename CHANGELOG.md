@@ -101,6 +101,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - Removed the MauMau, Sudoku and Tetris examples. Example games are now maintained in separate repositories, e.g. [Collapsi](https://github.com/tudo-aqua/bgw-example-collapsi).
+- Removed the documentation sample scenes and their images from the published `bgw-gui` artifact.
 
 ## [0.11] - 06.05.2026
 

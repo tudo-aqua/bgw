@@ -50,9 +50,7 @@ tasks.register<GradleBuild>("buildAndCopyRuntimeTask") {
   tasks = listOf("buildAndCopyRuntime")
 }
 
-val wrappersVersion = "-pre.831"
 val USE_SOCKET_DEFAULT = true
-val GENERATE_SAMPLES_DEFAULT = false
 
 fun buildPropertyFile() {
   val propertyFile = "Config.kt"
@@ -69,14 +67,11 @@ fun buildPropertyFile() {
 
 fun generateProperties(suffix: String = ""): String {
   val useSockets = project.findProperty("useSockets")?.toString()?.toBoolean() ?: USE_SOCKET_DEFAULT
-  val generateSamples =
-      project.findProperty("generateSamples")?.toString()?.toBoolean() ?: GENERATE_SAMPLES_DEFAULT
   return """
     package tools.aqua.bgw${if (suffix.isNotEmpty()) ".$suffix" else ""}
 
     internal object Config {
         val USE_SOCKETS = $useSockets
-        val GENERATE_SAMPLES = $generateSamples
         val BGW_VERSION = "${rootProject.version.toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")}"
     }
 """

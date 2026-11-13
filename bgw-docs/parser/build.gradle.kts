@@ -28,33 +28,10 @@ node {
   nodeProjectDir.set(projectDir)
 }
 
-tasks.register("generateSamplesConfig") {
-  this.group = "build"
-  doFirst { project.extra["generateSamples"] = "true" }
-  doLast { buildPropertyFile() }
-  finalizedBy(":bgw-gui:build")
-}
-
-tasks.register("generateSamples") {
-  this.group = "build"
-  dependsOn("generateSamplesConfig")
-  mustRunAfter(":bgw-gui:build")
-  finalizedBy(":bgw-gui:runJvm")
-}
-
-tasks.register("buildAndCopySamples") {
-  this.group = "build"
-  dependsOn("generateSamples")
-  mustRunAfter(":bgw-gui:runJvm")
-  doLast {
-    val sourceDir = project(":bgw-gui").buildDir.resolve("examples/bgwSamples.json")
-    val destinationDir = projectDir.resolve("../website/public/bgw")
-    println("Copying files from $sourceDir to $destinationDir")
-    copy {
-      from(sourceDir)
-      into(destinationDir)
-    }
-  }
+tasks.register<Copy>("buildAndCopySamples") {
+  group = "build"
+  from(project(":bgw-gui").tasks.named("generateDocsSamples"))
+  into(projectDir.resolve("../website/public/bgw"))
 }
 
 tasks.register("buildAndCopyDokkaHtml") {
@@ -118,41 +95,4 @@ tasks.register("buildAndCopyDokkaJson") {
 tasks.register<GradleBuild>("buildAndCopySamplesTask") {
   this.group = "build"
   tasks = listOf("buildAndCopySamples")
-}
-
-val wrappersVersion = "-pre.831"
-val USE_SOCKET_DEFAULT = true
-val GENERATE_SAMPLES_DEFAULT = false
-
-fun buildPropertyFile() {
-  val propertyFile = "Config.kt"
-  rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
-    parentFile.mkdirs()
-    writeText(generateProperties())
-  }
-
-  rootDir.resolve("bgw-gui/src/jvmMain/kotlin/tools/aqua/bgw/application/${propertyFile}").apply {
-    parentFile.mkdirs()
-    writeText(generateProperties("application"))
-  }
-
-  val useSockets = project.findProperty("useSockets")?.toString()?.toBoolean() ?: USE_SOCKET_DEFAULT
-  val generateSamples =
-      project.findProperty("generateSamples")?.toString()?.toBoolean() ?: GENERATE_SAMPLES_DEFAULT
-}
-
-fun generateProperties(suffix: String = ""): String {
-  val useSockets = project.findProperty("useSockets")?.toString()?.toBoolean() ?: USE_SOCKET_DEFAULT
-  val generateSamples =
-      project.findProperty("generateSamples")?.toString()?.toBoolean() ?: GENERATE_SAMPLES_DEFAULT
-  return """
-    package tools.aqua.bgw${if (suffix.isNotEmpty()) ".$suffix" else ""}
-
-    internal object Config {
-        val USE_SOCKETS = $useSockets
-        val GENERATE_SAMPLES = $generateSamples
-        val BGW_VERSION = "${rootProject.version.toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")}"
-    }
-"""
-      .trimIndent()
 }

@@ -15,50 +15,25 @@
  * limitations under the License.
  */
 
-import gradle.kotlin.dsl.accessors._e6d6b7590b198cd1142dd34cafa85fef.publishing
-import java.nio.file.Files
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
-import tools.aqua.GlobalMavenMetadataExtension
-import tools.aqua.MavenMetadataExtension
-import tools.aqua.announcePublications
 import tools.aqua.defaultFormat
-import tools.aqua.isSigningRequired
 
 plugins {
+  id("tools.aqua.bgw.publish-conventions")
+
   kotlin("multiplatform")
   kotlin("plugin.serialization")
 
   id("dev.detekt")
   id("org.jetbrains.dokka")
   id("org.jetbrains.kotlinx.kover")
-  id("com.vanniktech.maven.publish")
   id("com.diffplug.spotless")
-  signing
 }
 
 val propertyFile = "Config.kt"
 val wrappersVersion = "2025.5.6"
-val stagingToken: String? = providers.gradleProperty("stagingToken").orNull
-val stagingServer: String? = providers.gradleProperty("stagingServer").orNull
-
-if (stagingToken != null && stagingServer != null) {
-  publishing {
-    repositories {
-      maven {
-        name = "staging"
-        setUrl(stagingServer)
-        credentials(HttpHeaderCredentials::class) {
-          name = "Private-Token"
-          value = stagingToken
-        }
-        authentication { create<HttpHeaderAuthentication>("header") }
-      }
-    }
-  }
-}
 
 fun buildDefaultPropertyFile() {
   rootDir.resolve("bgw-gui/src/jsMain/kotlin/tools/aqua/bgw/${propertyFile}").apply {
@@ -72,9 +47,7 @@ fun buildDefaultPropertyFile() {
   }
 }
 
-/**
- * The project version escaped for use inside a Kotlin string literal.
- */
+/** The project version escaped for use inside a Kotlin string literal. */
 fun escapedVersion(): String =
     rootProject.version.toString().replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$")
 
@@ -84,7 +57,6 @@ fun generateDefaultProperties(suffix: String = "") =
 
     internal object Config {
         val USE_SOCKETS = true
-        val GENERATE_SAMPLES = false
         val BGW_VERSION = "${escapedVersion()}"
     }
 """
@@ -94,46 +66,11 @@ if (!project.extra.has("useSockets")) {
   project.extra.set("useSockets", "true")
 }
 
-if (!project.extra.has("generateSamples")) {
-  project.extra.set("generateSamples", "false")
-}
-
 buildDefaultPropertyFile()
-
-repositories {
-  gradlePluginPortal()
-  mavenCentral()
-  maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-}
 
 kotlin {
   jvmToolchain(11)
-  jvm {
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    binaries {
-      executable {
-        mainClass.set("tools.aqua.bgw.main.MainKt")
-        applicationDefaultJvmArgs =
-            listOf(
-                "--add-opens",
-                "java.desktop/sun.awt=ALL-UNNAMED",
-                "--add-opens",
-                "java.desktop/java.awt.peer=ALL-UNNAMED",
-                "--add-opens",
-                "java.desktop/sun.lwawt=ALL-UNNAMED",
-                "--add-opens",
-                "java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-                "--enable-native-access",
-                "ALL-UNNAMED",
-                "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
-                "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
-                "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-                "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
-                "--enable-native-access=ALL-UNNAMED")
-      }
-    }
-    testRuns["test"].executionTask.configure { useJUnitPlatform() }
-  }
+  jvm { testRuns["test"].executionTask.configure { useJUnitPlatform() } }
   js(IR) {
     binaries.executable()
     browser {
@@ -191,87 +128,6 @@ tasks.named<Copy>("jvmProcessResources") {
   val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
   from(jsBrowserDistribution)
 }
-
-// region - Cleanup JCEF helper processes
-var globalTmpDir = ""
-
-tasks.named<JavaExec>("runJvm") {
-  doFirst {
-    val tmpDir = Files.createTempDirectory("bgw-")
-    tmpDir.toFile().deleteOnExit()
-    globalTmpDir = tmpDir.toString()
-    jvmArgs = listOf("-DtmpDir=${tmpDir}")
-  }
-  dependsOn(tasks.named<Jar>("jvmJar"))
-  classpath(tasks.named<Jar>("jvmJar"))
-}
-
-gradle.buildFinished {
-  try {
-    val applicationPIDs =
-        file("$globalTmpDir/application.pid").readText().split(",").map { it.toLong() }.toSet()
-    killJcefHelperProcesses(applicationPIDs)
-    if (globalTmpDir.isNotEmpty()) {
-      File(globalTmpDir).deleteRecursively()
-    }
-  } catch (_: Exception) {}
-}
-
-fun killJcefHelperProcesses(pids: Set<Long>) {
-  pids.forEach { pid -> ProcessHandle.of(pid).ifPresent { it.destroy() } }
-}
-
-// endregion
-
-val mavenMetadata = extensions.create<MavenMetadataExtension>("mavenMetadata")
-
-// Log the coordinates of everything that is published, locally and remotely.
-announcePublications()
-
-mavenPublishing {
-  publishToMavenCentral()
-  // Only sign when publishing to a remote repository.
-  if (isSigningRequired()) signAllPublications()
-
-  pom {
-    name.set(mavenMetadata.name)
-    description.set(mavenMetadata.description)
-
-    val globalMetadata = rootProject.extensions.getByType<GlobalMavenMetadataExtension>()
-
-    url.set(
-        "https://github.com/${globalMetadata.githubProject.get().organization}/${globalMetadata.githubProject.get().project}")
-
-    licenses {
-      globalMetadata.licenses.get().forEach { licenseData ->
-        license {
-          name.set(licenseData.name)
-          url.set(licenseData.url)
-        }
-      }
-    }
-
-    developers {
-      globalMetadata.developers.get().forEach { dev ->
-        developer {
-          name.set(dev.name)
-          email.set(dev.email)
-        }
-      }
-    }
-
-    scm {
-      val github = globalMetadata.githubProject.get()
-      connection.set("scm:git:git://github.com/${github.organization}/${github.project}.git")
-      developerConnection.set(
-          "scm:git:ssh://git@github.com/${github.organization}/${github.project}.git")
-      url.set(
-          "https://github.com/${github.organization}/${github.project}/tree/${github.mainBranch}")
-    }
-  }
-}
-
-signing { useGpgCmd() }
 
 spotless {
   kotlin {

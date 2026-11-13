@@ -19,13 +19,11 @@ package tools.aqua.bgw.main
 
 import java.io.File
 import kotlinx.serialization.json.Json
-import tools.aqua.bgw.application.Config
 import tools.aqua.bgw.main.examples.ExampleApplication
 
-internal fun main() {
-  if (Config.GENERATE_SAMPLES) {
-    val jsonData = Json.encodeToString(ExampleApplication.getMap())
-    File("build/examples").mkdirs()
-    File("build/examples/bgwSamples.json").writeText(jsonData)
-  }
+/** Serializes the documentation sample scenes into the JSON file given as the first argument. */
+internal fun main(args: Array<String>) {
+  val output = File(requireNotNull(args.firstOrNull()) { "Missing output file argument." })
+  output.parentFile?.mkdirs()
+  output.writeText(Json.encodeToString(ExampleApplication.getMap()))
 }

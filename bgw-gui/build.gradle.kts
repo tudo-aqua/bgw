@@ -15,12 +15,29 @@
  * limitations under the License.
  */
 
-plugins {
-  id("tools.aqua.bgw.base-conventions")
-  id("tools.aqua.bgw.multiplatform-conventions")
-}
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmCompilation
+
+plugins { id("tools.aqua.bgw.multiplatform-conventions") }
 
 mavenMetadata {
   name.set("BoardGameWork GUI Library")
   description.set("A framework for board game applications.")
+}
+
+// The scenes previewed in the documentation. They use internal API to serialize the scenes and are
+// therefore compiled against the main compilation, but they are not part of the published library.
+val samples: KotlinJvmCompilation =
+    kotlin.jvm().compilations.create("samples") {
+      associateWith(kotlin.jvm().compilations.getByName("main"))
+    }
+
+val samplesOutput = layout.buildDirectory.file("examples/bgwSamples.json")
+
+tasks.register<JavaExec>("generateDocsSamples") {
+  group = "documentation"
+  description = "Serializes the documentation sample scenes to JSON."
+  classpath(samples.output.allOutputs, samples.runtimeDependencyFiles)
+  mainClass = "tools.aqua.bgw.main.MainKt"
+  args(samplesOutput.get().asFile.absolutePath)
+  outputs.file(samplesOutput)
 }
