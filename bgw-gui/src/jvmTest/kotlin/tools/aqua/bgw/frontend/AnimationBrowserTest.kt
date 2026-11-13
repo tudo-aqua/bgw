@@ -17,8 +17,11 @@
 
 package tools.aqua.bgw.frontend
 
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import org.openqa.selenium.JavascriptExecutor
 import tools.aqua.bgw.animation.Animation
 import tools.aqua.bgw.animation.DiceAnimation
 import tools.aqua.bgw.animation.FadeAnimation
@@ -31,6 +34,8 @@ import tools.aqua.bgw.animation.ScaleAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.layoutviews.Pane
+import tools.aqua.bgw.core.AnimationInterpolation
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.TextVisual
@@ -190,6 +195,55 @@ class AnimationBrowserTest : BrowserTestBase() {
   private fun tokenScene(): Pair<BoardGameScene, TokenView> {
     val token = TokenView(posX = 50, posY = 50, width = 100, height = 100, visual = ColorVisual.RED)
     return BoardGameScene(width = 800, height = 600).apply { addComponents(token) } to token
+  }
+
+  @Test
+  fun movingAPaneMovesItsChildrenOnlyOnce() {
+    val child = TokenView(posX = 40, posY = 30, width = 50, height = 50, visual = ColorVisual.RED)
+    val pane =
+        Pane<TokenView>(posX = 50, posY = 50, width = 300, height = 200, visual = ColorVisual.GRAY)
+            .apply { add(child) }
+    val scene = BoardGameScene(width = 800, height = 600).apply { addComponents(pane) }
+    show(scene)
+    tester.awaitBGWComp(child.id)
+
+    // Both positions are read in one script, so the pane cannot move between the two readings.
+    fun childOffset(): Double =
+        ((tester.requireDriver() as JavascriptExecutor).executeScript(
+                """
+                const left = (id) => document.getElementById(id).getBoundingClientRect().left;
+                return left(arguments[0]) - left(arguments[1]);
+                """
+                    .trimIndent(),
+                child.id,
+                pane.id) as Number)
+            .toDouble()
+    val offset = childOffset()
+
+    val finished = AtomicBoolean(false)
+    scene.playAnimation(
+        MovementAnimation(
+                pane,
+                byX = 300.0,
+                duration = 2000,
+                interpolation = AnimationInterpolation.LINEAR,
+                persist = true)
+            .apply { onFinished = { finished.set(true) } })
+
+    // While the pane moves, its child keeps its position within the pane instead of being moved
+    // by the animation of the pane a second time.
+    val offsets = mutableListOf<Double>()
+    val deadline = System.currentTimeMillis() + 10_000
+    while (!finished.get() && System.currentTimeMillis() < deadline) {
+      offsets += childOffset()
+      Thread.sleep(150)
+    }
+    assertTrue(offsets.size >= 5, "Expected samples during the animation, got ${offsets.size}")
+    offsets.forEach { assertAround(offset, it, 1.0, "Offset of the child within the pane") }
+    tester.await("pane and child at the final position") {
+      getBGWComp(pane.id).logicalLocation.x in 349.0..351.0 &&
+          childOffset() in (offset - 1.0)..(offset + 1.0)
+    }
   }
 
   private fun playAndAwait(scene: BoardGameScene, animation: Animation) {

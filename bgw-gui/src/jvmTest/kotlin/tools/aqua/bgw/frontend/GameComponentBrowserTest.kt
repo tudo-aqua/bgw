@@ -19,6 +19,7 @@ package tools.aqua.bgw.frontend
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import org.openqa.selenium.JavascriptExecutor
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.gamecomponentviews.DiceView
 import tools.aqua.bgw.components.gamecomponentviews.HexagonView
@@ -27,9 +28,39 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.core.HexOrientation
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 
 class GameComponentBrowserTest : BrowserTestBase() {
+
+  @Test
+  fun croppedImageVisualRedrawsWhenOnlyItsOffsetChanges() {
+    val token =
+        TokenView(
+            width = 32,
+            height = 32,
+            visual = ImageVisual("icon.png", width = 32, height = 32, offsetX = 0, offsetY = 0))
+    show(BoardGameScene(width = 800, height = 600).apply { addComponents(token) })
+    tester.awaitBGWComp(token.id)
+    tester.await("crop at the origin") { centerPixel(token) == listOf(32L, 28L, 48L) }
+
+    // The image is cached by the browser, so only the offset of the crop changes.
+    token.visual = ImageVisual("icon.png", width = 32, height = 32, offsetX = 64, offsetY = 64)
+    tester.await("crop at the new offset") { centerPixel(token) == listOf(228L, 89L, 118L) }
+  }
+
+  /** Returns the RGB value of the center pixel of the canvas that draws the crop of [token]. */
+  @Suppress("UNCHECKED_CAST")
+  private fun centerPixel(token: TokenView): List<Long>? =
+      (tester.requireDriver() as JavascriptExecutor).executeScript(
+          """
+          const canvas = document.getElementById(arguments[0])?.querySelector("canvas");
+          if (!canvas) return null;
+          const pixel = canvas.getContext("2d").getImageData(16, 16, 1, 1).data;
+          return [pixel[0], pixel[1], pixel[2]];
+          """
+              .trimIndent(),
+          token.id) as List<Long>?
 
   @Test
   fun tokenRendersAndUpdatesItsVisualAndTransformProperties() {
