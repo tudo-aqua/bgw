@@ -28,14 +28,16 @@ node {
   nodeProjectDir.set(projectDir.resolve("website"))
 }
 
+// The tasks that write the generated data into website/public, which the website build copies.
+val generatedDataTasks =
+    listOf(
+        ":bgw-docs:website:buildAndCopyRuntimeTask",
+        ":bgw-docs:parser:buildAndCopySamplesTask",
+        ":bgw-docs:parser:buildAndCopyDokkaJson")
+
 tasks.register<GradleBuild>("docsBuild") {
   group = "documentation"
-  tasks =
-      listOf(
-          ":bgw-docs:website:buildAndCopyRuntimeTask",
-          ":bgw-docs:parser:buildAndCopySamplesTask",
-          ":bgw-docs:parser:buildAndCopyDokkaJson",
-          "yarnPreDeploy")
+  tasks = generatedDataTasks + "yarnPreDeploy"
 }
 
 tasks.register("yarnInstall", YarnTask::class) {
@@ -45,6 +47,7 @@ tasks.register("yarnInstall", YarnTask::class) {
 
 tasks.register("yarnPreDeploy", YarnTask::class) {
   dependsOn("yarnInstall")
+  mustRunAfter(generatedDataTasks)
   group = "yarn"
   args.set(listOf("predeploy"))
 }
